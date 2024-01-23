@@ -29,6 +29,7 @@
     "nuqs": "^1.15.4",
     "react": "^18",
     "react-dom": "^18",
+    "react-query": "^3.39.3",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4"
