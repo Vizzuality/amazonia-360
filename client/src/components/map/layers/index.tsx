@@ -9,7 +9,8 @@ import { env } from "@/env.mjs";
 import { useMap } from "@/components/map/provider";
 
 export default function Layer(
-  props: Partial<ArcGISFeatureLayer> & { id: string },
+  props: Partial<ArcGISFeatureLayer> &
+    Required<Pick<ArcGISFeatureLayer, "id" | "url">> & { index: number },
 ) {
   const mapInstance = useMap("default");
   const { id, url } = props;
@@ -44,24 +45,25 @@ export default function Layer(
       return;
     }
 
-    const { id } = props;
+    const { index, ...fProps } = props;
 
     if (map.findLayerById(id)) {
       const l = map.findLayerById(id);
-      Object.entries(props).forEach(([key, value]) => {
+      Object.entries(fProps).forEach(([key, value]) => {
         l.set(key, value);
+        map.reorder(map.findLayerById(id), index);
       });
     }
 
     if (!map.findLayerById(id)) {
       const fl = new ArcGISFeatureLayer({
-        ...props,
+        ...fProps,
         apiKey: env.NEXT_PUBLIC_ARCGIS_API_KEY,
       });
 
-      map.add(fl);
+      map.add(fl, index);
     }
-  }, [props, mapInstance]);
+  }, [id, props, mapInstance]);
 
   return null;
 }

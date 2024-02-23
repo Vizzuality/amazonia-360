@@ -15,7 +15,7 @@ export default function Sidebar() {
   ) => {
     setLayers((layers) => {
       if (e.target.checked) {
-        return [layerId, ...layers];
+        return [...layers, layerId];
       }
 
       return layers.filter((l) => l !== layerId);

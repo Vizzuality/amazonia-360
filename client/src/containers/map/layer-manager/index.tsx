@@ -11,14 +11,14 @@ export default function LayerManager() {
 
   return (
     <>
-      {layers.map((layer) => {
+      {layers.map((layer, i) => {
         const l = LAYERS.find((l) => l.id === layer);
 
         if (!l) {
           return null;
         }
 
-        return <Layer key={l.id} {...l} />;
+        return <Layer key={l.id} {...l} index={i} />;
       })}
     </>
   );
