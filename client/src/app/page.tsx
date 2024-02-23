@@ -1,8 +1,11 @@
 import Map from "@/containers/map";
+import Sidebar from "@/containers/sidebar";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
+    <main className="flex justify-between">
+      <Sidebar />
+
       <Map />
     </main>
   );

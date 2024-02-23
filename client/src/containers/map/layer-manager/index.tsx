@@ -1,20 +1,25 @@
+"use client";
+
+import { useSyncLayers } from "@/app/store";
+
+import { LAYERS } from "@/constants/layers";
+
 import Layer from "@/components/map/layers";
 
 export default function LayerManager() {
+  const [layers] = useSyncLayers();
+
   return (
     <>
-      <Layer
-        id="area-de-trabajo-panamazonia"
-        url="https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_AREA_DE_TRABAJO_PANAMAZONIA/FeatureServer/0"
-      />
-      <Layer
-        id="climas"
-        url="https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tipos_climaticos_KOEPEN/FeatureServer/0"
-      />
-      <Layer
-        id="protected-areas"
-        url="https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Areas_protegidas/FeatureServer/0"
-      />
+      {layers.map((layer) => {
+        const l = LAYERS.find((l) => l.id === layer);
+
+        if (!l) {
+          return null;
+        }
+
+        return <Layer key={l.id} {...l} />;
+      })}
     </>
   );
 }
