@@ -13,12 +13,13 @@ export default function LayerManager() {
     <>
       {layers.map((layer, i) => {
         const l = LAYERS.find((l) => l.id === layer);
+        // l!.opacity = opacity;
 
         if (!l) {
           return null;
         }
 
-        return <Layer key={l.id} {...l} index={i} />;
+        return <Layer key={l.id} layer={l} index={i} />;
       })}
     </>
   );

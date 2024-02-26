@@ -23,7 +23,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-96 bg-gray-200">
+    <aside className="w-96 bg-gray-200 p-4">
       <h1>Layer Manager</h1>
 
       {LAYERS.map((layer) => (
