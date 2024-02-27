@@ -1,3 +1,9 @@
-import { parseAsArrayOf, parseAsString } from "nuqs";
+import { parseAsArrayOf, parseAsStringLiteral } from "nuqs";
 
-export const layersParser = parseAsArrayOf(parseAsString).withDefault([]);
+import { getKeys } from "@/lib/utils";
+
+import { DATASETS } from "@/constants/datasets";
+
+export const datasetsParser = parseAsArrayOf(
+  parseAsStringLiteral(getKeys(DATASETS)),
+).withDefault([]);

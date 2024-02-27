@@ -2,8 +2,8 @@
 
 import { useQueryState } from "nuqs";
 
-import { layersParser } from "@/app/parsers";
+import { datasetsParser } from "@/app/parsers";
 
-export const useSyncLayers = () => {
-  return useQueryState("layers", layersParser);
+export const useSyncDatasets = () => {
+  return useQueryState("datasets", datasetsParser);
 };

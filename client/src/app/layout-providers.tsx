@@ -1,5 +1,9 @@
 "use client";
 
+import { useState } from "react";
+
+import { QueryClient, QueryClientProvider } from "react-query";
+
 import { MapProvider } from "@/components/map/provider";
 
 export default function LayoutProviders({
@@ -7,5 +11,11 @@ export default function LayoutProviders({
 }: {
   children: React.ReactNode;
 }) {
-  return <MapProvider>{children}</MapProvider>;
+  const [queryClient] = useState(() => new QueryClient());
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <MapProvider>{children}</MapProvider>
+    </QueryClientProvider>
+  );
 }

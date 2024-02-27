@@ -1,4 +1,4 @@
-export const DEFAULT_MAP_VIEW_PROPERTIES = {
+export const DEFAULT_MAP_VIEW_PROPERTIES: __esri.MapViewProperties = {
   extent: {
     xmin: -84.34627596688159,
     ymin: -25.38670960349323,

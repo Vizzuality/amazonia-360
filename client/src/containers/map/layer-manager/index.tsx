@@ -1,18 +1,18 @@
 "use client";
 
-import { useSyncLayers } from "@/app/store";
+import { useSyncDatasets } from "@/app/store";
 
-import { LAYERS } from "@/constants/layers";
+import { DATASETS } from "@/constants/datasets";
 
 import Layer from "@/components/map/layers";
 
 export default function LayerManager() {
-  const [layers] = useSyncLayers();
+  const [layers] = useSyncDatasets();
 
   return (
     <>
       {layers.map((layer, i) => {
-        const l = LAYERS.find((l) => l.id === layer);
+        const l = DATASETS[layer].layer;
         // l!.opacity = opacity;
 
         if (!l) {
