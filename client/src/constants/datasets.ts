@@ -5,6 +5,13 @@ import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
 import Query from "@arcgis/core/rest/support/Query";
 import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
 
+import GEOJSON from "@/data/geojson.json";
+
+export const GEOMETRY_TEST = new Polygon({
+  hasZ: false,
+  rings: GEOJSON.features[0].geometry.coordinates,
+});
+
 export const DATASETS = {
   admin: {
     layer: new FeatureLayer({
@@ -27,24 +34,7 @@ export const DATASETS = {
       where: "FID is not null",
       outFields: ["*"],
       returnGeometry: false,
-      geometry: new Polygon({
-        hasZ: false,
-        rings: [
-          [
-            [-67.31103404787922, -11.661233160198478],
-            [-66.30420141042109, -14.55282988542723],
-            [-65.74704984520523, -11.6657021602758],
-            [-64.73063426395457, -13.636933141719169],
-            [-64.21144625073742, -10.57328110561042],
-            [-62.66147776498329, -13.060157745373786],
-            [-61.90003054919214, -10.015509154938869],
-            [-62.64525455392423, -8.046035000161865],
-            [-64.80917311077667, -7.911512505979346],
-            [-67.1534448198541, -8.655921487346376],
-            [-67.31103404787922, -11.661233160198478],
-          ],
-        ],
-      }),
+      geometry: GEOMETRY_TEST,
     }),
   },
   area_afp: {
@@ -61,7 +51,12 @@ export const DATASETS = {
       title: "Ciudades capitales",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_CAPITALES_ADMIN/FeatureServer/0",
     }),
-    getFeatures: undefined,
+    getFeatures: new Query({
+      where: "FID is not null",
+      outFields: ["*"],
+      returnGeometry: false,
+      geometry: GEOMETRY_TEST,
+    }),
   },
   frontera_internacional: {
     layer: new FeatureLayer({
@@ -86,7 +81,12 @@ export const DATASETS = {
         }),
       }),
     }),
-    getFeatures: undefined,
+    getFeatures: new Query({
+      where: "FID is not null",
+      outFields: ["*"],
+      returnGeometry: false,
+      geometry: GEOMETRY_TEST,
+    }),
   },
   tipos_climaticos: {
     layer: new FeatureLayer({
@@ -94,7 +94,12 @@ export const DATASETS = {
       title: "Tipos climáticos (Koepen)",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tipos_climaticos_KOEPEN/FeatureServer/0",
     }),
-    getFeatures: undefined,
+    getFeatures: new Query({
+      where: "FID is not null",
+      outFields: ["*"],
+      returnGeometry: false,
+      geometry: GEOMETRY_TEST,
+    }),
   },
   biomas: {
     layer: new FeatureLayer({
@@ -102,7 +107,12 @@ export const DATASETS = {
       title: "Biomas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Biomas/FeatureServer/0",
     }),
-    getFeatures: undefined,
+    getFeatures: new Query({
+      where: "FID is not null",
+      outFields: ["*"],
+      returnGeometry: false,
+      geometry: GEOMETRY_TEST,
+    }),
   },
   ecosistemas: {
     layer: new FeatureLayer({
@@ -172,7 +182,12 @@ export const DATASETS = {
         ],
       }),
     }),
-    getFeatures: undefined,
+    getFeatures: new Query({
+      where: "FID is not null",
+      outFields: ["*"],
+      returnGeometry: false,
+      geometry: GEOMETRY_TEST,
+    }),
   },
   cuencas_hidrograficas: {
     layer: new FeatureLayer({
@@ -180,7 +195,12 @@ export const DATASETS = {
       title: "Cuenca hidrográfica, pertenencia a grandes cuencas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Grandes_cuencas_hidrograficas/FeatureServer/0",
     }),
-    getFeatures: undefined,
+    getFeatures: new Query({
+      where: "FID is not null",
+      outFields: ["*"],
+      returnGeometry: false,
+      geometry: GEOMETRY_TEST,
+    }),
   },
   areas_protegidas: {
     layer: new FeatureLayer({
@@ -188,7 +208,12 @@ export const DATASETS = {
       title: "Áreas protegidas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Areas_protegidas/FeatureServer/0",
     }),
-    getFeatures: undefined,
+    getFeatures: new Query({
+      where: "FID is not null",
+      outFields: ["*"],
+      returnGeometry: false,
+      geometry: GEOMETRY_TEST,
+    }),
   },
 } as const;
 

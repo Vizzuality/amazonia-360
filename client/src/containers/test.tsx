@@ -16,9 +16,10 @@ export default function Test({ id }: { id: DatasetIds }) {
   return (
     <div className="w-full">
       <h1>{DATASETS[`${id}`].layer.title}</h1>
+
       {data?.features.map((f) => (
-        <div key={f.attributes.OBJECTID}>
-          <h2>{f.attributes.OBJECTID}</h2>
+        <div key={f.attributes.FID}>
+          <h2>{f.attributes.FID}</h2>
           <pre className="w-full overflow-scroll break-words">
             {JSON.stringify(f.attributes, null, 2)}
           </pre>
