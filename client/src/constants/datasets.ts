@@ -42,6 +42,16 @@ export const DATASETS = {
       id: "area_afp",
       title: "Límite del área AFP",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_AREA_DE_TRABAJO_PANAMAZONIA/FeatureServer/0",
+      renderer: new SimpleRenderer({
+        symbol: new SimpleFillSymbol({
+          color: [0, 0, 0, 0],
+          style: "solid",
+          outline: {
+            width: 1,
+            color: "#004E70",
+          },
+        }),
+      }),
     }),
     getFeatures: undefined,
   },

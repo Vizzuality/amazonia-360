@@ -4,6 +4,9 @@ export const DEFAULT_MAP_VIEW_PROPERTIES: __esri.MapViewProperties = {
     ymin: -25.38670960349323,
     xmax: -32.060183541373306,
     ymax: 14.481895073924633,
+    spatialReference: {
+      wkid: 4326,
+    },
   },
 
   constraints: {

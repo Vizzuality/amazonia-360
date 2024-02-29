@@ -27,10 +27,11 @@
     "clsx": "^2.1.0",
     "jotai": "^2.6.2",
     "next": "14.1.0",
-    "nuqs": "^1.15.4",
+    "nuqs": "^1.17.0",
     "react": "^18",
     "react-dom": "^18",
     "react-query": "^3.39.3",
+    "rooks": "^7.14.1",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4"
