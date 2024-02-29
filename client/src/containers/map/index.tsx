@@ -8,6 +8,8 @@ import { useSyncBbox } from "@/app/store";
 
 import LayerManager from "@/containers/map/layer-manager";
 
+import Sketch from "@/components/map/sketch";
+
 const Map = dynamic(() => import("@/components/map"), {
   ssr: false,
 });
@@ -23,6 +25,7 @@ export default function MapContainer() {
     <div className="w-full h-screen">
       <Map id="default" defaultBbox={bbox} onMapMove={handleMapMove}>
         <LayerManager />
+        <Sketch />
       </Map>
     </div>
   );
