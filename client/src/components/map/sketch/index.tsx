@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
@@ -6,26 +6,58 @@ import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
 import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 
+import Layer from "@/components/map/layers/graphics";
 import { useMap } from "@/components/map/provider";
 
-export default function Sketch() {
+export type SketchProps = {
+  type?: "point" | "polygon" | "polyline";
+  enabled?: boolean;
+  onCreate?: (layer: GraphicsLayer) => void;
+  onCancel?: (layer: GraphicsLayer) => void;
+};
+
+export default function Sketch({
+  type,
+  enabled,
+  onCreate,
+  onCancel,
+}: SketchProps) {
   const mapInstance = useMap();
 
-  const sketchViewModelRef = useRef<SketchViewModel>();
+  const layerRef = useRef<GraphicsLayer>(new GraphicsLayer());
 
+  const sketchViewModelRef = useRef<SketchViewModel>();
+  const sketchViewModelOnCreateRef = useRef<IHandle>();
+
+  const handleSketchCreate = useCallback(
+    (e: __esri.SketchViewModelCreateEvent) => {
+      if (e.state === "complete" && sketchViewModelRef.current) {
+        const g = e.graphic.clone();
+
+        if (type !== undefined) {
+          g.symbol = sketchViewModelRef.current[`${type}Symbol`].clone();
+        }
+        layerRef.current.add(g);
+
+        onCreate && onCreate(layerRef.current);
+      }
+
+      if (e.state === "cancel" && sketchViewModelRef.current) {
+        onCancel && onCancel(layerRef.current);
+      }
+    },
+    [type, onCreate, onCancel],
+  );
+
+  // Create the sketch view model
   useEffect(() => {
-    if (!mapInstance) {
-      return;
-    }
+    if (!mapInstance) return;
 
     const { view } = mapInstance;
+    if (!view) return;
 
-    if (!view) {
-      return;
-    }
-
-    const layer = new GraphicsLayer();
     const sketchLayer = new GraphicsLayer();
+
     const sketchViewModel = new SketchViewModel({
       view,
       layer: sketchLayer,
@@ -39,7 +71,7 @@ export default function Sketch() {
         },
       }),
       polylineSymbol: new SimpleLineSymbol({
-        color: "#009ADE11",
+        color: "#009ADEFF",
         width: 2,
       }),
       polygonSymbol: new SimpleFillSymbol({
@@ -56,40 +88,34 @@ export default function Sketch() {
 
     sketchViewModelRef.current = sketchViewModel;
 
-    sketchViewModel.on("create", (event) => {
-      if (event.state === "complete") {
-        const g = event.graphic.clone();
-
-        g.symbol = new SimpleFillSymbol({
-          color: "#009ADE11",
-          outline: {
-            color: "#004E70",
-            width: 2,
-          },
-        });
-        layer.add(g);
-        mapInstance.map.add(layer, 100);
-      }
-    });
-
-    sketchViewModel.on("update", (event) => {
-      if (event.state === "complete") {
-        console.log(event.graphics);
-      }
-    });
-
     return () => {
       sketchViewModel.destroy();
     };
   }, [mapInstance]);
 
+  // Enable/disable the sketch view model
   useEffect(() => {
     if (!sketchViewModelRef.current) {
       return;
     }
 
-    sketchViewModelRef.current.create("polygon");
-  }, []);
+    if (!type) {
+      return;
+    }
 
-  return null;
+    // reset
+    layerRef.current.removeAll();
+    sketchViewModelRef.current.cancel();
+
+    sketchViewModelRef.current.create(type);
+
+    // Check if the sketch view model has the create event listener and remove it
+    sketchViewModelOnCreateRef.current?.remove();
+    sketchViewModelOnCreateRef.current = sketchViewModelRef.current.on(
+      "create",
+      handleSketchCreate,
+    );
+  }, [type, enabled, handleSketchCreate]);
+
+  return <Layer layer={layerRef.current} index={100} />;
 }
