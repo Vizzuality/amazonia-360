@@ -1,10 +1,13 @@
 "use client";
-
+import { atom } from "jotai";
 import { useQueryState } from "nuqs";
 import { createSerializer } from "nuqs/server";
 
 import { bboxParser, datasetsParser } from "@/app/parsers";
 
+import { SketchProps } from "@/components/map/sketch";
+
+// URL PARAMS
 export const useSyncBbox = () => {
   return useQueryState("bbox", bboxParser);
 };
@@ -26,3 +29,9 @@ export const useSyncSearchParams = () => {
 
   return serialize({ bbox, datasets });
 };
+
+// JOTAI PARAMS
+export const sketchAtom = atom<SketchProps>({
+  enabled: false,
+  type: undefined,
+});

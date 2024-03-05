@@ -1,16 +1,9 @@
 import { QueryFunction, UseQueryOptions, useQuery } from "react-query";
 
-import Geometry from "@arcgis/core/geometry/Geometry";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import Query from "@arcgis/core/rest/support/Query";
 
 import { env } from "@/env.mjs";
-
-export type ArcGISQueryParams = {
-  query?: Query;
-  feature?: FeatureLayer;
-  geometry?: Geometry;
-};
 
 /**
  ************************************************************
@@ -19,17 +12,20 @@ export type ArcGISQueryParams = {
  ************************************************************
  ************************************************************
  */
+
+export type ArcGISQueryParams = {
+  query?: Query;
+  feature?: FeatureLayer;
+};
 export const getFeatures = async (params: ArcGISQueryParams) => {
-  const { feature, query, geometry } = params;
+  const { feature, query } = params;
 
   if (!feature || !query) {
     throw new Error("Feature and query are required");
   }
 
   feature!.apiKey = env.NEXT_PUBLIC_ARCGIS_API_KEY;
-  if (geometry) {
-    query!.geometry = geometry;
-  }
+
   return feature!.queryFeatures(query);
 };
 
