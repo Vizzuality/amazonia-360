@@ -9,10 +9,38 @@ import {
 
 import SearchVM from "@arcgis/core/widgets/Search/SearchViewModel";
 
+import { DATASETS } from "@/constants/datasets";
+
 const searchVM = new SearchVM({
   popupEnabled: false,
   autoSelect: false,
-  includeDefaultSources: true,
+  includeDefaultSources: false,
+  sources: [
+    {
+      layer: DATASETS.admin.layer,
+      searchFields: ["NAME_0", "NAME_1", "NAME_2"],
+      displayField: "COMPNAME",
+      outFields: ["*"],
+      name: "Admin",
+      exactMatch: false,
+      maxResults: 3,
+      maxSuggestions: 3,
+      suggestionsEnabled: true,
+      minSuggestCharacters: 3,
+    },
+    {
+      layer: DATASETS.ciudades_capitales.layer,
+      searchFields: ["NAME_0", "NAME_1", "NAME_2", "NOMBCAP"],
+      displayField: "COMPNAME",
+      outFields: ["*"],
+      name: "Admin",
+      exactMatch: false,
+      maxResults: 3,
+      maxSuggestions: 3,
+      suggestionsEnabled: true,
+      minSuggestCharacters: 3,
+    },
+  ],
 });
 
 /**
@@ -132,7 +160,10 @@ export const getGetSearchMutationOptions = <
     return getSearch(props);
   };
 
-  return { mutationFn, ...mutationOptions };
+  return {
+    mutationFn,
+    ...mutationOptions,
+  };
 };
 
 export const useGetSearch = <TError = unknown, TContext = unknown>(options?: {

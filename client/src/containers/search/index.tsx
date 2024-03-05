@@ -40,11 +40,18 @@ export default function SearchC() {
           {...q}
           onChange={setSearch}
           onSelect={(value) => {
-            s.mutate({
-              text: value.value,
-              key: value.key,
-              sourceIndex: value.sourceIndex,
-            });
+            s.mutate(
+              {
+                text: value.value,
+                key: value.key,
+                sourceIndex: value.sourceIndex,
+              },
+              {
+                onSuccess: (data) => {
+                  console.info(data);
+                },
+              },
+            );
             setSearch("");
           }}
         />

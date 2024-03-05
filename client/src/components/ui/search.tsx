@@ -11,7 +11,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 
-type Option = {
+export type Option = {
   label: string;
   value: string;
   key: string;
