@@ -1,5 +1,7 @@
 "use client";
 
+import { useCallback } from "react";
+
 import dynamic from "next/dynamic";
 
 import { useAtom } from "jotai";
@@ -23,20 +25,25 @@ export default function MapContainer() {
     setBbox([extent.xmin, extent.ymin, extent.xmax, extent.ymax]);
   }, 500);
 
-  const handleCreate = () => {
+  const handleCreate = useCallback(() => {
     setSketch({ enabled: false, type: undefined });
-  };
+  }, [setSketch]);
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     setSketch({ enabled: false, type: undefined });
-  };
+  }, [setSketch]);
 
   return (
     <div className="w-full h-screen">
       <Map id="default" defaultBbox={bbox} onMapMove={handleMapMove}>
         <LayerManager />
 
-        <Sketch {...sketch} onCreate={handleCreate} onCancel={handleCancel} />
+        <Sketch
+          type={sketch.type}
+          enabled={sketch.enabled}
+          onCreate={handleCreate}
+          onCancel={handleCancel}
+        />
       </Map>
     </div>
   );

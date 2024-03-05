@@ -42,7 +42,7 @@ export default function Sketch({
         onCreate && onCreate(layerRef.current);
       }
 
-      if (e.state === "cancel" && sketchViewModelRef.current) {
+      if (e.state === "cancel") {
         onCancel && onCancel(layerRef.current);
       }
     },
@@ -105,8 +105,8 @@ export default function Sketch({
 
     // reset
     layerRef.current.removeAll();
-    sketchViewModelRef.current.cancel();
 
+    // sketchViewModelRef.current.cancel();
     sketchViewModelRef.current.create(type);
 
     // Check if the sketch view model has the create event listener and remove it

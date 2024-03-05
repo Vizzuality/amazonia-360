@@ -11,13 +11,14 @@ import { Button } from "@/components/ui/button";
 
 export default function Sketch() {
   const [sketch, setSketch] = useAtom(sketchAtom);
+
   const handleClick = (
     e: MouseEvent<HTMLButtonElement>,
     type: SketchProps["type"],
   ) => {
     e.preventDefault();
     if (sketch.enabled && sketch.type === type) {
-      return setSketch({ ...sketch, type });
+      return setSketch({ enabled: false, type: undefined });
     }
 
     return setSketch({ enabled: true, type });
