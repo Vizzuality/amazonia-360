@@ -5,11 +5,6 @@ import Query from "@arcgis/core/rest/support/Query";
 
 import { env } from "@/env.mjs";
 
-export type ArcGISQueryParams = {
-  query?: Query;
-  feature?: FeatureLayer;
-};
-
 /**
  ************************************************************
  ************************************************************
@@ -17,6 +12,11 @@ export type ArcGISQueryParams = {
  ************************************************************
  ************************************************************
  */
+
+export type ArcGISQueryParams = {
+  query?: Query;
+  feature?: FeatureLayer;
+};
 export const getFeatures = async (params: ArcGISQueryParams) => {
   const { feature, query } = params;
 
