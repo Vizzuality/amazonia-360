@@ -74,4 +74,9 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .same-trigger-size {
+    width: var(--radix-popover-trigger-width);
+    max-height: var(--radix-popover-content-available-height);
+  }
 }
