@@ -86,12 +86,12 @@ export const useGetFeatures = <
  */
 
 export type GetFeaturesIdParams = {
-  id: string | number;
+  id: string | number | null;
 } & GetFeaturesParams;
 export const getFeaturesId = async (params: GetFeaturesIdParams) => {
-  const { feature, query } = params;
+  const { id, feature, query } = params;
 
-  if (!feature || !query) {
+  if (!feature || !query || !id) {
     throw new Error("Feature and query are required");
   }
 

@@ -2,10 +2,13 @@ import { useState } from "react";
 
 import { useGetArcGISSuggestions, useGetSearch } from "@/lib/search";
 
+import { useSyncLocation } from "@/app/store";
+
 import { Search } from "@/components/ui/search";
 
 export default function SearchC() {
   const [search, setSearch] = useState("");
+  const [, setLocation] = useSyncLocation();
 
   const q = useGetArcGISSuggestions(
     { text: search },
@@ -48,7 +51,18 @@ export default function SearchC() {
               },
               {
                 onSuccess: (data) => {
-                  console.info(data);
+                  if (data.numResults !== 1)
+                    throw new Error("Invalid number of results");
+
+                  const FID =
+                    data.results[0].results[0].feature.getAttribute("FID");
+                  const SOURCE = data.results[0].source.layer.id;
+
+                  setLocation({
+                    type: "feature",
+                    FID,
+                    SOURCE,
+                  });
                 },
               },
             );
