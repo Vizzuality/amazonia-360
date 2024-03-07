@@ -1,3 +1,5 @@
+import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
+
 import { useGetFeatures, useGetFeaturesId } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
@@ -6,16 +8,6 @@ import { DATASETS, DatasetIds } from "@/constants/datasets";
 
 export default function Test({ id }: { id: DatasetIds }) {
   const [location] = useSyncLocation();
-  const { data } = useGetFeatures(
-    {
-      query: DATASETS[`${id}`].getFeatures(),
-      feature: DATASETS[`${id}`].layer,
-    },
-    {
-      enabled: !!DATASETS[`${id}`].getFeatures,
-    },
-  );
-
   const { data: data1 } = useGetFeaturesId(
     {
       id: location?.type === "feature" ? location.FID : null,
@@ -35,11 +27,24 @@ export default function Test({ id }: { id: DatasetIds }) {
         location?.type === "feature" &&
         !!DATASETS[`${location?.SOURCE}`].getFeatures &&
         !!location.FID,
-      select: (data) => data.features[0],
     },
   );
 
-  console.info(data1);
+  const { data } = useGetFeatures(
+    {
+      query: DATASETS[`${id}`].getFeatures({
+        ...(data1?.features && {
+          geometry: geometryEngine.union(
+            data1?.features.map((f) => f.geometry),
+          ),
+        }),
+      }),
+      feature: DATASETS[`${id}`].layer,
+    },
+    {
+      enabled: !!DATASETS[`${id}`].getFeatures && !!data1,
+    },
+  );
 
   return (
     <div className="w-full">

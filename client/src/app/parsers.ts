@@ -18,16 +18,16 @@ export const bboxParser = parseAsArrayOf(parseAsFloat).withDefault([
   21.011946256491825,
 ]);
 
-type FeatureLocation = {
+export type FeatureLocation = {
   type: "feature";
   FID: number;
   SOURCE: DatasetIds;
 };
 
-type CustomLocation = {
+export type CustomLocation = {
   type: "custom";
   GEOMETRY: string;
 };
 
-type Location = FeatureLocation | CustomLocation;
+export type Location = FeatureLocation | CustomLocation;
 export const locationParser = parseAsJson<Location>();

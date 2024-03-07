@@ -34,7 +34,6 @@ export const DATASETS = {
       new Query({
         where: "FID is not null",
         outFields: ["*"],
-        geometry: GEOMETRY_TEST,
         ...props,
       }),
   },
@@ -66,7 +65,6 @@ export const DATASETS = {
       new Query({
         where: "FID is not null",
         outFields: ["*"],
-        geometry: GEOMETRY_TEST,
         ...props,
       }),
   },
@@ -97,7 +95,6 @@ export const DATASETS = {
       new Query({
         where: "FID is not null",
         outFields: ["*"],
-        geometry: GEOMETRY_TEST,
         ...props,
       }),
   },
@@ -111,7 +108,6 @@ export const DATASETS = {
       new Query({
         where: "FID is not null",
         outFields: ["*"],
-        geometry: GEOMETRY_TEST,
         ...props,
       }),
   },
@@ -125,7 +121,6 @@ export const DATASETS = {
       new Query({
         where: "FID is not null",
         outFields: ["*"],
-        geometry: GEOMETRY_TEST,
         ...props,
       }),
   },
@@ -201,7 +196,6 @@ export const DATASETS = {
       new Query({
         where: "FID is not null",
         outFields: ["*"],
-        geometry: GEOMETRY_TEST,
         ...props,
       }),
   },
@@ -215,7 +209,6 @@ export const DATASETS = {
       new Query({
         where: "FID is not null",
         outFields: ["*"],
-        geometry: GEOMETRY_TEST,
         ...props,
       }),
   },
@@ -229,7 +222,6 @@ export const DATASETS = {
       new Query({
         where: "FID is not null",
         outFields: ["*"],
-        geometry: GEOMETRY_TEST,
         ...props,
       }),
   },
