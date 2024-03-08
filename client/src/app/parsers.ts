@@ -1,3 +1,4 @@
+import Polygon from "@arcgis/core/geometry/Polygon";
 import {
   parseAsArrayOf,
   parseAsFloat,
@@ -26,7 +27,7 @@ export type FeatureLocation = {
 
 export type CustomLocation = {
   type: "custom";
-  GEOMETRY: string;
+  GEOMETRY: Polygon;
 };
 
 export type Location = FeatureLocation | CustomLocation;

@@ -15,6 +15,7 @@ import { MapContext } from "@/components/map/provider";
 export type MapProps = {
   id: string;
   defaultBbox?: number[];
+  bbox?: __esri.Extent;
   children?: React.ReactNode;
   onMapMove?: (extent: __esri.Extent) => void;
 };
@@ -22,6 +23,7 @@ export type MapProps = {
 export default function Map({
   id = "default",
   defaultBbox,
+  bbox,
   children,
   onMapMove,
 }: MapProps) {
@@ -96,6 +98,15 @@ export default function Map({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, onMapMount, onMapUnmount, onMapMove]);
+
+  useEffect(() => {
+    if (bbox && mapViewRef.current) {
+      mapViewRef.current.goTo(bbox, {
+        duration: 1000,
+        easing: "ease-in-out",
+      });
+    }
+  }, [bbox]);
 
   return (
     <div ref={mapContainerRef} className="w-full h-full">

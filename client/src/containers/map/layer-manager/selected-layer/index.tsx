@@ -3,11 +3,9 @@ import { useEffect, useRef } from "react";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
 
-import { useGetFeaturesId } from "@/lib/query";
+import { useLocation } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/store";
-
-import { DATASETS } from "@/constants/datasets";
 
 import Layer from "@/components/map/layers/graphics";
 
@@ -28,41 +26,20 @@ export default function SelectedLayer() {
   );
   const [location] = useSyncLocation();
 
-  const { data: data1 } = useGetFeaturesId(
-    {
-      id: location?.type === "feature" ? location.FID : null,
-      query:
-        location?.type === "feature"
-          ? DATASETS[`${location?.SOURCE}`].getFeatures({
-              returnGeometry: true,
-            })
-          : undefined,
-      feature:
-        location?.type === "feature"
-          ? DATASETS[`${location?.SOURCE}`].layer
-          : undefined,
-    },
-    {
-      enabled:
-        location?.type === "feature" &&
-        !!DATASETS[`${location?.SOURCE}`].getFeatures &&
-        !!location.FID,
-      select: (data) => data.features,
-    },
-  );
+  const graphics = useLocation(location);
 
   useEffect(() => {
-    if (data1) {
+    if (graphics) {
       graphicsLayerRef.current.removeAll();
       graphicsLayerRef.current.addMany(
-        data1.map((f) => {
+        graphics.map((f) => {
           f.symbol = symbol;
 
           return f;
         }),
       );
     }
-  }, [data1]);
+  }, [graphics]);
 
   return <Layer index={100} layer={graphicsLayerRef.current} />;
 }

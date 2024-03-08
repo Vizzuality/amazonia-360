@@ -37,6 +37,8 @@ export const useSyncSearchParams = () => {
 };
 
 // JOTAI PARAMS
+export const tmpBboxAtom = atom<__esri.Extent | undefined>(undefined);
+
 export const sketchAtom = atom<SketchProps>({
   enabled: false,
   type: undefined,

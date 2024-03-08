@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 import { useAtom } from "jotai";
 import { useDebounce } from "rooks";
 
-import { sketchAtom, useSyncBbox } from "@/app/store";
+import { sketchAtom, tmpBboxAtom, useSyncBbox } from "@/app/store";
 
 import LayerManager from "@/containers/map/layer-manager";
 
@@ -19,6 +19,7 @@ const Map = dynamic(() => import("@/components/map"), {
 
 export default function MapContainer() {
   const [bbox, setBbox] = useSyncBbox();
+  const [tmpBbox] = useAtom(tmpBboxAtom);
   const [sketch, setSketch] = useAtom(sketchAtom);
 
   const handleMapMove = useDebounce((extent: __esri.Extent) => {
@@ -35,7 +36,12 @@ export default function MapContainer() {
 
   return (
     <div className="w-full h-screen">
-      <Map id="default" defaultBbox={bbox} onMapMove={handleMapMove}>
+      <Map
+        id="default"
+        defaultBbox={bbox}
+        bbox={tmpBbox}
+        onMapMove={handleMapMove}
+      >
         <LayerManager />
 
         <Sketch
