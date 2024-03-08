@@ -10,6 +10,7 @@ const searchVM = new SearchVM({
   popupEnabled: false,
   autoSelect: false,
   includeDefaultSources: false,
+
   sources: [
     {
       name: "Admin",
@@ -38,16 +39,7 @@ const searchVM = new SearchVM({
       url: "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer",
       singleLineFieldName: "SingleLine",
       apiKey: env.NEXT_PUBLIC_ARCGIS_API_KEY,
-      countryCode: [
-        "BRA",
-        "BOL",
-        "COL",
-        "ECU",
-        "GUY",
-        "SUR",
-        "PER",
-        "VEN",
-      ].join(","),
+      countryCode: ["BRA", "BOL", "COL", "ECU", "PER", "VEN"].join(","),
       outFields: ["*"],
       maxResults: 1,
       maxSuggestions: 2,

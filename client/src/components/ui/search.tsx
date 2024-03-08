@@ -88,7 +88,7 @@ export function Search<T extends Option>({
                   value={o.value}
                   onSelect={() => onSelect(o)}
                 >
-                  {o.label}
+                  {o.label} <span className="hidden">({o.value})</span>
                 </CommandItem>
               ))}
             </CommandGroup>

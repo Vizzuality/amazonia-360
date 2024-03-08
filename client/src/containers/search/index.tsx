@@ -31,7 +31,7 @@ export default function SearchC() {
         type: "search",
         key: value.key,
         sourceIndex: value.sourceIndex,
-        text: value.value,
+        text: value.label,
       });
       setSearch("");
     },
@@ -51,7 +51,7 @@ export default function SearchC() {
               .map((r) =>
                 r.results.map((r1) => ({
                   label: r1.text,
-                  value: r1.text,
+                  value: r1.key,
                   key: r1.key,
                   sourceIndex: r.sourceIndex,
                 })),
