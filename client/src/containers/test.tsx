@@ -1,6 +1,4 @@
-import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
-
-import { useLocation } from "@/lib/location";
+import { useLocationGeometry } from "@/lib/location";
 import { useGetFeatures } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
@@ -9,19 +7,20 @@ import { DATASETS, DatasetIds } from "@/constants/datasets";
 
 export default function Test({ id }: { id: DatasetIds }) {
   const [location] = useSyncLocation();
-  const features = useLocation(location);
+
+  const GEOMETRY = useLocationGeometry(location);
 
   const { data } = useGetFeatures(
     {
       query: DATASETS[`${id}`].getFeatures({
-        ...(!!features.length && {
-          geometry: geometryEngine.union(features.map((f) => f.geometry)),
+        ...(!!GEOMETRY && {
+          geometry: GEOMETRY,
         }),
       }),
       feature: DATASETS[`${id}`].layer,
     },
     {
-      enabled: !!DATASETS[`${id}`].getFeatures && !!features.length,
+      enabled: !!DATASETS[`${id}`].getFeatures && !!GEOMETRY,
     },
   );
 

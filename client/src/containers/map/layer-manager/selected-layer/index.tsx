@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 
+import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
 
@@ -26,20 +27,24 @@ export default function SelectedLayer() {
   );
   const [location] = useSyncLocation();
 
-  const graphics = useLocation(location);
+  const graphic = useLocation(location);
 
   useEffect(() => {
-    if (graphics) {
-      graphicsLayerRef.current.removeAll();
-      graphicsLayerRef.current.addMany(
-        graphics.map((f) => {
-          f.symbol = symbol;
+    if (graphic) {
+      if (graphic.geometry.type === "point") {
+        const g = geometryEngine.geodesicBuffer(
+          graphic.geometry,
+          30,
+          "kilometers",
+        );
 
-          return f;
-        }),
-      );
+        graphic.geometry = Array.isArray(g) ? g[0] : g;
+      }
+      graphic.symbol = symbol;
+      graphicsLayerRef.current.removeAll();
+      graphicsLayerRef.current.add(graphic);
     }
-  }, [graphics]);
+  }, [graphic]);
 
   return <Layer index={100} layer={graphicsLayerRef.current} />;
 }

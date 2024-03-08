@@ -1,53 +1,55 @@
 import { useMemo } from "react";
 
-import Polygon from "@arcgis/core/geometry/Polygon";
-import Graphic from "@arcgis/core/Graphic";
+import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 
-import { useGetFeaturesId } from "@/lib/query";
+import { useGetSearch } from "@/lib/search";
 
-import { Location } from "@/app/parsers";
+import { Location, SearchLocation } from "@/app/parsers";
 
-import { DATASETS } from "@/constants/datasets";
-
-export const useLocation = (location: Location | null) => {
-  const { data: featureData } = useGetFeaturesId(
-    {
-      id: location?.type === "feature" ? location.FID : null,
-      query:
-        location?.type === "feature"
-          ? DATASETS[`${location?.SOURCE}`].getFeatures({
-              returnGeometry: true,
-            })
-          : undefined,
-      feature:
-        location?.type === "feature"
-          ? DATASETS[`${location?.SOURCE}`].layer
-          : undefined,
-    },
-    {
-      enabled:
-        location?.type === "feature" &&
-        !!DATASETS[`${location?.SOURCE}`].getFeatures &&
-        !!location.FID,
-      select: (data) => data.features,
-    },
-  );
+export const useLocation = (location?: Location | null) => {
+  const { data: featureData } = useGetSearch(location as SearchLocation, {
+    enabled: location?.type === "search",
+  });
 
   return useMemo(() => {
-    if (location?.type === "feature" && featureData) {
-      return featureData;
+    if (location?.type === "search" && featureData) {
+      return featureData.results[0].results[0].feature;
     }
 
-    if (location?.type === "custom") {
-      return [
-        new Graphic({
-          geometry: new Polygon({
-            rings: location.GEOMETRY.rings,
-          }),
-        }),
-      ];
-    }
+    // if (location?.type === "custom") {
+    //   return [
+    //     new Graphic({
+    //       geometry: new Polygon({
+    //         rings: location.GEOMETRY.rings,
+    //       }),
+    //     }),
+    //   ];
+    // }
 
-    return [];
+    return null;
   }, [location, featureData]);
+};
+
+export const useLocationGeometry = (location?: Location | null) => {
+  const LOCATION = useLocation(location);
+
+  const GEOMETRY = useMemo(() => {
+    if (LOCATION?.geometry?.type === "point") {
+      const g = geometryEngine.geodesicBuffer(
+        LOCATION.geometry,
+        30,
+        "kilometers",
+      );
+
+      return Array.isArray(g) ? g[0] : g;
+    }
+
+    if (LOCATION?.geometry?.type === "polygon") {
+      return LOCATION.geometry;
+    }
+
+    return null;
+  }, [LOCATION]);
+
+  return GEOMETRY;
 };

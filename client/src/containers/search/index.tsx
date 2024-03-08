@@ -1,11 +1,8 @@
 import { useCallback, useState } from "react";
 
-import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
-import { useSetAtom } from "jotai";
+import { useGetSuggestions } from "@/lib/search";
 
-import { useGetArcGISSuggestions, useGetSearch } from "@/lib/search";
-
-import { tmpBboxAtom, useSyncLocation } from "@/app/store";
+import { useSyncLocation } from "@/app/store";
 
 import { Search } from "@/components/ui/search";
 
@@ -19,9 +16,8 @@ type Option = {
 export default function SearchC() {
   const [search, setSearch] = useState("");
   const [, setLocation] = useSyncLocation();
-  const setTmpBbox = useSetAtom(tmpBboxAtom);
 
-  const q = useGetArcGISSuggestions(
+  const q = useGetSuggestions(
     { text: search },
     {
       enabled: !!search,
@@ -29,57 +25,17 @@ export default function SearchC() {
     },
   );
 
-  const s = useGetSearch();
-
   const handleSelect = useCallback(
     (value: Option) => {
-      s.mutate(
-        {
-          text: value.value,
-          key: value.key,
-          sourceIndex: value.sourceIndex,
-        },
-        {
-          onSuccess: (data) => {
-            if (data.numResults !== 1)
-              throw new Error("Invalid number of results");
-
-            const TYPE = data.results[0].results[0].feature.geometry.type;
-            const FID = data.results[0].results[0].feature.getAttribute("FID");
-            const SOURCE = data.results[0].source.layer.id;
-
-            if (TYPE !== "point") {
-              setLocation({
-                type: "feature",
-                FID,
-                SOURCE,
-              });
-            }
-
-            if (TYPE === "point") {
-              const g = geometryEngine.geodesicBuffer(
-                data.results[0].results[0].feature.geometry,
-                30,
-                "kilometers",
-                true,
-              );
-
-              if (!Array.isArray(g)) {
-                setLocation({
-                  type: "custom",
-                  GEOMETRY: g.toJSON(),
-                });
-              }
-            }
-
-            setSearch("");
-
-            setTmpBbox(data.results[0].results[0].extent);
-          },
-        },
-      );
+      setLocation({
+        type: "search",
+        key: value.key,
+        sourceIndex: value.sourceIndex,
+        text: value.value,
+      });
+      setSearch("");
     },
-    [setLocation, setTmpBbox, s],
+    [setLocation],
   );
 
   return (
