@@ -1,4 +1,11 @@
-import { QueryFunction, UseQueryOptions, useQuery } from "react-query";
+import {
+  MutationFunction,
+  QueryFunction,
+  UseMutationOptions,
+  UseQueryOptions,
+  useMutation,
+  useQuery,
+} from "react-query";
 
 import SearchVM from "@arcgis/core/widgets/Search/SearchViewModel";
 
@@ -191,4 +198,47 @@ export const useGetSearch = <
     queryFn,
     ...options,
   });
+};
+
+/**
+ ************************************************************
+ ************************************************************
+ * Search
+ * useGetMutationSearch
+ ************************************************************
+ ************************************************************
+ */
+
+export const getSearchMutationOptions = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    Awaited<ReturnType<typeof getSearch>>,
+    TError,
+    __esri.SuggestResult,
+    TContext
+  >,
+): UseMutationOptions<
+  Awaited<ReturnType<typeof getSearch>>,
+  TError,
+  __esri.SuggestResult,
+  TContext
+> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof getSearch>>,
+    __esri.SuggestResult
+  > = (props) => getSearch(props);
+
+  return { mutationFn, ...options };
+};
+
+export const useGetMutationSearch = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    Awaited<ReturnType<typeof getSearch>>,
+    TError,
+    __esri.SuggestResult,
+    TContext
+  >,
+) => {
+  const mutationOptions = getSearchMutationOptions(options);
+
+  return useMutation(mutationOptions);
 };

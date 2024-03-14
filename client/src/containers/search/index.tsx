@@ -1,8 +1,11 @@
 import { useCallback, useState } from "react";
 
-import { useGetSuggestions } from "@/lib/search";
+import { useSetAtom } from "jotai";
 
-import { useSyncLocation } from "@/app/store";
+import { getGeometryWithBuffer } from "@/lib/location";
+import { useGetMutationSearch, useGetSuggestions } from "@/lib/search";
+
+import { tmpBboxAtom, useSyncLocation } from "@/app/store";
 
 import { Search } from "@/components/ui/search";
 
@@ -16,6 +19,7 @@ type Option = {
 export default function SearchC() {
   const [search, setSearch] = useState("");
   const [, setLocation] = useSyncLocation();
+  const setTmpBbox = useSetAtom(tmpBboxAtom);
 
   const q = useGetSuggestions(
     { text: search },
@@ -25,17 +29,40 @@ export default function SearchC() {
     },
   );
 
+  const m = useGetMutationSearch();
+
   const handleSelect = useCallback(
     (value: Option) => {
-      setLocation({
-        type: "search",
-        key: value.key,
-        sourceIndex: value.sourceIndex,
-        text: value.label,
-      });
-      setSearch("");
+      m.mutate(
+        {
+          key: value.key,
+          sourceIndex: value.sourceIndex,
+          text: value.label,
+        },
+        {
+          onSuccess: (data) => {
+            setLocation({
+              type: "search",
+              key: value.key,
+              sourceIndex: value.sourceIndex,
+              text: value.label,
+            });
+            setSearch("");
+
+            if (data?.results[0].results[0].feature) {
+              const g = getGeometryWithBuffer(
+                data.results[0].results[0].feature,
+              );
+
+              if (g) {
+                setTmpBbox(g.extent);
+              }
+            }
+          },
+        },
+      );
     },
-    [setLocation],
+    [m, setLocation, setTmpBbox],
   );
 
   return (

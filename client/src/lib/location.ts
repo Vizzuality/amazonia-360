@@ -30,22 +30,26 @@ export const useLocation = (location?: Location | null) => {
   }, [location, featureData]);
 };
 
+export const getGeometryWithBuffer = (graphic: __esri.Graphic | null) => {
+  if (graphic?.geometry?.type === "point") {
+    const g = geometryEngine.geodesicBuffer(graphic.geometry, 30, "kilometers");
+
+    return Array.isArray(g) ? g[0] : g;
+  }
+
+  if (graphic?.geometry?.type === "polygon") {
+    return graphic.geometry;
+  }
+
+  return null;
+};
+
 export const useLocationGeometry = (location?: Location | null) => {
   const LOCATION = useLocation(location);
 
   const GEOMETRY = useMemo(() => {
-    if (LOCATION?.geometry?.type === "point") {
-      const g = geometryEngine.geodesicBuffer(
-        LOCATION.geometry,
-        30,
-        "kilometers",
-      );
-
-      return Array.isArray(g) ? g[0] : g;
-    }
-
-    if (LOCATION?.geometry?.type === "polygon") {
-      return LOCATION.geometry;
+    if (LOCATION) {
+      return getGeometryWithBuffer(LOCATION);
     }
 
     return null;
