@@ -30,12 +30,12 @@ export const DATASETS = {
       }),
     }),
 
-    getFeatures: new Query({
-      where: "FID is not null",
-      outFields: ["*"],
-      returnGeometry: false,
-      geometry: GEOMETRY_TEST,
-    }),
+    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
   },
   area_afp: {
     layer: new FeatureLayer({
@@ -53,7 +53,7 @@ export const DATASETS = {
         }),
       }),
     }),
-    getFeatures: undefined,
+    getFeatures: () => undefined,
   },
   ciudades_capitales: {
     layer: new FeatureLayer({
@@ -61,12 +61,12 @@ export const DATASETS = {
       title: "Ciudades capitales",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_CAPITALES_ADMIN/FeatureServer/0",
     }),
-    getFeatures: new Query({
-      where: "FID is not null",
-      outFields: ["*"],
-      returnGeometry: false,
-      geometry: GEOMETRY_TEST,
-    }),
+    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
   },
   frontera_internacional: {
     layer: new FeatureLayer({
@@ -74,7 +74,7 @@ export const DATASETS = {
       title: "Vectores frontera internacional",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/REFERENCIA_FRONTERA_INTERNACIONAL/FeatureServer/0",
     }),
-    getFeatures: undefined,
+    getFeatures: () => undefined,
   },
   tierras_indigenas: {
     layer: new FeatureLayer({
@@ -91,12 +91,12 @@ export const DATASETS = {
         }),
       }),
     }),
-    getFeatures: new Query({
-      where: "FID is not null",
-      outFields: ["*"],
-      returnGeometry: false,
-      geometry: GEOMETRY_TEST,
-    }),
+    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
   },
   tipos_climaticos: {
     layer: new FeatureLayer({
@@ -104,12 +104,12 @@ export const DATASETS = {
       title: "Tipos climáticos (Koepen)",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tipos_climaticos_KOEPEN/FeatureServer/0",
     }),
-    getFeatures: new Query({
-      where: "FID is not null",
-      outFields: ["*"],
-      returnGeometry: false,
-      geometry: GEOMETRY_TEST,
-    }),
+    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
   },
   biomas: {
     layer: new FeatureLayer({
@@ -117,12 +117,12 @@ export const DATASETS = {
       title: "Biomas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Biomas/FeatureServer/0",
     }),
-    getFeatures: new Query({
-      where: "FID is not null",
-      outFields: ["*"],
-      returnGeometry: false,
-      geometry: GEOMETRY_TEST,
-    }),
+    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
   },
   ecosistemas: {
     layer: new FeatureLayer({
@@ -192,12 +192,12 @@ export const DATASETS = {
         ],
       }),
     }),
-    getFeatures: new Query({
-      where: "FID is not null",
-      outFields: ["*"],
-      returnGeometry: false,
-      geometry: GEOMETRY_TEST,
-    }),
+    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
   },
   cuencas_hidrograficas: {
     layer: new FeatureLayer({
@@ -205,12 +205,12 @@ export const DATASETS = {
       title: "Cuenca hidrográfica, pertenencia a grandes cuencas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Grandes_cuencas_hidrograficas/FeatureServer/0",
     }),
-    getFeatures: new Query({
-      where: "FID is not null",
-      outFields: ["*"],
-      returnGeometry: false,
-      geometry: GEOMETRY_TEST,
-    }),
+    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
   },
   areas_protegidas: {
     layer: new FeatureLayer({
@@ -218,12 +218,12 @@ export const DATASETS = {
       title: "Áreas protegidas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Areas_protegidas/FeatureServer/0",
     }),
-    getFeatures: new Query({
-      where: "FID is not null",
-      outFields: ["*"],
-      returnGeometry: false,
-      geometry: GEOMETRY_TEST,
-    }),
+    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
   },
 } as const;
 

@@ -1,15 +1,26 @@
-import { useGetArcGISQueryFeatures } from "@/lib/query";
+import { useLocationGeometry } from "@/lib/location";
+import { useGetFeatures } from "@/lib/query";
+
+import { useSyncLocation } from "@/app/store";
 
 import { DATASETS, DatasetIds } from "@/constants/datasets";
 
 export default function Test({ id }: { id: DatasetIds }) {
-  const { data } = useGetArcGISQueryFeatures(
+  const [location] = useSyncLocation();
+
+  const GEOMETRY = useLocationGeometry(location);
+
+  const { data } = useGetFeatures(
     {
-      query: DATASETS[`${id}`].getFeatures,
+      query: DATASETS[`${id}`].getFeatures({
+        ...(!!GEOMETRY && {
+          geometry: GEOMETRY,
+        }),
+      }),
       feature: DATASETS[`${id}`].layer,
     },
     {
-      enabled: !!DATASETS[`${id}`].getFeatures,
+      enabled: !!DATASETS[`${id}`].getFeatures && !!GEOMETRY,
     },
   );
 
