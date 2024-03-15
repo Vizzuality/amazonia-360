@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 
-import { Inter } from "next/font/google";
+import { Montserrat } from "next/font/google";
 
 import "@/styles/globals.css";
 import "@arcgis/core/assets/esri/themes/light/main.css";
 import LayoutProviders from "@/app/layout-providers";
 
-const inter = Inter({ subsets: ["latin"] });
+const montserrat = Montserrat({
+  weight: ["500", "600", "700"],
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,7 +24,7 @@ export default function RootLayout({
   return (
     <LayoutProviders>
       <html lang="en">
-        <body className={inter.className}>{children}</body>
+        <body className={montserrat.className}>{children}</body>
       </html>
     </LayoutProviders>
   );

@@ -31,7 +31,7 @@ export default function ArcChart({ value, color = "#FFDA00" }: ArcChartProps) {
   const { format } = formatPercentage({});
 
   return (
-    <div ref={parentRef} className="w-full h-28">
+    <div ref={parentRef} className="w-full h-28 relative">
       <svg width={width} height={height}>
         <Group top={height} left={width / 2}>
           <Arc
@@ -53,7 +53,7 @@ export default function ArcChart({ value, color = "#FFDA00" }: ArcChartProps) {
           />
         </Group>
       </svg>
-      <span className="block -translate-y-full text-center text-4xl">
+      <span className="absolute top-full left-1/2 block -translate-x-1/2 -translate-y-full text-center text-4xl font-bold">
         {format(value)}
       </span>
     </div>

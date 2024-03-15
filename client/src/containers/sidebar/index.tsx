@@ -21,7 +21,7 @@ export default function Sidebar() {
 
           <Sketch />
 
-          <ArcChart value={0.75} />
+          <ArcChart value={0.84} />
 
           <Layers />
 

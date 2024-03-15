@@ -64,6 +64,9 @@ export default function Map({
         }),
       });
 
+      // Remove the default widgets
+      mapViewRef.current.ui.empty("top-left");
+
       // check if the map is loaded
       mapViewRef.current.when(() => {
         if (!mapViewRef.current || !mapRef.current) {
@@ -74,9 +77,6 @@ export default function Map({
           view: mapViewRef.current,
         });
         setLoaded(true);
-
-        // Remove the default widgets
-        mapViewRef.current.ui.empty("top-left");
       });
 
       // Listen to extent changes
