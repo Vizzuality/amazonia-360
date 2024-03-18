@@ -23,10 +23,13 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@t3-oss/env-nextjs": "^0.7.3",
+    "@visx/annotation": "^3.3.0",
     "@visx/group": "^3.3.0",
+    "@visx/hierarchy": "^3.3.0",
     "@visx/responsive": "^3.10.2",
     "@visx/scale": "^3.5.0",
     "@visx/shape": "^3.5.0",
+    "chroma-js": "^2.4.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.1",
@@ -42,6 +45,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/chroma-js": "^2.4.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
