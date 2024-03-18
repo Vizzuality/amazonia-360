@@ -4,8 +4,6 @@ import { useState } from "react";
 
 import { QueryClient, QueryClientProvider } from "react-query";
 
-import { MapProvider } from "@/components/map/provider";
-
 export default function LayoutProviders({
   children,
 }: {
@@ -25,8 +23,6 @@ export default function LayoutProviders({
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <MapProvider>{children}</MapProvider>
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 }

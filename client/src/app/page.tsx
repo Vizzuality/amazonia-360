@@ -1,12 +1,7 @@
-import Map from "@/containers/map";
-import Sidebar from "@/containers/sidebar";
-
-export default function Home() {
+export default function HomePage() {
   return (
     <main className="flex justify-between">
-      <Sidebar />
-
-      <Map />
+      <h1>Home</h1>
     </main>
   );
 }

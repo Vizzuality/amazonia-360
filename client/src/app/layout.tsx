@@ -6,6 +6,8 @@ import "@/styles/globals.css";
 import "@arcgis/core/assets/esri/themes/light/main.css";
 import LayoutProviders from "@/app/layout-providers";
 
+import Header from "@/containers/header";
+
 const montserrat = Montserrat({
   weight: ["500", "600", "700"],
   subsets: ["latin"],
@@ -24,7 +26,10 @@ export default function RootLayout({
   return (
     <LayoutProviders>
       <html lang="en">
-        <body className={montserrat.className}>{children}</body>
+        <body className={montserrat.className}>
+          <Header />
+          {children}
+        </body>
       </html>
     </LayoutProviders>
   );
