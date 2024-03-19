@@ -4,9 +4,9 @@ import * as React from "react";
 
 import { UseQueryResult } from "react-query";
 
-import { Cross1Icon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { Command as CommandPrimitive } from "cmdk";
+import { LuSearch, LuX } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
@@ -44,10 +44,10 @@ export function Search<T extends Option>({
   return (
     <Popover>
       <PopoverTrigger ref={triggerRef} className="w-full relative">
-        <MagnifyingGlassIcon className="absolute top-1/2 left-3 -translate-y-1/2 h-8 w-8 text-cyan-500" />
+        <LuSearch className="absolute top-1/2 left-6 -translate-y-1/2 h-8 w-8 text-blue-500" />
         <div
           className={cn(
-            "flex w-full rounded-[40px] bg-transparent py-5 pl-12 text-sm border-b leading-[normal] bg-white",
+            "flex w-full rounded-[40px] bg-transparent py-5 h-16 pl-16 text-sm bg-white items-center",
             !value && "text-gray-500",
           )}
         >
@@ -59,8 +59,7 @@ export function Search<T extends Option>({
         <PopoverPrimitive.Content
           align="start"
           sideOffset={
-            ((triggerRef.current?.getBoundingClientRect()?.height || 0) + 1) *
-              -1 ?? 0
+            (triggerRef.current?.getBoundingClientRect()?.height || 0) * -1 ?? 0
           }
           className={cn(
             "z-50 w-popover-width border-0 rounded-[40px] bg-white overflow-hidden p-0 text-popover-foreground shadow-md outline-none",
@@ -68,13 +67,13 @@ export function Search<T extends Option>({
         >
           <Command shouldFilter={false}>
             <div className="w-full relative" cmdk-input-wrapper="">
-              <MagnifyingGlassIcon className="absolute top-1/2 left-3 -translate-y-1/2 h-8 w-8 text-cyan-500" />
+              <LuSearch className="absolute top-1/2 left-6 -translate-y-1/2 h-8 w-8 text-blue-500" />
 
               <CommandPrimitive.Input
                 value={value}
                 placeholder={placeholder ?? "Search..."}
                 className={cn(
-                  "flex w-full bg-transparent py-5 pl-12 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+                  "flex w-full bg-transparent h-16 py-5 pl-16 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
                 )}
                 onValueChange={(e) => {
                   onChange(e);
@@ -89,7 +88,7 @@ export function Search<T extends Option>({
                     onSelect(null);
                   }}
                 >
-                  <Cross1Icon className="text-current" />
+                  <LuX className="text-current" />
                 </button>
               )}
             </div>

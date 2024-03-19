@@ -7,6 +7,7 @@ import ArcGISExtent from "@arcgis/core/geometry/Extent";
 import * as ArcGISprojection from "@arcgis/core/geometry/projection";
 import ArcGISMap from "@arcgis/core/Map";
 import ArcGISMapView from "@arcgis/core/views/MapView";
+import ArcGISScaleBar from "@arcgis/core/widgets/ScaleBar";
 
 import { DEFAULT_MAP_VIEW_PROPERTIES } from "@/constants/map";
 
@@ -66,7 +67,17 @@ export default function Map({
 
       // Remove the default widgets
       mapViewRef.current.ui.empty("top-left");
+
+      // Set the padding
       mapViewRef.current.padding.left = window.innerWidth / 2;
+
+      const scaleBar = new ArcGISScaleBar({
+        view: mapViewRef.current,
+        unit: "dual",
+        style: "ruler",
+      });
+
+      mapViewRef.current.ui.add(scaleBar, "bottom-right");
 
       // check if the map is loaded
       mapViewRef.current.when(() => {
