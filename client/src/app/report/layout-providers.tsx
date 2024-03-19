@@ -11,7 +11,7 @@ export default function LayoutProviders({
 }) {
   return (
     <JotaiProvider>
-      <MapProvider>{children}</MapProvider>;
+      <MapProvider>{children}</MapProvider>
     </JotaiProvider>
   );
 }

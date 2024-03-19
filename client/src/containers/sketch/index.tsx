@@ -25,14 +25,10 @@ export default function Sketch() {
   };
 
   return (
-    <>
-      <h1 className="text-2xl">Sketch</h1>
-
-      <div className="flex space-x-1">
-        <Button onClick={(e) => handleClick(e, "polygon")}>Polygon</Button>
-        <Button onClick={(e) => handleClick(e, "polyline")}>Polyline</Button>
-        <Button onClick={(e) => handleClick(e, "point")}>Point</Button>
-      </div>
-    </>
+    <div className="flex space-x-1">
+      <Button onClick={(e) => handleClick(e, "polygon")}>Polygon</Button>
+      <Button onClick={(e) => handleClick(e, "polyline")}>Polyline</Button>
+      <Button onClick={(e) => handleClick(e, "point")}>Point</Button>
+    </div>
   );
 }

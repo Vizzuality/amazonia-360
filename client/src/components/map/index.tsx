@@ -66,6 +66,7 @@ export default function Map({
 
       // Remove the default widgets
       mapViewRef.current.ui.empty("top-left");
+      mapViewRef.current.padding.left = window.innerWidth / 2;
 
       // check if the map is loaded
       mapViewRef.current.when(() => {

@@ -4,21 +4,14 @@ import * as React from "react";
 
 import { UseQueryResult } from "react-query";
 
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { Cross1Icon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
+import { Command as CommandPrimitive } from "cmdk";
 
 import { cn } from "@/lib/utils";
 
-import {
-  Command,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
+import { Popover, PopoverTrigger } from "@/components/ui/popover";
 
 export type Option = {
   label: string;
@@ -29,14 +22,16 @@ export type Option = {
 
 export type SearchProps<T> = {
   value: string;
+  open: boolean;
   options: T[];
   placeholder?: string;
   onChange: (e: string) => void;
-  onSelect: (o: T) => void;
+  onSelect: (o: T | null) => void;
 } & UseQueryResult;
 
 export function Search<T extends Option>({
   value,
+  open,
   options,
   placeholder,
   isFetching,
@@ -44,13 +39,15 @@ export function Search<T extends Option>({
   onChange,
   onSelect,
 }: SearchProps<T>) {
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
+
   return (
     <Popover>
-      <PopoverTrigger className="w-full relative">
-        <MagnifyingGlassIcon className="absolute top-1/2 left-3 -translate-y-1/2 h-4 w-4 opacity-50" />
+      <PopoverTrigger ref={triggerRef} className="w-full relative">
+        <MagnifyingGlassIcon className="absolute top-1/2 left-3 -translate-y-1/2 h-8 w-8 text-cyan-500" />
         <div
           className={cn(
-            "flex h-10 w-full rounded-md bg-transparent py-3 pl-8 text-sm border-b leading-[normal]",
+            "flex w-full rounded-[40px] bg-transparent py-5 pl-12 text-sm border-b leading-[normal] bg-white",
             !value && "text-gray-500",
           )}
         >
@@ -58,43 +55,66 @@ export function Search<T extends Option>({
         </div>
       </PopoverTrigger>
 
-      <PopoverContent
-        align="start"
-        className={cn(
-          "w-popover-width p-0 border-0",
-          "data-[state=open]:animate-none data-[state=closed]:animate-none data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-100 data-[state=open]:zoom-in-100 data-[side=bottom]:slide-in-from-top-0 data-[side=left]:slide-in-from-right-0 data-[side=right]:slide-in-from-left-0 data-[side=top]:slide-in-from-bottom-0",
-        )}
-        sideOffset={-38}
-      >
-        <Command shouldFilter={false}>
-          <CommandInput
-            value={value}
-            placeholder={placeholder ?? "Search..."}
-            className="h-9"
-            onValueChange={(e) => {
-              onChange(e);
-            }}
-          />
-
-          {!options.length && !!value && !isFetching && isFetched && (
-            <p className="py-6 text-center text-sm">No results found.</p>
+      <PopoverPrimitive.Portal>
+        <PopoverPrimitive.Content
+          align="start"
+          sideOffset={
+            ((triggerRef.current?.getBoundingClientRect()?.height || 0) + 1) *
+              -1 ?? 0
+          }
+          className={cn(
+            "z-50 w-popover-width border-0 rounded-[40px] bg-white overflow-hidden p-0 text-popover-foreground shadow-md outline-none",
           )}
+        >
+          <Command shouldFilter={false}>
+            <div className="w-full relative" cmdk-input-wrapper="">
+              <MagnifyingGlassIcon className="absolute top-1/2 left-3 -translate-y-1/2 h-8 w-8 text-cyan-500" />
 
-          {!!options.length && (
-            <CommandGroup>
-              {options.map((o) => (
-                <CommandItem
-                  key={o.value}
-                  value={o.value}
-                  onSelect={() => onSelect(o)}
+              <CommandPrimitive.Input
+                value={value}
+                placeholder={placeholder ?? "Search..."}
+                className={cn(
+                  "flex w-full bg-transparent py-5 pl-12 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+                )}
+                onValueChange={(e) => {
+                  onChange(e);
+                }}
+              />
+
+              {value && (
+                <button
+                  type="button"
+                  className="absolute top-1/2 right-4 -translate-y-1/2 h-4 w-4 hover:text-cyan-500 focus:outline-none"
+                  onClick={() => {
+                    onSelect(null);
+                  }}
                 >
-                  {o.label} <span className="hidden">({o.value})</span>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          )}
-        </Command>
-      </PopoverContent>
+                  <Cross1Icon className="text-current" />
+                </button>
+              )}
+            </div>
+
+            {open && !options.length && !!value && !isFetching && isFetched && (
+              <p className="py-6 text-center text-sm">No results found.</p>
+            )}
+
+            {open && !!options.length && (
+              <CommandGroup className="px-2 pb-5">
+                {options.map((o) => (
+                  <CommandItem
+                    key={o.value}
+                    value={o.value}
+                    className="px-4"
+                    onSelect={() => onSelect(o)}
+                  >
+                    {o.label} <span className="hidden">({o.value})</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+          </Command>
+        </PopoverPrimitive.Content>
+      </PopoverPrimitive.Portal>
     </Popover>
   );
 }

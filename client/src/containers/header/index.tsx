@@ -27,8 +27,8 @@ export default function Header() {
         <nav className="flex space-x-4">
           <Link
             className={cn({
-              "hover:text-blue-500 text-sm": true,
-              "text-blue-500": pathname.includes("/report"),
+              "hover:text-cyan-500 text-sm": true,
+              "text-cyan-500": pathname.includes("/report"),
             })}
             href="/report"
           >
@@ -36,8 +36,8 @@ export default function Header() {
           </Link>
           <Link
             className={cn({
-              "hover:text-blue-500 text-sm": true,
-              "text-blue-500": pathname.includes("/hub"),
+              "hover:text-cyan-500 text-sm": true,
+              "text-cyan-500": pathname.includes("/hub"),
             })}
             href="/hub"
           >
