@@ -105,7 +105,6 @@ export default function Map({
 
       return () => {
         onMapUnmount(id);
-        mapViewRef.current!.destroy();
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -3,7 +3,7 @@
 import { useSyncLocation } from "@/app/store";
 
 import Search from "@/containers/search";
-// import Sketch from "@/containers/sketch";
+import Sketch from "@/containers/sketch";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -33,7 +33,7 @@ export default function ReportLocation() {
 
           {location && <Button>Confirm location</Button>}
 
-          {/* <Sketch /> */}
+          <Sketch />
         </div>
       </ScrollArea>
     </aside>

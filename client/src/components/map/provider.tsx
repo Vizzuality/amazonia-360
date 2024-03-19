@@ -3,7 +3,7 @@ import {
   createContext,
   useCallback,
   useContext,
-  useState,
+  useRef,
 } from "react";
 
 export type MapProps = {
@@ -24,37 +24,21 @@ export const MapContext = createContext<MapContextProps>({
 });
 
 export const MapProvider: React.FC<{ children?: ReactNode }> = (props) => {
-  const [maps, setMaps] = useState<{ [id: string]: MapProps }>({});
+  const maps = useRef<{ [id: string]: MapProps }>({});
 
   const onMapMount = useCallback(
-    (id: string = "default", map: MapProps) =>
-      setMaps((prev) => {
-        if (id === "current") {
-          throw new Error("'current' cannot be used as map id");
-        }
-        if (prev[id]) {
-          throw new Error(`Multiple maps with the same id: ${id}`);
-        }
-        return { ...prev, [id]: map };
-      }),
+    (id: string = "default", map: MapProps) => (maps.current[id] = map),
     [],
   );
 
   const onMapUnmount = useCallback((id: string = "default") => {
-    setMaps((prev) => {
-      if (prev[id]) {
-        const nextMaps = { ...prev };
-        delete nextMaps[id];
-        return nextMaps;
-      }
-      return prev;
-    });
+    delete maps.current[id];
   }, []);
 
   return (
     <MapContext.Provider
       value={{
-        maps,
+        maps: maps.current,
         onMapMount,
         onMapUnmount,
       }}

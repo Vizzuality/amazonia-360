@@ -17,8 +17,7 @@ export const datasetsParser = parseAsArrayOf(
 ).withDefault([]);
 
 export const bboxParser = parseAsArrayOf(parseAsFloat).withDefault([
-  -86.72417279662345, -32.612321039385954, -37.944875921636424,
-  21.011946256491825,
+  -85.41285153807887, -34.1915564718903, -29.16285153809382, 18.111690313034348,
 ]);
 
 export type SearchLocation = {
