@@ -2,7 +2,7 @@
 
 import { DATASETS } from "@/constants/datasets";
 
-import SelectedLayer from "@/containers/map/layer-manager/selected-layer";
+import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
 
 import Layer from "@/components/map/layers";
 

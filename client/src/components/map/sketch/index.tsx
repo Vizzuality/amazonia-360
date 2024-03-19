@@ -12,8 +12,8 @@ import { useMap } from "@/components/map/provider";
 export type SketchProps = {
   type?: "point" | "polygon" | "polyline";
   enabled?: boolean;
-  onCreate?: (layer: GraphicsLayer) => void;
-  onCancel?: (layer: GraphicsLayer) => void;
+  onCreate?: (graphic: __esri.Graphic) => void;
+  onCancel?: () => void;
 };
 
 export default function Sketch({
@@ -24,7 +24,7 @@ export default function Sketch({
 }: SketchProps) {
   const mapInstance = useMap();
 
-  const layerRef = useRef<GraphicsLayer>(new GraphicsLayer());
+  const layerRef = useRef<__esri.GraphicsLayer>(new GraphicsLayer());
 
   const sketchViewModelRef = useRef<SketchViewModel>();
   const sketchViewModelOnCreateRef = useRef<IHandle>();
@@ -37,13 +37,13 @@ export default function Sketch({
         if (type !== undefined) {
           g.symbol = sketchViewModelRef.current[`${type}Symbol`].clone();
         }
-        layerRef.current.add(g);
+        // layerRef.current.add(g);
 
-        onCreate && onCreate(layerRef.current);
+        if (onCreate) onCreate(g);
       }
 
       if (e.state === "cancel") {
-        onCancel && onCancel(layerRef.current);
+        if (onCancel) onCancel();
       }
     },
     [type, onCreate, onCancel],
@@ -71,7 +71,7 @@ export default function Sketch({
         },
       }),
       polylineSymbol: new SimpleLineSymbol({
-        color: "#009ADEFF",
+        color: "#009ADE11",
         width: 2,
       }),
       polygonSymbol: new SimpleFillSymbol({

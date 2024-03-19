@@ -134,14 +134,14 @@ export const useGetSuggestions = <
  ************************************************************
  */
 
-export type GetSearchParams = __esri.SuggestResult | undefined;
+export type GetSearchParams = __esri.SuggestResult | null | undefined;
 export const getSearch = async (params: GetSearchParams) => {
   if (!params) return null;
 
   const { text, key, sourceIndex } = params;
 
   if (!text || !key || sourceIndex === undefined) {
-    throw new Error("text, key and sourceIndex are required");
+    console.error("text, key and sourceIndex are required");
   }
 
   return searchVM.search(params);
@@ -153,7 +153,7 @@ export const getSearchQueryKey = (params: GetSearchParams) => {
   const { text, key, sourceIndex } = params;
 
   if (!text || !key || sourceIndex === undefined) {
-    throw new Error("text, key and sourceIndex are required");
+    console.error("text, key and sourceIndex are required");
   }
 
   return ["arcgis", "suggest", text, key, sourceIndex] as const;

@@ -40,6 +40,7 @@ export default function SelectedLayer() {
 
         graphic.geometry = Array.isArray(g) ? g[0] : g;
       }
+
       graphic.symbol = symbol;
       graphicsLayerRef.current.removeAll();
       graphicsLayerRef.current.add(graphic);

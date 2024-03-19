@@ -1,6 +1,3 @@
-import Point from "@arcgis/core/geometry/Point";
-import Polygon from "@arcgis/core/geometry/Polygon";
-import Polyline from "@arcgis/core/geometry/Polyline";
 import {
   parseAsArrayOf,
   parseAsFloat,
@@ -25,8 +22,8 @@ export type SearchLocation = {
 } & __esri.SuggestResult;
 
 export type CustomLocation = {
-  type: "custom";
-  GEOMETRY: Point | Polygon | Polyline;
+  type: __esri.Geometry["type"];
+  geometry: Record<string, unknown>;
 };
 
 export type Location = SearchLocation | CustomLocation;

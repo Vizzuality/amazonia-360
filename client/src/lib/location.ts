@@ -1,33 +1,57 @@
 import { useMemo } from "react";
 
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
+import Point from "@arcgis/core/geometry/Point";
+import Polygon from "@arcgis/core/geometry/Polygon";
+import Polyline from "@arcgis/core/geometry/Polyline";
+import Graphic from "@arcgis/core/Graphic";
 
 import { useGetSearch } from "@/lib/search";
 
-import { Location, SearchLocation } from "@/app/parsers";
+import { CustomLocation, Location, SearchLocation } from "@/app/parsers";
 
 export const useLocation = (location?: Location | null) => {
-  const { data: featureData } = useGetSearch(location as SearchLocation, {
-    enabled: location?.type === "search",
-  });
+  const { data: featureData } = useGetSearch(
+    location?.type === "search" ? (location as SearchLocation) : null,
+    {
+      enabled: location?.type === "search",
+    },
+  );
 
   return useMemo(() => {
     if (location?.type === "search" && featureData) {
       return featureData.results[0].results[0].feature;
     }
 
-    // if (location?.type === "custom") {
-    //   return [
-    //     new Graphic({
-    //       geometry: new Polygon({
-    //         rings: location.GEOMETRY.rings,
-    //       }),
-    //     }),
-    //   ];
-    // }
+    if (location?.type && location?.type !== "search") {
+      const geo = getGeometryByType(location);
+
+      if (!geo) return null;
+
+      const graphic = new Graphic({
+        geometry: geo,
+      });
+      return graphic;
+    }
 
     return null;
   }, [location, featureData]);
+};
+
+export const getGeometryByType = (location: CustomLocation) => {
+  if (location?.type === "point") {
+    return Point.fromJSON(location.geometry);
+  }
+
+  if (location?.type === "polygon") {
+    return Polygon.fromJSON(location.geometry);
+  }
+
+  if (location?.type === "polyline") {
+    return Polyline.fromJSON(location.geometry);
+  }
+
+  return null;
 };
 
 export const getGeometryWithBuffer = (graphic: __esri.Graphic | null) => {

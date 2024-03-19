@@ -31,9 +31,13 @@ export default function ReportLocation() {
 
           <Search />
 
-          {location && <Button>Confirm location</Button>}
-
           <Sketch />
+
+          {location && (
+            <Button size="lg" variant="destructive">
+              Confirm location
+            </Button>
+          )}
         </div>
       </ScrollArea>
     </aside>
