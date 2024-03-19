@@ -91,6 +91,13 @@ export default function Map({
         setLoaded(true);
       });
 
+      ArcGISReactiveUtils.when(
+        () => mapViewRef.current!.width,
+        () => {
+          mapViewRef.current!.padding.left = window.innerWidth / 2;
+        },
+      );
+
       // Listen to extent changes
       ArcGISReactiveUtils.when(
         () => mapViewRef.current!.extent,
