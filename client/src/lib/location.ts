@@ -54,15 +54,21 @@ export const getGeometryByType = (location: CustomLocation) => {
   return null;
 };
 
-export const getGeometryWithBuffer = (graphic: __esri.Graphic | null) => {
-  if (graphic?.geometry?.type === "point") {
-    const g = geometryEngine.geodesicBuffer(graphic.geometry, 30, "kilometers");
+export const getGeometryWithBuffer = (geometry: __esri.Geometry | null) => {
+  if (geometry?.type === "point") {
+    const g = geometryEngine.geodesicBuffer(geometry, 30, "kilometers");
 
     return Array.isArray(g) ? g[0] : g;
   }
 
-  if (graphic?.geometry?.type === "polygon") {
-    return graphic.geometry;
+  if (geometry?.type === "polyline") {
+    const g = geometryEngine.geodesicBuffer(geometry, 3, "kilometers");
+
+    return Array.isArray(g) ? g[0] : g;
+  }
+
+  if (geometry?.type === "polygon") {
+    return geometry;
   }
 
   return null;
@@ -73,7 +79,7 @@ export const useLocationGeometry = (location?: Location | null) => {
 
   const GEOMETRY = useMemo(() => {
     if (LOCATION) {
-      return getGeometryWithBuffer(LOCATION);
+      return getGeometryWithBuffer(LOCATION.geometry);
     }
 
     return null;

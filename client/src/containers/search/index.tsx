@@ -67,7 +67,7 @@ export default function SearchC() {
             if (data?.results[0].results[0].feature) {
               const d = data.results[0].results[0];
               const s = d.name;
-              const g = getGeometryWithBuffer(d.feature);
+              const g = getGeometryWithBuffer(d.feature.geometry);
 
               if (s) {
                 setSearch(s);

@@ -55,15 +55,15 @@ export function Search<T extends Option>({
         </div>
 
         {value && (
-          <button
-            type="button"
-            className="absolute top-1/2 right-4 -translate-y-1/2 h-4 w-4 hover:text-cyan-500 focus:outline-none"
+          <span
+            role="button"
+            className="absolute top-1/2 right-4 -translate-y-1/2 h-4 w-4 hover:text-cyan-500 focus:outline-none block"
             onClick={() => {
               onSelect(null);
             }}
           >
             <LuX className="text-current" />
-          </button>
+          </span>
         )}
       </PopoverTrigger>
 

@@ -7,6 +7,8 @@ import dynamic from "next/dynamic";
 import { useAtom } from "jotai";
 import { useDebounce } from "rooks";
 
+import { getGeometryWithBuffer } from "@/lib/location";
+
 import {
   sketchAtom,
   tmpBboxAtom,
@@ -39,7 +41,11 @@ export default function MapContainer() {
         type: graphic.geometry.type,
         geometry: graphic.geometry.toJSON(),
       });
-      setTmpBbox(graphic.geometry.extent);
+
+      const g = getGeometryWithBuffer(graphic.geometry);
+      if (g) {
+        setTmpBbox(g.extent);
+      }
     },
     [setTmpBbox, setSketch, setLocation],
   );

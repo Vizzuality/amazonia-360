@@ -1,23 +1,16 @@
 import { useEffect, useRef } from "react";
 
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
+import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
-import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
 
 import { useLocation } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/store";
 
-import Layer from "@/components/map/layers/graphics";
+import { BUFFER_SYMBOL, SYMBOLS } from "@/constants/map";
 
-const symbol = new SimpleFillSymbol({
-  color: [0, 0, 0, 0],
-  style: "solid",
-  outline: {
-    width: 1,
-    color: "#004E70",
-  },
-});
+import Layer from "@/components/map/layers/graphics";
 
 export default function SelectedLayer() {
   const graphicsLayerRef = useRef<GraphicsLayer>(
@@ -31,19 +24,31 @@ export default function SelectedLayer() {
 
   useEffect(() => {
     if (graphic) {
-      if (graphic.geometry.type === "point") {
+      const buffer = new Graphic({
+        symbol: BUFFER_SYMBOL,
+      });
+      if (
+        graphic.geometry.type === "point" ||
+        graphic.geometry.type === "polyline"
+      ) {
+        const k = graphic.geometry.type === "point" ? 30 : 3;
         const g = geometryEngine.geodesicBuffer(
           graphic.geometry,
-          30,
+          k,
           "kilometers",
         );
 
-        graphic.geometry = Array.isArray(g) ? g[0] : g;
+        buffer.geometry = Array.isArray(g) ? g[0] : g;
       }
 
-      graphic.symbol = symbol;
+      graphic.symbol = SYMBOLS[graphic.geometry.type];
+
       graphicsLayerRef.current.removeAll();
       graphicsLayerRef.current.add(graphic);
+
+      if (buffer.geometry) {
+        graphicsLayerRef.current.add(buffer);
+      }
     }
 
     if (!graphic) {

@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useRef } from "react";
 
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
-import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
-import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
-import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
+
+import { POINT_SYMBOL, POLYGON_SYMBOL, POLYLINE_SYMBOL } from "@/constants/map";
 
 import Layer from "@/components/map/layers/graphics";
 import { useMap } from "@/components/map/provider";
@@ -37,7 +36,6 @@ export default function Sketch({
         if (type !== undefined) {
           g.symbol = sketchViewModelRef.current[`${type}Symbol`].clone();
         }
-        // layerRef.current.add(g);
 
         if (onCreate) onCreate(g);
       }
@@ -61,26 +59,9 @@ export default function Sketch({
     const sketchViewModel = new SketchViewModel({
       view,
       layer: sketchLayer,
-      pointSymbol: new SimpleMarkerSymbol({
-        color: "#009ADE11",
-        style: "circle",
-        size: 10,
-        outline: {
-          color: "#004E70",
-          width: 2,
-        },
-      }),
-      polylineSymbol: new SimpleLineSymbol({
-        color: "#009ADE11",
-        width: 2,
-      }),
-      polygonSymbol: new SimpleFillSymbol({
-        color: "#009ADE11",
-        outline: {
-          color: "#004E70",
-          width: 2,
-        },
-      }),
+      pointSymbol: POINT_SYMBOL,
+      polylineSymbol: POLYLINE_SYMBOL,
+      polygonSymbol: POLYGON_SYMBOL,
       defaultCreateOptions: {
         hasZ: false,
       },
