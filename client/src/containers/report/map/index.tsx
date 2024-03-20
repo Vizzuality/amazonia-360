@@ -7,9 +7,16 @@ import dynamic from "next/dynamic";
 import { useAtom } from "jotai";
 import { useDebounce } from "rooks";
 
-import { sketchAtom, tmpBboxAtom, useSyncBbox } from "@/app/store";
+import { getGeometryWithBuffer } from "@/lib/location";
 
-import LayerManager from "@/containers/map/layer-manager";
+import {
+  sketchAtom,
+  tmpBboxAtom,
+  useSyncBbox,
+  useSyncLocation,
+} from "@/app/store";
+
+import LayerManager from "@/containers/report/map/layer-manager";
 
 import Sketch from "@/components/map/sketch";
 
@@ -19,23 +26,36 @@ const Map = dynamic(() => import("@/components/map"), {
 
 export default function MapContainer() {
   const [bbox, setBbox] = useSyncBbox();
-  const [tmpBbox] = useAtom(tmpBboxAtom);
+  const [tmpBbox, setTmpBbox] = useAtom(tmpBboxAtom);
   const [sketch, setSketch] = useAtom(sketchAtom);
+  const [, setLocation] = useSyncLocation();
 
   const handleMapMove = useDebounce((extent: __esri.Extent) => {
     setBbox([extent.xmin, extent.ymin, extent.xmax, extent.ymax]);
   }, 500);
 
-  const handleCreate = useCallback(() => {
-    setSketch({ enabled: false, type: undefined });
-  }, [setSketch]);
+  const handleCreate = useCallback(
+    (graphic: __esri.Graphic) => {
+      setSketch({ enabled: false, type: undefined });
+      setLocation({
+        type: graphic.geometry.type,
+        geometry: graphic.geometry.toJSON(),
+      });
+
+      const g = getGeometryWithBuffer(graphic.geometry);
+      if (g) {
+        setTmpBbox(g.extent);
+      }
+    },
+    [setTmpBbox, setSketch, setLocation],
+  );
 
   const handleCancel = useCallback(() => {
     setSketch({ enabled: false, type: undefined });
   }, [setSketch]);
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full grow">
       <Map
         id="default"
         defaultBbox={bbox}

@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useRef } from "react";
 
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
-import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
-import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
-import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
+
+import { POINT_SYMBOL, POLYGON_SYMBOL, POLYLINE_SYMBOL } from "@/constants/map";
 
 import Layer from "@/components/map/layers/graphics";
 import { useMap } from "@/components/map/provider";
@@ -12,8 +11,8 @@ import { useMap } from "@/components/map/provider";
 export type SketchProps = {
   type?: "point" | "polygon" | "polyline";
   enabled?: boolean;
-  onCreate?: (layer: GraphicsLayer) => void;
-  onCancel?: (layer: GraphicsLayer) => void;
+  onCreate?: (graphic: __esri.Graphic) => void;
+  onCancel?: () => void;
 };
 
 export default function Sketch({
@@ -24,7 +23,7 @@ export default function Sketch({
 }: SketchProps) {
   const mapInstance = useMap();
 
-  const layerRef = useRef<GraphicsLayer>(new GraphicsLayer());
+  const layerRef = useRef<__esri.GraphicsLayer>(new GraphicsLayer());
 
   const sketchViewModelRef = useRef<SketchViewModel>();
   const sketchViewModelOnCreateRef = useRef<IHandle>();
@@ -37,13 +36,12 @@ export default function Sketch({
         if (type !== undefined) {
           g.symbol = sketchViewModelRef.current[`${type}Symbol`].clone();
         }
-        layerRef.current.add(g);
 
-        onCreate && onCreate(layerRef.current);
+        if (onCreate) onCreate(g);
       }
 
       if (e.state === "cancel") {
-        onCancel && onCancel(layerRef.current);
+        if (onCancel) onCancel();
       }
     },
     [type, onCreate, onCancel],
@@ -61,26 +59,9 @@ export default function Sketch({
     const sketchViewModel = new SketchViewModel({
       view,
       layer: sketchLayer,
-      pointSymbol: new SimpleMarkerSymbol({
-        color: "#009ADE11",
-        style: "circle",
-        size: 10,
-        outline: {
-          color: "#004E70",
-          width: 2,
-        },
-      }),
-      polylineSymbol: new SimpleLineSymbol({
-        color: "#009ADEFF",
-        width: 2,
-      }),
-      polygonSymbol: new SimpleFillSymbol({
-        color: "#009ADE11",
-        outline: {
-          color: "#004E70",
-          width: 2,
-        },
-      }),
+      pointSymbol: POINT_SYMBOL,
+      polylineSymbol: POLYLINE_SYMBOL,
+      polygonSymbol: POLYGON_SYMBOL,
       defaultCreateOptions: {
         hasZ: false,
       },

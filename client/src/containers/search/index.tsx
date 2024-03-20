@@ -17,6 +17,7 @@ type Option = {
 };
 
 export default function SearchC() {
+  const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [, setLocation] = useSyncLocation();
   const setTmpBbox = useSetAtom(tmpBboxAtom);
@@ -31,8 +32,23 @@ export default function SearchC() {
 
   const m = useGetMutationSearch();
 
+  const handleSearch = useCallback(
+    (value: string) => {
+      setOpen(true);
+      setSearch(value);
+    },
+    [setSearch],
+  );
+
   const handleSelect = useCallback(
-    (value: Option) => {
+    (value: Option | null) => {
+      if (!value) {
+        setLocation(null);
+        setOpen(false);
+        setSearch("");
+        return;
+      }
+
       m.mutate(
         {
           key: value.key,
@@ -47,13 +63,16 @@ export default function SearchC() {
               sourceIndex: value.sourceIndex,
               text: value.label,
             });
-            setSearch("");
 
             if (data?.results[0].results[0].feature) {
-              const g = getGeometryWithBuffer(
-                data.results[0].results[0].feature,
-              );
+              const d = data.results[0].results[0];
+              const s = d.name;
+              const g = getGeometryWithBuffer(d.feature.geometry);
 
+              if (s) {
+                setSearch(s);
+                setOpen(false);
+              }
               if (g) {
                 setTmpBbox(g.extent);
               }
@@ -67,11 +86,10 @@ export default function SearchC() {
 
   return (
     <>
-      <h1 className="text-2xl">Search</h1>
-
       <div className="w-full">
         <Search
           value={search}
+          open={open}
           placeholder="Search location..."
           options={
             (q.data?.results
@@ -86,7 +104,7 @@ export default function SearchC() {
               .flat() as Option[]) || ([] as Option[])
           }
           {...q}
-          onChange={setSearch}
+          onChange={handleSearch}
           onSelect={handleSelect}
         />
       </div>

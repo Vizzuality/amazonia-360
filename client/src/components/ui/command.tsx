@@ -3,8 +3,8 @@
 import * as React from "react";
 
 import { type DialogProps } from "@radix-ui/react-dialog";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { Command as CommandPrimitive } from "cmdk";
+import { LuSearch } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
@@ -43,13 +43,12 @@ const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, ref) => (
-  <div className="w-full relative" cmdk-input-wrapper="">
-    <MagnifyingGlassIcon className="absolute top-1/2 left-3 -translate-y-1/2 h-4 w-4 opacity-50" />
-
+  <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+    <LuSearch className="mr-2 h-4 w-4 shrink-0 opacity-50" />
     <CommandPrimitive.Input
       ref={ref}
       className={cn(
-        "flex h-10 w-full rounded-md bg-transparent py-3 pl-8 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+        "flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}
