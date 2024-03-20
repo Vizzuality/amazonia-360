@@ -6,7 +6,7 @@ import { UseQueryResult } from "react-query";
 
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { Command as CommandPrimitive } from "cmdk";
-import { LuSearch, LuX } from "react-icons/lu";
+import { LuLoader2, LuSearch, LuX } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
@@ -54,17 +54,24 @@ export function Search<T extends Option>({
           {value || placeholder || "Search..."}
         </div>
 
-        {value && (
-          <span
-            role="button"
-            className="absolute top-1/2 right-4 -translate-y-1/2 h-4 w-4 hover:text-cyan-500 focus:outline-none block"
-            onClick={() => {
-              onSelect(null);
-            }}
-          >
-            <LuX className="text-current" />
-          </span>
-        )}
+        <div className="absolute top-1/2 right-6 -translate-y-1/2">
+          {isFetching && (
+            <span className="h-4 w-4 animate-spin text-blue-500">
+              <LuLoader2 className="text-current" />
+            </span>
+          )}
+          {value && (
+            <span
+              role="button"
+              className="h-4 w-4 hover:text-cyan-500 focus:outline-none block"
+              onClick={() => {
+                onSelect(null);
+              }}
+            >
+              <LuX className="text-current" />
+            </span>
+          )}
+        </div>
       </PopoverTrigger>
 
       <PopoverPrimitive.Portal>
@@ -92,17 +99,24 @@ export function Search<T extends Option>({
                 }}
               />
 
-              {value && (
-                <button
-                  type="button"
-                  className="absolute top-1/2 right-4 -translate-y-1/2 h-4 w-4 hover:text-cyan-500 focus:outline-none"
-                  onClick={() => {
-                    onSelect(null);
-                  }}
-                >
-                  <LuX className="text-current" />
-                </button>
-              )}
+              <div className="absolute top-1/2 right-6 -translate-y-1/2 flex space-x-1">
+                {isFetching && (
+                  <span className="h-4 w-4 animate-spin text-blue-500">
+                    <LuLoader2 className="text-current" />
+                  </span>
+                )}
+                {value && (
+                  <span
+                    role="button"
+                    className="h-4 w-4 hover:text-cyan-500 focus:outline-none block"
+                    onClick={() => {
+                      onSelect(null);
+                    }}
+                  >
+                    <LuX className="text-current" />
+                  </span>
+                )}
+              </div>
             </div>
 
             {open && !options.length && !!value && !isFetching && isFetched && (
