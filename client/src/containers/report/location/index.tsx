@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useSyncLocation } from "@/app/store";
 
 import Search from "@/containers/search";
@@ -34,9 +36,11 @@ export default function ReportLocation() {
           <Sketch />
 
           {location && (
-            <Button size="lg" variant="destructive">
-              Confirm location
-            </Button>
+            <Link href="/report/topics">
+              <Button size="lg" variant="destructive">
+                Confirm location
+              </Button>
+            </Link>
           )}
         </div>
       </ScrollArea>
