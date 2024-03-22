@@ -28,7 +28,7 @@ export default function TopicsItem({
   return (
     <div key={id} className="col-span-6 md:col-span-4 lg:col-span-2">
       <div
-        className="relative rounded-2xl overflow-hidden mx-auto aspect-[210/380] group cursor-pointer"
+        className="relative rounded-2xl overflow-hidden mx-auto aspect-[210/300] 2xl:aspect-[210/380] group cursor-pointer"
         onClick={() => {
           if (onChange) onChange(!checked);
         }}
@@ -49,7 +49,7 @@ export default function TopicsItem({
           priority
           fill
           sizes="100%"
-          className="group-hover:scale-105 transition-transform duration-300 ease-in-out transform-gpu"
+          className="group-hover:scale-105 transition-transform duration-300 ease-in-out transform-gpu object-cover"
         />
 
         <div

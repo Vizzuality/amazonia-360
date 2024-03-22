@@ -3,13 +3,22 @@ import { atom } from "jotai";
 import { useQueryState } from "nuqs";
 import { createSerializer } from "nuqs/server";
 
-import { bboxParser, datasetsParser, locationParser } from "@/app/parsers";
+import {
+  bboxParser,
+  datasetsParser,
+  locationParser,
+  topicsParser,
+} from "@/app/parsers";
 
 import { SketchProps } from "@/components/map/sketch";
 
 // URL PARAMS
 export const useSyncBbox = () => {
   return useQueryState("bbox", bboxParser);
+};
+
+export const useSyncTopics = () => {
+  return useQueryState("topics", topicsParser);
 };
 
 export const useSyncDatasets = () => {
@@ -22,7 +31,7 @@ export const useSyncLocation = () => {
 
 const searchParams = {
   bbox: bboxParser,
-  datasets: datasetsParser,
+  topics: topicsParser,
   location: locationParser,
 };
 
@@ -30,10 +39,10 @@ const serialize = createSerializer(searchParams);
 
 export const useSyncSearchParams = () => {
   const [bbox] = useSyncBbox();
-  const [datasets] = useSyncDatasets();
+  const [topics] = useSyncTopics();
   const [location] = useSyncLocation();
 
-  return serialize({ bbox, datasets, location });
+  return serialize({ bbox, topics, location });
 };
 
 // JOTAI PARAMS

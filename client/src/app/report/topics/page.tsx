@@ -1,5 +1,9 @@
 import { Metadata } from "next";
 
+import { redirect } from "next/navigation";
+
+import { PageProps } from "@/app/types";
+
 import Topics from "@/containers/report/topics";
 
 export const metadata: Metadata = {
@@ -7,7 +11,20 @@ export const metadata: Metadata = {
   description: "Report topics description",
 };
 
-export default function ReportTopicsPage() {
+// Define the types for the page parameters
+export interface Params {}
+
+export interface SearchParams {
+  location: string;
+}
+
+export default async function ReportTopicsPage({
+  searchParams,
+}: PageProps<Params, SearchParams>) {
+  if (!searchParams.location) {
+    redirect("/report");
+  }
+
   return (
     <main className="relative flex flex-col h-[calc(100svh_-_theme(space.20))] bg-blue-50 py-12">
       <div className="flex flex-col space-y-10">

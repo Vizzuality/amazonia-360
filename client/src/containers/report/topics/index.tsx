@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
-
 import Link from "next/link";
+
+import { useSyncSearchParams, useSyncTopics } from "@/app/store";
 
 import { TOPICS, Topic } from "@/constants/topics";
 
@@ -11,12 +11,19 @@ import TopicsItem from "@/containers/report/topics/item";
 import { Button } from "@/components/ui/button";
 
 export default function Topics() {
-  const [topics, setTopics] = useState<string[]>([]);
+  const searchParams = useSyncSearchParams();
+  const [topics, setTopics] = useSyncTopics();
   const handleTopicChange = (id: Topic["id"], checked: boolean) => {
     if (checked) {
-      setTopics((prev) => [...prev, id]);
+      setTopics((prev) => {
+        if (prev) return [...prev, id];
+        return [id];
+      });
     } else {
-      setTopics((prev) => prev.filter((i) => i !== id));
+      setTopics((prev) => {
+        if (prev) return prev.filter((t) => t !== id);
+        return [];
+      });
     }
   };
 
@@ -28,7 +35,7 @@ export default function Topics() {
             <TopicsItem
               key={topic.id}
               {...topic}
-              checked={topics.includes(topic.id)}
+              checked={(topics || []).includes(topic.id)}
               onChange={(c) => {
                 handleTopicChange(topic.id, c);
               }}
@@ -38,11 +45,11 @@ export default function Topics() {
       </div>
       <div className="container">
         <div className="flex justify-center space-x-4">
-          <Link href="/report">
+          <Link href={`/report${searchParams}`}>
             <Button variant="secondary">Cancel</Button>
           </Link>
 
-          <Link href="/report/results">
+          <Link href={`/report/results${searchParams}`}>
             <Button>Generate Report</Button>
           </Link>
         </div>
