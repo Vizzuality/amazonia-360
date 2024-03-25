@@ -2,7 +2,7 @@
 
 import { Provider as JotaiProvider } from "jotai";
 
-import { MapProvider } from "@/components/map/provider";
+import { MapContainerProvider } from "@/components/map/container-provider";
 
 export default function PageProviders({
   children,
@@ -11,7 +11,7 @@ export default function PageProviders({
 }) {
   return (
     <JotaiProvider>
-      <MapProvider>{children}</MapProvider>
+      <MapContainerProvider>{children}</MapContainerProvider>
     </JotaiProvider>
   );
 }

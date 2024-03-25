@@ -6,14 +6,14 @@ import ArcGISGraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 
 import { useMap } from "@/components/map/provider";
 
-export default function Layer({
+export default function GraphicsLayer({
   layer,
   index,
 }: {
   layer: ArcGISGraphicsLayer;
   index: number;
 }) {
-  const mapInstance = useMap("default");
+  const mapInstance = useMap();
   const { id } = layer;
 
   useEffect(() => {

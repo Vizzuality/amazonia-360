@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ReactNode,
   createContext,
@@ -12,33 +14,30 @@ export type MapProps = {
 };
 
 export type MapContextProps = {
-  maps: { [id: string]: MapProps };
-  onMapMount: (id: string, map: MapProps) => void;
-  onMapUnmount: (id: string) => void;
+  map: MapProps | undefined;
+  onMapMount: (map: MapProps) => void;
+  onMapUnmount: () => void;
 };
 
 export const MapContext = createContext<MapContextProps>({
-  maps: {},
+  map: undefined,
   onMapMount: () => {},
   onMapUnmount: () => {},
 });
 
 export const MapProvider: React.FC<{ children?: ReactNode }> = (props) => {
-  const maps = useRef<{ [id: string]: MapProps }>({});
+  const mapRef = useRef<MapProps>();
 
-  const onMapMount = useCallback(
-    (id: string = "default", map: MapProps) => (maps.current[id] = map),
-    [],
-  );
+  const onMapMount = useCallback((map: MapProps) => (mapRef.current = map), []);
 
-  const onMapUnmount = useCallback((id: string = "default") => {
-    delete maps.current[id];
+  const onMapUnmount = useCallback(() => {
+    mapRef.current = undefined;
   }, []);
 
   return (
     <MapContext.Provider
       value={{
-        maps: maps.current,
+        map: mapRef.current,
         onMapMount,
         onMapUnmount,
       }}
@@ -48,8 +47,8 @@ export const MapProvider: React.FC<{ children?: ReactNode }> = (props) => {
   );
 };
 
-export function useMap(id: string = "default"): MapProps | undefined {
-  const { maps } = useContext(MapContext);
+export function useMap(): MapProps | undefined {
+  const { map } = useContext(MapContext);
 
-  return maps[id];
+  return map;
 }
