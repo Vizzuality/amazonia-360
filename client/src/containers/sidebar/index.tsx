@@ -3,8 +3,8 @@
 import { useSyncDatasets } from "@/app/store";
 
 import Layers from "@/containers/layers";
-import Search from "@/containers/search";
-import Sketch from "@/containers/sketch";
+import Search from "@/containers/report/location/search";
+import Sketch from "@/containers/report/location/sketch";
 import Test from "@/containers/test";
 
 import ArcChart from "@/components/charts/arc";

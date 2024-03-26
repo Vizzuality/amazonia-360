@@ -81,6 +81,7 @@ export default function Sketch({
     }
 
     if (!type) {
+      sketchViewModelRef.current.cancel();
       return;
     }
 
