@@ -1,6 +1,8 @@
 "use client";
 
-import { useSyncLocation } from "@/app/store";
+import Link from "next/link";
+
+import { useSyncLocation, useSyncSearchParams } from "@/app/store";
 
 import Search from "@/containers/search";
 import Sketch from "@/containers/sketch";
@@ -10,6 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function ReportLocation() {
   const [location] = useSyncLocation();
+  const searchParams = useSyncSearchParams();
 
   return (
     <aside className="flex flex-col w-5/12 shrink-0 max-h-screen overflow-hidden pointer-events-auto">
@@ -34,9 +37,11 @@ export default function ReportLocation() {
           <Sketch />
 
           {location && (
-            <Button size="lg" variant="destructive">
-              Confirm location
-            </Button>
+            <Link href={`/report/topics${searchParams}`}>
+              <Button size="lg" variant="destructive">
+                Confirm location
+              </Button>
+            </Link>
           )}
         </div>
       </ScrollArea>

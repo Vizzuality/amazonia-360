@@ -8,10 +8,15 @@ import {
 import { getKeys } from "@/lib/utils";
 
 import { DATASETS } from "@/constants/datasets";
+import { TOPICS } from "@/constants/topics";
 
 export const datasetsParser = parseAsArrayOf(
   parseAsStringLiteral(getKeys(DATASETS)),
 ).withDefault([]);
+
+export const topicsParser = parseAsArrayOf(
+  parseAsStringLiteral(TOPICS.map((topic) => topic.id)),
+);
 
 export const bboxParser = parseAsArrayOf(parseAsFloat).withDefault([
   -85.41285153807887, -34.1915564718903, -29.16285153809382, 18.111690313034348,

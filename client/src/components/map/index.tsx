@@ -11,7 +11,8 @@ import ArcGISScaleBar from "@arcgis/core/widgets/ScaleBar";
 
 import { DEFAULT_MAP_VIEW_PROPERTIES } from "@/constants/map";
 
-import { MapContext } from "@/components/map/provider";
+// import { MapContainerContext } from "@/components/map/container-provider";
+import { MapContext, MapProvider } from "@/components/map/provider";
 
 export type MapProps = {
   id: string;
@@ -21,7 +22,15 @@ export type MapProps = {
   onMapMove?: (extent: __esri.Extent) => void;
 };
 
-export default function Map({
+export default function Map(mapProps: MapProps) {
+  return (
+    <MapProvider>
+      <MapView {...mapProps} />
+    </MapProvider>
+  );
+}
+
+export function MapView({
   id = "default",
   defaultBbox,
   bbox,
@@ -84,7 +93,7 @@ export default function Map({
         if (!mapViewRef.current || !mapRef.current) {
           return;
         }
-        onMapMount(id, {
+        onMapMount({
           map: mapRef.current,
           view: mapViewRef.current,
         });
@@ -111,7 +120,7 @@ export default function Map({
       );
 
       return () => {
-        onMapUnmount(id);
+        onMapUnmount();
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

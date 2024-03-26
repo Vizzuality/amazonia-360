@@ -15,7 +15,7 @@ export default function Layer({
   layer: ArcGISFeatureLayer;
   index: number;
 }) {
-  const mapInstance = useMap("default");
+  const mapInstance = useMap();
   const { id, url } = layer;
 
   useEffect(() => {

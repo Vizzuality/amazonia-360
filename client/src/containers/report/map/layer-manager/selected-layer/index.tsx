@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef } from "react";
 
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";

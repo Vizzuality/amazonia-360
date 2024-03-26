@@ -13,7 +13,7 @@ export default function GeojsonLayer({
   layer: ArcGISGeojsonLayer;
   index: number;
 }) {
-  const mapInstance = useMap("default");
+  const mapInstance = useMap();
   const { id, url } = layer;
 
   useEffect(() => {

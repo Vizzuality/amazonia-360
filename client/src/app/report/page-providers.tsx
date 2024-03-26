@@ -2,16 +2,16 @@
 
 import { Provider as JotaiProvider } from "jotai";
 
-import { MapProvider } from "@/components/map/provider";
+import { MapContainerProvider } from "@/components/map/container-provider";
 
-export default function LayoutProviders({
+export default function PageProviders({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
     <JotaiProvider>
-      <MapProvider>{children}</MapProvider>
+      <MapContainerProvider>{children}</MapContainerProvider>
     </JotaiProvider>
   );
 }
