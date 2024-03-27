@@ -10,7 +10,7 @@ export default function ReportLocation() {
   return (
     <aside className="flex flex-col w-5/12 shrink-0 max-h-screen overflow-hidden pointer-events-auto">
       <ScrollArea className="grow w-full">
-        <div className="space-y-4 p-4 overflow-hidden">
+        <div className="relative space-y-4 p-8 overflow-hidden backdrop-blur-xl bg-white/0">
           <h1 className="text-blue-400 text-4xl">
             Knowledge for a thriving Amazonia
           </h1>
