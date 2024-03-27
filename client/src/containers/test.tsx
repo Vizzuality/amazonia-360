@@ -73,7 +73,17 @@ export default function Test({ id }: { id: DatasetIds }) {
       </div>
 
       <div className="col-span-6 max-h-96">
-        <Map id={id}>
+        <Map
+          id={id}
+          {...(GEOMETRY?.extent && {
+            defaultBbox: [
+              GEOMETRY?.extent.xmin,
+              GEOMETRY?.extent.ymin,
+              GEOMETRY?.extent.xmax,
+              GEOMETRY?.extent.ymax,
+            ],
+          })}
+        >
           <Layer layer={gLayer} index={0} />
         </Map>
       </div>

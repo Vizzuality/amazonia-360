@@ -11,7 +11,7 @@ import { useGetSearch } from "@/lib/search";
 import { CustomLocation, Location, SearchLocation } from "@/app/parsers";
 
 export const useLocation = (location?: Location | null) => {
-  const { data: featureData } = useGetSearch(
+  const { data: searchData } = useGetSearch(
     location?.type === "search" ? (location as SearchLocation) : null,
     {
       enabled: location?.type === "search",
@@ -19,8 +19,8 @@ export const useLocation = (location?: Location | null) => {
   );
 
   return useMemo(() => {
-    if (location?.type === "search" && featureData) {
-      return featureData.results[0].results[0].feature;
+    if (location?.type === "search" && searchData) {
+      return searchData.results[0].results[0].feature;
     }
 
     if (location?.type && location?.type !== "search") {
@@ -35,7 +35,7 @@ export const useLocation = (location?: Location | null) => {
     }
 
     return null;
-  }, [location, featureData]);
+  }, [location, searchData]);
 };
 
 export const getGeometryByType = (location: CustomLocation) => {

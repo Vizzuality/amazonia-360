@@ -1,3 +1,4 @@
+import SearchVM from "@arcgis/core/widgets/Search/SearchViewModel";
 import {
   MutationFunction,
   QueryFunction,
@@ -5,9 +6,7 @@ import {
   UseQueryOptions,
   useMutation,
   useQuery,
-} from "react-query";
-
-import SearchVM from "@arcgis/core/widgets/Search/SearchViewModel";
+} from "@tanstack/react-query";
 
 import { env } from "@/env.mjs";
 
@@ -88,21 +87,16 @@ export const getSuggestionsQueryOptions = <
   TError = unknown,
 >(
   params: GetSuggestParams,
-  options?: UseQueryOptions<
-    Awaited<ReturnType<typeof getSuggestions>>,
-    TError,
-    TData
+  options?: Omit<
+    UseQueryOptions<Awaited<ReturnType<typeof getSuggestions>>, TError, TData>,
+    "queryKey"
   >,
 ) => {
-  const queryKey = options?.queryKey ?? getSuggestionsQueryKey(params);
+  const queryKey = getSuggestionsQueryKey(params);
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof getSuggestions>>
   > = () => getSuggestions(params);
-  return { queryKey, queryFn, ...options } as UseQueryOptions<
-    Awaited<ReturnType<typeof getSuggestions>>,
-    TError,
-    TData
-  >;
+  return { queryKey, queryFn, ...options };
 };
 
 export const useGetSuggestions = <
@@ -110,10 +104,9 @@ export const useGetSuggestions = <
   TError = unknown,
 >(
   params: GetSuggestParams,
-  options?: UseQueryOptions<
-    Awaited<ReturnType<typeof getSuggestions>>,
-    TError,
-    TData
+  options?: Omit<
+    UseQueryOptions<Awaited<ReturnType<typeof getSuggestions>>, TError, TData>,
+    "queryKey"
   >,
 ) => {
   const { queryKey, queryFn } = getSuggestionsQueryOptions(params, options);
@@ -148,7 +141,7 @@ export const getSearch = async (params: GetSearchParams) => {
 };
 
 export const getSearchQueryKey = (params: GetSearchParams) => {
-  if (!params) return null;
+  if (!params) return ["arcgis", "suggest", ""] as const;
 
   const { text, key, sourceIndex } = params;
 
@@ -164,20 +157,15 @@ export const getSearchQueryOptions = <
   TError = unknown,
 >(
   params?: GetSearchParams,
-  options?: UseQueryOptions<
-    Awaited<ReturnType<typeof getSearch>>,
-    TError,
-    TData
+  options?: Omit<
+    UseQueryOptions<Awaited<ReturnType<typeof getSearch>>, TError, TData>,
+    "queryKey"
   >,
 ) => {
-  const queryKey = options?.queryKey ?? getSearchQueryKey(params);
+  const queryKey = getSearchQueryKey(params);
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getSearch>>> = () =>
     getSearch(params);
-  return { queryKey, queryFn, ...options } as UseQueryOptions<
-    Awaited<ReturnType<typeof getSearch>>,
-    TError,
-    TData
-  >;
+  return { queryKey, queryFn, ...options };
 };
 
 export const useGetSearch = <
@@ -185,10 +173,9 @@ export const useGetSearch = <
   TError = unknown,
 >(
   params: GetSearchParams,
-  options?: UseQueryOptions<
-    Awaited<ReturnType<typeof getSearch>>,
-    TError,
-    TData
+  options?: Omit<
+    UseQueryOptions<Awaited<ReturnType<typeof getSearch>>, TError, TData>,
+    "queryKey"
   >,
 ) => {
   const { queryKey, queryFn } = getSearchQueryOptions(params, options);

@@ -24,13 +24,7 @@ export default function SearchC() {
   const [location, setLocation] = useSyncLocation();
   const setTmpBbox = useSetAtom(tmpBboxAtom);
 
-  const q = useGetSuggestions(
-    { text: search },
-    {
-      enabled: !!search,
-      keepPreviousData: !!search,
-    },
-  );
+  const q = useGetSuggestions({ text: search }, { enabled: !!search });
 
   const m = useGetMutationSearch();
 
