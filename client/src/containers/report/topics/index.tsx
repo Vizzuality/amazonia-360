@@ -46,7 +46,7 @@ export default function Topics() {
       <div className="container">
         <div className="flex justify-center space-x-4">
           <Link href={`/report${searchParams}`}>
-            <Button variant="secondary">Cancel</Button>
+            <Button variant="outline">Cancel</Button>
           </Link>
 
           <Link href={`/report/results${searchParams}`}>

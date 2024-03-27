@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useSetAtom } from "jotai";
 
@@ -21,7 +21,7 @@ type Option = {
 export default function SearchC() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [, setLocation] = useSyncLocation();
+  const [location, setLocation] = useSyncLocation();
   const setTmpBbox = useSetAtom(tmpBboxAtom);
 
   const q = useGetSuggestions(
@@ -85,6 +85,11 @@ export default function SearchC() {
     },
     [m, setLocation, setTmpBbox],
   );
+
+  useEffect(() => {
+    if (!location) return;
+    setSearch("");
+  }, [location]);
 
   return (
     <>

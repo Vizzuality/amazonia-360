@@ -1,48 +1,37 @@
 "use client";
 
-import Link from "next/link";
+import Confirm from "@/containers/report/location/confirm";
+import Search from "@/containers/report/location/search";
+import Sketch from "@/containers/report/location/sketch";
 
-import { useSyncLocation, useSyncSearchParams } from "@/app/store";
-
-import Search from "@/containers/search";
-import Sketch from "@/containers/sketch";
-
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function ReportLocation() {
-  const [location] = useSyncLocation();
-  const searchParams = useSyncSearchParams();
-
   return (
     <aside className="flex flex-col w-5/12 shrink-0 max-h-screen overflow-hidden pointer-events-auto">
       <ScrollArea className="grow w-full">
-        <div className="space-y-4 p-4 overflow-hidden">
+        <div className="relative space-y-4 p-8 overflow-hidden backdrop-blur-xl bg-white/0">
           <h1 className="text-blue-400 text-4xl">
-            Get insights on your area of interest
+            Knowledge for a thriving Amazonia
           </h1>
 
           <p className="font-medium">
             Select your location of interest to get a customised report to help
-            better understanding the region and achieve a positive impact.
+            you better understanding the region and achieve a positive impact.
           </p>
 
           <p className="font-medium">
-            To get start please <strong>search</strong> for a location or{" "}
-            <strong>click on the map</strong> to select your location.
+            To get start please <strong>search</strong> for a location or use
+            one of the <strong>drawing tools</strong>.
           </p>
 
-          <Search />
+          <div className="space-y-2">
+            <Search />
 
-          <Sketch />
+            <Sketch />
+          </div>
 
-          {location && (
-            <Link href={`/report/topics${searchParams}`}>
-              <Button size="lg" variant="destructive">
-                Confirm location
-              </Button>
-            </Link>
-          )}
+          <Confirm />
         </div>
       </ScrollArea>
     </aside>
