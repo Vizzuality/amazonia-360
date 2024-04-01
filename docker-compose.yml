@@ -13,15 +13,27 @@ services:
       - "5432:5432"
     volumes:
       - postgis_data:/var/lib/postgresql/data
+    networks:
+      - amazonia360-network
+    restart: always
 
   api:
-    build: ./api
+    build:
+        context: ./api
+        dockerfile: Dockerfile
     ports:
       - "3000:3000"
     env_file:
       - .env
     depends_on:
       - postgis
+    networks:
+      - amazonia360-network
+    restart:
+        always
 
 volumes:
   postgis_data:
+networks:
+  amazonia360-network:
+    driver: bridge
