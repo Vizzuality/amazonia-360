@@ -3,8 +3,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 
 import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
-import ArcGISExtent from "@arcgis/core/geometry/Extent";
-import * as ArcGISprojection from "@arcgis/core/geometry/projection";
 import ArcGISMap from "@arcgis/core/Map";
 import ArcGISMapView from "@arcgis/core/views/MapView";
 import ArcGISScaleBar from "@arcgis/core/widgets/ScaleBar";
@@ -68,10 +66,13 @@ export function MapView({
             xmax: defaultBbox[2],
             ymax: defaultBbox[3],
             spatialReference: {
-              wkid: 4326,
+              wkid: 102100,
             },
           },
         }),
+        spatialReference: {
+          wkid: 102100,
+        },
       });
 
       // Remove the default widgets
@@ -111,11 +112,7 @@ export function MapView({
       ArcGISReactiveUtils.when(
         () => mapViewRef.current!.extent,
         (extent) => {
-          const pExtent = ArcGISprojection.project(extent, {
-            wkid: 4326,
-          }) as ArcGISExtent;
-
-          onMapMove && onMapMove(pExtent);
+          onMapMove && onMapMove(extent);
         },
       );
 

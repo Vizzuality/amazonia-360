@@ -19,7 +19,8 @@ export const topicsParser = parseAsArrayOf(
 );
 
 export const bboxParser = parseAsArrayOf(parseAsFloat).withDefault([
-  -85.41285153807887, -34.1915564718903, -29.16285153809382, 18.111690313034348,
+  -9539948.512044987, -3484407.1727718394, -3278227.154925013,
+  2361496.7504768865,
 ]);
 
 export type SearchLocation = {
