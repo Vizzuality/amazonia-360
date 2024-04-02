@@ -16,6 +16,12 @@ export type MapProps = {
   id: string;
   defaultBbox?: number[];
   bbox?: __esri.Extent;
+  padding?: {
+    top?: number;
+    right?: number;
+    bottom?: number;
+    left?: number;
+  };
   children?: React.ReactNode;
   onMapMove?: (extent: __esri.Extent) => void;
 };
@@ -32,6 +38,7 @@ export function MapView({
   id = "default",
   defaultBbox,
   bbox,
+  padding,
   children,
   onMapMove,
 }: MapProps) {
@@ -79,7 +86,7 @@ export function MapView({
       mapViewRef.current.ui.empty("top-left");
 
       // Set the padding
-      mapViewRef.current.padding.left = window.innerWidth / 2;
+      mapViewRef.current.padding.left = padding?.left || 0;
 
       const scaleBar = new ArcGISScaleBar({
         view: mapViewRef.current,

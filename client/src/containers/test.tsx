@@ -14,6 +14,8 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS, DatasetIds } from "@/constants/datasets";
 
+import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
+
 import Layer from "@/components/map/layers/graphics";
 
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
@@ -85,6 +87,7 @@ export default function Test({ id }: { id: DatasetIds }) {
           })}
         >
           <Layer layer={gLayer} index={0} />
+          <SelectedLayer />
         </Map>
       </div>
     </div>

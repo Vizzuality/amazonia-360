@@ -5,7 +5,7 @@ import { useCallback } from "react";
 import dynamic from "next/dynamic";
 
 import { useAtom } from "jotai";
-import { useDebounce } from "rooks";
+import { useDebounce, useWindowSize } from "rooks";
 
 import { getGeometryWithBuffer } from "@/lib/location";
 
@@ -29,6 +29,8 @@ export default function MapContainer() {
   const [tmpBbox, setTmpBbox] = useAtom(tmpBboxAtom);
   const [sketch, setSketch] = useAtom(sketchAtom);
   const [, setLocation] = useSyncLocation();
+
+  const { innerWidth } = useWindowSize();
 
   const handleMapMove = useDebounce((extent: __esri.Extent) => {
     setBbox([extent.xmin, extent.ymin, extent.xmax, extent.ymax]);
@@ -61,6 +63,12 @@ export default function MapContainer() {
         defaultBbox={bbox}
         bbox={tmpBbox}
         onMapMove={handleMapMove}
+        padding={{
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: innerWidth ? innerWidth / 2 : 0,
+        }}
       >
         <LayerManager />
 

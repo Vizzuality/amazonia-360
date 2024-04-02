@@ -137,7 +137,16 @@ export const getSearch = async (params: GetSearchParams) => {
     console.error("text, key and sourceIndex are required");
   }
 
-  return searchVM.search(params);
+  return searchVM.search(params).then((res) => {
+    if (res.numResults === 1) {
+      const r = res.results[0].results[0];
+      return {
+        type: r.feature.geometry.type,
+        geometry: r.feature.geometry.toJSON(),
+      };
+    }
+    return null;
+  });
 };
 
 export const getSearchQueryKey = (params: GetSearchParams) => {

@@ -5,7 +5,7 @@ import {
   createContext,
   useCallback,
   useContext,
-  useRef,
+  useState,
 } from "react";
 
 export type MapProps = {
@@ -26,18 +26,18 @@ export const MapContext = createContext<MapContextProps>({
 });
 
 export const MapProvider: React.FC<{ children?: ReactNode }> = (props) => {
-  const mapRef = useRef<MapProps>();
+  const [map, setMap] = useState<MapProps>();
 
-  const onMapMount = useCallback((map: MapProps) => (mapRef.current = map), []);
+  const onMapMount = useCallback((map: MapProps) => setMap(map), []);
 
   const onMapUnmount = useCallback(() => {
-    mapRef.current = undefined;
+    setMap(undefined);
   }, []);
 
   return (
     <MapContext.Provider
       value={{
-        map: mapRef.current,
+        map,
         onMapMount,
         onMapUnmount,
       }}
