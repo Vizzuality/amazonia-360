@@ -53,6 +53,7 @@ export default function Layer({
     if (!map.findLayerById(id)) {
       map.add(layer, index);
     }
+    map.reorder(layer, index);
   }, [id, index, layer, mapInstance]);
 
   return null;

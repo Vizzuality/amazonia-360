@@ -3,6 +3,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 
 import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
+import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import ArcGISMap from "@arcgis/core/Map";
 import ArcGISMapView from "@arcgis/core/views/MapView";
 import ArcGISScaleBar from "@arcgis/core/widgets/ScaleBar";
@@ -52,11 +53,13 @@ export function MapView({
 
   useEffect(() => {
     if (mapContainerRef.current) {
+      const baseLayer = new GraphicsLayer();
       /**
        * Initialize application
        */
       mapRef.current = new ArcGISMap({
         basemap: "gray-vector",
+        layers: [baseLayer],
       });
 
       /**

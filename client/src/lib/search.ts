@@ -1,3 +1,4 @@
+import * as projection from "@arcgis/core/geometry/projection.js";
 import SearchVM from "@arcgis/core/widgets/Search/SearchViewModel";
 import {
   MutationFunction,
@@ -137,16 +138,24 @@ export const getSearch = async (params: GetSearchParams) => {
     console.error("text, key and sourceIndex are required");
   }
 
-  return searchVM.search(params).then((res) => {
+  const g = await searchVM.search(params).then((res) => {
     if (res.numResults === 1) {
       const r = res.results[0].results[0];
+
+      const projectedGeo = projection.project(r.feature.geometry, {
+        wkid: 102100,
+      });
+      const g = Array.isArray(projectedGeo) ? projectedGeo[0] : projectedGeo;
+
       return {
-        type: r.feature.geometry.type,
-        geometry: r.feature.geometry.toJSON(),
+        type: g.type,
+        geometry: g.toJSON(),
       };
     }
     return null;
   });
+
+  return g;
 };
 
 export const getSearchQueryKey = (params: GetSearchParams) => {

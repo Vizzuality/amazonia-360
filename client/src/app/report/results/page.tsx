@@ -61,7 +61,7 @@ export default async function ReportResultsPage({
             </div>
           </header>
 
-          <Test id="ciudades_capitales" />
+          <Test id="admin" />
         </div>
       </main>
     </HydrationBoundary>
