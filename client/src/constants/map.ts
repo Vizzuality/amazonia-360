@@ -3,18 +3,9 @@ import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
 import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
 
 export const DEFAULT_MAP_VIEW_PROPERTIES: __esri.MapViewProperties = {
-  extent: {
-    xmin: -84.34627596688159,
-    ymin: -25.38670960349323,
-    xmax: -32.060183541373306,
-    ymax: 14.481895073924633,
-    spatialReference: {
-      wkid: 4326,
-    },
-  },
-
   constraints: {
     minZoom: 3, // The minimum allowed zoom level of the view.
+    // maxZoom: 8, // The maximum allowed zoom level of the view.
   },
 } satisfies __esri.MapViewProperties;
 
@@ -34,7 +25,7 @@ export const POLYLINE_SYMBOL = new SimpleLineSymbol({
 });
 
 export const POLYGON_SYMBOL = new SimpleFillSymbol({
-  color: "#196E8C11",
+  color: "#196E8C22",
   outline: {
     color: "#004E70",
     width: 1,

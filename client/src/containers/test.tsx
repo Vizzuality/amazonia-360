@@ -4,8 +4,8 @@ import { useMemo } from "react";
 
 import dynamic from "next/dynamic";
 
-import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
-import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer";
+import FeatureEffect from "@arcgis/core/layers/support/FeatureEffect";
+import FeatureFilter from "@arcgis/core/webdoc/geotriggersInfo/FeatureFilter";
 
 import { useLocationGeometry } from "@/lib/location";
 import { useGetFeatures } from "@/lib/query";
@@ -14,7 +14,9 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS, DatasetIds } from "@/constants/datasets";
 
-import Layer from "@/components/map/layers/graphics";
+import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
+
+import Layer from "@/components/map/layers";
 
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
 
@@ -28,7 +30,6 @@ export default function Test({ id }: { id: DatasetIds }) {
       query: DATASETS[`${id}`].getFeatures({
         ...(!!GEOMETRY && {
           geometry: GEOMETRY,
-          returnGeometry: true,
         }),
       }),
       feature: DATASETS[`${id}`].layer,
@@ -38,24 +39,19 @@ export default function Test({ id }: { id: DatasetIds }) {
     },
   );
 
-  const gLayer = useMemo(() => {
-    const layer = new GraphicsLayer({
-      id: `${id}-graphics`,
-    });
-
-    if (data) {
-      layer.addMany(
-        data.features.map((f) => {
-          const renderer = DATASETS[`${id}`].layer.renderer as SimpleRenderer;
-          // f.symbol = DATASETS[`${id}`].layer.getSymbol(f).symbol;
-          f.symbol = renderer.symbol;
-          return f;
+  const LAYER = useMemo(() => {
+    const l = DATASETS[id].layer.clone();
+    if (GEOMETRY) {
+      l.featureEffect = new FeatureEffect({
+        filter: new FeatureFilter({
+          geometry: GEOMETRY,
         }),
-      );
+        excludedEffect: "opacity(0%)",
+      });
     }
 
-    return layer;
-  }, [data, id]);
+    return l;
+  }, [id, GEOMETRY]);
 
   return (
     <div className="w-full container grid grid-cols-12">
@@ -72,9 +68,21 @@ export default function Test({ id }: { id: DatasetIds }) {
         ))}
       </div>
 
-      <div className="col-span-6 max-h-96">
-        <Map id={id}>
-          <Layer layer={gLayer} index={0} />
+      <div className="col-span-6 h-96">
+        <Map
+          id={id}
+          {...(GEOMETRY?.extent && {
+            defaultBbox: [
+              GEOMETRY?.extent.xmin,
+              GEOMETRY?.extent.ymin,
+              GEOMETRY?.extent.xmax,
+              GEOMETRY?.extent.ymax,
+            ],
+            bbox: undefined,
+          })}
+        >
+          <Layer layer={LAYER} index={1} />
+          <SelectedLayer />
         </Map>
       </div>
     </div>

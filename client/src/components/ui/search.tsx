@@ -2,9 +2,8 @@
 
 import * as React from "react";
 
-import { UseQueryResult } from "react-query";
-
 import * as PopoverPrimitive from "@radix-ui/react-popover";
+import { UseQueryResult } from "@tanstack/react-query";
 import { Command as CommandPrimitive } from "cmdk";
 import { LuLoader2, LuSearch, LuX } from "react-icons/lu";
 
@@ -27,7 +26,7 @@ export type SearchProps<T> = {
   placeholder?: string;
   onChange: (e: string) => void;
   onSelect: (o: T | null) => void;
-} & UseQueryResult;
+} & UseQueryResult<unknown, unknown>;
 
 export function Search<T extends Option>({
   value,

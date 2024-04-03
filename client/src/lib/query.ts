@@ -1,7 +1,10 @@
-import { QueryFunction, UseQueryOptions, useQuery } from "react-query";
-
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import Query from "@arcgis/core/rest/support/Query";
+import {
+  QueryFunction,
+  UseQueryOptions,
+  useQuery,
+} from "@tanstack/react-query";
 
 import { env } from "@/env.mjs";
 
@@ -41,10 +44,9 @@ export const getFeaturesOptions = <
   TError = unknown,
 >(
   params: GetFeaturesParams,
-  options?: UseQueryOptions<
-    Awaited<ReturnType<typeof getFeatures>>,
-    TError,
-    TData
+  options?: Omit<
+    UseQueryOptions<Awaited<ReturnType<typeof getFeatures>>, TError, TData>,
+    "queryKey"
   >,
 ) => {
   const queryKey = getFeaturesKey(params);
@@ -62,10 +64,9 @@ export const useGetFeatures = <
   TError = unknown,
 >(
   params: GetFeaturesParams,
-  options?: UseQueryOptions<
-    Awaited<ReturnType<typeof getFeatures>>,
-    TError,
-    TData
+  options?: Omit<
+    UseQueryOptions<Awaited<ReturnType<typeof getFeatures>>, TError, TData>,
+    "queryKey"
   >,
 ) => {
   const { queryKey, queryFn } = getFeaturesOptions(params, options);
@@ -120,10 +121,9 @@ export const getFeaturesIdOptions = <
   TError = unknown,
 >(
   params: GetFeaturesIdParams,
-  options?: UseQueryOptions<
-    Awaited<ReturnType<typeof getFeaturesId>>,
-    TError,
-    TData
+  options?: Omit<
+    UseQueryOptions<Awaited<ReturnType<typeof getFeaturesId>>, TError, TData>,
+    "queryKey"
   >,
 ) => {
   const queryKey = getFeaturesIdKey(params);
@@ -142,10 +142,9 @@ export const useGetFeaturesId = <
   TError = unknown,
 >(
   params: GetFeaturesIdParams,
-  options?: UseQueryOptions<
-    Awaited<ReturnType<typeof getFeaturesId>>,
-    TError,
-    TData
+  options?: Omit<
+    UseQueryOptions<Awaited<ReturnType<typeof getFeaturesId>>, TError, TData>,
+    "queryKey"
   >,
 ) => {
   const { queryKey, queryFn } = getFeaturesIdOptions(params, options);

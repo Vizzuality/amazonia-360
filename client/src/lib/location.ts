@@ -11,7 +11,7 @@ import { useGetSearch } from "@/lib/search";
 import { CustomLocation, Location, SearchLocation } from "@/app/parsers";
 
 export const useLocation = (location?: Location | null) => {
-  const { data: featureData } = useGetSearch(
+  const { data: searchData } = useGetSearch(
     location?.type === "search" ? (location as SearchLocation) : null,
     {
       enabled: location?.type === "search",
@@ -19,8 +19,18 @@ export const useLocation = (location?: Location | null) => {
   );
 
   return useMemo(() => {
-    if (location?.type === "search" && featureData) {
-      return featureData.results[0].results[0].feature;
+    if (location?.type === "search" && searchData) {
+      const geo = getGeometryByType({
+        type: searchData.type,
+        geometry: searchData.geometry,
+      });
+
+      if (!geo) return null;
+
+      const graphic = new Graphic({
+        geometry: geo,
+      });
+      return graphic;
     }
 
     if (location?.type && location?.type !== "search") {
@@ -35,7 +45,7 @@ export const useLocation = (location?: Location | null) => {
     }
 
     return null;
-  }, [location, featureData]);
+  }, [location, searchData]);
 };
 
 export const getGeometryByType = (location: CustomLocation) => {
@@ -55,19 +65,21 @@ export const getGeometryByType = (location: CustomLocation) => {
 };
 
 export const getGeometryWithBuffer = (geometry: __esri.Geometry | null) => {
-  if (geometry?.type === "point") {
+  if (!geometry) return null;
+
+  if (geometry.type === "point") {
     const g = geometryEngine.geodesicBuffer(geometry, 30, "kilometers");
 
     return Array.isArray(g) ? g[0] : g;
   }
 
-  if (geometry?.type === "polyline") {
+  if (geometry.type === "polyline") {
     const g = geometryEngine.geodesicBuffer(geometry, 3, "kilometers");
 
     return Array.isArray(g) ? g[0] : g;
   }
 
-  if (geometry?.type === "polygon") {
+  if (geometry.type === "polygon") {
     return geometry;
   }
 

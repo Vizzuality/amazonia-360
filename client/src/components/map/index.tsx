@@ -3,8 +3,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 
 import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
-import ArcGISExtent from "@arcgis/core/geometry/Extent";
-import * as ArcGISprojection from "@arcgis/core/geometry/projection";
+import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import ArcGISMap from "@arcgis/core/Map";
 import ArcGISMapView from "@arcgis/core/views/MapView";
 import ArcGISScaleBar from "@arcgis/core/widgets/ScaleBar";
@@ -18,6 +17,12 @@ export type MapProps = {
   id: string;
   defaultBbox?: number[];
   bbox?: __esri.Extent;
+  padding?: {
+    top?: number;
+    right?: number;
+    bottom?: number;
+    left?: number;
+  };
   children?: React.ReactNode;
   onMapMove?: (extent: __esri.Extent) => void;
 };
@@ -34,6 +39,7 @@ export function MapView({
   id = "default",
   defaultBbox,
   bbox,
+  padding,
   children,
   onMapMove,
 }: MapProps) {
@@ -47,11 +53,13 @@ export function MapView({
 
   useEffect(() => {
     if (mapContainerRef.current) {
+      const baseLayer = new GraphicsLayer();
       /**
        * Initialize application
        */
       mapRef.current = new ArcGISMap({
         basemap: "gray-vector",
+        layers: [baseLayer],
       });
 
       /**
@@ -68,17 +76,20 @@ export function MapView({
             xmax: defaultBbox[2],
             ymax: defaultBbox[3],
             spatialReference: {
-              wkid: 4326,
+              wkid: 102100,
             },
           },
         }),
+        spatialReference: {
+          wkid: 102100,
+        },
       });
 
       // Remove the default widgets
       mapViewRef.current.ui.empty("top-left");
 
       // Set the padding
-      mapViewRef.current.padding.left = window.innerWidth / 2;
+      mapViewRef.current.padding.left = padding?.left || 0;
 
       const scaleBar = new ArcGISScaleBar({
         view: mapViewRef.current,
@@ -111,11 +122,7 @@ export function MapView({
       ArcGISReactiveUtils.when(
         () => mapViewRef.current!.extent,
         (extent) => {
-          const pExtent = ArcGISprojection.project(extent, {
-            wkid: 4326,
-          }) as ArcGISExtent;
-
-          onMapMove && onMapMove(pExtent);
+          onMapMove && onMapMove(extent);
         },
       );
 

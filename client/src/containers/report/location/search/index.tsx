@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { useSetAtom } from "jotai";
 
-import { getGeometryWithBuffer } from "@/lib/location";
+import { getGeometryByType, getGeometryWithBuffer } from "@/lib/location";
 import { useGetMutationSearch, useGetSuggestions } from "@/lib/search";
 
 import { tmpBboxAtom, useSyncLocation } from "@/app/store";
@@ -24,13 +24,7 @@ export default function SearchC() {
   const [location, setLocation] = useSyncLocation();
   const setTmpBbox = useSetAtom(tmpBboxAtom);
 
-  const q = useGetSuggestions(
-    { text: search },
-    {
-      enabled: !!search,
-      keepPreviousData: !!search,
-    },
-  );
+  const q = useGetSuggestions({ text: search }, { enabled: !!search });
 
   const m = useGetMutationSearch();
 
@@ -66,15 +60,16 @@ export default function SearchC() {
               text: value.label,
             });
 
-            if (data?.results[0].results[0].feature) {
-              const d = data.results[0].results[0];
-              const s = d.name;
-              const g = getGeometryWithBuffer(d.feature.geometry);
+            if (data) {
+              const geo = getGeometryByType({
+                type: data.type,
+                geometry: data.geometry,
+              });
 
-              if (s) {
-                setSearch(s);
-                setOpen(false);
-              }
+              if (!geo) return;
+
+              const g = getGeometryWithBuffer(geo);
+
               if (g) {
                 setTmpBbox(g.extent);
               }

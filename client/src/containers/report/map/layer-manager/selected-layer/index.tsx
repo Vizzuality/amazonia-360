@@ -29,6 +29,7 @@ export default function SelectedLayer() {
       const buffer = new Graphic({
         symbol: BUFFER_SYMBOL,
       });
+
       if (
         graphic.geometry.type === "point" ||
         graphic.geometry.type === "polyline"
