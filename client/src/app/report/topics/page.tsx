@@ -36,7 +36,7 @@ export default async function ReportTopicsPage({
                 location?
               </h1>
               <h2 className="text-sm text-gray-900 text-center font-medium">
-                Select your topics of interest to get a more tailormaid report.
+                Choose your interests for a personalized report.
               </h2>
             </div>
           </div>

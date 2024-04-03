@@ -20,23 +20,23 @@ export const TOPICS = [
     description: "Understand the demographics of your area of interest.",
   },
   {
-    id: "climate-and-metorological",
-    label: "Climate and Metorological",
-    image: "/images/topics/climate-and-metorological.png",
+    id: "climate-and-meteorological",
+    label: "Climate and Meteorological",
+    image: "/images/topics/climate-and-meteorological.png",
     description:
-      "Information covering hydrology, fire occurrences, air quality, etc.",
+      "Information covering hydrology, fire occurrences, air quality, and more.",
   },
   {
-    id: "human-activity-land-cover",
-    label: "Human Activity / Land Cover",
-    image: "/images/topics/human-activity-land-cover.png",
+    id: "land-cover",
+    label: "Land Cover",
+    image: "/images/topics/land-cover.png",
     description:
       "Get data on infrastructure, agriculture, mining, logging, livestock, and fishing.",
   },
   {
-    id: "academic-and-research-data",
-    label: "Academic and Research Data",
-    image: "/images/topics/academic-and-research-data.png",
+    id: "bioeconomy-and-research-data",
+    label: "Bioeconomy and Research Data",
+    image: "/images/topics/bioeconomy-and-research-data.png",
     description:
       "Data relating to research centers, bioeconomy-related researchers, and other academic endeavors.",
   },
