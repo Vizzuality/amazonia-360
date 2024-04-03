@@ -86,7 +86,7 @@ export function MapView({
       });
 
       // Remove the default widgets
-      mapViewRef.current.ui.empty("top-left");
+      mapViewRef.current.ui.move("zoom", "top-right");
 
       // Set the padding
       mapViewRef.current.padding.left = padding?.left || 0;

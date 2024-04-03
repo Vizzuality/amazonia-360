@@ -9,19 +9,17 @@ export default function ReportLocation() {
     <aside className="flex flex-col w-5/12 shrink-0 max-h-screen overflow-hidden pointer-events-auto">
       <ScrollArea className="grow w-full">
         <div className="relative space-y-4 p-8 overflow-hidden backdrop-blur-xl bg-white/0">
-          <h1 className="text-blue-400 text-4xl">
-            Knowledge for a thriving Amazonia
-          </h1>
+          <div className="p-2 space-y-4">
+            <h1 className="text-blue-400 text-4xl">
+              Get insights on your area of interest
+            </h1>
 
-          <p className="font-medium">
-            Select your location of interest to get a customised report to help
-            you better understanding the region and achieve a positive impact.
-          </p>
-
-          <p className="font-medium">
-            To get start please <strong>search</strong> for a location or use
-            one of the <strong>drawing tools</strong>.
-          </p>
+            <p className="font-medium">
+              Choose your area of interest: Get a customized report to deepen
+              your understanding of your region of interest and guide your
+              efforts towards making a significant impact.
+            </p>
+          </div>
 
           <div className="space-y-2">
             <Search />
