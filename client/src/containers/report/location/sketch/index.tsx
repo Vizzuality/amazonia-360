@@ -106,7 +106,7 @@ export default function Sketch() {
           <button
             key={button.id}
             className={cn(
-              "grow w-full h-full flex items-center justify-center space-x-2.5 bg-white hover:bg-white/80 rounded-[32px] transition-all duration-500 overflow-hidden",
+              "grow w-full h-full bg-white hover:bg-white/80 rounded-[32px] transition-all duration-500 overflow-hidden",
               sketch.enabled &&
                 sketch.type === button.id &&
                 "w-full bg-primary hover:bg-primary/80 text-white",
@@ -114,17 +114,19 @@ export default function Sketch() {
             )}
             onClick={(e) => handleClick(e, button.id)}
           >
-            {button.icon}
-            <span
+            <div
               className={cn(
-                "transition-opacity duration-300",
-                sketch.enabled && sketch.type !== button.id && "opacity-0",
+                "flex items-center justify-center space-x-2.5 transition-transform duration-300",
+                sketch.enabled && sketch.type !== button.id && "scale-0",
               )}
             >
-              {sketch.enabled && sketch.type === button.id && "Cancel"}
-              {sketch.enabled && sketch.type !== button.id && button.label}
-              {!sketch.enabled && button.label}
-            </span>
+              {button.icon}
+              <span className="transition-none">
+                {sketch.enabled && sketch.type === button.id && "Cancel"}
+                {sketch.enabled && sketch.type !== button.id && button.label}
+                {!sketch.enabled && button.label}
+              </span>
+            </div>
           </button>
         );
       })}
