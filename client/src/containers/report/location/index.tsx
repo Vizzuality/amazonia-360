@@ -1,5 +1,3 @@
-"use client";
-
 import Confirm from "@/containers/report/location/confirm";
 import Search from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
