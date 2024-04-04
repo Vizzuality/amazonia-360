@@ -1,5 +1,6 @@
 *.py[cod]
 *.venv
+*data/
 .env
 /env/
 /infrastructure/vars/local.tfvars
