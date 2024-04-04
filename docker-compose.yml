@@ -1,22 +1,5 @@
 version: '3.7'
 services:
-  postgis:
-    container_name: amazonia360-postgis
-    image: postgis/postgis:latest
-    env_file:
-      - .env
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgis_data:/var/lib/postgresql/data
-    networks:
-      - amazonia360-network
-    restart: always
-
   api:
     build:
         context: ./api
@@ -25,15 +8,10 @@ services:
       - "8000:8000"
     env_file:
       - .env
-    depends_on:
-      - postgis
     networks:
       - amazonia360-network
     restart:
         always
-
-volumes:
-  postgis_data:
 networks:
   amazonia360-network:
     driver: bridge
