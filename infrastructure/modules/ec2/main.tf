@@ -6,6 +6,11 @@ resource "aws_instance" "amazonia360-ec2" {
   key_name = aws_key_pair.local_public_key.key_name
   associate_public_ip_address = true
 
+  user_data = <<-EOF
+  #!/bin/bash
+  echo "${var.authorized_key}" >> /home/ec2-user/.ssh/authorized_keys
+  EOF
+
   tags = {
     Name = var.instance_name
   }
@@ -13,6 +18,6 @@ resource "aws_instance" "amazonia360-ec2" {
 
 
 resource "aws_key_pair" "local_public_key" {
-  key_name   = "amazonia360-ec2-key-pair"
+  key_name = "amazonia360-key-pair"
   public_key = file("~/.ssh/id_rsa.pub")
 }

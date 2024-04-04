@@ -24,3 +24,14 @@ variable "security_groups" {
     type        = list(string)
     description = "List of security groups to attach to the EC2 instance"
 }
+
+variable "ec2_public_key" {
+  type = string
+  description = "Public key to be used for the key pair associated to the EC2 instance"
+}
+
+
+variable "authorized_key"{
+    type = string
+    description = "Public key to be added to the authorized_keys file of the ec2-user"
+}

@@ -9,3 +9,8 @@ variable "vpc_name" {
   description = "Name of the VPC"
   default     = "amazonia360-vpc"
 }
+
+variable "ec2_instance_id"{
+    type = string
+    description = "ID of the EC2 instance"
+}
