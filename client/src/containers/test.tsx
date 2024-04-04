@@ -5,10 +5,9 @@ import { useMemo } from "react";
 import dynamic from "next/dynamic";
 
 import FeatureEffect from "@arcgis/core/layers/support/FeatureEffect";
-import FeatureFilter from "@arcgis/core/webdoc/geotriggersInfo/FeatureFilter";
 
 import { useLocationGeometry } from "@/lib/location";
-import { useGetFeatures } from "@/lib/query";
+import { useGetAnalysis, useGetFeatures } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
@@ -39,13 +38,33 @@ export default function Test({ id }: { id: DatasetIds }) {
     },
   );
 
+  const { data: analysis } = useGetAnalysis({
+    in_feature1: {
+      url: "https://atlas.iadb.org/server/rest/services/Hosted/AFP_AdminLevel2/FeatureServer/0",
+    },
+    in_feature2: {
+      geometryType: "esriGeometryPolygon",
+      spatialReference: {
+        wkid: 102100,
+        latestWkid: 3857,
+      },
+      features: [
+        {
+          geometry: GEOMETRY?.toJSON(),
+        },
+      ],
+    },
+  });
+
+  console.log(analysis);
+
   const LAYER = useMemo(() => {
     const l = DATASETS[id].layer.clone();
     if (GEOMETRY) {
       l.featureEffect = new FeatureEffect({
-        filter: new FeatureFilter({
+        filter: {
           geometry: GEOMETRY,
-        }),
+        },
         excludedEffect: "opacity(0%)",
       });
     }
@@ -57,10 +76,10 @@ export default function Test({ id }: { id: DatasetIds }) {
     <div className="w-full container grid grid-cols-12">
       <div className="col-span-6">
         <h1>{DATASETS[`${id}`].layer.title}</h1>
-
+        <h2>{data?.features.length}</h2>
         {data?.features.map((f) => (
           <div key={f.attributes.FID}>
-            <h2>{f.attributes.FID}</h2>
+            <h3>{f.attributes.FID}</h3>
             <pre className="w-full overflow-scroll break-words">
               {JSON.stringify(f.attributes, null, 2)}
             </pre>

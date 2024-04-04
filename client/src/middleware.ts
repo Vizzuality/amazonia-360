@@ -5,16 +5,16 @@ import { env } from "@/env.mjs";
 
 // Step 1. HTTP Basic Auth Middleware for Challenge
 export default async function middleware(req: NextRequest) {
-  const token = await fetch(
-    `https://atlas.iadb.org/portal/sharing/rest/oauth2/token/?client_id=${env.ARCGIS_CLIENT_ID}client_secret=${env.ARCGIS_CLIENT_SECRET}&grant_type=client_credentials`,
-  ).then((res) => res.json());
-
   if (!isAuthenticated(req)) {
     return new NextResponse("Authentication required", {
       status: 401,
       headers: { "WWW-Authenticate": "Basic" },
     });
   }
+  const token = await fetch(
+    `https://atlas.iadb.org/portal/sharing/rest/oauth2/token/?client_id=${env.ARCGIS_CLIENT_ID}client_secret=${env.ARCGIS_CLIENT_SECRET}&grant_type=client_credentials`,
+  ).then((res) => res.json());
+
   const response = NextResponse.next();
   response.cookies.set("arcgis_token", token.access_token);
 
