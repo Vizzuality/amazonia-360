@@ -1,32 +1,45 @@
 """Minimal COG tiler."""
-from typing import Annotated, Union, List
+from typing import Annotated, List, Union
 
 import rasterio
 from exactextract import exact_extract
-from fastapi.responses import ORJSONResponse
-from geojson_pydantic import FeatureCollection, Feature
-from pydantic import BaseModel
-from titiler.core.factory import TilerFactory
-from titiler.core.errors import DEFAULT_STATUS_CODES, add_exception_handlers
+from fastapi import Body, Depends, FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
-
-from fastapi import FastAPI, Body, Depends
+from fastapi.responses import ORJSONResponse
+from geojson_pydantic import Feature, FeatureCollection
+from pydantic import BaseModel
+from titiler.core.errors import DEFAULT_STATUS_CODES, add_exception_handlers
+from titiler.core.factory import TilerFactory
 
 
 class StatsProperties(BaseModel):
-    min: float
-    max: float
-    mean: float
+    """Model for exact_extract result fields."""
+
+    min: Annotated[float, Query(description="Minimum value.")]
+    max: Annotated[float, Query(description="MAximum value.")]
+    majority: Annotated[
+        float,
+        Query(
+            description="The raster value occupying the greatest number of cells, taking into account cell coverage "
+            "fractions but not weighting raster values."
+        ),
+    ]
+    variety: Annotated[
+        float,
+        Query(description="The number of distinct raster values in cells wholly or partially covered by the polygon."),
+    ]
 
 
 class StatsFeature(BaseModel):
     """Stats response model."""
+
     type: str
     properties: StatsProperties
 
 
 class StatsFeatures(BaseModel):
     """Stats response model."""
+
     features: List[StatsFeature]
 
 
@@ -35,7 +48,8 @@ class ZonalTilerFactory(TilerFactory):
 
     def register_routes(self):
         """Register Zonal Tiler routes."""
-        super().register_routes()
+        self.tile()
+        self.tilejson()
         self.register_exact_zonal_stats()
 
     def register_exact_zonal_stats(self):
@@ -47,21 +61,20 @@ class ZonalTilerFactory(TilerFactory):
             response_model_exclude_unset=True,
             response_model_exclude_none=True,
             responses={
-                200:
-                    {
-                        "description": "Return the stats of the zonal statistics",
-                        "content": {"application/json": {}},
-                    },
-            }
+                200: {
+                    "description": "Return the stats of the zonal statistics",
+                    "content": {"application/json": {}},
+                },
+            },
         )
         def exact_zonal_stats(
-                geojson: Annotated[
-                    Union[FeatureCollection, Feature],
-                    Body(description="GeoJSON Feature or FeatureCollection."),
-                ],
-                src_path=Depends(self.path_dependency),
-                reader_params=Depends(self.reader_dependency),
-                env=Depends(self.environment_dependency),
+            geojson: Annotated[
+                Union[FeatureCollection, Feature],
+                Body(description="GeoJSON Feature or FeatureCollection."),
+            ],
+            src_path=Depends(self.path_dependency),
+            reader_params=Depends(self.reader_dependency),
+            env=Depends(self.environment_dependency),
         ) -> StatsFeatures:
             """Compute the zonal statistics of a COG."""
             if isinstance(geojson, FeatureCollection):
@@ -73,7 +86,7 @@ class ZonalTilerFactory(TilerFactory):
 
             with rasterio.Env(**env):
                 with rasterio.open(src_path, **reader_params) as src_dst:
-                    stats = exact_extract(src_dst, features, ops=["min", "max", "mean"])
+                    stats = exact_extract(src_dst, features, ops=["min", "max", "majority", "variety"])
                     return StatsFeatures(features=stats)
 
 
