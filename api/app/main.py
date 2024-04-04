@@ -16,7 +16,7 @@ class StatsProperties(BaseModel):
     """Model for exact_extract result fields."""
 
     min: Annotated[float, Query(description="Minimum value.")]
-    max: Annotated[float, Query(description="MAximum value.")]
+    max: Annotated[float, Query(description="Maximum value.")]
     majority: Annotated[
         float,
         Query(
