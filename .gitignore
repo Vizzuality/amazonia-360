@@ -1,4 +1,6 @@
+*.py[cod]
+*.venv
 .env
 /env/
 /infrastructure/vars/local.tfvars
-*.venv
+__pycache__/

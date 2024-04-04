@@ -1,0 +1,19 @@
+[tool.ruff]
+select = [
+    "D1",   # pydocstyle errors
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # flake8
+    "C",    # flake8-comprehensions
+    "B",    # flake8-bugbear
+    "N",    # Naming conventions
+    "I",    # isort
+]
+line-length = 120
+ignore = [
+    "D104", # Missing docstring in public module
+]
+extend-include = ["*.ipynb"]
+
+[tool.ruff.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.params.Depends", "fastapi.Query", "fastapi.params.Query"]
