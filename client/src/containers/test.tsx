@@ -13,6 +13,7 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS, DatasetIds } from "@/constants/datasets";
 
+import Card from "@/containers/card";
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
 
 import Layer from "@/components/map/layers";
@@ -29,6 +30,7 @@ export default function Test({ id }: { id: DatasetIds }) {
       query: DATASETS[`${id}`].getFeatures({
         ...(!!GEOMETRY && {
           geometry: GEOMETRY,
+          returnGeometry: true,
         }),
       }),
       feature: DATASETS[`${id}`].layer,
@@ -37,26 +39,40 @@ export default function Test({ id }: { id: DatasetIds }) {
       enabled: !!DATASETS[`${id}`].getFeatures && !!GEOMETRY,
     },
   );
+  // const q = DATASETS[`${id}`].getFeatures({
+  //   ...(!!GEOMETRY && {
+  //     geometry: GEOMETRY,
+  //   }),
+  // });
 
-  const { data: analysis } = useGetAnalysis({
-    in_feature1: {
-      url: "https://atlas.iadb.org/server/rest/services/Hosted/AFP_AdminLevel2/FeatureServer/0",
-    },
-    in_feature2: {
-      geometryType: "esriGeometryPolygon",
-      spatialReference: {
-        wkid: 102100,
-        latestWkid: 3857,
+  // console.log(q?.toJSON());
+
+  const { data: analysis } = useGetAnalysis(
+    {
+      in_feature1: {
+        url: "https://atlas.iadb.org/server/rest/services/Hosted/AFP_AdminLevel2/FeatureServer/0",
       },
-      features: [
-        {
-          geometry: GEOMETRY?.toJSON(),
+      in_feature2: {
+        geometryType: "esriGeometryPolygon",
+        spatialReference: {
+          wkid: 102100,
+          latestWkid: 3857,
         },
-      ],
+        features: [
+          {
+            geometry: GEOMETRY?.toJSON(),
+          },
+        ],
+      },
     },
-  });
+    {
+      enabled: !!data && !!GEOMETRY,
+    },
+  );
 
-  console.log(analysis);
+  if (analysis?.results[0]?.value?.features) {
+    console.log(analysis?.results[0]?.value?.features);
+  }
 
   const LAYER = useMemo(() => {
     const l = DATASETS[id].layer.clone();
@@ -87,22 +103,24 @@ export default function Test({ id }: { id: DatasetIds }) {
         ))}
       </div>
 
-      <div className="col-span-6 h-96">
-        <Map
-          id={id}
-          {...(GEOMETRY?.extent && {
-            defaultBbox: [
-              GEOMETRY?.extent.xmin,
-              GEOMETRY?.extent.ymin,
-              GEOMETRY?.extent.xmax,
-              GEOMETRY?.extent.ymax,
-            ],
-            bbox: undefined,
-          })}
-        >
-          <Layer layer={LAYER} index={1} />
-          <SelectedLayer />
-        </Map>
+      <div className="col-span-6">
+        <Card padding={false} className="h-96">
+          <Map
+            id={id}
+            {...(GEOMETRY?.extent && {
+              defaultBbox: [
+                GEOMETRY?.extent.xmin,
+                GEOMETRY?.extent.ymin,
+                GEOMETRY?.extent.xmax,
+                GEOMETRY?.extent.ymax,
+              ],
+              bbox: undefined,
+            })}
+          >
+            <Layer layer={LAYER} index={1} />
+            <SelectedLayer />
+          </Map>
+        </Card>
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import { getSearchQueryOptions } from "@/lib/search";
 import { locationParser } from "@/app/parsers";
 import { PageProps } from "@/app/types";
 
+import Card from "@/containers/card";
 import Test from "@/containers/test";
 
 export const metadata: Metadata = {
@@ -60,6 +61,10 @@ export default async function ReportResultsPage({
               </div>
             </div>
           </header>
+
+          <div className="container">
+            <Card />
+          </div>
 
           <Test id="admin" />
         </div>
