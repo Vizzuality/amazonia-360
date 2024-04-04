@@ -78,3 +78,12 @@ resource "aws_security_group" "amazonia360-sg" {
     Name = "amazonia360-sg"
   }
 }
+
+
+resource "aws_eip" "amazonia360-eip" {
+  instance = var.ec2_instance_id
+  domain      = "vpc"
+  lifecycle {
+    prevent_destroy = false
+  }
+}
