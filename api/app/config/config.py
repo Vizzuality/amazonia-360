@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     postgres_db: str
     postgres_host: str
     postgres_port: str
+    auth_token: str
 
     class Config:
         env_file = ".env"
@@ -15,6 +16,4 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    settings = Settings()
-    print(settings)
-    return settings
+    return Settings()
