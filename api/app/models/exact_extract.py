@@ -5,7 +5,13 @@ from pydantic import BaseModel, Field
 
 
 class StatsProperties(BaseModel):
-    """Model for exact_extract statistics results."""
+    """Model for `exact_extract` statistics results.
+
+    Deliberately avoids the `values` field since it is a
+     list of all raster values for each cell that intersects the polygon.
+     It is not included in the model because it can be very large and there are better ways to get this information
+     in Titiler.
+    """
 
     cell_id: List[int] | None = Field(
         None, description="Array with 0-based index of each cell that intersects the polygon, increasing left-to-right."
@@ -95,9 +101,6 @@ class StatsProperties(BaseModel):
     unique: List[int] | None = Field(
         None, description="Array of unique raster values for cells that intersect the polygon."
     )
-    values: List[int] | None = Field(
-        None, description="Array of raster values for each cell that intersects the polygon."
-    )
     variance: float | None = Field(
         None,
         description="Population variance of cell values that intersect the polygon, taking into account coverage "
@@ -142,3 +145,4 @@ class StatsFeatures(BaseModel):
 
 
 StatsOps = StrEnum("StatsOps", list(StatsProperties.model_fields.keys()))
+StatsOps.__doc__ = "Statistic operations available in `exact_extract`. See `StatsProperties` for more details."
