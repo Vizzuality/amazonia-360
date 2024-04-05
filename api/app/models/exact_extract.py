@@ -38,12 +38,12 @@ class StatsProperties(BaseModel):
     frac: list[float] | None = Field(
         None, description="Fraction of covered cells that are occupied by each distinct raster value."
     )
-    majority: int | None = Field(
+    majority: float | int | None = Field(
         None,
         description="The raster value occupying the greatest number of cells, taking into account cell coverage "
         "fractions but not weighting raster values.",
     )
-    max: int | None = Field(
+    max: float | int | None = Field(
         None,
         description="Maximum value of cells that intersect the polygon, not taking coverage fractions or weighting "
         "raster values into account.",
@@ -63,12 +63,12 @@ class StatsProperties(BaseModel):
         description="Mean value of cells that intersect the polygon, weighted by the percent of each cell that is "
         "covered.",
     )
-    median: int | None = Field(
+    median: float | int | None = Field(
         None,
         description="Median value of cells that intersect the polygon, weighted by the percent of each cell that is "
         "covered.",
     )
-    min: int | None = Field(
+    min: float | int | None = Field(
         None,
         description="Minimum value of cells that intersect the polygon, not taking coverage fractions or weighting "
         "raster values into account.",
@@ -83,7 +83,7 @@ class StatsProperties(BaseModel):
         description="Cell center y-coordinate for the cell containing the minimum value intersected by the polygon. "
         "The center of this cell may or may not be inside the polygon.",
     )
-    minority: int | None = Field(
+    minority: float | int | None = Field(
         None,
         description="The raster value occupying the least number of cells, taking into account cell coverage "
         "fractions but not weighting raster values.",
@@ -98,7 +98,7 @@ class StatsProperties(BaseModel):
         description="Sum of values of raster cells that intersect the polygon, with each raster value weighted by its "
         "coverage fraction.",
     )
-    unique: List[int] | None = Field(
+    unique: List[float | int] | None = Field(
         None, description="Array of unique raster values for cells that intersect the polygon."
     )
     variance: float | None = Field(
@@ -126,7 +126,7 @@ class StatsProperties(BaseModel):
         "fraction and weighting raster value.",
     )
     weighted_variance: float | None = Field(None, description="Weighted version of variance.")
-    weights: List[int] | None = Field(
+    weights: List[float | int] | None = Field(
         None, description="Array of weight values for each cell that intersects the polygon."
     )
 
