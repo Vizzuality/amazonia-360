@@ -17,9 +17,10 @@ class ZonalTilerFactory(TilerFactory):
 
     def register_routes(self):
         """Register Zonal Tiler routes."""
+        self.point()
+        self.register_exact_zonal_stats()
         self.tile()
         self.tilejson()
-        self.register_exact_zonal_stats()
 
     def register_exact_zonal_stats(self):
         """Create Zonal Tiler Router"""
@@ -49,7 +50,10 @@ class ZonalTilerFactory(TilerFactory):
             reader_params=Depends(self.reader_dependency),
             env=Depends(self.environment_dependency),
         ) -> StatsFeatures:
-            """Compute the zonal statistics of a raster. Powered by `exact_extract`."""
+            """Compute the zonal statistics of a raster.
+
+            Powered by [`exact_extract`](https://github.com/isciences/exactextract).
+            """
             if isinstance(geojson, FeatureCollection):
                 # exact_extract does not understand FeatureCollection currently
                 # so extract the features and pass them as a list
