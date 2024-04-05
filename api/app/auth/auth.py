@@ -1,16 +1,18 @@
+"""Auth middleware for the API."""
+
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
-from app.config.config import get_settings
 
+from config.config import get_settings
 
 TOKEN = get_settings().auth_token
 
 
-
 class AuthMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
+    """Generic auth middleware."""
 
+    async def dispatch(self, request: Request, call_next):  # noqa: D102
         if request.url.path == "/docs":
             return await call_next(request)
 
