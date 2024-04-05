@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     postgres_host: str
     postgres_port: str
     auth_token: str
+    tif_path: str
 
     class Config:  # noqa: D106
         env_file = ".env"
