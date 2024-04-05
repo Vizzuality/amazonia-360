@@ -2,7 +2,7 @@
 import os
 from typing import Annotated
 
-from fastapi import FastAPI, Depends, Query
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
 from titiler.core.errors import DEFAULT_STATUS_CODES, add_exception_handlers
@@ -32,6 +32,7 @@ add_exception_handlers(app, DEFAULT_STATUS_CODES)
 
 @app.get("/tifs")
 async def list_files():
+    """List all tif files."""
     tif_path = get_settings().tif_path
     files = os.listdir(tif_path)
     return {"files": sorted(files)}
