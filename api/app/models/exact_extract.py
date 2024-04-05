@@ -29,7 +29,7 @@ class StatsProperties(BaseModel):
     coverage: List[float] | None = Field(
         None, description="Array with coverage fraction of each cell that intersects the polygon."
     )
-    frac: str | None = Field(
+    frac: list[float] | None = Field(
         None, description="Fraction of covered cells that are occupied by each distinct raster value."
     )
     majority: int | None = Field(
@@ -106,7 +106,7 @@ class StatsProperties(BaseModel):
     variety: int | None = Field(
         None, description="The number of distinct raster values in cells wholly or partially covered by the polygon."
     )
-    weighted_frac: str | None = Field(
+    weighted_frac: list[float] | None = Field(
         None,
         description="Fraction of covered cells that are occupied by each distinct raster value, weighted by the value "
         "of a second weighting raster.",

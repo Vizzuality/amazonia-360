@@ -1,4 +1,3 @@
-"""Minimal COG tiler."""
 import os
 from typing import Annotated
 
@@ -32,7 +31,7 @@ add_exception_handlers(app, DEFAULT_STATUS_CODES)
 
 @app.get("/tifs")
 async def list_files():
-    """List all tif files."""
+    """List all available tif files."""
     tif_path = get_settings().tif_path
     files = os.listdir(tif_path)
     return {"files": sorted(files)}
