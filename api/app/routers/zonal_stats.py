@@ -6,39 +6,10 @@ import rasterio
 from exactextract import exact_extract
 from fastapi import Body, Depends, Query
 from geojson_pydantic import Feature, FeatureCollection
-from pydantic import BaseModel, Field
 from titiler.core.factory import TilerFactory
 
 from app.config.config import get_settings
-
-
-class StatsProperties(BaseModel):
-    """Model for exact_extract result fields."""
-
-    min: Annotated[float | None, Field(description="Minimum value.")] = None
-    max: Annotated[float | None, Field(description="Maximum value.")] = None
-    majority: Annotated[
-        float | None,
-        Field(description="The raster value occupying the greatest number of cells"),
-    ] = None
-    variety: Annotated[
-        float | None,
-        Field(description="The number of distinct raster values"),
-    ] = None
-
-
-class StatsFeature(BaseModel):
-    """Stats response model."""
-
-    type: str
-    properties: StatsProperties
-
-
-class StatsFeatures(BaseModel):
-    """Stats response model."""
-
-    features: List[StatsFeature]
-
+from app.models.exact_extract import StatsFeatures, StatsOps
 
 class ZonalTilerFactory(TilerFactory):
     """Zonal Tiler Factory"""
@@ -69,7 +40,10 @@ class ZonalTilerFactory(TilerFactory):
                 Union[FeatureCollection, Feature],
                 Body(description="GeoJSON Feature or FeatureCollection."),
             ],
-            statistics: List[Annotated[str, Query(description="Statistics to compute.")]],
+            statistics: Annotated[
+                List[StatsOps],
+                Query(title="Statistics", description="Statistics to compute. See StatProperties for more details."),
+            ] = ("min", "max"),
             src_path=Depends(self.path_dependency),
             reader_params=Depends(self.reader_dependency),
             env=Depends(self.environment_dependency),
@@ -86,5 +60,6 @@ class ZonalTilerFactory(TilerFactory):
                 tif_path = get_settings().tif_path
                 src_path = os.path.join(tif_path, src_path)
                 with rasterio.open(src_path, **reader_params) as src_dst:
+                    statistics = [op.value for op in statistics]  # extract the values from the Enum
                     stats = exact_extract(src_dst, features, ops=statistics)
                     return StatsFeatures(features=stats)
