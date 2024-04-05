@@ -49,7 +49,7 @@ class ZonalTilerFactory(TilerFactory):
             reader_params=Depends(self.reader_dependency),
             env=Depends(self.environment_dependency),
         ) -> StatsFeatures:
-            """Compute the zonal statistics of a raster with, powered by `exact_extract`."""
+            """Compute the zonal statistics of a raster. Powered by `exact_extract`."""
             if isinstance(geojson, FeatureCollection):
                 # exact_extract does not understand FeatureCollection currently
                 # so extract the features and pass them as a list
