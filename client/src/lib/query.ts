@@ -179,18 +179,27 @@ export const getAnalysis = async (params: GetAnalysisParams) => {
 
   const token = getCookie("arcgis_token");
 
-  return geoprocessor!.execute(
-    "https://atlas.iadb.org/server/rest/services/ClipLayer/GPServer/Clip%20Layer",
+  return geoprocessor.submitJob(
+    "https://atlas.iadb.org/server/rest/services/System/SpatialAnalysisTools/GPServer/OverlayLayers",
     {
-      in_feature1,
-      in_feature2,
+      inputLayer: in_feature1,
+      overlayLayer: in_feature2,
       token,
     },
-    undefined,
-    {
-      withCredentials: true,
-    },
   );
+
+  // return geoprocessor!.execute(
+  //   "https://atlas.iadb.org/server/rest/services/ClipLayer/GPServer/Clip%20Layer",
+  //   {
+  //     in_feature1,
+  //     in_feature2,
+  //     token,
+  //   },
+  //   undefined,
+  //   {
+  //     withCredentials: true,
+  //   },
+  // );
 };
 
 export const getAnalysisKey = (params: GetAnalysisParams) => {

@@ -13,8 +13,10 @@ import { getSearchQueryOptions } from "@/lib/search";
 import { locationParser } from "@/app/parsers";
 import { PageProps } from "@/app/types";
 
-import Card from "@/containers/card";
+import { Card, CardTitle, CardWidgetNumber } from "@/containers/card";
 import Test from "@/containers/test";
+
+import ArcChart from "@/components/charts/arc";
 
 export const metadata: Metadata = {
   title: "Report | results",
@@ -63,7 +65,20 @@ export default async function ReportResultsPage({
           </header>
 
           <div className="container">
-            <Card />
+            <div className="grid grid-cols-12 gap-2">
+              <div className="col-span-3">
+                <Card>
+                  <CardTitle>Results</CardTitle>
+                  <ArcChart value={0.5} />
+                </Card>
+              </div>
+              <div className="col-span-3">
+                <Card>
+                  <CardTitle>Results</CardTitle>
+                  <CardWidgetNumber>45900</CardWidgetNumber>
+                </Card>
+              </div>
+            </div>
           </div>
 
           <Test id="admin" />

@@ -8,7 +8,15 @@ interface CardProps {
   className?: string;
 }
 
-export default function Card({
+export function CardTitle({ children }: PropsWithChildren) {
+  return <h2 className="text-base font-semibold text-blue-600">{children}</h2>;
+}
+
+export function CardWidgetNumber({ children }: PropsWithChildren) {
+  return <div className="font-bold text-4xl">{children}</div>;
+}
+
+export function Card({
   padding = true,
   className,
   children,

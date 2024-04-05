@@ -7,13 +7,13 @@ import dynamic from "next/dynamic";
 import FeatureEffect from "@arcgis/core/layers/support/FeatureEffect";
 
 import { useLocationGeometry } from "@/lib/location";
-import { useGetAnalysis, useGetFeatures } from "@/lib/query";
+import { useGetFeatures } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
 import { DATASETS, DatasetIds } from "@/constants/datasets";
 
-import Card from "@/containers/card";
+import { Card } from "@/containers/card";
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
 
 import Layer from "@/components/map/layers";
@@ -30,7 +30,7 @@ export default function Test({ id }: { id: DatasetIds }) {
       query: DATASETS[`${id}`].getFeatures({
         ...(!!GEOMETRY && {
           geometry: GEOMETRY,
-          returnGeometry: true,
+          returnGeometry: false,
         }),
       }),
       feature: DATASETS[`${id}`].layer,
@@ -47,32 +47,34 @@ export default function Test({ id }: { id: DatasetIds }) {
 
   // console.log(q?.toJSON());
 
-  const { data: analysis } = useGetAnalysis(
-    {
-      in_feature1: {
-        url: "https://atlas.iadb.org/server/rest/services/Hosted/AFP_AdminLevel2/FeatureServer/0",
-      },
-      in_feature2: {
-        geometryType: "esriGeometryPolygon",
-        spatialReference: {
-          wkid: 102100,
-          latestWkid: 3857,
-        },
-        features: [
-          {
-            geometry: GEOMETRY?.toJSON(),
-          },
-        ],
-      },
-    },
-    {
-      enabled: !!data && !!GEOMETRY,
-    },
-  );
+  // const { data: analysis } = useGetAnalysis(
+  //   {
+  //     in_feature1: {
+  //       // url: "https://atlas.iadb.org/server/rest/services/Hosted/AFP_AdminLevel2/FeatureServer/0",
+  //       // url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM2/FeatureServer/0",
+  //       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer/0",
+  //     },
+  //     in_feature2: {
+  //       geometryType: "esriGeometryPolygon",
+  //       spatialReference: {
+  //         wkid: 102100,
+  //         latestWkid: 3857,
+  //       },
+  //       features: [
+  //         {
+  //           geometry: GEOMETRY?.toJSON(),
+  //         },
+  //       ],
+  //     },
+  //   },
+  //   {
+  //     enabled: !!data && !!GEOMETRY,
+  //   },
+  // );
 
-  if (analysis?.results[0]?.value?.features) {
-    console.log(analysis?.results[0]?.value?.features);
-  }
+  // if (analysis?.results[0]?.value?.features) {
+  //   console.log(analysis?.results[0]?.value?.features);
+  // }
 
   const LAYER = useMemo(() => {
     const l = DATASETS[id].layer.clone();
@@ -89,18 +91,20 @@ export default function Test({ id }: { id: DatasetIds }) {
   }, [id, GEOMETRY]);
 
   return (
-    <div className="w-full container grid grid-cols-12">
+    <div className="w-full container grid grid-cols-12 gap-2">
       <div className="col-span-6">
-        <h1>{DATASETS[`${id}`].layer.title}</h1>
-        <h2>{data?.features.length}</h2>
-        {data?.features.map((f) => (
-          <div key={f.attributes.FID}>
-            <h3>{f.attributes.FID}</h3>
-            <pre className="w-full overflow-scroll break-words">
-              {JSON.stringify(f.attributes, null, 2)}
-            </pre>
-          </div>
-        ))}
+        <Card>
+          <h1>{DATASETS[`${id}`].layer.title}</h1>
+          <h2>{data?.features.length}</h2>
+          {data?.features.map((f) => (
+            <div key={f.attributes.FID}>
+              <h3>{f.attributes.FID}</h3>
+              <pre className="w-full overflow-scroll break-words">
+                {JSON.stringify(f.attributes, null, 2)}
+              </pre>
+            </div>
+          ))}
+        </Card>
       </div>
 
       <div className="col-span-6">
