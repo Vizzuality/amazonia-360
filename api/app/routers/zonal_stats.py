@@ -43,13 +43,13 @@ class ZonalTilerFactory(TilerFactory):
             ],
             statistics: Annotated[
                 List[StatsOps],
-                Query(title="Statistics", description="Statistics to compute. See StatProperties for more details."),
+                Query(title="Statistics", description="Statistics to compute. See `StatsProperties` for more details."),
             ] = ("min", "max"),
             src_path=Depends(self.path_dependency),
             reader_params=Depends(self.reader_dependency),
             env=Depends(self.environment_dependency),
         ) -> StatsFeatures:
-            """Compute the zonal statistics of a COG."""
+            """Compute the zonal statistics of a raster with, powered by `exact_extract`."""
             if isinstance(geojson, FeatureCollection):
                 # exact_extract does not understand FeatureCollection currently
                 # so extract the features and pass them as a list
