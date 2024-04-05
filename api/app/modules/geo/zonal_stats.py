@@ -1,4 +1,5 @@
 """Minimal COG tiler."""
+import os
 from typing import Annotated, List, Union
 
 import rasterio
@@ -82,6 +83,7 @@ class ZonalTilerFactory(TilerFactory):
                 features = [geojson.model_dump()]
 
             with rasterio.Env(**env):
+                src_path = os.path.join('/opt/api/data', src_path)
                 with rasterio.open(src_path, **reader_params) as src_dst:
                     stats = exact_extract(src_dst, features, ops=["min", "max", "majority", "variety"])
                     return StatsFeatures(features=stats)

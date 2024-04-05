@@ -84,6 +84,6 @@ resource "aws_eip" "amazonia360-eip" {
   instance = var.ec2_instance_id
   domain      = "vpc"
   lifecycle {
-    prevent_destroy = false
+    prevent_destroy = true
   }
 }
