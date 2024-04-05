@@ -11,6 +11,7 @@ from titiler.core.factory import TilerFactory
 from app.config.config import get_settings
 from app.models.exact_extract import StatsFeatures, StatsOps
 
+
 class ZonalTilerFactory(TilerFactory):
     """Zonal Tiler Factory"""
 
