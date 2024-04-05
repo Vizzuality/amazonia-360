@@ -9,6 +9,8 @@ from geojson_pydantic import Feature, FeatureCollection
 from pydantic import BaseModel
 from titiler.core.factory import TilerFactory
 
+from app.config.config import get_settings
+
 
 class StatsProperties(BaseModel):
     """Model for exact_extract result fields."""
@@ -83,7 +85,8 @@ class ZonalTilerFactory(TilerFactory):
                 features = [geojson.model_dump()]
 
             with rasterio.Env(**env):
-                src_path = os.path.join("/opt/api/data", src_path)
+                tif_path = get_settings().tif_path
+                src_path = os.path.join(tif_path, src_path)
                 with rasterio.open(src_path, **reader_params) as src_dst:
                     stats = exact_extract(src_dst, features, ops=["min", "max", "majority", "variety"])
                     return StatsFeatures(features=stats)
