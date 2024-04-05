@@ -5,7 +5,6 @@ import { useMemo } from "react";
 import dynamic from "next/dynamic";
 
 import FeatureEffect from "@arcgis/core/layers/support/FeatureEffect";
-import FeatureFilter from "@arcgis/core/webdoc/geotriggersInfo/FeatureFilter";
 
 import { useLocationGeometry } from "@/lib/location";
 import { useGetFeatures } from "@/lib/query";
@@ -14,6 +13,7 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS, DatasetIds } from "@/constants/datasets";
 
+import { Card } from "@/containers/card";
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
 
 import Layer from "@/components/map/layers";
@@ -30,6 +30,7 @@ export default function Test({ id }: { id: DatasetIds }) {
       query: DATASETS[`${id}`].getFeatures({
         ...(!!GEOMETRY && {
           geometry: GEOMETRY,
+          returnGeometry: false,
         }),
       }),
       feature: DATASETS[`${id}`].layer,
@@ -38,14 +39,50 @@ export default function Test({ id }: { id: DatasetIds }) {
       enabled: !!DATASETS[`${id}`].getFeatures && !!GEOMETRY,
     },
   );
+  // const q = DATASETS[`${id}`].getFeatures({
+  //   ...(!!GEOMETRY && {
+  //     geometry: GEOMETRY,
+  //   }),
+  // });
+
+  // console.log(q?.toJSON());
+
+  // const { data: analysis } = useGetAnalysis(
+  //   {
+  //     in_feature1: {
+  //       // url: "https://atlas.iadb.org/server/rest/services/Hosted/AFP_AdminLevel2/FeatureServer/0",
+  //       // url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM2/FeatureServer/0",
+  //       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer/0",
+  //     },
+  //     in_feature2: {
+  //       geometryType: "esriGeometryPolygon",
+  //       spatialReference: {
+  //         wkid: 102100,
+  //         latestWkid: 3857,
+  //       },
+  //       features: [
+  //         {
+  //           geometry: GEOMETRY?.toJSON(),
+  //         },
+  //       ],
+  //     },
+  //   },
+  //   {
+  //     enabled: !!data && !!GEOMETRY,
+  //   },
+  // );
+
+  // if (analysis?.results[0]?.value?.features) {
+  //   console.log(analysis?.results[0]?.value?.features);
+  // }
 
   const LAYER = useMemo(() => {
     const l = DATASETS[id].layer.clone();
     if (GEOMETRY) {
       l.featureEffect = new FeatureEffect({
-        filter: new FeatureFilter({
+        filter: {
           geometry: GEOMETRY,
-        }),
+        },
         excludedEffect: "opacity(0%)",
       });
     }
@@ -54,36 +91,40 @@ export default function Test({ id }: { id: DatasetIds }) {
   }, [id, GEOMETRY]);
 
   return (
-    <div className="w-full container grid grid-cols-12">
+    <div className="w-full container grid grid-cols-12 gap-2">
       <div className="col-span-6">
-        <h1>{DATASETS[`${id}`].layer.title}</h1>
-
-        {data?.features.map((f) => (
-          <div key={f.attributes.FID}>
-            <h2>{f.attributes.FID}</h2>
-            <pre className="w-full overflow-scroll break-words">
-              {JSON.stringify(f.attributes, null, 2)}
-            </pre>
-          </div>
-        ))}
+        <Card>
+          <h1>{DATASETS[`${id}`].layer.title}</h1>
+          <h2>{data?.features.length}</h2>
+          {data?.features.map((f) => (
+            <div key={f.attributes.FID}>
+              <h3>{f.attributes.FID}</h3>
+              <pre className="w-full overflow-scroll break-words">
+                {JSON.stringify(f.attributes, null, 2)}
+              </pre>
+            </div>
+          ))}
+        </Card>
       </div>
 
-      <div className="col-span-6 h-96">
-        <Map
-          id={id}
-          {...(GEOMETRY?.extent && {
-            defaultBbox: [
-              GEOMETRY?.extent.xmin,
-              GEOMETRY?.extent.ymin,
-              GEOMETRY?.extent.xmax,
-              GEOMETRY?.extent.ymax,
-            ],
-            bbox: undefined,
-          })}
-        >
-          <Layer layer={LAYER} index={1} />
-          <SelectedLayer />
-        </Map>
+      <div className="col-span-6">
+        <Card padding={false} className="h-96">
+          <Map
+            id={id}
+            {...(GEOMETRY?.extent && {
+              defaultBbox: [
+                GEOMETRY?.extent.xmin,
+                GEOMETRY?.extent.ymin,
+                GEOMETRY?.extent.xmax,
+                GEOMETRY?.extent.ymax,
+              ],
+              bbox: undefined,
+            })}
+          >
+            <Layer layer={LAYER} index={1} />
+            <SelectedLayer />
+          </Map>
+        </Card>
       </div>
     </div>
   );

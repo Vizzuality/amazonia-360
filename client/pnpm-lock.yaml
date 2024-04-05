@@ -92,6 +92,9 @@ dependencies:
   react-icons:
     specifier: ^5.0.1
     version: 5.0.1(react@18.2.0)
+  react-use-cookie:
+    specifier: ^1.5.0
+    version: 1.5.0(react@18.2.0)
   rooks:
     specifier: ^7.14.1
     version: 7.14.1(react-dom@18.2.0)(react@18.2.0)
@@ -4039,6 +4042,15 @@ packages:
       invariant: 2.2.4
       react: 18.2.0
       tslib: 2.6.2
+    dev: false
+
+  /react-use-cookie@1.5.0(react@18.2.0):
+    resolution: {integrity: sha512-zPEAmAYbRLXzpi3VD3rjYHszTo8BonuiaiLH/jYixHr6qE+Yukm2lA6AsinX1uL7/9nFSVeKBLqI4oOZYdhghQ==}
+    engines: {node: '>=8', npm: '>=5'}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-use-measure@2.1.1(react-dom@18.2.0)(react@18.2.0):

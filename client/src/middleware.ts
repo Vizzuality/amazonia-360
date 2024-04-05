@@ -4,15 +4,21 @@ import type { NextRequest } from "next/server";
 import { env } from "@/env.mjs";
 
 // Step 1. HTTP Basic Auth Middleware for Challenge
-export default function middleware(req: NextRequest) {
+export default async function middleware(req: NextRequest) {
   if (!isAuthenticated(req)) {
     return new NextResponse("Authentication required", {
       status: 401,
       headers: { "WWW-Authenticate": "Basic" },
     });
   }
+  const token = await fetch(
+    `https://atlas.iadb.org/portal/sharing/rest/oauth2/token/?client_id=${env.ARCGIS_CLIENT_ID}client_secret=${env.ARCGIS_CLIENT_SECRET}&grant_type=client_credentials`,
+  ).then((res) => res.json());
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+  response.cookies.set("arcgis_token", token.access_token);
+
+  return response;
 }
 
 // Step 2. Check HTTP Basic Auth header if present
@@ -39,5 +45,5 @@ function isAuthenticated(req: NextRequest) {
 
 // Step 3. Configure "Matching Paths" below to protect routes with HTTP Basic Auth
 export const config = {
-  matcher: "/",
+  matcher: "/((?!api|_next/static|_next/image|favicon.ico).*)",
 };
