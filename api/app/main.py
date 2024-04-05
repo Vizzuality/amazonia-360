@@ -18,6 +18,7 @@ def path_params(raster_name: Annotated[str, Query(description="Raster file path.
     raster = os.path.join(tif_path, raster_name)
     return raster
 
+
 # Use ORJSONResponse to handle serialization of NaN values. Normal Json fails to serialize NaN values.
 app = FastAPI(title="Amazonia360 API", default_response_class=ORJSONResponse)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
@@ -27,3 +28,10 @@ routes = ZonalTilerFactory(path_dependency=path_params)
 app.include_router(routes.router)
 
 add_exception_handlers(app, DEFAULT_STATUS_CODES)
+
+
+@app.get("/tifs")
+async def list_files():
+    tif_path = get_settings().tif_path
+    files = os.listdir(tif_path)
+    return {"files": files}
