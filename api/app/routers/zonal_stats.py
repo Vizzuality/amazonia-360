@@ -6,7 +6,7 @@ import rasterio
 from exactextract import exact_extract
 from fastapi import Body, Depends, Query
 from geojson_pydantic import Feature, FeatureCollection
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from titiler.core.factory import TilerFactory
 
 from app.config.config import get_settings
@@ -15,19 +15,16 @@ from app.config.config import get_settings
 class StatsProperties(BaseModel):
     """Model for exact_extract result fields."""
 
-    min: Annotated[float, Query(description="Minimum value.")]
-    max: Annotated[float, Query(description="Maximum value.")]
+    min: Annotated[float | None, Field(description="Minimum value.")] = None
+    max: Annotated[float | None, Field(description="Maximum value.")] = None
     majority: Annotated[
-        float,
-        Query(
-            description="The raster value occupying the greatest number of cells, taking into account cell coverage "
-            "fractions but not weighting raster values."
-        ),
-    ]
+        float | None,
+        Field(description="The raster value occupying the greatest number of cells"),
+    ] = None
     variety: Annotated[
-        float,
-        Query(description="The number of distinct raster values in cells wholly or partially covered by the polygon."),
-    ]
+        float | None,
+        Field(description="The number of distinct raster values"),
+    ] = None
 
 
 class StatsFeature(BaseModel):
@@ -72,6 +69,7 @@ class ZonalTilerFactory(TilerFactory):
                 Union[FeatureCollection, Feature],
                 Body(description="GeoJSON Feature or FeatureCollection."),
             ],
+            statistics: List[Annotated[str, Query(description="Statistics to compute.")]],
             src_path=Depends(self.path_dependency),
             reader_params=Depends(self.reader_dependency),
             env=Depends(self.environment_dependency),
@@ -88,5 +86,5 @@ class ZonalTilerFactory(TilerFactory):
                 tif_path = get_settings().tif_path
                 src_path = os.path.join(tif_path, src_path)
                 with rasterio.open(src_path, **reader_params) as src_dst:
-                    stats = exact_extract(src_dst, features, ops=["min", "max", "majority", "variety"])
+                    stats = exact_extract(src_dst, features, ops=statistics)
                     return StatsFeatures(features=stats)
