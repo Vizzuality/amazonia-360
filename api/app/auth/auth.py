@@ -4,7 +4,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
 
-from config.config import get_settings
+from app.config.config import get_settings
 
 TOKEN = get_settings().auth_token
 
@@ -19,7 +19,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
         if request.url.path == "/openapi.json":
             return await call_next(request)
 
-        request_token = request.headers.get("Authorization").split(" ")[1]
+        request_token = request.headers.get("Authorization")
+        if request_token and request_token.startswith("Bearer "):
+            request_token = request_token.split("Bearer ")[1]
         if request_token == TOKEN:
             return await call_next(request)
         else:
