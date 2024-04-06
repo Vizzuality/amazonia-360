@@ -1,0 +1,23 @@
+name: CI / CD
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build and run tests
+      run: docker-compose up --build test
+
+    - name: Clean up
+      run: docker-compose down

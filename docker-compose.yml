@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.9'
 services:
   api:
     build:
@@ -6,8 +6,9 @@ services:
         dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    env_file:
-      - .env
+    environment:
+      - AUTH_TOKEN=${AUTH_TOKEN}
+      - TIFF_PATH=${TIFF_PATH}
     networks:
       - amazonia360-network
     restart:
@@ -17,8 +18,7 @@ services:
     build:
         context: ./api
         dockerfile: Dockerfile
-    env_file:
-      - .env.test
+    env_file: .env.test
     networks:
       - amazonia360-network
 
