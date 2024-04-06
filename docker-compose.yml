@@ -12,6 +12,17 @@ services:
       - amazonia360-network
     restart:
         always
+
+  test:
+    build:
+        context: ./api
+        dockerfile: Dockerfile
+    env_file:
+      - .env.test
+    networks:
+      - amazonia360-network
+
+    command: pytest tests
 networks:
   amazonia360-network:
     driver: bridge

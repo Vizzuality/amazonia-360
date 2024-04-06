@@ -174,3 +174,4 @@ typing-extensions==4.10.0
     #   pydantic-core
     #   titiler-core
 uvicorn==0.29.0
+pytest==8.1.1
