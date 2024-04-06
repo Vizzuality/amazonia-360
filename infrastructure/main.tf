@@ -17,7 +17,7 @@ terraform {
 
 module "ec2" {
   source         = "./modules/ec2"
-  ami            = "ami-0facbf2a36e11b9dd"
+  ami            = "ami-0db612899f2542162"
   instance_type  = "t2.large"
   subnet_id      = module.vpc.subnet_id
   instance_name  = "amazonia360-ec2"
