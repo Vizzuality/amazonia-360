@@ -34,4 +34,4 @@ add_exception_handlers(app, DEFAULT_STATUS_CODES)
 async def list_files():
     tif_path = get_settings().tif_path
     files = os.listdir(tif_path)
-    return {"files": files}
+    return {"files": sorted(files)}
