@@ -2,9 +2,9 @@ import os
 from typing import Annotated
 
 from fastapi import FastAPI, Query
+from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
-from starlette.exceptions import HTTPException
 from titiler.core.errors import DEFAULT_STATUS_CODES, add_exception_handlers
 
 from app.auth.auth import AuthMiddleware
