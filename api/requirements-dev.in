@@ -1,3 +1,4 @@
 -c requirements.txt
-ruff
 mypy
+pytest
+ruff
