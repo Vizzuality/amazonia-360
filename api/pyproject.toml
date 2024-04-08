@@ -21,3 +21,6 @@ src = ["app"]
 
 [tool.ruff.flake8-bugbear]
 extend-immutable-calls = ["fastapi.Depends", "fastapi.params.Depends", "fastapi.Query", "fastapi.params.Query"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/{tests}/*" = ["D103"]  # Missing docstring in public function
