@@ -1,0 +1,6 @@
+exactextract
+fastapi
+orjson
+pydantic_settings
+titiler
+uvicorn
