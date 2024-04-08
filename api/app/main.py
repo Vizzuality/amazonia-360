@@ -38,3 +38,9 @@ async def list_files():
     tif_path = get_settings().tif_path
     files = os.listdir(tif_path)
     return {"files": sorted(files)}
+
+
+@app.get("/health")
+async def health():
+    """Health check."""
+    return {"status": "ok"}
