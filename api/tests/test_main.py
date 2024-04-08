@@ -1,15 +1,16 @@
 import os
 import shutil
 
+import numpy as np
 import pytest
+import rasterio
 from app.config.config import get_settings
 
 from tests.utils import test_client
 
-token = get_settings().auth_token
-test_tif_path = get_settings().tif_path
-files = ["raster.tif", "raster2.tif", "raster3.tif"]
-geojson = {
+TOKEN = get_settings().auth_token
+FILES = ["raster.tif", "raster2.tif", "raster3.tif"]
+GEOJSON = {
     "type": "FeatureCollection",
     "features": [
         {
@@ -19,60 +20,19 @@ geojson = {
                 "type": "Polygon",
                 "coordinates": [
                     [
-                        [115.0870, -8.3455],
-                        [115.0870, -8.3355],
-                        [115.0970, -8.3355],
-                        [115.0970, -8.3455],
-                        [115.0870, -8.3455],
-                    ]
+                        [3.0, 7.0],
+                        [3.0, 10.0],
+                        [0.0, 10.0],
+                        [0.0, 7.0],
+                        [3.0, 7.0],
+                    ],
                 ],
             },
         }
     ],
 }
 
-headers = {"Authorization": f"Bearer {token}"}
-
-
-def test_no_token():
-    response = test_client.get("/tifs")
-    assert response.status_code == 401
-    assert response.text == "Unauthorized"
-
-
-def test_with_token(setup_data_folder):
-    response = test_client.get("/tifs", headers=headers)
-    assert response.status_code == 200
-
-
-def test_list_files_empty(setup_data_folder):
-    response = test_client.get("/tifs", headers=headers)
-    assert response.status_code == 200
-    assert response.json() == {"files": []}
-
-
-def test_list_files(setup_files):
-    response = test_client.get("/tifs", headers=headers)
-    assert response.status_code == 200
-    assert response.json() == {"files": files}
-
-
-def test_wrong_file_name_raises_404(setup_data_folder):
-    response = test_client.post(
-        "/exact_zonal_stats", headers=headers, params={"raster_filename": "wrong.tif"}, json=geojson
-    )
-    assert response.status_code == 404
-
-
-# TODO: Activate this test once having a test tif file
-
-# def test_exact_zonal_stats(setup_tif):
-#     response = test_client.post(
-#       "/exact_zonal_stats", headers=headers, params={"raster_name": "test.tif"}, json=geojson
-#     )
-#     assert response.status_code == 200
-#     assert response.json() == {"mean": 0.0, "min": 0.0, "max": 0.0, "count": 0, "sum": 0.0}
-#
+HEADERS = {"Authorization": f"Bearer {TOKEN}"}
 
 
 @pytest.fixture()
@@ -85,17 +45,39 @@ def setup_data_folder():
 
 
 @pytest.fixture()
-def setup_files():
-    os.mkdir(get_settings().tif_path)
-    for file in files:
+def tif_file(setup_data_folder):
+    data = np.array([[0, 1, 0], [1, 9, 1], [0, 1, 0]])
+    transform = rasterio.transform.from_origin(0, 10, 1, 1)  # upper left corner at 0E, 10N and 1 degree pixel size
+    with rasterio.open(
+        f"{get_settings().tif_path}/raster.tif",
+        "w",
+        driver="GTiff",
+        width=data.shape[1],
+        height=data.shape[0],
+        count=1,
+        dtype="uint8",
+        crs="+proj=latlong",
+        transform=transform,
+    ) as dst:
+        dst.write(data, 1)
+
+    yield
+
+    os.remove(f"{get_settings().tif_path}/raster.tif")
+
+
+@pytest.fixture()
+def setup_files(setup_data_folder):
+    test_tif_path = get_settings().tif_path
+
+    for file in FILES:
         with open(f"{test_tif_path}/{file}", "w") as f:
             f.write("test data")
 
     yield
 
-    for file in files:
+    for file in FILES:
         os.remove(f"{test_tif_path}/{file}")
-    os.rmdir(test_tif_path)
 
 
 @pytest.fixture()
@@ -107,3 +89,68 @@ def setup_tif():
 
     os.remove(f"{get_settings().tif_path}/test.tif")
     os.rmdir(get_settings().tif_path)
+
+
+def test_no_token():
+    response = test_client.get("/tifs")
+    assert response.status_code == 401
+    assert response.text == "Unauthorized"
+
+
+def test_with_token(setup_data_folder):
+    response = test_client.get("/tifs", headers=HEADERS)
+    assert response.status_code == 200
+
+
+def test_list_files_empty(setup_data_folder):
+    response = test_client.get("/tifs", headers=HEADERS)
+    assert response.status_code == 200
+    assert response.json() == {"files": []}
+
+
+def test_list_files(setup_files):
+    response = test_client.get("/tifs", headers=HEADERS)
+    assert response.status_code == 200
+    assert response.json() == {"files": FILES}
+
+
+def test_wrong_file_name_raises_404(setup_data_folder):
+    response = test_client.post(
+        "/exact_zonal_stats", headers=HEADERS, params={"raster_filename": "wrong.tif"}, json=GEOJSON
+    )
+    assert response.status_code == 404
+
+
+def test_no_geojson_raises_422(tif_file):
+    response = test_client.post("/exact_zonal_stats", headers=HEADERS, params={"raster_filename": "raster.tif"})
+    assert response.status_code == 422
+    assert response.json() == {
+        "detail": [
+            {
+                "input": None,
+                "loc": ["body"],
+                "msg": "Field required",
+                "type": "missing",
+                "url": "https://errors.pydantic.dev/2.6/v/missing",
+            }
+        ]
+    }
+
+
+def test_default_zonal_stats(tif_file):
+    response = test_client.post(
+        "/exact_zonal_stats", headers=HEADERS, params={"raster_filename": "raster.tif"}, json=GEOJSON
+    )
+    assert response.status_code == 200
+    assert response.json() == {"features": [{"properties": {"max": 9.0, "min": 0.0}, "type": "Feature"}]}
+
+
+def test_custom_zonal_stats(tif_file):
+    response = test_client.post(
+        "/exact_zonal_stats",
+        headers=HEADERS,
+        params={"raster_filename": "raster.tif", "statistics": ["count"]},
+        json=GEOJSON,
+    )
+    assert response.status_code == 200
+    assert response.json() == {"features": [{"properties": {"count": 9}, "type": "Feature"}]}
