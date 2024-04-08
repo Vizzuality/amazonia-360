@@ -31,7 +31,7 @@ export default function WidgetMap({ ids }: WidgetMapProps) {
   const LAYERS = useMemo(() => {
     return ids.map((id) => {
       const l = DATASETS[id].layer.clone();
-      if (GEOMETRY) {
+      if (GEOMETRY && !l.featureReduction) {
         l.featureEffect = new FeatureEffect({
           filter: {
             geometry: GEOMETRY,

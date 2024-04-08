@@ -32,7 +32,9 @@ export default function WidgetResearchCenters() {
 
   return (
     <Card>
-      <CardTitle>Research centers ()</CardTitle>
+      <CardTitle>
+        Research centers ({institutional_trackingData?.features?.length ?? "-"})
+      </CardTitle>
       <ul className="space-y-1">
         {institutional_trackingData?.features.map((feature) => (
           <li key={feature.attributes.FID}>{feature.attributes.Org_Name}</li>

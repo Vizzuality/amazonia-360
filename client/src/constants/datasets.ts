@@ -241,6 +241,26 @@ export const DATASETS = {
       id: "institutional_tracking",
       title: "Institutional Tracking",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Institutional_Tracking/FeatureServer/0",
+      featureReduction: {
+        type: "cluster",
+        clusterMinSize: 16.5,
+        labelingInfo: [
+          {
+            deconflictionStrategy: "none",
+            labelExpressionInfo: {
+              expression: "Text($feature.cluster_count, '#,###')",
+            },
+            symbol: {
+              type: "text",
+              color: "#FFFFFF",
+              font: {
+                size: "12px",
+              },
+            },
+            labelPlacement: "center-center",
+          },
+        ],
+      },
       renderer: new SimpleRenderer({
         symbol: new SimpleMarkerSymbol({
           color: "#000000",

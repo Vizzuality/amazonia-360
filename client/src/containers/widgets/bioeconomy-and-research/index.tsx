@@ -1,7 +1,7 @@
 import WidgetResearchCenters from "@/containers/widgets/bioeconomy-and-research/research-centers";
 import WidgetMap from "@/containers/widgets/map";
 
-export default function WidgetsBioeconomicAndResearchData() {
+export default function WidgetsBioeconomicAndResearch() {
   return (
     <div className="container">
       <div className="grid grid-cols-12 gap-2">
