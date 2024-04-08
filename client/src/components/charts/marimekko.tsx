@@ -8,7 +8,7 @@ import { Treemap, hierarchy, stratify, treemapDice } from "@visx/hierarchy";
 import { useParentSize } from "@visx/responsive";
 import CHROMA from "chroma-js";
 
-import { formatPercentage } from "@/lib/formats";
+import { useFormatPercentage } from "@/lib/formats";
 
 export const background = "#00152E"; // navy
 
@@ -61,7 +61,7 @@ const MarimekkoChart = ({ data = [] }: MarimekkoChartProp) => {
     ]).domain([MIN, MAX]);
   }, [MIN, MAX]);
 
-  const { format } = formatPercentage({
+  const { format } = useFormatPercentage({
     maximumFractionDigits: 0,
   });
 

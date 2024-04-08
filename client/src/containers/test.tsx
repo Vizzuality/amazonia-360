@@ -108,7 +108,7 @@ export default function Test({ id }: { id: DatasetIds }) {
       </div>
 
       <div className="col-span-6">
-        <Card padding={false} className="h-96">
+        <Card className="h-96 p-0">
           <Map
             id={id}
             {...(GEOMETRY?.extent && {

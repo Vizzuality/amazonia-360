@@ -64,7 +64,9 @@ export const getGeometryByType = (location: CustomLocation) => {
   return null;
 };
 
-export const getGeometryWithBuffer = (geometry: __esri.Geometry | null) => {
+export const getGeometryWithBuffer = (
+  geometry: __esri.Geometry | null,
+): __esri.Polygon | null => {
   if (!geometry) return null;
 
   if (geometry.type === "point") {
@@ -80,7 +82,7 @@ export const getGeometryWithBuffer = (geometry: __esri.Geometry | null) => {
   }
 
   if (geometry.type === "polygon") {
-    return geometry;
+    return geometry as __esri.Polygon;
   }
 
   return null;

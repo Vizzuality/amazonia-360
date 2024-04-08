@@ -12,22 +12,28 @@ export function CardTitle({ children }: PropsWithChildren) {
   return <h2 className="text-base font-semibold text-blue-600">{children}</h2>;
 }
 
-export function CardWidgetNumber({ children }: PropsWithChildren) {
-  return <div className="font-bold text-4xl">{children}</div>;
+export function CardWidgetNumber({
+  value,
+  unit,
+}: {
+  value: string | number | null;
+  unit: string;
+}) {
+  return (
+    <div className="flex items-end space-x-2">
+      <span className="font-bold text-4xl text-blue-600">{value}</span>
+      <span className="text-xs font-medium text-gray-500 relative bottom-1.5">
+        {unit}
+      </span>
+    </div>
+  );
 }
 
-export function Card({
-  padding = true,
-  className,
-  children,
-}: PropsWithChildren<CardProps>) {
+export function Card({ className, children }: PropsWithChildren<CardProps>) {
   return (
     <div
       className={cn(
         "p-6 rounded-2xl bg-white border border-blue-100 overflow-hidden",
-        {
-          "p-0": !padding,
-        },
         className,
       )}
     >
