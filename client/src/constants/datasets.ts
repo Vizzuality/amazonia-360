@@ -236,6 +236,29 @@ export const DATASETS = {
         ...props,
       }),
   },
+  institutional_tracking: {
+    layer: new FeatureLayer({
+      id: "institutional_tracking",
+      title: "Institutional Tracking",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Institutional_Tracking/FeatureServer/0",
+      renderer: new SimpleRenderer({
+        symbol: new SimpleMarkerSymbol({
+          color: "#000000",
+          size: 4,
+          outline: {
+            width: 1,
+            color: "#000000",
+          },
+        }),
+      }),
+    }),
+    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
+  },
 } as const;
 
 export type DatasetIds = keyof typeof DATASETS;
