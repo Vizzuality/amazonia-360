@@ -96,6 +96,10 @@ def test_no_token():
     assert response.status_code == 401
     assert response.text == "Unauthorized"
 
+def test_health_is_public():
+    response = test_client.get("/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
 
 def test_with_token(setup_data_folder):
     response = test_client.get("/tifs", headers=HEADERS)
