@@ -1,5 +1,4 @@
 import os
-import shutil
 
 import numpy as np
 import pytest
@@ -67,28 +66,18 @@ def tif_file(setup_data_folder):
 
 
 @pytest.fixture()
-def setup_files(setup_data_folder):
+def setup_empty_files(setup_data_folder):
     test_tif_path = get_settings().tif_path
 
     for file in FILES:
+        # Create empty files writing nothing
         with open(f"{test_tif_path}/{file}", "w") as f:
-            f.write("test data")
+            f.write("")
 
     yield
 
     for file in FILES:
         os.remove(f"{test_tif_path}/{file}")
-
-
-@pytest.fixture()
-def setup_tif():
-    os.mkdir(get_settings().tif_path)
-    shutil.copy("/opt/api/tests/test.tif", get_settings().tif_path)
-
-    yield
-
-    os.remove(f"{get_settings().tif_path}/test.tif")
-    os.rmdir(get_settings().tif_path)
 
 
 def test_no_token():
@@ -108,7 +97,7 @@ def test_list_files_empty(setup_data_folder):
     assert response.json() == {"files": []}
 
 
-def test_list_files(setup_files):
+def test_list_files(setup_empty_files):
     response = test_client.get("/tifs", headers=HEADERS)
     assert response.status_code == 200
     assert response.json() == {"files": FILES}
@@ -154,3 +143,13 @@ def test_custom_zonal_stats(tif_file):
     )
     assert response.status_code == 200
     assert response.json() == {"features": [{"properties": {"count": 9}, "type": "Feature"}]}
+
+
+def test_nonexistent_statistic_raises_422(tif_file):
+    response = test_client.post(
+        "/exact_zonal_stats",
+        headers=HEADERS,
+        params={"raster_filename": "raster.tif", "statistics": ["nonexistent"]},
+        json=GEOJSON,
+    )
+    assert response.status_code == 422
