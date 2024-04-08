@@ -45,8 +45,17 @@ def setup_data_folder():
 
 @pytest.fixture()
 def tif_file(setup_data_folder):
+    """Create a test raster file.
+
+        [[0, 1, 0],
+        [1, 9, 1],
+        [0, 1, 0]]
+
+    The raster is a 3x3 grid with the upper left corner at 0E, 10N and 1 degree pixel size.
+    The bbox is BoundingBox(left=0.0, bottom=7.0, right=3.0, top=10.0)
+    """
     data = np.array([[0, 1, 0], [1, 9, 1], [0, 1, 0]])
-    transform = rasterio.transform.from_origin(0, 10, 1, 1)  # upper left corner at 0E, 10N and 1 degree pixel size
+    transform = rasterio.transform.from_origin(0, 10, 1, 1)
     with rasterio.open(
         f"{get_settings().tif_path}/raster.tif",
         "w",
