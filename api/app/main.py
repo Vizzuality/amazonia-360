@@ -4,6 +4,7 @@ from typing import Annotated
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
+from starlette.exceptions import HTTPException
 from titiler.core.errors import DEFAULT_STATUS_CODES, add_exception_handlers
 
 from app.auth.auth import AuthMiddleware
@@ -11,10 +12,12 @@ from app.config.config import get_settings
 from app.routers.zonal_stats import ZonalTilerFactory
 
 
-def path_params(raster_name: Annotated[str, Query(description="Raster file path.")]):
-    """Path params."""
+def path_params(raster_filename: Annotated[str, Query(description="Raster filename.")]):
+    """Dependency to get the path of the raster file."""
     tif_path = get_settings().tif_path
-    raster = os.path.join(tif_path, raster_name)
+    raster = os.path.join(tif_path, raster_filename)
+    if not os.path.exists(raster):
+        raise HTTPException(status_code=404, detail=f"Raster file {raster} does not exist.")
     return raster
 
 
