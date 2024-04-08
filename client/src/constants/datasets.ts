@@ -4,6 +4,7 @@ import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer";
 import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
 import Query from "@arcgis/core/rest/support/Query";
 import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
+import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
 
 import GEOJSON from "@/data/geojson.json";
 
@@ -60,6 +61,16 @@ export const DATASETS = {
       id: "ciudades_capitales",
       title: "Ciudades capitales",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_CAPITALES_ADMIN/FeatureServer/0",
+      renderer: new SimpleRenderer({
+        symbol: new SimpleMarkerSymbol({
+          color: "#000000",
+          size: 4,
+          outline: {
+            width: 1,
+            color: "#000000",
+          },
+        }),
+      }),
     }),
     getFeatures: (props?: __esri.QueryProperties | undefined) =>
       new Query({

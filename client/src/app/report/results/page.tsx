@@ -13,11 +13,12 @@ import { getSearchQueryOptions } from "@/lib/search";
 import { locationParser } from "@/app/parsers";
 import { PageProps } from "@/app/types";
 
-import Test from "@/containers/test";
-import WidgetAltitude from "@/containers/widgets/altitude";
-import WidgetAmazoniaCoverage from "@/containers/widgets/amazonia-coverage";
-import WidgetPopulation from "@/containers/widgets/population";
-import WidgetTotalArea from "@/containers/widgets/total-area";
+import WidgetMap from "@/containers/widgets/map";
+import WidgetAltitude from "@/containers/widgets/overview/altitude";
+import WidgetAmazoniaCoverage from "@/containers/widgets/overview/amazonia-coverage";
+import WidgetLandmarks from "@/containers/widgets/overview/landmarks";
+import WidgetPopulation from "@/containers/widgets/overview/population";
+import WidgetTotalArea from "@/containers/widgets/overview/total-area";
 
 export const metadata: Metadata = {
   title: "Report | results",
@@ -53,7 +54,7 @@ export default async function ReportResultsPage({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className="relative flex flex-col h-[calc(100svh_-_theme(space.20))] bg-blue-50 py-12">
+      <main className="relative flex flex-col bg-blue-50 py-12">
         <div className="flex flex-col space-y-10">
           <header>
             <div className="container">
@@ -65,6 +66,7 @@ export default async function ReportResultsPage({
             </div>
           </header>
 
+          {/* OVERVIEW */}
           <div className="container">
             <div className="grid grid-cols-12 gap-2">
               <div className="col-span-3">
@@ -79,10 +81,14 @@ export default async function ReportResultsPage({
               <div className="col-span-3">
                 <WidgetAmazoniaCoverage />
               </div>
+              <div className="col-span-6">
+                <WidgetMap ids={["ciudades_capitales", "areas_protegidas"]} />
+              </div>
+              <div className="col-span-6">
+                <WidgetLandmarks />
+              </div>
             </div>
           </div>
-
-          <Test id="admin" />
         </div>
       </main>
     </HydrationBoundary>
