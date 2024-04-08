@@ -44,7 +44,10 @@ class ZonalTilerFactory(TilerFactory):
             ],
             statistics: Annotated[
                 List[StatsOps],
-                Query(title="Statistics", description="Statistics to compute. See `StatsProperties` for more details."),
+                Query(
+                    title="Statistics",
+                    description="Statistics to compute. See `StatsProperties` for more details.",
+                ),
             ] = ("min", "max"),
             src_path=Depends(self.path_dependency),
             reader_params=Depends(self.reader_dependency),
