@@ -13,12 +13,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
     """Generic auth middleware."""
 
     async def dispatch(self, request: Request, call_next):  # noqa: D102
-        if request.url.path == "/docs":
+        if request.url.path == "/docs" or request.url.path == "/openapi.json" or request.url.path == "/health":
             return await call_next(request)
-
-        if request.url.path == "/openapi.json":
-            return await call_next(request)
-
         request_token = request.headers.get("Authorization")
         if request_token and request_token.startswith("Bearer "):
             request_token = request_token.split("Bearer ")[1]
