@@ -94,6 +94,9 @@ def test_no_token():
     assert response.status_code == 401
     assert response.text == "Unauthorized"
 
+def test_options_http_method_is_allowed():
+    response = test_client.options("/tifs")
+    assert response.status_code == 200
 
 def test_health_is_public():
     response = test_client.get("/health")
