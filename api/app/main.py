@@ -14,8 +14,8 @@ from app.routers.zonal_stats import ZonalTilerFactory
 
 def path_params(raster_filename: Annotated[str, Query(description="Raster filename.")]):
     """Dependency to get the path of the raster file."""
-    tif_path = get_settings().tif_path
-    raster = os.path.join(tif_path, raster_filename)
+    tiff_path = get_settings().tiff_path
+    raster = os.path.join(tiff_path, raster_filename)
     if not os.path.exists(raster):
         raise HTTPException(status_code=404, detail=f"Raster file {raster} does not exist.")
     return raster
@@ -35,8 +35,8 @@ add_exception_handlers(app, DEFAULT_STATUS_CODES)
 @app.get("/tifs")
 async def list_files():
     """List all available tif files."""
-    tif_path = get_settings().tif_path
-    files = os.listdir(tif_path)
+    tiff_path = get_settings().tiff_path
+    files = os.listdir(tiff_path)
     return {"files": sorted(files)}
 
 

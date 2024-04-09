@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     postgres_host: str
     postgres_port: str
     auth_token: str
-    tif_path: str
+    tiff_path: str
 
 @lru_cache
 def get_settings() -> Settings:

@@ -36,11 +36,11 @@ HEADERS = {"Authorization": f"Bearer {TOKEN}"}
 
 @pytest.fixture()
 def setup_data_folder():
-    os.mkdir(get_settings().tif_path)
+    os.mkdir(get_settings().tiff_path)
 
     yield
 
-    os.rmdir(get_settings().tif_path)
+    os.rmdir(get_settings().tiff_path)
 
 
 @pytest.fixture()
@@ -57,7 +57,7 @@ def tif_file(setup_data_folder):
     data = np.array([[0, 1, 0], [1, 9, 1], [0, 1, 0]])
     transform = rasterio.transform.from_origin(0, 10, 1, 1)
     with rasterio.open(
-        f"{get_settings().tif_path}/raster.tif",
+        f"{get_settings().tiff_path}/raster.tif",
         "w",
         driver="GTiff",
         width=data.shape[1],
@@ -71,22 +71,22 @@ def tif_file(setup_data_folder):
 
     yield
 
-    os.remove(f"{get_settings().tif_path}/raster.tif")
+    os.remove(f"{get_settings().tiff_path}/raster.tif")
 
 
 @pytest.fixture()
 def setup_empty_files(setup_data_folder):
-    test_tif_path = get_settings().tif_path
+    test_tiff_path = get_settings().tiff_path
 
     for file in FILES:
         # Create empty files writing nothing
-        with open(f"{test_tif_path}/{file}", "w") as f:
+        with open(f"{test_tiff_path}/{file}", "w") as f:
             f.write("")
 
     yield
 
     for file in FILES:
-        os.remove(f"{test_tif_path}/{file}")
+        os.remove(f"{test_tiff_path}/{file}")
 
 
 def test_no_token():
