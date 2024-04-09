@@ -9,18 +9,19 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
+import { CardLoader } from "@/containers/card";
+
 export default function WidgetLandmarksCountries() {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
 
-  const { data: adminData } = useGetFeatures(
+  const query = useGetFeatures(
     {
       query: DATASETS.admin.getFeatures({
         ...(!!GEOMETRY && {
           orderByFields: ["NAME_0"],
           geometry: GEOMETRY,
-          returnGeometry: false,
         }),
       }),
       feature: DATASETS.admin.layer,
@@ -47,16 +48,18 @@ export default function WidgetLandmarksCountries() {
   return (
     <div>
       <h3 className="text-xs font-medium text-gray-500">Countries</h3>
-      <ul className="flex space-x-5">
-        {adminData?.map((c) => (
-          <li className="flex space-x-2 items-center" key={c?.ISO}>
-            <div className="w-8 rounded-sm overflow-hidden">
-              <Flag code={c?.ISO} className="block" />
-            </div>
-            <span>{c?.NAME}</span>
-          </li>
-        ))}
-      </ul>
+      <CardLoader query={query} className="h-12">
+        <ul className="flex space-x-5">
+          {query.data?.map((c) => (
+            <li className="flex space-x-2 items-center" key={c?.ISO}>
+              <div className="w-8 rounded-sm overflow-hidden">
+                <Flag code={c?.ISO} className="block" />
+              </div>
+              <span>{c?.NAME}</span>
+            </li>
+          ))}
+        </ul>
+      </CardLoader>
     </div>
   );
 }

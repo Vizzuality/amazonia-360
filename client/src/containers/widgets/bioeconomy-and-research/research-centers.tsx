@@ -7,14 +7,14 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
-import { Card, CardTitle } from "@/containers/card";
+import { Card, CardLoader, CardTitle } from "@/containers/card";
 
 export default function WidgetResearchCenters() {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
 
-  const { data: institutional_trackingData } = useGetFeatures(
+  const query = useGetFeatures(
     {
       query: DATASETS.institutional_tracking.getFeatures({
         ...(!!GEOMETRY && {
@@ -33,13 +33,15 @@ export default function WidgetResearchCenters() {
   return (
     <Card>
       <CardTitle>
-        Research centers ({institutional_trackingData?.features?.length ?? "-"})
+        Research centers ({query.data?.features?.length ?? "-"})
       </CardTitle>
-      <ul className="space-y-1">
-        {institutional_trackingData?.features.map((feature) => (
-          <li key={feature.attributes.FID}>{feature.attributes.Org_Name}</li>
-        ))}
-      </ul>
+      <CardLoader query={query} className="h-12">
+        <ul className="space-y-1">
+          {query.data?.features.map((feature) => (
+            <li key={feature.attributes.FID}>{feature.attributes.Org_Name}</li>
+          ))}
+        </ul>
+      </CardLoader>
     </Card>
   );
 }

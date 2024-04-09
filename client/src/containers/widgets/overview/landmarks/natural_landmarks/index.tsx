@@ -7,12 +7,14 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
+import { CardLoader } from "@/containers/card";
+
 export default function WidgetLandmarksNatural() {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
 
-  const { data: areas_protegidasData } = useGetFeatures(
+  const query = useGetFeatures(
     {
       query: DATASETS.areas_protegidas.getFeatures({
         ...(!!GEOMETRY && {
@@ -31,11 +33,13 @@ export default function WidgetLandmarksNatural() {
   return (
     <div>
       <h3 className="text-xs font-medium text-gray-500">Natural landmarks</h3>
-      <ul className="space-y-1">
-        {areas_protegidasData?.features.map((feature) => (
-          <li key={feature.attributes.FID}>{feature.attributes.NAME}</li>
-        ))}
-      </ul>
+      <CardLoader query={query} className="h-12">
+        <ul className="space-y-1">
+          {query.data?.features.map((feature) => (
+            <li key={feature.attributes.FID}>{feature.attributes.NAME}</li>
+          ))}
+        </ul>
+      </CardLoader>
     </div>
   );
 }
