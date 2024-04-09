@@ -40,9 +40,9 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script: |
           cd amazonia-360
-          git pull
+          git pull --rebase
           sudo docker-compose down
-          sudo docker-compose up api --exit-code-from api 
+          sudo docker-compose up -d api --build 
 
   health-check:
     name: Health Check
