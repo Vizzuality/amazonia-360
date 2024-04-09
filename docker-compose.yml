@@ -4,6 +4,7 @@ services:
     build:
         context: ./api
         dockerfile: Dockerfile
+        target: production
     ports:
       - "8000:8000"
     environment:
@@ -23,6 +24,7 @@ services:
     build:
         context: ./api
         dockerfile: Dockerfile
+        target: development
     env_file: .env.test
     networks:
       - amazonia360-network
