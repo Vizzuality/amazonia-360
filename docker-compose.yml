@@ -20,10 +20,9 @@ services:
         context: ./api
         dockerfile: Dockerfile
         target: development
-    env_file: .env.test
     environment:
-        - AUTH_TOKEN="secret"
-        - TIFF_PATH="/opt/api/data"
+        - AUTH_TOKEN=secret
+        - TIFF_PATH=/opt/api/data
     networks:
       - amazonia360-network
 
