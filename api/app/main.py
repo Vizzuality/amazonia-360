@@ -24,7 +24,7 @@ def path_params(raster_filename: Annotated[str, Query(description="Raster filena
 # Use ORJSONResponse to handle serialization of NaN values. Normal Json fails to serialize NaN values.
 app = FastAPI(title="Amazonia360 API", default_response_class=ORJSONResponse)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
-app.add_middleware(AuthMiddleware)
+# app.add_middleware(AuthMiddleware)
 
 routes = ZonalTilerFactory(path_dependency=path_params)
 app.include_router(routes.router)
