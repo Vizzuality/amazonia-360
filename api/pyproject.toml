@@ -1,4 +1,9 @@
 [tool.ruff]
+line-length = 120
+extend-include = ["*.ipynb"]
+src = ["app"]
+
+[tool.ruff.lint]
 select = [
     "D1",   # pydocstyle errors
     "E",    # pycodestyle errors
@@ -9,17 +14,12 @@ select = [
     "N",    # Naming conventions
     "I",    # isort
 ]
-line-length = 120
 ignore = [
     "D100", # Missing docstring in public module
     "D104", # Missing docstring in __init__
 ]
-extend-include = ["*.ipynb"]
 
-src = ["app"]
-
-
-[tool.ruff.flake8-bugbear]
+[tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = ["fastapi.Depends", "fastapi.params.Depends", "fastapi.Query", "fastapi.params.Query"]
 
 [tool.ruff.lint.per-file-ignores]
