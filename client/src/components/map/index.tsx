@@ -4,6 +4,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 
 import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
+import VectorTileLayer from "@arcgis/core/layers/VectorTileLayer";
 import ArcGISMap from "@arcgis/core/Map";
 import ArcGISMapView from "@arcgis/core/views/MapView";
 import ArcGISScaleBar from "@arcgis/core/widgets/ScaleBar";
@@ -58,7 +59,21 @@ export function MapView({
        * Initialize application
        */
       mapRef.current = new ArcGISMap({
-        basemap: "gray-vector",
+        basemap: {
+          baseLayers: [
+            new VectorTileLayer({
+              url: "https://basemaps.arcgis.com/arcgis/rest/services/World_Basemap_v2/VectorTileServer",
+              style:
+                "https://www.arcgis.com/sharing/rest/content/items/291da5eab3a0412593b66d384379f89f/resources/styles/root.json?f=pjson",
+            }),
+            new VectorTileLayer({
+              url: "https://basemaps.arcgis.com/arcgis/rest/services/World_Basemap_v2/VectorTileServer",
+              style:
+                "https://www.arcgis.com/sharing/rest/content/items/1768e8369a214dfab4e2167d5c5f2454/resources/styles/root.json?f=pjson",
+            }),
+          ],
+          referenceLayers: [],
+        },
         layers: [baseLayer],
       });
 
