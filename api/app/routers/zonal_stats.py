@@ -65,8 +65,8 @@ class ZonalTilerFactory(TilerFactory):
                 features = [geojson.model_dump()]
 
             with rasterio.Env(**env):
-                tif_path = get_settings().tif_path
-                src_path = os.path.join(tif_path, src_path)
+                tiff_path = get_settings().tiff_path
+                src_path = os.path.join(tiff_path, src_path)
                 with rasterio.open(src_path, **reader_params) as src_dst:
                     statistics = [op.value for op in statistics]  # extract the values from the Enum
                     stats = exact_extract(src_dst, features, ops=statistics)

@@ -8,7 +8,7 @@ resource "aws_instance" "amazonia360-ec2" {
 
   user_data = <<-EOF
   #!/bin/bash
-  echo "${var.authorized_key}" >> /home/ec2-user/.ssh/authorized_keys
+  echo "${var.authorized_key}" >> /home/ubuntu/.ssh/authorized_keys
   EOF
 
   tags = {
@@ -19,5 +19,5 @@ resource "aws_instance" "amazonia360-ec2" {
 
 resource "aws_key_pair" "local_public_key" {
   key_name = "amazonia360-key-pair"
-  public_key = file("~/.ssh/id_rsa.pub")
+  public_key = file("~/.ssh/key_amazonia360_ec2.pub")
 }

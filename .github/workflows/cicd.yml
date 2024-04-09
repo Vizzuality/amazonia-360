@@ -20,15 +20,16 @@ jobs:
       uses: docker/setup-buildx-action@v1
 
     - name: Build and run tests
-      run: docker-compose up --build test
+      run: docker-compose up --build --exit-code-from test test
 
     - name: Clean up
       run: docker-compose down
 
   deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     needs: build-and-test
-    if: github.ref == 'refs/heads/develop'
+    #if: github.ref == 'refs/heads/develop'
     steps:
 
     - name: Deploy to EC2
@@ -38,15 +39,16 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          cd amazonia360/amazonia-360
+          cd amazonia-360
           git pull
-          docker-compose down
-          docker-compose up -d api --build
+          sudo docker-compose down
+          sudo docker-compose up api --exit-code-from api 
 
   health-check:
+    name: Health Check
     runs-on: ubuntu-latest
     needs: deploy
-    if: github.ref == 'refs/heads/develop'
+    #if: github.ref == 'refs/heads/develop'
     steps:
       - name: URL Health Check
         uses: Jtalk/url-health-check-action@v4

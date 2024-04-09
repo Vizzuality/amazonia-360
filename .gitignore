@@ -2,7 +2,6 @@
 *.venv
 *data/
 .env
-.env.BCK
 /env/
 /infrastructure/vars/local.tfvars
 __pycache__/
