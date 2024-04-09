@@ -17,7 +17,7 @@ def path_params(raster_filename: Annotated[str, Query(description="Raster filena
     tiff_path = get_settings().tiff_path
     raster = os.path.join(tiff_path, raster_filename)
     if not os.path.exists(raster):
-        raise HTTPException(status_code=404, detail=f"Raster file {raster} does not exist.")
+        raise HTTPException(status_code=404, detail=f"Raster file {raster_filename} does not exist.")
     return raster
 
 

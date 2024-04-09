@@ -94,10 +94,12 @@ def test_no_token():
     assert response.status_code == 401
     assert response.text == "Unauthorized"
 
+
 def test_health_is_public():
     response = test_client.get("/health")
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
+
 
 def test_with_token(setup_data_folder):
     response = test_client.get("/tifs", headers=HEADERS)
@@ -121,6 +123,7 @@ def test_wrong_file_name_raises_404(setup_data_folder):
         "/exact_zonal_stats", headers=HEADERS, params={"raster_filename": "wrong.tif"}, json=GEOJSON
     )
     assert response.status_code == 404
+    assert response.json() == {"detail": "Raster file wrong.tif does not exist."}
 
 
 def test_no_geojson_raises_422(tif_file):
