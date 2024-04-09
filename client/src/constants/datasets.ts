@@ -31,7 +31,7 @@ export const DATASETS = {
       }),
     }),
 
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],
@@ -54,7 +54,12 @@ export const DATASETS = {
         }),
       }),
     }),
-    getFeatures: () => undefined,
+    getFeatures: (props?: __esri.QueryProperties) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
   },
   ciudades_capitales: {
     layer: new FeatureLayer({
@@ -72,7 +77,7 @@ export const DATASETS = {
         }),
       }),
     }),
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],
@@ -85,7 +90,12 @@ export const DATASETS = {
       title: "Vectores frontera internacional",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/REFERENCIA_FRONTERA_INTERNACIONAL/FeatureServer/0",
     }),
-    getFeatures: () => undefined,
+    getFeatures: (props?: __esri.QueryProperties) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
   },
   tierras_indigenas: {
     layer: new FeatureLayer({
@@ -102,7 +112,7 @@ export const DATASETS = {
         }),
       }),
     }),
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],
@@ -115,7 +125,7 @@ export const DATASETS = {
       title: "Tipos climáticos (Koepen)",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tipos_climaticos_KOEPEN/FeatureServer/0",
     }),
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],
@@ -128,7 +138,7 @@ export const DATASETS = {
       title: "Biomas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Biomas/FeatureServer/0",
     }),
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],
@@ -203,7 +213,7 @@ export const DATASETS = {
         ],
       }),
     }),
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],
@@ -216,7 +226,7 @@ export const DATASETS = {
       title: "Cuenca hidrográfica, pertenencia a grandes cuencas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Grandes_cuencas_hidrograficas/FeatureServer/0",
     }),
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],
@@ -229,7 +239,7 @@ export const DATASETS = {
       title: "Áreas protegidas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Areas_protegidas/FeatureServer/0",
     }),
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],
@@ -272,7 +282,7 @@ export const DATASETS = {
         }),
       }),
     }),
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],

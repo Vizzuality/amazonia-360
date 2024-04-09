@@ -1,5 +1,8 @@
 import { getCookie } from "react-use-cookie";
 
+import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
+import * as geometryEngineAsync from "@arcgis/core/geometry/geometryEngineAsync";
+// import * as geodesicUtils from "@arcgis/core/geometry/support/geodesicUtils";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import * as geoprocessor from "@arcgis/core/rest/geoprocessor";
 import Query from "@arcgis/core/rest/support/Query";
@@ -10,6 +13,8 @@ import {
 } from "@tanstack/react-query";
 
 import { env } from "@/env.mjs";
+
+import { DATASETS, DatasetIds } from "@/constants/datasets";
 
 /**
  ************************************************************
@@ -162,15 +167,127 @@ export const useGetFeaturesId = <
 /**
  ************************************************************
  ************************************************************
- * Synchronous analysis
+ * Client analysis
  ************************************************************
  ************************************************************
  */
-export type GetAnalysisParams = {
+export type GetClientAnalysisParams = {
+  id: DatasetIds;
+  polygon?: __esri.Polygon | null;
+};
+
+export type ClientAnalysisQueryOptions<TData, TError> = UseQueryOptions<
+  Awaited<ReturnType<typeof getClientAnalysis>>,
+  TError,
+  TData
+>;
+
+export const getClientAnalysis = async (params: GetClientAnalysisParams) => {
+  const { id, polygon } = params;
+
+  if (!id || !polygon) {
+    throw new Error("Polygon is required");
+  }
+
+  const q = DATASETS[id]
+    .getFeatures({
+      geometry: polygon,
+      returnGeometry: true,
+    })
+    .clone();
+
+  const f = DATASETS[id].layer.clone();
+
+  try {
+    const featureSet = await f.queryFeatures(q);
+    const geoms = featureSet.features.map((f) => f.geometry).filter(Boolean);
+
+    if (geoms.length === 0) {
+      return {};
+    }
+
+    const results = (await geometryEngineAsync.intersect(
+      geoms,
+      polygon,
+    )) as unknown as __esri.Polygon[];
+
+    const areas = results
+      .map((r) => {
+        const area = geometryEngine.geodesicArea(r, "square-kilometers");
+        return area;
+      })
+      .reduce((acc, a) => acc + a, 0);
+
+    const polygonArea = geometryEngine.geodesicArea(
+      polygon,
+      "square-kilometers",
+    );
+
+    return {
+      percentage: areas / polygonArea,
+    };
+  } catch (error) {
+    throw new Error(`Error getting features: ${error}`);
+  }
+};
+
+export const getClientAnalysisKey = (params: GetClientAnalysisParams) => {
+  const { id } = params;
+  return ["arcgis", "analysis", id] as const;
+};
+
+export const getClientAnalysisOptions = <
+  TData = Awaited<ReturnType<typeof getClientAnalysis>>,
+  TError = unknown,
+>(
+  params: GetClientAnalysisParams,
+  options?: Omit<ClientAnalysisQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const queryKey = getClientAnalysisKey(params);
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getClientAnalysis>>
+  > = () => getClientAnalysis(params);
+  return { queryKey, queryFn, ...options } as ClientAnalysisQueryOptions<
+    TData,
+    TError
+  >;
+};
+
+export const useGetClientAnalysis = <
+  TData = Awaited<ReturnType<typeof getClientAnalysis>>,
+  TError = unknown,
+>(
+  params: GetClientAnalysisParams,
+  options?: Omit<ClientAnalysisQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const { queryKey, queryFn } = getClientAnalysisOptions(params, options);
+
+  return useQuery({
+    queryKey,
+    queryFn,
+    ...options,
+  });
+};
+
+/**
+ ************************************************************
+ ************************************************************
+ * Server analysis
+ ************************************************************
+ ************************************************************
+ */
+export type GetServerAnalysisParams = {
   in_feature1?: unknown;
   in_feature2?: unknown;
 };
-export const getAnalysis = async (params: GetAnalysisParams) => {
+
+export type ServerAnalysisQueryOptions<TData, TError> = UseQueryOptions<
+  Awaited<ReturnType<typeof getServerAnalysis>>,
+  TError,
+  TData
+>;
+
+export const getServerAnalysis = async (params: GetServerAnalysisParams) => {
   const { in_feature1, in_feature2 } = params;
 
   if (!in_feature1 || !in_feature2) {
@@ -202,7 +319,7 @@ export const getAnalysis = async (params: GetAnalysisParams) => {
   // );
 };
 
-export const getAnalysisKey = (params: GetAnalysisParams) => {
+export const getServerAnalysisKey = (params: GetServerAnalysisParams) => {
   const { in_feature1, in_feature2 } = params;
   return [
     "arcgis",
@@ -212,37 +329,31 @@ export const getAnalysisKey = (params: GetAnalysisParams) => {
   ] as const;
 };
 
-export const getAnalysisOptions = <
-  TData = Awaited<ReturnType<typeof getAnalysis>>,
+export const getServerAnalysisOptions = <
+  TData = Awaited<ReturnType<typeof getServerAnalysis>>,
   TError = unknown,
 >(
-  params: GetAnalysisParams,
-  options?: Omit<
-    UseQueryOptions<Awaited<ReturnType<typeof getAnalysis>>, TError, TData>,
-    "queryKey"
-  >,
+  params: GetServerAnalysisParams,
+  options?: Omit<ServerAnalysisQueryOptions<TData, TError>, "queryKey">,
 ) => {
-  const queryKey = getAnalysisKey(params);
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAnalysis>>> = () =>
-    getAnalysis(params);
-  return { queryKey, queryFn, ...options } as UseQueryOptions<
-    Awaited<ReturnType<typeof getAnalysis>>,
-    TError,
-    TData
+  const queryKey = getServerAnalysisKey(params);
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getServerAnalysis>>
+  > = () => getServerAnalysis(params);
+  return { queryKey, queryFn, ...options } as ServerAnalysisQueryOptions<
+    TData,
+    TError
   >;
 };
 
-export const useGetAnalysis = <
-  TData = Awaited<ReturnType<typeof getAnalysis>>,
+export const useGetServerAnalysis = <
+  TData = Awaited<ReturnType<typeof getServerAnalysis>>,
   TError = unknown,
 >(
-  params: GetAnalysisParams,
-  options?: Omit<
-    UseQueryOptions<Awaited<ReturnType<typeof getAnalysis>>, TError, TData>,
-    "queryKey"
-  >,
+  params: GetServerAnalysisParams,
+  options?: Omit<ServerAnalysisQueryOptions<TData, TError>, "queryKey">,
 ) => {
-  const { queryKey, queryFn } = getAnalysisOptions(params, options);
+  const { queryKey, queryFn } = getServerAnalysisOptions(params, options);
 
   return useQuery({
     queryKey,

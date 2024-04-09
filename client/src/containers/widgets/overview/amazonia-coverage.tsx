@@ -3,22 +3,47 @@
 import { useMemo } from "react";
 
 import { useFormatPercentage } from "@/lib/formats";
+import { useLocationGeometry } from "@/lib/location";
+import { useGetClientAnalysis } from "@/lib/query";
 
-import { Card, CardWidgetNumber, CardTitle } from "@/containers/card";
+import { useSyncLocation } from "@/app/store";
+
+import {
+  Card,
+  CardWidgetNumber,
+  CardTitle,
+  CardLoader,
+} from "@/containers/card";
 
 export default function WidgetAmazoniaCoverage() {
+  const [location] = useSyncLocation();
+
+  const GEOMETRY = useLocationGeometry(location);
+
   const { format } = useFormatPercentage({
     maximumFractionDigits: 0,
   });
 
+  const query = useGetClientAnalysis(
+    {
+      id: "area_afp",
+      polygon: GEOMETRY,
+    },
+    {
+      enabled: !!GEOMETRY,
+    },
+  );
+
   const COVERAGE = useMemo(() => {
-    return format(1);
-  }, [format]);
+    return format(query.data?.percentage ?? 0);
+  }, [query.data?.percentage, format]);
 
   return (
     <Card>
       <CardTitle>Amazonia coverage</CardTitle>
-      <CardWidgetNumber value={COVERAGE} unit="is in Amazonia" />
+      <CardLoader query={query} className="h-12">
+        <CardWidgetNumber value={COVERAGE} unit="is in Amazonia" />
+      </CardLoader>
     </Card>
   );
 }

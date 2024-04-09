@@ -1,7 +1,11 @@
 "use client";
 import { PropsWithChildren } from "react";
 
+import { UseQueryResult } from "@tanstack/react-query";
+
 import { cn } from "@/lib/utils";
+
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface CardProps {
   padding?: boolean;
@@ -10,6 +14,21 @@ interface CardProps {
 
 export function CardTitle({ children }: PropsWithChildren) {
   return <h2 className="text-base font-semibold text-blue-600">{children}</h2>;
+}
+
+export function CardLoader({
+  query,
+  children,
+  ...rest
+}: {
+  query: UseQueryResult<unknown, unknown>;
+  children: React.ReactNode;
+} & React.HTMLAttributes<HTMLDivElement>) {
+  if (query.isFetching) {
+    return <Skeleton {...rest} />;
+  }
+
+  return <>{children}</>;
 }
 
 export function CardWidgetNumber({
