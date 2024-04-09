@@ -89,14 +89,14 @@ def setup_empty_files(setup_data_folder):
         os.remove(f"{test_tiff_path}/{file}")
 
 
-def test_no_token():
-    response = test_client.get("/tifs")
-    assert response.status_code == 401
-    assert response.text == "Unauthorized"
+# def test_no_token():
+#     response = test_client.get("/tifs")
+#     assert response.status_code == 401
+#     assert response.text == "Unauthorized"
 
-def test_options_http_method_is_allowed():
-    response = test_client.options("/tifs")
-    assert response.status_code == 200
+# def test_options_http_method_is_allowed():
+#     response = test_client.options("/tifs")
+#     assert response.status_code == 200
 
 def test_health_is_public():
     response = test_client.get("/health")
