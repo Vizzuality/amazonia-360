@@ -24,7 +24,7 @@ export function CardLoader({
   query: UseQueryResult<unknown, unknown>;
   children: React.ReactNode;
 } & React.HTMLAttributes<HTMLDivElement>) {
-  if (query.isFetching) {
+  if (!query.data || query.isFetching) {
     return <Skeleton {...rest} />;
   }
 

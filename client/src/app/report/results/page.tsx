@@ -14,6 +14,8 @@ import { locationParser } from "@/app/parsers";
 import { PageProps } from "@/app/types";
 
 import WidgetsBioeconomicAndResearchData from "@/containers/widgets/bioeconomy-and-research";
+import WidgetsDemographicAndSocieconomic from "@/containers/widgets/demographic-and-socioeconomic";
+import WidgetsLandCover from "@/containers/widgets/land-cover";
 import WidgetsOverview from "@/containers/widgets/overview";
 
 export const metadata: Metadata = {
@@ -65,8 +67,14 @@ export default async function ReportResultsPage({
           {/* OVERVIEW */}
           <WidgetsOverview />
 
+          {/* DEMOGRAPHIC AND SOCIOECONOMIC */}
+          <WidgetsDemographicAndSocieconomic />
+
           {/* BIOECONOMY */}
           <WidgetsBioeconomicAndResearchData />
+
+          {/* LAND COVER */}
+          <WidgetsLandCover />
         </div>
       </main>
     </HydrationBoundary>

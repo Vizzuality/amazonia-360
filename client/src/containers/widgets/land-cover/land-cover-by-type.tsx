@@ -1,8 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
-
-import { useFormatNumber } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
 import { useGetRasterAnalysis } from "@/lib/query";
 
@@ -10,17 +7,16 @@ import { useSyncLocation } from "@/app/store";
 
 import { LAND_COVER, LandCoverIds } from "@/constants/raster";
 
-import { Card, CardWidgetNumber, CardTitle } from "@/containers/card";
+import { Card, CardLoader, CardTitle } from "@/containers/card";
 
-export default function WidgetPopulation() {
+import MarimekkoChart from "@/components/charts/marimekko";
+
+export default function WidgetLandCoverByType() {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
-  const { format } = useFormatNumber({
-    maximumFractionDigits: 0,
-  });
 
-  const { data } = useGetRasterAnalysis(
+  const query = useGetRasterAnalysis(
     {
       id: "landcover",
       polygon: GEOMETRY,
@@ -30,14 +26,15 @@ export default function WidgetPopulation() {
       enabled: !!GEOMETRY,
 
       select(data) {
-        return data.features.reduce((acc, f) => {
+        const values = data.features.map((f) => {
           if (f.properties.unique && f.properties.frac) {
             const { frac, unique } = f.properties;
 
             const us = unique.map((u, index) => {
               return {
-                id: u,
-                value: frac[index],
+                id: `${u}`,
+                parent: "landcover",
+                size: frac[index],
                 label: LAND_COVER[`${u as LandCoverIds}`],
               };
             }, {});
@@ -45,22 +42,28 @@ export default function WidgetPopulation() {
             return us;
           }
 
-          return acc;
-        }, {});
+          return [];
+        });
+
+        return [
+          {
+            id: "landcover",
+            parent: null,
+            size: 0,
+            label: "Land Cover",
+          },
+          ...values.flat(),
+        ];
       },
     },
   );
 
-  console.log(data);
-
-  const POPULATION = useMemo(() => {
-    return format(265000);
-  }, [format]);
-
   return (
     <Card>
-      <CardTitle>Population</CardTitle>
-      <CardWidgetNumber value={POPULATION} unit="inhabitants" />
+      <CardTitle>Land cover by type</CardTitle>
+      <CardLoader query={query} className="h-40">
+        {!!query.data && <MarimekkoChart data={query.data || []} />}
+      </CardLoader>
     </Card>
   );
 }

@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import { useFormatPercentage } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
-import { useGetClientAnalysis } from "@/lib/query";
+import { useGetIntersectionAnalysis } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
@@ -24,7 +24,7 @@ export default function WidgetAmazoniaCoverage() {
     maximumFractionDigits: 0,
   });
 
-  const query = useGetClientAnalysis(
+  const query = useGetIntersectionAnalysis(
     {
       id: "area_afp",
       polygon: GEOMETRY,

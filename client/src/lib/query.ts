@@ -14,6 +14,9 @@ import {
 
 import { env } from "@/env.mjs";
 
+import { StatsOps } from "@/types/generated/api.schemas";
+import { exactZonalStatsExactZonalStatsPost } from "@/types/generated/default";
+
 import { DATASETS, DatasetIds } from "@/constants/datasets";
 
 /**
@@ -167,22 +170,25 @@ export const useGetFeaturesId = <
 /**
  ************************************************************
  ************************************************************
- * Client analysis
+ * CLIENT ANALYSIS
+ * - useGetIntersectionAnalysis
  ************************************************************
  ************************************************************
  */
-export type GetClientAnalysisParams = {
+export type GetIntersectionAnalysisParams = {
   id: DatasetIds;
   polygon?: __esri.Polygon | null;
 };
 
-export type ClientAnalysisQueryOptions<TData, TError> = UseQueryOptions<
-  Awaited<ReturnType<typeof getClientAnalysis>>,
+export type IntersectionAnalysisQueryOptions<TData, TError> = UseQueryOptions<
+  Awaited<ReturnType<typeof getIntersectionAnalysis>>,
   TError,
   TData
 >;
 
-export const getClientAnalysis = async (params: GetClientAnalysisParams) => {
+export const getIntersectionAnalysis = async (
+  params: GetIntersectionAnalysisParams,
+) => {
   const { id, polygon } = params;
 
   if (!id || !polygon) {
@@ -231,36 +237,124 @@ export const getClientAnalysis = async (params: GetClientAnalysisParams) => {
   }
 };
 
-export const getClientAnalysisKey = (params: GetClientAnalysisParams) => {
-  const { id } = params;
-  return ["arcgis", "analysis", id] as const;
+export const getIntersectionAnalysisKey = (
+  params: GetIntersectionAnalysisParams,
+) => {
+  const { id, polygon } = params;
+  return ["arcgis", "analysis", id, polygon?.toJSON()] as const;
 };
 
-export const getClientAnalysisOptions = <
-  TData = Awaited<ReturnType<typeof getClientAnalysis>>,
+export const getIntersectionAnalysisOptions = <
+  TData = Awaited<ReturnType<typeof getIntersectionAnalysis>>,
   TError = unknown,
 >(
-  params: GetClientAnalysisParams,
-  options?: Omit<ClientAnalysisQueryOptions<TData, TError>, "queryKey">,
+  params: GetIntersectionAnalysisParams,
+  options?: Omit<IntersectionAnalysisQueryOptions<TData, TError>, "queryKey">,
 ) => {
-  const queryKey = getClientAnalysisKey(params);
+  const queryKey = getIntersectionAnalysisKey(params);
   const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getClientAnalysis>>
-  > = () => getClientAnalysis(params);
-  return { queryKey, queryFn, ...options } as ClientAnalysisQueryOptions<
+    Awaited<ReturnType<typeof getIntersectionAnalysis>>
+  > = () => getIntersectionAnalysis(params);
+  return { queryKey, queryFn, ...options } as IntersectionAnalysisQueryOptions<
     TData,
     TError
   >;
 };
 
-export const useGetClientAnalysis = <
-  TData = Awaited<ReturnType<typeof getClientAnalysis>>,
+export const useGetIntersectionAnalysis = <
+  TData = Awaited<ReturnType<typeof getIntersectionAnalysis>>,
   TError = unknown,
 >(
-  params: GetClientAnalysisParams,
-  options?: Omit<ClientAnalysisQueryOptions<TData, TError>, "queryKey">,
+  params: GetIntersectionAnalysisParams,
+  options?: Omit<IntersectionAnalysisQueryOptions<TData, TError>, "queryKey">,
 ) => {
-  const { queryKey, queryFn } = getClientAnalysisOptions(params, options);
+  const { queryKey, queryFn } = getIntersectionAnalysisOptions(params, options);
+
+  return useQuery({
+    queryKey,
+    queryFn,
+    ...options,
+  });
+};
+
+/**
+ ************************************************************
+ ************************************************************
+ * CLIENT ANALYSIS
+ * - useGetRasterAnalysis
+ ************************************************************
+ ************************************************************
+ */
+export type GetRasterAnalysisParams = {
+  id: "landcover" | "population";
+  polygon?: __esri.Polygon | null;
+  statistics?: StatsOps[];
+};
+
+export type RasterAnalysisQueryOptions<TData, TError> = UseQueryOptions<
+  Awaited<ReturnType<typeof getRasterAnalysis>>,
+  TError,
+  TData
+>;
+
+export const getRasterAnalysis = async (params: GetRasterAnalysisParams) => {
+  const { id, polygon, statistics } = params;
+
+  if (!id || !polygon) {
+    throw new Error("Polygon is required");
+  }
+
+  return exactZonalStatsExactZonalStatsPost(
+    {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          properties: {},
+          geometry: {
+            type: "Polygon",
+            coordinates: polygon.toJSON().rings,
+          },
+        },
+      ],
+    },
+    {
+      raster_filename: `${id}_cog.tif`,
+      statistics,
+    },
+  );
+};
+
+export const getRasterAnalysisKey = (params: GetRasterAnalysisParams) => {
+  const { id, polygon, statistics } = params;
+  return ["arcgis", "analysis", id, polygon?.toJSON(), statistics] as const;
+};
+
+export const getRasterAnalysisOptions = <
+  TData = Awaited<ReturnType<typeof getRasterAnalysis>>,
+  TError = unknown,
+>(
+  params: GetRasterAnalysisParams,
+  options?: Omit<RasterAnalysisQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const queryKey = getRasterAnalysisKey(params);
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getRasterAnalysis>>
+  > = () => getRasterAnalysis(params);
+  return { queryKey, queryFn, ...options } as RasterAnalysisQueryOptions<
+    TData,
+    TError
+  >;
+};
+
+export const useGetRasterAnalysis = <
+  TData = Awaited<ReturnType<typeof getRasterAnalysis>>,
+  TError = unknown,
+>(
+  params: GetRasterAnalysisParams,
+  options?: Omit<RasterAnalysisQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const { queryKey, queryFn } = getRasterAnalysisOptions(params, options);
 
   return useQuery({
     queryKey,
