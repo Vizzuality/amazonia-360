@@ -119,7 +119,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataPagination table={table} />
+      <DataPagination table={table} totalPagesToDisplay={5} />
     </div>
   );
 }
