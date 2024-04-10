@@ -15,7 +15,8 @@ import { DATASETS, DatasetIds } from "@/constants/datasets";
 import { Card } from "@/containers/card";
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
 
-import Layer from "@/components/map/layers";
+import FeatureLayer from "@/components/map/layers/feature";
+import WebTileLayer from "@/components/map/layers/web-tile";
 
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
 
@@ -30,8 +31,9 @@ export default function WidgetMap({ ids }: WidgetMapProps) {
 
   const LAYERS = useMemo(() => {
     return ids.map((id) => {
-      const l = DATASETS[id].layer.clone();
-      if (GEOMETRY && !l.featureReduction) {
+      const l = DATASETS[id].layer;
+
+      if (GEOMETRY && l.type === "feature" && !l.featureReduction) {
         l.featureEffect = new FeatureEffect({
           filter: {
             geometry: GEOMETRY,
@@ -58,9 +60,27 @@ export default function WidgetMap({ ids }: WidgetMapProps) {
           bbox: undefined,
         })}
       >
-        {LAYERS.map((layer, index, arr) => (
-          <Layer key={layer.id} layer={layer} index={arr.length - index} />
-        ))}
+        {LAYERS.map((layer, index, arr) => {
+          if (layer.type === "feature") {
+            return (
+              <FeatureLayer
+                key={layer.id}
+                layer={layer}
+                index={arr.length - index}
+              />
+            );
+          }
+
+          if (layer.type === "web-tile") {
+            return (
+              <WebTileLayer
+                key={layer.id}
+                layer={layer}
+                index={arr.length - index}
+              />
+            );
+          }
+        })}
         <SelectedLayer />
       </Map>
     </Card>

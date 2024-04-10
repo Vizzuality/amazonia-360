@@ -1,10 +1,16 @@
+"use client";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+import WebTileLayer from "@arcgis/core/layers/WebTileLayer";
 import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer";
 import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
 import Query from "@arcgis/core/rest/support/Query";
 import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
 import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
+
+import { env } from "@/env.mjs";
+
+import { getKeys } from "@/lib/utils";
 
 import GEOJSON from "@/data/geojson.json";
 
@@ -289,6 +295,21 @@ export const DATASETS = {
         ...props,
       }),
   },
+  land_cover: {
+    layer: new WebTileLayer({
+      id: "land_cover",
+      title: "Land cover",
+      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=landcover_cog.tif`,
+    }),
+    getFeatures: (props?: __esri.QueryProperties) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
+  },
 } as const;
+
+export const DATASET_IDS = getKeys(DATASETS);
 
 export type DatasetIds = keyof typeof DATASETS;

@@ -1,3 +1,5 @@
+"use client";
+
 import * as projection from "@arcgis/core/geometry/projection.js";
 import SearchVM from "@arcgis/core/widgets/Search/SearchViewModel";
 import {

@@ -191,8 +191,10 @@ export const getIntersectionAnalysis = async (
 ) => {
   const { id, polygon } = params;
 
-  if (!id || !polygon) {
-    throw new Error("Polygon is required");
+  const d = DATASETS[id];
+
+  if (!id || !polygon || d.layer.type !== "feature") {
+    throw new Error("Polygon is required or layer is not a feature layer");
   }
 
   const q = DATASETS[id]
@@ -202,7 +204,7 @@ export const getIntersectionAnalysis = async (
     })
     .clone();
 
-  const f = DATASETS[id].layer.clone();
+  const f = d.layer.clone();
 
   try {
     const featureSet = await f.queryFeatures(q);

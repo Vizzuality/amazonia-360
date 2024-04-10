@@ -12,7 +12,7 @@ import { useSyncLocation } from "@/app/store";
 
 import { BUFFER_SYMBOL, SYMBOLS } from "@/constants/map";
 
-import Layer from "@/components/map/layers/graphics";
+import FeatureLayer from "@/components/map/layers/graphics";
 
 export default function SelectedLayer() {
   const graphicsLayerRef = useRef<GraphicsLayer>(
@@ -59,5 +59,5 @@ export default function SelectedLayer() {
     }
   }, [graphic]);
 
-  return <Layer index={100} layer={graphicsLayerRef.current} />;
+  return <FeatureLayer index={100} layer={graphicsLayerRef.current} />;
 }

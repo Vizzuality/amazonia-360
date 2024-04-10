@@ -32,7 +32,7 @@ export default function WidgetLandCoverByType() {
 
             const us = unique.map((u, index) => {
               return {
-                id: `${u}`,
+                id: LAND_COVER[`${u as LandCoverIds}`],
                 parent: "landcover",
                 size: frac[index],
                 label: LAND_COVER[`${u as LandCoverIds}`],

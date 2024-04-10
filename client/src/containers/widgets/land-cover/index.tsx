@@ -9,7 +9,7 @@ export default function WidgetsLandCover() {
           <WidgetLandCoverByType />
         </div>
         <div className="col-span-6">
-          <WidgetMap ids={["tierras_indigenas"]} />
+          <WidgetMap ids={["land_cover"]} />
         </div>
       </div>
     </div>

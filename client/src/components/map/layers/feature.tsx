@@ -8,7 +8,7 @@ import { env } from "@/env.mjs";
 
 import { useMap } from "@/components/map/provider";
 
-export default function Layer({
+export default function FeatureLayer({
   layer,
   index,
 }: {

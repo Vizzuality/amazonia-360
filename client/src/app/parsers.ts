@@ -5,13 +5,11 @@ import {
   parseAsStringLiteral,
 } from "nuqs";
 
-import { getKeys } from "@/lib/utils";
-
-import { DATASETS } from "@/constants/datasets";
+import { DATASET_IDS } from "@/constants/datasets";
 import { TOPICS } from "@/constants/topics";
 
 export const datasetsParser = parseAsArrayOf(
-  parseAsStringLiteral(getKeys(DATASETS)),
+  parseAsStringLiteral(DATASET_IDS),
 ).withDefault([]);
 
 export const topicsParser = parseAsArrayOf(
