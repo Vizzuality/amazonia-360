@@ -1,4 +1,3 @@
-"use client";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import WebTileLayer from "@arcgis/core/layers/WebTileLayer";

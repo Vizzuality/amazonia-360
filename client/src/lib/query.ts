@@ -12,8 +12,6 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 
-import { env } from "@/env.mjs";
-
 import { StatsOps } from "@/types/generated/api.schemas";
 import { exactZonalStatsExactZonalStatsPost } from "@/types/generated/default";
 
@@ -37,10 +35,7 @@ export const getFeatures = async (params: GetFeaturesParams) => {
     throw new Error("Feature and query are required");
   }
 
-  const f = feature.clone();
   const q = query.clone();
-
-  f!.apiKey = env.NEXT_PUBLIC_ARCGIS_API_KEY;
 
   return feature!.queryFeatures(q);
 };
@@ -111,7 +106,6 @@ export const getFeaturesId = async (params: GetFeaturesIdParams) => {
   const q = query.clone();
 
   q!.where = `FID = ${params.id}`;
-  f!.apiKey = env.NEXT_PUBLIC_ARCGIS_API_KEY;
 
   return f!.queryFeatures(q);
 };

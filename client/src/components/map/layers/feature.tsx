@@ -4,8 +4,6 @@ import { useEffect } from "react";
 
 import ArcGISFeatureLayer from "@arcgis/core/layers/FeatureLayer";
 
-import { env } from "@/env.mjs";
-
 import { useMap } from "@/components/map/provider";
 
 export default function FeatureLayer({
@@ -47,8 +45,6 @@ export default function FeatureLayer({
     if (!map) {
       return;
     }
-
-    layer.apiKey = env.NEXT_PUBLIC_ARCGIS_API_KEY;
 
     if (!map.findLayerById(id)) {
       map.add(layer, index);

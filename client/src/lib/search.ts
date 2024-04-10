@@ -1,5 +1,3 @@
-"use client";
-
 import * as projection from "@arcgis/core/geometry/projection.js";
 import SearchVM from "@arcgis/core/widgets/Search/SearchViewModel";
 import {
@@ -10,8 +8,6 @@ import {
   useMutation,
   useQuery,
 } from "@tanstack/react-query";
-
-import { env } from "@/env.mjs";
 
 import { DATASETS } from "@/constants/datasets";
 
@@ -47,7 +43,6 @@ const searchVM = new SearchVM({
       name: "ArcGIS World Geocoding Service",
       url: "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer",
       singleLineFieldName: "SingleLine",
-      apiKey: env.NEXT_PUBLIC_ARCGIS_API_KEY,
       countryCode: ["BRA", "BOL", "COL", "ECU", "PER", "VEN"].join(","),
       outFields: ["*"],
       maxResults: 1,
