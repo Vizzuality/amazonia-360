@@ -4,6 +4,7 @@ import WidgetMap from "@/containers/widgets/map";
 export default function WidgetsBioeconomicAndResearch() {
   return (
     <div className="container">
+      <h2 className="text-xl font-semibold mb-4">Bioeconomy and Research</h2>
       <div className="grid grid-cols-12 gap-2">
         <div className="col-span-6">
           <WidgetMap ids={["institutional_tracking"]} />

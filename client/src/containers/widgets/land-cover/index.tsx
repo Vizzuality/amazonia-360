@@ -4,6 +4,7 @@ import WidgetMap from "@/containers/widgets/map";
 export default function WidgetsLandCover() {
   return (
     <div className="container">
+      <h2 className="text-xl font-semibold mb-4">Land Cover</h2>
       <div className="grid grid-cols-12 gap-2">
         <div className="col-span-6">
           <WidgetLandCoverByType />

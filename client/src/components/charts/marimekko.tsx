@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 
 import { HtmlLabel } from "@visx/annotation";
 import { Group } from "@visx/group";
-import { Treemap, hierarchy, stratify, treemapDice } from "@visx/hierarchy";
+import { Treemap, hierarchy, stratify, treemapSquarify } from "@visx/hierarchy";
 import { useParentSize } from "@visx/responsive";
 import CHROMA from "chroma-js";
 
@@ -72,7 +72,7 @@ const MarimekkoChart = ({ data = [] }: MarimekkoChartProp) => {
           root={root}
           size={[xMax, yMax]}
           paddingInner={4}
-          tile={treemapDice}
+          tile={treemapSquarify}
           round
         >
           {(treemap) => (
@@ -108,11 +108,14 @@ const MarimekkoChart = ({ data = [] }: MarimekkoChartProp) => {
                         }}
                       >
                         <div className="p-3 max-w-52">
-                          <p className="font-bold text-white">
-                            {format(
-                              (node.value || 0) / (node.parent?.value || 1),
-                            )}
-                          </p>
+                          {nodeWidth > 50 && (
+                            <p className="font-bold text-white">
+                              {format(
+                                (node.value || 0) / (node.parent?.value || 1),
+                              )}
+                            </p>
+                          )}
+
                           {nodeWidth > 120 && (
                             <p className="text-sm font-medium text-white">
                               {node.data.id}

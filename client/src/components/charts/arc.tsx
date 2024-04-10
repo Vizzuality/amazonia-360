@@ -28,7 +28,9 @@ export default function ArcChart({ value, color = "#FFDA00" }: ArcChartProps) {
     });
   }, [startAngle, endAngle]);
 
-  const { format } = useFormatPercentage({});
+  const { format } = useFormatPercentage({
+    maximumFractionDigits: 0,
+  });
 
   return (
     <div ref={parentRef} className="w-full h-28 relative">

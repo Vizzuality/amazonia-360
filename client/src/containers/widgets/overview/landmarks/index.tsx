@@ -9,9 +9,11 @@ export default function WidgetLandmarks() {
   return (
     <Card>
       <CardTitle>Landmarks</CardTitle>
-      <WidgetLandmarksCities />
-      <WidgetLandmarksNatural />
-      <WidgetLandmarksCountries />
+      <div className="space-y-4 mt-4">
+        <WidgetLandmarksCities />
+        <WidgetLandmarksNatural />
+        <WidgetLandmarksCountries />
+      </div>
     </Card>
   );
 }

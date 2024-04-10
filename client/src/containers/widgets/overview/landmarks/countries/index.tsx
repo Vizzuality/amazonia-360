@@ -46,7 +46,7 @@ export default function WidgetLandmarksCountries() {
   );
 
   return (
-    <div>
+    <div className="space-y-2">
       <h3 className="text-xs font-medium text-gray-500">Countries</h3>
       <CardLoader query={query} className="h-12">
         <ul className="flex space-x-5">

@@ -52,18 +52,17 @@ export default async function ReportResultsPage({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className="relative flex flex-col bg-blue-50 py-12">
-        <div className="flex flex-col space-y-10">
-          <header>
-            <div className="container">
-              <div className="max-w-2xl mx-auto space-y-4">
-                <h1 className="text-3xl font-bold text-blue-500 text-center">
-                  Testing
-                </h1>
-              </div>
+      <main className="relative flex flex-col bg-blue-50 py-12 space-y-10">
+        <header>
+          <div className="container">
+            <div className="max-w-2xl mx-auto space-y-4">
+              <h1 className="text-3xl font-bold text-blue-500 text-center">
+                Testing
+              </h1>
             </div>
-          </header>
-
+          </div>
+        </header>
+        <div className="flex flex-col space-y-20">
           {/* OVERVIEW */}
           <WidgetsOverview />
 
