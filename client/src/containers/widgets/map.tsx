@@ -47,7 +47,7 @@ export default function WidgetMap({ ids }: WidgetMapProps) {
   }, [ids, GEOMETRY]);
 
   return (
-    <Card className="h-96 p-0">
+    <Card className="h-full min-h-96 p-0">
       <Map
         id="overview"
         {...(GEOMETRY?.extent && {

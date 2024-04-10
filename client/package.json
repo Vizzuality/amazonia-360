@@ -25,6 +25,7 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@t3-oss/env-nextjs": "^0.7.3",
     "@tanstack/react-query": "^5.28.9",
+    "@tanstack/react-table": "^8.15.3",
     "@visx/annotation": "^3.3.0",
     "@visx/group": "^3.3.0",
     "@visx/hierarchy": "^3.3.0",

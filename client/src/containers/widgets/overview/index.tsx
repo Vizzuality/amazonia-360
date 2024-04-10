@@ -1,7 +1,7 @@
 import WidgetMap from "@/containers/widgets/map";
+import WidgetAdministrativeBoundaries from "@/containers/widgets/overview/administrative-boundaries";
 import WidgetAltitude from "@/containers/widgets/overview/altitude";
 import WidgetAmazoniaCoverage from "@/containers/widgets/overview/amazonia-coverage";
-import WidgetLandmarks from "@/containers/widgets/overview/landmarks";
 import WidgetPopulation from "@/containers/widgets/overview/population";
 import WidgetTotalArea from "@/containers/widgets/overview/total-area";
 
@@ -22,10 +22,10 @@ export default function WidgetsOverview() {
           <WidgetAmazoniaCoverage />
         </div>
         <div className="col-span-6">
-          <WidgetMap ids={["ciudades_capitales", "areas_protegidas"]} />
+          <WidgetMap ids={["ciudades_capitales"]} />
         </div>
         <div className="col-span-6">
-          <WidgetLandmarks />
+          <WidgetAdministrativeBoundaries />
         </div>
       </div>
     </div>
