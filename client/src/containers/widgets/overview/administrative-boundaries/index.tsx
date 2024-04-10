@@ -40,7 +40,7 @@ export default function WidgetAdministrativeBoundaries() {
   return (
     <Card>
       <CardTitle>Administrative Boundaries</CardTitle>
-      <div className="mt-4 min-h-96">
+      <div className="mt-3 min-h-96">
         <CardLoader query={query} className="h-96">
           <div className="space-y-2">
             <p className="text-sm font-medium">
