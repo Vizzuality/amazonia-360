@@ -24,6 +24,7 @@ export type MapProps = {
     bottom?: number;
     left?: number;
   };
+  viewProps?: __esri.MapViewProperties;
   children?: React.ReactNode;
   onMapMove?: (extent: __esri.Extent) => void;
 };
@@ -42,6 +43,7 @@ export function MapView({
   bbox,
   padding,
   children,
+  viewProps,
   onMapMove,
 }: MapProps) {
   const mapRef = useRef<ArcGISMap>();
@@ -98,6 +100,7 @@ export function MapView({
         spatialReference: {
           wkid: 102100,
         },
+        ...viewProps,
       });
 
       // Remove the default widgets

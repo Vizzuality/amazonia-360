@@ -59,6 +59,12 @@ export default function WidgetMap({ ids }: WidgetMapProps) {
           ],
           bbox: undefined,
         })}
+        viewProps={{
+          navigation: {
+            mouseWheelZoomEnabled: false,
+            browserTouchPanEnabled: false,
+          },
+        }}
       >
         {LAYERS.map((layer, index, arr) => {
           if (layer.type === "feature") {
