@@ -11,7 +11,7 @@ import { Card, CardLoader, CardTitle } from "@/containers/card";
 import {
   ResearchCenter,
   columns,
-} from "@/containers/widgets/bioeconomy-and-research/research-centers/columns";
+} from "@/containers/widgets/bioeconomy/research-centers/columns";
 import { DataTable } from "@/containers/widgets/table";
 
 export default function WidgetResearchCenters() {
