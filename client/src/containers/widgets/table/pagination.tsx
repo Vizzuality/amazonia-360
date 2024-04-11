@@ -24,8 +24,12 @@ export function DataPagination<TData>({
   const { pageIndex } = table.getState().pagination;
   const pageCount = table.getPageCount();
 
-  const showLeftEllipsis = pageIndex > pageCount / 2;
-  const showRightEllipsis = pageCount - pageIndex + 1 > totalPagesToDisplay / 2;
+  const showLeftEllipsis =
+    pageCount > totalPagesToDisplay && pageIndex + 1 > totalPagesToDisplay / 2;
+  const showRightEllipsis =
+    pageCount > totalPagesToDisplay &&
+    pageCount - (pageIndex + 1) > totalPagesToDisplay / 2;
+
   const getPageNumbers = () => {
     if (pageCount <= totalPagesToDisplay) {
       return Array.from({ length: pageCount }, (_, i) => i + 1);
