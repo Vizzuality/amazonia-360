@@ -45,8 +45,8 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="space-y-2">
-      <div className="rounded-md">
+    <div>
+      <div className="rounded-md min-h-64">
         <Table className="border-foreground">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -119,7 +119,10 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataPagination table={table} totalPagesToDisplay={5} />
+      <footer className="flex items-center justify-between">
+        <p className="text-xs font-medium text-gray-500">{`${data.length} results`}</p>
+        <DataPagination table={table} totalPagesToDisplay={5} />
+      </footer>
     </div>
   );
 }

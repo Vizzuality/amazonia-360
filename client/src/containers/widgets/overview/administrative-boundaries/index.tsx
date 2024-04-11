@@ -40,8 +40,8 @@ export default function WidgetAdministrativeBoundaries() {
   return (
     <Card>
       <CardTitle>Administrative Boundaries</CardTitle>
-      <div className="mt-3 min-h-96">
-        <CardLoader query={query} className="h-96">
+      <div className="mt-3">
+        <CardLoader query={query} className="h-72">
           <div className="space-y-2">
             <p className="text-sm font-medium">
               The selected area intersects 1 state, 4 municipalities and 5
@@ -55,7 +55,7 @@ export default function WidgetAdministrativeBoundaries() {
                 initialState: {
                   pagination: {
                     pageIndex: 0,
-                    pageSize: 7,
+                    pageSize: 6,
                   },
                   sorting: [
                     {

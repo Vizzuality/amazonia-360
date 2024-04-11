@@ -8,6 +8,11 @@ import { useSyncLocation } from "@/app/store";
 import { DATASETS } from "@/constants/datasets";
 
 import { Card, CardLoader, CardTitle } from "@/containers/card";
+import {
+  ResearchCenter,
+  columns,
+} from "@/containers/widgets/bioeconomy-and-research/research-centers/columns";
+import { DataTable } from "@/containers/widgets/table";
 
 export default function WidgetResearchCenters() {
   const [location] = useSyncLocation();
@@ -27,20 +32,34 @@ export default function WidgetResearchCenters() {
     },
     {
       enabled: !!DATASETS.institutional_tracking.getFeatures && !!GEOMETRY,
+      select(data): ResearchCenter[] {
+        return data.features.map((f) => f.attributes);
+      },
     },
   );
 
   return (
     <Card>
-      <CardTitle>
-        Research centers ({query.data?.features?.length ?? "-"})
-      </CardTitle>
-      <CardLoader query={query} className="h-12">
-        <ul className="space-y-1">
-          {query.data?.features.map((feature) => (
-            <li key={feature.attributes.FID}>{feature.attributes.Org_Name}</li>
-          ))}
-        </ul>
+      <CardTitle>Research centers ({query.data?.length ?? "-"})</CardTitle>
+      <CardLoader query={query} className="h-72">
+        <DataTable
+          columns={columns}
+          data={query.data ?? []}
+          tableOptions={{
+            initialState: {
+              pagination: {
+                pageIndex: 0,
+                pageSize: 6,
+              },
+              sorting: [
+                {
+                  id: "NAME_1",
+                  desc: false,
+                },
+              ],
+            },
+          }}
+        />
       </CardLoader>
     </Card>
   );
