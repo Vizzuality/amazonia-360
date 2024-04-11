@@ -3,8 +3,8 @@ import { TOPICS } from "@/constants/topics";
 import WidgetMap from "@/containers/widgets/map";
 import WidgetIndigenousLandCoverage from "@/containers/widgets/population/indigenous-land";
 
-export default function WidgetsPopulation() {
-  const T = TOPICS.find((t) => t.id === "population");
+export default function WidgetsFinancial() {
+  const T = TOPICS.find((t) => t.id === "financial");
 
   return (
     <div className="container">
@@ -13,6 +13,7 @@ export default function WidgetsPopulation() {
         <div className="col-span-6">
           <WidgetIndigenousLandCoverage />
         </div>
+
         <div className="col-span-6">
           <WidgetMap ids={["tierras_indigenas"]} />
         </div>

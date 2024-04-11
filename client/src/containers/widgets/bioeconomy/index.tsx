@@ -3,7 +3,7 @@ import { TOPICS } from "@/constants/topics";
 import WidgetResearchCenters from "@/containers/widgets/bioeconomy/research-centers";
 import WidgetMap from "@/containers/widgets/map";
 
-export default function WidgetsBioeconomicAndResearch() {
+export default function WidgetsBioeconomy() {
   const T = TOPICS.find((t) => t.id === "bioeconomy");
 
   return (

@@ -40,3 +40,10 @@ export const TOPICS = [
     description: "Understand the IDB operations in your area of interest.",
   },
 ] as Topic[] satisfies Topic[];
+
+export type TopicIds =
+  | "natural-physical-environment"
+  | "population"
+  | "protection"
+  | "bioeconomy"
+  | "financial";
