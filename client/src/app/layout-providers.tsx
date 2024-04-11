@@ -1,6 +1,11 @@
 "use client";
 
+import { useMemo } from "react";
+
+import esriConfig from "@arcgis/core/config";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+import { env } from "@/env.mjs";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -44,6 +49,16 @@ export default function LayoutProviders({
   //       suspend because React will throw away the client on the initial
   //       render if it suspends and there is no boundary
   const queryClient = getQueryClient();
+
+  useMemo(() => {
+    esriConfig.apiKey = env.NEXT_PUBLIC_ARCGIS_API_KEY;
+    esriConfig.request.interceptors?.push({
+      urls: [env.NEXT_PUBLIC_API_URL],
+      headers: {
+        Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
+      },
+    });
+  }, []);
 
   return (
     <TooltipProvider>

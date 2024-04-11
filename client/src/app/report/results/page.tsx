@@ -13,10 +13,10 @@ import { getSearchQueryOptions } from "@/lib/search";
 import { locationParser } from "@/app/parsers";
 import { PageProps } from "@/app/types";
 
-import { Card, CardTitle, CardWidgetNumber } from "@/containers/card";
-import Test from "@/containers/test";
-
-import ArcChart from "@/components/charts/arc";
+import WidgetsBioeconomicAndResearchData from "@/containers/widgets/bioeconomy-and-research";
+import WidgetsDemographicAndSocieconomic from "@/containers/widgets/demographic-and-socioeconomic";
+import WidgetsLandCover from "@/containers/widgets/land-cover";
+import WidgetsOverview from "@/containers/widgets/overview";
 
 export const metadata: Metadata = {
   title: "Report | results",
@@ -52,36 +52,28 @@ export default async function ReportResultsPage({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className="relative flex flex-col h-[calc(100svh_-_theme(space.20))] bg-blue-50 py-12">
-        <div className="flex flex-col space-y-10">
-          <header>
-            <div className="container">
-              <div className="max-w-2xl mx-auto space-y-4">
-                <h1 className="text-3xl font-bold text-blue-500 text-center">
-                  Testing
-                </h1>
-              </div>
-            </div>
-          </header>
-
+      <main className="relative flex flex-col bg-blue-50 py-12 space-y-10">
+        <header>
           <div className="container">
-            <div className="grid grid-cols-12 gap-2">
-              <div className="col-span-3">
-                <Card>
-                  <CardTitle>Results</CardTitle>
-                  <ArcChart value={0.5} />
-                </Card>
-              </div>
-              <div className="col-span-3">
-                <Card>
-                  <CardTitle>Results</CardTitle>
-                  <CardWidgetNumber>45900</CardWidgetNumber>
-                </Card>
-              </div>
+            <div className="max-w-2xl mx-auto space-y-4">
+              <h1 className="text-3xl font-bold text-blue-500 text-center">
+                Testing
+              </h1>
             </div>
           </div>
+        </header>
+        <div className="flex flex-col space-y-20">
+          {/* OVERVIEW */}
+          <WidgetsOverview />
 
-          <Test id="admin" />
+          {/* DEMOGRAPHIC AND SOCIOECONOMIC */}
+          <WidgetsDemographicAndSocieconomic />
+
+          {/* BIOECONOMY */}
+          <WidgetsBioeconomicAndResearchData />
+
+          {/* LAND COVER */}
+          <WidgetsLandCover />
         </div>
       </main>
     </HydrationBoundary>

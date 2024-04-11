@@ -7,27 +7,27 @@
   :root {
     /* Amazonia */
     /* colors */
-    --accent: hsl(200 25% 95%);
-    --accent-foreground: hsl(198 100% 22%);
-    --background: hsl(0 0 100%);
-    --border: hsl(201 24% 84%);
-    --card: hsl(0 0 100%);
-    --destructive: hsl(0 84% 60%);
-    --destructive-foreground: hsl(0 0% 100%);
-    --foreground: hsl(198 100% 11%);
-    --hover-destructive: hsl(0 72% 51%);
-    --hover-primary: hsl(198 100% 15%);
-    --hover-secondary: hsl(200 29% 67%);
-    --input: hsl(201 24% 84%);
-    --muted: hsl(200 25% 95%);
-    --muted-foreground: hsl(0 1% 23%);
-    --popover: hsl(0 0 100%);
-    --popover-foreground: hsl(0 0 12%);
-    --primary: hsl(198 100% 22%);
-    --primary-foreground: hsl(200 25% 95%);
-    --ring: hsl(198 100% 22%);
-    --secondary: hsl(200 25% 95%);
-    --secondary-foreground: hsl(198 100% 15%);
+    --accent: 200 25% 95%;
+    --accent-foreground: 198 100% 22%;
+    --background: 0 0 100%;
+    --border: 201 24% 84%;
+    --card: 0 0 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --foreground: 198 100% 11%;
+    --hover-destructive: 0 72% 51%;
+    --hover-primary: 198 100% 15%;
+    --hover-secondary: 200 29% 67%;
+    --input: 201 24% 84%;
+    --muted: 200 25% 95%;
+    --muted-foreground: 0 1% 23%;
+    --popover: 0 0 100%;
+    --popover-foreground: 0 0 12%;
+    --primary: 198 100% 22%;
+    --primary-foreground: 200 25% 95%;
+    --ring: 198 100% 22%;
+    --secondary: 200 25% 95%;
+    --secondary-foreground: 198 100% 15%;
     /* numbers */
     --radius: 0.5rem;
   }

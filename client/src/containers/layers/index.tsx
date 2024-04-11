@@ -26,7 +26,7 @@ export default function Layers() {
 
   return (
     <>
-      <h1 className="text-2xl">Layer Manager</h1>
+      <h1 className="text-2xl">FeatureLayer Manager</h1>
 
       <ul className="space-y-4">
         {getKeys(DATASETS).map((d) => {

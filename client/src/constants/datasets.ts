@@ -1,9 +1,15 @@
 import Polygon from "@arcgis/core/geometry/Polygon";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+import WebTileLayer from "@arcgis/core/layers/WebTileLayer";
 import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer";
 import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
 import Query from "@arcgis/core/rest/support/Query";
 import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
+import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
+
+import { env } from "@/env.mjs";
+
+import { getKeys } from "@/lib/utils";
 
 import GEOJSON from "@/data/geojson.json";
 
@@ -30,7 +36,7 @@ export const DATASETS = {
       }),
     }),
 
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],
@@ -53,15 +59,30 @@ export const DATASETS = {
         }),
       }),
     }),
-    getFeatures: () => undefined,
+    getFeatures: (props?: __esri.QueryProperties) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
   },
   ciudades_capitales: {
     layer: new FeatureLayer({
       id: "ciudades_capitales",
       title: "Ciudades capitales",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_CAPITALES_ADMIN/FeatureServer/0",
+      renderer: new SimpleRenderer({
+        symbol: new SimpleMarkerSymbol({
+          color: "#000000",
+          size: 4,
+          outline: {
+            width: 1,
+            color: "#000000",
+          },
+        }),
+      }),
     }),
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],
@@ -74,7 +95,12 @@ export const DATASETS = {
       title: "Vectores frontera internacional",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/REFERENCIA_FRONTERA_INTERNACIONAL/FeatureServer/0",
     }),
-    getFeatures: () => undefined,
+    getFeatures: (props?: __esri.QueryProperties) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
   },
   tierras_indigenas: {
     layer: new FeatureLayer({
@@ -91,7 +117,7 @@ export const DATASETS = {
         }),
       }),
     }),
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],
@@ -104,7 +130,7 @@ export const DATASETS = {
       title: "Tipos climáticos (Koepen)",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tipos_climaticos_KOEPEN/FeatureServer/0",
     }),
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],
@@ -117,7 +143,7 @@ export const DATASETS = {
       title: "Biomas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Biomas/FeatureServer/0",
     }),
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],
@@ -192,7 +218,7 @@ export const DATASETS = {
         ],
       }),
     }),
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],
@@ -205,7 +231,7 @@ export const DATASETS = {
       title: "Cuenca hidrográfica, pertenencia a grandes cuencas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Grandes_cuencas_hidrograficas/FeatureServer/0",
     }),
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],
@@ -218,7 +244,63 @@ export const DATASETS = {
       title: "Áreas protegidas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Areas_protegidas/FeatureServer/0",
     }),
-    getFeatures: (props?: __esri.QueryProperties | undefined) =>
+    getFeatures: (props?: __esri.QueryProperties) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
+  },
+  institutional_tracking: {
+    layer: new FeatureLayer({
+      id: "institutional_tracking",
+      title: "Institutional Tracking",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Institutional_Tracking/FeatureServer/0",
+      featureReduction: {
+        type: "cluster",
+        clusterMinSize: 16.5,
+        labelingInfo: [
+          {
+            deconflictionStrategy: "none",
+            labelExpressionInfo: {
+              expression: "Text($feature.cluster_count, '#,###')",
+            },
+            symbol: {
+              type: "text",
+              color: "#FFFFFF",
+              font: {
+                size: "12px",
+              },
+            },
+            labelPlacement: "center-center",
+          },
+        ],
+      },
+      renderer: new SimpleRenderer({
+        symbol: new SimpleMarkerSymbol({
+          color: "#000000",
+          size: 4,
+          outline: {
+            width: 1,
+            color: "#000000",
+          },
+        }),
+      }),
+    }),
+    getFeatures: (props?: __esri.QueryProperties) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
+  },
+  land_cover: {
+    layer: new WebTileLayer({
+      id: "land_cover",
+      title: "Land cover",
+      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=landcover_cog.tif`,
+    }),
+    getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
         outFields: ["*"],
@@ -226,5 +308,7 @@ export const DATASETS = {
       }),
   },
 } as const;
+
+export const DATASET_IDS = getKeys(DATASETS);
 
 export type DatasetIds = keyof typeof DATASETS;

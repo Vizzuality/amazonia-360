@@ -1,4 +1,4 @@
-export const formatNumber = (options?: Intl.NumberFormatOptions) => {
+export const useFormatNumber = (options?: Intl.NumberFormatOptions) => {
   return new Intl.NumberFormat("en-US", {
     style: "decimal",
     minimumFractionDigits: 0,
@@ -7,7 +7,7 @@ export const formatNumber = (options?: Intl.NumberFormatOptions) => {
   });
 };
 
-export const formatPercentage = (options?: Intl.NumberFormatOptions) => {
+export const useFormatPercentage = (options?: Intl.NumberFormatOptions) => {
   return new Intl.NumberFormat("en-US", {
     style: "percent",
     minimumFractionDigits: 0,

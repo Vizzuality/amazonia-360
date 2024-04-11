@@ -7,7 +7,7 @@ import Link from "next/link";
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import Polygon from "@arcgis/core/geometry/Polygon";
 
-import { formatNumber } from "@/lib/formats";
+import { useFormatNumber } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
 
 import { useSyncLocation, useSyncSearchParams } from "@/app/store";
@@ -20,7 +20,7 @@ export default function Confirm() {
   const [location, setLocation] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
 
-  const { format } = formatNumber({
+  const { format } = useFormatNumber({
     maximumFractionDigits: 0,
   });
 
