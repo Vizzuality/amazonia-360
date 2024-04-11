@@ -29,9 +29,10 @@ export default function WidgetAdministrativeBoundariesHeader({
 
   return (
     <p className="text-sm font-medium">
-      The selected area intersects {countries.size} countries, {states.size}{" "}
-      states, {municipalities.size} municipalities and {capitals.size} capital
-      cities.
+      The selected area intersects <strong>{countries.size} countries</strong>,{" "}
+      <strong>{states.size} states</strong>,{" "}
+      <strong>{municipalities.size} municipalities</strong> and{" "}
+      <strong>{capitals.size} capital cities</strong>.
     </p>
   );
 }
