@@ -61,7 +61,7 @@ export default function WidgetLandCoverByType() {
   return (
     <Card>
       <CardTitle>Land cover by type</CardTitle>
-      <CardLoader query={query} className="h-40">
+      <CardLoader query={[query]} className="h-40">
         {!!query.data && <MarimekkoChart data={query.data || []} />}
       </CardLoader>
     </Card>

@@ -27,7 +27,7 @@ export default function WidgetIndigenousLandCoverage() {
   return (
     <Card>
       <CardTitle>Indigenous lands</CardTitle>
-      <CardLoader query={query} className="h-12">
+      <CardLoader query={[query]} className="h-12">
         <ArcChart value={query.data?.percentage ?? 0} />
       </CardLoader>
     </Card>

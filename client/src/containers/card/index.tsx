@@ -21,10 +21,10 @@ export function CardLoader({
   children,
   ...rest
 }: {
-  query: UseQueryResult<unknown, unknown>;
+  query: UseQueryResult<unknown, unknown>[];
   children: React.ReactNode;
 } & React.HTMLAttributes<HTMLDivElement>) {
-  if (!query.data || query.isFetching) {
+  if (!query.every((q) => q.data) || query.some((q) => q.isFetching)) {
     return <Skeleton {...rest} />;
   }
 

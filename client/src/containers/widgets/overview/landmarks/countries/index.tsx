@@ -48,7 +48,7 @@ export default function WidgetLandmarksCountries() {
   return (
     <div className="space-y-2">
       <h3 className="text-xs font-medium text-gray-500">Countries</h3>
-      <CardLoader query={query} className="h-12">
+      <CardLoader query={[query]} className="h-12">
         <ul className="flex space-x-5">
           {query.data?.map((c) => (
             <li className="flex space-x-2 items-center" key={c?.ISO}>

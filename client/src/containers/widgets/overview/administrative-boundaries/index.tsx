@@ -8,10 +8,12 @@ import { useSyncLocation } from "@/app/store";
 import { DATASETS } from "@/constants/datasets";
 
 import { Card, CardLoader, CardTitle } from "@/containers/card";
+import { columns } from "@/containers/widgets/overview/administrative-boundaries/columns";
+import WidgetAdministrativeBoundariesHeader from "@/containers/widgets/overview/administrative-boundaries/header";
 import {
   AdministrativeBoundary,
-  columns,
-} from "@/containers/widgets/overview/administrative-boundaries/columns";
+  City,
+} from "@/containers/widgets/overview/administrative-boundaries/types";
 import { DataTable } from "@/containers/widgets/table";
 
 export default function WidgetAdministrativeBoundaries() {
@@ -19,7 +21,7 @@ export default function WidgetAdministrativeBoundaries() {
 
   const GEOMETRY = useLocationGeometry(location);
 
-  const query = useGetFeatures(
+  const queryAdmin = useGetFeatures(
     {
       query: DATASETS.admin.getFeatures({
         ...(!!GEOMETRY && {
@@ -37,20 +39,37 @@ export default function WidgetAdministrativeBoundaries() {
     },
   );
 
+  const queryCities = useGetFeatures(
+    {
+      query: DATASETS.ciudades_capitales.getFeatures({
+        ...(!!GEOMETRY && {
+          geometry: GEOMETRY,
+        }),
+      }),
+      feature: DATASETS.ciudades_capitales.layer,
+    },
+    {
+      enabled: !!DATASETS.ciudades_capitales.getFeatures && !!GEOMETRY,
+      select(data): City[] {
+        return data.features.map((f) => f.attributes);
+      },
+    },
+  );
+
   return (
     <Card>
       <CardTitle>Administrative Boundaries</CardTitle>
       <div className="mt-3">
-        <CardLoader query={query} className="h-72">
+        <CardLoader query={[queryAdmin, queryCities]} className="h-72">
           <div className="space-y-2">
-            <p className="text-sm font-medium">
-              The selected area intersects 1 state, 4 municipalities and 5
-              capital cities, including state capital Cobija.
-            </p>
+            <WidgetAdministrativeBoundariesHeader
+              administrativeBoundaries={queryAdmin.data ?? []}
+              cities={queryCities.data ?? []}
+            />
 
             <DataTable
               columns={columns}
-              data={query.data ?? []}
+              data={queryAdmin.data ?? []}
               tableOptions={{
                 initialState: {
                   pagination: {

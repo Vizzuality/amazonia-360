@@ -41,7 +41,7 @@ export default function WidgetAmazoniaCoverage() {
   return (
     <Card>
       <CardTitle>Amazonia coverage</CardTitle>
-      <CardLoader query={query} className="h-12">
+      <CardLoader query={[query]} className="h-12">
         <CardWidgetNumber value={COVERAGE} unit="is in Amazonia" />
       </CardLoader>
     </Card>

@@ -33,7 +33,7 @@ export default function WidgetLandmarksNatural() {
   return (
     <div className="space-y-2">
       <h3 className="text-xs font-medium text-gray-500">Natural landmarks</h3>
-      <CardLoader query={query} className="h-12">
+      <CardLoader query={[query]} className="h-12">
         <ul className="space-y-1">
           {query.data?.features.map((feature) => (
             <li key={feature.attributes.FID}>{feature.attributes.NAME}</li>

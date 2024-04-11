@@ -40,8 +40,8 @@ export default function WidgetResearchCenters() {
 
   return (
     <Card>
-      <CardTitle>Research centers ({query.data?.length ?? "-"})</CardTitle>
-      <CardLoader query={query} className="h-72">
+      <CardTitle>Research centers</CardTitle>
+      <CardLoader query={[query]} className="h-72">
         <DataTable
           columns={columns}
           data={query.data ?? []}

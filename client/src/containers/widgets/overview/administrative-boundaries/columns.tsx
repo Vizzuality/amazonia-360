@@ -2,15 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type AdministrativeBoundary = {
-  FID: string;
-  GID_0: string;
-  NAME_0: string;
-  NAME_1: string;
-  NAME_2: string;
-};
+import { AdministrativeBoundary } from "@/containers/widgets/overview/administrative-boundaries/types";
 
 export const columns: ColumnDef<AdministrativeBoundary>[] = [
   {

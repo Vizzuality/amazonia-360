@@ -33,7 +33,7 @@ export default function WidgetLandmarksCities() {
   return (
     <div className="space-y-2">
       <h3 className="text-xs font-medium text-gray-500">Cities</h3>
-      <CardLoader query={query} className="h-12">
+      <CardLoader query={[query]} className="h-12">
         <ul className="space-y-1">
           {query.data?.features.map((feature) => (
             <li key={feature.attributes.FID}>{feature.attributes.NOMBCAP}</li>
