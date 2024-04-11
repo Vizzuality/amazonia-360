@@ -13,10 +13,10 @@ import { getSearchQueryOptions } from "@/lib/search";
 import { locationParser } from "@/app/parsers";
 import { PageProps } from "@/app/types";
 
-import WidgetsBioeconomicAndResearchData from "@/containers/widgets/bioeconomy-and-research";
-import WidgetsDemographicAndSocieconomic from "@/containers/widgets/demographic-and-socioeconomic";
-import WidgetsLandCover from "@/containers/widgets/land-cover";
+import WidgetsBioeconomicAndResearchData from "@/containers/widgets/bioeconomy";
+import WidgetsLandCover from "@/containers/widgets/natural-physical-environment";
 import WidgetsOverview from "@/containers/widgets/overview";
+import WidgetsDemographicAndSocieconomic from "@/containers/widgets/population";
 
 export const metadata: Metadata = {
   title: "Report | results",
@@ -66,14 +66,14 @@ export default async function ReportResultsPage({
           {/* OVERVIEW */}
           <WidgetsOverview />
 
+          {/* LAND COVER */}
+          <WidgetsLandCover />
+
           {/* DEMOGRAPHIC AND SOCIOECONOMIC */}
           <WidgetsDemographicAndSocieconomic />
 
           {/* BIOECONOMY */}
           <WidgetsBioeconomicAndResearchData />
-
-          {/* LAND COVER */}
-          <WidgetsLandCover />
         </div>
       </main>
     </HydrationBoundary>

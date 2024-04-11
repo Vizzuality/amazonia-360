@@ -26,7 +26,7 @@ export default function TopicsItem({
   const descriptionRef = useRef<HTMLParagraphElement>(null);
 
   return (
-    <div key={id} className="col-span-6 md:col-span-4 lg:col-span-2">
+    <div key={id} className="w-full">
       <div
         className={cn(
           "relative rounded-2xl overflow-hidden mx-auto aspect-[210/300] 2xl:aspect-[210/380] group cursor-pointer",

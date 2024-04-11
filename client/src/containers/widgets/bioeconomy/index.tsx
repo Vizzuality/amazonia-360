@@ -1,10 +1,14 @@
-import WidgetResearchCenters from "@/containers/widgets/bioeconomy-and-research/research-centers";
+import { TOPICS } from "@/constants/topics";
+
+import WidgetResearchCenters from "@/containers/widgets/bioeconomy/research-centers";
 import WidgetMap from "@/containers/widgets/map";
 
 export default function WidgetsBioeconomicAndResearch() {
+  const T = TOPICS.find((t) => t.id === "bioeconomy");
+
   return (
     <div className="container">
-      <h2 className="text-xl font-semibold mb-4">Bioeconomy and Research</h2>
+      <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
       <div className="grid grid-cols-12 gap-2">
         <div className="col-span-6">
           <WidgetMap ids={["institutional_tracking"]} />
