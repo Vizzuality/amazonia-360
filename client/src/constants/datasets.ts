@@ -243,6 +243,15 @@ export const DATASETS = {
       id: "areas_protegidas",
       title: "Áreas protegidas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Areas_protegidas/FeatureServer/0",
+      renderer: new SimpleRenderer({
+        symbol: new SimpleFillSymbol({
+          color: "#cadcc5",
+          outline: {
+            color: "#b5b986",
+            width: 1,
+          },
+        }),
+      }),
     }),
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({

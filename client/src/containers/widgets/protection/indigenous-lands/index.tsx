@@ -1,0 +1,69 @@
+"use client";
+
+import { useFormatPercentage } from "@/lib/formats";
+import { useLocationGeometry } from "@/lib/location";
+import { useGetFeatures, useGetIntersectionAnalysis } from "@/lib/query";
+
+import { useSyncLocation } from "@/app/store";
+
+import { DATASETS } from "@/constants/datasets";
+
+import {
+  Card,
+  CardTitle,
+  CardLoader,
+  CardWidgetNumber,
+} from "@/containers/card";
+import { IndigenousLand } from "@/containers/widgets/protection/indigenous-lands/types";
+
+export default function WidgetIndigenousLands() {
+  const [location] = useSyncLocation();
+
+  const GEOMETRY = useLocationGeometry(location);
+
+  const { format } = useFormatPercentage({
+    maximumFractionDigits: 0,
+  });
+
+  const queryIndigenousLands = useGetFeatures(
+    {
+      query: DATASETS.tierras_indigenas.getFeatures({
+        ...(!!GEOMETRY && {
+          geometry: GEOMETRY,
+        }),
+      }),
+      feature: DATASETS.tierras_indigenas.layer,
+    },
+    {
+      enabled: !!DATASETS.tierras_indigenas.getFeatures && !!GEOMETRY,
+      select(data): IndigenousLand[] {
+        return data.features.map((f) => f.attributes);
+      },
+    },
+  );
+
+  const queryIndigenousLandsCoverage = useGetIntersectionAnalysis(
+    {
+      id: "tierras_indigenas",
+      polygon: GEOMETRY,
+    },
+    {
+      enabled: !!GEOMETRY,
+    },
+  );
+
+  return (
+    <Card>
+      <CardTitle>Indigenous lands</CardTitle>
+      <CardLoader
+        query={[queryIndigenousLands, queryIndigenousLandsCoverage]}
+        className="h-16"
+      >
+        <CardWidgetNumber
+          value={`${queryIndigenousLands.data?.length ?? 0}`}
+          subvalue={`representing ${format(queryIndigenousLandsCoverage.data?.percentage ?? 0)} of the area`}
+        />
+      </CardLoader>
+    </Card>
+  );
+}
