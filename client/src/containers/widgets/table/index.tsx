@@ -61,6 +61,7 @@ export function DataTable<TData, TValue>({
                             header.column.getCanSort() &&
                               "cursor-pointer select-none",
                           )}
+                          style={{ width: `${header.getSize()}px` }}
                           title={
                             header.column.getCanSort()
                               ? header.column.getNextSortingOrder() === "asc"
