@@ -53,7 +53,7 @@ export default function WidgetResearchCenters() {
               },
               sorting: [
                 {
-                  id: "NAME_1",
+                  id: "Org_Name",
                   desc: false,
                 },
               ],

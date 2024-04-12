@@ -118,7 +118,7 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
-        <footer className="flex items-center justify-between mt-2">
+        <footer className="flex items-center justify-between mt-4">
           <p className="text-xs font-medium text-gray-500">{`${data.length} results`}</p>
           <DataPagination table={table} totalPagesToDisplay={5} />
         </footer>
