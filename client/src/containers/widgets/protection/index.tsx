@@ -1,7 +1,9 @@
 import { TOPICS } from "@/constants/topics";
 
 import WidgetMap from "@/containers/widgets/map";
-import WidgetIndigenousLandCoverage from "@/containers/widgets/population/indigenous-land";
+import WidgetForestFires from "@/containers/widgets/protection/forest-fires";
+import WidgetIndigenousLands from "@/containers/widgets/protection/indigenous-lands";
+import WidgetProtectedAreas from "@/containers/widgets/protection/protected-areas";
 
 export default function WidgetsProtection() {
   const T = TOPICS.find((t) => t.id === "protection");
@@ -11,11 +13,21 @@ export default function WidgetsProtection() {
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
       <div className="grid grid-cols-12 gap-2">
         <div className="col-span-6">
-          <WidgetIndigenousLandCoverage />
+          <div className="grid grid-cols-12 gap-2 items-stretch">
+            <div className="col-span-6">
+              <WidgetForestFires />
+            </div>
+            <div className="col-span-6">
+              <WidgetIndigenousLands />
+            </div>
+            <div className="col-span-12">
+              <WidgetProtectedAreas />
+            </div>
+          </div>
         </div>
 
         <div className="col-span-6">
-          <WidgetMap ids={["tierras_indigenas"]} />
+          <WidgetMap ids={["areas_protegidas"]} />
         </div>
       </div>
     </div>

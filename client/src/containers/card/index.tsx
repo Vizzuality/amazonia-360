@@ -33,17 +33,26 @@ export function CardLoader({
 
 export function CardWidgetNumber({
   value,
+  subvalue,
   unit,
 }: {
   value: string | number | null;
-  unit: string;
+  subvalue?: string | number | null;
+  unit?: string;
 }) {
   return (
-    <div className="flex items-end space-x-2">
-      <span className="font-bold text-4xl text-blue-600">{value}</span>
-      <span className="text-xs font-medium text-gray-500 relative bottom-1.5">
-        {unit}
-      </span>
+    <div>
+      <div className="flex items-end space-x-2">
+        <span className="font-bold text-4xl text-blue-600">{value}</span>
+
+        {!!unit && (
+          <span className="text-xs font-medium text-gray-500 relative bottom-1.5">
+            {unit}
+          </span>
+        )}
+      </div>
+
+      {subvalue && <p className="text-xs text-foreground">{subvalue}</p>}
     </div>
   );
 }

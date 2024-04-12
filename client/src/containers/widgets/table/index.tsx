@@ -46,7 +46,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="rounded-md min-h-64">
+      <div className="rounded-md min-h-72 flex flex-col justify-between">
         <Table className="border-foreground">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -61,6 +61,7 @@ export function DataTable<TData, TValue>({
                             header.column.getCanSort() &&
                               "cursor-pointer select-none",
                           )}
+                          style={{ width: `${header.getSize()}px` }}
                           title={
                             header.column.getCanSort()
                               ? header.column.getNextSortingOrder() === "asc"
@@ -118,11 +119,11 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
+        <footer className="flex items-center justify-between mt-4">
+          <p className="text-xs font-medium text-gray-500">{`${data.length} results`}</p>
+          <DataPagination table={table} totalPagesToDisplay={5} />
+        </footer>
       </div>
-      <footer className="flex items-center justify-between">
-        <p className="text-xs font-medium text-gray-500">{`${data.length} results`}</p>
-        <DataPagination table={table} totalPagesToDisplay={5} />
-      </footer>
     </div>
   );
 }
