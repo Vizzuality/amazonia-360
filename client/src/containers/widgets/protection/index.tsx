@@ -15,7 +15,7 @@ export default function WidgetsProtection() {
         </div>
 
         <div className="col-span-6">
-          <WidgetMap ids={["tierras_indigenas"]} />
+          <WidgetMap ids={["areas_protegidas"]} />
         </div>
       </div>
     </div>

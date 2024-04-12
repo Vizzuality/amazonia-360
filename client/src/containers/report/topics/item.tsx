@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { Topic } from "@/constants/topics";
 
 type TopicsItemProps = Topic & {
+  size: "sm" | "md" | "lg";
   checked: boolean;
   onChange: (checked: boolean) => void;
 };
@@ -19,6 +20,7 @@ export default function TopicsItem({
   id,
   label,
   image,
+  size,
   description,
   checked,
   onChange,
@@ -29,19 +31,21 @@ export default function TopicsItem({
     <div key={id} className="w-full">
       <div
         className={cn(
-          "relative rounded-2xl overflow-hidden mx-auto aspect-[210/300] 2xl:aspect-[210/380] group cursor-pointer",
+          "relative rounded-2xl overflow-hidden mx-auto group cursor-pointer",
+          size === "sm" && "aspect-[206/107]",
+          size === "lg" && "aspect-[210/300] 2xl:aspect-[210/380]",
           checked && "outline-dashed outline-primary outline-2",
         )}
         onClick={() => {
           if (onChange) onChange(!checked);
         }}
         onMouseEnter={() => {
-          if (descriptionRef.current) {
+          if (descriptionRef.current && size === "lg") {
             descriptionRef.current.style.maxHeight = `${descriptionRef.current.scrollHeight}px`;
           }
         }}
         onMouseLeave={() => {
-          if (descriptionRef.current) {
+          if (descriptionRef.current && size === "lg") {
             descriptionRef.current.style.maxHeight = "0";
           }
         }}
@@ -76,7 +80,9 @@ export default function TopicsItem({
 
           <div
             ref={descriptionRef}
-            className="font-semibold text-xs max-h-0 overflow-hidden transition-all group-hover:max-h-20 duration-300 ease-in-out"
+            className={cn(
+              "font-semibold text-xs max-h-0 overflow-hidden transition-all duration-300 ease-in-out",
+            )}
           >
             <p className="pt-2">{description}</p>
           </div>
