@@ -46,7 +46,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="rounded-md min-h-64 flex flex-col justify-between">
+      <div className="rounded-md min-h-72 flex flex-col justify-between">
         <Table className="border-foreground">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
