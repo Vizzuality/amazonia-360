@@ -6,6 +6,9 @@ This terraform project creates the following resources:
 - A security group that allows SSH access to the EC2 instance
 - A VPC
 - A key pair associated to the EC2 instance
+- Load Balancer with a target group and a listener to forward traffic to the EC2 instance
+- AWS Certificate Manager certificate for the load balancer
+- Route 53 record set on main account to point to the load balancer
 
 We are using for now the default profile in aws, which holds the credentials for the test user under de vizz backend sandbox. 
 THis needs to be updated accordingly
