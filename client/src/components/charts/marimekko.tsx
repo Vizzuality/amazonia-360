@@ -13,11 +13,12 @@ import { cn, getContrastColor } from "@/lib/utils";
 
 export const background = "#00152E"; // navy
 
-type Data = {
+export type Data = {
   id: string;
   label: string;
   parent: string | null;
-  size: number | null;
+  size: number;
+  color: string;
 };
 
 interface MarimekkoChartProps<DataT extends Data> {
@@ -128,7 +129,7 @@ const MarimekkoChart = <T extends Data>({
                               </p>
                             )}
 
-                            {nodeWidth > 120 && nodeHeight > 50 && (
+                            {nodeWidth > 120 && nodeHeight > 100 && (
                               <p
                                 className={cn(
                                   "text-sm font-medium text-white",

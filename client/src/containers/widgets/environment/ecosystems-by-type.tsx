@@ -5,65 +5,64 @@ import { scaleOrdinal } from "@visx/scale";
 
 import { useFormatPercentage } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
-import { useGetRasterAnalysis } from "@/lib/query";
+import { useGetIntersectionAnalysis } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
-import { LAND_COVER, LandCoverIds } from "@/constants/raster";
-
 import { Card, CardLoader, CardTitle } from "@/containers/card";
 
-import MarimekkoChart from "@/components/charts/marimekko";
+import MarimekkoChart, { Data } from "@/components/charts/marimekko";
 
-export default function WidgetLandCoverByType() {
+export default function WidgetEcosystemsByType() {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
 
-  const query = useGetRasterAnalysis(
+  const query = useGetIntersectionAnalysis(
     {
-      id: "landcover",
+      id: "ecosistemas",
       polygon: GEOMETRY,
-      statistics: ["frac", "unique"],
     },
     {
       enabled: !!GEOMETRY,
 
       select(data) {
-        const values = data.features.map((f) => {
-          if (f.properties.unique && f.properties.frac) {
-            const { frac, unique } = f.properties;
+        const { areas } = data;
 
-            const us = unique.map((u, index) => {
-              return {
-                id: LAND_COVER[`${u as LandCoverIds}`].label,
-                parent: "root",
-                size: frac[index],
-                label: LAND_COVER[`${u as LandCoverIds}`].label,
-                color: LAND_COVER[`${u as LandCoverIds}`].color,
-              };
-            }, {});
+        return data?.features
+          ?.map((f) => {
+            return {
+              id: f.attributes.ECO_NAME,
+              parent: "root",
+              size: f.area / (areas || 1),
+              label: f.attributes.ECO_NAME,
+              color: "blue",
+            };
+          })
+          ?.reduce((acc, curr) => {
+            const index = acc.findIndex((a) => a.id === curr.id);
 
-            return us
-              .filter((u) => u.size > 0.001)
-              .toSorted((a, b) => {
-                if (!a.size || !b.size) return 0;
+            if (index === -1) {
+              acc.push(curr);
+            } else {
+              acc[index].size = (acc[index]?.size ?? 0) + curr.size;
+            }
 
-                return b.size - a.size;
-              });
-          }
+            return acc;
+          }, [] as Data[])
+          ?.filter((u) => u.size > 0.001)
+          ?.toSorted((a, b) => {
+            if (!a.size || !b.size) return 0;
 
-          return [];
-        });
-
-        return values.flat();
+            return b.size - a.size;
+          });
       },
     },
   );
 
   const ordinalColorScale = scaleOrdinal({
     domain: query?.data?.map((d) => d),
-    range: query?.data?.map((d) => d.color) || [], // sort by size.toReversed(),
+    range: ["#40551F", "#668A26", "#8ABD2D", "#B0E33A", "#D6FF47"],
   });
 
   const { format } = useFormatPercentage({
@@ -72,7 +71,7 @@ export default function WidgetLandCoverByType() {
 
   return (
     <Card>
-      <CardTitle>Land cover by type</CardTitle>
+      <CardTitle>Ecosystems by type</CardTitle>
       <CardLoader query={[query]} className="h-52">
         {!!query.data && (
           <div className="space-y-2 pt-2">
@@ -87,10 +86,10 @@ export default function WidgetLandCoverByType() {
                   {labels.map((label) => (
                     <div
                       key={`legend-quantile-${label.datum.id}`}
-                      className="flex space-x-1"
+                      className="flex items-center"
                     >
                       <div
-                        className="w-2 h-2 mt-0.5 border border-foreground/50 rounded-[2px] shrink-0"
+                        className="w-2 h-2 mr-1 border border-black"
                         style={{
                           backgroundColor: label.value,
                         }}

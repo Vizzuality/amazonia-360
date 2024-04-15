@@ -226,6 +226,12 @@ export const getIntersectionAnalysis = async (
     );
 
     return {
+      features: featureSet.features.map((f, i) => ({
+        ...f.toJSON(),
+        area: geometryEngine.geodesicArea(results[i], "square-kilometers"),
+      })),
+      areas,
+      polygonArea,
       percentage: areas / polygonArea,
     };
   } catch (error) {
