@@ -57,15 +57,15 @@ def tif_file(setup_data_folder):
     data = np.array([[0, 1, 0], [1, 9, 1], [0, 1, 0]])
     transform = rasterio.transform.from_origin(0, 10, 1, 1)
     with rasterio.open(
-        f"{get_settings().tiff_path}/raster.tif",
-        "w",
-        driver="GTiff",
-        width=data.shape[1],
-        height=data.shape[0],
-        count=1,
-        dtype="uint8",
-        crs="+proj=latlong",
-        transform=transform,
+            f"{get_settings().tiff_path}/raster.tif",
+            "w",
+            driver="GTiff",
+            width=data.shape[1],
+            height=data.shape[0],
+            count=1,
+            dtype="uint8",
+            crs="+proj=latlong",
+            transform=transform,
     ) as dst:
         dst.write(data, 1)
 
@@ -89,19 +89,35 @@ def setup_empty_files(setup_data_folder):
         os.remove(f"{test_tiff_path}/{file}")
 
 
-# def test_no_token():
-#     response = test_client.get("/tifs")
-#     assert response.status_code == 401
-#     assert response.text == "Unauthorized"
+def test_no_token():
+    response = test_client.get("/tifs")
+    response2 = test_client.post("/exact_zonal_stats")
+    assert response.status_code == 401
+    assert response2.status_code == 401
+    assert response.json() == {"detail": "Unauthorized"}
+    assert response2.json() == {"detail": "Unauthorized"}
 
-# def test_options_http_method_is_allowed():
-#     response = test_client.options("/tifs")
-#     assert response.status_code == 200
 
 def test_health_is_public():
     response = test_client.get("/health")
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
+
+
+def test_options_request_is_allowed_with_correct_headers():
+    headers = {
+            "Access-Control-Request-Method": "GET",
+            "Origin": "http://example.com"
+        }
+    response = test_client.options(
+        "/tifs",
+        headers=headers
+    )
+    response2 = test_client.options('/exact_zonal_stats', headers=headers)
+    assert response.status_code == 200
+    assert response2.status_code == 200
+    assert "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT" in response.headers["Access-Control-Allow-Methods"]
+    assert "*" in response.headers["Access-Control-Allow-Origin"]
 
 
 def test_with_token(setup_data_folder):

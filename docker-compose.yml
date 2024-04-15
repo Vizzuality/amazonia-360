@@ -22,7 +22,7 @@ services:
         target: development
     environment:
         - AUTH_TOKEN=secret
-        - TIFF_PATH=/opt/api/data
+        - TIFF_PATH=/opt/api/test_data
     networks:
       - amazonia360-network
 
