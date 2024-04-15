@@ -12,7 +12,7 @@ export default function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="h-20 flex flex-col justify-center">
+    <header className="h-20 flex flex-col justify-center bg-[#CBD8DF]">
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/">
           <h1 className="flex items-center space-x-4">
