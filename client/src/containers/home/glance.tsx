@@ -1,6 +1,9 @@
 "use client";
 import { useCallback, useState } from "react";
 
+import { scaleOrdinal } from "@visx/scale";
+
+import MarimekkoChart from "@/components/charts/marimekko";
 import {
   Select,
   SelectContent,
@@ -11,11 +14,12 @@ import {
 
 export default function Glance() {
   const [chartOpt, setChartOpt] = useState<string | null>(null);
-  // const MOCK_DATA = [
-  //   { id: "Brazil", parent: "root", size: 61 },
-  //   { id: "Peru", parent: "root", size: 12 },
-  //   { id: "Bolivia", parent: "root", size: 9 },
-  // ];
+  const MOCK_DATA = [
+    { label: "Brazil", color: "", id: "Brazil", parent: "root", size: 40 },
+    { label: "Peru", color: "", id: "Peru", parent: "root", size: 10 },
+    { label: "Bolivia", color: "", id: "Bolivia", parent: "root", size: 30 },
+    { label: "Guatemala", color: "", id: "Bolivia", parent: "root", size: 20 },
+  ];
 
   const OPTIONS = [
     "Share of total Amazonia area %",
@@ -24,12 +28,17 @@ export default function Glance() {
     "Share of Amazonia Population in the country (%)",
   ];
 
+  const ordinalColorScale = scaleOrdinal({
+    domain: MOCK_DATA?.map((d) => d),
+    range: ["#009ADE", "#93CAEB", "#DBEDF8"],
+  });
+
   const handleSingleValueChange = useCallback((e: string) => {
     setChartOpt(e);
   }, []);
 
   return (
-    <section className="container flex md:space-x-28 py-10 md:py-28 md:flex-row flex-col">
+    <section className="container flex md:space-x-28 py-10 md:py-28 md:flex-row flex-col items-end">
       <div className="flex flex-col w-full md:w-1/2">
         <h3 className="uppercase text-sm font-extrabold text-cyan-500">
           Amazonia at a glance
@@ -42,17 +51,15 @@ export default function Glance() {
           America. This vital region is a confluence of cultural diversity and
           environmental significance.
         </p>
+        <p className="text-blue-300 text-sm mt-10 md:mt-48">Source: </p>
       </div>
-      <div className="w-full md:w-1/2 flex">
-        <div className="flex items-center space-x-2">
+      <div className="w-full md:w-1/2 flex flex-col space-y-10 mt-20 md:mt-0">
+        <div className="flex items-center space-x-2 justify-end">
           <h4 className="font-bold whitespace-nowrap text-sm">On the chart</h4>
           <Select onValueChange={handleSingleValueChange}>
-            <SelectTrigger
-              className="flex h-10 items-center justify-between rounded border border-gray-400 px-4"
-              data-cy="filter-country-select"
-            >
+            <SelectTrigger className="w-96">
               <div>
-                <SelectValue placeholder={""}> </SelectValue>
+                <SelectValue placeholder={OPTIONS[0]}> </SelectValue>
                 {chartOpt}
               </div>
             </SelectTrigger>
@@ -69,6 +76,13 @@ export default function Glance() {
                 ))}
             </SelectContent>
           </Select>
+        </div>
+        <div className="w-full">
+          <MarimekkoChart
+            data={MOCK_DATA}
+            colorScale={ordinalColorScale}
+            className="h-[488px]"
+          />
         </div>
       </div>
     </section>

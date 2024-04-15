@@ -24,10 +24,12 @@ export type Data = {
 interface MarimekkoChartProps<DataT extends Data> {
   data: DataT[];
   colorScale: ScaleTypeToD3Scale<string, DataT>["ordinal"];
+  className?: string;
 }
 const MarimekkoChart = <T extends Data>({
   data = [],
   colorScale,
+  className = "h-52",
 }: MarimekkoChartProps<T>) => {
   const { parentRef, width, height } = useParentSize({ debounceTime: 150 });
 
@@ -70,7 +72,13 @@ const MarimekkoChart = <T extends Data>({
 
   return (
     <div className="space-y-2">
-      <div ref={parentRef} className="w-full h-52">
+      <div
+        ref={parentRef}
+        className={cn({
+          "w-full": true,
+          [className]: !!className,
+        })}
+      >
         <svg width={width} height={height}>
           <Treemap<typeof DATA>
             root={root}

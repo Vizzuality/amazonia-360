@@ -3,7 +3,7 @@ import { CalendarClock, Proportions, Sparkles } from "lucide-react";
 export default function Vision() {
   return (
     <section className="bg-blue-50">
-      <div className="container text-white py-28 flex flex-col space-y-10">
+      <div className="container text-white py-10 md:py-28 flex flex-col space-y-10">
         <div className="flex flex-col w-full">
           <h3 className="uppercase text-sm font-extrabold text-cyan-500">
             amazonia360 vision{" "}
