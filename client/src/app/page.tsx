@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 
 import Footer from "@/containers/home/footer";
+import Glance from "@/containers/home/glance";
 import Hero from "@/containers/home/hero";
 import Hub from "@/containers/home/hub";
 import InformationOn from "@/containers/home/information-on";
@@ -18,6 +19,7 @@ export default function HomePage() {
       <Hero />
       <KeyFeatures />
       <InformationOn />
+      <Glance />
       <Vision />
       <Hub />
       <Footer />
