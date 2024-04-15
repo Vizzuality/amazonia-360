@@ -1,13 +1,13 @@
 import os
 from typing import Annotated
 
-from fastapi import FastAPI, Query
+from fastapi import Depends, FastAPI, Query
 from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
 from titiler.core.errors import DEFAULT_STATUS_CODES, add_exception_handlers
 
-from app.auth.auth import AuthMiddleware
+from app.auth.auth import verify_token
 from app.config.config import get_settings
 from app.routers.zonal_stats import ZonalTilerFactory
 
@@ -24,15 +24,14 @@ def path_params(raster_filename: Annotated[str, Query(description="Raster filena
 # Use ORJSONResponse to handle serialization of NaN values. Normal Json fails to serialize NaN values.
 app = FastAPI(title="Amazonia360 API", default_response_class=ORJSONResponse)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
-# app.add_middleware(AuthMiddleware)
 
 routes = ZonalTilerFactory(path_dependency=path_params)
-app.include_router(routes.router)
+app.include_router(routes.router, dependencies=[Depends(verify_token)])
 
 add_exception_handlers(app, DEFAULT_STATUS_CODES)
 
 
-@app.get("/tifs")
+@app.get("/tifs", dependencies=[Depends(verify_token)])
 async def list_files():
     """List all available tif files."""
     tiff_path = get_settings().tiff_path
