@@ -2,8 +2,10 @@ import { Metadata } from "next";
 
 import Footer from "@/containers/home/footer";
 import Hero from "@/containers/home/hero";
+import Hub from "@/containers/home/hub";
 import InformationOn from "@/containers/home/information-on";
 import KeyFeatures from "@/containers/home/key-features";
+import Vision from "@/containers/home/vision";
 
 export const metadata: Metadata = {
   title: "Amazonia360",
@@ -16,6 +18,8 @@ export default function HomePage() {
       <Hero />
       <KeyFeatures />
       <InformationOn />
+      <Vision />
+      <Hub />
       <Footer />
     </main>
   );
