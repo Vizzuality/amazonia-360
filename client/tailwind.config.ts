@@ -95,6 +95,7 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       fontSize: {
+        "2xs": ["0.625rem", "0.75rem"],
         "4xl": ["2.5rem", "3rem"],
       },
       width: {

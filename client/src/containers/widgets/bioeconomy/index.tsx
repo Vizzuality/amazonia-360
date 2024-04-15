@@ -10,10 +10,10 @@ export default function WidgetsBioeconomy() {
     <div className="container">
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
       <div className="grid grid-cols-12 gap-2">
-        <div className="col-span-6">
+        <div className="col-span-6 flex flex-col">
           <WidgetMap ids={["institutional_tracking"]} />
         </div>
-        <div className="col-span-6">
+        <div className="col-span-6 flex flex-col">
           <WidgetResearchCenters />
         </div>
       </div>
