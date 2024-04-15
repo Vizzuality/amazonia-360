@@ -4,10 +4,6 @@ terraform {
       source = "hashicorp/aws"
       version = "~> 5.10.0"
     }
-    acme = {
-      source  = "vancluever/acme"
-      version = "~> 2.5.0"
-    }
 
   }
 #  backend "s3" {
@@ -33,10 +29,6 @@ module "ec2" {
 
 module "vpc" {
   source         = "./modules/vpc"
-  providers = {
-    aws = aws
-    acme = acme.vancluever
-  }
   vpc_cidr_block = "10.0.0.0/16"
   vpc_name       = "amazonia360-vpc"
   ec2_instance_id = module.ec2.instance_id

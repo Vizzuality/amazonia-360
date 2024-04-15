@@ -1,17 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.10.0"
-    }
-    acme = {
-      source  = "vancluever/acme"
-      version = "~> 2.5.0"
-    }
-
-  }
-}
-
 resource "aws_vpc" "amazonia360-vpc" {
   cidr_block = var.vpc_cidr_block
   enable_dns_support   = true
