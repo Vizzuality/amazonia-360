@@ -9,6 +9,7 @@ import { useParentSize } from "@visx/responsive";
 import { ScaleTypeToD3Scale } from "@visx/scale";
 
 import { useFormatPercentage } from "@/lib/formats";
+import { cn, getContrastColor } from "@/lib/utils";
 
 export const background = "#00152E"; // navy
 
@@ -30,10 +31,20 @@ const MarimekkoChart = <T extends Data>({
   const { parentRef, width, height } = useParentSize({ debounceTime: 150 });
 
   const DATA = useMemo(() => {
+    const d1 = [...data];
+    if (!d1.find((d) => d.id === "root")) {
+      d1.unshift({
+        id: "root",
+        parent: null,
+        size: 0,
+        label: "Land Cover",
+      } as T);
+    }
+
     return stratify<T>()
       .id((d) => d.id)
       .parentId((d) => d.parent)(
-        data.toSorted((a, b) => {
+        d1.toSorted((a, b) => {
           if (!a.size || !b.size) return 0;
 
           return a.size - b.size;
@@ -101,16 +112,32 @@ const MarimekkoChart = <T extends Data>({
                           }}
                         >
                           <div className="p-3 max-w-52">
-                            {nodeWidth > 50 && (
-                              <p className="font-bold text-white">
+                            {nodeWidth > 50 && nodeHeight > 50 && (
+                              <p
+                                className={cn(
+                                  "font-bold",
+                                  getContrastColor(colorScale(node.data.data)) >
+                                    0.5
+                                    ? "text-foreground"
+                                    : "text-white",
+                                )}
+                              >
                                 {format(
                                   (node.value || 0) / (node.parent?.value || 1),
                                 )}
                               </p>
                             )}
 
-                            {nodeWidth > 120 && (
-                              <p className="text-sm font-medium text-white">
+                            {nodeWidth > 120 && nodeHeight > 50 && (
+                              <p
+                                className={cn(
+                                  "text-sm font-medium text-white",
+                                  getContrastColor(colorScale(node.data.data)) >
+                                    0.5
+                                    ? "text-foreground"
+                                    : "text-white",
+                                )}
+                              >
                                 {node.data.id}
                               </p>
                             )}
