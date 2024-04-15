@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 
+import Footer from "@/containers/home/footer";
 import Hero from "@/containers/home/hero";
 import InformationOn from "@/containers/home/information-on";
 import KeyFeatures from "@/containers/home/key-features";
@@ -15,6 +16,7 @@ export default function HomePage() {
       <Hero />
       <KeyFeatures />
       <InformationOn />
+      <Footer />
     </main>
   );
 }

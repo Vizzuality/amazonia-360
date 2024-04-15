@@ -1,4 +1,4 @@
-import Topics from "../report/topics";
+import Topics from "@/containers/report/topics";
 
 export default function InformationOn() {
   return (
