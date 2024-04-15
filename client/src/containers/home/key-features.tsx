@@ -10,7 +10,7 @@ export default function KeyFeatures() {
         <h2 className="text-blue-400 text-2xl lg:text-4xl pb-6">
           Knowledge for a thriving Amazonia
         </h2>
-        <p className="text-blue-900 text-base lg:text-lg font-light text-blue-900">
+        <p className="text-blue-900 text-base lg:text-lg font-light">
           Personalize your experience with reports that adapt to your focus
           areas, providing you with the targeted insights you need to make
           informed decisions.

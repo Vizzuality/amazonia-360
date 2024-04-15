@@ -1,5 +1,7 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+
 import { useSyncTopics } from "@/app/store";
 
 import { TOPICS, Topic } from "@/constants/topics";
@@ -7,10 +9,14 @@ import { TOPICS, Topic } from "@/constants/topics";
 import TopicsItem from "@/containers/report/topics/item";
 
 export interface TopicsProps {
+  interactive?: boolean;
   size: "sm" | "md" | "lg";
 }
 
-export default function Topics({ size = "md" }: TopicsProps) {
+export default function Topics({
+  interactive = true,
+  size = "md",
+}: TopicsProps) {
   const [topics, setTopics] = useSyncTopics();
   const handleTopicChange = (id: Topic["id"], checked: boolean) => {
     if (checked) {
@@ -27,17 +33,18 @@ export default function Topics({ size = "md" }: TopicsProps) {
   };
 
   return (
-    <section className="space-y-6">
-      <div className="container">
-        <div className="flex gap-4">
+    <section className="md:space-y-6">
+      <div className={cn({ container: interactive })}>
+        <div className="flex md:flex-row flex-col gap-4">
           {TOPICS.map((topic) => (
             <TopicsItem
               key={topic.id}
               {...topic}
+              interactive={interactive}
               size={size}
               checked={(topics || []).includes(topic.id)}
               onChange={(c) => {
-                handleTopicChange(topic.id, c);
+                interactive && handleTopicChange(topic.id, c);
               }}
             />
           ))}
