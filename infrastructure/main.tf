@@ -22,7 +22,7 @@ module "ec2" {
   instance_type  = "t2.large"
   subnet_id      = module.vpc.subnet_id
   instance_name  = "amazonia360-ec2"
-  security_groups = [module.vpc.security_group_id]
+  security_group_ids = [module.vpc.security_group_id]
   ec2_public_key  = var.ec2_public_key
   authorized_key = var.authorized_key
 }

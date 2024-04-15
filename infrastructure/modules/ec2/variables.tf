@@ -20,9 +20,9 @@ variable "instance_name" {
   default     = "amazonia360-ec2"
 }
 
-variable "security_groups" {
+variable "security_group_ids" {
     type        = list(string)
-    description = "List of security groups to attach to the EC2 instance"
+    description = "List of security group Ids to attach to the EC2 instance"
 }
 
 variable "ec2_public_key" {
