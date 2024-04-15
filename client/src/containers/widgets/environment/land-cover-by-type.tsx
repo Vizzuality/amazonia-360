@@ -1,5 +1,8 @@
 "use client";
 
+import { LegendOrdinal } from "@visx/legend";
+import { scaleOrdinal } from "@visx/scale";
+
 import { useLocationGeometry } from "@/lib/location";
 import { useGetRasterAnalysis } from "@/lib/query";
 
@@ -58,11 +61,64 @@ export default function WidgetLandCoverByType() {
     },
   );
 
+  const ordinalColorScale = scaleOrdinal({
+    domain:
+      query?.data
+        ?.map((d) => d)
+        .toSorted((a, b) => {
+          if (!a.size || !b.size) return 0;
+
+          return b.size - a.size;
+        }) || [], // sort by size
+    range: [
+      "#93CAEB",
+      "#6FB8E5",
+      "#4BA6DE",
+      "#009ADE",
+      "#35749B",
+      "#2D6485",
+    ].toReversed(),
+  });
+
   return (
     <Card>
       <CardTitle>Land cover by type</CardTitle>
       <CardLoader query={[query]} className="h-40">
-        {!!query.data && <MarimekkoChart data={query.data || []} />}
+        {!!query.data && (
+          <div className="space-y-2">
+            <MarimekkoChart
+              colorScale={ordinalColorScale}
+              data={query.data || []}
+            />
+
+            <LegendOrdinal scale={ordinalColorScale} className="w-full">
+              {(labels) => (
+                <div className="flex flex-wrap justify-start gap-2">
+                  {labels
+                    .filter(
+                      (label) => label.datum.size && label.datum.size > 0.001,
+                    )
+                    .map((label) => (
+                      <div
+                        key={`legend-quantile-${label.datum.id}`}
+                        className="flex items-center"
+                      >
+                        <div
+                          className="w-2 h-2 mr-1"
+                          style={{
+                            backgroundColor: label.value,
+                          }}
+                        />
+                        <span className="text-xs font-medium text-gray-500">
+                          {label.datum.label}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+              )}
+            </LegendOrdinal>
+          </div>
+        )}
       </CardLoader>
     </Card>
   );
