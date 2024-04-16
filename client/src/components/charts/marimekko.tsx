@@ -28,7 +28,7 @@ interface MarimekkoChartProps<DataT extends Data> {
   data: DataT[];
   colorScale: ScaleTypeToD3Scale<string, DataT>["ordinal"];
   className?: string;
-  format?: (node: HierarchyRectangularNode<HierarchyNode<DataT>>) => string;
+  format: (node: HierarchyRectangularNode<HierarchyNode<DataT>>) => string;
 }
 const MarimekkoChart = <T extends Data>({
   data = [],
@@ -71,6 +71,20 @@ const MarimekkoChart = <T extends Data>({
   const yMax = height - margin.top - margin.bottom;
   const root = hierarchy(DATA);
 
+  const getTextWidth = (text?: string): number => {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+
+    if (context && text) {
+      context.font = getComputedStyle(document.body).font;
+      const width = context.measureText(text).width + 24;
+      canvas.remove();
+      return width;
+    }
+    canvas.remove();
+    return 0;
+  };
+
   return (
     <div className="space-y-2">
       <div
@@ -93,6 +107,10 @@ const MarimekkoChart = <T extends Data>({
                 {treemap.descendants().map((node) => {
                   const nodeWidth = node.x1 - node.x0;
                   const nodeHeight = node.y1 - node.y0;
+                  const idWidth = getTextWidth(node.data.id);
+                  const valueWidth = getTextWidth(format(node));
+
+                  const maxWidth = Math.max(idWidth, valueWidth);
 
                   return (
                     <Group key={node.data.id}>
@@ -122,7 +140,7 @@ const MarimekkoChart = <T extends Data>({
                           }}
                         >
                           <div className="p-3 max-w-52">
-                            {nodeWidth > 80 && nodeHeight > 50 && (
+                            {nodeWidth > maxWidth && nodeHeight > 50 && (
                               <p
                                 className={cn(
                                   "font-bold",
@@ -136,7 +154,7 @@ const MarimekkoChart = <T extends Data>({
                               </p>
                             )}
 
-                            {nodeWidth > 120 && nodeHeight > 100 && (
+                            {nodeWidth > maxWidth && nodeHeight > 100 && (
                               <p
                                 className={cn(
                                   "text-sm font-medium text-white",

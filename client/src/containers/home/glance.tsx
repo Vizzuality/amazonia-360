@@ -126,9 +126,6 @@ export default function Glance() {
       </div>
       <div className="w-full md:w-1/2 flex flex-col space-y-10 mt-20 md:mt-0">
         <div className="flex items-center lg:space-x-2 justify-end">
-          <h4 className="font-bold whitespace-nowrap text-sm lg:block hidden">
-            On the chart
-          </h4>
           <Select onValueChange={handleSingleValueChange}>
             <SelectTrigger className="w-full md:w-96 lg:w-[550px]">
               <div>
