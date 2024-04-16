@@ -59,38 +59,47 @@ export default function Glance() {
   });
 
   const FORMAT = {
-    total_area_km2: (node: HierarchyRectangularNode<HierarchyNode<Data>>) => {
-      return formatNumber(node?.value || 0);
-    },
-    total_population_estimated_by_2025: (
+    country_total_cartographic_area_sqkm: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
       return formatNumber(node?.value || 0);
     },
-    amazon_area_km2: (node: HierarchyRectangularNode<HierarchyNode<Data>>) => {
+    amazonia_area_by_country_cartographic_area_sqkm: (
+      node: HierarchyRectangularNode<HierarchyNode<Data>>,
+    ) => {
       return formatNumber(node?.value || 0);
     },
-    percentage_of_amazon_area_in_the_country: (
+    proportion_of_amazonia_area_by_country_percentage: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
       return formatPercentage((node?.value || 0) / (node?.parent?.value || 1));
     },
-    share_of_total_amazon_area: (
+    proportion_of_total_area_of_the_afp_by_country_percentage: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
       return formatPercentage((node?.value || 0) / (node?.parent?.value || 1));
     },
-    amazon_population_estimated_by_2025: (
+    total_population_by_country_ghspop25: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
       return formatNumber(node?.value || 0);
     },
-    percentage_of_amazon_population_in_the_country: (
+    population_of_the_amazonia_zone_by_country_ghspop25: (
+      node: HierarchyRectangularNode<HierarchyNode<Data>>,
+    ) => {
+      return formatNumber(node?.value || 0);
+    },
+    proportion_of_the_population_of_the_amazonia_zone_by_country_percentage: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
       return formatPercentage((node?.value || 0) / (node?.parent?.value || 1));
     },
-    share_of_total_amazon_population: (
+    proportion_of_the_population_of_the_afp_by_country_percentage: (
+      node: HierarchyRectangularNode<HierarchyNode<Data>>,
+    ) => {
+      return formatPercentage((node?.value || 0) / (node?.parent?.value || 1));
+    },
+    population_density_of_the_afp_zones_by_country_inhabitants_per_sqkm: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
       return formatPercentage((node?.value || 0) / (node?.parent?.value || 1));
@@ -116,15 +125,19 @@ export default function Glance() {
         </p>
       </div>
       <div className="w-full md:w-1/2 flex flex-col space-y-10 mt-20 md:mt-0">
-        <div className="flex items-center space-x-2 justify-end">
-          <h4 className="font-bold whitespace-nowrap text-sm">On the chart</h4>
+        <div className="flex items-center lg:space-x-2 justify-end">
+          <h4 className="font-bold whitespace-nowrap text-sm lg:block hidden">
+            On the chart
+          </h4>
           <Select onValueChange={handleSingleValueChange}>
-            <SelectTrigger className="w-[400px]">
+            <SelectTrigger className="w-full md:w-96 lg:w-[550px]">
               <div>
                 <SelectValue> </SelectValue>
 
-                {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.label ||
-                  ""}
+                <p className="truncate max-w-64 md:max-w-80 lg:max-w-none">
+                  {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.label ||
+                    ""}
+                </p>
               </div>
             </SelectTrigger>
             <SelectContent className="no-scrollbar max-h-96 overflow-y-auto border-none shadow-md">
