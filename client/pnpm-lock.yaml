@@ -56,6 +56,9 @@ dependencies:
   '@visx/hierarchy':
     specifier: ^3.3.0
     version: 3.3.0(react@18.2.0)
+  '@visx/legend':
+    specifier: ^3.5.0
+    version: 3.5.0(react@18.2.0)
   '@visx/responsive':
     specifier: ^3.10.2
     version: 3.10.2(react@18.2.0)
@@ -2422,6 +2425,19 @@ packages:
       '@visx/group': 3.3.0(react@18.2.0)
       classnames: 2.5.1
       d3-hierarchy: 1.1.9
+      prop-types: 15.8.1
+      react: 18.2.0
+    dev: false
+
+  /@visx/legend@3.5.0(react@18.2.0):
+    resolution: {integrity: sha512-bRQNF3M2VCTxTmRkRVjeQSDqvjgUT1CMU3T1apf2UmZJ7zo73anwqDBtSJx+csarDij0DbcoWvKY4NdTp7Uepg==}
+    peerDependencies:
+      react: ^16.3.0-0 || ^17.0.0-0 || ^18.0.0-0
+    dependencies:
+      '@types/react': 18.2.48
+      '@visx/group': 3.3.0(react@18.2.0)
+      '@visx/scale': 3.5.0
+      classnames: 2.5.1
       prop-types: 15.8.1
       react: 18.2.0
     dev: false

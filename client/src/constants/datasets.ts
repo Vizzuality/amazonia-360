@@ -105,7 +105,7 @@ export const DATASETS = {
   tierras_indigenas: {
     layer: new FeatureLayer({
       id: "tierras_indigenas",
-      title: "Tierras indígenas",
+      title: "Indigenous lands",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({
@@ -241,7 +241,7 @@ export const DATASETS = {
   areas_protegidas: {
     layer: new FeatureLayer({
       id: "areas_protegidas",
-      title: "Áreas protegidas",
+      title: "Protected areas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Areas_protegidas/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({

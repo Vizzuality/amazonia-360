@@ -5,3 +5,4 @@
 /env/
 /infrastructure/vars/local.tfvars
 __pycache__/
+/node_modules/

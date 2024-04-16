@@ -29,6 +29,7 @@
     "@visx/annotation": "^3.3.0",
     "@visx/group": "^3.3.0",
     "@visx/hierarchy": "^3.3.0",
+    "@visx/legend": "^3.5.0",
     "@visx/responsive": "^3.10.2",
     "@visx/scale": "^3.5.0",
     "@visx/shape": "^3.5.0",
