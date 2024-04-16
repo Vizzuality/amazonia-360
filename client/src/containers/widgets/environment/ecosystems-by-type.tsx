@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  HierarchyNode,
+  HierarchyRectangularNode,
+} from "@visx/hierarchy/lib/types";
 import { LegendOrdinal } from "@visx/legend";
 import { scaleOrdinal } from "@visx/scale";
 
@@ -69,6 +73,10 @@ export default function WidgetEcosystemsByType() {
     maximumFractionDigits: 0,
   });
 
+  const FORMAT = (node: HierarchyRectangularNode<HierarchyNode<Data>>) => {
+    return format(node?.value || 0);
+  };
+
   return (
     <Card>
       <CardTitle>Ecosystems by type</CardTitle>
@@ -76,6 +84,7 @@ export default function WidgetEcosystemsByType() {
         {!!query.data && (
           <div className="space-y-2 pt-2">
             <MarimekkoChart
+              format={FORMAT}
               colorScale={ordinalColorScale}
               data={query.data || []}
             />

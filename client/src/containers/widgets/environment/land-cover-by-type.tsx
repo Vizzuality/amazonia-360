@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  HierarchyNode,
+  HierarchyRectangularNode,
+} from "@visx/hierarchy/lib/types";
 import { LegendOrdinal } from "@visx/legend";
 import { scaleOrdinal } from "@visx/scale";
 
@@ -13,7 +17,7 @@ import { LAND_COVER, LandCoverIds } from "@/constants/raster";
 
 import { Card, CardLoader, CardTitle } from "@/containers/card";
 
-import MarimekkoChart from "@/components/charts/marimekko";
+import MarimekkoChart, { Data } from "@/components/charts/marimekko";
 
 export default function WidgetLandCoverByType() {
   const [location] = useSyncLocation();
@@ -70,6 +74,10 @@ export default function WidgetLandCoverByType() {
     maximumFractionDigits: 0,
   });
 
+  const FORMAT = (node: HierarchyRectangularNode<HierarchyNode<Data>>) => {
+    return format(node?.value || 0);
+  };
+
   return (
     <Card>
       <CardTitle>Land cover by type</CardTitle>
@@ -77,6 +85,7 @@ export default function WidgetLandCoverByType() {
         {!!query.data && (
           <div className="space-y-2 pt-2">
             <MarimekkoChart
+              format={FORMAT}
               colorScale={ordinalColorScale}
               data={query.data || []}
             />

@@ -5,10 +5,13 @@ import React, { useMemo } from "react";
 import { HtmlLabel } from "@visx/annotation";
 import { Group } from "@visx/group";
 import { Treemap, hierarchy, stratify, treemapSquarify } from "@visx/hierarchy";
+import {
+  HierarchyNode,
+  HierarchyRectangularNode,
+} from "@visx/hierarchy/lib/types";
 import { useParentSize } from "@visx/responsive";
 import { ScaleTypeToD3Scale } from "@visx/scale";
 
-import { useFormatPercentage } from "@/lib/formats";
 import { cn, getContrastColor } from "@/lib/utils";
 
 export const background = "#00152E"; // navy
@@ -25,11 +28,13 @@ interface MarimekkoChartProps<DataT extends Data> {
   data: DataT[];
   colorScale: ScaleTypeToD3Scale<string, DataT>["ordinal"];
   className?: string;
+  format?: (node: HierarchyRectangularNode<HierarchyNode<DataT>>) => string;
 }
 const MarimekkoChart = <T extends Data>({
   data = [],
   colorScale,
   className = "h-52",
+  format,
 }: MarimekkoChartProps<T>) => {
   const { parentRef, width, height } = useParentSize({ debounceTime: 150 });
 
@@ -65,10 +70,6 @@ const MarimekkoChart = <T extends Data>({
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
   const root = hierarchy(DATA);
-
-  const { format } = useFormatPercentage({
-    maximumFractionDigits: 0,
-  });
 
   return (
     <div className="space-y-2">
@@ -121,7 +122,7 @@ const MarimekkoChart = <T extends Data>({
                           }}
                         >
                           <div className="p-3 max-w-52">
-                            {nodeWidth > 50 && nodeHeight > 50 && (
+                            {nodeWidth > 80 && nodeHeight > 50 && (
                               <p
                                 className={cn(
                                   "font-bold",
@@ -131,9 +132,7 @@ const MarimekkoChart = <T extends Data>({
                                     : "text-white",
                                 )}
                               >
-                                {format(
-                                  (node.value || 0) / (node.parent?.value || 1),
-                                )}
+                                {format && format(node)}
                               </p>
                             )}
 
