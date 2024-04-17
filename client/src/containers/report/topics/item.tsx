@@ -33,7 +33,7 @@ export default function TopicsItem({
     <div key={id} className="w-full">
       <div
         className={cn(
-          "relative rounded-2xl overflow-hidden mx-auto group cursor-pointer after:absolute after:bottom-0 after:left-0 after:h-16 after:w-full after:bg-gradient-to-b after:from-transparent after:to-[#09090B]/85 after:content-['']",
+          "shadow relative rounded-2xl overflow-hidden mx-auto group cursor-pointer after:absolute after:bottom-0 after:left-0 after:h-16 after:w-full after:bg-gradient-to-b after:from-transparent after:to-[#09090B]/85 after:content-['']",
           size === "sm" && "aspect-[206/107]",
           size === "lg" && "aspect-[210/300] 2xl:aspect-[210/380]",
           checked && "outline-dashed outline-primary outline-2",
