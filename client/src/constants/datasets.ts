@@ -309,12 +309,34 @@ export const DATASETS = {
       title: "Land cover",
       urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=landcover_cog.tif`,
     }),
-    getFeatures: (props?: __esri.QueryProperties) =>
-      new Query({
-        where: "FID is not null",
-        outFields: ["*"],
-        ...props,
-      }),
+  },
+  elevation_ranges: {
+    layer: new WebTileLayer({
+      id: "elevation_ranges",
+      title: "Elevation ranges",
+      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=elevation_ranges_cog.tif`,
+    }),
+  },
+  fires: {
+    layer: new WebTileLayer({
+      id: "fires",
+      title: "Fires",
+      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=fires_cog.tif`,
+    }),
+  },
+  population: {
+    layer: new WebTileLayer({
+      id: "population",
+      title: "Land cover",
+      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=population_cog.tif`,
+    }),
+  },
+  deprivation_index: {
+    layer: new WebTileLayer({
+      id: "deprivation_index",
+      title: "Land cover",
+      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=deprivation_index_cog.tif`,
+    }),
   },
 } as const;
 

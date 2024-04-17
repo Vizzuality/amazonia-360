@@ -170,7 +170,14 @@ export const useGetFeaturesId = <
  ************************************************************
  */
 export type GetIntersectionAnalysisParams = {
-  id: DatasetIds;
+  id: Exclude<
+    DatasetIds,
+    | "population"
+    | "deprivation_index"
+    | "land_cover"
+    | "fires"
+    | "elevation_ranges"
+  >;
   polygon?: __esri.Polygon | null;
 };
 
@@ -288,7 +295,12 @@ export const useGetIntersectionAnalysis = <
  ************************************************************
  */
 export type GetRasterAnalysisParams = {
-  id: "landcover" | "population";
+  id:
+    | "landcover"
+    | "population"
+    | "fires"
+    | "elevation_ranges"
+    | "deprivation_index";
   polygon?: __esri.Polygon | null;
   statistics?: StatsOps[];
 };
