@@ -5,7 +5,7 @@ export default function Help() {
     <section className="bg-blue-700 text-white">
       <div className="container">
         <div className="py-16 flex flex-col md:flex-row justify-between items-center">
-          <p className="font-light md:w-8/12">
+          <p className="font-normal md:w-8/12">
             Amazonia360 is not just presenting data; it&apos;s making sense of
             it. Our goal is to become a focal point that unifies and amplifies
             the assets from various initiatives dedicated to this region,

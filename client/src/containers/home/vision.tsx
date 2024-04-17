@@ -5,13 +5,13 @@ export default function Vision() {
     <section className="bg-blue-50">
       <div className="container text-white py-10 md:py-28 flex flex-col space-y-10">
         <div className="flex flex-col w-full">
-          <h3 className="uppercase text-sm font-extrabold text-cyan-500">
+          <h3 className="uppercase text-sm font-extrabold text-cyan-500 tracking-wide-lg">
             amazonia360 vision{" "}
           </h3>
           <h2 className="text-blue-400 text-2xl lg:text-4xl pb-6">
             AI-Powered on the horizon{" "}
           </h2>
-          <p className="text-blue-900 text-base lg:text-lg font-light md:max-w-4xl">
+          <p className="text-blue-900 text-base lg:text-lg font-normal md:max-w-4xl">
             As Amazonia360 grows beyond its beta launch, we are committed to
             enhancing your experience. The next chapter will see a suite of AI
             features that will elevate your research and understanding:
@@ -24,10 +24,10 @@ export default function Vision() {
               <Sparkles size={32} strokeWidth={1} className="text-cyan-600" />
             </div>
             <div className="flex flex-col space-y-6">
-              <h4 className="text-blue-500 text-lg font-semibold">
+              <h4 className="text-blue-500 text-lg font-bold">
                 Smart Search Capabilities
               </h4>
-              <p className="text-base text-blue-900 font-light max-w-sm">
+              <p className="text-base text-blue-900 font-normal max-w-sm">
                 Navigate through vast datasets with an intelligent search
                 function tailored to deliver precise results.
               </p>
@@ -42,10 +42,10 @@ export default function Vision() {
               />
             </div>
             <div className="flex flex-col space-y-6">
-              <h4 className="text-blue-500 text-lg font-semibold">
+              <h4 className="text-blue-500 text-lg font-bold">
                 Instant Data Summaries{" "}
               </h4>
-              <p className="text-base text-blue-900 font-light max-w-sm">
+              <p className="text-base text-blue-900 font-normal max-w-sm">
                 Gain immediate insights with AI-generated summaries that distill
                 complex data into clear, actionable information.{" "}
               </p>
@@ -60,10 +60,10 @@ export default function Vision() {
               />
             </div>
             <div className="flex flex-col space-y-6">
-              <h4 className="text-blue-500 text-lg font-semibold">
+              <h4 className="text-blue-500 text-lg font-bold">
                 Customized Reports
               </h4>
-              <p className="text-base text-blue-900 font-light max-w-sm">
+              <p className="text-base text-blue-900 font-normal max-w-sm">
                 Receive AI-crafted reports that align with your specific
                 environmental interests, enhancing your strategic impact.
               </p>

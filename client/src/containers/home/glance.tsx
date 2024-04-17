@@ -109,13 +109,13 @@ export default function Glance() {
   return (
     <section className="container flex md:space-x-28 py-10 md:py-28 md:flex-row flex-col items-end">
       <div className="flex flex-col w-full md:w-1/2">
-        <h3 className="uppercase text-sm font-extrabold text-cyan-500">
+        <h3 className="uppercase text-sm font-extrabold text-cyan-500 tracking-wide-lg">
           Amazonia at a glance
         </h3>
         <h2 className="text-blue-400 text-2xl lg:text-4xl pb-6">
           A mosaic of ecosystems and habitats
         </h2>
-        <p className="text-blue-900 text-base lg:text-lg font-light">
+        <p className="text-blue-900 text-base lg:text-lg font-normal">
           Amazonia spans over 6.7 million square kilometers across South
           America. This vital region is a confluence of cultural diversity and
           environmental significance.

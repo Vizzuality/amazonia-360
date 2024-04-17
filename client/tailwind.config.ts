@@ -104,6 +104,9 @@ const config = {
       height: {
         "popover-height": "var(--radix-popover-trigger-height)",
       },
+      letterSpacing: {
+        ["wide-lg"]: "0.7px",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

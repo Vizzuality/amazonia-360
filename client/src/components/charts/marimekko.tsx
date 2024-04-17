@@ -233,7 +233,7 @@ const MarimekkoChart = <T extends Data>({
       </div>
       {tooltipOpen && tooltipData && tooltipIsNeeded(tooltipData) && (
         <TooltipInPortal top={tooltipTop} left={tooltipLeft}>
-          <div className="text-blue-900 cursor-pointer flex flex-col space-y-1 text-sm">
+          <div className="text-blue-900 flex flex-col space-y-1 text-sm">
             <p className="font-bold">{tooltipData.data.id}</p>
             <p>{format(tooltipData)}</p>
           </div>

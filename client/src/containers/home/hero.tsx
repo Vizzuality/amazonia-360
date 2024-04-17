@@ -13,7 +13,7 @@ export default function Hero() {
           <h2 className="text-blue-400 text-2xl lg:text-4xl">
             Understanding Amazonia like never before
           </h2>
-          <p className="text-blue-900 text-base lg:text-lg font-light">
+          <p className="text-blue-900 text-base lg:text-lg font-normal">
             With <span className="font-bold">Amazonia360</span> get all the
             resources you need about one of the world&apos;s most diverse
             ecosystems. Amazonia360 is your gateway to understanding and help
@@ -29,8 +29,8 @@ export default function Hero() {
         <Image
           src={"/images/home/hero.jpg"}
           alt="Amazonia"
-          width={500}
-          height={500}
+          width={1500}
+          height={1500}
           className="md:object-cover w-full md:h-[calc(100vh-5rem)] md:w-7/12 md:absolute md:right-0 md:top-20"
         />
       </div>
