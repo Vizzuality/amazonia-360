@@ -6,6 +6,7 @@ import "@/styles/globals.css";
 import "@arcgis/core/assets/esri/themes/light/main.css";
 import LayoutProviders from "@/app/layout-providers";
 
+import Footer from "@/containers/footer";
 import Header from "@/containers/header";
 
 const montserrat = Montserrat({
@@ -29,6 +30,7 @@ export default await function RootLayout({
         <body className={montserrat.className}>
           <Header />
           {children}
+          <Footer />
         </body>
       </html>
     </LayoutProviders>

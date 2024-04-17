@@ -28,7 +28,7 @@ export default async function ReportTopicsPage({
   }
 
   return (
-    <main className="relative flex flex-col h-[calc(100svh_-_theme(space.20))] bg-blue-50 py-12">
+    <main className="relative flex flex-col bg-blue-50 py-12">
       <div className="flex flex-col space-y-10">
         <TopicsHeader />
 
