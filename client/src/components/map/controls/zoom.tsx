@@ -73,7 +73,12 @@ export const ZoomControl: FC<ZoomControlProps> = ({
   }, []);
 
   return (
-    <div className={cn("flex flex-col space-y-0.5", className)}>
+    <div
+      className={cn(
+        "flex flex-col bg-white rounded-full border border-border overflow-hidden",
+        className,
+      )}
+    >
       <Tooltip>
         <TooltipTrigger asChild>
           <button
@@ -82,6 +87,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({
               [CONTROL_BUTTON_STYLES.hover]: zoom !== maxZoom,
               [CONTROL_BUTTON_STYLES.active]: zoom !== maxZoom,
               [CONTROL_BUTTON_STYLES.disabled]: zoom === maxZoom,
+              "border-0 rounded-none": true,
             })}
             aria-label="Zoom in"
             type="button"
@@ -109,6 +115,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({
               [CONTROL_BUTTON_STYLES.hover]: zoom !== minZoom,
               [CONTROL_BUTTON_STYLES.active]: zoom !== minZoom,
               [CONTROL_BUTTON_STYLES.disabled]: zoom === minZoom,
+              "border-0 rounded-none": true,
             })}
             aria-label="Zoom out"
             type="button"
