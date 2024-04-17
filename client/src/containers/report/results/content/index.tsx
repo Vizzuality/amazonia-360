@@ -7,6 +7,7 @@ import { TOPICS, TopicIds } from "@/constants/topics";
 import WidgetsBioeconomy from "@/containers/widgets/bioeconomy";
 import WidgetsEnvironment from "@/containers/widgets/environment";
 import WidgetsFinancial from "@/containers/widgets/financial";
+import WidgetsOtherResources from "@/containers/widgets/other-resources";
 import WidgetsOverview from "@/containers/widgets/overview";
 import WidgetsDemographicAndSocieconomic from "@/containers/widgets/population";
 import WidgetsProtection from "@/containers/widgets/protection";
@@ -39,6 +40,7 @@ export default function ReportResultsContent() {
             return null;
         }
       })}
+      <WidgetsOtherResources />
     </div>
   );
 }
