@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
 
 import { HtmlLabel } from "@visx/annotation";
+import { localPoint } from "@visx/event";
 import { Group } from "@visx/group";
 import { Treemap, hierarchy, stratify, treemapSquarify } from "@visx/hierarchy";
 import {
@@ -11,6 +12,7 @@ import {
 } from "@visx/hierarchy/lib/types";
 import { useParentSize } from "@visx/responsive";
 import { ScaleTypeToD3Scale } from "@visx/scale";
+import { useTooltip, useTooltipInPortal } from "@visx/tooltip";
 
 import { cn, getContrastColor } from "@/lib/utils";
 
@@ -30,6 +32,7 @@ interface MarimekkoChartProps<DataT extends Data> {
   className?: string;
   format: (node: HierarchyRectangularNode<HierarchyNode<DataT>>) => string;
 }
+
 const MarimekkoChart = <T extends Data>({
   data = [],
   colorScale,
@@ -85,6 +88,36 @@ const MarimekkoChart = <T extends Data>({
     return 0;
   };
 
+  const {
+    tooltipOpen,
+    tooltipLeft,
+    tooltipTop,
+    tooltipData,
+    hideTooltip,
+    showTooltip,
+  } = useTooltip<HierarchyRectangularNode<HierarchyNode<T>>>();
+
+  const { containerRef, TooltipInPortal } = useTooltipInPortal({
+    scroll: true,
+    detectBounds: true,
+  });
+
+  const tooltipTimeoutRef = useRef<number | null>(null);
+
+  const tooltipIsNeeded = (
+    node: HierarchyRectangularNode<HierarchyNode<T>>,
+  ) => {
+    const nodeWidth = node.x1 - node.x0;
+
+    const idWidth = getTextWidth(node.data.id);
+    const valueWidth = getTextWidth(format(node));
+
+    const maxWidth = Math.max(idWidth, valueWidth);
+
+    if (nodeWidth > maxWidth) return false;
+    if (nodeWidth < maxWidth) return true;
+  };
+
   return (
     <div className="space-y-2">
       <div
@@ -94,7 +127,7 @@ const MarimekkoChart = <T extends Data>({
           [className]: !!className,
         })}
       >
-        <svg width={width} height={height}>
+        <svg width={width} height={height} ref={containerRef}>
           <Treemap<typeof DATA>
             root={root}
             size={[xMax, yMax]}
@@ -124,6 +157,26 @@ const MarimekkoChart = <T extends Data>({
                           ry={4}
                           // fill={colorScale(node.value).hex()}
                           fill={colorScale(node.data.data)}
+                          onMouseLeave={() => {
+                            tooltipTimeoutRef.current = window.setTimeout(
+                              () => {
+                                hideTooltip();
+                              },
+                              200,
+                            );
+                          }}
+                          onMouseMove={(event) => {
+                            if (tooltipTimeoutRef.current)
+                              clearTimeout(tooltipTimeoutRef.current);
+
+                            const eventSvgCoords = localPoint(event);
+
+                            showTooltip({
+                              tooltipData: node,
+                              tooltipTop: eventSvgCoords?.y,
+                              tooltipLeft: eventSvgCoords?.x,
+                            });
+                          }}
                         />
                       )}
 
@@ -178,6 +231,14 @@ const MarimekkoChart = <T extends Data>({
           </Treemap>
         </svg>
       </div>
+      {tooltipOpen && tooltipData && tooltipIsNeeded(tooltipData) && (
+        <TooltipInPortal top={tooltipTop} left={tooltipLeft}>
+          <div className="text-blue-900 cursor-pointer flex flex-col space-y-1 text-sm">
+            <p className="font-bold">{tooltipData.data.id}</p>
+            <p>{format(tooltipData)}</p>
+          </div>
+        </TooltipInPortal>
+      )}
     </div>
   );
 };
