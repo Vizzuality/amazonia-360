@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { HtmlLabel } from "@visx/annotation";
 import { localPoint } from "@visx/event";
@@ -39,7 +39,12 @@ const MarimekkoChart = <T extends Data>({
   className = "h-52",
   format,
 }: MarimekkoChartProps<T>) => {
+  const [isMounted, setIsMounted] = useState(false);
   const { parentRef, width, height } = useParentSize({ debounceTime: 150 });
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const DATA = useMemo(() => {
     const d1 = [...data];
@@ -75,16 +80,19 @@ const MarimekkoChart = <T extends Data>({
   const root = hierarchy(DATA);
 
   const getTextWidth = (text?: string): number => {
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
+    if (isMounted) {
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
 
-    if (context && text) {
-      context.font = getComputedStyle(document.body).font;
-      const width = context.measureText(text).width + 24;
+      if (context && text) {
+        context.font = getComputedStyle(document.body).font;
+        const width = context.measureText(text).width + 24;
+        canvas.remove();
+        return width;
+      }
       canvas.remove();
-      return width;
+      return 0;
     }
-    canvas.remove();
     return 0;
   };
 
