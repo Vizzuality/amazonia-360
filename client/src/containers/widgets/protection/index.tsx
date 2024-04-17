@@ -49,7 +49,10 @@ export default function WidgetsProtection() {
               }}
             >
               <SelectTrigger>
-                <span>{DATASETS[layer].layer.title}</span>
+                <div>
+                  <span className="text-gray-500">See: </span>
+                  {DATASETS[layer].layer.title}
+                </div>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={DATASETS.areas_protegidas.layer.id}>
