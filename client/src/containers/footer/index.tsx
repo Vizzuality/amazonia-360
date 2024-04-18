@@ -8,14 +8,14 @@ export default function Help() {
       <div className="container flex md:flex-row flex-col justify-between w-full py-4 items-center">
         <div className="pb-16 md:pb-0 flex md:space-x-10 flex-col space-y-10 md:space-y-0 items-center md:flex-row">
           <Image
-            src={"/images/home/IDB-logo.png"}
+            src={"/images/home/idb_logo.png"}
             alt="IDB Logo"
             width={65}
             height={24}
             className="text-white"
           />
           <Image
-            src={"/images/home/KF-logo.png"}
+            src={"/images/home/amazonia_forever_logo.png"}
             alt="KF Logo"
             width={65}
             height={24}
@@ -23,12 +23,21 @@ export default function Help() {
           />
         </div>
         <div className="text-sm font-light flex md:flex-row flex-col">
-          {/* //!TODO: Add hrefs */}
           <Button variant="link" className="text-white leading-1">
-            Terms & conditions
+            <a
+              href="https://www.iadb.org/en/home/terms-and-conditions"
+              target="_blank"
+            >
+              Terms & conditions
+            </a>
           </Button>
           <Button variant="link" className="text-white leading-1">
-            Privacy Policy
+            <a
+              href="https://www.iadb.org/en/home/privacy-notice"
+              target="_blank"
+            >
+              Privacy Policy
+            </a>
           </Button>
         </div>
       </div>
