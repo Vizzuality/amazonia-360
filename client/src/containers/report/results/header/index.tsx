@@ -79,7 +79,7 @@ export default function ReportResultsHeader() {
 
       {open && (
         <div className="animate-in fade-in zoom-in-95 duration-300">
-          <Topics size="sm" />
+          <Topics size="sm" interactive />
         </div>
       )}
     </header>

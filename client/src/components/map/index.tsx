@@ -104,7 +104,10 @@ export function MapView({
           components: [],
         },
         padding: {
-          left: padding?.left || 0,
+          top: 16,
+          right: 16,
+          bottom: 16,
+          left: padding?.left || 16,
         },
         ...viewProps,
       });
@@ -156,7 +159,7 @@ export function MapView({
   }, [bbox]);
 
   return (
-    <div ref={mapContainerRef} className="w-full h-full">
+    <div ref={mapContainerRef} className="w-full h-full grow">
       {loaded && children}
     </div>
   );
