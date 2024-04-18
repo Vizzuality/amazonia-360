@@ -103,7 +103,7 @@ export default function ShareReport() {
 
           <Button className="rounded-full h-10 w-10" variant="outline">
             <LinkedinShareButton
-              url={encodeURIComponent(currentUrl)}
+              url={currentUrl}
               title={"Amazonia360 Report"}
               summary={"Amazonia360 Report"}
               source={"Amazonia360"}
