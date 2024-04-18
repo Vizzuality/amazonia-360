@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef } from "react";
 
 import { HtmlLabel } from "@visx/annotation";
 import { localPoint } from "@visx/event";
@@ -14,7 +14,7 @@ import { useParentSize } from "@visx/responsive";
 import { ScaleTypeToD3Scale } from "@visx/scale";
 import { useTooltip, useTooltipInPortal } from "@visx/tooltip";
 
-import { cn, getContrastColor } from "@/lib/utils";
+import { cn, getContrastColor, getTextSize } from "@/lib/utils";
 
 export const background = "#00152E"; // navy
 
@@ -39,12 +39,7 @@ const MarimekkoChart = <T extends Data>({
   className = "h-52",
   format,
 }: MarimekkoChartProps<T>) => {
-  const [isMounted, setIsMounted] = useState(false);
   const { parentRef, width, height } = useParentSize({ debounceTime: 150 });
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   const DATA = useMemo(() => {
     const d1 = [...data];
@@ -79,23 +74,6 @@ const MarimekkoChart = <T extends Data>({
   const yMax = height - margin.top - margin.bottom;
   const root = hierarchy(DATA);
 
-  const getTextWidth = (text?: string): number => {
-    if (isMounted) {
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-
-      if (context && text) {
-        context.font = getComputedStyle(document.body).font;
-        const width = context.measureText(text).width + 24;
-        canvas.remove();
-        return width;
-      }
-      canvas.remove();
-      return 0;
-    }
-    return 0;
-  };
-
   const {
     tooltipOpen,
     tooltipLeft,
@@ -112,18 +90,31 @@ const MarimekkoChart = <T extends Data>({
 
   const tooltipTimeoutRef = useRef<number | null>(null);
 
-  const tooltipIsNeeded = (
-    node: HierarchyRectangularNode<HierarchyNode<T>>,
-  ) => {
+  const isVisible = (node: HierarchyRectangularNode<HierarchyNode<T>>) => {
     const nodeWidth = node.x1 - node.x0;
+    const nodeHeight = node.y1 - node.y0;
+    const padding = 24;
 
-    const idWidth = getTextWidth(node.data.id);
-    const valueWidth = getTextWidth(format(node));
+    const { width: idWidth, height: idHeight } = getTextSize({
+      text: node.data.id ?? "",
+      maxWidth: nodeWidth,
+      padding,
+      font: "500 14px / 20px __Montserrat_6f749a, __Montserrat_Fallback_6f749a",
+    });
+    const { width: valueWidth, height: valueHeight } = getTextSize({
+      text: format(node),
+      maxWidth: nodeWidth,
+      padding,
+    });
 
-    const maxWidth = Math.max(idWidth, valueWidth);
-
-    if (nodeWidth > maxWidth) return false;
-    if (nodeWidth < maxWidth) return true;
+    return {
+      id:
+        nodeWidth - padding * 2 >= idWidth &&
+        nodeHeight - padding * 2 >= idHeight + valueHeight,
+      value:
+        nodeWidth - padding * 2 >= valueWidth &&
+        nodeHeight - padding * 2 >= valueHeight,
+    };
   };
 
   return (
@@ -148,10 +139,9 @@ const MarimekkoChart = <T extends Data>({
                 {treemap.descendants().map((node) => {
                   const nodeWidth = node.x1 - node.x0;
                   const nodeHeight = node.y1 - node.y0;
-                  const idWidth = getTextWidth(node.data.id);
-                  const valueWidth = getTextWidth(format(node));
 
-                  const maxWidth = Math.max(idWidth, valueWidth);
+                  const { id: idVisible, value: valueVisible } =
+                    isVisible(node);
 
                   return (
                     <Group key={node.data.id}>
@@ -201,7 +191,7 @@ const MarimekkoChart = <T extends Data>({
                           }}
                         >
                           <div className="p-3 max-w-52">
-                            {nodeWidth > maxWidth && nodeHeight > 50 && (
+                            {valueVisible && (
                               <p
                                 className={cn(
                                   "font-bold",
@@ -215,7 +205,7 @@ const MarimekkoChart = <T extends Data>({
                               </p>
                             )}
 
-                            {nodeWidth > maxWidth && nodeHeight > 100 && (
+                            {idVisible && valueVisible && (
                               <p
                                 className={cn(
                                   "text-sm font-medium text-white",
@@ -239,14 +229,16 @@ const MarimekkoChart = <T extends Data>({
           </Treemap>
         </svg>
       </div>
-      {tooltipOpen && tooltipData && tooltipIsNeeded(tooltipData) && (
-        <TooltipInPortal top={tooltipTop} left={tooltipLeft}>
-          <div className="text-blue-900 flex flex-col space-y-1 text-sm">
-            <p className="font-bold">{tooltipData.data.id}</p>
-            <p>{format(tooltipData)}</p>
-          </div>
-        </TooltipInPortal>
-      )}
+      {tooltipOpen &&
+        tooltipData &&
+        (!isVisible(tooltipData).id || !isVisible(tooltipData).value) && (
+          <TooltipInPortal top={tooltipTop} left={tooltipLeft}>
+            <div className="text-blue-900 flex flex-col space-y-1 text-sm">
+              <p className="font-bold">{tooltipData.data.id}</p>
+              <p>{format(tooltipData)}</p>
+            </div>
+          </TooltipInPortal>
+        )}
     </div>
   );
 };

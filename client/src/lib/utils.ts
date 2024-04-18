@@ -42,3 +42,57 @@ export function convertHexToRgbaArray(
   const alpha = opacity * 255;
   return [red, green, blue, alpha];
 }
+
+export const getTextSize = ({
+  text,
+  maxWidth,
+  padding = 0,
+  font,
+}: {
+  text: string;
+  maxWidth: number;
+  padding?: number;
+  font?: string;
+}): {
+  width: number;
+  height: number;
+} => {
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+
+  if (context && text) {
+    context.font = font || getComputedStyle(document.body).font;
+
+    const words = text.split(" ");
+    const lines = [];
+    let currentLine = words[0];
+
+    for (let i = 1; i < words.length; i++) {
+      const word = words[i];
+      const width = context.measureText(currentLine + " " + word).width;
+      if (width < maxWidth - padding * 2) {
+        currentLine += " " + word;
+      } else {
+        lines.push(currentLine);
+        currentLine = word;
+      }
+    }
+    lines.push(currentLine);
+
+    const lineHeight = context.measureText("M").width; // Approximate line height
+    const totalHeight = lines.length * lineHeight;
+    const longestLine = lines.reduce((a, b) => (a.length > b.length ? a : b));
+    const totalWidth = context.measureText(longestLine).width;
+
+    canvas.remove();
+
+    return { width: totalWidth, height: totalHeight };
+  }
+
+  canvas.remove();
+
+  return {
+    width: 0,
+    height: 0,
+  };
+};
