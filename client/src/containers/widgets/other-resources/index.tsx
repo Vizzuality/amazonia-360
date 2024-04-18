@@ -1,89 +1,32 @@
 import { useState } from "react";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RESOURCES } from "@/containers/widgets/other-resources/mock";
+import Resource from "@/containers/widgets/other-resources/resource";
 
-import Resource from "./resource";
-import { type ResourcesProps } from "./types";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function OtherResources() {
   const [tab, setTab] = useState("all");
 
-  const RESOURCES: ResourcesProps = {
-    multimedia: [
-      {
-        title: "El teletrabajo en Bolivia: de la pandemia a la postpandemia",
-        author: "Serrate, Liliana; Urquidi, Manuel; Aramayo, Fernando",
-        type: "document",
-      },
-      {
-        title: "El teletrabajo en Bolivia: de la pandemia a la postpandemia",
-        author: "Serrate, Liliana; Urquidi, Manuel; Aramayo, Fernando",
-        type: "database",
-      },
-      {
-        title: "El teletrabajo en Bolivia: de la pandemia a la postpandemia",
-        author: "Serrate, Liliana; Urquidi, Manuel; Aramayo, Fernando",
-        type: "multimedia",
-      },
-      {
-        title: "El teletrabajo en Bolivia: de la pandemia a la postpandemia",
-        author: "Serrate, Liliana; Urquidi, Manuel; Aramayo, Fernando",
-        type: "document",
-      },
-    ],
-    database: [
-      {
-        title: "El teletrabajo en Bolivia: de la pandemia a la postpandemia",
-        author: "Serrate, Liliana; Urquidi, Manuel; Aramayo, Fernando",
-        type: "document",
-      },
-      {
-        title: "El teletrabajo en Bolivia: de la pandemia a la postpandemia",
-        author: "Serrate, Liliana; Urquidi, Manuel; Aramayo, Fernando",
-        type: "database",
-      },
-    ],
-    publications: [
-      {
-        title: "El teletrabajo en Bolivia: de la pandemia a la postpandemia",
-        author: "Serrate, Liliana; Urquidi, Manuel; Aramayo, Fernando",
-        type: "database",
-      },
-    ],
-  };
-
   return (
     <div className="container">
       <h2 className="text-xl font-semibold mb-4">Other resources</h2>
-      <Tabs defaultValue={tab}>
-        <TabsList className="w-full px-5">
-          <TabsTrigger
-            value="all"
-            className="rounded-l-lg"
-            onClick={() => setTab("all")}
-          >
-            All
+      <Tabs defaultValue={tab} className="flex flex-col space-y-4 items-start">
+        <TabsList>
+          <TabsTrigger value="all" onClick={() => setTab("all")}>
+            All ({Object.values(RESOURCES).flat().length || 0})
           </TabsTrigger>
           <TabsTrigger
             value="publications"
-            className="rounded-r-lg"
             onClick={() => setTab("publications")}
           >
-            Publications
+            Publications ({RESOURCES.publications.length || 0})
           </TabsTrigger>
-          <TabsTrigger
-            value="database"
-            className="rounded-l-lg"
-            onClick={() => setTab("database")}
-          >
-            Database
+          <TabsTrigger value="database" onClick={() => setTab("database")}>
+            Database ({RESOURCES.database.length || 0})
           </TabsTrigger>
-          <TabsTrigger
-            value="multimedia"
-            className="rounded-r-lg"
-            onClick={() => setTab("multimedia")}
-          >
-            Multimedia
+          <TabsTrigger value="multimedia" onClick={() => setTab("multimedia")}>
+            Multimedia ({RESOURCES.multimedia.length || 0})
           </TabsTrigger>
         </TabsList>
         <TabsContent value="all">
