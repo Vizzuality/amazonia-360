@@ -2,7 +2,7 @@ import { getCookie } from "react-use-cookie";
 
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import * as geometryEngineAsync from "@arcgis/core/geometry/geometryEngineAsync";
-// import * as geodesicUtils from "@arcgis/core/geometry/support/geodesicUtils";
+import * as projection from "@arcgis/core/geometry/projection";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import * as geoprocessor from "@arcgis/core/rest/geoprocessor";
 import Query from "@arcgis/core/rest/support/Query";
@@ -170,7 +170,14 @@ export const useGetFeaturesId = <
  ************************************************************
  */
 export type GetIntersectionAnalysisParams = {
-  id: DatasetIds;
+  id: Exclude<
+    DatasetIds,
+    | "population"
+    | "deprivation_index"
+    | "land_cover"
+    | "fires"
+    | "elevation_ranges"
+  >;
   polygon?: __esri.Polygon | null;
 };
 
@@ -288,7 +295,12 @@ export const useGetIntersectionAnalysis = <
  ************************************************************
  */
 export type GetRasterAnalysisParams = {
-  id: "landcover" | "population";
+  id:
+    | "landcover"
+    | "population"
+    | "fires"
+    | "elevation_ranges"
+    | "deprivation_index";
   polygon?: __esri.Polygon | null;
   statistics?: StatsOps[];
 };
@@ -306,6 +318,12 @@ export const getRasterAnalysis = async (params: GetRasterAnalysisParams) => {
     throw new Error("Polygon is required");
   }
 
+  const projectedGeom = projection.project(polygon, {
+    wkid: 4326,
+  });
+
+  const geom = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
+
   return exactZonalStatsExactZonalStatsPost(
     {
       type: "FeatureCollection",
@@ -315,13 +333,13 @@ export const getRasterAnalysis = async (params: GetRasterAnalysisParams) => {
           properties: {},
           geometry: {
             type: "Polygon",
-            coordinates: polygon.toJSON().rings,
+            coordinates: geom.toJSON().rings,
           },
         },
       ],
     },
     {
-      raster_filename: `${id}_cog.tif`,
+      raster_filename: `${id}.tif`,
       statistics,
     },
   );

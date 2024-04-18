@@ -40,11 +40,11 @@ export default function WidgetLandCoverByType() {
 
             const us = unique.map((u, index) => {
               return {
-                id: LAND_COVER[`${u as LandCoverIds}`].label,
+                id: LAND_COVER[`${u}` as LandCoverIds].label,
                 parent: "root",
                 size: frac[index],
-                label: LAND_COVER[`${u as LandCoverIds}`].label,
-                color: LAND_COVER[`${u as LandCoverIds}`].color,
+                label: LAND_COVER[`${u}` as LandCoverIds].label,
+                color: LAND_COVER[`${u}` as LandCoverIds].color,
               };
             }, {});
 

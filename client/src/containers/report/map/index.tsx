@@ -18,6 +18,8 @@ import {
 
 import LayerManager from "@/containers/report/map/layer-manager";
 
+import Controls from "@/components/map/controls";
+import ZoomControl from "@/components/map/controls/zoom";
 import Sketch from "@/components/map/sketch";
 
 const Map = dynamic(() => import("@/components/map"), {
@@ -78,6 +80,10 @@ export default function MapContainer() {
           onCreate={handleCreate}
           onCancel={handleCancel}
         />
+
+        <Controls>
+          <ZoomControl />
+        </Controls>
       </Map>
     </div>
   );

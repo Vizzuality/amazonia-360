@@ -8,6 +8,17 @@ import { LuDownload, LuLayoutGrid, LuPlus, LuShare2 } from "react-icons/lu";
 
 import Topics from "@/containers/report/topics";
 
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTrigger,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogDescription,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
 export default function ReportResultsHeader() {
@@ -21,12 +32,29 @@ export default function ReportResultsHeader() {
           <div className="flex items-center space-x-6">
             <h1 className="text-4xl font-bold text-primary">Testing</h1>
 
-            <Link href="/report">
-              <Button variant="outline" className="space-x-2">
-                <LuPlus className="w-5 h-5" />
-                <span>New report</span>
-              </Button>
-            </Link>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" className="space-x-2">
+                  <LuPlus className="w-5 h-5" />
+                  <span>New report</span>
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    You will lose all of your saved information if you continue.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+                  <Link href="/report">
+                    <AlertDialogAction>Continue</AlertDialogAction>
+                  </Link>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
 
           {/* Toolbar */}

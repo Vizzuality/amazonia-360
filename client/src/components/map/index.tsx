@@ -100,14 +100,16 @@ export function MapView({
         spatialReference: {
           wkid: 102100,
         },
+        ui: {
+          components: [],
+        },
+        padding: {
+          left: padding?.left || 0,
+        },
         ...viewProps,
       });
 
-      // Remove the default widgets
-      mapViewRef.current.ui.move("zoom", "top-right");
-
       // Set the padding
-      mapViewRef.current.padding.left = padding?.left || 0;
 
       const scaleBar = new ArcGISScaleBar({
         view: mapViewRef.current,
@@ -128,13 +130,6 @@ export function MapView({
         });
         setLoaded(true);
       });
-
-      // ArcGISReactiveUtils.when(
-      //   () => mapViewRef.current!.width,
-      //   () => {
-      //     mapViewRef.current!.padding.left = window.innerWidth / 2;
-      //   },
-      // );
 
       // Listen to extent changes
       ArcGISReactiveUtils.when(

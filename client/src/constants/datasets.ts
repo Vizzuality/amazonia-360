@@ -1,4 +1,3 @@
-import Polygon from "@arcgis/core/geometry/Polygon";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import WebTileLayer from "@arcgis/core/layers/WebTileLayer";
 import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer";
@@ -11,12 +10,11 @@ import { env } from "@/env.mjs";
 
 import { getKeys } from "@/lib/utils";
 
-import GEOJSON from "@/data/geojson.json";
-
-export const GEOMETRY_TEST = new Polygon({
-  hasZ: false,
-  rings: GEOJSON.features[0].geometry.coordinates,
-});
+import {
+  ELEVATION_RANGES_COLORMAP,
+  FIRES_COLORMAP,
+  LAND_COVER_COLORMAP,
+} from "@/constants/raster";
 
 export const DATASETS = {
   admin: {
@@ -105,7 +103,7 @@ export const DATASETS = {
   tierras_indigenas: {
     layer: new FeatureLayer({
       id: "tierras_indigenas",
-      title: "Tierras indígenas",
+      title: "Indigenous lands",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({
@@ -241,7 +239,7 @@ export const DATASETS = {
   areas_protegidas: {
     layer: new FeatureLayer({
       id: "areas_protegidas",
-      title: "Áreas protegidas",
+      title: "Protected areas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Areas_protegidas/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({
@@ -307,14 +305,82 @@ export const DATASETS = {
     layer: new WebTileLayer({
       id: "land_cover",
       title: "Land cover",
-      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=landcover_cog.tif`,
+      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=landcover_cog.tif&colormap=${encodeURIComponent(JSON.stringify(LAND_COVER_COLORMAP))}`,
     }),
-    getFeatures: (props?: __esri.QueryProperties) =>
-      new Query({
-        where: "FID is not null",
-        outFields: ["*"],
-        ...props,
-      }),
+  },
+  elevation_ranges: {
+    layer: new WebTileLayer({
+      id: "elevation_ranges",
+      title: "Elevation ranges",
+      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=elevation_ranges_cog.tif&colormap=${encodeURIComponent(JSON.stringify(ELEVATION_RANGES_COLORMAP))}`,
+    }),
+  },
+  fires: {
+    layer: new WebTileLayer({
+      id: "fires",
+      title: "Fires",
+      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=fires_cog.tif&colormap=${encodeURIComponent(JSON.stringify(FIRES_COLORMAP))}`,
+    }),
+  },
+  population: {
+    layer: new WebTileLayer({
+      id: "population",
+      title: "Population",
+      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=population_cog.tif&rescale=0,1&colormap=${encodeURIComponent(
+        JSON.stringify([
+          [
+            [-1, 0],
+            [255, 255, 255, 0],
+          ],
+          [
+            [0, 25],
+            [183, 240, 139, 0],
+          ],
+          [
+            [25, 50],
+            [82, 138, 34, 125],
+          ],
+          [
+            [50, 75],
+            [82, 138, 34, 191],
+          ],
+          [
+            [75, 1000000000],
+            [82, 138, 34, 255],
+          ],
+        ]),
+      )}`,
+    }),
+  },
+  deprivation_index: {
+    layer: new WebTileLayer({
+      id: "deprivation_index",
+      title: "Deprivation index",
+      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=deprivation_index_cog.tif&rescale=0,1&colormap=${encodeURIComponent(
+        JSON.stringify([
+          [
+            [-1, 0],
+            [255, 255, 255, 0],
+          ],
+          [
+            [0, 25],
+            [183, 240, 139, 67],
+          ],
+          [
+            [25, 50],
+            [82, 138, 34, 125],
+          ],
+          [
+            [50, 75],
+            [82, 138, 34, 191],
+          ],
+          [
+            [75, 1000000000],
+            [82, 138, 34, 255],
+          ],
+        ]),
+      )}`,
+    }),
   },
 } as const;
 

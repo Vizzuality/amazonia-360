@@ -15,6 +15,9 @@ import { DATASETS, DatasetIds } from "@/constants/datasets";
 import { Card } from "@/containers/card";
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
 
+import Controls from "@/components/map/controls";
+import FullscreenControl from "@/components/map/controls/fullscreen";
+import ZoomControl from "@/components/map/controls/zoom";
 import FeatureLayer from "@/components/map/layers/feature";
 import WebTileLayer from "@/components/map/layers/web-tile";
 
@@ -47,7 +50,7 @@ export default function WidgetMap({ ids }: WidgetMapProps) {
   }, [ids, GEOMETRY]);
 
   return (
-    <Card className="h-full min-h-96 p-0">
+    <Card className="h-full min-h-96 p-0 relative">
       <Map
         id="overview"
         {...(GEOMETRY?.extent && {
@@ -88,6 +91,11 @@ export default function WidgetMap({ ids }: WidgetMapProps) {
           }
         })}
         <SelectedLayer />
+
+        <Controls>
+          <FullscreenControl />
+          <ZoomControl />
+        </Controls>
       </Map>
     </Card>
   );
