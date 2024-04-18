@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import Link from "next/link";
 
-import { LuDownload, LuLayoutGrid, LuPlus, LuShare2 } from "react-icons/lu";
+import { LuDownload, LuLayoutGrid, LuPlus } from "react-icons/lu";
 
 import Topics from "@/containers/report/topics";
 
@@ -20,6 +20,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+
+import ShareReport from "./share";
 
 export default function ReportResultsHeader() {
   const [open, setOpen] = useState(false);
@@ -67,9 +69,9 @@ export default function ReportResultsHeader() {
               <LuLayoutGrid className="w-5 h-5" />
               <span>Topics</span>
             </Button>
-            <Button variant="outline" className="space-x-2">
-              <LuShare2 className="w-5 h-5" />
-            </Button>
+
+            <ShareReport />
+
             <Button variant="outline" className="space-x-2">
               <LuDownload className="w-5 h-5" />
             </Button>
