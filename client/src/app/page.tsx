@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <main>
+    <main className="relative flex flex-col min-h-[calc(100svh_-_theme(space.40)_+_1px)]">
       <Hero />
       <KeyFeatures />
       <InformationOn />

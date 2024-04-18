@@ -1,11 +1,11 @@
-import { ArrowRight } from "lucide-react";
+import { LuArrowRight } from "react-icons/lu";
 
 import { Button } from "@/components/ui/button";
 
 export default function Hub() {
   return (
     <section
-      className="text-white bg-center py-20"
+      className="text-white bg-center py-28"
       style={{
         background:
           "linear-gradient(90deg, rgba(0, 0, 0, 0.60) 34.5%, rgba(0, 62, 90, 0.00) 74%), url('/images/home/hub.jpeg') lightgray 50% / cover no-repeat",
@@ -25,7 +25,7 @@ export default function Hub() {
             className="mt-4 space-x-2.5 flex"
           >
             <p>Access hub</p>
-            <ArrowRight size={20} strokeWidth={1} />
+            <LuArrowRight size={20} strokeWidth={1} />
           </Button>
         </div>
       </div>

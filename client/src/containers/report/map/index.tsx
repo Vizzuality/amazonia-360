@@ -57,7 +57,7 @@ export default function MapContainer() {
   }, [setSketch]);
 
   return (
-    <div className="w-full grow">
+    <div className="w-full flex flex-col grow">
       <Map
         id="default"
         defaultBbox={bbox}

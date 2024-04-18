@@ -129,12 +129,12 @@ export function MapView({
         setLoaded(true);
       });
 
-      ArcGISReactiveUtils.when(
-        () => mapViewRef.current!.width,
-        () => {
-          mapViewRef.current!.padding.left = window.innerWidth / 2;
-        },
-      );
+      // ArcGISReactiveUtils.when(
+      //   () => mapViewRef.current!.width,
+      //   () => {
+      //     mapViewRef.current!.padding.left = window.innerWidth / 2;
+      //   },
+      // );
 
       // Listen to extent changes
       ArcGISReactiveUtils.when(
@@ -161,7 +161,7 @@ export function MapView({
   }, [bbox]);
 
   return (
-    <div ref={mapContainerRef} className="w-full h-full">
+    <div ref={mapContainerRef} className="w-full h-full grow">
       {loaded && children}
     </div>
   );
