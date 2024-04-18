@@ -6,11 +6,12 @@ import {
   EmailShareButton,
   FacebookShareButton,
   TwitterShareButton,
+  LinkedinShareButton,
 } from "react-share";
 
 import { usePathname } from "next/navigation";
 
-import { Facebook, Twitter, Mail, Share2 } from "lucide-react";
+import { Facebook, Twitter, LinkedinIcon, Mail, Share2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -100,9 +101,9 @@ export default function ShareReport() {
             </EmailShareButton>
           </Button>
 
-          {/* <Button className="rounded-full h-10 w-10" variant="outline">
+          <Button className="rounded-full h-10 w-10" variant="outline">
             <LinkedinShareButton
-              url={currentUrl}
+              url={encodeURIComponent(currentUrl)}
               title={"Amazonia360 Report"}
               summary={"Amazonia360 Report"}
               source={"Amazonia360"}
@@ -110,7 +111,7 @@ export default function ShareReport() {
             >
               <LinkedinIcon className="fill-blue-400 text-blue-400" size={16} />
             </LinkedinShareButton>
-          </Button> */}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
