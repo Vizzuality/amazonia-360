@@ -17,7 +17,7 @@ export default function InformationOn() {
           perspective.
         </p>
         <div className="mt-10 w-full">
-          <Topics size="lg" interactive={false} />
+          <Topics size="lg" clickable={false} />
         </div>
       </div>
     </section>
