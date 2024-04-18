@@ -116,12 +116,12 @@ export default function Glance() {
           A mosaic of ecosystems and habitats
         </h2>
         <p className="text-blue-900 text-base lg:text-lg font-normal">
-          Amazonia spans over 6.7 million square kilometers across South
-          America. This vital region is a confluence of cultural diversity and
-          environmental significance.
+          Amazonia spans over <span className="font-bold">6.7 million</span>{" "}
+          square kilometers across South America. This vital region is a
+          confluence of cultural diversity and environmental significance.
         </p>
         <p className="text-blue-300 text-sm mt-10 md:mt-48">
-          Source: Population - GHS2025; Area - ArcGIS calculations{" "}
+          Source: Population - GHS2025; Cartographic area{" "}
         </p>
       </div>
       <div className="w-full md:w-1/2 flex flex-col space-y-10 mt-20 md:mt-0">
