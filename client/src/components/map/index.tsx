@@ -104,7 +104,10 @@ export function MapView({
           components: [],
         },
         padding: {
-          left: padding?.left || 0,
+          top: 16,
+          right: 16,
+          bottom: 16,
+          left: padding?.left || 16,
         },
         ...viewProps,
       });
