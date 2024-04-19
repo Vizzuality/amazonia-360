@@ -9,6 +9,7 @@ import { Treemap, hierarchy, stratify, treemapSquarify } from "@visx/hierarchy";
 import {
   HierarchyNode,
   HierarchyRectangularNode,
+  TileMethod,
 } from "@visx/hierarchy/lib/types";
 import { useParentSize } from "@visx/responsive";
 import { ScaleTypeToD3Scale } from "@visx/scale";
@@ -31,6 +32,7 @@ interface MarimekkoChartProps<DataT extends Data> {
   colorScale: ScaleTypeToD3Scale<string, DataT>["ordinal"];
   className?: string;
   format: (node: HierarchyRectangularNode<HierarchyNode<DataT>>) => string;
+  tile?: TileMethod<HierarchyNode<DataT>> | undefined;
 }
 
 const MarimekkoChart = <T extends Data>({
@@ -38,6 +40,7 @@ const MarimekkoChart = <T extends Data>({
   colorScale,
   className = "h-52",
   format,
+  tile,
 }: MarimekkoChartProps<T>) => {
   const { parentRef, width, height } = useParentSize({ debounceTime: 150 });
 
@@ -131,7 +134,7 @@ const MarimekkoChart = <T extends Data>({
             root={root}
             size={[xMax, yMax]}
             paddingInner={4}
-            tile={treemapSquarify}
+            tile={tile ?? treemapSquarify}
             round
           >
             {(treemap) => (

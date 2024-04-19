@@ -1,13 +1,15 @@
 "use client";
 
 import { useLocationGeometry } from "@/lib/location";
-import { useGetFeatures } from "@/lib/query";
+import { useGetFeatures, useGetRasterAnalysis } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
+import { ELEVATION_RANGES, ElevationRangeIds } from "@/constants/raster";
 
 import { Card, CardLoader, CardTitle } from "@/containers/card";
+import WidgetEnvironmentSummaryAltitude from "@/containers/widgets/environment/summary/altitude";
 import WidgetEnvironmentSummaryBiomes from "@/containers/widgets/environment/summary/biomes";
 import WidgetEnvironmentSummaryClimate from "@/containers/widgets/environment/summary/climate";
 import WidgetEnvironmentSummaryHydro from "@/containers/widgets/environment/summary/hydro";
@@ -16,6 +18,46 @@ export default function WidgetEnvironmentSummary() {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
+
+  const queryAltitude = useGetRasterAnalysis(
+    {
+      id: "elevation_ranges",
+      polygon: GEOMETRY,
+      statistics: ["frac", "unique"],
+    },
+    {
+      enabled: !!GEOMETRY,
+
+      select(data) {
+        const values = data.features.map((f) => {
+          if (f.properties.unique && f.properties.frac) {
+            const { frac, unique } = f.properties;
+
+            const us = unique.map((u, index) => {
+              const e = ELEVATION_RANGES[`${u}` as ElevationRangeIds];
+              return {
+                id: u,
+                x: frac[index],
+                y: e.range[1],
+                label: e.label,
+                color: e.color,
+              };
+            }, {});
+
+            return us.toSorted((a, b) => {
+              if (!a.id || !b.id) return 0;
+
+              return a.id - b.id;
+            });
+          }
+
+          return [];
+        });
+
+        return values.flat();
+      },
+    },
+  );
 
   const queryHydro = useGetFeatures({
     feature: DATASETS.cuencas_hidrograficas.layer,
@@ -48,13 +90,13 @@ export default function WidgetEnvironmentSummary() {
     <Card>
       <CardTitle>Environment summary</CardTitle>
       <CardLoader
-        query={[queryHydro, queryClimate, queryBiomes]}
+        query={[queryAltitude, queryHydro, queryClimate, queryBiomes]}
         className="h-28"
       >
         {!!queryHydro.data && (
           <p className="text-sm font-medium">
-            The region is situated within an altitude range of 200-500 meters.{" "}
-            <WidgetEnvironmentSummaryClimate query={queryClimate} />{" "}
+            <WidgetEnvironmentSummaryAltitude query={queryAltitude} />.{" "}
+            <WidgetEnvironmentSummaryClimate query={queryClimate} />.{" "}
             <WidgetEnvironmentSummaryHydro query={queryHydro} />.{" "}
             <WidgetEnvironmentSummaryBiomes query={queryBiomes} />.
           </p>

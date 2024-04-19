@@ -106,38 +106,47 @@ export type FireIds = keyof typeof FIRES;
 
 export const ELEVATION_RANGES = {
   "1": {
+    range: [0, 0],
     label: "0 m",
     color: "#00a8d0",
   },
   "2": {
+    range: [0, 5],
     label: "0 - 5 m.",
     color: "#15d06a",
   },
   "3": {
+    range: [5, 100],
     label: "5 - 100 m.",
     color: "#75e37d",
   },
   "4": {
+    range: [100, 250],
     label: "100 - 250 m.",
     color: "#d1f58f",
   },
   "5": {
+    range: [250, 500],
     label: "250 - 500 m.",
     color: "#e8e18c",
   },
   "6": {
+    range: [500, 1000],
     label: "500 - 1.000 m.",
     color: "#baa673",
   },
   "7": {
+    range: [1000, 3500],
     label: "1.000 - 3.500 m.",
     color: "#8a6959",
   },
   "8": {
+    range: [3500, 5000],
     label: "4.000 - 5.000 m.",
     color: "#a38983",
   },
   "9": {
+    range: [5000, 6858.67],
     label: "5.000 - 6.858,67 m.",
     color: "#d1c4c1",
   },
