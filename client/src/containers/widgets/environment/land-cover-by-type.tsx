@@ -99,7 +99,7 @@ export default function WidgetLandCoverByType() {
                       className="flex space-x-1"
                     >
                       <div
-                        className="w-2 h-2 mt-0.5 border border-foreground/50 rounded-[2px] shrink-0"
+                        className="w-2 h-2 shrink-0 mt-px border border-foreground/50 rounded-[2px]"
                         style={{
                           backgroundColor: label.value,
                         }}

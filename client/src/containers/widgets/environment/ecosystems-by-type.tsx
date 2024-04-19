@@ -24,7 +24,7 @@ export default function WidgetEcosystemsByType() {
 
   const query = useGetIntersectionAnalysis(
     {
-      id: "ecosistemas",
+      id: "biomas",
       polygon: GEOMETRY,
     },
     {
@@ -36,10 +36,10 @@ export default function WidgetEcosystemsByType() {
         return data?.features
           ?.map((f) => {
             return {
-              id: f.attributes.ECO_NAME,
+              id: f.attributes.BIOMADES,
               parent: "root",
               size: f.area / (areas || 1),
-              label: f.attributes.ECO_NAME,
+              label: f.attributes.BIOMADES,
               color: "blue",
             };
           })
@@ -79,7 +79,7 @@ export default function WidgetEcosystemsByType() {
 
   return (
     <Card>
-      <CardTitle>Ecosystems by type</CardTitle>
+      <CardTitle>Biomes by type</CardTitle>
       <CardLoader query={[query]} className="h-52">
         {!!query.data && (
           <div className="space-y-2 pt-2">
@@ -95,10 +95,10 @@ export default function WidgetEcosystemsByType() {
                   {labels.map((label) => (
                     <div
                       key={`legend-quantile-${label.datum.id}`}
-                      className="flex items-center"
+                      className="flex"
                     >
                       <div
-                        className="w-2 h-2 mr-1 border border-black"
+                        className="w-2 h-2 shrink-0 mt-px mr-1 border border-black"
                         style={{
                           backgroundColor: label.value,
                         }}
