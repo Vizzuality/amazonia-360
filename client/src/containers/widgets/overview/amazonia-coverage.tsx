@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { useFormatPercentage } from "@/lib/formats";
+import { formatPercentage } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
 import { useGetIntersectionAnalysis } from "@/lib/query";
 
@@ -20,10 +20,6 @@ export default function WidgetAmazoniaCoverage() {
 
   const GEOMETRY = useLocationGeometry(location);
 
-  const { format } = useFormatPercentage({
-    maximumFractionDigits: 0,
-  });
-
   const query = useGetIntersectionAnalysis(
     {
       id: "area_afp",
@@ -35,8 +31,10 @@ export default function WidgetAmazoniaCoverage() {
   );
 
   const COVERAGE = useMemo(() => {
-    return format(query.data?.percentage ?? 0);
-  }, [query.data?.percentage, format]);
+    return formatPercentage(query.data?.percentage ?? 0, {
+      maximumFractionDigits: 0,
+    });
+  }, [query.data?.percentage]);
 
   return (
     <Card>

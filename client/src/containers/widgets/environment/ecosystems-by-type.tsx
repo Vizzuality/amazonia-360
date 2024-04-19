@@ -7,7 +7,7 @@ import {
 import { LegendOrdinal } from "@visx/legend";
 import { scaleOrdinal } from "@visx/scale";
 
-import { useFormatPercentage } from "@/lib/formats";
+import { formatPercentage } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
 import { useGetIntersectionAnalysis } from "@/lib/query";
 
@@ -69,12 +69,10 @@ export default function WidgetEcosystemsByType() {
     range: ["#40551F", "#668A26", "#8ABD2D", "#B0E33A", "#D6FF47"],
   });
 
-  const { format } = useFormatPercentage({
-    maximumFractionDigits: 0,
-  });
-
   const FORMAT = (node: HierarchyRectangularNode<HierarchyNode<Data>>) => {
-    return format(node?.value || 0);
+    return formatPercentage(node?.value || 0, {
+      maximumFractionDigits: 0,
+    });
   };
 
   return (
@@ -106,7 +104,11 @@ export default function WidgetEcosystemsByType() {
                       <span className="text-2xs font-semibold text-gray-500">
                         {label.datum.label}{" "}
                         <span>
-                          ({label.datum.size > 0.01 && format(label.datum.size)}
+                          (
+                          {label.datum.size > 0.01 &&
+                            formatPercentage(label.datum.size, {
+                              maximumFractionDigits: 0,
+                            })}
                           {label.datum.size <= 0.01 && `<1%`})
                         </span>
                       </span>

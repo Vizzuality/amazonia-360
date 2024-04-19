@@ -7,7 +7,7 @@ import {
 } from "@visx/hierarchy/lib/types";
 import { scaleOrdinal } from "@visx/scale";
 
-import { useFormatNumber, useFormatPercentage } from "@/lib/formats";
+import { formatNumber, formatPercentage } from "@/lib/formats";
 
 import {
   MOSAIC_DATA,
@@ -49,60 +49,77 @@ export default function Glance() {
     setChartKey(e);
   }, []);
 
-  const { format: formatPercentage } = useFormatPercentage({
-    maximumFractionDigits: 0,
-  });
-  const { format: formatNumber } = useFormatNumber({
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 2,
-    notation: "compact",
-  });
-
   const FORMAT = {
     country_total_cartographic_area_sqkm: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
-      return formatNumber(node?.value || 0);
+      return formatNumber(node?.value || 0, {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+        notation: "compact",
+      });
     },
     amazonia_area_by_country_cartographic_area_sqkm: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
-      return formatNumber(node?.value || 0);
+      return formatNumber(node?.value || 0, {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+        notation: "compact",
+      });
     },
     proportion_of_amazonia_area_by_country_percentage: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
-      return formatPercentage((node?.value || 0) / (node?.parent?.value || 1));
+      return formatPercentage((node?.value || 0) / (node?.parent?.value || 1), {
+        maximumFractionDigits: 0,
+      });
     },
     proportion_of_total_area_of_the_afp_by_country_percentage: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
-      return formatPercentage((node?.value || 0) / (node?.parent?.value || 1));
+      return formatPercentage((node?.value || 0) / (node?.parent?.value || 1), {
+        maximumFractionDigits: 0,
+      });
     },
     total_population_by_country_ghspop25: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
-      return formatNumber(node?.value || 0);
+      return formatNumber(node?.value || 0, {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+        notation: "compact",
+      });
     },
     population_of_the_amazonia_zone_by_country_ghspop25: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
-      return formatNumber(node?.value || 0);
+      return formatNumber(node?.value || 0, {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+        notation: "compact",
+      });
     },
     proportion_of_the_population_of_the_amazonia_zone_by_country_percentage: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
-      return formatPercentage((node?.value || 0) / (node?.parent?.value || 1));
+      return formatPercentage((node?.value || 0) / (node?.parent?.value || 1), {
+        maximumFractionDigits: 0,
+      });
     },
     proportion_of_the_population_of_the_afp_by_country_percentage: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
-      return formatPercentage((node?.value || 0) / (node?.parent?.value || 1));
+      return formatPercentage((node?.value || 0) / (node?.parent?.value || 1), {
+        maximumFractionDigits: 0,
+      });
     },
     population_density_of_the_afp_zones_by_country_inhabitants_per_sqkm: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
-      return formatPercentage((node?.value || 0) / (node?.parent?.value || 1));
+      return formatPercentage((node?.value || 0) / (node?.parent?.value || 1), {
+        maximumFractionDigits: 0,
+      });
     },
   };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormatPercentage } from "@/lib/formats";
+import { formatPercentage } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
 import { useGetFeatures, useGetIntersectionAnalysis } from "@/lib/query";
 
@@ -20,10 +20,6 @@ export default function WidgetIndigenousLands() {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
-
-  const { format } = useFormatPercentage({
-    maximumFractionDigits: 0,
-  });
 
   const queryIndigenousLands = useGetFeatures(
     {
@@ -61,7 +57,12 @@ export default function WidgetIndigenousLands() {
       >
         <CardWidgetNumber
           value={`${queryIndigenousLands.data?.length ?? 0}`}
-          subvalue={`representing ${format(queryIndigenousLandsCoverage.data?.percentage ?? 0)} of the area`}
+          subvalue={`representing ${formatPercentage(
+            queryIndigenousLandsCoverage.data?.percentage ?? 0,
+            {
+              maximumFractionDigits: 0,
+            },
+          )} of the area`}
         />
       </CardLoader>
     </Card>

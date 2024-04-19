@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { UseQueryResult } from "@tanstack/react-query";
 import Pluralize from "pluralize";
 
-import { useFormatPercentage } from "@/lib/formats";
+import { formatPercentage } from "@/lib/formats";
 import { joinWithAnd } from "@/lib/utils";
 
 export default function WidgetEnvironmentSummaryAltitude({
@@ -28,10 +28,6 @@ export default function WidgetEnvironmentSummaryAltitude({
     };
   }, [query.data]);
 
-  const { format } = useFormatPercentage({
-    maximumFractionDigits: 1,
-  });
-
   return (
     <>
       The region is situated within an{" "}
@@ -39,7 +35,10 @@ export default function WidgetEnvironmentSummaryAltitude({
       <strong>
         {joinWithAnd(
           Array.from(STATISTICS.altitudes.values()).map(
-            (v) => `${v.label} (${format(v.x)})`,
+            (v) =>
+              `${v.label} (${formatPercentage(v.x, {
+                maximumFractionDigits: 0,
+              })})`,
           ),
         )}
       </strong>
