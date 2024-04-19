@@ -28,12 +28,12 @@ export default async function ReportTopicsPage({
   }
 
   return (
-    <main className="relative flex flex-col h-[calc(100svh_-_theme(space.20))] bg-blue-50 py-12">
+    <main className="relative flex flex-col bg-blue-50 py-12 min-h-[calc(100svh_-_theme(space.40)_+_1px)]">
       <div className="flex flex-col space-y-10">
         <TopicsHeader />
 
         <div className="space-y-6">
-          <Topics size="lg" />
+          <Topics size="lg" interactive />
 
           <TopicsFooter />
         </div>

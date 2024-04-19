@@ -7,7 +7,7 @@ import { useParentSize } from "@visx/responsive";
 import { scaleLinear } from "@visx/scale";
 import { Arc } from "@visx/shape";
 
-import { useFormatPercentage } from "@/lib/formats";
+import { formatPercentage } from "@/lib/formats";
 
 export type ArcChartProps = {
   value: number;
@@ -27,10 +27,6 @@ export default function ArcChart({ value, color = "#FFDA00" }: ArcChartProps) {
       clamp: true,
     });
   }, [startAngle, endAngle]);
-
-  const { format } = useFormatPercentage({
-    maximumFractionDigits: 0,
-  });
 
   return (
     <div ref={parentRef} className="w-full h-28 relative">
@@ -56,7 +52,7 @@ export default function ArcChart({ value, color = "#FFDA00" }: ArcChartProps) {
         </Group>
       </svg>
       <span className="absolute top-full left-1/2 block -translate-x-1/2 -translate-y-full text-center text-4xl font-bold">
-        {format(value)}
+        {formatPercentage(value)}
       </span>
     </div>
   );

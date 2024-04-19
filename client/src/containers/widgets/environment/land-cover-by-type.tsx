@@ -1,9 +1,13 @@
 "use client";
 
+import {
+  HierarchyNode,
+  HierarchyRectangularNode,
+} from "@visx/hierarchy/lib/types";
 import { LegendOrdinal } from "@visx/legend";
 import { scaleOrdinal } from "@visx/scale";
 
-import { useFormatPercentage } from "@/lib/formats";
+import { formatPercentage } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
 import { useGetRasterAnalysis } from "@/lib/query";
 
@@ -13,7 +17,7 @@ import { LAND_COVER, LandCoverIds } from "@/constants/raster";
 
 import { Card, CardLoader, CardTitle } from "@/containers/card";
 
-import MarimekkoChart from "@/components/charts/marimekko";
+import MarimekkoChart, { Data } from "@/components/charts/marimekko";
 
 export default function WidgetLandCoverByType() {
   const [location] = useSyncLocation();
@@ -36,11 +40,11 @@ export default function WidgetLandCoverByType() {
 
             const us = unique.map((u, index) => {
               return {
-                id: LAND_COVER[`${u as LandCoverIds}`].label,
+                id: LAND_COVER[`${u}` as LandCoverIds].label,
                 parent: "root",
                 size: frac[index],
-                label: LAND_COVER[`${u as LandCoverIds}`].label,
-                color: LAND_COVER[`${u as LandCoverIds}`].color,
+                label: LAND_COVER[`${u}` as LandCoverIds].label,
+                color: LAND_COVER[`${u}` as LandCoverIds].color,
               };
             }, {});
 
@@ -66,9 +70,11 @@ export default function WidgetLandCoverByType() {
     range: query?.data?.map((d) => d.color) || [], // sort by size.toReversed(),
   });
 
-  const { format } = useFormatPercentage({
-    maximumFractionDigits: 0,
-  });
+  const FORMAT = (node: HierarchyRectangularNode<HierarchyNode<Data>>) => {
+    return formatPercentage(node?.value || 0, {
+      maximumFractionDigits: 0,
+    });
+  };
 
   return (
     <Card>
@@ -77,6 +83,7 @@ export default function WidgetLandCoverByType() {
         {!!query.data && (
           <div className="space-y-2 pt-2">
             <MarimekkoChart
+              format={FORMAT}
               colorScale={ordinalColorScale}
               data={query.data || []}
             />
@@ -90,7 +97,7 @@ export default function WidgetLandCoverByType() {
                       className="flex space-x-1"
                     >
                       <div
-                        className="w-2 h-2 mt-0.5 border border-foreground/50 rounded-[2px] shrink-0"
+                        className="w-2 h-2 shrink-0 mt-px border border-foreground/50 rounded-[2px]"
                         style={{
                           backgroundColor: label.value,
                         }}
@@ -98,7 +105,11 @@ export default function WidgetLandCoverByType() {
                       <span className="text-2xs font-semibold text-gray-500">
                         {label.datum.label}{" "}
                         <span>
-                          ({label.datum.size > 0.01 && format(label.datum.size)}
+                          (
+                          {label.datum.size > 0.01 &&
+                            formatPercentage(label.datum.size, {
+                              maximumFractionDigits: 0,
+                            })}
                           {label.datum.size <= 0.01 && `<1%`})
                         </span>
                       </span>

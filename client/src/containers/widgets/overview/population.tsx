@@ -2,18 +2,16 @@
 
 import { useMemo } from "react";
 
-import { useFormatNumber } from "@/lib/formats";
+import { formatNumber } from "@/lib/formats";
 
 import { Card, CardWidgetNumber, CardTitle } from "@/containers/card";
 
 export default function WidgetPopulation() {
-  const { format } = useFormatNumber({
-    maximumFractionDigits: 0,
-  });
-
   const POPULATION = useMemo(() => {
-    return format(265000);
-  }, [format]);
+    return formatNumber(265000, {
+      maximumFractionDigits: 0,
+    });
+  }, []);
 
   return (
     <Card>
