@@ -1,0 +1,14 @@
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - jupyterlab-code-formatter
+      - ruff
+      - rasterio
+      - xarray
+      - rioxarray
+      - jupyter
+      - geopandas
+      - polars
