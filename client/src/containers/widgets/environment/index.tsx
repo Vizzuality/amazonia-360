@@ -61,6 +61,9 @@ export default function WidgetsEnvironment() {
                 <SelectItem value={DATASETS.tipos_climaticos.layer.id}>
                   {DATASETS.tipos_climaticos.layer.title}
                 </SelectItem>
+                <SelectItem value={DATASETS.elevation_ranges.layer.id}>
+                  {DATASETS.elevation_ranges.layer.title}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
