@@ -12,7 +12,6 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS, DatasetIds } from "@/constants/datasets";
 
-import { Card } from "@/containers/card";
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
 
 import Controls from "@/components/map/controls";
@@ -50,7 +49,7 @@ export default function WidgetMap({ ids }: WidgetMapProps) {
   }, [ids, GEOMETRY]);
 
   return (
-    <Card className="h-full min-h-96 p-0 relative">
+    <div className="relative h-full min-h-96">
       <Map
         id="overview"
         {...(GEOMETRY?.extent && {
@@ -97,6 +96,6 @@ export default function WidgetMap({ ids }: WidgetMapProps) {
           <ZoomControl />
         </Controls>
       </Map>
-    </Card>
+    </div>
   );
 }

@@ -1,6 +1,7 @@
 import { TOPICS } from "@/constants/topics";
 
-import WidgetMap from "@/containers/widgets/map";
+import WidgetsPopulationDeprivation from "@/containers/widgets/population/deprivation";
+import WidgetsPopulationPopulation from "@/containers/widgets/population/population";
 
 export default function WidgetsPopulation() {
   const T = TOPICS.find((t) => t.id === "population");
@@ -10,10 +11,10 @@ export default function WidgetsPopulation() {
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
       <div className="grid grid-cols-12 gap-2">
         <div className="col-span-6">
-          <WidgetMap ids={["population"]} />
+          <WidgetsPopulationPopulation />
         </div>
         <div className="col-span-6">
-          <WidgetMap ids={["deprivation_index"]} />
+          <WidgetsPopulationDeprivation />
         </div>
       </div>
     </div>

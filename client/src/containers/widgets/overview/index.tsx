@@ -1,3 +1,4 @@
+import { Card } from "@/containers/card";
 import WidgetMap from "@/containers/widgets/map";
 import WidgetAdministrativeBoundaries from "@/containers/widgets/overview/administrative-boundaries";
 import WidgetAltitude from "@/containers/widgets/overview/altitude";
@@ -22,7 +23,9 @@ export default function WidgetsOverview() {
           <WidgetAmazoniaCoverage />
         </div>
         <div className="col-span-6">
-          <WidgetMap ids={["ciudades_capitales"]} />
+          <Card className="h-full p-0 relative">
+            <WidgetMap ids={["ciudades_capitales"]} />
+          </Card>
         </div>
         <div className="col-span-6">
           <WidgetAdministrativeBoundaries />

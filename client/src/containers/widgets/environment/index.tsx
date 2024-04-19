@@ -3,6 +3,7 @@ import { useState } from "react";
 import { DATASETS, DatasetIds } from "@/constants/datasets";
 import { TOPICS } from "@/constants/topics";
 
+import { Card } from "@/containers/card";
 import WidgetEcosystemsByType from "@/containers/widgets/environment/ecosystems-by-type";
 import WidgetLandCoverByType from "@/containers/widgets/environment/land-cover-by-type";
 import WidgetEnvironmentSummary from "@/containers/widgets/environment/summary";
@@ -34,7 +35,7 @@ export default function WidgetsEnvironment() {
             <WidgetLandCoverByType />
           </div>
         </div>
-        <div className="col-span-6 relative">
+        <div className="col-span-6 flex flex-col relative">
           <div className="absolute top-4 left-4 z-10">
             <Select
               value={layer}
@@ -67,7 +68,9 @@ export default function WidgetsEnvironment() {
               </SelectContent>
             </Select>
           </div>
-          <WidgetMap ids={[layer]} />
+          <Card className="h-full p-0 relative">
+            <WidgetMap ids={[layer]} />
+          </Card>
         </div>
       </div>
     </div>

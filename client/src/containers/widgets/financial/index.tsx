@@ -1,5 +1,6 @@
 import { TOPICS } from "@/constants/topics";
 
+import { Card } from "@/containers/card";
 import WidgetMap from "@/containers/widgets/map";
 
 export default function WidgetsFinancial() {
@@ -10,7 +11,9 @@ export default function WidgetsFinancial() {
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
       <div className="grid grid-cols-12 gap-2">
         <div className="col-span-6">
-          <WidgetMap ids={["tierras_indigenas"]} />
+          <Card className="h-full p-0 relative">
+            <WidgetMap ids={["tierras_indigenas"]} />
+          </Card>
         </div>
       </div>
     </div>
