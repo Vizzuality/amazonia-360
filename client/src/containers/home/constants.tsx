@@ -143,7 +143,7 @@ export const MOSAIC_DATA = [
     proportion_of_total_area_of_the_afp_by_country_percentage: 0.175,
     total_population_by_country_ghspop25: 628406,
     population_of_the_amazonia_zone_by_country_ghspop25: 628406,
-    proportion_of_the_population_of_the_amazonia_zone_by_country_percentage: 12,
+    proportion_of_the_population_of_the_amazonia_zone_by_country_percentage: 1,
     proportion_of_the_population_of_the_afp_by_country_percentage: 0.0105,
     population_density_of_the_afp_zones_by_country_inhabitants_per_sqkm: 0.0432,
   },
