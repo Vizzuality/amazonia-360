@@ -6,6 +6,7 @@ import {
   HierarchyRectangularNode,
 } from "@visx/hierarchy/lib/types";
 import { scaleOrdinal } from "@visx/scale";
+import CHROMA from "chroma-js";
 
 import { formatNumber, formatPercentage } from "@/lib/formats";
 
@@ -28,7 +29,7 @@ import {
 export default function Glance() {
   const [chartKey, setChartKey] = useState<MosaicIds>(MOSAIC_OPTIONS[4].key);
 
-  const parsedData = useMemo(() => {
+  const parsedData: Data[] = useMemo(() => {
     return MOSAIC_DATA.map((d) => {
       return {
         label: d.country,
@@ -37,12 +38,14 @@ export default function Glance() {
         parent: "root",
         size: d[chartKey],
       };
-    });
+    }).toSorted((a, b) => b.size - a.size);
   }, [chartKey]);
 
   const ordinalColorScale = scaleOrdinal({
     domain: parsedData?.map((d) => d),
-    range: ["#009ADE", "#93CAEB", "#DBEDF8"],
+    range: CHROMA.scale(["#009ADE", "#93CAEB", "#DBEDF8"]).colors(
+      parsedData?.length || 1,
+    ),
   });
 
   const handleSingleValueChange = useCallback((e: MosaicIds) => {
@@ -71,14 +74,14 @@ export default function Glance() {
     proportion_of_amazonia_area_by_country_percentage: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
-      return formatPercentage((node?.value || 0) / (node?.parent?.value || 1), {
+      return formatPercentage(node?.value || 0, {
         maximumFractionDigits: 0,
       });
     },
     proportion_of_total_area_of_the_afp_by_country_percentage: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
-      return formatPercentage((node?.value || 0) / (node?.parent?.value || 1), {
+      return formatPercentage(node?.value || 0, {
         maximumFractionDigits: 0,
       });
     },
@@ -103,21 +106,21 @@ export default function Glance() {
     proportion_of_the_population_of_the_amazonia_zone_by_country_percentage: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
-      return formatPercentage((node?.value || 0) / (node?.parent?.value || 1), {
+      return formatPercentage(node?.value || 0, {
         maximumFractionDigits: 0,
       });
     },
     proportion_of_the_population_of_the_afp_by_country_percentage: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
-      return formatPercentage((node?.value || 0) / (node?.parent?.value || 1), {
+      return formatPercentage(node?.value || 0, {
         maximumFractionDigits: 0,
       });
     },
     population_density_of_the_afp_zones_by_country_inhabitants_per_sqkm: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
-      return formatPercentage((node?.value || 0) / (node?.parent?.value || 1), {
+      return formatPercentage(node?.value || 0, {
         maximumFractionDigits: 0,
       });
     },

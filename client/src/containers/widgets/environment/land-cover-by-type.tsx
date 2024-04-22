@@ -33,7 +33,7 @@ export default function WidgetLandCoverByType() {
     {
       enabled: !!GEOMETRY,
 
-      select(data) {
+      select(data): Data[] {
         const values = data.features.map((f) => {
           if (f.properties.unique && f.properties.frac) {
             const { frac, unique } = f.properties;
