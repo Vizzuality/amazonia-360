@@ -108,7 +108,7 @@ export default function Glance() {
 
   return (
     <section className="container flex md:space-x-28 py-10 md:py-28 md:flex-row flex-col items-end">
-      <div className="flex flex-col w-full md:w-1/2">
+      <div className="flex flex-col w-full md:w-1/2 borders">
         <h3 className="uppercase text-sm font-extrabold text-cyan-500 tracking-wide-lg">
           Amazonia at a glance
         </h3>
@@ -120,14 +120,10 @@ export default function Glance() {
           square kilometers across South America. This vital region is a
           confluence of cultural diversity and environmental significance.
         </p>
-        <p className="text-blue-300 text-sm mt-10 md:mt-48">
-          Source: Population - GHS2025; Cartographic area{" "}
-        </p>
-      </div>
-      <div className="w-full md:w-1/2 flex flex-col space-y-10 mt-20 md:mt-0">
-        <div className="flex items-center lg:space-x-2 justify-end">
+
+        <div className="my-5">
           <Select onValueChange={handleSingleValueChange}>
-            <SelectTrigger className="w-full md:w-96 lg:w-[550px]">
+            <SelectTrigger className="w-full md:w-96 lg:w-[550px] rounded-none">
               <div>
                 <SelectValue> </SelectValue>
 
@@ -151,6 +147,15 @@ export default function Glance() {
             </SelectContent>
           </Select>
         </div>
+
+        <p className="text-blue-300 text-sm mt-2 md:mt-52">
+          Source: Population - GHS2025; Cartographic area{" "}
+        </p>
+      </div>
+      <div className="w-full md:w-1/2 flex flex-col mt-20 md:mt-0 space-y-1">
+        <p className="text-blue-900 font-semibold text-sm">
+          {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.label || ""}
+        </p>
         <div className="w-full">
           <MarimekkoChart
             format={FORMAT[chartKey]}
