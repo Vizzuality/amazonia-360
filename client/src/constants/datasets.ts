@@ -307,26 +307,26 @@ export const DATASETS = {
       id: "idb_operations",
       title: "IDB Operations",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/IDB_Operations/FeatureServer/0",
-      // featureReduction: {
-      //   type: "cluster",
-      //   clusterMinSize: 16.5,
-      //   labelingInfo: [
-      //     {
-      //       deconflictionStrategy: "none",
-      //       labelExpressionInfo: {
-      //         expression: "Text($feature.cluster_count, '#,###')",
-      //       },
-      //       symbol: {
-      //         type: "text",
-      //         color: "#FFFFFF",
-      //         font: {
-      //           size: "12px",
-      //         },
-      //       },
-      //       labelPlacement: "center-center",
-      //     },
-      //   ],
-      // },
+      featureReduction: {
+        type: "cluster",
+        clusterMinSize: 16.5,
+        labelingInfo: [
+          {
+            deconflictionStrategy: "none",
+            labelExpressionInfo: {
+              expression: "Text($feature.cluster_count, '#,###')",
+            },
+            symbol: {
+              type: "text",
+              color: "#FFFFFF",
+              font: {
+                size: "12px",
+              },
+            },
+            labelPlacement: "center-center",
+          },
+        ],
+      },
       renderer: new SimpleRenderer({
         symbol: new SimpleMarkerSymbol({
           color: "#000000",

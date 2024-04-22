@@ -1,6 +1,7 @@
 import { TOPICS } from "@/constants/topics";
 
 import { Card } from "@/containers/card";
+import WidgetTotalFunding from "@/containers/widgets/financial/total-funding";
 import WidgetTotalOperations from "@/containers/widgets/financial/total-operations";
 import WidgetMap from "@/containers/widgets/map";
 
@@ -14,6 +15,9 @@ export default function WidgetsFinancial() {
         <div className="col-span-6 grid grid-cols-12 gap-2">
           <div className="col-span-6">
             <WidgetTotalOperations />
+          </div>
+          <div className="col-span-6">
+            <WidgetTotalFunding />
           </div>
         </div>
         <div className="col-span-6">

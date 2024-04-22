@@ -49,7 +49,7 @@ export default function WidgetResearchCenters() {
             initialState: {
               pagination: {
                 pageIndex: 0,
-                pageSize: 6,
+                pageSize: 7,
               },
               sorting: [
                 {

@@ -64,7 +64,7 @@ export default function WidgetProtectedAreas() {
                 initialState: {
                   pagination: {
                     pageIndex: 0,
-                    pageSize: 6,
+                    pageSize: 7,
                   },
                   sorting: [
                     {
