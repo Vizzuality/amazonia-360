@@ -33,7 +33,7 @@ export default function ShareReport() {
         setShareLinkBtnText("Copied");
         setTimeout(function () {
           setShareLinkBtnText("Copy");
-        }, 5000);
+        }, 1000);
       })
       .catch((err: ErrorEvent) => {
         console.info(err.message);
