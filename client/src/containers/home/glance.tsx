@@ -117,7 +117,7 @@ export default function Glance() {
             A mosaic of ecosystems and habitats
           </h2>
           <p className="text-blue-900 text-base lg:text-lg font-normal">
-            Amazonia spans over <span className="font-bold">6.7 million</span>{" "}
+            Amazonia spans over <span className="font-bold">8.3 million</span>{" "}
             square kilometers across South America. This vital region is a
             confluence of cultural diversity and environmental significance.
           </p>
