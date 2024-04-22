@@ -6,14 +6,10 @@ import { useGetRasterAnalysis } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
-import {
-  Card,
-  CardWidgetNumber,
-  CardTitle,
-  CardLoader,
-} from "@/containers/card";
+import { Card, CardLoader, CardTitle } from "@/containers/card";
+import WidgetMap from "@/containers/widgets/map";
 
-export default function WidgetPopulation() {
+export default function WidgetsPopulationDeprivation() {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
@@ -36,16 +32,18 @@ export default function WidgetPopulation() {
   );
 
   return (
-    <Card>
-      <CardTitle>Population</CardTitle>
-      <CardLoader query={[query]} className="h-12">
-        <CardWidgetNumber
-          value={formatNumber(query.data, {
-            maximumFractionDigits: 0,
-          })}
-          unit="inhabitants"
-        />
-      </CardLoader>
+    <Card className="h-full p-0 relative">
+      <div className="p-6">
+        <CardTitle>Population</CardTitle>
+        <CardLoader query={[query]} className="h-10">
+          <p className="text-sm font-medium">
+            The current selection could have{" "}
+            <strong>{formatNumber(query.data)}</strong> inhabitants, estimated
+            for 2025 according to the GHS mode.
+          </p>
+        </CardLoader>
+      </div>
+      <WidgetMap ids={["population"]} />
     </Card>
   );
 }

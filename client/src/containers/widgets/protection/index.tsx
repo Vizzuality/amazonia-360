@@ -5,6 +5,7 @@ import { useState } from "react";
 import { DATASETS, DatasetIds } from "@/constants/datasets";
 import { TOPICS } from "@/constants/topics";
 
+import { Card } from "@/containers/card";
 import WidgetMap from "@/containers/widgets/map";
 import WidgetForestFires from "@/containers/widgets/protection/forest-fires";
 import WidgetIndigenousLands from "@/containers/widgets/protection/indigenous-lands";
@@ -61,10 +62,16 @@ export default function WidgetsProtection() {
                 <SelectItem value={DATASETS.tierras_indigenas.layer.id}>
                   {DATASETS.tierras_indigenas.layer.title}
                 </SelectItem>
+                <SelectItem value={DATASETS.fires.layer.id}>
+                  {DATASETS.fires.layer.title}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <WidgetMap ids={[layer]} />
+
+          <Card className="p-0 h-full relative">
+            <WidgetMap ids={[layer]} />
+          </Card>
         </div>
       </div>
     </div>

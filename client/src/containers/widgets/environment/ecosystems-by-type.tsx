@@ -7,7 +7,7 @@ import {
 import { LegendOrdinal } from "@visx/legend";
 import { scaleOrdinal } from "@visx/scale";
 
-import { useFormatPercentage } from "@/lib/formats";
+import { formatPercentage } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
 import { useGetIntersectionAnalysis } from "@/lib/query";
 
@@ -24,7 +24,7 @@ export default function WidgetEcosystemsByType() {
 
   const query = useGetIntersectionAnalysis(
     {
-      id: "ecosistemas",
+      id: "biomas",
       polygon: GEOMETRY,
     },
     {
@@ -36,10 +36,10 @@ export default function WidgetEcosystemsByType() {
         return data?.features
           ?.map((f) => {
             return {
-              id: f.attributes.ECO_NAME,
+              id: f.attributes.BIOMADES,
               parent: "root",
               size: f.area / (areas || 1),
-              label: f.attributes.ECO_NAME,
+              label: f.attributes.BIOMADES,
               color: "blue",
             };
           })
@@ -69,17 +69,15 @@ export default function WidgetEcosystemsByType() {
     range: ["#40551F", "#668A26", "#8ABD2D", "#B0E33A", "#D6FF47"],
   });
 
-  const { format } = useFormatPercentage({
-    maximumFractionDigits: 0,
-  });
-
   const FORMAT = (node: HierarchyRectangularNode<HierarchyNode<Data>>) => {
-    return format(node?.value || 0);
+    return formatPercentage(node?.value || 0, {
+      maximumFractionDigits: 0,
+    });
   };
 
   return (
     <Card>
-      <CardTitle>Ecosystems by type</CardTitle>
+      <CardTitle>Biomes by type</CardTitle>
       <CardLoader query={[query]} className="h-52">
         {!!query.data && (
           <div className="space-y-2 pt-2">
@@ -95,10 +93,10 @@ export default function WidgetEcosystemsByType() {
                   {labels.map((label) => (
                     <div
                       key={`legend-quantile-${label.datum.id}`}
-                      className="flex items-center"
+                      className="flex"
                     >
                       <div
-                        className="w-2 h-2 mr-1 border border-black"
+                        className="w-2 h-2 shrink-0 mt-px mr-1 border border-black"
                         style={{
                           backgroundColor: label.value,
                         }}
@@ -106,7 +104,11 @@ export default function WidgetEcosystemsByType() {
                       <span className="text-2xs font-semibold text-gray-500">
                         {label.datum.label}{" "}
                         <span>
-                          ({label.datum.size > 0.01 && format(label.datum.size)}
+                          (
+                          {label.datum.size > 0.01 &&
+                            formatPercentage(label.datum.size, {
+                              maximumFractionDigits: 0,
+                            })}
                           {label.datum.size <= 0.01 && `<1%`})
                         </span>
                       </span>

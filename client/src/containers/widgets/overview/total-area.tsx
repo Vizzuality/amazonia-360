@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 
-import { useFormatNumber } from "@/lib/formats";
+import { formatNumber } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/store";
@@ -15,15 +15,16 @@ export default function WidgetTotalArea() {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
 
-  const { format } = useFormatNumber({
-    maximumFractionDigits: 0,
-  });
-
   const AREA = useMemo(() => {
     if (!GEOMETRY) return null;
 
-    return format(geometryEngine.geodesicArea(GEOMETRY, "square-kilometers"));
-  }, [GEOMETRY, format]);
+    return formatNumber(
+      geometryEngine.geodesicArea(GEOMETRY, "square-kilometers"),
+      {
+        maximumFractionDigits: 0,
+      },
+    );
+  }, [GEOMETRY]);
 
   return (
     <Card>

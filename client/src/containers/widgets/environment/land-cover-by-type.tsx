@@ -7,7 +7,7 @@ import {
 import { LegendOrdinal } from "@visx/legend";
 import { scaleOrdinal } from "@visx/scale";
 
-import { useFormatPercentage } from "@/lib/formats";
+import { formatPercentage } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
 import { useGetRasterAnalysis } from "@/lib/query";
 
@@ -33,7 +33,7 @@ export default function WidgetLandCoverByType() {
     {
       enabled: !!GEOMETRY,
 
-      select(data) {
+      select(data): Data[] {
         const values = data.features.map((f) => {
           if (f.properties.unique && f.properties.frac) {
             const { frac, unique } = f.properties;
@@ -70,12 +70,10 @@ export default function WidgetLandCoverByType() {
     range: query?.data?.map((d) => d.color) || [], // sort by size.toReversed(),
   });
 
-  const { format } = useFormatPercentage({
-    maximumFractionDigits: 0,
-  });
-
   const FORMAT = (node: HierarchyRectangularNode<HierarchyNode<Data>>) => {
-    return format(node?.value || 0);
+    return formatPercentage(node?.value || 0, {
+      maximumFractionDigits: 0,
+    });
   };
 
   return (
@@ -99,7 +97,7 @@ export default function WidgetLandCoverByType() {
                       className="flex space-x-1"
                     >
                       <div
-                        className="w-2 h-2 mt-0.5 border border-foreground/50 rounded-[2px] shrink-0"
+                        className="w-2 h-2 shrink-0 mt-px border border-foreground/50 rounded-[2px]"
                         style={{
                           backgroundColor: label.value,
                         }}
@@ -107,7 +105,11 @@ export default function WidgetLandCoverByType() {
                       <span className="text-2xs font-semibold text-gray-500">
                         {label.datum.label}{" "}
                         <span>
-                          ({label.datum.size > 0.01 && format(label.datum.size)}
+                          (
+                          {label.datum.size > 0.01 &&
+                            formatPercentage(label.datum.size, {
+                              maximumFractionDigits: 0,
+                            })}
                           {label.datum.size <= 0.01 && `<1%`})
                         </span>
                       </span>

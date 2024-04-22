@@ -22,7 +22,7 @@ export default function WidgetEnvironmentSummaryClimate({
     <>
       It typically experiences a{" "}
       <strong>{joinWithAnd(Array.from(STATISTICS.climates.values()))}</strong>{" "}
-      {Pluralize("climate type", STATISTICS.climates.size)}.
+      {Pluralize("climate type", STATISTICS.climates.size)}
     </>
   );
 }
