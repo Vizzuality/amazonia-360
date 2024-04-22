@@ -108,47 +108,52 @@ export default function Glance() {
 
   return (
     <section className="container flex md:space-x-28 py-10 md:py-28 md:flex-row flex-col items-end">
-      <div className="flex flex-col w-full md:w-1/2 borders">
-        <h3 className="uppercase text-sm font-extrabold text-cyan-500 tracking-wide-lg">
-          Amazonia at a glance
-        </h3>
-        <h2 className="text-blue-400 text-2xl lg:text-4xl pb-6">
-          A mosaic of ecosystems and habitats
-        </h2>
-        <p className="text-blue-900 text-base lg:text-lg font-normal">
-          Amazonia spans over <span className="font-bold">6.7 million</span>{" "}
-          square kilometers across South America. This vital region is a
-          confluence of cultural diversity and environmental significance.
-        </p>
+      <div className="flex flex-col w-full md:w-1/2 space-y-2 md:space-y-44">
+        <div>
+          <h3 className="uppercase text-sm font-extrabold text-cyan-500 tracking-wide-lg">
+            Amazonia at a glance
+          </h3>
+          <h2 className="text-blue-400 text-2xl lg:text-3xl xl:text-4xl pb-6">
+            A mosaic of ecosystems and habitats
+          </h2>
+          <p className="text-blue-900 text-base lg:text-lg font-normal">
+            Amazonia spans over <span className="font-bold">6.7 million</span>{" "}
+            square kilometers across South America. This vital region is a
+            confluence of cultural diversity and environmental significance.
+          </p>
 
-        <div className="my-5">
-          <Select onValueChange={handleSingleValueChange}>
-            <SelectTrigger className="w-full md:w-96 lg:w-[550px] rounded-none">
-              <div>
-                <SelectValue> </SelectValue>
+          <div className="mt-7 flex flex-col space-y-1">
+            <p className="text-sm text-blue-900 font-semibold">
+              View on the chart
+            </p>
+            <Select onValueChange={handleSingleValueChange}>
+              <SelectTrigger className="w-full rounded-none">
+                <div>
+                  <SelectValue> </SelectValue>
 
-                <p className="truncate max-w-64 md:max-w-80 lg:max-w-none">
-                  {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.label ||
-                    ""}
-                </p>
-              </div>
-            </SelectTrigger>
-            <SelectContent className="no-scrollbar max-h-96 overflow-y-auto border-none shadow-md">
-              {MOSAIC_OPTIONS &&
-                MOSAIC_OPTIONS.map((opt) => (
-                  <SelectItem
-                    key={opt.key}
-                    value={opt.key}
-                    className="cursor-pointer"
-                  >
-                    {opt.label}
-                  </SelectItem>
-                ))}
-            </SelectContent>
-          </Select>
+                  <p className="truncate max-w-64 md:max-w-80 lg:max-w-none">
+                    {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)
+                      ?.label || ""}
+                  </p>
+                </div>
+              </SelectTrigger>
+              <SelectContent className="no-scrollbar max-h-96 overflow-y-auto border-none shadow-md">
+                {MOSAIC_OPTIONS &&
+                  MOSAIC_OPTIONS.map((opt) => (
+                    <SelectItem
+                      key={opt.key}
+                      value={opt.key}
+                      className="cursor-pointer"
+                    >
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        <p className="text-blue-300 text-sm mt-2 md:mt-52">
+        <p className="text-blue-300 text-sm">
           Source: Population - GHS2025; Cartographic area{" "}
         </p>
       </div>
