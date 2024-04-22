@@ -25,6 +25,7 @@ export type Data = {
   parent: string | null;
   size: number;
   color: string;
+  percentage?: number;
 };
 
 interface MarimekkoChartProps<DataT extends Data> {
@@ -130,7 +131,8 @@ const MarimekkoChart = <T extends Data>({
               <Group>
                 {treemap.descendants().map((node) => {
                   const nodeWidth = node.x1 - node.x0;
-                  const nodeHeight = node.y1 - node.y0;
+                  const nodeHeight =
+                    (node.y1 - node.y0) * (node.data.data?.percentage || 1);
 
                   const { id: idVisible, value: valueVisible } =
                     isVisible(node);
@@ -142,7 +144,7 @@ const MarimekkoChart = <T extends Data>({
                           width={nodeWidth}
                           height={nodeHeight}
                           x={node.x0}
-                          y={node.y0}
+                          y={node.y0 + (node.y1 - node.y0 - nodeHeight)}
                           rx={4}
                           ry={4}
                           // fill={colorScale(node.value).hex()}

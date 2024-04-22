@@ -33,7 +33,7 @@ export default function WidgetForestFires() {
     {
       enabled: !!GEOMETRY,
 
-      select(data) {
+      select(data): Data[] {
         const values = data.features.map((f) => {
           if (f.properties.unique && f.properties.frac) {
             const { frac, unique } = f.properties;
@@ -62,7 +62,7 @@ export default function WidgetForestFires() {
 
   const ordinalColorScale = scaleOrdinal({
     domain: query?.data?.map((d) => d),
-    range: query?.data?.map((d) => d.color) || [], // sort by size.toReversed(),
+    range: query?.data?.map((d) => d.color), // sort by size.toReversed(),
   });
 
   const FORMAT = (node: HierarchyRectangularNode<HierarchyNode<Data>>) => {

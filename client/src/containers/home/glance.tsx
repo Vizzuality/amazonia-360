@@ -29,7 +29,7 @@ import {
 export default function Glance() {
   const [chartKey, setChartKey] = useState<MosaicIds>(MOSAIC_OPTIONS[4].key);
 
-  const parsedData = useMemo(() => {
+  const parsedData: Data[] = useMemo(() => {
     return MOSAIC_DATA.map((d) => {
       return {
         label: d.country,

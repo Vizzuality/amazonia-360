@@ -1,5 +1,13 @@
 "use client";
 
+import { treemapDice } from "@visx/hierarchy";
+import {
+  HierarchyNode,
+  HierarchyRectangularNode,
+} from "@visx/hierarchy/lib/types";
+import { scaleOrdinal } from "@visx/scale";
+
+import { formatPercentage } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
 import { useGetRasterAnalysis } from "@/lib/query";
 
@@ -9,7 +17,7 @@ import { ELEVATION_RANGES, ElevationRangeIds } from "@/constants/raster";
 
 import { Card, CardTitle, CardLoader } from "@/containers/card";
 
-import BarChart from "@/components/charts/bar";
+import MarimekkoChart, { Data } from "@/components/charts/marimekko";
 
 export default function WidgetAltitude() {
   const [location] = useSyncLocation();
@@ -25,7 +33,7 @@ export default function WidgetAltitude() {
     {
       enabled: !!GEOMETRY,
 
-      select(data) {
+      select(data): Data[] {
         const values = data.features.map((f) => {
           if (f.properties.unique && f.properties.frac) {
             const { frac, unique } = f.properties;
@@ -33,34 +41,58 @@ export default function WidgetAltitude() {
             const us = unique.map((u, index) => {
               const e = ELEVATION_RANGES[`${u}` as ElevationRangeIds];
               return {
-                id: u,
-                x: frac[index],
-                y: e.range[1],
+                id: e.label,
+                key: u,
+                parent: "root",
+                size: frac[index],
                 label: e.label,
                 color: e.color,
               };
             }, {});
 
-            return us.toSorted((a, b) => {
-              if (!a.id || !b.id) return 0;
-
-              return a.id - b.id;
-            });
+            return us.filter((u) => u.size > 0.001);
           }
 
           return [];
         });
 
-        return values.flat();
+        return values
+          .flat()
+          .toSorted((a, b) => a.key - b.key)
+          .map((d, i, arr) => {
+            return {
+              ...d,
+              percentage: (i + 1) / arr.length,
+            };
+          });
       },
     },
   );
+
+  const ordinalColorScale = scaleOrdinal({
+    domain: query?.data?.map((d) => d),
+    range: query?.data?.map((d) => d.color) || [], // sort by size.toReversed(),
+  });
+
+  const FORMAT = (node: HierarchyRectangularNode<HierarchyNode<Data>>) => {
+    return formatPercentage(node?.value || 0, {
+      maximumFractionDigits: 0,
+    });
+  };
 
   return (
     <Card>
       <CardTitle>Altitude</CardTitle>
       <CardLoader query={[query]} className="h-12">
-        <BarChart data={query?.data || []} />
+        {!!query?.data && (
+          <MarimekkoChart
+            data={query?.data}
+            colorScale={ordinalColorScale}
+            format={FORMAT}
+            className="h-12"
+            tile={treemapDice}
+          />
+        )}
       </CardLoader>
     </Card>
   );
