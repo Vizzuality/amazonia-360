@@ -4,7 +4,8 @@ import { useState } from "react";
 
 import Link from "next/link";
 
-import { LuDownload, LuLayoutGrid, LuPlus, LuShare2 } from "react-icons/lu";
+import { Download } from "lucide-react";
+import { LuLayoutGrid, LuPlus, LuShare2 } from "react-icons/lu";
 
 import Topics from "@/containers/report/topics";
 
@@ -33,7 +34,7 @@ export default function ReportResultsHeader() {
             <h1 className="text-4xl font-bold text-primary">Testing</h1>
 
             <AlertDialog>
-              <AlertDialogTrigger asChild>
+              <AlertDialogTrigger asChild className="print:hidden">
                 <Button variant="outline" className="space-x-2">
                   <LuPlus className="w-5 h-5" />
                   <span>New report</span>
@@ -58,7 +59,7 @@ export default function ReportResultsHeader() {
           </div>
 
           {/* Toolbar */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 print:hidden">
             <Button
               variant={open ? "default" : "outline"}
               className="space-x-2"
@@ -70,8 +71,12 @@ export default function ReportResultsHeader() {
             <Button variant="outline" className="space-x-2">
               <LuShare2 className="w-5 h-5" />
             </Button>
-            <Button variant="outline" className="space-x-2">
-              <LuDownload className="w-5 h-5" />
+            <Button
+              variant="outline"
+              className="space-x-2"
+              onClick={() => window.print()}
+            >
+              <Download className="w-5 h-5" />
             </Button>
           </div>
         </div>

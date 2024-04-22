@@ -1,5 +1,7 @@
 import { Files, FileVideo2, DatabaseIcon } from "lucide-react";
 
+import { cn } from "@/lib/utils";
+
 import { Card } from "@/containers/card";
 
 import { Button } from "@/components/ui/button";
@@ -8,7 +10,7 @@ import { type ResourceProps } from "./types";
 
 export default function Resource({ resource }: { resource: ResourceProps }) {
   return (
-    <Card>
+    <Card className={cn({ "print:[&:nth-child(7n)]:break-before-page": true })}>
       <div className="flex flex-col space-y-4 text-center items-center">
         <div className="rounded-full w-20 h-20 bg-blue-50 flex items-center justify-center">
           {resource.type === "document" && (

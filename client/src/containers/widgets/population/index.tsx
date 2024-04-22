@@ -10,10 +10,10 @@ export default function WidgetsPopulation() {
     <div className="container">
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
       <div className="grid grid-cols-12 gap-2">
-        <div className="col-span-6">
+        <div className="col-span-6 print:col-span-12">
           <WidgetsPopulationPopulation />
         </div>
-        <div className="col-span-6">
+        <div className="col-span-6 print:col-span-12">
           <WidgetsPopulationDeprivation />
         </div>
       </div>

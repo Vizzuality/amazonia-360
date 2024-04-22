@@ -27,21 +27,21 @@ export default function WidgetsProtection() {
     <div className="container">
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
       <div className="grid grid-cols-12 gap-2">
-        <div className="col-span-6">
+        <div className="col-span-6 print:col-span-12">
           <div className="grid grid-cols-12 gap-2 items-stretch">
-            <div className="col-span-6">
+            <div className="col-span-6 print:col-span-12">
               <WidgetForestFires />
             </div>
-            <div className="col-span-6">
+            <div className="col-span-6 print:col-span-12">
               <WidgetIndigenousLands />
             </div>
-            <div className="col-span-12">
+            <div className="col-span-12 print:col-span-12 print:break-before-page">
               <WidgetProtectedAreas />
             </div>
           </div>
         </div>
 
-        <div className="col-span-6 relative">
+        <div className="col-span-6 relative print:col-span-12">
           <div className="absolute top-4 left-4 z-10">
             <Select
               value={layer}

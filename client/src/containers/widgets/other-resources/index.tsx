@@ -9,7 +9,7 @@ export default function OtherResources() {
   const [tab, setTab] = useState("all");
 
   return (
-    <div className="container">
+    <div className="container print:break-before-page">
       <h2 className="text-xl font-semibold mb-4">Other resources</h2>
       <Tabs defaultValue={tab} className="flex flex-col space-y-4 items-start">
         <TabsList>
@@ -30,7 +30,7 @@ export default function OtherResources() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="all">
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 print:grid-cols-2 gap-2">
             {Object.values(RESOURCES)
               .flat()
               .map((r, idx) => (
@@ -39,21 +39,21 @@ export default function OtherResources() {
           </div>
         </TabsContent>
         <TabsContent value="publications">
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 print:grid-cols-2 gap-2">
             {RESOURCES.publications.map((r, idx) => (
               <Resource key={idx} resource={r} />
             ))}
           </div>
         </TabsContent>
         <TabsContent value="database">
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 print:grid-cols-2 gap-2">
             {RESOURCES.database.map((r, idx) => (
               <Resource key={idx} resource={r} />
             ))}
           </div>
         </TabsContent>
         <TabsContent value="multimedia">
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 print:grid-cols-2 gap-2">
             {RESOURCES.multimedia.map((r, idx) => (
               <Resource key={idx} resource={r} />
             ))}

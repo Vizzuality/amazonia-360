@@ -31,7 +31,7 @@ export default function WidgetsPopulationDeprivation() {
     },
   );
   return (
-    <Card className="h-full p-0 relative">
+    <Card className="h-full p-0 relative print:break-before-page">
       <div className="p-6">
         <CardTitle>Deprivation Index</CardTitle>
         <CardLoader query={[query]} className="h-10">

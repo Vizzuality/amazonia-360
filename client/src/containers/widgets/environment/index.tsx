@@ -24,18 +24,18 @@ export default function WidgetsEnvironment() {
     <div className="container">
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
       <div className="grid grid-cols-12 gap-2">
-        <div className="col-span-6 grid grid-cols-12 gap-2 items-stretch">
+        <div className="col-span-6 print:col-span-12 grid grid-cols-12 gap-2 items-stretch">
           <div className="col-span-12">
             <WidgetEnvironmentSummary />
           </div>
           <div className="col-span-6 h-full flex flex-col">
             <WidgetEcosystemsByType />
           </div>
-          <div className="col-span-6 h-full flex flex-col">
+          <div className="col-span-6  h-full flex flex-col">
             <WidgetLandCoverByType />
           </div>
         </div>
-        <div className="col-span-6 flex flex-col relative">
+        <div className="col-span-6 print:col-span-12 flex flex-col relative print:break-before-page">
           <div className="absolute top-4 left-4 z-10">
             <Select
               value={layer}
