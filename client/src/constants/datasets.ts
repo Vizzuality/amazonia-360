@@ -326,27 +326,35 @@ export const DATASETS = {
     layer: new WebTileLayer({
       id: "population",
       title: "Population",
-      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=population_cog.tif&rescale=0,1&colormap=${encodeURIComponent(
+      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=population_cog.tif&colormap=${encodeURIComponent(
         JSON.stringify([
           [
             [-1, 0],
             [255, 255, 255, 0],
           ],
           [
-            [0, 25],
-            [183, 240, 139, 0],
+            [0, 1],
+            [254, 235, 226, 0],
           ],
           [
-            [25, 50],
-            [82, 138, 34, 125],
+            [1, 1000],
+            [122, 1, 119, 255],
           ],
           [
-            [50, 75],
-            [82, 138, 34, 191],
+            [1000, 2500],
+            [197, 27, 138, 255],
           ],
           [
-            [75, 1000000000],
-            [82, 138, 34, 255],
+            [2500, 5000],
+            [247, 104, 161, 255],
+          ],
+          [
+            [5000, 10000],
+            [251, 180, 185, 255],
+          ],
+          [
+            [10000, 17000],
+            [254, 235, 226, 255],
           ],
         ]),
       )}`,
@@ -356,27 +364,31 @@ export const DATASETS = {
     layer: new WebTileLayer({
       id: "deprivation_index",
       title: "Deprivation index",
-      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=deprivation_index_cog.tif&rescale=0,1&colormap=${encodeURIComponent(
+      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=deprivation_index_cog.tif&colormap=${encodeURIComponent(
         JSON.stringify([
           [
             [-1, 0],
             [255, 255, 255, 0],
           ],
           [
-            [0, 25],
-            [183, 240, 139, 67],
+            [0, 10],
+            [255, 255, 204, 255],
           ],
           [
-            [25, 50],
-            [82, 138, 34, 125],
+            [10, 30],
+            [161, 218, 180, 255],
           ],
           [
-            [50, 75],
-            [82, 138, 34, 191],
+            [30, 70],
+            [65, 182, 196, 255],
           ],
           [
-            [75, 1000000000],
-            [82, 138, 34, 255],
+            [70, 90],
+            [44, 127, 184, 255],
+          ],
+          [
+            [90, 100],
+            [37, 52, 148, 255],
           ],
         ]),
       )}`,
