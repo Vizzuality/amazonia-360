@@ -62,6 +62,9 @@ export default function WidgetsProtection() {
                 <SelectItem value={DATASETS.tierras_indigenas.layer.id}>
                   {DATASETS.tierras_indigenas.layer.title}
                 </SelectItem>
+                <SelectItem value={DATASETS.fires.layer.id}>
+                  {DATASETS.fires.layer.title}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>

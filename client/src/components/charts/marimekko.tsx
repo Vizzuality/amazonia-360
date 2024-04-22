@@ -57,19 +57,8 @@ const MarimekkoChart = <T extends Data>({
 
     return stratify<T>()
       .id((d) => d.id)
-      .parentId((d) => d.parent)(
-        d1.toSorted((a, b) => {
-          if (!a.size || !b.size) return 0;
-
-          return a.size - b.size;
-        }),
-      )
-      .sum((d) => d.size ?? 0)
-      .sort((a, b) => {
-        if (!a.value || !b.value) return 0;
-
-        return b.value - a.value;
-      });
+      .parentId((d) => d.parent)(d1)
+      .sum((d) => d.size ?? 0);
   }, [data]);
 
   const margin = { top: 0, left: 0, right: 0, bottom: 0 };
@@ -133,7 +122,7 @@ const MarimekkoChart = <T extends Data>({
           <Treemap<typeof DATA>
             root={root}
             size={[xMax, yMax]}
-            paddingInner={4}
+            paddingInner={2}
             tile={tile ?? treemapSquarify}
             round
           >
