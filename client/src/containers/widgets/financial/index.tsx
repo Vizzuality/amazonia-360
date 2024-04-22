@@ -1,9 +1,8 @@
 import { TOPICS } from "@/constants/topics";
 
-import { Card } from "@/containers/card";
+import WidgetIDBOperations from "@/containers/widgets/financial/idb-operations";
 import WidgetTotalFunding from "@/containers/widgets/financial/total-funding";
 import WidgetTotalOperations from "@/containers/widgets/financial/total-operations";
-import WidgetMap from "@/containers/widgets/map";
 
 export default function WidgetsFinancial() {
   const T = TOPICS.find((t) => t.id === "financial");
@@ -21,9 +20,7 @@ export default function WidgetsFinancial() {
           </div>
         </div>
         <div className="col-span-6">
-          <Card className="h-full p-0 relative">
-            <WidgetMap ids={["idb_operations"]} />
-          </Card>
+          <WidgetIDBOperations />
         </div>
       </div>
     </div>

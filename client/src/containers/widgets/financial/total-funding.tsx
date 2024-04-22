@@ -48,7 +48,7 @@ export default function WidgetTotalFunding() {
     return formatCurrency(t ?? 0, {
       notation: "compact",
       compactDisplay: "short",
-      maximumFractionDigits: 0,
+      maximumFractionDigits: 2,
     });
   }, [t]);
 
