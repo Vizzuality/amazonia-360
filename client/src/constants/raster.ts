@@ -150,7 +150,7 @@ export const ELEVATION_RANGES = {
     label: "5.000 - 6.858,67 m.",
     color: "#d1c4c1",
   },
-};
+} as const;
 
 export const ELEVATION_RANGES_COLORMAP = Object.keys(ELEVATION_RANGES).reduce(
   (acc, key) => ({
@@ -163,3 +163,36 @@ export const ELEVATION_RANGES_COLORMAP = Object.keys(ELEVATION_RANGES).reduce(
 );
 
 export type ElevationRangeIds = keyof typeof ELEVATION_RANGES;
+
+export const BIOMES = {
+  "1": {
+    label: "Tropical and Subtropical Moist Broadleaf Forests",
+    color: "#014600",
+  },
+  "2": {
+    label: "Tropical and Subtropical Dry Broadleaf Forests",
+    color: "#607a22",
+  },
+  "7": {
+    label: "Tropical and Subtropical Grasslands, Savannas and Shrublands",
+    color: "#9b950e",
+  },
+  "9": {
+    label: "Flooded Grasslands and Savannas",
+    color: "#2a8384",
+  },
+  "10": {
+    label: "Montane Grasslands and Shrublands",
+    color: "#814229",
+  },
+  "13": {
+    label: "Deserts and Xeric Shrublands",
+    color: "#f5e759",
+  },
+  "14": {
+    label: "Mangroves",
+    color: "#8dccbd",
+  },
+} as const;
+
+export type BiomesIds = keyof typeof BIOMES;
