@@ -38,8 +38,12 @@ export default function WidgetsPopulationDeprivation() {
         <CardLoader query={[query]} className="h-10">
           <p className="text-sm font-medium">
             The current selection could have{" "}
-            <strong>{formatNumber(query.data)}</strong> inhabitants, estimated
-            for 2025 according to the GHS mode.
+            <strong>
+              {formatNumber(query.data, {
+                maximumFractionDigits: 0,
+              })}
+            </strong>{" "}
+            inhabitants, estimated for 2025 according to the GHS mode.
           </p>
         </CardLoader>
       </div>
