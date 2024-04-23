@@ -76,7 +76,7 @@ export default function WidgetEcosystemsByType() {
   };
 
   return (
-    <Card>
+    <Card className="grow">
       <CardTitle>Biomes by type</CardTitle>
       <CardLoader query={[query]} className="h-52">
         {!!query.data && (

@@ -1,7 +1,9 @@
 import { useState } from "react";
 
+import WidgetsColumn from "@/containers/widgets/column";
 import { RESOURCES } from "@/containers/widgets/other-resources/mock";
 import Resource from "@/containers/widgets/other-resources/resource";
+import WidgetsRow from "@/containers/widgets/row";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -30,34 +32,42 @@ export default function OtherResources() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="all">
-          <div className="grid grid-cols-4 gap-2">
+          <WidgetsRow>
             {Object.values(RESOURCES)
               .flat()
               .map((r, idx) => (
-                <Resource key={idx} resource={r} />
+                <WidgetsColumn className="col-span-3" key={idx}>
+                  <Resource key={idx} resource={r} />
+                </WidgetsColumn>
               ))}
-          </div>
+          </WidgetsRow>
         </TabsContent>
         <TabsContent value="publications">
-          <div className="grid grid-cols-4 gap-2">
+          <WidgetsRow>
             {RESOURCES.publications.map((r, idx) => (
-              <Resource key={idx} resource={r} />
+              <WidgetsColumn className="col-span-3" key={idx}>
+                <Resource key={idx} resource={r} />
+              </WidgetsColumn>
             ))}
-          </div>
+          </WidgetsRow>
         </TabsContent>
         <TabsContent value="database">
-          <div className="grid grid-cols-4 gap-2">
+          <WidgetsRow>
             {RESOURCES.database.map((r, idx) => (
-              <Resource key={idx} resource={r} />
+              <WidgetsColumn className="col-span-3" key={idx}>
+                <Resource key={idx} resource={r} />
+              </WidgetsColumn>
             ))}
-          </div>
+          </WidgetsRow>
         </TabsContent>
         <TabsContent value="multimedia">
-          <div className="grid grid-cols-4 gap-2">
+          <WidgetsRow>
             {RESOURCES.multimedia.map((r, idx) => (
-              <Resource key={idx} resource={r} />
+              <WidgetsColumn className="col-span-3" key={idx}>
+                <Resource key={idx} resource={r} />
+              </WidgetsColumn>
             ))}
-          </div>
+          </WidgetsRow>
         </TabsContent>
       </Tabs>
     </div>

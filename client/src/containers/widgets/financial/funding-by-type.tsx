@@ -81,7 +81,7 @@ export default function WidgetFundingByType() {
   };
 
   return (
-    <Card className="flex flex-col grow">
+    <Card className="grow">
       <CardTitle>IDB operations</CardTitle>
 
       <CardLoader query={[query]} className="h-44">

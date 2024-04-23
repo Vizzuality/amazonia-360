@@ -20,20 +20,23 @@ export default function ReportResultsContent() {
       {/* OVERVIEW */}
       <WidgetsOverview />
 
-      {TOPICS?.map((topic) => {
+      {TOPICS?.filter((topic) => {
+        const id = topic.id as TopicIds;
+        return topics?.includes(id);
+      }).map((topic, index) => {
         const id = topic.id as TopicIds;
 
         if (!topics?.includes(id)) return null;
 
         switch (id) {
           case "natural-physical-environment":
-            return <WidgetsEnvironment key={id} />;
+            return <WidgetsEnvironment key={id} index={index} />;
           case "population":
             return <WidgetsDemographicAndSocieconomic key={id} />;
           case "protection":
-            return <WidgetsProtection key={id} />;
+            return <WidgetsProtection key={id} index={index} />;
           case "bioeconomy":
-            return <WidgetsBioeconomy key={id} />;
+            return <WidgetsBioeconomy key={id} index={index} />;
           case "financial":
             return <WidgetsFinancial key={id} />;
           default:
