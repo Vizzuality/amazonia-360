@@ -3,10 +3,11 @@
 import { useState } from "react";
 
 import Link from "next/link";
-// import { useSearchParams } from "next/navigation";
 
 import { Download } from "lucide-react";
 import { LuLayoutGrid, LuPlus, LuShare2 } from "react-icons/lu";
+
+import { useSyncSearchParams } from "@/app/store";
 
 import Topics from "@/containers/report/topics";
 
@@ -25,18 +26,29 @@ import { Button } from "@/components/ui/button";
 
 export default function ReportResultsHeader() {
   const [open, setOpen] = useState(false);
-  // const urlParams = useSearchParams();
 
-  // const getReport = () => {
-  //   fetch("/api/pdf", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
+  const urlParams = useSyncSearchParams();
 
-  //     body: JSON.stringify({ params: urlParams }),
-  //   });
-  // };
+  const getReport = () => {
+    fetch("/api/pdf", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ searchParams: urlParams }),
+    }).then((res) => {
+      if (res.ok) {
+        res.blob().then((blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "report.pdf";
+          a.click();
+          window.URL.revokeObjectURL(url);
+        });
+      }
+    });
+  };
 
   return (
     <header className="pb-6 space-y-4">
@@ -88,11 +100,11 @@ export default function ReportResultsHeader() {
             <Button
               variant="outline"
               className="space-x-2"
-              // onClick={() => getReport()}
+              onClick={() => getReport()}
             >
-              <a href="/api/pdf" target="_blank" download="report.pdf">
-                <Download className="w-5 h-5" />
-              </a>
+              {/* <a href="/api/pdf" target="_blank" download="report.pdf"> */}
+              <Download className="w-5 h-5" />
+              {/* </a> */}
             </Button>
           </div>
         </div>

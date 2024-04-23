@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 import puppeteer from "puppeteer";
 
-export async function GET(request: Request) {
-  console.log("REQUEST ----->", request);
+export async function POST(request: NextRequest) {
+  const body = await request.json();
 
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
@@ -12,7 +12,7 @@ export async function GET(request: Request) {
     Authorization: request.headers.get("Authorization") || "",
   });
 
-  await page.goto("http://localhost:3000/report/results");
+  await page.goto(`http://localhost:3000/report/results${body.searchParams}`);
 
   await page.emulateMediaType("screen");
 
