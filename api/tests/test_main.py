@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -36,11 +37,12 @@ HEADERS = {"Authorization": f"Bearer {TOKEN}"}
 
 @pytest.fixture()
 def setup_data_folder():
-    os.mkdir(get_settings().tiff_path)
+    data_path = Path(get_settings().tiff_path)
+    data_path.mkdir(exist_ok=True)
 
     yield
 
-    os.rmdir(get_settings().tiff_path)
+    data_path.rmdir()
 
 
 @pytest.fixture()
@@ -54,18 +56,19 @@ def tif_file(setup_data_folder):
     The raster is a 3x3 grid with the upper left corner at 0E, 10N and 1 degree pixel size.
     The bbox is BoundingBox(left=0.0, bottom=7.0, right=3.0, top=10.0)
     """
-    data = np.array([[0, 1, 0], [1, 9, 1], [0, 1, 0]])
+    data = np.array([[0, 1, 0], [1, 9, 1], [0, 1, 0]], dtype=np.int32)
     transform = rasterio.transform.from_origin(0, 10, 1, 1)
     with rasterio.open(
-            f"{get_settings().tiff_path}/raster.tif",
-            "w",
-            driver="GTiff",
-            width=data.shape[1],
-            height=data.shape[0],
-            count=1,
-            dtype="uint8",
-            crs="+proj=latlong",
-            transform=transform,
+        f"{get_settings().tiff_path}/raster.tif",
+        "w",
+        driver="GTiff",
+        width=data.shape[1],
+        height=data.shape[0],
+        count=1,
+        dtype="int32",
+        crs="+proj=latlong",
+        transform=transform,
+        nodata=-200,
     ) as dst:
         dst.write(data, 1)
 
@@ -105,15 +108,9 @@ def test_health_is_public():
 
 
 def test_options_request_is_allowed_with_correct_headers():
-    headers = {
-            "Access-Control-Request-Method": "GET",
-            "Origin": "http://example.com"
-        }
-    response = test_client.options(
-        "/tifs",
-        headers=headers
-    )
-    response2 = test_client.options('/exact_zonal_stats', headers=headers)
+    headers = {"Access-Control-Request-Method": "GET", "Origin": "http://example.com"}
+    response = test_client.options("/tifs", headers=headers)
+    response2 = test_client.options("/exact_zonal_stats", headers=headers)
     assert response.status_code == 200
     assert response2.status_code == 200
     assert "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT" in response.headers["Access-Control-Allow-Methods"]
