@@ -3,7 +3,6 @@
 import { useState } from "react";
 
 import Link from "next/link";
-// import { useSearchParams } from "next/navigation";
 
 import { Download } from "lucide-react";
 import { LuLayoutGrid, LuPlus, LuShare2 } from "react-icons/lu";
@@ -25,18 +24,6 @@ import { Button } from "@/components/ui/button";
 
 export default function ReportResultsHeader() {
   const [open, setOpen] = useState(false);
-  // const urlParams = useSearchParams();
-
-  // const getReport = () => {
-  //   fetch("/api/pdf", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-
-  //     body: JSON.stringify({ params: urlParams }),
-  //   });
-  // };
 
   return (
     <header className="pb-6 space-y-4">
@@ -88,11 +75,9 @@ export default function ReportResultsHeader() {
             <Button
               variant="outline"
               className="space-x-2"
-              // onClick={() => getReport()}
+              onClick={() => window.print()}
             >
-              <a href="/api/pdf" target="_blank" download="report.pdf">
-                <Download className="w-5 h-5" />
-              </a>
+              <Download className="w-5 h-5" />
             </Button>
           </div>
         </div>
