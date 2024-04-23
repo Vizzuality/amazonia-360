@@ -77,7 +77,7 @@ export default function WidgetLandCoverByType() {
   };
 
   return (
-    <Card>
+    <Card className="grow">
       <CardTitle>Land cover by type</CardTitle>
       <CardLoader query={[query]} className="h-52">
         {!!query.data && (

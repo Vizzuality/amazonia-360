@@ -2,14 +2,18 @@
 
 import { useState } from "react";
 
+import { cn } from "@/lib/utils";
+
 import { DATASETS, DatasetIds } from "@/constants/datasets";
 import { TOPICS } from "@/constants/topics";
 
 import { Card } from "@/containers/card";
+import WidgetsColumn from "@/containers/widgets/column";
 import WidgetMap from "@/containers/widgets/map";
 import WidgetForestFires from "@/containers/widgets/protection/forest-fires";
 import WidgetIndigenousLands from "@/containers/widgets/protection/indigenous-lands";
 import WidgetProtectedAreas from "@/containers/widgets/protection/protected-areas";
+import WidgetsRow from "@/containers/widgets/row";
 
 import {
   Select,
@@ -18,7 +22,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 
-export default function WidgetsProtection() {
+export default function WidgetsProtection({ index }: { index: number }) {
   const [layer, setLayer] = useState<DatasetIds>("areas_protegidas");
 
   const T = TOPICS.find((t) => t.id === "protection");
@@ -26,22 +30,24 @@ export default function WidgetsProtection() {
   return (
     <div className="container">
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
-      <div className="grid grid-cols-12 gap-2">
-        <div className="col-span-6">
-          <div className="grid grid-cols-12 gap-2 items-stretch">
-            <div className="col-span-6">
+      <WidgetsRow>
+        <WidgetsColumn
+          className={cn("col-span-6", index % 2 !== 0 && "order-2")}
+        >
+          <WidgetsRow>
+            <WidgetsColumn className="col-span-6">
               <WidgetForestFires />
-            </div>
-            <div className="col-span-6">
+            </WidgetsColumn>
+            <WidgetsColumn className="col-span-6">
               <WidgetIndigenousLands />
-            </div>
-            <div className="col-span-12">
+            </WidgetsColumn>
+            <WidgetsColumn className="col-span-12">
               <WidgetProtectedAreas />
-            </div>
-          </div>
-        </div>
+            </WidgetsColumn>
+          </WidgetsRow>
+        </WidgetsColumn>
 
-        <div className="col-span-6 relative">
+        <WidgetsColumn className="col-span-6">
           <div className="absolute top-4 left-4 z-10">
             <Select
               value={layer}
@@ -72,8 +78,8 @@ export default function WidgetsProtection() {
           <Card className="p-0 h-full relative">
             <WidgetMap ids={[layer]} />
           </Card>
-        </div>
-      </div>
+        </WidgetsColumn>
+      </WidgetsRow>
     </div>
   );
 }

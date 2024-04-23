@@ -1,9 +1,11 @@
 import { TOPICS } from "@/constants/topics";
 
+import WidgetsColumn from "@/containers/widgets/column";
 import WidgetFundingByType from "@/containers/widgets/financial/funding-by-type";
 import WidgetIDBOperations from "@/containers/widgets/financial/idb-operations";
 import WidgetTotalFunding from "@/containers/widgets/financial/total-funding";
 import WidgetTotalOperations from "@/containers/widgets/financial/total-operations";
+import WidgetsRow from "@/containers/widgets/row";
 
 export default function WidgetsFinancial() {
   const T = TOPICS.find((t) => t.id === "financial");
@@ -11,24 +13,24 @@ export default function WidgetsFinancial() {
   return (
     <div className="container">
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
-      <div className="grid grid-cols-12 gap-2 items-stretch">
-        <div className="col-span-6 flex flex-col">
-          <div className="grid grid-cols-12 gap-2 grow">
-            <div className="col-span-6 flex flex-col grow-0 shrink-0">
+      <WidgetsRow>
+        <WidgetsColumn className="col-span-6">
+          <WidgetsRow className="grid-cols-subgrid grow">
+            <WidgetsColumn className="col-span-6 self-start">
               <WidgetTotalOperations />
-            </div>
-            <div className="col-span-6 flex flex-col grow-0 shrink-0">
+            </WidgetsColumn>
+            <WidgetsColumn className="col-span-6 self-start">
               <WidgetTotalFunding />
-            </div>
-            <div className="col-span-12 flex flex-col grow">
+            </WidgetsColumn>
+            <WidgetsColumn className="col-span-12">
               <WidgetFundingByType />
-            </div>
-          </div>
-        </div>
-        <div className="col-span-6">
+            </WidgetsColumn>
+          </WidgetsRow>
+        </WidgetsColumn>
+        <WidgetsColumn className="col-span-6">
           <WidgetIDBOperations />
-        </div>
-      </div>
+        </WidgetsColumn>
+      </WidgetsRow>
     </div>
   );
 }
