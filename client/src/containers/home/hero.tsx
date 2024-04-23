@@ -14,10 +14,9 @@ export default function Hero() {
             Understanding Amazonia like never before
           </h2>
           <p className="text-blue-900 text-base lg:text-lg font-normal">
-            With <span className="font-bold">Amazonia360</span> get all the
-            resources you need about one of the world&apos;s most diverse
-            ecosystems. Amazonia360 is your gateway to understanding and help
-            you achieving the greatest impact in this region.
+            <span className="font-bold">Amazonia360</span> is your gateway to
+            understanding and help you achieving the greatest impact in this
+            region.
           </p>
           <Link href="/report">
             <Button size="lg" className="flex space-x-2.5">

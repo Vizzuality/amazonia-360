@@ -13,7 +13,7 @@ import { Topic } from "@/constants/topics";
 type TopicsItemProps = Topic & {
   size: "sm" | "md" | "lg";
   checked: boolean;
-  interactive: boolean;
+  clickable: boolean;
   onChange: (checked: boolean) => void;
 };
 
@@ -22,7 +22,7 @@ export default function TopicsItem({
   label,
   image,
   size,
-  interactive,
+  clickable,
   description,
   checked,
   onChange,
@@ -39,15 +39,15 @@ export default function TopicsItem({
           checked && "outline-dashed outline-primary outline-2",
         )}
         onClick={() => {
-          if (onChange && interactive) onChange(!checked);
+          if (onChange && clickable) onChange(!checked);
         }}
         onMouseEnter={() => {
-          if (descriptionRef.current && size === "lg" && interactive) {
+          if (descriptionRef.current && size === "lg") {
             descriptionRef.current.style.maxHeight = `${descriptionRef.current.scrollHeight}px`;
           }
         }}
         onMouseLeave={() => {
-          if (descriptionRef.current && size === "lg" && interactive) {
+          if (descriptionRef.current && size === "lg") {
             descriptionRef.current.style.maxHeight = "0";
           }
         }}
@@ -61,11 +61,11 @@ export default function TopicsItem({
           className={cn({
             "object-cover": true,
             "group-hover:scale-105 transition-transform duration-300 ease-in-out transform-gpu":
-              interactive,
+              clickable,
           })}
         />
 
-        {interactive && (
+        {clickable && (
           <div
             className={cn({
               "flex justify-center items-center absolute top-2 right-2 w-8 h-8 border border-dashed border-white bg-white/20 rounded-full transition-colors":
