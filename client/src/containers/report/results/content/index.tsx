@@ -16,7 +16,7 @@ export default function ReportResultsContent() {
   const [topics] = useSyncTopics();
 
   return (
-    <div className="flex flex-col space-y-20">
+    <div className="flex flex-col space-y-20 print:space-y-6">
       {/* OVERVIEW */}
       <WidgetsOverview />
 
