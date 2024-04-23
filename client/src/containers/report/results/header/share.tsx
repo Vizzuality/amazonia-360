@@ -2,16 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import {
-  EmailShareButton,
-  FacebookShareButton,
-  TwitterShareButton,
-  LinkedinShareButton,
-} from "react-share";
-
 import { usePathname } from "next/navigation";
 
-import { Facebook, Twitter, LinkedinIcon, Mail, Share2 } from "lucide-react";
+import { Share2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -65,7 +58,7 @@ export default function ShareReport() {
             {shareLinkBtnText}
           </Button>
         </div>
-        <div className="flex space-x-2">
+        {/* <div className="flex space-x-2">
           <Button className="rounded-full h-10 w-10" variant="outline">
             <FacebookShareButton
               url={currentUrl}
@@ -112,7 +105,7 @@ export default function ShareReport() {
               <LinkedinIcon className="fill-blue-400 text-blue-400" size={16} />
             </LinkedinShareButton>
           </Button>
-        </div>
+        </div> */}
       </DialogContent>
     </Dialog>
   );
