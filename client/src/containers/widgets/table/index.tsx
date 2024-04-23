@@ -46,11 +46,11 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="rounded-md min-h-72 flex flex-col justify-between">
+      <div className="rounded-md min-h-80 flex flex-col justify-between">
         <Table className="border-foreground">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="hover:bg-white">
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
@@ -59,7 +59,7 @@ export function DataTable<TData, TValue>({
                           className={cn(
                             "flex items-center space-x-1",
                             header.column.getCanSort() &&
-                              "cursor-pointer select-none",
+                              "cursor-pointer select-none hover:underline",
                           )}
                           style={{ width: `${header.getSize()}px` }}
                           title={
@@ -80,7 +80,7 @@ export function DataTable<TData, TValue>({
                             )}
                           </span>
                           {header.column.getIsSorted() && (
-                            <LuArrowUpDown className="h-4 w-4 text-muted-foreground" />
+                            <LuArrowUpDown className="shrink-0 h-4 w-4 text-muted-foreground" />
                           )}
                         </div>
                       )}

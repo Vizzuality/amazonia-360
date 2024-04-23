@@ -301,6 +301,50 @@ export const DATASETS = {
         ...props,
       }),
   },
+
+  idb_operations: {
+    layer: new FeatureLayer({
+      id: "idb_operations",
+      title: "IDB Operations",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/IDB_Operations/FeatureServer/0",
+      featureReduction: {
+        type: "cluster",
+        clusterMinSize: 16.5,
+        labelingInfo: [
+          {
+            deconflictionStrategy: "none",
+            labelExpressionInfo: {
+              expression: "Text($feature.cluster_count, '#,###')",
+            },
+            symbol: {
+              type: "text",
+              color: "#FFFFFF",
+              font: {
+                size: "12px",
+              },
+            },
+            labelPlacement: "center-center",
+          },
+        ],
+      },
+      renderer: new SimpleRenderer({
+        symbol: new SimpleMarkerSymbol({
+          color: "#000000",
+          size: 4,
+          outline: {
+            width: 1,
+            color: "#000000",
+          },
+        }),
+      }),
+    }),
+    getFeatures: (props?: __esri.QueryProperties) =>
+      new Query({
+        where: "objectid is not null",
+        outFields: ["*"],
+        ...props,
+      }),
+  },
   land_cover: {
     layer: new WebTileLayer({
       id: "land_cover",
