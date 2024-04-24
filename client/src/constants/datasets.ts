@@ -210,6 +210,7 @@ export const DATASETS = {
       id: "biomas",
       title: "Biomes",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Biomas/FeatureServer/0",
+      maxScale: 0,
       renderer: new UniqueValueRenderer({
         field: "BIOME",
         defaultSymbol: new SimpleFillSymbol({

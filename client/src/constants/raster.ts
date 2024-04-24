@@ -61,35 +61,35 @@ export type LandCoverIds = keyof typeof LAND_COVER;
 
 export const FIRES = {
   "1": {
-    label: "Extremadamente baja o nula",
+    label: "Extremely low or null",
     color: "#ffffb2",
   },
   "2": {
-    label: "Muy baja",
+    label: "Very low",
     color: "#fed976",
   },
   "3": {
-    label: "Baja",
+    label: "Low",
     color: "#feb24c",
   },
   "4": {
-    label: "Alta",
+    label: "High",
     color: "#fd8d3c",
   },
   "5": {
-    label: "Muy alta",
+    label: "Very high",
     color: "#f03b20",
   },
   "6": {
-    label: "Extramedamente alta",
+    label: "Extremely high",
     color: "#bd0026",
   },
   "7": {
-    label: "Anomalía térmica urbana, industrial, minera",
+    label: "Urban, industrial, mining thermal anomaly",
     color: "#08519c",
   },
   "8": {
-    label: "Anomalía térmica geológica (vulcanismo)",
+    label: "Geological thermal anomaly (volcanism)",
     color: "#810f7c",
   },
 };
@@ -198,15 +198,42 @@ export const BIOMES = {
 export type BiomesIds = keyof typeof BIOMES;
 
 export const CLIMATE_TYPES = {
-  Af: { label: "Tropical, rainforest", color: "#0001FE" },
-  Csb: { label: "Temperate, dry summer, warm summer", color: "#C6C700" },
-  Cfb: { label: "Temperate, no dry season, warm summer", color: "#66FF33" },
-  Am: { label: "Tropical, monsoon", color: "#0077FF" },
-  Aw: { label: "Tropical, savannah", color: "#46A9FA" },
-  BWk: { label: "Arid, desert, cold", color: "#FE9695" },
-  BSk: { label: "Arid, steppe, cold", color: "#FEDB63" },
-  BSh: { label: "Arid, steppe, hot", color: "#F5A300" },
-  ET: { label: "Polar, tundra or frost", color: "#B2B2B2" },
+  Af: {
+    label: "Tropical, rainforest",
+    color: "#0001FE",
+  },
+  Csb: {
+    label: "Temperate, dry summer, warm summer",
+    color: "#C6C700",
+  },
+  Cfb: {
+    label: "Temperate, no dry season, warm summer",
+    color: "#66FF33",
+  },
+  Am: {
+    label: "Tropical, monsoon",
+    color: "#0077FF",
+  },
+  Aw: {
+    label: "Tropical, savannah",
+    color: "#46A9FA",
+  },
+  BWk: {
+    label: "Arid, desert, cold",
+    color: "#FE9695",
+  },
+  BSk: {
+    label: "Arid, steppe, cold",
+    color: "#FEDB63",
+  },
+  BSh: {
+    label: "Arid, steppe, hot",
+    color: "#F5A300",
+  },
+  ET: {
+    label: "Polar, tundra or frost",
+    color: "#B2B2B2",
+  },
 } as const;
 
 export type ClimateTypesIds = keyof typeof CLIMATE_TYPES;
