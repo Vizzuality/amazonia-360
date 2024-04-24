@@ -7,7 +7,13 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
-import { Card, CardLoader, CardNoData, CardTitle } from "@/containers/card";
+import {
+  Card,
+  CardContent,
+  CardLoader,
+  CardNoData,
+  CardTitle,
+} from "@/containers/card";
 import { columns } from "@/containers/widgets/overview/administrative-boundaries/columns";
 import WidgetAdministrativeBoundariesHeader from "@/containers/widgets/overview/administrative-boundaries/header";
 import {
@@ -59,37 +65,35 @@ export default function WidgetAdministrativeBoundaries() {
   return (
     <Card>
       <CardTitle>Administrative Boundaries</CardTitle>
-      <div className="mt-3">
+      <CardContent className="space-y-2">
         <CardLoader query={[queryAdmin, queryCities]} className="h-72">
           <CardNoData query={[queryAdmin, queryCities]}>
-            <div className="space-y-2">
-              <WidgetAdministrativeBoundariesHeader
-                administrativeBoundaries={queryAdmin.data ?? []}
-                cities={queryCities.data ?? []}
-              />
+            <WidgetAdministrativeBoundariesHeader
+              administrativeBoundaries={queryAdmin.data ?? []}
+              cities={queryCities.data ?? []}
+            />
 
-              <DataTable
-                columns={columns}
-                data={queryAdmin.data ?? []}
-                tableOptions={{
-                  initialState: {
-                    pagination: {
-                      pageIndex: 0,
-                      pageSize: 7,
-                    },
-                    sorting: [
-                      {
-                        id: "NAME_1",
-                        desc: false,
-                      },
-                    ],
+            <DataTable
+              columns={columns}
+              data={queryAdmin.data ?? []}
+              tableOptions={{
+                initialState: {
+                  pagination: {
+                    pageIndex: 0,
+                    pageSize: 7,
                   },
-                }}
-              />
-            </div>
+                  sorting: [
+                    {
+                      id: "NAME_1",
+                      desc: false,
+                    },
+                  ],
+                },
+              }}
+            />
           </CardNoData>
         </CardLoader>
-      </div>
+      </CardContent>
     </Card>
   );
 }

@@ -7,7 +7,13 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
-import { Card, CardLoader, CardNoData, CardTitle } from "@/containers/card";
+import {
+  Card,
+  CardContent,
+  CardLoader,
+  CardNoData,
+  CardTitle,
+} from "@/containers/card";
 import { columns } from "@/containers/widgets/protection/protected-areas/columns";
 import WidgetProtectedAreasHeader from "@/containers/widgets/protection/protected-areas/header";
 import { ProtectedAreas } from "@/containers/widgets/protection/protected-areas/types";
@@ -44,42 +50,40 @@ export default function WidgetProtectedAreas() {
   return (
     <Card>
       <CardTitle>Protected areas</CardTitle>
-      <div className="mt-3">
-        <CardLoader
-          query={[queryProtected, queryProtectedCoverage]}
-          className="h-72"
-        >
-          <CardNoData query={[queryProtected]}>
-            <div className="space-y-2">
-              <WidgetProtectedAreasHeader
-                protectedAreas={queryProtected.data ?? []}
-                protectedAreaCoverage={
-                  queryProtectedCoverage.data?.percentage ?? 0
-                }
-              />
+      <CardLoader
+        query={[queryProtected, queryProtectedCoverage]}
+        className="h-72"
+      >
+        <CardNoData query={[queryProtected]}>
+          <CardContent className="space-y-2">
+            <WidgetProtectedAreasHeader
+              protectedAreas={queryProtected.data ?? []}
+              protectedAreaCoverage={
+                queryProtectedCoverage.data?.percentage ?? 0
+              }
+            />
 
-              <DataTable
-                columns={columns}
-                data={queryProtected.data ?? []}
-                tableOptions={{
-                  initialState: {
-                    pagination: {
-                      pageIndex: 0,
-                      pageSize: 7,
-                    },
-                    sorting: [
-                      {
-                        id: "NAME",
-                        desc: false,
-                      },
-                    ],
+            <DataTable
+              columns={columns}
+              data={queryProtected.data ?? []}
+              tableOptions={{
+                initialState: {
+                  pagination: {
+                    pageIndex: 0,
+                    pageSize: 7,
                   },
-                }}
-              />
-            </div>
-          </CardNoData>
-        </CardLoader>
-      </div>
+                  sorting: [
+                    {
+                      id: "NAME",
+                      desc: false,
+                    },
+                  ],
+                },
+              }}
+            />
+          </CardContent>
+        </CardNoData>
+      </CardLoader>
     </Card>
   );
 }

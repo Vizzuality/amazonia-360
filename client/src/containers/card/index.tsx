@@ -18,6 +18,15 @@ export function CardTitle({ children }: PropsWithChildren) {
   return <h2 className="text-base font-semibold text-blue-600">{children}</h2>;
 }
 
+export function CardContent({
+  className,
+  children,
+}: PropsWithChildren<{ className?: string }>) {
+  return (
+    <div className={cn("mt-2 flex flex-col grow", className)}>{children}</div>
+  );
+}
+
 export function CardLoader({
   query,
   children,
@@ -45,7 +54,7 @@ export function CardNoData({
     !query.every((q) => q.data && Array.isArray(q.data) && !!q.data.length)
   ) {
     return (
-      <div className="flex flex-col items-center space-y-6 py-12">
+      <div className="flex flex-col justify-center items-center space-y-6 py-12 grow">
         <Image
           src={"/images/no-data.png"}
           alt="No data"
