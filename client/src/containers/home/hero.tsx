@@ -15,8 +15,7 @@ export default function Hero() {
           </h2>
           <p className="text-blue-900 text-base lg:text-lg font-normal">
             <span className="font-bold">Amazonia360</span> is your gateway to
-            understanding and help you achieving the greatest impact in this
-            region.
+            understanding and achieving the greatest impact in this region.
           </p>
           <Link href="/report">
             <Button size="lg" className="flex space-x-2.5">
