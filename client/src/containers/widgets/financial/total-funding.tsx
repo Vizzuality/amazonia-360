@@ -41,7 +41,7 @@ export default function WidgetTotalFunding() {
   );
 
   const t = query.data?.reduce((acc, curr) => {
-    return acc + (curr.totalamount || 0);
+    return acc + (curr.idbamount || 0);
   }, 0);
 
   const TOTAL = useMemo(() => {
@@ -54,7 +54,7 @@ export default function WidgetTotalFunding() {
 
   return (
     <Card>
-      <CardTitle>Total funding</CardTitle>
+      <CardTitle>IDB total funding</CardTitle>
       <CardLoader query={[query]} className="h-12">
         <CardWidgetNumber value={TOTAL} />
       </CardLoader>

@@ -33,13 +33,13 @@ export const columns: ColumnDef<IDBOperation>[] = [
     accessorKey: "sector",
     header: "Sector",
     sortingFn: "alphanumericCaseSensitive",
-    maxSize: 100,
+    maxSize: 120,
   },
   {
-    accessorKey: "totalamount",
+    accessorKey: "idbamount",
     header: "Funding",
     sortingFn: "alphanumericCaseSensitive",
-    minSize: 150,
+    maxSize: 90,
     cell(props) {
       const v = props.getValue<number>();
       return <span>{formatCurrency(v)}</span>;

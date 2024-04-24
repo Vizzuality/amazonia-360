@@ -17,6 +17,7 @@ import { useSyncLocation } from "@/app/store";
 import { DATASETS } from "@/constants/datasets";
 
 import { Card, CardLoader, CardNoData, CardTitle } from "@/containers/card";
+import { IDBOperation } from "@/containers/widgets/financial/types";
 
 import MarimekkoChart, { Data } from "@/components/charts/marimekko";
 
@@ -42,11 +43,11 @@ export default function WidgetFundingByType() {
           ?.reduce((a, b) => a + b, 0);
 
         return data.features
-          ?.map((f) => f.attributes)
+          ?.map((f) => f.attributes as IDBOperation)
           ?.map((d) => ({
-            id: d.opertype,
-            size: d.totalamount / t,
-            label: d.opertype,
+            id: `${d.sector}`,
+            size: (d.idbamount || 0) / t,
+            label: `${d.sector}`,
             parent: "root",
             color: "blue",
           }))
@@ -82,7 +83,7 @@ export default function WidgetFundingByType() {
 
   return (
     <Card className="grow">
-      <CardTitle>IDB operations</CardTitle>
+      <CardTitle>IDB funding by sector</CardTitle>
 
       <CardLoader query={[query]} className="h-44">
         <CardNoData query={[query]}>

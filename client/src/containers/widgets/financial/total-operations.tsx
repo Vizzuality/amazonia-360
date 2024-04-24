@@ -48,7 +48,7 @@ export default function WidgetTotalOperations() {
 
   return (
     <Card>
-      <CardTitle>Funding operations</CardTitle>
+      <CardTitle>IDB funding operations</CardTitle>
       <CardLoader query={[query]} className="h-12">
         <CardWidgetNumber value={TOTAL} unit="operations" />
       </CardLoader>

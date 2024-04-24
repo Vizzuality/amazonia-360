@@ -10,24 +10,24 @@ export const DEFAULT_MAP_VIEW_PROPERTIES: __esri.MapViewProperties = {
 } satisfies __esri.MapViewProperties;
 
 export const POINT_SYMBOL = new SimpleMarkerSymbol({
-  color: "#004E70",
+  color: "#009ADE",
   style: "circle",
   size: 10,
   outline: {
-    color: "#004E70",
+    color: "#009ADE",
     width: 1,
   },
 });
 
 export const POLYLINE_SYMBOL = new SimpleLineSymbol({
-  color: "#004E70",
+  color: "#009ADE",
   width: 1,
 });
 
 export const POLYGON_SYMBOL = new SimpleFillSymbol({
   color: "#196E8C22",
   outline: {
-    color: "#004E70",
+    color: "#009ADE",
     width: 1,
   },
 });
@@ -38,7 +38,7 @@ export const BUFFER_SYMBOL = new SimpleFillSymbol({
   outline: {
     width: 1,
     style: "short-dash",
-    color: "#004E70",
+    color: "#009ADE",
   },
 });
 

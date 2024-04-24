@@ -15,11 +15,11 @@ export default function WidgetsFinancial() {
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
       <WidgetsRow>
         <WidgetsColumn className="col-span-6 print:col-span-12">
-          <WidgetsRow className="grid-cols-subgrid grow">
-            <WidgetsColumn className="col-span-6 self-start">
+          <WidgetsRow className="items-start grow-0">
+            <WidgetsColumn className="col-span-6">
               <WidgetTotalOperations />
             </WidgetsColumn>
-            <WidgetsColumn className="col-span-6 self-start">
+            <WidgetsColumn className="col-span-6">
               <WidgetTotalFunding />
             </WidgetsColumn>
             <WidgetsColumn className="col-span-12">
