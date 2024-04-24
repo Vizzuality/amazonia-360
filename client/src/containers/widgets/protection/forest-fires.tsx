@@ -15,7 +15,8 @@ import { useSyncLocation } from "@/app/store";
 
 import { FIRES, FireIds } from "@/constants/raster";
 
-import { Card, CardLoader, CardTitle } from "@/containers/card";
+import { Card, CardContent, CardLoader, CardTitle } from "@/containers/card";
+import LegendOrdinal from "@/containers/legend/ordinal";
 
 import MarimekkoChart, { Data } from "@/components/charts/marimekko";
 
@@ -74,17 +75,19 @@ export default function WidgetForestFires() {
   return (
     <Card>
       <CardTitle>Frequency of forest fires</CardTitle>
-      <CardLoader query={[query]} className="h-16">
-        {!!query?.data && (
+      <CardContent className="space-y-2">
+        <CardLoader query={[query]} className="h-16">
           <MarimekkoChart
-            data={query?.data}
+            data={query?.data || []}
             colorScale={ordinalColorScale}
             format={FORMAT}
-            className="h-16"
+            className="h-6"
             tile={treemapDice}
           />
-        )}
-      </CardLoader>
+
+          <LegendOrdinal ordinalColorScale={ordinalColorScale} />
+        </CardLoader>
+      </CardContent>
     </Card>
   );
 }

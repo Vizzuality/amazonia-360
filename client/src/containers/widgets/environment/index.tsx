@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select";
 
 export default function WidgetsEnvironment({ index }: { index: number }) {
-  const [layer, setLayer] = useState<DatasetIds>("land_cover");
+  const [layer, setLayer] = useState<DatasetIds>("elevation_ranges");
   const T = TOPICS.find((t) => t.id === "natural-physical-environment");
 
   return (
@@ -65,6 +65,9 @@ export default function WidgetsEnvironment({ index }: { index: number }) {
                 </div>
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value={DATASETS.elevation_ranges.layer.id}>
+                  {DATASETS.elevation_ranges.layer.title}
+                </SelectItem>
                 <SelectItem value={DATASETS.land_cover.layer.id}>
                   {DATASETS.land_cover.layer.title}
                 </SelectItem>
@@ -73,9 +76,6 @@ export default function WidgetsEnvironment({ index }: { index: number }) {
                 </SelectItem>
                 <SelectItem value={DATASETS.tipos_climaticos.layer.id}>
                   {DATASETS.tipos_climaticos.layer.title}
-                </SelectItem>
-                <SelectItem value={DATASETS.elevation_ranges.layer.id}>
-                  {DATASETS.elevation_ranges.layer.title}
                 </SelectItem>
               </SelectContent>
             </Select>

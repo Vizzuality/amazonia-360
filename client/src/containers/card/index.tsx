@@ -101,7 +101,7 @@ export function Card({ className, children }: PropsWithChildren<CardProps>) {
   return (
     <div
       className={cn(
-        "p-6 rounded-2xl bg-white border border-blue-200 overflow-hidden flex flex-col grow",
+        "p-6 rounded-2xl bg-white border border-blue-100 overflow-hidden flex flex-col grow",
         className,
       )}
     >

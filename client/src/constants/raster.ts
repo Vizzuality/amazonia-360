@@ -61,7 +61,7 @@ export type LandCoverIds = keyof typeof LAND_COVER;
 
 export const FIRES = {
   "1": {
-    label: "Extremely low or null",
+    label: "Extremely low",
     color: "#ffffb2",
   },
   "2": {

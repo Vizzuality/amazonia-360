@@ -13,11 +13,11 @@ export default function LegendOrdinal({
   return (
     <VxLegendOrdinal scale={ordinalColorScale} className="w-full">
       {(labels) => (
-        <div className="flex flex-wrap justify-start gap-y-1 gap-x-3">
+        <div className="flex flex-wrap justify-start gap-y-1 gap-x-2">
           {labels.map((label) => (
             <div key={`legend-quantile-${label.datum.id}`} className="flex">
               <div
-                className="w-2 h-2 rounded-[2px] shrink-0 mt-px mr-1 shadow-sm"
+                className="w-2 h-2 rounded-[2px] shrink-0 mt-0.5 mr-1 shadow-[0_0_1px_0px_rgba(0,0,0,0.25)]"
                 style={{
                   backgroundColor: label.value,
                 }}
