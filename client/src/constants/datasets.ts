@@ -127,7 +127,7 @@ export const DATASETS = {
   tipos_climaticos: {
     layer: new FeatureLayer({
       id: "tipos_climaticos",
-      title: "Tipos climáticos (Koepen)",
+      title: "Climate types (Koepen)",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tipos_climaticos_KOEPEN/FeatureServer/0",
       renderer: new UniqueValueRenderer({
         field: "Field2",
