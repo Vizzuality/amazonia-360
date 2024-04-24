@@ -6,7 +6,7 @@ import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 
-import { useLocation } from "@/lib/location";
+import { POINT_BUFFER, POLYLINE_BUFFER, useLocation } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/store";
 
@@ -34,7 +34,8 @@ export default function SelectedLayer() {
         graphic.geometry.type === "point" ||
         graphic.geometry.type === "polyline"
       ) {
-        const k = graphic.geometry.type === "point" ? 30 : 3;
+        const k =
+          graphic.geometry.type === "point" ? POINT_BUFFER : POLYLINE_BUFFER;
         const g = geometryEngine.geodesicBuffer(
           graphic.geometry,
           k,
