@@ -10,6 +10,10 @@ import { useGetSearch } from "@/lib/search";
 
 import { CustomLocation, Location, SearchLocation } from "@/app/parsers";
 
+export const POINT_BUFFER = 60;
+
+export const POLYLINE_BUFFER = 30;
+
 export const useLocation = (location?: Location | null) => {
   const { data: searchData } = useGetSearch(
     location?.type === "search" ? (location as SearchLocation) : null,
@@ -91,13 +95,21 @@ export const getGeometryWithBuffer = (
   if (!geometry) return null;
 
   if (geometry.type === "point") {
-    const g = geometryEngine.geodesicBuffer(geometry, 30, "kilometers");
+    const g = geometryEngine.geodesicBuffer(
+      geometry,
+      POINT_BUFFER,
+      "kilometers",
+    );
 
     return Array.isArray(g) ? g[0] : g;
   }
 
   if (geometry.type === "polyline") {
-    const g = geometryEngine.geodesicBuffer(geometry, 3, "kilometers");
+    const g = geometryEngine.geodesicBuffer(
+      geometry,
+      POLYLINE_BUFFER,
+      "kilometers",
+    );
 
     return Array.isArray(g) ? g[0] : g;
   }

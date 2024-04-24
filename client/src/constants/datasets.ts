@@ -19,9 +19,57 @@ import {
 } from "@/constants/raster";
 
 export const DATASETS = {
-  admin: {
+  admin0: {
     layer: new FeatureLayer({
-      id: "admin",
+      id: "admin0",
+      title: "Admin0",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM0/FeatureServer/0",
+      renderer: new SimpleRenderer({
+        symbol: new SimpleFillSymbol({
+          color: [0, 0, 0, 0.25],
+          style: "solid",
+          outline: {
+            width: 1,
+            color: [255, 255, 255, 1],
+          },
+        }),
+      }),
+    }),
+
+    getFeatures: (props?: __esri.QueryProperties) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
+  },
+  admin1: {
+    layer: new FeatureLayer({
+      id: "admin1",
+      title: "Admin1",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM1/FeatureServer/0",
+      renderer: new SimpleRenderer({
+        symbol: new SimpleFillSymbol({
+          color: [0, 0, 0, 0.25],
+          style: "solid",
+          outline: {
+            width: 1,
+            color: [255, 255, 255, 1],
+          },
+        }),
+      }),
+    }),
+
+    getFeatures: (props?: __esri.QueryProperties) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
+  },
+  admin2: {
+    layer: new FeatureLayer({
+      id: "admin2",
       title: "Admin",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM2/FeatureServer/0",
       renderer: new SimpleRenderer({
