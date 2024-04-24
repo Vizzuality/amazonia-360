@@ -14,6 +14,8 @@ import {
 } from "@/containers/widgets/bioeconomy/research-centers/columns";
 import { DataTable } from "@/containers/widgets/table";
 
+import { NoData } from "@/components/ui/no-data";
+
 export default function WidgetResearchCenters() {
   const [location] = useSyncLocation();
 
@@ -42,24 +44,27 @@ export default function WidgetResearchCenters() {
     <Card>
       <CardTitle>Research centers</CardTitle>
       <CardLoader query={[query]} className="h-72">
-        <DataTable
-          columns={columns}
-          data={query.data ?? []}
-          tableOptions={{
-            initialState: {
-              pagination: {
-                pageIndex: 0,
-                pageSize: 7,
-              },
-              sorting: [
-                {
-                  id: "Org_Name",
-                  desc: false,
+        {!!query.data?.length && (
+          <DataTable
+            columns={columns}
+            data={query.data ?? []}
+            tableOptions={{
+              initialState: {
+                pagination: {
+                  pageIndex: 0,
+                  pageSize: 7,
                 },
-              ],
-            },
-          }}
-        />
+                sorting: [
+                  {
+                    id: "Org_Name",
+                    desc: false,
+                  },
+                ],
+              },
+            }}
+          />
+        )}
+        <NoData query={[query]} />
       </CardLoader>
     </Card>
   );

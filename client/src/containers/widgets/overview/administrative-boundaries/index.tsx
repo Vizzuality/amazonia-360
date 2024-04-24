@@ -16,6 +16,8 @@ import {
 } from "@/containers/widgets/overview/administrative-boundaries/types";
 import { DataTable } from "@/containers/widgets/table";
 
+import { NoData } from "@/components/ui/no-data";
+
 export default function WidgetAdministrativeBoundaries() {
   const [location] = useSyncLocation();
 
@@ -61,31 +63,34 @@ export default function WidgetAdministrativeBoundaries() {
       <CardTitle>Administrative Boundaries</CardTitle>
       <div className="mt-3">
         <CardLoader query={[queryAdmin, queryCities]} className="h-72">
-          <div className="space-y-2">
-            <WidgetAdministrativeBoundariesHeader
-              administrativeBoundaries={queryAdmin.data ?? []}
-              cities={queryCities.data ?? []}
-            />
+          {!!queryAdmin.data?.length && (
+            <div className="space-y-2">
+              <WidgetAdministrativeBoundariesHeader
+                administrativeBoundaries={queryAdmin.data ?? []}
+                cities={queryCities.data ?? []}
+              />
 
-            <DataTable
-              columns={columns}
-              data={queryAdmin.data ?? []}
-              tableOptions={{
-                initialState: {
-                  pagination: {
-                    pageIndex: 0,
-                    pageSize: 7,
-                  },
-                  sorting: [
-                    {
-                      id: "NAME_1",
-                      desc: false,
+              <DataTable
+                columns={columns}
+                data={queryAdmin.data ?? []}
+                tableOptions={{
+                  initialState: {
+                    pagination: {
+                      pageIndex: 0,
+                      pageSize: 7,
                     },
-                  ],
-                },
-              }}
-            />
-          </div>
+                    sorting: [
+                      {
+                        id: "NAME_1",
+                        desc: false,
+                      },
+                    ],
+                  },
+                }}
+              />
+            </div>
+          )}
+          <NoData query={[queryAdmin]} />
         </CardLoader>
       </div>
     </Card>

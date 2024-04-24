@@ -13,9 +13,9 @@ export function NoData({
     query.map((q) => q.isFetched) &&
     query.map((q) => q.data).flat().length === 0
   ) {
+    console.log("Data", query);
     return (
       <div className="flex flex-col items-center space-y-6 py-12">
-        {" "}
         <Image
           src={"/images/no-data.png"}
           alt="No data"
