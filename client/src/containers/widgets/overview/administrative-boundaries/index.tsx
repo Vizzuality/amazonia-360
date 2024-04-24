@@ -25,16 +25,16 @@ export default function WidgetAdministrativeBoundaries() {
 
   const queryAdmin = useGetFeatures(
     {
-      query: DATASETS.admin.getFeatures({
+      query: DATASETS.admin2.getFeatures({
         ...(!!GEOMETRY && {
           orderByFields: ["NAME_0"],
           geometry: GEOMETRY,
         }),
       }),
-      feature: DATASETS.admin.layer,
+      feature: DATASETS.admin2.layer,
     },
     {
-      enabled: !!DATASETS.admin.getFeatures && !!GEOMETRY,
+      enabled: !!DATASETS.admin2.getFeatures && !!GEOMETRY,
       select(data): AdministrativeBoundary[] {
         return data.features.map((f) => f.attributes);
       },

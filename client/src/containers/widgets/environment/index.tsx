@@ -7,7 +7,7 @@ import { TOPICS } from "@/constants/topics";
 
 import { Card } from "@/containers/card";
 import WidgetsColumn from "@/containers/widgets/column";
-import WidgetEcosystemsByType from "@/containers/widgets/environment/ecosystems-by-type";
+import WidgetBiomesByType from "@/containers/widgets/environment/biomes-by-type";
 import WidgetLandCoverByType from "@/containers/widgets/environment/land-cover-by-type";
 import WidgetEnvironmentSummary from "@/containers/widgets/environment/summary";
 import WidgetMap from "@/containers/widgets/map";
@@ -29,21 +29,24 @@ export default function WidgetsEnvironment({ index }: { index: number }) {
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
       <WidgetsRow>
         <WidgetsColumn
-          className={cn("col-span-6", index % 2 !== 0 && "order-2")}
+          className={cn(
+            "col-span-6 print:col-span-12",
+            index % 2 !== 0 && "order-2",
+          )}
         >
           <WidgetsRow>
             <WidgetsColumn className="col-span-12">
               <WidgetEnvironmentSummary />
             </WidgetsColumn>
             <WidgetsColumn className="col-span-6 h-full flex flex-col">
-              <WidgetEcosystemsByType />
+              <WidgetBiomesByType />
             </WidgetsColumn>
             <WidgetsColumn className="col-span-6 h-full flex flex-col">
               <WidgetLandCoverByType />
             </WidgetsColumn>
           </WidgetsRow>
         </WidgetsColumn>
-        <WidgetsColumn className="col-span-6">
+        <WidgetsColumn className="col-span-6 print:break-before-page">
           <div className="absolute top-4 left-4 z-10">
             <Select
               value={layer}
@@ -60,9 +63,6 @@ export default function WidgetsEnvironment({ index }: { index: number }) {
               <SelectContent>
                 <SelectItem value={DATASETS.land_cover.layer.id}>
                   {DATASETS.land_cover.layer.title}
-                </SelectItem>
-                <SelectItem value={DATASETS.ecosistemas.layer.id}>
-                  {DATASETS.ecosistemas.layer.title}
                 </SelectItem>
                 <SelectItem value={DATASETS.biomas.layer.id}>
                   {DATASETS.biomas.layer.title}

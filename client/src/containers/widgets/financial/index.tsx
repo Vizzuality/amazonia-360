@@ -11,10 +11,10 @@ export default function WidgetsFinancial() {
   const T = TOPICS.find((t) => t.id === "financial");
 
   return (
-    <div className="container">
+    <div className="container print:break-before-page">
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
       <WidgetsRow>
-        <WidgetsColumn className="col-span-6">
+        <WidgetsColumn className="col-span-6 print:col-span-12">
           <WidgetsRow className="grid-cols-subgrid grow">
             <WidgetsColumn className="col-span-6 self-start">
               <WidgetTotalOperations />
@@ -27,7 +27,7 @@ export default function WidgetsFinancial() {
             </WidgetsColumn>
           </WidgetsRow>
         </WidgetsColumn>
-        <WidgetsColumn className="col-span-6">
+        <WidgetsColumn className="col-span-6 print:col-span-12">
           <WidgetIDBOperations />
         </WidgetsColumn>
       </WidgetsRow>

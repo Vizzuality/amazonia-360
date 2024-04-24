@@ -11,7 +11,7 @@ export default function OtherResources() {
   const [tab, setTab] = useState("all");
 
   return (
-    <div className="container">
+    <div className="container print:break-before-page">
       <h2 className="text-xl font-semibold mb-4">Other resources</h2>
       <Tabs defaultValue={tab} className="flex flex-col space-y-4 items-start">
         <TabsList>
@@ -43,11 +43,14 @@ export default function OtherResources() {
           )}
         </TabsList>
         <TabsContent value="all">
-          <WidgetsRow>
+          <WidgetsRow className="print:grid-cols-2">
             {Object.values(RESOURCES)
               .flat()
               .map((r, idx) => (
-                <WidgetsColumn className="col-span-3" key={idx}>
+                <WidgetsColumn
+                  className="col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
+                  key={idx}
+                >
                   <Resource key={idx} resource={r} />
                 </WidgetsColumn>
               ))}
@@ -58,27 +61,36 @@ export default function OtherResources() {
           </WidgetsRow>
         </TabsContent>
         <TabsContent value="publications">
-          <WidgetsRow>
+          <WidgetsRow className="print:grid-cols-2">
             {RESOURCES.publications.map((r, idx) => (
-              <WidgetsColumn className="col-span-3" key={idx}>
+              <WidgetsColumn
+                className="col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
+                key={idx}
+              >
                 <Resource key={idx} resource={r} />
               </WidgetsColumn>
             ))}
           </WidgetsRow>
         </TabsContent>
         <TabsContent value="database">
-          <WidgetsRow>
+          <WidgetsRow className="print:grid-cols-2">
             {RESOURCES.database.map((r, idx) => (
-              <WidgetsColumn className="col-span-3" key={idx}>
+              <WidgetsColumn
+                className="col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
+                key={idx}
+              >
                 <Resource key={idx} resource={r} />
               </WidgetsColumn>
             ))}
           </WidgetsRow>
         </TabsContent>
         <TabsContent value="multimedia">
-          <WidgetsRow>
+          <WidgetsRow className="print:grid-cols-2">
             {RESOURCES.multimedia.map((r, idx) => (
-              <WidgetsColumn className="col-span-3" key={idx}>
+              <WidgetsColumn
+                className="col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
+                key={idx}
+              >
                 <Resource key={idx} resource={r} />
               </WidgetsColumn>
             ))}

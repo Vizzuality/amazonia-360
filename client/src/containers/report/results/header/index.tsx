@@ -4,7 +4,12 @@ import { useState } from "react";
 
 import Link from "next/link";
 
-import { LuDownload, LuLayoutGrid, LuPlus, LuShare2 } from "react-icons/lu";
+import { Download } from "lucide-react";
+import { LuLayoutGrid, LuPlus } from "react-icons/lu";
+
+import { useLocationTitle } from "@/lib/location";
+
+import { useSyncLocation } from "@/app/store";
 
 import Topics from "@/containers/report/topics";
 
@@ -21,7 +26,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
+import ShareReport from "./share";
+
 export default function ReportResultsHeader() {
+  const [location] = useSyncLocation();
+
+  const title = useLocationTitle(location);
+
   const [open, setOpen] = useState(false);
 
   return (
@@ -29,11 +40,11 @@ export default function ReportResultsHeader() {
       <div className="container">
         <div className="flex justify-between">
           {/* Name */}
-          <div className="flex items-center space-x-6">
-            <h1 className="text-4xl font-bold text-primary">Testing</h1>
+          <div className="flex items-center space-x-6 mr-4">
+            <h1 className="text-4xl font-bold text-primary">{title}</h1>
 
             <AlertDialog>
-              <AlertDialogTrigger asChild>
+              <AlertDialogTrigger asChild className="print:hidden">
                 <Button variant="outline" className="space-x-2">
                   <LuPlus className="w-5 h-5" />
                   <span>New report</span>
@@ -58,7 +69,7 @@ export default function ReportResultsHeader() {
           </div>
 
           {/* Toolbar */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 print:hidden">
             <Button
               variant={open ? "default" : "outline"}
               className="space-x-2"
@@ -67,11 +78,15 @@ export default function ReportResultsHeader() {
               <LuLayoutGrid className="w-5 h-5" />
               <span>Topics</span>
             </Button>
-            <Button variant="outline" className="space-x-2">
-              <LuShare2 className="w-5 h-5" />
-            </Button>
-            <Button variant="outline" className="space-x-2">
-              <LuDownload className="w-5 h-5" />
+
+            <ShareReport />
+
+            <Button
+              variant="outline"
+              className="space-x-2"
+              onClick={() => window.print()}
+            >
+              <Download className="w-5 h-5" />
             </Button>
           </div>
         </div>

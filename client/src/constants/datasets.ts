@@ -11,15 +11,65 @@ import { env } from "@/env.mjs";
 import { getKeys } from "@/lib/utils";
 
 import {
+  BIOMES,
+  CLIMATE_TYPES,
   ELEVATION_RANGES_COLORMAP,
   FIRES_COLORMAP,
   LAND_COVER_COLORMAP,
 } from "@/constants/raster";
 
 export const DATASETS = {
-  admin: {
+  admin0: {
     layer: new FeatureLayer({
-      id: "admin",
+      id: "admin0",
+      title: "Admin0",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM0/FeatureServer/0",
+      renderer: new SimpleRenderer({
+        symbol: new SimpleFillSymbol({
+          color: [0, 0, 0, 0.25],
+          style: "solid",
+          outline: {
+            width: 1,
+            color: [255, 255, 255, 1],
+          },
+        }),
+      }),
+    }),
+
+    getFeatures: (props?: __esri.QueryProperties) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
+  },
+  admin1: {
+    layer: new FeatureLayer({
+      id: "admin1",
+      title: "Admin1",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM1/FeatureServer/0",
+      renderer: new SimpleRenderer({
+        symbol: new SimpleFillSymbol({
+          color: [0, 0, 0, 0.25],
+          style: "solid",
+          outline: {
+            width: 1,
+            color: [255, 255, 255, 1],
+          },
+        }),
+      }),
+    }),
+
+    getFeatures: (props?: __esri.QueryProperties) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
+  },
+  admin2: {
+    layer: new FeatureLayer({
+      id: "admin2",
       title: "Admin",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM2/FeatureServer/0",
       renderer: new SimpleRenderer({
@@ -125,8 +175,28 @@ export const DATASETS = {
   tipos_climaticos: {
     layer: new FeatureLayer({
       id: "tipos_climaticos",
-      title: "Tipos climáticos (Koepen)",
+      title: "Climate types (Koepen)",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tipos_climaticos_KOEPEN/FeatureServer/0",
+      renderer: new UniqueValueRenderer({
+        field: "Field2",
+        defaultSymbol: new SimpleFillSymbol({
+          color: [227, 139, 79, 0.8],
+          outline: {
+            color: [230, 230, 230, 0.8],
+            width: 1,
+          },
+        }),
+        uniqueValueInfos: getKeys(CLIMATE_TYPES).map((k) => ({
+          value: k,
+          symbol: new SimpleFillSymbol({
+            color: CLIMATE_TYPES[k].color,
+            outline: {
+              color: [0, 0, 0, 0.25],
+              width: 0.5,
+            },
+          }),
+        })),
+      }),
     }),
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
@@ -138,8 +208,28 @@ export const DATASETS = {
   biomas: {
     layer: new FeatureLayer({
       id: "biomas",
-      title: "Biomas",
+      title: "Biomes",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Biomas/FeatureServer/0",
+      renderer: new UniqueValueRenderer({
+        field: "BIOME",
+        defaultSymbol: new SimpleFillSymbol({
+          color: [227, 139, 79, 0.8],
+          outline: {
+            color: [230, 230, 230, 0.8],
+            width: 1,
+          },
+        }),
+        uniqueValueInfos: getKeys(BIOMES).map((k) => ({
+          value: k,
+          symbol: new SimpleFillSymbol({
+            color: BIOMES[k].color,
+            outline: {
+              color: [0, 0, 0, 0.25],
+              width: 0.5,
+            },
+          }),
+        })),
+      }),
     }),
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
@@ -166,7 +256,7 @@ export const DATASETS = {
           {
             value: 1,
             symbol: new SimpleFillSymbol({
-              color: [0, 0, 255, 0.8],
+              color: [1, 70, 0, 0.8],
               outline: {
                 color: [0, 230, 230, 0.8],
                 width: 1,
