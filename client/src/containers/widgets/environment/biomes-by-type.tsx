@@ -13,11 +13,13 @@ import { useGetIntersectionAnalysis } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
+import { BIOMES, BiomesIds } from "@/constants/raster";
+
 import { Card, CardLoader, CardTitle } from "@/containers/card";
 
 import MarimekkoChart, { Data } from "@/components/charts/marimekko";
 
-export default function WidgetEcosystemsByType() {
+export default function WidgetBiomesByType() {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
@@ -40,7 +42,7 @@ export default function WidgetEcosystemsByType() {
               parent: "root",
               size: f.area / (areas || 1),
               label: f.attributes.BIOMADES,
-              color: "blue",
+              color: BIOMES[f.attributes.BIOME as BiomesIds]?.color,
             };
           })
           ?.reduce((acc, curr) => {
@@ -66,7 +68,7 @@ export default function WidgetEcosystemsByType() {
 
   const ordinalColorScale = scaleOrdinal({
     domain: query?.data?.map((d) => d),
-    range: ["#40551F", "#668A26", "#8ABD2D", "#B0E33A", "#D6FF47"],
+    range: query?.data?.map((d) => d.color),
   });
 
   const FORMAT = (node: HierarchyRectangularNode<HierarchyNode<Data>>) => {
