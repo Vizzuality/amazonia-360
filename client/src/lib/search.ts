@@ -31,7 +31,7 @@ const searchVM = new SearchVM({
     {
       name: "Admin1",
       layer: DATASETS.admin1.layer,
-      searchFields: ["NAME_1"],
+      searchFields: ["NAME_0", "NAME_1"],
       displayField: "COMPNAME",
       outFields: ["*"],
       maxResults: 1,
@@ -42,7 +42,7 @@ const searchVM = new SearchVM({
     {
       name: "Admin2",
       layer: DATASETS.admin2.layer,
-      searchFields: ["NAME_2"],
+      searchFields: ["NAME_0", "NAME_1", "NAME_2"],
       displayField: "COMPNAME",
       outFields: ["*"],
       maxResults: 1,
@@ -53,7 +53,7 @@ const searchVM = new SearchVM({
     {
       name: "Ciudades Capitales",
       layer: DATASETS.ciudades_capitales.layer,
-      searchFields: ["NOMBCAP"],
+      searchFields: ["NOMBCAP", "NAME_0", "NAME_1", "NAME_2"],
       displayField: "COMPNAME",
       outFields: ["*"],
       maxResults: 1,

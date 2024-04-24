@@ -76,6 +76,7 @@ export function Search<T extends Option>({
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
           align="start"
+          updatePositionStrategy="always"
           sideOffset={
             (triggerRef.current?.getBoundingClientRect()?.height || 0) * -1 ?? 0
           }
@@ -126,7 +127,7 @@ export function Search<T extends Option>({
               <CommandGroup className="px-2 pb-5">
                 {options.map((o) => (
                   <CommandItem
-                    key={o.value}
+                    key={o.sourceIndex + o.key + o.value}
                     value={o.value}
                     className="px-4"
                     onSelect={() => onSelect(o)}
