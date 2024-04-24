@@ -7,14 +7,12 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
-import { Card, CardLoader, CardTitle } from "@/containers/card";
+import { Card, CardLoader, CardTitle, CardNoData } from "@/containers/card";
 import {
   ResearchCenter,
   columns,
 } from "@/containers/widgets/bioeconomy/research-centers/columns";
 import { DataTable } from "@/containers/widgets/table";
-
-import { NoData } from "@/components/ui/no-data";
 
 export default function WidgetResearchCenters() {
   const [location] = useSyncLocation();
@@ -44,7 +42,7 @@ export default function WidgetResearchCenters() {
     <Card>
       <CardTitle>Research centers</CardTitle>
       <CardLoader query={[query]} className="h-72">
-        {!!query.data?.length && (
+        <CardNoData query={[query]}>
           <DataTable
             columns={columns}
             data={query.data ?? []}
@@ -63,8 +61,7 @@ export default function WidgetResearchCenters() {
               },
             }}
           />
-        )}
-        <NoData query={[query]} />
+        </CardNoData>
       </CardLoader>
     </Card>
   );

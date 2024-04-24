@@ -7,12 +7,10 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
-import { Card, CardLoader, CardTitle } from "@/containers/card";
+import { Card, CardLoader, CardNoData, CardTitle } from "@/containers/card";
 import { columns } from "@/containers/widgets/financial/idb-operations/columns";
 import { IDBOperation } from "@/containers/widgets/financial/types";
 import { DataTable } from "@/containers/widgets/table";
-
-import { NoData } from "@/components/ui/no-data";
 
 export default function WidgetIDBOperations() {
   const [location] = useSyncLocation();
@@ -41,7 +39,7 @@ export default function WidgetIDBOperations() {
       <CardTitle>IDB operations</CardTitle>
       <div className="mt-3">
         <CardLoader query={[query]} className="h-72">
-          {!!query.data?.length && (
+          <CardNoData query={[query]}>
             <div className="space-y-2">
               <DataTable
                 columns={columns}
@@ -62,8 +60,7 @@ export default function WidgetIDBOperations() {
                 }}
               />
             </div>
-          )}
-          <NoData query={[query]} />
+          </CardNoData>
         </CardLoader>
       </div>
     </Card>

@@ -7,7 +7,7 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
-import { Card, CardLoader, CardTitle } from "@/containers/card";
+import { Card, CardLoader, CardNoData, CardTitle } from "@/containers/card";
 import { columns } from "@/containers/widgets/overview/administrative-boundaries/columns";
 import WidgetAdministrativeBoundariesHeader from "@/containers/widgets/overview/administrative-boundaries/header";
 import {
@@ -15,8 +15,6 @@ import {
   City,
 } from "@/containers/widgets/overview/administrative-boundaries/types";
 import { DataTable } from "@/containers/widgets/table";
-
-import { NoData } from "@/components/ui/no-data";
 
 export default function WidgetAdministrativeBoundaries() {
   const [location] = useSyncLocation();
@@ -63,7 +61,7 @@ export default function WidgetAdministrativeBoundaries() {
       <CardTitle>Administrative Boundaries</CardTitle>
       <div className="mt-3">
         <CardLoader query={[queryAdmin, queryCities]} className="h-72">
-          {!!queryAdmin.data?.length && (
+          <CardNoData query={[queryAdmin, queryCities]}>
             <div className="space-y-2">
               <WidgetAdministrativeBoundariesHeader
                 administrativeBoundaries={queryAdmin.data ?? []}
@@ -89,8 +87,7 @@ export default function WidgetAdministrativeBoundaries() {
                 }}
               />
             </div>
-          )}
-          <NoData query={[queryAdmin]} />
+          </CardNoData>
         </CardLoader>
       </div>
     </Card>
