@@ -19,6 +19,7 @@ import { DATASETS } from "@/constants/datasets";
 import { Card, CardLoader, CardTitle } from "@/containers/card";
 
 import MarimekkoChart, { Data } from "@/components/charts/marimekko";
+import { NoData } from "@/components/ui/no-data";
 
 export default function WidgetFundingByType() {
   const [location] = useSyncLocation();
@@ -85,7 +86,7 @@ export default function WidgetFundingByType() {
       <CardTitle>IDB operations</CardTitle>
 
       <CardLoader query={[query]} className="h-44">
-        {!!query.data && (
+        {!!query.data?.length && (
           <div className="space-y-2 pt-2">
             <MarimekkoChart
               format={FORMAT}
@@ -125,6 +126,7 @@ export default function WidgetFundingByType() {
             </LegendOrdinal>
           </div>
         )}
+        <NoData query={[query]} />
       </CardLoader>
     </Card>
   );
