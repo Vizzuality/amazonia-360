@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Help() {
   return (
-    <section className="bg-blue-700 text-white">
+    <section className="bg-blue-700 text-white print:hidden">
       <div className="container flex md:flex-row flex-col justify-between w-full py-4 items-center">
         <div className="pb-16 md:pb-0 flex md:space-x-10 flex-col space-y-10 md:space-y-0 items-center md:flex-row">
           <Image

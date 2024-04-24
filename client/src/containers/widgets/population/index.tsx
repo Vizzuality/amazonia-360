@@ -12,10 +12,10 @@ export default function WidgetsPopulation() {
     <div className="container">
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
       <WidgetsRow>
-        <WidgetsColumn className="col-span-6">
+        <WidgetsColumn className="col-span-6 print:col-span-12">
           <WidgetsPopulationPopulation />
         </WidgetsColumn>
-        <WidgetsColumn className="col-span-6">
+        <WidgetsColumn className="col-span-6 print:col-span-12">
           <WidgetsPopulationDeprivation />
         </WidgetsColumn>
       </WidgetsRow>

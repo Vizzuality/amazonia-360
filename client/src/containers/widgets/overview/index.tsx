@@ -12,24 +12,24 @@ export default function WidgetsOverview() {
   return (
     <div className="container">
       <WidgetsRow>
-        <WidgetsColumn className="col-span-3">
+        <WidgetsColumn className="col-span-3 print:col-span-6">
           <WidgetTotalArea />
         </WidgetsColumn>
-        <WidgetsColumn className="col-span-3">
+        <WidgetsColumn className="col-span-3 print:col-span-6">
           <WidgetPopulation />
         </WidgetsColumn>
-        <WidgetsColumn className="col-span-3">
+        <WidgetsColumn className="col-span-3 print:col-span-6">
           <WidgetAltitude />
         </WidgetsColumn>
-        <WidgetsColumn className="col-span-3">
+        <WidgetsColumn className="col-span-3 print:col-span-6">
           <WidgetAmazoniaCoverage />
         </WidgetsColumn>
-        <WidgetsColumn className="col-span-6">
+        <WidgetsColumn className="col-span-6 print:col-span-12">
           <Card className="h-full p-0 relative">
             <WidgetMap ids={["ciudades_capitales"]} />
           </Card>
         </WidgetsColumn>
-        <WidgetsColumn className="col-span-6">
+        <WidgetsColumn className="col-span-6 print:col-span-12 print:break-before-page">
           <WidgetAdministrativeBoundaries />
         </WidgetsColumn>
       </WidgetsRow>

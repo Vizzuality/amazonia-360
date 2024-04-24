@@ -32,7 +32,10 @@ export default function WidgetsProtection({ index }: { index: number }) {
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
       <WidgetsRow>
         <WidgetsColumn
-          className={cn("col-span-6", index % 2 !== 0 && "order-2")}
+          className={cn(
+            "col-span-6 print:col-span-12",
+            index % 2 !== 0 && "order-2",
+          )}
         >
           <WidgetsRow>
             <WidgetsColumn className="col-span-6">
@@ -41,13 +44,13 @@ export default function WidgetsProtection({ index }: { index: number }) {
             <WidgetsColumn className="col-span-6">
               <WidgetIndigenousLands />
             </WidgetsColumn>
-            <WidgetsColumn className="col-span-12">
+            <WidgetsColumn className="col-span-12 print:break-before-page">
               <WidgetProtectedAreas />
             </WidgetsColumn>
           </WidgetsRow>
         </WidgetsColumn>
 
-        <WidgetsColumn className="col-span-6">
+        <WidgetsColumn className="col-span-6 print:col-span-12">
           <div className="absolute top-4 left-4 z-10">
             <Select
               value={layer}

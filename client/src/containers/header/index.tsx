@@ -24,7 +24,7 @@ export default function Header() {
           </h1>
         </Link>
 
-        <nav className="flex space-x-4">
+        <nav className="flex space-x-4 print:hidden">
           <Link
             className={cn({
               "hover:text-cyan-500 text-sm": true,
