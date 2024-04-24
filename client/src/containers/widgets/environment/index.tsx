@@ -61,9 +61,6 @@ export default function WidgetsEnvironment({ index }: { index: number }) {
                 <SelectItem value={DATASETS.land_cover.layer.id}>
                   {DATASETS.land_cover.layer.title}
                 </SelectItem>
-                <SelectItem value={DATASETS.ecosistemas.layer.id}>
-                  {DATASETS.ecosistemas.layer.title}
-                </SelectItem>
                 <SelectItem value={DATASETS.biomas.layer.id}>
                   {DATASETS.biomas.layer.title}
                 </SelectItem>
