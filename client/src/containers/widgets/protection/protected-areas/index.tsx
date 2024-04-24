@@ -7,7 +7,13 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
-import { Card, CardLoader, CardTitle } from "@/containers/card";
+import {
+  Card,
+  CardContent,
+  CardLoader,
+  CardNoData,
+  CardTitle,
+} from "@/containers/card";
 import { columns } from "@/containers/widgets/protection/protected-areas/columns";
 import WidgetProtectedAreasHeader from "@/containers/widgets/protection/protected-areas/header";
 import { ProtectedAreas } from "@/containers/widgets/protection/protected-areas/types";
@@ -44,12 +50,12 @@ export default function WidgetProtectedAreas() {
   return (
     <Card>
       <CardTitle>Protected areas</CardTitle>
-      <div className="mt-3">
-        <CardLoader
-          query={[queryProtected, queryProtectedCoverage]}
-          className="h-72"
-        >
-          <div className="space-y-2">
+      <CardLoader
+        query={[queryProtected, queryProtectedCoverage]}
+        className="h-72"
+      >
+        <CardNoData query={[queryProtected]}>
+          <CardContent className="space-y-2">
             <WidgetProtectedAreasHeader
               protectedAreas={queryProtected.data ?? []}
               protectedAreaCoverage={
@@ -75,9 +81,9 @@ export default function WidgetProtectedAreas() {
                 },
               }}
             />
-          </div>
-        </CardLoader>
-      </div>
+          </CardContent>
+        </CardNoData>
+      </CardLoader>
     </Card>
   );
 }

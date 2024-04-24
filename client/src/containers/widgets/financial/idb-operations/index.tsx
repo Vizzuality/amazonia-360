@@ -7,7 +7,13 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
-import { Card, CardLoader, CardTitle } from "@/containers/card";
+import {
+  Card,
+  CardContent,
+  CardLoader,
+  CardNoData,
+  CardTitle,
+} from "@/containers/card";
 import { columns } from "@/containers/widgets/financial/idb-operations/columns";
 import { IDBOperation } from "@/containers/widgets/financial/types";
 import { DataTable } from "@/containers/widgets/table";
@@ -37,9 +43,10 @@ export default function WidgetIDBOperations() {
   return (
     <Card>
       <CardTitle>IDB operations</CardTitle>
-      <div className="mt-3">
+
+      <CardContent className="space-y-2">
         <CardLoader query={[query]} className="h-72">
-          <div className="space-y-2">
+          <CardNoData query={[query]}>
             <DataTable
               columns={columns}
               data={query.data ?? []}
@@ -58,9 +65,9 @@ export default function WidgetIDBOperations() {
                 },
               }}
             />
-          </div>
+          </CardNoData>
         </CardLoader>
-      </div>
+      </CardContent>
     </Card>
   );
 }

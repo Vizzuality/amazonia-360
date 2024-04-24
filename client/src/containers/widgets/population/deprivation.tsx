@@ -6,7 +6,7 @@ import { useGetRasterAnalysis } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
-import { Card, CardLoader, CardTitle } from "@/containers/card";
+import { Card, CardContent, CardLoader, CardTitle } from "@/containers/card";
 import WidgetMap from "@/containers/widgets/map";
 
 export default function WidgetsPopulationDeprivation() {
@@ -34,13 +34,15 @@ export default function WidgetsPopulationDeprivation() {
     <Card className="h-full p-0 relative print:break-before-page">
       <div className="p-6">
         <CardTitle>Deprivation Index</CardTitle>
-        <CardLoader query={[query]} className="h-10">
-          <p className="text-sm font-medium">
-            The SEDAC Deprivation Index reaches an{" "}
-            <strong>average of {formatNumber(query.data)}</strong> out of a
-            maximum of 100, representing the worst situation.
-          </p>
-        </CardLoader>
+        <CardContent>
+          <CardLoader query={[query]} className="h-10">
+            <p className="text-sm font-medium">
+              The SEDAC Deprivation Index reaches an{" "}
+              <strong>average of {formatNumber(query.data)}</strong> out of a
+              maximum of 100, representing the worst situation.
+            </p>
+          </CardLoader>
+        </CardContent>
       </div>
       <WidgetMap ids={["deprivation_index"]} />
     </Card>

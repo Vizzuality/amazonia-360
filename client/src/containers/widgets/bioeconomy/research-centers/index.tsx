@@ -7,7 +7,13 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
-import { Card, CardLoader, CardTitle } from "@/containers/card";
+import {
+  Card,
+  CardLoader,
+  CardTitle,
+  CardNoData,
+  CardContent,
+} from "@/containers/card";
 import {
   ResearchCenter,
   columns,
@@ -41,26 +47,30 @@ export default function WidgetResearchCenters() {
   return (
     <Card>
       <CardTitle>Research centers</CardTitle>
-      <CardLoader query={[query]} className="h-72">
-        <DataTable
-          columns={columns}
-          data={query.data ?? []}
-          tableOptions={{
-            initialState: {
-              pagination: {
-                pageIndex: 0,
-                pageSize: 7,
-              },
-              sorting: [
-                {
-                  id: "Org_Name",
-                  desc: false,
+      <CardContent>
+        <CardLoader query={[query]} className="h-72">
+          <CardNoData query={[query]}>
+            <DataTable
+              columns={columns}
+              data={query.data ?? []}
+              tableOptions={{
+                initialState: {
+                  pagination: {
+                    pageIndex: 0,
+                    pageSize: 7,
+                  },
+                  sorting: [
+                    {
+                      id: "Org_Name",
+                      desc: false,
+                    },
+                  ],
                 },
-              ],
-            },
-          }}
-        />
-      </CardLoader>
+              }}
+            />
+          </CardNoData>
+        </CardLoader>
+      </CardContent>
     </Card>
   );
 }

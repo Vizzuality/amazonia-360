@@ -7,7 +7,13 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
-import { Card, CardLoader, CardTitle } from "@/containers/card";
+import {
+  Card,
+  CardContent,
+  CardLoader,
+  CardNoData,
+  CardTitle,
+} from "@/containers/card";
 import { columns } from "@/containers/widgets/overview/administrative-boundaries/columns";
 import WidgetAdministrativeBoundariesHeader from "@/containers/widgets/overview/administrative-boundaries/header";
 import {
@@ -59,9 +65,9 @@ export default function WidgetAdministrativeBoundaries() {
   return (
     <Card>
       <CardTitle>Administrative Boundaries</CardTitle>
-      <div className="mt-3">
+      <CardContent className="space-y-2">
         <CardLoader query={[queryAdmin, queryCities]} className="h-72">
-          <div className="space-y-2">
+          <CardNoData query={[queryAdmin, queryCities]}>
             <WidgetAdministrativeBoundariesHeader
               administrativeBoundaries={queryAdmin.data ?? []}
               cities={queryCities.data ?? []}
@@ -85,9 +91,9 @@ export default function WidgetAdministrativeBoundaries() {
                 },
               }}
             />
-          </div>
+          </CardNoData>
         </CardLoader>
-      </div>
+      </CardContent>
     </Card>
   );
 }

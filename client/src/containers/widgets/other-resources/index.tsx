@@ -18,18 +18,29 @@ export default function OtherResources() {
           <TabsTrigger value="all" onClick={() => setTab("all")}>
             All ({Object.values(RESOURCES).flat().length || 0})
           </TabsTrigger>
-          <TabsTrigger
-            value="publications"
-            onClick={() => setTab("publications")}
-          >
-            Publications ({RESOURCES.publications.length || 0})
-          </TabsTrigger>
-          <TabsTrigger value="database" onClick={() => setTab("database")}>
-            Database ({RESOURCES.database.length || 0})
-          </TabsTrigger>
-          <TabsTrigger value="multimedia" onClick={() => setTab("multimedia")}>
-            Multimedia ({RESOURCES.multimedia.length || 0})
-          </TabsTrigger>
+          {!!RESOURCES.publications.length && (
+            <TabsTrigger
+              value="publications"
+              onClick={() => setTab("publications")}
+            >
+              Publications ({RESOURCES.publications.length})
+            </TabsTrigger>
+          )}
+
+          {!!RESOURCES.database.length && (
+            <TabsTrigger value="database" onClick={() => setTab("database")}>
+              Database ({RESOURCES.database.length})
+            </TabsTrigger>
+          )}
+
+          {!!RESOURCES.multimedia.length && (
+            <TabsTrigger
+              value="multimedia"
+              onClick={() => setTab("multimedia")}
+            >
+              Multimedia ({RESOURCES.multimedia.length})
+            </TabsTrigger>
+          )}
         </TabsList>
         <TabsContent value="all">
           <WidgetsRow className="print:grid-cols-2">
@@ -43,6 +54,10 @@ export default function OtherResources() {
                   <Resource key={idx} resource={r} />
                 </WidgetsColumn>
               ))}
+            {/* // !TODO: Implement NoData component */}
+            {/* {!!Object.values(RESOURCES).flat().length && (
+              <NoData query={} />
+            )} */}
           </WidgetsRow>
         </TabsContent>
         <TabsContent value="publications">

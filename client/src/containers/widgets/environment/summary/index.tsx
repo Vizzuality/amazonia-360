@@ -8,7 +8,7 @@ import { useSyncLocation } from "@/app/store";
 import { DATASETS } from "@/constants/datasets";
 import { ELEVATION_RANGES, ElevationRangeIds } from "@/constants/raster";
 
-import { Card, CardLoader, CardTitle } from "@/containers/card";
+import { Card, CardContent, CardLoader, CardTitle } from "@/containers/card";
 import WidgetEnvironmentSummaryAltitude from "@/containers/widgets/environment/summary/altitude";
 import WidgetEnvironmentSummaryBiomes from "@/containers/widgets/environment/summary/biomes";
 import WidgetEnvironmentSummaryClimate from "@/containers/widgets/environment/summary/climate";
@@ -89,19 +89,19 @@ export default function WidgetEnvironmentSummary() {
   return (
     <Card>
       <CardTitle>Environment summary</CardTitle>
-      <CardLoader
-        query={[queryAltitude, queryHydro, queryClimate, queryBiomes]}
-        className="h-28"
-      >
-        {!!queryHydro.data && (
+      <CardContent>
+        <CardLoader
+          query={[queryAltitude, queryHydro, queryClimate, queryBiomes]}
+          className="h-28"
+        >
           <p className="text-sm font-medium">
             <WidgetEnvironmentSummaryAltitude query={queryAltitude} />.{" "}
             <WidgetEnvironmentSummaryClimate query={queryClimate} />.{" "}
             <WidgetEnvironmentSummaryHydro query={queryHydro} />.{" "}
             <WidgetEnvironmentSummaryBiomes query={queryBiomes} />.
           </p>
-        )}
-      </CardLoader>
+        </CardLoader>
+      </CardContent>
     </Card>
   );
 }
