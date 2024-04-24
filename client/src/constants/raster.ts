@@ -150,7 +150,7 @@ export const ELEVATION_RANGES = {
     label: "5.000 - 6.858,67 m.",
     color: "#d1c4c1",
   },
-};
+} as const;
 
 export const ELEVATION_RANGES_COLORMAP = Object.keys(ELEVATION_RANGES).reduce(
   (acc, key) => ({
@@ -163,3 +163,50 @@ export const ELEVATION_RANGES_COLORMAP = Object.keys(ELEVATION_RANGES).reduce(
 );
 
 export type ElevationRangeIds = keyof typeof ELEVATION_RANGES;
+
+export const BIOMES = {
+  "1": {
+    label: "Tropical and Subtropical Moist Broadleaf Forests",
+    color: "#014600",
+  },
+  "2": {
+    label: "Tropical and Subtropical Dry Broadleaf Forests",
+    color: "#607a22",
+  },
+  "7": {
+    label: "Tropical and Subtropical Grasslands, Savannas and Shrublands",
+    color: "#9b950e",
+  },
+  "9": {
+    label: "Flooded Grasslands and Savannas",
+    color: "#2a8384",
+  },
+  "10": {
+    label: "Montane Grasslands and Shrublands",
+    color: "#814229",
+  },
+  "13": {
+    label: "Deserts and Xeric Shrublands",
+    color: "#f5e759",
+  },
+  "14": {
+    label: "Mangroves",
+    color: "#8dccbd",
+  },
+} as const;
+
+export type BiomesIds = keyof typeof BIOMES;
+
+export const CLIMATE_TYPES = {
+  Af: { label: "Tropical, rainforest", color: "#0001FE" },
+  Csb: { label: "Temperate, dry summer, warm summer", color: "#C6C700" },
+  Cfb: { label: "Temperate, no dry season, warm summer", color: "#66FF33" },
+  Am: { label: "Tropical, monsoon", color: "#0077FF" },
+  Aw: { label: "Tropical, savannah", color: "#46A9FA" },
+  BWk: { label: "Arid, desert, cold", color: "#FE9695" },
+  BSk: { label: "Arid, steppe, cold", color: "#FEDB63" },
+  BSh: { label: "Arid, steppe, hot", color: "#F5A300" },
+  ET: { label: "Polar, tundra or frost", color: "#B2B2B2" },
+} as const;
+
+export type ClimateTypesIds = keyof typeof CLIMATE_TYPES;
