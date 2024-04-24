@@ -20,7 +20,7 @@ export default function WidgetEnvironmentSummaryClimate({
 
   return (
     <>
-      It typically experiences a{" "}
+      The region typically experiences a{" "}
       <strong>{joinWithAnd(Array.from(STATISTICS.climates.values()))}</strong>{" "}
       {Pluralize("climate type", STATISTICS.climates.size)}
     </>

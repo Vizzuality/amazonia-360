@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { LuCoins } from "react-icons/lu";
+import { LuPin } from "react-icons/lu";
 
 import { formatCurrency } from "@/lib/formats";
 
@@ -17,7 +17,7 @@ export const columns: ColumnDef<IDBOperation>[] = [
       const v = props.getValue<string>();
       return (
         <div className="flex space-x-2">
-          <LuCoins className="text-cyan-600 mt-px shrink-0" />
+          <LuPin className="text-cyan-600 mt-px shrink-0" />
           <span>{v}</span>
         </div>
       );

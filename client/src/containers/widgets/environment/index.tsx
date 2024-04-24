@@ -7,6 +7,7 @@ import { TOPICS } from "@/constants/topics";
 
 import { Card } from "@/containers/card";
 import WidgetsColumn from "@/containers/widgets/column";
+import WidgetAltitude from "@/containers/widgets/environment/altitude";
 import WidgetBiomesByType from "@/containers/widgets/environment/biomes-by-type";
 import WidgetLandCoverByType from "@/containers/widgets/environment/land-cover-by-type";
 import WidgetEnvironmentSummary from "@/containers/widgets/environment/summary";
@@ -37,6 +38,9 @@ export default function WidgetsEnvironment({ index }: { index: number }) {
           <WidgetsRow>
             <WidgetsColumn className="col-span-12">
               <WidgetEnvironmentSummary />
+            </WidgetsColumn>
+            <WidgetsColumn className="col-span-12">
+              <WidgetAltitude />
             </WidgetsColumn>
             <WidgetsColumn className="col-span-6 h-full flex flex-col">
               <WidgetBiomesByType />

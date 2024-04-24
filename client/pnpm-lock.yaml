@@ -80,6 +80,9 @@ dependencies:
   '@visx/tooltip':
     specifier: 3.3.0
     version: 3.3.0(react-dom@18.2.0)(react@18.2.0)
+  '@visx/vendor':
+    specifier: ^3.5.0
+    version: 3.5.0
   axios:
     specifier: ^1.6.8
     version: 1.6.8

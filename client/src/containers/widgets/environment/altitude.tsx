@@ -1,5 +1,6 @@
 "use client";
 
+import { treemapDice } from "@visx/hierarchy";
 import {
   HierarchyNode,
   HierarchyRectangularNode,
@@ -12,21 +13,21 @@ import { useGetRasterAnalysis } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
-import { LAND_COVER, LandCoverIds } from "@/constants/raster";
+import { ELEVATION_RANGES, ElevationRangeIds } from "@/constants/raster";
 
-import { Card, CardLoader, CardTitle } from "@/containers/card";
+import { Card, CardTitle, CardLoader } from "@/containers/card";
 import LegendOrdinal from "@/containers/legend/ordinal";
 
 import MarimekkoChart, { Data } from "@/components/charts/marimekko";
 
-export default function WidgetLandCoverByType() {
+export default function WidgetAltitude() {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
 
   const query = useGetRasterAnalysis(
     {
-      id: "landcover",
+      id: "elevation_ranges",
       polygon: GEOMETRY,
       statistics: ["frac", "unique"],
     },
@@ -39,28 +40,32 @@ export default function WidgetLandCoverByType() {
             const { frac, unique } = f.properties;
 
             const us = unique.map((u, index) => {
+              const e = ELEVATION_RANGES[`${u}` as ElevationRangeIds];
               return {
-                id: LAND_COVER[`${u}` as LandCoverIds].label,
+                id: e.label,
+                key: u,
                 parent: "root",
                 size: frac[index],
-                label: LAND_COVER[`${u}` as LandCoverIds].label,
-                color: LAND_COVER[`${u}` as LandCoverIds].color,
+                label: e.label,
+                color: e.color,
               };
             }, {});
 
-            return us
-              .filter((u) => u.size > 0.001)
-              .toSorted((a, b) => {
-                if (!a.size || !b.size) return 0;
-
-                return b.size - a.size;
-              });
+            return us.filter((u) => u.size > 0.001);
           }
 
           return [];
         });
 
-        return values.flat();
+        return values
+          .flat()
+          .toSorted((a, b) => a.key - b.key)
+          .map((d, i, arr) => {
+            return {
+              ...d,
+              percentage: (i + 1) / arr.length,
+            };
+          });
       },
     },
   );
@@ -77,20 +82,20 @@ export default function WidgetLandCoverByType() {
   };
 
   return (
-    <Card className="grow">
-      <CardTitle>Land cover by type</CardTitle>
-      <CardLoader query={[query]} className="h-52">
-        {!!query.data && (
-          <div className="space-y-2 pt-2">
-            <MarimekkoChart
-              format={FORMAT}
-              colorScale={ordinalColorScale}
-              data={query.data || []}
-            />
+    <Card>
+      <CardTitle>Altitude</CardTitle>
+      <CardLoader query={[query]} className="h-20">
+        <div className="space-y-2 pt-2">
+          <MarimekkoChart
+            data={query?.data || []}
+            colorScale={ordinalColorScale}
+            format={FORMAT}
+            className="h-12"
+            tile={treemapDice}
+          />
 
-            <LegendOrdinal ordinalColorScale={ordinalColorScale} />
-          </div>
-        )}
+          <LegendOrdinal ordinalColorScale={ordinalColorScale} />
+        </div>
       </CardLoader>
     </Card>
   );

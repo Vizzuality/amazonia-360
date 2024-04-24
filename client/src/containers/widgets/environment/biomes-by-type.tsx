@@ -4,7 +4,6 @@ import {
   HierarchyNode,
   HierarchyRectangularNode,
 } from "@visx/hierarchy/lib/types";
-import { LegendOrdinal } from "@visx/legend";
 import { scaleOrdinal } from "@visx/scale";
 
 import { formatPercentage } from "@/lib/formats";
@@ -16,6 +15,7 @@ import { useSyncLocation } from "@/app/store";
 import { BIOMES, BiomesIds } from "@/constants/raster";
 
 import { Card, CardLoader, CardTitle } from "@/containers/card";
+import LegendOrdinal from "@/containers/legend/ordinal";
 
 import MarimekkoChart, { Data } from "@/components/charts/marimekko";
 
@@ -81,46 +81,15 @@ export default function WidgetBiomesByType() {
     <Card className="grow">
       <CardTitle>Biomes by type</CardTitle>
       <CardLoader query={[query]} className="h-52">
-        {!!query.data && (
-          <div className="space-y-2 pt-2">
-            <MarimekkoChart
-              format={FORMAT}
-              colorScale={ordinalColorScale}
-              data={query.data || []}
-            />
+        <div className="space-y-2 pt-2">
+          <MarimekkoChart
+            format={FORMAT}
+            colorScale={ordinalColorScale}
+            data={query.data || []}
+          />
 
-            <LegendOrdinal scale={ordinalColorScale} className="w-full">
-              {(labels) => (
-                <div className="flex flex-wrap justify-start gap-y-1 gap-x-3">
-                  {labels.map((label) => (
-                    <div
-                      key={`legend-quantile-${label.datum.id}`}
-                      className="flex"
-                    >
-                      <div
-                        className="w-2 h-2 shrink-0 mt-px mr-1 border border-black"
-                        style={{
-                          backgroundColor: label.value,
-                        }}
-                      />
-                      <span className="text-2xs font-semibold text-gray-500">
-                        {label.datum.label}{" "}
-                        <span>
-                          (
-                          {label.datum.size > 0.01 &&
-                            formatPercentage(label.datum.size, {
-                              maximumFractionDigits: 0,
-                            })}
-                          {label.datum.size <= 0.01 && `<1%`})
-                        </span>
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </LegendOrdinal>
-          </div>
-        )}
+          <LegendOrdinal ordinalColorScale={ordinalColorScale} />
+        </div>
       </CardLoader>
     </Card>
   );

@@ -2,9 +2,9 @@ import { Card } from "@/containers/card";
 import WidgetsColumn from "@/containers/widgets/column";
 import WidgetMap from "@/containers/widgets/map";
 import WidgetAdministrativeBoundaries from "@/containers/widgets/overview/administrative-boundaries";
-import WidgetAltitude from "@/containers/widgets/overview/altitude";
 import WidgetAmazoniaCoverage from "@/containers/widgets/overview/amazonia-coverage";
 import WidgetPopulation from "@/containers/widgets/overview/population";
+import WidgetProtection from "@/containers/widgets/overview/protection";
 import WidgetTotalArea from "@/containers/widgets/overview/total-area";
 import WidgetsRow from "@/containers/widgets/row";
 
@@ -19,7 +19,7 @@ export default function WidgetsOverview() {
           <WidgetPopulation />
         </WidgetsColumn>
         <WidgetsColumn className="col-span-3 print:col-span-6">
-          <WidgetAltitude />
+          <WidgetProtection />
         </WidgetsColumn>
         <WidgetsColumn className="col-span-3 print:col-span-6">
           <WidgetAmazoniaCoverage />
