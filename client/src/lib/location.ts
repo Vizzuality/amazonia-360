@@ -48,6 +48,27 @@ export const useLocation = (location?: Location | null) => {
   }, [location, searchData]);
 };
 
+export const useLocationTitle = (location?: Location | null) => {
+  const { data: searchData } = useGetSearch(
+    location?.type === "search" ? (location as SearchLocation) : null,
+    {
+      enabled: location?.type === "search",
+    },
+  );
+
+  return useMemo(() => {
+    if (location?.type === "search" && searchData) {
+      return location.text;
+    }
+
+    if (location?.type && location?.type !== "search") {
+      return "Custom Area";
+    }
+
+    return null;
+  }, [location, searchData]);
+};
+
 export const getGeometryByType = (location: CustomLocation) => {
   if (location?.type === "point") {
     return Point.fromJSON(location.geometry);

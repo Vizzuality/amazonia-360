@@ -7,6 +7,10 @@ import Link from "next/link";
 import { Download } from "lucide-react";
 import { LuLayoutGrid, LuPlus } from "react-icons/lu";
 
+import { useLocationTitle } from "@/lib/location";
+
+import { useSyncLocation } from "@/app/store";
+
 import Topics from "@/containers/report/topics";
 
 import {
@@ -25,6 +29,10 @@ import { Button } from "@/components/ui/button";
 import ShareReport from "./share";
 
 export default function ReportResultsHeader() {
+  const [location] = useSyncLocation();
+
+  const title = useLocationTitle(location);
+
   const [open, setOpen] = useState(false);
 
   return (
@@ -32,8 +40,8 @@ export default function ReportResultsHeader() {
       <div className="container">
         <div className="flex justify-between">
           {/* Name */}
-          <div className="flex items-center space-x-6">
-            <h1 className="text-4xl font-bold text-primary">Testing</h1>
+          <div className="flex items-center space-x-6 mr-4">
+            <h1 className="text-4xl font-bold text-primary">{title}</h1>
 
             <AlertDialog>
               <AlertDialogTrigger asChild className="print:hidden">
