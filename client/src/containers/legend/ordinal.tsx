@@ -4,15 +4,24 @@ import { ScaleOrdinal } from "@visx/vendor/d3-scale";
 import { formatPercentage } from "@/lib/formats";
 import { cn } from "@/lib/utils";
 
-import { Data } from "@/components/charts/marimekko";
+export type LegendOrdinalT = {
+  id: string;
+  label: string;
+  color: string;
+  size?: number;
+};
 
-export default function LegendOrdinal({
+export default function LegendOrdinal<T extends LegendOrdinalT>({
   direction = "horizontal",
   ordinalColorScale,
 }: {
-  ordinalColorScale: ScaleOrdinal<Data, string>;
+  ordinalColorScale?: ScaleOrdinal<T, string, never>;
   direction?: "horizontal" | "vertical";
 }) {
+  if (!ordinalColorScale) {
+    return null;
+  }
+
   return (
     <VxLegendOrdinal scale={ordinalColorScale} className="w-full">
       {(labels) => (
@@ -33,14 +42,16 @@ export default function LegendOrdinal({
               />
               <span className="text-2xs font-semibold text-foreground">
                 {label.datum.label}{" "}
-                <span>
-                  (
-                  {label.datum.size > 0.01 &&
-                    formatPercentage(label.datum.size, {
-                      maximumFractionDigits: 0,
-                    })}
-                  {label.datum.size <= 0.01 && `<1%`})
-                </span>
+                {!!label.datum.size && (
+                  <span>
+                    (
+                    {label.datum.size > 0.01 &&
+                      formatPercentage(label.datum.size, {
+                        maximumFractionDigits: 0,
+                      })}
+                    {label.datum.size <= 0.01 && `<1%`})
+                  </span>
+                )}
               </span>
             </div>
           ))}
