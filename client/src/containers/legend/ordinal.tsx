@@ -2,18 +2,27 @@ import { LegendOrdinal as VxLegendOrdinal } from "@visx/legend";
 import { ScaleOrdinal } from "@visx/vendor/d3-scale";
 
 import { formatPercentage } from "@/lib/formats";
+import { cn } from "@/lib/utils";
 
 import { Data } from "@/components/charts/marimekko";
 
 export default function LegendOrdinal({
+  direction = "horizontal",
   ordinalColorScale,
 }: {
   ordinalColorScale: ScaleOrdinal<Data, string>;
+  direction?: "horizontal" | "vertical";
 }) {
   return (
     <VxLegendOrdinal scale={ordinalColorScale} className="w-full">
       {(labels) => (
-        <div className="flex flex-wrap justify-start gap-y-1 gap-x-2">
+        <div
+          className={cn({
+            "flex justify-start gap-y-1": true,
+            "flex flex-col": direction === "vertical",
+            "flex-row flex-wrap gap-x-2": direction === "horizontal",
+          })}
+        >
           {labels.map((label) => (
             <div key={`legend-quantile-${label.datum.id}`} className="flex">
               <div

@@ -529,6 +529,29 @@ export const DATASETS = {
       )}`,
     }),
   },
+  acu_knowledge: {
+    layer: new FeatureLayer({
+      id: "acu_knowledge",
+      title: "ACU Knowledge",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/ACU_Knowledge/FeatureServer/0",
+      renderer: new SimpleRenderer({
+        symbol: new SimpleMarkerSymbol({
+          color: "#000000",
+          size: 4,
+          outline: {
+            width: 1,
+            color: "#000000",
+          },
+        }),
+      }),
+    }),
+    getFeatures: (props?: __esri.QueryProperties) =>
+      new Query({
+        where: "FID is not null",
+        outFields: ["*"],
+        ...props,
+      }),
+  },
 } as const;
 
 export const DATASET_IDS = getKeys(DATASETS);

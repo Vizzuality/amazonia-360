@@ -18,7 +18,7 @@ export default function Help() {
             src={"/images/home/amazonia_forever_logo.png"}
             alt="KF Logo"
             width={65}
-            height={24}
+            height={48}
             className="text-white"
           />
         </div>
