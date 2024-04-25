@@ -9,14 +9,14 @@ import { useSyncLocation } from "@/app/store";
 import { Card, CardContent, CardLoader, CardTitle } from "@/containers/card";
 import WidgetMap from "@/containers/widgets/map";
 
-export default function WidgetsPopulationDeprivation() {
+export default function WidgetsPopulationPopulation() {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
 
   const query = useGetRasterAnalysis(
     {
-      id: "deprivation_index",
+      id: "population",
       polygon: GEOMETRY,
       statistics: ["sum"],
     },

@@ -14,8 +14,9 @@ import {
 import { useParentSize } from "@visx/responsive";
 import { ScaleTypeToD3Scale } from "@visx/scale";
 import { useTooltip, useTooltipInPortal } from "@visx/tooltip";
+import CHROMA from "chroma-js";
 
-import { cn, getContrastColor, getTextSize } from "@/lib/utils";
+import { cn, getTextSize } from "@/lib/utils";
 
 export const background = "#00152E"; // navy
 
@@ -189,8 +190,9 @@ const MarimekkoChart = <T extends Data>({
                               <p
                                 className={cn(
                                   "font-bold",
-                                  getContrastColor(colorScale(node.data.data)) >
-                                    0.5
+                                  CHROMA(
+                                    colorScale(node.data.data),
+                                  ).luminance() > 0.5
                                     ? "text-foreground"
                                     : "text-white",
                                 )}
@@ -203,8 +205,9 @@ const MarimekkoChart = <T extends Data>({
                               <p
                                 className={cn(
                                   "text-sm font-medium text-white",
-                                  getContrastColor(colorScale(node.data.data)) >
-                                    0.5
+                                  CHROMA(
+                                    colorScale(node.data.data),
+                                  ).luminance() > 0.5
                                     ? "text-foreground"
                                     : "text-white",
                                 )}

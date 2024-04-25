@@ -20,7 +20,7 @@ export default function WidgetPopulation() {
 
   const query = useGetRasterAnalysis(
     {
-      id: "deprivation_index",
+      id: "population",
       polygon: GEOMETRY,
       statistics: ["sum"],
     },
