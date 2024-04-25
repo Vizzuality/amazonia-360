@@ -13,7 +13,7 @@ import { useGetRasterAnalysis } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
-import { ELEVATION_RANGES, ElevationRangeIds } from "@/constants/raster";
+import { ELEVATION_RANGES, ElevationRangeIds } from "@/constants/colors";
 
 import { Card, CardTitle, CardLoader } from "@/containers/card";
 import LegendOrdinal from "@/containers/legend/ordinal";

@@ -12,7 +12,7 @@ import { useGetIntersectionAnalysis } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
-import { BIOMES, BiomesIds } from "@/constants/raster";
+import { BIOMES, BiomesIds } from "@/constants/colors";
 
 import { Card, CardLoader, CardTitle } from "@/containers/card";
 import LegendOrdinal from "@/containers/legend/ordinal";

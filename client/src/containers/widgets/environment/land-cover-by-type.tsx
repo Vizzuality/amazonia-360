@@ -12,7 +12,7 @@ import { useGetRasterAnalysis } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
-import { LAND_COVER, LandCoverIds } from "@/constants/raster";
+import { LAND_COVER, LandCoverIds } from "@/constants/colors";
 
 import { Card, CardLoader, CardTitle } from "@/containers/card";
 import LegendOrdinal from "@/containers/legend/ordinal";

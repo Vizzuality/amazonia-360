@@ -16,7 +16,7 @@ import {
   ELEVATION_RANGES_COLORMAP,
   FIRES_COLORMAP,
   LAND_COVER_COLORMAP,
-} from "@/constants/raster";
+} from "@/constants/colors";
 
 export const DATASETS = {
   admin0: {

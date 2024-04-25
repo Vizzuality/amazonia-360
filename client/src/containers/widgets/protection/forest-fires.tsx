@@ -13,7 +13,7 @@ import { useGetRasterAnalysis } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
-import { FIRES, FireIds } from "@/constants/raster";
+import { FIRES, FireIds } from "@/constants/colors";
 
 import { Card, CardContent, CardLoader, CardTitle } from "@/containers/card";
 import LegendOrdinal from "@/containers/legend/ordinal";
