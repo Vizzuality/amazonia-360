@@ -33,15 +33,15 @@ export default function WidgetsProtection({ index }: { index: number }) {
       <WidgetsRow>
         <WidgetsColumn
           className={cn(
-            "col-span-6 print:col-span-12",
-            index % 2 !== 0 && "order-2",
+            "col-span-12 lg:col-span-6 print:col-span-12",
+            index % 2 !== 0 && "lg:order-2",
           )}
         >
           <WidgetsRow>
-            <WidgetsColumn className="col-span-6">
+            <WidgetsColumn className="col-span-12 md:col-span-6">
               <WidgetForestFires />
             </WidgetsColumn>
-            <WidgetsColumn className="col-span-6">
+            <WidgetsColumn className="col-span-12 md:col-span-6">
               <WidgetIndigenousLands />
             </WidgetsColumn>
             <WidgetsColumn className="col-span-12 print:break-before-page">
@@ -50,7 +50,7 @@ export default function WidgetsProtection({ index }: { index: number }) {
           </WidgetsRow>
         </WidgetsColumn>
 
-        <WidgetsColumn className="col-span-6 print:col-span-12">
+        <WidgetsColumn className="col-span-12 lg:col-span-6 print:col-span-12">
           <div className="absolute top-4 left-4 z-10">
             <Select
               value={layer}

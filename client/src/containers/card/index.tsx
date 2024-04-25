@@ -56,7 +56,7 @@ export function CardNoData({
     return (
       <div className="flex flex-col justify-center items-center space-y-6 py-12 grow">
         <Image
-          src={"/images/no-data.png"}
+          src={"/images/no-data.svg"}
           alt="No data"
           width={141}
           height={94}

@@ -14,12 +14,12 @@ export default function WidgetsFinancial() {
     <div className="container print:break-before-page">
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
       <WidgetsRow>
-        <WidgetsColumn className="col-span-6 print:col-span-12">
+        <WidgetsColumn className="col-span-12 lg:col-span-6 print:col-span-12">
           <WidgetsRow className="items-start grow-0">
-            <WidgetsColumn className="col-span-6">
+            <WidgetsColumn className="col-span-12 md:col-span-6">
               <WidgetTotalOperations />
             </WidgetsColumn>
-            <WidgetsColumn className="col-span-6">
+            <WidgetsColumn className="col-span-12 md:col-span-6">
               <WidgetTotalFunding />
             </WidgetsColumn>
             <WidgetsColumn className="col-span-12">
@@ -27,7 +27,7 @@ export default function WidgetsFinancial() {
             </WidgetsColumn>
           </WidgetsRow>
         </WidgetsColumn>
-        <WidgetsColumn className="col-span-6 print:col-span-12">
+        <WidgetsColumn className="col-span-12 lg:col-span-6 print:col-span-12">
           <WidgetIDBOperations />
         </WidgetsColumn>
       </WidgetsRow>

@@ -31,8 +31,8 @@ export default function WidgetsEnvironment({ index }: { index: number }) {
       <WidgetsRow>
         <WidgetsColumn
           className={cn(
-            "col-span-6 print:col-span-12",
-            index % 2 !== 0 && "order-2",
+            "col-span-12 lg:col-span-6 print:col-span-12",
+            index % 2 !== 0 && "lg:order-2",
           )}
         >
           <WidgetsRow>
@@ -42,15 +42,15 @@ export default function WidgetsEnvironment({ index }: { index: number }) {
             <WidgetsColumn className="col-span-12">
               <WidgetAltitude />
             </WidgetsColumn>
-            <WidgetsColumn className="col-span-6 h-full flex flex-col">
+            <WidgetsColumn className="col-span-12 md:col-span-6 h-full flex flex-col">
               <WidgetBiomesByType />
             </WidgetsColumn>
-            <WidgetsColumn className="col-span-6 h-full flex flex-col">
+            <WidgetsColumn className="col-span-12 md:col-span-6 h-full flex flex-col">
               <WidgetLandCoverByType />
             </WidgetsColumn>
           </WidgetsRow>
         </WidgetsColumn>
-        <WidgetsColumn className="col-span-6 print:break-before-page">
+        <WidgetsColumn className="col-span-12 lg:col-span-6 print:break-before-page">
           <div className="absolute top-4 left-4 z-10">
             <Select
               value={layer}

@@ -17,13 +17,13 @@ export default function WidgetsBioeconomy({ index }: { index: number }) {
       <WidgetsRow>
         <WidgetsColumn
           className={cn(
-            "col-span-6 print:col-span-12",
-            index % 2 !== 0 && "order-2",
+            "col-span-12 lg:col-span-6 print:col-span-12",
+            index % 2 !== 0 && "lg:order-2",
           )}
         >
           <WidgetResearchCenters />
         </WidgetsColumn>
-        <WidgetsColumn className="col-span-6 print:col-span-12">
+        <WidgetsColumn className="col-span-12 lg:col-span-6 print:col-span-12">
           <Card className="h-full p-0 relative">
             <WidgetMap ids={["institutional_tracking"]} />
           </Card>
