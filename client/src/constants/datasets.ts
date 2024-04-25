@@ -5,6 +5,8 @@ import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
 import Query from "@arcgis/core/rest/support/Query";
 import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
 import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
+import { scaleOrdinal } from "@visx/scale";
+import { ScaleOrdinal } from "@visx/vendor/d3-scale";
 
 import { env } from "@/env.mjs";
 
@@ -13,10 +15,15 @@ import { getKeys } from "@/lib/utils";
 import {
   BIOMES,
   CLIMATE_TYPES,
+  ELEVATION_RANGES,
   ELEVATION_RANGES_COLORMAP,
+  FIRES,
   FIRES_COLORMAP,
+  LAND_COVER,
   LAND_COVER_COLORMAP,
 } from "@/constants/colors";
+
+import { LegendOrdinalT } from "@/containers/legend/ordinal";
 
 export const DATASETS = {
   admin0: {
@@ -35,7 +42,7 @@ export const DATASETS = {
         }),
       }),
     }),
-
+    legend: null,
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -59,7 +66,7 @@ export const DATASETS = {
         }),
       }),
     }),
-
+    legend: null,
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -83,7 +90,7 @@ export const DATASETS = {
         }),
       }),
     }),
-
+    legend: null,
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -107,6 +114,7 @@ export const DATASETS = {
         }),
       }),
     }),
+    legend: null,
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -130,6 +138,7 @@ export const DATASETS = {
         }),
       }),
     }),
+    legend: null,
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -143,6 +152,7 @@ export const DATASETS = {
       title: "Vectores frontera internacional",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/REFERENCIA_FRONTERA_INTERNACIONAL/FeatureServer/0",
     }),
+    legend: null,
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -165,6 +175,19 @@ export const DATASETS = {
         }),
       }),
     }),
+    legend: {
+      type: "ordinal",
+      scale: scaleOrdinal({
+        domain: [
+          {
+            id: "Indigenous lands",
+            label: "Indigenous lands",
+            color: "#E59F6F",
+          },
+        ],
+        range: ["#E59F6F"],
+      }) as ScaleOrdinal<LegendOrdinalT, string>,
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -198,6 +221,25 @@ export const DATASETS = {
         })),
       }),
     }),
+    legend: {
+      type: "ordinal",
+      scale: scaleOrdinal({
+        domain: getKeys(CLIMATE_TYPES)
+          .toSorted((a, b) =>
+            CLIMATE_TYPES[a].label.localeCompare(CLIMATE_TYPES[b].label),
+          )
+          .map((k) => ({
+            id: k,
+            label: CLIMATE_TYPES[k].label,
+            color: CLIMATE_TYPES[k].color,
+          })),
+        range: getKeys(CLIMATE_TYPES)
+          .toSorted((a, b) =>
+            CLIMATE_TYPES[a].label.localeCompare(CLIMATE_TYPES[b].label),
+          )
+          .map((k) => CLIMATE_TYPES[k].color),
+      }) as ScaleOrdinal<LegendOrdinalT, string>,
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -232,6 +274,21 @@ export const DATASETS = {
         })),
       }),
     }),
+    legend: {
+      type: "ordinal",
+      scale: scaleOrdinal({
+        domain: getKeys(BIOMES)
+          .toSorted((a, b) => BIOMES[a].label.localeCompare(BIOMES[b].label))
+          .map((k) => ({
+            id: k,
+            label: BIOMES[k].label,
+            color: BIOMES[k].color,
+          })),
+        range: getKeys(BIOMES)
+          .toSorted((a, b) => BIOMES[a].label.localeCompare(BIOMES[b].label))
+          .map((k) => BIOMES[k].color),
+      }) as ScaleOrdinal<LegendOrdinalT, string>,
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -307,6 +364,7 @@ export const DATASETS = {
         ],
       }),
     }),
+    legend: null,
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -320,6 +378,7 @@ export const DATASETS = {
       title: "Cuenca hidrográfica, pertenencia a grandes cuencas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Grandes_cuencas_hidrograficas/FeatureServer/0",
     }),
+    legend: null,
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -342,6 +401,19 @@ export const DATASETS = {
         }),
       }),
     }),
+    legend: {
+      type: "ordinal",
+      scale: scaleOrdinal({
+        domain: [
+          {
+            id: "Protected areas",
+            label: "Protected areas",
+            color: "#b5b986",
+          },
+        ],
+        range: ["#b5b986"],
+      }) as ScaleOrdinal<LegendOrdinalT, string>,
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -385,6 +457,7 @@ export const DATASETS = {
         }),
       }),
     }),
+    legend: null,
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -429,6 +502,7 @@ export const DATASETS = {
         }),
       }),
     }),
+    legend: null,
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "objectid is not null",
@@ -442,6 +516,25 @@ export const DATASETS = {
       title: "Land cover",
       urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=landcover_cog.tif&colormap=${encodeURIComponent(JSON.stringify(LAND_COVER_COLORMAP))}`,
     }),
+    legend: {
+      type: "ordinal",
+      scale: scaleOrdinal({
+        domain: getKeys(LAND_COVER)
+          .toSorted((a, b) =>
+            LAND_COVER[a].label.localeCompare(LAND_COVER[b].label),
+          )
+          .map((k) => ({
+            id: k,
+            label: LAND_COVER[k].label,
+            color: LAND_COVER[k].color,
+          })),
+        range: getKeys(LAND_COVER)
+          .toSorted((a, b) =>
+            LAND_COVER[a].label.localeCompare(LAND_COVER[b].label),
+          )
+          .map((k) => LAND_COVER[k].color),
+      }) as ScaleOrdinal<LegendOrdinalT, string>,
+    },
   },
   elevation_ranges: {
     layer: new WebTileLayer({
@@ -449,6 +542,17 @@ export const DATASETS = {
       title: "Elevation ranges",
       urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=elevation_ranges_cog.tif&colormap=${encodeURIComponent(JSON.stringify(ELEVATION_RANGES_COLORMAP))}`,
     }),
+    legend: {
+      type: "ordinal",
+      scale: scaleOrdinal({
+        domain: getKeys(ELEVATION_RANGES).map((k) => ({
+          id: k,
+          label: ELEVATION_RANGES[k].label,
+          color: ELEVATION_RANGES[k].color,
+        })),
+        range: getKeys(ELEVATION_RANGES).map((k) => ELEVATION_RANGES[k].color),
+      }) as ScaleOrdinal<LegendOrdinalT, string>,
+    },
   },
   fires: {
     layer: new WebTileLayer({
@@ -456,6 +560,17 @@ export const DATASETS = {
       title: "Fires",
       urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=fires_cog.tif&colormap=${encodeURIComponent(JSON.stringify(FIRES_COLORMAP))}`,
     }),
+    legend: {
+      type: "ordinal",
+      scale: scaleOrdinal({
+        domain: getKeys(FIRES).map((k) => ({
+          id: k,
+          label: FIRES[k].label,
+          color: FIRES[k].color,
+        })),
+        range: getKeys(FIRES).map((k) => FIRES[k].color),
+      }) as ScaleOrdinal<LegendOrdinalT, string>,
+    },
   },
   population: {
     layer: new WebTileLayer({
@@ -494,6 +609,7 @@ export const DATASETS = {
         ]),
       )}`,
     }),
+    legend: null,
   },
   deprivation_index: {
     layer: new WebTileLayer({
@@ -528,6 +644,7 @@ export const DATASETS = {
         ]),
       )}`,
     }),
+    legend: null,
   },
   acu_knowledge: {
     layer: new FeatureLayer({
@@ -545,6 +662,7 @@ export const DATASETS = {
         }),
       }),
     }),
+    legend: null,
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
