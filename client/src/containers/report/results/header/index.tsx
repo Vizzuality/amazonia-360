@@ -52,9 +52,11 @@ export default function ReportResultsHeader() {
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogTitle>New report</AlertDialogTitle>
                   <AlertDialogDescription>
-                    You will lose all of your saved information if you continue.
+                    Proceed if you wish to generate a new report by selecting a
+                    new area. Note that switching areas will refresh your
+                    current session, and the existing report will be lost.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

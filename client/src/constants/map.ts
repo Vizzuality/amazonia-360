@@ -25,7 +25,7 @@ export const POLYLINE_SYMBOL = new SimpleLineSymbol({
 });
 
 export const POLYGON_SYMBOL = new SimpleFillSymbol({
-  color: "#196E8C22",
+  color: "#009ADE22",
   outline: {
     color: "#009ADE",
     width: 1,
