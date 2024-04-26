@@ -9,6 +9,7 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
+import { CardLoader, CardNoData } from "@/containers/card";
 import WidgetsColumn from "@/containers/widgets/column";
 import Resource from "@/containers/widgets/other-resources/resource";
 import { ResourceProps } from "@/containers/widgets/other-resources/types";
@@ -52,50 +53,58 @@ export default function OtherResources() {
   return (
     <div className="container print:break-before-page">
       <h2 className="text-xl font-semibold mb-4">Other resources</h2>
-      <Tabs defaultValue={tab} className="flex flex-col space-y-4 items-start">
-        <TabsList>
-          <TabsTrigger value="all" onClick={() => setTab("all")}>
-            All ({query.data?.length || 0})
-          </TabsTrigger>
 
-          {GROUPS.map((group) => (
-            <TabsTrigger
-              key={group[0]}
-              value={group[0]}
-              onClick={() => setTab(group[0])}
-            >
-              {group[0]} ({group[1].length})
-            </TabsTrigger>
-          ))}
-        </TabsList>
-        <TabsContent className="w-full" value="all">
-          <WidgetsRow className="print:grid-cols-2">
-            {query.data?.map((r, idx) => (
-              <WidgetsColumn
-                className="col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
-                key={idx}
-              >
-                <Resource key={idx} {...r} />
-              </WidgetsColumn>
-            ))}
-          </WidgetsRow>
-        </TabsContent>
+      <CardLoader query={[query]} className="h-80">
+        <CardNoData query={[query]}>
+          <Tabs
+            defaultValue={tab}
+            className="flex flex-col space-y-4 items-start"
+          >
+            <TabsList>
+              <TabsTrigger value="all" onClick={() => setTab("all")}>
+                All ({query.data?.length || 0})
+              </TabsTrigger>
 
-        {GROUPS.map((group) => (
-          <TabsContent className="w-full" key={group[0]} value={group[0]}>
-            <WidgetsRow className="print:grid-cols-2">
-              {group[1].map((r, idx) => (
-                <WidgetsColumn
-                  className="col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
-                  key={idx}
+              {GROUPS.map((group) => (
+                <TabsTrigger
+                  key={group[0]}
+                  value={group[0]}
+                  onClick={() => setTab(group[0])}
                 >
-                  <Resource key={idx} {...r} />
-                </WidgetsColumn>
+                  {group[0]} ({group[1].length})
+                </TabsTrigger>
               ))}
-            </WidgetsRow>
-          </TabsContent>
-        ))}
-      </Tabs>
+            </TabsList>
+            <TabsContent className="w-full" value="all">
+              <WidgetsRow className="print:grid-cols-2">
+                {query.data?.map((r, idx) => (
+                  <WidgetsColumn
+                    className="col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
+                    key={idx}
+                  >
+                    <Resource key={idx} {...r} />
+                  </WidgetsColumn>
+                ))}
+              </WidgetsRow>
+            </TabsContent>
+
+            {GROUPS.map((group) => (
+              <TabsContent className="w-full" key={group[0]} value={group[0]}>
+                <WidgetsRow className="print:grid-cols-2">
+                  {group[1].map((r, idx) => (
+                    <WidgetsColumn
+                      className="col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
+                      key={idx}
+                    >
+                      <Resource key={idx} {...r} />
+                    </WidgetsColumn>
+                  ))}
+                </WidgetsRow>
+              </TabsContent>
+            ))}
+          </Tabs>
+        </CardNoData>
+      </CardLoader>
     </div>
   );
 }
