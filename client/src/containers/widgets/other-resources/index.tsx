@@ -1,8 +1,18 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
+import { flatGroup } from "@visx/vendor/d3-array";
+
+import { useLocationGeometry } from "@/lib/location";
+import { useGetFeatures } from "@/lib/query";
+
+import { useSyncLocation } from "@/app/store";
+
+import { DATASETS } from "@/constants/datasets";
+
+import { CardLoader, CardNoData } from "@/containers/card";
 import WidgetsColumn from "@/containers/widgets/column";
-import { RESOURCES } from "@/containers/widgets/other-resources/mock";
 import Resource from "@/containers/widgets/other-resources/resource";
+import { ResourceProps } from "@/containers/widgets/other-resources/types";
 import WidgetsRow from "@/containers/widgets/row";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,93 +20,91 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export default function OtherResources() {
   const [tab, setTab] = useState("all");
 
+  const [location] = useSyncLocation();
+
+  const GEOMETRY = useLocationGeometry(location);
+
+  const query = useGetFeatures(
+    {
+      query: DATASETS.acu_knowledge.getFeatures({
+        ...(!!GEOMETRY && {
+          orderByFields: ["Name"],
+          geometry: GEOMETRY,
+        }),
+      }),
+      feature: DATASETS.acu_knowledge.layer,
+    },
+    {
+      enabled: !!DATASETS.acu_knowledge.getFeatures && !!GEOMETRY,
+      select(data): ResourceProps[] {
+        return data.features.map((f) => f.attributes);
+      },
+    },
+  );
+
+  const GROUPS = useMemo(() => {
+    if (!query.data) return [];
+
+    const groups = flatGroup(query.data, (d) => d.Type);
+
+    return groups.toSorted((a, b) => a[0].localeCompare(b[0]));
+  }, [query.data]);
+
   return (
     <div className="container print:break-before-page">
       <h2 className="text-xl font-semibold mb-4">Other resources</h2>
-      <Tabs defaultValue={tab} className="flex flex-col space-y-4 items-start">
-        <TabsList>
-          <TabsTrigger value="all" onClick={() => setTab("all")}>
-            All ({Object.values(RESOURCES).flat().length || 0})
-          </TabsTrigger>
-          {!!RESOURCES.publications.length && (
-            <TabsTrigger
-              value="publications"
-              onClick={() => setTab("publications")}
-            >
-              Publications ({RESOURCES.publications.length})
-            </TabsTrigger>
-          )}
 
-          {!!RESOURCES.database.length && (
-            <TabsTrigger value="database" onClick={() => setTab("database")}>
-              Database ({RESOURCES.database.length})
-            </TabsTrigger>
-          )}
+      <CardLoader query={[query]} className="h-80">
+        <CardNoData query={[query]}>
+          <Tabs
+            defaultValue={tab}
+            className="flex flex-col space-y-4 items-start"
+          >
+            <TabsList>
+              <TabsTrigger value="all" onClick={() => setTab("all")}>
+                All ({query.data?.length || 0})
+              </TabsTrigger>
 
-          {!!RESOURCES.multimedia.length && (
-            <TabsTrigger
-              value="multimedia"
-              onClick={() => setTab("multimedia")}
-            >
-              Multimedia ({RESOURCES.multimedia.length})
-            </TabsTrigger>
-          )}
-        </TabsList>
-        <TabsContent value="all">
-          <WidgetsRow className="print:grid-cols-2">
-            {Object.values(RESOURCES)
-              .flat()
-              .map((r, idx) => (
-                <WidgetsColumn
-                  className="col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
-                  key={idx}
+              {GROUPS.map((group) => (
+                <TabsTrigger
+                  key={group[0]}
+                  value={group[0]}
+                  onClick={() => setTab(group[0])}
                 >
-                  <Resource key={idx} resource={r} />
-                </WidgetsColumn>
+                  {group[0]} ({group[1].length})
+                </TabsTrigger>
               ))}
-            {/* // !TODO: Implement NoData component */}
-            {/* {!!Object.values(RESOURCES).flat().length && (
-              <NoData query={} />
-            )} */}
-          </WidgetsRow>
-        </TabsContent>
-        <TabsContent value="publications">
-          <WidgetsRow className="print:grid-cols-2">
-            {RESOURCES.publications.map((r, idx) => (
-              <WidgetsColumn
-                className="col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
-                key={idx}
-              >
-                <Resource key={idx} resource={r} />
-              </WidgetsColumn>
+            </TabsList>
+            <TabsContent className="w-full" value="all">
+              <WidgetsRow className="print:grid-cols-2">
+                {query.data?.map((r, idx) => (
+                  <WidgetsColumn
+                    className="col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
+                    key={idx}
+                  >
+                    <Resource key={idx} {...r} />
+                  </WidgetsColumn>
+                ))}
+              </WidgetsRow>
+            </TabsContent>
+
+            {GROUPS.map((group) => (
+              <TabsContent className="w-full" key={group[0]} value={group[0]}>
+                <WidgetsRow className="print:grid-cols-2">
+                  {group[1].map((r, idx) => (
+                    <WidgetsColumn
+                      className="col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
+                      key={idx}
+                    >
+                      <Resource key={idx} {...r} />
+                    </WidgetsColumn>
+                  ))}
+                </WidgetsRow>
+              </TabsContent>
             ))}
-          </WidgetsRow>
-        </TabsContent>
-        <TabsContent value="database">
-          <WidgetsRow className="print:grid-cols-2">
-            {RESOURCES.database.map((r, idx) => (
-              <WidgetsColumn
-                className="col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
-                key={idx}
-              >
-                <Resource key={idx} resource={r} />
-              </WidgetsColumn>
-            ))}
-          </WidgetsRow>
-        </TabsContent>
-        <TabsContent value="multimedia">
-          <WidgetsRow className="print:grid-cols-2">
-            {RESOURCES.multimedia.map((r, idx) => (
-              <WidgetsColumn
-                className="col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
-                key={idx}
-              >
-                <Resource key={idx} resource={r} />
-              </WidgetsColumn>
-            ))}
-          </WidgetsRow>
-        </TabsContent>
-      </Tabs>
+          </Tabs>
+        </CardNoData>
+      </CardLoader>
     </div>
   );
 }
