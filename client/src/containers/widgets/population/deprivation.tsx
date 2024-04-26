@@ -6,7 +6,11 @@ import { useGetRasterAnalysis } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
+import { DATASETS } from "@/constants/datasets";
+
 import { Card, CardContent, CardLoader, CardTitle } from "@/containers/card";
+import Legend from "@/containers/legend";
+import LegendItem from "@/containers/legend/item";
 import WidgetMap from "@/containers/widgets/map";
 
 export default function WidgetsPopulationDeprivation() {
@@ -43,6 +47,12 @@ export default function WidgetsPopulationDeprivation() {
             </p>
           </CardLoader>
         </CardContent>
+      </div>
+
+      <div className="absolute bottom-4 left-4 z-10">
+        <Legend>
+          <LegendItem {...DATASETS.deprivation_index?.legend} />
+        </Legend>
       </div>
       <WidgetMap ids={["deprivation_index"]} />
     </Card>

@@ -5,25 +5,25 @@ import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
 import Query from "@arcgis/core/rest/support/Query";
 import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
 import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
-import { scaleOrdinal } from "@visx/scale";
-import { ScaleOrdinal } from "@visx/vendor/d3-scale";
 
 import { env } from "@/env.mjs";
 
-import { getKeys } from "@/lib/utils";
+import { convertHexToRgbaArray, getKeys } from "@/lib/utils";
 
 import {
   BIOMES,
   CLIMATE_TYPES,
+  DEPRIVATION_INDEX,
   ELEVATION_RANGES,
   ELEVATION_RANGES_COLORMAP,
   FIRES,
   FIRES_COLORMAP,
+  INDIGENOUS_LANDS,
   LAND_COVER,
   LAND_COVER_COLORMAP,
+  POPULATION,
+  PROTECTED_AREAS,
 } from "@/constants/colors";
-
-import { LegendOrdinalT } from "@/containers/legend/ordinal";
 
 export const DATASETS = {
   admin0: {
@@ -176,17 +176,12 @@ export const DATASETS = {
       }),
     }),
     legend: {
-      type: "ordinal",
-      scale: scaleOrdinal({
-        domain: [
-          {
-            id: "Indigenous lands",
-            label: "Indigenous lands",
-            color: "#E59F6F",
-          },
-        ],
-        range: ["#E59F6F"],
-      }) as ScaleOrdinal<LegendOrdinalT, string>,
+      type: "basic",
+      items: getKeys(INDIGENOUS_LANDS).map((k) => ({
+        id: k,
+        label: INDIGENOUS_LANDS[k].label,
+        color: INDIGENOUS_LANDS[k].color,
+      })),
     },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
@@ -222,23 +217,16 @@ export const DATASETS = {
       }),
     }),
     legend: {
-      type: "ordinal",
-      scale: scaleOrdinal({
-        domain: getKeys(CLIMATE_TYPES)
-          .toSorted((a, b) =>
-            CLIMATE_TYPES[a].label.localeCompare(CLIMATE_TYPES[b].label),
-          )
-          .map((k) => ({
-            id: k,
-            label: CLIMATE_TYPES[k].label,
-            color: CLIMATE_TYPES[k].color,
-          })),
-        range: getKeys(CLIMATE_TYPES)
-          .toSorted((a, b) =>
-            CLIMATE_TYPES[a].label.localeCompare(CLIMATE_TYPES[b].label),
-          )
-          .map((k) => CLIMATE_TYPES[k].color),
-      }) as ScaleOrdinal<LegendOrdinalT, string>,
+      type: "basic",
+      items: getKeys(CLIMATE_TYPES)
+        .toSorted((a, b) =>
+          CLIMATE_TYPES[a].label.localeCompare(CLIMATE_TYPES[b].label),
+        )
+        .map((k) => ({
+          id: k,
+          label: CLIMATE_TYPES[k].label,
+          color: CLIMATE_TYPES[k].color,
+        })),
     },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
@@ -275,19 +263,14 @@ export const DATASETS = {
       }),
     }),
     legend: {
-      type: "ordinal",
-      scale: scaleOrdinal({
-        domain: getKeys(BIOMES)
-          .toSorted((a, b) => BIOMES[a].label.localeCompare(BIOMES[b].label))
-          .map((k) => ({
-            id: k,
-            label: BIOMES[k].label,
-            color: BIOMES[k].color,
-          })),
-        range: getKeys(BIOMES)
-          .toSorted((a, b) => BIOMES[a].label.localeCompare(BIOMES[b].label))
-          .map((k) => BIOMES[k].color),
-      }) as ScaleOrdinal<LegendOrdinalT, string>,
+      type: "basic",
+      items: getKeys(BIOMES)
+        .toSorted((a, b) => BIOMES[a].label.localeCompare(BIOMES[b].label))
+        .map((k) => ({
+          id: k,
+          label: BIOMES[k].label,
+          color: BIOMES[k].color,
+        })),
     },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
@@ -301,68 +284,6 @@ export const DATASETS = {
       id: "ecosistemas",
       title: "Ecosistemas",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Ecosistemas/FeatureServer/0",
-      renderer: new UniqueValueRenderer({
-        field: "BIOME",
-        defaultSymbol: new SimpleFillSymbol({
-          color: [227, 139, 79, 0.8],
-          outline: {
-            color: [230, 230, 230, 0.8],
-            width: 1,
-          },
-        }),
-        uniqueValueInfos: [
-          {
-            value: 1,
-            symbol: new SimpleFillSymbol({
-              color: [1, 70, 0, 0.8],
-              outline: {
-                color: [0, 230, 230, 0.8],
-                width: 1,
-              },
-            }),
-          },
-          {
-            value: 2,
-            symbol: new SimpleFillSymbol({
-              color: [0, 255, 0, 0.8],
-              outline: {
-                color: [230, 0, 230, 0.8],
-                width: 1,
-              },
-            }),
-          },
-          {
-            value: 3,
-            symbol: new SimpleFillSymbol({
-              color: [255, 0, 0, 0.8],
-              outline: {
-                color: [230, 230, 0, 0.8],
-                width: 1,
-              },
-            }),
-          },
-          {
-            value: 4,
-            symbol: new SimpleFillSymbol({
-              color: [255, 255, 0, 0.8],
-              outline: {
-                color: [230, 0, 0, 0.8],
-                width: 1,
-              },
-            }),
-          },
-          {
-            value: 5,
-            symbol: new SimpleFillSymbol({
-              color: [255, 0, 255, 0.8],
-              outline: {
-                color: [0, 230, 0, 0.8],
-                width: 1,
-              },
-            }),
-          },
-        ],
-      }),
     }),
     legend: null,
     getFeatures: (props?: __esri.QueryProperties) =>
@@ -402,17 +323,12 @@ export const DATASETS = {
       }),
     }),
     legend: {
-      type: "ordinal",
-      scale: scaleOrdinal({
-        domain: [
-          {
-            id: "Protected areas",
-            label: "Protected areas",
-            color: "#b5b986",
-          },
-        ],
-        range: ["#b5b986"],
-      }) as ScaleOrdinal<LegendOrdinalT, string>,
+      type: "basic",
+      items: getKeys(PROTECTED_AREAS).map((k) => ({
+        id: k,
+        label: PROTECTED_AREAS[k].label,
+        color: PROTECTED_AREAS[k].color,
+      })),
     },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
@@ -465,7 +381,6 @@ export const DATASETS = {
         ...props,
       }),
   },
-
   idb_operations: {
     layer: new FeatureLayer({
       id: "idb_operations",
@@ -517,23 +432,16 @@ export const DATASETS = {
       urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=landcover_cog.tif&colormap=${encodeURIComponent(JSON.stringify(LAND_COVER_COLORMAP))}`,
     }),
     legend: {
-      type: "ordinal",
-      scale: scaleOrdinal({
-        domain: getKeys(LAND_COVER)
-          .toSorted((a, b) =>
-            LAND_COVER[a].label.localeCompare(LAND_COVER[b].label),
-          )
-          .map((k) => ({
-            id: k,
-            label: LAND_COVER[k].label,
-            color: LAND_COVER[k].color,
-          })),
-        range: getKeys(LAND_COVER)
-          .toSorted((a, b) =>
-            LAND_COVER[a].label.localeCompare(LAND_COVER[b].label),
-          )
-          .map((k) => LAND_COVER[k].color),
-      }) as ScaleOrdinal<LegendOrdinalT, string>,
+      type: "basic",
+      items: getKeys(LAND_COVER)
+        .toSorted((a, b) =>
+          LAND_COVER[a].label.localeCompare(LAND_COVER[b].label),
+        )
+        .map((k) => ({
+          id: k,
+          label: LAND_COVER[k].label,
+          color: LAND_COVER[k].color,
+        })),
     },
   },
   elevation_ranges: {
@@ -543,15 +451,12 @@ export const DATASETS = {
       urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=elevation_ranges_cog.tif&colormap=${encodeURIComponent(JSON.stringify(ELEVATION_RANGES_COLORMAP))}`,
     }),
     legend: {
-      type: "ordinal",
-      scale: scaleOrdinal({
-        domain: getKeys(ELEVATION_RANGES).map((k) => ({
-          id: k,
-          label: ELEVATION_RANGES[k].label,
-          color: ELEVATION_RANGES[k].color,
-        })),
-        range: getKeys(ELEVATION_RANGES).map((k) => ELEVATION_RANGES[k].color),
-      }) as ScaleOrdinal<LegendOrdinalT, string>,
+      type: "basic",
+      items: getKeys(ELEVATION_RANGES).map((k) => ({
+        id: k,
+        label: ELEVATION_RANGES[k].label,
+        color: ELEVATION_RANGES[k].color,
+      })),
     },
   },
   fires: {
@@ -560,16 +465,14 @@ export const DATASETS = {
       title: "Fires",
       urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=fires_cog.tif&colormap=${encodeURIComponent(JSON.stringify(FIRES_COLORMAP))}`,
     }),
+
     legend: {
-      type: "ordinal",
-      scale: scaleOrdinal({
-        domain: getKeys(FIRES).map((k) => ({
-          id: k,
-          label: FIRES[k].label,
-          color: FIRES[k].color,
-        })),
-        range: getKeys(FIRES).map((k) => FIRES[k].color),
-      }) as ScaleOrdinal<LegendOrdinalT, string>,
+      type: "basic",
+      items: getKeys(FIRES).map((k) => ({
+        id: k,
+        label: FIRES[k].label,
+        color: FIRES[k].color,
+      })),
     },
   },
   population: {
@@ -579,37 +482,24 @@ export const DATASETS = {
       urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=population_cog.tif&colormap=${encodeURIComponent(
         JSON.stringify([
           [
-            [-1, 0],
+            [-1, 1],
             [255, 255, 255, 0],
           ],
-          [
-            [0, 1],
-            [254, 235, 226, 0],
-          ],
-          [
-            [1, 1000],
-            [122, 1, 119, 255],
-          ],
-          [
-            [1000, 2500],
-            [197, 27, 138, 255],
-          ],
-          [
-            [2500, 5000],
-            [247, 104, 161, 255],
-          ],
-          [
-            [5000, 10000],
-            [251, 180, 185, 255],
-          ],
-          [
-            [10000, 17000],
-            [254, 235, 226, 255],
-          ],
+          ...getKeys(POPULATION).map((k) => [
+            [POPULATION[k].min, POPULATION[k].max],
+            convertHexToRgbaArray(POPULATION[k].color),
+          ]),
         ]),
       )}`,
     }),
-    legend: null,
+    legend: {
+      type: "gradient",
+      items: getKeys(POPULATION).map((k, i, arr) => ({
+        id: k,
+        label: i === 0 || i === arr.length - 1 ? POPULATION[k].label : null,
+        color: POPULATION[k].color,
+      })),
+    },
   },
   deprivation_index: {
     layer: new WebTileLayer({
@@ -621,30 +511,22 @@ export const DATASETS = {
             [-1, 0],
             [255, 255, 255, 0],
           ],
-          [
-            [0, 10],
-            [255, 255, 204, 255],
-          ],
-          [
-            [10, 30],
-            [161, 218, 180, 255],
-          ],
-          [
-            [30, 70],
-            [65, 182, 196, 255],
-          ],
-          [
-            [70, 90],
-            [44, 127, 184, 255],
-          ],
-          [
-            [90, 100],
-            [37, 52, 148, 255],
-          ],
+          ...getKeys(DEPRIVATION_INDEX).map((k) => [
+            [DEPRIVATION_INDEX[k].min, DEPRIVATION_INDEX[k].max],
+            convertHexToRgbaArray(DEPRIVATION_INDEX[k].color),
+          ]),
         ]),
       )}`,
     }),
-    legend: null,
+    legend: {
+      type: "gradient",
+      items: getKeys(DEPRIVATION_INDEX).map((k, i, arr) => ({
+        id: k,
+        label:
+          i === 0 || i === arr.length - 1 ? DEPRIVATION_INDEX[k].label : null,
+        color: DEPRIVATION_INDEX[k].color,
+      })),
+    },
   },
   acu_knowledge: {
     layer: new FeatureLayer({

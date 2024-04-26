@@ -4,7 +4,7 @@ import { DATASETS, DatasetIds } from "@/constants/datasets";
 
 import { Card } from "@/containers/card";
 import Legend from "@/containers/legend";
-import LegendOrdinal from "@/containers/legend/ordinal";
+import LegendItem from "@/containers/legend/item";
 import WidgetMap from "@/containers/widgets/map";
 
 import {
@@ -16,6 +16,7 @@ import {
 
 export default function WidgetsProtectionMap() {
   const [layer, setLayer] = useState<DatasetIds>("areas_protegidas");
+  const legend = DATASETS[layer]?.legend;
 
   return (
     <>
@@ -46,15 +47,10 @@ export default function WidgetsProtectionMap() {
         </Select>
       </div>
 
-      {!!DATASETS[layer]?.legend && (
+      {!!legend && (
         <div className="absolute bottom-4 left-4 z-10">
           <Legend>
-            {DATASETS[layer]?.legend?.type === "ordinal" && (
-              <LegendOrdinal
-                ordinalColorScale={DATASETS[layer]?.legend?.scale}
-                direction="vertical"
-              />
-            )}
+            <LegendItem {...legend} direction="vertical" />
           </Legend>
         </div>
       )}

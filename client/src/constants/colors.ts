@@ -237,3 +237,83 @@ export const CLIMATE_TYPES = {
 } as const;
 
 export type ClimateTypesIds = keyof typeof CLIMATE_TYPES;
+
+export const POPULATION = {
+  1: {
+    label: "Very low",
+    min: 1,
+    max: 1000,
+    color: "#7a0177",
+  },
+  2: {
+    label: "Low",
+    min: 1000,
+    max: 2500,
+    color: "#c51b8a",
+  },
+  3: {
+    label: "Medium",
+    min: 2500,
+    max: 5000,
+    color: "#f768a1",
+  },
+  4: {
+    label: "High",
+    min: 5000,
+    max: 10000,
+    color: "#fbb4b9",
+  },
+  5: {
+    label: "Very high",
+    min: 10000,
+    max: 17000,
+    color: "#feebe2",
+  },
+} as const;
+
+export const DEPRIVATION_INDEX = {
+  1: {
+    label: "Very low",
+    min: 0,
+    max: 10,
+    color: "#ffffcc",
+  },
+  2: {
+    label: "Low",
+    min: 10,
+    max: 30,
+    color: "#a1dab4",
+  },
+  3: {
+    label: "Medium",
+    min: 30,
+    max: 70,
+    color: "#41b6c4",
+  },
+  4: {
+    label: "High",
+    min: 70,
+    max: 90,
+    color: "#225ea8",
+  },
+  5: {
+    label: "Very high",
+    min: 90,
+    max: 100,
+    color: "#0c2c84",
+  },
+} as const;
+
+export const PROTECTED_AREAS = {
+  "1": {
+    label: "Protected areas",
+    color: "#b5b986",
+  },
+} as const;
+
+export const INDIGENOUS_LANDS = {
+  "1": {
+    label: "Indigenous lands",
+    color: "#E59F6F",
+  },
+} as const;

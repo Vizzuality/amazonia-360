@@ -10,7 +10,7 @@ import { LuChevronUp } from "react-icons/lu";
 export default function Legend({ children }: PropsWithChildren) {
   return (
     <Collapsible className="bg-white border border-blue-100 rounded-3xl py-2 px-4">
-      <CollapsibleTrigger className="text-sm min-w-28 flex justify-between items-center">
+      <CollapsibleTrigger className="text-sm min-w-28 w-full flex justify-between items-center">
         <span>Legend</span>
         <LuChevronUp className="w-4 h-4" />
       </CollapsibleTrigger>
