@@ -1,20 +1,13 @@
 export type MosaicIds =
-  | "country_total_cartographic_area_sqkm"
   | "amazonia_area_by_country_cartographic_area_sqkm"
   | "proportion_of_amazonia_area_by_country_percentage"
   | "proportion_of_total_area_of_the_afp_by_country_percentage"
-  | "total_population_by_country_ghspop25"
   | "population_of_the_amazonia_zone_by_country_ghspop25"
   | "proportion_of_the_population_of_the_amazonia_zone_by_country_percentage"
   | "proportion_of_the_population_of_the_afp_by_country_percentage"
   | "population_density_of_the_afp_zones_by_country_inhabitants_per_sqkm";
 
 export const MOSAIC_OPTIONS = [
-  {
-    key: "country_total_cartographic_area_sqkm",
-    label: "Country total cartographic area SQKM",
-  },
-
   {
     key: "amazonia_area_by_country_cartographic_area_sqkm",
     label: "Amazonia area by country, cartographic area SQKM",
@@ -26,10 +19,6 @@ export const MOSAIC_OPTIONS = [
   {
     key: "proportion_of_total_area_of_the_afp_by_country_percentage",
     label: "Proportion of total area of the AFP by country %",
-  },
-  {
-    key: "total_population_by_country_ghspop25",
-    label: "Total population by country GHSPOP25",
   },
   {
     key: "population_of_the_amazonia_zone_by_country_ghspop25",

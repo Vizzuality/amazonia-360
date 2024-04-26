@@ -53,15 +53,6 @@ export default function Glance() {
   }, []);
 
   const FORMAT = {
-    country_total_cartographic_area_sqkm: (
-      node: HierarchyRectangularNode<HierarchyNode<Data>>,
-    ) => {
-      return formatNumber(node?.value || 0, {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2,
-        notation: "compact",
-      });
-    },
     amazonia_area_by_country_cartographic_area_sqkm: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
@@ -83,15 +74,6 @@ export default function Glance() {
     ) => {
       return formatPercentage(node?.value || 0, {
         maximumFractionDigits: 0,
-      });
-    },
-    total_population_by_country_ghspop25: (
-      node: HierarchyRectangularNode<HierarchyNode<Data>>,
-    ) => {
-      return formatNumber(node?.value || 0, {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2,
-        notation: "compact",
       });
     },
     population_of_the_amazonia_zone_by_country_ghspop25: (
