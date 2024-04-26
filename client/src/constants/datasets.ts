@@ -532,7 +532,7 @@ export const DATASETS = {
     layer: new FeatureLayer({
       id: "acu_knowledge",
       title: "ACU Knowledge",
-      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/ACU_Knowledge/FeatureServer/0",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/ACU_KnowledgeDB/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleMarkerSymbol({
           color: "#000000",
