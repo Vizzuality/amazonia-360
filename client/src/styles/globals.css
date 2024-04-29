@@ -67,6 +67,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground font-semibold;
   }
@@ -74,5 +75,44 @@
   .same-trigger-size {
     width: var(--radix-popover-trigger-width);
     max-height: var(--radix-popover-content-available-height);
+  }
+}
+
+@layer base {
+  .map .esri-widget {
+    font-family: var(--montserrat);
+  }
+
+  .map .esri-popup--shadow {
+    @apply shadow-lg;
+  }
+
+  .map .esri-feature__content-element {
+    @apply p-0;
+  }
+
+  .map .esri-widget__table tr {
+    @apply pt-1;
+  }
+
+  .map .esri-widget__table tr:nth-child(odd) {
+    background-color: hsl(var(--background));
+  }
+
+  .map .esri-widget__table tr:nth-child(even) {
+    background-color: hsl(var(--background));
+  }
+
+  .map .esri-widget__table tr th,
+  .map .esri-widget__table tr td {
+    @apply text-2xs p-0.5;
+  }
+
+  .map .esri-widget__table tr th {
+    @apply font-semibold;
+  }
+
+  .map .esri-widget__table tr td {
+    @apply pl-2;
   }
 }

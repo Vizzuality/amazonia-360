@@ -22,11 +22,11 @@ import WebTileLayer from "@/components/map/layers/web-tile";
 
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
 
-interface WidgetMapProps {
+interface WidgetMapProps extends __esri.MapViewProperties {
   ids: DatasetIds[];
 }
 
-export default function WidgetMap({ ids }: WidgetMapProps) {
+export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
@@ -66,6 +66,7 @@ export default function WidgetMap({ ids }: WidgetMapProps) {
             mouseWheelZoomEnabled: false,
             browserTouchPanEnabled: false,
           },
+          ...viewProps,
         }}
       >
         {LAYERS.map((layer, index, arr) => {

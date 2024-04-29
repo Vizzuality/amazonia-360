@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 
 import { Montserrat } from "next/font/google";
 
-import "@/styles/globals.css";
 import "@arcgis/core/assets/esri/themes/light/main.css";
+import "@/styles/globals.css";
 import LayoutProviders from "@/app/layout-providers";
 
 import Footer from "@/containers/footer";
@@ -12,6 +12,7 @@ import Header from "@/containers/header";
 const montserrat = Montserrat({
   weight: ["500", "600", "700"],
   subsets: ["latin"],
+  variable: "--montserrat",
 });
 
 export const metadata: Metadata = {

@@ -26,7 +26,25 @@ export default function WidgetsOverview() {
         </WidgetsColumn>
         <WidgetsColumn className="col-span-12 lg:col-span-6 print:col-span-12">
           <Card className="h-full p-0 relative">
-            <WidgetMap ids={["ciudades_capitales"]} />
+            <WidgetMap
+              ids={["ciudades_capitales"]}
+              popup={{
+                dockEnabled: true,
+                dockOptions: {
+                  buttonEnabled: false,
+                  breakpoint: false,
+                  position: "top-left",
+                },
+                visibleElements: {
+                  featureNavigation: false,
+                },
+                viewModel: {
+                  includeDefaultActions: false,
+                  features: [],
+                },
+                collapseEnabled: false,
+              }}
+            />
           </Card>
         </WidgetsColumn>
         <WidgetsColumn className="col-span-12 lg:col-span-6 print:col-span-12 print:break-before-page">

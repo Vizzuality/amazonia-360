@@ -137,6 +137,29 @@ export const DATASETS = {
           },
         }),
       }),
+      popupEnabled: true,
+      popupTemplate: {
+        title: "{NOMBCAP}",
+        content: [
+          {
+            type: "fields",
+            fieldInfos: [
+              {
+                fieldName: "NAME_2",
+                label: "Municipality",
+              },
+              {
+                fieldName: "NAME_1",
+                label: "State",
+              },
+              {
+                fieldName: "NAME_0",
+                label: "Country",
+              },
+            ],
+          },
+        ],
+      },
     }),
     legend: null,
     getFeatures: (props?: __esri.QueryProperties) =>
