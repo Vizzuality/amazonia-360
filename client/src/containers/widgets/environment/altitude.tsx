@@ -83,7 +83,7 @@ export default function WidgetAltitude() {
 
   return (
     <Card>
-      <CardTitle>Altitude</CardTitle>
+      <CardTitle>Elevation</CardTitle>
       <CardLoader query={[query]} className="h-20">
         <div className="space-y-2 pt-2">
           <MarimekkoChart

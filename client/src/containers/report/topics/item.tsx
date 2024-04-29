@@ -6,6 +6,7 @@ import Image from "next/image";
 
 import { LuCheck } from "react-icons/lu";
 
+import { PLACEHOLDER } from "@/lib/images";
 import { cn } from "@/lib/utils";
 
 import { Topic } from "@/constants/topics";
@@ -58,6 +59,9 @@ export default function TopicsItem({
           priority
           fill
           sizes="100%"
+          placeholder={
+            size === "lg" ? PLACEHOLDER(210, 380) : PLACEHOLDER(210, 250)
+          }
           className={cn({
             "object-cover": true,
             "group-hover:scale-105 transition-transform duration-300 ease-in-out transform-gpu":
