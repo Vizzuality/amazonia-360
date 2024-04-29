@@ -40,8 +40,8 @@ export default function Hub() {
         <Image
           src={"/images/hub/coming-soon.jpg"}
           alt="Coming soon..."
-          width={718}
-          height={818}
+          width={2000}
+          height={2000}
           className="object-cover h-full w-full"
         />
       </div>
