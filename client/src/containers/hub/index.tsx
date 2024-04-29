@@ -9,8 +9,8 @@ export default function Hub() {
   return (
     <main className="flex flex-col-reverse md:flex-row w-full bg-blue-50 md:h-[calc(100svh_-_theme(space.40)_+_1px)] relative">
       <div className="container flex h-full md:pr-60 py-12 md:py-0">
-        <div className="w-full md:w-1/2 h-full flex flex-col justify-center">
-          <h2 className="text-blue-400 text-3xl lg:text-4xl pb-6 font-bold">
+        <div className="w-full md:w-1/2 h-full flex flex-col justify-center p-10">
+          <h2 className="text-blue-400 text-3xl lg:text-4xl pb-6 font-semibold">
             We are currently <br />
             building this feature!
           </h2>
