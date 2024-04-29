@@ -2,5 +2,5 @@ exactextract
 fastapi
 orjson
 pydantic_settings
-titiler
+titiler.core
 uvicorn
