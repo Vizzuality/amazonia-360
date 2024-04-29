@@ -197,6 +197,25 @@ export const DATASETS = {
           },
         }),
       }),
+      popupEnabled: true,
+      popupTemplate: {
+        title: "{FID}",
+        content: [
+          {
+            type: "fields",
+            fieldInfos: [
+              {
+                fieldName: "categoria",
+                label: "Category",
+              },
+              {
+                fieldName: "etnias",
+                label: "Ethnicities",
+              },
+            ],
+          },
+        ],
+      },
     }),
     legend: {
       type: "basic",
@@ -344,6 +363,25 @@ export const DATASETS = {
           },
         }),
       }),
+      popupEnabled: true,
+      popupTemplate: {
+        title: "{NAME}",
+        content: [
+          {
+            type: "fields",
+            fieldInfos: [
+              {
+                fieldName: "DESIG_ENG",
+                label: "Designation",
+              },
+              {
+                fieldName: "IUCN_CAT",
+                label: "IUCN",
+              },
+            ],
+          },
+        ],
+      },
     }),
     legend: {
       type: "basic",

@@ -33,7 +33,7 @@ export default function WidgetsOverview() {
                 dockOptions: {
                   buttonEnabled: false,
                   breakpoint: false,
-                  position: "top-left",
+                  position: "bottom-right",
                 },
                 visibleElements: {
                   featureNavigation: false,
