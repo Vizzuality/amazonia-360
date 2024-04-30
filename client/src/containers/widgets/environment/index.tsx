@@ -14,7 +14,7 @@ export default function WidgetsEnvironment({ index }: { index: number }) {
   const T = TOPICS.find((t) => t.id === "natural-physical-environment");
 
   return (
-    <div className="container">
+    <div className="container print:break-before-page">
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
       <WidgetsRow>
         <WidgetsColumn
