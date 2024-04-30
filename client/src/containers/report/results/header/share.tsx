@@ -4,10 +4,17 @@ import { useCallback, useEffect, useState } from "react";
 
 import { usePathname } from "next/navigation";
 
+import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { Share2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipArrow,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function ShareReport() {
   const pathname = usePathname();
@@ -36,9 +43,20 @@ export default function ShareReport() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="space-x-2">
-          <Share2 className="w-5 h-5" />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" className="space-x-2">
+              <Share2 className="w-5 h-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipPortal>
+            <TooltipContent side="top" align="center">
+              <div className="text-xxs">Share report</div>
+
+              <TooltipArrow className="fill-foreground" width={10} height={5} />
+            </TooltipContent>
+          </TooltipPortal>
+        </Tooltip>
       </DialogTrigger>
       <DialogContent>
         <div className="flex flex-col space-y-2 mb-6">
