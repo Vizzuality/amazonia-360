@@ -159,7 +159,7 @@ export function MapView({
   }, [bbox]);
 
   return (
-    <div ref={mapContainerRef} className="w-full h-full grow">
+    <div ref={mapContainerRef} className="map w-full h-full grow">
       {loaded && children}
     </div>
   );

@@ -137,6 +137,29 @@ export const DATASETS = {
           },
         }),
       }),
+      popupEnabled: true,
+      popupTemplate: {
+        title: "{NOMBCAP}",
+        content: [
+          {
+            type: "fields",
+            fieldInfos: [
+              {
+                fieldName: "NAME_2",
+                label: "Municipality",
+              },
+              {
+                fieldName: "NAME_1",
+                label: "State",
+              },
+              {
+                fieldName: "NAME_0",
+                label: "Country",
+              },
+            ],
+          },
+        ],
+      },
     }),
     legend: null,
     getFeatures: (props?: __esri.QueryProperties) =>
@@ -174,6 +197,25 @@ export const DATASETS = {
           },
         }),
       }),
+      popupEnabled: true,
+      popupTemplate: {
+        title: "{FID}",
+        content: [
+          {
+            type: "fields",
+            fieldInfos: [
+              {
+                fieldName: "categoria",
+                label: "Category",
+              },
+              {
+                fieldName: "etnias",
+                label: "Ethnicities",
+              },
+            ],
+          },
+        ],
+      },
     }),
     legend: {
       type: "basic",
@@ -215,6 +257,10 @@ export const DATASETS = {
           }),
         })),
       }),
+      popupEnabled: true,
+      popupTemplate: {
+        title: "{Field3}",
+      },
     }),
     legend: {
       type: "basic",
@@ -261,6 +307,10 @@ export const DATASETS = {
           }),
         })),
       }),
+      popupEnabled: true,
+      popupTemplate: {
+        title: "{BIOMADES}",
+      },
     }),
     legend: {
       type: "basic",
@@ -321,6 +371,25 @@ export const DATASETS = {
           },
         }),
       }),
+      popupEnabled: true,
+      popupTemplate: {
+        title: "{NAME}",
+        content: [
+          {
+            type: "fields",
+            fieldInfos: [
+              {
+                fieldName: "DESIG_ENG",
+                label: "Designation",
+              },
+              {
+                fieldName: "IUCN_CAT",
+                label: "IUCN",
+              },
+            ],
+          },
+        ],
+      },
     }),
     legend: {
       type: "basic",

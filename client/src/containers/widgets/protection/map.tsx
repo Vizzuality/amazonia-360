@@ -56,7 +56,25 @@ export default function WidgetsProtectionMap() {
       )}
 
       <Card className="h-full p-0 relative">
-        <WidgetMap ids={[layer]} />
+        <WidgetMap
+          ids={[layer]}
+          popup={{
+            dockEnabled: true,
+            dockOptions: {
+              buttonEnabled: false,
+              breakpoint: false,
+              position: "bottom-right",
+            },
+            visibleElements: {
+              featureNavigation: false,
+            },
+            viewModel: {
+              includeDefaultActions: false,
+              features: [],
+            },
+            collapseEnabled: false,
+          }}
+        />
       </Card>
     </>
   );
