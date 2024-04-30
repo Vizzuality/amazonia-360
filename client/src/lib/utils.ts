@@ -87,9 +87,10 @@ export const getTextSize = ({
 export const deepMergeObjects = <T>(
   ...objects: (T | Record<string, unknown> | undefined)[]
 ) => {
-  const deepCopyObjects = objects.map((object) =>
-    JSON.parse(JSON.stringify(object)),
-  );
+  const deepCopyObjects = objects.map((object) => {
+    if (object === undefined) return {};
+    JSON.parse(JSON.stringify(object));
+  });
   return deepCopyObjects.reduce(
     (merged, current) => ({ ...merged, ...current }),
     {},
