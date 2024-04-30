@@ -257,6 +257,10 @@ export const DATASETS = {
           }),
         })),
       }),
+      popupEnabled: true,
+      popupTemplate: {
+        title: "{Field3}",
+      },
     }),
     legend: {
       type: "basic",
@@ -303,6 +307,10 @@ export const DATASETS = {
           }),
         })),
       }),
+      popupEnabled: true,
+      popupTemplate: {
+        title: "{BIOMADES}",
+      },
     }),
     legend: {
       type: "basic",
