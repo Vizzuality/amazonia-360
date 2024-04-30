@@ -42,6 +42,7 @@ export default function Hub() {
           alt="Coming soon..."
           width={2000}
           height={2000}
+          priority
           className="object-cover h-full w-full"
         />
       </div>
