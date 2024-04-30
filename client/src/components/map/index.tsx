@@ -8,8 +8,7 @@ import VectorTileLayer from "@arcgis/core/layers/VectorTileLayer";
 import ArcGISMap from "@arcgis/core/Map";
 import ArcGISMapView from "@arcgis/core/views/MapView";
 import ArcGISScaleBar from "@arcgis/core/widgets/ScaleBar";
-
-import { deepMergeObjects } from "@/lib/utils";
+import { merge } from "ts-deepmerge";
 
 import { DEFAULT_MAP_VIEW_PROPERTIES } from "@/constants/map";
 
@@ -26,7 +25,7 @@ export type MapProps = {
     bottom?: number;
     left?: number;
   };
-  viewProps?: __esri.MapViewProperties;
+  viewProps?: Partial<__esri.MapViewProperties>;
   children?: React.ReactNode;
   onMapMove?: (extent: __esri.Extent) => void;
 };
@@ -81,13 +80,17 @@ export function MapView({
         layers: [baseLayer],
       });
 
+      const mergedViewProps = merge(
+        DEFAULT_MAP_VIEW_PROPERTIES as unknown as Record<string, unknown>,
+        (viewProps || {}) as unknown as Record<string, unknown>,
+      );
+
       /**
        * Initialize the MapView
        */
       mapViewRef.current = new ArcGISMapView({
         map: mapRef.current, // An instance of a Map object to display in the view.
         container: mapContainerRef.current, // The id or node representing the DOM element containing the view.
-        ...DEFAULT_MAP_VIEW_PROPERTIES,
         ...(defaultBbox && {
           extent: {
             xmin: defaultBbox[0],
@@ -99,22 +102,13 @@ export function MapView({
             },
           },
         }),
-        spatialReference: {
-          wkid: 102100,
-        },
-        ui: {
-          components: [],
-        },
         padding: {
           top: 16,
           right: 16,
           bottom: 16,
           left: padding?.left || 16,
         },
-        ...deepMergeObjects<__esri.MapViewProperties>(
-          DEFAULT_MAP_VIEW_PROPERTIES,
-          viewProps,
-        ),
+        ...mergedViewProps,
       });
 
       // Set the padding

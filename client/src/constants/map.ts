@@ -2,11 +2,17 @@ import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
 import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
 import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
 
-export const DEFAULT_MAP_VIEW_PROPERTIES: __esri.MapViewProperties = {
+export const DEFAULT_MAP_VIEW_PROPERTIES: Partial<__esri.MapViewProperties> = {
   constraints: {
     minZoom: 3, // The minimum allowed zoom level of the view.
     // maxZoom: 8, // The maximum allowed zoom level of the view.
     maxScale: 1000000,
+  },
+  spatialReference: {
+    wkid: 102100,
+  },
+  ui: {
+    components: [],
   },
 } satisfies __esri.MapViewProperties;
 
