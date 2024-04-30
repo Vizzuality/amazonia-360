@@ -6,6 +6,7 @@ export const DEFAULT_MAP_VIEW_PROPERTIES: __esri.MapViewProperties = {
   constraints: {
     minZoom: 3, // The minimum allowed zoom level of the view.
     // maxZoom: 8, // The maximum allowed zoom level of the view.
+    maxScale: 1000000,
   },
 } satisfies __esri.MapViewProperties;
 

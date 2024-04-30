@@ -9,6 +9,8 @@ import ArcGISMap from "@arcgis/core/Map";
 import ArcGISMapView from "@arcgis/core/views/MapView";
 import ArcGISScaleBar from "@arcgis/core/widgets/ScaleBar";
 
+import { deepMergeObjects } from "@/lib/utils";
+
 import { DEFAULT_MAP_VIEW_PROPERTIES } from "@/constants/map";
 
 // import { MapContainerContext } from "@/components/map/container-provider";
@@ -109,7 +111,10 @@ export function MapView({
           bottom: 16,
           left: padding?.left || 16,
         },
-        ...viewProps,
+        ...deepMergeObjects<__esri.MapViewProperties>(
+          DEFAULT_MAP_VIEW_PROPERTIES,
+          viewProps,
+        ),
       });
 
       // Set the padding
