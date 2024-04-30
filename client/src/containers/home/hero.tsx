@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Hero() {
   return (
-    <section className="w-screen md:bg-blue-50 flex flex-col-reverse md:flex-row md:h-[calc(100svh_-_theme(space.20)_+_1px)]">
+    <section className="w-full md:bg-blue-50 flex flex-col-reverse md:flex-row md:h-[calc(100svh_-_theme(space.20)_+_1px)]">
       <div className="container relative">
         <div className="md:px-10 py-12 bg-white/80 max-w-2xl md:absolute z-10 flex flex-col space-y-6 md:top-1/2 md:rounded md:-translate-y-1/2">
           <h2 className="text-blue-400 text-2xl lg:text-4xl">

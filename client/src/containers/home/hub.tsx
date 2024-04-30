@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { LuArrowRight } from "react-icons/lu";
 
 import { Button } from "@/components/ui/button";
@@ -19,14 +21,16 @@ export default function Hub() {
             data – a central hub for all information related to Amazonia&apos;s
             environment and its communities.
           </p>
-          <Button
-            size="lg"
-            variant="secondary"
-            className="mt-4 space-x-2.5 flex"
-          >
-            <p>Access hub</p>
-            <LuArrowRight size={20} strokeWidth={1} />
-          </Button>
+          <Link href="/hub">
+            <Button
+              size="lg"
+              variant="secondary"
+              className="mt-4 space-x-2.5 flex"
+            >
+              <p>Access hub</p>
+              <LuArrowRight size={20} strokeWidth={1} />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
