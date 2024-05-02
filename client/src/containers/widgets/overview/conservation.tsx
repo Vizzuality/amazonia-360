@@ -1,5 +1,7 @@
 "use client";
 
+import Pluralize from "pluralize";
+
 import { formatNumber } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
 import { useGetFeatures } from "@/lib/query";
@@ -51,7 +53,7 @@ export default function WidgetConservation() {
           value={formatNumber(query?.data?.length, {
             maximumFractionDigits: 0,
           })}
-          unit="protected areas"
+          unit={Pluralize("protected area", query?.data?.length || 0)}
         />
       </CardLoader>
     </Card>

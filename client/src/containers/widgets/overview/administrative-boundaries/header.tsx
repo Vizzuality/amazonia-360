@@ -2,6 +2,8 @@
 
 import { useMemo } from "react";
 
+import Pluralize from "pluralize";
+
 import {
   AdministrativeBoundary,
   City,
@@ -29,10 +31,23 @@ export default function WidgetAdministrativeBoundariesHeader({
 
   return (
     <p className="text-sm font-medium">
-      The selected area intersects <strong>{countries.size} countries</strong>,{" "}
-      <strong>{states.size} states</strong>,{" "}
-      <strong>{municipalities.size} municipalities</strong> and{" "}
-      <strong>{capitals.size} capital cities</strong>.
+      The selected area intersects{" "}
+      <strong>
+        {countries.size} {Pluralize("country", countries.size)}
+      </strong>
+      ,{" "}
+      <strong>
+        {states.size} {Pluralize("state", states.size)}
+      </strong>
+      ,{" "}
+      <strong>
+        {municipalities.size} {Pluralize("municipality", municipalities.size)}
+      </strong>{" "}
+      and{" "}
+      <strong>
+        {capitals.size} {Pluralize("capital city", capitals.size)}
+      </strong>
+      .
     </p>
   );
 }
