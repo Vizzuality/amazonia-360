@@ -4,14 +4,33 @@ import { PropsWithChildren } from "react";
 import Image from "next/image";
 
 import { UseQueryResult } from "@tanstack/react-query";
+import { LuInfo } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
+import { DatasetIds } from "@/constants/datasets";
+
+import Info from "@/containers/info";
+
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface CardProps {
   padding?: boolean;
   className?: string;
+}
+
+export function CardHeader({
+  className,
+  children,
+}: PropsWithChildren<{
+  className?: string;
+}>) {
+  return (
+    <header className={cn("flex items-start justify-between", className)}>
+      {children}
+    </header>
+  );
 }
 
 export function CardTitle({ children }: PropsWithChildren) {
@@ -24,6 +43,19 @@ export function CardContent({
 }: PropsWithChildren<{ className?: string }>) {
   return (
     <div className={cn("mt-2 flex flex-col grow", className)}>{children}</div>
+  );
+}
+
+export function CardInfo({ ids }: { ids: DatasetIds[] }) {
+  return (
+    <Dialog>
+      <DialogTrigger className="h-6 w-6 flex items-center justify-center">
+        <LuInfo className="text-blue-600" />
+      </DialogTrigger>
+      <DialogContent className="p-0">
+        <Info ids={ids} />
+      </DialogContent>
+    </Dialog>
   );
 }
 

@@ -29,7 +29,7 @@ export const DATASETS = {
   admin0: {
     layer: new FeatureLayer({
       id: "admin0",
-      title: "Admin0",
+      title: "Administrative boundaries (Adm0)",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM0/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({
@@ -43,6 +43,10 @@ export const DATASETS = {
       }),
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_ADM0/FeatureServer/info/metadata",
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -53,7 +57,7 @@ export const DATASETS = {
   admin1: {
     layer: new FeatureLayer({
       id: "admin1",
-      title: "Admin1",
+      title: "Administrative boundaries (Adm1)",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM1/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({
@@ -67,6 +71,10 @@ export const DATASETS = {
       }),
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_ADM1/FeatureServer/info/metadata",
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -77,7 +85,7 @@ export const DATASETS = {
   admin2: {
     layer: new FeatureLayer({
       id: "admin2",
-      title: "Admin",
+      title: "Administrative boundaries (Adm2)",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM2/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({
@@ -91,6 +99,10 @@ export const DATASETS = {
       }),
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_ADM2/FeatureServer/info/metadata",
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -115,6 +127,7 @@ export const DATASETS = {
       }),
     }),
     legend: null,
+    metadata: null,
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -162,6 +175,10 @@ export const DATASETS = {
       },
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_CAPITALES_ADMIN/FeatureServer/info/metadata",
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -176,6 +193,7 @@ export const DATASETS = {
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/REFERENCIA_FRONTERA_INTERNACIONAL/FeatureServer/0",
     }),
     legend: null,
+    metadata: null,
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -224,6 +242,10 @@ export const DATASETS = {
         label: INDIGENOUS_LANDS[k].label,
         color: INDIGENOUS_LANDS[k].color,
       })),
+    },
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Tierras_indigenas/FeatureServer/info/metadata",
     },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
@@ -274,6 +296,10 @@ export const DATASETS = {
           color: CLIMATE_TYPES[k].color,
         })),
     },
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Tipos_climaticos_KOEPEN/FeatureServer/info/metadata",
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -322,6 +348,10 @@ export const DATASETS = {
           color: BIOMES[k].color,
         })),
     },
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Biomas/FeatureServer/info/metadata",
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -336,6 +366,10 @@ export const DATASETS = {
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Ecosistemas/FeatureServer/0",
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Ecosistemas/FeatureServer/info/metadata",
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -350,6 +384,10 @@ export const DATASETS = {
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Grandes_cuencas_hidrograficas/FeatureServer/0",
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Grandes_cuencas_hidrograficas/FeatureServer/info/metadata",
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -399,6 +437,10 @@ export const DATASETS = {
         color: PROTECTED_AREAS[k].color,
       })),
     },
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Areas_protegidas/FeatureServer/info/metadata",
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -433,16 +475,20 @@ export const DATASETS = {
       },
       renderer: new SimpleRenderer({
         symbol: new SimpleMarkerSymbol({
-          color: "#000000",
+          color: "#004E70",
           size: 4,
           outline: {
             width: 1,
-            color: "#000000",
+            color: "#004E70",
           },
         }),
       }),
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Institutional_Tracking/FeatureServer/info/metadata",
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -487,6 +533,10 @@ export const DATASETS = {
       }),
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/IDB_Operations/FeatureServer/info/metadata",
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "objectid is not null",
@@ -512,6 +562,10 @@ export const DATASETS = {
           color: LAND_COVER[k].color,
         })),
     },
+    metadata: {
+      type: "raster",
+      url: null,
+    },
   },
   elevation_ranges: {
     layer: new WebTileLayer({
@@ -526,6 +580,10 @@ export const DATASETS = {
         label: ELEVATION_RANGES[k].label,
         color: ELEVATION_RANGES[k].color,
       })),
+    },
+    metadata: {
+      type: "raster",
+      url: null,
     },
   },
   fires: {
@@ -542,6 +600,10 @@ export const DATASETS = {
         label: FIRES[k].label,
         color: FIRES[k].color,
       })),
+    },
+    metadata: {
+      type: "raster",
+      url: null,
     },
   },
   population: {
@@ -568,6 +630,10 @@ export const DATASETS = {
         label: i === 0 || i === arr.length - 1 ? POPULATION[k].label : null,
         color: POPULATION[k].color,
       })),
+    },
+    metadata: {
+      type: "raster",
+      url: null,
     },
   },
   deprivation_index: {
@@ -596,6 +662,10 @@ export const DATASETS = {
         color: DEPRIVATION_INDEX[k].color,
       })),
     },
+    metadata: {
+      type: "raster",
+      url: null,
+    },
   },
   acu_knowledge: {
     layer: new FeatureLayer({
@@ -614,6 +684,10 @@ export const DATASETS = {
       }),
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/ACU_KnowledgeDB/FeatureServer/info/metadata",
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
