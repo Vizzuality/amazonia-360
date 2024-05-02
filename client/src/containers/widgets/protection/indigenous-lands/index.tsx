@@ -13,6 +13,8 @@ import {
   CardTitle,
   CardLoader,
   CardWidgetNumber,
+  CardHeader,
+  CardInfo,
 } from "@/containers/card";
 import { IndigenousLand } from "@/containers/widgets/protection/indigenous-lands/types";
 
@@ -50,7 +52,11 @@ export default function WidgetIndigenousLands() {
 
   return (
     <Card>
-      <CardTitle>Indigenous lands</CardTitle>
+      <CardHeader>
+        <CardTitle>Indigenous lands</CardTitle>
+        <CardInfo ids={["tierras_indigenas"]} />
+      </CardHeader>
+
       <CardLoader
         query={[queryIndigenousLands, queryIndigenousLandsCoverage]}
         className="h-16"

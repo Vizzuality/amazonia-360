@@ -257,7 +257,7 @@ export const DATASETS = {
   tipos_climaticos: {
     layer: new FeatureLayer({
       id: "tipos_climaticos",
-      title: "Climate types (Koepen)",
+      title: "Climate types (Köepen)",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tipos_climaticos_KOEPEN/FeatureServer/0",
       renderer: new UniqueValueRenderer({
         field: "Field2",
@@ -380,7 +380,7 @@ export const DATASETS = {
   cuencas_hidrograficas: {
     layer: new FeatureLayer({
       id: "cuencas_hidrograficas",
-      title: "Cuenca hidrográfica, pertenencia a grandes cuencas",
+      title: "Hydrographic basins",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Grandes_cuencas_hidrograficas/FeatureServer/0",
     }),
     legend: null,
