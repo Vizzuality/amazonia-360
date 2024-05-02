@@ -14,6 +14,12 @@ import Info from "@/containers/info";
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Tooltip,
+  TooltipArrow,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface CardProps {
   padding?: boolean;
@@ -48,14 +54,22 @@ export function CardContent({
 
 export function CardInfo({ ids }: { ids: DatasetIds[] }) {
   return (
-    <Dialog>
-      <DialogTrigger className="h-6 w-6 flex items-center justify-center">
-        <LuInfo className="text-blue-600" />
-      </DialogTrigger>
-      <DialogContent className="p-0">
-        <Info ids={ids} />
-      </DialogContent>
-    </Dialog>
+    <Tooltip delayDuration={100}>
+      <Dialog>
+        <TooltipTrigger asChild>
+          <DialogTrigger className="h-6 w-6 flex items-center justify-center">
+            <LuInfo className="text-blue-600" />
+          </DialogTrigger>
+        </TooltipTrigger>
+        <DialogContent className="p-0">
+          <Info ids={ids} />
+        </DialogContent>
+        <TooltipContent sideOffset={0}>
+          More information
+          <TooltipArrow />
+        </TooltipContent>
+      </Dialog>
+    </Tooltip>
   );
 }
 
@@ -67,7 +81,7 @@ export function CardLoader({
   query: UseQueryResult<unknown, unknown>[];
   children: React.ReactNode;
 } & React.HTMLAttributes<HTMLDivElement>) {
-  if (!query.every((q) => q.data) || query.some((q) => q.isFetching)) {
+  if (query.some((q) => q.isFetching)) {
     return <Skeleton {...rest} />;
   }
 

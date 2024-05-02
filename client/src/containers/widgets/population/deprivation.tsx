@@ -8,7 +8,14 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
-import { Card, CardContent, CardLoader, CardTitle } from "@/containers/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardInfo,
+  CardLoader,
+  CardTitle,
+} from "@/containers/card";
 import Legend from "@/containers/legend";
 import LegendItem from "@/containers/legend/item";
 import WidgetMap from "@/containers/widgets/map";
@@ -37,7 +44,11 @@ export default function WidgetsPopulationDeprivation() {
   return (
     <Card className="h-full p-0 relative print:break-before-page">
       <div className="p-6">
-        <CardTitle>Deprivation Index</CardTitle>
+        <CardHeader>
+          <CardTitle>Deprivation Index</CardTitle>
+          <CardInfo ids={["deprivation_index"]} />
+        </CardHeader>
+
         <CardContent>
           <CardLoader query={[query]} className="h-10">
             <p className="text-sm font-medium">
