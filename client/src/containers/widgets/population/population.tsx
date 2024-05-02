@@ -42,13 +42,14 @@ export default function WidgetsPopulationPopulation() {
         <CardContent>
           <CardLoader query={[query]} className="h-10">
             <p className="text-sm font-medium">
-              The current selection could have{" "}
+              The currently selected area has an estimated population of{" "}
               <strong>
                 {formatNumber(query.data, {
                   maximumFractionDigits: 0,
                 })}
               </strong>{" "}
-              inhabitants, estimated for 2025 according to the GHS mode.
+              inhabitants in 2025, according to the Global Human Settlement
+              (GHS) model
             </p>
           </CardLoader>
         </CardContent>

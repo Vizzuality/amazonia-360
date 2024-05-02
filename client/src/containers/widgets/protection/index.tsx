@@ -12,7 +12,7 @@ import WidgetProtectedAreas from "@/containers/widgets/protection/protected-area
 import WidgetsRow from "@/containers/widgets/row";
 
 export default function WidgetsProtection({ index }: { index: number }) {
-  const T = TOPICS.find((t) => t.id === "protection");
+  const T = TOPICS.find((t) => t.id === "land-use-and-conservation");
 
   return (
     <div className="container">

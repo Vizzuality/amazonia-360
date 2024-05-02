@@ -2,7 +2,7 @@ import { Card } from "@/containers/card";
 import WidgetsColumn from "@/containers/widgets/column";
 import WidgetMap from "@/containers/widgets/map";
 import WidgetAdministrativeBoundaries from "@/containers/widgets/overview/administrative-boundaries";
-import WidgetAmazoniaCoverage from "@/containers/widgets/overview/amazonia-coverage";
+import WidgetIndigenous from "@/containers/widgets/overview/indigenous-lands";
 import WidgetPopulation from "@/containers/widgets/overview/population";
 import WidgetProtection from "@/containers/widgets/overview/protection";
 import WidgetTotalArea from "@/containers/widgets/overview/total-area";
@@ -22,7 +22,7 @@ export default function WidgetsOverview() {
           <WidgetProtection />
         </WidgetsColumn>
         <WidgetsColumn className="col-span-12 md:col-span-6 lg:col-span-3 print:col-span-6">
-          <WidgetAmazoniaCoverage />
+          <WidgetIndigenous />
         </WidgetsColumn>
         <WidgetsColumn className="col-span-12 lg:col-span-6 print:col-span-12">
           <Card className="h-full p-0 relative">

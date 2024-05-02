@@ -14,36 +14,31 @@ export const TOPICS = [
       "Get data on infrastructure, agriculture, mining, logging, livestock, and fishing.",
   },
   {
-    id: "population",
-    label: "Population",
+    id: "sociodemographics",
+    label: "Sociodemographics",
     image: "/images/topics/population.png",
     description: "Understand the demographics of your area of interest.",
   },
   {
-    id: "protection",
-    label: "Protection, Deforestation and Forest Fires",
+    id: "land-use-and-conservation",
+    label: "Land use and Conservation",
     image: "/images/topics/protection.png",
     description:
       "Get data on infrastructure, agriculture, mining, logging, livestock, and fishing.",
   },
   {
     id: "bioeconomy",
-    label: "Bioeconomy",
+    label: "Bioeconomy Research Centers",
     image: "/images/topics/bioeconomy.png",
     description:
       "Data relating to research centers, bioeconomy-related researchers, and other academic endeavors.",
   },
   {
     id: "financial",
-    label: "Financial",
+    label: "IDB Operations",
     image: "/images/topics/financial.png",
     description: "Understand the IDB operations in your area of interest.",
   },
-] as Topic[] satisfies Topic[];
+] as const satisfies Topic[];
 
-export type TopicIds =
-  | "natural-physical-environment"
-  | "population"
-  | "protection"
-  | "bioeconomy"
-  | "financial";
+export type TopicIds = (typeof TOPICS)[number]["id"];

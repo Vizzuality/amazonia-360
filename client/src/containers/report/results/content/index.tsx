@@ -31,9 +31,9 @@ export default function ReportResultsContent() {
         switch (id) {
           case "natural-physical-environment":
             return <WidgetsEnvironment key={id} index={index} />;
-          case "population":
+          case "sociodemographics":
             return <WidgetsDemographicAndSocieconomic key={id} />;
-          case "protection":
+          case "land-use-and-conservation":
             return <WidgetsProtection key={id} index={index} />;
           case "bioeconomy":
             return <WidgetsBioeconomy key={id} index={index} />;

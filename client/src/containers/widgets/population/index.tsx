@@ -6,7 +6,7 @@ import WidgetsPopulationPopulation from "@/containers/widgets/population/populat
 import WidgetsRow from "@/containers/widgets/row";
 
 export default function WidgetsPopulation() {
-  const T = TOPICS.find((t) => t.id === "population");
+  const T = TOPICS.find((t) => t.id === "sociodemographics");
 
   return (
     <div className="container">

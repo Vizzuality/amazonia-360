@@ -16,22 +16,22 @@ import {
 } from "@/containers/card";
 import { ProtectedAreas } from "@/containers/widgets/protection/protected-areas/types";
 
-export default function WidgetProtection() {
+export default function WidgetIndigenous() {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
 
   const query = useGetFeatures(
     {
-      query: DATASETS.areas_protegidas.getFeatures({
+      query: DATASETS.tierras_indigenas.getFeatures({
         ...(!!GEOMETRY && {
           geometry: GEOMETRY,
         }),
       }),
-      feature: DATASETS.areas_protegidas.layer,
+      feature: DATASETS.tierras_indigenas.layer,
     },
     {
-      enabled: !!DATASETS.areas_protegidas.getFeatures && !!GEOMETRY,
+      enabled: !!DATASETS.tierras_indigenas.getFeatures && !!GEOMETRY,
       select(data): ProtectedAreas[] {
         return data.features.map((f) => f.attributes);
       },
@@ -40,13 +40,13 @@ export default function WidgetProtection() {
 
   return (
     <Card>
-      <CardTitle>Conservation</CardTitle>
+      <CardTitle>Indigenous lands</CardTitle>
       <CardLoader query={[query]} className="h-12">
         <CardWidgetNumber
           value={formatNumber(query?.data?.length, {
             maximumFractionDigits: 0,
           })}
-          unit="protected areas"
+          unit="indigenous lands"
         />
       </CardLoader>
     </Card>
