@@ -13,9 +13,15 @@ export default function Help() {
           </p>
           <div className="flex flex-col items-center pt-16 md:py-0">
             <h3 className="text-lg font-bold">Help us improve!</h3>
-            <Button size="lg" variant="secondary" className="mt-4">
-              Give feedback
-            </Button>
+            <a
+              href="https://survey123.arcgis.com/share/fadbaa4e81f04f068f5ed0abd99e4789"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Button size="lg" variant="secondary" className="mt-4">
+                Give feedback
+              </Button>
+            </a>
           </div>
         </div>
       </div>
