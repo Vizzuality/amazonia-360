@@ -8,7 +8,7 @@ export default function ReportLocation() {
   return (
     <aside className="flex flex-col w-5/12 shrink-0 max-h-screen overflow-hidden pointer-events-auto">
       <ScrollArea className="grow w-full">
-        <div className="relative space-y-4 p-8 overflow-hidden backdrop-blur-xl bg-white/0">
+        <div className="relative space-y-4 p-8 overflow-hidden backdrop-blur-xl bg-muted/75 rounded-3xl">
           <div className="p-2 space-y-4">
             <h1 className="text-blue-400 text-4xl">
               Get insights on your area of interest

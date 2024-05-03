@@ -19,6 +19,7 @@ import {
 import LayerManager from "@/containers/report/map/layer-manager";
 
 import Controls from "@/components/map/controls";
+import BasemapControl from "@/components/map/controls/basemap";
 import ZoomControl from "@/components/map/controls/zoom";
 import Sketch from "@/components/map/sketch";
 
@@ -83,6 +84,7 @@ export default function MapContainer() {
 
         <Controls>
           <ZoomControl />
+          <BasemapControl />
         </Controls>
       </Map>
     </div>
