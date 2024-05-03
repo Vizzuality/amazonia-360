@@ -2,6 +2,8 @@
 
 import { useMemo } from "react";
 
+import Pluralize from "pluralize";
+
 import { formatNumber } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
 import { useGetFeatures } from "@/lib/query";
@@ -56,7 +58,10 @@ export default function WidgetTotalOperations() {
       </CardHeader>
 
       <CardLoader query={[query]} className="h-12">
-        <CardWidgetNumber value={TOTAL} unit="operations" />
+        <CardWidgetNumber
+          value={TOTAL}
+          unit={Pluralize("operation", query.data?.length ?? 0)}
+        />
       </CardLoader>
     </Card>
   );
