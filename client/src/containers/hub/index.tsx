@@ -18,8 +18,9 @@ export default function Hub() {
             <p>
               We&apos;re currently developing the Hub - your one-stop
               destination for accessing and sharing all essential information to{" "}
-              <b>guide decision-making</b> in the Amazonia region. Here,
-              <b>collaboration, coordination,</b> and <b>knowledge sharing</b>{" "}
+              <strong>guide decision-making</strong> in the Amazonia region.
+              Here,{" "}
+              <strong>collaboration, coordination and knowledge sharing</strong>{" "}
               empower informed choices and drive <b>positive impact</b>.
             </p>
             <p>
