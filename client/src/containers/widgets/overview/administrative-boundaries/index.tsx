@@ -10,6 +10,8 @@ import { DATASETS } from "@/constants/datasets";
 import {
   Card,
   CardContent,
+  CardHeader,
+  CardInfo,
   CardLoader,
   CardNoData,
   CardTitle,
@@ -64,7 +66,10 @@ export default function WidgetAdministrativeBoundaries() {
 
   return (
     <Card>
-      <CardTitle>Administrative Boundaries</CardTitle>
+      <CardHeader>
+        <CardTitle>Administrative Boundaries</CardTitle>
+        <CardInfo ids={["admin2", "ciudades_capitales"]} />
+      </CardHeader>
       <CardContent className="space-y-2">
         <CardLoader query={[queryAdmin, queryCities]} className="h-72">
           <CardNoData query={[queryAdmin, queryCities]}>

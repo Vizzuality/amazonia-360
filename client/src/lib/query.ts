@@ -11,6 +11,7 @@ import {
   UseQueryOptions,
   useQuery,
 } from "@tanstack/react-query";
+import axios from "axios";
 
 import { StatsOps } from "@/types/generated/api.schemas";
 import { exactZonalStatsExactZonalStatsPost } from "@/types/generated/default";
@@ -468,6 +469,97 @@ export const useGetServerAnalysis = <
   options?: Omit<ServerAnalysisQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const { queryKey, queryFn } = getServerAnalysisOptions(params, options);
+
+  return useQuery({
+    queryKey,
+    queryFn,
+    ...options,
+  });
+};
+
+/**
+ ************************************************************
+ ************************************************************
+ * Metadata
+ ************************************************************
+ ************************************************************
+ */
+export type GetMetadataParams = {
+  id: DatasetIds;
+};
+
+export type MetadataQueryOptions<TData, TError> = UseQueryOptions<
+  Awaited<ReturnType<typeof getMetadata>>,
+  TError,
+  TData
+>;
+
+export const getMetadata = async (params: GetMetadataParams) => {
+  const { id } = params;
+
+  if (!id) {
+    throw new Error("id is required");
+  }
+
+  const DATASET = DATASETS[id];
+
+  if (!DATASET?.metadata?.url) {
+    return new Promise<{ id: DatasetIds; metadata: string }>((resolve) => {
+      resolve({
+        id,
+        metadata: "",
+      });
+    });
+  }
+
+  return axios
+    .get(DATASET?.metadata?.url, {
+      headers: {
+        "Content-Type": "application/xml",
+      },
+    })
+    .then((res) => {
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(res.data, "text/xml");
+
+      const metadata = xmlDoc.getElementsByTagName("idAbs")[0];
+
+      return {
+        id,
+        metadata: metadata?.textContent || "",
+      };
+    });
+};
+
+export const getMetadataKey = (params: GetMetadataParams) => {
+  const { id } = params;
+  return ["arcgis", "metadata", id] as const;
+};
+
+export const getMetadataOptions = <
+  TData = Awaited<ReturnType<typeof getMetadata>>,
+  TError = unknown,
+>(
+  params: GetMetadataParams,
+  options?: Omit<MetadataQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const queryKey = getMetadataKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMetadata>>> = () =>
+    getMetadata(params);
+  return { queryKey, queryFn, ...options } as MetadataQueryOptions<
+    TData,
+    TError
+  >;
+};
+
+export const useGetMetadata = <
+  TData = Awaited<ReturnType<typeof getMetadata>>,
+  TError = unknown,
+>(
+  params: GetMetadataParams,
+  options?: Omit<MetadataQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const { queryKey, queryFn } = getMetadataOptions(params, options);
 
   return useQuery({
     queryKey,

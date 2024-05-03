@@ -14,7 +14,13 @@ import { useSyncLocation } from "@/app/store";
 
 import { BIOMES, BiomesIds } from "@/constants/colors";
 
-import { Card, CardLoader, CardTitle } from "@/containers/card";
+import {
+  Card,
+  CardHeader,
+  CardInfo,
+  CardLoader,
+  CardTitle,
+} from "@/containers/card";
 import LegendOrdinal from "@/containers/legend/ordinal";
 
 import MarimekkoChart, { Data } from "@/components/charts/marimekko";
@@ -79,7 +85,11 @@ export default function WidgetBiomesByType() {
 
   return (
     <Card className="grow">
-      <CardTitle>Biomes by type</CardTitle>
+      <CardHeader>
+        <CardTitle>Biomes by type</CardTitle>
+        <CardInfo ids={["biomas"]} />
+      </CardHeader>
+
       <CardLoader query={[query]} className="h-52">
         <div className="space-y-2 pt-2">
           <MarimekkoChart

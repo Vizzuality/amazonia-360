@@ -15,7 +15,13 @@ import { useSyncLocation } from "@/app/store";
 
 import { ELEVATION_RANGES, ElevationRangeIds } from "@/constants/colors";
 
-import { Card, CardTitle, CardLoader } from "@/containers/card";
+import {
+  Card,
+  CardTitle,
+  CardLoader,
+  CardHeader,
+  CardInfo,
+} from "@/containers/card";
 import LegendOrdinal from "@/containers/legend/ordinal";
 
 import MarimekkoChart, { Data } from "@/components/charts/marimekko";
@@ -83,7 +89,11 @@ export default function WidgetAltitude() {
 
   return (
     <Card>
-      <CardTitle>Elevation</CardTitle>
+      <CardHeader>
+        <CardTitle>Elevation</CardTitle>
+        <CardInfo ids={["elevation_ranges"]} />
+      </CardHeader>
+
       <CardLoader query={[query]} className="h-20">
         <div className="space-y-2 pt-2">
           <MarimekkoChart

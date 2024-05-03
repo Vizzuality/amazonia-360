@@ -29,7 +29,7 @@ export const DATASETS = {
   admin0: {
     layer: new FeatureLayer({
       id: "admin0",
-      title: "Admin0",
+      title: "Administrative boundaries (Adm0)",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM0/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({
@@ -43,6 +43,11 @@ export const DATASETS = {
       }),
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_ADM0/FeatureServer/info/metadata",
+      data: null,
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -53,7 +58,7 @@ export const DATASETS = {
   admin1: {
     layer: new FeatureLayer({
       id: "admin1",
-      title: "Admin1",
+      title: "Administrative boundaries (Adm1)",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM1/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({
@@ -67,6 +72,11 @@ export const DATASETS = {
       }),
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_ADM1/FeatureServer/info/metadata",
+      data: null,
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -77,7 +87,7 @@ export const DATASETS = {
   admin2: {
     layer: new FeatureLayer({
       id: "admin2",
-      title: "Admin",
+      title: "Administrative boundaries (Adm2)",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM2/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({
@@ -91,6 +101,11 @@ export const DATASETS = {
       }),
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_ADM2/FeatureServer/info/metadata",
+      data: null,
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -115,6 +130,7 @@ export const DATASETS = {
       }),
     }),
     legend: null,
+    metadata: null,
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -125,7 +141,7 @@ export const DATASETS = {
   ciudades_capitales: {
     layer: new FeatureLayer({
       id: "ciudades_capitales",
-      title: "Ciudades capitales",
+      title: "Capital cities",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_CAPITALES_ADMIN/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleMarkerSymbol({
@@ -162,6 +178,11 @@ export const DATASETS = {
       },
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_CAPITALES_ADMIN/FeatureServer/info/metadata",
+      data: null,
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -176,6 +197,7 @@ export const DATASETS = {
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/REFERENCIA_FRONTERA_INTERNACIONAL/FeatureServer/0",
     }),
     legend: null,
+    metadata: null,
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -225,6 +247,11 @@ export const DATASETS = {
         color: INDIGENOUS_LANDS[k].color,
       })),
     },
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Tierras_indigenas/FeatureServer/info/metadata",
+      data: null,
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -235,7 +262,7 @@ export const DATASETS = {
   tipos_climaticos: {
     layer: new FeatureLayer({
       id: "tipos_climaticos",
-      title: "Climate types (Koepen)",
+      title: "Climate types (Köepen)",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tipos_climaticos_KOEPEN/FeatureServer/0",
       renderer: new UniqueValueRenderer({
         field: "Field2",
@@ -273,6 +300,11 @@ export const DATASETS = {
           label: CLIMATE_TYPES[k].label,
           color: CLIMATE_TYPES[k].color,
         })),
+    },
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Tipos_climaticos_KOEPEN/FeatureServer/info/metadata",
+      data: null,
     },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
@@ -322,6 +354,11 @@ export const DATASETS = {
           color: BIOMES[k].color,
         })),
     },
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Biomas/FeatureServer/info/metadata",
+      data: null,
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -336,6 +373,11 @@ export const DATASETS = {
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Ecosistemas/FeatureServer/0",
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Ecosistemas/FeatureServer/info/metadata",
+      data: null,
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -346,10 +388,15 @@ export const DATASETS = {
   cuencas_hidrograficas: {
     layer: new FeatureLayer({
       id: "cuencas_hidrograficas",
-      title: "Cuenca hidrográfica, pertenencia a grandes cuencas",
+      title: "Hydrographic basins",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Grandes_cuencas_hidrograficas/FeatureServer/0",
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Grandes_cuencas_hidrograficas/FeatureServer/info/metadata",
+      data: null,
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -399,6 +446,11 @@ export const DATASETS = {
         color: PROTECTED_AREAS[k].color,
       })),
     },
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Areas_protegidas/FeatureServer/info/metadata",
+      data: null,
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -433,16 +485,21 @@ export const DATASETS = {
       },
       renderer: new SimpleRenderer({
         symbol: new SimpleMarkerSymbol({
-          color: "#000000",
+          color: "#004E70",
           size: 4,
           outline: {
             width: 1,
-            color: "#000000",
+            color: "#004E70",
           },
         }),
       }),
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Institutional_Tracking/FeatureServer/info/metadata",
+      data: null,
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",
@@ -487,6 +544,11 @@ export const DATASETS = {
       }),
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/IDB_Operations/FeatureServer/info/metadata",
+      data: null,
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "objectid is not null",
@@ -512,6 +574,15 @@ export const DATASETS = {
           color: LAND_COVER[k].color,
         })),
     },
+    metadata: {
+      type: "raster",
+      url: null,
+      data: `<p><strong>Types of land coverages in the AFP&#39;s area of work.</strong></p>
+      <p>Polygon and raster image versions representing land cover in the AFP&#39;s work area.</p>
+      <p>Compiled by Amazonia360 (2023-2024) , from ESA WorldCover project data, consisting of global land cover products at 10 m resolution for 2021, from Sentinel-1 and 2 data. ( <a href="https://worldcover2021.esa.int/">https://worldcover2021.esa.int/</a>)</p>
+      <p>The legend includes 11 generic classes that adequately describe the land surface at 10 m: &quot;Tree cover&quot;, &quot;Shrublands&quot;, &quot;Grasslands&quot;, &quot;Croplands&quot;, &quot;Urbanized&quot;, &quot;Bare/shrubby vegetation&quot;, &quot;Snow and ice&quot;, &quot;Permanent water bodies&quot;, &quot;Herbaceous wetlands&quot;, &quot;Mangroves&quot; and &quot;Mosses and lichens&quot;. The portion of the data for northern South America was extracted, sampled and projected to generate a raster and a vector version for testing the zonal viewer assembly.</p>
+      `,
+    },
   },
   elevation_ranges: {
     layer: new WebTileLayer({
@@ -526,6 +597,15 @@ export const DATASETS = {
         label: ELEVATION_RANGES[k].label,
         color: ELEVATION_RANGES[k].color,
       })),
+    },
+    metadata: {
+      type: "raster",
+      url: null,
+      data: `<p><strong>Altitudinal and topographic slope ranges of the terrain.</strong></p>
+      <p>Layers of polygons representing the ranges of altitude above sea level in meters (AFP_ALTIT) and the topographic slope of the terrain in degrees (AFP_SLOP), for the entire in the AFP&#39;s work area.</p>
+      <p>Compiled by Amazonia360, 2023, from Copernicus DEM elevation data which is a Digital Surface Model (DSM) representing the topographic surface of the Earth including buildings, infrastructure and vegetation. In particular, the GLO-30 product has been used, offering global coverage with a resolution of 30 meters. A Copernicus DEM altitude raster layer has been constructed in Amazonia360, covering northern South America. The original altitude raster data has been sampled and reclassified into classes relevant to agricultural development and forest management, infrastructure installation feasibility, accessibility and flood risk. The two vector layers of altitude and slope were then assembled from this reclassification.
+      Copernicus DEM:
+      <a href="https://spacedata.copernicus.eu/es/collections/copernicus-digital-elevation-model">https://spacedata.copernicus.eu/es/collections/copernicus-digital-elevation-model</a></p>`,
     },
   },
   fires: {
@@ -542,6 +622,16 @@ export const DATASETS = {
         label: FIRES[k].label,
         color: FIRES[k].color,
       })),
+    },
+    metadata: {
+      type: "raster",
+      url: null,
+      data: `<p><strong>Frequency ranges of forest fires in the AFP work area.</strong></p>
+      <p>Forest fire frequency classes, based on remotely sensed hot spot and forest fire data.</p>
+      <p>Compiled by Amazonia360 based on basic data of hot spots and forest fires from: Fire Information for Resource Management System (FIRMS) NASA.
+      <a href="https://firms.modaps.eosdis.nasa.gov/">https://firms.modaps.eosdis.nasa.gov/</a></p>
+      <p>The historical data of hot spots between March 2014 and March 2024, from the observation of different types of radiometers in Earth orbit, were requested and downloaded. The resulting event cloud was sampled using a 10 km analysis grid for each rectangular cell, covering the entire AFP working area. The centroids were generated with the accumulated events per cell and transformed into a raster image. This was reclassified to obtain event frequency ranges, cells with industrial or geological hot spots were filtered and polygons were generated to represent regions according to the frequency of fires.</p>
+      `,
     },
   },
   population: {
@@ -568,6 +658,20 @@ export const DATASETS = {
         label: i === 0 || i === arr.length - 1 ? POPULATION[k].label : null,
         color: POPULATION[k].color,
       })),
+    },
+    metadata: {
+      type: "raster",
+      url: null,
+      data: `<p><strong>Estimated population for the year 2025 in the AFP&#39;s work area.</strong></p>
+      <p>Raster model representing the population projection for the year 2025 expressed in number of inhabitants per pixel of 180 meters resolution.</p>
+      <p>Adaptation of data from the Global Human Settlement Layer (GHSL) project: Joint Research Centre (JRC), Science and Knowledge Service of the European Commission. Publications Office of the European Union, Luxembourg, 2022.
+      <a href="https://ghsl.jrc.ec.europa.eu/ghs_pop.php">https://ghsl.jrc.ec.europa.eu/ghs_pop.php</a>
+      Data from publication 2023A of are explained in:
+      Schiavina, M., Melchiorri, M., Pesaresi, M., Politis, P., Carneiro Freire, S.M., Maffenini, L., Florio, P., Ehrlich, D., Goch, K., Carioli, A., Uhl, J., Tommasi, P. and Kemper, T., GHSL Data Package 2023, Publications Office of the European Union, Luxembourg, 2023, ISBN 978-92-68-02341-9, doi:10.2760/098587, JRC133256.</p>
+      <p><a href="https://publications.jrc.ec.europa.eu/repository/handle/JRC133256">https://publications.jrc.ec.europa.eu/repository/handle/JRC133256</a>
+      From the global data layer: GHS_POP_E2025_GLOBE_R2023A_4326_3ss_V1_0.tif,
+      The data for northern South America were extracted, reprojected and sampled to suit the requirements of the zonal viewer. The resolution of the original model (90 m) was reduced by aggregation to a size suitable for the viewer, 180 meters.</p>
+      `,
     },
   },
   deprivation_index: {
@@ -596,6 +700,15 @@ export const DATASETS = {
         color: DEPRIVATION_INDEX[k].color,
       })),
     },
+    metadata: {
+      type: "raster",
+      url: null,
+      data: `<p><strong>Estimate of deprivation, deprivation in living conditions in the AFP&#39;s work area.</strong></p>
+      <p>Raster model that represents the levels of multidimensional deprivation in living conditions of the population, by means of an index assigned to each pixel of one kilometer resolution.</p>
+      <p>Adapted by Amazonia360, 2023, from the Global Relative Deprivation Index (GRDI), v1 (2010-2020) generated by the Socioeconomic Data and Applications Center (SEDAC; NASA, Columbia University) This is a gridded global relative deprivation index that characterizes multidimensional deprivation levels at each pixel with a resolution of ~1 km. The original GRDI dataset is a one-kilometer pixel model, with a value from 0 to 100, where a value of 100 represents the highest level of relative deprivation and a value of 0 the lowest. GRDIv1. It groups weights of six input components, or dimensions, which are combined to determine the degree of relative deprivation. These dimensions consider economic aspects and living conditions data. The original file is: povmap-grdi-v1-grdiv1-geotiff(1).zip; and comes from:
+      Center for International Earth Science Information Network (CIESIN), Columbia University. 2022. Global Gridded Relative Deprivation Index (GRDI), Version 1. Palisades, New York: NASA Socioeconomic Data and Applications Center (SEDAC). <a href="https://doi.org/10.7927/3xxe-ap97">https://doi.org/10.7927/3xxe-ap97</a></p>
+      `,
+    },
   },
   acu_knowledge: {
     layer: new FeatureLayer({
@@ -614,6 +727,11 @@ export const DATASETS = {
       }),
     }),
     legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/ACU_KnowledgeDB/FeatureServer/info/metadata",
+      data: null,
+    },
     getFeatures: (props?: __esri.QueryProperties) =>
       new Query({
         where: "FID is not null",

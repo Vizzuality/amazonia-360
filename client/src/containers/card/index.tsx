@@ -4,14 +4,39 @@ import { PropsWithChildren } from "react";
 import Image from "next/image";
 
 import { UseQueryResult } from "@tanstack/react-query";
+import { LuInfo } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
+import { DatasetIds } from "@/constants/datasets";
+
+import Info from "@/containers/info";
+
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Tooltip,
+  TooltipArrow,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface CardProps {
   padding?: boolean;
   className?: string;
+}
+
+export function CardHeader({
+  className,
+  children,
+}: PropsWithChildren<{
+  className?: string;
+}>) {
+  return (
+    <header className={cn("flex items-start justify-between", className)}>
+      {children}
+    </header>
+  );
 }
 
 export function CardTitle({ children }: PropsWithChildren) {
@@ -27,6 +52,27 @@ export function CardContent({
   );
 }
 
+export function CardInfo({ ids }: { ids: DatasetIds[] }) {
+  return (
+    <Tooltip delayDuration={100}>
+      <Dialog>
+        <TooltipTrigger asChild>
+          <DialogTrigger className="h-6 w-6 flex items-center justify-center">
+            <LuInfo className="text-blue-600" />
+          </DialogTrigger>
+        </TooltipTrigger>
+        <DialogContent className="p-0">
+          <Info ids={ids} />
+        </DialogContent>
+        <TooltipContent sideOffset={0}>
+          More information
+          <TooltipArrow />
+        </TooltipContent>
+      </Dialog>
+    </Tooltip>
+  );
+}
+
 export function CardLoader({
   query,
   children,
@@ -35,7 +81,7 @@ export function CardLoader({
   query: UseQueryResult<unknown, unknown>[];
   children: React.ReactNode;
 } & React.HTMLAttributes<HTMLDivElement>) {
-  if (!query.every((q) => q.data) || query.some((q) => q.isFetching)) {
+  if (query.some((q) => q.isFetching)) {
     return <Skeleton {...rest} />;
   }
 

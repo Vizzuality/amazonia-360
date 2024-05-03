@@ -11,6 +11,8 @@ import {
   CardWidgetNumber,
   CardTitle,
   CardLoader,
+  CardHeader,
+  CardInfo,
 } from "@/containers/card";
 
 export default function WidgetPopulation() {
@@ -37,7 +39,11 @@ export default function WidgetPopulation() {
 
   return (
     <Card>
-      <CardTitle>Population</CardTitle>
+      <CardHeader>
+        <CardTitle>Population</CardTitle>
+        <CardInfo ids={["population"]} />
+      </CardHeader>
+
       <CardLoader query={[query]} className="h-12">
         <CardWidgetNumber
           value={formatNumber(query.data, {

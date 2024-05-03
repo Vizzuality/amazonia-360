@@ -15,6 +15,8 @@ import {
   CardWidgetNumber,
   CardTitle,
   CardLoader,
+  CardHeader,
+  CardInfo,
 } from "@/containers/card";
 import { IDBOperation } from "@/containers/widgets/financial/types";
 
@@ -54,7 +56,11 @@ export default function WidgetTotalFunding() {
 
   return (
     <Card>
-      <CardTitle>IDB total funding</CardTitle>
+      <CardHeader>
+        <CardTitle>IDB total funding</CardTitle>
+        <CardInfo ids={["idb_operations"]} />
+      </CardHeader>
+
       <CardLoader query={[query]} className="h-12">
         <CardWidgetNumber value={TOTAL} />
       </CardLoader>

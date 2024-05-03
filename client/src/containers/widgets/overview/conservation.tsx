@@ -1,5 +1,7 @@
 "use client";
 
+import Pluralize from "pluralize";
+
 import { formatNumber } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
 import { useGetFeatures } from "@/lib/query";
@@ -13,10 +15,12 @@ import {
   CardWidgetNumber,
   CardTitle,
   CardLoader,
+  CardHeader,
+  CardInfo,
 } from "@/containers/card";
 import { ProtectedAreas } from "@/containers/widgets/protection/protected-areas/types";
 
-export default function WidgetProtection() {
+export default function WidgetConservation() {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
@@ -40,13 +44,16 @@ export default function WidgetProtection() {
 
   return (
     <Card>
-      <CardTitle>Conservation</CardTitle>
+      <CardHeader>
+        <CardTitle>Conservation</CardTitle>
+        <CardInfo ids={["areas_protegidas"]} />
+      </CardHeader>
       <CardLoader query={[query]} className="h-12">
         <CardWidgetNumber
           value={formatNumber(query?.data?.length, {
             maximumFractionDigits: 0,
           })}
-          unit="protected areas"
+          unit={Pluralize("protected area", query?.data?.length || 0)}
         />
       </CardLoader>
     </Card>

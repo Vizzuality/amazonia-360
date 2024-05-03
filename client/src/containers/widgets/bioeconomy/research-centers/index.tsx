@@ -13,6 +13,8 @@ import {
   CardTitle,
   CardNoData,
   CardContent,
+  CardHeader,
+  CardInfo,
 } from "@/containers/card";
 import {
   ResearchCenter,
@@ -46,7 +48,11 @@ export default function WidgetResearchCenters() {
 
   return (
     <Card>
-      <CardTitle>Research centers</CardTitle>
+      <CardHeader>
+        <CardTitle>Research centers</CardTitle>
+        <CardInfo ids={["institutional_tracking"]} />
+      </CardHeader>
+
       <CardContent>
         <CardLoader query={[query]} className="h-72">
           <CardNoData query={[query]}>

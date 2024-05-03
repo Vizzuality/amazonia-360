@@ -14,7 +14,13 @@ import { useSyncLocation } from "@/app/store";
 
 import { LAND_COVER, LandCoverIds } from "@/constants/colors";
 
-import { Card, CardLoader, CardTitle } from "@/containers/card";
+import {
+  Card,
+  CardHeader,
+  CardInfo,
+  CardLoader,
+  CardTitle,
+} from "@/containers/card";
 import LegendOrdinal from "@/containers/legend/ordinal";
 
 import MarimekkoChart, { Data } from "@/components/charts/marimekko";
@@ -78,7 +84,11 @@ export default function WidgetLandCoverByType() {
 
   return (
     <Card className="grow">
-      <CardTitle>Land cover by type</CardTitle>
+      <CardHeader>
+        <CardTitle>Land cover by type</CardTitle>
+        <CardInfo ids={["land_cover"]} />
+      </CardHeader>
+
       <CardLoader query={[query]} className="h-52">
         {!!query.data && (
           <div className="space-y-2 pt-2">

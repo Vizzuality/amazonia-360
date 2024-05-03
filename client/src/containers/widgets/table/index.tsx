@@ -9,6 +9,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import Pluralize from "pluralize";
 import { LuArrowUpDown } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
@@ -120,7 +121,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
         <footer className="flex items-center justify-between mt-4">
-          <p className="text-xs font-medium text-gray-500">{`${data.length} results`}</p>
+          <p className="text-xs font-medium text-gray-500">{`${data.length} ${Pluralize("result", data.length)}`}</p>
           <DataPagination table={table} totalPagesToDisplay={5} />
         </footer>
       </div>
