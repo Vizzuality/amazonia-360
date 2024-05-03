@@ -10,6 +10,8 @@ import { DATASETS } from "@/constants/datasets";
 import {
   Card,
   CardContent,
+  CardHeader,
+  CardInfo,
   CardLoader,
   CardNoData,
   CardTitle,
@@ -42,7 +44,10 @@ export default function WidgetIDBOperations() {
 
   return (
     <Card>
-      <CardTitle>IDB operations</CardTitle>
+      <CardHeader>
+        <CardTitle>IDB operations</CardTitle>
+        <CardInfo ids={["idb_operations"]} />
+      </CardHeader>
 
       <CardContent className="space-y-2">
         <CardLoader query={[query]} className="h-72">
