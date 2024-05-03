@@ -16,6 +16,7 @@ import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer"
 
 import Controls from "@/components/map/controls";
 import FullscreenControl from "@/components/map/controls/fullscreen";
+import InfoControl from "@/components/map/controls/info";
 import ZoomControl from "@/components/map/controls/zoom";
 import FeatureLayer from "@/components/map/layers/feature";
 import WebTileLayer from "@/components/map/layers/web-tile";
@@ -95,6 +96,7 @@ export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
         <Controls>
           <FullscreenControl />
           <ZoomControl />
+          <InfoControl ids={ids} />
         </Controls>
       </Map>
     </div>
