@@ -11,21 +11,21 @@ export default function Hub() {
       <div className="container flex h-full md:pr-60 py-12 md:py-0">
         <div className="w-full md:w-1/2 h-full flex flex-col justify-center p-10">
           <h2 className="text-blue-400 text-3xl lg:text-4xl pb-6 font-semibold">
-            We are currently <br />
-            building this feature!
+            Coming Soon: <br />
+            The Amazonia Hub
           </h2>
           <div className="text-blue-900 text-base font-normal pb-12 flex flex-col space-y-2">
             <p>
-              We&apos;re currently developing the Hub - your one-stop
-              destination for accessing and sharing all essential information to{" "}
-              <b>guide decision-making</b> in the Amazonia region. Here,
-              <b>collaboration, coordination,</b> and <b>knowledge sharing</b>{" "}
-              empower informed choices and drive <b>positive impact</b>.
+              Welcome to the Hub - your future one-stop destination for
+              essential information to guide decision-making in the Amazonia
+              region. Once complete, it will facilitate collaboration,
+              coordination, and knowledge sharing, empowering you to make
+              informed choices that drive positive impact.
             </p>
             <p>
-              While we are working on this, we encourage you to explore our{" "}
-              <b>Reporting tool</b>, offering valuable insights into the
-              Amazonia.
+              While the Hub is under development, we encourage you to explore
+              our Report Tool, which currently offers valuable insights into the
+              dynamics of Amazonia.
             </p>
           </div>
           <Link href="/report">

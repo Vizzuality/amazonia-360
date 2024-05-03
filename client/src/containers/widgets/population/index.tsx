@@ -9,7 +9,7 @@ export default function WidgetsPopulation() {
   const T = TOPICS.find((t) => t.id === "sociodemographics");
 
   return (
-    <div className="container">
+    <div className="container print:break-before-page">
       <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
       <WidgetsRow>
         <WidgetsColumn className="col-span-12 md:col-span-6 print:col-span-12">
