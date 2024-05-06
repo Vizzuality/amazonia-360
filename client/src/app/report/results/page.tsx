@@ -52,12 +52,11 @@ export default async function ReportResultsPage({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="relative flex flex-col bg-blue-50 print:bg-white py-12 min-h-[calc(100svh_-_theme(space.40)_+_1px)]">
-        <ReportResultsDisclaimer />
-
         <ReportResultsHeader />
 
         <ReportResultsContent />
       </main>
+      <ReportResultsDisclaimer />
     </HydrationBoundary>
   );
 }
