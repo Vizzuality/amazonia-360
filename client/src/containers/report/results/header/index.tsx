@@ -4,14 +4,13 @@ import { useState } from "react";
 
 import Link from "next/link";
 
-import { TooltipPortal } from "@radix-ui/react-tooltip";
-import { Download } from "lucide-react";
 import { LuLayoutGrid, LuPlus } from "react-icons/lu";
 
 import { useLocationTitle } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/store";
 
+import DownloadReport from "@/containers/report/results/header/download";
 import Topics from "@/containers/report/topics";
 
 import {
@@ -26,12 +25,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipArrow,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 import ShareReport from "./share";
 
@@ -91,28 +84,8 @@ export default function ReportResultsHeader() {
             </Button>
 
             <ShareReport />
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="space-x-2"
-                  onClick={() => window.print()}
-                >
-                  <Download className="w-5 h-5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipPortal>
-                <TooltipContent side="top" align="center">
-                  <div className="text-xxs">Download report</div>
 
-                  <TooltipArrow
-                    className="fill-foreground"
-                    width={10}
-                    height={5}
-                  />
-                </TooltipContent>
-              </TooltipPortal>
-            </Tooltip>
+            <DownloadReport />
           </div>
         </div>
       </div>

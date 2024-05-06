@@ -14,6 +14,7 @@ import { locationParser } from "@/app/parsers";
 import { PageProps } from "@/app/types";
 
 import ReportResultsContent from "@/containers/report/results/content";
+import ReportResultsDisclaimer from "@/containers/report/results/disclaimer";
 import ReportResultsHeader from "@/containers/report/results/header";
 
 export const metadata: Metadata = {
@@ -51,6 +52,8 @@ export default async function ReportResultsPage({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="relative flex flex-col bg-blue-50 print:bg-white py-12 min-h-[calc(100svh_-_theme(space.40)_+_1px)]">
+        <ReportResultsDisclaimer />
+
         <ReportResultsHeader />
 
         <ReportResultsContent />
