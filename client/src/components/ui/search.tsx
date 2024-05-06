@@ -46,7 +46,7 @@ export function Search<T extends Option>({
         <LuSearch className="absolute top-1/2 left-6 -translate-y-1/2 h-8 w-8 text-blue-500 stroke-1" />
         <div
           className={cn(
-            "flex w-full rounded-[32px] py-5 h-16 pl-[70px] text-sm bg-white items-center",
+            "flex w-full rounded-[32px] py-5 h-12 tall:2xl:h-16 pl-[70px] text-sm bg-white items-center",
             !value && "text-gray-500",
           )}
         >
@@ -92,7 +92,7 @@ export function Search<T extends Option>({
                 value={value}
                 placeholder={placeholder ?? "Search..."}
                 className={cn(
-                  "flex w-full bg-transparent h-16 py-5 pl-[70px] text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+                  "flex w-full bg-transparent h-12 tall:2xl:h-16 py-5 pl-[70px] text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
                 )}
                 onValueChange={(e) => {
                   onChange(e);

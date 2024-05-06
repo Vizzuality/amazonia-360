@@ -97,7 +97,7 @@ export default function Sketch() {
   return (
     <div
       className={cn(
-        "flex w-full h-14 text-sm items-center space-x-2 rounded-[32px] overflow-hidden",
+        "flex w-full h-10 tall:2xl:h-14 text-sm items-center space-x-2 rounded-[32px] overflow-hidden",
         sketch.enabled && "space-x-0",
       )}
     >
