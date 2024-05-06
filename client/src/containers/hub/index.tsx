@@ -10,11 +10,11 @@ export default function Hub() {
     <main className="flex flex-col-reverse md:flex-row w-full bg-blue-50 md:h-[calc(100svh_-_theme(space.40)_+_1px)] relative">
       <div className="container flex h-full md:pr-60 py-12 md:py-0">
         <div className="w-full md:w-1/2 h-full flex flex-col justify-center p-10">
-          <h2 className="text-blue-400 text-3xl lg:text-4xl pb-6 font-semibold">
+          <h2 className="text-blue-400 text-2xl lg:text-3xl tall:xl:text-4xl pb-6 font-semibold">
             Coming Soon: <br />
             The Amazonia Hub
           </h2>
-          <div className="text-blue-900 text-base font-normal pb-10 flex flex-col space-y-2">
+          <div className="text-blue-900 text-sm tall:xl:text-base font-normal pb-5 tall:xl:pb-10 flex flex-col space-y-2">
             <p>
               Welcome to the Hub - your future one-stop destination for
               essential information to guide decision-making in the Amazonia

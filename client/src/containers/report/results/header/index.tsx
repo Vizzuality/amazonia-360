@@ -48,7 +48,9 @@ export default function ReportResultsHeader() {
         <div className="flex justify-between">
           {/* Name */}
           <div className="flex items-center space-x-6 mr-4">
-            <h1 className="text-4xl font-bold text-primary">{title}</h1>
+            <h1 className="text-2xl lg:text-3xl tall:xl:text-4xl font-bold text-primary">
+              {title}
+            </h1>
 
             <AlertDialog>
               <AlertDialogTrigger asChild className="print:hidden">
