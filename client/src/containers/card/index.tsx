@@ -65,7 +65,7 @@ export function CardInfo({ ids }: { ids: DatasetIds[] }) {
           <Info ids={ids} />
         </DialogContent>
         <TooltipContent sideOffset={0}>
-          More information
+          About the data
           <TooltipArrow />
         </TooltipContent>
       </Dialog>

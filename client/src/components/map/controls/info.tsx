@@ -57,7 +57,7 @@ export const InfoControl: FC<InfoControlProps> = ({
 
         <TooltipPortal>
           <TooltipContent side="left" align="center">
-            <div className="text-xxs">More information</div>
+            <div className="text-xxs">About the data</div>
 
             <TooltipArrow className="fill-foreground" width={10} height={5} />
           </TooltipContent>
