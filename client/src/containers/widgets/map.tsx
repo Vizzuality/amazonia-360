@@ -4,8 +4,6 @@ import { useMemo } from "react";
 
 import dynamic from "next/dynamic";
 
-import FeatureEffect from "@arcgis/core/layers/support/FeatureEffect";
-
 import { useLocationGeometry } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/store";
@@ -36,18 +34,9 @@ export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
     return ids.map((id) => {
       const l = DATASETS[id].layer;
 
-      if (GEOMETRY && l.type === "feature" && !l.featureReduction) {
-        l.featureEffect = new FeatureEffect({
-          filter: {
-            geometry: GEOMETRY,
-          },
-          excludedEffect: "opacity(0%)",
-        });
-      }
-
       return l;
     });
-  }, [ids, GEOMETRY]);
+  }, [ids]);
 
   return (
     <div className="relative h-full min-h-96">
@@ -77,6 +66,7 @@ export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
                 key={layer.id}
                 layer={layer}
                 index={arr.length - index}
+                GEOMETRY={GEOMETRY}
               />
             );
           }
