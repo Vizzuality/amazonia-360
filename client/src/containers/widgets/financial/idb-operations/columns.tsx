@@ -24,7 +24,7 @@ export const columns: ColumnDef<IDBOperation>[] = [
     },
   },
   {
-    accessorKey: "opertype",
+    accessorKey: "opertypenm",
     header: "Type",
     sortingFn: "alphanumericCaseSensitive",
     maxSize: 100,
