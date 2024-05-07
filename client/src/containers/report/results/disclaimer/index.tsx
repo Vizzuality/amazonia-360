@@ -1,6 +1,6 @@
 export default function ReportResultsDisclaimer() {
   return (
-    <div className="bg-orange-200 py-10 2xl:py-20 print:hidden">
+    <div className="bg-gray-300 py-10 print:hidden">
       <div className="container">
         <div className="space-y-2">
           <p className="italic">
