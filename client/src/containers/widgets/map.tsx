@@ -90,7 +90,7 @@ export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
           if (layer.type === "feature") {
             const i =
               layer.customParameters?.position === "top"
-                ? 1001
+                ? arr.length + 2
                 : arr.length - index;
 
             return (
@@ -114,7 +114,7 @@ export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
           }
         })}
         <SelectedLayer />
-        <VectorTileLayer layer={LABELS_LAYER} index={1000} />
+        <VectorTileLayer layer={LABELS_LAYER} index={LAYERS.length + 1} />
 
         <Controls>
           <FullscreenControl />
