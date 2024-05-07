@@ -76,13 +76,11 @@ export default function Glance() {
         maximumFractionDigits: 0,
       });
     },
-    population_of_the_amazonia_zone_by_country_ghspop25: (
+    population_density_of_the_afp_zones_by_country_inhabitants_per_sqkm: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
-      return formatNumber(node?.value || 0, {
+      return formatNumber((node?.value || 0) * 100, {
         maximumFractionDigits: 2,
-        minimumFractionDigits: 2,
-        notation: "compact",
       });
     },
     proportion_of_the_population_of_the_amazonia_zone_by_country_percentage: (
@@ -93,13 +91,6 @@ export default function Glance() {
       });
     },
     proportion_of_the_population_of_the_afp_by_country_percentage: (
-      node: HierarchyRectangularNode<HierarchyNode<Data>>,
-    ) => {
-      return formatPercentage(node?.value || 0, {
-        maximumFractionDigits: 0,
-      });
-    },
-    population_density_of_the_afp_zones_by_country_inhabitants_per_sqkm: (
       node: HierarchyRectangularNode<HierarchyNode<Data>>,
     ) => {
       return formatPercentage(node?.value || 0, {
@@ -159,16 +150,22 @@ export default function Glance() {
           Source: Population - GHS2025; Cartographic area{" "}
         </p>
       </div>
-      <div className="w-full md:w-1/2 flex flex-col mt-20 md:mt-0 space-y-1">
-        <p className="text-blue-900 font-semibold text-sm">
-          {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.label || ""}
-        </p>
+      <div className="w-full md:w-1/2 flex flex-col mt-20 md:mt-0 space-y-4">
+        <header className="space-y-1">
+          <h3 className="text-foreground font-semibold text-xl">
+            {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.label || ""}
+          </h3>
+          <p className="text-foreground font-medium text-xs">
+            {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.description ||
+              ""}
+          </p>
+        </header>
         <div className="w-full">
           <MarimekkoChart
             format={FORMAT[chartKey]}
             data={parsedData}
             colorScale={ordinalColorScale}
-            className="h-[488px]"
+            className="h-[450px]"
           />
         </div>
       </div>

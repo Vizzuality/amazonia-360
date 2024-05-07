@@ -2,7 +2,6 @@ export type MosaicIds =
   | "amazonia_area_by_country_cartographic_area_sqkm"
   | "proportion_of_amazonia_area_by_country_percentage"
   | "proportion_of_total_area_of_the_afp_by_country_percentage"
-  | "population_of_the_amazonia_zone_by_country_ghspop25"
   | "proportion_of_the_population_of_the_amazonia_zone_by_country_percentage"
   | "proportion_of_the_population_of_the_afp_by_country_percentage"
   | "population_density_of_the_afp_zones_by_country_inhabitants_per_sqkm";
@@ -10,32 +9,39 @@ export type MosaicIds =
 export const MOSAIC_OPTIONS = [
   {
     key: "amazonia_area_by_country_cartographic_area_sqkm",
-    label: "Amazonia area by country, cartographic area SQKM",
+    label: "Country Amazonia Area (km²)",
+    description:
+      "Total area of the Amazonia Forever work area within a country",
   },
   {
     key: "proportion_of_amazonia_area_by_country_percentage",
-    label: "Proportion of Amazonia area by country %",
+    label: "Country Amazonia Coverage (%)",
+    description:
+      "Percentage of a country covered by the Amazonia Forever work area",
   },
   {
     key: "proportion_of_total_area_of_the_afp_by_country_percentage",
-    label: "Proportion of total area of the AFP by country %",
-  },
-  {
-    key: "population_of_the_amazonia_zone_by_country_ghspop25",
-    label: "Population of the amazonia zone by country GHSPOP25",
-  },
-  {
-    key: "proportion_of_the_population_of_the_amazonia_zone_by_country_percentage",
-    label: "Proportion of the population of the amazonia zone by country %",
-  },
-  {
-    key: "proportion_of_the_population_of_the_afp_by_country_percentage",
-    label: "Proportion of the population of the AFP by country %",
+    label: "Country Share of Total Amazonia (%)",
+    description:
+      "Percentage of the total Amazonia Forever work area located within a country",
   },
   {
     key: "population_density_of_the_afp_zones_by_country_inhabitants_per_sqkm",
-    label:
-      "Population density of the AFP zones by country, inhabitants per SQKM",
+    label: "Country Amazonia Population Density (inhabitants/km²)",
+    description:
+      "Population density within a country's Amazonia Forever work area",
+  },
+  {
+    key: "proportion_of_the_population_of_the_amazonia_zone_by_country_percentage",
+    label: "Country Amazonia Population (%)",
+    description:
+      "Percentage of a country's population residing in its Amazonia Forever work area",
+  },
+  {
+    key: "proportion_of_the_population_of_the_afp_by_country_percentage",
+    label: "Country Share of Total Amazonia Population (%)",
+    description:
+      "Percentage of the total Amazonia Forever work area population residing within a country",
   },
 ] as const;
 
