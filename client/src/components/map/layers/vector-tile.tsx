@@ -2,19 +2,19 @@
 
 import { useEffect } from "react";
 
-import ArcGISWebTileLayer from "@arcgis/core/layers/WebTileLayer";
+import ArcGISVectorTileLayer from "@arcgis/core/layers/VectorTileLayer";
 
 import { useMap } from "@/components/map/provider";
 
-export default function WebTileLayer({
+export default function VectorTileLayer({
   layer,
   index,
 }: {
-  layer: ArcGISWebTileLayer;
+  layer: ArcGISVectorTileLayer;
   index: number;
 }) {
   const mapInstance = useMap();
-  const { id, urlTemplate } = layer;
+  const { id } = layer;
 
   useEffect(() => {
     return () => {
@@ -33,7 +33,7 @@ export default function WebTileLayer({
         map.remove(l);
       }
     };
-  }, [id, urlTemplate, mapInstance]);
+  }, [id, mapInstance]);
 
   useEffect(() => {
     if (!mapInstance) {
