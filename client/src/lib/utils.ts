@@ -44,6 +44,13 @@ export const getTextSize = ({
   width: number;
   height: number;
 } => {
+  if (typeof window === "undefined") {
+    return {
+      width: 0,
+      height: 0,
+    };
+  }
+
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
 

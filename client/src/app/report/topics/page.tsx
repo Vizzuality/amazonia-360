@@ -33,7 +33,7 @@ export default async function ReportTopicsPage({
         <TopicsHeader />
 
         <div className="space-y-6">
-          <Topics size="lg" clickable />
+          <Topics size="lg" interactive />
 
           <TopicsFooter />
         </div>

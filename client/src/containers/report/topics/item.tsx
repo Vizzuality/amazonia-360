@@ -14,7 +14,7 @@ import { Topic } from "@/constants/topics";
 type TopicsItemProps = Topic & {
   size: "sm" | "md" | "lg";
   checked: boolean;
-  clickable: boolean;
+  interactive: boolean;
   onChange: (checked: boolean) => void;
 };
 
@@ -23,7 +23,7 @@ export default function TopicsItem({
   label,
   image,
   size,
-  clickable,
+  interactive,
   description,
   checked,
   onChange,
@@ -38,17 +38,18 @@ export default function TopicsItem({
           size === "sm" && "aspect-[206/107]",
           size === "lg" && "aspect-[210/250] tall:2xl:aspect-[210/380]",
           checked && "outline-dashed outline-primary outline-2",
+          !interactive && "cursor-auto",
         )}
         onClick={() => {
-          if (onChange && clickable) onChange(!checked);
+          if (onChange && interactive) onChange(!checked);
         }}
         onMouseEnter={() => {
-          if (descriptionRef.current && size === "lg") {
+          if (interactive && descriptionRef.current && size === "lg") {
             descriptionRef.current.style.maxHeight = `${descriptionRef.current.scrollHeight}px`;
           }
         }}
         onMouseLeave={() => {
-          if (descriptionRef.current && size === "lg") {
+          if (interactive && descriptionRef.current && size === "lg") {
             descriptionRef.current.style.maxHeight = "0";
           }
         }}
@@ -65,11 +66,11 @@ export default function TopicsItem({
           className={cn({
             "object-cover": true,
             "group-hover:scale-105 transition-transform duration-300 ease-in-out transform-gpu":
-              clickable,
+              interactive,
           })}
         />
 
-        {clickable && (
+        {interactive && (
           <div
             className={cn({
               "flex justify-center items-center absolute top-2 right-2 w-8 h-8 border border-dashed border-white bg-white/20 rounded-full transition-colors":
@@ -87,16 +88,24 @@ export default function TopicsItem({
           </div>
         )}
 
-        <div className="absolute z-10 bottom-0 left-0 p-4 bg-gradient-to-b from-gray-900/0 to-gray-900/85 w-full text-white">
-          <h3 className="font-bold text-sm">{label}</h3>
+        <div
+          className={cn(
+            "absolute z-10 bottom-0 left-0 p-4 w-full text-white",
+            "after:absolute after:top-0 after:left-0 after:w-full after:h-full after:bg-gradient-to-b after:from-gray-900/0 after:via-gray-900/50 after:to-gray-900/50",
+          )}
+        >
+          <div className="relative z-10">
+            <h3 className="font-bold text-sm">{label}</h3>
 
-          <div
-            ref={descriptionRef}
-            className={cn(
-              "font-semibold text-xs max-h-0 overflow-hidden transition-all duration-300 ease-in-out",
-            )}
-          >
-            <p className="pt-2">{description}</p>
+            <div
+              ref={descriptionRef}
+              className={cn(
+                "font-semibold text-xs max-h-0 overflow-hidden transition-all duration-300 ease-in-out",
+                !interactive && "max-h-none",
+              )}
+            >
+              <p className="pt-2">{description}</p>
+            </div>
           </div>
         </div>
       </div>

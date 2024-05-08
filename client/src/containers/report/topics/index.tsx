@@ -9,11 +9,14 @@ import { TOPICS, TopicIds } from "@/constants/topics";
 import TopicsItem from "@/containers/report/topics/item";
 
 export interface TopicsProps {
-  clickable?: boolean;
+  interactive?: boolean;
   size: "sm" | "md" | "lg";
 }
 
-export default function Topics({ clickable = true, size = "md" }: TopicsProps) {
+export default function Topics({
+  interactive = true,
+  size = "md",
+}: TopicsProps) {
   const [topics, setTopics] = useSyncTopics();
   const handleTopicChange = (id: TopicIds, checked: boolean) => {
     if (checked) {
@@ -31,17 +34,17 @@ export default function Topics({ clickable = true, size = "md" }: TopicsProps) {
 
   return (
     <section className="md:space-y-6">
-      <div className={cn({ container: clickable })}>
+      <div className={cn({ container: interactive })}>
         <div className="flex md:flex-row flex-col gap-4">
           {TOPICS.map((topic) => (
             <TopicsItem
               key={topic.id}
               {...topic}
-              clickable={clickable}
+              interactive={interactive}
               size={size}
               checked={(topics || []).includes(topic.id)}
               onChange={(c) => {
-                clickable && handleTopicChange(topic.id, c);
+                interactive && handleTopicChange(topic.id, c);
               }}
             />
           ))}
