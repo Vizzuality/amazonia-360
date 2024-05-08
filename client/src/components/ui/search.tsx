@@ -38,10 +38,11 @@ export function Search<T extends Option>({
   onChange,
   onSelect,
 }: SearchProps<T>) {
+  const [opened, setOpened] = React.useState(false);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <Popover>
+    <Popover onOpenChange={setOpened} open={opened}>
       <PopoverTrigger ref={triggerRef} className="w-full relative">
         <LuSearch className="absolute top-1/2 left-6 -translate-y-1/2 h-8 w-8 text-blue-500 stroke-1" />
         <div
