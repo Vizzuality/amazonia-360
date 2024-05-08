@@ -11,7 +11,6 @@ import { merge } from "ts-deepmerge";
 
 import { DEFAULT_MAP_VIEW_PROPERTIES } from "@/constants/map";
 
-// import { MapContainerContext } from "@/components/map/container-provider";
 import { MapContext, MapProvider } from "@/components/map/provider";
 
 export type MapProps = {
@@ -24,6 +23,7 @@ export type MapProps = {
     bottom?: number;
     left?: number;
   };
+  mapProps?: Partial<__esri.MapProperties>;
   viewProps?: Partial<__esri.MapViewProperties>;
   children?: React.ReactNode;
   onMapMove?: (extent: __esri.Extent) => void;
@@ -43,6 +43,7 @@ export function MapView({
   bbox,
   padding,
   children,
+  mapProps,
   viewProps,
   onMapMove,
 }: MapProps) {
@@ -62,22 +63,8 @@ export function MapView({
        */
       mapRef.current = new ArcGISMap({
         basemap: "gray-vector",
-        // basemap: {
-        //   baseLayers: [
-        //     new VectorTileLayer({
-        //       url: "https://basemaps.arcgis.com/arcgis/rest/services/World_Basemap_v2/VectorTileServer",
-        //       style:
-        //         "https://www.arcgis.com/sharing/rest/content/items/291da5eab3a0412593b66d384379f89f/resources/styles/root.json",
-        //     }),
-        //     new VectorTileLayer({
-        //       url: "https://basemaps.arcgis.com/arcgis/rest/services/World_Basemap_v2/VectorTileServer",
-        //       style:
-        //         "https://www.arcgis.com/sharing/rest/content/items/1768e8369a214dfab4e2167d5c5f2454/resources/styles/root.json",
-        //     }),
-        //   ],
-        //   referenceLayers: [],
-        // },
         layers: [baseLayer],
+        ...mapProps,
       });
 
       const mergedViewProps = merge(

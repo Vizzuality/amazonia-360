@@ -14,7 +14,7 @@ import { BUFFER_SYMBOL, SYMBOLS } from "@/constants/map";
 
 import FeatureLayer from "@/components/map/layers/graphics";
 
-export default function SelectedLayer() {
+export default function SelectedLayer({ index = 100 }: { index?: number }) {
   const graphicsLayerRef = useRef<GraphicsLayer>(
     new GraphicsLayer({
       id: "selected-layer",
@@ -60,5 +60,5 @@ export default function SelectedLayer() {
     }
   }, [graphic]);
 
-  return <FeatureLayer index={100} layer={graphicsLayerRef.current} />;
+  return <FeatureLayer index={index} layer={graphicsLayerRef.current} />;
 }

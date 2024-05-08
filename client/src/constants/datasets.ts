@@ -463,6 +463,9 @@ export const DATASETS = {
       id: "institutional_tracking",
       title: "Institutional Tracking",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Institutional_Tracking/FeatureServer/0",
+      customParameters: {
+        position: "top",
+      },
       featureReduction: {
         type: "cluster",
         clusterMinSize: 16.5,
@@ -512,6 +515,9 @@ export const DATASETS = {
       id: "idb_operations",
       title: "IDB Operations",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/IDB_Operations/FeatureServer/0",
+      customParameters: {
+        position: "top",
+      },
       featureReduction: {
         type: "cluster",
         clusterMinSize: 16.5,
