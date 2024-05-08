@@ -1,6 +1,8 @@
-export default function ReportResultsDisclaimer() {
+import Disclaimer from "@/containers/disclaimers";
+
+export default function DataDisclaimer() {
   return (
-    <div className="bg-gray-300 py-10 print:hidden">
+    <Disclaimer className="py-10">
       <div className="container">
         <div className="space-y-2">
           <p className="italic">
@@ -29,6 +31,6 @@ export default function ReportResultsDisclaimer() {
           </p>
         </div>
       </div>
-    </div>
+    </Disclaimer>
   );
 }

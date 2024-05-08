@@ -13,8 +13,8 @@ import { getSearchQueryOptions } from "@/lib/search";
 import { locationParser } from "@/app/parsers";
 import { PageProps } from "@/app/types";
 
+import DataDisclaimer from "@/containers/disclaimers/data";
 import ReportResultsContent from "@/containers/report/results/content";
-import ReportResultsDisclaimer from "@/containers/report/results/disclaimer";
 import ReportResultsHeader from "@/containers/report/results/header";
 
 export const metadata: Metadata = {
@@ -56,7 +56,7 @@ export default async function ReportResultsPage({
 
         <ReportResultsContent />
       </main>
-      <ReportResultsDisclaimer />
+      <DataDisclaimer />
     </HydrationBoundary>
   );
 }

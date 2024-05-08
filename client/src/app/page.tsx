@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 
-import Disclaimer from "@/containers/home/disclaimer";
 import Glance from "@/containers/home/glance";
 import Help from "@/containers/home/help";
 import Hero from "@/containers/home/hero";
@@ -17,7 +16,6 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <main className="relative flex flex-col min-h-[calc(100svh_-_theme(space.40)_+_1px)]">
-      <Disclaimer />
       <Hero />
       <KeyFeatures />
       <InformationOn />
