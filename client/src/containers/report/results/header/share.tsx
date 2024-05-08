@@ -4,17 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 
 import { usePathname } from "next/navigation";
 
-import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { Share2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import {
-  Tooltip,
-  TooltipArrow,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 export default function ShareReport() {
   const pathname = usePathname();
@@ -42,42 +35,32 @@ export default function ShareReport() {
 
   return (
     <Dialog>
-      <Tooltip>
-        <DialogTrigger asChild>
-          <TooltipTrigger asChild>
-            <Button variant="outline" className="space-x-2">
-              <Share2 className="w-5 h-5" />
-            </Button>
-          </TooltipTrigger>
-        </DialogTrigger>
+      <DialogTrigger asChild>
+        <Button variant="outline" className="space-x-2">
+          <Share2 className="w-5 h-5" />
+          <span>Share</span>
+        </Button>
+      </DialogTrigger>
 
-        <TooltipPortal>
-          <TooltipContent side="top" align="center">
-            <div className="text-xxs">Share report</div>
+      <DialogContent>
+        <div className="flex flex-col space-y-2 mb-6">
+          <h3 className="font-bold text-xl text-blue-500">Share</h3>
 
-            <TooltipArrow className="fill-foreground" width={10} height={5} />
-          </TooltipContent>
-        </TooltipPortal>
-
-        <DialogContent>
-          <div className="flex flex-col space-y-2 mb-6">
-            <h3 className="font-bold text-xl text-blue-500">Share</h3>
-
-            <p className="text-base text-foreground font-medium">
-              Copy and paste link to share
+          <p className="text-base text-foreground font-medium">
+            Copy and paste link to share
+          </p>
+        </div>
+        <div className="flex w-full space-x-2 mb-6">
+          <div className="bg-background flex h-10 rounded-sm border px-3 py-2 text-sm text-gray-900 w-[376px]">
+            <p className="truncate text-foreground text-base font-normal">
+              {currentUrl}
             </p>
           </div>
-          <div className="flex w-full space-x-2 mb-6">
-            <div className="bg-background flex h-10 rounded-sm border px-3 py-2 text-sm text-gray-900 w-[376px]">
-              <p className="truncate text-foreground text-base font-normal">
-                {currentUrl}
-              </p>
-            </div>
-            <Button className="py-5 w-20" onClick={copyShareLink}>
-              {shareLinkBtnText}
-            </Button>
-          </div>
-          {/* <div className="flex space-x-2">
+          <Button className="py-5 w-20" onClick={copyShareLink}>
+            {shareLinkBtnText}
+          </Button>
+        </div>
+        {/* <div className="flex space-x-2">
             <Button className="rounded-full h-10 w-10" variant="outline">
               <FacebookShareButton
                 url={currentUrl}
@@ -125,8 +108,7 @@ export default function ShareReport() {
               </LinkedinShareButton>
             </Button>
           </div> */}
-        </DialogContent>
-      </Tooltip>
+      </DialogContent>
     </Dialog>
   );
 }

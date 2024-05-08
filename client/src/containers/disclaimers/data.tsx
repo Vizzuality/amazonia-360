@@ -5,14 +5,14 @@ export default function DataDisclaimer() {
     <Disclaimer className="py-10">
       <div className="container">
         <div className="space-y-2">
-          <p className="italic">
+          <p className="font-medium text-sm">
             The maps, data, and geographic information presented on Amazonia360
             are provided for reference purposes only and are intended solely to
             enhance territorial knowledge of the Amazonia Forever program&apos;s
             work area.
           </p>
 
-          <p className="italic text-sm">
+          <p className="font-medium text-sm">
             International boundary lines and other administrative delimitations
             used by Amazonia360 are sourced from carefully selected and
             well-referenced external sources. However, the original data may
@@ -22,7 +22,7 @@ export default function DataDisclaimer() {
             international borders, disputes, or claims between countries.
           </p>
 
-          <p className="italic text-sm">
+          <p className="font-medium text-sm">
             This material is not suitable for precision applications,
             navigation, or emergency situations. Amazonia360 and its affiliates,
             including the Inter-American Development Bank (IDB), shall not be
