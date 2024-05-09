@@ -61,7 +61,7 @@ export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
   }, [ids]);
 
   return (
-    <div className="relative h-full min-h-96">
+    <div className="relative h-full print:h-96 min-h-96">
       <Map
         id="overview"
         {...(GEOMETRY?.extent && {

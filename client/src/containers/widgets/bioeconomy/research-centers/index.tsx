@@ -54,7 +54,7 @@ export default function WidgetResearchCenters() {
       </CardHeader>
 
       <CardContent>
-        <CardLoader query={[query]} className="h-72">
+        <CardLoader query={[query]} className="print:h-auto h-72">
           <CardNoData query={[query]}>
             <DataTable
               columns={columns}

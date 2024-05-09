@@ -47,7 +47,7 @@ export default function WidgetsOverview() {
             />
           </Card>
         </WidgetsColumn>
-        <WidgetsColumn className="col-span-12 lg:col-span-6 print:col-span-12 print:break-before-page">
+        <WidgetsColumn className="col-span-12 lg:col-span-6 print:col-span-12">
           <WidgetAdministrativeBoundaries />
         </WidgetsColumn>
       </WidgetsRow>

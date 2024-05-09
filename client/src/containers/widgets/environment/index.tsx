@@ -38,7 +38,7 @@ export default function WidgetsEnvironment({ index }: { index: number }) {
             </WidgetsColumn>
           </WidgetsRow>
         </WidgetsColumn>
-        <WidgetsColumn className="col-span-12 lg:col-span-6 print:break-before-page">
+        <WidgetsColumn className="col-span-12 lg:col-span-6">
           <WidgetsEnvironmentMap />
         </WidgetsColumn>
       </WidgetsRow>

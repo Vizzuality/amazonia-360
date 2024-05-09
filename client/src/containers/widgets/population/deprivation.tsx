@@ -42,7 +42,7 @@ export default function WidgetsPopulationDeprivation() {
     },
   );
   return (
-    <Card className="h-full p-0 relative print:break-before-page">
+    <Card className="h-full p-0 relative">
       <div className="p-6">
         <CardHeader>
           <CardTitle>Deprivation Index</CardTitle>

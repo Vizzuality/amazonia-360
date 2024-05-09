@@ -31,7 +31,7 @@ export default function WidgetsProtection({ index }: { index: number }) {
             <WidgetsColumn className="col-span-12 md:col-span-6">
               <WidgetIndigenousLands />
             </WidgetsColumn>
-            <WidgetsColumn className="col-span-12 print:break-before-page">
+            <WidgetsColumn className="col-span-12">
               <WidgetProtectedAreas />
             </WidgetsColumn>
           </WidgetsRow>
