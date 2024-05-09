@@ -36,7 +36,8 @@ export default function TopicsItem({
         className={cn(
           "shadow relative rounded-2xl overflow-hidden mx-auto group cursor-pointer after:absolute after:bottom-0 after:left-0 after:h-16 after:w-full after:bg-gradient-to-b after:from-transparent after:to-[#09090B]/85 after:content-['']",
           size === "sm" && "aspect-[206/107]",
-          size === "lg" && "aspect-[210/250] tall:2xl:aspect-[210/380]",
+          size === "lg" &&
+            "aspect-[210/250] sm:aspect-[600/200] lg:aspect-[210/250] tall:2xl:aspect-[210/380]",
           checked && "outline-dashed outline-primary outline-2",
           !interactive && "cursor-auto",
         )}
@@ -101,7 +102,7 @@ export default function TopicsItem({
               ref={descriptionRef}
               className={cn(
                 "font-semibold text-xs max-h-0 overflow-hidden transition-all duration-300 ease-in-out",
-                !interactive && "max-h-none",
+                !interactive && "max-h-none lg:max-h-0 xl:max-h-none",
               )}
             >
               <p className="pt-2">{description}</p>

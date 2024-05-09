@@ -643,7 +643,8 @@ export const DATASETS = {
   population: {
     layer: new WebTileLayer({
       id: "population",
-      title: "Population",
+      title:
+        "Global Human Settlement Layer (GHSL) - Population projection for 2025",
       urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=population_cog.tif&colormap=${encodeURIComponent(
         JSON.stringify([
           [

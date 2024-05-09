@@ -35,7 +35,7 @@ export default function Topics({
   return (
     <section className="md:space-y-6">
       <div className={cn({ container: interactive })}>
-        <div className="flex md:flex-row flex-col gap-4">
+        <div className="flex lg:flex-row flex-col gap-4">
           {TOPICS.map((topic) => (
             <TopicsItem
               key={topic.id}

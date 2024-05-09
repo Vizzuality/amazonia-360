@@ -12,9 +12,9 @@ export default function Vision() {
             AI-Powered on the horizon{" "}
           </h2>
           <p className="text-blue-900 text-base lg:text-lg font-normal md:max-w-4xl">
-            As Amazonia360 grows beyond its beta launch, we are committed to
+            As Amazonia360 grows beyond this prototype, we are committed to
             enhancing your experience. The next chapter will see a suite of AI
-            features that will elevate your research and understanding:
+            features that will elevate your search experience and understanding:
           </p>
         </div>
 

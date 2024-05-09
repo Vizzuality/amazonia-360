@@ -2,8 +2,8 @@ import { LayoutDashboard, MapPinned, Share2 } from "lucide-react";
 
 export default function KeyFeatures() {
   return (
-    <section className="container flex md:space-x-28 py-10 md:py-28 md:flex-row flex-col">
-      <div className="flex flex-col w-full md:w-1/2">
+    <section className="container flex lg:space-x-28 py-10 md:py-28 lg:flex-row flex-col">
+      <div className="flex flex-col w-full lg:w-1/2">
         <h3 className="uppercase text-sm font-extrabold text-cyan-500 tracking-wide-lg">
           key features
         </h3>
@@ -12,12 +12,12 @@ export default function KeyFeatures() {
         </h2>
         <p className="text-blue-900 text-base lg:text-lg font-normal">
           Personalize your experience with reports that adapt to your focus
-          areas, providing you with the targeted insights you need to make
-          informed decisions.
+          areas, providing you with the targeted insights you need to understand
+          the region complexity and challenges.
         </p>
       </div>
-      <div className="w-full md:w-1/2">
-        <ul className="flex flex-col space-y-10 mt-20 md:mt-6">
+      <div className="w-full lg:w-1/2">
+        <ul className="flex flex-col space-y-10 mt-20 lg:mt-6">
           <li className="flex space-x-6 w-full">
             <div className="h-20 w-20 flex items-center justify-center rounded-full bg-blue-50">
               <MapPinned size={32} strokeWidth={1} className="text-cyan-600" />
@@ -42,10 +42,10 @@ export default function KeyFeatures() {
             </div>
             <div className="w-3/4">
               <h4 className="text-blue-500 text-lg font-bold">
-                Customizable dashboards
+                Customizable search
               </h4>
               <p className="text-base text-blue-900 font-normal">
-                Customize your dashboard with the data that matters most to you.
+                Customize your search with the data that matters most to you.
               </p>
             </div>
           </li>

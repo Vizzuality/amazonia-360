@@ -19,7 +19,7 @@ export default function Hero() {
           </p>
           <Link href="/report">
             <Button size="lg" className="flex space-x-2.5">
-              <p>Explore report tool</p>
+              <p>Access report tool</p>
               <LuArrowRight size={20} strokeWidth={1} />
             </Button>
           </Link>

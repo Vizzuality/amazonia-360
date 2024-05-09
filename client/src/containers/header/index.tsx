@@ -24,7 +24,17 @@ export default function Header() {
           </h1>
         </Link>
 
-        <nav className="flex space-x-4 print:hidden">
+        <nav className="flex space-x-8 print:hidden">
+          <Link
+            className={cn({
+              "hover:text-cyan-500 text-sm": true,
+              "text-cyan-500": pathname === "/",
+            })}
+            href="/"
+          >
+            Home
+          </Link>
+
           <Link
             className={cn({
               "hover:text-cyan-500 text-sm": true,

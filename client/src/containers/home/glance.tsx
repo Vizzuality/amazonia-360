@@ -10,6 +10,7 @@ import CHROMA from "chroma-js";
 
 import { formatNumber, formatPercentage } from "@/lib/formats";
 
+import { CardInfo } from "@/containers/card";
 import {
   MOSAIC_DATA,
   MOSAIC_OPTIONS,
@@ -107,7 +108,8 @@ export default function Glance() {
             Amazonia at a glance
           </h3>
           <h2 className="text-blue-400 text-2xl lg:text-3xl xl:text-4xl pb-6">
-            A mosaic of ecosystems and habitats
+            A Continent-sized Mosaic of Cultures and Nature Across Eight
+            Countries
           </h2>
           <p className="text-blue-900 text-base lg:text-lg font-normal">
             Amazonia spans over <span className="font-bold">8.3 million</span>{" "}
@@ -119,7 +121,7 @@ export default function Glance() {
             <p className="text-sm text-blue-900 font-semibold">
               View on the chart
             </p>
-            <Select onValueChange={handleSingleValueChange}>
+            <Select value={chartKey} onValueChange={handleSingleValueChange}>
               <SelectTrigger className="w-full rounded-none">
                 <div>
                   <SelectValue> </SelectValue>
@@ -146,9 +148,22 @@ export default function Glance() {
           </div>
         </div>
 
-        <p className="text-blue-300 text-sm">
-          Source: Population - GHS2025; Cartographic area{" "}
-        </p>
+        <div className="text-blue-300 space-y-1">
+          <p className="text-base">Source: </p>
+          <ul className="text-sm space-y-2">
+            <li>
+              <span>
+                Global Human Settlement Layer (GHSL) - Population projection for
+                2025;
+              </span>
+              <CardInfo
+                ids={["population"]}
+                className="inline-flex top-0.5 relative"
+              />
+            </li>
+            <li>Cartographic area</li>
+          </ul>
+        </div>
       </div>
       <div className="w-full md:w-1/2 flex flex-col mt-20 md:mt-0 space-y-4">
         <header className="space-y-1">

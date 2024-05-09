@@ -52,12 +52,23 @@ export function CardContent({
   );
 }
 
-export function CardInfo({ ids }: { ids: DatasetIds[] }) {
+export function CardInfo({
+  ids,
+  className,
+}: {
+  ids: DatasetIds[];
+  className?: string;
+}) {
   return (
     <Tooltip delayDuration={100}>
       <Dialog>
         <TooltipTrigger asChild>
-          <DialogTrigger className="h-6 w-6 flex items-center justify-center">
+          <DialogTrigger
+            className={cn(
+              "h-6 w-6 flex items-center justify-center",
+              className,
+            )}
+          >
             <LuInfo className="text-blue-600" />
           </DialogTrigger>
         </TooltipTrigger>
