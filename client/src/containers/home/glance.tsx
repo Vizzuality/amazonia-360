@@ -102,7 +102,7 @@ export default function Glance() {
 
   return (
     <section className="container flex md:space-x-28 py-10 md:py-28 md:flex-row flex-col items-end">
-      <div className="flex flex-col w-full md:w-1/2 space-y-2 md:space-y-44">
+      <div className="flex flex-col w-full md:w-1/2 space-y-5 md:space-y-44">
         <div>
           <h3 className="uppercase text-sm font-extrabold text-cyan-500 tracking-wide-lg">
             Amazonia at a glance
@@ -118,19 +118,17 @@ export default function Glance() {
           </p>
 
           <div className="mt-7 flex flex-col space-y-1">
-            <p className="text-sm text-blue-900 font-semibold">
-              View on the chart
+            <p className="text-xs text-blue-900 font-semibold">
+              View on the chart:
             </p>
             <Select value={chartKey} onValueChange={handleSingleValueChange}>
-              <SelectTrigger className="w-full rounded-none">
-                <div>
-                  <SelectValue> </SelectValue>
-
+              <SelectTrigger className="w-full h-14 rounded-none">
+                <SelectValue>
                   <p className="truncate max-w-64 md:max-w-80 lg:max-w-none">
                     {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)
                       ?.label || ""}
                   </p>
-                </div>
+                </SelectValue>
               </SelectTrigger>
               <SelectContent className="no-scrollbar max-h-96 overflow-y-auto border-none shadow-md">
                 {MOSAIC_OPTIONS &&
