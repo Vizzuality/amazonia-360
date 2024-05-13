@@ -11,12 +11,8 @@ export default async function middleware(req: NextRequest) {
       headers: { "WWW-Authenticate": "Basic" },
     });
   }
-  const token = await fetch(
-    `https://atlas.iadb.org/portal/sharing/rest/oauth2/token/?client_id=${env.ARCGIS_CLIENT_ID}client_secret=${env.ARCGIS_CLIENT_SECRET}&grant_type=client_credentials`,
-  ).then((res) => res.json());
 
   const response = NextResponse.next();
-  response.cookies.set("arcgis_token", token.access_token);
 
   return response;
 }

@@ -1,10 +1,7 @@
-import { getCookie } from "react-use-cookie";
-
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import * as geometryEngineAsync from "@arcgis/core/geometry/geometryEngineAsync";
 import * as projection from "@arcgis/core/geometry/projection";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import * as geoprocessor from "@arcgis/core/rest/geoprocessor";
 import Query from "@arcgis/core/rest/support/Query";
 import {
   QueryFunction,
@@ -199,7 +196,7 @@ export const getIntersectionAnalysis = async (
     throw new Error("Polygon is required or layer is not a feature layer");
   }
 
-  const q = DATASETS[id]
+  const q = d
     .getFeatures({
       geometry: polygon,
       returnGeometry: true,
@@ -221,12 +218,14 @@ export const getIntersectionAnalysis = async (
       polygon,
     )) as unknown as __esri.Polygon[];
 
-    const areas = results
-      .map((r) => {
-        const area = geometryEngine.geodesicArea(r, "square-kilometers");
-        return area;
-      })
-      .reduce((acc, a) => acc + a, 0);
+    const totalResults = (await geometryEngineAsync.union(
+      results,
+    )) as unknown as __esri.Polygon;
+
+    const totalResultsArea = await geometryEngine.geodesicArea(
+      totalResults,
+      "square-kilometers",
+    );
 
     const polygonArea = geometryEngine.geodesicArea(
       polygon,
@@ -238,9 +237,9 @@ export const getIntersectionAnalysis = async (
         ...f.toJSON(),
         area: geometryEngine.geodesicArea(results[i], "square-kilometers"),
       })),
-      areas,
+      areas: totalResultsArea,
       polygonArea,
-      percentage: areas / polygonArea,
+      percentage: totalResultsArea / polygonArea,
     };
   } catch (error) {
     throw new Error(`Error getting features: ${error}`);
@@ -376,99 +375,6 @@ export const useGetRasterAnalysis = <
   options?: Omit<RasterAnalysisQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const { queryKey, queryFn } = getRasterAnalysisOptions(params, options);
-
-  return useQuery({
-    queryKey,
-    queryFn,
-    ...options,
-  });
-};
-
-/**
- ************************************************************
- ************************************************************
- * Server analysis
- ************************************************************
- ************************************************************
- */
-export type GetServerAnalysisParams = {
-  in_feature1?: unknown;
-  in_feature2?: unknown;
-};
-
-export type ServerAnalysisQueryOptions<TData, TError> = UseQueryOptions<
-  Awaited<ReturnType<typeof getServerAnalysis>>,
-  TError,
-  TData
->;
-
-export const getServerAnalysis = async (params: GetServerAnalysisParams) => {
-  const { in_feature1, in_feature2 } = params;
-
-  if (!in_feature1 || !in_feature2) {
-    throw new Error("in_feature1 and in_feature2 are required");
-  }
-
-  const token = getCookie("arcgis_token");
-
-  return geoprocessor.submitJob(
-    "https://atlas.iadb.org/server/rest/services/System/SpatialAnalysisTools/GPServer/OverlayLayers",
-    {
-      inputLayer: in_feature1,
-      overlayLayer: in_feature2,
-      token,
-    },
-  );
-
-  // return geoprocessor!.execute(
-  //   "https://atlas.iadb.org/server/rest/services/ClipLayer/GPServer/Clip%20Layer",
-  //   {
-  //     in_feature1,
-  //     in_feature2,
-  //     token,
-  //   },
-  //   undefined,
-  //   {
-  //     withCredentials: true,
-  //   },
-  // );
-};
-
-export const getServerAnalysisKey = (params: GetServerAnalysisParams) => {
-  const { in_feature1, in_feature2 } = params;
-  return [
-    "arcgis",
-    "analysis",
-    JSON.stringify(in_feature1),
-    JSON.stringify(in_feature2),
-  ] as const;
-};
-
-export const getServerAnalysisOptions = <
-  TData = Awaited<ReturnType<typeof getServerAnalysis>>,
-  TError = unknown,
->(
-  params: GetServerAnalysisParams,
-  options?: Omit<ServerAnalysisQueryOptions<TData, TError>, "queryKey">,
-) => {
-  const queryKey = getServerAnalysisKey(params);
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getServerAnalysis>>
-  > = () => getServerAnalysis(params);
-  return { queryKey, queryFn, ...options } as ServerAnalysisQueryOptions<
-    TData,
-    TError
-  >;
-};
-
-export const useGetServerAnalysis = <
-  TData = Awaited<ReturnType<typeof getServerAnalysis>>,
-  TError = unknown,
->(
-  params: GetServerAnalysisParams,
-  options?: Omit<ServerAnalysisQueryOptions<TData, TError>, "queryKey">,
-) => {
-  const { queryKey, queryFn } = getServerAnalysisOptions(params, options);
 
   return useQuery({
     queryKey,
