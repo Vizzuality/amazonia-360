@@ -115,8 +115,8 @@ export function CardNoData({
         <Image
           src={"/images/no-data.svg"}
           alt="No data"
-          width={141}
-          height={94}
+          width={149}
+          height={96}
         />
         <p className="text-sm text-blue-900 font-medium text-center">
           No results for this location at the moment. <br /> Feel free to adjust
