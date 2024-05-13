@@ -221,7 +221,7 @@ export const DATASETS = {
       }),
       popupEnabled: true,
       popupTemplate: {
-        title: "{FID}",
+        title: "{nombre}",
         content: [
           {
             type: "fields",
