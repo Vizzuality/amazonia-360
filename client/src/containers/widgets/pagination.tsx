@@ -1,7 +1,5 @@
 "use client";
 
-import { Table } from "@tanstack/react-table";
-
 import {
   Pagination,
   PaginationContent,
@@ -12,18 +10,23 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-interface DataPaginationProps<TData> {
-  table: Table<TData>;
+interface DataPaginationProps {
+  pageIndex: number;
+  pageCount: number;
   totalPagesToDisplay: number;
+  onPagePrevious: () => void;
+  onPageNext: () => void;
+  onPageIndex: (pageIndex: number) => void;
 }
 
-export function DataPagination<TData>({
-  table,
+export function DataPagination({
+  pageIndex,
+  pageCount,
   totalPagesToDisplay,
-}: DataPaginationProps<TData>) {
-  const { pageIndex } = table.getState().pagination;
-  const pageCount = table.getPageCount();
-
+  onPagePrevious,
+  onPageNext,
+  onPageIndex,
+}: DataPaginationProps) {
   const showLeftEllipsis =
     pageCount > totalPagesToDisplay && pageIndex + 1 > totalPagesToDisplay / 2;
   const showRightEllipsis =
@@ -66,7 +69,7 @@ export function DataPagination<TData>({
       <PaginationItem key={pageNumber}>
         <PaginationLink
           isActive={pageNumber === pageIndex + 1}
-          onClick={() => table.setPageIndex(pageNumber - 1)}
+          onClick={() => onPageIndex(pageNumber - 1)}
         >
           {pageNumber}
         </PaginationLink>
@@ -80,7 +83,7 @@ export function DataPagination<TData>({
         <PaginationItem>
           <PaginationPrevious
             disabled={pageIndex === 0}
-            onClick={() => table.previousPage()}
+            onClick={() => onPagePrevious()}
           />
         </PaginationItem>
 
@@ -98,7 +101,7 @@ export function DataPagination<TData>({
         <PaginationItem>
           <PaginationNext
             disabled={pageIndex === pageCount - 1}
-            onClick={() => table.nextPage()}
+            onClick={() => onPageNext()}
           />
         </PaginationItem>
       </PaginationContent>
