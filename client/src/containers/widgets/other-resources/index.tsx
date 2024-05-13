@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 
 import { flatGroup } from "@visx/vendor/d3-array";
 
-import { useLocationGeometry } from "@/lib/location";
+import { useLocationGadm } from "@/lib/location";
 import { useGetFeatures } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
@@ -22,20 +22,20 @@ export default function OtherResources() {
 
   const [location] = useSyncLocation();
 
-  const GEOMETRY = useLocationGeometry(location);
+  const queryGadm = useLocationGadm(location);
 
   const query = useGetFeatures(
     {
       query: DATASETS.acu_knowledge.getFeatures({
-        ...(!!GEOMETRY && {
+        ...(!!queryGadm.data?.gid0 && {
           orderByFields: ["Name"],
-          geometry: GEOMETRY,
+          where: `CountryIso in (${queryGadm.data?.gid0.map((g) => `'${g}'`)})`,
         }),
       }),
       feature: DATASETS.acu_knowledge.layer,
     },
     {
-      enabled: !!DATASETS.acu_knowledge.getFeatures && !!GEOMETRY,
+      enabled: !!DATASETS.acu_knowledge.getFeatures && !!queryGadm.data?.gid0,
       select(data): ResourceProps[] {
         return data.features.map((f) => f.attributes);
       },

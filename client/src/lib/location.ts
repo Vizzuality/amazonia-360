@@ -6,9 +6,14 @@ import Polygon from "@arcgis/core/geometry/Polygon";
 import Polyline from "@arcgis/core/geometry/Polyline";
 import Graphic from "@arcgis/core/Graphic";
 
+import { useGetFeatures } from "@/lib/query";
 import { useGetSearch } from "@/lib/search";
 
 import { CustomLocation, Location, SearchLocation } from "@/app/parsers";
+
+import { DATASETS } from "@/constants/datasets";
+
+import { AdministrativeBoundary } from "@/containers/widgets/overview/administrative-boundaries/types";
 
 export const POINT_BUFFER = 60;
 
@@ -73,6 +78,54 @@ export const useLocationTitle = (location?: Location | null) => {
   }, [location, searchData]);
 };
 
+export const useLocationGeometry = (location?: Location | null) => {
+  const LOCATION = useLocation(location);
+
+  const GEOMETRY = useMemo(() => {
+    if (LOCATION) {
+      return getGeometryWithBuffer(LOCATION.geometry);
+    }
+
+    return null;
+  }, [LOCATION]);
+
+  return GEOMETRY;
+};
+
+export const useLocationGadm = (location?: Location | null) => {
+  const GEOMETRY = useLocationGeometry(location);
+
+  const query = useGetFeatures(
+    {
+      query: DATASETS.admin2.getFeatures({
+        ...(!!GEOMETRY && {
+          geometry: GEOMETRY,
+        }),
+      }),
+      feature: DATASETS.admin2.layer,
+    },
+    {
+      enabled: !!DATASETS.admin2.getFeatures && !!GEOMETRY,
+      select(data): {
+        gid0: string[];
+        // gid1: string[];
+        // gid2: string[];
+      } {
+        const attributes: AdministrativeBoundary[] = data.features.map(
+          (f) => f.attributes,
+        );
+        return {
+          gid0: Array.from(new Set(attributes.map((f) => f.GID_0)).values()),
+          // gid1: Array.from(new Set(attributes.map((f) => f.GID_1)).values()),
+          // gid2: Array.from(new Set(attributes.map((f) => f.GID_2)).values()),
+        };
+      },
+    },
+  );
+
+  return query;
+};
+
 export const getGeometryByType = (location: CustomLocation) => {
   if (location?.type === "point") {
     return Point.fromJSON(location.geometry);
@@ -119,18 +172,4 @@ export const getGeometryWithBuffer = (
   }
 
   return null;
-};
-
-export const useLocationGeometry = (location?: Location | null) => {
-  const LOCATION = useLocation(location);
-
-  const GEOMETRY = useMemo(() => {
-    if (LOCATION) {
-      return getGeometryWithBuffer(LOCATION.geometry);
-    }
-
-    return null;
-  }, [LOCATION]);
-
-  return GEOMETRY;
 };

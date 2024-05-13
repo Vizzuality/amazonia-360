@@ -108,7 +108,7 @@ export function CardNoData({
 }) {
   if (
     query.every((q) => q.isFetched) &&
-    !query.every((q) => q.data && Array.isArray(q.data) && !!q.data.length)
+    !query.some((q) => q.data && Array.isArray(q.data) && !!q.data.length)
   ) {
     return (
       <div className="flex flex-col justify-center items-center space-y-6 py-12 grow">
