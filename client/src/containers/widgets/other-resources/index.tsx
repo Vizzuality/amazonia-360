@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 
 import { flatGroup } from "@visx/vendor/d3-array";
 
-import { useLocationGeometry } from "@/lib/location";
+import { useLocationGadm } from "@/lib/location";
 import { useGetFeatures } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
@@ -10,10 +10,8 @@ import { useSyncLocation } from "@/app/store";
 import { DATASETS } from "@/constants/datasets";
 
 import { CardLoader, CardNoData } from "@/containers/card";
-import WidgetsColumn from "@/containers/widgets/column";
-import Resource from "@/containers/widgets/other-resources/resource";
+import OtherResourcesGroup from "@/containers/widgets/other-resources/group";
 import { ResourceProps } from "@/containers/widgets/other-resources/types";
-import WidgetsRow from "@/containers/widgets/row";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -22,20 +20,20 @@ export default function OtherResources() {
 
   const [location] = useSyncLocation();
 
-  const GEOMETRY = useLocationGeometry(location);
+  const queryGadm = useLocationGadm(location);
 
   const query = useGetFeatures(
     {
       query: DATASETS.acu_knowledge.getFeatures({
-        ...(!!GEOMETRY && {
+        ...(!!queryGadm.data?.gid0 && {
           orderByFields: ["Name"],
-          geometry: GEOMETRY,
+          where: `CountryIso in (${queryGadm.data?.gid0.map((g) => `'${g}'`)})`,
         }),
       }),
       feature: DATASETS.acu_knowledge.layer,
     },
     {
-      enabled: !!DATASETS.acu_knowledge.getFeatures && !!GEOMETRY,
+      enabled: !!DATASETS.acu_knowledge.getFeatures && !!queryGadm.data?.gid0,
       select(data): ResourceProps[] {
         return data.features.map((f) => f.attributes);
       },
@@ -76,30 +74,12 @@ export default function OtherResources() {
               ))}
             </TabsList>
             <TabsContent className="w-full" value="all">
-              <WidgetsRow className="print:grid-cols-2">
-                {query.data?.map((r, idx) => (
-                  <WidgetsColumn
-                    className="col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
-                    key={idx}
-                  >
-                    <Resource key={idx} {...r} />
-                  </WidgetsColumn>
-                ))}
-              </WidgetsRow>
+              <OtherResourcesGroup data={query.data} />
             </TabsContent>
 
             {GROUPS.map((group) => (
               <TabsContent className="w-full" key={group[0]} value={group[0]}>
-                <WidgetsRow className="print:grid-cols-2">
-                  {group[1].map((r, idx) => (
-                    <WidgetsColumn
-                      className="col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
-                      key={idx}
-                    >
-                      <Resource key={idx} {...r} />
-                    </WidgetsColumn>
-                  ))}
-                </WidgetsRow>
+                <OtherResourcesGroup data={group[1]} />
               </TabsContent>
             ))}
           </Tabs>

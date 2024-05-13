@@ -33,7 +33,7 @@ export interface SearchParams {
 export default async function ReportResultsPage({
   searchParams,
 }: PageProps<Params, SearchParams>) {
-  if (!searchParams.location || !searchParams.topics) {
+  if (!searchParams.location) {
     redirect("/report");
   }
 

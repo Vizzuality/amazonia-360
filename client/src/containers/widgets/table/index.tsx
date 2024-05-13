@@ -14,7 +14,7 @@ import { LuArrowUpDown } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { DataPagination } from "@/containers/widgets/table/pagination";
+import { DataPagination } from "@/containers/widgets/pagination";
 
 import {
   Table,
@@ -44,6 +44,8 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     ...tableOptions,
   });
+
+  const { pageIndex } = table.getState().pagination;
 
   return (
     <div className="flex flex-col grow">
@@ -122,7 +124,14 @@ export function DataTable<TData, TValue>({
         </Table>
         <footer className="flex items-center justify-between mt-4">
           <p className="text-xs font-medium text-gray-500">{`${data.length} ${Pluralize("result", data.length)}`}</p>
-          <DataPagination table={table} totalPagesToDisplay={5} />
+          <DataPagination
+            pageIndex={pageIndex}
+            pageCount={table.getPageCount()}
+            totalPagesToDisplay={5}
+            onPagePrevious={table.previousPage}
+            onPageNext={table.nextPage}
+            onPageIndex={table.setPageIndex}
+          />
         </footer>
       </div>
     </div>
