@@ -4,3 +4,4 @@ orjson
 pydantic_settings
 titiler.core
 uvicorn
+h3
