@@ -8,6 +8,7 @@ from typing import Annotated, Iterator
 import polars as pl
 import rasterio as rio
 import typer
+from h3ronpy.h3ronpyrs import DEFAULT_CELL_COLUMN_NAME
 from h3ronpy.polars.raster import nearest_h3_resolution, raster_to_dataframe
 from rasterio.windows import Window
 from rich import print
@@ -15,11 +16,15 @@ from rich.progress import Progress
 
 cli = typer.Typer(pretty_exceptions_short=True, pretty_exceptions_show_locals=False)
 
+MIN_TILE_LEVEL = 1
+RESOLUTION_TO_LEVEL_DIFF = 5
+
 
 class AvailableAggFunctions(str, Enum):  # noqa: D101
     sum = "sum"
     mean = "mean"
     count = "count"  # type: ignore
+    median = "median"
     relative_area = "relative_area"
 
 
@@ -49,21 +54,29 @@ def chunk_generator(splits: int, height: int, width: int) -> Iterator[Window]:
 
 
 def aggregate_cells(
-    df: pl.LazyFrame, h3res: int, agg_func: str, h3index_col_name: str
+    df: pl.LazyFrame,
+    h3res: int,
+    agg_func: str,
+    var_column_name: str,
+    h3index_col_name: str,
 ) -> pl.LazyFrame:
     """Computes h3 aggregation of `df` at `h3res`.
     Returns columns in the order h3index, value.
     """
-    agg_expression = pl.col("value")
+    agg_expression = pl.col(var_column_name)
     if agg_func == "sum":
         agg_expression = agg_expression.sum()
     elif agg_func == "mean":
         agg_expression = agg_expression.mean()
     elif agg_func == "count":
         agg_expression = agg_expression.count()
+    elif agg_func == "median":
+        agg_expression = agg_expression.median()
     elif agg_func == "relative_area":
         agg_expression = (
-            (pl.col(h3index_col_name).h3.cells_area_km2() * pl.col("value")).sum()
+            (
+                pl.col(h3index_col_name).h3.cells_area_km2() * pl.col(var_column_name)
+            ).sum()
             / pl.col("area_parent").first()
         ).cast(pl.Float64)
     else:
@@ -74,17 +87,54 @@ def aggregate_cells(
             pl.col(h3index_col_name).h3.change_resolution(h3res).alias("h3index_parent")
         )
         .group_by("h3index_parent")
-        .agg(value=agg_expression)
+        .agg(agg_expression.alias(var_column_name))
     )
     return overview.select(
-        [pl.col("h3index_parent").alias(h3index_col_name), pl.col("value")]
+        [pl.col("h3index_parent").alias(h3index_col_name), pl.col(var_column_name)]
     )
+
+
+def make_overviews(
+    base_level_path: Path,
+    output_path: Path,
+    overview_level: int,
+    agg_func: AvailableAggFunctions,
+    var_column_name: str,
+    progress: Progress,
+) -> None:
+    """Compute higher resolution tiles with agg function `agg_func`."""
+    tiles = list(base_level_path.glob("*.arrow"))
+    overview_resolution = overview_level + RESOLUTION_TO_LEVEL_DIFF
+    for tile in progress.track(tiles, description="Computing tile"):
+        df = pl.scan_ipc(tile, memory_map=True)
+        df = aggregate_cells(
+            df,
+            overview_resolution,
+            agg_func.value,
+            var_column_name,
+            h3index_col_name=DEFAULT_CELL_COLUMN_NAME,
+        ).with_columns(
+            pl.col(DEFAULT_CELL_COLUMN_NAME)
+            .h3.change_resolution(overview_level)
+            .alias("tile_id")
+        )
+        # make tiles
+        partition_dfs = df.collect().partition_by(
+            ["tile_id"], as_dict=True, include_key=False
+        )
+        for tile_group, tile_df in partition_dfs.items():
+            if tile_df.shape[0] == 0:  # todo: skip empty tiles ?
+                continue
+            tile_id = tile_group[0]
+            filename = output_path / (hex(tile_id)[2:] + ".arrow")
+            tile_df.write_ipc(filename)
 
 
 @cli.command()
 def main(
     input_file: Path,
     output_path: Path,
+    var_column_name: Annotated[str, typer.Option(help="column name in the arrow ipc")],
     nodata: Annotated[int, typer.Option(help="Set nodata value.")] = 0,
     agg_func: Annotated[
         AvailableAggFunctions, typer.Option(help="Overview aggregation function.")
@@ -103,28 +153,31 @@ def main(
     """Convert a raster to a h3 file."""
     seen_tiles = set()
 
+    # ----------------------------------------------------------
+    #                    RASTER TO H3
+    # ----------------------------------------------------------
+    n_chunks = splits**2
+
+    # Resolution of the tile index. A tile is a h3 cell that contains all the
+    # cells that are RESOLUTION_TO_LEVEL_DIFF resolutions below it.
+    base_tile_level = h3_res - RESOLUTION_TO_LEVEL_DIFF
+
+    base_level_path = output_path / str(base_tile_level)
+    base_level_path.mkdir(exist_ok=True, parents=True)
+
+    progress = Progress(transient=True)
+    progress.start()
+    read_chunk_task = progress.add_task("Sampling raster to h3", total=n_chunks)
+
     with rio.open(input_file) as src:
-        h3res = (
+        h3_res = (
             h3_res
             if h3_res is not None
             else nearest_h3_resolution(src.shape, src.transform)
         )
-        n_chunks = splits**2
-
-        # Resolution of the tile index. A tile is a h3 cell that contains all the
-        # cells that are 5 resolutions below it.
-        tile_index_res = h3res - 5
-
-        output_path_base = output_path / str(tile_index_res)
-        output_path_base.mkdir(exist_ok=True, parents=True)
-
-        progress = Progress(transient=True)
-        progress.start()
-        read_chunk_task = progress.add_task("Sampling raster to h3", total=n_chunks)
-
         for i, (_, window) in enumerate(chunk_generator(splits, src.height, src.width)):
             progress.update(
-                read_chunk_task, description=f"Processing chunk {i+1} of {n_chunks}"
+                read_chunk_task, description=f"Processing chunk {i + 1} of {n_chunks}"
             )
             data = src.read(1, window=window)
             win_transform = src.window_transform(window)
@@ -132,82 +185,86 @@ def main(
             df = raster_to_dataframe(
                 data,
                 win_transform,
-                h3res,
+                h3_res,
                 nodata_value=nodata,
                 compact=False,
             )
 
             df = (
-                df.with_columns(
-                    pl.col("cell").h3.change_resolution(tile_index_res).alias("tile")
+                df.rename({"value": var_column_name})
+                .with_columns(
+                    pl.col(DEFAULT_CELL_COLUMN_NAME)
+                    .h3.change_resolution(base_tile_level)
+                    .alias("tile_id")
                 )
-                .filter(
-                    pl.col("value") > 0  # NOTE: shouldn't it be dealt with nodata?
-                )
-                .unique(subset=["cell"])
+                .filter(pl.col(var_column_name) > 0)  # TODO: is this necessary?
+                .unique(subset=[DEFAULT_CELL_COLUMN_NAME])
             )
             if use_hex:
                 df = df.with_columns(
-                    pl.col("cell").cast(pl.Utf8).h3.cells_parse().h3.cells_to_string()
+                    pl.col(DEFAULT_CELL_COLUMN_NAME)
+                    .cast(pl.Utf8)
+                    .h3.cells_parse()
+                    .h3.cells_to_string()
                 )
 
-            partition_dfs = df.partition_by(["tile"], as_dict=True, include_key=False)
-            write_task = progress.add_task(
-                "Writing tiles", total=len(partition_dfs.items()), visible=True
+            partition_dfs = df.partition_by(
+                ["tile_id"], as_dict=True, include_key=False
             )
-            for tile_group, tile_df in partition_dfs.items():
+            n_tiles = len(partition_dfs)
+            for tile_group, tile_df in progress.track(
+                partition_dfs.items(), description="Writing tiles"
+            ):
                 tile_id = tile_group[0]
-                filename = output_path_base / (hex(tile_id)[2:] + ".arrow")
+                filename = base_level_path / (hex(tile_id)[2:] + ".arrow")
                 if tile_id in seen_tiles:
                     pl.concat([pl.read_ipc(filename), tile_df]).unique(
-                        subset=["cell"]
+                        subset=[DEFAULT_CELL_COLUMN_NAME]
                     ).write_ipc(filename)
                 else:
                     tile_df.write_ipc(filename)
                 seen_tiles.add(tile_id)
-                progress.update(write_task, advance=1)
 
-            progress.update(write_task, visible=False)
             progress.update(read_chunk_task, advance=1)
 
-        progress.stop()
-        print("")
+    progress.stop()
+    print(f"Converted {input_file} to {n_tiles} h3 tiles with resolution {h3_res}.")
 
-        # while tile_index_res >= 0:
-        #     overview_res = tile_index_res + 5
-        #
-        #     if (
-        #         overview_res < h3res
-        #     ):  # aggregate to correct overview resolution if not the first write
-        #         print(f"Aggregating to resolution {overview_res}")
-        #         df = aggregate_cells(
-        #             df, overview_res, agg_func.value, h3index_col_name="cell"
-        #         ).with_columns(
-        #             pl.col("cell").h3.change_resolution(tile_index_res).alias("tile")
-        #         )
-        #
-        #     overview_output_path = output_path / str(tile_index_res)
-        #     overview_output_path.mkdir(exist_ok=True, parents=True)
-        #
-        #     # make tiles
-        #     partition_dfs = df.partition_by(["tile"], as_dict=True, include_key=False)
-        #
-        #     for tile_group, tile_df in track(
-        #         partition_dfs.items(), description="Writing tiles"
-        #     ):
-        #         if tile_df.shape[0] == 0:  # todo: skip empty tiles ?
-        #             continue
-        #         tile_id = tile_group[0]
-        #         filename = overview_output_path / (hex(tile_id)[2:] + ".arrow")
-        #         if tile_id in seen_tiles:
-        #             pl.concat([pl.read_ipc(filename), tile_df]).unique(
-        #                 subset=["cell"]
-        #             ).write_ipc(filename)
-        #         else:
-        #             tile_df.write_ipc(filename)
-        #         seen_tiles.add(tile_id)
-        #
-        #     tile_index_res -= 1
+    # ----------------------------------------------------------
+    #                    MAKE OVERVIEWS
+    # ----------------------------------------------------------
+
+    progress = Progress(transient=True)
+    progress.start()
+    total_computing_overviews_task = progress.add_task(
+        "Computing overviews", total=base_tile_level - 1
+    )
+
+    current_tile_path = base_level_path
+    next_tile_level = base_tile_level - 1
+    while next_tile_level >= MIN_TILE_LEVEL:
+        overview_path = output_path / str(next_tile_level)
+        overview_path.mkdir(exist_ok=True)
+
+        progress.update(
+            total_computing_overviews_task,
+            description=f"Computing overview {overview_path}",
+        )
+
+        make_overviews(
+            current_tile_path,
+            overview_path,
+            next_tile_level,
+            agg_func,
+            var_column_name,
+            progress,
+        )
+
+        next_tile_level -= 1
+        current_tile_path = overview_path
+
+        progress.update(total_computing_overviews_task, advance=1)
+    progress.stop()
 
 
 if __name__ == "__main__":
