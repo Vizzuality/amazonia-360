@@ -1,0 +1,22 @@
+[tool.ruff]
+extend-include = ["*.ipynb"]
+src = ["src"]
+
+[tool.ruff.lint]
+select = [
+    "D1",   # pydocstyle errors
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # flake8
+    "C",    # flake8-comprehensions
+    "B",    # flake8-bugbear
+    "N",    # Naming conventions
+    "I",    # isort
+]
+ignore = [
+    "D100", # Missing docstring in public module
+    "D104", # Missing docstring in __init__
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/{tests}/*" = ["D103"]  # Missing docstring in public function
