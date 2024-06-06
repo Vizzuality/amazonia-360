@@ -105,7 +105,10 @@ def make_overviews(
     """Compute higher resolution tiles with agg function `agg_func`."""
     tiles = list(base_level_path.glob("*.arrow"))
     overview_resolution = overview_level + RESOLUTION_TO_LEVEL_DIFF
-    for tile in progress.track(tiles, description="Computing tile"):
+
+    iter_tiles_task = progress.add_task("Processing tile: ")
+    for tile in progress.track(tiles, task_id=iter_tiles_task):
+        progress.update(iter_tiles_task, description=f"Processing tile: {tile.stem}")
         df = pl.scan_ipc(tile, memory_map=True)
         df = aggregate_cells(
             df,
@@ -128,6 +131,7 @@ def make_overviews(
             tile_id = tile_group[0]
             filename = output_path / (hex(tile_id)[2:] + ".arrow")
             tile_df.write_ipc(filename)
+    progress.update(iter_tiles_task, visible=False)
 
 
 @cli.command()
@@ -158,13 +162,6 @@ def main(
     # ----------------------------------------------------------
     n_chunks = splits**2
 
-    # Resolution of the tile index. A tile is a h3 cell that contains all the
-    # cells that are RESOLUTION_TO_LEVEL_DIFF resolutions below it.
-    base_tile_level = h3_res - RESOLUTION_TO_LEVEL_DIFF
-
-    base_level_path = output_path / str(base_tile_level)
-    base_level_path.mkdir(exist_ok=True, parents=True)
-
     progress = Progress(transient=True)
     progress.start()
     read_chunk_task = progress.add_task("Sampling raster to h3", total=n_chunks)
@@ -175,6 +172,13 @@ def main(
             if h3_res is not None
             else nearest_h3_resolution(src.shape, src.transform)
         )
+        # Resolution of the tile index. A tile is a h3 cell that contains all the
+        # cells that are RESOLUTION_TO_LEVEL_DIFF resolutions below it.
+        base_tile_level = h3_res - RESOLUTION_TO_LEVEL_DIFF
+
+        base_level_path = output_path / str(base_tile_level)
+        base_level_path.mkdir(exist_ok=True, parents=True)
+
         for i, (_, window) in enumerate(chunk_generator(splits, src.height, src.width)):
             progress.update(
                 read_chunk_task, description=f"Processing chunk {i + 1} of {n_chunks}"
@@ -212,11 +216,16 @@ def main(
                 ["tile_id"], as_dict=True, include_key=False
             )
             n_tiles = len(partition_dfs)
+
+            write_tiles_task = progress.add_task("Writing tiles")
             for tile_group, tile_df in progress.track(
-                partition_dfs.items(), description="Writing tiles"
+                partition_dfs.items(), task_id=write_tiles_task
             ):
                 tile_id = tile_group[0]
                 filename = base_level_path / (hex(tile_id)[2:] + ".arrow")
+                progress.update(
+                    write_tiles_task, description=f"Writing tile {filename.stem}"
+                )
                 if tile_id in seen_tiles:
                     pl.concat([pl.read_ipc(filename), tile_df]).unique(
                         subset=[DEFAULT_CELL_COLUMN_NAME]
@@ -224,7 +233,7 @@ def main(
                 else:
                     tile_df.write_ipc(filename)
                 seen_tiles.add(tile_id)
-
+            progress.update(write_tiles_task, visible=False)
             progress.update(read_chunk_task, advance=1)
 
     progress.stop()
