@@ -118,68 +118,59 @@ def main(
         output_path_base = output_path / str(tile_index_res)
         output_path_base.mkdir(exist_ok=True, parents=True)
 
-        with Progress(transient=True) as progress:
-            read_chunk_task = progress.add_task("Sampling raster to h3", total=n_chunks)
+        progress = Progress(transient=True)
+        progress.start()
+        read_chunk_task = progress.add_task("Sampling raster to h3", total=n_chunks)
 
-            for i, (_, window) in enumerate(
-                chunk_generator(splits, src.height, src.width)
-            ):
-                progress.update(
-                    read_chunk_task, description=f"Processing chunk {i+1} of {n_chunks}"
-                )
-                data = src.read(1, window=window)
-                win_transform = src.window_transform(window)
-                nodata = nodata if nodata is not None else src.nodata
-                df = raster_to_dataframe(
-                    data,
-                    win_transform,
-                    h3res,
-                    nodata_value=nodata,
-                    compact=False,
-                )
+        for i, (_, window) in enumerate(chunk_generator(splits, src.height, src.width)):
+            progress.update(
+                read_chunk_task, description=f"Processing chunk {i+1} of {n_chunks}"
+            )
+            data = src.read(1, window=window)
+            win_transform = src.window_transform(window)
+            nodata = nodata if nodata is not None else src.nodata
+            df = raster_to_dataframe(
+                data,
+                win_transform,
+                h3res,
+                nodata_value=nodata,
+                compact=False,
+            )
 
-                df = (
-                    df.with_columns(
-                        pl.col("cell")
-                        .h3.change_resolution(tile_index_res)
-                        .alias("tile")
-                    )
-                    .filter(
-                        pl.col("value") > 0
-                    )  # NOTE: should I do this? should it be dealt with nodata?
-                    .unique(subset=["cell"])
+            df = (
+                df.with_columns(
+                    pl.col("cell").h3.change_resolution(tile_index_res).alias("tile")
                 )
-                if use_hex:
-                    df = df.with_columns(
-                        pl.col("cell")
-                        .cast(pl.Utf8)
-                        .h3.cells_parse()
-                        .h3.cells_to_string()
-                    )
-
-                    # make tiles
-                partition_dfs = df.partition_by(
-                    ["tile"], as_dict=True, include_key=False
+                .filter(
+                    pl.col("value") > 0  # NOTE: shouldn't it be dealt with nodata?
+                )
+                .unique(subset=["cell"])
+            )
+            if use_hex:
+                df = df.with_columns(
+                    pl.col("cell").cast(pl.Utf8).h3.cells_parse().h3.cells_to_string()
                 )
 
-                write_task = progress.add_task(
-                    "Writing tiles", total=len(partition_dfs.items()), visible=True
-                )
-                for tile_group, tile_df in partition_dfs.items():
-                    tile_id = tile_group[0]
-                    filename = output_path_base / (hex(tile_id)[2:] + ".arrow")
-                    if tile_id in seen_tiles:
-                        pl.concat([pl.read_ipc(filename), tile_df]).unique(
-                            subset=["cell"]
-                        ).write_ipc(filename)
-                    else:
-                        tile_df.write_ipc(filename)
-                    seen_tiles.add(tile_id)
-                    progress.update(write_task, advance=1)
+            partition_dfs = df.partition_by(["tile"], as_dict=True, include_key=False)
+            write_task = progress.add_task(
+                "Writing tiles", total=len(partition_dfs.items()), visible=True
+            )
+            for tile_group, tile_df in partition_dfs.items():
+                tile_id = tile_group[0]
+                filename = output_path_base / (hex(tile_id)[2:] + ".arrow")
+                if tile_id in seen_tiles:
+                    pl.concat([pl.read_ipc(filename), tile_df]).unique(
+                        subset=["cell"]
+                    ).write_ipc(filename)
+                else:
+                    tile_df.write_ipc(filename)
+                seen_tiles.add(tile_id)
+                progress.update(write_task, advance=1)
 
-                progress.update(write_task, visible=False)
-                progress.update(read_chunk_task, advance=1)
+            progress.update(write_task, visible=False)
+            progress.update(read_chunk_task, advance=1)
 
+        progress.stop()
         print("")
 
         # while tile_index_res >= 0:
