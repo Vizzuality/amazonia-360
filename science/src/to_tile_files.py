@@ -1,5 +1,6 @@
 """Convert a raster to h3 chunks."""
 
+import logging
 from enum import Enum
 from math import ceil
 from pathlib import Path
@@ -12,12 +13,16 @@ from h3ronpy.h3ronpyrs import DEFAULT_CELL_COLUMN_NAME
 from h3ronpy.polars.raster import nearest_h3_resolution, raster_to_dataframe
 from rasterio.windows import Window
 from rich import print
+from rich.logging import RichHandler
 from rich.progress import Progress
 
 cli = typer.Typer(pretty_exceptions_short=True, pretty_exceptions_show_locals=False)
 
-MIN_TILE_LEVEL = 1
+MIN_TILE_LEVEL = 0
 RESOLUTION_TO_LEVEL_DIFF = 5
+
+logging.basicConfig(handlers=[RichHandler()])
+log = logging.getLogger(__name__)
 
 
 class AvailableAggFunctions(str, Enum):  # noqa: D101
@@ -25,6 +30,7 @@ class AvailableAggFunctions(str, Enum):  # noqa: D101
     mean = "mean"
     count = "count"  # type: ignore
     median = "median"
+    mode = "mode"
     relative_area = "relative_area"
 
 
@@ -72,6 +78,8 @@ def aggregate_cells(
         agg_expression = agg_expression.count()
     elif agg_func == "median":
         agg_expression = agg_expression.median()
+    elif agg_func == "mode":
+        agg_expression = agg_expression.mode().first()
     elif agg_func == "relative_area":
         agg_expression = (
             (
@@ -105,7 +113,7 @@ def make_overviews(
     """Compute higher resolution tiles with agg function `agg_func`."""
     tiles = list(base_level_path.glob("*.arrow"))
     overview_resolution = overview_level + RESOLUTION_TO_LEVEL_DIFF
-
+    seen_tiles = set()
     iter_tiles_task = progress.add_task("Processing tile: ")
     for tile in progress.track(tiles, task_id=iter_tiles_task):
         progress.update(iter_tiles_task, description=f"Processing tile: {tile.stem}")
@@ -121,7 +129,6 @@ def make_overviews(
             .h3.change_resolution(overview_level)
             .alias("tile_id")
         )
-        # make tiles
         partition_dfs = df.collect().partition_by(
             ["tile_id"], as_dict=True, include_key=False
         )
@@ -130,42 +137,28 @@ def make_overviews(
                 continue
             tile_id = tile_group[0]
             filename = output_path / (hex(tile_id)[2:] + ".arrow")
-            tile_df.write_ipc(filename)
+            if tile_id in seen_tiles:
+                pl.concat([pl.read_ipc(filename), tile_df]).unique(
+                    subset=["cell"]
+                ).write_ipc(filename)
+            else:
+                seen_tiles.add(tile_id)
+                tile_df.write_ipc(filename)
     progress.update(iter_tiles_task, visible=False)
+    print(
+        f"Computed {len(seen_tiles)} overview tiles at resolution {overview_resolution}."  # noqa E501
+    )
 
 
-@cli.command()
-def main(
-    input_file: Path,
-    output_path: Path,
-    var_column_name: Annotated[str, typer.Option(help="column name in the arrow ipc")],
-    nodata: Annotated[int, typer.Option(help="Set nodata value.")] = 0,
-    agg_func: Annotated[
-        AvailableAggFunctions, typer.Option(help="Overview aggregation function.")
-    ] = AvailableAggFunctions.mean,
-    splits: Annotated[
-        int,
-        typer.Option(
-            help="Dive and process the raster in chunks to reduce the memory usage."
-        ),
-    ] = 2,
-    use_hex: Annotated[
-        bool, typer.Option(help="Output h3 index as hex string.")
-    ] = False,
-    h3_res: Annotated[int, typer.Option(help="Output h3 resolution.")] = None,
-) -> None:
-    """Convert a raster to a h3 file."""
+def raster_to_h3(
+    h3_res, input_file, nodata, output_path, splits, var_column_name
+) -> tuple[Path, int]:
+    """Raster file to h3 arrow tiles"""
     seen_tiles = set()
-
-    # ----------------------------------------------------------
-    #                    RASTER TO H3
-    # ----------------------------------------------------------
     n_chunks = splits**2
-
     progress = Progress(transient=True)
     progress.start()
     read_chunk_task = progress.add_task("Sampling raster to h3", total=n_chunks)
-
     with rio.open(input_file) as src:
         h3_res = (
             h3_res
@@ -201,17 +194,9 @@ def main(
                     .h3.change_resolution(base_tile_level)
                     .alias("tile_id")
                 )
-                .filter(pl.col(var_column_name) > 0)  # TODO: is this necessary?
+                # .filter(pl.col(var_column_name) > 0)  # TODO: is this necessary?
                 .unique(subset=[DEFAULT_CELL_COLUMN_NAME])
             )
-            if use_hex:
-                df = df.with_columns(
-                    pl.col(DEFAULT_CELL_COLUMN_NAME)
-                    .cast(pl.Utf8)
-                    .h3.cells_parse()
-                    .h3.cells_to_string()
-                )
-
             partition_dfs = df.partition_by(
                 ["tile_id"], as_dict=True, include_key=False
             )
@@ -235,9 +220,33 @@ def main(
                 seen_tiles.add(tile_id)
             progress.update(write_tiles_task, visible=False)
             progress.update(read_chunk_task, advance=1)
-
     progress.stop()
     print(f"Converted {input_file} to {n_tiles} h3 tiles with resolution {h3_res}.")
+    return base_level_path, base_tile_level
+
+
+@cli.command()
+def main(
+    input_file: Path,
+    output_path: Path,
+    var_column_name: Annotated[str, typer.Option(help="column name in the arrow ipc")],
+    nodata: Annotated[int, typer.Option(help="Set nodata value.")] = 0,
+    agg_func: Annotated[
+        AvailableAggFunctions, typer.Option(help="Overview aggregation function.")
+    ] = AvailableAggFunctions.mean,
+    splits: Annotated[
+        int,
+        typer.Option(
+            help="Dive and process the raster in chunks to reduce the memory usage."
+        ),
+    ] = 2,
+    h3_res: Annotated[int, typer.Option(help="Output h3 resolution.")] = None,
+) -> None:
+    """Convert a raster to a h3 file."""
+
+    base_level_path, base_tile_level = raster_to_h3(
+        h3_res, input_file, nodata, output_path, splits, var_column_name
+    )
 
     # ----------------------------------------------------------
     #                    MAKE OVERVIEWS

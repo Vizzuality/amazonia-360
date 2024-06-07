@@ -9,7 +9,7 @@ from titiler.core.errors import DEFAULT_STATUS_CODES, add_exception_handlers
 
 from app.auth.auth import verify_token
 from app.config.config import get_settings
-from app.routers.h3 import h3tile_router
+from app.routers.h3 import h3_grid_router
 from app.routers.zonal_stats import ZonalTilerFactory
 
 
@@ -29,7 +29,7 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 tiler_routes = ZonalTilerFactory(path_dependency=path_params)
 
 app.include_router(tiler_routes.router, tags=["Raster"], dependencies=[Depends(verify_token)])
-app.include_router(h3tile_router, prefix="/grid", tags=["Grid"])
+app.include_router(h3_grid_router, prefix="/grid", tags=["Grid"])
 
 add_exception_handlers(app, DEFAULT_STATUS_CODES)
 

@@ -6,10 +6,10 @@ from fastapi.responses import FileResponse
 
 from app.config.config import get_settings
 
-h3tile_router = APIRouter()
+h3_grid_router = APIRouter()
 
 
-@h3tile_router.get(
+@h3_grid_router.get(
     "/tile/{tile_index}",
     responses={200: {"description": "Get a grid tile"}, 404: {"description": "Not found"}},
     response_model=None,
