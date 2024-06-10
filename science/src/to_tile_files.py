@@ -10,6 +10,7 @@ import polars as pl
 import rasterio as rio
 import typer
 from h3ronpy.h3ronpyrs import DEFAULT_CELL_COLUMN_NAME
+from h3ronpy.polars import uncompact
 from h3ronpy.polars.raster import nearest_h3_resolution, raster_to_dataframe
 from rasterio.windows import Window
 from rich import print
@@ -21,7 +22,7 @@ cli = typer.Typer(pretty_exceptions_short=True, pretty_exceptions_show_locals=Fa
 MIN_TILE_LEVEL = 0
 RESOLUTION_TO_LEVEL_DIFF = 5
 
-logging.basicConfig(handlers=[RichHandler()])
+logging.basicConfig(handlers=[RichHandler()], level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 
@@ -151,7 +152,13 @@ def make_overviews(
 
 
 def raster_to_h3(
-    h3_res, input_file, nodata, output_path, splits, var_column_name
+    h3_res: int,
+    input_file: Path,
+    nodata: int | float,
+    output_path: Path,
+    splits: int,
+    var_column_name: str,
+    compact_filtering: bool,
 ) -> tuple[Path, int]:
     """Raster file to h3 arrow tiles"""
     seen_tiles = set()
@@ -184,8 +191,18 @@ def raster_to_h3(
                 win_transform,
                 h3_res,
                 nodata_value=nodata,
-                compact=False,
-            )
+                compact=compact_filtering,
+            ).lazy()
+
+            if compact_filtering:
+                log.debug("Filtering cells that are 0 and uncompacting rest of cells")
+                df = (
+                    df.filter(pl.col("value") > 0)
+                    .with_columns(
+                        pl.col("cell").map_elements(lambda x: uncompact([x], h3_res))
+                    )
+                    .explode("cell")
+                )
 
             df = (
                 df.rename({"value": var_column_name})
@@ -194,15 +211,16 @@ def raster_to_h3(
                     .h3.change_resolution(base_tile_level)
                     .alias("tile_id")
                 )
-                # .filter(pl.col(var_column_name) > 0)  # TODO: is this necessary?
                 .unique(subset=[DEFAULT_CELL_COLUMN_NAME])
             )
-            partition_dfs = df.partition_by(
+
+            partition_dfs = df.collect().partition_by(
                 ["tile_id"], as_dict=True, include_key=False
             )
             n_tiles = len(partition_dfs)
 
             write_tiles_task = progress.add_task("Writing tiles")
+
             for tile_group, tile_df in progress.track(
                 partition_dfs.items(), task_id=write_tiles_task
             ):
@@ -241,11 +259,12 @@ def main(
         ),
     ] = 2,
     h3_res: Annotated[int, typer.Option(help="Output h3 resolution.")] = None,
+    compact: Annotated[bool, typer.Option(help="compact h3")] = False,
 ) -> None:
     """Convert a raster to a h3 file."""
 
     base_level_path, base_tile_level = raster_to_h3(
-        h3_res, input_file, nodata, output_path, splits, var_column_name
+        h3_res, input_file, nodata, output_path, splits, var_column_name, compact
     )
 
     # ----------------------------------------------------------
