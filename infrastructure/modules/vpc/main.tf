@@ -111,10 +111,33 @@ resource "aws_lb" "load_balancer" {
   enable_deletion_protection = false
 }
 
+resource "aws_lb" "dev_load_balancer" {
+  name               = "dev-amazonia360-load-balancer"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.amazonia360-sg.id]
+  subnets            = [aws_subnet.amazonia360-subnet.id, aws_subnet.amazonia360-subnet2.id]
+
+  enable_deletion_protection = false
+}
+
 
 
 resource "aws_lb_target_group" "my_target_group" {
   name     = "my-target-group"
+  port     = 8000
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.amazonia360-vpc.id
+
+  health_check {
+    enabled = true
+    path    = "/health"
+    protocol = "HTTP"
+  }
+}
+
+resource "aws_lb_target_group" "dev_my_target_group" {
+  name     = "dev-amazonia-target-group"
   port     = 8000
   protocol = "HTTP"
   vpc_id   = aws_vpc.amazonia360-vpc.id
@@ -133,6 +156,15 @@ resource "aws_lb_target_group_attachment" "my_target_group_attachment" {
   port             = 8000
 }
 
+resource "aws_lb_target_group_attachment" "dev_my_target_group_attachment" {
+  target_group_arn = aws_lb_target_group.dev_my_target_group.arn
+  target_id        = var.ec2_dev_instance_id
+  port             = 8000
+}
+
+
+
+
 
 resource "aws_lb_listener" "https_listener" {
   load_balancer_arn = aws_lb.load_balancer.arn
@@ -144,6 +176,19 @@ resource "aws_lb_listener" "https_listener" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.my_target_group.arn
+  }
+}
+
+resource "aws_lb_listener" "dev_https_listener" {
+  load_balancer_arn = aws_lb.dev_load_balancer.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_acm_certificate.dev-acm_certificate.arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.dev_my_target_group.arn
   }
 }
 
@@ -163,6 +208,27 @@ resource "aws_acm_certificate" "acm_certificate" {
     create_before_destroy = true
   }
 }
+
+resource "aws_acm_certificate" "dev-acm_certificate" {
+  domain_name       = "dev.api.amazonia360.dev-vizzuality.com"
+  validation_method = "DNS"
+
+  tags = {
+    Name = "Amazonia360 API SSL certificate"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
+
+resource "aws_acm_certificate_validation" "domain_certificate_validation" {
+  certificate_arn = aws_acm_certificate.dev-acm_certificate.arn
+}
+
+
 
 #
 # resource "aws_acm_certificate_validation" "domain_certificate_validation" {

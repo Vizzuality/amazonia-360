@@ -14,3 +14,8 @@ variable "ec2_instance_id"{
     type = string
     description = "ID of the EC2 instance"
 }
+
+variable "ec2_dev_instance_id"{
+    type = string
+    description = "ID of the DEV EC2 instance"
+}
