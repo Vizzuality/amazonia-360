@@ -35,7 +35,7 @@ jobs:
     - name: Deploy to EC2
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST }}
+        host: ${{ secrets.DEV_HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         script: |
@@ -53,7 +53,7 @@ jobs:
       - name: URL Health Check
         uses: Jtalk/url-health-check-action@v4
         with:
-          url: ${{ secrets.HEALTHCHECK }}
+          url: ${{ secrets.DEV_HEALTHCHECK }}
           retries: 5
           wait: 10
 
