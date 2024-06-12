@@ -1,4 +1,5 @@
 [tool.ruff]
+line-length = 100
 extend-include = ["*.ipynb"]
 src = ["src"]
 
