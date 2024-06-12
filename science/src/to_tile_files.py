@@ -22,7 +22,7 @@ cli = typer.Typer(pretty_exceptions_short=True, pretty_exceptions_show_locals=Fa
 MIN_TILE_LEVEL = 0
 RESOLUTION_TO_LEVEL_DIFF = 5
 
-logging.basicConfig(handlers=[RichHandler()], level=logging.DEBUG)
+logging.basicConfig(handlers=[RichHandler()], level=logging.INFO)
 log = logging.getLogger(__name__)
 
 
@@ -195,7 +195,6 @@ def raster_to_h3(
             ).lazy()
 
             if compact_filtering:
-                log.debug("Filtering cells that are 0 and uncompacting rest of cells")
                 df = (
                     df.filter(pl.col("value") > 0)
                     .with_columns(
