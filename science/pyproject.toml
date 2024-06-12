@@ -16,6 +16,7 @@ select = [
 ignore = [
     "D100", # Missing docstring in public module
     "D104", # Missing docstring in __init__
+    "C901", # Too complex
 ]
 
 [tool.ruff.lint.per-file-ignores]

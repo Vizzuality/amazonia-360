@@ -198,7 +198,10 @@ def raster_to_h3(
                 df = (
                     df.filter(pl.col("value") > 0)
                     .with_columns(
-                        pl.col("cell").map_elements(lambda x: uncompact([x], h3_res))
+                        pl.col("cell").map_elements(
+                            lambda x: uncompact([x], h3_res),
+                            return_dtype=pl.List(pl.UInt64),
+                        )
                     )
                     .explode("cell")
                 )
