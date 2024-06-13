@@ -61,7 +61,26 @@ def dataset_minmax_level(tile_source: Path) -> tuple[int, int]:
 
 def make_polars_schema(metas: list[dict]) -> dict:
     """build polars schema from meta files"""
-    return {e["var_name"]: e["var_dtype"] for e in metas}
+    numpy_to_polars_dtype = {
+        "int8": pl.Int8,
+        "int16": pl.Int16,
+        "int32": pl.Int32,
+        "int64": pl.Int64,
+        "uint8": pl.UInt8,
+        "uint16": pl.UInt16,
+        "uint32": pl.UInt32,
+        "uint64": pl.UInt64,
+        "float16": pl.Float32,  # Polars does not have Float16, so map to Float32
+        "float32": pl.Float32,
+        "float64": pl.Float64,
+        "str": pl.Utf8,
+        "bool": pl.Boolean,
+        "datetime64": pl.Datetime,
+        "timedelta64": pl.Duration,
+        "object": pl.Object,  # Use pl.Object for generic objects, although not recommended
+        "void": pl.Null,  # Map NumPy void type to Polars Null
+    }
+    return {e["var_name"]: numpy_to_polars_dtype[e["var_dtype"]] for e in metas}
 
 
 @cli.command()
@@ -108,7 +127,7 @@ def main(
             tiles.update([f.name for f in (dataset / str(level)).glob("*.arrow")])
 
         for tile_name in track(tiles, description=f"dealing with level {level}", transient=True):
-            dfs = []
+            dfs = [pl.LazyFrame(schema=make_polars_schema(metas))]
             for dataset in datasets:
                 tile_file = dataset / str(level) / tile_name
                 if not tile_file.exists():
@@ -131,16 +150,13 @@ def main(
             # │ 5    ┆ null ┆ b    │     │ 6    ┆ null ┆ c   │
             # │ 6    ┆ null ┆ c    │     └──────┴──────┴─────┘
             # └──────┴──────┴──────┘
-            # Must be more idiomatic way to do this
-            tile_df = (
-                tile_df.group_by("cell", maintain_order=True)
-                .all()
-                .with_columns(pl.col("*").exclude("cell").list.drop_nulls().list.first())
-            )
+            # Must be more idiomatic way to do this. We can safely use max because there must be
+            # only one none null value in each group
+            tile_df = tile_df.group_by("cell", maintain_order=True).agg(pl.all().max())
 
             out_dataset_path = out_path / str(level)
             out_dataset_path.mkdir(parents=True, exist_ok=True)
-            tile_df.collect().write_ipc(out_dataset_path / tile_name, compression="zstd")
+            tile_df.collect().write_ipc(out_dataset_path / tile_name, compression=None)
 
     with open(out_path / "meta.json", "w") as f:
         json.dump(metas, f)
