@@ -3,6 +3,7 @@ import os
 import h3
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
+from h3 import H3CellError
 
 from app.config.config import get_settings
 
@@ -18,8 +19,13 @@ async def grid_tile(tile_index: str) -> FileResponse:
     """Request a tile of h3 cells
 
     :raises HTTPException 404: Item not found
+    :raises HTTPException 422: H3 index is not valid
     """
-    z = h3.api.basic_str.h3_get_resolution(tile_index)
+    try:
+        z = h3.api.basic_str.h3_get_resolution(tile_index)
+    except H3CellError:
+        raise HTTPException(status_code=422, detail="Tile index is not a valid H3 cell") from None
+
     tile_file = os.path.join(get_settings().grid_tiles_path, f"{z}/{tile_index}.arrow")
     if not os.path.exists(tile_file):
         raise HTTPException(status_code=404, detail=f"Tile {tile_file} not found")
