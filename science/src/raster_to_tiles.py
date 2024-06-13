@@ -91,11 +91,15 @@ def aggregate_cells(
         raise ValueError(f"`agg_func` {agg_func} not found.")
 
     overview = (
-        df.with_columns(pl.col(h3index_col_name).h3.change_resolution(h3res).alias("h3index_parent"))
+        df.with_columns(
+            pl.col(h3index_col_name).h3.change_resolution(h3res).alias("h3index_parent")
+        )
         .group_by("h3index_parent")
         .agg(agg_expression.alias(var_column_name))
     )
-    return overview.select([pl.col("h3index_parent").alias(h3index_col_name), pl.col(var_column_name)])
+    return overview.select(
+        [pl.col("h3index_parent").alias(h3index_col_name), pl.col(var_column_name)]
+    )
 
 
 def make_overviews(
@@ -120,7 +124,9 @@ def make_overviews(
             agg_func.value,
             var_column_name,
             h3index_col_name=DEFAULT_CELL_COLUMN_NAME,
-        ).with_columns(pl.col(DEFAULT_CELL_COLUMN_NAME).h3.change_resolution(overview_level).alias("tile_id"))
+        ).with_columns(
+            pl.col(DEFAULT_CELL_COLUMN_NAME).h3.change_resolution(overview_level).alias("tile_id")
+        )
         partition_dfs = df.collect().partition_by(["tile_id"], as_dict=True, include_key=False)
         for tile_group, tile_df in partition_dfs.items():
             if tile_df.shape[0] == 0:  # todo: skip empty tiles ?
@@ -128,7 +134,9 @@ def make_overviews(
             tile_id = tile_group[0]
             filename = output_path / (hex(tile_id)[2:] + ".arrow")
             if tile_id in seen_tiles:
-                pl.concat([pl.read_ipc(filename), tile_df]).unique(subset=["cell"]).write_ipc(filename)
+                pl.concat([pl.read_ipc(filename), tile_df]).unique(subset=["cell"]).write_ipc(
+                    filename
+                )
             else:
                 seen_tiles.add(tile_id)
                 tile_df.write_ipc(filename)
@@ -164,7 +172,7 @@ def raster_to_h3(
         base_tile_level = h3_res - RESOLUTION_TO_LEVEL_DIFF
 
         meta = {
-            "var_name": [var_column_name],
+            "var_name": var_column_name,
             "var_dtype": src.dtypes,
             "base_tile_level": base_tile_level,
             "base_tile_resolution": h3_res,
@@ -202,7 +210,11 @@ def raster_to_h3(
 
             df = (
                 df.rename({"value": var_column_name})
-                .with_columns(pl.col(DEFAULT_CELL_COLUMN_NAME).h3.change_resolution(base_tile_level).alias("tile_id"))
+                .with_columns(
+                    pl.col(DEFAULT_CELL_COLUMN_NAME)
+                    .h3.change_resolution(base_tile_level)
+                    .alias("tile_id")
+                )
                 .unique(subset=[DEFAULT_CELL_COLUMN_NAME])
             )
 
@@ -211,14 +223,16 @@ def raster_to_h3(
 
             write_tiles_task = progress.add_task("Writing tiles")
 
-            for tile_group, tile_df in progress.track(partition_dfs.items(), task_id=write_tiles_task):
+            for tile_group, tile_df in progress.track(
+                partition_dfs.items(), task_id=write_tiles_task
+            ):
                 tile_id = tile_group[0]
                 filename = base_level_path / (hex(tile_id)[2:] + ".arrow")
                 progress.update(write_tiles_task, description=f"Writing tile {filename.stem}")
                 if tile_id in seen_tiles:
-                    pl.concat([pl.read_ipc(filename), tile_df]).unique(subset=[DEFAULT_CELL_COLUMN_NAME]).write_ipc(
-                        filename
-                    )
+                    pl.concat([pl.read_ipc(filename), tile_df]).unique(
+                        subset=[DEFAULT_CELL_COLUMN_NAME]
+                    ).write_ipc(filename)
                 else:
                     tile_df.write_ipc(filename)
                 seen_tiles.add(tile_id)
@@ -243,7 +257,9 @@ def main(
         typer.Option(help="Dive and process the raster in chunks to reduce the memory usage."),
     ] = 2,
     h3_res: Annotated[int, typer.Option(help="Output h3 resolution.")] = None,
-    compact: Annotated[bool, typer.Option(help="Use compact to reduce memory footprint at cost of speed.")] = False,
+    compact: Annotated[
+        bool, typer.Option(help="Use compact to reduce memory footprint at cost of speed.")
+    ] = False,
 ) -> None:
     """Convert a raster dataset to a h3 tiled dataset."""
 
@@ -260,7 +276,9 @@ def main(
 
     progress = Progress(transient=True)
     progress.start()
-    total_computing_overviews_task = progress.add_task("Computing overviews", total=base_tile_level - 1)
+    total_computing_overviews_task = progress.add_task(
+        "Computing overviews", total=base_tile_level - 1
+    )
 
     current_tile_path = base_level_path
     next_tile_level = base_tile_level - 1
