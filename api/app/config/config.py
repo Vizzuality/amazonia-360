@@ -10,6 +10,7 @@ class Settings(BaseSettings):
 
     auth_token: str
     tiff_path: str
+    grid_tiles_path: str
 
 
 @lru_cache

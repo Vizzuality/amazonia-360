@@ -9,6 +9,7 @@ from titiler.core.errors import DEFAULT_STATUS_CODES, add_exception_handlers
 
 from app.auth.auth import verify_token
 from app.config.config import get_settings
+from app.routers.h3 import h3_grid_router
 from app.routers.zonal_stats import ZonalTilerFactory
 
 
@@ -25,13 +26,15 @@ def path_params(raster_filename: Annotated[str, Query(description="Raster filena
 app = FastAPI(title="Amazonia360 API", default_response_class=ORJSONResponse)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-routes = ZonalTilerFactory(path_dependency=path_params)
-app.include_router(routes.router, dependencies=[Depends(verify_token)])
+tiler_routes = ZonalTilerFactory(path_dependency=path_params)
+
+app.include_router(tiler_routes.router, tags=["Raster"], dependencies=[Depends(verify_token)])
+app.include_router(h3_grid_router, prefix="/grid", tags=["Grid"])
 
 add_exception_handlers(app, DEFAULT_STATUS_CODES)
 
 
-@app.get("/tifs", dependencies=[Depends(verify_token)])
+@app.get("/tifs", tags=["Raster"], dependencies=[Depends(verify_token)])
 async def list_files():
     """List all available tif files."""
     tiff_path = get_settings().tiff_path

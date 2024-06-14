@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -57,21 +58,53 @@ def tif_file(setup_data_folder):
     data = np.array([[0, 1, 0], [1, 9, 1], [0, 1, 0]])
     transform = rasterio.transform.from_origin(0, 10, 1, 1)
     with rasterio.open(
-            f"{get_settings().tiff_path}/raster.tif",
-            "w",
-            driver="GTiff",
-            width=data.shape[1],
-            height=data.shape[0],
-            count=1,
-            dtype="uint8",
-            crs="+proj=latlong",
-            transform=transform,
+        f"{get_settings().tiff_path}/raster.tif",
+        "w",
+        driver="GTiff",
+        width=data.shape[1],
+        height=data.shape[0],
+        count=1,
+        dtype="uint8",
+        crs="+proj=latlong",
+        transform=transform,
     ) as dst:
         dst.write(data, 1)
 
     yield
 
     os.remove(f"{get_settings().tiff_path}/raster.tif")
+
+
+@pytest.fixture()
+def h3_dataset(setup_data_folder) -> str:
+    """Create an empty binary file to be used as grid dataset stub
+    for a level 0 tile. like:
+           data
+            └── grid
+                ├── 0
+                │   └── 84395c9ffffffff.arrow
+                └── meta.json
+    """
+    level = "4"
+    h3_index = "84395c9ffffffff"
+
+    grid_dataset_path = Path(get_settings().grid_tiles_path)
+    level_path = grid_dataset_path / level
+    level_path.mkdir(parents=True)
+    tile_path = level_path / f"{h3_index}.arrow"
+
+    with open(grid_dataset_path / "meta.json", "w") as f:
+        f.write("Not a json")
+
+    with open(tile_path, "wb") as f:
+        f.write(b"I am an arrow file!")
+
+    yield h3_index
+
+    tile_path.unlink()
+    level_path.rmdir()
+    (grid_dataset_path / "meta.json").unlink()
+    grid_dataset_path.rmdir()
 
 
 @pytest.fixture()
@@ -105,15 +138,9 @@ def test_health_is_public():
 
 
 def test_options_request_is_allowed_with_correct_headers():
-    headers = {
-            "Access-Control-Request-Method": "GET",
-            "Origin": "http://example.com"
-        }
-    response = test_client.options(
-        "/tifs",
-        headers=headers
-    )
-    response2 = test_client.options('/exact_zonal_stats', headers=headers)
+    headers = {"Access-Control-Request-Method": "GET", "Origin": "http://example.com"}
+    response = test_client.options("/tifs", headers=headers)
+    response2 = test_client.options("/exact_zonal_stats", headers=headers)
     assert response.status_code == 200
     assert response2.status_code == 200
     assert "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT" in response.headers["Access-Control-Allow-Methods"]
@@ -188,3 +215,30 @@ def test_nonexistent_statistic_raises_422(tif_file):
         json=GEOJSON,
     )
     assert response.status_code == 422
+
+
+def test_h3grid(h3_dataset):
+    response = test_client.get(f"/grid/tile/{h3_dataset}", headers=HEADERS)
+
+    assert response.status_code == 200
+    assert response.read() == b"I am an arrow file!"
+
+
+def test_h3grid_404(h3_dataset):
+    response = test_client.get("/grid/tile/8439181ffffffff", headers=HEADERS)
+
+    assert response.status_code == 404
+
+
+def test_h3grid_bad_index(h3_dataset):
+    response = test_client.get("/grid/tile/123", headers=HEADERS)
+
+    assert response.status_code == 422
+    assert response.json() == {"detail": "Tile index is not a valid H3 cell"}
+
+
+def test_h3grid_metadata_fails(h3_dataset):
+    res = test_client.get("/grid/meta", headers=HEADERS)
+
+    assert res.status_code == 500
+    assert res.json() == {"detail": "Metadata file is malformed. Please contact developer."}
