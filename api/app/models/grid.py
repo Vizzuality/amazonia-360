@@ -1,9 +1,9 @@
-# ruff: noqa: D101, D106
+# ruff: noqa: D101
 
 from enum import Enum
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from pydantic.color import Color
 
 
@@ -28,12 +28,11 @@ class NumericalLegend(BaseModel):
 
 
 class CategoricalLegendEntry(BaseModel):
+    model_config = ConfigDict(json_encoders={Color: lambda c: c.as_hex()})
+
     value: int | str
     color: Color
     label: str = Field(description="human readable label")
-
-    class Config:
-        json_encoders = {Color: lambda c: c.as_hex()}
 
 
 class CategoricalLegend(BaseModel):

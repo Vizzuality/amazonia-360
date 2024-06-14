@@ -79,18 +79,22 @@ def tif_file(setup_data_folder):
 def h3_dataset(setup_data_folder) -> str:
     """Create an empty binary file to be used as grid dataset stub
     for a level 0 tile. like:
-        data root
+           data
             └── grid
-                └── 0
-                    └── 84395c9ffffffff.arrow
+                ├── 0
+                │   └── 84395c9ffffffff.arrow
+                └── meta.json
     """
     level = "4"
     h3_index = "84395c9ffffffff"
 
-    dataset_path = Path(get_settings().grid_tiles_path)
-    level_path = dataset_path / level
+    grid_dataset_path = Path(get_settings().grid_tiles_path)
+    level_path = grid_dataset_path / level
     level_path.mkdir(parents=True)
     tile_path = level_path / f"{h3_index}.arrow"
+
+    with open(grid_dataset_path / "meta.json", "w") as f:
+        f.write("Not a json")
 
     with open(tile_path, "wb") as f:
         f.write(b"I am an arrow file!")
@@ -99,7 +103,8 @@ def h3_dataset(setup_data_folder) -> str:
 
     tile_path.unlink()
     level_path.rmdir()
-    dataset_path.rmdir()
+    (grid_dataset_path / "meta.json").unlink()
+    grid_dataset_path.rmdir()
 
 
 @pytest.fixture()
@@ -229,3 +234,11 @@ def test_h3grid_bad_index(h3_dataset):
     response = test_client.get("/grid/tile/123", headers=HEADERS)
 
     assert response.status_code == 422
+    assert response.json() == {"detail": "Tile index is not a valid H3 cell"}
+
+
+def test_h3grid_metadata_fails(h3_dataset):
+    res = test_client.get("/grid/meta", headers=HEADERS)
+
+    assert res.status_code == 500
+    assert res.json() == {"detail": "Metadata file is malformed. Please contact developer."}
