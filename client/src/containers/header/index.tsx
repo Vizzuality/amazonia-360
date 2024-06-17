@@ -53,6 +53,16 @@ export default function Header() {
           >
             Hub
           </Link>
+          <Link
+            className={cn({
+              "hover:text-cyan-500 text-sm": true,
+              "text-cyan-500": pathname.includes("/grid"),
+            })}
+            href="/grid"
+          >
+            Grid
+          </Link>
+
           {/* <Link className="text-blue-600 hover:text-blue-700" href="#">
             Amazonia Forever
           </Link> */}

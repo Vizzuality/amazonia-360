@@ -61,6 +61,12 @@ exports[`Header renders the Home link selected 1`] = `
         >
           Hub
         </a>
+        <a
+          class="hover:text-cyan-500 text-sm"
+          href="/grid"
+        >
+          Grid
+        </a>
       </nav>
     </div>
   </header>
@@ -128,6 +134,12 @@ exports[`Header renders the Hub link selected 1`] = `
         >
           Hub
         </a>
+        <a
+          class="hover:text-cyan-500 text-sm"
+          href="/grid"
+        >
+          Grid
+        </a>
       </nav>
     </div>
   </header>
@@ -194,6 +206,12 @@ exports[`Header renders the Report Tool link selected 1`] = `
           href="/hub"
         >
           Hub
+        </a>
+        <a
+          class="hover:text-cyan-500 text-sm"
+          href="/grid"
+        >
+          Grid
         </a>
       </nav>
     </div>
