@@ -1,0 +1,123 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WidgetPopulation renders WidgetPopulation component with loading state 1`] = `
+<div>
+  <div
+    class="p-6 rounded-2xl bg-white border border-blue-100 overflow-hidden flex flex-col grow break-inside-avoid"
+  >
+    <header
+      class="flex items-start justify-between"
+    >
+      <h2
+        class="text-base font-semibold text-blue-600"
+      >
+        Population
+      </h2>
+      <button
+        aria-controls="radix-:r5:"
+        aria-expanded="false"
+        aria-haspopup="dialog"
+        class="h-6 w-6 flex items-center justify-center"
+        data-state="closed"
+        type="button"
+      >
+        <svg
+          class="text-blue-600"
+          fill="none"
+          height="1em"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="10"
+          />
+          <path
+            d="M12 16v-4"
+          />
+          <path
+            d="M12 8h.01"
+          />
+        </svg>
+      </button>
+    </header>
+    <div
+      class="animate-pulse rounded-md bg-primary/10 h-12"
+      data-testid="card-loader"
+    />
+  </div>
+</div>
+`;
+
+exports[`WidgetPopulation renders WidgetPopulation component without crashing 1`] = `
+<div>
+  <div
+    class="p-6 rounded-2xl bg-white border border-blue-100 overflow-hidden flex flex-col grow break-inside-avoid"
+  >
+    <header
+      class="flex items-start justify-between"
+    >
+      <h2
+        class="text-base font-semibold text-blue-600"
+      >
+        Population
+      </h2>
+      <button
+        aria-controls="radix-:r1:"
+        aria-expanded="false"
+        aria-haspopup="dialog"
+        class="h-6 w-6 flex items-center justify-center"
+        data-state="closed"
+        type="button"
+      >
+        <svg
+          class="text-blue-600"
+          fill="none"
+          height="1em"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="10"
+          />
+          <path
+            d="M12 16v-4"
+          />
+          <path
+            d="M12 8h.01"
+          />
+        </svg>
+      </button>
+    </header>
+    <div>
+      <div
+        class="flex items-end space-x-2"
+      >
+        <span
+          class="font-bold text-4xl text-blue-600"
+        >
+          100,000
+        </span>
+        <span
+          class="text-xs font-medium text-gray-500 relative bottom-1.5"
+        >
+          inhabitants
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -93,7 +93,7 @@ export function CardLoader({
   children: React.ReactNode;
 } & React.HTMLAttributes<HTMLDivElement>) {
   if (query.some((q) => q.isFetching)) {
-    return <Skeleton {...rest} />;
+    return <Skeleton data-testid="card-loader" {...rest} />;
   }
 
   return <>{children}</>;

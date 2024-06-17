@@ -1,0 +1,202 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Header renders the Home link selected 1`] = `
+<div>
+  <header
+    class="h-20 flex flex-col justify-center bg-white backdrop-blur"
+  >
+    <div
+      class="container mx-auto flex justify-between items-center"
+    >
+      <a
+        href="/"
+      >
+        <h1
+          class="flex items-center space-x-4"
+        >
+          <img
+            alt="IDB"
+            data-nimg="1"
+            decoding="async"
+            height="24"
+            loading="lazy"
+            src="/IDB-logo.svg"
+            style="color: transparent;"
+            width="65"
+          />
+          <div
+            class="space-x-2"
+          >
+            <span
+              class="font-medium text-sm"
+            >
+              Amazonia360
+            </span>
+            <div
+              class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+            >
+              Prototype
+            </div>
+          </div>
+        </h1>
+      </a>
+      <nav
+        class="flex space-x-8 print:hidden"
+      >
+        <a
+          class="hover:text-cyan-500 text-sm text-cyan-500"
+          href="/"
+        >
+          Home
+        </a>
+        <a
+          class="hover:text-cyan-500 text-sm"
+          href="/report"
+        >
+          Report Tool
+        </a>
+        <a
+          class="hover:text-cyan-500 text-sm"
+          href="/hub"
+        >
+          Hub
+        </a>
+      </nav>
+    </div>
+  </header>
+</div>
+`;
+
+exports[`Header renders the Hub link selected 1`] = `
+<div>
+  <header
+    class="h-20 flex flex-col justify-center bg-white backdrop-blur"
+  >
+    <div
+      class="container mx-auto flex justify-between items-center"
+    >
+      <a
+        href="/"
+      >
+        <h1
+          class="flex items-center space-x-4"
+        >
+          <img
+            alt="IDB"
+            data-nimg="1"
+            decoding="async"
+            height="24"
+            loading="lazy"
+            src="/IDB-logo.svg"
+            style="color: transparent;"
+            width="65"
+          />
+          <div
+            class="space-x-2"
+          >
+            <span
+              class="font-medium text-sm"
+            >
+              Amazonia360
+            </span>
+            <div
+              class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+            >
+              Prototype
+            </div>
+          </div>
+        </h1>
+      </a>
+      <nav
+        class="flex space-x-8 print:hidden"
+      >
+        <a
+          class="hover:text-cyan-500 text-sm"
+          href="/"
+        >
+          Home
+        </a>
+        <a
+          class="hover:text-cyan-500 text-sm"
+          href="/report"
+        >
+          Report Tool
+        </a>
+        <a
+          class="hover:text-cyan-500 text-sm text-cyan-500"
+          href="/hub"
+        >
+          Hub
+        </a>
+      </nav>
+    </div>
+  </header>
+</div>
+`;
+
+exports[`Header renders the Report Tool link selected 1`] = `
+<div>
+  <header
+    class="h-20 flex flex-col justify-center bg-white backdrop-blur"
+  >
+    <div
+      class="container mx-auto flex justify-between items-center"
+    >
+      <a
+        href="/"
+      >
+        <h1
+          class="flex items-center space-x-4"
+        >
+          <img
+            alt="IDB"
+            data-nimg="1"
+            decoding="async"
+            height="24"
+            loading="lazy"
+            src="/IDB-logo.svg"
+            style="color: transparent;"
+            width="65"
+          />
+          <div
+            class="space-x-2"
+          >
+            <span
+              class="font-medium text-sm"
+            >
+              Amazonia360
+            </span>
+            <div
+              class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+            >
+              Prototype
+            </div>
+          </div>
+        </h1>
+      </a>
+      <nav
+        class="flex space-x-8 print:hidden"
+      >
+        <a
+          class="hover:text-cyan-500 text-sm"
+          href="/"
+        >
+          Home
+        </a>
+        <a
+          class="hover:text-cyan-500 text-sm text-cyan-500"
+          href="/report"
+        >
+          Report Tool
+        </a>
+        <a
+          class="hover:text-cyan-500 text-sm"
+          href="/hub"
+        >
+          Hub
+        </a>
+      </nav>
+    </div>
+  </header>
+</div>
+`;
