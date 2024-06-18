@@ -5,11 +5,13 @@ import { useMemo } from "react";
 import dynamic from "next/dynamic";
 
 import { DeckLayer } from "@deck.gl/arcgis";
+import { DataFilterExtension } from "@deck.gl/extensions/typed";
 import { H3HexagonLayer } from "@deck.gl/geo-layers/typed";
-import { ScatterplotLayer } from "@deck.gl/layers/typed";
+import { ArrowLoader } from "@loaders.gl/arrow";
+import { load } from "@loaders.gl/core";
 import { scaleSequential } from "@visx/vendor/d3-scale";
+import { color } from "d3-color";
 import { interpolateViridis } from "d3-scale-chromatic";
-import { cellToLatLng } from "h3-js";
 import { useAtom } from "jotai";
 import { useDebounce } from "rooks";
 
@@ -33,12 +35,18 @@ export default function MapContainer() {
     setBbox([extent.xmin, extent.ymin, extent.xmax, extent.ymax]);
   }, 500);
 
-  const colorscale = scaleSequential()
-    .domain([0, 5])
-    // .domain([selectedLayer.min_value, selectedLayer.max_value])
-    .interpolator(interpolateViridis);
+  const colorscale = useMemo(() => {
+    return (
+      scaleSequential()
+        // .domain([1, 5])
+        .domain([0, 10000])
+        .interpolator(interpolateViridis)
+    );
+  }, []);
 
   const layer = useMemo(() => {
+    const filterRange = [1, 10000000];
+
     return new DeckLayer({
       "deck.layers": new H3TileLayer({
         id: "tile-h3s",
@@ -57,26 +65,31 @@ export default function MapContainer() {
         renderSubLayers: (props) => {
           // For zoom < 1 (~whole world view), render a scatterplot layer instead of the hexagon layer
           // It is faster to render points than hexagons (is it?) when there are many cells.
-          if (props.tile.zoom < 1) {
-            return new ScatterplotLayer({
-              id: props.id,
-              data: props.data,
-              pickable: true,
-              radiusUnits: "meters",
-              getRadius: 9854, // is the radius of a h3 cell at resolution 5 in meters
-              getPosition: (d) =>
-                cellToLatLng(BigInt(d.cell).toString(16)).reverse(),
-              getFillColor: (d) => {
-                const c = color(colorscale(d.fire)).rgb();
-                return [c.r, c.g, c.b];
-              },
-              opacity: 0.8,
-            });
-          }
+          // if (props.tile.zoom < 1) {
+          //   return new ScatterplotLayer({
+          //     id: props.id,
+          //     data: props.data,
+          //     pickable: true,
+          //     radiusUnits: "meters",
+          //     getRadius: 9854, // is the radius of a h3 cell at resolution 5 in meters
+          //     getPosition: (d) => {
+          //       const ll = cellToLatLng(BigInt(d.cell).toString(16)).reverse();
+          //       // console.log(ll);
+          //       return ll;
+          //     },
+          //     getFillColor: (d) => {
+          //       // return [255, 0, 0, 255];
+          //       const c = color(colorscale(d.fire)).rgb();
+          //       return [c.r, c.g, c.b];
+          //     },
+          //     opacity: 0.8,
+          //   });
+          // }
           return new H3HexagonLayer({
             id: props.id,
             data: props.data,
-            highPrecision: "auto",
+            highPrecision: true,
+            // coverage: 1.001,
             pickable: true,
             wireframe: false,
             filled: true,
@@ -89,15 +102,18 @@ export default function MapContainer() {
               return res.toString(16);
             },
             getFillColor: (d) => {
-              const c = color(colorscale(d.fire)).rgb();
+              const c = color(colorscale(d.population)).rgb();
               return [c.r, c.g, c.b];
             },
             opacity: 0.8,
+            extensions: [new DataFilterExtension({ filterSize: 1 })],
+            filterRange,
+            getFilterValue: (d) => [d.population],
           });
         },
       }),
     });
-  }, []);
+  }, [colorscale]);
 
   return (
     <div className="w-full flex flex-col grow">
