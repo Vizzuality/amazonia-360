@@ -1,6 +1,7 @@
 import {
   parseAsArrayOf,
   parseAsFloat,
+  parseAsInteger,
   parseAsJson,
   parseAsStringLiteral,
 } from "nuqs";
@@ -32,3 +33,7 @@ export type CustomLocation = {
 
 export type Location = SearchLocation | CustomLocation;
 export const locationParser = parseAsJson<Location>();
+
+export const populationParser = parseAsArrayOf(parseAsInteger).withDefault([
+  1, 50000,
+]);
