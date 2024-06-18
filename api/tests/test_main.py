@@ -132,6 +132,12 @@ def test_no_token_is_unauthorized():
     assert response2.json() == {"detail": "Unauthorized"}
 
 
+def test_wrong_token_is_unauthorized():
+    response = test_client.get("/tifs", headers={"Authorization": "Bearer BAD-TOKKI-123"})
+    assert response.status_code == 401
+    assert response.json() == {"detail": "Unauthorized"}
+
+
 def test_health_is_public():
     response = test_client.get("/health")
     assert response.status_code == 200
@@ -245,7 +251,7 @@ def test_h3grid_metadata_fails_gracefully(h3_dataset):
     assert res.json() == {"detail": "Metadata file is malformed. Please contact developer."}
 
 
-def test_all_api_endpoints_require_token():
+def test_all_api_routes_require_token():
     api_routes = {r.path: r.methods for r in test_client.app.routes if isinstance(r, APIRoute)}
     del api_routes["/health"]
     for route, method in api_routes.items():
