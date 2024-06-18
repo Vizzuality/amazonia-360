@@ -8,7 +8,7 @@ from h3 import H3CellError
 from pydantic import ValidationError
 
 from app.config.config import get_settings
-from app.models.grid import TileDatasetMeta
+from app.models.grid import MultiDatasetMeta
 
 log = logging.getLogger(__name__)
 
@@ -40,13 +40,13 @@ async def grid_tile(tile_index: str) -> FileResponse:
 @h3_grid_router.get(
     "/meta",
 )
-async def grid_dataset_metadata() -> TileDatasetMeta:
+async def grid_dataset_metadata() -> MultiDatasetMeta:
     """Dataset metadata"""
     file = os.path.join(get_settings().grid_tiles_path, "meta.json")
     with open(file) as f:
         raw = f.read()
     try:
-        meta = TileDatasetMeta.model_validate_json(raw)
+        meta = MultiDatasetMeta.model_validate_json(raw)
     except ValidationError as e:
         # validation error is our fault, and we don't want to show internal error details
         # so re re-raising 500 with aseptic message and keep the details in our logs.

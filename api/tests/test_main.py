@@ -5,6 +5,7 @@ import numpy as np
 import pytest
 import rasterio
 from app.config.config import get_settings
+from fastapi.routing import APIRoute
 
 from tests.utils import test_client
 
@@ -122,13 +123,19 @@ def setup_empty_files(setup_data_folder):
         os.remove(f"{test_tiff_path}/{file}")
 
 
-def test_no_token():
+def test_no_token_is_unauthorized():
     response = test_client.get("/tifs")
     response2 = test_client.post("/exact_zonal_stats")
     assert response.status_code == 401
     assert response2.status_code == 401
     assert response.json() == {"detail": "Unauthorized"}
     assert response2.json() == {"detail": "Unauthorized"}
+
+
+def test_wrong_token_is_unauthorized():
+    response = test_client.get("/tifs", headers={"Authorization": "Bearer BAD-TOKKI-123"})
+    assert response.status_code == 401
+    assert response.json() == {"detail": "Unauthorized"}
 
 
 def test_health_is_public():
@@ -237,8 +244,16 @@ def test_h3grid_bad_index(h3_dataset):
     assert response.json() == {"detail": "Tile index is not a valid H3 cell"}
 
 
-def test_h3grid_metadata_fails(h3_dataset):
+def test_h3grid_metadata_fails_gracefully(h3_dataset):
     res = test_client.get("/grid/meta", headers=HEADERS)
 
     assert res.status_code == 500
     assert res.json() == {"detail": "Metadata file is malformed. Please contact developer."}
+
+
+def test_all_api_routes_require_token():
+    api_routes = {r.path: r.methods for r in test_client.app.routes if isinstance(r, APIRoute)}
+    del api_routes["/health"]
+    for route, method in api_routes.items():
+        res = test_client.request(method.pop(), route)
+        assert res.status_code == 401
