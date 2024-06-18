@@ -15,21 +15,22 @@ class LegendTypes(str, Enum):
 
 class LevelStats(BaseModel):
     level: int = Field(
-        ge=0, le=15, description="Stats for this level. AKA Overview or zoom level in other applications"
+        ge=0,
+        le=15,
+        description="Stats for this level. AKA Overview or zoom level in other applications",
     )
-    min: int | float
-    max: int | float
+    min: int | float | None = Field(..., description="null value represents -infinity")
+    max: int | float | None = Field(..., description="null value represents infinity")
 
 
 class NumericalLegend(BaseModel):
     legend_type: Literal["discrete"] | Literal["continuous"]
+    colormap_name: str | None = Field("viridis", description="suggestion of color map to use")
     stats: list[LevelStats]
-    colormap_name: str = Field(default=None, description="suggestion of color map to use")
 
 
 class CategoricalLegendEntry(BaseModel):
     model_config = ConfigDict(json_encoders={Color: lambda c: c.as_hex()})
-
     value: int | str
     color: Color
     label: str = Field(description="human readable label")
@@ -37,16 +38,17 @@ class CategoricalLegendEntry(BaseModel):
 
 class CategoricalLegend(BaseModel):
     legend_type: Literal["categorical"]
-    categories: list[CategoricalLegendEntry]
+    entries: list[CategoricalLegendEntry]
 
 
-class Dataset(BaseModel):
+class DatasetMeta(BaseModel):
     var_name: str = Field(description="Column name")
     var_dtype: str = Field(description="Column dtype. ")
+    nodata: str
     description: str
-    legend: CategoricalLegend | NumericalLegend = Field(discriminator="legend_type")
     aggregation_method: str = Field(description="Aggregation method used to compute the overview levels")
-    lineage: list[str] = Field(default=None, description="Source data used to compute this dataset")
+    lineage: list[str] | None = Field(default=None, description="Source data used to compute this dataset")
+    legend: CategoricalLegend | NumericalLegend = Field(discriminator="legend_type")
 
 
 class H3GridInfo(BaseModel):
@@ -55,6 +57,6 @@ class H3GridInfo(BaseModel):
     h3_cells_count: int
 
 
-class TileDatasetMeta(BaseModel):
-    datasets: list[Dataset] = Field(description="Variables represented in this dataset")
+class MultiDatasetMeta(BaseModel):
+    datasets: list[DatasetMeta] = Field(description="Variables represented in this dataset")
     h3_grid_info: list[H3GridInfo] = Field(description="H3 related information")
