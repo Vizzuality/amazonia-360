@@ -7,9 +7,7 @@ import { DataFilterExtension } from "@deck.gl/extensions/typed";
 import { H3HexagonLayer } from "@deck.gl/geo-layers/typed";
 import { ArrowLoader } from "@loaders.gl/arrow";
 import { load } from "@loaders.gl/core";
-import { scaleSequential } from "@visx/vendor/d3-scale";
-import { color } from "d3-color";
-import { interpolateViridis } from "d3-scale-chromatic";
+import CHROMA from "chroma-js";
 
 import { useSyncPopulation } from "@/app/store";
 
@@ -53,8 +51,7 @@ export const getGridLayerProps = ({ population, colorscale }) => {
           return res.toString(16);
         },
         getFillColor: (d) => {
-          const c = color(colorscale(d.population)).rgb();
-          return [c.r, c.g, c.b];
+          return colorscale(d.population).rgb();
         },
         opacity: 0.8,
         extensions: [new DataFilterExtension({ filterSize: 1 })],
@@ -70,12 +67,7 @@ export default function GridLayer() {
   const [population] = useSyncPopulation();
 
   const colorscale = useMemo(() => {
-    return (
-      scaleSequential()
-        // .domain([1, 5])
-        .domain([1, 10000])
-        .interpolator(interpolateViridis)
-    );
+    return CHROMA.scale("Viridis").domain([1, 10000]);
   }, []);
 
   const layer = useMemo(() => {
@@ -90,8 +82,6 @@ export default function GridLayer() {
     GRID_LAYER.current.deck.layers = [
       getGridLayerProps({ population, colorscale }),
     ];
-
-    console.log(GRID_LAYER.current);
 
     return GRID_LAYER.current;
   }, [colorscale, population]);
