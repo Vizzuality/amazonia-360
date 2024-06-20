@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
 import { TileLayer, _Tileset2D as Tileset2D } from "@deck.gl/geo-layers";
 import bbox from "@turf/bbox";
 import { lineString } from "@turf/helpers";

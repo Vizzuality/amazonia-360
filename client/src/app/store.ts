@@ -37,7 +37,7 @@ export const useSyncPopulation = () => {
 
 export const useSyncFires = () => {
   return useQueryState("fires", firesParser);
-}
+};
 
 const searchParams = {
   bbox: bboxParser,

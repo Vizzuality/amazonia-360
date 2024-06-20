@@ -3,7 +3,10 @@
 import { useMemo, useRef } from "react";
 
 import { DeckLayer } from "@deck.gl/arcgis";
-import { DataFilterExtension, DataFilterExtensionProps } from "@deck.gl/extensions";
+import {
+  DataFilterExtension,
+  DataFilterExtensionProps,
+} from "@deck.gl/extensions";
 import { H3HexagonLayer } from "@deck.gl/geo-layers";
 import { ArrowLoader } from "@loaders.gl/arrow";
 import { load } from "@loaders.gl/core";
@@ -14,10 +17,14 @@ import { useSyncFires, useSyncPopulation } from "@/app/store";
 import Layer from "@/components/map/layers";
 import H3TileLayer from "@/components/map/layers/h3-tile-layer";
 
-export const getGridLayerProps = ({ population, fires, colorscale }: {
+export const getGridLayerProps = ({
+  population,
+  fires,
+  colorscale,
+}: {
   population: number[];
   fires: number[];
-  colorscale: any;
+  colorscale: CHROMA.Scale<CHROMA.Color>;
 }) => {
   return new H3TileLayer({
     id: "tile-h3s",
@@ -38,14 +45,17 @@ export const getGridLayerProps = ({ population, fires, colorscale }: {
       population,
     },
     renderSubLayers: (props) => {
-      return new H3HexagonLayer<{
-        cell: string;
-        population: number;
-        fire: number;
-      }, DataFilterExtensionProps<{
-        population: number;
-        fire: number;
-      }>>({
+      return new H3HexagonLayer<
+        {
+          cell: string;
+          population: number;
+          fire: number;
+        },
+        DataFilterExtensionProps<{
+          population: number;
+          fire: number;
+        }>
+      >({
         id: props.id,
         data: props.data,
         highPrecision: true,
@@ -65,7 +75,9 @@ export const getGridLayerProps = ({ population, fires, colorscale }: {
           return colorscale(d.population).rgb();
         },
         opacity: 0.8,
-        extensions: [new DataFilterExtension({ filterSize: 1, categorySize: 1 })],
+        extensions: [
+          new DataFilterExtension({ filterSize: 1, categorySize: 1 }),
+        ],
         filterRange: population as [number, number] | [number, number][],
         filterCategories: fires,
         getFilterValue: (d) => [d.population],
@@ -100,7 +112,7 @@ export default function GridLayer() {
     ];
 
     return GRID_LAYER.current;
-  }, [colorscale, population]);
+  }, [population, fires, colorscale]);
 
   return <Layer index={0} layer={layer} />;
 }
