@@ -1,4 +1,4 @@
-import { TileLayer, _Tileset2D as Tileset2D } from "@deck.gl/geo-layers/typed";
+import { TileLayer, _Tileset2D as Tileset2D } from "@deck.gl/geo-layers";
 import bbox from "@turf/bbox";
 import { lineString } from "@turf/helpers";
 import {
