@@ -126,10 +126,10 @@ def setup_empty_files(setup_data_folder):
 def test_no_token_is_unauthorized():
     response = test_client.get("/tifs")
     response2 = test_client.post("/exact_zonal_stats")
-    assert response.status_code == 403
-    assert response2.status_code == 403
-    assert response.json() == {"detail": "Not authenticated"}
-    assert response2.json() == {"detail": "Not authenticated"}
+    assert response.status_code == 401
+    assert response2.status_code == 401
+    assert response.json() == {"detail": "Unauthorized"}
+    assert response2.json() == {"detail": "Unauthorized"}
 
 
 def test_wrong_token_is_unauthorized():
@@ -256,4 +256,4 @@ def test_all_api_routes_require_token():
     del api_routes["/health"]
     for route, method in api_routes.items():
         res = test_client.request(method.pop(), route)
-        assert res.status_code == 403
+        assert res.status_code == 401
