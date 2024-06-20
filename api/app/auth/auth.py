@@ -11,6 +11,5 @@ security = HTTPBearer(auto_error=False)
 
 def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Validate API key."""
-    auth_token = get_settings().auth_token
-    if credentials is None or credentials.credentials != auth_token:
+    if credentials is None or credentials.credentials != get_settings().auth_token:
         raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Unauthorized")
