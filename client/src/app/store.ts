@@ -6,6 +6,7 @@ import { createSerializer } from "nuqs/server";
 import {
   bboxParser,
   datasetsParser,
+  firesParser,
   locationParser,
   populationParser,
   topicsParser,
@@ -33,6 +34,10 @@ export const useSyncLocation = () => {
 export const useSyncPopulation = () => {
   return useQueryState("population", populationParser);
 };
+
+export const useSyncFires = () => {
+  return useQueryState("fires", firesParser);
+}
 
 const searchParams = {
   bbox: bboxParser,

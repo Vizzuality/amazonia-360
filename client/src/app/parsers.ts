@@ -37,3 +37,5 @@ export const locationParser = parseAsJson<Location>();
 export const populationParser = parseAsArrayOf(parseAsInteger).withDefault([
   1, 50000,
 ]);
+
+export const firesParser = parseAsArrayOf(parseAsInteger).withDefault([1, 2, 3, 4, 5, 6]);
