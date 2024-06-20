@@ -1,27 +1,15 @@
-"""Auth middleware for the API."""
+"""Auth dependency for the API."""
 
-from fastapi import HTTPException
-from fastapi.security import HTTPBearer
-from starlette.requests import Request
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from starlette.status import HTTP_401_UNAUTHORIZED
 
 from app.config.config import get_settings
 
-security = HTTPBearer()
+security = HTTPBearer(auto_error=False)
 
 
-def verify_token(request: Request):
+def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Validate API key."""
-    auth_token = get_settings().auth_token
-    auth_header = request.headers.get("Authorization")
-    if not auth_header:
+    if credentials is None or credentials.credentials != get_settings().auth_token:
         raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Unauthorized")
-
-    try:
-        scheme, token = auth_header.split()
-        if scheme.lower() != "bearer" or token != auth_token:
-            raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Unauthorized")
-    except ValueError:
-        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Invalid authorization header")  # noqa: B904
-
-    return token
