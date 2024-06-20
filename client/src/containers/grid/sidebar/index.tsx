@@ -1,13 +1,14 @@
 "use client";
 
 import { formatNumber } from "@/lib/formats";
+import { getKeys } from "@/lib/utils";
 
 import { useSyncFires, useSyncPopulation } from "@/app/store";
 
-import { Slider } from "@/components/ui/slider";
 import { FIRES } from "@/constants/colors";
-import { getKeys } from "@/lib/utils";
+
 import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
 
 export default function Sidebar() {
   const [population, setPopulation] = useSyncPopulation();
@@ -25,7 +26,7 @@ export default function Sidebar() {
     } else {
       setFires(fires.filter((fire) => fire !== value));
     }
-  }
+  };
 
   return (
     <div className="w-96 p-5 bg-white border-r border-gray-200">
@@ -61,8 +62,13 @@ export default function Sidebar() {
         <div className="space-y-1">
           <div className="flex flex-col justify-between gap-1">
             {getKeys(FIRES).map((key) => (
-              <div className="flex space-x-1 items-center">
-                <Checkbox checked={fires.includes(+key)} onCheckedChange={(checked) => handleCheckedChange({ checked, value: +key})} />
+              <div key={key} className="flex space-x-1 items-center">
+                <Checkbox
+                  checked={fires.includes(+key)}
+                  onCheckedChange={(checked) =>
+                    handleCheckedChange({ checked, value: +key })
+                  }
+                />
                 <span key={key} className="text-xs text-gray-500">
                   {FIRES[key].label}
                 </span>
