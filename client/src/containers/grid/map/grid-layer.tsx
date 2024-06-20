@@ -32,7 +32,7 @@ export const getGridLayerProps = ({
     getTileData: (tile) => {
       if (!tile.url) return Promise.resolve(null);
       return load(tile.url, ArrowLoader, {
-        arrow: { shape: "object-row-table" },
+        arrow: { shape: "arrow-table" },
       }).then((data) => {
         return data.data;
       });
