@@ -253,7 +253,10 @@ def test_h3grid_metadata_fails_gracefully(h3_dataset):
 
 def test_all_api_routes_require_token():
     api_routes = {r.path: r.methods for r in test_client.app.routes if isinstance(r, APIRoute)}
+
+    # public endpoints that do not need auth:
     del api_routes["/health"]
+
     for route, method in api_routes.items():
         res = test_client.request(method.pop(), route)
         assert res.status_code == 401
