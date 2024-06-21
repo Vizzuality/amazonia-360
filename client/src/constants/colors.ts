@@ -84,14 +84,14 @@ export const FIRES = {
     label: "Extremely high",
     color: "#bd0026",
   },
-  "7": {
-    label: "Urban, industrial, mining thermal anomaly",
-    color: "#08519c",
-  },
-  "8": {
-    label: "Geological thermal anomaly (volcanism)",
-    color: "#810f7c",
-  },
+  // "7": {
+  //   label: "Urban, industrial, mining thermal anomaly",
+  //   color: "#08519c",
+  // },
+  // "8": {
+  //   label: "Geological thermal anomaly (volcanism)",
+  //   color: "#810f7c",
+  // },
 };
 
 export const FIRES_COLORMAP = Object.keys(FIRES).reduce(
