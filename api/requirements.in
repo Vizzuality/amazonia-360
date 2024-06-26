@@ -5,3 +5,4 @@ pydantic_settings
 titiler.core
 uvicorn
 h3
+duckdb

@@ -1,6 +1,8 @@
 import os
+from contextlib import asynccontextmanager
 from typing import Annotated
 
+import duckdb
 from fastapi import Depends, FastAPI, Query
 from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,6 +15,17 @@ from app.routers.h3 import h3_grid_router
 from app.routers.zonal_stats import ZonalTilerFactory
 
 
+@asynccontextmanager
+async def lifespan(app_: FastAPI):
+    """Share a DuckDB connection pool across the app."""
+    con = duckdb.connect()
+    con.install_extension("arrow")
+    con.load_extension("arrow")
+    app_.duckdb_connection = con
+    yield
+    app_.duckdb_connection.close()
+
+
 def path_params(raster_filename: Annotated[str, Query(description="Raster filename.")]):
     """Dependency to get the path of the raster file."""
     tiff_path = get_settings().tiff_path
@@ -23,13 +36,13 @@ def path_params(raster_filename: Annotated[str, Query(description="Raster filena
 
 
 # Use ORJSONResponse to handle serialization of NaN values. Normal Json fails to serialize NaN values.
-app = FastAPI(title="Amazonia360 API", default_response_class=ORJSONResponse)
+app = FastAPI(title="Amazonia360 API", default_response_class=ORJSONResponse, lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 tiler_routes = ZonalTilerFactory(path_dependency=path_params)
 
 app.include_router(tiler_routes.router, tags=["Raster"], dependencies=[Depends(verify_token)])
-app.include_router(h3_grid_router, prefix="/grid", tags=["Grid"], dependencies=[Depends(verify_token)])
+app.include_router(h3_grid_router, prefix="/grid", tags=["Grid"], dependencies=[])
 
 add_exception_handlers(app, DEFAULT_STATUS_CODES)
 
