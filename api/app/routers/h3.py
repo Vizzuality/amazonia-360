@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 import h3
-import pyarrow.dataset as ds
+import polars as pl
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse
 from h3 import H3CellError
@@ -58,18 +58,15 @@ async def grid_dataset_metadata() -> MultiDatasetMeta:
 
 
 @h3_grid_router.get("/table")
-async def read_table(level: int, request: Request):
+def read_table(filter: dict, level: int, request: Request):
     """Query tile dataset and return table data"""
     files_path = Path(get_settings().grid_tiles_path) / str(level)
-    dataset = ds.dataset(files_path, format="arrow")  # noqa: F841
-    with request.app.duckdb_connection.cursor() as cur:
-        cur.execute(
-            """
-        SELECT * FROM dataset
-        WHERE population < 10000
+    lf = pl.scan_ipc(files_path.glob("*.arrow"))
+    res = pl.SQLContext(frame=lf).execute(
+        """SELECT * FROM frame
+        WHERE population < 10000 AND fire > 1
         ORDER BY population DESC
         LIMIT 10;
         """
-        )
-        res = cur.fetch_arrow_table().to_pydict()
-    return JSONResponse(res)
+    )
+    return JSONResponse(res.collect().to_dict(as_series=False))
