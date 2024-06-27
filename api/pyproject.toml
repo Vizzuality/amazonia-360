@@ -24,3 +24,6 @@ extend-immutable-calls = ["fastapi.Depends", "fastapi.params.Depends", "fastapi.
 
 [tool.ruff.lint.per-file-ignores]
 "**/{tests}/*" = ["D103"]  # Missing docstring in public function
+
+[tool.mypy]
+disable_error_code = ["import-untyped", "attr-defined"]

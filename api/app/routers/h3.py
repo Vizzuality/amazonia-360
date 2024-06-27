@@ -1,9 +1,11 @@
 import logging
 import os
+from pathlib import Path
 
 import h3
-from fastapi import APIRouter, HTTPException
-from fastapi.responses import FileResponse
+import polars as pl
+from fastapi import APIRouter, HTTPException, Request
+from fastapi.responses import FileResponse, JSONResponse
 from h3 import H3CellError
 from pydantic import ValidationError
 
@@ -53,3 +55,18 @@ async def grid_dataset_metadata() -> MultiDatasetMeta:
         log.exception(e)
         raise HTTPException(status_code=500, detail="Metadata file is malformed. Please contact developer.") from None
     return meta
+
+
+@h3_grid_router.get("/table")
+def read_table(filter: dict, level: int, request: Request):
+    """Query tile dataset and return table data"""
+    files_path = Path(get_settings().grid_tiles_path) / str(level)
+    lf = pl.scan_ipc(files_path.glob("*.arrow"))
+    res = pl.SQLContext(frame=lf).execute(
+        """SELECT * FROM frame
+        WHERE population < 10000 AND fire > 1
+        ORDER BY population DESC
+        LIMIT 10;
+        """
+    )
+    return JSONResponse(res.collect().to_dict(as_series=False))
