@@ -1,10 +1,11 @@
 # ruff: noqa: D101
 
 from enum import Enum
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
-from pydantic.color import Color
+from pydantic_extra_types.color import Color
+from sqlalchemy.sql import column, desc, select, table
 
 
 class LegendTypes(str, Enum):
@@ -60,3 +61,66 @@ class H3GridInfo(BaseModel):
 class MultiDatasetMeta(BaseModel):
     datasets: list[DatasetMeta] = Field(description="Variables represented in this dataset")
     h3_grid_info: list[H3GridInfo] = Field(description="H3 related information")
+
+
+# ===============================================
+#               TABLE FILTERING
+# ===============================================
+
+
+class Operators(str, Enum):
+    eq = "eq"
+    gt = "gt"
+    lt = "lt"
+    gte = "gte"
+    lte = "lte"
+    in_ = "in"
+    not_eq = "not_eq"
+    not_in = "not_in"
+    startswith = "startswith"
+    endswith = "endswith"
+    like = "like"
+    ilike = "ilike"
+    contains = "contains"
+    icontains = "icontains"
+    not_like = "not_like"
+
+
+class Filter(BaseModel):
+    column_name: str = Field(..., description="Name of the column to which the filter will apply")
+    operation: Operators = Field()
+    value: Any = Field(..., description="value/s ")
+
+
+class TableFilters(BaseModel):
+    filters: list[Filter]
+    limit: int = Field(10, description="Number of records")
+    order_by: list[str] = Field(..., description="List of columns to use in order by")
+    desc: list[bool] = Field(
+        ..., description="List of bools to set descending sorting order. Must match length of order_by"
+    )
+
+    def to_sql_query(self, table_name: str) -> str:
+        """Compile model to sql query"""
+        op_to_python_dunder = {
+            "eq": "__eq__",
+            "gt": "__gt__",
+            "lt": "__lt__",
+            "gte": "__ge__",
+            "lte": "__le__",
+            "not_eq": "__ne__",
+            "in": "in_",
+        }
+        filters_to_apply = []
+        for _filter in self.filters:
+            col = column(_filter.column_name)
+            param = getattr(col, op_to_python_dunder.get(_filter.operation, _filter.operation))(_filter.value)
+            filters_to_apply.append(param)
+        query = (
+            select("*")
+            .select_from(table(table_name))
+            .where(*filters_to_apply)
+            .limit(self.limit)
+            .order_by(*[desc(column(col)) if d else column(col) for col, d in zip(self.order_by, self.desc)])
+        )
+        return str(query.compile(compile_kwargs={"literal_binds": True}))

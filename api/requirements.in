@@ -6,3 +6,6 @@ titiler.core
 uvicorn
 h3
 duckdb
+pydantic-extra-types
+polars
+sqlalchemy

@@ -4,13 +4,13 @@ from pathlib import Path
 
 import h3
 import polars as pl
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
 from h3 import H3CellError
 from pydantic import ValidationError
 
 from app.config.config import get_settings
-from app.models.grid import MultiDatasetMeta
+from app.models.grid import MultiDatasetMeta, TableFilters
 
 log = logging.getLogger(__name__)
 
@@ -57,16 +57,12 @@ async def grid_dataset_metadata() -> MultiDatasetMeta:
     return meta
 
 
-@h3_grid_router.get("/table")
-def read_table(filter: dict, level: int, request: Request):
+@h3_grid_router.post("/table")
+def read_table(filters: TableFilters, level: int):
     """Query tile dataset and return table data"""
     files_path = Path(get_settings().grid_tiles_path) / str(level)
     lf = pl.scan_ipc(files_path.glob("*.arrow"))
-    res = pl.SQLContext(frame=lf).execute(
-        """SELECT * FROM frame
-        WHERE population < 10000 AND fire > 1
-        ORDER BY population DESC
-        LIMIT 10;
-        """
-    )
+    query = filters.to_sql_query("frame")
+    log.debug(query)
+    res = pl.SQLContext(frame=lf).execute(query)
     return JSONResponse(res.collect().to_dict(as_series=False))

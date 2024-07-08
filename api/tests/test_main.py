@@ -95,7 +95,7 @@ def h3_dataset(setup_data_folder) -> str:
     tile_path = level_path / f"{h3_index}.arrow"
 
     with open(grid_dataset_path / "meta.json", "w") as f:
-        f.write("Not a json")
+        f.write("{}")
 
     with open(tile_path, "wb") as f:
         f.write(b"I am an arrow file!")

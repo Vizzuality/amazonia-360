@@ -29,7 +29,7 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 tiler_routes = ZonalTilerFactory(path_dependency=path_params)
 
 app.include_router(tiler_routes.router, tags=["Raster"], dependencies=[Depends(verify_token)])
-app.include_router(h3_grid_router, prefix="/grid", tags=["Grid"], dependencies=[])
+app.include_router(h3_grid_router, prefix="/grid", tags=["Grid"], dependencies=[Depends(verify_token)])
 
 add_exception_handlers(app, DEFAULT_STATUS_CODES)
 
