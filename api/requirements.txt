@@ -33,6 +33,7 @@ cligj==0.7.2
     # via rasterio
 color-operations==0.1.3
     # via rio-tiler
+duckdb==1.0.0
 exactextract==0.2.0.dev0
 fastapi==0.110.1
     # via titiler-core
