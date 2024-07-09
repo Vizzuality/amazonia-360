@@ -1,7 +1,7 @@
 # ruff: noqa: D101
 
 from enum import Enum
-from typing import Literal, Self
+from typing import Annotated, Literal, Self
 
 import pydantic
 from pydantic import BaseModel, ConfigDict, Field
@@ -98,7 +98,7 @@ class NumericalFilter(BaseModel):
 
 
 class TableFilters(BaseModel):
-    filters: list[CategoricalFilter | NumericalFilter] = Field(discriminator="filter_type")
+    filters: list[Annotated[CategoricalFilter | NumericalFilter, Field(..., discriminator="filter_type")]]
     limit: int = Field(10, lt=1000, description="Number of records")
     order_by: list[str] = Field(description="List of columns to use in order by")
     desc: list[bool] = Field(description="List of bools to set descending sorting order. Must match length of order_by")

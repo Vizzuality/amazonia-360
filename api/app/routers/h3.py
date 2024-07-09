@@ -1,10 +1,11 @@
 import logging
 import os
 from pathlib import Path
+from typing import Annotated
 
 import h3
 import polars as pl
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import FileResponse, JSONResponse
 from h3 import H3CellError
 from pydantic import ValidationError
@@ -58,7 +59,10 @@ async def grid_dataset_metadata() -> MultiDatasetMeta:
 
 
 @h3_grid_router.post("/table")
-def read_table(filters: TableFilters, level: int):
+def read_table(
+    level: Annotated[int, Query(..., description="Resolution level to query the data")],
+    filters: TableFilters,
+):
     """Query tile dataset and return table data"""
     files_path = Path(get_settings().grid_tiles_path) / str(level)
     lf = pl.scan_ipc(files_path.glob("*.arrow"))
