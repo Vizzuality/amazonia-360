@@ -5,7 +5,7 @@ from typing import Annotated
 
 import h3
 import polars as pl
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import FileResponse, JSONResponse
 from h3 import H3CellError
 from pydantic import ValidationError
@@ -60,8 +60,8 @@ async def grid_dataset_metadata() -> MultiDatasetMeta:
 
 @h3_grid_router.post("/table")
 def read_table(
-    level: Annotated[int, Query(..., description="Resolution level to query the data")],
-    filters: TableFilters,
+    level: Annotated[int, Query(..., description="Tile level at which the query will be computed")],
+    filters: TableFilters = Depends(),
 ):
     """Query tile dataset and return table data"""
     files_path = Path(get_settings().grid_tiles_path) / str(level)

@@ -1,9 +1,9 @@
 # ruff: noqa: D101
 
 from enum import Enum
-from typing import Annotated, Literal, Self
+from typing import Annotated, Literal
 
-import pydantic
+from fastapi import Query
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic_extra_types.color import Color
 from sqlalchemy.sql import column, desc, select, table
@@ -100,14 +100,7 @@ class NumericalFilter(BaseModel):
 class TableFilters(BaseModel):
     filters: list[Annotated[CategoricalFilter | NumericalFilter, Field(..., discriminator="filter_type")]]
     limit: int = Field(10, lt=1000, description="Number of records")
-    order_by: list[str] = Field(description="List of columns to use in order by")
-    desc: list[bool] = Field(description="List of bools to set descending sorting order. Must match length of order_by")
-
-    @pydantic.model_validator(mode="after")
-    def verify_order_by_and_desc_lengths(self) -> Self:  # noqa: D102
-        if len(self.order_by) != len(self.desc):
-            raise ValueError("order_by and desc must have the same length")
-        return self
+    order_by: Annotated[list[str], Field(Query(..., description="Prepend '-' to column name to make it descending"))]
 
     def to_sql_query(self, table_name: str) -> str:
         """Compile model to sql query"""
@@ -130,6 +123,6 @@ class TableFilters(BaseModel):
             .select_from(table(table_name))
             .where(*filters_to_apply)
             .limit(self.limit)
-            .order_by(*[desc(column(col)) if d else column(col) for col, d in zip(self.order_by, self.desc)])
+            .order_by(*[desc(column(col[1:])) if col.startswith("-") else column(col) for col in self.order_by])
         )
         return str(query.compile(compile_kwargs={"literal_binds": True}))
