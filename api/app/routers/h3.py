@@ -12,7 +12,7 @@ from pydantic import ValidationError
 from app.config.config import get_settings
 from app.models.grid import MultiDatasetMeta, TableFilters
 
-log = logging.getLogger(__name__)
+log = logging.getLogger("uvicorn.error")
 
 h3_grid_router = APIRouter()
 
@@ -50,8 +50,8 @@ async def grid_dataset_metadata() -> MultiDatasetMeta:
     try:
         meta = MultiDatasetMeta.model_validate_json(raw)
     except ValidationError as e:
-        # validation error is our fault, and we don't want to show internal error details
-        # so re re-raising 500 with aseptic message and keep the details in our logs.
+        # validation error is our fault because meta file is internal. We don't want to show internal error details
+        # so raise controlled 500
         log.exception(e)
         raise HTTPException(status_code=500, detail="Metadata file is malformed. Please contact developer.") from None
     return meta
@@ -64,5 +64,16 @@ def read_table(filters: TableFilters, level: int):
     lf = pl.scan_ipc(files_path.glob("*.arrow"))
     query = filters.to_sql_query("frame")
     log.debug(query)
-    res = pl.SQLContext(frame=lf).execute(query)
-    return JSONResponse(res.collect().to_dict(as_series=False))
+    try:
+        res = pl.SQLContext(frame=lf).execute(query).collect()
+    except pl.exceptions.ColumnNotFoundError as e:
+        # bad column in order by clause
+        log.exception(e)
+        raise HTTPException(status_code=404, detail=f"Column '{e}' not found in dataset") from None
+
+    except pl.exceptions.ComputeError as e:
+        # possibly raise if wrong type in compare. I'm not aware of other sources of ComputeError
+        log.exception(e)
+        raise HTTPException(status_code=422, detail=str(e)) from None
+
+    return JSONResponse(res.to_dict(as_series=False))

@@ -1,8 +1,9 @@
 # ruff: noqa: D101
 
 from enum import Enum
-from typing import Any, Literal
+from typing import Literal, Self
 
+import pydantic
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic_extra_types.color import Color
 from sqlalchemy.sql import column, desc, select, table
@@ -68,37 +69,45 @@ class MultiDatasetMeta(BaseModel):
 # ===============================================
 
 
-class Operators(str, Enum):
+class NumericalOperators(str, Enum):
     eq = "eq"
     gt = "gt"
     lt = "lt"
     gte = "gte"
     lte = "lte"
-    in_ = "in"
     not_eq = "not_eq"
+
+
+class CategoricalOperators(str, Enum):
+    in_ = "in"
     not_in = "not_in"
-    startswith = "startswith"
-    endswith = "endswith"
-    like = "like"
-    ilike = "ilike"
-    contains = "contains"
-    icontains = "icontains"
-    not_like = "not_like"
 
 
-class Filter(BaseModel):
-    column_name: str = Field(..., description="Name of the column to which the filter will apply")
-    operation: Operators = Field()
-    value: Any = Field(..., description="value/s ")
+class CategoricalFilter(BaseModel):
+    filter_type: Literal["categorical"]
+    column_name: str = Field(description="Name of the column to which the filter will apply")
+    operation: CategoricalOperators = Field()
+    value: list[int] = Field(description="Value to compare with")
+
+
+class NumericalFilter(BaseModel):
+    filter_type: Literal["numerical"]
+    column_name: str = Field(description="Name of the column to which the filter will apply")
+    operation: NumericalOperators = Field(description="Operation to use in compare")
+    value: float = Field(description="Value to compare with")
 
 
 class TableFilters(BaseModel):
-    filters: list[Filter]
-    limit: int = Field(10, description="Number of records")
-    order_by: list[str] = Field(..., description="List of columns to use in order by")
-    desc: list[bool] = Field(
-        ..., description="List of bools to set descending sorting order. Must match length of order_by"
-    )
+    filters: list[CategoricalFilter | NumericalFilter] = Field(discriminator="filter_type")
+    limit: int = Field(10, lt=1000, description="Number of records")
+    order_by: list[str] = Field(description="List of columns to use in order by")
+    desc: list[bool] = Field(description="List of bools to set descending sorting order. Must match length of order_by")
+
+    @pydantic.model_validator(mode="after")
+    def verify_order_by_and_desc_lengths(self) -> Self:  # noqa: D102
+        if len(self.order_by) != len(self.desc):
+            raise ValueError("order_by and desc must have the same length")
+        return self
 
     def to_sql_query(self, table_name: str) -> str:
         """Compile model to sql query"""
