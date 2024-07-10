@@ -1,7 +1,7 @@
 [tool.ruff]
 line-length = 120
 extend-include = ["*.ipynb"]
-src = ["app"]
+src = ["."]
 
 [tool.ruff.lint]
 select = [

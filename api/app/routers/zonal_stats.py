@@ -1,4 +1,5 @@
 """Minimal COG tiler."""
+
 import os
 from typing import Annotated, List, Union
 
@@ -9,7 +10,7 @@ from geojson_pydantic import Feature, FeatureCollection
 from titiler.core.factory import TilerFactory
 
 from app.config.config import get_settings
-from app.models.exact_extract import StatsFeatures, StatsOps
+from app.models.zonal_stats import StatsFeatures, StatsOps
 
 
 class ZonalTilerFactory(TilerFactory):

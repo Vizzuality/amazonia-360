@@ -6,7 +6,7 @@ from typing import Annotated
 import h3
 import polars as pl
 from fastapi import APIRouter, Depends, HTTPException, Query
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, ORJSONResponse
 from h3 import H3CellError
 from pydantic import ValidationError
 
@@ -15,10 +15,10 @@ from app.models.grid import MultiDatasetMeta, TableFilters
 
 log = logging.getLogger("uvicorn.error")
 
-h3_grid_router = APIRouter()
+grid_router = APIRouter()
 
 
-@h3_grid_router.get(
+@grid_router.get(
     "/tile/{tile_index}",
     responses={200: {"description": "Get a grid tile"}, 404: {"description": "Not found"}},
     response_model=None,
@@ -40,7 +40,7 @@ async def grid_tile(tile_index: str) -> FileResponse:
     return FileResponse(tile_file, media_type="application/octet-stream")
 
 
-@h3_grid_router.get(
+@grid_router.get(
     "/meta",
 )
 async def grid_dataset_metadata() -> MultiDatasetMeta:
@@ -58,13 +58,15 @@ async def grid_dataset_metadata() -> MultiDatasetMeta:
     return meta
 
 
-@h3_grid_router.post("/table")
+@grid_router.post("/table")
 def read_table(
     level: Annotated[int, Query(..., description="Tile level at which the query will be computed")],
     filters: TableFilters = Depends(),
-):
+) -> ORJSONResponse:
     """Query tile dataset and return table data"""
     files_path = Path(get_settings().grid_tiles_path) / str(level)
+    if not files_path.exists():
+        raise HTTPException(404, detail=f"Level {level} does not exist") from None
     lf = pl.scan_ipc(files_path.glob("*.arrow"))
     query = filters.to_sql_query("frame")
     log.debug(query)
@@ -79,5 +81,4 @@ def read_table(
         # possibly raise if wrong type in compare. I'm not aware of other sources of ComputeError
         log.exception(e)
         raise HTTPException(status_code=422, detail=str(e)) from None
-
-    return JSONResponse(res.to_dict(as_series=False))
+    return ORJSONResponse(res.to_dict(as_series=False))

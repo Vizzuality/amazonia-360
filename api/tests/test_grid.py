@@ -1,4 +1,6 @@
 from app.models.grid import TableFilters
+from tests.conftest import HEADERS
+from tests.utils import test_client
 
 
 def test_table_filter_numerical_eq_to_sql():
@@ -141,3 +143,30 @@ def test_table_filters_multiple_filters():
         query.replace("\n", "")
         == 'SELECT * FROM "table" WHERE foo = 10.0 AND bar IN (1, 2, 3) ORDER BY baz DESC, foo LIMIT 100'
     )
+
+
+def test_h3grid(grid_dataset):
+    response = test_client.get(f"/grid/tile/{grid_dataset}", headers=HEADERS)
+
+    assert response.status_code == 200
+    assert response.read() == b"I am an arrow file!"
+
+
+def test_h3grid_404(grid_dataset):
+    response = test_client.get("/grid/tile/8439181ffffffff", headers=HEADERS)
+
+    assert response.status_code == 404
+
+
+def test_h3grid_bad_index(grid_dataset):
+    response = test_client.get("/grid/tile/123", headers=HEADERS)
+
+    assert response.status_code == 422
+    assert response.json() == {"detail": "Tile index is not a valid H3 cell"}
+
+
+def test_h3grid_metadata_fails_gracefully(grid_dataset):
+    res = test_client.get("/grid/meta", headers=HEADERS)
+
+    assert res.status_code == 500
+    assert res.json() == {"detail": "Metadata file is malformed. Please contact developer."}
