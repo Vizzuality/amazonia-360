@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 import numpy as np
+import polars as pl
 import pytest
 import rasterio
 
@@ -29,11 +30,24 @@ def grid_dataset(setup_data_folder) -> str:
     level_path.mkdir(parents=True)
     tile_path = level_path / f"{h3_index}.arrow"
 
+    df = pl.DataFrame(
+        {
+            "cell": [
+                618668968382824400,
+                619428375900454900,
+                619428407452893200,
+                619428407943888900,
+                619428407676764200,
+            ],
+            "landcover": [1, 4, 3, 3, 4],
+            "population": [100, 200, 1, 900, 900],
+        }
+    )
     with open(grid_dataset_path / "meta.json", "w") as f:
         f.write("{}")
 
     with open(tile_path, "wb") as f:
-        f.write(b"I am an arrow file!")
+        df.write_ipc(f)
 
     yield h3_index
 

@@ -6,7 +6,7 @@ from typing import Annotated, Literal
 from fastapi import Query
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic_extra_types.color import Color
-from sqlalchemy.sql import column, desc, select, table
+from sqlalchemy.sql import column, desc, nullslast, select, table
 
 
 class LegendTypes(str, Enum):
@@ -98,7 +98,7 @@ class NumericalFilter(BaseModel):
 
 
 class TableFilters(BaseModel):
-    filters: list[Annotated[CategoricalFilter | NumericalFilter, Field(..., discriminator="filter_type")]]
+    filters: list[Annotated[CategoricalFilter | NumericalFilter, Field(discriminator="filter_type")]]
     limit: int = Field(10, lt=1000, description="Number of records")
     order_by: Annotated[list[str], Field(Query(..., description="Prepend '-' to column name to make it descending"))]
 
@@ -115,6 +115,8 @@ class TableFilters(BaseModel):
         }
         filters_to_apply = []
         for _filter in self.filters:
+            if _filter is None:
+                continue
             col = column(_filter.column_name)
             param = getattr(col, op_to_python_dunder.get(_filter.operation, _filter.operation))(_filter.value)
             filters_to_apply.append(param)
@@ -123,6 +125,8 @@ class TableFilters(BaseModel):
             .select_from(table(table_name))
             .where(*filters_to_apply)
             .limit(self.limit)
-            .order_by(*[desc(column(col[1:])) if col.startswith("-") else column(col) for col in self.order_by])
+            .order_by(
+                *[nullslast(desc(column(col[1:]))) if col.startswith("-") else column(col) for col in self.order_by]
+            )
         )
         return str(query.compile(compile_kwargs={"literal_binds": True}))
