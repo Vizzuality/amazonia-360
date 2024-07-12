@@ -6,9 +6,10 @@ from typing import Annotated
 import h3
 import polars as pl
 from fastapi import APIRouter, Depends, HTTPException, Query
-from fastapi.responses import FileResponse, ORJSONResponse
+from fastapi.responses import ORJSONResponse
 from h3 import H3CellError
 from pydantic import ValidationError
+from starlette.responses import Response
 
 from app.config.config import get_settings
 from app.models.grid import MultiDatasetMeta, TableFilters
@@ -23,21 +24,20 @@ grid_router = APIRouter()
     responses={200: {"description": "Get a grid tile"}, 404: {"description": "Not found"}},
     response_model=None,
 )
-async def grid_tile(tile_index: str) -> FileResponse:
-    """Request a tile of h3 cells
-
-    :raises HTTPException 404: Item not found
-    :raises HTTPException 422: H3 index is not valid
-    """
+async def grid_tile(tile_index: str, columns: list[str] = Query()) -> Response:
+    """Request a tile of h3 cells filtered by columns"""
     try:
         z = h3.api.basic_str.h3_get_resolution(tile_index)
     except H3CellError:
         raise HTTPException(status_code=422, detail="Tile index is not a valid H3 cell") from None
-
-    tile_file = os.path.join(get_settings().grid_tiles_path, f"{z}/{tile_index}.arrow")
-    if not os.path.exists(tile_file):
-        raise HTTPException(status_code=404, detail=f"Tile {tile_file} not found")
-    return FileResponse(tile_file, media_type="application/octet-stream")
+    tile_path = os.path.join(get_settings().grid_tiles_path, f"{z}/{tile_index}.arrow")
+    if not os.path.exists(tile_path):
+        raise HTTPException(status_code=404, detail=f"Tile {tile_path} not found")
+    try:
+        tile_file = pl.read_ipc(tile_path, columns=["cell", *columns]).write_ipc(None)
+    except pl.exceptions.ColumnNotFoundError as e:
+        raise HTTPException(status_code=404, detail=e) from None
+    return Response(tile_file.getvalue(), media_type="application/octet-stream")
 
 
 @grid_router.get(
