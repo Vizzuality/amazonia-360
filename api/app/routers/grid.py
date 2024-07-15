@@ -1,11 +1,11 @@
 import logging
 import os
-from pathlib import Path
+import pathlib
 from typing import Annotated
 
 import h3
 import polars as pl
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from fastapi.responses import ORJSONResponse
 from h3 import H3CellError
 from pydantic import ValidationError
@@ -21,16 +21,15 @@ grid_router = APIRouter()
 
 @grid_router.get(
     "/tile/{tile_index}",
-    responses={200: {"description": "Get a grid tile"}, 404: {"description": "Not found"}},
-    response_model=None,
+    summary="Get a grid tile",
 )
 async def grid_tile(
-    tile_index: str,
+    tile_index: Annotated[str, Path(description="The `h3` index of the tile")],
     columns: list[str] = Query(
-        [], description="Colum/s to include in the tile. If empty, it returns only the cell index."
+        [], description="Colum/s to include in the tile. If empty, it returns only cell indexes."
     ),
 ) -> Response:
-    """Request a tile of h3 cells filtered by columns"""
+    """Get a tile of h3 cells with specified data columns"""
     try:
         z = h3.api.basic_str.h3_get_resolution(tile_index)
     except H3CellError:
@@ -47,9 +46,10 @@ async def grid_tile(
 
 @grid_router.get(
     "/meta",
+    summary="Dataset metadata",
 )
 async def grid_dataset_metadata() -> MultiDatasetMeta:
-    """Dataset metadata"""
+    """Get the grid dataset metadata"""
     file = os.path.join(get_settings().grid_tiles_path, "meta.json")
     with open(file) as f:
         raw = f.read()
@@ -69,7 +69,7 @@ def read_table(
     filters: TableFilters = Depends(),
 ) -> ORJSONResponse:
     """Query tile dataset and return table data"""
-    files_path = Path(get_settings().grid_tiles_path) / str(level)
+    files_path = pathlib.Path(get_settings().grid_tiles_path) / str(level)
     if not files_path.exists():
         raise HTTPException(404, detail=f"Level {level} does not exist") from None
     lf = pl.scan_ipc(files_path.glob("*.arrow"))

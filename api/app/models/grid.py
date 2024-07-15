@@ -44,12 +44,12 @@ class CategoricalLegend(BaseModel):
 
 
 class DatasetMeta(BaseModel):
-    var_name: str = Field(description="Column name")
-    var_dtype: str = Field(description="Column dtype. ")
+    var_name: str = Field(description="Column name.")
+    var_dtype: str = Field(description="Column dtype.")
     nodata: str
     description: str
-    aggregation_method: str = Field(description="Aggregation method used to compute the overview levels")
-    lineage: list[str] | None = Field(default=None, description="Source data used to compute this dataset")
+    aggregation_method: str = Field(description="Aggregation method used to compute the overview levels.")
+    lineage: list[str] | None = Field(default=None, description="Source data used to compute this dataset.")
     legend: CategoricalLegend | NumericalLegend = Field(discriminator="legend_type")
 
 
@@ -60,8 +60,8 @@ class H3GridInfo(BaseModel):
 
 
 class MultiDatasetMeta(BaseModel):
-    datasets: list[DatasetMeta] = Field(description="Variables represented in this dataset")
-    h3_grid_info: list[H3GridInfo] = Field(description="H3 related information")
+    datasets: list[DatasetMeta] = Field(description="Variables represented in this dataset.")
+    h3_grid_info: list[H3GridInfo] = Field(description="H3 related information.")
 
 
 # ===============================================
@@ -85,22 +85,27 @@ class CategoricalOperators(str, Enum):
 
 class CategoricalFilter(BaseModel):
     filter_type: Literal["categorical"]
-    column_name: str = Field(description="Name of the column to which the filter will apply")
-    operation: CategoricalOperators = Field()
-    value: list[int] = Field(description="Value to compare with")
+    column_name: str = Field(description="Name of the column to which the filter will apply.")
+    operation: CategoricalOperators
+    value: list[int] = Field(description="Value to compare with.")
 
 
 class NumericalFilter(BaseModel):
     filter_type: Literal["numerical"]
-    column_name: str = Field(description="Name of the column to which the filter will apply")
-    operation: NumericalOperators = Field(description="Operation to use in compare")
-    value: float = Field(description="Value to compare with")
+    column_name: str = Field(description="Name of the column to which the filter will apply.")
+    operation: NumericalOperators = Field(description="Operation to use in compare.")
+    value: float = Field(description="Value to compare with.")
 
 
 class TableFilters(BaseModel):
     filters: list[Annotated[CategoricalFilter | NumericalFilter, Field(discriminator="filter_type")]]
-    limit: int = Field(10, lt=1000, description="Number of records")
-    order_by: Annotated[list[str], Field(Query(..., description="Prepend '-' to column name to make it descending"))]
+    limit: int = Field(Query(10, lt=1000, description="Number of records."))
+    order_by: Annotated[
+        list[str],
+        Field(
+            Query(..., description="Prepend '-' to column name to make it descending"),
+        ),
+    ]
 
     def to_sql_query(self, table_name: str) -> str:
         """Compile model to sql query"""
