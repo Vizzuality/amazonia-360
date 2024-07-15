@@ -1,6 +1,5 @@
 """Minimal COG tiler."""
 
-import os
 from typing import Annotated, List, Union
 
 import rasterio
@@ -9,7 +8,6 @@ from fastapi import Body, Depends, Query
 from geojson_pydantic import Feature, FeatureCollection
 from titiler.core.factory import TilerFactory
 
-from app.config.config import get_settings
 from app.models.zonal_stats import StatsFeatures, StatsOps
 
 
@@ -66,8 +64,6 @@ class ZonalTilerFactory(TilerFactory):
                 features = [geojson.model_dump()]
 
             with rasterio.Env(**env):
-                tiff_path = get_settings().tiff_path
-                src_path = os.path.join(tiff_path, src_path)
                 with rasterio.open(src_path, **reader_params) as src_dst:
                     statistics = [op.value for op in statistics]  # extract the values from the Enum
                     stats = exact_extract(src_dst, features, ops=statistics)
