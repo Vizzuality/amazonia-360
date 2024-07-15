@@ -1,10 +1,12 @@
 # ruff: noqa: D101
 
 from enum import Enum
-from typing import Literal
+from typing import Annotated, Literal
 
+from fastapi import Query
 from pydantic import BaseModel, ConfigDict, Field
-from pydantic.color import Color
+from pydantic_extra_types.color import Color
+from sqlalchemy.sql import column, desc, nullslast, select, table
 
 
 class LegendTypes(str, Enum):
@@ -60,3 +62,71 @@ class H3GridInfo(BaseModel):
 class MultiDatasetMeta(BaseModel):
     datasets: list[DatasetMeta] = Field(description="Variables represented in this dataset")
     h3_grid_info: list[H3GridInfo] = Field(description="H3 related information")
+
+
+# ===============================================
+#               TABLE FILTERING
+# ===============================================
+
+
+class NumericalOperators(str, Enum):
+    eq = "eq"
+    gt = "gt"
+    lt = "lt"
+    gte = "gte"
+    lte = "lte"
+    not_eq = "not_eq"
+
+
+class CategoricalOperators(str, Enum):
+    in_ = "in"
+    not_in = "not_in"
+
+
+class CategoricalFilter(BaseModel):
+    filter_type: Literal["categorical"]
+    column_name: str = Field(description="Name of the column to which the filter will apply")
+    operation: CategoricalOperators = Field()
+    value: list[int] = Field(description="Value to compare with")
+
+
+class NumericalFilter(BaseModel):
+    filter_type: Literal["numerical"]
+    column_name: str = Field(description="Name of the column to which the filter will apply")
+    operation: NumericalOperators = Field(description="Operation to use in compare")
+    value: float = Field(description="Value to compare with")
+
+
+class TableFilters(BaseModel):
+    filters: list[Annotated[CategoricalFilter | NumericalFilter, Field(discriminator="filter_type")]]
+    limit: int = Field(10, lt=1000, description="Number of records")
+    order_by: Annotated[list[str], Field(Query(..., description="Prepend '-' to column name to make it descending"))]
+
+    def to_sql_query(self, table_name: str) -> str:
+        """Compile model to sql query"""
+        op_to_python_dunder = {
+            "eq": "__eq__",
+            "gt": "__gt__",
+            "lt": "__lt__",
+            "gte": "__ge__",
+            "lte": "__le__",
+            "not_eq": "__ne__",
+            "in": "in_",
+        }
+        filters_to_apply = []
+        for _filter in self.filters:
+            if _filter is None:
+                continue
+            col = column(_filter.column_name)
+            param = getattr(col, op_to_python_dunder.get(_filter.operation, _filter.operation))(_filter.value)
+            filters_to_apply.append(param)
+        query = (
+            select("*")
+            .select_from(table(table_name))
+            .where(*filters_to_apply)
+            .limit(self.limit)
+            .order_by(
+                *[nullslast(desc(column(col[1:]))) if col.startswith("-") else column(col) for col in self.order_by]
+            )
+        )
+        return str(query.compile(compile_kwargs={"literal_binds": True}))
