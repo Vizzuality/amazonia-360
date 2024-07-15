@@ -24,7 +24,12 @@ grid_router = APIRouter()
     responses={200: {"description": "Get a grid tile"}, 404: {"description": "Not found"}},
     response_model=None,
 )
-async def grid_tile(tile_index: str, columns: list[str] = Query()) -> Response:
+async def grid_tile(
+    tile_index: str,
+    columns: list[str] = Query(
+        [], description="Colum/s to include in the tile. If empty, it returns only the cell index."
+    ),
+) -> Response:
     """Request a tile of h3 cells filtered by columns"""
     try:
         z = h3.api.basic_str.h3_get_resolution(tile_index)

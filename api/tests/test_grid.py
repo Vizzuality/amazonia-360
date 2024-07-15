@@ -8,7 +8,9 @@ from tests.utils import test_client
 
 
 def test_grid_tile(grid_dataset):
-    response = test_client.get(f"/grid/tile/{grid_dataset}", headers=HEADERS)
+    response = test_client.get(
+        f"/grid/tile/{grid_dataset}", params={"columns": ["landcover", "population"]}, headers=HEADERS
+    )
 
     assert response.status_code == 200
     assert pl.read_ipc(response.read()).to_dict(as_series=False) == {
@@ -21,6 +23,21 @@ def test_grid_tile(grid_dataset):
         ],
         "landcover": [1, 4, 3, 3, 4],
         "population": [100, 200, 1, 900, 900],
+    }
+
+
+def test_grid_tile_empty_column_param(grid_dataset):
+    response = test_client.get(f"/grid/tile/{grid_dataset}", headers=HEADERS)
+
+    assert response.status_code == 200
+    assert pl.read_ipc(response.read()).to_dict(as_series=False) == {
+        "cell": [
+            618668968382824400,
+            619428375900454900,
+            619428407452893200,
+            619428407943888900,
+            619428407676764200,
+        ],
     }
 
 
