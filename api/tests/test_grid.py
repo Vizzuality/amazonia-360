@@ -41,6 +41,12 @@ def test_grid_tile_empty_column_param(grid_dataset):
     }
 
 
+def test_grid_tile_wrong_column(grid_dataset):
+    response = test_client.get(f"/grid/tile/{grid_dataset}", params={"columns": ["NOEXIST"]}, headers=HEADERS)
+    assert response.status_code == 400
+    assert response.json() == {"detail": "One or more of the specified columns is not valid"}
+
+
 def test_grid_tile_404(grid_dataset):
     response = test_client.get("/grid/tile/8439181ffffffff", headers=HEADERS)
 
@@ -50,7 +56,7 @@ def test_grid_tile_404(grid_dataset):
 def test_grid_tile_bad_index(grid_dataset):
     response = test_client.get("/grid/tile/123", headers=HEADERS)
 
-    assert response.status_code == 422
+    assert response.status_code == 400
     assert response.json() == {"detail": "Tile index is not a valid H3 cell"}
 
 

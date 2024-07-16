@@ -33,14 +33,14 @@ async def grid_tile(
     try:
         z = h3.api.basic_str.h3_get_resolution(tile_index)
     except H3CellError:
-        raise HTTPException(status_code=422, detail="Tile index is not a valid H3 cell") from None
+        raise HTTPException(status_code=400, detail="Tile index is not a valid H3 cell") from None
     tile_path = os.path.join(get_settings().grid_tiles_path, f"{z}/{tile_index}.arrow")
     if not os.path.exists(tile_path):
         raise HTTPException(status_code=404, detail=f"Tile {tile_path} not found")
     try:
         tile_file = pl.read_ipc(tile_path, columns=["cell", *columns]).write_ipc(None)
-    except pl.exceptions.ColumnNotFoundError as e:
-        raise HTTPException(status_code=404, detail=e) from None
+    except pl.exceptions.ColumnNotFoundError:
+        raise HTTPException(status_code=400, detail="One or more of the specified columns is not valid") from None
     return Response(tile_file.getvalue(), media_type="application/octet-stream")
 
 
@@ -80,7 +80,7 @@ def read_table(
     except pl.exceptions.ColumnNotFoundError as e:
         # bad column in order by clause
         log.exception(e)
-        raise HTTPException(status_code=404, detail=f"Column '{e}' not found in dataset") from None
+        raise HTTPException(status_code=400, detail="One or more of the specified columns is not valid") from None
 
     except pl.exceptions.ComputeError as e:
         # possibly raise if wrong type in compare. I'm not aware of other sources of ComputeError
