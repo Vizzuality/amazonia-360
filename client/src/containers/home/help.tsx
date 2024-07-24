@@ -6,7 +6,7 @@ export default function Help() {
       <div className="container">
         <div className="py-16 flex flex-col md:flex-row justify-between items-center">
           <p className="font-normal md:w-8/12">
-            Amazonia360 goes beyond simply presenting data, it&apos;s making
+            Amazonia360+ goes beyond simply presenting data, it&apos;s making
             sense of it. Our goal is to become a focal point that unifies and
             amplifies the potential of geospatial data and information produced
             by partners and initiatives dedicated to the region. By achieving

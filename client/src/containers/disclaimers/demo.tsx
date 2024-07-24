@@ -6,7 +6,7 @@ export default function DemoDisclaimer() {
       <div className="container">
         <div className="flex space-x-2">
           <p className="font-medium text-sm">
-            This website is a prototype of Amazonia360, designed to facilitate
+            This website is a prototype of Amazonia360+, designed to facilitate
             co-creation with select users. The contents and data are for
             demonstration purposes only and have not been fully validated yet.
             Please refrain from sharing this link, as the functionalities
