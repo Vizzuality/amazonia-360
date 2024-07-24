@@ -9,7 +9,7 @@ import KeyFeatures from "@/containers/home/key-features";
 import Vision from "@/containers/home/vision";
 
 export const metadata: Metadata = {
-  title: "Amazonia360",
+  title: "Amazonia360+",
   description: "",
 };
 
