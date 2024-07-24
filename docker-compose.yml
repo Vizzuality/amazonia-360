@@ -21,6 +21,10 @@ services:
         context: ./api
         dockerfile: Dockerfile
         target: development
+    environment:
+      - AUTH_TOKEN=secret
+      - TIFF_PATH=/opt/api/test_data
+      - GRID_TILES_PATH=/opt/api/test_data/grid
     networks:
       - amazonia360-network
 
