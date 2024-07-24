@@ -8,7 +8,9 @@ from tests.utils import test_client
 
 
 def test_grid_tile(grid_dataset):
-    response = test_client.get(f"/grid/tile/{grid_dataset}", headers=HEADERS)
+    response = test_client.get(
+        f"/grid/tile/{grid_dataset}", params={"columns": ["landcover", "population"]}, headers=HEADERS
+    )
 
     assert response.status_code == 200
     assert pl.read_ipc(response.read()).to_dict(as_series=False) == {
@@ -24,6 +26,27 @@ def test_grid_tile(grid_dataset):
     }
 
 
+def test_grid_tile_empty_column_param(grid_dataset):
+    response = test_client.get(f"/grid/tile/{grid_dataset}", headers=HEADERS)
+
+    assert response.status_code == 200
+    assert pl.read_ipc(response.read()).to_dict(as_series=False) == {
+        "cell": [
+            618668968382824400,
+            619428375900454900,
+            619428407452893200,
+            619428407943888900,
+            619428407676764200,
+        ],
+    }
+
+
+def test_grid_tile_wrong_column(grid_dataset):
+    response = test_client.get(f"/grid/tile/{grid_dataset}", params={"columns": ["NOEXIST"]}, headers=HEADERS)
+    assert response.status_code == 400
+    assert response.json() == {"detail": "One or more of the specified columns is not valid"}
+
+
 def test_grid_tile_404(grid_dataset):
     response = test_client.get("/grid/tile/8439181ffffffff", headers=HEADERS)
 
@@ -33,7 +56,7 @@ def test_grid_tile_404(grid_dataset):
 def test_grid_tile_bad_index(grid_dataset):
     response = test_client.get("/grid/tile/123", headers=HEADERS)
 
-    assert response.status_code == 422
+    assert response.status_code == 400
     assert response.json() == {"detail": "Tile index is not a valid H3 cell"}
 
 
