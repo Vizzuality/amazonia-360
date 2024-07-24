@@ -64,7 +64,7 @@ export default function ShareReport() {
             <Button className="rounded-full h-10 w-10" variant="outline">
               <FacebookShareButton
                 url={currentUrl}
-                title={"Amazonia360 Report"}
+                title={"Amazonia360+ Report"}
                 aria-label="share facebook"
               >
                 <Facebook className="fill-blue-400 text-blue-400" size={16} />
@@ -74,7 +74,7 @@ export default function ShareReport() {
             <Button className="rounded-full h-10 w-10" variant="outline">
               <TwitterShareButton
                 url={currentUrl}
-                title={"Amazonia360 Report"}
+                title={"Amazonia360+ Report"}
                 aria-label="share twitter"
               >
                 <Twitter className="fill-blue-400 text-blue-400" size={16} />
@@ -84,8 +84,8 @@ export default function ShareReport() {
             <Button className="group rounded-full h-10 w-10" variant="outline">
               <EmailShareButton
                 url={currentUrl}
-                title={"Amazonia360 Report"}
-                subject={"I want to share this Amazonia360 report with you"}
+                title={"Amazonia360+ Report"}
+                subject={"I want to share this Amazonia360+ report with you"}
                 body={""}
                 aria-label="share email"
               >
@@ -99,9 +99,9 @@ export default function ShareReport() {
             <Button className="rounded-full h-10 w-10" variant="outline">
               <LinkedinShareButton
                 url={currentUrl}
-                title={"Amazonia360 Report"}
-                summary={"Amazonia360 Report"}
-                source={"Amazonia360"}
+                title={"Amazonia360+ Report"}
+                summary={"Amazonia360+ Report"}
+                source={"Amazonia360+"}
                 aria-label="share linkedin"
               >
                 <LinkedinIcon className="fill-blue-400 text-blue-400" size={16} />

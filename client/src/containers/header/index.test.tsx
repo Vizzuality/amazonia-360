@@ -21,7 +21,7 @@ describe("Header", () => {
 
   it("renders the title", () => {
     render(<Header />);
-    expect(screen.getByText("Amazonia360")).toBeInTheDocument();
+    expect(screen.getByText("Amazonia360+")).toBeInTheDocument();
   });
 
   it("renders the logo", () => {
