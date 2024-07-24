@@ -10,6 +10,7 @@ services:
     environment:
       - AUTH_TOKEN=${AUTH_TOKEN}
       - TIFF_PATH=${TIFF_PATH}
+      - GRID_TILES_PATH=${GRID_TILES_PATH}
     networks:
       - amazonia360-network
     restart:
