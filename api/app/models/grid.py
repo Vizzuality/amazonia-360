@@ -46,9 +46,10 @@ class CategoricalLegend(BaseModel):
 class DatasetMeta(BaseModel):
     var_name: str = Field(description="Column name.")
     var_dtype: str = Field(description="Column dtype.")
-    nodata: str
-    description: str
-    aggregation_method: str = Field(description="Aggregation method used to compute the overview levels.")
+    label: str = Field(description="Human readable name.")
+    nodata: str | None = Field(default=None, description="Nodata value used in grid")
+    description: str = Field(description="Human readable indicator description.")
+    unit: str | None = Field(description="Unit of the measurement")
     lineage: list[str] | None = Field(default=None, description="Source data used to compute this dataset.")
     legend: CategoricalLegend | NumericalLegend = Field(discriminator="legend_type")
 
