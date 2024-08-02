@@ -12,6 +12,8 @@ import { ArrowLoader } from "@loaders.gl/arrow";
 import { load } from "@loaders.gl/core";
 import CHROMA from "chroma-js";
 
+import { env } from "@/env.mjs";
+
 import { useSyncFires, useSyncPopulation } from "@/app/store";
 
 import Layer from "@/components/map/layers";
@@ -33,6 +35,11 @@ export const getGridLayerProps = ({
       if (!tile.url) return Promise.resolve(null);
       return load(tile.url, ArrowLoader, {
         arrow: { shape: "arrow-table" },
+        fetch: {
+          headers: {
+            Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
+          },
+        },
       }).then((data) => {
         return data.data;
       });
