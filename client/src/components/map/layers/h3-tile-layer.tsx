@@ -80,7 +80,7 @@ export class H3Tileset2D extends Tileset2D {
    * */
   getTileIndices(opts) {
     // let tileRes = Math.max(Math.floor(opts.viewport.zoom / 2 - 1), 0);
-    let tileRes = 0;
+    let tileRes = 1;
 
     if (
       typeof opts.minZoom === "number" &&
