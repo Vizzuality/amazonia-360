@@ -9,7 +9,12 @@ import { LuLoader2, LuSearch, LuX } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 
 export type Option = {
@@ -124,20 +129,22 @@ export function Search<T extends Option>({
               <p className="py-6 text-center text-sm">No results found.</p>
             )}
 
-            {open && !!options.length && (
-              <CommandGroup className="px-2 pb-5">
-                {options.map((o) => (
-                  <CommandItem
-                    key={o.sourceIndex + o.key + o.value}
-                    value={o.value}
-                    className="px-4"
-                    onSelect={() => onSelect(o)}
-                  >
-                    {o.label} <span className="hidden">({o.value})</span>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            )}
+            <CommandList>
+              {open && !!options.length && (
+                <CommandGroup className="px-2 pb-5">
+                  {options.map((o) => (
+                    <CommandItem
+                      key={o.sourceIndex + o.key + o.value}
+                      value={o.value}
+                      className="px-4"
+                      onSelect={() => onSelect(o)}
+                    >
+                      {o.label} <span className="hidden">({o.value})</span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
+            </CommandList>
           </Command>
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Portal>
