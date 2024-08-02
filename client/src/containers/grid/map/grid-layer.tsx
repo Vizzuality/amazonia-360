@@ -3,10 +3,6 @@
 import { useMemo, useRef } from "react";
 
 import { DeckLayer } from "@deck.gl/arcgis";
-import {
-  DataFilterExtension,
-  DataFilterExtensionProps,
-} from "@deck.gl/extensions";
 import { H3HexagonLayer } from "@deck.gl/geo-layers";
 import { ArrowLoader } from "@loaders.gl/arrow";
 import { load } from "@loaders.gl/core";
@@ -21,7 +17,6 @@ import H3TileLayer from "@/components/map/layers/h3-tile-layer";
 
 export const getGridLayerProps = ({
   population,
-  fires,
   colorscale,
 }: {
   population: number[];
@@ -30,7 +25,7 @@ export const getGridLayerProps = ({
 }) => {
   return new H3TileLayer({
     id: "tile-h3s",
-    data: "https://dev.api.amazonia360.dev-vizzuality.com/grid/tile/{h3index}",
+    data: "https://dev.api.amazonia360.dev-vizzuality.com/grid/tile/{h3index}?columns=PMEAN",
     getTileData: (tile) => {
       if (!tile.url) return Promise.resolve(null);
       return load(tile.url, ArrowLoader, {
@@ -52,17 +47,11 @@ export const getGridLayerProps = ({
       population,
     },
     renderSubLayers: (props) => {
-      return new H3HexagonLayer<
-        {
-          cell: string;
-          population: number;
-          fire: number;
-        },
-        DataFilterExtensionProps<{
-          population: number;
-          fire: number;
-        }>
-      >({
+      return new H3HexagonLayer<{
+        cell: string;
+        PMEAN: number;
+        FRECF: number;
+      }>({
         id: props.id,
         data: props.data,
         highPrecision: true,
@@ -71,26 +60,20 @@ export const getGridLayerProps = ({
         wireframe: false,
         filled: true,
         extruded: false,
-        stroked: false,
-        // getLineColor: [255, 255, 255, 255],
-        // getLineWidth:  10,
+        // LINE
+        // stroked: true,
+        // getLineColor: [100, 100, 100, 0],
+        // getLineWidth: 1,
+        // lineWidthUnits: "pixels",
+
         getHexagon: (d) => {
           const res = BigInt(d.cell);
           return res.toString(16);
         },
         getFillColor: (d) => {
-          return colorscale(d.population).rgb();
+          return colorscale(d.PMEAN).rgb();
         },
         opacity: 0.8,
-        extensions: [
-          new DataFilterExtension({ filterSize: 1, categorySize: 1 }),
-        ],
-        filterRange: population as [number, number] | [number, number][],
-        filterCategories: fires,
-        getFilterValue: (d) => [d.population],
-        getFilterCategory: (d) => {
-          return [d.fire];
-        },
       });
     },
   });
@@ -102,7 +85,7 @@ export default function GridLayer() {
   const [fires] = useSyncFires();
 
   const colorscale = useMemo(() => {
-    return CHROMA.scale("Viridis").domain([1, 10000]);
+    return CHROMA.scale("viridis").domain([0, 35]);
   }, []);
 
   const layer = useMemo(() => {
