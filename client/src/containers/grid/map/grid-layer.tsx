@@ -10,17 +10,16 @@ import CHROMA from "chroma-js";
 
 import { env } from "@/env.mjs";
 
-import { useSyncFires, useSyncPopulation } from "@/app/store";
+import { useSyncGridFilters } from "@/app/store";
 
 import Layer from "@/components/map/layers";
 import H3TileLayer from "@/components/map/layers/h3-tile-layer";
 
 export const getGridLayerProps = ({
-  population,
+  gridFilters,
   colorscale,
 }: {
-  population: number[];
-  fires: number[];
+  gridFilters: Record<string, number[]> | null;
   colorscale: CHROMA.Scale<CHROMA.Color>;
 }) => {
   return new H3TileLayer({
@@ -44,7 +43,7 @@ export const getGridLayerProps = ({
     maxRequests: 10, // max simultaneous requests. Set 0 for unlimited
     maxCacheSize: 300, // max number of tiles to keep in the cache
     _subLayerProps: {
-      population,
+      gridFilters: gridFilters ? gridFilters : {},
     },
     renderSubLayers: (props) => {
       return new H3HexagonLayer<{
@@ -81,8 +80,7 @@ export const getGridLayerProps = ({
 
 export default function GridLayer() {
   const GRID_LAYER = useRef<typeof DeckLayer>();
-  const [population] = useSyncPopulation();
-  const [fires] = useSyncFires();
+  const [gridFilters] = useSyncGridFilters();
 
   const colorscale = useMemo(() => {
     return CHROMA.scale("viridis").domain([0, 35]);
@@ -91,18 +89,18 @@ export default function GridLayer() {
   const layer = useMemo(() => {
     if (!GRID_LAYER.current) {
       GRID_LAYER.current = new DeckLayer({
-        "deck.layers": [getGridLayerProps({ population, fires, colorscale })],
+        "deck.layers": [getGridLayerProps({ gridFilters, colorscale })],
       });
 
       return GRID_LAYER.current;
     }
 
     GRID_LAYER.current.deck.layers = [
-      getGridLayerProps({ population, fires, colorscale }),
+      getGridLayerProps({ gridFilters, colorscale }),
     ];
 
     return GRID_LAYER.current;
-  }, [population, fires, colorscale]);
+  }, [gridFilters, colorscale]);
 
   return <Layer index={0} layer={layer} />;
 }

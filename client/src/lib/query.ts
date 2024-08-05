@@ -11,7 +11,7 @@ import {
 import axios from "axios";
 
 import { StatsOps } from "@/types/generated/api.schemas";
-import { exactZonalStatsExactZonalStatsPost } from "@/types/generated/default";
+import { exactZonalStatsExactZonalStatsPost } from "@/types/generated/raster";
 
 import { DATASETS, DatasetIds } from "@/constants/datasets";
 
