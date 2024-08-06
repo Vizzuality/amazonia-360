@@ -38,9 +38,6 @@ export const getGridLayerProps = ({
         return data.data;
       });
     },
-    minZoom: 0,
-    maxZoom: 12,
-    maxRequests: 10, // max simultaneous requests. Set 0 for unlimited
     maxCacheSize: 300, // max number of tiles to keep in the cache
     _subLayerProps: {
       gridFilters: gridFilters ? gridFilters : {},

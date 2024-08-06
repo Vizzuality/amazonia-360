@@ -11,6 +11,7 @@ import { Slider } from "@/components/ui/slider";
 
 export default function GridFiltersItem(dataset: DatasetMeta) {
   const [gridFilters, setGridFilters] = useSyncGridFilters();
+  // const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
 
   const continousOptions = useMemo(() => {
     if (dataset.legend.legend_type === "continuous") {
@@ -24,6 +25,17 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
       return dataset.legend.entries;
     }
   }, [dataset.legend]);
+
+  const continuousValue = useMemo(() => {
+    if (continousOptions && gridFilters) {
+      return (
+        gridFilters[dataset.var_name] || [
+          continousOptions.min,
+          continousOptions.max,
+        ]
+      );
+    }
+  }, [dataset.var_name, continousOptions, gridFilters]);
 
   return (
     <div key={dataset.var_name} className="space-y-2">
@@ -44,10 +56,7 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
             min={continousOptions.min || 0}
             max={continousOptions.max || 100}
             step={1}
-            defaultValue={[
-              continousOptions.min || 0,
-              continousOptions.max || 100,
-            ]}
+            value={continuousValue}
             // value={dataset.legend.range}
             minStepsBetweenThumbs={1}
             onValueChange={(v) => {

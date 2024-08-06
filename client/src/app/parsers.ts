@@ -2,15 +2,11 @@ import {
   parseAsArrayOf,
   parseAsFloat,
   parseAsJson,
+  parseAsString,
   parseAsStringLiteral,
 } from "nuqs";
 
-import { DATASET_IDS } from "@/constants/datasets";
 import { TOPICS } from "@/constants/topics";
-
-export const datasetsParser = parseAsArrayOf(
-  parseAsStringLiteral(DATASET_IDS),
-).withDefault([]);
 
 export const topicsParser = parseAsArrayOf(
   parseAsStringLiteral(TOPICS.map((topic) => topic.id)),
@@ -34,3 +30,4 @@ export type Location = SearchLocation | CustomLocation;
 export const locationParser = parseAsJson<Location>();
 
 export const gridFiltersParser = parseAsJson<Record<string, number[]>>();
+export const gridDatasetsParser = parseAsArrayOf(parseAsString);
