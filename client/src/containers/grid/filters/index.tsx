@@ -11,10 +11,12 @@ export default function GridFilters() {
     <div>
       <h2 className="text-lg font-medium">Filters</h2>
 
-      {gridMetaData &&
-        gridMetaData.datasets.map((dataset) => (
-          <GridFiltersItem key={dataset.var_name} {...dataset} />
-        ))}
+      <div className="space-y-2">
+        {gridMetaData &&
+          gridMetaData.datasets.map((dataset) => (
+            <GridFiltersItem key={dataset.var_name} {...dataset} />
+          ))}
+      </div>
     </div>
   );
 }

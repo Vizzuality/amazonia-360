@@ -2,16 +2,27 @@
 
 import { useMemo } from "react";
 
+import { LuPlus, LuX } from "react-icons/lu";
+
+import { cn } from "@/lib/utils";
+
 import { DatasetMeta } from "@/types/generated/api.schemas";
 
-import { useSyncGridFilters } from "@/app/store";
+import { useSyncGridDatasets, useSyncGridFilters } from "@/app/store";
 
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { Slider } from "@/components/ui/slider";
 
 export default function GridFiltersItem(dataset: DatasetMeta) {
   const [gridFilters, setGridFilters] = useSyncGridFilters();
-  // const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
+  const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
+
+  const open = gridDatasets?.includes(dataset.var_name);
 
   const continousOptions = useMemo(() => {
     if (dataset.legend.legend_type === "continuous") {
@@ -27,70 +38,106 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
   }, [dataset.legend]);
 
   const continuousValue = useMemo(() => {
-    if (continousOptions && gridFilters) {
-      return (
-        gridFilters[dataset.var_name] || [
-          continousOptions.min,
-          continousOptions.max,
-        ]
-      );
+    if (continousOptions) {
+      if (gridFilters) {
+        return (
+          gridFilters[dataset.var_name] || [
+            continousOptions.min || 0,
+            continousOptions.max || 100,
+          ]
+        );
+      }
+
+      return [continousOptions.min || 0, continousOptions.max || 100];
     }
+
+    return [-Infinity, Infinity];
   }, [dataset.var_name, continousOptions, gridFilters]);
+
+  const onOpenChange = (open: boolean) => {
+    setGridDatasets(
+      open
+        ? [...gridDatasets, dataset.var_name]
+        : gridDatasets?.filter((d) => d !== dataset.var_name),
+    );
+  };
 
   return (
     <div key={dataset.var_name} className="space-y-2">
-      <h3 className="text-sm font-medium mt-4">{dataset.label}</h3>
+      <Collapsible
+        open={open}
+        onOpenChange={onOpenChange}
+        className={cn({
+          "border border-blue-50 px-3 py-1.5 rounded-2xl": true,
+        })}
+      >
+        <CollapsibleTrigger className="flex justify-between items-center w-full">
+          <h3 className="text-sm font-medium text-foreground">
+            {dataset.label}
+          </h3>
 
-      {dataset.legend.legend_type === "continuous" && continousOptions && (
-        <div className="space-y-1">
-          <div className="flex justify-between">
-            <span className="text-xs text-gray-500">
-              {continousOptions.min}
-            </span>
-            <span className="text-xs text-gray-500 float-right">
-              {continousOptions.max}
-            </span>
-          </div>
+          {!open && <LuPlus className="w-5 h-5 text-primary" />}
+          {open && <LuX className="w-5 h-5 text-primary" />}
+        </CollapsibleTrigger>
 
-          <Slider
-            min={continousOptions.min || 0}
-            max={continousOptions.max || 100}
-            step={1}
-            value={continuousValue}
-            // value={dataset.legend.range}
-            minStepsBetweenThumbs={1}
-            onValueChange={(v) => {
-              setGridFilters({
-                ...gridFilters,
-                [dataset.var_name]: v,
-              });
-            }}
-          />
-        </div>
-      )}
+        <CollapsibleContent className="py-2">
+          {dataset.legend.legend_type === "continuous" && continousOptions && (
+            <div className="space-y-1">
+              <div className="flex justify-between">
+                <span className="text-xs text-gray-500">
+                  {continousOptions.min}
+                </span>
+                <span className="text-xs text-gray-500 float-right">
+                  {continousOptions.max}
+                </span>
+              </div>
 
-      {dataset.legend.legend_type === "categorical" && categoricalOptions && (
-        <div className="flex flex-col justify-between gap-1">
-          {categoricalOptions.map((option) => (
-            <div key={option.value} className="flex space-x-1 items-center">
-              <Checkbox
-                // checked={fires.includes(+key)}
-                onCheckedChange={(checked) => {
-                  console.log(dataset.var_name, option, checked);
-
-                  // setGridFilters({
-                  //   ...gridFilters,
-                  //   [dataset.var_name]: checked
-                  //     ? [...gridFilters[dataset.var_name], key]
-                  //     : gridFilters[dataset.var_name].filter((k) => k !== key),
-                  // });
+              <Slider
+                min={continousOptions.min || 0}
+                max={continousOptions.max || 100}
+                step={1}
+                value={continuousValue}
+                minStepsBetweenThumbs={1}
+                onValueChange={(v) => {
+                  setGridFilters({
+                    ...gridFilters,
+                    [dataset.var_name]: v,
+                  });
                 }}
               />
-              <span className="text-xs text-gray-500">{option.label}</span>
             </div>
-          ))}
-        </div>
-      )}
+          )}
+
+          {dataset.legend.legend_type === "categorical" &&
+            categoricalOptions && (
+              <div className="flex flex-col justify-between gap-1">
+                {categoricalOptions.map((option) => (
+                  <div
+                    key={option.value}
+                    className="flex space-x-1 items-center"
+                  >
+                    <Checkbox
+                      // checked={fires.includes(+key)}
+                      onCheckedChange={(checked) => {
+                        console.info(dataset.var_name, option, checked);
+
+                        // setGridFilters({
+                        //   ...gridFilters,
+                        //   [dataset.var_name]: checked
+                        //     ? [...gridFilters[dataset.var_name], key]
+                        //     : gridFilters[dataset.var_name].filter((k) => k !== key),
+                        // });
+                      }}
+                    />
+                    <span className="text-xs text-gray-500">
+                      {option.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   );
 }
