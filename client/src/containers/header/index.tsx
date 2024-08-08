@@ -18,7 +18,7 @@ export default function Header() {
           <h1 className="flex items-center space-x-4">
             <Image src="/IDB-logo.svg" alt="IDB" width={65} height={24} />
             <div className="space-x-2">
-              <span className="font-medium text-sm">Amazonia360</span>
+              <span className="font-medium text-sm">Amazonia360+</span>
               <Badge variant="secondary">Prototype</Badge>
             </div>
           </h1>

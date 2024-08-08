@@ -1,4 +1,4 @@
-### Amazonia 360 backend infrastructure
+### Amazonia 360+ backend infrastructure
 
 This terraform project creates the following resources:
 
@@ -10,7 +10,7 @@ This terraform project creates the following resources:
 - AWS Certificate Manager certificate for the load balancer
 - Route 53 record set on main account to point to the load balancer
 
-We are using for now the default profile in aws, which holds the credentials for the test user under de vizz backend sandbox. 
+We are using for now the default profile in aws, which holds the credentials for the test user under de vizz backend sandbox.
 THis needs to be updated accordingly
 
 By default, the vpc exposes the port 8000 to the internet, where the api will be running
