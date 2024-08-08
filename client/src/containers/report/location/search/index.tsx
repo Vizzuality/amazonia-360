@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { useSetAtom } from "jotai";
 
@@ -21,7 +21,7 @@ type Option = {
 export default function SearchC() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [location, setLocation] = useSyncLocation();
+  const [, setLocation] = useSyncLocation();
   const setTmpBbox = useSetAtom(tmpBboxAtom);
 
   const q = useGetSuggestions({ text: search }, { enabled: !!search });
@@ -60,6 +60,8 @@ export default function SearchC() {
               text: value.label,
             });
 
+            setSearch("");
+
             if (data) {
               const geo = getGeometryByType({
                 type: data.type,
@@ -80,11 +82,6 @@ export default function SearchC() {
     },
     [m, setLocation, setTmpBbox],
   );
-
-  useEffect(() => {
-    if (!location) return;
-    setSearch("");
-  }, [location]);
 
   return (
     <>
