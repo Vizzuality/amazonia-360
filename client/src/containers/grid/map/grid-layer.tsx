@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
 import { DeckLayer } from "@deck.gl/arcgis";
+import { Accessor, Color } from "@deck.gl/core";
 import { H3HexagonLayer } from "@deck.gl/geo-layers";
 import { ArrowLoader } from "@loaders.gl/arrow";
 import { load } from "@loaders.gl/core";
@@ -22,15 +23,17 @@ import { useMap } from "@/components/map/provider";
 export const getGridLayerProps = ({
   gridDatasets,
   gridFilters,
-  colorscale,
+  getFillColor,
   zoom,
 }: {
   gridDatasets: string[];
   gridFilters: Record<string, number[]> | null;
-  colorscale: CHROMA.Scale<CHROMA.Color>;
+  getFillColor: Accessor<Record<string, number>, Color>;
   zoom: number;
 }) => {
-  const columns = gridDatasets.map((d) => `columns=${d}`).join("&");
+  const columns = !!gridDatasets.length
+    ? gridDatasets.map((d) => `columns=${d}`).join("&")
+    : "";
 
   return new H3TileLayer({
     id: "tile-h3s",
@@ -76,19 +79,7 @@ export const getGridLayerProps = ({
           const res = BigInt(d.cell);
           return res.toString(16);
         },
-        getFillColor: (d) => {
-          const currentFilters = (gridFilters || {})[gridDatasets[0]];
-
-          if (currentFilters) {
-            const value = d[`${gridDatasets[0]}`];
-
-            if (value < currentFilters[0] || value > currentFilters[1]) {
-              return [0, 0, 0, 0];
-            }
-          }
-
-          return colorscale(d[`${gridDatasets[0]}`]).rgb();
-        },
+        getFillColor,
         opacity: 1,
         updateTriggers: {
           getLineWidth: [zoom],
@@ -132,6 +123,47 @@ export default function GridLayer() {
     return CHROMA.scale("viridis").domain([0, 35]);
   }, [gridDatasets, gridMetaData]);
 
+  const getFillColor = useCallback(
+    (d: Record<string, number>): Color => {
+      if (gridDatasets.length === 1) {
+        const [dataset] = gridDatasets;
+        const currentFilters = (gridFilters || {})[dataset];
+
+        if (currentFilters) {
+          const value = d[`${dataset}`];
+
+          if (value < currentFilters[0] || value > currentFilters[1]) {
+            return [0, 0, 0, 0];
+          }
+        }
+
+        return colorscale(d[`${dataset}`]).rgb();
+      }
+
+      if (gridDatasets.length > 1) {
+        const f = gridDatasets.every((dataset) => {
+          const currentFilters = (gridFilters || {})[dataset];
+          if (currentFilters) {
+            const v = d[`${dataset}`];
+            if (v < currentFilters[0] || v > currentFilters[1]) {
+              return false;
+            }
+          }
+          return true;
+        });
+
+        if (f) {
+          return [0, 100, 200, 255];
+        }
+
+        return [0, 0, 0, 0];
+      }
+
+      return [0, 0, 0, 0];
+    },
+    [gridDatasets, gridFilters, colorscale],
+  );
+
   const layer = useMemo(() => {
     if (!GRID_LAYER.current) {
       GRID_LAYER.current = new DeckLayer({
@@ -139,8 +171,8 @@ export default function GridLayer() {
           getGridLayerProps({
             gridDatasets,
             gridFilters,
-            colorscale,
             zoom,
+            getFillColor,
           }),
         ],
       });
@@ -152,13 +184,13 @@ export default function GridLayer() {
       getGridLayerProps({
         gridDatasets,
         gridFilters,
-        colorscale,
         zoom,
+        getFillColor,
       }),
     ];
 
     return GRID_LAYER.current;
-  }, [gridDatasets, gridFilters, colorscale, zoom]);
+  }, [gridDatasets, gridFilters, getFillColor, zoom]);
 
   // Listen to extent changes
   ArcGISReactiveUtils.when(
