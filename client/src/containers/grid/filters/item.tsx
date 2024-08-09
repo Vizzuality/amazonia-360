@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 
 import { LuPlus, LuX } from "react-icons/lu";
+import { useDebounce } from "rooks";
 
 import { cn } from "@/lib/utils";
 
@@ -62,6 +63,15 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
     );
   };
 
+  const onValueChange = (v: number[]) => {
+    setGridFilters({
+      ...gridFilters,
+      [dataset.var_name]: v,
+    });
+  };
+
+  const onValueChangeDebounced = useDebounce(onValueChange, 100);
+
   return (
     <div key={dataset.var_name} className="space-y-2">
       <Collapsible
@@ -96,14 +106,9 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
                 min={continousOptions.min || 0}
                 max={continousOptions.max || 100}
                 step={1}
-                value={continuousValue}
+                defaultValue={continuousValue}
                 minStepsBetweenThumbs={1}
-                onValueChange={(v) => {
-                  setGridFilters({
-                    ...gridFilters,
-                    [dataset.var_name]: v,
-                  });
-                }}
+                onValueChange={onValueChangeDebounced}
               />
             </div>
           )}
