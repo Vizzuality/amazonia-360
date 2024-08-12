@@ -22,7 +22,7 @@ export const columns: ColumnDef<ResearchCenter>[] = [
       const v = props.getValue<string>();
       return (
         <div className="flex space-x-2">
-          <LuFolderSearch className="text-cyan-600 mt-px shrink-0" />
+          <LuFolderSearch className="mt-px shrink-0 text-cyan-600" />
           <span>{v}</span>
         </div>
       );

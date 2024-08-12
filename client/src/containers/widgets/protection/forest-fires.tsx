@@ -1,10 +1,7 @@
 "use client";
 
 import { treemapDice } from "@visx/hierarchy";
-import {
-  HierarchyNode,
-  HierarchyRectangularNode,
-} from "@visx/hierarchy/lib/types";
+import { HierarchyNode, HierarchyRectangularNode } from "@visx/hierarchy/lib/types";
 import { scaleOrdinal } from "@visx/scale";
 
 import { formatPercentage } from "@/lib/formats";
@@ -15,14 +12,7 @@ import { useSyncLocation } from "@/app/store";
 
 import { FIRES, FireIds } from "@/constants/colors";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardInfo,
-  CardLoader,
-  CardTitle,
-} from "@/containers/card";
+import { Card, CardContent, CardHeader, CardInfo, CardLoader, CardTitle } from "@/containers/card";
 import LegendOrdinal from "@/containers/legend/ordinal";
 
 import MarimekkoChart, { Data } from "@/components/charts/marimekko";

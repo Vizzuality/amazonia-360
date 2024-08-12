@@ -17,7 +17,7 @@ export const columns: ColumnDef<AdministrativeBoundary>[] = [
       const v = props.getValue<string>();
       return (
         <div className="flex space-x-2">
-          <LuMapPin className="text-cyan-600 mt-px shrink-0" />
+          <LuMapPin className="mt-px shrink-0 text-cyan-600" />
           <span>{v}</span>
         </div>
       );

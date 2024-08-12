@@ -1,8 +1,4 @@
-import {
-  QueryFunction,
-  UseQueryOptions,
-  useQuery,
-} from "@tanstack/react-query";
+import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 
 import { gridDatasetMetadataGridMetaGet } from "@/types/generated/grid";
 
@@ -37,18 +33,11 @@ export const getGridMetaOptions = <
   options?: Omit<GridMetaQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const queryKey = getGridMetaKey();
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getGridMeta>>> = () =>
-    getGridMeta();
-  return { queryKey, queryFn, ...options } as GridMetaQueryOptions<
-    TData,
-    TError
-  >;
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getGridMeta>>> = () => getGridMeta();
+  return { queryKey, queryFn, ...options } as GridMetaQueryOptions<TData, TError>;
 };
 
-export const useGetGridMeta = <
-  TData = Awaited<ReturnType<typeof getGridMeta>>,
-  TError = unknown,
->(
+export const useGetGridMeta = <TData = Awaited<ReturnType<typeof getGridMeta>>, TError = unknown>(
   options?: Omit<GridMetaQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const { queryKey, queryFn } = getGridMetaOptions(options);

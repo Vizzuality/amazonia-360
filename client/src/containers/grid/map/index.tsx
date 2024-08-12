@@ -26,7 +26,7 @@ export default function MapContainer() {
   }, 500);
 
   return (
-    <div className="w-full flex flex-col grow">
+    <div className="flex w-full grow flex-col">
       <Map
         id="default"
         defaultBbox={bbox}

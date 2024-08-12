@@ -114,9 +114,8 @@ export const getSuggestionsQueryOptions = <
   >,
 ) => {
   const queryKey = getSuggestionsQueryKey(params);
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getSuggestions>>
-  > = () => getSuggestions(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getSuggestions>>> = () =>
+    getSuggestions(params);
   return { queryKey, queryFn, ...options };
 };
 
@@ -195,26 +194,16 @@ export const getSearchQueryOptions = <
   TError = unknown,
 >(
   params?: GetSearchParams,
-  options?: Omit<
-    UseQueryOptions<Awaited<ReturnType<typeof getSearch>>, TError, TData>,
-    "queryKey"
-  >,
+  options?: Omit<UseQueryOptions<Awaited<ReturnType<typeof getSearch>>, TError, TData>, "queryKey">,
 ) => {
   const queryKey = getSearchQueryKey(params);
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getSearch>>> = () =>
-    getSearch(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getSearch>>> = () => getSearch(params);
   return { queryKey, queryFn, ...options };
 };
 
-export const useGetSearch = <
-  TData = Awaited<ReturnType<typeof getSearch>>,
-  TError = unknown,
->(
+export const useGetSearch = <TData = Awaited<ReturnType<typeof getSearch>>, TError = unknown>(
   params: GetSearchParams,
-  options?: Omit<
-    UseQueryOptions<Awaited<ReturnType<typeof getSearch>>, TError, TData>,
-    "queryKey"
-  >,
+  options?: Omit<UseQueryOptions<Awaited<ReturnType<typeof getSearch>>, TError, TData>, "queryKey">,
 ) => {
   const { queryKey, queryFn } = getSearchQueryOptions(params, options);
 

@@ -4,9 +4,7 @@
  * Amazonia360 API
  * OpenAPI spec version: 0.1.0
  */
-export type ReadTableGridTablePostBodyItem =
-  | CategoricalFilter
-  | NumericalFilter;
+export type ReadTableGridTablePostBodyItem = CategoricalFilter | NumericalFilter;
 
 export type ReadTableGridTablePostParams = {
   /**
@@ -3468,9 +3466,7 @@ export type TileTilesTileMatrixSetIdZXYScaleXFormatGetParams = {
 /**
  * GeoJSON Feature or FeatureCollection.
  */
-export type ExactZonalStatsExactZonalStatsPostBody =
-  | FeatureCollection
-  | Feature;
+export type ExactZonalStatsExactZonalStatsPostBody = FeatureCollection | Feature;
 
 export type ExactZonalStatsExactZonalStatsPostParams = {
   /**
@@ -3560,8 +3556,7 @@ export interface ValidationError {
 
 export type TileJSONTemplate = string | null;
 
-export type TileJSONScheme =
-  (typeof TileJSONScheme)[keyof typeof TileJSONScheme];
+export type TileJSONScheme = (typeof TileJSONScheme)[keyof typeof TileJSONScheme];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TileJSONScheme = {
@@ -3877,9 +3872,7 @@ export interface StatsFeatures {
   features: StatsFeature[];
 }
 
-export type PolygonCoordinatesItemItem =
-  | [number, number]
-  | [number, number, number];
+export type PolygonCoordinatesItemItem = [number, number] | [number, number, number];
 
 export type PolygonBbox =
   | [number, number, number, number]
@@ -3922,8 +3915,7 @@ export interface PointInput {
   type: "Point";
 }
 
-export type NumericalOperators =
-  (typeof NumericalOperators)[keyof typeof NumericalOperators];
+export type NumericalOperators = (typeof NumericalOperators)[keyof typeof NumericalOperators];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const NumericalOperators = {
@@ -3959,9 +3951,7 @@ export interface NumericalFilter {
   value: number;
 }
 
-export type MultiPolygonCoordinatesItemItemItem =
-  | [number, number]
-  | [number, number, number];
+export type MultiPolygonCoordinatesItemItemItem = [number, number] | [number, number, number];
 
 export type MultiPolygonBbox =
   | [number, number, number, number]
@@ -3977,9 +3967,7 @@ export interface MultiPolygon {
   type: "MultiPolygon";
 }
 
-export type MultiPointCoordinatesItem =
-  | [number, number]
-  | [number, number, number];
+export type MultiPointCoordinatesItem = [number, number] | [number, number, number];
 
 export type MultiPointBbox =
   | [number, number, number, number]
@@ -3995,9 +3983,7 @@ export interface MultiPoint {
   type: "MultiPoint";
 }
 
-export type MultiLineStringCoordinatesItemItem =
-  | [number, number]
-  | [number, number, number];
+export type MultiLineStringCoordinatesItemItem = [number, number] | [number, number, number];
 
 export type MultiLineStringBbox =
   | [number, number, number, number]
@@ -4013,9 +3999,7 @@ export interface MultiLineString {
   type: "MultiLineString";
 }
 
-export type LineStringCoordinatesItem =
-  | [number, number]
-  | [number, number, number];
+export type LineStringCoordinatesItem = [number, number] | [number, number, number];
 
 export type LineStringBbox =
   | [number, number, number, number]
@@ -4200,8 +4184,7 @@ export interface DatasetMeta {
   var_name: string;
 }
 
-export type CategoricalOperators =
-  (typeof CategoricalOperators)[keyof typeof CategoricalOperators];
+export type CategoricalOperators = (typeof CategoricalOperators)[keyof typeof CategoricalOperators];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CategoricalOperators = {

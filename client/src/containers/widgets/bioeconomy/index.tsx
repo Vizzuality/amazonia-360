@@ -13,7 +13,7 @@ export default function WidgetsBioeconomy({ index }: { index: number }) {
 
   return (
     <div className="container print:break-before-page">
-      <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
+      <h2 className="mb-4 text-xl font-semibold">{T?.label}</h2>
       <WidgetsRow>
         <WidgetsColumn
           className={cn(
@@ -24,7 +24,7 @@ export default function WidgetsBioeconomy({ index }: { index: number }) {
           <WidgetResearchCenters />
         </WidgetsColumn>
         <WidgetsColumn className="col-span-12 lg:col-span-6 print:col-span-12">
-          <Card className="h-full p-0 relative">
+          <Card className="relative h-full p-0">
             <WidgetMap ids={["institutional_tracking"]} />
           </Card>
         </WidgetsColumn>

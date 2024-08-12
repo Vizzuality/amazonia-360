@@ -1,9 +1,5 @@
 import Basemap from "@arcgis/core/Basemap";
-import {
-  QueryFunction,
-  UseQueryOptions,
-  useQuery,
-} from "@tanstack/react-query";
+import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 
 import { BasemapIds } from "@/components/map/controls/basemap";
 
@@ -37,10 +33,7 @@ export const getBasemapKey = (params: GetBasemapParams) => {
   return ["arcgis", "basemap", id] as const;
 };
 
-export const getBasemapOptions = <
-  TData = Awaited<ReturnType<typeof getBasemap>>,
-  TError = unknown,
->(
+export const getBasemapOptions = <TData = Awaited<ReturnType<typeof getBasemap>>, TError = unknown>(
   params: GetBasemapParams,
   options?: Omit<
     UseQueryOptions<Awaited<ReturnType<typeof getBasemap>>, TError, TData>,
@@ -48,8 +41,7 @@ export const getBasemapOptions = <
   >,
 ) => {
   const queryKey = getBasemapKey(params);
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getBasemap>>> = () =>
-    getBasemap(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getBasemap>>> = () => getBasemap(params);
   return { queryKey, queryFn, ...options } as UseQueryOptions<
     Awaited<ReturnType<typeof getBasemap>>,
     TError,
@@ -57,10 +49,7 @@ export const getBasemapOptions = <
   >;
 };
 
-export const useGetBasemap = <
-  TData = Awaited<ReturnType<typeof getBasemap>>,
-  TError = unknown,
->(
+export const useGetBasemap = <TData = Awaited<ReturnType<typeof getBasemap>>, TError = unknown>(
   params: GetBasemapParams,
   options?: Omit<
     UseQueryOptions<Awaited<ReturnType<typeof getBasemap>>, TError, TData>,

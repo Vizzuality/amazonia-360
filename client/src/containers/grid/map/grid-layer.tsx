@@ -31,9 +31,7 @@ export const getGridLayerProps = ({
   getFillColor: Accessor<Record<string, number>, Color>;
   zoom: number;
 }) => {
-  const columns = !!gridDatasets.length
-    ? gridDatasets.map((d) => `columns=${d}`).join("&")
-    : "";
+  const columns = !!gridDatasets.length ? gridDatasets.map((d) => `columns=${d}`).join("&") : "";
 
   return new H3TileLayer({
     id: "tile-h3s",
@@ -106,9 +104,7 @@ export default function GridLayer() {
 
     if (gridDatasets.length === 1) {
       const [g] = gridDatasets;
-      const dataset = gridMetaData.datasets.find(
-        (dataset) => dataset.var_name === g,
-      );
+      const dataset = gridMetaData.datasets.find((dataset) => dataset.var_name === g);
 
       if (dataset?.legend.legend_type === "continuous") {
         const s = dataset.legend.stats.find((stat) => stat.level === 1);

@@ -10,32 +10,27 @@ export const MOSAIC_OPTIONS = [
   {
     key: "amazonia_area_by_country_cartographic_area_sqkm",
     label: "Country Amazonia Area (km²)",
-    description:
-      "Total area of the Amazonia Forever work area within a country",
+    description: "Total area of the Amazonia Forever work area within a country",
   },
   {
     key: "proportion_of_amazonia_area_by_country_percentage",
     label: "Country Amazonia Coverage (%)",
-    description:
-      "Percentage of a country covered by the Amazonia Forever work area",
+    description: "Percentage of a country covered by the Amazonia Forever work area",
   },
   {
     key: "proportion_of_total_area_of_the_afp_by_country_percentage",
     label: "Country Share of Total Amazonia (%)",
-    description:
-      "Percentage of the total Amazonia Forever work area located within a country",
+    description: "Percentage of the total Amazonia Forever work area located within a country",
   },
   {
     key: "population_density_of_the_afp_zones_by_country_inhabitants_per_sqkm",
     label: "Country Amazonia Population Density (inhabitants/km²)",
-    description:
-      "Population density within a country's Amazonia Forever work area",
+    description: "Population density within a country's Amazonia Forever work area",
   },
   {
     key: "proportion_of_the_population_of_the_amazonia_zone_by_country_percentage",
     label: "Country Amazonia Population (%)",
-    description:
-      "Percentage of a country's population residing in its Amazonia Forever work area",
+    description: "Percentage of a country's population residing in its Amazonia Forever work area",
   },
   {
     key: "proportion_of_the_population_of_the_afp_by_country_percentage",

@@ -111,9 +111,7 @@ export const useLocationGadm = (location?: Location | null) => {
         // gid1: string[];
         // gid2: string[];
       } {
-        const attributes: AdministrativeBoundary[] = data.features.map(
-          (f) => f.attributes,
-        );
+        const attributes: AdministrativeBoundary[] = data.features.map((f) => f.attributes);
         return {
           gid0: Array.from(new Set(attributes.map((f) => f.GID_0)).values()),
           // gid1: Array.from(new Set(attributes.map((f) => f.GID_1)).values()),
@@ -142,27 +140,17 @@ export const getGeometryByType = (location: CustomLocation) => {
   return null;
 };
 
-export const getGeometryWithBuffer = (
-  geometry: __esri.Geometry | null,
-): __esri.Polygon | null => {
+export const getGeometryWithBuffer = (geometry: __esri.Geometry | null): __esri.Polygon | null => {
   if (!geometry) return null;
 
   if (geometry.type === "point") {
-    const g = geometryEngine.geodesicBuffer(
-      geometry,
-      POINT_BUFFER,
-      "kilometers",
-    );
+    const g = geometryEngine.geodesicBuffer(geometry, POINT_BUFFER, "kilometers");
 
     return Array.isArray(g) ? g[0] : g;
   }
 
   if (geometry.type === "polyline") {
-    const g = geometryEngine.geodesicBuffer(
-      geometry,
-      POLYLINE_BUFFER,
-      "kilometers",
-    );
+    const g = geometryEngine.geodesicBuffer(geometry, POLYLINE_BUFFER, "kilometers");
 
     return Array.isArray(g) ? g[0] : g;
   }

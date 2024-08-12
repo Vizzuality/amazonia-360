@@ -3,10 +3,10 @@
 exports[`Header renders the Home link selected 1`] = `
 <div>
   <header
-    class="h-20 flex flex-col justify-center bg-white backdrop-blur"
+    class="flex h-20 flex-col justify-center bg-white backdrop-blur"
   >
     <div
-      class="container mx-auto flex justify-between items-center"
+      class="container mx-auto flex items-center justify-between"
     >
       <a
         href="/"
@@ -28,7 +28,7 @@ exports[`Header renders the Home link selected 1`] = `
             class="space-x-2"
           >
             <span
-              class="font-medium text-sm"
+              class="text-sm font-medium"
             >
               Amazonia360+
             </span>
@@ -44,25 +44,25 @@ exports[`Header renders the Home link selected 1`] = `
         class="flex space-x-8 print:hidden"
       >
         <a
-          class="hover:text-cyan-500 text-sm text-cyan-500"
+          class="text-sm hover:text-cyan-500 text-cyan-500"
           href="/"
         >
           Home
         </a>
         <a
-          class="hover:text-cyan-500 text-sm"
+          class="text-sm hover:text-cyan-500"
           href="/report"
         >
           Report Tool
         </a>
         <a
-          class="hover:text-cyan-500 text-sm"
+          class="text-sm hover:text-cyan-500"
           href="/hub"
         >
           Hub
         </a>
         <a
-          class="hover:text-cyan-500 text-sm"
+          class="text-sm hover:text-cyan-500"
           href="/grid"
         >
           Grid
@@ -76,10 +76,10 @@ exports[`Header renders the Home link selected 1`] = `
 exports[`Header renders the Hub link selected 1`] = `
 <div>
   <header
-    class="h-20 flex flex-col justify-center bg-white backdrop-blur"
+    class="flex h-20 flex-col justify-center bg-white backdrop-blur"
   >
     <div
-      class="container mx-auto flex justify-between items-center"
+      class="container mx-auto flex items-center justify-between"
     >
       <a
         href="/"
@@ -101,7 +101,7 @@ exports[`Header renders the Hub link selected 1`] = `
             class="space-x-2"
           >
             <span
-              class="font-medium text-sm"
+              class="text-sm font-medium"
             >
               Amazonia360+
             </span>
@@ -117,25 +117,25 @@ exports[`Header renders the Hub link selected 1`] = `
         class="flex space-x-8 print:hidden"
       >
         <a
-          class="hover:text-cyan-500 text-sm"
+          class="text-sm hover:text-cyan-500"
           href="/"
         >
           Home
         </a>
         <a
-          class="hover:text-cyan-500 text-sm"
+          class="text-sm hover:text-cyan-500"
           href="/report"
         >
           Report Tool
         </a>
         <a
-          class="hover:text-cyan-500 text-sm text-cyan-500"
+          class="text-sm hover:text-cyan-500 text-cyan-500"
           href="/hub"
         >
           Hub
         </a>
         <a
-          class="hover:text-cyan-500 text-sm"
+          class="text-sm hover:text-cyan-500"
           href="/grid"
         >
           Grid
@@ -149,10 +149,10 @@ exports[`Header renders the Hub link selected 1`] = `
 exports[`Header renders the Report Tool link selected 1`] = `
 <div>
   <header
-    class="h-20 flex flex-col justify-center bg-white backdrop-blur"
+    class="flex h-20 flex-col justify-center bg-white backdrop-blur"
   >
     <div
-      class="container mx-auto flex justify-between items-center"
+      class="container mx-auto flex items-center justify-between"
     >
       <a
         href="/"
@@ -174,7 +174,7 @@ exports[`Header renders the Report Tool link selected 1`] = `
             class="space-x-2"
           >
             <span
-              class="font-medium text-sm"
+              class="text-sm font-medium"
             >
               Amazonia360+
             </span>
@@ -190,25 +190,25 @@ exports[`Header renders the Report Tool link selected 1`] = `
         class="flex space-x-8 print:hidden"
       >
         <a
-          class="hover:text-cyan-500 text-sm"
+          class="text-sm hover:text-cyan-500"
           href="/"
         >
           Home
         </a>
         <a
-          class="hover:text-cyan-500 text-sm text-cyan-500"
+          class="text-sm hover:text-cyan-500 text-cyan-500"
           href="/report"
         >
           Report Tool
         </a>
         <a
-          class="hover:text-cyan-500 text-sm"
+          class="text-sm hover:text-cyan-500"
           href="/hub"
         >
           Hub
         </a>
         <a
-          class="hover:text-cyan-500 text-sm"
+          class="text-sm hover:text-cyan-500"
           href="/grid"
         >
           Grid

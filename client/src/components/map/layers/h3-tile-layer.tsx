@@ -38,13 +38,9 @@ function makeBufferedBounds(bounds: number[], tileRes: number) {
   // So will use random edge from the central cell as an edge length proxy since it doesn't need to be exact.
   const medLat = (bounds[1] + bounds[3]) / 2;
   const medLng = (bounds[0] + bounds[2]) / 2;
-  const centroidCellEdges = originToDirectedEdges(
-    latLngToCell(medLat, medLng, tileRes),
-  );
+  const centroidCellEdges = originToDirectedEdges(latLngToCell(medLat, medLng, tileRes));
   // largest edge from the center cell of the viewport
-  const buffer =
-    (Math.max(...centroidCellEdges.map((x) => edgeLength(x, "rads"))) * 180) /
-    Math.PI;
+  const buffer = (Math.max(...centroidCellEdges.map((x) => edgeLength(x, "rads"))) * 180) / Math.PI;
   bounds[0] = Math.max(bounds[0] - buffer, -180); // min X
   bounds[1] = Math.max(bounds[1] - buffer, -90); // min Y
   bounds[2] = Math.min(bounds[2] + buffer, 180); // max X
@@ -101,10 +97,7 @@ export class H3Tileset2D extends Tileset2D {
     ) {
       tileRes = opts.maxZoom;
     }
-    const bufferedBounds = makeBufferedBounds(
-      opts.viewport.getBounds(),
-      tileRes,
-    );
+    const bufferedBounds = makeBufferedBounds(opts.viewport.getBounds(), tileRes);
     const cells = fillViewportBBoxes(bufferedBounds, tileRes);
     return cells.map((h3index) => ({ h3index: h3index }));
   }

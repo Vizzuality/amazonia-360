@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 export default function GridPage() {
   return (
     <PageProviders>
-      <main className="relative flex flex-col min-h-[calc(100svh_-_theme(space.40)_+_1px)]">
+      <main className="relative flex min-h-[calc(100svh_-_theme(space.40)_+_1px)] flex-col">
         {/* <div className="absolute z-10 w-1/2 h-full left-0 top-0 bg-gradient-to-r from-slate-500/20 to-slate-500/0 pointer-events-none"></div> */}
-        <div className="flex justify-between items-stretch grow">
+        <div className="flex grow items-stretch justify-between">
           <Sidebar />
           <Map />
         </div>

@@ -30,8 +30,7 @@ export default function WidgetEnvironmentSummaryAltitude({
 
   return (
     <>
-      The region is situated within an{" "}
-      {Pluralize("altitude range", STATISTICS.altitudes.size)} of{" "}
+      The region is situated within an {Pluralize("altitude range", STATISTICS.altitudes.size)} of{" "}
       <strong>
         {joinWithAnd(
           Array.from(STATISTICS.altitudes.values()).map(
