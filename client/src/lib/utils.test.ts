@@ -1,10 +1,4 @@
-import {
-  cn,
-  getKeys,
-  joinWithAnd,
-  convertHexToRgbaArray,
-  getTextSize,
-} from "./utils";
+import { cn, getKeys, joinWithAnd, convertHexToRgbaArray, getTextSize } from "./utils";
 
 const mockWindow = jest.spyOn(global, "window", "get") as jest.SpyInstance<
   (Window & typeof globalThis) | undefined,

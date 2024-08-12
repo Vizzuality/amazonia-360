@@ -8,12 +8,7 @@ import { useGetIntersectionAnalysis } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
-import {
-  Card,
-  CardWidgetNumber,
-  CardTitle,
-  CardLoader,
-} from "@/containers/card";
+import { Card, CardWidgetNumber, CardTitle, CardLoader } from "@/containers/card";
 
 export default function WidgetAmazoniaCoverage() {
   const [location] = useSyncLocation();

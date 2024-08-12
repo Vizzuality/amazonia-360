@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  HierarchyNode,
-  HierarchyRectangularNode,
-} from "@visx/hierarchy/lib/types";
+import { HierarchyNode, HierarchyRectangularNode } from "@visx/hierarchy/lib/types";
 import { scaleOrdinal } from "@visx/scale";
 
 import { formatPercentage } from "@/lib/formats";
@@ -14,13 +11,7 @@ import { useSyncLocation } from "@/app/store";
 
 import { BIOMES, BiomesIds } from "@/constants/colors";
 
-import {
-  Card,
-  CardHeader,
-  CardInfo,
-  CardLoader,
-  CardTitle,
-} from "@/containers/card";
+import { Card, CardHeader, CardInfo, CardLoader, CardTitle } from "@/containers/card";
 import LegendOrdinal from "@/containers/legend/ordinal";
 
 import MarimekkoChart, { Data } from "@/components/charts/marimekko";
@@ -92,11 +83,7 @@ export default function WidgetBiomesByType() {
 
       <CardLoader query={[query]} className="h-52">
         <div className="space-y-2 pt-2">
-          <MarimekkoChart
-            format={FORMAT}
-            colorScale={ordinalColorScale}
-            data={query.data || []}
-          />
+          <MarimekkoChart format={FORMAT} colorScale={ordinalColorScale} data={query.data || []} />
 
           <LegendOrdinal ordinalColorScale={ordinalColorScale} />
         </div>

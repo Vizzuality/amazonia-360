@@ -12,17 +12,8 @@ import { LuLayers } from "react-icons/lu";
 import { cn } from "@/lib/utils";
 
 import { useMap } from "@/components/map/provider";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Tooltip,
-  TooltipArrow,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { CONTROL_BUTTON_STYLES } from "./constants";
 
@@ -75,9 +66,7 @@ interface BasemapControlProps {
   className?: string;
 }
 
-export const BasemapControl: FC<BasemapControlProps> = ({
-  className,
-}: BasemapControlProps) => {
+export const BasemapControl: FC<BasemapControlProps> = ({ className }: BasemapControlProps) => {
   const map = useMap();
 
   const handleBasemap = useCallback(
@@ -109,37 +98,32 @@ export const BasemapControl: FC<BasemapControlProps> = ({
           </TooltipTrigger>
         </PopoverTrigger>
 
-        <PopoverContent
-          side="left"
-          align="start"
-          className="bg-background w-auto p-0"
-        >
+        <PopoverContent side="left" align="start" className="w-auto bg-background p-0">
           <ul className="flex flex-col">
             {BASEMAPS.map((b) => {
               return (
                 <li key={b.id} className="flex">
                   <button
                     className={cn({
-                      "flex items-center p-2 w-full space-x-2 hover:bg-muted group transition-colors duration-200":
+                      "group flex w-full items-center space-x-2 p-2 transition-colors duration-200 hover:bg-muted":
                         true,
-                      "bg-foreground hover:bg-foreground":
-                        map?.map.basemap?.id === b.id,
+                      "bg-foreground hover:bg-foreground": map?.map.basemap?.id === b.id,
                     })}
                     type="button"
                     onClick={() => handleBasemap(b.id)}
                   >
-                    <div className="shrink-0 w-16 shadow-sm">
+                    <div className="w-16 shrink-0 shadow-sm">
                       <Image
                         src={b.basemap.thumbnailUrl}
                         alt={b.label}
                         width={200}
                         height={133}
-                        className="group-hover:scale-105 transition-transform duration-200 ease-in-out"
+                        className="transition-transform duration-200 ease-in-out group-hover:scale-105"
                       />
                     </div>
                     <span
                       className={cn({
-                        "text-foreground text-xs transition-colors": true,
+                        "text-xs text-foreground transition-colors": true,
                         "text-background": map?.map.basemap?.id === b.id,
                       })}
                     >

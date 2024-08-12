@@ -8,13 +8,10 @@ import {
 
 import { TOPICS } from "@/constants/topics";
 
-export const topicsParser = parseAsArrayOf(
-  parseAsStringLiteral(TOPICS.map((topic) => topic.id)),
-);
+export const topicsParser = parseAsArrayOf(parseAsStringLiteral(TOPICS.map((topic) => topic.id)));
 
 export const bboxParser = parseAsArrayOf(parseAsFloat).withDefault([
-  -9502265.057100412, -3312366.5313590243, -3318815.2169444375,
-  2249803.142895202,
+  -9502265.057100412, -3312366.5313590243, -3318815.2169444375, 2249803.142895202,
 ]);
 
 export type SearchLocation = {

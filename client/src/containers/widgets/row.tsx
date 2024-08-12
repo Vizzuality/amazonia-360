@@ -11,7 +11,7 @@ export default function WidgetsRow({
   return (
     <div
       className={cn(
-        "grid grid-cols-12 gap-2 items-stretch grow print:items-start print:grow-0",
+        "grid grow grid-cols-12 items-stretch gap-2 print:grow-0 print:items-start",
         className,
       )}
     >

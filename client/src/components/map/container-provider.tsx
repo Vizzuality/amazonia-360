@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  ReactNode,
-  createContext,
-  useCallback,
-  useContext,
-  useRef,
-} from "react";
+import { ReactNode, createContext, useCallback, useContext, useRef } from "react";
 
 export type MapProps = {
   map: __esri.Map;
@@ -25,9 +19,7 @@ export const MapContainerContext = createContext<MapContainerContextProps>({
   onMapUnmount: () => {},
 });
 
-export const MapContainerProvider: React.FC<{ children?: ReactNode }> = (
-  props,
-) => {
+export const MapContainerProvider: React.FC<{ children?: ReactNode }> = (props) => {
   const maps = useRef<{ [id: string]: MapProps }>({});
 
   const onMapMount = useCallback(
