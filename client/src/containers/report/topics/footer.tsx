@@ -9,11 +9,7 @@ import { useSyncSearchParams, useSyncTopics } from "@/app/store";
 import { TOPICS } from "@/constants/topics";
 
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function TopicsFooter() {
   const searchParams = useSyncSearchParams();
@@ -45,9 +41,7 @@ export default function TopicsFooter() {
               </TooltipTrigger>
               <TooltipPortal>
                 <TooltipContent side="top" align="start">
-                  <p className="text-center">
-                    Please select at least one topic
-                  </p>
+                  <p className="text-center">Please select at least one topic</p>
                 </TooltipContent>
               </TooltipPortal>
             </Tooltip>

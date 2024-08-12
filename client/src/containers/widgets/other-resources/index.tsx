@@ -50,25 +50,18 @@ export default function OtherResources() {
 
   return (
     <div className="container print:break-before-page">
-      <h2 className="text-xl font-semibold mb-4">Knowledge resources</h2>
+      <h2 className="mb-4 text-xl font-semibold">Knowledge resources</h2>
 
       <CardLoader query={[query]} className="h-80">
         <CardNoData query={[query]}>
-          <Tabs
-            defaultValue={tab}
-            className="flex flex-col space-y-4 items-start"
-          >
+          <Tabs defaultValue={tab} className="flex flex-col items-start space-y-4">
             <TabsList>
               <TabsTrigger value="all" onClick={() => setTab("all")}>
                 All ({query.data?.length || 0})
               </TabsTrigger>
 
               {GROUPS.map((group) => (
-                <TabsTrigger
-                  key={group[0]}
-                  value={group[0]}
-                  onClick={() => setTab(group[0])}
-                >
+                <TabsTrigger key={group[0]} value={group[0]} onClick={() => setTab(group[0])}>
                   {group[0]} ({group[1].length})
                 </TabsTrigger>
               ))}

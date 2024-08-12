@@ -20,15 +20,13 @@ export interface SearchParams {
   location: string;
 }
 
-export default async function ReportTopicsPage({
-  searchParams,
-}: PageProps<Params, SearchParams>) {
+export default async function ReportTopicsPage({ searchParams }: PageProps<Params, SearchParams>) {
   if (!searchParams.location) {
     redirect("/report");
   }
 
   return (
-    <main className="relative flex flex-col bg-blue-50 py-12 min-h-[calc(100svh_-_theme(space.40)_+_1px)]">
+    <main className="relative flex min-h-[calc(100svh_-_theme(space.40)_+_1px)] flex-col bg-blue-50 py-12">
       <div className="flex flex-col space-y-10">
         <TopicsHeader />
 

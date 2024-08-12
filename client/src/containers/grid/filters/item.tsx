@@ -12,11 +12,7 @@ import { DatasetMeta } from "@/types/generated/api.schemas";
 import { useSyncGridDatasets, useSyncGridFilters } from "@/app/store";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Slider } from "@/components/ui/slider";
 
 export default function GridFiltersItem(dataset: DatasetMeta) {
@@ -42,10 +38,7 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
     if (continousOptions) {
       if (gridFilters) {
         return (
-          gridFilters[dataset.var_name] || [
-            continousOptions.min || 0,
-            continousOptions.max || 100,
-          ]
+          gridFilters[dataset.var_name] || [continousOptions.min || 0, continousOptions.max || 100]
         );
       }
 
@@ -78,28 +71,22 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
         open={open}
         onOpenChange={onOpenChange}
         className={cn({
-          "border border-blue-50 px-3 py-1.5 rounded-2xl": true,
+          "rounded-2xl border border-blue-50 px-3 py-1.5": true,
         })}
       >
-        <CollapsibleTrigger className="flex justify-between items-center w-full">
-          <h3 className="text-sm font-medium text-foreground">
-            {dataset.label}
-          </h3>
+        <CollapsibleTrigger className="flex w-full items-center justify-between">
+          <h3 className="text-sm font-medium text-foreground">{dataset.label}</h3>
 
-          {!open && <LuPlus className="w-5 h-5 text-primary" />}
-          {open && <LuX className="w-5 h-5 text-primary" />}
+          {!open && <LuPlus className="h-5 w-5 text-primary" />}
+          {open && <LuX className="h-5 w-5 text-primary" />}
         </CollapsibleTrigger>
 
         <CollapsibleContent className="py-2">
           {dataset.legend.legend_type === "continuous" && continousOptions && (
             <div className="space-y-1">
               <div className="flex justify-between">
-                <span className="text-xs text-gray-500">
-                  {continousOptions.min}
-                </span>
-                <span className="text-xs text-gray-500 float-right">
-                  {continousOptions.max}
-                </span>
+                <span className="text-xs text-gray-500">{continousOptions.min}</span>
+                <span className="float-right text-xs text-gray-500">{continousOptions.max}</span>
               </div>
 
               <Slider
@@ -113,34 +100,28 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
             </div>
           )}
 
-          {dataset.legend.legend_type === "categorical" &&
-            categoricalOptions && (
-              <div className="flex flex-col justify-between gap-1">
-                {categoricalOptions.map((option) => (
-                  <div
-                    key={option.value}
-                    className="flex space-x-1 items-center"
-                  >
-                    <Checkbox
-                      // checked={fires.includes(+key)}
-                      onCheckedChange={(checked) => {
-                        console.info(dataset.var_name, option, checked);
+          {dataset.legend.legend_type === "categorical" && categoricalOptions && (
+            <div className="flex flex-col justify-between gap-1">
+              {categoricalOptions.map((option) => (
+                <div key={option.value} className="flex items-center space-x-1">
+                  <Checkbox
+                    // checked={fires.includes(+key)}
+                    onCheckedChange={(checked) => {
+                      console.info(dataset.var_name, option, checked);
 
-                        // setGridFilters({
-                        //   ...gridFilters,
-                        //   [dataset.var_name]: checked
-                        //     ? [...gridFilters[dataset.var_name], key]
-                        //     : gridFilters[dataset.var_name].filter((k) => k !== key),
-                        // });
-                      }}
-                    />
-                    <span className="text-xs text-gray-500">
-                      {option.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
+                      // setGridFilters({
+                      //   ...gridFilters,
+                      //   [dataset.var_name]: checked
+                      //     ? [...gridFilters[dataset.var_name], key]
+                      //     : gridFilters[dataset.var_name].filter((k) => k !== key),
+                      // });
+                    }}
+                  />
+                  <span className="text-xs text-gray-500">{option.label}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </CollapsibleContent>
       </Collapsible>
     </div>

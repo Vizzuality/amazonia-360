@@ -9,12 +9,7 @@ import { useDebounce, useWindowSize } from "rooks";
 
 import { getGeometryWithBuffer } from "@/lib/location";
 
-import {
-  sketchAtom,
-  tmpBboxAtom,
-  useSyncBbox,
-  useSyncLocation,
-} from "@/app/store";
+import { sketchAtom, tmpBboxAtom, useSyncBbox, useSyncLocation } from "@/app/store";
 
 import LayerManager from "@/containers/report/map/layer-manager";
 
@@ -60,7 +55,7 @@ export default function MapContainer() {
   }, [setSketch]);
 
   return (
-    <div className="w-full flex flex-col grow">
+    <div className="flex w-full grow flex-col">
       <Map
         id="default"
         defaultBbox={bbox}

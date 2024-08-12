@@ -36,19 +36,19 @@ export default function ReportResultsHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="pb-6 space-y-4">
+    <header className="space-y-4 pb-6">
       <div className="container">
         <div className="flex justify-between">
           {/* Name */}
-          <div className="flex items-center space-x-6 mr-4">
-            <h1 className="text-2xl lg:text-3xl tall:xl:text-4xl font-bold text-primary">
+          <div className="mr-4 flex items-center space-x-6">
+            <h1 className="text-2xl font-bold text-primary lg:text-3xl tall:xl:text-4xl">
               {title}
             </h1>
 
             <AlertDialog>
               <AlertDialogTrigger asChild className="print:hidden">
                 <Button variant="outline" className="space-x-2">
-                  <LuPlus className="w-5 h-5" />
+                  <LuPlus className="h-5 w-5" />
                   <span>New report</span>
                 </Button>
               </AlertDialogTrigger>
@@ -56,9 +56,9 @@ export default function ReportResultsHeader() {
                 <AlertDialogHeader>
                   <AlertDialogTitle>New report</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Proceed if you wish to generate a new report by selecting a
-                    new area. Note that switching areas will refresh your
-                    current session, and the existing report will be lost.
+                    Proceed if you wish to generate a new report by selecting a new area. Note that
+                    switching areas will refresh your current session, and the existing report will
+                    be lost.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -79,7 +79,7 @@ export default function ReportResultsHeader() {
               className="space-x-2"
               onClick={() => setOpen(!open)}
             >
-              <LuLayoutGrid className="w-5 h-5" />
+              <LuLayoutGrid className="h-5 w-5" />
               <span>Topics</span>
             </Button>
 
@@ -91,7 +91,7 @@ export default function ReportResultsHeader() {
       </div>
 
       {open && (
-        <div className="animate-in fade-in zoom-in-95 duration-300">
+        <div className="duration-300 animate-in fade-in zoom-in-95">
           <Topics size="sm" interactive />
         </div>
       )}

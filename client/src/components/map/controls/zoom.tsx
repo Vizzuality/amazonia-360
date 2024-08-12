@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  FC,
-  useCallback,
-  MouseEvent,
-  useRef,
-  useMemo,
-  useState,
-  useEffect,
-} from "react";
+import { FC, useCallback, MouseEvent, useRef, useMemo, useState, useEffect } from "react";
 
 import ZoomVM from "@arcgis/core/widgets/Zoom/ZoomViewModel";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
@@ -18,12 +10,7 @@ import { useDebounce } from "rooks";
 import { cn } from "@/lib/utils";
 
 import { useMap } from "@/components/map/provider";
-import {
-  Tooltip,
-  TooltipArrow,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { CONTROL_BUTTON_STYLES } from "./constants";
 
@@ -31,9 +18,7 @@ interface ZoomControlProps {
   className?: string;
 }
 
-export const ZoomControl: FC<ZoomControlProps> = ({
-  className,
-}: ZoomControlProps) => {
+export const ZoomControl: FC<ZoomControlProps> = ({ className }: ZoomControlProps) => {
   const zoomViewModelRef = useRef<ZoomVM>();
 
   const map = useMap();
@@ -75,7 +60,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col bg-white rounded-full border border-border overflow-hidden",
+        "flex flex-col overflow-hidden rounded-full border border-border bg-white",
         className,
       )}
     >
@@ -87,7 +72,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({
               [CONTROL_BUTTON_STYLES.hover]: zoom !== maxZoom,
               [CONTROL_BUTTON_STYLES.active]: zoom !== maxZoom,
               [CONTROL_BUTTON_STYLES.disabled]: zoom === maxZoom,
-              "border-0 rounded-none": true,
+              "rounded-none border-0": true,
             })}
             aria-label="Zoom in"
             type="button"
@@ -115,7 +100,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({
               [CONTROL_BUTTON_STYLES.hover]: zoom !== minZoom,
               [CONTROL_BUTTON_STYLES.active]: zoom !== minZoom,
               [CONTROL_BUTTON_STYLES.disabled]: zoom === minZoom,
-              "border-0 rounded-none": true,
+              "rounded-none border-0": true,
             })}
             aria-label="Zoom out"
             type="button"

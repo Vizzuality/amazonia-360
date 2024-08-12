@@ -12,13 +12,13 @@ export default function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="h-20 flex flex-col justify-center bg-white backdrop-blur">
-      <div className="container mx-auto flex justify-between items-center">
+    <header className="flex h-20 flex-col justify-center bg-white backdrop-blur">
+      <div className="container mx-auto flex items-center justify-between">
         <Link href="/">
           <h1 className="flex items-center space-x-4">
             <Image src="/IDB-logo.svg" alt="IDB" width={65} height={24} />
             <div className="space-x-2">
-              <span className="font-medium text-sm">AmazoniaForever360+</span>
+              <span className="text-sm font-medium">AmazoniaForever360+</span>
               <Badge variant="secondary">Prototype</Badge>
             </div>
           </h1>
@@ -27,7 +27,7 @@ export default function Header() {
         <nav className="flex space-x-8 print:hidden">
           <Link
             className={cn({
-              "hover:text-cyan-500 text-sm": true,
+              "text-sm hover:text-cyan-500": true,
               "text-cyan-500": pathname === "/",
             })}
             href="/"
@@ -37,7 +37,7 @@ export default function Header() {
 
           <Link
             className={cn({
-              "hover:text-cyan-500 text-sm": true,
+              "text-sm hover:text-cyan-500": true,
               "text-cyan-500": pathname.includes("/report"),
             })}
             href="/report"
@@ -46,7 +46,7 @@ export default function Header() {
           </Link>
           <Link
             className={cn({
-              "hover:text-cyan-500 text-sm": true,
+              "text-sm hover:text-cyan-500": true,
               "text-cyan-500": pathname.includes("/hub"),
             })}
             href="/hub"
@@ -55,7 +55,7 @@ export default function Header() {
           </Link>
           <Link
             className={cn({
-              "hover:text-cyan-500 text-sm": true,
+              "text-sm hover:text-cyan-500": true,
               "text-cyan-500": pathname.includes("/grid"),
             })}
             href="/grid"

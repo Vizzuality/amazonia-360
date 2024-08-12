@@ -24,18 +24,13 @@ export const gridTileGridTileTileIndexGet = (
   params?: GridTileGridTileTileIndexGetParams,
   options?: SecondParameter<typeof API>,
 ) => {
-  return API<unknown>(
-    { url: `/grid/tile/${tileIndex}`, method: "GET", params },
-    options,
-  );
+  return API<unknown>({ url: `/grid/tile/${tileIndex}`, method: "GET", params }, options);
 };
 /**
  * Get the grid dataset metadata
  * @summary Dataset metadata
  */
-export const gridDatasetMetadataGridMetaGet = (
-  options?: SecondParameter<typeof API>,
-) => {
+export const gridDatasetMetadataGridMetaGet = (options?: SecondParameter<typeof API>) => {
   return API<MultiDatasetMeta>({ url: `/grid/meta`, method: "GET" }, options);
 };
 /**

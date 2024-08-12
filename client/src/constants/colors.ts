@@ -50,9 +50,7 @@ export const LAND_COVER = {
 export const LAND_COVER_COLORMAP = Object.keys(LAND_COVER).reduce(
   (acc, key) => ({
     ...acc,
-    [key]: convertHexToRgbaArray(
-      LAND_COVER[key as keyof typeof LAND_COVER].color,
-    ),
+    [key]: convertHexToRgbaArray(LAND_COVER[key as keyof typeof LAND_COVER].color),
   }),
   {} as Record<keyof typeof LAND_COVER, string>,
 );
@@ -155,9 +153,7 @@ export const ELEVATION_RANGES = {
 export const ELEVATION_RANGES_COLORMAP = Object.keys(ELEVATION_RANGES).reduce(
   (acc, key) => ({
     ...acc,
-    [key]: convertHexToRgbaArray(
-      ELEVATION_RANGES[key as keyof typeof ELEVATION_RANGES].color,
-    ),
+    [key]: convertHexToRgbaArray(ELEVATION_RANGES[key as keyof typeof ELEVATION_RANGES].color),
   }),
   {} as Record<keyof typeof ELEVATION_RANGES, string>,
 );

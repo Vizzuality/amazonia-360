@@ -5,9 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const getKeys = Object.keys as <T extends object>(
-  obj: T,
-) => Array<keyof T>;
+export const getKeys = Object.keys as <T extends object>(obj: T) => Array<keyof T>;
 
 export function joinWithAnd(arr: string[]) {
   if (arr.length === 0) return "";
@@ -18,10 +16,7 @@ export function joinWithAnd(arr: string[]) {
   return arr.join(", ") + " and " + lastItem;
 }
 
-export function convertHexToRgbaArray(
-  hex: string,
-  opacity: number = 1,
-): number[] {
+export function convertHexToRgbaArray(hex: string, opacity: number = 1): number[] {
   const hexValue = hex.replace(/^#/, "");
   const red = parseInt(hexValue.substring(0, 2), 16);
   const green = parseInt(hexValue.substring(2, 4), 16);

@@ -13,10 +13,7 @@ export interface TopicsProps {
   size: "sm" | "md" | "lg";
 }
 
-export default function Topics({
-  interactive = true,
-  size = "md",
-}: TopicsProps) {
+export default function Topics({ interactive = true, size = "md" }: TopicsProps) {
   const [topics, setTopics] = useSyncTopics();
   const handleTopicChange = (id: TopicIds, checked: boolean) => {
     if (checked) {
@@ -35,7 +32,7 @@ export default function Topics({
   return (
     <section className="md:space-y-6">
       <div className={cn({ container: interactive })}>
-        <div className="flex lg:flex-row flex-col gap-4">
+        <div className="flex flex-col gap-4 lg:flex-row">
           {TOPICS.map((topic) => (
             <TopicsItem
               key={topic.id}

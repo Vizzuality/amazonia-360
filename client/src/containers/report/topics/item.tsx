@@ -34,11 +34,11 @@ export default function TopicsItem({
     <div key={id} className="w-full">
       <div
         className={cn(
-          "shadow relative rounded-2xl overflow-hidden mx-auto group cursor-pointer after:absolute after:bottom-0 after:left-0 after:h-16 after:w-full after:bg-gradient-to-b after:from-transparent after:to-[#09090B]/85 after:content-['']",
+          "group relative mx-auto cursor-pointer overflow-hidden rounded-2xl shadow after:absolute after:bottom-0 after:left-0 after:h-16 after:w-full after:bg-gradient-to-b after:from-transparent after:to-[#09090B]/85 after:content-['']",
           size === "sm" && "aspect-[206/107]",
           size === "lg" &&
             "aspect-[210/250] sm:aspect-[600/200] lg:aspect-[210/250] tall:2xl:aspect-[210/380]",
-          checked && "outline-dashed outline-primary outline-2",
+          checked && "outline-dashed outline-2 outline-primary",
           !interactive && "cursor-auto",
         )}
         onClick={() => {
@@ -61,12 +61,10 @@ export default function TopicsItem({
           priority
           fill
           sizes="100%"
-          placeholder={
-            size === "lg" ? PLACEHOLDER(210, 380) : PLACEHOLDER(210, 250)
-          }
+          placeholder={size === "lg" ? PLACEHOLDER(210, 380) : PLACEHOLDER(210, 250)}
           className={cn({
             "object-cover": true,
-            "group-hover:scale-105 transition-transform duration-300 ease-in-out transform-gpu":
+            "transform-gpu transition-transform duration-300 ease-in-out group-hover:scale-105":
               interactive,
           })}
         />
@@ -74,14 +72,14 @@ export default function TopicsItem({
         {interactive && (
           <div
             className={cn({
-              "flex justify-center items-center absolute top-2 right-2 w-8 h-8 border border-dashed border-white bg-white/20 rounded-full transition-colors":
+              "absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full border border-dashed border-white bg-white/20 transition-colors":
                 true,
               "bg-white/100": checked,
             })}
           >
             <LuCheck
               className={cn({
-                "w-3 h-3 text-gray-900 transition-colors": true,
+                "h-3 w-3 text-gray-900 transition-colors": true,
                 "opacity-100": checked,
                 "opacity-0": !checked,
               })}
@@ -91,17 +89,17 @@ export default function TopicsItem({
 
         <div
           className={cn(
-            "absolute z-10 bottom-0 left-0 p-4 w-full text-white",
-            "after:absolute after:top-0 after:left-0 after:w-full after:h-full after:bg-gradient-to-b after:from-gray-900/0 after:via-gray-900/50 after:to-gray-900/50",
+            "absolute bottom-0 left-0 z-10 w-full p-4 text-white",
+            "after:absolute after:left-0 after:top-0 after:h-full after:w-full after:bg-gradient-to-b after:from-gray-900/0 after:via-gray-900/50 after:to-gray-900/50",
           )}
         >
           <div className="relative z-10">
-            <h3 className="font-bold text-sm">{label}</h3>
+            <h3 className="text-sm font-bold">{label}</h3>
 
             <div
               ref={descriptionRef}
               className={cn(
-                "font-semibold text-xs max-h-0 overflow-hidden transition-all duration-300 ease-in-out",
+                "max-h-0 overflow-hidden text-xs font-semibold transition-all duration-300 ease-in-out",
                 !interactive && "max-h-none lg:max-h-0 xl:max-h-none",
               )}
             >

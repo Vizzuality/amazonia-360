@@ -38,10 +38,7 @@ export const pointPointLonLatGet = (
   params: PointPointLonLatGetParams,
   options?: SecondParameter<typeof API>,
 ) => {
-  return API<PointOutput>(
-    { url: `/point/${lon},${lat}`, method: "GET", params },
-    options,
-  );
+  return API<PointOutput>({ url: `/point/${lon},${lat}`, method: "GET", params }, options);
 };
 /**
  * Compute the zonal statistics of a raster.
@@ -233,10 +230,7 @@ export const tileTilesZXYScaleXGet = (
   params: TileTilesZXYScaleXGetParams,
   options?: SecondParameter<typeof API>,
 ) => {
-  return API<unknown>(
-    { url: `/tiles/${z}/${x}/${y}@${scale}x`, method: "GET", params },
-    options,
-  );
+  return API<unknown>({ url: `/tiles/${z}/${x}/${y}@${scale}x`, method: "GET", params }, options);
 };
 /**
  * Create map tile from a dataset.
@@ -251,10 +245,7 @@ export const tileTilesZXYFormatGet = (
   params: TileTilesZXYFormatGetParams,
   options?: SecondParameter<typeof API>,
 ) => {
-  return API<unknown>(
-    { url: `/tiles/${z}/${x}/${y}.${format}`, method: "GET", params },
-    options,
-  );
+  return API<unknown>({ url: `/tiles/${z}/${x}/${y}.${format}`, method: "GET", params }, options);
 };
 /**
  * Create map tile from a dataset.
@@ -268,10 +259,7 @@ export const tileTilesZXYGet = (
   params: TileTilesZXYGetParams,
   options?: SecondParameter<typeof API>,
 ) => {
-  return API<unknown>(
-    { url: `/tiles/${z}/${x}/${y}`, method: "GET", params },
-    options,
-  );
+  return API<unknown>({ url: `/tiles/${z}/${x}/${y}`, method: "GET", params }, options);
 };
 /**
  * Return TileJSON document for a dataset.
@@ -309,10 +297,7 @@ export const tilejsonTilejsonJsonGet = (
   params: TilejsonTilejsonJsonGetParams,
   options?: SecondParameter<typeof API>,
 ) => {
-  return API<TileJSON>(
-    { url: `/tilejson.json`, method: "GET", params },
-    options,
-  );
+  return API<TileJSON>({ url: `/tilejson.json`, method: "GET", params }, options);
 };
 /**
  * List all available tif files.
@@ -348,15 +333,11 @@ export type TileTilesZXYScaleXGetResult = NonNullable<
 export type TileTilesZXYFormatGetResult = NonNullable<
   Awaited<ReturnType<typeof tileTilesZXYFormatGet>>
 >;
-export type TileTilesZXYGetResult = NonNullable<
-  Awaited<ReturnType<typeof tileTilesZXYGet>>
->;
+export type TileTilesZXYGetResult = NonNullable<Awaited<ReturnType<typeof tileTilesZXYGet>>>;
 export type TilejsonTileMatrixSetIdTilejsonJsonGetResult = NonNullable<
   Awaited<ReturnType<typeof tilejsonTileMatrixSetIdTilejsonJsonGet>>
 >;
 export type TilejsonTilejsonJsonGetResult = NonNullable<
   Awaited<ReturnType<typeof tilejsonTilejsonJsonGet>>
 >;
-export type ListFilesTifsGetResult = NonNullable<
-  Awaited<ReturnType<typeof listFilesTifsGet>>
->;
+export type ListFilesTifsGetResult = NonNullable<Awaited<ReturnType<typeof listFilesTifsGet>>>;
