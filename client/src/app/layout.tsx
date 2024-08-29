@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 
 import { Montserrat } from "next/font/google";
-
-import Script from 'next/script';
+import Script from "next/script";
 
 import "@arcgis/core/assets/esri/themes/light/main.css";
 import "@/styles/globals.css";
@@ -38,10 +37,7 @@ export default await function RootLayout({
           <Footer />
         </body>
 
-        <Script
-          id="fullstory"
-          strategy="afterInteractive"
-        >
+        <Script id="fullstory" strategy="afterInteractive">
           {`
               window['_fs_host'] = 'fullstory.com';
               window['_fs_script'] = 'edge.fullstory.com/s/fs.js';
@@ -63,8 +59,7 @@ export default await function RootLayout({
               g.log=function(b,d){h("log",{level:b,msg:d})},g.consent=function(b){h("setIdentity",{consent:!arguments.length||b})}}(),s="fetch",
               f="XMLHttpRequest",g._w={},g._w[f]=m[f],g._w[s]=m[s],m[s]&&(m[s]=function(){return g._w[s].apply(this,arguments)}),g._v="2.0.0")
               }(window,document,window._fs_namespace,"script",window._fs_script);
-          `
-          }
+          `}
         </Script>
       </html>
     </LayoutProviders>
