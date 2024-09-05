@@ -39,7 +39,7 @@ export const getGridLayerProps = ({
     getTileData: (tile) => {
       if (!tile.url) return Promise.resolve(null);
       return load(tile.url, ArrowLoader, {
-        arrow: { shape: "arrow-table" },
+        arrow: { shape: "object-row-table" },
         fetch: {
           headers: {
             Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
@@ -58,8 +58,8 @@ export const getGridLayerProps = ({
       return new H3HexagonLayer<Record<string, number>, { cell: string }>({
         id: props.id,
         data: props.data,
-        highPrecision: true,
-        // coverage: 1.001,
+        highPrecision: false,
+        // coverage: 1.15,
         pickable: true,
         wireframe: false,
         filled: !!gridDatasets.length,
