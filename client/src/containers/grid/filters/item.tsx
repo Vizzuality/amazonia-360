@@ -3,7 +3,6 @@
 import { useMemo } from "react";
 
 import { LuPlus, LuX } from "react-icons/lu";
-import { useDebounce } from "rooks";
 
 import { cn } from "@/lib/utils";
 
@@ -63,7 +62,7 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
     });
   };
 
-  const onValueChangeDebounced = useDebounce(onValueChange, 100);
+  // const onValueChangeDebounced = useDebounce(onValueChange, 100);
 
   return (
     <div key={dataset.var_name} className="space-y-2">
@@ -95,7 +94,7 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
                 step={1}
                 defaultValue={continuousValue}
                 minStepsBetweenThumbs={1}
-                onValueChange={onValueChangeDebounced}
+                onValueChange={onValueChange}
               />
             </div>
           )}
