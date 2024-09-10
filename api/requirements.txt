@@ -34,8 +34,11 @@ cligj==0.7.2
 color-operations==0.1.3
     # via rio-tiler
 exactextract==0.2.0.dev0
+    # via -r requirements.in
 fastapi==0.110.1
-    # via titiler-core
+    # via
+    #   -r requirements.in
+    #   titiler-core
 geojson-pydantic==1.0.2
     # via titiler-core
 greenlet==3.0.3
@@ -45,6 +48,9 @@ h11==0.14.0
     #   httpcore
     #   uvicorn
 h3==3.7.7
+    # via -r requirements.in
+h3ronpy==0.21.0
+    # via -r requirements.in
 httpcore==1.0.5
     # via httpx
 httpx==0.27.0
@@ -66,13 +72,20 @@ numexpr==2.10.0
 numpy==1.26.4
     # via
     #   color-operations
+    #   h3ronpy
     #   numexpr
+    #   pyarrow
     #   rasterio
     #   rio-tiler
+    #   shapely
     #   snuggs
     #   titiler-core
 orjson==3.10.0
+    # via -r requirements.in
 polars==1.1.0
+    # via -r requirements.in
+pyarrow==17.0.0
+    # via h3ronpy
 pydantic==2.6.4
     # via
     #   fastapi
@@ -85,7 +98,9 @@ pydantic==2.6.4
 pydantic-core==2.16.3
     # via pydantic
 pydantic-extra-types==2.9.0
+    # via -r requirements.in
 pydantic-settings==2.2.1
+    # via -r requirements.in
 pyparsing==3.1.2
     # via snuggs
 pyproj==3.6.1
@@ -104,6 +119,8 @@ rio-tiler==6.4.5
     # via titiler-core
 setuptools==69.2.0
     # via rasterio
+shapely==2.0.6
+    # via h3ronpy
 simplejson==3.19.2
     # via titiler-core
 six==1.16.0
@@ -115,9 +132,11 @@ sniffio==1.3.1
 snuggs==1.4.7
     # via rasterio
 sqlalchemy==2.0.31
+    # via -r requirements.in
 starlette==0.37.2
     # via fastapi
 titiler-core==0.18.0
+    # via -r requirements.in
 typing-extensions==4.11.0
     # via
     #   fastapi
@@ -126,3 +145,4 @@ typing-extensions==4.11.0
     #   sqlalchemy
     #   titiler-core
 uvicorn==0.29.0
+    # via -r requirements.in
