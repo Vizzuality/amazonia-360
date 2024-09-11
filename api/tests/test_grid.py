@@ -15,11 +15,11 @@ def test_grid_tile(grid_dataset):
     assert response.status_code == 200
     assert pl.read_ipc(response.read()).to_dict(as_series=False) == {
         "cell": [
-            618668968382824400,
-            619428375900454900,
-            619428407452893200,
-            619428407943888900,
-            619428407676764200,
+            "895f4261e03ffff",
+            "865f00007ffffff",
+            "865f0000fffffff",
+            "865f00017ffffff",
+            "865f0001fffffff",
         ],
         "landcover": [1, 4, 3, 3, 4],
         "population": [100, 200, 1, 900, 900],
@@ -32,11 +32,11 @@ def test_grid_tile_empty_column_param(grid_dataset):
     assert response.status_code == 200
     assert pl.read_ipc(response.read()).to_dict(as_series=False) == {
         "cell": [
-            618668968382824400,
-            619428375900454900,
-            619428407452893200,
-            619428407943888900,
-            619428407676764200,
+            "895f4261e03ffff",
+            "865f00007ffffff",
+            "865f0000fffffff",
+            "865f00017ffffff",
+            "865f0001fffffff",
         ],
     }
 
@@ -222,9 +222,49 @@ def test_grid_table(grid_dataset):
     assert response.status_code == 200
     assert json.loads(response.read()) == {
         "cell": [
-            619428375900454900,
-            618668968382824400,
+            "865f00007ffffff",
+            "895f4261e03ffff",
         ],
         "landcover": [4, 1],
         "population": [200, 100],
     }
+
+
+def test_grid_tile_post_geojson(grid_dataset, geojson):
+    response = test_client.post(
+        f"/grid/tile/{grid_dataset}",
+        params={"columns": ["landcover", "population"]},
+        headers=HEADERS,
+        content=geojson,
+    )
+    assert response.status_code == 200
+    assert pl.read_ipc(response.read()).to_dict(as_series=False) == {
+        "cell": [
+            "895f4261e03ffff",
+        ],
+        "landcover": [1],
+        "population": [100],
+    }
+
+
+def test_grid_tile_post_geojson_404(grid_dataset, geojson):
+    response = test_client.post(
+        "/grid/tile/8439181ffffffff",
+        params={"columns": ["landcover", "population"]},
+        headers=HEADERS,
+        content=geojson,
+    )
+
+    assert response.status_code == 404
+
+
+def test_grid_tile_post_wrong_column(grid_dataset, geojson):
+    response = test_client.post(
+        f"/grid/tile/{grid_dataset}",
+        params={"columns": ["I DO NOT EXIST"]},
+        headers=HEADERS,
+        content=geojson,
+    )
+
+    assert response.status_code == 400
+    assert response.json() == {"detail": "One or more of the specified columns is not valid"}
