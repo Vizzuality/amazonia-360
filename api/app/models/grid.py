@@ -136,3 +136,12 @@ class TableFilters(BaseModel):
             )
         )
         return str(query.compile(compile_kwargs={"literal_binds": True}))
+
+
+class TableResultColumn(BaseModel):
+    column: Annotated[str, Field(title="column", description="Column name")]
+    values: Annotated[list, Field(description="Check dataset metadata for type info")]
+
+
+class TableResults(BaseModel):
+    table: list[TableResultColumn]

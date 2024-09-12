@@ -221,12 +221,11 @@ def test_grid_table(grid_dataset):
     response = test_client.post("/grid/table?level=4&order_by=-population", headers=HEADERS, content=json.dumps(body))
     assert response.status_code == 200
     assert json.loads(response.read()) == {
-        "cell": [
-            "865f00007ffffff",
-            "895f4261e03ffff",
-        ],
-        "landcover": [4, 1],
-        "population": [200, 100],
+        "table": [
+            {"column": "cell", "values": ["865f00007ffffff", "895f4261e03ffff"]},
+            {"column": "landcover", "values": [4, 1]},
+            {"column": "population", "values": [200, 100]},
+        ]
     }
 
 
@@ -241,11 +240,11 @@ def test_grid_table_geojson(grid_dataset, geojson):
     response = test_client.post("/grid/table?level=4&order_by=-population", headers=HEADERS, content=json.dumps(body))
     assert response.status_code == 200
     assert json.loads(response.read()) == {
-        "cell": [
-            "895f4261e03ffff",
-        ],
-        "landcover": [1],
-        "population": [100],
+        "table": [
+            {"column": "cell", "values": ["895f4261e03ffff"]},
+            {"column": "landcover", "values": [1]},
+            {"column": "population", "values": [100]},
+        ]
     }
 
 
@@ -258,9 +257,7 @@ def test_grid_tile_post_geojson(grid_dataset, geojson):
     )
     assert response.status_code == 200
     assert pl.read_ipc(response.read()).to_dict(as_series=False) == {
-        "cell": [
-            "895f4261e03ffff",
-        ],
+        "cell": ["895f4261e03ffff"],
         "landcover": [1],
         "population": [100],
     }

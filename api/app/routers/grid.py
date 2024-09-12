@@ -10,7 +10,6 @@ import polars as pl
 import shapely
 from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from fastapi.params import Body
-from fastapi.responses import ORJSONResponse
 from geojson_pydantic import Feature
 from h3 import H3CellError
 from h3ronpy.polars import cells_to_string
@@ -19,7 +18,7 @@ from pydantic import ValidationError
 from starlette.responses import Response
 
 from app.config.config import get_settings
-from app.models.grid import MultiDatasetMeta, TableFilters
+from app.models.grid import MultiDatasetMeta, TableFilters, TableResults
 
 log = logging.getLogger("uvicorn.error")
 
@@ -118,7 +117,7 @@ def read_table(
     level: Annotated[int, Query(..., description="Tile level at which the query will be computed")],
     filters: TableFilters = Depends(),
     geojson: Annotated[Feature | None, Body(description="GeoJSON feature used to filter the cells.")] = None,
-) -> ORJSONResponse:
+) -> TableResults:
     """Query tile dataset and return table data"""
     files_path = pathlib.Path(get_settings().grid_tiles_path) / str(level)
     if not files_path.exists():
@@ -144,4 +143,4 @@ def read_table(
         log.exception(e)
         raise HTTPException(status_code=422, detail=str(e)) from None
 
-    return ORJSONResponse(res.to_dict(as_series=False))
+    return TableResults(table=[{"column": k, "values": v} for k, v in res.to_dict(as_series=False).items()])
