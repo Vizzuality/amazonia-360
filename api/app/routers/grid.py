@@ -26,7 +26,7 @@ log = logging.getLogger("uvicorn.error")
 grid_router = APIRouter()
 
 
-def tile_from_fs(columns, tile_index) -> tuple[pl.LazyFrame, int]:
+def get_tile(tile_index: str, columns: list[str]) -> tuple[pl.LazyFrame, int]:
     """Get the tile from filesystem filtered by column and the resolution of the tile index"""
     try:
         z = h3.api.basic_str.h3_get_resolution(tile_index)
@@ -54,36 +54,38 @@ def cells_in_geojson(geometry: str, cell_resolution: int) -> pl.LazyFrame:
     "/tile/{tile_index}",
     summary="Get a grid tile",
 )
-def get_grid_tile(
+def grid_tile(
     tile_index: Annotated[str, Path(description="The `h3` index of the tile")],
     columns: list[str] = Query(
         [], description="Colum/s to include in the tile. If empty, it returns only cell indexes."
     ),
 ) -> Response:
     """Get a tile of h3 cells with specified data columns"""
-    tile, _ = tile_from_fs(columns, tile_index)
+    tile, _ = get_tile(tile_index, columns)
     try:
         tile_buffer = tile.collect().write_ipc(None)
+    # we don't know if the column requested are correct until we call .collect()
     except pl.exceptions.ColumnNotFoundError:
         raise HTTPException(status_code=400, detail="One or more of the specified columns is not valid") from None
     return Response(tile_buffer.getvalue(), media_type="application/octet-stream")
 
 
 @grid_router.post("/tile/{tile_index}", summary="Get a grid tile with cells contained inside the GeoJSON")
-def post_grid_tile(
+def grid_tile_in_area(
     tile_index: Annotated[str, Path(description="The `h3` index of the tile")],
-    geojson: Annotated[Feature, Body(description="GeoJSON Feature.")],
+    geojson: Annotated[Feature, Body(description="GeoJSON feature used to filter the cells.")],
     columns: list[str] = Query(
         [], description="Colum/s to include in the tile. If empty, it returns only cell indexes."
     ),
 ) -> Response:
     """Get a tile of h3 cells that are inside the polygon"""
-    tile, tile_index_res = tile_from_fs(columns, tile_index)
+    tile, tile_index_res = get_tile(tile_index, columns)
     cell_res = tile_index_res + get_settings().tile_to_cell_resolution_diff
     geom = shapely.from_geojson(geojson.model_dump_json())
     cells = cells_in_geojson(geom, cell_res)
     try:
         tile = tile.join(cells, on="cell").collect()
+    # we don't know if the column requested are correct until we call .collect()
     except pl.exceptions.ColumnNotFoundError:
         raise HTTPException(status_code=400, detail="One or more of the specified columns is not valid") from None
     if tile.is_empty():
@@ -115,23 +117,31 @@ async def grid_dataset_metadata() -> MultiDatasetMeta:
 def read_table(
     level: Annotated[int, Query(..., description="Tile level at which the query will be computed")],
     filters: TableFilters = Depends(),
+    geojson: Annotated[Feature | None, Body(description="GeoJSON feature used to filter the cells.")] = None,
 ) -> ORJSONResponse:
     """Query tile dataset and return table data"""
     files_path = pathlib.Path(get_settings().grid_tiles_path) / str(level)
     if not files_path.exists():
         raise HTTPException(404, detail=f"Level {level} does not exist") from None
-    lf = pl.scan_ipc(files_path.glob("*.arrow"))
+
+    lf = pl.scan_ipc(list(files_path.glob("*.arrow")))
+
+    if geojson is not None:
+        cell_res = level + get_settings().tile_to_cell_resolution_diff
+        geom = shapely.from_geojson(geojson.model_dump_json())
+        cells = cells_in_geojson(geom, cell_res)
+        lf = lf.join(cells, on="cell")
+
     query = filters.to_sql_query("frame")
     log.debug(query)
+
     try:
         res = pl.SQLContext(frame=lf).execute(query).collect()
-    except pl.exceptions.ColumnNotFoundError as e:
-        # bad column in order by clause
+    except pl.exceptions.ColumnNotFoundError as e:  # bad column in order by clause
         log.exception(e)
         raise HTTPException(status_code=400, detail="One or more of the specified columns is not valid") from None
-
-    except pl.exceptions.ComputeError as e:
-        # possibly raise if wrong type in compare. I'm not aware of other sources of ComputeError
+    except pl.exceptions.ComputeError as e:  # raised if wrong type in compare.
         log.exception(e)
         raise HTTPException(status_code=422, detail=str(e)) from None
+
     return ORJSONResponse(res.to_dict(as_series=False))
