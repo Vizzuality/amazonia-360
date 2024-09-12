@@ -211,14 +211,14 @@ def test_table_filters_multiple_filters():
 
 
 def test_grid_table(grid_dataset):
-    filters = [
-        {"filter_type": "numerical", "column_name": "population", "operation": "lte", "value": 200},
-        {"filter_type": "numerical", "column_name": "population", "operation": "gt", "value": 1},
-    ]
+    body = {
+        "filters": [
+            {"filter_type": "numerical", "column_name": "population", "operation": "lte", "value": 200},
+            {"filter_type": "numerical", "column_name": "population", "operation": "gt", "value": 1},
+        ]
+    }
 
-    response = test_client.post(
-        "/grid/table?level=4&order_by=-population", headers=HEADERS, content=json.dumps(filters)
-    )
+    response = test_client.post("/grid/table?level=4&order_by=-population", headers=HEADERS, content=json.dumps(body))
     assert response.status_code == 200
     assert json.loads(response.read()) == {
         "cell": [
@@ -227,6 +227,25 @@ def test_grid_table(grid_dataset):
         ],
         "landcover": [4, 1],
         "population": [200, 100],
+    }
+
+
+def test_grid_table_geojson(grid_dataset, geojson):
+    body = {
+        "filters": [
+            {"filter_type": "numerical", "column_name": "population", "operation": "lte", "value": 200},
+            {"filter_type": "numerical", "column_name": "population", "operation": "gt", "value": 1},
+        ],
+        "geojson": json.loads(geojson),
+    }
+    response = test_client.post("/grid/table?level=4&order_by=-population", headers=HEADERS, content=json.dumps(body))
+    assert response.status_code == 200
+    assert json.loads(response.read()) == {
+        "cell": [
+            "895f4261e03ffff",
+        ],
+        "landcover": [1],
+        "population": [100],
     }
 
 
