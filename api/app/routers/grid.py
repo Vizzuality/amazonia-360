@@ -10,12 +10,12 @@ import polars as pl
 import shapely
 from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from fastapi.params import Body
+from fastapi.responses import Response
 from geojson_pydantic import Feature
 from h3 import H3CellError
 from h3ronpy.polars import cells_to_string
 from h3ronpy.polars.vector import geometry_to_cells
 from pydantic import ValidationError
-from starlette.responses import Response
 
 from app.config.config import get_settings
 from app.models.grid import MultiDatasetMeta, TableFilters, TableResults
@@ -24,12 +24,21 @@ log = logging.getLogger("uvicorn.error")
 
 grid_router = APIRouter()
 
+tile_exception_responses = {
+    400: {"description": "Column does not exist or tile_index is not valid h3 index."},
+    404: {"description": "Tile does not exist or is empty"},
+}
+
+
+class ArrowIPCResponse(Response):  # noqa: D101
+    media_type = "application/octet-stream"
+
 
 def get_tile(tile_index: str, columns: list[str]) -> tuple[pl.LazyFrame, int]:
     """Get the tile from filesystem filtered by column and the resolution of the tile index"""
     try:
         z = h3.api.basic_str.h3_get_resolution(tile_index)
-    except H3CellError:
+    except (H3CellError, ValueError):
         raise HTTPException(status_code=400, detail="Tile index is not a valid H3 cell") from None
     tile_path = os.path.join(get_settings().grid_tiles_path, f"{z}/{tile_index}.arrow")
     if not os.path.exists(tile_path):
@@ -52,13 +61,16 @@ def cells_in_geojson(geometry: str, cell_resolution: int) -> pl.LazyFrame:
 @grid_router.get(
     "/tile/{tile_index}",
     summary="Get a grid tile",
+    response_class=ArrowIPCResponse,
+    response_description="Arrow IPC table",
+    responses=tile_exception_responses,
 )
 def grid_tile(
     tile_index: Annotated[str, Path(description="The `h3` index of the tile")],
     columns: list[str] = Query(
         [], description="Colum/s to include in the tile. If empty, it returns only cell indexes."
     ),
-) -> Response:
+) -> ArrowIPCResponse:
     """Get a tile of h3 cells with specified data columns"""
     tile, _ = get_tile(tile_index, columns)
     try:
@@ -66,17 +78,23 @@ def grid_tile(
     # we don't know if the column requested are correct until we call .collect()
     except pl.exceptions.ColumnNotFoundError:
         raise HTTPException(status_code=400, detail="One or more of the specified columns is not valid") from None
-    return Response(tile_buffer.getvalue(), media_type="application/octet-stream")
+    return ArrowIPCResponse(tile_buffer.getvalue())
 
 
-@grid_router.post("/tile/{tile_index}", summary="Get a grid tile with cells contained inside the GeoJSON")
+@grid_router.post(
+    "/tile/{tile_index}",
+    summary="Get a grid tile with cells contained inside the GeoJSON",
+    response_class=ArrowIPCResponse,
+    response_description="Arrow IPC table",
+    responses=tile_exception_responses,
+)
 def grid_tile_in_area(
     tile_index: Annotated[str, Path(description="The `h3` index of the tile")],
     geojson: Annotated[Feature, Body(description="GeoJSON feature used to filter the cells.")],
     columns: list[str] = Query(
         [], description="Colum/s to include in the tile. If empty, it returns only cell indexes."
     ),
-) -> Response:
+) -> ArrowIPCResponse:
     """Get a tile of h3 cells that are inside the polygon"""
     tile, tile_index_res = get_tile(tile_index, columns)
     cell_res = tile_index_res + get_settings().tile_to_cell_resolution_diff
@@ -90,7 +108,7 @@ def grid_tile_in_area(
     if tile.is_empty():
         raise HTTPException(status_code=404, detail="No data in region")
     tile_buffer = tile.write_ipc(None)
-    return Response(tile_buffer.getvalue(), media_type="application/octet-stream")
+    return ArrowIPCResponse(tile_buffer.getvalue())
 
 
 @grid_router.get(
@@ -116,7 +134,7 @@ async def grid_dataset_metadata() -> MultiDatasetMeta:
 def read_table(
     level: Annotated[int, Query(..., description="Tile level at which the query will be computed")],
     filters: TableFilters = Depends(),
-    geojson: Annotated[Feature | None, Body(description="GeoJSON feature used to filter the cells.")] = None,
+    geojson: Feature | None = None,
 ) -> TableResults:
     """Query tile dataset and return table data"""
     files_path = pathlib.Path(get_settings().grid_tiles_path) / str(level)
