@@ -20,7 +20,7 @@ from pydantic import ValidationError
 from app.config.config import get_settings
 from app.models.grid import MultiDatasetMeta, TableFilters, TableResults
 
-log = logging.getLogger("uvicorn.error")
+log = logging.getLogger("uvicorn.error")  # Show the logs in the uvicorn runner logs
 
 grid_router = APIRouter()
 
