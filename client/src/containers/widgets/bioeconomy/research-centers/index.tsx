@@ -16,10 +16,7 @@ import {
   CardHeader,
   CardInfo,
 } from "@/containers/card";
-import {
-  ResearchCenter,
-  columns,
-} from "@/containers/widgets/bioeconomy/research-centers/columns";
+import { ResearchCenter, columns } from "@/containers/widgets/bioeconomy/research-centers/columns";
 import { DataTable } from "@/containers/widgets/table";
 
 export default function WidgetResearchCenters() {
@@ -54,7 +51,7 @@ export default function WidgetResearchCenters() {
       </CardHeader>
 
       <CardContent>
-        <CardLoader query={[query]} className="print:h-auto h-72">
+        <CardLoader query={[query]} className="h-72 print:h-auto">
           <CardNoData query={[query]}>
             <DataTable
               columns={columns}

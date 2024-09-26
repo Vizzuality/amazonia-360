@@ -10,7 +10,7 @@ export default function WidgetsPopulation() {
 
   return (
     <div className="container print:break-before-page">
-      <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
+      <h2 className="mb-4 text-xl font-semibold">{T?.label}</h2>
       <WidgetsRow>
         <WidgetsColumn className="col-span-12 md:col-span-6 print:col-span-12">
           <WidgetsPopulationPopulation />

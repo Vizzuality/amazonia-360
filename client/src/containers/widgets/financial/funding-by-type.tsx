@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  HierarchyNode,
-  HierarchyRectangularNode,
-} from "@visx/hierarchy/lib/types";
+import { HierarchyNode, HierarchyRectangularNode } from "@visx/hierarchy/lib/types";
 import { scaleOrdinal } from "@visx/scale";
 import CHROMA from "chroma-js";
 
@@ -15,14 +12,7 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
-import {
-  Card,
-  CardHeader,
-  CardInfo,
-  CardLoader,
-  CardNoData,
-  CardTitle,
-} from "@/containers/card";
+import { Card, CardHeader, CardInfo, CardLoader, CardNoData, CardTitle } from "@/containers/card";
 import LegendOrdinal from "@/containers/legend/ordinal";
 import { IDBOperation } from "@/containers/widgets/financial/types";
 
@@ -77,9 +67,7 @@ export default function WidgetFundingByType() {
   const ordinalColorScale = scaleOrdinal({
     domain: query?.data?.map((d) => d),
     // range,
-    range: CHROMA.scale(["#2D6485", "#009ADE", "#B7DBF2"]).colors(
-      query?.data?.length || 0,
-    ),
+    range: CHROMA.scale(["#2D6485", "#009ADE", "#B7DBF2"]).colors(query?.data?.length || 0),
   });
 
   const FORMAT = (node: HierarchyRectangularNode<HierarchyNode<Data>>) => {

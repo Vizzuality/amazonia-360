@@ -61,7 +61,7 @@ export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
   }, [ids]);
 
   return (
-    <div className="relative h-full print:h-96 min-h-96">
+    <div className="relative h-full min-h-96 print:h-96">
       <Map
         id="overview"
         {...(GEOMETRY?.extent && {
@@ -89,28 +89,13 @@ export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
         {LAYERS.map((layer, index, arr) => {
           if (layer.type === "feature") {
             const i =
-              layer.customParameters?.position === "top"
-                ? arr.length + 3
-                : arr.length - index;
+              layer.customParameters?.position === "top" ? arr.length + 3 : arr.length - index;
 
-            return (
-              <FeatureLayer
-                key={layer.id}
-                layer={layer}
-                index={i}
-                GEOMETRY={GEOMETRY}
-              />
-            );
+            return <FeatureLayer key={layer.id} layer={layer} index={i} GEOMETRY={GEOMETRY} />;
           }
 
           if (layer.type === "web-tile") {
-            return (
-              <WebTileLayer
-                key={layer.id}
-                layer={layer}
-                index={arr.length - index}
-              />
-            );
+            return <WebTileLayer key={layer.id} layer={layer} index={arr.length - index} />;
           }
         })}
 

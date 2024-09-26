@@ -8,14 +8,7 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardInfo,
-  CardLoader,
-  CardTitle,
-} from "@/containers/card";
+import { Card, CardContent, CardHeader, CardInfo, CardLoader, CardTitle } from "@/containers/card";
 import Legend from "@/containers/legend";
 import LegendItem from "@/containers/legend/item";
 import WidgetMap from "@/containers/widgets/map";
@@ -42,7 +35,7 @@ export default function WidgetsPopulationDeprivation() {
     },
   );
   return (
-    <Card className="h-full p-0 relative">
+    <Card className="relative h-full p-0">
       <div className="p-6">
         <CardHeader>
           <CardTitle>Deprivation Index</CardTitle>
@@ -53,8 +46,8 @@ export default function WidgetsPopulationDeprivation() {
           <CardLoader query={[query]} className="h-10">
             <p className="text-sm font-medium">
               The SEDAC Deprivation Index reaches an{" "}
-              <strong>average of {formatNumber(query.data)}</strong> out of a
-              maximum of 100, representing the worst situation.
+              <strong>average of {formatNumber(query.data)}</strong> out of a maximum of 100,
+              representing the worst situation.
             </p>
           </CardLoader>
         </CardContent>

@@ -15,7 +15,7 @@ export default function WidgetsEnvironment({ index }: { index: number }) {
 
   return (
     <div className="container print:break-before-page">
-      <h2 className="text-xl font-semibold mb-4">{T?.label}</h2>
+      <h2 className="mb-4 text-xl font-semibold">{T?.label}</h2>
       <WidgetsRow>
         <WidgetsColumn
           className={cn(
@@ -30,10 +30,10 @@ export default function WidgetsEnvironment({ index }: { index: number }) {
             <WidgetsColumn className="col-span-12">
               <WidgetAltitude />
             </WidgetsColumn>
-            <WidgetsColumn className="col-span-12 md:col-span-6 h-full flex flex-col">
+            <WidgetsColumn className="col-span-12 flex h-full flex-col md:col-span-6">
               <WidgetBiomesByType />
             </WidgetsColumn>
-            <WidgetsColumn className="col-span-12 md:col-span-6 h-full flex flex-col">
+            <WidgetsColumn className="col-span-12 flex h-full flex-col md:col-span-6">
               <WidgetLandCoverByType />
             </WidgetsColumn>
           </WidgetsRow>

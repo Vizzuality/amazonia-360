@@ -292,9 +292,7 @@ export const DATASETS = {
     legend: {
       type: "basic",
       items: getKeys(CLIMATE_TYPES)
-        .toSorted((a, b) =>
-          CLIMATE_TYPES[a].label.localeCompare(CLIMATE_TYPES[b].label),
-        )
+        .toSorted((a, b) => CLIMATE_TYPES[a].label.localeCompare(CLIMATE_TYPES[b].label))
         .map((k) => ({
           id: k,
           label: CLIMATE_TYPES[k].label,
@@ -571,9 +569,7 @@ export const DATASETS = {
     legend: {
       type: "basic",
       items: getKeys(LAND_COVER)
-        .toSorted((a, b) =>
-          LAND_COVER[a].label.localeCompare(LAND_COVER[b].label),
-        )
+        .toSorted((a, b) => LAND_COVER[a].label.localeCompare(LAND_COVER[b].label))
         .map((k) => ({
           id: k,
           label: LAND_COVER[k].label,
@@ -643,8 +639,7 @@ export const DATASETS = {
   population: {
     layer: new WebTileLayer({
       id: "population",
-      title:
-        "Global Human Settlement Layer (GHSL) - Population projection for 2025",
+      title: "Global Human Settlement Layer (GHSL) - Population projection for 2025",
       urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=population_cog.tif&colormap=${encodeURIComponent(
         JSON.stringify([
           [
@@ -702,8 +697,7 @@ export const DATASETS = {
       type: "gradient",
       items: getKeys(DEPRIVATION_INDEX).map((k, i, arr) => ({
         id: k,
-        label:
-          i === 0 || i === arr.length - 1 ? DEPRIVATION_INDEX[k].label : null,
+        label: i === 0 || i === arr.length - 1 ? DEPRIVATION_INDEX[k].label : null,
         color: DEPRIVATION_INDEX[k].color,
       })),
     },

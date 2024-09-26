@@ -15,12 +15,7 @@ export type SketchProps = {
   onCancel?: () => void;
 };
 
-export default function Sketch({
-  type,
-  enabled,
-  onCreate,
-  onCancel,
-}: SketchProps) {
+export default function Sketch({ type, enabled, onCreate, onCancel }: SketchProps) {
   const mapInstance = useMap();
 
   const layerRef = useRef<__esri.GraphicsLayer>(new GraphicsLayer());

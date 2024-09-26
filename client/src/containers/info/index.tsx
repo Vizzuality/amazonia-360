@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function Info({ ids }: { ids: DatasetIds[] }) {
   return (
-    <ScrollArea className="flex flex-col grow max-h-[calc(100svh_-_theme(space.20))]">
+    <ScrollArea className="flex max-h-[calc(100svh_-_theme(space.20))] grow flex-col">
       <ul className="space-y-4 divide-y p-6">
         {ids.map((id) => {
           const DATASET = DATASETS[id];

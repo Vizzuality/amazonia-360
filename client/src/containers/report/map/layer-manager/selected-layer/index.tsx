@@ -30,17 +30,9 @@ export default function SelectedLayer({ index = 100 }: { index?: number }) {
         symbol: BUFFER_SYMBOL,
       });
 
-      if (
-        graphic.geometry.type === "point" ||
-        graphic.geometry.type === "polyline"
-      ) {
-        const k =
-          graphic.geometry.type === "point" ? POINT_BUFFER : POLYLINE_BUFFER;
-        const g = geometryEngine.geodesicBuffer(
-          graphic.geometry,
-          k,
-          "kilometers",
-        );
+      if (graphic.geometry.type === "point" || graphic.geometry.type === "polyline") {
+        const k = graphic.geometry.type === "point" ? POINT_BUFFER : POLYLINE_BUFFER;
+        const g = geometryEngine.geodesicBuffer(graphic.geometry, k, "kilometers");
 
         buffer.geometry = Array.isArray(g) ? g[0] : g;
       }

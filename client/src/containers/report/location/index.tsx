@@ -6,18 +6,17 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function ReportLocation() {
   return (
-    <aside className="flex flex-col w-4/12 tall:2xl:w-5/12 shrink-0 max-h-screen overflow-hidden pointer-events-auto">
-      <ScrollArea className="grow w-full">
-        <div className="relative space-y-2 xl:space-y-4 p-4 tall:xl:p-8 overflow-hidden backdrop-blur-xl bg-muted/75 rounded-3xl">
-          <div className="p-2 space-y-2 tall:xl:space-y-4">
-            <h1 className="text-blue-400 text-2xl lg:text-3xl tall:xl:text-4xl">
+    <aside className="pointer-events-auto flex max-h-screen w-4/12 shrink-0 flex-col overflow-hidden tall:2xl:w-5/12">
+      <ScrollArea className="w-full grow">
+        <div className="relative space-y-2 overflow-hidden rounded-3xl bg-muted/75 p-4 backdrop-blur-xl xl:space-y-4 tall:xl:p-8">
+          <div className="space-y-2 p-2 tall:xl:space-y-4">
+            <h1 className="text-2xl text-blue-400 lg:text-3xl tall:xl:text-4xl">
               Get insights on your area of interest
             </h1>
 
-            <p className="font-medium text-sm tall:xl:text-base">
-              Choose your area of interest: Get a customized report to deepen
-              your understanding of your region of interest and guide your
-              efforts towards making a significant impact.
+            <p className="text-sm font-medium tall:xl:text-base">
+              Choose your area of interest: Get a customized report to deepen your understanding of
+              your region of interest and guide your efforts towards making a significant impact.
             </p>
           </div>
 

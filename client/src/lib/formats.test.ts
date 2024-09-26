@@ -8,9 +8,7 @@ describe("formats", () => {
   });
 
   test("formatNumber with options formats correctly", () => {
-    expect(formatNumber(123456.789, { maximumFractionDigits: 0 })).toBe(
-      "123,457",
-    );
+    expect(formatNumber(123456.789, { maximumFractionDigits: 0 })).toBe("123,457");
     expect(formatNumber(0.005, { maximumFractionDigits: 0 })).toBe("~0");
   });
 
@@ -21,9 +19,7 @@ describe("formats", () => {
   });
 
   test("formatPercentage with options formats correctly", () => {
-    expect(formatPercentage(0.123456, { maximumFractionDigits: 0 })).toBe(
-      "12%",
-    );
+    expect(formatPercentage(0.123456, { maximumFractionDigits: 0 })).toBe("12%");
     expect(formatPercentage(0.0005, { maximumFractionDigits: 0 })).toBe("<1%");
   });
 
@@ -34,9 +30,7 @@ describe("formats", () => {
   });
 
   test("formatCurrency with options formats correctly", () => {
-    expect(formatCurrency(123456.789, { maximumFractionDigits: 0 })).toBe(
-      "$123,457",
-    );
+    expect(formatCurrency(123456.789, { maximumFractionDigits: 0 })).toBe("$123,457");
     expect(formatCurrency(0.005, { maximumFractionDigits: 0 })).toBe("~0");
   });
 });

@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
     /* Amazonia */
@@ -69,7 +68,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-semibold;
+    @apply bg-background font-semibold text-foreground;
   }
 
   .same-trigger-size {
@@ -95,7 +94,6 @@
     @apply p-0;
   }
 
-
   /*
     TABLE
   */
@@ -113,7 +111,7 @@
 
   .map .esri-widget__table tr th,
   .map .esri-widget__table tr td {
-    @apply text-2xs p-0.5;
+    @apply p-0.5 text-2xs;
   }
 
   .map .esri-widget__table tr th {
@@ -127,8 +125,8 @@
 
 @media print {
   :root {
-    -webkit-print-color-adjust:exact !important;
-    print-color-adjust:exact !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .container {

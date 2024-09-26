@@ -20,7 +20,7 @@ const SKETCH_BUTTONS = [
         height="20"
         viewBox="0 0 21 20"
         fill="none"
-        className="text-current stroke-current"
+        className="stroke-current text-current"
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
@@ -40,7 +40,7 @@ const SKETCH_BUTTONS = [
         height="20"
         viewBox="0 0 21 20"
         fill="none"
-        className="text-current stroke-current"
+        className="stroke-current text-current"
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
@@ -60,7 +60,7 @@ const SKETCH_BUTTONS = [
         height="20"
         viewBox="0 0 21 20"
         fill="none"
-        className="text-current fill-current"
+        className="fill-current text-current"
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
@@ -80,10 +80,7 @@ export default function Sketch() {
   const [sketch, setSketch] = useAtom(sketchAtom);
   const [, setLocation] = useSyncLocation();
 
-  const handleClick = (
-    e: MouseEvent<HTMLButtonElement>,
-    type: SketchProps["type"],
-  ) => {
+  const handleClick = (e: MouseEvent<HTMLButtonElement>, type: SketchProps["type"]) => {
     e.preventDefault();
     setLocation(null);
 
@@ -97,7 +94,7 @@ export default function Sketch() {
   return (
     <div
       className={cn(
-        "flex w-full h-10 tall:2xl:h-14 text-sm items-center space-x-2 rounded-[32px] overflow-hidden",
+        "flex h-10 w-full items-center space-x-2 overflow-hidden rounded-[32px] text-sm tall:2xl:h-14",
         sketch.enabled && "space-x-0",
       )}
     >
@@ -106,10 +103,10 @@ export default function Sketch() {
           <button
             key={button.id}
             className={cn(
-              "grow w-full h-full bg-white hover:bg-white/80 rounded-[32px] transition-all duration-500 overflow-hidden",
+              "h-full w-full grow overflow-hidden rounded-[32px] bg-white transition-all duration-500 hover:bg-white/80",
               sketch.enabled &&
                 sketch.type === button.id &&
-                "w-full bg-primary hover:bg-primary/80 text-white",
+                "w-full bg-primary text-white hover:bg-primary/80",
               sketch.enabled && sketch.type !== button.id && "w-0",
             )}
             onClick={(e) => handleClick(e, button.id)}

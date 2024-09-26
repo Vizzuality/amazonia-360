@@ -15,8 +15,8 @@ export default function WidgetProtectedAreasHeader({
 }: WidgetProtectedAreasHeaderProps) {
   return (
     <p className="text-sm font-medium">
-      There are <strong>{protectedAreas.length} protected areas</strong> in the
-      selected region, which represents{" "}
+      There are <strong>{protectedAreas.length} protected areas</strong> in the selected region,
+      which represents{" "}
       <strong>
         {formatPercentage(protectedAreaCoverage, {
           maximumFractionDigits: 0,

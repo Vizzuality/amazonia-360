@@ -2,11 +2,7 @@ import { Metadata } from "next";
 
 import { redirect } from "next/navigation";
 
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
+import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 
 import { getSearchQueryOptions } from "@/lib/search";
 
@@ -30,9 +26,7 @@ export interface SearchParams {
   topics: string;
 }
 
-export default async function ReportResultsPage({
-  searchParams,
-}: PageProps<Params, SearchParams>) {
+export default async function ReportResultsPage({ searchParams }: PageProps<Params, SearchParams>) {
   if (!searchParams.location) {
     redirect("/report");
   }
@@ -51,7 +45,7 @@ export default async function ReportResultsPage({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className="relative flex flex-col bg-blue-50 print:bg-white py-12 min-h-[calc(100svh_-_theme(space.40)_+_1px)]">
+      <main className="relative flex min-h-[calc(100svh_-_theme(space.40)_+_1px)] flex-col bg-blue-50 py-12 print:bg-white">
         <ReportResultsHeader />
 
         <ReportResultsContent />

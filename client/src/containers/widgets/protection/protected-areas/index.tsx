@@ -56,17 +56,12 @@ export default function WidgetProtectedAreas() {
         <CardInfo ids={["areas_protegidas"]} />
       </CardHeader>
 
-      <CardLoader
-        query={[queryProtected, queryProtectedCoverage]}
-        className="h-72"
-      >
+      <CardLoader query={[queryProtected, queryProtectedCoverage]} className="h-72">
         <CardNoData query={[queryProtected]}>
           <CardContent className="space-y-2">
             <WidgetProtectedAreasHeader
               protectedAreas={queryProtected.data ?? []}
-              protectedAreaCoverage={
-                queryProtectedCoverage.data?.percentage ?? 0
-              }
+              protectedAreaCoverage={queryProtectedCoverage.data?.percentage ?? 0}
             />
 
             <DataTable

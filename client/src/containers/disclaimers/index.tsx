@@ -8,9 +8,5 @@ export default function Disclaimer({
 }: PropsWithChildren<{
   className?: string;
 }>) {
-  return (
-    <div className={cn("bg-amber-100 py-4 print:hidden", className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn("bg-amber-100 py-4 print:hidden", className)}>{children}</div>;
 }

@@ -12,12 +12,7 @@ import { DatasetIds } from "@/constants/datasets";
 import Info from "@/containers/info";
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import {
-  Tooltip,
-  TooltipArrow,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { CONTROL_BUTTON_STYLES } from "./constants";
 
@@ -26,10 +21,7 @@ interface InfoControlProps {
   ids: DatasetIds[];
 }
 
-export const InfoControl: FC<InfoControlProps> = ({
-  ids,
-  className,
-}: InfoControlProps) => {
+export const InfoControl: FC<InfoControlProps> = ({ ids, className }: InfoControlProps) => {
   return (
     <Tooltip>
       <Dialog>

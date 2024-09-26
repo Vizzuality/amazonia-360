@@ -1,21 +1,14 @@
 "use client";
 import { useCallback, useMemo, useState } from "react";
 
-import {
-  HierarchyNode,
-  HierarchyRectangularNode,
-} from "@visx/hierarchy/lib/types";
+import { HierarchyNode, HierarchyRectangularNode } from "@visx/hierarchy/lib/types";
 import { scaleOrdinal } from "@visx/scale";
 import CHROMA from "chroma-js";
 
 import { formatNumber, formatPercentage } from "@/lib/formats";
 
 import { CardInfo } from "@/containers/card";
-import {
-  MOSAIC_DATA,
-  MOSAIC_OPTIONS,
-  type MosaicIds,
-} from "@/containers/home/constants";
+import { MOSAIC_DATA, MOSAIC_OPTIONS, type MosaicIds } from "@/containers/home/constants";
 
 import MarimekkoChart from "@/components/charts/marimekko";
 import { type Data } from "@/components/charts/marimekko";
@@ -44,9 +37,7 @@ export default function Glance() {
 
   const ordinalColorScale = scaleOrdinal({
     domain: parsedData?.map((d) => d),
-    range: CHROMA.scale(["#009ADE", "#93CAEB", "#DBEDF8"]).colors(
-      parsedData?.length || 1,
-    ),
+    range: CHROMA.scale(["#009ADE", "#93CAEB", "#DBEDF8"]).colors(parsedData?.length || 1),
   });
 
   const handleSingleValueChange = useCallback((e: MosaicIds) => {
@@ -101,43 +92,35 @@ export default function Glance() {
   };
 
   return (
-    <section className="container flex md:space-x-28 py-10 md:py-28 md:flex-row flex-col items-end">
-      <div className="flex flex-col w-full md:w-1/2 space-y-5 md:space-y-44">
+    <section className="container flex flex-col items-end py-10 md:flex-row md:space-x-28 md:py-28">
+      <div className="flex w-full flex-col space-y-5 md:w-1/2 md:space-y-44">
         <div>
-          <h3 className="uppercase text-sm font-extrabold text-cyan-500 tracking-wide-lg">
+          <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
             Amazonia at a glance
           </h3>
-          <h2 className="text-blue-400 text-2xl lg:text-3xl xl:text-4xl pb-6">
-            A Continent-sized Mosaic of Cultures and Nature Across Eight
-            Countries
+          <h2 className="pb-6 text-2xl text-blue-400 lg:text-3xl xl:text-4xl">
+            A Continent-sized Mosaic of Cultures and Nature Across Eight Countries
           </h2>
-          <p className="text-blue-900 text-base lg:text-lg font-normal">
-            Amazonia spans over <span className="font-bold">8.3 million</span>{" "}
-            square kilometers across South America. This vital region is a
-            confluence of cultural diversity and environmental significance.
+          <p className="text-base font-normal text-blue-900 lg:text-lg">
+            Amazonia spans over <span className="font-bold">8.3 million</span> square kilometers
+            across South America. This vital region is a confluence of cultural diversity and
+            environmental significance.
           </p>
 
           <div className="mt-7 flex flex-col space-y-1">
-            <p className="text-xs text-blue-900 font-semibold">
-              View on the chart:
-            </p>
+            <p className="text-xs font-semibold text-blue-900">View on the chart:</p>
             <Select value={chartKey} onValueChange={handleSingleValueChange}>
-              <SelectTrigger className="w-full h-14 rounded-none">
+              <SelectTrigger className="h-14 w-full rounded-none">
                 <SelectValue>
-                  <p className="truncate max-w-64 md:max-w-80 lg:max-w-none">
-                    {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)
-                      ?.label || ""}
+                  <p className="max-w-64 truncate md:max-w-80 lg:max-w-none">
+                    {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.label || ""}
                   </p>
                 </SelectValue>
               </SelectTrigger>
               <SelectContent className="no-scrollbar max-h-96 overflow-y-auto border-none shadow-md">
                 {MOSAIC_OPTIONS &&
                   MOSAIC_OPTIONS.map((opt) => (
-                    <SelectItem
-                      key={opt.key}
-                      value={opt.key}
-                      className="cursor-pointer"
-                    >
+                    <SelectItem key={opt.key} value={opt.key} className="cursor-pointer">
                       {opt.label}
                     </SelectItem>
                   ))}
@@ -146,31 +129,24 @@ export default function Glance() {
           </div>
         </div>
 
-        <div className="text-blue-300 space-y-1">
+        <div className="space-y-1 text-blue-300">
           <p className="text-base">Source: </p>
-          <ul className="text-sm space-y-2">
+          <ul className="space-y-2 text-sm">
             <li>
-              <span>
-                Global Human Settlement Layer (GHSL) - Population projection for
-                2025;
-              </span>
-              <CardInfo
-                ids={["population"]}
-                className="inline-flex top-0.5 relative"
-              />
+              <span>Global Human Settlement Layer (GHSL) - Population projection for 2025;</span>
+              <CardInfo ids={["population"]} className="relative top-0.5 inline-flex" />
             </li>
             <li>Cartographic area</li>
           </ul>
         </div>
       </div>
-      <div className="w-full md:w-1/2 flex flex-col mt-20 md:mt-0 space-y-4">
+      <div className="mt-20 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2">
         <header className="space-y-1">
-          <h3 className="text-foreground font-semibold text-xl">
+          <h3 className="text-xl font-semibold text-foreground">
             {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.label || ""}
           </h3>
-          <p className="text-foreground font-medium text-xs">
-            {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.description ||
-              ""}
+          <p className="text-xs font-medium text-foreground">
+            {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.description || ""}
           </p>
         </header>
         <div className="w-full">

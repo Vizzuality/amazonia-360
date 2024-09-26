@@ -18,12 +18,9 @@ export default function WidgetTotalArea() {
   const AREA = useMemo(() => {
     if (!GEOMETRY) return null;
 
-    return formatNumber(
-      geometryEngine.geodesicArea(GEOMETRY, "square-kilometers"),
-      {
-        maximumFractionDigits: 0,
-      },
-    );
+    return formatNumber(geometryEngine.geodesicArea(GEOMETRY, "square-kilometers"), {
+      maximumFractionDigits: 0,
+    });
   }, [GEOMETRY]);
 
   return (

@@ -9,12 +9,7 @@ import { LuExpand, LuMinimize } from "react-icons/lu";
 import { cn } from "@/lib/utils";
 
 import { useMap } from "@/components/map/provider";
-import {
-  Tooltip,
-  TooltipArrow,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { CONTROL_BUTTON_STYLES } from "./constants";
 

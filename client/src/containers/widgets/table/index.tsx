@@ -48,8 +48,8 @@ export function DataTable<TData, TValue>({
   const { pageIndex } = table.getState().pagination;
 
   return (
-    <div className="flex flex-col grow">
-      <div className="rounded-md print:min-h-0 min-h-80 flex flex-col grow justify-between">
+    <div className="flex grow flex-col">
+      <div className="flex min-h-80 grow flex-col justify-between rounded-md print:min-h-0">
         <Table className="border-foreground">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -77,13 +77,10 @@ export function DataTable<TData, TValue>({
                           onClick={header.column.getToggleSortingHandler()}
                         >
                           <span>
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                            {flexRender(header.column.columnDef.header, header.getContext())}
                           </span>
                           {header.column.getIsSorted() && (
-                            <LuArrowUpDown className="shrink-0 h-4 w-4 text-muted-foreground" />
+                            <LuArrowUpDown className="h-4 w-4 shrink-0 text-muted-foreground" />
                           )}
                         </div>
                       )}
@@ -96,33 +93,24 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
-        <footer className="flex items-center justify-between mt-4">
+        <footer className="mt-4 flex items-center justify-between">
           <p className="text-xs font-medium text-gray-500">{`${data.length} ${Pluralize("result", data.length)}`}</p>
           <DataPagination
             pageIndex={pageIndex}
