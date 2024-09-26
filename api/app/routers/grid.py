@@ -74,7 +74,9 @@ def grid_tile(
     """Get a tile of h3 cells with specified data columns"""
     tile, _ = get_tile(tile_index, columns)
     try:
-        tile_buffer = tile.collect().write_ipc(None)
+        # Need to use the _undocumented_ old compatibility method so the string columns are readable by
+        # the apache arrow implementation in JS ( as of today 26/9/2024 it is not without this flag ).
+        tile_buffer = tile.collect().write_ipc(None, compat_level=pl.interchange.CompatLevel.oldest())
     # we don't know if the column requested are correct until we call .collect()
     except pl.exceptions.ColumnNotFoundError:
         raise HTTPException(status_code=400, detail="One or more of the specified columns is not valid") from None
