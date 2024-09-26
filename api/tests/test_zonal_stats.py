@@ -42,7 +42,6 @@ def test_no_geojson_raises_422(tif_file):
                 "loc": ["body"],
                 "msg": "Field required",
                 "type": "missing",
-                "url": "https://errors.pydantic.dev/2.6/v/missing",
             }
         ]
     }
