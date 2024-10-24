@@ -12,21 +12,28 @@ export const ArcGISProvider = ({
 }: PropsWithChildren<{
   session: {
     token: string | undefined;
-    expire: number;
+    expires_in: number;
   };
 }>) => {
   useSession({
     refetchInterval: 5 * 60 * 1000, // 5 minutes
+    refetchOnReconnect: "always",
+    refetchOnWindowFocus: "always",
   });
 
-  console.log(session);
   useMemo(() => {
-    // esriConfig.apiKey = arcgisAccessToken || env.NEXT_PUBLIC_ARCGIS_API_KEY;
+    // esriConfig.apiKey = session.token ?? "";
     esriConfig.apiKey = env.NEXT_PUBLIC_ARCGIS_API_KEY;
     esriConfig.request.interceptors?.push({
       urls: [env.NEXT_PUBLIC_API_URL],
       headers: {
         Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
+      },
+    });
+    esriConfig.request.interceptors?.push({
+      urls: ["https://atlas.iadb.org"],
+      query: {
+        token: session.token,
       },
     });
   }, [session]);

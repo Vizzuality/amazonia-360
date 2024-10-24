@@ -31,8 +31,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <LayoutProviders
       session={{
-        token: atob(session?.value || ""),
-        expire: +(sessionExpire?.value || 0),
+        token: session?.value,
+        expires_in: +(sessionExpire?.value || 0),
       }}
     >
       <html lang="en">

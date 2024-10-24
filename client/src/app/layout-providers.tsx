@@ -42,7 +42,7 @@ export default function LayoutProviders({
 }: {
   session: {
     token: string | undefined;
-    expire: number;
+    expires_in: number;
   };
   children: React.ReactNode;
 }) {
