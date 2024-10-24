@@ -26,13 +26,15 @@ export interface SearchParams {
   topics: string;
 }
 
-export default async function ReportResultsPage({ searchParams }: PageProps<Params, SearchParams>) {
-  if (!searchParams.location) {
+export default async function ReportResultsPage({
+  searchParams,
+}: PageProps<Params, Promise<SearchParams>>) {
+  const queryClient = new QueryClient();
+  const l = locationParser.parseServerSide((await searchParams).location);
+
+  if (!l) {
     redirect("/report");
   }
-
-  const queryClient = new QueryClient();
-  const l = locationParser.parseServerSide(searchParams.location);
 
   if (l && l.type === "search") {
     const { queryKey, queryFn } = getSearchQueryOptions(l);

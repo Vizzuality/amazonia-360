@@ -39,7 +39,13 @@ function getQueryClient() {
   }
 }
 
-export default function LayoutProviders({ children }: { children: React.ReactNode }) {
+export default function LayoutProviders({
+  arcgisAccessToken,
+  children,
+}: {
+  arcgisAccessToken?: string;
+  children: React.ReactNode;
+}) {
   // NOTE: Avoid useState when initializing the query client if you don't
   //       have a suspense boundary between this and the code that may
   //       suspend because React will throw away the client on the initial
@@ -47,6 +53,8 @@ export default function LayoutProviders({ children }: { children: React.ReactNod
   const queryClient = getQueryClient();
 
   useMemo(() => {
+    console.log(arcgisAccessToken);
+    // esriConfig.apiKey = arcgisAccessToken || env.NEXT_PUBLIC_ARCGIS_API_KEY;
     esriConfig.apiKey = env.NEXT_PUBLIC_ARCGIS_API_KEY;
     esriConfig.request.interceptors?.push({
       urls: [env.NEXT_PUBLIC_API_URL],
@@ -54,7 +62,7 @@ export default function LayoutProviders({ children }: { children: React.ReactNod
         Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
       },
     });
-  }, []);
+  }, [arcgisAccessToken]);
 
   return (
     <TooltipProvider>

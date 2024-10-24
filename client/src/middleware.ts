@@ -1,7 +1,11 @@
+import "server-only";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 import { env } from "@/env.mjs";
+
+import { session } from "@/actions/session";
 
 // Step 1. HTTP Basic Auth Middleware for Challenge
 export default async function middleware(req: NextRequest) {
@@ -10,6 +14,14 @@ export default async function middleware(req: NextRequest) {
       status: 401,
       headers: { "WWW-Authenticate": "Basic" },
     });
+  }
+
+  const cookieStore = await cookies();
+  const now = Date.now();
+  const sessionExpire = +(cookieStore.get("session_expire") || 0);
+
+  if (!cookieStore.has("session") || now >= sessionExpire || now + 600000 >= sessionExpire) {
+    await session();
   }
 
   const response = NextResponse.next();
