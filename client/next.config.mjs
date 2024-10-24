@@ -12,9 +12,6 @@ const nextConfig = {
     ],
   },
   transpilePackages: ["@t3-oss/env-nextjs", "@t3-oss/env-core"],
-  experimental: {
-    missingSuspenseWithCSRBailout: false,
-  },
 };
 
 export default nextConfig;

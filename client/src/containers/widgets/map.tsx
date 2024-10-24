@@ -18,6 +18,7 @@ import Controls from "@/components/map/controls";
 import FullscreenControl from "@/components/map/controls/fullscreen";
 import InfoControl from "@/components/map/controls/info";
 import ZoomControl from "@/components/map/controls/zoom";
+import Layer from "@/components/map/layers";
 import FeatureLayer from "@/components/map/layers/feature";
 import VectorTileLayer from "@/components/map/layers/vector-tile";
 import WebTileLayer from "@/components/map/layers/web-tile";
@@ -96,6 +97,10 @@ export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
 
           if (layer.type === "web-tile") {
             return <WebTileLayer key={layer.id} layer={layer} index={arr.length - index} />;
+          }
+
+          if (layer.type === "map-image") {
+            return <Layer key={layer.id} layer={layer} index={arr.length - index} />;
           }
         })}
 
