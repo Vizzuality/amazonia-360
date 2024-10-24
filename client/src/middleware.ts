@@ -1,5 +1,4 @@
 import "server-only";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -16,13 +15,7 @@ export default async function middleware(req: NextRequest) {
     });
   }
 
-  const cookieStore = await cookies();
-  const now = Date.now();
-  const sessionExpire = +(cookieStore.get("session_expire") || 0);
-
-  if (!cookieStore.has("session") || now >= sessionExpire || now + 600000 >= sessionExpire) {
-    await session();
-  }
+  await session();
 
   const response = NextResponse.next();
 
