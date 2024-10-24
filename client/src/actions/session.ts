@@ -23,7 +23,7 @@ export async function session() {
 
   // Set the cookie
   const cookiesStore = await cookies();
-  cookiesStore.set("session", data.access_token, {
+  cookiesStore.set("session", btoa(data.access_token), {
     httpOnly: false,
     secure: true,
     expires: Date.now() + data.expires_in * 1000,
