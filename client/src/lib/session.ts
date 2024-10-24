@@ -21,7 +21,7 @@ export const getSession = async () => {
 };
 
 export const getSessionKey = () => {
-  return ["grid", "meta"];
+  return ["session"];
 };
 
 export const getSessionOptions = <TData = Awaited<ReturnType<typeof getSession>>, TError = unknown>(

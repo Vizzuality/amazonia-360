@@ -19,8 +19,8 @@ export const ArcGISProvider = ({
     refetchInterval: 5 * 60 * 1000, // 5 minutes
   });
 
+  console.log(session);
   useMemo(() => {
-    console.log(session);
     // esriConfig.apiKey = arcgisAccessToken || env.NEXT_PUBLIC_ARCGIS_API_KEY;
     esriConfig.apiKey = env.NEXT_PUBLIC_ARCGIS_API_KEY;
     esriConfig.request.interceptors?.push({
