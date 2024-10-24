@@ -26,9 +26,15 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const cookiesStore = await cookies();
   const session = cookiesStore.get("session");
+  const sessionExpire = cookiesStore.get("session_expire");
 
   return (
-    <LayoutProviders arcgisAccessToken={session?.value}>
+    <LayoutProviders
+      session={{
+        token: session?.value,
+        expire: +(sessionExpire?.value || 0),
+      }}
+    >
       <html lang="en">
         <body className={montserrat.className}>
           <DemoDisclaimer />

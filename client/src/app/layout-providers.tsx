@@ -40,10 +40,13 @@ function getQueryClient() {
 }
 
 export default function LayoutProviders({
-  arcgisAccessToken,
+  session,
   children,
 }: {
-  arcgisAccessToken?: string;
+  session: {
+    token: string | undefined;
+    expire: number;
+  };
   children: React.ReactNode;
 }) {
   // NOTE: Avoid useState when initializing the query client if you don't
@@ -53,7 +56,7 @@ export default function LayoutProviders({
   const queryClient = getQueryClient();
 
   useMemo(() => {
-    console.log(arcgisAccessToken);
+    console.log(session);
     // esriConfig.apiKey = arcgisAccessToken || env.NEXT_PUBLIC_ARCGIS_API_KEY;
     esriConfig.apiKey = env.NEXT_PUBLIC_ARCGIS_API_KEY;
     esriConfig.request.interceptors?.push({
@@ -62,7 +65,7 @@ export default function LayoutProviders({
         Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
       },
     });
-  }, [arcgisAccessToken]);
+  }, [session]);
 
   return (
     <TooltipProvider>
