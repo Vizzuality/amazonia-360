@@ -8,4 +8,6 @@ export async function GET() {
 
 export async function POST() {
   await session({ refresh: true });
+
+  return Response.json(true);
 }
