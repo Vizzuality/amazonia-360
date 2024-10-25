@@ -6,7 +6,6 @@ export async function GET() {
   return Response.json(true);
 }
 
-
 export async function POST() {
   await session({ refresh: true });
 }

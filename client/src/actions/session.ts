@@ -15,11 +15,7 @@ export async function login() {
   ).then((res) => res.json());
 }
 
-export async function session({
-  refresh = false,
-}: {
-  refresh?: boolean;
-}) {
+export async function session({ refresh = false }: { refresh?: boolean }) {
   const cookiesStore = await cookies();
   const sessionCookie = cookiesStore.get("session");
   const expireInCookie = cookiesStore.get("session_expire");
@@ -29,7 +25,12 @@ export async function session({
 
   const now = Date.now();
 
-  if (refresh && !cookiesStore.has("session") || !token || now >= expires_in || now + 600000 >= expires_in) {
+  if (
+    (refresh && !cookiesStore.has("session")) ||
+    !token ||
+    now >= expires_in ||
+    now + 600000 >= expires_in
+  ) {
     const data = await login();
 
     // Set the cookie
