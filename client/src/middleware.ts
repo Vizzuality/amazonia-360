@@ -15,7 +15,7 @@ export default async function middleware(req: NextRequest) {
     });
   }
 
-  await session({ refresh: false });
+  await session({ refresh: true });
 
   const response = NextResponse.next();
 
