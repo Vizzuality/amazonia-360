@@ -25,31 +25,31 @@ export async function session() {
 
   const now = Date.now();
 
-  if (!cookiesStore.has("session") || !token || now >= expires_in || now + 600000 >= expires_in) {
-    const data = await login();
+  // if (!cookiesStore.has("session") || !token || now >= expires_in || now + 600000 >= expires_in) {
+  const data = await login();
 
-    // Set the cookie
-    cookiesStore.set("session", data.access_token, {
-      httpOnly: false,
-      secure: true,
-      expires: Date.now() + data.expires_in * 1000,
-      sameSite: "strict",
-      path: "/",
-    });
+  // Set the cookie
+  cookiesStore.set("session", data.access_token, {
+    httpOnly: false,
+    secure: true,
+    expires: Date.now() + data.expires_in * 1000,
+    sameSite: "strict",
+    path: "/",
+  });
 
-    cookiesStore.set("session_expire", `${Date.now() + data.expires_in * 1000}`, {
-      httpOnly: false,
-      secure: true,
-      expires: Date.now() + data.expires_in * 1000,
-      sameSite: "strict",
-      path: "/",
-    });
+  cookiesStore.set("session_expire", `${Date.now() + data.expires_in * 1000}`, {
+    httpOnly: false,
+    secure: true,
+    expires: Date.now() + data.expires_in * 1000,
+    sameSite: "strict",
+    path: "/",
+  });
 
-    return {
-      token: data.access_token,
-      expires_in: Date.now() + data.expires_in * 1000,
-    };
-  }
+  return {
+    token: data.access_token,
+    expires_in: Date.now() + data.expires_in * 1000,
+  };
+  // }
 
   if (cookiesStore.has("session")) {
     return {
