@@ -26,7 +26,8 @@ export async function session({ refresh = false }: { refresh?: boolean }) {
   const now = Date.now();
 
   if (
-    (refresh && !cookiesStore.has("session")) ||
+    refresh ||
+    !cookiesStore.has("session") ||
     !token ||
     now >= expires_in ||
     now + 600000 >= expires_in
