@@ -5,7 +5,7 @@ import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 
 import { POINT_SYMBOL, POLYGON_SYMBOL, POLYLINE_SYMBOL } from "@/constants/map";
 
-import FeatureLayer from "@/components/map/layers/graphics";
+import Layer from "@/components/map/layers";
 import { useMap } from "@/components/map/provider";
 
 export type SketchProps = {
@@ -94,5 +94,5 @@ export default function Sketch({ type, enabled, onCreate, onCancel }: SketchProp
     );
   }, [type, enabled, handleSketchCreate]);
 
-  return <FeatureLayer layer={layerRef.current} index={100} />;
+  return <Layer layer={layerRef.current} index={100} />;
 }

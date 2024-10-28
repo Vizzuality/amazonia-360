@@ -2,6 +2,7 @@ import { Metadata } from "next";
 
 import { redirect } from "next/navigation";
 
+import { locationParser } from "@/app/parsers";
 import { PageProps } from "@/app/types";
 
 import Topics from "@/containers/report/topics";
@@ -21,7 +22,9 @@ export interface SearchParams {
 }
 
 export default async function ReportTopicsPage({ searchParams }: PageProps<Params, SearchParams>) {
-  if (!searchParams.location) {
+  const l = locationParser.parseServerSide((await searchParams).location);
+
+  if (!l) {
     redirect("/report");
   }
 
