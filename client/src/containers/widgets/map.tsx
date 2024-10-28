@@ -18,9 +18,7 @@ import Controls from "@/components/map/controls";
 import FullscreenControl from "@/components/map/controls/fullscreen";
 import InfoControl from "@/components/map/controls/info";
 import ZoomControl from "@/components/map/controls/zoom";
-import FeatureLayer from "@/components/map/layers/feature";
-import VectorTileLayer from "@/components/map/layers/vector-tile";
-import WebTileLayer from "@/components/map/layers/web-tile";
+import Layer from "@/components/map/layers";
 
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
 
@@ -84,24 +82,21 @@ export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
           ...viewProps,
         }}
       >
-        <VectorTileLayer layer={BASEMAP_LAYER} index={0} />
+        <Layer layer={BASEMAP_LAYER} index={0} />
 
         {LAYERS.map((layer, index, arr) => {
+          let i = arr.length - index;
+
           if (layer.type === "feature") {
-            const i =
-              layer.customParameters?.position === "top" ? arr.length + 3 : arr.length - index;
-
-            return <FeatureLayer key={layer.id} layer={layer} index={i} GEOMETRY={GEOMETRY} />;
+            i = layer?.customParameters?.position === "top" ? arr.length + 3 : arr.length - index;
           }
 
-          if (layer.type === "web-tile") {
-            return <WebTileLayer key={layer.id} layer={layer} index={arr.length - index} />;
-          }
+          return <Layer key={layer.id} layer={layer} index={i} GEOMETRY={GEOMETRY} />;
         })}
 
         <SelectedLayer index={LAYERS.length + 1} />
 
-        <VectorTileLayer layer={LABELS_LAYER} index={LAYERS.length + 2} />
+        <Layer layer={LABELS_LAYER} index={LAYERS.length + 2} />
 
         <Controls>
           <FullscreenControl />

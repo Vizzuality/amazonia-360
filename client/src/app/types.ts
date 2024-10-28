@@ -1,4 +1,4 @@
 export interface PageProps<Params, SearchParams = undefined> {
-  params: Params;
-  searchParams: SearchParams;
+  params: Promise<Params>;
+  searchParams: Promise<SearchParams>;
 }

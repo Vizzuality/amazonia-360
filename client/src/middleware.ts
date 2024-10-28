@@ -1,7 +1,10 @@
+import "server-only";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 import { env } from "@/env.mjs";
+
+import { session } from "@/actions/session";
 
 // Step 1. HTTP Basic Auth Middleware for Challenge
 export default async function middleware(req: NextRequest) {
@@ -11,6 +14,8 @@ export default async function middleware(req: NextRequest) {
       headers: { "WWW-Authenticate": "Basic" },
     });
   }
+
+  await session({ refresh: false });
 
   const response = NextResponse.next();
 
