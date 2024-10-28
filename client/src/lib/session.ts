@@ -17,7 +17,12 @@ export type SessionQueryOptions<TData, TError> = UseQueryOptions<
 >;
 
 export const getSession = async () => {
-  return axios.get("/api/session");
+  return axios
+    .get<{
+      token?: string;
+      expires_in: number;
+    }>("/api/session")
+    .then((response) => response.data);
 };
 
 export const getSessionKey = () => {

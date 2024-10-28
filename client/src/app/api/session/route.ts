@@ -1,13 +1,13 @@
 import { session } from "@/actions/session";
 
 export async function GET() {
-  await session({ refresh: false });
+  const data = await session({ refresh: false });
 
-  return Response.json(true);
+  return Response.json(data || {});
 }
 
 export async function POST() {
-  await session({ refresh: true });
+  const data = await session({ refresh: true });
 
-  return Response.json(true);
+  return Response.json(data || {});
 }
