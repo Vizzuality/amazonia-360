@@ -5,6 +5,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
 import { DeckLayer } from "@deck.gl/arcgis";
 import { Accessor, Color } from "@deck.gl/core";
+import { DataFilterExtension, DataFilterExtensionProps } from "@deck.gl/extensions";
 import { H3HexagonLayer } from "@deck.gl/geo-layers";
 import { ArrowLoader } from "@loaders.gl/arrow";
 import { load } from "@loaders.gl/core";
@@ -24,7 +25,6 @@ export const getGridLayerProps = ({
   gridDatasets,
   gridFilters,
   getFillColor,
-  zoom,
 }: {
   gridDatasets: string[];
   gridFilters: Record<string, number[]> | null;
@@ -39,14 +39,17 @@ export const getGridLayerProps = ({
     getTileData: (tile) => {
       if (!tile.url) return Promise.resolve(null);
       return load(tile.url, ArrowLoader, {
-        arrow: { shape: "object-row-table" },
+        arrow: { shape: "arrow-table" },
+        // arrow: { shape: "object-row-table" },
         fetch: {
           headers: {
             Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
           },
         },
       }).then((data) => {
-        return data.data;
+        return Object.assign(data.data, {
+          length: data.data.numRows,
+        });
       });
     },
     maxCacheSize: 300, // max number of tiles to keep in the cache
@@ -55,32 +58,77 @@ export const getGridLayerProps = ({
       gridFilters: gridFilters ? gridFilters : {},
     },
     renderSubLayers: (props) => {
-      return new H3HexagonLayer<Record<string, number>, { cell: string }>({
-        id: props.id,
-        data: props.data,
-        highPrecision: false,
-        // coverage: 1.15,
-        pickable: true,
-        wireframe: false,
-        filled: !!gridDatasets.length,
-        extruded: false,
-        // LINE
-        stroked: true,
-        getLineColor: [0, 154, 222, 255],
-        getLineWidth: () => {
-          if (zoom <= 7) return 0.5;
-          return 1;
-        },
-        lineWidthUnits: "pixels",
+      if (!props.data) {
+        return null;
+      }
 
-        getHexagon: (d) => `${d.cell}`,
-        getFillColor,
-        opacity: 1,
-        updateTriggers: {
-          getLineWidth: [zoom],
-          getFillColor: [gridDatasets, gridFilters],
-        },
-      });
+      const filterRange = () => {
+        if (gridDatasets.length === 1) {
+          const [d] = gridDatasets;
+          return gridFilters?.[d] as [number, number];
+        }
+
+        return gridDatasets.filter((d) => !!gridFilters?.[d]).map((d) => gridFilters?.[d]) as [
+          number,
+          number,
+        ][];
+      };
+
+      const filterSize = () => {
+        const g = gridDatasets.filter((d) => !!gridFilters?.[d]);
+        return Math.min(g.length, 4) as 0 | 1 | 2 | 3 | 4;
+      };
+
+      return [
+        new H3HexagonLayer<
+          {
+            cell: number;
+            [key: string]: number;
+          },
+          DataFilterExtensionProps
+        >({
+          id: props.id,
+          data: props.data,
+          highPrecision: false,
+          opacity: 1,
+          pickable: true,
+          filled: !!gridDatasets.length,
+          extruded: false,
+          stroked: false,
+          getFillColor,
+          getHexagon: (d) => `${d.cell}`,
+          getFilterValue: (d) => {
+            if (gridDatasets.length === 1) {
+              return d[`${gridDatasets[0]}`];
+            }
+
+            return gridDatasets.map((dataset) => d[`${dataset}`]);
+          },
+          filterRange: filterRange(),
+          extensions: [new DataFilterExtension({ filterSize: filterSize() })],
+          updateTriggers: {
+            getFillColor: [gridDatasets],
+            getFilterValue: [gridDatasets],
+          },
+        }),
+        new H3HexagonLayer({
+          id: `${props.id}-grid`,
+          data: props.data,
+          highPrecision: false,
+          pickable: false,
+          filled: false,
+          extruded: false,
+          // LINE
+          stroked: true,
+          getLineColor: [0, 154, 222, 255],
+          getLineWidth: () => {
+            return 0.5;
+          },
+          lineWidthUnits: "pixels",
+          getHexagon: (d) => `${d.cell}`,
+          opacity: 1,
+        }),
+      ];
     },
   });
 };
@@ -120,41 +168,17 @@ export default function GridLayer() {
     (d: Record<string, number>): Color => {
       if (gridDatasets.length === 1) {
         const [dataset] = gridDatasets;
-        const currentFilters = (gridFilters || {})[dataset];
-
-        if (currentFilters) {
-          const value = d[`${dataset}`];
-
-          if (value < currentFilters[0] || value > currentFilters[1]) {
-            return [0, 0, 0, 0];
-          }
-        }
 
         return colorscale(d[`${dataset}`]).rgb();
       }
 
       if (gridDatasets.length > 1) {
-        const f = gridDatasets.every((dataset) => {
-          const currentFilters = (gridFilters || {})[dataset];
-          if (currentFilters) {
-            const v = d[`${dataset}`];
-            if (v < currentFilters[0] || v > currentFilters[1]) {
-              return false;
-            }
-          }
-          return true;
-        });
-
-        if (f) {
-          return [0, 100, 200, 255];
-        }
-
-        return [0, 0, 0, 0];
+        return [0, 100, 200, 255];
       }
 
       return [0, 0, 0, 0];
     },
-    [gridDatasets, gridFilters, colorscale],
+    [gridDatasets, colorscale],
   );
 
   const layer = useMemo(() => {
