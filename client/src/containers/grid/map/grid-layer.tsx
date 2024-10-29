@@ -36,10 +36,12 @@ export const getGridLayerProps = ({
   gridMetaData: MultiDatasetMeta | undefined;
   zoom: number;
 }) => {
+  // Create array of 4n values
+  const filters = [...Array(4).keys()];
   const columns = !!gridDatasets.length ? gridDatasets.map((d) => `columns=${d}`).join("&") : "";
 
   return new H3TileLayer({
-    id: `tile-h3s-${columns.toString()}`,
+    id: `tile-h3s`,
     data: `https://dev.api.amazonia360.dev-vizzuality.com/grid/tile/{h3index}?${columns}`,
     extent: [-85.3603, -28.5016, -29.8134, 10.8038],
     getTileData: (tile) => {
@@ -68,33 +70,37 @@ export const getGridLayerProps = ({
         return null;
       }
 
-      const filterRange = () => {
-        if (gridDatasets.length === 1) {
-          const [d] = gridDatasets;
-          const legend = gridMetaData?.datasets.find((dataset) => dataset.var_name === d)?.legend;
-
-          if (legend?.legend_type === "continuous") {
-            const stats = legend?.stats?.find((s) => s.level === 1);
-
-            return (gridFilters?.[d] || [stats?.min, stats?.max]) as [number, number];
-          }
-        }
-
-        return gridDatasets.map((d) => {
-          const legend = gridMetaData?.datasets.find((dataset) => dataset.var_name === d)?.legend;
-
-          if (legend?.legend_type === "continuous") {
-            const stats = legend?.stats?.find((s) => s.level === 1);
-
-            return (gridFilters?.[d] || [stats?.min, stats?.max]) as [number, number];
+      const getFilterValue: Accessor<Record<string, number>, number[]> = (d) => {
+        return filters.map((f) => {
+          if (gridDatasets[f]) {
+            return d[`${gridDatasets[f]}`];
           }
 
-          return [1, 100] as [number, number];
+          return 0;
         });
       };
 
-      const filterSize = () => {
-        return Math.min(gridDatasets.length, 4) as 0 | 1 | 2 | 3 | 4;
+      const filterRange = () => {
+        return filters.map((f) => {
+          if (gridDatasets[f]) {
+            const legend = gridMetaData?.datasets.find(
+              (dataset) => dataset.var_name === gridDatasets[f],
+            )?.legend;
+
+            if (legend?.legend_type === "continuous") {
+              const stats = legend?.stats?.find((s) => s.level === 1);
+
+              return (gridFilters?.[gridDatasets[f]] || [stats?.min, stats?.max]) as [
+                number,
+                number,
+              ];
+            }
+
+            return [-1, 1] as [number, number];
+          }
+
+          return [-1, 1] as [number, number];
+        });
       };
 
       return [
@@ -113,17 +119,13 @@ export const getGridLayerProps = ({
           filled: !!gridDatasets.length,
           extruded: false,
           stroked: false,
-          getFillColor,
           getHexagon: (d) => `${d.cell}`,
-          getFilterValue: (d) => {
-            if (gridDatasets.length === 1) {
-              return d[`${gridDatasets[0]}`];
-            }
-
-            return gridDatasets.map((dataset) => d[`${dataset}`]);
-          },
-          extensions: [new DataFilterExtension({ filterSize: filterSize() })],
+          getFillColor,
+          getFilterValue,
           filterRange: filterRange(),
+          extensions: [
+            new DataFilterExtension({ filterSize: filters.length as 0 | 1 | 2 | 3 | 4 }),
+          ],
           updateTriggers: {
             getFillColor: [gridDatasets],
             getFilterValue: [gridDatasets],
