@@ -1,3 +1,4 @@
+import io
 import logging
 import os
 import pathlib
@@ -7,6 +8,7 @@ from typing import Annotated
 import h3
 import h3ronpy.polars  # noqa: F401
 import polars as pl
+import pyarrow as pa
 import shapely
 from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from fastapi.params import Body
@@ -58,6 +60,21 @@ def cells_in_geojson(geometry: str, cell_resolution: int) -> pl.LazyFrame:
     return pl.LazyFrame({"cell": cells})
 
 
+def polars_to_string_ipc(df: pl.DataFrame) -> bytes:
+    """Cast cell column of polars dataframe to arrow type `string` and return the ipc bytes."""
+    # For performance reasons all the strings in polars are treated as `large_string`,
+    # a custom string type. As of today, the frontend library @loadrs.gl/arrow only supports
+    # `string` type so we need to downcast with pyarrow
+    table: pa.Table = df.to_arrow()
+
+    schema = table.schema
+    schema = schema.set(schema.get_field_index("cell"), pa.field("cell", pa.string()))
+    table = table.cast(schema)
+    sink = io.BytesIO()
+    with pa.ipc.new_file(sink, table.schema) as writer:
+        writer.write_table(table)
+    return sink.getvalue()
+
 @grid_router.get(
     "/tile/{tile_index}",
     summary="Get a grid tile",
@@ -74,13 +91,11 @@ def grid_tile(
     """Get a tile of h3 cells with specified data columns"""
     tile, _ = get_tile(tile_index, columns)
     try:
-        # Need to use the _undocumented_ old compatibility method so the string columns are readable by
-        # the apache arrow implementation in JS ( as of today 26/9/2024 it is not without this flag ).
-        tile_buffer = tile.collect().write_ipc(None, compat_level=pl.interchange.CompatLevel.oldest())
+        tile = tile.collect()
     # we don't know if the column requested are correct until we call .collect()
     except pl.exceptions.ColumnNotFoundError:
         raise HTTPException(status_code=400, detail="One or more of the specified columns is not valid") from None
-    return ArrowIPCResponse(tile_buffer.getvalue())
+    return ArrowIPCResponse(polars_to_string_ipc(tile))
 
 
 @grid_router.post(
@@ -109,8 +124,7 @@ def grid_tile_in_area(
         raise HTTPException(status_code=400, detail="One or more of the specified columns is not valid") from None
     if tile.is_empty():
         raise HTTPException(status_code=404, detail="No data in region")
-    tile_buffer = tile.write_ipc(None)
-    return ArrowIPCResponse(tile_buffer.getvalue())
+    return ArrowIPCResponse(polars_to_string_ipc(tile))
 
 
 @grid_router.get(
