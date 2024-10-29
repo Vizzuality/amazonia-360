@@ -13,8 +13,6 @@ services:
       - GRID_TILES_PATH=${GRID_TILES_PATH}
     networks:
       - amazonia360-network
-    restart:
-        always
 
   test:
     build:
