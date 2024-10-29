@@ -73,10 +73,7 @@ export const getGridLayerProps = ({
         },
         lineWidthUnits: "pixels",
 
-        getHexagon: (d) => {
-          const res = BigInt(d.cell);
-          return res.toString(16);
-        },
+        getHexagon: (d) => `${d.cell}`,
         getFillColor,
         opacity: 1,
         updateTriggers: {
