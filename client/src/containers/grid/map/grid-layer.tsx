@@ -41,6 +41,7 @@ export const getGridLayerProps = ({
   return new H3TileLayer({
     id: `tile-h3s-${columns.toString()}`,
     data: `https://dev.api.amazonia360.dev-vizzuality.com/grid/tile/{h3index}?${columns}`,
+    extent: [-85.3603, -28.5016, -29.8134, 10.8038],
     getTileData: (tile) => {
       if (!tile.url) return Promise.resolve(null);
       return load(tile.url, ArrowLoader, {
@@ -106,7 +107,7 @@ export const getGridLayerProps = ({
         >({
           id: props.id,
           data: props.data,
-          highPrecision: false,
+          highPrecision: true,
           opacity: 1,
           pickable: true,
           filled: !!gridDatasets.length,
