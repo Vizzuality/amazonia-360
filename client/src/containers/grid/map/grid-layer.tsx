@@ -15,6 +15,8 @@ import { env } from "@/env.mjs";
 
 import { useGetGridMeta } from "@/lib/grid";
 
+import { MultiDatasetMeta } from "@/types/generated/api.schemas";
+
 import { useSyncGridDatasets, useSyncGridFilters } from "@/app/store";
 
 import Layer from "@/components/map/layers";
@@ -25,16 +27,19 @@ export const getGridLayerProps = ({
   gridDatasets,
   gridFilters,
   getFillColor,
+  gridMetaData,
+  zoom,
 }: {
   gridDatasets: string[];
   gridFilters: Record<string, number[]> | null;
   getFillColor: Accessor<Record<string, number>, Color>;
+  gridMetaData: MultiDatasetMeta | undefined;
   zoom: number;
 }) => {
   const columns = !!gridDatasets.length ? gridDatasets.map((d) => `columns=${d}`).join("&") : "";
 
   return new H3TileLayer({
-    id: "tile-h3s",
+    id: `tile-h3s-${columns.toString()}`,
     data: `https://dev.api.amazonia360.dev-vizzuality.com/grid/tile/{h3index}?${columns}`,
     getTileData: (tile) => {
       if (!tile.url) return Promise.resolve(null);
@@ -65,18 +70,30 @@ export const getGridLayerProps = ({
       const filterRange = () => {
         if (gridDatasets.length === 1) {
           const [d] = gridDatasets;
-          return gridFilters?.[d] as [number, number];
+          const legend = gridMetaData?.datasets.find((dataset) => dataset.var_name === d)?.legend;
+
+          if (legend?.legend_type === "continuous") {
+            const stats = legend?.stats?.find((s) => s.level === 1);
+
+            return (gridFilters?.[d] || [stats?.min, stats?.max]) as [number, number];
+          }
         }
 
-        return gridDatasets.filter((d) => !!gridFilters?.[d]).map((d) => gridFilters?.[d]) as [
-          number,
-          number,
-        ][];
+        return gridDatasets.map((d) => {
+          const legend = gridMetaData?.datasets.find((dataset) => dataset.var_name === d)?.legend;
+
+          if (legend?.legend_type === "continuous") {
+            const stats = legend?.stats?.find((s) => s.level === 1);
+
+            return (gridFilters?.[d] || [stats?.min, stats?.max]) as [number, number];
+          }
+
+          return [1, 100] as [number, number];
+        });
       };
 
       const filterSize = () => {
-        const g = gridDatasets.filter((d) => !!gridFilters?.[d]);
-        return Math.min(g.length, 4) as 0 | 1 | 2 | 3 | 4;
+        return Math.min(gridDatasets.length, 4) as 0 | 1 | 2 | 3 | 4;
       };
 
       return [
@@ -104,8 +121,8 @@ export const getGridLayerProps = ({
 
             return gridDatasets.map((dataset) => d[`${dataset}`]);
           },
-          filterRange: filterRange(),
           extensions: [new DataFilterExtension({ filterSize: filterSize() })],
+          filterRange: filterRange(),
           updateTriggers: {
             getFillColor: [gridDatasets],
             getFilterValue: [gridDatasets],
@@ -122,11 +139,14 @@ export const getGridLayerProps = ({
           stroked: true,
           getLineColor: [0, 154, 222, 255],
           getLineWidth: () => {
-            return 0.5;
+            return (1 - zoom) / 5;
           },
           lineWidthUnits: "pixels",
           getHexagon: (d) => `${d.cell}`,
           opacity: 1,
+          updateTriggers: {
+            getLineWidth: [zoom],
+          },
         }),
       ];
     },
@@ -188,6 +208,7 @@ export default function GridLayer() {
           getGridLayerProps({
             gridDatasets,
             gridFilters,
+            gridMetaData,
             zoom,
             getFillColor,
           }),
@@ -201,13 +222,14 @@ export default function GridLayer() {
       getGridLayerProps({
         gridDatasets,
         gridFilters,
+        gridMetaData,
         zoom,
         getFillColor,
       }),
     ];
 
     return GRID_LAYER.current;
-  }, [gridDatasets, gridFilters, getFillColor, zoom]);
+  }, [gridDatasets, gridFilters, getFillColor, gridMetaData, zoom]);
 
   // Listen to extent changes
   ArcGISReactiveUtils.when(
