@@ -6,15 +6,16 @@ export default function Vision() {
       <div className="container text-white py-10 md:py-28 flex flex-col space-y-10">
         <div className="flex flex-col w-full">
           <h3 className="uppercase text-sm font-extrabold text-cyan-500 tracking-wide-lg">
-            amazonia360+ vision{" "}
+            amazoniaForever360+ vision{" "}
           </h3>
           <h2 className="text-blue-400 text-2xl lg:text-4xl pb-6">
             AI-Powered on the horizon{" "}
           </h2>
           <p className="text-blue-900 text-base lg:text-lg font-normal md:max-w-4xl">
-            As Amazonia360+ grows beyond this prototype, we are committed to
-            enhancing your experience. The next chapter will see a suite of AI
-            features that will elevate your search experience and understanding:
+            As AmazoniaForever360+ grows beyond this prototype, we are committed
+            to enhancing your experience. The next chapter will see a suite of
+            AI features that will elevate your search experience and
+            understanding:
           </p>
         </div>
 
