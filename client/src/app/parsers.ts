@@ -8,7 +8,26 @@ import {
 
 import { TOPICS } from "@/constants/topics";
 
+import { VisualizationType } from "@/containers/report/visualization-types/types";
+
 export const topicsParser = parseAsArrayOf(parseAsStringLiteral(TOPICS.map((topic) => topic.id)));
+
+export const datasetsParser = parseAsArrayOf(parseAsStringLiteral(DATASET_IDS)).withDefault([]);
+
+export type TopicsParserType = (typeof TOPICS)[number]["id"];
+
+type Indicator = {
+  id: string;
+  type: VisualizationType;
+  size: [number, number];
+};
+
+export type Indicators = {
+  id: TopicsParserType;
+  indicators: Indicator[];
+};
+
+export const indicatorsParser = parseAsArrayOf(parseAsJson<Indicators>());
 
 export const bboxParser = parseAsArrayOf(parseAsFloat).withDefault([
   -9502265.057100412, -3312366.5313590243, -3318815.2169444375, 2249803.142895202,

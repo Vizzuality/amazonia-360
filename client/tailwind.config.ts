@@ -16,7 +16,9 @@ const config = {
     extend: {
       screens: {
         "2xl": "1441px",
-        tall: { raw: "(min-height: 800px)" },
+        tall: {
+          raw: "(min-height: 800px)",
+        },
       },
       colors: {
         border: "hsl(var(--border))",
@@ -53,27 +55,37 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
         blue: {
-          50: "#f0f4f6",
-          100: "#cbd8df",
-          200: "#94B4C4",
-          300: "#5E90A8",
-          400: "#196E8C",
-          500: "#004E70",
-          600: "#003E5A",
-          700: "#00374E",
-          800: "#002F43",
-          900: "#002738",
+          "50": "#f0f4f6",
+          "100": "#cbd8df",
+          "200": "#94B4C4",
+          "300": "#5E90A8",
+          "400": "#196E8C",
+          "500": "#004E70",
+          "600": "#003E5A",
+          "700": "#00374E",
+          "800": "#002F43",
+          "900": "#002738",
         },
         cyan: {
-          100: "#DBEDF8",
-          200: "#B7DBF2",
-          300: "#93CAEB",
-          400: "#6FB8E5",
-          500: "#009ADE",
-          600: "#4BA6DE",
-          700: "#35749B",
-          800: "#2D6485",
-          900: "#26536F",
+          "100": "#DBEDF8",
+          "200": "#B7DBF2",
+          "300": "#93CAEB",
+          "400": "#6FB8E5",
+          "500": "#009ADE",
+          "600": "#4BA6DE",
+          "700": "#35749B",
+          "800": "#2D6485",
+          "900": "#26536F",
+        },
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar-background))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          primary: "hsl(var(--sidebar-primary))",
+          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+          accent: "hsl(var(--sidebar-accent))",
+          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+          border: "hsl(var(--sidebar-border))",
+          ring: "hsl(var(--sidebar-ring))",
         },
       },
       borderRadius: {
@@ -83,12 +95,20 @@ const config = {
       },
       keyframes: {
         "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
+          from: {
+            height: "0",
+          },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+          },
         },
         "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
+          from: {
+            height: "var(--radix-accordion-content-height)",
+          },
+          to: {
+            height: "0",
+          },
         },
       },
       animation: {

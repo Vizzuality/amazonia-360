@@ -23,26 +23,33 @@ export default function ReportResultsContent() {
       {TOPICS?.filter((topic) => {
         const id = topic.id as TopicIds;
         return topics?.includes(id);
-      }).map((topic, index) => {
-        const id = topic.id as TopicIds;
+      })
+        .sort((a, b) => {
+          if (!topics) return 0;
+          const indexA = topics.indexOf(a.id as TopicIds);
+          const indexB = topics.indexOf(b.id as TopicIds);
+          return indexA - indexB;
+        })
+        .map((topic, index) => {
+          const id = topic.id as TopicIds;
 
-        if (!topics?.includes(id)) return null;
+          if (!topics?.includes(id)) return null;
 
-        switch (id) {
-          case "natural-physical-environment":
-            return <WidgetsEnvironment key={id} index={index} />;
-          case "sociodemographics":
-            return <WidgetsDemographicAndSocieconomic key={id} />;
-          case "land-use-and-conservation":
-            return <WidgetsProtection key={id} index={index} />;
-          case "bioeconomy":
-            return <WidgetsBioeconomy key={id} index={index} />;
-          case "financial":
-            return <WidgetsFinancial key={id} />;
-          default:
-            return null;
-        }
-      })}
+          switch (id) {
+            case "natural-physical-environment":
+              return <WidgetsEnvironment key={id} index={index} />;
+            case "sociodemographics":
+              return <WidgetsDemographicAndSocieconomic key={id} />;
+            case "land-use-and-conservation":
+              return <WidgetsProtection key={id} index={index} />;
+            case "bioeconomy":
+              return <WidgetsBioeconomy key={id} index={index} />;
+            case "financial":
+              return <WidgetsFinancial key={id} />;
+            default:
+              return null;
+          }
+        })}
       <WidgetsOtherResources />
     </div>
   );

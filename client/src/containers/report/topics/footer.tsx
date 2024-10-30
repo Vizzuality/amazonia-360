@@ -21,7 +21,7 @@ export default function TopicsFooter() {
         <Button
           variant="ghost"
           onClick={() => {
-            setTopics(TOPICS.map((t) => t.id));
+            setTopics(TOPICS.map((t) => t?.id));
           }}
         >
           Select all topics

@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { useSidebar } from "@/components/ui/sidebar";
 
 import ShareReport from "./share";
 
@@ -33,7 +34,8 @@ export default function ReportResultsHeader() {
 
   const title = useLocationTitle(location);
 
-  const [open, setOpen] = useState(false);
+  const [open] = useState(false);
+  const { toggleSidebar } = useSidebar();
 
   return (
     <header className="space-y-4 pb-6">
@@ -72,15 +74,17 @@ export default function ReportResultsHeader() {
             </AlertDialog>
           </div>
 
-          {/* Toolbar */}
           <div className="flex items-center space-x-4 print:hidden">
             <Button
               variant={open ? "default" : "outline"}
               className="space-x-2"
-              onClick={() => setOpen(!open)}
+              onClick={() => {
+                // onClick?.(event);
+                toggleSidebar();
+              }}
             >
               <LuLayoutGrid className="h-5 w-5" />
-              <span>Topics</span>
+              <span>Indicators</span>
             </Button>
 
             <ShareReport />
