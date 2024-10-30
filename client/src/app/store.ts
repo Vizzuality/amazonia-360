@@ -9,6 +9,8 @@ import {
   gridFiltersParser,
   locationParser,
   topicsParser,
+  indicatorsParser,
+  datasetsParser,
 } from "@/app/parsers";
 
 import { SketchProps } from "@/components/map/sketch";
@@ -20,6 +22,15 @@ export const useSyncBbox = () => {
 
 export const useSyncTopics = () => {
   return useQueryState("topics", topicsParser);
+};
+
+// TO - DO - this will be renamed to topics when contextual viewer is finished (replacing the other one)
+export const useSyncIndicators = () => {
+  return useQueryState("indicators", indicatorsParser);
+};
+
+export const useSyncDatasets = () => {
+  return useQueryState("datasets", datasetsParser);
 };
 
 export const useSyncLocation = () => {
