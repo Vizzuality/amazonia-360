@@ -1,0 +1,6 @@
+# Client linting and type checking
+# cd ./client && pnpm types && pnpm lint --fix && pnpm check-types && git add src/types/generated/
+cd ./client && pnpm lint --fix && pnpm check-types && pnpm test
+
+# CMS config sync
+# cd .. && cd ./cms && pnpm config-sync export -y && git add config/sync

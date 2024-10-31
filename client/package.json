@@ -9,7 +9,7 @@
     "lint": "next lint",
     "check-types": "tsc",
     "types": "orval --config ./orval.config.ts",
-    "prepare": "cd .. && husky install client/.husky",
+    "prepare": "cd .. && husky client/.husky",
     "test": "jest",
     "test:watch": "jest --watch"
   },
