@@ -26,6 +26,7 @@ jest.mock("@arcgis/core/layers/WebTileLayer", () => class WebTileLayer {});
 jest.mock("@arcgis/core/layers/GraphicsLayer", () => class GraphicsLayer {});
 jest.mock("@arcgis/core/layers/VectorTileLayer", () => class VectorTileLayer {});
 jest.mock("@arcgis/core/layers/GeoJSONLayer", () => class GeoJSONLayer {});
+jest.mock("@arcgis/core/layers/MapImageLayer", () => class MapImageLayer {});
 
 jest.mock("@arcgis/core/geometry/Point", () => class Point {});
 jest.mock(
