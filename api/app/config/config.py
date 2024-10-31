@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     auth_token: str
     tiff_path: str
     grid_tiles_path: str
+    tile_to_cell_resolution_diff: int = 5
 
 
 @lru_cache

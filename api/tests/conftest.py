@@ -1,3 +1,4 @@
+import json
 import os
 from pathlib import Path
 
@@ -17,6 +18,30 @@ os.environ["GRID_TILES_PATH"] = str(TEST_ROOT / "data" / "grid")
 
 FILES = ["raster.tif", "raster2.tif", "raster3.tif"]
 HEADERS = {"Authorization": f"Bearer {get_settings().auth_token}"}
+
+
+@pytest.fixture()
+def geojson() -> str:
+    """This geojson contains the cell 895f4261e03ffff in `grid_dataset`"""
+    s = json.dumps(
+        {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "coordinates": [
+                    [
+                        [-61.11, 8.66],
+                        [-61.11, 8.50],
+                        [-60.86, 8.50],
+                        [-60.86, 8.66],
+                        [-61.11, 8.66],
+                    ]
+                ],
+                "type": "Polygon",
+            },
+        }
+    )
+    return s
 
 
 @pytest.fixture()
@@ -40,11 +65,11 @@ def grid_dataset(setup_data_folder) -> str:
     df = pl.DataFrame(
         {
             "cell": [
-                618668968382824400,
-                619428375900454900,
-                619428407452893200,
-                619428407943888900,
-                619428407676764200,
+                "895f4261e03ffff",
+                "865f00007ffffff",
+                "865f0000fffffff",
+                "865f00017ffffff",
+                "865f0001fffffff",
             ],
             "landcover": [1, 4, 3, 3, 4],
             "population": [100, 200, 1, 900, 900],

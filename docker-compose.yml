@@ -13,9 +13,7 @@ services:
       - GRID_TILES_PATH=${GRID_TILES_PATH}
     networks:
       - amazonia360-network
-    restart:
-        always
-
+    restart: always
   test:
     build:
         context: ./api
