@@ -1,34 +1,58 @@
+"use client";
+
+import { useAtom } from "jotai";
+
+import { tabAtom } from "@/app/store";
+
 import Confirm from "@/containers/report/location/confirm";
 import Search from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ReportLocation() {
+  const [tab, setTab] = useAtom(tabAtom);
+
   return (
-    <aside className="pointer-events-auto flex max-h-screen w-4/12 shrink-0 flex-col overflow-hidden tall:2xl:w-5/12">
-      <ScrollArea className="w-full grow">
-        <div className="relative space-y-2 overflow-hidden rounded-3xl bg-muted/75 p-4 backdrop-blur-xl xl:space-y-4 tall:xl:p-8">
-          <div className="space-y-2 p-2 tall:xl:space-y-4">
-            <h1 className="text-2xl text-blue-400 lg:text-3xl tall:xl:text-4xl">
-              Get insights on your area of interest
-            </h1>
+    <aside className="pointer-events-auto flex max-h-screen w-4/12 shrink-0 flex-col overflow-hidden tall:2xl:w-4/12">
+      <Tabs defaultValue={tab} onValueChange={(t) => setTab(t)} className="flex grow flex-col">
+        <TabsList className="w-full rounded-lg border border-blue-100 bg-muted p-1">
+          <TabsTrigger variant="primary" className="w-full" value="contextual-viewer">
+            Contextual viewer
+          </TabsTrigger>
+          <TabsTrigger variant="primary" className="w-full" value="grid">
+            Grid
+          </TabsTrigger>
+        </TabsList>
 
-            <p className="text-sm font-medium tall:xl:text-base">
-              Choose your area of interest: Get a customized report to deepen your understanding of
-              your region of interest and guide your efforts towards making a significant impact.
-            </p>
-          </div>
+        <TabsContent className="flex grow flex-col" value="contextual-viewer">
+          <ScrollArea className="w-full grow">
+            <div className="relative space-y-2 overflow-hidden rounded-lg bg-white p-4 backdrop-blur-xl xl:space-y-4">
+              <div className="space-y-2">
+                <h1 className="text-lg font-bold text-primary">Select your area of interest</h1>
 
-          <div className="space-y-2">
-            <Search />
+                <p className="text-sm font-medium text-muted-foreground">
+                  Use the search or the drawing tools to select your area of interest and get a
+                  report on it.
+                </p>
+              </div>
 
-            <Sketch />
-          </div>
+              <div className="space-y-2">
+                <Search />
 
-          <Confirm />
-        </div>
-      </ScrollArea>
+                <Sketch />
+              </div>
+
+              <Confirm />
+            </div>
+          </ScrollArea>
+        </TabsContent>
+
+        <TabsContent className="flex grow flex-col" value="grid">
+          {tab}
+        </TabsContent>
+      </Tabs>
     </aside>
   );
 }

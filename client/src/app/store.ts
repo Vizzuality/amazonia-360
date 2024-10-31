@@ -58,3 +58,5 @@ export const sketchAtom = atom<SketchProps>({
   enabled: false,
   type: undefined,
 });
+
+export const tabAtom = atom<string>("contextual-viewer");
