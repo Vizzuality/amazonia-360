@@ -8,8 +8,8 @@ import { useSyncTopics } from "@/app/store";
 
 import { TOPICS, Topic } from "@/constants/topics";
 
+import { TopicsReportItems } from "@/containers/report/indicators/item";
 import SortableList from "@/containers/report/sortable/list";
-import { TopicsReportItems } from "@/containers/report/topics-report/item";
 
 import {
   Sidebar,

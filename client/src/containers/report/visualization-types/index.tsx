@@ -2,13 +2,14 @@
 
 import { MapIcon, TableIcon, PieChart, Binary } from "lucide-react";
 
+import { useGridstackContext } from "@/lib/dynamic-grid/use-gridstack-context";
 import { cn } from "@/lib/utils";
 
 import { useSyncIndicators } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
 
-import { buttonVariants } from "@/components/ui/button";
+// import { buttonVariants } from "@/components/ui/button";
 
 import { Visualizations } from "./types";
 
@@ -27,9 +28,21 @@ export function VisualizationTypes({
   topicId: Topic["id"];
 }) {
   const [indicators, setIndicators] = useSyncIndicators();
+  const { grid } = useGridstackContext();
 
   const handleVisualizationType = (types: Visualizations["default"]) => {
     const newIndicators = [...(indicators || [])];
+
+    const widgetSize = DEFAULT_VISUALIZATION_SIZES[types];
+
+    const widgetDiv = document.createElement("div");
+    widgetDiv.classList.add("grid-stack-item-content");
+    widgetDiv.setAttribute("gs-auto-position", "true");
+    widgetDiv.setAttribute("gs-w", widgetSize[0].toString());
+    widgetDiv.setAttribute("gs-h", widgetSize[1].toString());
+
+    grid?.el.appendChild(widgetDiv);
+    grid?.makeWidget(widgetDiv);
 
     // Find topic
     const topicIndex = newIndicators.findIndex((topic) => topic.id === topicId);
@@ -98,7 +111,7 @@ export function VisualizationTypes({
                 >
                   {b}
                 </span>
-                {MOCKED.default.includes(b) && (
+                {/* {MOCKED.default.includes(b) && (
                   <span
                     className={cn(
                       buttonVariants({
@@ -110,7 +123,7 @@ export function VisualizationTypes({
                   >
                     Recommended
                   </span>
-                )}
+                )} */}
               </button>
             </li>
           );
