@@ -2,7 +2,7 @@
 
 import { useAtom } from "jotai";
 
-import { tabAtom } from "@/app/store";
+import { tabAtom, useSyncLocation } from "@/app/store";
 
 import Confirm from "@/containers/report/location/confirm";
 import Search from "@/containers/report/location/search";
@@ -13,6 +13,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ReportLocation() {
   const [tab, setTab] = useAtom(tabAtom);
+
+  const [location] = useSyncLocation();
 
   return (
     <aside className="pointer-events-auto flex max-h-screen w-4/12 shrink-0 flex-col overflow-hidden tall:2xl:w-4/12">
@@ -38,13 +40,15 @@ export default function ReportLocation() {
                 </p>
               </div>
 
-              <div className="space-y-4">
-                <Search />
+              {!location && (
+                <div className="space-y-4">
+                  <Search />
 
-                <Sketch />
-              </div>
+                  <Sketch />
+                </div>
+              )}
 
-              <Confirm />
+              {location && <Confirm />}
             </div>
           </ScrollArea>
         </TabsContent>
