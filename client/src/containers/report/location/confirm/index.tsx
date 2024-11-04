@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import Polygon from "@arcgis/core/geometry/Polygon";
+import { useSetAtom } from "jotai";
 
 import { formatNumber } from "@/lib/formats";
 import { useLocationGeometry, useLocationTitle } from "@/lib/location";
@@ -11,7 +12,6 @@ import { useLocationGeometry, useLocationTitle } from "@/lib/location";
 import { confirmAtom, useSyncLocation } from "@/app/store";
 
 import { Button } from "@/components/ui/button";
-import { useSetAtom } from "jotai";
 
 export default function Confirm() {
   const setConfirm = useSetAtom(confirmAtom);

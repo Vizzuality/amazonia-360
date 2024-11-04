@@ -17,7 +17,7 @@ export default function Hero() {
             <span className="font-bold">AmazoniaForever360+</span> is your gateway to understanding
             and achieving the greatest impact in this region.
           </p>
-          <Link href="/report">
+          <Link href="/report" prefetch>
             <Button size="lg" className="flex space-x-2.5">
               <p>Access report tool</p>
               <LuArrowRight size={20} strokeWidth={1} />
