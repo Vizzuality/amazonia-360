@@ -44,10 +44,10 @@ export function Search<T extends Option>({
   return (
     <Popover onOpenChange={setOpened} open={opened}>
       <PopoverTrigger ref={triggerRef} className="relative w-full">
-        <LuSearch className="absolute left-6 top-1/2 h-8 w-8 -translate-y-1/2 stroke-1 text-blue-500" />
+        <LuSearch className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 stroke-1 text-black" />
         <div
           className={cn(
-            "flex h-12 w-full items-center rounded-[32px] bg-white py-5 pl-[70px] text-sm tall:2xl:h-16",
+            "flex h-14 w-full items-center rounded-sm border border-input bg-white py-5 pl-10 text-sm",
             !value && "text-gray-500",
           )}
         >
@@ -80,18 +80,18 @@ export function Search<T extends Option>({
           updatePositionStrategy="always"
           sideOffset={(triggerRef.current?.getBoundingClientRect()?.height || 0) * -1}
           className={cn(
-            "z-50 w-popover-width overflow-hidden rounded-[32px] border-0 bg-white p-0 text-popover-foreground shadow-md outline-none",
+            "z-50 w-popover-width overflow-hidden rounded-sm border-0 bg-white p-0 text-popover-foreground shadow-md outline-none",
           )}
         >
           <Command shouldFilter={false}>
             <div className="relative w-full" cmdk-input-wrapper="">
-              <LuSearch className="absolute left-6 top-1/2 h-8 w-8 -translate-y-1/2 stroke-1 text-blue-500" />
+              <LuSearch className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 stroke-1 text-black" />
 
               <CommandPrimitive.Input
                 value={value}
                 placeholder={placeholder ?? "Search..."}
                 className={cn(
-                  "flex h-12 w-full bg-transparent py-5 pl-[70px] text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 tall:2xl:h-16",
+                  "flex h-14 w-full items-center rounded-sm border border-input bg-white py-5 pl-10 text-sm placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
                 )}
                 onValueChange={(e) => {
                   onChange(e);
