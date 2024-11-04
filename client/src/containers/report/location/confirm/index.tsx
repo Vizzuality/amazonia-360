@@ -2,20 +2,19 @@
 
 import { useMemo } from "react";
 
-import Link from "next/link";
-
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import Polygon from "@arcgis/core/geometry/Polygon";
 
 import { formatNumber } from "@/lib/formats";
 import { useLocationGeometry, useLocationTitle } from "@/lib/location";
 
-import { useSyncLocation, useSyncSearchParams } from "@/app/store";
+import { confirmAtom, useSyncLocation } from "@/app/store";
 
 import { Button } from "@/components/ui/button";
+import { useSetAtom } from "jotai";
 
 export default function Confirm() {
-  const searchParams = useSyncSearchParams();
+  const setConfirm = useSetAtom(confirmAtom);
 
   const [location, setLocation] = useSyncLocation();
   const TITLE = useLocationTitle(location);
@@ -43,11 +42,10 @@ export default function Confirm() {
         <Button variant="outline" size="lg" className="grow" onClick={() => setLocation(null)}>
           Clear
         </Button>
-        <Link href={`/report/topics${searchParams}`} className="grow">
-          <Button size="lg" className="w-full">
-            Select
-          </Button>
-        </Link>
+
+        <Button size="lg" className="grow" onClick={() => setConfirm(true)}>
+          Select
+        </Button>
       </div>
     </div>
   );

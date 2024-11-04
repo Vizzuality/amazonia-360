@@ -80,7 +80,7 @@ export default function Sketch() {
               <div className="flex flex-col items-start justify-start space-y-1">
                 <span className="text-base font-bold transition-none">{button.label}</span>
                 <span className="text-xs font-medium text-muted-foreground">
-                  Click on the map to select a single point and get a buffer radius of 30km2
+                  {button.description}
                 </span>
               </div>
             </div>

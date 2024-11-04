@@ -60,3 +60,4 @@ export const sketchAtom = atom<SketchProps>({
 });
 
 export const tabAtom = atom<string>("contextual-viewer");
+export const confirmAtom = atom<boolean>(false);

@@ -1,18 +1,22 @@
 "use client";
 
 import { useAtom } from "jotai";
+import { LuArrowLeft } from "react-icons/lu";
 
-import { tabAtom, useSyncLocation } from "@/app/store";
+import { tabAtom, confirmAtom, useSyncLocation } from "@/app/store";
 
 import Confirm from "@/containers/report/location/confirm";
+import { GenerateReport } from "@/containers/report/location/generate";
 import Search from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
+import Topics from "@/containers/report/location/topics";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ReportLocation() {
   const [tab, setTab] = useAtom(tabAtom);
+  const [confirm, setConfirm] = useAtom(confirmAtom);
 
   const [location] = useSyncLocation();
 
@@ -30,26 +34,53 @@ export default function ReportLocation() {
 
         <TabsContent className="flex grow flex-col" value="contextual-viewer">
           <ScrollArea className="w-full grow">
-            <div className="relative space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
-              <div className="space-y-1">
-                <h1 className="text-lg font-bold text-primary">Select your area of interest</h1>
+            {!confirm && (
+              <div className="relative space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
+                <div className="space-y-1">
+                  <h1 className="text-lg font-bold text-primary">Select your area of interest</h1>
 
-                <p className="text-sm font-medium text-muted-foreground">
-                  Use the search or the drawing tools to select your area of interest and get a
-                  report on it.
-                </p>
-              </div>
-
-              {!location && (
-                <div className="space-y-4">
-                  <Search />
-
-                  <Sketch />
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Use the search or the drawing tools to select your area of interest and get a
+                    report on it.
+                  </p>
                 </div>
-              )}
 
-              {location && <Confirm />}
-            </div>
+                {!location && (
+                  <div className="space-y-4">
+                    <Search />
+
+                    <Sketch />
+                  </div>
+                )}
+
+                {location && <Confirm />}
+              </div>
+            )}
+
+            {confirm && (
+              <div className="relative space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
+                <div className="space-y-1">
+                  <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
+                    <button
+                      onClick={() => setConfirm(false)}
+                      className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50"
+                    >
+                      <LuArrowLeft className="h-4 w-4" />
+                    </button>
+                    Select Report topics
+                  </h1>
+
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Select <strong>one or more topics</strong> on which you want to get information
+                    for this area.
+                  </p>
+                </div>
+
+                <Topics />
+
+                <GenerateReport />
+              </div>
+            )}
           </ScrollArea>
         </TabsContent>
 
