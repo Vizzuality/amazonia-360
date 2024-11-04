@@ -78,6 +78,10 @@
 }
 
 @layer base {
+  .map .esri-view-surface:focus::after {
+    outline: none !important;
+  }
+
   .map .esri-widget {
     font-family: var(--montserrat);
   }

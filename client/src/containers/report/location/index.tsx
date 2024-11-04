@@ -28,7 +28,7 @@ export default function ReportLocation() {
 
         <TabsContent className="flex grow flex-col" value="contextual-viewer">
           <ScrollArea className="w-full grow">
-            <div className="relative space-y-2 overflow-hidden rounded-lg bg-white p-4 backdrop-blur-xl xl:space-y-4">
+            <div className="relative space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
               <div className="space-y-1">
                 <h1 className="text-lg font-bold text-primary">Select your area of interest</h1>
 
@@ -38,7 +38,7 @@ export default function ReportLocation() {
                 </p>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-4">
                 <Search />
 
                 <Sketch />
