@@ -19,7 +19,6 @@ export default function ReportResultsContent() {
     <div className="flex flex-col space-y-20 print:space-y-6">
       {/* OVERVIEW */}
       <WidgetsOverview />
-
       {TOPICS?.filter((topic) => {
         const id = topic.id as TopicIds;
         return topics?.includes(id);
@@ -37,7 +36,7 @@ export default function ReportResultsContent() {
 
           switch (id) {
             case "natural-physical-environment":
-              return <WidgetsEnvironment key={id} index={index} />;
+              return <WidgetsEnvironment key={id} />;
             case "sociodemographics":
               return <WidgetsDemographicAndSocieconomic key={id} />;
             case "land-use-and-conservation":

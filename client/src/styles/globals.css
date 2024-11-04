@@ -137,3 +137,30 @@
     @apply p-0;
   }
 }
+
+.grid-stack {
+  background: #cbd8df;
+}
+
+.grid-stack-item-content {
+  color: #2c3e50;
+  text-align: center;
+  background-color: #004e70;
+}
+
+.grid-stack-item {
+  background-color: rgba(0, 0, 0, 0.125);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 10px;
+  padding: 10px;
+}
+.grid-stack {
+  background-color: rgba(0, 0, 0, 0.125);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 10px;
+}
+.grid-stack-placeholder-custom {
+  background-color: rgba(0, 0, 0, 0.125);
+  border: 1px dashed rgba(0, 0, 0, 0.125);
+  border-radius: 10px;
+}
