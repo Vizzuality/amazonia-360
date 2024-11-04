@@ -2,20 +2,19 @@
 
 import { useMemo } from "react";
 
-import Link from "next/link";
-
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import Polygon from "@arcgis/core/geometry/Polygon";
+import { useSetAtom } from "jotai";
 
 import { formatNumber } from "@/lib/formats";
 import { useLocationGeometry, useLocationTitle } from "@/lib/location";
 
-import { useSyncLocation, useSyncSearchParams } from "@/app/store";
+import { confirmAtom, useSyncLocation } from "@/app/store";
 
 import { Button } from "@/components/ui/button";
 
 export default function Confirm() {
-  const searchParams = useSyncSearchParams();
+  const setConfirm = useSetAtom(confirmAtom);
 
   const [location, setLocation] = useSyncLocation();
   const TITLE = useLocationTitle(location);
@@ -29,9 +28,9 @@ export default function Confirm() {
   if (!location) return null;
 
   return (
-    <div className="flex w-full items-center justify-between space-x-2 overflow-hidden rounded-[16px] bg-white px-5 py-5 text-sm">
-      <div className="grow">
-        <div className="text-lg font-bold leading-tight">{TITLE}</div>
+    <div className="flex w-full flex-col justify-between gap-4 overflow-hidden rounded-lg bg-blue-50 p-4 text-sm">
+      <div className="flex items-end justify-between">
+        <div className="text-sm font-semibold leading-tight">{TITLE}</div>
         <div className="text-gray-500">
           {formatNumber(AREA, {
             maximumFractionDigits: 0,
@@ -39,13 +38,14 @@ export default function Confirm() {
           km²
         </div>
       </div>
-      <div className="shrink-0 space-x-2">
-        <Button variant="outline" size="lg" onClick={() => setLocation(null)}>
+      <div className="flex items-center justify-between gap-2">
+        <Button variant="outline" size="lg" className="grow" onClick={() => setLocation(null)}>
           Clear
         </Button>
-        <Link href={`/report/topics${searchParams}`}>
-          <Button size="lg">Select</Button>
-        </Link>
+
+        <Button size="lg" className="grow" onClick={() => setConfirm(true)}>
+          Select
+        </Button>
       </div>
     </div>
   );

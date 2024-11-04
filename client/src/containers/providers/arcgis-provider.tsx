@@ -13,17 +13,20 @@ export const ArcGISProvider = ({
 }: PropsWithChildren<{
   session: {
     token?: string;
-    expires_in: number;
+    expires_in?: number;
   };
 }>) => {
   const { data: sessionData } = useSession({
+    refetchOnMount: "always",
     refetchOnReconnect: "always",
     refetchOnWindowFocus: "always",
     refetchInterval: 5 * 60 * 1000,
-    initialData: {
-      token: session?.token,
-      expires_in: session?.expires_in,
-    },
+    ...(!!session && {
+      initialData: {
+        token: session?.token,
+        expires_in: session?.expires_in || 0,
+      },
+    }),
   });
 
   useMemo(() => {
