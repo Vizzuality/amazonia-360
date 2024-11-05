@@ -12,14 +12,7 @@ export const SortableItem: React.FC<SortableItemProps> = ({
   sortable,
   children,
 }: SortableItemProps) => {
-  const {
-    attributes,
-    listeners,
-    transform,
-    transition,
-    isDragging,
-    setNodeRef,
-  } = useSortable({
+  const { attributes, listeners, transform, transition, isDragging, setNodeRef } = useSortable({
     id,
   });
 

@@ -6,6 +6,7 @@ import {
   parseAsStringLiteral,
 } from "nuqs";
 
+import { DATASET_IDS } from "@/constants/datasets";
 import { TOPICS } from "@/constants/topics";
 
 import { VisualizationType } from "@/containers/report/visualization-types/types";

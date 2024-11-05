@@ -23,14 +23,9 @@ type ItemRefListType = {
   ref: ItemRefType;
 }[];
 
-export const GridstackContext =
-  React.createContext<GridStackContextType | null>(null);
+export const GridstackContext = React.createContext<GridStackContextType | null>(null);
 
-export const GridstackProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const GridstackProvider = ({ children }: { children: React.ReactNode }) => {
   const [grid, setGrid] = React.useState<GridStack | null>(null);
   const [itemRefList, setItemRefList] = React.useState<ItemRefListType>([]);
 
@@ -60,18 +55,8 @@ export const GridstackProvider = ({
       itemRefList,
       getItemRefFromListById,
     }),
-    [
-      grid,
-      itemRefList,
-      addItemRefToList,
-      removeItemRefFromList,
-      getItemRefFromListById,
-    ],
+    [grid, itemRefList, addItemRefToList, removeItemRefFromList, getItemRefFromListById],
   );
 
-  return (
-    <GridstackContext.Provider value={value}>
-      {children}
-    </GridstackContext.Provider>
-  );
+  return <GridstackContext.Provider value={value}>{children}</GridstackContext.Provider>;
 };

@@ -28,10 +28,7 @@ export const GridstackGrid = ({
 
   React.useLayoutEffect(() => {
     if (!grid && containerRef.current) {
-      const gridInstance = GridStack.init(
-        optionsRef.current,
-        containerRef.current,
-      );
+      const gridInstance = GridStack.init(optionsRef.current, containerRef.current);
       setGrid(gridInstance);
     }
     return () => {
