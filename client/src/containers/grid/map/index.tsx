@@ -27,18 +27,7 @@ export default function MapContainer() {
 
   return (
     <div className="flex w-full grow flex-col">
-      <Map
-        id="default"
-        defaultBbox={bbox}
-        bbox={tmpBbox}
-        onMapMove={handleMapMove}
-        padding={{
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-        }}
-      >
+      <Map id="default" defaultBbox={bbox} bbox={tmpBbox} onMapMove={handleMapMove}>
         <GridLayer />
 
         <Controls>

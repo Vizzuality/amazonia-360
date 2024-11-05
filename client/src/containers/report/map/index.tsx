@@ -62,9 +62,9 @@ export default function MapContainer() {
         bbox={tmpBbox}
         onMapMove={handleMapMove}
         padding={{
-          top: 0,
-          right: 0,
-          bottom: 0,
+          top: 16,
+          right: 16,
+          bottom: 16,
           left: innerWidth ? innerWidth / 2 : 0,
         }}
       >

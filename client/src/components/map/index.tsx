@@ -41,7 +41,7 @@ export function MapView({
   id = "default",
   defaultBbox,
   bbox,
-  padding,
+  // padding,
   children,
   mapProps,
   viewProps,
@@ -89,12 +89,12 @@ export function MapView({
             },
           },
         }),
-        padding: {
-          top: 16,
-          right: 16,
-          bottom: 16,
-          left: padding?.left || 16,
-        },
+        // padding: {
+        //   top: padding?.top ?? 16,
+        //   right: padding?.right ?? 16,
+        //   bottom: padding?.bottom ?? 16,
+        //   left: padding?.left ?? 16,
+        // },
         ...mergedViewProps,
       });
 
