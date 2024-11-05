@@ -38,22 +38,19 @@ export function TopicsSidebar() {
   );
 
   return (
-    <Sidebar className="bg-white p-6 w-96">
+    <Sidebar className="w-96 bg-white p-6">
       <SidebarHeader>
-        <div className="flex w-full justify-between items-center">
+        <div className="flex w-full items-center justify-between">
           <h3>Report indicators</h3>
           <LuX className="h-4 w-4 cursor-pointer" onClick={toggleSidebar} />
         </div>
-        <p className="font-semibold text-gray-300 text-sm leading-5">
-          Add indicators to your report and view them in various formats—map,
-          table, chart, etc—tailored to your needs.
+        <p className="text-sm font-semibold leading-5 text-gray-300">
+          Add indicators to your report and view them in various formats—map, table, chart,
+          etc—tailored to your needs.
         </p>
       </SidebarHeader>
       <SidebarContent>
-        <SortableList
-          onChangeOrder={handleChangeOrder}
-          sortable={{ handle: true, enabled: true }}
-        >
+        <SortableList onChangeOrder={handleChangeOrder} sortable={{ handle: true, enabled: true }}>
           {(items || topics).map((topic) => (
             <TopicsReportItems key={topic.id} topic={topic} id={topic.id} />
           ))}

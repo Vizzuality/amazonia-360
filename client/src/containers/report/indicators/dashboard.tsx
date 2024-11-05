@@ -10,14 +10,14 @@ export const GridContainer = ({ children }: { children: React.ReactNode }) => {
 
 const GridDemo = ({ children }: { children: React.ReactNode }) => {
   const gridOptions: GridStackOptions = {
-    column: 12,
+    column: 4,
     acceptWidgets: false,
     removable: false,
     itemClass: "grid-stack-item",
     staticGrid: false,
     cellHeight: "100px",
-    margin: "2",
-    minRow: 5,
+    margin: 8,
+    minRow: 1,
     placeholderClass: "grid-stack-placeholder-custom",
   };
   return <GridstackGrid options={gridOptions}>{children}</GridstackGrid>;

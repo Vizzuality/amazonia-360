@@ -20,10 +20,7 @@ import {
   DragStartEvent,
   DragEndEvent,
 } from "@dnd-kit/core";
-import {
-  restrictToVerticalAxis,
-  restrictToWindowEdges,
-} from "@dnd-kit/modifiers";
+import { restrictToVerticalAxis, restrictToWindowEdges } from "@dnd-kit/modifiers";
 import {
   arrayMove,
   // SortableContext,
@@ -97,12 +94,7 @@ export const SortableList: React.FC<SortableListProps> = ({
         const oldIndex = itemsIds?.indexOf(active.id as string);
         const newIndex = itemsIds?.indexOf(over?.id as string);
 
-        if (
-          onChangeOrder &&
-          itemsIds &&
-          oldIndex !== undefined &&
-          newIndex !== undefined
-        ) {
+        if (onChangeOrder && itemsIds && oldIndex !== undefined && newIndex !== undefined) {
           onChangeOrder(arrayMove(itemsIds, oldIndex, newIndex));
         }
       }

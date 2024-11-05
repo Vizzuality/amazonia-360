@@ -35,8 +35,7 @@ export const GridstackItemComponent = ({
 }: GridstackItemComponentProps) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const optionsRef = React.useRef<GridStackWidget | undefined>(initOptions);
-  const { grid, addItemRefToList, removeItemRefFromList } =
-    useGridstackContext();
+  const { grid, addItemRefToList, removeItemRefFromList } = useGridstackContext();
   const itemRef = React.useRef<GridItemHTMLElement | null>(null);
 
   // Update the optionsRef when initOptions changes
@@ -50,12 +49,9 @@ export const GridstackItemComponent = ({
     if (grid && containerRef.current) {
       // Initialize the widget
 
-      grid.batchUpdate(true);
-      itemRef.current = grid?.makeWidget(
-        containerRef.current,
-        optionsRef.current,
-      );
-      grid.batchUpdate(false);
+      grid?.batchUpdate(true);
+      itemRef.current = grid?.makeWidget(containerRef.current, optionsRef.current);
+      grid?.batchUpdate(false);
 
       addItemRefToList(id, itemRef);
 
@@ -81,8 +77,10 @@ export const GridstackItemComponent = ({
   }, [grid]);
 
   return (
-    <div ref={containerRef} id="">
-      <div className={`w-full h-full ${className}`}>{children}</div>
+    <div ref={containerRef} id={id}>
+      <div className={`h-full w-full rounded-2xl border border-blue-100 ${className}`}>
+        {children}
+      </div>
     </div>
   );
 };
