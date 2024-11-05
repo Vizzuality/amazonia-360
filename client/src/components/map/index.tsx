@@ -3,6 +3,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 
 import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
+// import Extent from "@arcgis/core/geometry/Extent";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import ArcGISMap from "@arcgis/core/Map";
 import ArcGISMapView from "@arcgis/core/views/MapView";
@@ -18,10 +19,10 @@ export type MapProps = {
   defaultBbox?: number[];
   bbox?: __esri.Extent;
   padding?: {
-    top?: number;
-    right?: number;
-    bottom?: number;
-    left?: number;
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
   };
   mapProps?: Partial<__esri.MapProperties>;
   viewProps?: Partial<__esri.MapViewProperties>;
@@ -41,7 +42,12 @@ export function MapView({
   id = "default",
   defaultBbox,
   bbox,
-  // padding,
+  // padding = {
+  //   top: 50,
+  //   right: 50,
+  //   bottom: 50,
+  //   left: 50,
+  // },
   children,
   mapProps,
   viewProps,
@@ -137,7 +143,33 @@ export function MapView({
 
   useEffect(() => {
     if (bbox && mapViewRef.current) {
-      mapViewRef.current.goTo(bbox, {
+      const b = bbox.clone();
+
+      // const tl = mapViewRef.current.toMap({
+      //   x: 0,
+      //   y: 0,
+      // });
+      // const br = mapViewRef.current.toMap({ x: padding.left, y: 0 });
+
+      // const e = new Extent({
+      //   xmin: tl.x,
+      //   ymin: br.y,
+      //   xmax: br.x,
+      //   ymax: tl.y,
+      //   spatialReference: mapViewRef.current.spatialReference,
+      // });
+
+      if (b.width > b.height) {
+        b.offset(-b.width * 0.5, 0, 0);
+        b.expand(1.5);
+      }
+
+      if (b.width <= b.height) {
+        b.offset(-b.height * 0.5, 0, 0);
+        b.expand(1.5);
+      }
+
+      mapViewRef.current.goTo(b, {
         duration: 1000,
         easing: "ease-in-out",
       });
