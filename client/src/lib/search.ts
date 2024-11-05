@@ -1,4 +1,4 @@
-import * as projection from "@arcgis/core/geometry/projection.js";
+import * as projection from "@arcgis/core/geometry/projection";
 import SearchVM from "@arcgis/core/widgets/Search/SearchViewModel";
 import {
   MutationFunction,

@@ -1,6 +1,13 @@
 FROM python:3.11-slim as base
 LABEL maintainer="hello@vizzuality.com"
 
+# Requirement of fiona and gdal.
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends libexpat1; \
+	rm -rf /var/lib/apt/lists/*
+
+
 FROM base as production
 ENV NAME api
 ENV APP_HOME /opt/$NAME

@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CardLoader renders CardLoader Children component when query is not fetching 1`] = `
+<div>
+  <div
+    role="presentation"
+  >
+    Test
+  </div>
+</div>
+`;
+
+exports[`CardLoader renders CardLoader Skeleton component when query is fetching 1`] = `
+<div>
+  <div
+    class="animate-pulse rounded-md bg-primary/10"
+    data-testid="card-loader"
+  />
+</div>
+`;
+
+exports[`CardLoader renders CardLoader component without crashing 1`] = `
+<div>
+  <div
+    class="animate-pulse rounded-md bg-primary/10"
+    data-testid="card-loader"
+  />
+</div>
+`;
+
+exports[`CardNoData renders CardNoData Children component when query is fetched and there is data 1`] = `
+<div>
+  <div
+    role="presentation"
+  >
+    Test
+  </div>
+</div>
+`;
+
+exports[`CardNoData renders CardNoData component when query is fetched and no data 1`] = `
+<div>
+  <div
+    class="flex flex-col justify-center items-center space-y-6 py-12 grow"
+  >
+    <img
+      alt="No data"
+      data-nimg="1"
+      decoding="async"
+      height="96"
+      loading="lazy"
+      src="/images/no-data.svg"
+      style="color: transparent;"
+      width="149"
+    />
+    <p
+      class="text-sm text-blue-900 font-medium text-center"
+    >
+      No results for this location at the moment. 
+      <br />
+       Feel free to adjust your search criteria or check back later!
+    </p>
+  </div>
+</div>
+`;
+
+exports[`CardNoData renders CardNoData component without crashing 1`] = `
+<div>
+  <div
+    class="flex flex-col justify-center items-center space-y-6 py-12 grow"
+  >
+    <img
+      alt="No data"
+      data-nimg="1"
+      decoding="async"
+      height="96"
+      loading="lazy"
+      src="/images/no-data.svg"
+      style="color: transparent;"
+      width="149"
+    />
+    <p
+      class="text-sm text-blue-900 font-medium text-center"
+    >
+      No results for this location at the moment. 
+      <br />
+       Feel free to adjust your search criteria or check back later!
+    </p>
+  </div>
+</div>
+`;

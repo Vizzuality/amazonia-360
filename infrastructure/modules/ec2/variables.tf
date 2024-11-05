@@ -35,3 +35,8 @@ variable "authorized_key"{
     type = string
     description = "Public key to be added to the authorized_keys file of the ec2-user"
 }
+
+variable "environment" {
+  type = string
+  description = "Environment for the EC2 instance"
+}

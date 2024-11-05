@@ -10,19 +10,15 @@ services:
     environment:
       - AUTH_TOKEN=${AUTH_TOKEN}
       - TIFF_PATH=${TIFF_PATH}
+      - GRID_TILES_PATH=${GRID_TILES_PATH}
     networks:
       - amazonia360-network
-    restart:
-        always
-
+    restart: always
   test:
     build:
         context: ./api
         dockerfile: Dockerfile
         target: development
-    environment:
-        - AUTH_TOKEN=secret
-        - TIFF_PATH=/opt/api/test_data
     networks:
       - amazonia360-network
 

@@ -18,6 +18,6 @@ resource "aws_instance" "amazonia360-ec2" {
 
 
 resource "aws_key_pair" "local_public_key" {
-  key_name = "amazonia360-key-pair"
+  key_name = "amazonia360-key-pair-${var.environment}"
   public_key = file("~/.ssh/key_amazonia360_ec2.pub")
 }

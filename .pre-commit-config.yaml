@@ -16,8 +16,7 @@ repos:
       - id: ruff-format
         types_or: [ python, pyi, jupyter ]
 
-  # check for private keys and passwords!
-  - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.17.0
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.7.1
     hooks:
-      - id: gitleaks-docker
+      - id: nbstripout
