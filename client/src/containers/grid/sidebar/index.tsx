@@ -1,6 +1,6 @@
 "use client";
 
-import GridFilters from "@/containers/grid/filters";
+import GridFilters from "@/containers/report/location/filters";
 
 export default function Sidebar() {
   return (
