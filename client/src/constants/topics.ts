@@ -1,4 +1,4 @@
-export type TopicIds =
+export type TopicId =
   | "natural-physical-environment"
   | "sociodemographics"
   | "land-use-and-conservation"
@@ -6,7 +6,7 @@ export type TopicIds =
   | "financial";
 
 export type Topic = {
-  id: TopicIds;
+  id: TopicId;
   label: string;
   image: string;
   description: string;
@@ -107,6 +107,15 @@ export const DEFAULT_VISUALIZATION_SIZES: {
 } = {
   map: [2, 4],
   chart: [2, 2],
+  numeric: [1, 1],
+  table: [2, 4],
+};
+
+export const MIN_VISUALIZATION_SIZES: {
+  [key: string]: [number, number];
+} = {
+  map: [2, 4],
+  chart: [1, 1],
   numeric: [1, 1],
   table: [2, 4],
 };

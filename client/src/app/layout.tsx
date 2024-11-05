@@ -11,6 +11,8 @@ import Footer from "@/containers/footer";
 import Header from "@/containers/header";
 
 import "@arcgis/core/assets/esri/themes/light/main.css";
+import "gridstack/dist/gridstack-extra.css";
+import "gridstack/dist/gridstack.css";
 import "@/styles/globals.css";
 
 const montserrat = Montserrat({

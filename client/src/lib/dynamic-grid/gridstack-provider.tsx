@@ -5,49 +5,42 @@ import * as React from "react";
 
 import type { GridStack } from "gridstack";
 
-import "gridstack/dist/gridstack-extra.css";
-import "gridstack/dist/gridstack.css";
 import type { ItemRefType } from "./gridstack-item";
 
 type GridStackContextType = {
-  grid: GridStack | null | undefined;
+  grid: GridStack | null;
   setGrid: React.Dispatch<React.SetStateAction<GridStack | null>>;
   addItemRefToList: (id: string, ref: ItemRefType) => void;
   removeItemRefFromList: (id: string) => void;
-  itemRefList: ItemRefListType;
+  itemList: ItemListType;
   getItemRefFromListById: (id: string) => ItemRefType | null;
 };
 
-type ItemRefListType = {
+type ItemListType = {
   id: string;
   ref: ItemRefType;
 }[];
 
-export const GridstackContext =
-  React.createContext<GridStackContextType | null>(null);
+export const GridstackContext = React.createContext<GridStackContextType | null>(null);
 
-export const GridstackProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const GridstackProvider = ({ children }: { children: React.ReactNode }) => {
   const [grid, setGrid] = React.useState<GridStack | null>(null);
-  const [itemRefList, setItemRefList] = React.useState<ItemRefListType>([]);
+  const [itemList, setItemList] = React.useState<ItemListType>([]);
 
   const addItemRefToList = React.useCallback((id: string, ref: ItemRefType) => {
-    setItemRefList((prev) => [...prev, { id, ref }]);
+    setItemList((prev) => [...prev, { id, ref }]);
   }, []);
 
   const removeItemRefFromList = React.useCallback((id: string) => {
-    setItemRefList((prev) => prev.filter((item) => item.id !== id));
+    setItemList((prev) => prev.filter((item) => item.id !== id));
   }, []);
 
   const getItemRefFromListById = React.useCallback(
     (id: string) => {
-      const item = itemRefList.find((item) => item.id === id);
+      const item = itemList.find((item) => item.id === id);
       return item?.ref ?? null;
     },
-    [itemRefList],
+    [itemList],
   );
 
   // Memoize the context value to prevent unnecessary re-renders
@@ -57,21 +50,11 @@ export const GridstackProvider = ({
       setGrid,
       addItemRefToList,
       removeItemRefFromList,
-      itemRefList,
+      itemList,
       getItemRefFromListById,
     }),
-    [
-      grid,
-      itemRefList,
-      addItemRefToList,
-      removeItemRefFromList,
-      getItemRefFromListById,
-    ],
+    [grid, itemList, addItemRefToList, removeItemRefFromList, getItemRefFromListById],
   );
 
-  return (
-    <GridstackContext.Provider value={value}>
-      {children}
-    </GridstackContext.Provider>
-  );
+  return <GridstackContext.Provider value={value}>{children}</GridstackContext.Provider>;
 };

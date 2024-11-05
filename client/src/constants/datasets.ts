@@ -1,5 +1,4 @@
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import MapImageLayer from "@arcgis/core/layers/MapImageLayer";
 import WebTileLayer from "@arcgis/core/layers/WebTileLayer";
 import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer";
 import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
@@ -21,7 +20,7 @@ import {
   FIRES_COLORMAP,
   INDIGENOUS_LANDS,
   LAND_COVER,
-  // LAND_COVER_COLORMAP,
+  LAND_COVER_COLORMAP,
   POPULATION,
   PROTECTED_AREAS,
 } from "@/constants/colors";
@@ -562,10 +561,10 @@ export const DATASETS = {
       }),
   },
   land_cover: {
-    layer: new MapImageLayer({
+    layer: new WebTileLayer({
       id: "land_cover",
       title: "Land cover",
-      url: "https://atlas.iadb.org/server/rest/services/Amazonia360/AFP_ESA_LC250_WM_tif/MapServer",
+      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=landcover_cog.tif&colormap=${encodeURIComponent(JSON.stringify(LAND_COVER_COLORMAP))}`,
     }),
     legend: {
       type: "basic",
@@ -746,3 +745,5 @@ export const DATASETS = {
 export const DATASET_IDS = getKeys(DATASETS);
 
 export type DatasetIds = keyof typeof DATASETS;
+
+export type Dataset = (typeof DATASETS)[DatasetIds];
