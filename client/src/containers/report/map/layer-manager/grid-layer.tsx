@@ -2,7 +2,6 @@
 
 import { useCallback, useMemo, useRef } from "react";
 
-import * as projection from "@arcgis/core/geometry/projection";
 import { DeckLayer } from "@deck.gl/arcgis";
 import { Accessor, Color } from "@deck.gl/core";
 import { DataFilterExtension, DataFilterExtensionProps } from "@deck.gl/extensions";
@@ -40,16 +39,6 @@ export const getGridLayerProps = ({
   const filters = [...Array(4).keys()];
   const columns = !!gridDatasets.length ? gridDatasets.map((d) => `columns=${d}`).join("&") : "";
 
-  let geom = null;
-
-  if (geometry) {
-    const projectedGeom = projection.project(geometry, {
-      wkid: 4326,
-    });
-
-    geom = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
-  }
-
   return new H3TileLayer({
     id: `tile-h3s`,
     data: `https://dev.api.amazonia360.dev-vizzuality.com/grid/tile/{h3index}?${columns}`,
@@ -60,14 +49,14 @@ export const getGridLayerProps = ({
         arrow: { shape: "arrow-table" },
         // arrow: { shape: "object-row-table" },
         fetch: {
-          method: !!geom ? "POST" : "GET",
-          ...(!!geom && {
+          method: !!geometry ? "POST" : "GET",
+          ...(!!geometry && {
             body: JSON.stringify({
               type: "Feature",
               properties: {},
               geometry: {
                 type: "Polygon",
-                coordinates: geom?.toJSON().rings,
+                coordinates: geometry?.toJSON().rings,
               },
             }),
           }),
@@ -180,7 +169,9 @@ export default function GridLayer() {
   const [gridFilters] = useSyncGridFilters();
   const [gridDatasets] = useSyncGridDatasets();
 
-  const GEOMETRY = useLocationGeometry(location);
+  const GEOMETRY = useLocationGeometry(location, {
+    wkid: 4326,
+  });
 
   const { data: gridMetaData } = useGetGridMeta();
 

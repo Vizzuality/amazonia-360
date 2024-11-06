@@ -4,6 +4,7 @@ import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import Point from "@arcgis/core/geometry/Point";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import Polyline from "@arcgis/core/geometry/Polyline";
+import * as projection from "@arcgis/core/geometry/projection";
 import Graphic from "@arcgis/core/Graphic";
 
 import { useGetFeatures } from "@/lib/query";
@@ -78,16 +79,30 @@ export const useLocationTitle = (location?: Location | null) => {
   }, [location, searchData]);
 };
 
-export const useLocationGeometry = (location?: Location | null) => {
+export const useLocationGeometry = (
+  location?: Location | null,
+  outSpatialReference?: __esri.SpatialReference | __esri.SpatialReferenceProperties,
+) => {
   const LOCATION = useLocation(location);
 
   const GEOMETRY = useMemo(() => {
     if (LOCATION) {
-      return getGeometryWithBuffer(LOCATION.geometry);
+      const g = getGeometryWithBuffer(LOCATION.geometry);
+
+      if (!g) return null;
+
+      const projectedGeom = projection.project(
+        g,
+        outSpatialReference || LOCATION.geometry.spatialReference || { wkid: 102100 },
+      );
+
+      const geom = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
+
+      return geom as __esri.Polygon;
     }
 
     return null;
-  }, [LOCATION]);
+  }, [LOCATION, outSpatialReference]);
 
   return GEOMETRY;
 };

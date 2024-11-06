@@ -1,6 +1,5 @@
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import * as geometryEngineAsync from "@arcgis/core/geometry/geometryEngineAsync";
-import * as projection from "@arcgis/core/geometry/projection";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import Query from "@arcgis/core/rest/support/Query";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
@@ -278,12 +277,6 @@ export const getRasterAnalysis = async (params: GetRasterAnalysisParams) => {
     throw new Error("Polygon is required");
   }
 
-  const projectedGeom = projection.project(polygon, {
-    wkid: 4326,
-  });
-
-  const geom = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
-
   return exactZonalStatsExactZonalStatsPost(
     {
       type: "FeatureCollection",
@@ -293,7 +286,7 @@ export const getRasterAnalysis = async (params: GetRasterAnalysisParams) => {
           properties: {},
           geometry: {
             type: "Polygon",
-            coordinates: geom.toJSON().rings,
+            coordinates: polygon.toJSON().rings,
           },
         },
       ],
