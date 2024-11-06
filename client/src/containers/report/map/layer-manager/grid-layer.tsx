@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef } from "react";
 
-import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
+import * as projection from "@arcgis/core/geometry/projection";
 import { DeckLayer } from "@deck.gl/arcgis";
 import { Accessor, Color } from "@deck.gl/core";
 import { DataFilterExtension, DataFilterExtensionProps } from "@deck.gl/extensions";
@@ -14,30 +14,41 @@ import CHROMA from "chroma-js";
 import { env } from "@/env.mjs";
 
 import { useGetGridMeta } from "@/lib/grid";
+import { useLocationGeometry } from "@/lib/location";
 
 import { MultiDatasetMeta } from "@/types/generated/api.schemas";
 
-import { useSyncGridDatasets, useSyncGridFilters } from "@/app/store";
+import { useSyncGridDatasets, useSyncGridFilters, useSyncLocation } from "@/app/store";
 
 import Layer from "@/components/map/layers";
 import H3TileLayer from "@/components/map/layers/h3-tile-layer";
-import { useMap } from "@/components/map/provider";
 
 export const getGridLayerProps = ({
   gridDatasets,
   gridFilters,
   getFillColor,
   gridMetaData,
+  geometry,
 }: {
   gridDatasets: string[];
   gridFilters: Record<string, number[]> | null;
   getFillColor: Accessor<Record<string, number>, Color>;
   gridMetaData: MultiDatasetMeta | undefined;
-  zoom: number;
+  geometry: __esri.Polygon | null;
 }) => {
   // Create array of 4n values
   const filters = [...Array(4).keys()];
   const columns = !!gridDatasets.length ? gridDatasets.map((d) => `columns=${d}`).join("&") : "";
+
+  let geom = null;
+
+  if (geometry) {
+    const projectedGeom = projection.project(geometry, {
+      wkid: 4326,
+    });
+
+    geom = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
+  }
 
   return new H3TileLayer({
     id: `tile-h3s`,
@@ -49,8 +60,20 @@ export const getGridLayerProps = ({
         arrow: { shape: "arrow-table" },
         // arrow: { shape: "object-row-table" },
         fetch: {
+          method: !!geom ? "POST" : "GET",
+          ...(!!geom && {
+            body: JSON.stringify({
+              type: "Feature",
+              properties: {},
+              geometry: {
+                type: "Polygon",
+                coordinates: geom?.toJSON().rings,
+              },
+            }),
+          }),
           headers: {
             Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
+            "Content-Type": "application/json",
           },
         },
       }).then((data) => {
@@ -153,10 +176,11 @@ export const getGridLayerProps = ({
 
 export default function GridLayer() {
   const GRID_LAYER = useRef<typeof DeckLayer>();
-  const map = useMap();
-  const [zoom, setZoom] = useState(map?.view.zoom || 0);
+  const [location] = useSyncLocation();
   const [gridFilters] = useSyncGridFilters();
   const [gridDatasets] = useSyncGridDatasets();
+
+  const GEOMETRY = useLocationGeometry(location);
 
   const { data: gridMetaData } = useGetGridMeta();
 
@@ -207,8 +231,8 @@ export default function GridLayer() {
             gridDatasets,
             gridFilters,
             gridMetaData,
-            zoom,
             getFillColor,
+            geometry: GEOMETRY,
           }),
         ],
       });
@@ -221,21 +245,13 @@ export default function GridLayer() {
         gridDatasets,
         gridFilters,
         gridMetaData,
-        zoom,
         getFillColor,
+        geometry: GEOMETRY,
       }),
     ];
 
     return GRID_LAYER.current;
-  }, [gridDatasets, gridFilters, getFillColor, gridMetaData, zoom]);
-
-  // Listen to extent changes
-  ArcGISReactiveUtils.when(
-    () => map?.view!.zoom,
-    (z) => {
-      setZoom(() => z);
-    },
-  );
+  }, [gridDatasets, gridFilters, getFillColor, gridMetaData, GEOMETRY]);
 
   return <Layer index={0} layer={layer} />;
 }
