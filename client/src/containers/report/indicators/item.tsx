@@ -16,6 +16,7 @@ import { TopicsReportItem } from "./sidebar-topic-item";
 
 export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
   const [topics, setTopics] = useSyncTopics();
+  // const [indicators, setIndicator] = useSyncIndicators();
   const [open, setOpen] = useState(false);
 
   const handleTopic = useCallback(

@@ -1,4 +1,4 @@
-export type TopicIds =
+export type TopicId =
   | "natural-physical-environment"
   | "sociodemographics"
   | "land-use-and-conservation"
@@ -6,7 +6,7 @@ export type TopicIds =
   | "financial";
 
 export type Topic = {
-  id: TopicIds;
+  id: TopicId;
   label: string;
   image: string;
   description: string;

@@ -35,7 +35,7 @@ export function Badges({ topicId, indicatorId }: { topicId: string; indicatorId:
   };
 
   return (
-    <div className="space-x-1 py-1.5">
+    <div className="flex flex-wrap gap-1 py-1.5">
       {indicatorsDisplay?.map(({ type }) => (
         <Badge onClick={handleClick} variant="secondary" className="capitalize" key={type}>
           {type}

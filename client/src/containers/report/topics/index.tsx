@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 import { useSyncTopics } from "@/app/store";
 
-import { TOPICS, TopicIds } from "@/constants/topics";
+import { TOPICS, TopicId } from "@/constants/topics";
 
 import TopicsItem from "@/containers/report/topics/item";
 
@@ -15,7 +15,7 @@ export interface TopicsProps {
 
 export default function Topics({ interactive = true, size = "md" }: TopicsProps) {
   const [topics, setTopics] = useSyncTopics();
-  const handleTopicChange = (id: TopicIds, checked: boolean) => {
+  const handleTopicChange = (id: TopicId, checked: boolean) => {
     if (checked) {
       setTopics((prev) => {
         if (prev) return [...prev, id];

@@ -12,13 +12,15 @@ import { useGridstackContext } from "./use-gridstack-context";
 // Create a context for the GridStack instance
 
 export const GridstackGrid = ({
+  id,
   options,
   children,
 }: {
+  id: string;
   options: GridStackOptions;
   children: React.ReactNode;
 }) => {
-  const { grid, setGrid } = useGridstackContext();
+  const { grids, setGrids } = useGridstackContext();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const optionsRef = React.useRef<GridStackOptions>(options);
 
@@ -27,19 +29,19 @@ export const GridstackGrid = ({
   }, [options]);
 
   React.useLayoutEffect(() => {
-    if (!grid && containerRef.current) {
+    if (!grids?.[id] && containerRef.current) {
       const gridInstance = GridStack.init(optionsRef.current, containerRef.current);
-      setGrid(gridInstance);
+      setGrids((prev) => ({ ...prev, [id]: gridInstance }));
     }
     return () => {
-      if (grid) {
-        //? grid.destroy(false);
-        grid.removeAll(false);
-        grid.destroy(false);
-        setGrid(null);
+      if (grids?.[id]) {
+        //   //? grid.destroy(false);
+        grids?.[id]?.removeAll(false);
+        grids?.[id]?.destroy(false);
+        setGrids((prev) => ({ ...prev, [id]: null }));
       }
     };
-  }, [grid, setGrid]);
+  }, [id, grids, setGrids]);
 
   return <div ref={containerRef}>{children}</div>;
 };
