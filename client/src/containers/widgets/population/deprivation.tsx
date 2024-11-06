@@ -16,7 +16,9 @@ import WidgetMap from "@/containers/widgets/map";
 export default function WidgetsPopulationDeprivation() {
   const [location] = useSyncLocation();
 
-  const GEOMETRY = useLocationGeometry(location);
+  const GEOMETRY = useLocationGeometry(location, {
+    wkid: 4326,
+  });
 
   const query = useGetRasterAnalysis(
     {

@@ -1,8 +1,7 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef } from "react";
 
-import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
 import { DeckLayer } from "@deck.gl/arcgis";
 import { Accessor, Color } from "@deck.gl/core";
 import { DataFilterExtension, DataFilterExtensionProps } from "@deck.gl/extensions";
@@ -14,27 +13,27 @@ import CHROMA from "chroma-js";
 import { env } from "@/env.mjs";
 
 import { useGetGridMeta } from "@/lib/grid";
+import { useLocationGeometry } from "@/lib/location";
 
 import { MultiDatasetMeta } from "@/types/generated/api.schemas";
 
-import { useSyncGridDatasets, useSyncGridFilters } from "@/app/store";
+import { useSyncGridDatasets, useSyncGridFilters, useSyncLocation } from "@/app/store";
 
 import Layer from "@/components/map/layers";
 import H3TileLayer from "@/components/map/layers/h3-tile-layer";
-import { useMap } from "@/components/map/provider";
 
 export const getGridLayerProps = ({
   gridDatasets,
   gridFilters,
   getFillColor,
   gridMetaData,
-  zoom,
+  geometry,
 }: {
   gridDatasets: string[];
   gridFilters: Record<string, number[]> | null;
   getFillColor: Accessor<Record<string, number>, Color>;
   gridMetaData: MultiDatasetMeta | undefined;
-  zoom: number;
+  geometry: __esri.Polygon | null;
 }) => {
   // Create array of 4n values
   const filters = [...Array(4).keys()];
@@ -50,8 +49,20 @@ export const getGridLayerProps = ({
         arrow: { shape: "arrow-table" },
         // arrow: { shape: "object-row-table" },
         fetch: {
+          method: !!geometry ? "POST" : "GET",
+          ...(!!geometry && {
+            body: JSON.stringify({
+              type: "Feature",
+              properties: {},
+              geometry: {
+                type: "Polygon",
+                coordinates: geometry?.toJSON().rings,
+              },
+            }),
+          }),
           headers: {
             Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
+            "Content-Type": "application/json",
           },
         },
       }).then((data) => {
@@ -134,22 +145,18 @@ export const getGridLayerProps = ({
         new H3HexagonLayer({
           id: `${props.id}-grid`,
           data: props.data,
-          highPrecision: false,
+          highPrecision: true,
+          opacity: 1,
           pickable: false,
           filled: false,
           extruded: false,
+          // HEXAGON
+          getHexagon: (d) => `${d.cell}`,
           // LINE
           stroked: true,
           getLineColor: [0, 154, 222, 255],
-          getLineWidth: () => {
-            return (1 - zoom) / 5;
-          },
+          getLineWidth: 1,
           lineWidthUnits: "pixels",
-          getHexagon: (d) => `${d.cell}`,
-          opacity: 1,
-          updateTriggers: {
-            getLineWidth: [zoom],
-          },
         }),
       ];
     },
@@ -158,10 +165,13 @@ export const getGridLayerProps = ({
 
 export default function GridLayer() {
   const GRID_LAYER = useRef<typeof DeckLayer>();
-  const map = useMap();
-  const [zoom, setZoom] = useState(map?.view.zoom || 0);
+  const [location] = useSyncLocation();
   const [gridFilters] = useSyncGridFilters();
   const [gridDatasets] = useSyncGridDatasets();
+
+  const GEOMETRY = useLocationGeometry(location, {
+    wkid: 4326,
+  });
 
   const { data: gridMetaData } = useGetGridMeta();
 
@@ -212,8 +222,8 @@ export default function GridLayer() {
             gridDatasets,
             gridFilters,
             gridMetaData,
-            zoom,
             getFillColor,
+            geometry: GEOMETRY,
           }),
         ],
       });
@@ -226,21 +236,13 @@ export default function GridLayer() {
         gridDatasets,
         gridFilters,
         gridMetaData,
-        zoom,
         getFillColor,
+        geometry: GEOMETRY,
       }),
     ];
 
     return GRID_LAYER.current;
-  }, [gridDatasets, gridFilters, getFillColor, gridMetaData, zoom]);
-
-  // Listen to extent changes
-  ArcGISReactiveUtils.when(
-    () => map?.view!.zoom,
-    (z) => {
-      setZoom(() => z);
-    },
-  );
+  }, [gridDatasets, gridFilters, getFillColor, gridMetaData, GEOMETRY]);
 
   return <Layer index={0} layer={layer} />;
 }
