@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 import dynamic from "next/dynamic";
 
@@ -29,6 +29,15 @@ export default function MapContainer() {
   const [, setLocation] = useSyncLocation();
 
   const { innerWidth } = useWindowSize();
+
+  const padding = useMemo(() => {
+    return {
+      top: 50,
+      right: 50,
+      bottom: 50,
+      left: innerWidth ? innerWidth / 2 : 0,
+    };
+  }, [innerWidth]);
 
   const handleMapMove = useDebounce((extent: __esri.Extent) => {
     setBbox([extent.xmin, extent.ymin, extent.xmax, extent.ymax]);
@@ -61,12 +70,7 @@ export default function MapContainer() {
         defaultBbox={bbox}
         bbox={tmpBbox}
         onMapMove={handleMapMove}
-        padding={{
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: innerWidth ? innerWidth / 2 : 0,
-        }}
+        padding={padding}
       >
         <LayerManager />
 

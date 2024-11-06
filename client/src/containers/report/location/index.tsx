@@ -6,6 +6,7 @@ import { LuArrowLeft } from "react-icons/lu";
 import { tabAtom, confirmAtom, useSyncLocation } from "@/app/store";
 
 import Confirm from "@/containers/report/location/confirm";
+import GridFilters from "@/containers/report/location/filters";
 import { GenerateReport } from "@/containers/report/location/generate";
 import Search from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
@@ -85,7 +86,22 @@ export default function ReportLocation() {
         </TabsContent>
 
         <TabsContent className="flex grow flex-col" value="grid">
-          {tab}
+          <ScrollArea className="w-full grow">
+            <div className="relative space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
+              <div className="space-y-1">
+                <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
+                  Filter cells
+                </h1>
+
+                <p className="text-sm font-medium text-muted-foreground">
+                  Select indicators to filter the grid cells displayed on the map. This indicators
+                  may differ from the ones in the contextual viewer.
+                </p>
+              </div>
+
+              <GridFilters />
+            </div>
+          </ScrollArea>
         </TabsContent>
       </Tabs>
     </aside>

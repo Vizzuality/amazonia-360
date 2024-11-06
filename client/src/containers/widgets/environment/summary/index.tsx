@@ -15,7 +15,9 @@ import WidgetEnvironmentSummaryHydro from "@/containers/widgets/environment/summ
 export default function WidgetEnvironmentSummary() {
   const [location] = useSyncLocation();
 
-  const GEOMETRY = useLocationGeometry(location);
+  const GEOMETRY = useLocationGeometry(location, {
+    wkid: 4326,
+  });
 
   // const queryAltitude = useGetRasterAnalysis(
   //   {

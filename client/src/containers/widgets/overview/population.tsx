@@ -18,7 +18,9 @@ import {
 export default function WidgetPopulation() {
   const [location] = useSyncLocation();
 
-  const GEOMETRY = useLocationGeometry(location);
+  const GEOMETRY = useLocationGeometry(location, {
+    wkid: 4326,
+  });
 
   const query = useGetRasterAnalysis(
     {
