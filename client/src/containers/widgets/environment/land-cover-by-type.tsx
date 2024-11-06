@@ -19,7 +19,9 @@ import MarimekkoChart, { Data } from "@/components/charts/marimekko";
 export default function WidgetLandCoverByType() {
   const [location] = useSyncLocation();
 
-  const GEOMETRY = useLocationGeometry(location);
+  const GEOMETRY = useLocationGeometry(location, {
+    wkid: 4326,
+  });
 
   const query = useGetRasterAnalysis(
     {
