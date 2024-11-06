@@ -1,25 +1,28 @@
-import { GridstackItemComponent } from "@/lib/dynamic-grid/gridstack-item";
+// import { GridstackItemComponent } from "@/lib/dynamic-grid/gridstack-item";
 
-import { useSyncIndicators } from "@/app/store";
+// import { useSyncIndicators } from "@/app/store";
 
-import { TOPICS, DEFAULT_VISUALIZATION_SIZES, MIN_VISUALIZATION_SIZES } from "@/constants/topics";
+import {
+  TOPICS,
+  // DEFAULT_VISUALIZATION_SIZES, MIN_VISUALIZATION_SIZES
+} from "@/constants/topics";
 
-import GridContainer from "@/containers/report/indicators/dashboard";
+// import GridContainer from "@/containers/report/indicators/dashboard";
 // import WidgetLandCoverByType from "@/containers/widgets/environment/land-cover-by-type";
-import WidgetsEnvironmentMap from "@/containers/widgets/environment/map";
+// import WidgetsEnvironmentMap from "@/containers/widgets/environment/map";
 
 export default function WidgetsEnvironment() {
-  const [indicators] = useSyncIndicators();
+  // const [indicators] = useSyncIndicators();
   const T = TOPICS?.find(({ id }) => id === "natural-physical-environment");
 
-  const indicatorsByTopic = indicators?.find(
-    ({ id }) => id === "natural-physical-environment",
-  )?.indicators;
+  // const indicatorsByTopic = indicators?.find(
+  //   ({ id }) => id === "natural-physical-environment",
+  // )?.indicators;
 
   return (
     <div className="container print:break-before-page">
       <h2 className="mb-4 text-xl font-semibold">{T?.label}</h2>
-      <GridContainer>
+      {/* <GridContainer>
         {indicatorsByTopic?.map(({ id, type, size }) => {
           return (
             <GridstackItemComponent
@@ -39,7 +42,7 @@ export default function WidgetsEnvironment() {
             </GridstackItemComponent>
           );
         })}
-      </GridContainer>
+      </GridContainer> */}
     </div>
   );
 }
