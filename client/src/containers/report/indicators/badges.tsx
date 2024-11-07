@@ -1,11 +1,11 @@
 "use client";
 
-import { useSyncIndicators } from "@/app/store";
+import { useSyncTopics } from "@/app/store";
 
 import { Badge } from "@/components/ui/badge";
 
 export function Badges({ topicId, indicatorId }: { topicId: string; indicatorId: string }) {
-  const [indicators, setIndicators] = useSyncIndicators();
+  const [indicators, setIndicators] = useSyncTopics();
 
   const topic = indicators?.find(({ id }) => id === topicId);
   const indicatorsDisplay = topic?.indicators.filter(({ id }) => indicatorId === id);

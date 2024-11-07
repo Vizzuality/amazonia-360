@@ -11,7 +11,7 @@ import { useGetFeatures } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
-import { DATASETS, Dataset } from "@/constants/datasets";
+import { DATASETS } from "@/constants/datasets";
 
 import {
   Card,

@@ -5,32 +5,42 @@ import { useState, useCallback } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { LuChevronRight, LuGripVertical } from "react-icons/lu";
 
-import { TopicsParserType } from "@/app/parsers";
 import { useSyncTopics } from "@/app/store";
 
-import { Topic } from "@/constants/topics";
+import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
 
 import { Switch } from "@/components/ui/switch";
+
+import { VisualizationType } from "../visualization-types/types";
 
 import { TopicsReportItem } from "./sidebar-topic-item";
 
 export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
   const [topics, setTopics] = useSyncTopics();
-  // const [indicators, setIndicator] = useSyncIndicators();
   const [open, setOpen] = useState(false);
 
   const handleTopic = useCallback(
-    (topicId: TopicsParserType, isChecked: boolean) => {
+    (topic: Topic, isChecked: boolean) => {
       setTopics((prevTopics) => {
-        const newTopics = new Set(prevTopics);
-
         if (isChecked) {
-          newTopics.add(topicId);
+          const newTopic = {
+            id: topic.id,
+            indicators:
+              topic.default_indicators
+                ?.map((indicatorValue) => {
+                  const indicator = topic?.indicators?.find((ind) => ind.value === indicatorValue);
+                  return {
+                    id: indicator?.value || "",
+                    type: indicator?.types_available?.[0] as VisualizationType,
+                    size: DEFAULT_VISUALIZATION_SIZES[indicator?.types_available?.[0]],
+                  };
+                })
+                .filter((ind) => ind.id) || [],
+          };
+          return [...(prevTopics?.filter((t) => t.id !== topic.id) || []), newTopic];
         } else {
-          newTopics.delete(topicId);
+          return prevTopics?.filter((t) => t.id !== topic.id) || [];
         }
-
-        return Array.from(newTopics);
       });
     },
     [setTopics],
@@ -60,8 +70,8 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
             </div>
           </CollapsibleTrigger>
           <Switch
-            checked={topics?.includes(topic.id)}
-            onCheckedChange={(e) => handleTopic(topic.id, e)}
+            checked={!!topics?.find((t) => t.id === topic.id)}
+            onCheckedChange={(e) => handleTopic(topic, e)}
             id={topic.id}
             value={topic.id}
           />

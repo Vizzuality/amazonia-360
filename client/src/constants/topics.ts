@@ -1,3 +1,7 @@
+import { TopicsParserType } from "@/app/parsers";
+
+import { VisualizationType } from "@/containers/report/visualization-types/types";
+
 export type TopicId =
   | "natural-physical-environment"
   | "sociodemographics"
@@ -10,7 +14,8 @@ export type Topic = {
   label: string;
   image: string;
   description: string;
-  indicators?: { label: string; value: string }[];
+  default_indicators?: string[];
+  indicators?: { label: string; value: string; types_available: VisualizationType[] }[];
 };
 
 export const TOPICS = [
@@ -24,11 +29,21 @@ export const TOPICS = [
       {
         label: "Environment summary",
         value: "environment_summary",
+        types_available: ["map", "chart", "numeric"],
       },
-      { value: "elevation", label: "Elevation" },
-      { value: "biomes_by_type", label: "Biomes by type" },
-      { value: "land_cover_by_type", label: "Land cover by type" },
+      { value: "elevation", label: "Elevation", types_available: ["map", "chart", "numeric"] },
+      {
+        value: "biomes_by_type",
+        label: "Biomes by type",
+        types_available: ["map", "numeric"],
+      },
+      {
+        value: "land_cover_by_type",
+        label: "Land cover by type",
+        types_available: ["chart", "numeric"],
+      },
     ],
+    default_indicators: ["environment_summary", "elevation"],
   },
   {
     id: "sociodemographics",
@@ -40,9 +55,14 @@ export const TOPICS = [
       //   label: "Summary",
       //   value: "summary",
       // },
-      { label: "Population", value: "population" },
-      { label: "Deprivation index", value: "deprivation_index" },
+      { label: "Population", value: "population", types_available: ["chart", "numeric"] },
+      {
+        label: "Deprivation index",
+        value: "deprivation_index",
+        types_available: ["chart", "numeric"],
+      },
     ],
+    default_indicators: ["population"],
   },
   {
     id: "land-use-and-conservation",
@@ -58,10 +78,16 @@ export const TOPICS = [
       {
         label: "Frequency of forest fires",
         value: "frequency_of_forest_fires",
+        types_available: ["chart", "numeric"],
       },
-      { label: "Protected areas", value: "protected_areas" },
-      { label: "Indigenous lands", value: "indigenous_lands" },
+      { label: "Protected areas", value: "protected_areas", types_available: ["chart", "numeric"] },
+      {
+        label: "Indigenous lands",
+        value: "indigenous_lands",
+        types_available: ["chart", "numeric"],
+      },
     ],
+    default_indicators: ["frequency_of_forest_fires"],
   },
   {
     id: "bioeconomy",
@@ -73,8 +99,10 @@ export const TOPICS = [
       {
         label: "Research centers",
         value: "research_centers",
+        types_available: ["map", "numeric"],
       },
     ],
+    default_indicators: ["research_centers"],
   },
   {
     id: "financial",
@@ -85,22 +113,39 @@ export const TOPICS = [
       {
         label: "IDB funding operations",
         value: "idb_funding_operations",
+        types_available: ["map", "numeric"],
       },
       {
         label: "IDB total funding",
         value: "idb_total_funding",
+        types_available: ["map", "numeric"],
       },
       {
         label: "IDB operations",
         value: "idb_operations",
+        types_available: ["map", "numeric"],
       },
       {
         label: "IDB funding by sector",
         value: "idb_funding_by_sector",
+        types_available: ["map", "numeric"],
       },
     ],
+    default_indicators: ["idb_funding_operations"],
   },
 ] as const satisfies Topic[];
+
+type Indicator = {
+  id: string;
+  type?: VisualizationType;
+  size?: [number, number];
+};
+
+export type TopicsParsed = {
+  id: TopicsParserType;
+  visible?: boolean;
+  indicators: Indicator[] | undefined;
+};
 
 export const DEFAULT_VISUALIZATION_SIZES: {
   [key: string]: [number, number];

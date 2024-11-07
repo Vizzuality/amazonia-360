@@ -9,7 +9,6 @@ import {
   gridFiltersParser,
   locationParser,
   topicsParser,
-  indicatorsParser,
   datasetsParser,
 } from "@/app/parsers";
 
@@ -20,13 +19,9 @@ export const useSyncBbox = () => {
   return useQueryState("bbox", bboxParser);
 };
 
+// TO - DO - this will be renamed to topics when contextual viewer is finished (replacing the other one)
 export const useSyncTopics = () => {
   return useQueryState("topics", topicsParser);
-};
-
-// TO - DO - this will be renamed to topics when contextual viewer is finished (replacing the other one)
-export const useSyncIndicators = () => {
-  return useQueryState("indicators", indicatorsParser);
 };
 
 export const useSyncDatasets = () => {

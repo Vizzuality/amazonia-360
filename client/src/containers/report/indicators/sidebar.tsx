@@ -19,6 +19,7 @@ import {
   SidebarHeader,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { set } from "zod";
 
 export function TopicsSidebar() {
   const { toggleSidebar } = useSidebar();
@@ -31,8 +32,8 @@ export function TopicsSidebar() {
         .map((id) => TOPICS.find((l) => l.id === id))
         .filter((topic) => topic !== undefined) as Topic[];
 
-      setTopics(newOrder.map((t) => t.id));
       setItems(newOrder);
+      setTopics(newOrder);
     },
     [setTopics, setItems],
   );

@@ -4,9 +4,9 @@ import Link from "next/link";
 
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 
-import { useSyncSearchParams, useSyncTopics } from "@/app/store";
+import { useSyncTopics, useSyncSearchParams } from "@/app/store";
 
-import { TOPICS } from "@/constants/topics";
+import { DEFAULT_VISUALIZATION_SIZES, TopicId, TOPICS } from "@/constants/topics";
 
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -21,7 +21,22 @@ export default function TopicsFooter() {
         <Button
           variant="ghost"
           onClick={() => {
-            setTopics(TOPICS.map((t) => t?.id));
+            const topicsParsed = TOPICS.map((topic) => ({
+              id: topic.id as TopicId,
+              indicators:
+                topic.default_indicators
+                  ?.map((indicatorValue) => {
+                    const indicator = topic.indicators.find((ind) => ind.value === indicatorValue);
+                    return {
+                      id: indicator?.value || "",
+                      type: indicator?.types_available[0],
+                      size: DEFAULT_VISUALIZATION_SIZES[indicator?.types_available?.[0] || "map"],
+                    };
+                  })
+                  .filter((ind) => ind.id) || [],
+            }));
+
+            setTopics(topicsParsed);
           }}
         >
           Select all topics

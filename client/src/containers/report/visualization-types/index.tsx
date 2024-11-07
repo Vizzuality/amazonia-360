@@ -4,7 +4,7 @@ import { MapIcon, TableIcon, PieChart, Binary } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import { useSyncIndicators } from "@/app/store";
+import { useSyncTopics } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
 
@@ -24,7 +24,7 @@ export function VisualizationTypes({
   indicatorId: string;
   topicId: Topic["id"];
 }) {
-  const [indicators, setIndicators] = useSyncIndicators();
+  const [indicators, setIndicators] = useSyncTopics();
 
   const handleVisualizationType = (visualizationType: VisualizationType) => {
     const widgetSize = DEFAULT_VISUALIZATION_SIZES[visualizationType];

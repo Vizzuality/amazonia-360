@@ -1,6 +1,6 @@
 import { GridstackItemComponent } from "@/lib/dynamic-grid/gridstack-item";
 
-import { useSyncIndicators } from "@/app/store";
+import { useSyncTopics } from "@/app/store";
 
 // import { DATASETS } from "@/constants/datasets";
 import {
@@ -16,10 +16,10 @@ import WidgetTotalOperations from "@/containers/widgets/financial/total-operatio
 // import WidgetMap from "@/containers/widgets/map";
 
 export default function TopicDashboard({ topicId }: { topicId: TopicId }) {
-  const [indicators] = useSyncIndicators();
+  const [topics] = useSyncTopics();
   const T = TOPICS?.find(({ id }) => id === topicId);
 
-  const indicatorsByTopic = indicators?.find(({ id }) => id === topicId)?.indicators;
+  const indicatorsByTopic = topics?.find(({ id }) => id === topicId)?.indicators;
 
   return (
     <div className="container print:break-before-page">
@@ -33,10 +33,10 @@ export default function TopicDashboard({ topicId }: { topicId: TopicId }) {
               id={`${id}-${type}`}
               initOptions={{
                 autoPosition: true,
-                w: size[0] || DEFAULT_VISUALIZATION_SIZES[type][0],
-                h: size[1] || DEFAULT_VISUALIZATION_SIZES[type][1],
-                minH: MIN_VISUALIZATION_SIZES[type][0],
-                minW: MIN_VISUALIZATION_SIZES[type][1],
+                w: size?.[0] || DEFAULT_VISUALIZATION_SIZES[type || "map"][0],
+                h: size?.[1] || DEFAULT_VISUALIZATION_SIZES[type || "map"][1],
+                minH: MIN_VISUALIZATION_SIZES[type || "map"][0],
+                minW: MIN_VISUALIZATION_SIZES[type || "map"][1],
               }}
             >
               {/* TO - DO - type properly when we get real Indicators */}

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { useSyncSearchParams, useSyncTopics } from "@/app/store";
+import { useSyncTopics, useSyncSearchParams } from "@/app/store";
 
 import { Button } from "@/components/ui/button";
 
