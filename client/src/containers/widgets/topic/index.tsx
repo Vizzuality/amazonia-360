@@ -1,4 +1,5 @@
 import { GridstackItemComponent } from "@/lib/dynamic-grid/gridstack-item";
+import { GridstackProvider } from "@/lib/dynamic-grid/gridstack-provider";
 
 import { useSyncIndicators } from "@/app/store";
 
@@ -22,33 +23,34 @@ export default function TopicDashboard({ topicId }: { topicId: TopicId }) {
   const indicatorsByTopic = indicators?.find(({ id }) => id === topicId)?.indicators;
 
   return (
-    <div className="container print:break-before-page">
-      <h2 className="mb-4 text-xl font-semibold">{T?.label}</h2>
-      <GridContainer id={topicId}>
-        {indicatorsByTopic?.map(({ id, type, size }) => {
-          return (
-            <GridstackItemComponent
-              gridId={topicId}
-              key={`${id}-${type}`}
-              id={`${id}-${type}`}
-              initOptions={{
-                autoPosition: true,
-                w: size[0] || DEFAULT_VISUALIZATION_SIZES[type][0],
-                h: size[1] || DEFAULT_VISUALIZATION_SIZES[type][1],
-                minH: MIN_VISUALIZATION_SIZES[type][0],
-                minW: MIN_VISUALIZATION_SIZES[type][1],
-              }}
-            >
-              {/* TO - DO - type properly when we get real Indicators */}
-              {/* {type === "map" && !!DATASETS?.[id as keyof typeof DATASETS] && (
-                <WidgetMap ids={[id as keyof typeof DATASETS]} />
-              )} */}
-              {type === "chart" && <WidgetFundingByType />}
-              {type === "numeric" && <WidgetTotalOperations />}
-            </GridstackItemComponent>
-          );
-        })}
-      </GridContainer>
-    </div>
+    <GridstackProvider>
+      <div className="container relative print:break-before-page">
+        <h2 className="mb-4 text-xl font-semibold">{T?.label}</h2>
+        <GridContainer id={topicId}>
+          {indicatorsByTopic?.map(({ id, type, size }) => {
+            return (
+              <GridstackItemComponent
+                key={`${id}-${type}`}
+                id={`${id}-${type}`}
+                initOptions={{
+                  autoPosition: true,
+                  w: size[0] || DEFAULT_VISUALIZATION_SIZES[type][0],
+                  h: size[1] || DEFAULT_VISUALIZATION_SIZES[type][1],
+                  minH: MIN_VISUALIZATION_SIZES[type][0],
+                  minW: MIN_VISUALIZATION_SIZES[type][1],
+                }}
+              >
+                {/* TO - DO - type properly when we get real Indicators */}
+                {/* {type === "map" && !!DATASETS?.[id as keyof typeof DATASETS] && (
+                  <WidgetMap ids={[id as keyof typeof DATASETS]} />
+                )} */}
+                {type === "chart" && <WidgetFundingByType />}
+                {type === "numeric" && <WidgetTotalOperations />}
+              </GridstackItemComponent>
+            );
+          })}
+        </GridContainer>
+      </div>
+    </GridstackProvider>
   );
 }

@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 
-import { GridstackProvider } from "@/lib/dynamic-grid/gridstack-provider";
 import { getSearchQueryOptions } from "@/lib/search";
 
 import { locationParser } from "@/app/parsers";
@@ -51,15 +50,13 @@ export default async function ReportResultsPage({ searchParams }: PageProps<Para
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="relative flex min-h-[calc(100svh_-_theme(space.40)_+_1px)] flex-col bg-blue-50 py-12 print:bg-white">
         {/* TO - DO: sidebar accessibility */}
-        <GridstackProvider>
-          <SidebarProvider>
-            <div className="flex-col">
-              <ReportResultsHeader />
-              <ReportResultsContent />
-            </div>
-            <TopicsSidebar />
-          </SidebarProvider>
-        </GridstackProvider>
+        <SidebarProvider>
+          <div className="flex-col">
+            <ReportResultsHeader />
+            <ReportResultsContent />
+          </div>
+          <TopicsSidebar />
+        </SidebarProvider>
       </main>
       <DataDisclaimer />
     </HydrationBoundary>

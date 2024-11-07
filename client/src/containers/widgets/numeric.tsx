@@ -11,7 +11,7 @@ import { useGetFeatures } from "@/lib/query";
 
 import { useSyncLocation } from "@/app/store";
 
-import { DATASETS, Dataset } from "@/constants/datasets";
+import { DATASETS } from "@/constants/datasets";
 
 import {
   Card,
@@ -29,7 +29,7 @@ export default function NumericWidget({ id }: { id: keyof typeof DATASETS }) {
 
   const dataset = useMemo(() => {
     const d = DATASETS[id];
-    if (d.layer instanceof FeatureLayer) {
+    if (d.layer instanceof FeatureLayer && "getFeatures" in d) {
       return d;
     }
     return null;
