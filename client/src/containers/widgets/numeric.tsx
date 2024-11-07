@@ -37,13 +37,11 @@ export default function NumericWidget({ id }: { id: keyof typeof DATASETS }) {
 
   const query = useGetFeatures(
     {
-      query:
-        dataset?.getFeatures &&
-        dataset.getFeatures({
-          ...(!!GEOMETRY && {
-            geometry: GEOMETRY,
-          }),
+      query: dataset?.getFeatures({
+        ...(!!GEOMETRY && {
+          geometry: GEOMETRY,
         }),
+      }),
       feature: dataset?.layer instanceof FeatureLayer ? dataset.layer : undefined,
     },
     {

@@ -5,8 +5,6 @@ import * as React from "react";
 
 import { GridStack, type GridStackOptions } from "gridstack";
 
-import "gridstack/dist/gridstack-extra.css";
-import "gridstack/dist/gridstack.css";
 import { useGridstackContext } from "@/lib/dynamic-grid/use-gridstack-context";
 
 // Create a context for the GridStack instance
@@ -62,7 +60,7 @@ export const GridstackGrid = ({
   }, [grid, setGrid, itemList]);
 
   return (
-    <div id={id} ref={containerRef}>
+    <div id={id} ref={containerRef} className="-mx-1">
       {children}
     </div>
   );

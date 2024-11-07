@@ -145,6 +145,20 @@
 }
 
 .grid-stack-placeholder-custom {
-  border-radius: 10px;
-  border: 1px dashed #cbd8df; /* border-blue-100 */
+  position: relative;
+  pointer-events: none;
 }
+
+.grid-stack-placeholder-custom::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
+  border-radius: 16px;
+  border: 1px dashed #000;
+  pointer-events: none;
+  @apply bg-slate-200;
+}
+
