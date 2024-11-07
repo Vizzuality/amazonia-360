@@ -3,13 +3,15 @@
 
 import * as React from "react";
 
+import { DragHandleDots2Icon, SizeIcon } from "@radix-ui/react-icons";
 import type { GridItemHTMLElement, GridStackWidget } from "gridstack";
+
+import { Button } from "@/components/ui/button";
 
 import { useGridstackContext } from "./use-gridstack-context";
 
 interface GridstackItemComponentProps {
   id: string;
-  gridId: string;
   initOptions?: GridStackWidget;
   children: React.ReactNode;
   className?: string;
@@ -30,14 +32,13 @@ export type ItemRefType = React.MutableRefObject<GridItemHTMLElement | null>;
  */
 export const GridstackItemComponent = ({
   id,
-  gridId,
   initOptions,
   children,
-  className,
 }: GridstackItemComponentProps) => {
+  const { grid, addItemRefToList, removeItemRefFromList } = useGridstackContext();
+
   const containerRef = React.useRef<HTMLDivElement>(null);
   const optionsRef = React.useRef<GridStackWidget | undefined>(initOptions);
-  const { grids, addItemRefToList, removeItemRefFromList } = useGridstackContext();
   const itemRef = React.useRef<GridItemHTMLElement | null>(null);
 
   // Update the optionsRef when initOptions changes
@@ -47,25 +48,27 @@ export const GridstackItemComponent = ({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useLayoutEffect(() => {
-    if (!grids?.[gridId] || !containerRef.current) return;
-    if (grids?.[gridId] && containerRef.current) {
+    const g = grid;
+    if (!g || !containerRef.current) return;
+    if (g && containerRef.current) {
       // Initialize the widget
 
-      grids?.[gridId]?.batchUpdate(true);
-      itemRef.current = grids?.[gridId]?.makeWidget(containerRef.current, optionsRef.current);
-      grids?.[gridId]?.batchUpdate(false);
+      g?.batchUpdate(true);
+      itemRef.current = g?.makeWidget(containerRef.current, optionsRef.current);
+      g?.batchUpdate(false);
 
-      addItemRefToList(id, gridId, itemRef);
+      addItemRefToList(id, itemRef);
+      g?.enable(true);
 
       // Cleanup function to remove the widget
       return () => {
-        if (grids?.[gridId] && itemRef.current) {
+        if (g && itemRef.current) {
           try {
-            grids?.[gridId]?.batchUpdate(true);
-            grids?.[gridId]?.removeWidget(itemRef.current, false);
-            grids?.[gridId]?.batchUpdate(false);
+            g?.batchUpdate(true);
+            g?.removeWidget(itemRef.current, false);
+            g?.batchUpdate(false);
 
-            removeItemRefFromList(id, gridId);
+            removeItemRefFromList(id);
           } catch (error) {
             console.error("Error removing widget", error);
             //! Doing nothing here is a bad practice, but we don't want to crash the app (Temporary fix)
@@ -74,17 +77,27 @@ export const GridstackItemComponent = ({
         }
       };
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [grids?.[gridId]]);
+  }, [id, grid, addItemRefToList, removeItemRefFromList]);
 
   return (
     <div ref={containerRef} id={id}>
-      <div
-        id={`${id}-contenedor`}
-        className={`h-full w-full rounded-2xl border border-blue-100 ${className}`}
-      >
-        {children}
+      <div id={`${id}-contenedor`} className="h-full w-full p-1">
+        <div className="relative h-full w-full">
+          {children}
+          <Button
+            size="icon-sm"
+            className="handle absolute left-0 top-0 z-[101] -translate-x-1/4 -translate-y-1/4 rounded-full"
+          >
+            <DragHandleDots2Icon className="pointer-events-none h-5 w-5" />
+          </Button>
+
+          <Button
+            size="icon-sm"
+            className="absolute bottom-0 right-0 z-[99] translate-x-1/4 translate-y-1/4 rounded-full"
+          >
+            <SizeIcon className="pointer-events-none h-5 w-5 rotate-90" />
+          </Button>
+        </div>
       </div>
     </div>
   );

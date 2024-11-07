@@ -38,9 +38,9 @@ export function TopicsReportItem({
     default: "map",
   };
 
-  const [indicators] = useSyncTopics();
+  const [topics] = useSyncTopics();
 
-  const selectedTopicIndicators = indicators?.find(({ id }) => id === topic.id)?.indicators;
+  const selectedTopicIndicators = topics?.find(({ id }) => id === topic.id)?.indicators;
   const selectedIndicator = selectedTopicIndicators?.find(({ id }) => id === indicator.value);
 
   return (

@@ -126,7 +126,7 @@ export function Card({ className, children }: PropsWithChildren<CardProps>) {
   return (
     <div
       className={cn(
-        "flex grow break-inside-avoid flex-col overflow-hidden rounded-2xl border border-blue-100 bg-white p-6",
+        "flex h-full grow break-inside-avoid flex-col overflow-hidden rounded-2xl border border-blue-100 bg-white p-6",
         className,
       )}
     >

@@ -32,7 +32,7 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
                   return {
                     id: indicator?.value || "",
                     type: indicator?.types_available?.[0] as VisualizationType,
-                    size: DEFAULT_VISUALIZATION_SIZES[indicator?.types_available?.[0]],
+                    size: DEFAULT_VISUALIZATION_SIZES[indicator?.types_available?.[0] || "map"],
                   };
                 })
                 .filter((ind) => ind.id) || [],

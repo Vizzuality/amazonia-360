@@ -7,13 +7,26 @@ import {
 } from "nuqs";
 
 import { DATASET_IDS } from "@/constants/datasets";
-import { TOPICS, TopicsParsed } from "@/constants/topics";
+import { TOPICS } from "@/constants/topics";
+
+import { VisualizationType } from "@/containers/report/visualization-types/types";
 
 export const datasetsParser = parseAsArrayOf(parseAsStringLiteral(DATASET_IDS)).withDefault([]);
 
 export type TopicsParserType = (typeof TOPICS)[number]["id"];
 
-export const topicsParser = parseAsArrayOf(parseAsJson<TopicsParsed>()).withDefault([]);
+type Indicator = {
+  id: string;
+  type?: VisualizationType;
+  size?: [number, number];
+};
+
+export type Indicators = {
+  id: TopicsParserType;
+  indicators: Indicator[];
+};
+
+export const topicsParser = parseAsArrayOf(parseAsJson<Indicators>());
 
 export const bboxParser = parseAsArrayOf(parseAsFloat).withDefault([
   -12497583.775253754, -2540944.9326481596, -4391589.799669538, 1362846.9759313238,

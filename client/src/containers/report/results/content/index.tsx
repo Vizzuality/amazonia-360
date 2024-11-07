@@ -11,30 +11,27 @@ import TopicDashboard from "@/containers/widgets/topic";
 export default function ReportResultsContent() {
   const [topics] = useSyncTopics();
 
+  const topicsDashboard = TOPICS.filter((topic) => topics?.some((t) => t.id === topic.id)).sort(
+    (a, b) => {
+      if (!topics) return 0;
+      const indexA = topics.findIndex((t) => t.id === a.id);
+      const indexB = topics.findIndex((t) => t.id === b.id);
+      return indexA - indexB;
+    },
+  );
+
   return (
     <div className="flex flex-col space-y-20 print:space-y-6">
       {/* OVERVIEW */}
       <WidgetsOverview />
 
       {/* TOPICS DASHBOARD */}
-      {TOPICS.filter((topic) => {
+      {topicsDashboard.map((topic) => {
         const id = topic.id as TopicId;
-        return topics?.find((t) => t.id === id); // Check if `id` exists in the `topics` object
-      })
-        .sort((a, b) => {
-          if (!topics) return 0;
+        return <TopicDashboard key={id} topicId={id} />;
+      })}
 
-          // Get the index of each topic's `id` in the keys of the `topics` object
-          const indexA = Object.keys(topics).indexOf(a.id as TopicId);
-          const indexB = Object.keys(topics).indexOf(b.id as TopicId);
-          return indexA - indexB;
-        })
-        .map((topic) => {
-          const id = topic.id as TopicId;
-          if (!topics?.find((t) => t.id === id)) return null; // Check if `id` exists in `topics`
-
-          return <TopicDashboard key={id} topicId={id} />;
-        })}
+      {/* OTHER RESOURCES */}
       <WidgetsOtherResources />
     </div>
   );

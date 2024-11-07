@@ -1,14 +1,21 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+
 import { useSyncTopics } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES, TOPICS, Topic } from "@/constants/topics";
 
-import TopicsItem from "@/containers/report/location/topics/item";
+import TopicsItem from "@/containers/report/topics/item";
 
 import { VisualizationType } from "../visualization-types/types";
 
-export default function Topics() {
+export interface TopicsProps {
+  interactive?: boolean;
+  size: "sm" | "md" | "lg";
+}
+
+export default function Topics({ interactive = true, size = "md" }: TopicsProps) {
   const [topics, setTopics] = useSyncTopics();
 
   const handleTopicChange = (topic: Topic, checked: boolean) => {
@@ -39,19 +46,25 @@ export default function Topics() {
   };
 
   return (
-    <div className="flex flex-col gap-0.5">
-      {TOPICS.map((topic) => {
-        const isChecked = !!topics?.find(({ id }) => id === topic.id);
+    <section className="md:space-y-6">
+      <div className={cn({ container: interactive })}>
+        <div className="flex flex-col gap-4 lg:flex-row">
+          {TOPICS.map((topic) => {
+            const isChecked = !!topics?.find(({ id }) => id === topic.id);
 
-        return (
-          <TopicsItem
-            key={topic.id}
-            {...topic}
-            checked={isChecked}
-            onChange={(c) => handleTopicChange(topic, c)}
-          />
-        );
-      })}
-    </div>
+            return (
+              <TopicsItem
+                key={topic.id}
+                {...topic}
+                interactive={interactive}
+                size={size}
+                checked={isChecked}
+                onChange={(c) => handleTopicChange(topic, c)}
+              />
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 }

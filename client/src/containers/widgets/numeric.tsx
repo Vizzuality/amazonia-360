@@ -29,7 +29,7 @@ export default function NumericWidget({ id }: { id: keyof typeof DATASETS }) {
 
   const dataset = useMemo(() => {
     const d = DATASETS[id];
-    if (d.layer instanceof FeatureLayer) {
+    if (d.layer instanceof FeatureLayer && "getFeatures" in d) {
       return d;
     }
     return null;
@@ -37,13 +37,11 @@ export default function NumericWidget({ id }: { id: keyof typeof DATASETS }) {
 
   const query = useGetFeatures(
     {
-      query:
-        dataset?.getFeatures &&
-        dataset.getFeatures({
-          ...(!!GEOMETRY && {
-            geometry: GEOMETRY,
-          }),
+      query: dataset?.getFeatures({
+        ...(!!GEOMETRY && {
+          geometry: GEOMETRY,
         }),
+      }),
       feature: dataset?.layer instanceof FeatureLayer ? dataset.layer : undefined,
     },
     {

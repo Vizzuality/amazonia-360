@@ -1,6 +1,6 @@
 // import { GridstackItemComponent } from "@/lib/dynamic-grid/gridstack-item";
 
-// import { useSyncTopics } from "@/app/store";
+// import { useSyncIndicators } from "@/app/store";
 
 import {
   TOPICS,
@@ -12,10 +12,7 @@ import {
 // import WidgetTotalOperations from "@/containers/widgets/financial/total-operations";
 
 export default function WidgetsFinancial() {
-  // const [indicators] = useSyncTopics();
-  const T = TOPICS?.find(({ id }) => id === "financial");
-
-  // const indicatorsByTopic = indicators?.find(({ id }) => id === "financial")?.indicators;
+  const T = TOPICS.find((t) => t.id === "financial");
 
   return (
     <div className="container print:break-before-page">

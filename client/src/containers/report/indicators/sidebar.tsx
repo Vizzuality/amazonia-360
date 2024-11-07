@@ -19,11 +19,10 @@ import {
   SidebarHeader,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { set } from "zod";
 
 export function TopicsSidebar() {
   const { toggleSidebar } = useSidebar();
-  const [topics, setTopics] = useSyncTopics();
+  const [topics] = useSyncTopics();
   const [items, setItems] = useState<Topic[]>(TOPICS);
 
   const handleChangeOrder = useCallback(
@@ -33,9 +32,8 @@ export function TopicsSidebar() {
         .filter((topic) => topic !== undefined) as Topic[];
 
       setItems(newOrder);
-      setTopics(newOrder);
     },
-    [setTopics, setItems],
+    [setItems],
   );
 
   return (

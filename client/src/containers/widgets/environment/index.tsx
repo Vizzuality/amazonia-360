@@ -1,6 +1,6 @@
 // import { GridstackItemComponent } from "@/lib/dynamic-grid/gridstack-item";
 
-// import { useSyncTopics } from "@/app/store";
+// import { useSyncIndicators } from "@/app/store";
 
 import {
   TOPICS,
@@ -12,7 +12,7 @@ import {
 // import WidgetsEnvironmentMap from "@/containers/widgets/environment/map";
 
 export default function WidgetsEnvironment() {
-  // const [indicators] = useSyncTopics();
+  // const [indicators] = useSyncIndicators();
   const T = TOPICS?.find(({ id }) => id === "natural-physical-environment");
 
   // const indicatorsByTopic = indicators?.find(
