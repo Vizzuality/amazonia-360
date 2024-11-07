@@ -60,7 +60,7 @@ export const GridstackGrid = ({
   }, [grid, setGrid, itemList]);
 
   return (
-    <div id={id} ref={containerRef} className="-mx-1">
+    <div id={id} ref={containerRef} className="gridstack -mx-1">
       {children}
     </div>
   );

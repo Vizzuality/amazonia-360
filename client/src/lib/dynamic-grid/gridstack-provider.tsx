@@ -5,8 +5,6 @@ import * as React from "react";
 
 import type { GridStack } from "gridstack";
 
-import "gridstack/dist/gridstack-extra.css";
-import "gridstack/dist/gridstack.css";
 import type { ItemRefType } from "./gridstack-item";
 
 type GridStackContextType = {

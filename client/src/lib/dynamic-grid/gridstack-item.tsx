@@ -3,7 +3,10 @@
 
 import * as React from "react";
 
+import { DragHandleDots2Icon, SizeIcon } from "@radix-ui/react-icons";
 import type { GridItemHTMLElement, GridStackWidget } from "gridstack";
+
+import { Button } from "@/components/ui/button";
 
 import { useGridstackContext } from "./use-gridstack-context";
 
@@ -31,7 +34,6 @@ export const GridstackItemComponent = ({
   id,
   initOptions,
   children,
-  className,
 }: GridstackItemComponentProps) => {
   const { grid, addItemRefToList, removeItemRefFromList } = useGridstackContext();
 
@@ -80,8 +82,21 @@ export const GridstackItemComponent = ({
   return (
     <div ref={containerRef} id={id}>
       <div id={`${id}-contenedor`} className="h-full w-full p-1">
-        <div className={`h-full w-full rounded-2xl border border-blue-100 ${className}`}>
+        <div className="relative h-full w-full">
           {children}
+          <Button
+            size="icon-sm"
+            className="handle absolute left-0 top-0 z-[101] -translate-x-1/4 -translate-y-1/4 rounded-full"
+          >
+            <DragHandleDots2Icon className="pointer-events-none h-5 w-5" />
+          </Button>
+
+          <Button
+            size="icon-sm"
+            className="absolute right-0 bottom-0 z-[99] translate-x-1/4 translate-y-1/4 rounded-full"
+          >
+            <SizeIcon className="pointer-events-none h-5 w-5 rotate-90" />
+          </Button>
         </div>
       </div>
     </div>

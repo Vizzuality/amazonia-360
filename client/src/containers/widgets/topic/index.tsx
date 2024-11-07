@@ -16,6 +16,7 @@ import {
 import WidgetFundingByType from "@/containers/widgets/financial/funding-by-type";
 import WidgetTotalOperations from "@/containers/widgets/financial/total-operations";
 import WidgetMap from "@/containers/widgets/map";
+import WidgetProtectedAreas from "@/containers/widgets/protection/protected-areas";
 // import WidgetMap from "@/containers/widgets/map";
 
 export default function TopicDashboard({ topicId }: { topicId: TopicId }) {
@@ -25,6 +26,12 @@ export default function TopicDashboard({ topicId }: { topicId: TopicId }) {
   const indicatorsByTopic = indicators?.find(({ id }) => id === topicId)?.indicators;
 
   const gridOptions: GridStackOptions = {
+    handle: ".handle",
+    resizable: {
+      handles: "e, se, s, sw, w",
+      autoHide: false,
+    },
+    alwaysShowResizeHandle: true,
     column: 4,
     cellHeight: "122px",
     minRow: 4,
@@ -45,13 +52,14 @@ export default function TopicDashboard({ topicId }: { topicId: TopicId }) {
                   autoPosition: true,
                   w: size[0] || DEFAULT_VISUALIZATION_SIZES[type][0],
                   h: size[1] || DEFAULT_VISUALIZATION_SIZES[type][1],
-                  minH: MIN_VISUALIZATION_SIZES[type][0],
-                  minW: MIN_VISUALIZATION_SIZES[type][1],
+                  minW: MIN_VISUALIZATION_SIZES[type][0],
+                  minH: MIN_VISUALIZATION_SIZES[type][1],
                 }}
               >
                 {type === "map" && <WidgetMap ids={["fires"]} />}
                 {type === "chart" && <WidgetFundingByType />}
                 {type === "numeric" && <WidgetTotalOperations />}
+                {type === "table" && <WidgetProtectedAreas />}
               </GridstackItemComponent>
             );
           })}
