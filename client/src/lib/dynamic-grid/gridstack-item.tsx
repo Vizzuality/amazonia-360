@@ -93,7 +93,7 @@ export const GridstackItemComponent = ({
 
           <Button
             size="icon-sm"
-            className="absolute right-0 bottom-0 z-[99] translate-x-1/4 translate-y-1/4 rounded-full"
+            className="absolute bottom-0 right-0 z-[99] translate-x-1/4 translate-y-1/4 rounded-full"
           >
             <SizeIcon className="pointer-events-none h-5 w-5 rotate-90" />
           </Button>
