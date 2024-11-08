@@ -7,6 +7,7 @@ import { GridstackProvider } from "@/lib/dynamic-grid/gridstack-provider";
 
 import { useSyncTopics } from "@/app/store";
 
+import { DatasetIds } from "@/constants/datasets";
 import {
   TOPICS,
   DEFAULT_VISUALIZATION_SIZES,
@@ -15,8 +16,8 @@ import {
 } from "@/constants/topics";
 
 import WidgetFundingByType from "@/containers/widgets/financial/funding-by-type";
-import WidgetTotalOperations from "@/containers/widgets/financial/total-operations";
 import WidgetMap from "@/containers/widgets/map";
+import NumericWidget from "@/containers/widgets/numeric";
 import WidgetProtectedAreas from "@/containers/widgets/protection/protected-areas";
 
 // import WidgetMap from "@/containers/widgets/map";
@@ -60,7 +61,7 @@ export default function TopicDashboard({ topicId }: { topicId: TopicId }) {
               >
                 {type === "map" && <WidgetMap ids={["fires"]} />}
                 {type === "chart" && <WidgetFundingByType />}
-                {type === "numeric" && <WidgetTotalOperations />}
+                {type === "numeric" && <NumericWidget id={id as DatasetIds} />}
                 {type === "table" && <WidgetProtectedAreas />}
               </GridstackItemComponent>
             );

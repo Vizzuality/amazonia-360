@@ -6,7 +6,7 @@ import {
   parseAsStringLiteral,
 } from "nuqs";
 
-import { DATASET_IDS } from "@/constants/datasets";
+import { DATASET_IDS, DatasetIds } from "@/constants/datasets";
 import { TOPICS } from "@/constants/topics";
 
 import { VisualizationType } from "@/containers/report/visualization-types/types";
@@ -16,7 +16,7 @@ export const datasetsParser = parseAsArrayOf(parseAsStringLiteral(DATASET_IDS)).
 export type TopicsParserType = (typeof TOPICS)[number]["id"];
 
 type Indicator = {
-  id: string;
+  id: DatasetIds | string;
   type?: VisualizationType;
   size?: [number, number];
 };

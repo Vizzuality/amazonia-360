@@ -206,6 +206,7 @@ export const DATASETS = {
       }),
   },
   tierras_indigenas: {
+    title: "Indigenous lands",
     layer: new FeatureLayer({
       id: "tierras_indigenas",
       title: "Indigenous lands",
@@ -403,6 +404,7 @@ export const DATASETS = {
       }),
   },
   areas_protegidas: {
+    title: "Protected areas",
     layer: new FeatureLayer({
       id: "areas_protegidas",
       title: "Protected areas",
@@ -509,6 +511,7 @@ export const DATASETS = {
       }),
   },
   idb_operations: {
+    title: "IDB funding Operations",
     layer: new FeatureLayer({
       id: "idb_operations",
       title: "IDB Operations",

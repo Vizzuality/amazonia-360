@@ -29,7 +29,7 @@ export default function NumericWidget({ id }: { id: keyof typeof DATASETS }) {
 
   const dataset = useMemo(() => {
     const d = DATASETS[id];
-    if (d.layer instanceof FeatureLayer && "getFeatures" in d) {
+    if (d?.layer instanceof FeatureLayer && "getFeatures" in d) {
       return d;
     }
     return null;
@@ -61,7 +61,7 @@ export default function NumericWidget({ id }: { id: keyof typeof DATASETS }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>IDB funding operations</CardTitle>
+        <CardTitle>{dataset?.title}</CardTitle>
         <CardInfo ids={[id]} />
       </CardHeader>
 

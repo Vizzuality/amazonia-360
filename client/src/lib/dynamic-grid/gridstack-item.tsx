@@ -81,7 +81,7 @@ export const GridstackItemComponent = ({
 
   return (
     <div ref={containerRef} id={id}>
-      <div id={`${id}-contenedor`} className="h-full w-full p-1">
+      <div id={`${id}`} className="h-full w-full p-1">
         <div className="relative h-full w-full">
           {children}
           <Button

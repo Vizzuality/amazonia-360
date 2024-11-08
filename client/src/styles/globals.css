@@ -138,6 +138,10 @@
   }
 }
 
+/* .grid-stack-item {
+  @apply rounded-2xl shadow-md;
+} */
+
 .gridstack .grid-stack-placeholder-custom {
   position: relative;
   pointer-events: none;

@@ -80,14 +80,19 @@ export const TOPICS = [
         value: "frequency_of_forest_fires",
         types_available: ["chart", "numeric"],
       },
-      { label: "Protected areas", value: "protected_areas", types_available: ["chart", "numeric"] },
+      {
+        label: "Protected areas",
+        value: "areas_protegidas",
+        types_available: ["numeric", "chart"],
+      },
+      // { label: "Protected areas", value: "protected_areas", types_available: ["chart", "numeric"] },
       {
         label: "Indigenous lands",
-        value: "indigenous_lands",
-        types_available: ["chart", "numeric"],
+        value: "tierras_indigenas",
+        types_available: ["numeric", "chart"],
       },
     ],
-    default_indicators: ["frequency_of_forest_fires"],
+    default_indicators: ["areas_protegidas", "tierras_indigenas"],
   },
   {
     id: "bioeconomy",
@@ -123,7 +128,7 @@ export const TOPICS = [
       {
         label: "IDB operations",
         value: "idb_operations",
-        types_available: ["map", "numeric"],
+        types_available: ["numeric", "map"],
       },
       {
         label: "IDB funding by sector",
@@ -131,7 +136,7 @@ export const TOPICS = [
         types_available: ["map", "numeric"],
       },
     ],
-    default_indicators: ["idb_funding_operations"],
+    default_indicators: ["idb_operations", "idb_funding_by_sector"],
   },
 ] as const satisfies Topic[];
 
@@ -160,7 +165,7 @@ export const MIN_VISUALIZATION_SIZES: {
   [key: string]: [number, number];
 } = {
   map: [2, 2],
-  chart: [1, 1],
-  numeric: [1, 1],
+  chart: [1, 2],
+  numeric: [1, 2],
   table: [2, 2],
 };
