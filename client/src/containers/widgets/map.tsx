@@ -12,7 +12,14 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS, DatasetIds } from "@/constants/datasets";
 
-import { Card } from "@/containers/card";
+import {
+  Card,
+  CardControls,
+  CardHeader,
+  CardInfo,
+  CardSettings,
+  CardTitle,
+} from "@/containers/card";
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
 
 import Controls from "@/components/map/controls";
@@ -25,9 +32,10 @@ const Map = dynamic(() => import("@/components/map"), { ssr: false });
 
 interface WidgetMapProps extends __esri.MapViewProperties {
   ids: DatasetIds[];
+  handleWidgetSettings?: () => void;
 }
 
-export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
+export default function WidgetMap({ ids, handleWidgetSettings, ...viewProps }: WidgetMapProps) {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
@@ -62,50 +70,60 @@ export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
   return (
     <div className="relative h-full print:h-96">
       <Card className="p-0">
-        <Map
-          id="overview"
-          {...(GEOMETRY?.extent && {
-            defaultBbox: [
-              GEOMETRY?.extent.xmin,
-              GEOMETRY?.extent.ymin,
-              GEOMETRY?.extent.xmax,
-              GEOMETRY?.extent.ymax,
-            ],
-            bbox: undefined,
-          })}
-          mapProps={{
-            basemap: undefined,
-          }}
-          viewProps={{
-            navigation: {
-              mouseWheelZoomEnabled: false,
-              browserTouchPanEnabled: false,
-            },
-            ...viewProps,
-          }}
-        >
-          <Layer layer={BASEMAP_LAYER} index={0} />
+        <CardHeader className="p-6">
+          <CardTitle>Map</CardTitle>
+          <CardControls>
+            <CardInfo ids={ids} />
+            {!!handleWidgetSettings && <CardSettings onClick={handleWidgetSettings} />}
+          </CardControls>
+        </CardHeader>
+        <div className="relative h-full print:h-96">
+          <Map
+            id="overview"
+            {...(GEOMETRY?.extent && {
+              defaultBbox: [
+                GEOMETRY?.extent.xmin,
+                GEOMETRY?.extent.ymin,
+                GEOMETRY?.extent.xmax,
+                GEOMETRY?.extent.ymax,
+              ],
+              bbox: undefined,
+            })}
+            mapProps={{
+              basemap: undefined,
+            }}
+            viewProps={{
+              navigation: {
+                mouseWheelZoomEnabled: false,
+                browserTouchPanEnabled: false,
+              },
+              ...viewProps,
+            }}
+          >
+            <Layer layer={BASEMAP_LAYER} index={0} />
 
-          {LAYERS.map((layer, index, arr) => {
-            let i = arr.length - index;
+            {LAYERS.map((layer, index, arr) => {
+              let i = arr.length - index;
 
-            if (layer.type === "feature") {
-              i = layer?.customParameters?.position === "top" ? arr.length + 3 : arr.length - index;
-            }
+              if (layer.type === "feature") {
+                i =
+                  layer?.customParameters?.position === "top" ? arr.length + 3 : arr.length - index;
+              }
 
-            return <Layer key={layer.id} layer={layer} index={i} GEOMETRY={GEOMETRY} />;
-          })}
+              return <Layer key={layer.id} layer={layer} index={i} GEOMETRY={GEOMETRY} />;
+            })}
 
-          <SelectedLayer index={LAYERS.length + 1} />
+            <SelectedLayer index={LAYERS.length + 1} />
 
-          <Layer layer={LABELS_LAYER} index={LAYERS.length + 2} />
+            <Layer layer={LABELS_LAYER} index={LAYERS.length + 2} />
 
-          <Controls>
-            <FullscreenControl />
-            <ZoomControl />
-            <InfoControl ids={ids} />
-          </Controls>
-        </Map>
+            <Controls>
+              <FullscreenControl />
+              <ZoomControl />
+              {!handleWidgetSettings && <InfoControl ids={ids} />}
+            </Controls>
+          </Map>
+        </div>
       </Card>
     </div>
   );

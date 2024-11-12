@@ -7,7 +7,7 @@ import { LuChevronRight, LuPlus } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { useSyncIndicators } from "@/app/store";
+import { useSyncTopics } from "@/app/store";
 
 import { Topic } from "@/constants/topics";
 
@@ -38,9 +38,9 @@ export function TopicsReportItem({
     default: "map",
   };
 
-  const [indicators] = useSyncIndicators();
+  const [topics] = useSyncTopics();
 
-  const selectedTopicIndicators = indicators?.find(({ id }) => id === topic.id)?.indicators;
+  const selectedTopicIndicators = topics?.find(({ id }) => id === topic.id)?.indicators;
   const selectedIndicator = selectedTopicIndicators?.find(({ id }) => id === indicator.value);
 
   return (

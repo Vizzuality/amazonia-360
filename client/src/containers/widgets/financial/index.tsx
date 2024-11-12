@@ -13,7 +13,7 @@ import {
 
 export default function WidgetsFinancial() {
   // const [indicators] = useSyncIndicators();
-  const T = TOPICS?.find(({ id }) => id === "financial");
+  const T = TOPICS.find((t) => t.id === "financial");
 
   // const indicatorsByTopic = indicators?.find(({ id }) => id === "financial")?.indicators;
 

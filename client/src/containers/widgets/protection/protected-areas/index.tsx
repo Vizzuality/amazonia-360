@@ -10,10 +10,12 @@ import { DATASETS } from "@/constants/datasets";
 import {
   Card,
   CardContent,
+  CardControls,
   CardHeader,
   CardInfo,
   CardLoader,
   CardNoData,
+  CardSettings,
   CardTitle,
 } from "@/containers/card";
 import { columns } from "@/containers/widgets/protection/protected-areas/columns";
@@ -53,7 +55,10 @@ export default function WidgetProtectedAreas() {
     <Card>
       <CardHeader>
         <CardTitle>Protected areas</CardTitle>
-        <CardInfo ids={["areas_protegidas"]} />
+        <CardControls>
+          <CardInfo ids={["areas_protegidas"]} />
+          <CardSettings />
+        </CardControls>
       </CardHeader>
 
       <CardLoader query={[queryProtected, queryProtectedCoverage]} className="h-72">

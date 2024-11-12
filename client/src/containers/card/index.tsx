@@ -4,7 +4,7 @@ import { PropsWithChildren } from "react";
 import Image from "next/image";
 
 import { UseQueryResult } from "@tanstack/react-query";
-import { LuInfo } from "react-icons/lu";
+import { LuInfo, LuSettings2 } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
@@ -36,6 +36,27 @@ export function CardTitle({ children }: PropsWithChildren) {
 
 export function CardContent({ className, children }: PropsWithChildren<{ className?: string }>) {
   return <div className={cn("mt-2 flex grow flex-col", className)}>{children}</div>;
+}
+
+export function CardSettings({ onClick }: PropsWithChildren<{ onClick?: () => void }>) {
+  return (
+    <Tooltip delayDuration={100}>
+      <TooltipTrigger asChild>
+        <button type="button" className="text-base font-semibold text-blue-600" onClick={onClick}>
+          <LuSettings2 className="text-blue-600" />
+        </button>
+      </TooltipTrigger>
+
+      <TooltipContent sideOffset={0}>
+        Edit indicator
+        <TooltipArrow />
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
+export function CardControls({ children }: PropsWithChildren) {
+  return <div className="flex space-x-2">{children}</div>;
 }
 
 export function CardInfo({ ids, className }: { ids: DatasetIds[]; className?: string }) {

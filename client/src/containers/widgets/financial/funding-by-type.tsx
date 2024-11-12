@@ -12,7 +12,15 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
-import { Card, CardHeader, CardInfo, CardLoader, CardNoData, CardTitle } from "@/containers/card";
+import {
+  Card,
+  CardHeader,
+  CardInfo,
+  CardLoader,
+  CardNoData,
+  CardSettings,
+  CardTitle,
+} from "@/containers/card";
 import LegendOrdinal from "@/containers/legend/ordinal";
 import { IDBOperation } from "@/containers/widgets/financial/types";
 
@@ -81,6 +89,7 @@ export default function WidgetFundingByType() {
       <CardHeader>
         <CardTitle>IDB funding by sector</CardTitle>
         <CardInfo ids={["idb_operations"]} />
+        <CardSettings />
       </CardHeader>
 
       <CardLoader query={[query]} className="h-44">
