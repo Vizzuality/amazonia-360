@@ -22,7 +22,7 @@ import {
 
 export function TopicsSidebar() {
   const { toggleSidebar } = useSidebar();
-  const [topics, setTopics] = useSyncTopics();
+  const [topics] = useSyncTopics();
   const [items, setItems] = useState<Topic[]>(TOPICS);
 
   const handleChangeOrder = useCallback(
@@ -31,10 +31,9 @@ export function TopicsSidebar() {
         .map((id) => TOPICS.find((l) => l.id === id))
         .filter((topic) => topic !== undefined) as Topic[];
 
-      setTopics(newOrder.map((t) => t.id));
       setItems(newOrder);
     },
-    [setTopics, setItems],
+    [setItems],
   );
 
   return (

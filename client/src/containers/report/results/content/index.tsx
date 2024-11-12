@@ -1,56 +1,92 @@
 "use client";
 
+import { useState } from "react";
+
 import { useSyncTopics } from "@/app/store";
 
-import { TOPICS, TopicId } from "@/constants/topics";
+import { DatasetIds } from "@/constants/datasets";
+import { DEFAULT_VISUALIZATION_SIZES, MIN_VISUALIZATION_SIZES, TOPICS } from "@/constants/topics";
 
-// import WidgetsBioeconomy from "@/containers/widgets/bioeconomy";
-// import WidgetsEnvironment from "@/containers/widgets/environment";
-// import WidgetsFinancial from "@/containers/widgets/financial";
+import GridLayout from "@/containers/report/indicators/dashboard";
+import WidgetFundingByType from "@/containers/widgets/financial/funding-by-type";
+// import WidgetTotalOperations from "@/containers/widgets/financial/total-operations";
+import WidgetMap from "@/containers/widgets/map";
+import NumericWidget from "@/containers/widgets/numeric";
 import WidgetsOtherResources from "@/containers/widgets/other-resources";
 import WidgetsOverview from "@/containers/widgets/overview";
-// import WidgetsDemographicAndSocieconomic from "@/containers/widgets/population";
-// import WidgetsProtection from "@/containers/widgets/protection";
-import TopicDashboard from "@/containers/widgets/topic";
+import WidgetProtectedAreas from "@/containers/widgets/protection/protected-areas";
 
 export default function ReportResultsContent() {
   const [topics] = useSyncTopics();
+  const [isDraggable, setIsDraggable] = useState(false);
+  const [isResizable, setIsResizable] = useState(false);
+
+  const topicsDashboard = topics?.sort((a, b) => {
+    if (!topics) return 0;
+    const indexA = topics.findIndex((t) => t.id === a.id);
+    const indexB = topics.findIndex((t) => t.id === b.id);
+    return indexA - indexB;
+  });
+
+  const handleWidgetSettings = () => {
+    setIsDraggable(!isDraggable);
+    setIsResizable(!isResizable);
+  };
 
   return (
     <div className="flex flex-col space-y-20 print:space-y-6">
       {/* OVERVIEW */}
       <WidgetsOverview />
-      {TOPICS?.filter((topic) => {
-        const id = topic.id as TopicId;
-        return topics?.includes(id);
-      })
-        .sort((a, b) => {
-          if (!topics) return 0;
-          const indexA = topics.indexOf(a.id as TopicId);
-          const indexB = topics.indexOf(b.id as TopicId);
-          return indexA - indexB;
-        })
-        .map((topic) => {
-          const id = topic.id as TopicId;
 
-          if (!topics?.includes(id)) return null;
-          return <TopicDashboard key={id} topicId={id} />;
+      {/* TOPICS DASHBOARD */}
 
-          // switch (id) {
-          //   case "natural-physical-environment":
-          //     return <WidgetsEnvironment key={id} />;
-          //   case "sociodemographics":
-          //     return <WidgetsDemographicAndSocieconomic key={id} />;
-          //   case "land-use-and-conservation":
-          //     return <WidgetsProtection key={id} index={index} />;
-          //   case "bioeconomy":
-          //     return <WidgetsBioeconomy key={id} index={index} />;
-          //   case "financial":
-          //     return <WidgetsFinancial key={id} />;
-          //   default:
-          //     return null;
-          // }
+      {/* TO - DO - change topic dashboard (pass this to that component)*/}
+
+      <div>
+        {topicsDashboard?.map((topic) => {
+          const selectedTopic = TOPICS.find((t) => t.id === topic.id);
+          return (
+            <div key={topic.id} className="container relative print:break-before-page">
+              <h2 className="mb-4 text-xl font-semibold">{selectedTopic?.label}</h2>
+              <GridLayout
+                className="layout"
+                isDraggable={isDraggable}
+                isResizable={isResizable}
+                style={{ pointerEvents: "all" }}
+                // layout={generateLayout(topic)}
+                rowHeight={122}
+              >
+                {topic.indicators.map(({ type, id }) => {
+                  const [w, h] = DEFAULT_VISUALIZATION_SIZES[type];
+
+                  return (
+                    <div
+                      key={`${topic.id}-${id}-${type}`}
+                      data-grid={{
+                        x: 0,
+                        y: 0,
+                        w,
+                        h,
+                        minW: MIN_VISUALIZATION_SIZES[type][0],
+                        minH: MIN_VISUALIZATION_SIZES[type][1],
+                      }}
+                    >
+                      {type === "map" && (
+                        <WidgetMap ids={["fires"]} handleWidgetSettings={handleWidgetSettings} />
+                      )}
+                      {type === "chart" && <WidgetFundingByType />}
+                      {type === "numeric" && <NumericWidget id={id as DatasetIds} />}
+                      {type === "table" && <WidgetProtectedAreas />}
+                    </div>
+                  );
+                })}
+              </GridLayout>
+            </div>
+          );
         })}
+      </div>
+
+      {/* OTHER RESOURCES */}
       <WidgetsOtherResources />
     </div>
   );

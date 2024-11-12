@@ -4,7 +4,7 @@ import { MapIcon, TableIcon, PieChart, Binary } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import { useSyncIndicators } from "@/app/store";
+import { useSyncTopics } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
 
@@ -24,33 +24,32 @@ export function VisualizationTypes({
   indicatorId: string;
   topicId: Topic["id"];
 }) {
-  const [indicators, setIndicators] = useSyncIndicators();
+  const [topics, setTopics] = useSyncTopics();
 
   const handleVisualizationType = (visualizationType: VisualizationType) => {
     const widgetSize = DEFAULT_VISUALIZATION_SIZES[visualizationType];
+    const newTopics = [...(topics || [])];
 
-    const newIndicators = [...(indicators || [])];
-    const topicIndex = newIndicators.findIndex((topic) => topic.id === topicId);
+    const topicIndex = newTopics.findIndex((topic) => topic.id === topicId);
     const newIndicator = { type: visualizationType, id: indicatorId, size: widgetSize };
 
     if (topicIndex >= 0) {
-      const indicatorsArray = [...newIndicators[topicIndex].indicators];
-      const existingIndicatorIndex = indicatorsArray.findIndex(
+      const indicatorsArray = [...newTopics[topicIndex].indicators];
+
+      const exists = indicatorsArray.some(
         (indicator) => indicator.id === indicatorId && indicator.type === visualizationType,
       );
 
-      if (existingIndicatorIndex >= 0) {
-        indicatorsArray[existingIndicatorIndex] = newIndicator;
-      } else {
-        indicatorsArray.push(newIndicator);
+      if (!exists) {
+        newTopics[topicIndex] = {
+          ...newTopics[topicIndex],
+          indicators: [...indicatorsArray, newIndicator],
+        };
       }
-
-      newIndicators[topicIndex] = { ...newIndicators[topicIndex], indicators: indicatorsArray };
     } else {
-      newIndicators.push({ id: topicId, indicators: [newIndicator] });
+      newTopics.push({ id: topicId, indicators: [newIndicator] });
     }
-
-    setIndicators(newIndicators);
+    setTopics(newTopics);
   };
 
   return (
