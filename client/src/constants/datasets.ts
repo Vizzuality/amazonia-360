@@ -1,3 +1,4 @@
+import FeatureReductionCluster from "@arcgis/core/layers/support/FeatureReductionCluster";
 import PopupTemplate from "@arcgis/core/PopupTemplate";
 import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer";
 import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
@@ -164,7 +165,7 @@ export const DATASETS = {
         }),
       }),
       popupEnabled: true,
-      popupTemplate: {
+      popupTemplate: new PopupTemplate({
         title: "{NOMBCAP}",
         content: [
           {
@@ -185,7 +186,7 @@ export const DATASETS = {
             ],
           },
         ],
-      },
+      }),
     } satisfies FeatureLayer,
     legend: null,
     metadata: {
@@ -232,7 +233,7 @@ export const DATASETS = {
         }),
       }),
       popupEnabled: true,
-      popupTemplate: {
+      popupTemplate: new PopupTemplate({
         title: "{nombre}",
         content: [
           {
@@ -249,10 +250,10 @@ export const DATASETS = {
             ],
           },
         ],
-      },
+      }),
     } satisfies FeatureLayer,
     legend: {
-      type: "basic",
+      type: "basic" as const,
       items: getKeys(INDIGENOUS_LANDS).map((k) => ({
         id: k,
         label: INDIGENOUS_LANDS[k].label,
@@ -298,13 +299,13 @@ export const DATASETS = {
         })),
       }),
       popupEnabled: true,
-      popupTemplate: {
+      popupTemplate: new PopupTemplate({
         title: "{Field3}",
         content: [],
-      },
+      }),
     } satisfies FeatureLayer,
     legend: {
-      type: "basic",
+      type: "basic" as const,
       items: getKeys(CLIMATE_TYPES)
         .toSorted((a, b) => CLIMATE_TYPES[a].label.localeCompare(CLIMATE_TYPES[b].label))
         .map((k) => ({
@@ -353,12 +354,12 @@ export const DATASETS = {
         })),
       }),
       popupEnabled: true,
-      popupTemplate: {
+      popupTemplate: new PopupTemplate({
         title: "{BIOMADES}",
-      },
+      }),
     } satisfies FeatureLayer,
     legend: {
-      type: "basic",
+      type: "basic" as const,
       items: getKeys(BIOMES)
         .toSorted((a, b) => BIOMES[a].label.localeCompare(BIOMES[b].label))
         .map((k) => ({
@@ -455,7 +456,7 @@ export const DATASETS = {
       }),
     } satisfies FeatureLayer,
     legend: {
-      type: "basic",
+      type: "basic" as const,
       items: getKeys(PROTECTED_AREAS).map((k) => ({
         id: k,
         label: PROTECTED_AREAS[k].label,
@@ -483,7 +484,7 @@ export const DATASETS = {
       customParameters: {
         position: "top",
       },
-      featureReduction: {
+      featureReduction: new FeatureReductionCluster({
         type: "cluster",
         clusterMinSize: 16.5,
         labelingInfo: [
@@ -501,7 +502,7 @@ export const DATASETS = {
             labelPlacement: "center-center",
           } satisfies Partial<__esri.LabelClass>,
         ],
-      } satisfies Partial<__esri.FeatureReductionClusterProperties>,
+      }) satisfies Partial<__esri.FeatureReductionClusterProperties>,
       renderer: new SimpleRenderer({
         symbol: new SimpleMarkerSymbol({
           color: "#004E70",
@@ -535,7 +536,7 @@ export const DATASETS = {
       customParameters: {
         position: "top",
       },
-      featureReduction: {
+      featureReduction: new FeatureReductionCluster({
         type: "cluster",
         clusterMinSize: 16.5,
         labelingInfo: [
@@ -553,7 +554,7 @@ export const DATASETS = {
             labelPlacement: "center-center",
           } satisfies Partial<__esri.LabelClass>,
         ],
-      } satisfies Partial<__esri.FeatureReductionClusterProperties>,
+      }) satisfies Partial<__esri.FeatureReductionClusterProperties>,
       renderer: new SimpleRenderer({
         symbol: new SimpleMarkerSymbol({
           color: "#000000",
@@ -586,7 +587,7 @@ export const DATASETS = {
       url: "https://iservices6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/landcover_cog/ImageServer",
     },
     legend: {
-      type: "basic",
+      type: "basic" as const,
       items: getKeys(LAND_COVER)
         .toSorted((a, b) => LAND_COVER[a].label.localeCompare(LAND_COVER[b].label))
         .map((k) => ({
@@ -613,7 +614,7 @@ export const DATASETS = {
       urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=elevation_ranges_cog.tif&colormap=${encodeURIComponent(JSON.stringify(ELEVATION_RANGES_COLORMAP))}`,
     },
     legend: {
-      type: "basic",
+      type: "basic" as const,
       items: getKeys(ELEVATION_RANGES).map((k) => ({
         id: k,
         label: ELEVATION_RANGES[k].label,
@@ -639,7 +640,7 @@ export const DATASETS = {
     },
 
     legend: {
-      type: "basic",
+      type: "basic" as const,
       items: getKeys(FIRES).map((k) => ({
         id: k,
         label: FIRES[k].label,
@@ -676,7 +677,7 @@ export const DATASETS = {
       )}`,
     },
     legend: {
-      type: "gradient",
+      type: "gradient" as const,
       items: getKeys(POPULATION).map((k, i, arr) => ({
         id: k,
         label: i === 0 || i === arr.length - 1 ? POPULATION[k].label : null,
@@ -717,7 +718,7 @@ export const DATASETS = {
       )}`,
     },
     legend: {
-      type: "gradient",
+      type: "gradient" as const,
       items: getKeys(DEPRIVATION_INDEX).map((k, i, arr) => ({
         id: k,
         label: i === 0 || i === arr.length - 1 ? DEPRIVATION_INDEX[k].label : null,
@@ -738,7 +739,7 @@ export const DATASETS = {
     layer: {
       id: "acu_knowledge",
       title: "ACU Knowledge",
-      type: "web-tile" as const,
+      type: "feature" as const,
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/ACU_KnowledgeDB/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleMarkerSymbol({
