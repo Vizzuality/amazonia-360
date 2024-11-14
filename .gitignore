@@ -6,3 +6,7 @@
 /infrastructure/vars/local.tfvars
 __pycache__/
 /node_modules/
+
+# Infra
+/infrastructure/**/local.tfvars
+/infrastructure/**/.terraform/
