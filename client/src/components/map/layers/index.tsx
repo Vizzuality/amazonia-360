@@ -123,7 +123,6 @@ export default function Layer({
 
       if (map.findLayerById(id)) {
         const l = map.findLayerById(id);
-        console.log("removing layer", l, id);
         map.remove(l);
       }
     };
