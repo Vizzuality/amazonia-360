@@ -31,7 +31,10 @@ jest.mock("@arcgis/core/layers/ImageryTileLayer", () => class ImageryTileLayer {
 
 // Layer support
 jest.mock("@arcgis/core/layers/support/FeatureFilter", () => class FeatureFilter {});
-jest.mock("@arcgis/core/layers/support/FeatureReductionCluster", () => class FeatureReductionCluster {});
+jest.mock(
+  "@arcgis/core/layers/support/FeatureReductionCluster",
+  () => class FeatureReductionCluster {},
+);
 
 // Popup
 jest.mock("@arcgis/core/PopupTemplate", () => class PopupTemplate {});
