@@ -1,5 +1,7 @@
 "use client";
 
+import { MouseEvent } from "react";
+
 import { useLocationGeometry } from "@/lib/location";
 import { useGetFeatures, useGetIntersectionAnalysis } from "@/lib/query";
 
@@ -23,7 +25,13 @@ import WidgetProtectedAreasHeader from "@/containers/widgets/protection/protecte
 import { ProtectedAreas } from "@/containers/widgets/protection/protected-areas/types";
 import { DataTable } from "@/containers/widgets/table";
 
-export default function WidgetProtectedAreas() {
+export default function WidgetProtectedAreas({
+  id,
+  handleWidgetSettings,
+}: {
+  id?: string;
+  handleWidgetSettings?: (e: MouseEvent<HTMLElement>) => void;
+}) {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
@@ -57,7 +65,9 @@ export default function WidgetProtectedAreas() {
         <CardTitle>Protected areas</CardTitle>
         <CardControls>
           <CardInfo ids={["areas_protegidas"]} />
-          <CardSettings />
+          {!!handleWidgetSettings && !!id && (
+            <CardSettings id={id} onClick={handleWidgetSettings} />
+          )}
         </CardControls>
       </CardHeader>
 

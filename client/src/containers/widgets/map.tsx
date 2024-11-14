@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, MouseEvent } from "react";
 
 import dynamic from "next/dynamic";
 
@@ -31,11 +31,12 @@ import Layer from "@/components/map/layers";
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
 
 interface WidgetMapProps extends __esri.MapViewProperties {
+  id?: string;
   ids: DatasetIds[];
-  handleWidgetSettings?: () => void;
+  handleWidgetSettings?: (e: MouseEvent<HTMLElement>) => void;
 }
 
-export default function WidgetMap({ ids, handleWidgetSettings, ...viewProps }: WidgetMapProps) {
+export default function WidgetMap({ id, ids, handleWidgetSettings, ...viewProps }: WidgetMapProps) {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
@@ -74,7 +75,9 @@ export default function WidgetMap({ ids, handleWidgetSettings, ...viewProps }: W
           <CardTitle>Map</CardTitle>
           <CardControls>
             <CardInfo ids={ids} />
-            {!!handleWidgetSettings && <CardSettings onClick={handleWidgetSettings} />}
+            {!!handleWidgetSettings && id && (
+              <CardSettings id={id} onClick={handleWidgetSettings} />
+            )}
           </CardControls>
         </CardHeader>
         <div className="relative h-full print:h-96">

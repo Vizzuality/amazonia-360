@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, MouseEvent } from "react";
 
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import Pluralize from "pluralize";
@@ -24,7 +24,13 @@ import {
   CardControls,
 } from "@/containers/card";
 
-export default function NumericWidget({ id }: { id: keyof typeof DATASETS }) {
+export default function NumericWidget({
+  id,
+  handleWidgetSettings,
+}: {
+  id: keyof typeof DATASETS;
+  handleWidgetSettings?: (e: MouseEvent<HTMLElement>) => void;
+}) {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
@@ -66,7 +72,9 @@ export default function NumericWidget({ id }: { id: keyof typeof DATASETS }) {
         <CardTitle>{dataset?.layer?.title}</CardTitle>
         <CardControls>
           <CardInfo ids={[id]} />
-          <CardSettings />
+          {!!handleWidgetSettings && !!id && (
+            <CardSettings id={id} onClick={handleWidgetSettings} />
+          )}
         </CardControls>
       </CardHeader>
 

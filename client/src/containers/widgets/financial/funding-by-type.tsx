@@ -1,5 +1,7 @@
 "use client";
 
+import { MouseEvent } from "react";
+
 import { HierarchyNode, HierarchyRectangularNode } from "@visx/hierarchy/lib/types";
 import { scaleOrdinal } from "@visx/scale";
 import CHROMA from "chroma-js";
@@ -14,6 +16,7 @@ import { DATASETS } from "@/constants/datasets";
 
 import {
   Card,
+  CardControls,
   CardHeader,
   CardInfo,
   CardLoader,
@@ -26,7 +29,13 @@ import { IDBOperation } from "@/containers/widgets/financial/types";
 
 import MarimekkoChart, { Data } from "@/components/charts/marimekko";
 
-export default function WidgetFundingByType() {
+export default function WidgetFundingByType({
+  id,
+  handleWidgetSettings,
+}: {
+  id: string;
+  handleWidgetSettings?: (e: MouseEvent<HTMLElement>) => void;
+}) {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
@@ -88,8 +97,12 @@ export default function WidgetFundingByType() {
     <Card className="grow">
       <CardHeader>
         <CardTitle>IDB funding by sector</CardTitle>
-        <CardInfo ids={["idb_operations"]} />
-        <CardSettings />
+        <CardControls>
+          <CardInfo ids={["idb_operations"]} />
+          {!!handleWidgetSettings && !!id && (
+            <CardSettings id={id} onClick={handleWidgetSettings} />
+          )}
+        </CardControls>
       </CardHeader>
 
       <CardLoader query={[query]} className="h-44">

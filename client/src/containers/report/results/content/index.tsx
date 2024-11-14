@@ -1,12 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, MouseEvent } from "react";
 
-import { useSyncTopics } from "@/app/store";
+import { Layout } from "react-grid-layout";
+
+import { useAtom } from "jotai";
+
+import { cn } from "@/lib/utils";
+
+import { Indicators, TopicsParsed } from "@/app/parsers";
+import { indicatorsEditionMode, useSyncTopics } from "@/app/store";
 
 import { DatasetIds } from "@/constants/datasets";
 import { DEFAULT_VISUALIZATION_SIZES, MIN_VISUALIZATION_SIZES, TOPICS } from "@/constants/topics";
 
+import DeleteHandler from "@/containers/report/indicators/controls/delete";
+import MoveHandler from "@/containers/report/indicators/controls/drag";
+import ResizeHandler from "@/containers/report/indicators/controls/resize";
 import GridLayout from "@/containers/report/indicators/dashboard";
 import WidgetFundingByType from "@/containers/widgets/financial/funding-by-type";
 // import WidgetTotalOperations from "@/containers/widgets/financial/total-operations";
@@ -16,10 +26,20 @@ import WidgetsOtherResources from "@/containers/widgets/other-resources";
 import WidgetsOverview from "@/containers/widgets/overview";
 import WidgetProtectedAreas from "@/containers/widgets/protection/protected-areas";
 
+import { VisualizationType } from "../../visualization-types/types";
+
+interface IndicatorData {
+  type: VisualizationType;
+  id: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
 export default function ReportResultsContent() {
-  const [topics] = useSyncTopics();
-  const [isDraggable, setIsDraggable] = useState(false);
-  const [isResizable, setIsResizable] = useState(false);
+  const [topics, setTopics] = useSyncTopics();
+  const [editionMode, setEditionMode] = useAtom(indicatorsEditionMode);
 
   const topicsDashboard = topics?.sort((a, b) => {
     if (!topics) return 0;
@@ -28,10 +48,89 @@ export default function ReportResultsContent() {
     return indexA - indexB;
   });
 
-  const handleWidgetSettings = () => {
-    setIsDraggable(!isDraggable);
-    setIsResizable(!isResizable);
-  };
+  const handleWidgetSettings = useCallback(
+    (e: MouseEvent<HTMLElement>) => {
+      const id = e.currentTarget.id;
+      setEditionMode({ [id]: !editionMode[id] });
+    },
+    [editionMode, setEditionMode],
+  );
+
+  const handleDrop = useCallback(
+    (layout: Layout[]) => {
+      if (!layout) return;
+
+      // Initialize `acc` with an empty object as `TopicsParsed`
+      const indicatorsPosition = layout.reduce((acc, l) => {
+        const { topic, indicator, type } = JSON.parse(l.i);
+        const indicatorData: IndicatorData = {
+          type,
+          id: indicator,
+          x: l.x,
+          y: l.y,
+          w: l.w,
+          h: l.h,
+        };
+
+        if (!acc.id) {
+          acc.id = topic as TopicsParsed["id"];
+          acc.indicators = [];
+        }
+
+        acc.indicators?.push(indicatorData);
+
+        return acc;
+      }, {} as TopicsParsed);
+
+      setTopics((prev) => {
+        const currentTopics = prev ?? [];
+
+        const validIndicatorsPosition = {
+          ...indicatorsPosition,
+          indicators: indicatorsPosition.indicators ?? [],
+        } as Indicators;
+
+        const topicIndex = currentTopics.findIndex((t) => t.id === validIndicatorsPosition.id);
+
+        let updatedTopics;
+        if (topicIndex !== -1) {
+          updatedTopics = [
+            ...currentTopics.slice(0, topicIndex),
+            validIndicatorsPosition,
+            ...currentTopics.slice(topicIndex + 1),
+          ];
+        } else {
+          updatedTopics = [...currentTopics, validIndicatorsPosition];
+        }
+
+        return updatedTopics;
+      });
+    },
+    [setTopics],
+  );
+
+  const handleDeleteIndicator = useCallback(
+    (topicId: string, indicatorId: string) => {
+      setTopics((prev) => {
+        if (!prev) return prev;
+
+        const topicIndex = prev.findIndex((t) => t.id === topicId);
+        if (topicIndex === -1) return prev;
+
+        const updatedIndicators = prev[topicIndex].indicators.filter((i) => i.id !== indicatorId);
+
+        const updatedTopics = [
+          ...prev.slice(0, topicIndex),
+          { ...prev[topicIndex], indicators: updatedIndicators },
+          ...prev.slice(topicIndex + 1),
+        ];
+
+        return updatedTopics;
+      });
+      setEditionMode({});
+    },
+    [setTopics, setEditionMode],
+  );
 
   return (
     <div className="flex flex-col space-y-20 print:space-y-6">
@@ -41,7 +140,6 @@ export default function ReportResultsContent() {
       {/* TOPICS DASHBOARD */}
 
       {/* TO - DO - change topic dashboard (pass this to that component)*/}
-
       <div>
         {topicsDashboard?.map((topic) => {
           const selectedTopic = TOPICS.find((t) => t.id === topic.id);
@@ -50,36 +148,59 @@ export default function ReportResultsContent() {
               <h2 className="mb-4 text-xl font-semibold">{selectedTopic?.label}</h2>
               <GridLayout
                 className="layout"
-                isDraggable={isDraggable}
-                isResizable={isResizable}
+                isDraggable={editionMode[topic.id]}
+                isResizable={editionMode[topic.id]}
                 style={{ pointerEvents: "all" }}
-                // layout={generateLayout(topic)}
+                onDragStop={handleDrop}
                 rowHeight={122}
+                onResizeStop={(layout) => console.log(layout)}
               >
-                {topic.indicators.map(({ type, id }) => {
-                  const [w, h] = DEFAULT_VISUALIZATION_SIZES[type];
-
-                  return (
-                    <div
-                      key={`${topic.id}-${id}-${type}`}
-                      data-grid={{
-                        x: 0,
-                        y: 0,
-                        w,
-                        h,
-                        minW: MIN_VISUALIZATION_SIZES[type][0],
-                        minH: MIN_VISUALIZATION_SIZES[type][1],
-                      }}
-                    >
-                      {type === "map" && (
-                        <WidgetMap ids={["fires"]} handleWidgetSettings={handleWidgetSettings} />
-                      )}
-                      {type === "chart" && <WidgetFundingByType />}
-                      {type === "numeric" && <NumericWidget id={id as DatasetIds} />}
-                      {type === "table" && <WidgetProtectedAreas />}
-                    </div>
-                  );
-                })}
+                {topic.indicators.map(({ type, id }) => (
+                  <div
+                    key={`{"topic":"${topic.id}","indicator":"${id}","type":"${type}"}`}
+                    data-grid={{
+                      x: 0,
+                      y: 0,
+                      w: DEFAULT_VISUALIZATION_SIZES[type].w,
+                      h: DEFAULT_VISUALIZATION_SIZES[type].h,
+                      minW: MIN_VISUALIZATION_SIZES[type].w,
+                      minH: MIN_VISUALIZATION_SIZES[type].h,
+                    }}
+                    className={cn({
+                      "pointer-events-none opacity-50":
+                        Object.keys(editionMode)[0] !== id && Object.values(editionMode)[0],
+                    })}
+                  >
+                    {editionMode[id] && <MoveHandler />}
+                    {editionMode[id] && (
+                      <DeleteHandler
+                        topicId={topic.id}
+                        indicatorId={id}
+                        onClick={handleDeleteIndicator}
+                      />
+                    )}
+                    {type === "map" && (
+                      <WidgetMap
+                        id={id}
+                        ids={["fires"]}
+                        handleWidgetSettings={handleWidgetSettings}
+                      />
+                    )}
+                    {type === "chart" && (
+                      <WidgetFundingByType id={id} handleWidgetSettings={handleWidgetSettings} />
+                    )}
+                    {type === "numeric" && (
+                      <NumericWidget
+                        id={id as DatasetIds}
+                        handleWidgetSettings={handleWidgetSettings}
+                      />
+                    )}
+                    {type === "table" && (
+                      <WidgetProtectedAreas id={id} handleWidgetSettings={handleWidgetSettings} />
+                    )}
+                    {editionMode[id] && <ResizeHandler />}
+                  </div>
+                ))}
               </GridLayout>
             </div>
           );

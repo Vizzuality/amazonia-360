@@ -24,7 +24,10 @@ export type TopicsParserType = (typeof TOPICS)[number]["id"];
 type Indicator = {
   id: DatasetIds | string;
   type: VisualizationType;
-  size?: [number, number];
+  w?: number;
+  h?: number;
+  x?: number;
+  y?: number;
 };
 
 export type Indicators = {

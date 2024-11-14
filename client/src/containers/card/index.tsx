@@ -1,5 +1,6 @@
 "use client";
-import { PropsWithChildren } from "react";
+
+import { PropsWithChildren, MouseEvent } from "react";
 
 import Image from "next/image";
 
@@ -38,11 +39,19 @@ export function CardContent({ className, children }: PropsWithChildren<{ classNa
   return <div className={cn("mt-2 flex grow flex-col", className)}>{children}</div>;
 }
 
-export function CardSettings({ onClick }: PropsWithChildren<{ onClick?: () => void }>) {
+export function CardSettings({
+  id,
+  onClick,
+}: PropsWithChildren<{ id?: string; onClick?: (e: MouseEvent<HTMLElement>) => void }>) {
   return (
     <Tooltip delayDuration={100}>
       <TooltipTrigger asChild>
-        <button type="button" className="text-base font-semibold text-blue-600" onClick={onClick}>
+        <button
+          id={id}
+          type="button"
+          className="text-base font-semibold text-blue-600"
+          onClick={onClick}
+        >
           <LuSettings2 className="text-blue-600" />
         </button>
       </TooltipTrigger>

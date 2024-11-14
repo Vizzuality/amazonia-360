@@ -28,7 +28,8 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
               return {
                 id: indicator?.id,
                 type: indicator?.type,
-                size: DEFAULT_VISUALIZATION_SIZES[indicator?.type],
+                w: DEFAULT_VISUALIZATION_SIZES[indicator?.type].w,
+                h: DEFAULT_VISUALIZATION_SIZES[indicator?.type].h,
               };
             }),
           };

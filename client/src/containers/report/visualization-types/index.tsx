@@ -31,7 +31,12 @@ export function VisualizationTypes({
     const newTopics = [...(topics || [])];
 
     const topicIndex = newTopics.findIndex((topic) => topic.id === topicId);
-    const newIndicator = { type: visualizationType, id: indicatorId, size: widgetSize };
+    const newIndicator = {
+      type: visualizationType,
+      id: indicatorId,
+      w: widgetSize.w,
+      h: widgetSize.h,
+    };
 
     if (topicIndex >= 0) {
       const indicatorsArray = [...newTopics[topicIndex].indicators];
@@ -54,7 +59,7 @@ export function VisualizationTypes({
 
   return (
     <>
-      <span className="text-xs font-semibold text-muted-foreground">Visualization types</span>
+      <span className="text-xs font-semibold text-primary-foreground">Visualization types</span>
       <ul className="flex flex-col">
         {types.available.map((type) => (
           <li key={type} className="flex">

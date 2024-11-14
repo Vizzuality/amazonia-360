@@ -194,19 +194,19 @@ export type TopicsParsed = {
 };
 
 export const DEFAULT_VISUALIZATION_SIZES: {
-  [key: string]: [number, number];
+  [key: string]: { w: number; h: number };
 } = {
-  map: [2, 4],
-  chart: [2, 2],
-  numeric: [1, 1],
-  table: [2, 4],
+  map: { w: 2, h: 4 },
+  chart: { w: 2, h: 2 },
+  numeric: { w: 1, h: 1 },
+  table: { w: 2, h: 4 },
 };
 
 export const MIN_VISUALIZATION_SIZES: {
-  [key: string]: [number, number];
+  [key: string]: { w: number; h: number };
 } = {
-  map: [2, 4],
-  chart: [1, 1],
-  numeric: [1, 1],
-  table: [2, 4],
+  map: { w: 2, h: 4 },
+  chart: { w: 1, h: 1 },
+  numeric: { w: 1, h: 1 },
+  table: { w: 2, h: 4 },
 };
