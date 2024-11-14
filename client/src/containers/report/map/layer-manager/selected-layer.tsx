@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
+import dynamic from "next/dynamic";
+
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
@@ -12,7 +14,7 @@ import { useSyncLocation } from "@/app/store";
 
 import { BUFFER_SYMBOL, SYMBOLS } from "@/constants/map";
 
-import Layer from "@/components/map/layers";
+const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
 export default function SelectedLayer({ index = 100 }: { index?: number }) {
   const graphicsLayerRef = useRef<GraphicsLayer>(

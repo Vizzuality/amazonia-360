@@ -11,7 +11,7 @@ export type Session = {
 
 export async function login() {
   return fetch(
-    `https://atlas.iadb.org/portal/sharing/rest/oauth2/token/?client_id=${env.ARCGIS_CLIENT_ID}&client_secret=${env.ARCGIS_CLIENT_SECRET}&grant_type=client_credentials`,
+    `https://idb-gis.maps.arcgis.com/sharing/rest/oauth2/token/?client_id=${env.ARCGIS_CLIENT_ID}&client_secret=${env.ARCGIS_CLIENT_SECRET}&grant_type=client_credentials`,
   ).then((res) => res.json());
 }
 

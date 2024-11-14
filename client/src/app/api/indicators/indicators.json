@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "Indicador 1",
+    "description": "Descripción del indicador 1",
+    "value": 0.5
+  },
+  {
+    "id": 2,
+    "name": "Indicador 2",
+    "description": "Descripción del indicador 2",
+    "value": 0.7
+  },
+  {
+    "id": 3,
+    "name": "Indicador 3",
+    "description": "Descripción del indicador 3",
+    "value": 0.9
+  }
+]

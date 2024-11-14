@@ -1,6 +1,7 @@
 "use client";
 
 // import { useGetFeatures } from "@/lib/query";
+import dynamic from "next/dynamic";
 
 import { useAtomValue } from "jotai";
 
@@ -11,7 +12,7 @@ import { DATASETS } from "@/constants/datasets";
 import GridLayer from "@/containers/report/map/layer-manager/grid-layer";
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
 
-import Layer from "@/components/map/layers";
+const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
 export default function LayerManager() {
   const tab = useAtomValue(tabAtom);
