@@ -1,20 +1,72 @@
 [
   {
     "id": 1,
-    "name": "Indicador 1",
-    "description": "Descripción del indicador 1",
-    "value": 0.5
+    "name": "Indigenous lands",
+    "unit": "",
+    "topic_id": 1,
+    "topic_name": "Land use and Conservation",
+    "resource_name": "AFP_Tierras_indigenas",
+    "resource_type": "feature",
+    "resource_url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
+    "resource_query_map": {
+      "where": "1=1",
+      "outFields": ["*"],
+      "returnGeometry": true
+    },
+    "resource_query_numeric": {
+      "where": "1=1",
+      "outFields": ["*"],
+      "returnGeometry": false,
+      "outStatistics": [{
+        "onStatisticField": "FID",
+        "outStatisticFieldName": "count",
+        "statisticType": "count"
+      }]
+    },
+    "resource_query_table": {
+      "where": "1=1",
+      "outFields": [ "nombre as 'Name'", "etnias as 'Ethnicity'"],
+      "returnGeometry": false
+    },
+    "resource_query_chart": null,
+    "visualization_types": [
+      "map", "table", "numeric"
+    ],
+    "h3_grid_column_name": null
   },
   {
     "id": 2,
-    "name": "Indicador 2",
-    "description": "Descripción del indicador 2",
-    "value": 0.7
-  },
-  {
-    "id": 3,
-    "name": "Indicador 3",
-    "description": "Descripción del indicador 3",
-    "value": 0.9
+    "name": "Protected areas",
+    "unit": "",
+    "topic_id": 1,
+    "topic_name": "Land use and Conservation",
+    "resource_name": "AFP_Areas_protegidas",
+    "resource_type": "feature",
+    "resource_url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Areas_protegidas/FeatureServer",
+    "resource_query_map": {
+      "where": "1=1",
+      "outFields": ["*"],
+      "returnGeometry": true
+    },
+    "resource_query_numeric": {
+      "where": "1=1",
+      "outFields": ["*"],
+      "returnGeometry": false,
+      "outStatistics": [{
+        "onStatisticField": "FID",
+        "outStatisticFieldName": "count",
+        "statisticType": "count"
+      }]
+    },
+    "resource_query_table": {
+      "where": "1=1",
+      "outFields": [ "NAME as 'Name'", "DESIG_ENG as 'Designation'", "IUCN_CAT as 'Category'"],
+      "returnGeometry": false
+    },
+    "resource_query_chart": null,
+    "visualization_types": [
+      "map", "table", "numeric"
+    ],
+    "h3_grid_column_name": null
   }
 ]
