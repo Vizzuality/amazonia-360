@@ -1,0 +1,8 @@
+aws_profile="amazonia360"
+aws_eu_region="eu-west-3"
+aws_sa_region="sa-east-1"
+allowed_account_id="851725508245"
+project_name="amazonia360"
+github_owner="Vizzuality"
+github_token=""
+contact_email=""
