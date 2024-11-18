@@ -21,7 +21,7 @@ export type TopicsParsed = {
 
 export type TopicsParserType = (typeof TOPICS)[number]["id"];
 
-type Indicator = {
+export type Indicator = {
   id: DatasetIds | string;
   type: VisualizationType;
   w?: number;

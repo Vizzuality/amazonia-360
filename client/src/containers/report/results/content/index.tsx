@@ -9,7 +9,7 @@ import { useAtom } from "jotai";
 import { cn } from "@/lib/utils";
 
 import { Indicators, TopicsParsed } from "@/app/parsers";
-import { indicatorsEditionMode, useSyncTopics } from "@/app/store";
+import { indicatorsEditionModeAtom, reportEditionModeAtom, useSyncTopics } from "@/app/store";
 
 import { DatasetIds } from "@/constants/datasets";
 import { DEFAULT_VISUALIZATION_SIZES, MIN_VISUALIZATION_SIZES, TOPICS } from "@/constants/topics";
@@ -26,6 +26,8 @@ import WidgetsOtherResources from "@/containers/widgets/other-resources";
 import WidgetsOverview from "@/containers/widgets/overview";
 import WidgetProtectedAreas from "@/containers/widgets/protection/protected-areas";
 
+import { useSidebar } from "@/components/ui/sidebar";
+
 import { VisualizationType } from "../../visualization-types/types";
 
 interface IndicatorData {
@@ -39,7 +41,9 @@ interface IndicatorData {
 
 export default function ReportResultsContent() {
   const [topics, setTopics] = useSyncTopics();
-  const [editionMode, setEditionMode] = useAtom(indicatorsEditionMode);
+  const [editionModeIndicator, setEditionModeIndicator] = useAtom(indicatorsEditionModeAtom);
+  const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
+  const { toggleSidebar } = useSidebar();
 
   const topicsDashboard = topics?.sort((a, b) => {
     if (!topics) return 0;
@@ -51,9 +55,17 @@ export default function ReportResultsContent() {
   const handleWidgetSettings = useCallback(
     (e: MouseEvent<HTMLElement>) => {
       const id = e.currentTarget.id;
-      setEditionMode({ [id]: !editionMode[id] });
+      toggleSidebar();
+      setReportEditionMode(!reportEditionMode);
+      setEditionModeIndicator({ [id]: !editionModeIndicator[id] });
     },
-    [editionMode, setEditionMode],
+    [
+      editionModeIndicator,
+      setEditionModeIndicator,
+      reportEditionMode,
+      setReportEditionMode,
+      toggleSidebar,
+    ],
   );
 
   const handleDrop = useCallback(
@@ -102,7 +114,6 @@ export default function ReportResultsContent() {
         } else {
           updatedTopics = [...currentTopics, validIndicatorsPosition];
         }
-
         return updatedTopics;
       });
     },
@@ -127,9 +138,9 @@ export default function ReportResultsContent() {
 
         return updatedTopics;
       });
-      setEditionMode({});
+      setEditionModeIndicator({});
     },
-    [setTopics, setEditionMode],
+    [setTopics, setEditionModeIndicator],
   );
 
   return (
@@ -148,16 +159,16 @@ export default function ReportResultsContent() {
               <h2 className="mb-4 text-xl font-semibold">{selectedTopic?.label}</h2>
               <GridLayout
                 className="layout"
-                isDraggable={editionMode[topic.id]}
-                isResizable={editionMode[topic.id]}
+                isDraggable={editionModeIndicator[topic.id] && reportEditionMode}
+                isResizable={editionModeIndicator[topic.id] && reportEditionMode}
                 style={{ pointerEvents: "all" }}
                 onDragStop={handleDrop}
                 rowHeight={122}
-                onResizeStop={(layout) => console.log(layout)}
               >
                 {topic.indicators.map(({ type, id }) => (
                   <div
                     key={`{"topic":"${topic.id}","indicator":"${id}","type":"${type}"}`}
+                    id={id}
                     data-grid={{
                       x: 0,
                       y: 0,
@@ -168,11 +179,22 @@ export default function ReportResultsContent() {
                     }}
                     className={cn({
                       "pointer-events-none opacity-50":
-                        Object.keys(editionMode)[0] !== id && Object.values(editionMode)[0],
+                        Object.keys(editionModeIndicator)[0] !== id &&
+                        Object.values(editionModeIndicator)[0],
                     })}
+                    onMouseEnter={() => {
+                      if (reportEditionMode) {
+                        setEditionModeIndicator({ [id]: true });
+                      }
+                    }}
+                    onMouseLeave={() => {
+                      if (reportEditionMode) {
+                        setEditionModeIndicator({ [id]: false });
+                      }
+                    }}
                   >
-                    {editionMode[id] && <MoveHandler />}
-                    {editionMode[id] && (
+                    {editionModeIndicator[id] && <MoveHandler />}
+                    {editionModeIndicator[id] && (
                       <DeleteHandler
                         topicId={topic.id}
                         indicatorId={id}
@@ -198,7 +220,7 @@ export default function ReportResultsContent() {
                     {type === "table" && (
                       <WidgetProtectedAreas id={id} handleWidgetSettings={handleWidgetSettings} />
                     )}
-                    {editionMode[id] && <ResizeHandler />}
+                    {editionModeIndicator[id] && <ResizeHandler />}
                   </div>
                 ))}
               </GridLayout>

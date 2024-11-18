@@ -4,13 +4,15 @@ import { useState } from "react";
 
 import Link from "next/link";
 
-import { LuLayoutGrid, LuPlus } from "react-icons/lu";
+import { LuPlus } from "react-icons/lu";
 
 import { useLocationTitle } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/store";
 
 import DownloadReport from "@/containers/report/results/header/download";
+import IndicatorsReport from "@/containers/report/results/header/indicators";
+import ShareReport from "@/containers/report/results/header/share";
 import Topics from "@/containers/report/topics";
 
 import {
@@ -27,15 +29,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 
-import ShareReport from "./share";
-
 export default function ReportResultsHeader() {
   const [location] = useSyncLocation();
 
   const title = useLocationTitle(location);
 
   const [open] = useState(false);
-  const { toggleSidebar } = useSidebar();
+
+  const { open: isSidebarOpen } = useSidebar();
 
   return (
     <header className="space-y-4 pb-6">
@@ -74,23 +75,13 @@ export default function ReportResultsHeader() {
             </AlertDialog>
           </div>
 
-          <div className="flex items-center space-x-4 print:hidden">
-            <Button
-              variant={open ? "default" : "outline"}
-              className="space-x-2"
-              onClick={() => {
-                // onClick?.(event);
-                toggleSidebar();
-              }}
-            >
-              <LuLayoutGrid className="h-5 w-5" />
-              <span>Indicators</span>
-            </Button>
-
-            <ShareReport />
-
-            <DownloadReport />
-          </div>
+          {!isSidebarOpen && (
+            <div className="flex items-center space-x-2 print:hidden">
+              <DownloadReport />
+              <ShareReport />
+              <IndicatorsReport />
+            </div>
+          )}
         </div>
       </div>
 

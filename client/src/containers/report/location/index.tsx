@@ -76,8 +76,9 @@ export default function ReportLocation() {
                     for this area.
                   </p>
                 </div>
-
-                <Topics />
+                <div className="max-h-[50vh] overflow-y-auto">
+                  <Topics />
+                </div>
 
                 <GenerateReport />
               </div>

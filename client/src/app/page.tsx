@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 
+import Footer from "@/containers/footer";
 import Glance from "@/containers/home/glance";
 import Help from "@/containers/home/help";
 import Hero from "@/containers/home/hero";
@@ -23,6 +24,7 @@ export default function HomePage() {
       <Vision />
       <Hub />
       <Help />
+      <Footer />
     </main>
   );
 }

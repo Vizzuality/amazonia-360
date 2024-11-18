@@ -13,7 +13,7 @@ import {
 
 export default function WidgetsEnvironment() {
   // const [indicators] = useSyncIndicators();
-  const T = TOPICS?.find(({ id }) => id === "natural-physical-environment");
+  const T = TOPICS?.find(({ id }) => id === "nature");
 
   // const indicatorsByTopic = indicators?.find(
   //   ({ id }) => id === "natural-physical-environment",
@@ -21,7 +21,7 @@ export default function WidgetsEnvironment() {
 
   return (
     <div className="container print:break-before-page">
-      <h2 className="mb-4 text-xl font-semibold">{T?.label}</h2>
+      <h2 className="mb-4 text-xl">{T?.label}</h2>
       {/* <GridContainer>
         {indicatorsByTopic?.map(({ id, type, size }) => {
           return (

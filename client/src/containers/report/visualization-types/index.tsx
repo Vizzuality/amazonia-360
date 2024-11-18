@@ -6,21 +6,16 @@ import { cn } from "@/lib/utils";
 
 import { useSyncTopics } from "@/app/store";
 
-import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
+import { DEFAULT_VISUALIZATION_SIZES, Topic, TOPICS } from "@/constants/topics";
 
-import { Visualizations, VisualizationType } from "./types";
-
-const MOCKED: Visualizations = {
-  available: ["map", "table", "chart", "numeric"],
-  default: "map",
-};
+import { VisualizationType } from "./types";
 
 export function VisualizationTypes({
-  types = MOCKED,
+  types = ["map", "table", "chart", "numeric"],
   indicatorId,
   topicId,
 }: {
-  types: Visualizations;
+  types: VisualizationType[];
   indicatorId: string;
   topicId: Topic["id"];
 }) {
@@ -57,11 +52,17 @@ export function VisualizationTypes({
     setTopics(newTopics);
   };
 
+  const defaultVizualizations = TOPICS?.find(({ id }) => id === topicId)?.default_visualization;
+
+  const defaultVizualizationsPerIndicator = defaultVizualizations?.find(
+    ({ id }) => id === indicatorId,
+  )?.type;
+
   return (
     <>
-      <span className="text-xs font-semibold text-primary-foreground">Visualization types</span>
+      <span className="text-xs font-semibold text-primary">Visualization types</span>
       <ul className="flex flex-col">
-        {types.available.map((type) => (
+        {types.map((type) => (
           <li key={type} className="flex">
             <button
               type="button"
@@ -80,6 +81,11 @@ export function VisualizationTypes({
               >
                 {type}
               </span>
+              {defaultVizualizationsPerIndicator === type && (
+                <span className="rounded-full bg-secondary px-2.5 text-xs font-semibold">
+                  Default
+                </span>
+              )}
             </button>
           </li>
         ))}

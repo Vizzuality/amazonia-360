@@ -2,7 +2,7 @@
 
 import { useSyncTopics } from "@/app/store";
 
-import { TOPICS, Topic } from "@/constants/topics";
+import { TOPICS, Topic, DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
 
 import TopicsItem from "@/containers/report/location/topics/item";
 
@@ -16,11 +16,13 @@ export default function Topics() {
           id: topic.id,
           indicators:
             topic.default_visualization
-              ?.map((indicatorValue) => {
-                const indicator = topic.indicators?.find((ind) => ind.value === indicatorValue.id);
+              ?.map((indicator) => {
                 return {
-                  id: indicator?.value || "",
-                  type: indicator?.types_available?.[0] || "map",
+                  ...indicator,
+                  x: indicator?.x || 0,
+                  y: indicator?.y || 0,
+                  w: DEFAULT_VISUALIZATION_SIZES[indicator?.type].w,
+                  h: DEFAULT_VISUALIZATION_SIZES[indicator?.type].h,
                 };
               })
               .filter((ind) => ind.id) || [],
@@ -33,7 +35,7 @@ export default function Topics() {
   };
 
   return (
-    <div className="flex flex-col gap-0.5">
+    <div className="flex flex-col gap-0.5 overflow-y-auto">
       {TOPICS.map((topic) => {
         const isChecked = !!topics?.find(({ id }) => id === topic.id);
 

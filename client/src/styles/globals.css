@@ -153,3 +153,7 @@
 .react-resizable-handle {
   background-image: none !important;
 }
+
+.react-grid-placeholder {
+  background-color: blueviolet;
+}

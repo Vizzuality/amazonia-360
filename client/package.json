@@ -78,6 +78,7 @@
     "react-resizable": "^3.0.5",
     "react-resizable-box": "^2.1.0",
     "react-use-cookie": "^1.6.1",
+    "react-window": "^1.8.10",
     "react-world-flags": "^1.6.0",
     "rooks": "^7.14.1",
     "tailwind-merge": "^2.5.4",

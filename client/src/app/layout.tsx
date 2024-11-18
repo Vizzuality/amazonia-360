@@ -7,7 +7,6 @@ import Script from "next/script";
 import LayoutProviders from "@/app/layout-providers";
 
 import DemoDisclaimer from "@/containers/disclaimers/demo";
-import Footer from "@/containers/footer";
 import Header from "@/containers/header";
 
 import "@arcgis/core/assets/esri/themes/light/main.css";
@@ -41,7 +40,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <DemoDisclaimer />
           <Header />
           {children}
-          <Footer />
         </body>
 
         <Script id="fullstory" strategy="afterInteractive">

@@ -51,11 +51,13 @@ export default async function ReportResultsPage({ searchParams }: PageProps<Para
       <main className="relative flex min-h-[calc(100svh_-_theme(space.40)_+_1px)] flex-col bg-blue-50 py-12 print:bg-white">
         {/* TO - DO: sidebar accessibility */}
         <SidebarProvider>
-          <div className="flex-col">
+          <div className="w-full flex-col">
             <ReportResultsHeader />
             <ReportResultsContent />
           </div>
-          <TopicsSidebar />
+          <div className="relative">
+            <TopicsSidebar />
+          </div>
         </SidebarProvider>
       </main>
       <DataDisclaimer />

@@ -1,17 +1,38 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { LuChevronRight, LuGripVertical } from "react-icons/lu";
 
+import { cn } from "@/lib/utils";
+
 import { useSyncTopics } from "@/app/store";
 
-import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
+import { DEFAULT_VISUALIZATION_SIZES, TOPICS, Topic } from "@/constants/topics";
+
+import { CounterIndicatorsPill } from "@/containers/report/indicators/counter-indicators-pill";
 
 import { Switch } from "@/components/ui/switch";
 
 import { TopicsReportItem } from "./sidebar-topic-item";
+
+// TO DO - move to hook}
+const DEFAULT_TOPICS = TOPICS.map((topic) => {
+  return {
+    id: topic.id,
+    indicators: topic.default_visualization?.map((indicator) => {
+      return {
+        id: indicator?.id,
+        type: indicator?.type,
+        x: 0,
+        y: 0,
+        w: DEFAULT_VISUALIZATION_SIZES[indicator?.type].w,
+        h: DEFAULT_VISUALIZATION_SIZES[indicator?.type].h,
+      };
+    }),
+  };
+});
 
 export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
   const [topics, setTopics] = useSyncTopics();
@@ -28,8 +49,10 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
               return {
                 id: indicator?.id,
                 type: indicator?.type,
-                w: DEFAULT_VISUALIZATION_SIZES[indicator?.type].w,
-                h: DEFAULT_VISUALIZATION_SIZES[indicator?.type].h,
+                x: indicator?.x || 0,
+                y: indicator?.y || 0,
+                w: indicator?.w || DEFAULT_VISUALIZATION_SIZES[indicator?.type].w,
+                h: indicator?.h || DEFAULT_VISUALIZATION_SIZES[indicator?.type].h,
               };
             }),
           };
@@ -42,10 +65,39 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
     [setTopics],
   );
 
+  const activeIndicators = useMemo(() => {
+    return topics?.find(({ id }) => id === topic.id)?.indicators;
+  }, [topics, topic.id]);
+
+  const defaultIndicators = useMemo(() => {
+    return topic.default_visualization?.map((indicator) => indicator?.id);
+  }, [topic.default_visualization]);
+
+  const selectedIndicators = useMemo(() => {
+    return activeIndicators === undefined
+      ? defaultIndicators
+      : activeIndicators?.map(({ id }) => id);
+  }, [activeIndicators, defaultIndicators]);
+
+  const totalIndicatorsPerTopic =
+    useMemo(() => {
+      return TOPICS.find(({ id }) => id === topic.id)?.indicators;
+    }, [topic.id]) || [];
+
+  const handleResetTopic = useCallback(() => {
+    setTopics(DEFAULT_TOPICS);
+  }, [setTopics]);
+
   return (
-    <div key={id} className="flex flex-col">
+    <li
+      key={id}
+      className={cn({
+        "flex flex-col": true,
+        "b-2 box-border border-b border-b-primary/20": open,
+      })}
+    >
       <Collapsible open={open}>
-        <div className="flex">
+        <div className="flex items-center space-x-4">
           <CollapsibleTrigger
             className="flex w-full min-w-28 items-center justify-between text-sm"
             asChild
@@ -55,13 +107,18 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
             }}
           >
             <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center space-x-1">
-                <LuGripVertical />
+              <div className="flex items-center justify-start space-x-1">
+                <LuGripVertical className="shrink-0" />
                 <LuChevronRight
-                  className={`h-4 w-4 transition-transform duration-200 ${open ? "rotate-90" : ""}`}
+                  className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? "rotate-90" : ""}`}
                 />
 
-                <span>{topic.label}</span>
+                <span className="whitespace flex-nowrap text-sm">{topic.label}</span>
+
+                <CounterIndicatorsPill
+                  activeIndicatorsLength={selectedIndicators?.length}
+                  totalIndicatorsLength={totalIndicatorsPerTopic.length}
+                />
               </div>
             </div>
           </CollapsibleTrigger>
@@ -70,6 +127,7 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
             onCheckedChange={(e) => handleTopic(topic, e)}
             id={topic.id}
             value={topic.id}
+            className="h-4 w-8"
           />
         </div>
         <CollapsibleContent className="pt-2">
@@ -80,8 +138,15 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
               </li>
             ))}
           </ul>
+          <button
+            type="button"
+            onClick={handleResetTopic}
+            className="w-full py-1 text-right text-xs font-semibold"
+          >
+            Reset topic
+          </button>
         </CollapsibleContent>
       </Collapsible>
-    </div>
+    </li>
   );
 }
