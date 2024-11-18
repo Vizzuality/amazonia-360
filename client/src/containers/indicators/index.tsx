@@ -14,6 +14,7 @@ import {
 import { Indicator, ResourceFeature, VisualizationType } from "@/app/api/indicators/route";
 
 import { ChartIndicators } from "@/containers/indicators/chart";
+import { NumericIndicators } from "@/containers/indicators/numeric";
 import { TableIndicators } from "@/containers/indicators/table";
 
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,7 @@ import { Button } from "@/components/ui/button";
 export const ResourceQueryFeature = ({
   type,
   resource,
-}: {
+}: Indicator & {
   type: VisualizationType;
   resource: ResourceFeature;
 }) => {
@@ -52,6 +53,7 @@ export const ResourceQueryFeature = ({
       <div className="not-prose">
         {type === "table" && enabled && <TableIndicators resource={resource} />}
         {type === "chart" && enabled && <ChartIndicators resource={resource} />}
+        {type === "numeric" && enabled && <NumericIndicators resource={resource} />}
       </div>
     </div>
   );
@@ -61,8 +63,8 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
   const indicator = useIndicatorsId(id);
 
   return (
-    <div className="space-y-2">
-      <h2 className="text-xl">{indicator?.name}</h2>
+    <div className="space-y-5">
+      <h2 className="text-3xl">{indicator?.name}</h2>
       <div className="prose prose-sm max-w-none">
         <table className="w-full">
           <tbody>
@@ -100,7 +102,7 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
                   <tr key={type}>
                     <td>Query {type[0].toUpperCase() + type.slice(1)}</td>
                     <td>
-                      <ResourceQueryFeature type={type} resource={r} />
+                      <ResourceQueryFeature {...indicator} type={type} resource={r} />
                     </td>
                   </tr>
                 );
@@ -129,7 +131,7 @@ export const Indicators = () => {
   return (
     <section className="py-10">
       <div className="container">
-        <ul className="flex flex-col gap-6">
+        <ul className="flex flex-col gap-20">
           {data?.map((indicator) => (
             <li key={indicator.id}>
               <IndicatorItem id={indicator.id} />

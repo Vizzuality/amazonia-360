@@ -24,7 +24,7 @@
         "returnGeometry": false,
         "outStatistics": [{
           "onStatisticField": "FID",
-          "outStatisticFieldName": "count",
+          "outStatisticFieldName": "value",
           "statisticType": "count"
         }]
       },
@@ -59,7 +59,7 @@
         "returnGeometry": false,
         "outStatistics": [{
           "onStatisticField": "FID",
-          "outStatisticFieldName": "count",
+          "outStatisticFieldName": "value",
           "statisticType": "count"
         }]
       },
