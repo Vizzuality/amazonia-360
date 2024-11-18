@@ -13,6 +13,8 @@ import {
 
 import { Indicator, ResourceFeature, VisualizationType } from "@/app/api/indicators/route";
 
+import { TableIndicators } from "@/containers/indicators/table";
+
 import { Button } from "@/components/ui/button";
 
 export const ResourceQueryFeature = ({
@@ -29,20 +31,26 @@ export const ResourceQueryFeature = ({
   console.info(data);
 
   return (
-    <div>
-      <pre>{JSON.stringify(resource[`query_${type}`], null, 2)}</pre>
-      <Button
-        size="sm"
-        onClick={() => {
-          const key = getQueryFeatureIdKey({ resource, type });
-          queryClient.invalidateQueries({
-            queryKey: key,
-          });
-          setEnabled(true);
-        }}
-      >
-        Run Query
-      </Button>
+    <div className="space-y-5">
+      <div>
+        <pre>{JSON.stringify(resource[`query_${type}`], null, 2)}</pre>
+        <Button
+          size="sm"
+          onClick={() => {
+            const key = getQueryFeatureIdKey({ resource, type });
+            queryClient.invalidateQueries({
+              queryKey: key,
+            });
+            setEnabled(true);
+          }}
+        >
+          Run Query
+        </Button>
+      </div>
+
+      <div className="not-prose">
+        {type === "table" && enabled && <TableIndicators resource={resource} />}
+      </div>
     </div>
   );
 };
@@ -57,21 +65,21 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
         <table className="w-full">
           <tbody>
             <tr>
-              <td>Topic</td>
+              <td className="w-60">Topic</td>
               <td>
                 {indicator?.topic_id} - {indicator?.topic_name}
               </td>
             </tr>
             <tr>
-              <td>Resource</td>
+              <td className="w-60">Resource</td>
               <td>{indicator?.resource.name}</td>
             </tr>
             <tr>
-              <td>Resource Type</td>
+              <td className="w-60">Resource Type</td>
               <td>{indicator?.resource.type}</td>
             </tr>
             <tr>
-              <td>Resource URL</td>
+              <td className="w-60">Resource URL</td>
               <td>
                 <a href={indicator?.resource.url} target="_blank" rel="noreferrer">
                   {indicator?.resource.url}
@@ -79,7 +87,7 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
               </td>
             </tr>
             <tr>
-              <td>Visualization Types</td>
+              <td className="w-60">Visualization Types</td>
               <td>{indicator?.visualization_types.join(", ")}</td>
             </tr>
             {indicator?.visualization_types.map((type) => {
@@ -99,7 +107,7 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
               return null;
             })}
             <tr>
-              <td>H3 Grid Column Name</td>
+              <td className="w-60">H3 Grid Column Name</td>
               <td>{indicator?.h3_grid_column_name || "-"}</td>
             </tr>
           </tbody>

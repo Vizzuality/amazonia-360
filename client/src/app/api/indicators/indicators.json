@@ -30,7 +30,7 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["FID as \"id\"", "nombre as \"Name\"", "etnias as \"Ethnicity\"",","],
+        "outFields": ["nombre as \"Name\"", "etnias as \"Ethnicity\"",","],
         "returnGeometry": false
       },
       "query_chart": null
@@ -65,7 +65,7 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["NAME as \"Name\"", "DESIG_ENG as \"Designation\"", "IUCN_CAT as \"Category\"",","],
+        "outFields": ["NAME", "DESIG_ENG as \"Designation\"", "IUCN_CAT as \"Category\"",","],
         "returnGeometry": false
       },
       "query_chart": null
