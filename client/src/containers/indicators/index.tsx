@@ -13,6 +13,7 @@ import {
 
 import { Indicator, ResourceFeature, VisualizationType } from "@/app/api/indicators/route";
 
+import { ChartIndicators } from "@/containers/indicators/chart";
 import { TableIndicators } from "@/containers/indicators/table";
 
 import { Button } from "@/components/ui/button";
@@ -50,6 +51,7 @@ export const ResourceQueryFeature = ({
 
       <div className="not-prose">
         {type === "table" && enabled && <TableIndicators resource={resource} />}
+        {type === "chart" && enabled && <ChartIndicators resource={resource} />}
       </div>
     </div>
   );
@@ -118,7 +120,11 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
 };
 
 export const Indicators = () => {
-  const { data } = useIndicators();
+  const { data } = useIndicators({
+    refetchOnWindowFocus: "always",
+    refetchOnMount: "always",
+    refetchOnReconnect: "always",
+  });
 
   return (
     <section className="py-10">
