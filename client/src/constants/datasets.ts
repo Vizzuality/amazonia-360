@@ -485,7 +485,6 @@ export const DATASETS = {
         position: "top",
       },
       featureReduction: new FeatureReductionCluster({
-        type: "cluster",
         clusterMinSize: 16.5,
         labelingInfo: [
           {
@@ -537,7 +536,6 @@ export const DATASETS = {
         position: "top",
       },
       featureReduction: new FeatureReductionCluster({
-        type: "cluster",
         clusterMinSize: 16.5,
         labelingInfo: [
           {

@@ -5,33 +5,36 @@
     "unit": "",
     "topic_id": 1,
     "topic_name": "Land use and Conservation",
-    "resource_name": "AFP_Tierras_indigenas",
-    "resource_type": "feature",
-    "resource_url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
-    "resource_query_map": {
-      "where": "1=1",
-      "outFields": ["*"],
-      "returnGeometry": true
-    },
-    "resource_query_numeric": {
-      "where": "1=1",
-      "outFields": ["*"],
-      "returnGeometry": false,
-      "outStatistics": [{
-        "onStatisticField": "FID",
-        "outStatisticFieldName": "count",
-        "statisticType": "count"
-      }]
-    },
-    "resource_query_table": {
-      "where": "1=1",
-      "outFields": [ "nombre as 'Name'", "etnias as 'Ethnicity'"],
-      "returnGeometry": false
-    },
-    "resource_query_chart": null,
     "visualization_types": [
       "map", "table", "numeric"
     ],
+    "resource": {
+      "name": "AFP_Tierras_indigenas",
+      "type": "feature",
+      "layer_id": 0,
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
+      "query_map": {
+        "where": "1=1",
+        "outFields": ["*"],
+        "returnGeometry": true
+      },
+      "query_numeric": {
+        "where": "1=1",
+        "outFields": ["*"],
+        "returnGeometry": false,
+        "outStatistics": [{
+          "onStatisticField": "FID",
+          "outStatisticFieldName": "count",
+          "statisticType": "count"
+        }]
+      },
+      "query_table": {
+        "where": "1=1",
+        "outFields": ["FID as \"id\"", "nombre as \"Name\"", "etnias as \"Ethnicity\"",","],
+        "returnGeometry": false
+      },
+      "query_chart": null
+    },
     "h3_grid_column_name": null
   },
   {
@@ -40,30 +43,33 @@
     "unit": "",
     "topic_id": 1,
     "topic_name": "Land use and Conservation",
-    "resource_name": "AFP_Areas_protegidas",
-    "resource_type": "feature",
-    "resource_url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Areas_protegidas/FeatureServer",
-    "resource_query_map": {
-      "where": "1=1",
-      "outFields": ["*"],
-      "returnGeometry": true
+    "resource": {
+      "name": "AFP_Areas_protegidas",
+      "type": "feature",
+      "layer_id": 0,
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Areas_protegidas/FeatureServer",
+      "query_map": {
+        "where": "1=1",
+        "outFields": ["*"],
+        "returnGeometry": true
+      },
+      "query_numeric": {
+        "where": "1=1",
+        "outFields": ["*"],
+        "returnGeometry": false,
+        "outStatistics": [{
+          "onStatisticField": "FID",
+          "outStatisticFieldName": "count",
+          "statisticType": "count"
+        }]
+      },
+      "query_table": {
+        "where": "1=1",
+        "outFields": ["NAME as \"Name\"", "DESIG_ENG as \"Designation\"", "IUCN_CAT as \"Category\"",","],
+        "returnGeometry": false
+      },
+      "query_chart": null
     },
-    "resource_query_numeric": {
-      "where": "1=1",
-      "outFields": ["*"],
-      "returnGeometry": false,
-      "outStatistics": [{
-        "onStatisticField": "FID",
-        "outStatisticFieldName": "count",
-        "statisticType": "count"
-      }]
-    },
-    "resource_query_table": {
-      "where": "1=1",
-      "outFields": [ "NAME as 'Name'", "DESIG_ENG as 'Designation'", "IUCN_CAT as 'Category'"],
-      "returnGeometry": false
-    },
-    "resource_query_chart": null,
     "visualization_types": [
       "map", "table", "numeric"
     ],
