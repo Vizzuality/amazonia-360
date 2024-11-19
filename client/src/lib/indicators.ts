@@ -3,7 +3,13 @@ import Query from "@arcgis/core/rest/support/Query";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-import { Indicator, ResourceFeature, VisualizationType } from "@/app/api/indicators/route";
+import {
+  Indicator,
+  ResourceFeature,
+  ResourceImageryTile,
+  ResourceWebTile,
+  VisualizationType,
+} from "@/app/api/indicators/route";
 /**
  ************************************************************
  ************************************************************
@@ -58,20 +64,70 @@ export const useIndicatorsId = (id: Indicator["id"]) => {
   return data?.find((indicator) => indicator.id === id);
 };
 
+export type ResourceIdParams = {
+  resource: ResourceFeature | ResourceImageryTile | ResourceWebTile;
+};
+
+export type ResourceIdQueryOptions<TData, TError> = UseQueryOptions<
+  Awaited<ReturnType<typeof getResourceId>>,
+  TError,
+  TData
+>;
+
+export const getResourceId = async ({ resource }: ResourceIdParams) => {
+  return axios
+    .get(resource.url, {
+      params: {
+        f: "json",
+      },
+    })
+    .then((response) => response.data);
+};
+
+export const getResourceIdKey = ({ resource }: ResourceIdParams) => {
+  return ["resource", resource.url];
+};
+
+export const getResourceIdOptions = <
+  TData = Awaited<ReturnType<typeof getResourceId>>,
+  TError = unknown,
+>(
+  params: ResourceIdParams,
+  options?: Omit<ResourceIdQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const queryKey = getResourceIdKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getResourceId>>> = () =>
+    getResourceId(params);
+  return { queryKey, queryFn, ...options } as ResourceIdQueryOptions<TData, TError>;
+};
+
+export const useResourceId = <TData = Awaited<ReturnType<typeof getResourceId>>, TError = unknown>(
+  params: ResourceIdParams,
+  options?: Omit<ResourceIdQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const { queryKey, queryFn } = getResourceIdOptions(params, options);
+
+  return useQuery({
+    queryKey,
+    queryFn,
+    ...options,
+  });
+};
+
 /**
  ************************************************************
  ************************************************************
- * RESOURCES
+ * QUERIES
  * - useQueryFeatureId
  ************************************************************
  ************************************************************
  */
-export type ResourceIdParams = {
+export type QueryFeatureIdParams = {
   type: VisualizationType;
   resource: ResourceFeature;
 };
 
-export const getQueryFeatureId = async ({ type, resource }: ResourceIdParams) => {
+export const getQueryFeatureId = async ({ type, resource }: QueryFeatureIdParams) => {
   const f = new FeatureLayer({
     url: resource.url + resource.layer_id,
   });
@@ -101,7 +157,7 @@ export const getQueryFeatureId = async ({ type, resource }: ResourceIdParams) =>
   return null;
 };
 
-export const getQueryFeatureIdKey = ({ type, resource }: ResourceIdParams) => {
+export const getQueryFeatureIdKey = ({ type, resource }: QueryFeatureIdParams) => {
   return ["query-feature", type, resource.url];
 };
 
@@ -109,7 +165,7 @@ export const getQueryFeatureIdOptions = <
   TData = Awaited<ReturnType<typeof getQueryFeatureId>>,
   TError = unknown,
 >(
-  params: ResourceIdParams,
+  params: QueryFeatureIdParams,
   options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const queryKey = getQueryFeatureIdKey(params);
@@ -122,7 +178,7 @@ export const useQueryFeatureId = <
   TData = Awaited<ReturnType<typeof getQueryFeatureId>>,
   TError = unknown,
 >(
-  params: ResourceIdParams,
+  params: QueryFeatureIdParams,
   options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const { queryKey, queryFn } = getQueryFeatureIdOptions(params, options);
