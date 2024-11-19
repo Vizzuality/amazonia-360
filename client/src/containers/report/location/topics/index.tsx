@@ -21,8 +21,8 @@ export default function Topics() {
                   ...indicator,
                   x: indicator?.x || 0,
                   y: indicator?.y || 0,
-                  w: DEFAULT_VISUALIZATION_SIZES[indicator?.type].w,
-                  h: DEFAULT_VISUALIZATION_SIZES[indicator?.type].h,
+                  w: indicator?.w || DEFAULT_VISUALIZATION_SIZES[indicator?.type].w,
+                  h: indicator?.h || DEFAULT_VISUALIZATION_SIZES[indicator?.type].h,
                 };
               })
               .filter((ind) => ind.id) || [],

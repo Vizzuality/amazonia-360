@@ -3,6 +3,7 @@
 import { useCallback, MouseEvent } from "react";
 
 import { Layout } from "react-grid-layout";
+import { Responsive, WidthProvider } from "react-grid-layout";
 
 import { useAtom } from "jotai";
 
@@ -17,7 +18,6 @@ import { DEFAULT_VISUALIZATION_SIZES, MIN_VISUALIZATION_SIZES, TOPICS } from "@/
 import DeleteHandler from "@/containers/report/indicators/controls/delete";
 import MoveHandler from "@/containers/report/indicators/controls/drag";
 import ResizeHandler from "@/containers/report/indicators/controls/resize";
-import GridLayout from "@/containers/report/indicators/dashboard";
 import WidgetFundingByType from "@/containers/widgets/financial/funding-by-type";
 // import WidgetTotalOperations from "@/containers/widgets/financial/total-operations";
 import WidgetMap from "@/containers/widgets/map";
@@ -30,6 +30,8 @@ import { useSidebar } from "@/components/ui/sidebar";
 
 import { VisualizationType } from "../../visualization-types/types";
 
+const ResponsiveReactGridLayout = WidthProvider(Responsive);
+
 interface IndicatorData {
   type: VisualizationType;
   id: string | number;
@@ -38,10 +40,6 @@ interface IndicatorData {
   w: number;
   h: number;
 }
-
-let currentX = 0;
-let currentY = 0;
-const MAX_COLUMNS = 8;
 
 export default function ReportResultsContent() {
   const [topics, setTopics] = useSyncTopics();
@@ -155,36 +153,33 @@ export default function ReportResultsContent() {
       {/* TOPICS DASHBOARD */}
 
       {/* TO - DO - change topic dashboard (pass this to that component)*/}
-      <div className="space-y-5">
+      <div className="space-y-20">
         {topicsDashboard?.map((topic) => {
           const selectedTopic = TOPICS.find((t) => t.id === topic.id);
           return (
             <div key={topic.id} className="container relative print:break-before-page">
               <h2 className="mb-4 text-xl font-semibold">{selectedTopic?.label}</h2>
-              <GridLayout
-                className="layout"
+
+              <ResponsiveReactGridLayout
+                className="layout animated"
+                cols={{ lg: 4, md: 4, sm: 1, xs: 1, xxs: 1 }}
+                rowHeight={122}
                 containerPadding={[0, 0]}
                 isDraggable={reportEditionMode}
                 isResizable={reportEditionMode}
-                style={{ pointerEvents: "all" }}
+                resizeHandles={["sw", "nw", "se", "ne"]}
+                resizeHandle={false}
+                compactType="vertical"
+                onDrop={handleDrop}
                 onDragStop={handleDrop}
-                rowHeight={122}
+                onResizeStop={handleDrop}
               >
-                {topic.indicators.map(({ type, id }, index) => {
-                  const widgetWidth = DEFAULT_VISUALIZATION_SIZES[type].w;
-                  const widgetHeight = DEFAULT_VISUALIZATION_SIZES[type].h;
-
-                  // Move to the next row if the widget doesn't fit in the current row
-                  if (currentX + widgetWidth > MAX_COLUMNS) {
-                    currentY += topic?.indicators?.[index - 1]?.h || 0;
-                    currentX = 0;
-                  }
-
+                {topic.indicators.map(({ type, id, w, h, x, y }) => {
                   const dataGridConfig = {
-                    x: topic?.indicators?.[index - 1]?.w ? 0 : currentX,
-                    y: currentY,
-                    w: widgetWidth,
-                    h: widgetHeight,
+                    x: x ?? 0,
+                    y: y ?? 0,
+                    w: w ?? DEFAULT_VISUALIZATION_SIZES[type].w,
+                    h: h ?? DEFAULT_VISUALIZATION_SIZES[type].h,
                     minW: MIN_VISUALIZATION_SIZES[type].w,
                     minH: MIN_VISUALIZATION_SIZES[type].h,
                   };
@@ -192,32 +187,33 @@ export default function ReportResultsContent() {
                   return (
                     <div
                       key={`{"topic":"${topic.id}","indicator":"${id}","type":"${type}"}`}
-                      id={id as string}
+                      id={`${id}-${type}`}
                       data-grid={dataGridConfig}
                       className={cn({
-                        "pointer-events-none opacity-50 transition-opacity duration-300":
-                          Object.keys(editionModeIndicator)[0] !== id &&
+                        "pointer-events-none":
+                          Object.keys(editionModeIndicator)[0] !== `${id}-${type}` &&
                           Object.values(editionModeIndicator)[0],
                       })}
                       onMouseEnter={() => {
                         if (reportEditionMode) {
-                          setEditionModeIndicator({ [id]: true });
+                          setEditionModeIndicator({ [`${id}-${type}`]: true });
                         }
                       }}
                       onMouseLeave={() => {
                         if (reportEditionMode) {
-                          setEditionModeIndicator({ [id]: false });
+                          setEditionModeIndicator({ [`${id}-${type}`]: false });
                         }
                       }}
                     >
-                      {editionModeIndicator[id] && <MoveHandler />}
-                      {editionModeIndicator[id] && (
+                      {editionModeIndicator[`${id}-${type}`] && <MoveHandler />}
+                      {editionModeIndicator[`${id}-${type}`] && (
                         <DeleteHandler
                           topicId={topic.id}
-                          indicatorId={id}
+                          indicatorId={`${id}`}
                           onClick={onDeleteIndicator}
                         />
                       )}
+
                       {type === "map" && (
                         <WidgetMap id={id} ids={["fires"]} onEditionMode={onEditionMode} />
                       )}
@@ -230,11 +226,12 @@ export default function ReportResultsContent() {
                       {type === "table" && (
                         <WidgetProtectedAreas id={id} onEditionMode={onEditionMode} />
                       )}
-                      {editionModeIndicator[id] && <ResizeHandler />}
+
+                      {editionModeIndicator[`${id}-${type}`] && <ResizeHandler />}
                     </div>
                   );
                 })}
-              </GridLayout>
+              </ResponsiveReactGridLayout>
             </div>
           );
         })}

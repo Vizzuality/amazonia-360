@@ -29,8 +29,10 @@ export default function Topics({ interactive = true, size = "md" }: TopicsProps)
               return {
                 id: indicator?.id,
                 type: indicator?.type,
-                w: DEFAULT_VISUALIZATION_SIZES[indicator.type].w,
-                h: DEFAULT_VISUALIZATION_SIZES[indicator.type].h,
+                x: indicator?.x || 0,
+                y: indicator?.y || 0,
+                w: indicator?.w || DEFAULT_VISUALIZATION_SIZES[indicator.type].w,
+                h: indicator?.h || DEFAULT_VISUALIZATION_SIZES[indicator.type].h,
               };
             })
             .filter((ind) => ind.id) || [], // Filter out indicators without a valid id

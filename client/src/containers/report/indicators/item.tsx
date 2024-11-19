@@ -19,18 +19,17 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/compone
 
 import { TopicsReportItem } from "./sidebar-topic-item";
 
-// TO DO - move to hook}
 const DEFAULT_TOPICS = TOPICS.map((topic) => {
   return {
     id: topic.id,
     indicators: topic.default_visualization?.map((indicator) => {
       return {
-        id: indicator?.id,
-        type: indicator?.type,
-        x: 0,
-        y: 0,
-        w: DEFAULT_VISUALIZATION_SIZES[indicator?.type].w,
-        h: DEFAULT_VISUALIZATION_SIZES[indicator?.type].h,
+        id: indicator.id,
+        type: indicator.type,
+        x: indicator?.x ?? 0,
+        y: indicator?.y ?? 0,
+        w: indicator?.w ?? DEFAULT_VISUALIZATION_SIZES[indicator?.type].w,
+        h: indicator?.h ?? DEFAULT_VISUALIZATION_SIZES[indicator?.type].h,
       };
     }),
   };
@@ -71,15 +70,9 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
     return topics?.find(({ id }) => id === topic.id)?.indicators;
   }, [topics, topic.id]);
 
-  const defaultIndicators = useMemo(() => {
-    return topic.default_visualization?.map((indicator) => indicator?.id);
-  }, [topic.default_visualization]);
-
   const selectedIndicators = useMemo(() => {
-    return activeIndicators === undefined
-      ? defaultIndicators
-      : activeIndicators?.map(({ id }) => id);
-  }, [activeIndicators, defaultIndicators]);
+    return activeIndicators?.map(({ id }) => id);
+  }, [activeIndicators]);
 
   const handleResetTopic = useCallback(() => {
     setTopics(DEFAULT_TOPICS);
@@ -112,7 +105,9 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
 
                 <span className="whitespace flex-nowrap text-sm">{topic.label}</span>
 
-                <CounterIndicatorsPill activeIndicatorsLength={selectedIndicators?.length} />
+                {!!selectedIndicators && (
+                  <CounterIndicatorsPill activeIndicatorsLength={selectedIndicators?.length} />
+                )}
               </div>
             </div>
           </CollapsibleTrigger>

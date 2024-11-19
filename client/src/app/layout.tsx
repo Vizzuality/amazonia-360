@@ -11,6 +11,8 @@ import Header from "@/containers/header";
 
 import "@arcgis/core/assets/esri/themes/light/main.css";
 import "@/styles/globals.css";
+import "@/styles/grid-layout.css";
+import "react-resizable/css/styles.css";
 
 const montserrat = Montserrat({
   weight: ["500", "600", "700"],
@@ -36,7 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       }}
     >
       <html lang="en">
-        <body className={montserrat.className}>
+        <body className={`${montserrat.className} w-full overflow-x-hidden`}>
           <DemoDisclaimer />
           <Header />
           {children}
