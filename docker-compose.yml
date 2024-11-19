@@ -14,6 +14,24 @@ services:
     networks:
       - amazonia360-network
     restart: always
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      target: production
+      args:
+        NEXT_PUBLIC_URL: "http://localhost:3000"
+        NEXT_PUBLIC_API_URL: "http://api:8000"
+        NEXT_PUBLIC_ARCGIS_API_KEY: ""
+        NEXT_PUBLIC_API_KEY: ""
+        ARCGIS_CLIENT_ID: ""
+        ARCGIS_CLIENT_SECRET: ""
+        BASIC_AUTH_USER: amazonia360
+        BASIC_AUTH_PASSWORD: amazonia360
+    ports:
+      - "3000:3000"
+    networks:
+      - amazonia360-network
   test:
     build:
         context: ./api

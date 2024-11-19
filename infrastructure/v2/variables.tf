@@ -3,16 +3,6 @@ variable "aws_profile" {
   description = "AWS profile to use to perform TF operations"
 }
 
-variable "aws_dev_region" {
-  type    = string
-  default = "eu-west-3"
-}
-
-variable "aws_prod_region" {
-  type    = string
-  default = "sa-east-1"
-}
-
 variable "allowed_account_id" {
   type        = string
   description = "AWS account id"
@@ -21,6 +11,11 @@ variable "allowed_account_id" {
 variable "project_name" {
   type        = string
   description = "Short name of the project, will be used to prefix created resources"
+}
+
+variable "repo_name" {
+  type        = string
+  description = "Name of the Github repository where the code is hosted"
 }
 
 variable "github_owner" {
@@ -33,17 +28,44 @@ variable "github_token" {
   description = "Github token to access the repository"
 }
 
-variable "api_auth_token" {
-  type        = string
-  description = "API auth token"
+variable "dev" {
+  type = object({
+    aws_region = string
+    api = object({
+      auth_token      = string
+      tiff_path       = string
+      grid_tiles_path = string
+    })
+    client = object({
+      next_public_api_url      = string
+      next_public_api_key      = string
+      next_public_arcgis_api_key = string
+      arcgis_client_id         = string
+      arcgis_client_secret     = string
+      basic_auth_user          = string
+      basic_auth_password      = string
+      session_secret           = string
+    })
+  })
 }
 
-variable "api_tiff_path" {
-  type        = string
-  description = "API TIFF file path"
-}
-
-variable "api_grid_tiles_path" {
-  type        = string
-  description = "API Grid tiles file path"
+variable "prod" {
+  type = object({
+    aws_region = string
+    api = object({
+      auth_token      = string
+      tiff_path       = string
+      grid_tiles_path = string
+    })
+    client = object({
+      next_public_api_url      = string
+      next_public_api_key      = string
+      next_public_arcgis_api_key = string
+      arcgis_client_id         = string
+      arcgis_client_secret     = string
+      basic_auth_user          = string
+      basic_auth_password      = string
+      session_secret           = string
+    })
+  })
 }

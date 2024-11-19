@@ -1,0 +1,235 @@
+name: CI / CD v2
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - chore/infrastructure-migration
+    paths:
+      - "api/**"
+      - ".github/workflows/*"
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and run tests
+        run: docker compose up --build --exit-code-from test test
+
+      - name: Clean up
+        run: docker compose down
+
+  # BUILD AND DEPLOY
+  set_environment:
+    name: Set Deployment Environment
+    needs: [ build-and-test ]
+    runs-on: ubuntu-latest
+    # if: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'develop' || github.ref_name == 'main' }}
+    outputs:
+      env_name: ${{ steps.set_env.outputs.env_name }}
+    steps:
+      - id: set_env
+        run: echo "env_name=develop" >> $GITHUB_OUTPUT
+        # run: echo "env_name=${{ github.ref_name == 'main' && 'production' || github.ref_name }}" >> $GITHUB_OUTPUT
+
+  build_api:
+    name: build-api
+    needs: [ set_environment ]
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ needs.set_environment.outputs.env_name }}
+    steps:
+      - name: Debug env_name
+        run: |
+          echo "Environment name is: ${{ needs.set_environment.outputs.env_name }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.TF_PIPELINE_USER_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.TF_PIPELINE_USER_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.TF_AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          mask-password: 'true'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build, tag, and push Client image to Amazon ECR
+        uses: docker/build-push-action@v5
+        with:
+          context: api
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          file: ./api/Dockerfile
+          push: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.TF_API_REPOSITORY_NAME }}:${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.TF_API_REPOSITORY_NAME }}:${{ needs.set_environment.outputs.env_name }}
+
+  build_client:
+    name: build-client
+    needs: [ set_environment ]
+    environment:
+      name: ${{ needs.set_environment.outputs.env_name }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.TF_PIPELINE_USER_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.TF_PIPELINE_USER_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.TF_AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          mask-password: 'true'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build, tag, and push Client image to Amazon ECR
+        uses: docker/build-push-action@v5
+        with:
+          build-args: |            
+            NEXT_PUBLIC_URL=http://0.0.0.0:3000
+            NEXT_PUBLIC_API_URL=${{ vars.TF_CLIENT_NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_ARCGIS_API_KEY=${{ secrets.TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY }}
+            NEXT_PUBLIC_API_KEY=${{ secrets.TF_CLIENT_NEXT_PUBLIC_API_KEY }}
+            ARCGIS_CLIENT_ID=${{ secrets.TF_CLIENT_ARCGIS_CLIENT_ID }}
+            ARCGIS_CLIENT_SECRET=${{ secrets.TF_CLIENT_ARCGIS_CLIENT_SECRET }}
+            BASIC_AUTH_USER=${{ secrets.TF_CLIENT_BASIC_AUTH_USER }}
+            BASIC_AUTH_PASSWORD=${{ secrets.TF_CLIENT_BASIC_AUTH_PASSWORD }}
+          context: client
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          file: ./client/Dockerfile
+          push: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.TF_CLIENT_REPOSITORY_NAME }}:${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.TF_CLIENT_REPOSITORY_NAME }}:${{ needs.set_environment.outputs.env_name }}
+
+  deploy:
+    name: deploy
+    needs: [ set_environment, build_api, build_client ]
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ needs.set_environment.outputs.env_name }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.TF_PIPELINE_USER_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.TF_PIPELINE_USER_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.TF_AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Generate docker compose file
+        working-directory: infrastructure/v2/source_bundle
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY_API: ${{ secrets.TF_API_REPOSITORY_NAME }}
+          ECR_REPOSITORY_CLIENT: ${{ secrets.TF_CLIENT_REPOSITORY_NAME }}
+          IMAGE_TAG: ${{ needs.set_environment.outputs.env_name }}
+        run: |
+          cat <<EOF >> docker-compose.yml
+          version: '3.9'
+          services:
+            api:
+              image: $ECR_REGISTRY/$ECR_REPOSITORY_API:$IMAGE_TAG
+              ports:
+                - "8000:8000"
+              volumes:
+                - /var/app/data/api:/opt/api/data:ro
+              networks:
+                - amazonia360-network
+              restart: always
+            client:
+              image: $ECR_REGISTRY/$ECR_REPOSITORY_CLIENT:$IMAGE_TAG
+              networks:
+                - amazonia360-network
+              ports:
+                - 3000:3000
+              restart: always
+            nginx:
+              image: nginx
+              restart: always
+              networks:
+                - amazonia360-network
+              volumes:
+                - ./proxy/conf.d:/etc/nginx/conf.d
+                - "\${EB_LOG_BASE_DIR}/nginx:/var/log/nginx"
+              ports:
+                - 80:80
+              depends_on:
+                - api
+                - client
+          networks:
+            amazonia360-network:
+              driver: bridge
+          EOF
+
+      - name: Generate .ebextensions/20_sync_data.config
+        working-directory: infrastructure/v2/source_bundle
+        env:
+          PROJECT_NAME: ${{ vars.TF_PROJECT_NAME }}
+          ENV_NAME: ${{ needs.set_environment.outputs.env_name }}
+          AWS_REGION: ${{ vars.TF_AWS_REGION }}
+        run: |
+          mkdir -p .ebextensions
+          cat <<EOF >> .ebextensions/20_sync_data.config
+          commands:
+            20_install_awscli:
+              command: |
+                sudo apt-get update -y
+                sudo apt-get install -y awscli
+                sudo apt-get clean
+                sudo rm -rf /var/lib/apt/lists/*
+
+            21_create_data_folder:
+              command: mkdir -p /var/app/data/api
+
+            22_sync_s3_bucket:
+              command: aws s3 sync s3://${PROJECT_NAME}-${ENV_NAME}-bucket /var/app/data/api
+          EOF
+
+      - name: Generate zip file
+        working-directory: infrastructure/v2/source_bundle
+        run: |
+          zip -r deploy.zip * .[^.]*
+
+      - name: Deploy to Amazon EB
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.TF_PIPELINE_USER_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.TF_PIPELINE_USER_SECRET_ACCESS_KEY }}
+          application_name: ${{ vars.TF_PROJECT_NAME }}-${{ needs.set_environment.outputs.env_name }}
+          environment_name: ${{ vars.TF_PROJECT_NAME }}-${{ needs.set_environment.outputs.env_name }}-environment
+          region: ${{ vars.TF_AWS_REGION }}
+          version_label: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          deployment_package: infrastructure/v2/source_bundle/deploy.zip
+          wait_for_deployment: true

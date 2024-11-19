@@ -1,3 +1,8 @@
+variable "aws_profile" {
+  type        = string
+  description = "AWS profile"
+}
+
 variable "aws_region" {
   type        = string
   description = "AWS region"
@@ -17,19 +22,9 @@ variable "environment" {
   description = "Name of the environment, will be used to prefix created resources"
 }
 
-variable "vpc" {
-}
-
 variable "tags" {
   default     = {}
   description = "Additional tags to add to resources"
-}
-
-variable "subnet_ids" {
-}
-
-variable "availability_zones" {
-  type = list(string)
 }
 
 variable "beanstalk_platform" {
