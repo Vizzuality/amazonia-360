@@ -2,7 +2,7 @@ import { Metadata } from "next";
 
 import PageProviders from "@/app/report/page-providers";
 
-import { Indicators } from "@/containers/indicators";
+import Indicators from "@/containers/indicators";
 
 export const metadata: Metadata = {
   title: "Indicators",

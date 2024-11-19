@@ -1,4 +1,5 @@
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+import ImageryTileLayer from "@arcgis/core/layers/ImageryTileLayer";
 import Query from "@arcgis/core/rest/support/Query";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -119,6 +120,7 @@ export const useResourceId = <TData = Awaited<ReturnType<typeof getResourceId>>,
  ************************************************************
  * QUERIES
  * - useQueryFeatureId
+ * - useQueryImageryTileId
  ************************************************************
  ************************************************************
  */
@@ -182,6 +184,68 @@ export const useQueryFeatureId = <
   options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const { queryKey, queryFn } = getQueryFeatureIdOptions(params, options);
+
+  return useQuery({
+    queryKey,
+    queryFn,
+    ...options,
+  });
+};
+
+export type QueryImageryTileIdParams = {
+  type: VisualizationType;
+  resource: ResourceImageryTile;
+};
+
+export const getQueryImageryTileId = async ({ resource }: QueryImageryTileIdParams) => {
+  const f = new ImageryTileLayer({
+    url: resource.url,
+  });
+
+  return f.computeStatisticsHistograms({
+    geometry: {
+      type: "polygon",
+      spatialReference: { wkid: 102100 },
+      rings: [
+        [
+          [-7648399.591586382, -93947.23689839151],
+          [-7316127.829630809, -387962.2661972437],
+          [-7324918.087883603, -648001.0364233442],
+          [-7615550.778680836, -840813.4402726502],
+          [-7974116.878366503, -635656.4563552919],
+          [-8079466.212600519, -359451.25464688055],
+          [-7648399.591586382, -93947.23689839151],
+        ],
+      ],
+    },
+  });
+};
+
+export const getQueryImageryTileIdKey = ({ type, resource }: QueryImageryTileIdParams) => {
+  return ["query-imagery-tile", type, resource.url];
+};
+
+export const getQueryImageryTileIdOptions = <
+  TData = Awaited<ReturnType<typeof getQueryImageryTileId>>,
+  TError = unknown,
+>(
+  params: QueryImageryTileIdParams,
+  options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const queryKey = getQueryImageryTileIdKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getQueryImageryTileId>>> = () =>
+    getQueryImageryTileId(params);
+  return { queryKey, queryFn, ...options } as IndicatorsQueryOptions<TData, TError>;
+};
+
+export const useQueryImageryTileId = <
+  TData = Awaited<ReturnType<typeof getQueryImageryTileId>>,
+  TError = unknown,
+>(
+  params: QueryImageryTileIdParams,
+  options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const { queryKey, queryFn } = getQueryImageryTileIdOptions(params, options);
 
   return useQuery({
     queryKey,
