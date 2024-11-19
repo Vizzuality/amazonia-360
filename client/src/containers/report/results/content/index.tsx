@@ -1,18 +1,15 @@
 "use client";
 
-import { useCallback, MouseEvent } from "react";
+import { useCallback } from "react";
 
 import { Layout } from "react-grid-layout";
 import { Responsive, WidthProvider } from "react-grid-layout";
 
 import { useAtom } from "jotai";
 
-import { cn } from "@/lib/utils";
-
 import { Topics, TopicsParsed } from "@/app/parsers";
 import { indicatorsEditionModeAtom, reportEditionModeAtom, useSyncTopics } from "@/app/store";
 
-import { DatasetIds } from "@/constants/datasets";
 import { DEFAULT_VISUALIZATION_SIZES, MIN_VISUALIZATION_SIZES, TOPICS } from "@/constants/topics";
 
 import DeleteHandler from "@/containers/report/indicators/controls/delete";
@@ -21,12 +18,10 @@ import ResizeHandler from "@/containers/report/indicators/controls/resize";
 import WidgetFundingByType from "@/containers/widgets/financial/funding-by-type";
 // import WidgetTotalOperations from "@/containers/widgets/financial/total-operations";
 import WidgetMap from "@/containers/widgets/map";
-import NumericWidget from "@/containers/widgets/numeric";
 import WidgetsOtherResources from "@/containers/widgets/other-resources";
 import WidgetsOverview from "@/containers/widgets/overview";
+import WidgetIndigenousLands from "@/containers/widgets/protection/indigenous-lands";
 import WidgetProtectedAreas from "@/containers/widgets/protection/protected-areas";
-
-import { useSidebar } from "@/components/ui/sidebar";
 
 import { VisualizationType } from "../../visualization-types/types";
 
@@ -44,8 +39,7 @@ interface IndicatorData {
 export default function ReportResultsContent() {
   const [topics, setTopics] = useSyncTopics();
   const [editionModeIndicator, setEditionModeIndicator] = useAtom(indicatorsEditionModeAtom);
-  const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
-  const { toggleSidebar } = useSidebar();
+  const [reportEditionMode] = useAtom(reportEditionModeAtom);
 
   const topicsDashboard = topics?.sort((a, b) => {
     if (!topics) return 0;
@@ -53,22 +47,6 @@ export default function ReportResultsContent() {
     const indexB = topics.findIndex((t) => t.id === b.id);
     return indexA - indexB;
   });
-
-  const onEditionMode = useCallback(
-    (e: MouseEvent<HTMLElement>) => {
-      const id = e.currentTarget.id;
-      toggleSidebar();
-      setReportEditionMode(!reportEditionMode);
-      setEditionModeIndicator({ [id]: !editionModeIndicator[id] });
-    },
-    [
-      editionModeIndicator,
-      setEditionModeIndicator,
-      reportEditionMode,
-      setReportEditionMode,
-      toggleSidebar,
-    ],
-  );
 
   const handleDrop = useCallback(
     (layout: Layout[]) => {
@@ -188,12 +166,8 @@ export default function ReportResultsContent() {
                     <div
                       key={`{"topic":"${topic.id}","indicator":"${id}","type":"${type}"}`}
                       id={`${id}-${type}`}
+                      className="flex h-full flex-col"
                       data-grid={dataGridConfig}
-                      className={cn({
-                        "pointer-events-none":
-                          Object.keys(editionModeIndicator)[0] !== `${id}-${type}` &&
-                          Object.values(editionModeIndicator)[0],
-                      })}
                       onMouseEnter={() => {
                         if (reportEditionMode) {
                           setEditionModeIndicator({ [`${id}-${type}`]: true });
@@ -214,18 +188,10 @@ export default function ReportResultsContent() {
                         />
                       )}
 
-                      {type === "map" && (
-                        <WidgetMap id={id} ids={["fires"]} onEditionMode={onEditionMode} />
-                      )}
-                      {type === "chart" && (
-                        <WidgetFundingByType id={id} onEditionMode={onEditionMode} />
-                      )}
-                      {type === "numeric" && (
-                        <NumericWidget id={id as DatasetIds} onEditionMode={onEditionMode} />
-                      )}
-                      {type === "table" && (
-                        <WidgetProtectedAreas id={id} onEditionMode={onEditionMode} />
-                      )}
+                      {type === "map" && <WidgetMap ids={["fires"]} />}
+                      {type === "chart" && <WidgetFundingByType />}
+                      {type === "numeric" && <WidgetIndigenousLands />}
+                      {type === "table" && <WidgetProtectedAreas />}
 
                       {editionModeIndicator[`${id}-${type}`] && <ResizeHandler />}
                     </div>

@@ -4,6 +4,7 @@ import { PropsWithChildren, MouseEvent } from "react";
 
 import Image from "next/image";
 
+import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { UseQueryResult } from "@tanstack/react-query";
 import { LuInfo, LuSettings2 } from "react-icons/lu";
 
@@ -80,10 +81,12 @@ export function CardInfo({ ids, className }: { ids: DatasetIds[]; className?: st
         <DialogContent className="p-0">
           <Info ids={ids} />
         </DialogContent>
-        <TooltipContent sideOffset={0}>
-          About the data
-          <TooltipArrow />
-        </TooltipContent>
+        <TooltipPortal>
+          <TooltipContent sideOffset={0}>
+            About the data
+            <TooltipArrow />
+          </TooltipContent>
+        </TooltipPortal>
       </Dialog>
     </Tooltip>
   );

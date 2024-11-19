@@ -12,31 +12,22 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS, DatasetIds } from "@/constants/datasets";
 
-import {
-  Card,
-  CardControls,
-  CardHeader,
-  CardInfo,
-  CardSettings,
-  CardTitle,
-} from "@/containers/card";
+import { Card, CardControls, CardHeader, CardInfo, CardTitle } from "@/containers/card";
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
 
 import Controls from "@/components/map/controls";
 import FullscreenControl from "@/components/map/controls/fullscreen";
-import InfoControl from "@/components/map/controls/info";
 import ZoomControl from "@/components/map/controls/zoom";
 import Layer from "@/components/map/layers";
 
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
 
 interface WidgetMapProps extends __esri.MapViewProperties {
-  id?: string | number;
   ids: DatasetIds[];
   onEditionMode?: (e: MouseEvent<HTMLElement>) => void;
 }
 
-export default function WidgetMap({ id, ids, onEditionMode, ...viewProps }: WidgetMapProps) {
+export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
@@ -75,9 +66,9 @@ export default function WidgetMap({ id, ids, onEditionMode, ...viewProps }: Widg
           <CardTitle>Map</CardTitle>
           <CardControls>
             <CardInfo ids={ids} />
-            {!!onEditionMode && id && <CardSettings id={id as string} onClick={onEditionMode} />}
           </CardControls>
         </CardHeader>
+
         <div className="relative h-full print:h-96">
           <Map
             id="overview"
@@ -121,7 +112,6 @@ export default function WidgetMap({ id, ids, onEditionMode, ...viewProps }: Widg
             <Controls>
               <FullscreenControl />
               <ZoomControl />
-              {!onEditionMode && <InfoControl ids={ids} />}
             </Controls>
           </Map>
         </div>

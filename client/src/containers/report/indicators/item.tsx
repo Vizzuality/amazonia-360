@@ -75,8 +75,19 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
   }, [activeIndicators]);
 
   const handleResetTopic = useCallback(() => {
-    setTopics(DEFAULT_TOPICS);
-  }, [setTopics]);
+    setTopics((prevTopics) => {
+      const D = DEFAULT_TOPICS.find((t) => t.id === topic.id);
+      if (!prevTopics) return [];
+
+      if (!D) return prevTopics;
+
+      const i = prevTopics?.findIndex((t) => t.id === topic.id);
+
+      prevTopics.slice(i);
+
+      return [...prevTopics.slice(0, i), D, ...prevTopics.slice(i + 1)];
+    });
+  }, [topic.id, setTopics]);
 
   return (
     <li

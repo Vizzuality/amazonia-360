@@ -1,7 +1,5 @@
 "use client";
 
-import { MouseEvent } from "react";
-
 import { HierarchyNode, HierarchyRectangularNode } from "@visx/hierarchy/lib/types";
 import { scaleOrdinal } from "@visx/scale";
 import CHROMA from "chroma-js";
@@ -21,7 +19,6 @@ import {
   CardInfo,
   CardLoader,
   CardNoData,
-  CardSettings,
   CardTitle,
 } from "@/containers/card";
 import LegendOrdinal from "@/containers/legend/ordinal";
@@ -29,13 +26,7 @@ import { IDBOperation } from "@/containers/widgets/financial/types";
 
 import MarimekkoChart, { Data } from "@/components/charts/marimekko";
 
-export default function WidgetFundingByType({
-  id,
-  onEditionMode,
-}: {
-  id: string | number;
-  onEditionMode?: (e: MouseEvent<HTMLElement>) => void;
-}) {
+export default function WidgetFundingByType() {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
@@ -99,17 +90,17 @@ export default function WidgetFundingByType({
         <CardTitle>IDB funding by sector</CardTitle>
         <CardControls>
           <CardInfo ids={["idb_operations"]} />
-          {!!onEditionMode && !!id && <CardSettings id={id as string} onClick={onEditionMode} />}
         </CardControls>
       </CardHeader>
 
       <CardLoader query={[query]} className="h-44">
         <CardNoData query={[query]}>
-          <div className="space-y-2 pt-2">
+          <div className="flex grow flex-col space-y-2 pt-2">
             <MarimekkoChart
               format={FORMAT}
               colorScale={ordinalColorScale}
               data={query.data || []}
+              className="h-full grow"
             />
 
             <LegendOrdinal ordinalColorScale={ordinalColorScale} />

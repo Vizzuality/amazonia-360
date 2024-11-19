@@ -60,7 +60,7 @@ export function VisualizationTypes({
 
   return (
     <>
-      <span className="text-xs font-semibold text-secondary">Visualization types</span>
+      <span className="text-xs font-semibold text-primary">Visualization types</span>
       <ul className="flex flex-col">
         {types.map((type) => (
           <li key={type} className="flex">
