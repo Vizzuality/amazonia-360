@@ -2,38 +2,52 @@
 
 import { useSyncTopics } from "@/app/store";
 
-import { TOPICS, TopicIds } from "@/constants/topics";
+import { TOPICS, Topic, DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
 
 import TopicsItem from "@/containers/report/location/topics/item";
 
 export default function Topics() {
   const [topics, setTopics] = useSyncTopics();
-  const handleTopicChange = (id: TopicIds, checked: boolean) => {
-    if (checked) {
-      setTopics((prev) => {
-        if (prev) return [...prev, id];
-        return [id];
-      });
-    } else {
-      setTopics((prev) => {
-        if (prev) return prev.filter((t) => t !== id);
-        return [];
-      });
-    }
+
+  const handleTopicChange = (topic: Topic, checked: boolean) => {
+    setTopics((prev) => {
+      if (checked) {
+        const newTopic = {
+          id: topic.id,
+          indicators:
+            topic.default_visualization
+              ?.map((indicator) => {
+                return {
+                  ...indicator,
+                  x: indicator?.x || 0,
+                  y: indicator?.y || 0,
+                  w: indicator?.w || DEFAULT_VISUALIZATION_SIZES[indicator?.type].w,
+                  h: indicator?.h || DEFAULT_VISUALIZATION_SIZES[indicator?.type].h,
+                };
+              })
+              .filter((ind) => ind.id) || [],
+        };
+        return [...(prev || []), newTopic];
+      } else {
+        return prev?.filter((t) => t.id !== topic.id) || [];
+      }
+    });
   };
 
   return (
-    <div className="flex flex-col gap-0.5">
-      {TOPICS.map((topic) => (
-        <TopicsItem
-          key={topic.id}
-          {...topic}
-          checked={(topics || []).includes(topic.id)}
-          onChange={(c) => {
-            handleTopicChange(topic.id, c);
-          }}
-        />
-      ))}
+    <div className="flex flex-col gap-0.5 overflow-y-auto">
+      {TOPICS.map((topic) => {
+        const isChecked = !!topics?.find(({ id }) => id === topic.id);
+
+        return (
+          <TopicsItem
+            key={topic.id}
+            {...topic}
+            checked={isChecked}
+            onChange={(c) => handleTopicChange(topic, c)}
+          />
+        );
+      })}
     </div>
   );
 }
