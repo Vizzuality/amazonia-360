@@ -10,19 +10,24 @@ import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 
 import { POINT_BUFFER, POLYLINE_BUFFER, useLocation } from "@/lib/location";
 
-import { useSyncLocation } from "@/app/store";
+import { Location } from "@/app/parsers";
 
 import { BUFFER_SYMBOL, SYMBOLS } from "@/constants/map";
 
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
-export default function SelectedLayer({ index = 100 }: { index?: number }) {
+export default function SelectedLayer({
+  index = 100,
+  location,
+}: {
+  index?: number;
+  location: Location | null;
+}) {
   const graphicsLayerRef = useRef<GraphicsLayer>(
     new GraphicsLayer({
       id: "selected-layer",
     }),
   );
-  const [location] = useSyncLocation();
 
   const graphic = useLocation(location);
 

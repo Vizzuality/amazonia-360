@@ -104,7 +104,7 @@ export default function WidgetMap({ layers, ...viewProps }: WidgetMapProps) {
             return <Layer key={layer.id} layer={layer} index={i} GEOMETRY={GEOMETRY} />;
           })}
 
-          <SelectedLayer index={layers.length + 1} />
+          <SelectedLayer index={layers.length + 1} location={location} />
 
           <Layer layer={LABELS_LAYER} index={layers.length + 2} />
 
