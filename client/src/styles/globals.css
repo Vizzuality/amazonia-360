@@ -137,3 +137,23 @@
     @apply p-0;
   }
 }
+
+.react-grid-placeholder {
+  border-radius: 16px;
+  border: 1px dashed #000;
+  pointer-events: none;
+  @apply bg-slate-200 !important;
+}
+
+.react-resizable-handle::after {
+  background: transparent !important;
+  border: none !important;
+}
+
+.react-resizable-handle {
+  background-image: none !important;
+}
+
+.react-grid-placeholder {
+  background-color: blueviolet;
+}

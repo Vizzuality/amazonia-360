@@ -1,10 +1,12 @@
 "use client";
-import { PropsWithChildren } from "react";
+
+import { PropsWithChildren, MouseEvent } from "react";
 
 import Image from "next/image";
 
+import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { UseQueryResult } from "@tanstack/react-query";
-import { LuInfo } from "react-icons/lu";
+import { LuInfo, LuSettings2 } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
@@ -38,6 +40,35 @@ export function CardContent({ className, children }: PropsWithChildren<{ classNa
   return <div className={cn("mt-2 flex grow flex-col", className)}>{children}</div>;
 }
 
+export function CardSettings({
+  id,
+  onClick,
+}: PropsWithChildren<{ id: string; onClick?: (e: MouseEvent<HTMLElement>) => void }>) {
+  return (
+    <Tooltip delayDuration={100}>
+      <TooltipTrigger asChild>
+        <button
+          id={id}
+          type="button"
+          className="text-base font-semibold text-blue-600"
+          onClick={onClick}
+        >
+          <LuSettings2 className="text-blue-600" />
+        </button>
+      </TooltipTrigger>
+
+      <TooltipContent sideOffset={0}>
+        Edit indicator
+        <TooltipArrow />
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
+export function CardControls({ children }: PropsWithChildren) {
+  return <div className="flex space-x-2">{children}</div>;
+}
+
 export function CardInfo({ ids, className }: { ids: DatasetIds[]; className?: string }) {
   return (
     <Tooltip delayDuration={100}>
@@ -50,10 +81,12 @@ export function CardInfo({ ids, className }: { ids: DatasetIds[]; className?: st
         <DialogContent className="p-0">
           <Info ids={ids} />
         </DialogContent>
-        <TooltipContent sideOffset={0}>
-          About the data
-          <TooltipArrow />
-        </TooltipContent>
+        <TooltipPortal>
+          <TooltipContent sideOffset={0}>
+            About the data
+            <TooltipArrow />
+          </TooltipContent>
+        </TooltipPortal>
       </Dialog>
     </Tooltip>
   );
@@ -126,7 +159,7 @@ export function Card({ className, children }: PropsWithChildren<CardProps>) {
   return (
     <div
       className={cn(
-        "flex grow break-inside-avoid flex-col overflow-hidden rounded-2xl border border-blue-100 bg-white p-6",
+        "flex h-full grow break-inside-avoid flex-col overflow-hidden rounded-2xl border border-blue-100 bg-white p-6",
         className,
       )}
     >

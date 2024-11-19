@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 import { useSyncTopics } from "@/app/store";
 
-import { TOPICS, TopicIds } from "@/constants/topics";
+import { DEFAULT_VISUALIZATION_SIZES, TOPICS, Topic } from "@/constants/topics";
 
 import TopicsItem from "@/containers/report/topics/item";
 
@@ -15,16 +15,30 @@ export interface TopicsProps {
 
 export default function Topics({ interactive = true, size = "md" }: TopicsProps) {
   const [topics, setTopics] = useSyncTopics();
-  const handleTopicChange = (id: TopicIds, checked: boolean) => {
+  const handleTopicChange = (topic: Topic, checked: boolean) => {
     if (checked) {
       setTopics((prev) => {
-        if (prev) return [...prev, id];
-        return [id];
+        return prev?.filter((t) => t.id !== topic.id) || [];
       });
     } else {
+      const T = {
+        id: topic.id,
+        indicators:
+          topic.default_visualization
+            ?.map((indicator) => {
+              return {
+                id: indicator?.id,
+                type: indicator?.type,
+                x: indicator?.x || 0,
+                y: indicator?.y || 0,
+                w: indicator?.w || DEFAULT_VISUALIZATION_SIZES[indicator.type].w,
+                h: indicator?.h || DEFAULT_VISUALIZATION_SIZES[indicator.type].h,
+              };
+            })
+            .filter((ind) => ind.id) || [], // Filter out indicators without a valid id
+      };
       setTopics((prev) => {
-        if (prev) return prev.filter((t) => t !== id);
-        return [];
+        return [...(prev || []), T];
       });
     }
   };
@@ -33,18 +47,20 @@ export default function Topics({ interactive = true, size = "md" }: TopicsProps)
     <section className="md:space-y-6">
       <div className={cn({ container: interactive })}>
         <div className="flex flex-col gap-4 lg:flex-row">
-          {TOPICS.map((topic) => (
-            <TopicsItem
-              key={topic.id}
-              {...topic}
-              interactive={interactive}
-              size={size}
-              checked={(topics || []).includes(topic.id)}
-              onChange={(c) => {
-                interactive && handleTopicChange(topic.id, c);
-              }}
-            />
-          ))}
+          {TOPICS.map((topic) => {
+            const isChecked = !!topics?.find(({ id }) => id === topic.id);
+
+            return (
+              <TopicsItem
+                key={topic.id}
+                {...topic}
+                interactive={interactive}
+                size={size}
+                checked={isChecked}
+                onChange={(c) => handleTopicChange(topic, c)}
+              />
+            );
+          })}
         </div>
       </div>
     </section>

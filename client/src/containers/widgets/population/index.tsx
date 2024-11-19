@@ -6,11 +6,11 @@ import WidgetsPopulationPopulation from "@/containers/widgets/population/populat
 import WidgetsRow from "@/containers/widgets/row";
 
 export default function WidgetsPopulation() {
-  const T = TOPICS.find((t) => t.id === "sociodemographics");
+  const T = TOPICS.find((t) => t.id === "people");
 
   return (
     <div className="container print:break-before-page">
-      <h2 className="mb-4 text-xl font-semibold">{T?.label}</h2>
+      <h2 className="mb-4 text-xl">{T?.label}</h2>
       <WidgetsRow>
         <WidgetsColumn className="col-span-12 md:col-span-6 print:col-span-12">
           <WidgetsPopulationPopulation />
