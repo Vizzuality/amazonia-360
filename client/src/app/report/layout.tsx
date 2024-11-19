@@ -4,7 +4,6 @@ export default await function ReportLayout({ children }: { children: React.React
   return (
     <>
       {children}
-
       <FeedbackButton />
     </>
   );

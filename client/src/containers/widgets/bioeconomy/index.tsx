@@ -9,11 +9,11 @@ import WidgetMap from "@/containers/widgets/map";
 import WidgetsRow from "@/containers/widgets/row";
 
 export default function WidgetsBioeconomy({ index }: { index: number }) {
-  const T = TOPICS.find((t) => t.id === "bioeconomy");
+  const T = TOPICS.find((t) => t.id === "climate");
 
   return (
     <div className="container print:break-before-page">
-      <h2 className="mb-4 text-xl font-semibold">{T?.label}</h2>
+      <h2 className="mb-4 text-xl">{T?.label}</h2>
       <WidgetsRow>
         <WidgetsColumn
           className={cn(

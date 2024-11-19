@@ -3,7 +3,7 @@
 exports[`WidgetPopulation renders WidgetPopulation component with loading state 1`] = `
 <div>
   <div
-    class="flex grow break-inside-avoid flex-col overflow-hidden rounded-2xl border border-blue-100 bg-white p-6"
+    class="flex h-full grow break-inside-avoid flex-col overflow-hidden rounded-2xl border border-blue-100 bg-white p-6"
   >
     <header
       class="flex items-start justify-between"
@@ -58,7 +58,7 @@ exports[`WidgetPopulation renders WidgetPopulation component with loading state 
 exports[`WidgetPopulation renders WidgetPopulation component without crashing 1`] = `
 <div>
   <div
-    class="flex grow break-inside-avoid flex-col overflow-hidden rounded-2xl border border-blue-100 bg-white p-6"
+    class="flex h-full grow break-inside-avoid flex-col overflow-hidden rounded-2xl border border-blue-100 bg-white p-6"
   >
     <header
       class="flex items-start justify-between"

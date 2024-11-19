@@ -52,6 +52,9 @@ export const useSyncSearchParams = () => {
 };
 
 // JOTAI PARAMS
+export const indicatorsEditionModeAtom = atom<{ [key: string]: boolean }>({});
+export const reportEditionModeAtom = atom<boolean>(false);
+
 export const tmpBboxAtom = atom<__esri.Extent | undefined>(undefined);
 
 export const sketchAtom = atom<SketchProps>({
