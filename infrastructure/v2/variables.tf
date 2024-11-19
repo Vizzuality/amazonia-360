@@ -3,12 +3,12 @@ variable "aws_profile" {
   description = "AWS profile to use to perform TF operations"
 }
 
-variable "aws_eu_region" {
+variable "aws_dev_region" {
   type    = string
   default = "eu-west-3"
 }
 
-variable "aws_sa_region" {
+variable "aws_prod_region" {
   type    = string
   default = "sa-east-1"
 }
@@ -33,8 +33,17 @@ variable "github_token" {
   description = "Github token to access the repository"
 }
 
-variable "contact_email" {
+variable "api_auth_token" {
   type        = string
-  description = "Email address where contact form submissions will be sent"
+  description = "API auth token"
+}
 
+variable "api_tiff_path" {
+  type        = string
+  description = "API TIFF file path"
+}
+
+variable "api_grid_tiles_path" {
+  type        = string
+  description = "API Grid tiles file path"
 }
