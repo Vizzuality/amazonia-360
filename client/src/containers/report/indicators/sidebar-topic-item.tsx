@@ -41,7 +41,7 @@ export function TopicsReportItem({
   const selectedIndicator = selectedTopicIndicators?.find(({ id }) => id === indicator.value);
 
   return (
-    <Collapsible open={open && !!selectedIndicator} className="flex w-full flex-col pl-4">
+    <Collapsible open={open && !!selectedIndicator} className="flex w-full flex-col">
       <div className="flex justify-between">
         <CollapsibleTrigger asChild>
           <div className="flex items-center space-x-1">

@@ -7,22 +7,19 @@ import {
 } from "nuqs";
 
 import { DATASET_IDS, DatasetIds } from "@/constants/datasets";
-import { TOPICS } from "@/constants/topics";
 
 import { VisualizationType } from "@/containers/report/visualization-types/types";
 
 export const datasetsParser = parseAsArrayOf(parseAsStringLiteral(DATASET_IDS)).withDefault([]);
 
 export type TopicsParsed = {
-  id: TopicsParserType;
+  id: string | number;
   visible?: boolean;
   indicators: Indicator[] | undefined;
 };
 
-export type TopicsParserType = (typeof TOPICS)[number]["id"];
-
 export type Indicator = {
-  id: DatasetIds | string;
+  id: DatasetIds | string | number;
   type: VisualizationType;
   w?: number;
   h?: number;
@@ -30,12 +27,12 @@ export type Indicator = {
   y?: number;
 };
 
-export type Indicators = {
-  id: TopicsParserType;
+export type Topics = {
+  id: string | number;
   indicators: Indicator[];
 };
 
-export const topicsParser = parseAsArrayOf(parseAsJson<Indicators>());
+export const topicsParser = parseAsArrayOf(parseAsJson<Topics>());
 
 export const bboxParser = parseAsArrayOf(parseAsFloat).withDefault([
   -12497583.775253754, -2540944.9326481596, -4391589.799669538, 1362846.9759313238,

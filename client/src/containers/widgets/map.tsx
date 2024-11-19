@@ -31,12 +31,12 @@ import Layer from "@/components/map/layers";
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
 
 interface WidgetMapProps extends __esri.MapViewProperties {
-  id?: string;
+  id?: string | number;
   ids: DatasetIds[];
-  handleWidgetSettings?: (e: MouseEvent<HTMLElement>) => void;
+  onEditionMode?: (e: MouseEvent<HTMLElement>) => void;
 }
 
-export default function WidgetMap({ id, ids, handleWidgetSettings, ...viewProps }: WidgetMapProps) {
+export default function WidgetMap({ id, ids, onEditionMode, ...viewProps }: WidgetMapProps) {
   const [location] = useSyncLocation();
 
   const GEOMETRY = useLocationGeometry(location);
@@ -75,9 +75,7 @@ export default function WidgetMap({ id, ids, handleWidgetSettings, ...viewProps 
           <CardTitle>Map</CardTitle>
           <CardControls>
             <CardInfo ids={ids} />
-            {!!handleWidgetSettings && id && (
-              <CardSettings id={id} onClick={handleWidgetSettings} />
-            )}
+            {!!onEditionMode && id && <CardSettings id={id as string} onClick={onEditionMode} />}
           </CardControls>
         </CardHeader>
         <div className="relative h-full print:h-96">
@@ -123,7 +121,7 @@ export default function WidgetMap({ id, ids, handleWidgetSettings, ...viewProps 
             <Controls>
               <FullscreenControl />
               <ZoomControl />
-              {!handleWidgetSettings && <InfoControl ids={ids} />}
+              {!onEditionMode && <InfoControl ids={ids} />}
             </Controls>
           </Map>
         </div>

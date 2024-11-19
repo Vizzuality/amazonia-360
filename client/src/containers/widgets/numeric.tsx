@@ -26,10 +26,10 @@ import {
 
 export default function NumericWidget({
   id,
-  handleWidgetSettings,
+  onEditionMode,
 }: {
   id: keyof typeof DATASETS;
-  handleWidgetSettings?: (e: MouseEvent<HTMLElement>) => void;
+  onEditionMode?: (e: MouseEvent<HTMLElement>) => void;
 }) {
   const [location] = useSyncLocation();
 
@@ -72,9 +72,7 @@ export default function NumericWidget({
         <CardTitle>{dataset?.layer?.title}</CardTitle>
         <CardControls>
           <CardInfo ids={[id]} />
-          {!!handleWidgetSettings && !!id && (
-            <CardSettings id={id} onClick={handleWidgetSettings} />
-          )}
+          {!!onEditionMode && !!id && <CardSettings id={id} onClick={onEditionMode} />}
         </CardControls>
       </CardHeader>
 

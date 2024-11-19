@@ -31,10 +31,10 @@ import MarimekkoChart, { Data } from "@/components/charts/marimekko";
 
 export default function WidgetFundingByType({
   id,
-  handleWidgetSettings,
+  onEditionMode,
 }: {
-  id: string;
-  handleWidgetSettings?: (e: MouseEvent<HTMLElement>) => void;
+  id: string | number;
+  onEditionMode?: (e: MouseEvent<HTMLElement>) => void;
 }) {
   const [location] = useSyncLocation();
 
@@ -99,9 +99,7 @@ export default function WidgetFundingByType({
         <CardTitle>IDB funding by sector</CardTitle>
         <CardControls>
           <CardInfo ids={["idb_operations"]} />
-          {!!handleWidgetSettings && !!id && (
-            <CardSettings id={id} onClick={handleWidgetSettings} />
-          )}
+          {!!onEditionMode && !!id && <CardSettings id={id as string} onClick={onEditionMode} />}
         </CardControls>
       </CardHeader>
 

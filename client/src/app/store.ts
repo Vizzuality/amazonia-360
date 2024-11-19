@@ -9,7 +9,6 @@ import {
   gridFiltersParser,
   locationParser,
   topicsParser,
-  datasetsParser,
 } from "@/app/parsers";
 
 import { SketchProps } from "@/components/map/sketch";
@@ -21,10 +20,6 @@ export const useSyncBbox = () => {
 
 export const useSyncTopics = () => {
   return useQueryState("topics", topicsParser);
-};
-
-export const useSyncDatasets = () => {
-  return useQueryState("datasets", datasetsParser);
 };
 
 export const useSyncLocation = () => {

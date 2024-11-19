@@ -1,4 +1,4 @@
-import { TopicsParserType, Indicator } from "@/app/parsers";
+import { Indicator } from "@/app/parsers";
 
 import { VisualizationType } from "@/containers/report/visualization-types/types";
 
@@ -230,13 +230,13 @@ export const TOPICS = [
       },
     ],
     default_visualization: [
-      { id: "topographic_altitude", type: "chart" },
-      { id: "ecosystems", type: "map" },
       { id: "conservation_priority_indicator", type: "map" },
-      { id: "protected_areas", type: "numeric" },
+      { id: "ecosystems", type: "map" },
+      { id: "topographic_altitude", type: "chart" },
       { id: "worldcover_class_coverage", type: "chart" },
-      { id: "basic_species_count", type: "numeric" },
+      { id: "protected_areas", type: "numeric" },
       { id: "carbon_sequestered_biomass", type: "numeric" },
+      { id: "basic_species_count", type: "numeric" },
     ],
   },
   {
@@ -248,7 +248,11 @@ export const TOPICS = [
       { label: "Köppen Climate Types", value: "koppen_climate_types", types_available: ["map"] },
       { label: "Annual Precipitation", value: "annual_precipitation", types_available: ["chart"] },
       { label: "Annual Temperature", value: "annual_temperature", types_available: [] },
-      { label: "Drought Risk Index", value: "drought_risk_index", types_available: ["map"] },
+      {
+        label: "Drought Risk Index",
+        value: "drought_risk_index",
+        types_available: ["numeric", "map"],
+      },
       { label: "Fire Frequency", value: "fire_frequency", types_available: ["chart"] },
       {
         label: "Cumulative Forest Loss Indicator",
@@ -259,8 +263,8 @@ export const TOPICS = [
     default_visualization: [
       { id: "koppen_climate_types", type: "map" },
       { id: "annual_precipitation", type: "chart" },
-      { id: "drought_risk_index", type: "map" },
       { id: "fire_frequency", type: "chart" },
+      { id: "drought_risk_index", type: "numeric" }, // TO - DO -map in the spreadsheet but numeric in figma
       { id: "forest_loss_indicator", type: "numeric" },
     ],
   },
@@ -289,11 +293,11 @@ export const TOPICS = [
       { label: "Primary Health Index", value: "primary_health_index", types_available: ["map"] },
     ],
     default_visualization: [
-      { id: "total_population_ghspop_2025", type: "numeric" },
+      { id: "primary_health_index", type: "map" },
+      { id: "higher_education_centers", type: "map" },
       { id: "access_public_transport", type: "numeric" },
       { id: "access_electricity", type: "numeric" },
-      { id: "higher_education_centers", type: "map" },
-      { id: "primary_health_index", type: "map" },
+      { id: "total_population_ghspop_2025", type: "numeric" },
     ],
   },
   {
@@ -324,8 +328,17 @@ export const TOPICS = [
       },
     ],
     default_visualization: [
-      { id: "mining_concession_indicator", type: "numeric" },
+      {
+        id: "cultivated_area_indicator",
+        type: "numeric",
+      },
+      {
+        id: "illegal_mining_indicator",
+        type: "numeric",
+      },
+      // TO - DO - from here not in the spreadsheet
       { id: "oil_concession_indicator", type: "numeric" },
+      { id: "mining_concession_indicator", type: "numeric" },
     ],
   },
   {
@@ -340,6 +353,7 @@ export const TOPICS = [
         types_available: ["table"],
       },
     ],
+    // TO - DO - Different from the report in figma
     default_visualization: [{ id: "knowledge_products_database", type: "table" }],
   },
   {
@@ -375,8 +389,8 @@ export const TOPICS = [
       { label: "Ookla Connection Data", value: "ookla_connection_data", types_available: ["map"] },
     ],
     default_visualization: [
-      { id: "total_road_network", type: "map" },
       { id: "human_settlements_2025", type: "map" },
+      { id: "total_road_network", type: "map" },
     ],
   },
   {
@@ -384,6 +398,7 @@ export const TOPICS = [
     label: "IDB Operations",
     image: "/images/topics/idb-operations.png",
     description: "IDB development operations and impact data.",
+    // TO - DO - Different from
     indicators: [
       {
         label: "Action Areas DB (#74) (exp)",
@@ -396,7 +411,7 @@ export const TOPICS = [
 ] as const satisfies Topic[];
 
 export type TopicsParsed = {
-  id: TopicsParserType;
+  id: string | number;
   visible?: boolean;
   indicators: Indicator[] | undefined;
 };
@@ -405,7 +420,7 @@ export const DEFAULT_VISUALIZATION_SIZES: {
   [key: string]: { w: number; h: number };
 } = {
   map: { w: 2, h: 4 },
-  chart: { w: 2, h: 2 },
+  chart: { w: 2, h: 1 },
   numeric: { w: 1, h: 1 },
   table: { w: 2, h: 4 },
 };

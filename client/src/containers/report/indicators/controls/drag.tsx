@@ -12,7 +12,7 @@ const MoveHandler = () => (
     </TooltipTrigger>
 
     <TooltipPortal>
-      <TooltipContent side="left" align="center">
+      <TooltipContent side="top" align="center">
         Move
         <TooltipArrow className="fill-foreground" width={10} height={5} />
       </TooltipContent>

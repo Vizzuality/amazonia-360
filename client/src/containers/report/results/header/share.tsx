@@ -36,7 +36,7 @@ export default function ShareReport() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="hover:bg-primary/20">
+        <Button variant="outline">
           <Share2 className="h-5 w-5" />
         </Button>
       </DialogTrigger>

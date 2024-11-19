@@ -57,31 +57,33 @@ export function TopicsSidebar() {
   );
 
   return (
-    <Sidebar className="-bottom-12 -top-12 w-96 bg-white p-6">
-      <SidebarHeader>
-        <div className="flex w-full items-center justify-between">
-          <h3>Report indicators</h3>
-          <LuX className="h-4 w-4 cursor-pointer" onClick={handleReportEditionMode} />
-        </div>
-        <p className="text-sm font-semibold leading-5 text-gray-300">
-          Add indicators to your report and view them in various formats—
-          <span className="font-bold">map, table, chart, etc.</span>
-        </p>
-      </SidebarHeader>
-      <SidebarContent>
-        <ul className="flex flex-1 flex-col gap-2">
-          <SortableList
-            onChangeOrder={handleChangeOrder}
-            sortable={{ handle: true, enabled: true }}
-          >
-            {(items || topics).map((topic) => (
-              <TopicsReportItems key={topic.id} topic={topic} id={topic.id} />
-            ))}
-          </SortableList>
-        </ul>
-        <SidebarGroup />
-      </SidebarContent>
-      <SidebarFooter />
+    <Sidebar className="absolute -bottom-12 -top-12 w-96 bg-white">
+      <div className="sticky top-0 p-6">
+        <SidebarHeader>
+          <div className="flex w-full items-center justify-between">
+            <h3>Report indicators</h3>
+            <LuX className="h-4 w-4 cursor-pointer" onClick={handleReportEditionMode} />
+          </div>
+          <p className="text-sm font-semibold leading-5 text-gray-300">
+            Add indicators to your report and view them in various formats—
+            <span className="font-bold">map, table, chart, etc.</span>
+          </p>
+        </SidebarHeader>
+        <SidebarContent>
+          <ul className="flex flex-1 flex-col gap-2">
+            <SortableList
+              onChangeOrder={handleChangeOrder}
+              sortable={{ handle: true, enabled: true }}
+            >
+              {(items || topics).map((topic) => (
+                <TopicsReportItems key={topic.id} topic={topic} id={topic.id} />
+              ))}
+            </SortableList>
+          </ul>
+          <SidebarGroup />
+        </SidebarContent>
+        <SidebarFooter />
+      </div>
     </Sidebar>
   );
 }

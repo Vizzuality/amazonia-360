@@ -14,7 +14,7 @@ export default function IndicatorsReport() {
 
   return (
     <Button
-      className="space-x-2 hover:bg-primary/20"
+      className="space-x-2"
       onClick={() => {
         toggleSidebar();
         setReportEditionMode(!reportEditionMode);
@@ -22,7 +22,7 @@ export default function IndicatorsReport() {
       variant="outline"
     >
       <RxPencil1 className="h-5 w-5" />
-      <span>Report settings</span>
+      <span>Indicators</span>
     </Button>
   );
 }

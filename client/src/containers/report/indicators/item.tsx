@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo } from "react";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
+import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { LuChevronRight, LuGripVertical } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
@@ -14,6 +15,7 @@ import { DEFAULT_VISUALIZATION_SIZES, TOPICS, Topic } from "@/constants/topics";
 import { CounterIndicatorsPill } from "@/containers/report/indicators/counter-indicators-pill";
 
 import { Switch } from "@/components/ui/switch";
+import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { TopicsReportItem } from "./sidebar-topic-item";
 
@@ -79,11 +81,6 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
       : activeIndicators?.map(({ id }) => id);
   }, [activeIndicators, defaultIndicators]);
 
-  const totalIndicatorsPerTopic =
-    useMemo(() => {
-      return TOPICS.find(({ id }) => id === topic.id)?.indicators;
-    }, [topic.id]) || [];
-
   const handleResetTopic = useCallback(() => {
     setTopics(DEFAULT_TOPICS);
   }, [setTopics]);
@@ -97,7 +94,7 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
       })}
     >
       <Collapsible open={open}>
-        <div className="flex items-center space-x-4">
+        <div className={cn({ "flex items-center space-x-4 py-2": true, "pb-0": open })}>
           <CollapsibleTrigger
             className="flex w-full min-w-28 items-center justify-between text-sm"
             asChild
@@ -115,10 +112,7 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
 
                 <span className="whitespace flex-nowrap text-sm">{topic.label}</span>
 
-                <CounterIndicatorsPill
-                  activeIndicatorsLength={selectedIndicators?.length}
-                  totalIndicatorsLength={totalIndicatorsPerTopic.length}
-                />
+                <CounterIndicatorsPill activeIndicatorsLength={selectedIndicators?.length} />
               </div>
             </div>
           </CollapsibleTrigger>
@@ -130,7 +124,7 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
             className="h-4 w-8"
           />
         </div>
-        <CollapsibleContent className="pt-2">
+        <CollapsibleContent>
           <ul className="space-y-1 py-2 pl-6 text-sm font-medium">
             {topic?.indicators?.map((indicator) => (
               <li key={`${indicator.value}-${topic.id}`}>
@@ -138,13 +132,26 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
               </li>
             ))}
           </ul>
-          <button
-            type="button"
-            onClick={handleResetTopic}
-            className="w-full py-1 text-right text-xs font-semibold"
-          >
-            Reset topic
-          </button>
+          <div className="flex w-full justify-end">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  onClick={handleResetTopic}
+                  className="py-1 text-xs font-semibold"
+                >
+                  Reset topic
+                </button>
+              </TooltipTrigger>
+
+              <TooltipPortal>
+                <TooltipContent side="top" align="end">
+                  Clear all widgets and set’s the topic to it’s default view
+                  <TooltipArrow className="fill-foreground" width={10} height={5} />
+                </TooltipContent>
+              </TooltipPortal>
+            </Tooltip>
+          </div>
         </CollapsibleContent>
       </Collapsible>
     </li>

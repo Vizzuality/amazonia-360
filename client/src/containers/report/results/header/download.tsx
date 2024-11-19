@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 export default function DownloadReport() {
   return (
-    <Button variant="outline" className="hover:bg-primary/20" onClick={() => window.print()}>
+    <Button variant="outline" onClick={() => window.print()}>
       <Download className="h-5 w-5" />
     </Button>
   );

@@ -4,11 +4,8 @@ import { PropsWithChildren, MouseEvent } from "react";
 
 import Image from "next/image";
 
-import { PopoverArrow } from "@radix-ui/react-popover";
-import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { UseQueryResult } from "@tanstack/react-query";
-import { LuInfo, LuSettings2, LuTrash2 } from "react-icons/lu";
-import { RxPencil1 } from "react-icons/rx";
+import { LuInfo, LuSettings2 } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
@@ -17,7 +14,6 @@ import { DatasetIds } from "@/constants/datasets";
 import Info from "@/containers/info";
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -36,7 +32,7 @@ export function CardHeader({
 }
 
 export function CardTitle({ children }: PropsWithChildren) {
-  return <h2 className="text-base text-blue-600">{children}</h2>;
+  return <h2 className="text-base font-semibold text-blue-600">{children}</h2>;
 }
 
 export function CardContent({ className, children }: PropsWithChildren<{ className?: string }>) {
@@ -46,40 +42,25 @@ export function CardContent({ className, children }: PropsWithChildren<{ classNa
 export function CardSettings({
   id,
   onClick,
-}: PropsWithChildren<{ id?: string; onClick?: (e: MouseEvent<HTMLElement>) => void }>) {
+}: PropsWithChildren<{ id: string; onClick?: (e: MouseEvent<HTMLElement>) => void }>) {
   return (
-    <Popover>
-      <Tooltip delayDuration={100}>
-        <PopoverTrigger asChild>
-          <TooltipTrigger asChild>
-            <button id={id} type="button" className="text-base text-blue-600">
-              <LuSettings2 className="text-blue-600" />
-            </button>
-          </TooltipTrigger>
-        </PopoverTrigger>
+    <Tooltip delayDuration={100}>
+      <TooltipTrigger asChild>
+        <button
+          id={id}
+          type="button"
+          className="text-base font-semibold text-blue-600"
+          onClick={onClick}
+        >
+          <LuSettings2 className="text-blue-600" />
+        </button>
+      </TooltipTrigger>
 
-        <PopoverContent side="left" align="start" className="w-auto bg-background p-0">
-          <div className="flex flex-col p-2.5">
-            <button type="button" onClick={onClick} className="flex items-center space-x-2">
-              <RxPencil1 />
-              <span>Edit</span>
-            </button>
-            <button type="button" className="flex items-center space-x-2">
-              <LuTrash2 />
-              <span>Remove</span>
-            </button>
-          </div>
-          <PopoverArrow className="fill-background" width={10} height={5} />
-        </PopoverContent>
-
-        <TooltipPortal>
-          <TooltipContent side="left" align="center">
-            Edit indicator
-            <TooltipArrow className="fill-foreground" width={10} height={5} />
-          </TooltipContent>
-        </TooltipPortal>
-      </Tooltip>
-    </Popover>
+      <TooltipContent sideOffset={0}>
+        Edit indicator
+        <TooltipArrow />
+      </TooltipContent>
+    </Tooltip>
   );
 }
 

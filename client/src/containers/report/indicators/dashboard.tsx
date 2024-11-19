@@ -12,8 +12,10 @@ export const GridLayout: FC<ResponsiveProps> = ({
   rowHeight = 122,
   cols = { lg: 4, md: 4, sm: 1, xs: 1, xxs: 1 },
   children,
+  containerPadding = [0, 0],
   isDraggable = false,
   isResizable = false,
+  compactType = "horizontal",
   onDrop,
   onDragStop,
   onResizeStop,
@@ -23,7 +25,8 @@ export const GridLayout: FC<ResponsiveProps> = ({
       className={className}
       rowHeight={rowHeight}
       cols={cols}
-      compactType="horizontal"
+      containerPadding={containerPadding}
+      compactType={compactType}
       isDraggable={isDraggable}
       isResizable={isResizable}
       onDrop={onDrop}
