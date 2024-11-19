@@ -1,47 +1,48 @@
-import { cn } from "@/lib/utils";
+// import { GridstackItemComponent } from "@/lib/dynamic-grid/gridstack-item";
 
-import { TOPICS } from "@/constants/topics";
+// import { useSyncIndicators } from "@/app/store";
 
-import WidgetsColumn from "@/containers/widgets/column";
-import WidgetAltitude from "@/containers/widgets/environment/altitude";
-import WidgetBiomesByType from "@/containers/widgets/environment/biomes-by-type";
-import WidgetLandCoverByType from "@/containers/widgets/environment/land-cover-by-type";
-import WidgetsEnvironmentMap from "@/containers/widgets/environment/map";
-import WidgetEnvironmentSummary from "@/containers/widgets/environment/summary";
-import WidgetsRow from "@/containers/widgets/row";
+import {
+  TOPICS,
+  // DEFAULT_VISUALIZATION_SIZES, MIN_VISUALIZATION_SIZES
+} from "@/constants/topics";
 
-export default function WidgetsEnvironment({ index }: { index: number }) {
-  const T = TOPICS.find((t) => t.id === "natural-physical-environment");
+// import GridContainer from "@/containers/report/indicators/dashboard";
+// import WidgetLandCoverByType from "@/containers/widgets/environment/land-cover-by-type";
+// import WidgetsEnvironmentMap from "@/containers/widgets/environment/map";
+
+export default function WidgetsEnvironment() {
+  // const [indicators] = useSyncIndicators();
+  const T = TOPICS?.find(({ id }) => id === "nature");
+
+  // const indicatorsByTopic = indicators?.find(
+  //   ({ id }) => id === "natural-physical-environment",
+  // )?.indicators;
 
   return (
     <div className="container print:break-before-page">
-      <h2 className="mb-4 text-xl font-semibold">{T?.label}</h2>
-      <WidgetsRow>
-        <WidgetsColumn
-          className={cn(
-            "col-span-12 lg:col-span-6 print:col-span-12",
-            index % 2 !== 0 && "lg:order-2",
-          )}
-        >
-          <WidgetsRow>
-            <WidgetsColumn className="col-span-12">
-              <WidgetEnvironmentSummary />
-            </WidgetsColumn>
-            <WidgetsColumn className="col-span-12">
-              <WidgetAltitude />
-            </WidgetsColumn>
-            <WidgetsColumn className="col-span-12 flex h-full flex-col md:col-span-6">
-              <WidgetBiomesByType />
-            </WidgetsColumn>
-            <WidgetsColumn className="col-span-12 flex h-full flex-col md:col-span-6">
-              <WidgetLandCoverByType />
-            </WidgetsColumn>
-          </WidgetsRow>
-        </WidgetsColumn>
-        <WidgetsColumn className="col-span-12 lg:col-span-6">
-          <WidgetsEnvironmentMap />
-        </WidgetsColumn>
-      </WidgetsRow>
+      <h2 className="mb-4 text-xl">{T?.label}</h2>
+      {/* <GridContainer>
+        {indicatorsByTopic?.map(({ id, type, size }) => {
+          return (
+            <GridstackItemComponent
+              key={`${id}-${type}`}
+              id={`${id}-${type}`}
+              initOptions={{
+                autoPosition: true,
+                w: size[0] || DEFAULT_VISUALIZATION_SIZES[type][0],
+                h: size[1] || DEFAULT_VISUALIZATION_SIZES[type][1],
+                minH: MIN_VISUALIZATION_SIZES[type][0],
+                minW: MIN_VISUALIZATION_SIZES[type][1],
+              }}
+            >
+              {type === "map" && <WidgetsEnvironmentMap />}
+              {type === "chart" && <WidgetsEnvironmentMap />}
+              {type === "numeric" && <WidgetsEnvironmentMap />}
+            </GridstackItemComponent>
+          );
+        })}
+      </GridContainer> */}
     </div>
   );
 }

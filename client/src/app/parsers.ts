@@ -6,9 +6,33 @@ import {
   parseAsStringLiteral,
 } from "nuqs";
 
-import { TOPICS } from "@/constants/topics";
+import { DATASET_IDS, DatasetIds } from "@/constants/datasets";
 
-export const topicsParser = parseAsArrayOf(parseAsStringLiteral(TOPICS.map((topic) => topic.id)));
+import { VisualizationType } from "@/containers/report/visualization-types/types";
+
+export const datasetsParser = parseAsArrayOf(parseAsStringLiteral(DATASET_IDS)).withDefault([]);
+
+export type TopicsParsed = {
+  id: string | number;
+  visible?: boolean;
+  indicators: Indicator[] | undefined;
+};
+
+export type Indicator = {
+  id: DatasetIds | string | number;
+  type: VisualizationType;
+  w?: number;
+  h?: number;
+  x?: number;
+  y?: number;
+};
+
+export type Topics = {
+  id: string | number;
+  indicators: Indicator[];
+};
+
+export const topicsParser = parseAsArrayOf(parseAsJson<Topics>());
 
 export const bboxParser = parseAsArrayOf(parseAsFloat).withDefault([
   -12497583.775253754, -2540944.9326481596, -4391589.799669538, 1362846.9759313238,

@@ -10,8 +10,11 @@ import { locationParser } from "@/app/parsers";
 import { PageProps } from "@/app/types";
 
 import DataDisclaimer from "@/containers/disclaimers/data";
+import { TopicsSidebar } from "@/containers/report/indicators/sidebar";
 import ReportResultsContent from "@/containers/report/results/content";
 import ReportResultsHeader from "@/containers/report/results/header";
+
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 export const metadata: Metadata = {
   title: "Report | results",
@@ -45,10 +48,16 @@ export default async function ReportResultsPage({ searchParams }: PageProps<Para
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className="relative flex min-h-[calc(100svh_-_theme(space.40)_+_1px)] flex-col bg-blue-50 py-12 print:bg-white">
-        <ReportResultsHeader />
-
-        <ReportResultsContent />
+      <main className="relative bg-blue-50 py-12 print:bg-white">
+        <SidebarProvider>
+          <div className="w-full flex-col">
+            <ReportResultsHeader />
+            <ReportResultsContent />
+          </div>
+          <div className="relative">
+            <TopicsSidebar />
+          </div>
+        </SidebarProvider>
       </main>
       <DataDisclaimer />
     </HydrationBoundary>

@@ -218,6 +218,7 @@ export const DATASETS = {
       }),
   },
   tierras_indigenas: {
+    title: "Indigenous lands",
     layer: {
       id: "tierras_indigenas",
       title: "Indigenous lands",
@@ -421,6 +422,7 @@ export const DATASETS = {
       }),
   },
   areas_protegidas: {
+    title: "Protected areas",
     layer: {
       id: "areas_protegidas",
       title: "Protected areas",
@@ -527,6 +529,7 @@ export const DATASETS = {
       }),
   },
   idb_operations: {
+    title: "IDB funding Operations",
     layer: {
       id: "idb_operations",
       title: "IDB Operations",
@@ -768,3 +771,5 @@ export const DATASETS = {
 export const DATASET_IDS = getKeys(DATASETS);
 
 export type DatasetIds = keyof typeof DATASETS;
+
+export type Dataset = (typeof DATASETS)[DatasetIds];

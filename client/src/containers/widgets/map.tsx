@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, MouseEvent } from "react";
 
 import dynamic from "next/dynamic";
 
@@ -10,12 +10,11 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS, DatasetIds } from "@/constants/datasets";
 
-import { Card } from "@/containers/card";
+import { Card, CardControls, CardHeader, CardInfo, CardTitle } from "@/containers/card";
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
 
 import Controls from "@/components/map/controls";
 import FullscreenControl from "@/components/map/controls/fullscreen";
-import InfoControl from "@/components/map/controls/info";
 import ZoomControl from "@/components/map/controls/zoom";
 
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
@@ -23,6 +22,7 @@ const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
 interface WidgetMapProps extends __esri.MapViewProperties {
   ids: DatasetIds[];
+  onEditionMode?: (e: MouseEvent<HTMLElement>) => void;
 }
 
 export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
@@ -61,51 +61,60 @@ export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
 
   return (
     <div className="relative h-full print:h-96">
-      <Card className="h-full p-0">
-        <Map
-          id="overview"
-          {...(GEOMETRY?.extent && {
-            defaultBbox: [
-              GEOMETRY?.extent.xmin,
-              GEOMETRY?.extent.ymin,
-              GEOMETRY?.extent.xmax,
-              GEOMETRY?.extent.ymax,
-            ],
-            bbox: undefined,
-          })}
-          mapProps={{
-            basemap: undefined,
-          }}
-          viewProps={{
-            navigation: {
-              mouseWheelZoomEnabled: false,
-              browserTouchPanEnabled: false,
-            },
-            ...viewProps,
-          }}
-        >
-          <Layer layer={BASEMAP_LAYER} index={0} />
+      <Card className="p-0">
+        <CardHeader className="p-6">
+          <CardTitle>Map</CardTitle>
+          <CardControls>
+            <CardInfo ids={ids} />
+          </CardControls>
+        </CardHeader>
 
-          {LAYERS.map((layer, index, arr) => {
-            let i = arr.length - index;
+        <div className="relative h-full print:h-96">
+          <Map
+            id="overview"
+            {...(GEOMETRY?.extent && {
+              defaultBbox: [
+                GEOMETRY?.extent.xmin,
+                GEOMETRY?.extent.ymin,
+                GEOMETRY?.extent.xmax,
+                GEOMETRY?.extent.ymax,
+              ],
+              bbox: undefined,
+            })}
+            mapProps={{
+              basemap: undefined,
+            }}
+            viewProps={{
+              navigation: {
+                mouseWheelZoomEnabled: false,
+                browserTouchPanEnabled: false,
+              },
+              ...viewProps,
+            }}
+          >
+            <Layer layer={BASEMAP_LAYER} index={0} />
 
-            if (layer.type === "feature" && "customParameters" in layer) {
-              i = layer?.customParameters?.position === "top" ? arr.length + 3 : arr.length - index;
-            }
+            {LAYERS.map((layer, index, arr) => {
+              let i = arr.length - index;
 
-            return <Layer key={layer.id} layer={layer} index={i} GEOMETRY={GEOMETRY} />;
-          })}
+              if (layer.type === "feature" && "customParameters" in layer) {
+                i =
+                  layer?.customParameters?.position === "top" ? arr.length + 3 : arr.length - index;
+              }
 
-          <SelectedLayer index={LAYERS.length + 1} />
+              return <Layer key={layer.id} layer={layer} index={i} GEOMETRY={GEOMETRY} />;
+            })}
 
-          <Layer layer={LABELS_LAYER} index={LAYERS.length + 2} />
+            <SelectedLayer index={LAYERS.length + 1} />
 
-          <Controls>
-            <FullscreenControl />
-            <ZoomControl />
-            <InfoControl ids={ids} />
-          </Controls>
-        </Map>
+            <Layer layer={LABELS_LAYER} index={LAYERS.length + 2} />
+
+            <Controls>
+              <FullscreenControl />
+              <ZoomControl />
+            </Controls>
+          </Map>
+        </div>
       </Card>
     </div>
   );

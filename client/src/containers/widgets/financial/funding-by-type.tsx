@@ -12,7 +12,15 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
-import { Card, CardHeader, CardInfo, CardLoader, CardNoData, CardTitle } from "@/containers/card";
+import {
+  Card,
+  CardControls,
+  CardHeader,
+  CardInfo,
+  CardLoader,
+  CardNoData,
+  CardTitle,
+} from "@/containers/card";
 import LegendOrdinal from "@/containers/legend/ordinal";
 import { IDBOperation } from "@/containers/widgets/financial/types";
 
@@ -80,16 +88,19 @@ export default function WidgetFundingByType() {
     <Card className="grow">
       <CardHeader>
         <CardTitle>IDB funding by sector</CardTitle>
-        <CardInfo ids={["idb_operations"]} />
+        <CardControls>
+          <CardInfo ids={["idb_operations"]} />
+        </CardControls>
       </CardHeader>
 
       <CardLoader query={[query]} className="h-44">
         <CardNoData query={[query]}>
-          <div className="space-y-2 pt-2">
+          <div className="flex grow flex-col space-y-2 pt-2">
             <MarimekkoChart
               format={FORMAT}
               colorScale={ordinalColorScale}
               data={query.data || []}
+              className="h-full grow"
             />
 
             <LegendOrdinal ordinalColorScale={ordinalColorScale} />
