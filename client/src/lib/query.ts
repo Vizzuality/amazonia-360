@@ -5,6 +5,8 @@ import Query from "@arcgis/core/rest/support/Query";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
+import { omit } from "@/lib/utils";
+
 import { StatsOps } from "@/types/generated/api.schemas";
 import { exactZonalStatsExactZonalStatsPost } from "@/types/generated/raster";
 
@@ -19,7 +21,7 @@ import { DATASETS, DatasetIds } from "@/constants/datasets";
  */
 export type GetFeaturesParams = {
   query?: Query;
-  feature?: FeatureLayer;
+  feature?: Partial<__esri.FeatureLayer> | null;
 };
 export const getFeatures = async (params: GetFeaturesParams) => {
   const { feature, query } = params;
@@ -28,9 +30,10 @@ export const getFeatures = async (params: GetFeaturesParams) => {
     throw new Error("Feature and query are required");
   }
 
+  const f = new FeatureLayer(omit(feature, ["type"]));
   const q = query.clone();
 
-  return feature!.queryFeatures(q);
+  return f!.queryFeatures(q);
 };
 
 export const getFeaturesKey = (params: GetFeaturesParams) => {
@@ -91,7 +94,7 @@ export const getFeaturesId = async (params: GetFeaturesIdParams) => {
     throw new Error("Feature and query are required");
   }
 
-  const f = feature.clone();
+  const f = new FeatureLayer(omit(feature, ["type"]));
   const q = query.clone();
 
   q!.where = `FID = ${params.id}`;
@@ -181,7 +184,7 @@ export const getIntersectionAnalysis = async (params: GetIntersectionAnalysisPar
     })
     .clone();
 
-  const f = d.layer.clone();
+  const f = new FeatureLayer(omit(d.layer, ["type"]));
 
   try {
     const featureSet = await f.queryFeatures(q);

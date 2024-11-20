@@ -4,8 +4,6 @@ import { useMemo, MouseEvent } from "react";
 
 import dynamic from "next/dynamic";
 
-import ArcGISVectorTileLayer from "@arcgis/core/layers/VectorTileLayer";
-
 import { useLocationGeometry } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/store";
@@ -18,9 +16,9 @@ import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer"
 import Controls from "@/components/map/controls";
 import FullscreenControl from "@/components/map/controls/fullscreen";
 import ZoomControl from "@/components/map/controls/zoom";
-import Layer from "@/components/map/layers";
 
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
+const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
 interface WidgetMapProps extends __esri.MapViewProperties {
   ids: DatasetIds[];
@@ -34,21 +32,23 @@ export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
 
   // We need to create our custom basemap and labels layers because if we use the default ones the labels will be on top of all layers, even markers
   const BASEMAP_LAYER = useMemo(() => {
-    return new ArcGISVectorTileLayer({
+    return {
       id: "basemap",
+      type: "vector-tile" as const,
       url: "https://basemaps.arcgis.com/arcgis/rest/services/World_Basemap_v2/VectorTileServer",
       style:
         "https://www.arcgis.com/sharing/rest/content/items/291da5eab3a0412593b66d384379f89f/resources/styles/root.json",
-    });
+    };
   }, []);
 
   const LABELS_LAYER = useMemo(() => {
-    return new ArcGISVectorTileLayer({
+    return {
       id: "labels",
+      type: "vector-tile" as const,
       url: "https://basemaps.arcgis.com/arcgis/rest/services/World_Basemap_v2/VectorTileServer",
       style:
         "https://www.arcgis.com/sharing/rest/content/items/1768e8369a214dfab4e2167d5c5f2454/resources/styles/root.json",
-    });
+    };
   }, []);
 
   const LAYERS = useMemo(() => {
@@ -97,7 +97,7 @@ export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
             {LAYERS.map((layer, index, arr) => {
               let i = arr.length - index;
 
-              if (layer.type === "feature") {
+              if (layer.type === "feature" && "customParameters" in layer) {
                 i =
                   layer?.customParameters?.position === "top" ? arr.length + 3 : arr.length - index;
               }
@@ -105,7 +105,7 @@ export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
               return <Layer key={layer.id} layer={layer} index={i} GEOMETRY={GEOMETRY} />;
             })}
 
-            <SelectedLayer index={LAYERS.length + 1} />
+            <SelectedLayer index={LAYERS.length + 1} location={location} />
 
             <Layer layer={LABELS_LAYER} index={LAYERS.length + 2} />
 
