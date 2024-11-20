@@ -27,6 +27,17 @@ jest.mock("@arcgis/core/layers/GraphicsLayer", () => class GraphicsLayer {});
 jest.mock("@arcgis/core/layers/VectorTileLayer", () => class VectorTileLayer {});
 jest.mock("@arcgis/core/layers/GeoJSONLayer", () => class GeoJSONLayer {});
 jest.mock("@arcgis/core/layers/MapImageLayer", () => class MapImageLayer {});
+jest.mock("@arcgis/core/layers/ImageryTileLayer", () => class ImageryTileLayer {});
+
+// Layer support
+jest.mock("@arcgis/core/layers/support/FeatureFilter", () => class FeatureFilter {});
+jest.mock(
+  "@arcgis/core/layers/support/FeatureReductionCluster",
+  () => class FeatureReductionCluster {},
+);
+
+// Popup
+jest.mock("@arcgis/core/PopupTemplate", () => class PopupTemplate {});
 
 jest.mock("@arcgis/core/geometry/Point", () => class Point {});
 jest.mock(
@@ -55,6 +66,7 @@ jest.mock("@arcgis/core/renderers/UniqueValueRenderer", () => class UniqueValueR
 jest.mock("@arcgis/core/symbols/SimpleFillSymbol", () => class SimpleFillSymbol {});
 jest.mock("@arcgis/core/symbols/SimpleLineSymbol", () => class SimpleLineSymbol {});
 jest.mock("@arcgis/core/symbols/SimpleMarkerSymbol", () => class SimpleMarkerSymbol {});
+jest.mock("@arcgis/core/symbols/TextSymbol", () => class TextSymbol {});
 
 /****************
  * STORE

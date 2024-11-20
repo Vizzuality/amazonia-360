@@ -1,10 +1,11 @@
-import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import WebTileLayer from "@arcgis/core/layers/WebTileLayer";
+import FeatureReductionCluster from "@arcgis/core/layers/support/FeatureReductionCluster";
+import PopupTemplate from "@arcgis/core/PopupTemplate";
 import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer";
 import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
 import Query from "@arcgis/core/rest/support/Query";
 import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
 import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
+import TextSymbol from "@arcgis/core/symbols/TextSymbol";
 
 import { env } from "@/env.mjs";
 
@@ -20,15 +21,21 @@ import {
   FIRES_COLORMAP,
   INDIGENOUS_LANDS,
   LAND_COVER,
-  LAND_COVER_COLORMAP,
+  // LAND_COVER_COLORMAP,
   POPULATION,
   PROTECTED_AREAS,
 } from "@/constants/colors";
 
+export interface FeatureLayer extends __esri.FeatureLayerProperties {
+  type: "feature";
+  customParameters?: Record<"position", unknown>;
+}
+
 export const DATASETS = {
   admin0: {
-    layer: new FeatureLayer({
+    layer: {
       id: "admin0",
+      type: "feature",
       title: "Administrative boundaries (Adm0)",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM0/FeatureServer/0",
       renderer: new SimpleRenderer({
@@ -41,7 +48,7 @@ export const DATASETS = {
           },
         }),
       }),
-    }),
+    } satisfies FeatureLayer,
     legend: null,
     metadata: {
       type: "arcgis",
@@ -56,8 +63,9 @@ export const DATASETS = {
       }),
   },
   admin1: {
-    layer: new FeatureLayer({
+    layer: {
       id: "admin1",
+      type: "feature",
       title: "Administrative boundaries (Adm1)",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM1/FeatureServer/0",
       renderer: new SimpleRenderer({
@@ -70,7 +78,7 @@ export const DATASETS = {
           },
         }),
       }),
-    }),
+    } satisfies FeatureLayer,
     legend: null,
     metadata: {
       type: "arcgis",
@@ -85,9 +93,10 @@ export const DATASETS = {
       }),
   },
   admin2: {
-    layer: new FeatureLayer({
+    layer: {
       id: "admin2",
       title: "Administrative boundaries (Adm2)",
+      type: "feature",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM2/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({
@@ -99,7 +108,7 @@ export const DATASETS = {
           },
         }),
       }),
-    }),
+    } satisfies FeatureLayer,
     legend: null,
     metadata: {
       type: "arcgis",
@@ -114,9 +123,10 @@ export const DATASETS = {
       }),
   },
   area_afp: {
-    layer: new FeatureLayer({
+    layer: {
       id: "area_afp",
       title: "Límite del área AFP",
+      type: "feature",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_AREA_DE_TRABAJO_PANAMAZONIA/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({
@@ -128,7 +138,7 @@ export const DATASETS = {
           },
         }),
       }),
-    }),
+    } satisfies FeatureLayer,
     legend: null,
     metadata: null,
     getFeatures: (props?: __esri.QueryProperties) =>
@@ -139,9 +149,10 @@ export const DATASETS = {
       }),
   },
   ciudades_capitales: {
-    layer: new FeatureLayer({
+    layer: {
       id: "ciudades_capitales",
       title: "Capital cities",
+      type: "feature",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_CAPITALES_ADMIN/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleMarkerSymbol({
@@ -154,7 +165,7 @@ export const DATASETS = {
         }),
       }),
       popupEnabled: true,
-      popupTemplate: {
+      popupTemplate: new PopupTemplate({
         title: "{NOMBCAP}",
         content: [
           {
@@ -175,8 +186,8 @@ export const DATASETS = {
             ],
           },
         ],
-      },
-    }),
+      }),
+    } satisfies FeatureLayer,
     legend: null,
     metadata: {
       type: "arcgis",
@@ -191,11 +202,12 @@ export const DATASETS = {
       }),
   },
   frontera_internacional: {
-    layer: new FeatureLayer({
+    layer: {
       id: "frontera_internacional",
       title: "Vectores frontera internacional",
+      type: "feature",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/REFERENCIA_FRONTERA_INTERNACIONAL/FeatureServer/0",
-    }),
+    } satisfies FeatureLayer,
     legend: null,
     metadata: null,
     getFeatures: (props?: __esri.QueryProperties) =>
@@ -207,9 +219,10 @@ export const DATASETS = {
   },
   tierras_indigenas: {
     title: "Indigenous lands",
-    layer: new FeatureLayer({
+    layer: {
       id: "tierras_indigenas",
       title: "Indigenous lands",
+      type: "feature",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({
@@ -221,7 +234,7 @@ export const DATASETS = {
         }),
       }),
       popupEnabled: true,
-      popupTemplate: {
+      popupTemplate: new PopupTemplate({
         title: "{nombre}",
         content: [
           {
@@ -238,10 +251,10 @@ export const DATASETS = {
             ],
           },
         ],
-      },
-    }),
+      }),
+    } satisfies FeatureLayer,
     legend: {
-      type: "basic",
+      type: "basic" as const,
       items: getKeys(INDIGENOUS_LANDS).map((k) => ({
         id: k,
         label: INDIGENOUS_LANDS[k].label,
@@ -261,9 +274,10 @@ export const DATASETS = {
       }),
   },
   tipos_climaticos: {
-    layer: new FeatureLayer({
+    layer: {
       id: "tipos_climaticos",
       title: "Climate types (Köepen)",
+      type: "feature",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tipos_climaticos_KOEPEN/FeatureServer/0",
       renderer: new UniqueValueRenderer({
         field: "Field2",
@@ -286,12 +300,13 @@ export const DATASETS = {
         })),
       }),
       popupEnabled: true,
-      popupTemplate: {
+      popupTemplate: new PopupTemplate({
         title: "{Field3}",
-      },
-    }),
+        content: [],
+      }),
+    } satisfies FeatureLayer,
     legend: {
-      type: "basic",
+      type: "basic" as const,
       items: getKeys(CLIMATE_TYPES)
         .toSorted((a, b) => CLIMATE_TYPES[a].label.localeCompare(CLIMATE_TYPES[b].label))
         .map((k) => ({
@@ -313,9 +328,10 @@ export const DATASETS = {
       }),
   },
   biomas: {
-    layer: new FeatureLayer({
+    layer: {
       id: "biomas",
       title: "Biomes",
+      type: "feature",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Biomas/FeatureServer/0",
       maxScale: 0,
       renderer: new UniqueValueRenderer({
@@ -339,12 +355,12 @@ export const DATASETS = {
         })),
       }),
       popupEnabled: true,
-      popupTemplate: {
+      popupTemplate: new PopupTemplate({
         title: "{BIOMADES}",
-      },
-    }),
+      }),
+    } satisfies FeatureLayer,
     legend: {
-      type: "basic",
+      type: "basic" as const,
       items: getKeys(BIOMES)
         .toSorted((a, b) => BIOMES[a].label.localeCompare(BIOMES[b].label))
         .map((k) => ({
@@ -366,11 +382,12 @@ export const DATASETS = {
       }),
   },
   ecosistemas: {
-    layer: new FeatureLayer({
+    layer: {
       id: "ecosistemas",
       title: "Ecosistemas",
+      type: "feature",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Ecosistemas/FeatureServer/0",
-    }),
+    } satisfies FeatureLayer,
     legend: null,
     metadata: {
       type: "arcgis",
@@ -385,11 +402,12 @@ export const DATASETS = {
       }),
   },
   cuencas_hidrograficas: {
-    layer: new FeatureLayer({
+    layer: {
       id: "cuencas_hidrograficas",
       title: "Hydrographic basins",
+      type: "feature",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Grandes_cuencas_hidrograficas/FeatureServer/0",
-    }),
+    } satisfies FeatureLayer,
     legend: null,
     metadata: {
       type: "arcgis",
@@ -405,9 +423,10 @@ export const DATASETS = {
   },
   areas_protegidas: {
     title: "Protected areas",
-    layer: new FeatureLayer({
+    layer: {
       id: "areas_protegidas",
       title: "Protected areas",
+      type: "feature",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Areas_protegidas/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({
@@ -419,7 +438,7 @@ export const DATASETS = {
         }),
       }),
       popupEnabled: true,
-      popupTemplate: {
+      popupTemplate: new PopupTemplate({
         title: "{NAME}",
         content: [
           {
@@ -436,10 +455,10 @@ export const DATASETS = {
             ],
           },
         ],
-      },
-    }),
+      }),
+    } satisfies FeatureLayer,
     legend: {
-      type: "basic",
+      type: "basic" as const,
       items: getKeys(PROTECTED_AREAS).map((k) => ({
         id: k,
         label: PROTECTED_AREAS[k].label,
@@ -459,15 +478,15 @@ export const DATASETS = {
       }),
   },
   institutional_tracking: {
-    layer: new FeatureLayer({
+    layer: {
       id: "institutional_tracking",
       title: "Institutional Tracking",
+      type: "feature",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Institutional_Tracking/FeatureServer/0",
       customParameters: {
         position: "top",
       },
-      featureReduction: {
-        type: "cluster",
+      featureReduction: new FeatureReductionCluster({
         clusterMinSize: 16.5,
         labelingInfo: [
           {
@@ -475,17 +494,16 @@ export const DATASETS = {
             labelExpressionInfo: {
               expression: "Text($feature.cluster_count, '#,###')",
             },
-            symbol: {
-              type: "text",
+            symbol: new TextSymbol({
               color: "#FFFFFF",
               font: {
-                size: "12px",
+                size: 12,
               },
-            },
+            }),
             labelPlacement: "center-center",
-          },
+          } satisfies Partial<__esri.LabelClass>,
         ],
-      },
+      }) satisfies Partial<__esri.FeatureReductionClusterProperties>,
       renderer: new SimpleRenderer({
         symbol: new SimpleMarkerSymbol({
           color: "#004E70",
@@ -496,7 +514,7 @@ export const DATASETS = {
           },
         }),
       }),
-    }),
+    } satisfies FeatureLayer,
     legend: null,
     metadata: {
       type: "arcgis",
@@ -512,15 +530,15 @@ export const DATASETS = {
   },
   idb_operations: {
     title: "IDB funding Operations",
-    layer: new FeatureLayer({
+    layer: {
       id: "idb_operations",
       title: "IDB Operations",
+      type: "feature",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/IDB_Operations/FeatureServer/0",
       customParameters: {
         position: "top",
       },
-      featureReduction: {
-        type: "cluster",
+      featureReduction: new FeatureReductionCluster({
         clusterMinSize: 16.5,
         labelingInfo: [
           {
@@ -528,17 +546,16 @@ export const DATASETS = {
             labelExpressionInfo: {
               expression: "Text($feature.cluster_count, '#,###')",
             },
-            symbol: {
-              type: "text",
+            symbol: new TextSymbol({
               color: "#FFFFFF",
               font: {
                 size: "12px",
               },
-            },
+            }),
             labelPlacement: "center-center",
-          },
+          } satisfies Partial<__esri.LabelClass>,
         ],
-      },
+      }) satisfies Partial<__esri.FeatureReductionClusterProperties>,
       renderer: new SimpleRenderer({
         symbol: new SimpleMarkerSymbol({
           color: "#000000",
@@ -549,7 +566,7 @@ export const DATASETS = {
           },
         }),
       }),
-    }),
+    } satisfies FeatureLayer,
     legend: null,
     metadata: {
       type: "arcgis",
@@ -564,13 +581,14 @@ export const DATASETS = {
       }),
   },
   land_cover: {
-    layer: new WebTileLayer({
+    layer: {
       id: "land_cover",
+      type: "imagery-tile" as const,
       title: "Land cover",
-      urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=landcover_cog.tif&colormap=${encodeURIComponent(JSON.stringify(LAND_COVER_COLORMAP))}`,
-    }),
+      url: "https://iservices6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/landcover_cog/ImageServer",
+    },
     legend: {
-      type: "basic",
+      type: "basic" as const,
       items: getKeys(LAND_COVER)
         .toSorted((a, b) => LAND_COVER[a].label.localeCompare(LAND_COVER[b].label))
         .map((k) => ({
@@ -590,13 +608,14 @@ export const DATASETS = {
     },
   },
   elevation_ranges: {
-    layer: new WebTileLayer({
+    layer: {
       id: "elevation_ranges",
+      type: "web-tile" as const,
       title: "Elevation ranges",
       urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=elevation_ranges_cog.tif&colormap=${encodeURIComponent(JSON.stringify(ELEVATION_RANGES_COLORMAP))}`,
-    }),
+    },
     legend: {
-      type: "basic",
+      type: "basic" as const,
       items: getKeys(ELEVATION_RANGES).map((k) => ({
         id: k,
         label: ELEVATION_RANGES[k].label,
@@ -614,14 +633,15 @@ export const DATASETS = {
     },
   },
   fires: {
-    layer: new WebTileLayer({
+    layer: {
       id: "fires",
       title: "Fires",
+      type: "web-tile" as const,
       urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=fires_cog.tif&colormap=${encodeURIComponent(JSON.stringify(FIRES_COLORMAP))}`,
-    }),
+    },
 
     legend: {
-      type: "basic",
+      type: "basic" as const,
       items: getKeys(FIRES).map((k) => ({
         id: k,
         label: FIRES[k].label,
@@ -640,9 +660,10 @@ export const DATASETS = {
     },
   },
   population: {
-    layer: new WebTileLayer({
+    layer: {
       id: "population",
       title: "Global Human Settlement Layer (GHSL) - Population projection for 2025",
+      type: "web-tile" as const,
       urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=population_cog.tif&colormap=${encodeURIComponent(
         JSON.stringify([
           [
@@ -655,9 +676,9 @@ export const DATASETS = {
           ]),
         ]),
       )}`,
-    }),
+    },
     legend: {
-      type: "gradient",
+      type: "gradient" as const,
       items: getKeys(POPULATION).map((k, i, arr) => ({
         id: k,
         label: i === 0 || i === arr.length - 1 ? POPULATION[k].label : null,
@@ -680,9 +701,10 @@ export const DATASETS = {
     },
   },
   deprivation_index: {
-    layer: new WebTileLayer({
+    layer: {
       id: "deprivation_index",
       title: "Deprivation index",
+      type: "web-tile" as const,
       urlTemplate: `${env.NEXT_PUBLIC_API_URL}/tiles/WebMercatorQuad/{z}/{x}/{y}.png?raster_filename=deprivation_index_cog.tif&colormap=${encodeURIComponent(
         JSON.stringify([
           [
@@ -695,9 +717,9 @@ export const DATASETS = {
           ]),
         ]),
       )}`,
-    }),
+    },
     legend: {
-      type: "gradient",
+      type: "gradient" as const,
       items: getKeys(DEPRIVATION_INDEX).map((k, i, arr) => ({
         id: k,
         label: i === 0 || i === arr.length - 1 ? DEPRIVATION_INDEX[k].label : null,
@@ -715,9 +737,10 @@ export const DATASETS = {
     },
   },
   acu_knowledge: {
-    layer: new FeatureLayer({
+    layer: {
       id: "acu_knowledge",
       title: "ACU Knowledge",
+      type: "feature" as const,
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/ACU_KnowledgeDB/FeatureServer/0",
       renderer: new SimpleRenderer({
         symbol: new SimpleMarkerSymbol({
@@ -729,7 +752,7 @@ export const DATASETS = {
           },
         }),
       }),
-    }),
+    },
     legend: null,
     metadata: {
       type: "arcgis",
@@ -743,7 +766,7 @@ export const DATASETS = {
         ...props,
       }),
   },
-} as const;
+};
 
 export const DATASET_IDS = getKeys(DATASETS);
 

@@ -2,6 +2,8 @@
 
 import { useCallback, useMemo, useRef } from "react";
 
+import dynamic from "next/dynamic";
+
 import { DeckLayer } from "@deck.gl/arcgis";
 import { Accessor, Color } from "@deck.gl/core";
 import { DataFilterExtension, DataFilterExtensionProps } from "@deck.gl/extensions";
@@ -19,8 +21,9 @@ import { MultiDatasetMeta } from "@/types/generated/api.schemas";
 
 import { useSyncGridDatasets, useSyncGridFilters, useSyncLocation } from "@/app/store";
 
-import Layer from "@/components/map/layers";
 import H3TileLayer from "@/components/map/layers/h3-tile-layer";
+
+const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
 export const getGridLayerProps = ({
   gridDatasets,
