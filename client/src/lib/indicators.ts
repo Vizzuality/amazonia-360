@@ -67,6 +67,10 @@ export const useIndicatorsId = (id: Indicator["id"]) => {
 
 export type ResourceIdParams = {
   resource: ResourceFeature | ResourceImageryTile | ResourceWebTile;
+  session?: {
+    token?: string;
+    expires_in: number;
+  };
 };
 
 export type ResourceIdQueryOptions<TData, TError> = UseQueryOptions<
@@ -75,11 +79,12 @@ export type ResourceIdQueryOptions<TData, TError> = UseQueryOptions<
   TData
 >;
 
-export const getResourceId = async ({ resource }: ResourceIdParams) => {
+export const getResourceId = async ({ resource, session }: ResourceIdParams) => {
   return axios
     .get(resource.url, {
       params: {
         f: "json",
+        token: session?.token,
       },
     })
     .then((response) => response.data);
@@ -143,13 +148,12 @@ export const getQueryFeatureId = async ({ type, resource }: QueryFeatureIdParams
       spatialReference: { wkid: 102100 },
       rings: [
         [
-          [-7648399.591586382, -93947.23689839151],
-          [-7316127.829630809, -387962.2661972437],
-          [-7324918.087883603, -648001.0364233442],
-          [-7615550.778680836, -840813.4402726502],
-          [-7974116.878366503, -635656.4563552919],
-          [-8079466.212600519, -359451.25464688055],
-          [-7648399.591586382, -93947.23689839151],
+          [-7778710.517990138, -353320.67660269357],
+          [-7490667.131526064, -458345.1534664978],
+          [-7744070.212234159, -602491.0568694985],
+          [-7910545.282524961, -565935.0480921227],
+          [-7913172.805372263, -386694.9940776998],
+          [-7778710.517990138, -353320.67660269357],
         ],
       ],
     } as __esri.Polygon;
@@ -208,13 +212,12 @@ export const getQueryImageryTileId = async ({ resource }: QueryImageryTileIdPara
       spatialReference: { wkid: 102100 },
       rings: [
         [
-          [-7648399.591586382, -93947.23689839151],
-          [-7316127.829630809, -387962.2661972437],
-          [-7324918.087883603, -648001.0364233442],
-          [-7615550.778680836, -840813.4402726502],
-          [-7974116.878366503, -635656.4563552919],
-          [-8079466.212600519, -359451.25464688055],
-          [-7648399.591586382, -93947.23689839151],
+          [-7778710.517990138, -353320.67660269357],
+          [-7490667.131526064, -458345.1534664978],
+          [-7744070.212234159, -602491.0568694985],
+          [-7910545.282524961, -565935.0480921227],
+          [-7913172.805372263, -386694.9940776998],
+          [-7778710.517990138, -353320.67660269357],
         ],
       ],
     },

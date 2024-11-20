@@ -1,7 +1,7 @@
 import { session } from "@/actions/session";
 
 export async function GET() {
-  const data = await session({ refresh: false });
+  const data = await session({ refresh: true });
 
   return Response.json(data || {});
 }
