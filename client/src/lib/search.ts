@@ -1,4 +1,5 @@
 import * as projection from "@arcgis/core/geometry/projection";
+import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import SearchVM from "@arcgis/core/widgets/Search/SearchViewModel";
 import {
   MutationFunction,
@@ -8,6 +9,8 @@ import {
   useMutation,
   useQuery,
 } from "@tanstack/react-query";
+
+import { omit } from "@/lib/utils";
 
 import { DATASETS } from "@/constants/datasets";
 
@@ -30,7 +33,7 @@ const searchVM = new SearchVM({
     // },
     {
       name: "Admin1",
-      layer: DATASETS.admin1.layer,
+      layer: new FeatureLayer(omit(DATASETS.admin1.layer, ["type"])),
       searchFields: ["NAME_0", "NAME_1"],
       displayField: "COMPNAME",
       outFields: ["*"],
@@ -41,7 +44,7 @@ const searchVM = new SearchVM({
     },
     {
       name: "Admin2",
-      layer: DATASETS.admin2.layer,
+      layer: new FeatureLayer(omit(DATASETS.admin2.layer, ["type"])),
       searchFields: ["NAME_0", "NAME_1", "NAME_2"],
       displayField: "COMPNAME",
       outFields: ["*"],
@@ -52,7 +55,7 @@ const searchVM = new SearchVM({
     },
     {
       name: "Ciudades Capitales",
-      layer: DATASETS.ciudades_capitales.layer,
+      layer: new FeatureLayer(omit(DATASETS.ciudades_capitales.layer, ["type"])),
       searchFields: ["NOMBCAP", "NAME_0", "NAME_1", "NAME_2"],
       displayField: "COMPNAME",
       outFields: ["*"],

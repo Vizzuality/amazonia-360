@@ -42,7 +42,7 @@ export const ArcGISProvider = ({
     // Add token to the request interceptor
     const i = esriConfig.request.interceptors?.find((i) => {
       if (Array.isArray(i.urls)) {
-        return i.urls.includes("https://atlas.iadb.org");
+        return i.urls.includes("https://iservices6.arcgis.com");
       }
     });
 
@@ -54,7 +54,7 @@ export const ArcGISProvider = ({
 
     if (!i) {
       esriConfig.request.interceptors?.push({
-        urls: ["https://atlas.iadb.org"],
+        urls: ["https://iservices6.arcgis.com"],
         query: {
           token: sessionData?.token,
         },
