@@ -19,7 +19,7 @@ export default function Header() {
             <Image src="/IDB-logo.svg" alt="IDB" width={65} height={24} />
             <div className="space-x-2">
               <span className="text-sm font-medium">AmazoniaForever360+</span>
-              <Badge variant="secondary">Prototype</Badge>
+              <Badge variant="secondary">Beta</Badge>
             </div>
           </h1>
         </Link>

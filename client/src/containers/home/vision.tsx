@@ -10,8 +10,8 @@ export default function Vision() {
           </h3>
           <h2 className="pb-6 text-2xl text-blue-400 lg:text-4xl">AI-Powered on the horizon </h2>
           <p className="text-base font-normal text-blue-900 md:max-w-4xl lg:text-lg">
-            As AmazoniaForever360+ grows beyond this prototype, we are committed to enhancing your
-            experience. The next chapter will see a suite of AI features that will elevate your
+            As AmazoniaForever360+ grows beyond this beta version, we are committed to enhancing
+            your experience. The next chapter will see a suite of AI features that will elevate your
             search experience and understanding:
           </p>
         </div>

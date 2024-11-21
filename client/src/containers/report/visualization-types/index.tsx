@@ -1,6 +1,6 @@
 "use client";
 
-import { MapIcon, TableIcon, PieChart, Binary } from "lucide-react";
+import { MapIcon, TableIcon, PieChartIcon, HashIcon } from "lucide-react";
 
 import { useGetTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
@@ -73,8 +73,8 @@ export function VisualizationTypes({
             >
               {type === "map" && <MapIcon className="h-4 w-4" />}
               {type === "table" && <TableIcon className="h-4 w-4" />}
-              {type === "chart" && <PieChart className="h-4 w-4" />}
-              {type === "numeric" && <Binary className="h-4 w-4" />}
+              {type === "chart" && <PieChartIcon className="h-4 w-4" />}
+              {type === "numeric" && <HashIcon className="h-4 w-4" />}
               <span
                 className={cn({
                   "cursor-pointer p-1 text-xs font-semibold capitalize text-foreground transition-colors":

@@ -149,7 +149,7 @@
   {
     "id": "oil-mining-agriculture-energy",
     "label": "Oil, Mining, Agriculture, Energy",
-    "image": "/images/topics/oil-mining-agriculture-energy.png",
+    "image": "/images/topics/oil-mining-agriculture-energy.webp",
     "description": "Data on resources including oil, mining, and agricultural indicators.",
     "indicators": [
       {
@@ -206,7 +206,7 @@
   {
     "id": "finance-and-business",
     "label": "Finance and Business",
-    "image": "/images/topics/finance-and-business.png",
+    "image": "/images/topics/finance-and-business.webp",
     "description": "Economic and financial data, including GDP and banking locations.",
     "indicators": [
       {
@@ -242,7 +242,7 @@
   {
     "id": "infrastructure-urbanization",
     "label": "Infrastructure, Urbanization",
-    "image": "/images/topics/infrastructure-urbanization.png",
+    "image": "/images/topics/infrastructure-urbanization.webp",
     "description": "Data on infrastructure such as ports, airports, and road networks.",
     "indicators": [
       {
