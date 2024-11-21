@@ -6,9 +6,10 @@ import { cn } from "@/lib/utils";
 
 import { useSyncTopics } from "@/app/store";
 
-import { DEFAULT_VISUALIZATION_SIZES, Topic, TOPICS } from "@/constants/topics";
+import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
 
 import { VisualizationType } from "./types";
+import { useGetTopics } from "@/lib/topics";
 
 export function VisualizationTypes({
   types = ["map", "table", "chart", "numeric"],
@@ -20,6 +21,7 @@ export function VisualizationTypes({
   topicId: Topic["id"];
 }) {
   const [topics, setTopics] = useSyncTopics();
+  const { data: topicsData } = useGetTopics();
 
   const handleVisualizationType = (visualizationType: VisualizationType) => {
     const widgetSize = DEFAULT_VISUALIZATION_SIZES[visualizationType];
@@ -52,7 +54,7 @@ export function VisualizationTypes({
     setTopics(newTopics);
   };
 
-  const defaultVizualizations = TOPICS?.find(({ id }) => id === topicId)?.default_visualization;
+  const defaultVizualizations = topicsData?.find(({ id }) => id === topicId)?.default_visualization;
 
   const defaultVizualizationsPerIndicator = defaultVizualizations?.find(
     ({ id }) => id === indicatorId,

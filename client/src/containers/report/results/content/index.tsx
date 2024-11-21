@@ -7,10 +7,12 @@ import { Responsive, WidthProvider } from "react-grid-layout";
 
 import { useAtom } from "jotai";
 
+import { useGetTopics } from "@/lib/topics";
+
 import { Topics, TopicsParsed } from "@/app/parsers";
 import { indicatorsEditionModeAtom, reportEditionModeAtom, useSyncTopics } from "@/app/store";
 
-import { DEFAULT_VISUALIZATION_SIZES, MIN_VISUALIZATION_SIZES, TOPICS } from "@/constants/topics";
+import { DEFAULT_VISUALIZATION_SIZES, MIN_VISUALIZATION_SIZES } from "@/constants/topics";
 
 import DeleteHandler from "@/containers/report/indicators/controls/delete";
 import MoveHandler from "@/containers/report/indicators/controls/drag";
@@ -40,6 +42,8 @@ export default function ReportResultsContent() {
   const [topics, setTopics] = useSyncTopics();
   const [editionModeIndicator, setEditionModeIndicator] = useAtom(indicatorsEditionModeAtom);
   const [reportEditionMode] = useAtom(reportEditionModeAtom);
+
+  const { data: topicsData, isLoading: isLoadingTopicsData } = useGetTopics();
 
   const topicsDashboard = topics?.sort((a, b) => {
     if (!topics) return 0;
@@ -128,12 +132,13 @@ export default function ReportResultsContent() {
       {/* OVERVIEW */}
       <WidgetsOverview />
 
-      {/* TOPICS DASHBOARD */}
+      {/* topicsData DASHBOARD */}
 
       {/* TO - DO - change topic dashboard (pass this to that component)*/}
       <div className="space-y-20">
         {topicsDashboard?.map((topic) => {
-          const selectedTopic = TOPICS.find((t) => t.id === topic.id);
+          const selectedTopic = topicsData?.find((t) => t.id === topic.id);
+          if (isLoadingTopicsData) return null;
           return (
             <div key={topic.id} className="container relative print:break-before-page">
               <h2 className="mb-4 text-xl font-semibold">{selectedTopic?.label}</h2>
@@ -156,10 +161,10 @@ export default function ReportResultsContent() {
                   const dataGridConfig = {
                     x: x ?? 0,
                     y: y ?? 0,
-                    w: w ?? DEFAULT_VISUALIZATION_SIZES[type].w,
-                    h: h ?? DEFAULT_VISUALIZATION_SIZES[type].h,
-                    minW: MIN_VISUALIZATION_SIZES[type].w,
-                    minH: MIN_VISUALIZATION_SIZES[type].h,
+                    w: w ?? DEFAULT_VISUALIZATION_SIZES[type]?.w,
+                    h: h ?? DEFAULT_VISUALIZATION_SIZES[type]?.h,
+                    minW: MIN_VISUALIZATION_SIZES[type]?.w,
+                    minH: MIN_VISUALIZATION_SIZES[type]?.h,
                   };
 
                   return (

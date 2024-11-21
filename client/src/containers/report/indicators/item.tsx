@@ -6,11 +6,12 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/r
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { LuChevronRight, LuGripVertical } from "react-icons/lu";
 
+import { useGetTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { useSyncTopics } from "@/app/store";
 
-import { DEFAULT_VISUALIZATION_SIZES, TOPICS, Topic } from "@/constants/topics";
+import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
 
 import { CounterIndicatorsPill } from "@/containers/report/indicators/counter-indicators-pill";
 
@@ -19,31 +20,16 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/compone
 
 import { TopicsReportItem } from "./sidebar-topic-item";
 
-const DEFAULT_TOPICS = TOPICS.map((topic) => {
-  return {
-    id: topic.id,
-    indicators: topic.default_visualization?.map((indicator) => {
-      return {
-        id: indicator.id,
-        type: indicator.type,
-        x: indicator?.x ?? 0,
-        y: indicator?.y ?? 0,
-        w: indicator?.w ?? DEFAULT_VISUALIZATION_SIZES[indicator?.type].w,
-        h: indicator?.h ?? DEFAULT_VISUALIZATION_SIZES[indicator?.type].h,
-      };
-    }),
-  };
-});
-
-export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
+export function TopicsReportItems({ topic, id }: { topic: Topic; id: string | number }) {
   const [topics, setTopics] = useSyncTopics();
   const [open, setOpen] = useState(false);
+
+  const { data: topicsData } = useGetTopics();
 
   const handleTopic = useCallback(
     (topic: Topic, isChecked: boolean) => {
       setTopics((prevTopics) => {
         if (isChecked) {
-          // TO DO - save indicators selection in store to be able to recover them after toggling (maybe visible/hidden to topic)
           const newTopic = {
             id: topic.id,
             indicators: topic.default_visualization?.map((indicator) => {
@@ -76,18 +62,21 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
 
   const handleResetTopic = useCallback(() => {
     setTopics((prevTopics) => {
-      const D = DEFAULT_TOPICS.find((t) => t.id === topic.id);
-      if (!prevTopics) return [];
+      const updatedTopic = topics?.find((t) => t.id === topic.id);
+      if (!prevTopics || !updatedTopic) return prevTopics ?? [];
 
-      if (!D) return prevTopics;
+      const index = prevTopics.findIndex((t) => t.id === topic.id);
+      if (index === -1) return prevTopics;
 
-      const i = prevTopics?.findIndex((t) => t.id === topic.id);
+      const updatedTopics = [...prevTopics];
+      updatedTopics[index] = {
+        ...prevTopics[index],
+        ...updatedTopic,
+      };
 
-      prevTopics.slice(i);
-
-      return [...prevTopics.slice(0, i), D, ...prevTopics.slice(i + 1)];
+      return updatedTopics;
     });
-  }, [topic.id, setTopics]);
+  }, [topic.id, setTopics, topicsData, topics]);
 
   return (
     <li
@@ -125,7 +114,7 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
           <Switch
             checked={!!topics?.find((t) => t.id === topic.id)}
             onCheckedChange={(e) => handleTopic(topic, e)}
-            id={topic.id}
+            id={topic.id as string}
             value={topic.id}
             className="h-4 w-8"
           />

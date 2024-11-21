@@ -1,10 +1,11 @@
 "use client";
 
+import { useGetTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { useSyncTopics } from "@/app/store";
 
-import { DEFAULT_VISUALIZATION_SIZES, TOPICS, Topic } from "@/constants/topics";
+import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
 
 import TopicsItem from "@/containers/report/topics/item";
 
@@ -15,6 +16,7 @@ export interface TopicsProps {
 
 export default function Topics({ interactive = true, size = "md" }: TopicsProps) {
   const [topics, setTopics] = useSyncTopics();
+  const { data: topicsData } = useGetTopics();
   const handleTopicChange = (topic: Topic, checked: boolean) => {
     if (checked) {
       setTopics((prev) => {
@@ -47,7 +49,7 @@ export default function Topics({ interactive = true, size = "md" }: TopicsProps)
     <section className="md:space-y-6">
       <div className={cn({ container: interactive })}>
         <div className="flex flex-col gap-4 lg:flex-row">
-          {TOPICS.map((topic) => {
+          {topicsData?.map((topic) => {
             const isChecked = !!topics?.find(({ id }) => id === topic.id);
 
             return (

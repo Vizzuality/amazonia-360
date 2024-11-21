@@ -6,11 +6,12 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/r
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { LuChevronRight, LuPlus, LuInfo } from "react-icons/lu";
 
+import { useGetTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { useSyncTopics } from "@/app/store";
 
-import { Topic, TOPICS } from "@/constants/topics";
+import { Topic } from "@/constants/topics";
 
 import { VisualizationTypes } from "@/containers/report/visualization-types";
 
@@ -36,6 +37,7 @@ export function TopicsReportItem({
   const [open, setOpen] = useState(true);
 
   const [topics] = useSyncTopics();
+  const { data: topicsData } = useGetTopics();
 
   const selectedTopicIndicators = topics?.find(({ id }) => id === topic.id)?.indicators;
   const selectedIndicator = selectedTopicIndicators?.find(({ id }) => id === indicator.value);
@@ -75,7 +77,7 @@ export function TopicsReportItem({
                 </TooltipTrigger>
 
                 <DialogContent className="p-0">
-                  <p>{TOPICS.find(({ id }) => topic.id === id)?.description}</p>
+                  <p>{topicsData?.find(({ id }) => topic.id === id)?.description}</p>
                 </DialogContent>
 
                 <TooltipPortal>

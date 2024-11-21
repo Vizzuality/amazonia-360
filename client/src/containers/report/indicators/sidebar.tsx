@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import { useAtom } from "jotai";
 import { LuX } from "react-icons/lu";
 
+import { useGetTopics } from "@/lib/topics";
+
 import { useSyncTopics, reportEditionModeAtom } from "@/app/store";
 
-import { TOPICS, Topic, TopicsParsed } from "@/constants/topics";
+import { Topic, TopicsParsed } from "@/constants/topics";
 
 import { TopicsReportItems } from "@/containers/report/indicators/item";
 import SortableList from "@/containers/report/sortable/list";
@@ -20,12 +22,15 @@ import {
   SidebarHeader,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function TopicsSidebar() {
   const { toggleSidebar } = useSidebar();
   const [topics, setTopics] = useSyncTopics();
   const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
-  const [items, setItems] = useState<Topic[]>(TOPICS);
+  const [items, setItems] = useState<Topic[]>([]);
+
+  const { data: topicsData, isLoading } = useGetTopics();
 
   const handleReportEditionMode = useCallback(() => {
     toggleSidebar();
@@ -35,25 +40,24 @@ export function TopicsSidebar() {
   const handleChangeOrder = useCallback(
     (order: string[]) => {
       const newOrderSidebar = order
-        .map((id) => TOPICS.find((l) => l.id === id))
+        .map((id) => topicsData?.find((l) => l.id === id))
         .filter((topic) => topic !== undefined) as Topic[];
 
       const newOrder = order
         .map((id) => topics?.find((l) => l.id === id))
         .filter((topic) => topic !== undefined) as TopicsParsed[];
 
-      setItems(newOrderSidebar);
       const newOrderReport = newOrder
         .map((topic) => ({
           id: topic.id,
           indicators: topic?.indicators || [],
         }))
         .filter((topic) => !!topic.indicators);
-
+      setItems(newOrderSidebar);
       setTopics(newOrderReport);
     },
 
-    [setItems, setTopics, topics],
+    [setTopics, topics, topicsData],
   );
 
   return (
@@ -75,9 +79,12 @@ export function TopicsSidebar() {
               onChangeOrder={handleChangeOrder}
               sortable={{ handle: true, enabled: true }}
             >
-              {(items || topics).map((topic) => (
-                <TopicsReportItems key={topic.id} topic={topic} id={topic.id} />
-              ))}
+              {isLoading &&
+                [, , ,].map((index) => <Skeleton key={index} className="h-32 w-full" />)}
+              {!isLoading &&
+                (items.length ? items : topicsData)?.map((topic) => (
+                  <TopicsReportItems key={topic.id} topic={topic} id={topic.id} />
+                ))}
             </SortableList>
           </ul>
           <SidebarGroup />

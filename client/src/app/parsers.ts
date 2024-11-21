@@ -6,7 +6,7 @@ import {
   parseAsStringLiteral,
 } from "nuqs";
 
-import { DATASET_IDS, DatasetIds } from "@/constants/datasets";
+import { DATASET_IDS } from "@/constants/datasets";
 
 import { VisualizationType } from "@/containers/report/visualization-types/types";
 
@@ -19,7 +19,7 @@ export type TopicsParsed = {
 };
 
 export type Indicator = {
-  id: DatasetIds | string | number;
+  id: string | number;
   type: VisualizationType;
   w?: number;
   h?: number;

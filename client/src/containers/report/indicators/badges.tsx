@@ -4,7 +4,13 @@ import { useSyncTopics } from "@/app/store";
 
 import { Badge } from "@/components/ui/badge";
 
-export function Badges({ topicId, indicatorId }: { topicId: string; indicatorId: string }) {
+export function Badges({
+  topicId,
+  indicatorId,
+}: {
+  topicId: string | number;
+  indicatorId: string | number;
+}) {
   const [indicators, setIndicators] = useSyncTopics();
 
   const topic = indicators?.find(({ id }) => id === topicId);

@@ -2,10 +2,7 @@
 
 // import { useSyncIndicators } from "@/app/store";
 
-import {
-  TOPICS,
-  // DEFAULT_VISUALIZATION_SIZES, MIN_VISUALIZATION_SIZES
-} from "@/constants/topics";
+import { useGetTopics } from "@/lib/topics";
 
 // import GridContainer from "@/containers/report/indicators/dashboard";
 // import WidgetLandCoverByType from "@/containers/widgets/environment/land-cover-by-type";
@@ -13,7 +10,8 @@ import {
 
 export default function WidgetsEnvironment() {
   // const [indicators] = useSyncIndicators();
-  const T = TOPICS?.find(({ id }) => id === "nature");
+  const { data: topicsData } = useGetTopics();
+  const T = topicsData?.find(({ id }) => id === "nature");
 
   // const indicatorsByTopic = indicators?.find(
   //   ({ id }) => id === "natural-physical-environment",

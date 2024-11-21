@@ -1,8 +1,7 @@
 "use client";
 
+import { useGetTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
-
-import { TOPICS } from "@/constants/topics";
 
 import WidgetsColumn from "@/containers/widgets/column";
 import WidgetForestFires from "@/containers/widgets/protection/forest-fires";
@@ -12,7 +11,8 @@ import WidgetProtectedAreas from "@/containers/widgets/protection/protected-area
 import WidgetsRow from "@/containers/widgets/row";
 
 export default function WidgetsProtection({ index }: { index: number }) {
-  const T = TOPICS.find((t) => t.id === "oil-mining-agriculture-energy");
+  const { data: topicsData } = useGetTopics();
+  const T = topicsData?.find((t) => t.id === "oil-mining-agriculture-energy");
 
   return (
     <div className="container print:break-before-page">
