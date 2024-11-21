@@ -78,6 +78,13 @@ export default function Layer({
 
       map.reorder(l, index);
     }
+
+    if ("deck" in layer) {
+      const l = layer as unknown as __esri.Layer;
+      map.add(l, index);
+
+      map.reorder(l, index);
+    }
   }, [id, index, layer, GEOMETRY, mapInstance]);
 
   useEffect(() => {
