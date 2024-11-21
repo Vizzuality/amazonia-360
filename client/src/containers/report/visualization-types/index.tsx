@@ -2,6 +2,7 @@
 
 import { MapIcon, TableIcon, PieChart, Binary } from "lucide-react";
 
+import { useGetTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { useSyncTopics } from "@/app/store";
@@ -9,7 +10,6 @@ import { useSyncTopics } from "@/app/store";
 import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
 
 import { VisualizationType } from "./types";
-import { useGetTopics } from "@/lib/topics";
 
 export function VisualizationTypes({
   types = ["map", "table", "chart", "numeric"],

@@ -6,7 +6,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/r
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { LuChevronRight, LuGripVertical } from "react-icons/lu";
 
-import { useGetTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { useSyncTopics } from "@/app/store";
@@ -23,8 +22,6 @@ import { TopicsReportItem } from "./sidebar-topic-item";
 export function TopicsReportItems({ topic, id }: { topic: Topic; id: string | number }) {
   const [topics, setTopics] = useSyncTopics();
   const [open, setOpen] = useState(false);
-
-  const { data: topicsData } = useGetTopics();
 
   const handleTopic = useCallback(
     (topic: Topic, isChecked: boolean) => {
@@ -76,7 +73,7 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string | nu
 
       return updatedTopics;
     });
-  }, [topic.id, setTopics, topicsData, topics]);
+  }, [topic.id, setTopics, topics]);
 
   return (
     <li
