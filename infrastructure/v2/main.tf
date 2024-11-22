@@ -72,10 +72,13 @@ resource "aws_iam_service_linked_role" "elasticbeanstalk" {
 
 module "dev" {
   source                                        = "./modules/env"
+  providers = {
+    aws = aws.dev
+  }
+
   domain                                        = "dev.amazonia360.dev-vizzuality.com"
   project                                       = var.project_name
   environment                                   = "develop"
-  aws_profile                                   = var.aws_profile
   aws_region                                    = var.dev.aws_region
   beanstalk_platform                            = "64bit Amazon Linux 2023 v4.4.1 running Docker"
   beanstalk_tier                                = "WebServer"
@@ -110,42 +113,45 @@ module "dev" {
   }
 }
 
-module "prod" {
-  source                                        = "./modules/env"
-  domain                                        = "prod.amazonia360.dev-vizzuality.com"
-  project                                       = var.project_name
-  environment                                   = "production"
-  aws_profile                                   = var.aws_profile
-  aws_region                                    = var.prod.aws_region
-  beanstalk_platform                            = "64bit Amazon Linux 2023 v4.4.1 running Docker"
-  beanstalk_tier                                = "WebServer"
-  ec2_instance_type                             = "t3.medium"
-  elasticbeanstalk_iam_service_linked_role_name = aws_iam_service_linked_role.elasticbeanstalk.name
-  repo_name                                     = var.repo_name
-  cname_prefix                                  = "amazonia360-prod-environment"
-  github_owner = var.github_owner
-  github_token = var.github_token
-  github_additional_environment_variables = {
-    TF_AWS_REGION   = var.prod.aws_region
+# module "prod" {
+#   source                                        = "./modules/env"
+#   providers = {
+#     aws = aws.prod
+#   }
 
-    # API
-    TF_API_TIFF_PATH                       = var.prod.api.tiff_path
-    TF_API_GRID_TILES_PATH                 = var.prod.api.grid_tiles_path
+#   domain                                        = "prod.amazonia360.dev-vizzuality.com"
+#   project                                       = var.project_name
+#   environment                                   = "production"
+#   aws_region                                    = var.prod.aws_region
+#   beanstalk_platform                            = "64bit Amazon Linux 2023 v4.4.1 running Docker"
+#   beanstalk_tier                                = "WebServer"
+#   ec2_instance_type                             = "t3.medium"
+#   elasticbeanstalk_iam_service_linked_role_name = aws_iam_service_linked_role.elasticbeanstalk.name
+#   repo_name                                     = var.repo_name
+#   cname_prefix                                  = "amazonia360-prod-environment"
+#   github_owner = var.github_owner
+#   github_token = var.github_token
+#   github_additional_environment_variables = {
+#     TF_AWS_REGION   = var.prod.aws_region
 
-    # Client
-    TF_CLIENT_NEXT_PUBLIC_API_URL = var.prod.client.next_public_api_url
-  }
-  github_additional_environment_secrets = {
-    # API
-    TF_API_AUTH_TOKEN = var.prod.api.auth_token
+#     # API
+#     TF_API_TIFF_PATH                       = var.prod.api.tiff_path
+#     TF_API_GRID_TILES_PATH                 = var.prod.api.grid_tiles_path
 
-    # Client
-    TF_CLIENT_NEXT_PUBLIC_API_KEY = var.prod.client.next_public_api_key
-    TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.prod.client.next_public_arcgis_api_key
-    TF_CLIENT_ARCGIS_CLIENT_ID = var.prod.client.arcgis_client_id
-    TF_CLIENT_ARCGIS_CLIENT_SECRET = var.prod.client.arcgis_client_secret
-    TF_CLIENT_BASIC_AUTH_USER = var.prod.client.basic_auth_user
-    TF_CLIENT_BASIC_AUTH_PASSWORD = var.prod.client.basic_auth_password
-    TF_CLIENT_SESSION_SECRET = var.prod.client.session_secret
-  }
-}
+#     # Client
+#     TF_CLIENT_NEXT_PUBLIC_API_URL = var.prod.client.next_public_api_url
+#   }
+#   github_additional_environment_secrets = {
+#     # API
+#     TF_API_AUTH_TOKEN = var.prod.api.auth_token
+
+#     # Client
+#     TF_CLIENT_NEXT_PUBLIC_API_KEY = var.prod.client.next_public_api_key
+#     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.prod.client.next_public_arcgis_api_key
+#     TF_CLIENT_ARCGIS_CLIENT_ID = var.prod.client.arcgis_client_id
+#     TF_CLIENT_ARCGIS_CLIENT_SECRET = var.prod.client.arcgis_client_secret
+#     TF_CLIENT_BASIC_AUTH_USER = var.prod.client.basic_auth_user
+#     TF_CLIENT_BASIC_AUTH_PASSWORD = var.prod.client.basic_auth_password
+#     TF_CLIENT_SESSION_SECRET = var.prod.client.session_secret
+#   }
+# }
