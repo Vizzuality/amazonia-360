@@ -20,7 +20,7 @@ from h3ronpy.polars.vector import geometry_to_cells
 from pydantic import ValidationError
 
 from app.config.config import get_settings
-from app.models.grid import MultiDatasetMeta, TableFilters, TableResults
+from app.models.grid import MultiDatasetMeta, TableFilters, TableResultColumn, TableResults
 
 log = logging.getLogger("uvicorn.error")  # Show the logs in the uvicorn runner logs
 
@@ -36,7 +36,9 @@ class ArrowIPCResponse(Response):  # noqa: D101
     media_type = "application/octet-stream"
 
 
-def get_tile(tile_index: str, columns: list[str]) -> tuple[pl.LazyFrame, int]:
+def get_tile(
+    tile_index: Annotated[str, Path(description="The `h3` index of the tile")], columns: list[str]
+) -> tuple[pl.LazyFrame, int]:
     """Get the tile from filesystem filtered by column and the resolution of the tile index"""
     try:
         z = h3.api.basic_str.h3_get_resolution(tile_index)
@@ -66,14 +68,13 @@ def polars_to_string_ipc(df: pl.DataFrame) -> bytes:
     # a custom string type. As of today, the frontend library @loadrs.gl/arrow only supports
     # `string` type so we need to downcast with pyarrow
     table: pa.Table = df.to_arrow()
-
-    schema = table.schema
-    schema = schema.set(schema.get_field_index("cell"), pa.field("cell", pa.string()))
+    schema = table.schema.set(table.schema.get_field_index("cell"), pa.field("cell", pa.string()))
     table = table.cast(schema)
     sink = io.BytesIO()
     with pa.ipc.new_file(sink, table.schema) as writer:
         writer.write_table(table)
     return sink.getvalue()
+
 
 @grid_router.get(
     "/tile/{tile_index}",
@@ -176,5 +177,7 @@ def read_table(
     except pl.exceptions.ComputeError as e:  # raised if wrong type in compare.
         log.exception(e)
         raise HTTPException(status_code=422, detail=str(e)) from None
-
-    return TableResults(table=[{"column": k, "values": v} for k, v in res.to_dict(as_series=False).items()])
+    columns = res.to_dict(as_series=False)
+    table = [TableResultColumn(column=k, values=v) for k, v in columns.items() if k != "cell"]
+    cells = columns["cell"]
+    return TableResults(table=table, cells=cells)

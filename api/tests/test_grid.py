@@ -222,10 +222,10 @@ def test_grid_table(grid_dataset):
     assert response.status_code == 200
     assert json.loads(response.read()) == {
         "table": [
-            {"column": "cell", "values": ["865f00007ffffff", "895f4261e03ffff"]},
             {"column": "landcover", "values": [4, 1]},
             {"column": "population", "values": [200, 100]},
-        ]
+        ],
+        "cells": ["865f00007ffffff", "895f4261e03ffff"],
     }
 
 
@@ -241,10 +241,10 @@ def test_grid_table_geojson(grid_dataset, geojson):
     assert response.status_code == 200
     assert json.loads(response.read()) == {
         "table": [
-            {"column": "cell", "values": ["895f4261e03ffff"]},
             {"column": "landcover", "values": [1]},
             {"column": "population", "values": [100]},
-        ]
+        ],
+        "cells": ["895f4261e03ffff"],
     }
 
 

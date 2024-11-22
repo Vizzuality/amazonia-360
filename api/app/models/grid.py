@@ -4,7 +4,7 @@ from enum import Enum
 from typing import Annotated, Literal
 
 from fastapi import Query
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 from pydantic_extra_types.color import Color
 from sqlalchemy.sql import column, desc, nullslast, select, table
 
@@ -138,6 +138,9 @@ class TableFilters(BaseModel):
         return str(query.compile(compile_kwargs={"literal_binds": True}))
 
 
+H3Index = Annotated[str, Field(description="H3 cell index", examples=["81a8fffffffffff"])]
+
+
 class TableResultColumn(BaseModel):
     column: Annotated[str, Field(title="column", description="Column name")]
     values: Annotated[list, Field(description="Check dataset metadata for type info")]
@@ -145,3 +148,4 @@ class TableResultColumn(BaseModel):
 
 class TableResults(BaseModel):
     table: list[TableResultColumn]
+    cells: list[H3Index]
