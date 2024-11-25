@@ -20,7 +20,7 @@ type TopicsItemProps = Topic & {
 
 export default function TopicsItem({
   id,
-  label,
+  name,
   image,
   size,
   interactive,
@@ -57,7 +57,7 @@ export default function TopicsItem({
       >
         <Image
           src={image}
-          alt={label}
+          alt={name}
           priority
           fill
           sizes="100%"
@@ -94,7 +94,7 @@ export default function TopicsItem({
           )}
         >
           <div className="relative z-10">
-            <h3 className="text-sm font-bold">{label}</h3>
+            <h3 className="text-sm font-bold">{name}</h3>
 
             <div
               ref={descriptionRef}

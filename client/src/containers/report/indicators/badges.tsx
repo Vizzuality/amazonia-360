@@ -4,17 +4,11 @@ import { useSyncTopics } from "@/app/store";
 
 import { Badge } from "@/components/ui/badge";
 
-export function Badges({
-  topicId,
-  indicatorId,
-}: {
-  topicId: string | number;
-  indicatorId: string | number;
-}) {
+export function Badges({ topicId, indicatorId }: { topicId: number; indicatorId: number }) {
   const [indicators, setIndicators] = useSyncTopics();
 
   const topic = indicators?.find(({ id }) => id === topicId);
-  const indicatorsDisplay = topic?.indicators.filter(({ id }) => indicatorId === id);
+  const indicatorsDisplay = topic?.indicators?.filter(({ id }) => indicatorId === id);
 
   const handleClick = () => {
     setIndicators((prevIndicators) => {
@@ -23,7 +17,7 @@ export function Badges({
       const topicIndex = newIndicators.findIndex((topic) => topic.id === topicId);
 
       if (topicIndex >= 0) {
-        const indicatorsArray = [...newIndicators[topicIndex].indicators];
+        const indicatorsArray = [...(newIndicators[topicIndex].indicators || [])];
 
         const indicatorIndex = indicatorsArray.findIndex(
           (indicator) => indicator.id === indicatorId,

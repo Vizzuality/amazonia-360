@@ -1,16 +1,15 @@
-import { Indicator } from "@/app/parsers";
+import { VisualizationType } from "@/app/api/indicators/route";
+import { IndicatorView } from "@/app/parsers";
 
-import { VisualizationType } from "@/containers/report/visualization-types/types";
-
-import topicsData from "./topics.json";
+import topicsData from "./topics2.json";
 
 export type Topic = {
-  id: string | number;
-  label: string;
+  id: number;
+  name: string;
   image: string;
   description: string;
-  default_visualization: Indicator[];
-  indicators?: { label: string; value: string; types_available: VisualizationType[] }[];
+  default_visualization: IndicatorView[];
+  indicators?: { name: string; id: number; visualization_types: VisualizationType[] }[];
 };
 
 export async function GET() {

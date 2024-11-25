@@ -1,20 +1,13 @@
-import { Indicator } from "@/app/parsers";
-
-import { VisualizationType } from "@/containers/report/visualization-types/types";
+import { Indicator } from "@/app/api/indicators/route";
+import { IndicatorView } from "@/app/parsers";
 
 export type Topic = {
-  id: string | number;
-  label: string;
+  id: number;
+  name: string;
   image: string;
   description: string;
-  default_visualization: Indicator[];
-  indicators?: { label: string; value: string; types_available: VisualizationType[] }[];
-};
-
-export type TopicsParsed = {
-  id: string | number;
-  visible?: boolean;
-  indicators: Indicator[] | undefined;
+  default_visualization?: IndicatorView[];
+  indicators?: Omit<Indicator, "resource" | "h3_grid_column_name" | "topic_id" | "topic_name">[];
 };
 
 export const DEFAULT_VISUALIZATION_SIZES: {

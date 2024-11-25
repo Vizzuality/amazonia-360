@@ -9,6 +9,7 @@ import { Card, CardContent, CardLoader, CardTitle, CardWidgetNumber } from "@/co
 export interface NumericIndicatorsProps {
   resource: ResourceFeature;
 }
+// extender indicator and limit to resource
 
 export const NumericIndicators = ({ resource }: NumericIndicatorsProps) => {
   const query = useQueryFeatureId({ resource, type: "numeric" });

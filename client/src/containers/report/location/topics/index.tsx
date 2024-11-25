@@ -8,10 +8,12 @@ import { Topic, DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
 
 import TopicsItem from "@/containers/report/location/topics/item";
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 export default function Topics() {
   const [topics, setTopics] = useSyncTopics();
 
-  const { data: topicsData } = useGetTopics();
+  const { data: topicsData, isLoading: isLoadingTopicsData } = useGetTopics();
 
   const handleTopicChange = (topic: Topic, checked: boolean) => {
     setTopics((prev) => {
@@ -40,6 +42,7 @@ export default function Topics() {
 
   return (
     <div className="flex flex-col gap-0.5 overflow-y-auto">
+      {isLoadingTopicsData && <Skeleton className="h-20" />}
       {topicsData?.map((topic) => {
         const isChecked = !!topics?.find(({ id }) => id === topic.id);
 

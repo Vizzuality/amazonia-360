@@ -19,7 +19,7 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/compone
 
 import { TopicsReportItem } from "./sidebar-topic-item";
 
-export function TopicsReportItems({ topic, id }: { topic: Topic; id: string | number }) {
+export function TopicsReportItems({ topic, id }: { topic: Topic; id: number }) {
   const [topics, setTopics] = useSyncTopics();
   const [open, setOpen] = useState(false);
 
@@ -100,7 +100,7 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string | nu
                   className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? "rotate-90" : ""}`}
                 />
 
-                <span className="whitespace flex-nowrap text-sm">{topic.label}</span>
+                <span className="whitespace flex-nowrap text-sm">{topic.name}</span>
 
                 {!!selectedIndicators && (
                   <CounterIndicatorsPill activeIndicatorsLength={selectedIndicators?.length} />
@@ -111,7 +111,7 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string | nu
           <Switch
             checked={!!topics?.find((t) => t.id === topic.id)}
             onCheckedChange={(e) => handleTopic(topic, e)}
-            id={topic.id as string}
+            id={`${topic.id}`}
             value={topic.id}
             className="h-4 w-8"
           />
@@ -119,7 +119,7 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string | nu
         <CollapsibleContent>
           <ul className="space-y-1 py-2 pl-6 text-sm font-medium">
             {topic?.indicators?.map((indicator) => (
-              <li key={`${indicator.value}-${topic.id}`}>
+              <li key={`${indicator.id}-${topic.id}`}>
                 <TopicsReportItem {...{ topic, indicator }} />
               </li>
             ))}

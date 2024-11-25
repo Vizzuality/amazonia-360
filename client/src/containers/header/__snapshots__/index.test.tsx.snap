@@ -32,14 +32,22 @@ exports[`Header renders the Home link selected 1`] = `
             >
               AmazoniaForever360+
             </span>
-            <div
-              class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
-            >
-              Beta
-            </div>
           </div>
         </h1>
       </a>
+      <button
+        aria-controls="radix-:rc:"
+        aria-expanded="false"
+        aria-haspopup="dialog"
+        data-state="closed"
+        type="button"
+      >
+        <div
+          class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+        >
+          Beta
+        </div>
+      </button>
       <nav
         class="flex space-x-8 print:hidden"
       >
@@ -99,14 +107,22 @@ exports[`Header renders the Hub link selected 1`] = `
             >
               AmazoniaForever360+
             </span>
-            <div
-              class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
-            >
-              Beta
-            </div>
           </div>
         </h1>
       </a>
+      <button
+        aria-controls="radix-:ri:"
+        aria-expanded="false"
+        aria-haspopup="dialog"
+        data-state="closed"
+        type="button"
+      >
+        <div
+          class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+        >
+          Beta
+        </div>
+      </button>
       <nav
         class="flex space-x-8 print:hidden"
       >
@@ -166,14 +182,22 @@ exports[`Header renders the Report Tool link selected 1`] = `
             >
               AmazoniaForever360+
             </span>
-            <div
-              class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
-            >
-              Beta
-            </div>
           </div>
         </h1>
       </a>
+      <button
+        aria-controls="radix-:rf:"
+        aria-expanded="false"
+        aria-haspopup="dialog"
+        data-state="closed"
+        type="button"
+      >
+        <div
+          class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+        >
+          Beta
+        </div>
+      </button>
       <nav
         class="flex space-x-8 print:hidden"
       >

@@ -1,6 +1,10 @@
 "use client";
 
-import { useGetTopics } from "@/lib/topics";
+import { useIndicators } from "@/lib/indicators";
+import {
+  // useGetTopics,
+  useGetTopicsFromIndicators,
+} from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { useSyncTopics } from "@/app/store";
@@ -16,7 +20,11 @@ export interface TopicsProps {
 
 export default function Topics({ interactive = true, size = "md" }: TopicsProps) {
   const [topics, setTopics] = useSyncTopics();
-  const { data: topicsData } = useGetTopics();
+
+  // const { data: topicsData } = useGetTopics();
+  const { data: indicatorsData } = useIndicators();
+  const topicsData = useGetTopicsFromIndicators(indicatorsData);
+
   const handleTopicChange = (topic: Topic, checked: boolean) => {
     if (checked) {
       setTopics((prev) => {

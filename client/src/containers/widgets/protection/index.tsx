@@ -12,11 +12,11 @@ import WidgetsRow from "@/containers/widgets/row";
 
 export default function WidgetsProtection({ index }: { index: number }) {
   const { data: topicsData } = useGetTopics();
-  const T = topicsData?.find((t) => t.id === "oil-mining-agriculture-energy");
+  const T = topicsData?.find((t) => t.id === 5);
 
   return (
     <div className="container print:break-before-page">
-      <h2 className="mb-4 text-xl">{T?.label}</h2>
+      <h2 className="mb-4 text-xl">{T?.name}</h2>
       <WidgetsRow>
         <WidgetsColumn
           className={cn(

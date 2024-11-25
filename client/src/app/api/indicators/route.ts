@@ -1,3 +1,5 @@
+import { IndicatorView } from "@/app/parsers";
+
 import INDICATORS from "./indicators.json";
 
 export type VisualizationType = "map" | "table" | "chart" | "numeric";
@@ -33,6 +35,7 @@ export type Indicator = {
   visualization_types: VisualizationType[];
   resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
   h3_grid_column_name: string | null;
+  default_visualization?: Omit<IndicatorView, "id">;
 };
 
 export async function GET() {

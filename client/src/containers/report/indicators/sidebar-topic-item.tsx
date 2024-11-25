@@ -6,9 +6,14 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/r
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { LuChevronRight, LuPlus, LuInfo } from "react-icons/lu";
 
-import { useGetTopics } from "@/lib/topics";
+import { useIndicators } from "@/lib/indicators";
+import {
+  // useGetTopics,
+  useGetTopicsFromIndicators,
+} from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
+import { Indicator } from "@/app/api/indicators/route";
 import { useSyncTopics } from "@/app/store";
 
 import { Topic } from "@/constants/topics";
@@ -19,8 +24,6 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-import { VisualizationType } from "../visualization-types/types";
-
 import { Badges } from "./badges";
 
 export function TopicsReportItem({
@@ -29,18 +32,23 @@ export function TopicsReportItem({
 }: {
   topic: Topic;
   indicator: {
-    value: string;
-    label: string;
-    types_available: VisualizationType[];
+    id: Indicator["id"];
+    name: Indicator["name"];
+    visualization_types: Indicator["visualization_types"];
   };
 }) {
   const [open, setOpen] = useState(true);
 
   const [topics] = useSyncTopics();
-  const { data: topicsData } = useGetTopics();
+
+  // Get topics data
+  // const { data: topicsData } = useGetTopics();
+
+  const { data: indicatorsData } = useIndicators();
+  const topicsData = useGetTopicsFromIndicators(indicatorsData);
 
   const selectedTopicIndicators = topics?.find(({ id }) => id === topic.id)?.indicators;
-  const selectedIndicator = selectedTopicIndicators?.find(({ id }) => id === indicator.value);
+  const selectedIndicator = selectedTopicIndicators?.find(({ id }) => id === indicator.id);
 
   return (
     <Collapsible open={open && !!selectedIndicator} className="flex w-full flex-col">
@@ -64,7 +72,7 @@ export function TopicsReportItem({
                 })}
               />
 
-              <span className="text-left">{indicator.label}</span>
+              <span className="text-left">{indicator.name}</span>
             </button>
             <Tooltip>
               <Dialog>
@@ -99,8 +107,8 @@ export function TopicsReportItem({
           <PopoverContent side="left" align="start" className="w-auto bg-background p-2">
             <VisualizationTypes
               topicId={topic.id}
-              types={indicator.types_available}
-              indicatorId={indicator.value}
+              types={indicator.visualization_types}
+              indicatorId={indicator.id}
             />
           </PopoverContent>
         </Popover>
@@ -121,7 +129,7 @@ export function TopicsReportItem({
           />
         </svg>
 
-        <Badges topicId={topic.id} indicatorId={indicator.value} />
+        <Badges topicId={topic.id} indicatorId={indicator.id} />
       </CollapsibleContent>
     </Collapsible>
   );

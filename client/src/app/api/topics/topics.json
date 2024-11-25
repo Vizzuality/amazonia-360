@@ -1,6 +1,6 @@
 [
   {
-    "id": "nature",
+    "id": 1,
     "label": "Nature",
     "image": "/images/topics/nature.png",
     "description": "Get data on life zones, ecosystems, habitats, and conservation areas.",
@@ -8,47 +8,93 @@
       {
         "label": "Topographic Altitude",
         "value": "topographic_altitude",
-        "types_available": ["map", "chart"]
+        "visualization_types": ["map", "chart"]
       },
       {
         "label": "Topographic Slope",
         "value": "topographic_slope",
-        "types_available": ["map", "chart"]
+        "visualization_types": ["map", "chart"]
       },
       {
         "label": "Terrestrial Biome Types",
         "value": "terrestrial_biome_types",
-        "types_available": ["map", "chart"]
+        "visualization_types": ["map", "chart"]
       },
       {
         "label": "Ecosystems",
-        "value": "ecosystems",
-        "types_available": ["map", "chart", "table"]
+        "value": 7,
+        "visualization_types": ["map", "chart", "table"]
+      },
+      {
+        "label": "Selection of functional ecosystems",
+        "value": 6,
+        "visualization_types": ["map", "chart", "table"]
+      },
+      {
+        "label": "Coastal Influence Zone",
+        "value": 5,
+        "visualization_types": ["map", "chart", "table"]
+      },
+      {
+        "label": "Conservation Priority Indicator",
+        "value": 4,
+        "visualization_types": ["map", "chart", "table"]
       },
       {
         "label": "Conservation Priority Indicator",
         "value": "conservation_priority_indicator",
-        "types_available": ["map"]
+        "visualization_types": ["map"]
+      },
+
+      {
+        "label": "Wetlands, Floodplains, Mangroves",
+        "value": 3,
+        "visualization_types": ["map"]
       },
       {
         "label": "Protected Areas",
-        "value": "protected_areas",
-        "types_available": ["numeric"]
+        "value": 2,
+        "visualization_types": ["numeric"]
+      },
+      {
+        "label": "Indigenous territories",
+        "value": 1,
+        "visualization_types": ["map"]
       },
       {
         "label": "WorldCover Class Coverage",
         "value": "worldcover_class_coverage",
-        "types_available": ["chart"]
+        "visualization_types": ["chart"]
+      },
+      {
+        "label": "Cultivated Area Indicator",
+        "value": "",
+        "visualization_types": ["map"]
+      },
+      {
+        "label": "Soil Productivity Loss Indicator",
+        "value": "",
+        "visualization_types": ["map"]
       },
       {
         "label": "Basic Species Count",
         "value": "basic_species_count",
-        "types_available": ["numeric"]
+        "visualization_types": ["numeric"]
+      },
+      {
+        "label": "Wetlands Presence",
+        "value": "",
+        "visualization_types": ["map"]
+      },
+      {
+        "label": "Mangroves",
+        "value": "",
+        "visualization_types": ["map"]
       },
       {
         "label": "Carbon Sequestered in Biomass",
-        "value": "carbon_sequestered_biomass",
-        "types_available": ["map", "numeric"]
+        "value": "",
+        "visualization_types": ["map", "numeric"]
       }
     ],
     "default_visualization": [
@@ -56,7 +102,7 @@
       { "id": "ecosystems", "type": "map", "x": 2, "y": 0, "w": 2, "h": 4 },
       { "id": "topographic_altitude", "type": "chart", "x": 0, "y": 4, "w": 2, "h": 2 },
       { "id": "worldcover_class_coverage", "type": "chart", "x": 2, "y": 4, "w": 2, "h": 2 },
-      { "id": "protected_areas", "type": "numeric", "x": 0, "y": 6, "w": 1, "h": 1 },
+      { "id": 2, "type": "numeric", "x": 0, "y": 6, "w": 1, "h": 1 },
       { "id": "carbon_sequestered_biomass", "type": "numeric", "x": 1, "y": 6, "w": 1, "h": 1 },
       { "id": "basic_species_count", "type": "numeric", "x": 2, "y": 6, "w": 1, "h": 1 }
     ]
@@ -70,32 +116,32 @@
       {
         "label": "Köppen Climate Types",
         "value": "koppen_climate_types",
-        "types_available": ["map"]
+        "visualization_types": ["map"]
       },
       {
         "label": "Annual Precipitation",
         "value": "annual_precipitation",
-        "types_available": ["chart"]
+        "visualization_types": ["chart"]
       },
       {
         "label": "Annual Temperature",
         "value": "annual_temperature",
-        "types_available": []
+        "visualization_types": []
       },
       {
         "label": "Drought Risk Index",
         "value": "drought_risk_index",
-        "types_available": ["numeric", "map"]
+        "visualization_types": ["numeric", "map"]
       },
       {
         "label": "Fire Frequency",
         "value": "fire_frequency",
-        "types_available": ["chart"]
+        "visualization_types": ["chart"]
       },
       {
         "label": "Cumulative Forest Loss Indicator",
         "value": "forest_loss_indicator",
-        "types_available": ["numeric"]
+        "visualization_types": ["numeric"]
       }
     ],
     "default_visualization": [
@@ -115,27 +161,27 @@
       {
         "label": "Total Population - GHSPOP 2025",
         "value": "total_population_ghspop_2025",
-        "types_available": ["numeric"]
+        "visualization_types": ["numeric"]
       },
       {
         "label": "Access to Public Transport",
         "value": "access_public_transport",
-        "types_available": ["numeric"]
+        "visualization_types": ["numeric"]
       },
       {
         "label": "Access to Electricity",
         "value": "access_electricity",
-        "types_available": ["numeric"]
+        "visualization_types": ["numeric"]
       },
       {
         "label": "Higher Education Centers",
         "value": "higher_education_centers",
-        "types_available": ["map"]
+        "visualization_types": ["map"]
       },
       {
         "label": "Primary Health Index",
         "value": "primary_health_index",
-        "types_available": ["map"]
+        "visualization_types": ["map"]
       }
     ],
     "default_visualization": [
@@ -155,22 +201,22 @@
       {
         "label": "Mining Concession Indicator",
         "value": "mining_concession_indicator",
-        "types_available": ["map", "table", "chart"]
+        "visualization_types": ["map", "table", "chart"]
       },
       {
         "label": "Illegal Mining Indicator",
         "value": "illegal_mining_indicator",
-        "types_available": ["map", "chart", "numeric"]
+        "visualization_types": ["map", "chart", "numeric"]
       },
       {
         "label": "Oil Concession Indicator",
         "value": "oil_concession_indicator",
-        "types_available": ["numeric", "map", "chart"]
+        "visualization_types": ["numeric", "map", "chart"]
       },
       {
         "label": "Cultivated Area Indicator",
         "value": "cultivated_area_indicator",
-        "types_available": ["numeric", "map", "chart"]
+        "visualization_types": ["numeric", "map", "chart"]
       }
     ],
     "default_visualization": [
@@ -189,7 +235,7 @@
       {
         "label": "Knowledge Products Database",
         "value": "knowledge_products_database",
-        "types_available": ["table"]
+        "visualization_types": ["table"]
       }
     ],
     "default_visualization": [
@@ -212,12 +258,12 @@
       {
         "label": "GDP",
         "value": "gdp",
-        "types_available": ["map"]
+        "visualization_types": ["map"]
       },
       {
         "label": "Location of Banking Entities (OMS/Google)",
         "value": "banking_entities_location",
-        "types_available": ["map"]
+        "visualization_types": ["map"]
       }
     ],
     "default_visualization": [
@@ -248,17 +294,17 @@
       {
         "label": "Total Road Network",
         "value": "total_road_network",
-        "types_available": ["map"]
+        "visualization_types": ["map"]
       },
       {
         "label": "Human Settlements (total 2025)",
         "value": "human_settlements_2025",
-        "types_available": ["map"]
+        "visualization_types": ["map"]
       },
       {
         "label": "Ookla Connection Data",
         "value": "ookla_connection_data",
-        "types_available": ["map"]
+        "visualization_types": ["map"]
       }
     ],
     "default_visualization": [
@@ -289,7 +335,7 @@
       {
         "label": "Action Areas DB (#74) (exp)",
         "value": "action_areas_database",
-        "types_available": ["numeric"]
+        "visualization_types": ["numeric"]
       }
     ],
     "default_visualization": [

@@ -2,14 +2,18 @@
 
 import { MapIcon, TableIcon, PieChartIcon, HashIcon } from "lucide-react";
 
-import { useGetTopics } from "@/lib/topics";
+import { useIndicators } from "@/lib/indicators";
+import {
+  // useGetTopics,
+  useGetTopicsFromIndicators,
+} from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
+import { Indicator } from "@/app/api/indicators/route";
+import { VisualizationType } from "@/app/api/indicators/route";
 import { useSyncTopics } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
-
-import { VisualizationType } from "./types";
 
 export function VisualizationTypes({
   types = ["map", "table", "chart", "numeric"],
@@ -17,11 +21,13 @@ export function VisualizationTypes({
   topicId,
 }: {
   types: VisualizationType[];
-  indicatorId: string;
+  indicatorId: Indicator["id"];
   topicId: Topic["id"];
 }) {
   const [topics, setTopics] = useSyncTopics();
-  const { data: topicsData } = useGetTopics();
+  // const { data: topicsData } = useGetTopics();
+  const { data: indicatorsData } = useIndicators();
+  const topicsData = useGetTopicsFromIndicators(indicatorsData);
 
   const handleVisualizationType = (visualizationType: VisualizationType) => {
     const widgetSize = DEFAULT_VISUALIZATION_SIZES[visualizationType];
@@ -36,7 +42,7 @@ export function VisualizationTypes({
     };
 
     if (topicIndex >= 0) {
-      const indicatorsArray = [...newTopics[topicIndex].indicators];
+      const indicatorsArray = [...(newTopics[topicIndex].indicators || [])];
 
       const exists = indicatorsArray.some(
         (indicator) => indicator.id === indicatorId && indicator.type === visualizationType,

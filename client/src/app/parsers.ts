@@ -8,18 +8,12 @@ import {
 
 import { DATASET_IDS } from "@/constants/datasets";
 
-import { VisualizationType } from "@/containers/report/visualization-types/types";
+import { VisualizationType } from "./api/indicators/route";
 
 export const datasetsParser = parseAsArrayOf(parseAsStringLiteral(DATASET_IDS)).withDefault([]);
 
-export type TopicsParsed = {
-  id: string | number;
-  visible?: boolean;
-  indicators: Indicator[] | undefined;
-};
-
-export type Indicator = {
-  id: string | number;
+export type IndicatorView = {
+  id: number;
   type: VisualizationType;
   w?: number;
   h?: number;
@@ -28,8 +22,8 @@ export type Indicator = {
 };
 
 export type Topics = {
-  id: string | number;
-  indicators: Indicator[];
+  id: number;
+  indicators: IndicatorView[] | undefined;
 };
 
 export const topicsParser = parseAsArrayOf(parseAsJson<Topics>());

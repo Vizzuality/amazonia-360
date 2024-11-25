@@ -4,16 +4,16 @@ import { Trash2 } from "lucide-react";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 type DeleteHandlerProps = {
-  topicId: string | number;
-  indicatorId: string | number;
-  onClick: (topicId: string | number, indicatorId: string | number) => void;
+  topicId: number;
+  indicatorId: number;
+  onClick: (topicId: number, indicatorId: number) => void;
 };
 
 const DeleteHandler = ({ topicId, indicatorId, onClick }: DeleteHandlerProps) => (
   <Tooltip>
     <TooltipTrigger asChild>
       <button
-        id={indicatorId as string}
+        id={`${indicatorId}`}
         type="button"
         className="absolute -right-3 -top-2.5 z-10 rounded-full bg-primary p-2"
         onClick={() => onClick(topicId, indicatorId)}
