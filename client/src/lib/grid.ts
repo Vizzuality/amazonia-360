@@ -1,12 +1,17 @@
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 
-import { gridDatasetMetadataGridMetaGet } from "@/types/generated/grid";
+import {
+  BodyReadTableGridTablePost,
+  ReadTableGridTablePostParams,
+} from "@/types/generated/api.schemas";
+import { gridDatasetMetadataGridMetaGet, readTableGridTablePost } from "@/types/generated/grid";
 
 /**
  ************************************************************
  ************************************************************
- * CLIENT ANALYSIS
+ * GRID
  * - useGetGridMeta
+ * - useGetGridTable
  ************************************************************
  ************************************************************
  */
@@ -41,6 +46,51 @@ export const useGetGridMeta = <TData = Awaited<ReturnType<typeof getGridMeta>>, 
   options?: Omit<GridMetaQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const { queryKey, queryFn } = getGridMetaOptions(options);
+
+  return useQuery({
+    queryKey,
+    queryFn,
+    ...options,
+  });
+};
+
+export type GetGridTableParams = {
+  body: BodyReadTableGridTablePost;
+  params: ReadTableGridTablePostParams;
+};
+
+export type GridTableQueryOptions<TData, TError> = UseQueryOptions<
+  Awaited<ReturnType<typeof getGridTable>>,
+  TError,
+  TData
+>;
+
+export const getGridTable = async (params: GetGridTableParams) => {
+  return readTableGridTablePost(params.body, params.params);
+};
+
+export const getGridTableKey = (params: GetGridTableParams) => {
+  return ["grid", "table", params.params, params.body];
+};
+
+export const getGridTableOptions = <
+  TData = Awaited<ReturnType<typeof getGridTable>>,
+  TError = unknown,
+>(
+  params: GetGridTableParams,
+  options?: Omit<GridTableQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const queryKey = getGridTableKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getGridTable>>> = () =>
+    getGridTable(params);
+  return { queryKey, queryFn, ...options } as GridTableQueryOptions<TData, TError>;
+};
+
+export const useGetGridTable = <TData = Awaited<ReturnType<typeof getGridTable>>, TError = unknown>(
+  params: GetGridTableParams,
+  options?: Omit<GridTableQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const { queryKey, queryFn } = getGridTableOptions(params, options);
 
   return useQuery({
     queryKey,

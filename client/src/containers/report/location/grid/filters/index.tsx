@@ -2,7 +2,7 @@
 
 import { useGetGridMeta } from "@/lib/grid";
 
-import GridFiltersItem from "@/containers/report/location/filters/item";
+import GridFiltersItem from "./item";
 
 export default function GridFilters() {
   const { data: gridMetaData } = useGetGridMeta();
