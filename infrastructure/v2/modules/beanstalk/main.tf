@@ -8,11 +8,6 @@ resource "aws_s3_bucket" "application_bucket" {
   )
 }
 
-# resource "aws_s3_bucket_acl" "application_bucket_acl" {
-#   bucket = aws_s3_bucket.application_bucket.id
-#   acl    = "private"
-# }
-
 #
 # Site Server Security Groups
 # SSH access to and from the world
@@ -116,6 +111,11 @@ locals {
       namespace = "aws:autoscaling:launchconfiguration"
       name      = "RootVolumeSize"
       value     = "40"
+    },
+    {
+      namespace = "aws:autoscaling:launchconfiguration"
+      name      = "DisableIMDSv1"
+      value     = true
     },
     {
       namespace = "aws:autoscaling:launchconfiguration"

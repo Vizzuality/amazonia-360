@@ -154,6 +154,10 @@ jobs:
           ECR_REPOSITORY_API: ${{ secrets.TF_API_REPOSITORY_NAME }}
           ECR_REPOSITORY_CLIENT: ${{ secrets.TF_CLIENT_REPOSITORY_NAME }}
           IMAGE_TAG: ${{ needs.set_environment.outputs.env_name }}
+
+          API_AUTH_TOKEN: ${{ secrets.TF_API_AUTH_TOKEN }}
+          API_TIFF_PATH: ${{ vars.TF_API_TIFF_PATH }}
+          API_GRID_TILES_PATH: ${{ vars.TF_API_GRID_TILES_PATH }}
         run: |
           cat <<EOF >> docker-compose.yml
           version: '3.9'
@@ -166,6 +170,10 @@ jobs:
                 - /var/app/data/api:/opt/api/data:ro
               networks:
                 - amazonia360-network
+              environment:
+                - AUTH_TOKEN=${API_AUTH_TOKEN}
+                - TIFF_PATH=${API_TIFF_PATH}
+                - GRID_TILES_PATH=${API_GRID_TILES_PATH}
               restart: always
             client:
               image: $ECR_REGISTRY/$ECR_REPOSITORY_CLIENT:$IMAGE_TAG
