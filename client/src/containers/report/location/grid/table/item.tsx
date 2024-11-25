@@ -1,16 +1,22 @@
 import { useMemo } from "react";
 
+import Point from "@arcgis/core/geometry/Point";
+import * as projection from "@arcgis/core/geometry/projection";
+import { cellToLatLng } from "h3-js";
+
 import { useGetGridMeta } from "@/lib/grid";
 
-import { useSyncGridDatasets } from "@/app/store";
+import { useSyncGridDatasets, useSyncLocation } from "@/app/store";
 
 import { HexagonIcon } from "@/components/ui/icons/hexagon";
 
 export const GridTableItem = (
   props: Record<string, string | number> & { id: number; cell: string },
 ) => {
-  const queryMeta = useGetGridMeta();
+  const [, setLocation] = useSyncLocation();
   const [gridDatasets] = useSyncGridDatasets();
+
+  const queryMeta = useGetGridMeta();
 
   const { id, cell, ...rest } = props;
 
@@ -27,7 +33,12 @@ export const GridTableItem = (
   }, [gridDatasets, queryMeta.data?.datasets, rest]);
 
   const handleClick = () => {
-    console.log("Clicked on", id + 1, cell);
+    const latLng = cellToLatLng(cell);
+    const p = new Point({ x: latLng[1], y: latLng[0], spatialReference: { wkid: 4326 } });
+    const projectedGeom = projection.project(p, { wkid: 102100 });
+    const g = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
+
+    setLocation({ type: "point", geometry: g.toJSON() });
   };
 
   return (
