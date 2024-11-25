@@ -79,6 +79,9 @@ export const getGridLayerProps = ({
       gridDatasets,
       gridFilters: gridFilters ? gridFilters : {},
     },
+    updateTriggers: {
+      getTileData: [geometry],
+    },
     renderSubLayers: (props) => {
       if (!props.data) {
         return null;
@@ -190,10 +193,7 @@ export default function GridLayer() {
       if (dataset?.legend.legend_type === "continuous") {
         const s = dataset.legend.stats.find((stat) => stat.level === 1);
 
-        return CHROMA.scale(dataset.legend.colormap_name as string).domain([
-          s?.min || 0,
-          s?.max || 100,
-        ]);
+        return CHROMA.scale("viridis").domain([s?.min || 0, s?.max || 100]);
       }
     }
 
