@@ -85,11 +85,7 @@ export default function WidgetLandCoverByType() {
       <CardLoader query={[query]} className="h-52">
         {!!query.data && (
           <div className="space-y-2 pt-2">
-            <MarimekkoChart
-              format={FORMAT}
-              colorScale={ordinalColorScale}
-              data={query.data || []}
-            />
+            <MarimekkoChart format={FORMAT} data={query.data || []} />
 
             <LegendOrdinal ordinalColorScale={ordinalColorScale} />
           </div>

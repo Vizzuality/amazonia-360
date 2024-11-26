@@ -2,7 +2,6 @@
 
 import { treemapDice } from "@visx/hierarchy";
 import { HierarchyNode, HierarchyRectangularNode } from "@visx/hierarchy/lib/types";
-import { scaleOrdinal } from "@visx/scale";
 
 import { formatPercentage } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
@@ -68,11 +67,6 @@ export default function WidgetAltitude() {
     },
   );
 
-  const ordinalColorScale = scaleOrdinal({
-    domain: query?.data?.map((d) => d),
-    range: query?.data?.map((d) => d.color) || [], // sort by size.toReversed(),
-  });
-
   const FORMAT = (node: HierarchyRectangularNode<HierarchyNode<Data>>) => {
     return formatPercentage(node?.value || 0, {
       maximumFractionDigits: 0,
@@ -84,13 +78,7 @@ export default function WidgetAltitude() {
       <CardTitle>Altitude</CardTitle>
       <CardLoader query={[query]} className="h-12">
         {!!query?.data && (
-          <MarimekkoChart
-            data={query?.data}
-            colorScale={ordinalColorScale}
-            format={FORMAT}
-            className="h-12"
-            tile={treemapDice}
-          />
+          <MarimekkoChart data={query?.data} format={FORMAT} className="h-12" tile={treemapDice} />
         )}
       </CardLoader>
     </Card>

@@ -82,7 +82,6 @@ export default function WidgetForestFires() {
         <CardLoader query={[query]} className="h-16">
           <MarimekkoChart
             data={query?.data || []}
-            colorScale={ordinalColorScale}
             format={FORMAT}
             className="h-6"
             tile={treemapDice}

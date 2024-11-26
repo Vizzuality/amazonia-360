@@ -91,7 +91,6 @@ export default function WidgetAltitude() {
         <div className="space-y-2 pt-2">
           <MarimekkoChart
             data={query?.data || []}
-            colorScale={ordinalColorScale}
             format={FORMAT}
             className="h-12"
             tile={treemapDice}
