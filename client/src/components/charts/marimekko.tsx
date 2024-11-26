@@ -8,7 +8,6 @@ import { Group } from "@visx/group";
 import { Treemap, hierarchy, stratify, treemapSquarify } from "@visx/hierarchy";
 import { HierarchyNode, HierarchyRectangularNode, TileMethod } from "@visx/hierarchy/lib/types";
 import { useParentSize } from "@visx/responsive";
-import { ScaleTypeToD3Scale } from "@visx/scale";
 import { useTooltip, useTooltipInPortal } from "@visx/tooltip";
 import CHROMA from "chroma-js";
 
@@ -27,7 +26,6 @@ export type Data = {
 
 interface MarimekkoChartProps<DataT extends Data> {
   data: DataT[];
-  colorScale: ScaleTypeToD3Scale<string, DataT>["ordinal"];
   className?: string;
   format: (node: HierarchyRectangularNode<HierarchyNode<DataT>>) => string;
   tile?: TileMethod<HierarchyNode<DataT>> | undefined;
@@ -35,7 +33,6 @@ interface MarimekkoChartProps<DataT extends Data> {
 
 const MarimekkoChart = <T extends Data>({
   data = [],
-  colorScale,
   className = "h-52",
   format,
   tile,
@@ -133,7 +130,7 @@ const MarimekkoChart = <T extends Data>({
                           rx={4}
                           ry={4}
                           // fill={colorScale(node.value).hex()}
-                          fill={colorScale(node.data.data)}
+                          fill={node.data.data.color}
                           onMouseLeave={() => {
                             tooltipTimeoutRef.current = window.setTimeout(() => {
                               hideTooltip();
@@ -170,7 +167,7 @@ const MarimekkoChart = <T extends Data>({
                               <p
                                 className={cn(
                                   "font-bold",
-                                  CHROMA(colorScale(node.data.data)).luminance() > 0.5
+                                  CHROMA(node.data.data.color).luminance() > 0.5
                                     ? "text-foreground"
                                     : "text-white",
                                 )}
@@ -183,7 +180,7 @@ const MarimekkoChart = <T extends Data>({
                               <p
                                 className={cn(
                                   "text-sm font-medium text-white",
-                                  CHROMA(colorScale(node.data.data)).luminance() > 0.5
+                                  CHROMA(node.data.data.color).luminance() > 0.5
                                     ? "text-foreground"
                                     : "text-white",
                                 )}
