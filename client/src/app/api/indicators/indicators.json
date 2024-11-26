@@ -80,10 +80,10 @@
     "resource": {
       "name": "landcover_cog_tiles",
       "type": "imagery-tile",
-      "url": "https://tiledimageservices6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/landcover_cog_tiles/ImageServer"
+      "url": "https://tiledimageservices6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/landcover_test_3/ImageServer"
     },
     "visualization_types": [
-      "map", "numeric"
+      "map", "chart"
     ]
   }
 ]

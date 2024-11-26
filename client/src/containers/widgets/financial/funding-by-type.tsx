@@ -96,12 +96,7 @@ export default function WidgetFundingByType() {
       <CardLoader query={[query]} className="h-44">
         <CardNoData query={[query]}>
           <div className="flex grow flex-col space-y-2 pt-2">
-            <MarimekkoChart
-              format={FORMAT}
-              colorScale={ordinalColorScale}
-              data={query.data || []}
-              className="h-full grow"
-            />
+            <MarimekkoChart format={FORMAT} data={query.data || []} className="h-full grow" />
 
             <LegendOrdinal ordinalColorScale={ordinalColorScale} />
           </div>
