@@ -23,22 +23,24 @@ import {
 export default function Glance() {
   const [chartKey, setChartKey] = useState<MosaicIds>(MOSAIC_OPTIONS[4].key);
 
+  const ordinalColorScale = useMemo(() => {
+    return scaleOrdinal({
+      domain: MOSAIC_DATA?.toSorted((a, b) => b[chartKey] - a[chartKey]).map((d) => d[chartKey]),
+      range: CHROMA.scale(["#009ADE", "#93CAEB", "#DBEDF8"]).colors(MOSAIC_DATA?.length || 1),
+    });
+  }, [chartKey]);
+
   const parsedData: Data[] = useMemo(() => {
     return MOSAIC_DATA.map((d) => {
       return {
         label: d.country,
-        color: "",
+        color: ordinalColorScale(d[chartKey]),
         id: d.country,
         parent: "root",
         size: d[chartKey],
       };
     }).toSorted((a, b) => b.size - a.size);
-  }, [chartKey]);
-
-  const ordinalColorScale = scaleOrdinal({
-    domain: parsedData?.map((d) => d),
-    range: CHROMA.scale(["#009ADE", "#93CAEB", "#DBEDF8"]).colors(parsedData?.length || 1),
-  });
+  }, [chartKey, ordinalColorScale]);
 
   const handleSingleValueChange = useCallback((e: MosaicIds) => {
     setChartKey(e);
@@ -150,12 +152,7 @@ export default function Glance() {
           </p>
         </header>
         <div className="w-full">
-          <MarimekkoChart
-            format={FORMAT[chartKey]}
-            data={parsedData}
-            colorScale={ordinalColorScale}
-            className="h-[450px]"
-          />
+          <MarimekkoChart format={FORMAT[chartKey]} data={parsedData} className="h-[450px]" />
         </div>
       </div>
     </section>

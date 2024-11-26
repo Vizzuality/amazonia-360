@@ -129,6 +129,22 @@ export const useResourceId = <TData = Awaited<ReturnType<typeof getResourceId>>,
  ************************************************************
  ************************************************************
  */
+
+const GEOMETRY = {
+  type: "polygon",
+  spatialReference: { wkid: 102100 },
+  rings: [
+    [
+      [-7766471.038835982, -1329452.5803468754],
+      [-6879763.29221403, -1190719.3740093173],
+      [-6518254.366939386, -1425075.3027316048],
+      [-6563237.558085199, -1677317.4960726197],
+      [-7389177.867220452, -1682285.902911155],
+      [-7766471.038835982, -1329452.5803468754],
+    ],
+  ],
+} as __esri.Polygon;
+
 export type QueryFeatureIdParams = {
   type: VisualizationType;
   resource: ResourceFeature;
@@ -143,20 +159,7 @@ export const getQueryFeatureId = async ({ type, resource }: QueryFeatureIdParams
 
   if (q) {
     const query = new Query(q);
-    query.geometry = {
-      type: "polygon",
-      spatialReference: { wkid: 102100 },
-      rings: [
-        [
-          [-7778710.517990138, -353320.67660269357],
-          [-7490667.131526064, -458345.1534664978],
-          [-7744070.212234159, -602491.0568694985],
-          [-7910545.282524961, -565935.0480921227],
-          [-7913172.805372263, -386694.9940776998],
-          [-7778710.517990138, -353320.67660269357],
-        ],
-      ],
-    } as __esri.Polygon;
+    query.geometry = GEOMETRY;
     return f.queryFeatures(query);
   }
 
@@ -201,27 +204,71 @@ export type QueryImageryTileIdParams = {
   resource: ResourceImageryTile;
 };
 
-export const getQueryImageryTileId = async ({ resource }: QueryImageryTileIdParams) => {
+export const getQueryImageryTileId = async ({
+  resource,
+}: QueryImageryTileIdParams): Promise<{
+  RAT: {
+    features: {
+      attributes: {
+        Value: number;
+        Class: string;
+        Red: number;
+        Green: number;
+        Blue: number;
+        Alpha: number;
+      };
+    }[];
+  };
+  histograms: {
+    min: number;
+    max: number;
+    size: number;
+    counts: number[];
+  }[];
+  statistics: {
+    min: number;
+    max: number;
+    stddev: number;
+    median: number;
+    mode: number;
+    sum: number;
+    avg: number;
+  }[];
+} | null> => {
   const f = new ImageryTileLayer({
     url: resource.url,
   });
 
-  return f.computeStatisticsHistograms({
-    geometry: {
-      type: "polygon",
-      spatialReference: { wkid: 102100 },
-      rings: [
-        [
-          [-7778710.517990138, -353320.67660269357],
-          [-7490667.131526064, -458345.1534664978],
-          [-7744070.212234159, -602491.0568694985],
-          [-7910545.282524961, -565935.0480921227],
-          [-7913172.805372263, -386694.9940776998],
-          [-7778710.517990138, -353320.67660269357],
-        ],
-      ],
-    },
-  });
+  try {
+    const RAT = await axios
+      .get<{
+        features: {
+          Value: number;
+          Class: string;
+          Red: number;
+          Green: number;
+          Blue: number;
+          Alpha: number;
+        }[];
+      }>(`${resource.url}/rasterattributetable`, {
+        params: {
+          f: "json",
+        },
+      })
+      .then((response) => response.data);
+
+    const statistics = await f.computeStatisticsHistograms({
+      geometry: GEOMETRY,
+    });
+
+    return {
+      RAT,
+      ...statistics,
+    };
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 };
 
 export const getQueryImageryTileIdKey = ({ type, resource }: QueryImageryTileIdParams) => {
