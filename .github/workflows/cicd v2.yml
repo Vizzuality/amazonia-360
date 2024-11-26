@@ -30,7 +30,7 @@ jobs:
     name: Set Deployment Environment
     needs: [ build-and-test ]
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'develop' || github.ref_name == 'main' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'develop' || github.ref_name == 'staging' || github.ref_name == 'main' }}
     outputs:
       env_name: ${{ steps.set_env.outputs.env_name }}
     steps:
