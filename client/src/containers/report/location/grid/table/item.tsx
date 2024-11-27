@@ -5,6 +5,7 @@ import * as projection from "@arcgis/core/geometry/projection";
 import { cellToLatLng } from "h3-js";
 import { useSetAtom } from "jotai";
 
+import { formatNumberUnit } from "@/lib/formats";
 import { useGetGridMeta } from "@/lib/grid";
 import { getGeometryWithBuffer } from "@/lib/location";
 
@@ -37,6 +38,7 @@ export const GridTableItem = (
       return {
         name: d.label,
         value: rest[dataset],
+        unit: d.unit,
       };
     });
   }, [gridDatasets, queryMeta.data?.datasets, rest]);
@@ -81,7 +83,7 @@ export const GridTableItem = (
         {ITEMS.map((dataset) => (
           <li key={dataset?.name} className="flex justify-between">
             <span>{dataset?.name}</span>
-            <span>{dataset?.value}</span>
+            <span>{formatNumberUnit(+(dataset?.value ?? 0), `${dataset?.unit}`)}</span>
           </li>
         ))}
       </ul>
