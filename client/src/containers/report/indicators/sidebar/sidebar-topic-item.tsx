@@ -16,7 +16,13 @@ import { Topic } from "@/constants/topics";
 
 import { VisualizationTypes } from "@/containers/report/visualization-types";
 
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -77,7 +83,9 @@ export function TopicsReportItem({
                 </TooltipTrigger>
 
                 <DialogContent className="p-0">
+                  <DialogTitle className="sr-only">About the data</DialogTitle>
                   <p>{topicsData?.find(({ id }) => topic.id === id)?.description}</p>
+                  <DialogClose />
                 </DialogContent>
 
                 <TooltipPortal>

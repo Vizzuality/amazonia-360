@@ -1,9 +1,10 @@
+import { DialogTitle } from "@radix-ui/react-dialog";
 import { LuBarChart, LuDatabase, LuFileVideo2, LuFiles, LuListTodo, LuMap } from "react-icons/lu";
 
 import { Card } from "@/containers/card";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogClose } from "@/components/ui/dialog";
 
 import { ResourceProps } from "./types";
 
@@ -59,6 +60,7 @@ export default function Resource({
               </DialogTrigger>
 
               <DialogContent>
+                <DialogTitle className="sr-only">Resource Info</DialogTitle>
                 <div className="flex flex-col space-y-4">
                   <h3 className="pr-4 text-lg font-semibold text-blue-500">{Name}</h3>
                   <p className="text-sm font-medium text-foreground">{Description}</p>
@@ -99,6 +101,7 @@ export default function Resource({
                     </p>
                   </div>
                 </div>
+                <DialogClose />
               </DialogContent>
             </Dialog>
 

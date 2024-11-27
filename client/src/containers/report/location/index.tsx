@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+
 import { useAtom } from "jotai";
 import { LuArrowLeft } from "react-icons/lu";
 

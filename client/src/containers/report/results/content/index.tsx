@@ -9,6 +9,7 @@ import { useAtom } from "jotai";
 
 import { useGetTopics } from "@/lib/topics";
 
+import { VisualizationType } from "@/app/api/indicators/route";
 import { Topics } from "@/app/parsers";
 import { IndicatorView } from "@/app/parsers";
 import { indicatorsEditionModeAtom, reportEditionModeAtom, useSyncTopics } from "@/app/store";
@@ -22,7 +23,6 @@ import WidgetsOtherResources from "@/containers/widgets/other-resources";
 import WidgetsOverview from "@/containers/widgets/overview";
 
 import ReportResultsIndicator from "../indicator";
-import { VisualizationType } from "@/app/api/indicators/route";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 

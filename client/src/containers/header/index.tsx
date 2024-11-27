@@ -37,9 +37,7 @@ export default function Header() {
             </DialogTrigger>
 
             <DialogContent className="p-0">
-              <DialogTitle className="sr-only p-4 text-2xl">
-                AmazoniaForever360+ beta version
-              </DialogTitle>
+              <DialogTitle className="p-4 text-2xl">AmazoniaForever360+ beta version</DialogTitle>
               <BetaDisclaimer onClose={setOpen} />
             </DialogContent>
           </Dialog>
