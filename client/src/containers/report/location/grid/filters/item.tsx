@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 import { LuPlus, LuX } from "react-icons/lu";
 
+import { formatNumberUnit } from "@/lib/formats";
 import { cn } from "@/lib/utils";
 
 import { DatasetMeta } from "@/types/generated/api.schemas";
@@ -84,8 +85,12 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
           {dataset.legend.legend_type === "continuous" && continousOptions && (
             <div className="space-y-1">
               <div className="flex justify-between">
-                <span className="text-xs text-gray-500">{continousOptions.min}</span>
-                <span className="float-right text-xs text-gray-500">{continousOptions.max}</span>
+                <span className="text-xs text-gray-500">
+                  {formatNumberUnit(continousOptions.min)}
+                </span>
+                <span className="float-right text-xs text-gray-500">
+                  {formatNumberUnit(continousOptions.max)}
+                </span>
               </div>
 
               <Slider
