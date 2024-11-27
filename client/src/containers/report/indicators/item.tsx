@@ -69,7 +69,6 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: number }) {
         ...prevTopics[index],
         ...updatedTopic,
       };
-
       return updatedTopics;
     });
   }, [topic.id, setTopics, topics]);

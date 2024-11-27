@@ -22,6 +22,7 @@ import WidgetsOtherResources from "@/containers/widgets/other-resources";
 import WidgetsOverview from "@/containers/widgets/overview";
 
 import ReportResultsIndicator from "../indicator";
+import { VisualizationType } from "@/app/api/indicators/route";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -94,23 +95,29 @@ export default function ReportResultsContent() {
   );
 
   const onDeleteIndicator = useCallback(
-    (topicId: number, indicatorId: number) => {
+    (topicId: number, indicatorId: number, type: VisualizationType) => {
       setTopics((prev) => {
         if (!prev) return prev;
 
-        const topicIndex = prev.findIndex((t) => t.id === topicId);
-        if (topicIndex === -1) return prev;
+        // For some reason this comes duplicated
+        const prevTopics = prev.filter((topic) => typeof topic.id !== "string");
 
-        const updatedIndicators = prev[topicIndex]?.indicators?.filter((i) => i.id !== indicatorId);
+        const topicIndex = prevTopics.findIndex((t) => t.id === topicId);
+        if (topicIndex === -1) return prevTopics;
+
+        const updatedIndicators = prevTopics[topicIndex]?.indicators?.filter(
+          (i) => !(i.id === indicatorId && i.type === type),
+        );
 
         const updatedTopics = [
-          ...prev.slice(0, topicIndex),
-          { ...prev[topicIndex], indicators: updatedIndicators },
-          ...prev.slice(topicIndex + 1),
+          ...prevTopics.slice(0, topicIndex),
+          { ...prevTopics[topicIndex], indicators: updatedIndicators },
+          ...prevTopics.slice(topicIndex + 1),
         ];
 
         return updatedTopics;
       });
+
       setEditionModeIndicator({});
     },
     [setTopics, setEditionModeIndicator],
@@ -179,6 +186,7 @@ export default function ReportResultsContent() {
                         <DeleteHandler
                           topicId={topic.id}
                           indicatorId={id}
+                          type={type}
                           onClick={onDeleteIndicator}
                         />
                       )}

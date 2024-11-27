@@ -21,9 +21,7 @@ export default function Topics({ interactive = true, size = "md" }: TopicsProps)
 
   const handleTopicChange = (topic: Topic, checked: boolean) => {
     if (checked) {
-      setTopics((prev) => {
-        return prev?.filter((t) => t.id !== topic.id) || [];
-      });
+      setTopics((prev) => prev?.filter((t) => t.id !== topic.id) || []);
     } else {
       const T = {
         id: topic.id,
@@ -39,11 +37,9 @@ export default function Topics({ interactive = true, size = "md" }: TopicsProps)
                 h: indicator?.h || DEFAULT_VISUALIZATION_SIZES[indicator.type].h,
               };
             })
-            .filter((ind) => ind.id) || [], // Filter out indicators without a valid id
+            .filter((ind) => ind.id) || [],
       };
-      setTopics((prev) => {
-        return [...(prev || []), T];
-      });
+      setTopics((prev) => [...(prev || []), T]);
     }
   };
 

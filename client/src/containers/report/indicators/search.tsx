@@ -135,8 +135,9 @@ export default function SearchC() {
           <div
             className={cn({
               "flex w-full cursor-pointer justify-between py-1.5 text-sm": true,
-              "cursor-none opacity-50": o.active,
+              "pointer-events-none opacity-50": o.active,
             })}
+            role="button"
             aria-disabled={o.active}
           >
             <span>{o.label}</span>
