@@ -7,7 +7,7 @@ export type Topic = {
   image: string;
   description: string;
   default_visualization?: IndicatorView[];
-  indicators?: Omit<Indicator, "resource" | "h3_grid_column_name" | "topic_id" | "topic_name">[];
+  indicators?: Omit<Indicator, "resource" | "h3_grid_column_name" | "topic">[];
 };
 
 export const DEFAULT_VISUALIZATION_SIZES: {

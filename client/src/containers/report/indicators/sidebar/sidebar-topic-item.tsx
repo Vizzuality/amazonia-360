@@ -6,11 +6,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/r
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { LuChevronRight, LuPlus, LuInfo } from "react-icons/lu";
 
-import { useIndicators } from "@/lib/indicators";
-import {
-  // useGetTopics,
-  useGetTopicsFromIndicators,
-} from "@/lib/topics";
+import { useGetTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { Indicator } from "@/app/api/indicators/route";
@@ -24,7 +20,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-import { Badges } from "./badges";
+import { Badges } from "../badges";
 
 export function TopicsReportItem({
   topic,
@@ -41,11 +37,7 @@ export function TopicsReportItem({
 
   const [topics] = useSyncTopics();
 
-  // Get topics data
-  // const { data: topicsData } = useGetTopics();
-
-  const { data: indicatorsData } = useIndicators();
-  const topicsData = useGetTopicsFromIndicators(indicatorsData);
+  const { data: topicsData } = useGetTopics();
 
   const selectedTopicIndicators = topics?.find(({ id }) => id === topic.id)?.indicators;
   const selectedIndicator = selectedTopicIndicators?.find(({ id }) => id === indicator.id);

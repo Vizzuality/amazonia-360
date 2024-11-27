@@ -31,7 +31,7 @@ export default function TopicsItem({
   const descriptionRef = useRef<HTMLParagraphElement>(null);
 
   return (
-    <div key={id} className="w-full">
+    <div key={id} className="w-full max-w-52">
       <div
         className={cn(
           "group relative mx-auto cursor-pointer overflow-hidden rounded-2xl shadow after:absolute after:bottom-0 after:left-0 after:h-16 after:w-full after:bg-gradient-to-b after:from-transparent after:to-[#09090B]/85 after:content-['']",

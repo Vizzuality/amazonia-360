@@ -13,11 +13,10 @@ import { useSyncTopics } from "@/app/store";
 import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
 
 import { CounterIndicatorsPill } from "@/containers/report/indicators/counter-indicators-pill";
+import { TopicsReportItem } from "@/containers/report/indicators/sidebar/sidebar-topic-item";
 
 import { Switch } from "@/components/ui/switch";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-
-import { TopicsReportItem } from "./sidebar-topic-item";
 
 export function TopicsReportItems({ topic, id }: { topic: Topic; id: number }) {
   const [topics, setTopics] = useSyncTopics();
@@ -84,7 +83,13 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: number }) {
       })}
     >
       <Collapsible open={open}>
-        <div className={cn({ "flex items-center space-x-4 py-2": true, "pb-0": open })}>
+        <div
+          className={cn({
+            "flex items-center space-x-4 rounded-[2px] py-2": true,
+            "pb-0": open,
+            "px-0.5 hover:bg-secondary": !open,
+          })}
+        >
           <CollapsibleTrigger
             className="flex w-full min-w-28 items-center justify-between text-sm"
             asChild

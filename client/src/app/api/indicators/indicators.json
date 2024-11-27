@@ -3,16 +3,25 @@
     "id": 1,
     "name": "Indigenous lands",
     "unit": "",
-    "topic_id": 1,
-    "topic_name": "Nature",
-    "visualization_types": ["map", "table", "numeric"],
-    "default_visualization": {
-      "type": "numeric",
-      "x": 0,
-      "y": 0,
-      "w": 2,
-      "h": 1
+    "topic": {
+      "id": 1,
+      "name": "Nature",
+      "image": "/images/topics/nature.png",
+      "description": "Get data on life zones, ecosystems, habitats, and conservation areas.",
+      "default_visualization": [
+        {
+          "id": 1,
+          "type": "numeric",
+          "x": 0,
+          "y": 0,
+          "w": 2,
+          "h": 1
+        },
+        { "id": 2, "type": "numeric", "x": 2, "y": 0, "w": 2, "h": 1 },
+        { "id": 3, "type": "map", "x": 0, "y": 1, "w": 4, "h": 4 }
+      ]
     },
+    "visualization_types": ["map", "table", "numeric"],
     "resource": {
       "name": "AFP_Tierras_indigenas",
       "type": "feature",
@@ -41,8 +50,24 @@
     "id": 2,
     "name": "Protected areas",
     "unit": "",
-    "topic_id": 1,
-    "topic_name": "Nature",
+    "topic": {
+      "id": 1,
+      "name": "Nature",
+      "image": "/images/topics/nature.png",
+      "description": "Get data on life zones, ecosystems, habitats, and conservation areas.",
+      "default_visualization": [
+        {
+          "id": 1,
+          "type": "numeric",
+          "x": 0,
+          "y": 0,
+          "w": 2,
+          "h": 1
+        },
+        { "id": 2, "type": "numeric", "x": 2, "y": 0, "w": 2, "h": 1 },
+        { "id": 3, "type": "map", "x": 0, "y": 1, "w": 4, "h": 4 }
+      ]
+    },
     "resource": {
       "name": "AFP_Areas_protegidas",
       "type": "feature",
@@ -78,21 +103,35 @@
       }
     },
     "visualization_types": ["map", "table", "numeric"],
-    "default_visualization": { "type": "numeric", "x": 2, "y": 0, "w": 2, "h": 1 },
     "h3_grid_column_name": null
   },
   {
     "id": 3,
     "name": "Land cover",
     "unit": "",
-    "topic_id": 1,
-    "topic_name": "Nature",
+    "topic": {
+      "id": 1,
+      "name": "Nature",
+      "image": "/images/topics/nature.png",
+      "description": "Get data on life zones, ecosystems, habitats, and conservation areas.",
+      "default_visualization": [
+        {
+          "id": 1,
+          "type": "numeric",
+          "x": 0,
+          "y": 0,
+          "w": 2,
+          "h": 1
+        },
+        { "id": 2, "type": "numeric", "x": 2, "y": 0, "w": 2, "h": 1 },
+        { "id": 3, "type": "map", "x": 0, "y": 1, "w": 4, "h": 4 }
+      ]
+    },
     "resource": {
       "name": "landcover_cog_tiles",
       "type": "imagery-tile",
       "url": "https://tiledimageservices6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/landcover_test_3/ImageServer"
     },
-    "visualization_types": ["map", "numeric"],
-    "default_visualization": { "type": "map", "x": 0, "y": 1, "w": 4, "h": 4 }
+    "visualization_types": ["map", "numeric"]
   }
 ]

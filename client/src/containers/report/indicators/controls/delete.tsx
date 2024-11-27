@@ -16,7 +16,9 @@ const DeleteHandler = ({ topicId, indicatorId, onClick }: DeleteHandlerProps) =>
         id={`${indicatorId}`}
         type="button"
         className="absolute -right-3 -top-2.5 z-10 rounded-full bg-primary p-2"
-        onClick={() => onClick(topicId, indicatorId)}
+        onClick={() => {
+          onClick(topicId, indicatorId);
+        }}
       >
         <Trash2 className="h-4 w-4 font-bold text-white" />
       </button>

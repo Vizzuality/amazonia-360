@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useAtom } from "jotai";
 import { LuArrowLeft } from "react-icons/lu";
 
@@ -11,11 +12,12 @@ import GridFilters from "@/containers/report/location/grid/filters";
 import GridTable from "@/containers/report/location/grid/table";
 import Search from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
-import Topics from "@/containers/report/location/topics";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const Topics = dynamic(() => import("@/containers/report/location/topics"), { ssr: false });
 
 export default function ReportLocation() {
   const [tab, setTab] = useAtom(tabAtom);

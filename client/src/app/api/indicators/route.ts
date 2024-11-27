@@ -1,6 +1,6 @@
+import INDICATORS from "@/app/api/indicators/indicators.json";
+import { Topic } from "@/app/api/topics/route";
 import { IndicatorView } from "@/app/parsers";
-
-import INDICATORS from "./indicators.json";
 
 export type VisualizationType = "map" | "table" | "chart" | "numeric";
 
@@ -30,12 +30,16 @@ export type ResourceImageryTile = {
 export type Indicator = {
   id: number;
   name: string;
-  topic_id: number;
-  topic_name: string;
+  topic: {
+    id: Topic["id"];
+    name: string;
+    description: string;
+    image: string;
+    default_visualization: IndicatorView[];
+  };
   visualization_types: VisualizationType[];
   resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
   h3_grid_column_name: string | null;
-  default_visualization?: Omit<IndicatorView, "id">;
 };
 
 export async function GET() {

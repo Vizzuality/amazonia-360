@@ -1,23 +1,19 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 import { Layout } from "react-grid-layout";
 import { Responsive, WidthProvider } from "react-grid-layout";
 
 import { useAtom } from "jotai";
 
-import { useIndicators } from "@/lib/indicators";
-import {
-  // useGetTopics,
-  useGetTopicsFromIndicators,
-} from "@/lib/topics";
+import { useGetTopics } from "@/lib/topics";
 
 import { Topics } from "@/app/parsers";
 import { IndicatorView } from "@/app/parsers";
 import { indicatorsEditionModeAtom, reportEditionModeAtom, useSyncTopics } from "@/app/store";
 
-import { DEFAULT_VISUALIZATION_SIZES, MIN_VISUALIZATION_SIZES } from "@/constants/topics";
+import { MIN_VISUALIZATION_SIZES } from "@/constants/topics";
 
 import DeleteHandler from "@/containers/report/indicators/controls/delete";
 import MoveHandler from "@/containers/report/indicators/controls/drag";
@@ -34,15 +30,16 @@ export default function ReportResultsContent() {
   const [editionModeIndicator, setEditionModeIndicator] = useAtom(indicatorsEditionModeAtom);
   const [reportEditionMode] = useAtom(reportEditionModeAtom);
 
-  // const { data: topicsData, isLoading: isLoadingTopicsData } = useGetTopics();
-  const { data: indicatorsData } = useIndicators();
-  const topicsData = useGetTopicsFromIndicators(indicatorsData);
-  const topicsDashboard = topics?.sort((a, b) => {
-    if (!topics) return 0;
-    const indexA = topics.findIndex((t) => t.id === a.id);
-    const indexB = topics.findIndex((t) => t.id === b.id);
-    return indexA - indexB;
-  });
+  const { data: topicsData, isLoading: isLoadingTopicsData } = useGetTopics();
+
+  const topicsDashboard = useMemo(() => {
+    return topics?.sort((a, b) => {
+      if (!topics) return 0;
+      const indexA = topics.findIndex((t) => t.id === a.id);
+      const indexB = topics.findIndex((t) => t.id === b.id);
+      return indexA - indexB;
+    });
+  }, [topics]);
 
   const handleDrop = useCallback(
     (layout: Layout[]) => {
@@ -130,6 +127,8 @@ export default function ReportResultsContent() {
       <div className="space-y-20">
         {topicsDashboard?.map((topic) => {
           const selectedTopic = topicsData?.find((t) => t.id === topic.id);
+          if (isLoadingTopicsData) return null;
+
           return (
             <div key={topic.id} className="container relative print:break-before-page">
               <h2 className="mb-4 text-xl font-semibold">{selectedTopic?.name}</h2>
@@ -143,7 +142,7 @@ export default function ReportResultsContent() {
                 isResizable={reportEditionMode}
                 resizeHandles={["sw", "nw", "se", "ne"]}
                 resizeHandle={false}
-                compactType="vertical"
+                compactType={null}
                 onDrop={handleDrop}
                 onDragStop={handleDrop}
                 onResizeStop={handleDrop}
@@ -152,11 +151,12 @@ export default function ReportResultsContent() {
                   const dataGridConfig = {
                     x: x ?? 0,
                     y: y ?? 0,
-                    w: w ?? DEFAULT_VISUALIZATION_SIZES[type]?.w,
-                    h: h ?? DEFAULT_VISUALIZATION_SIZES[type]?.h,
-                    minW: MIN_VISUALIZATION_SIZES[type]?.w,
-                    minH: MIN_VISUALIZATION_SIZES[type]?.h,
+                    w: w,
+                    h: h,
+                    minW: MIN_VISUALIZATION_SIZES[type]?.w ?? 1,
+                    minH: MIN_VISUALIZATION_SIZES[type]?.h ?? 1,
                   };
+
                   return (
                     <div
                       key={`{"topic":"${topic.id}","indicator":"${id}","type":"${type}"}`}

@@ -4,7 +4,15 @@ import { useQueryFeatureId } from "@/lib/indicators";
 
 import { ResourceFeature } from "@/app/api/indicators/route";
 
-import { Card, CardContent, CardLoader, CardTitle, CardWidgetNumber } from "@/containers/card";
+import {
+  Card,
+  CardContent,
+  // CardControls,
+  // CardInfo,
+  CardLoader,
+  CardTitle,
+  CardWidgetNumber,
+} from "@/containers/card";
 
 export interface NumericIndicatorsProps {
   resource: ResourceFeature;
@@ -25,6 +33,7 @@ export const NumericIndicators = ({ resource }: NumericIndicatorsProps) => {
   return (
     <Card>
       <CardTitle>{resource.name}</CardTitle>
+
       <CardContent>
         <CardLoader query={[query]} className="h-12">
           <CardWidgetNumber value={VALUE} />

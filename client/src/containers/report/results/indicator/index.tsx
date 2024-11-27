@@ -32,7 +32,7 @@ export default function ReportResultsIndicator({
       )}
       {type === "table" && indicator.resource.type === "feature" && (
         <TableIndicators {...indicator} resource={indicator.resource} />
-      )}{" "}
+      )}
     </div>
   );
 }
