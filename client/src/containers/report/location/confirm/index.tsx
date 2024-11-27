@@ -9,13 +9,12 @@ import { useSetAtom } from "jotai";
 import { formatNumber } from "@/lib/formats";
 import { useLocationGeometry, useLocationTitle } from "@/lib/location";
 
-import { confirmAtom, useSyncLocation } from "@/app/store";
+import { reportPanelAtom, useSyncLocation } from "@/app/store";
 
 import { Button } from "@/components/ui/button";
 
 export default function Confirm() {
-  const setConfirm = useSetAtom(confirmAtom);
-
+  const setReportPanel = useSetAtom(reportPanelAtom);
   const [location, setLocation] = useSyncLocation();
   const TITLE = useLocationTitle(location);
   const GEOMETRY = useLocationGeometry(location);
@@ -43,7 +42,7 @@ export default function Confirm() {
           Clear
         </Button>
 
-        <Button size="lg" className="grow" onClick={() => setConfirm(true)}>
+        <Button size="lg" className="grow" onClick={() => setReportPanel("topics")}>
           Select
         </Button>
       </div>
