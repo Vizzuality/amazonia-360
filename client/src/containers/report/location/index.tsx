@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useAtom } from "jotai";
 import { LuArrowLeft } from "react-icons/lu";
 
-import { tabAtom, confirmAtom, useSyncLocation, gridPanelAtom } from "@/app/store";
+import { tabAtom, useSyncLocation, gridPanelAtom, reportPanelAtom } from "@/app/store";
 
 import Confirm from "@/containers/report/location/confirm";
 import { GenerateReport } from "@/containers/report/location/generate";
@@ -21,7 +21,7 @@ const Topics = dynamic(() => import("@/containers/report/location/topics"), { ss
 
 export default function ReportLocation() {
   const [tab, setTab] = useAtom(tabAtom);
-  const [confirm, setConfirm] = useAtom(confirmAtom);
+  const [reportPanel, setReportPanel] = useAtom(reportPanelAtom);
   const [gridPanel, setGridPanel] = useAtom(gridPanelAtom);
 
   const [location] = useSyncLocation();
@@ -44,7 +44,7 @@ export default function ReportLocation() {
 
         <TabsContent className="flex grow flex-col" value="contextual-viewer">
           <ScrollArea className="w-full grow">
-            {!confirm && (
+            {reportPanel === "location" && (
               <div className="relative space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
                 <div className="space-y-1">
                   <h1 className="text-lg font-bold text-primary">Select your area of interest</h1>
@@ -67,12 +67,12 @@ export default function ReportLocation() {
               </div>
             )}
 
-            {confirm && (
+            {reportPanel === "topics" && (
               <div className="relative space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
                 <div className="space-y-1">
                   <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
                     <button
-                      onClick={() => setConfirm(false)}
+                      onClick={() => setReportPanel("location")}
                       className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50"
                     >
                       <LuArrowLeft className="h-4 w-4" />
