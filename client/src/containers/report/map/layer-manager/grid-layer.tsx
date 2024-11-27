@@ -262,5 +262,5 @@ export default function GridLayer() {
     return GRID_LAYER.current;
   }, [gridDatasets, gridFilters, getFillColor, gridMetaData, GEOMETRY, zoom]);
 
-  return <Layer index={5} layer={layer} />;
+  return <Layer index={0} layer={layer} />;
 }
