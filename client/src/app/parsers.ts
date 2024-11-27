@@ -1,16 +1,6 @@
-import {
-  parseAsArrayOf,
-  parseAsFloat,
-  parseAsJson,
-  parseAsString,
-  parseAsStringLiteral,
-} from "nuqs";
-
-import { DATASET_IDS } from "@/constants/datasets";
+import { parseAsArrayOf, parseAsFloat, parseAsJson, parseAsString } from "nuqs";
 
 import { VisualizationType } from "./api/indicators/route";
-
-export const datasetsParser = parseAsArrayOf(parseAsStringLiteral(DATASET_IDS)).withDefault([]);
 
 export type IndicatorView = {
   id: number;

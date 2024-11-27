@@ -1,7 +1,7 @@
 import { VisualizationType } from "@/app/api/indicators/route";
 import { IndicatorView } from "@/app/parsers";
 
-import topicsData from "./topics2.json";
+import TOPICS from "./topics2.json";
 
 export type Topic = {
   id: number;
@@ -13,5 +13,5 @@ export type Topic = {
 };
 
 export async function GET() {
-  return Response.json(topicsData as Topic[]);
+  return Response.json(TOPICS as Topic[]);
 }

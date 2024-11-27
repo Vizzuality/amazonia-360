@@ -1,6 +1,7 @@
-import INDICATORS from "@/app/api/indicators/indicators.json";
 import { Topic } from "@/app/api/topics/route";
 import { IndicatorView } from "@/app/parsers";
+
+import INDICATORS from "./indicators.json";
 
 export type VisualizationType = "map" | "table" | "chart" | "numeric";
 

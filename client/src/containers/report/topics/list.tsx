@@ -11,7 +11,7 @@ import { Topic } from "@/constants/topics";
 import { TopicsReportItems } from "@/containers/report/indicators/item";
 import SortableList from "@/containers/report/sortable/list";
 
-export default function TopicsSidebar() {
+export default function TopicsList() {
   const [topics, setTopics] = useSyncTopics();
   const [items, setItems] = useState<Topic[]>([]);
 
