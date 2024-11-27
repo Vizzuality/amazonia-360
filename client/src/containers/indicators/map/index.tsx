@@ -3,21 +3,12 @@ import { useMemo } from "react";
 import { useResourceId } from "@/lib/indicators";
 import { useSession } from "@/lib/session";
 
-import {
-  Indicator,
-  ResourceFeature,
-  ResourceImageryTile,
-  ResourceWebTile,
-} from "@/app/api/indicators/route";
+import { Indicator } from "@/app/api/indicators/route";
 
 import { Card, CardContent, CardLoader, CardTitle } from "@/containers/card";
 import WidgetMap from "@/containers/map";
 
-export interface MapIndicatorsProps {
-  resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
-}
-
-export const MapIndicators = ({ id, resource }: Indicator) => {
+export const MapIndicators = ({ id, name, resource }: Indicator) => {
   const { data: session } = useSession();
   const query = useResourceId({ resource, session });
 
@@ -47,12 +38,10 @@ export const MapIndicators = ({ id, resource }: Indicator) => {
 
   return (
     <Card>
-      <CardTitle>{resource.name}</CardTitle>
+      <CardTitle>{name}</CardTitle>
       <CardContent>
-        <CardLoader query={[query]} className="h-72">
-          <div className="h-72">
-            <WidgetMap layers={[LAYER]} />
-          </div>
+        <CardLoader query={[query]} className="min-h-72 grow">
+          <WidgetMap layers={[LAYER]} />
         </CardLoader>
       </CardContent>
     </Card>

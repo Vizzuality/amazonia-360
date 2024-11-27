@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import { useQueryFeatureId } from "@/lib/indicators";
 
-import { ResourceFeature } from "@/app/api/indicators/route";
+import { Indicator, ResourceFeature } from "@/app/api/indicators/route";
 
 import {
   Card,
@@ -14,12 +14,12 @@ import {
   CardWidgetNumber,
 } from "@/containers/card";
 
-export interface NumericIndicatorsProps {
+export interface NumericIndicatorsProps extends Indicator {
   resource: ResourceFeature;
 }
 // extender indicator and limit to resource
 
-export const NumericIndicators = ({ resource }: NumericIndicatorsProps) => {
+export const NumericIndicators = ({ name, resource }: NumericIndicatorsProps) => {
   const query = useQueryFeatureId({ resource, type: "numeric" });
 
   const VALUE = useMemo(() => {
@@ -32,7 +32,7 @@ export const NumericIndicators = ({ resource }: NumericIndicatorsProps) => {
 
   return (
     <Card>
-      <CardTitle>{resource.name}</CardTitle>
+      <CardTitle>{name}</CardTitle>
 
       <CardContent>
         <CardLoader query={[query]} className="h-12">
