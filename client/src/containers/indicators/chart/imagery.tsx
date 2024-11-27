@@ -47,7 +47,7 @@ export const ChartImageryIndicators = ({
     if (!query.data) return 0;
 
     return query.data.histograms.reduce((acc, curr) => {
-      return acc + curr.counts.reduce((a, c) => a + c, 0);
+      return acc + [...curr.counts].reduce((a, c) => a + c, 0);
     }, 0);
   }, [query.data]);
 

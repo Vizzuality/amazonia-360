@@ -219,21 +219,8 @@ export const getQueryImageryTileId = async ({
       };
     }[];
   };
-  histograms: {
-    min: number;
-    max: number;
-    size: number;
-    counts: number[];
-  }[];
-  statistics: {
-    min: number;
-    max: number;
-    stddev: number;
-    median: number;
-    mode: number;
-    sum: number;
-    avg: number;
-  }[];
+  histograms: __esri.RasterHistogram[];
+  statistics: __esri.RasterBandStatistics[];
 } | null> => {
   const f = new ImageryTileLayer({
     url: resource.url,
@@ -243,12 +230,14 @@ export const getQueryImageryTileId = async ({
     const RAT = await axios
       .get<{
         features: {
-          Value: number;
-          Class: string;
-          Red: number;
-          Green: number;
-          Blue: number;
-          Alpha: number;
+          attributes: {
+            Value: number;
+            Class: string;
+            Red: number;
+            Green: number;
+            Blue: number;
+            Alpha: number;
+          };
         }[];
       }>(`${resource.url}/rasterattributetable`, {
         params: {
@@ -257,7 +246,10 @@ export const getQueryImageryTileId = async ({
       })
       .then((response) => response.data);
 
-    const statistics = await f.computeStatisticsHistograms({
+    const statistics: {
+      histograms: __esri.RasterHistogram[];
+      statistics: __esri.RasterBandStatistics[];
+    } = await f.computeStatisticsHistograms({
       geometry: GEOMETRY,
     });
 
