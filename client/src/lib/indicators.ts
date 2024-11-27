@@ -1,5 +1,4 @@
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import ImageryTileLayer from "@arcgis/core/layers/ImageryTileLayer";
 import Query from "@arcgis/core/rest/support/Query";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -222,6 +221,7 @@ export const getQueryImageryTileId = async ({
   histograms: __esri.RasterHistogram[];
   statistics: __esri.RasterBandStatistics[];
 } | null> => {
+  const ImageryTileLayer = (await import("@arcgis/core/layers/ImageryTileLayer")).default;
   const f = new ImageryTileLayer({
     url: resource.url,
   });

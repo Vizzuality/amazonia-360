@@ -1,4 +1,4 @@
-import { formatNumber, formatPercentage, formatCurrency } from "@/lib/formats";
+import { formatNumber, formatPercentage, formatCurrency, formatNumberUnit } from "@/lib/formats";
 
 describe("formats", () => {
   test("formatNumber formats correctly", () => {
@@ -32,5 +32,11 @@ describe("formats", () => {
   test("formatCurrency with options formats correctly", () => {
     expect(formatCurrency(123456.789, { maximumFractionDigits: 0 })).toBe("$123,457");
     expect(formatCurrency(0.005, { maximumFractionDigits: 0 })).toBe("~0");
+  });
+
+  test("formatNumberUnit formats correctly", () => {
+    expect(formatNumberUnit(123456.789, "unit")).toBe("123,456.79 unit");
+    expect(formatNumberUnit(0.005, "unit")).toBe("~0 unit");
+    expect(formatNumberUnit(undefined, "unit")).toBe("");
   });
 });

@@ -11,6 +11,7 @@ import { H3HexagonLayer } from "@deck.gl/geo-layers";
 import { ArrowLoader } from "@loaders.gl/arrow";
 import { load } from "@loaders.gl/core";
 import CHROMA from "chroma-js";
+import { useAtomValue } from "jotai";
 
 import { env } from "@/env.mjs";
 
@@ -19,7 +20,12 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { MultiDatasetMeta } from "@/types/generated/api.schemas";
 
-import { useSyncGridDatasets, useSyncGridFilters, useSyncLocation } from "@/app/store";
+import {
+  gridCellHighlightAtom,
+  useSyncGridDatasets,
+  useSyncGridFilters,
+  useSyncLocation,
+} from "@/app/store";
 
 import H3TileLayer from "@/components/map/layers/h3-tile-layer";
 import { useMap } from "@/components/map/provider";
@@ -33,6 +39,7 @@ export const getGridLayerProps = ({
   gridMetaData,
   geometry,
   zoom,
+  gridCellHighlight,
 }: {
   gridDatasets: string[];
   gridFilters: Record<string, number[]> | null;
@@ -40,6 +47,7 @@ export const getGridLayerProps = ({
   gridMetaData: MultiDatasetMeta | undefined;
   geometry: __esri.Polygon | null;
   zoom?: number;
+  gridCellHighlight?: string;
 }) => {
   // Create array of 4n values
   const filters = [...Array(4).keys()];
@@ -172,6 +180,24 @@ export const getGridLayerProps = ({
             getLineColor: [zoom],
           },
         }),
+        new H3HexagonLayer({
+          id: `${props.id}-grid-highlight`,
+          data: !!gridCellHighlight ? [gridCellHighlight] : [],
+          highPrecision: true,
+          opacity: 1,
+          visible: !!gridCellHighlight,
+          pickable: false,
+          filled: true,
+          extruded: false,
+          // HEXAGON
+          getHexagon: (d) => d,
+          // LINE
+          stroked: true,
+          getFillColor: [0, 220, 0, 255],
+          getLineColor: [0, 220, 0, 255],
+          getLineWidth: 3,
+          lineWidthUnits: "pixels",
+        }),
       ];
     },
   });
@@ -182,6 +208,7 @@ export default function GridLayer() {
   const [location] = useSyncLocation();
   const [gridFilters] = useSyncGridFilters();
   const [gridDatasets] = useSyncGridDatasets();
+  const gridCellHighlight = useAtomValue(gridCellHighlightAtom);
 
   const map = useMap();
   const [zoom, setZoom] = useState(map?.view.zoom);
@@ -241,6 +268,7 @@ export default function GridLayer() {
             getFillColor,
             geometry: GEOMETRY,
             zoom,
+            gridCellHighlight,
           }),
         ],
       });
@@ -256,11 +284,12 @@ export default function GridLayer() {
         getFillColor,
         geometry: GEOMETRY,
         zoom,
+        gridCellHighlight,
       }),
     ];
 
     return GRID_LAYER.current;
-  }, [gridDatasets, gridFilters, getFillColor, gridMetaData, GEOMETRY, zoom]);
+  }, [gridDatasets, gridFilters, getFillColor, gridMetaData, GEOMETRY, zoom, gridCellHighlight]);
 
   return <Layer index={0} layer={layer} />;
 }

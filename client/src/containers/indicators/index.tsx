@@ -1,16 +1,12 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
-const IndicatorList = dynamic(() => import("@/containers/indicators/list"), {
-  ssr: false,
-});
+import IndicatorsList from "@/containers/indicators/list";
 
 export const Indicators = () => {
   return (
     <section className="py-10">
       <div className="container">
-        <IndicatorList />
+        <IndicatorsList />
       </div>
     </section>
   );

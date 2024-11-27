@@ -43,3 +43,15 @@ export const formatCurrency = (v?: number, options?: Intl.NumberFormatOptions) =
 
   return f.format(v);
 };
+
+export const formatNumberUnit = (v?: number | null, unit?: string) => {
+  if (v === undefined || v === null) return "";
+
+  const fv = formatNumber(v);
+
+  if (fv && unit) {
+    return `${fv} ${unit}`;
+  }
+
+  return fv;
+};
