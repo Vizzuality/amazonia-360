@@ -63,6 +63,5 @@ export const sketchAtom = atom<SketchProps>({
 });
 
 export const tabAtom = atom<"contextual-viewer" | "grid">("contextual-viewer");
-export const confirmAtom = atom<boolean>(false);
-export const contextualViewerAtom = atom<string>("location");
-export const gridPanelAtom = atom<string>("filters");
+export const reportPanelAtom = atom<"location" | "topics">("location");
+export const gridPanelAtom = atom<"filters" | "table">("filters");
