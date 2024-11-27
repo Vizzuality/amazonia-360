@@ -29,14 +29,16 @@ export default function GridTable() {
   const queryTable = useGetGridTable(
     {
       body: {
-        geojson: {
-          type: "Feature",
-          properties: {},
-          geometry: {
-            type: "Polygon",
-            coordinates: GEOMETRY?.toJSON().rings,
+        ...(!!GEOMETRY && {
+          geojson: {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "Polygon",
+              coordinates: GEOMETRY?.toJSON().rings,
+            },
           },
-        },
+        }),
         filters: gridDatasets
           .map((dataset) => {
             const d = queryMeta.data?.datasets.find((d) => d.var_name === dataset);
