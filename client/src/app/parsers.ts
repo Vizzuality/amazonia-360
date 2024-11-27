@@ -11,12 +11,12 @@ export type IndicatorView = {
   y?: number;
 };
 
-export type Topics = {
+export type Topic = {
   id: number;
   indicators: IndicatorView[] | undefined;
 };
 
-export const topicsParser = parseAsArrayOf(parseAsJson<Topics>());
+export const topicsParser = parseAsArrayOf(parseAsJson<Topic>());
 
 export const bboxParser = parseAsArrayOf(parseAsFloat).withDefault([
   -12497583.775253754, -2540944.9326481596, -4391589.799669538, 1362846.9759313238,
