@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
 
@@ -22,6 +22,7 @@ import { MultiDatasetMeta } from "@/types/generated/api.schemas";
 import { useSyncGridDatasets, useSyncGridFilters, useSyncLocation } from "@/app/store";
 
 import H3TileLayer from "@/components/map/layers/h3-tile-layer";
+import { useMap } from "@/components/map/provider";
 
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
@@ -31,12 +32,14 @@ export const getGridLayerProps = ({
   getFillColor,
   gridMetaData,
   geometry,
+  zoom,
 }: {
   gridDatasets: string[];
   gridFilters: Record<string, number[]> | null;
   getFillColor: Accessor<Record<string, number>, Color>;
   gridMetaData: MultiDatasetMeta | undefined;
   geometry: __esri.Polygon | null;
+  zoom?: number;
 }) => {
   // Create array of 4n values
   const filters = [...Array(4).keys()];
@@ -44,8 +47,9 @@ export const getGridLayerProps = ({
 
   return new H3TileLayer({
     id: `tile-h3s`,
-    data: `https://dev.api.amazonia360.dev-vizzuality.com/grid/tile/{h3index}?${columns}`,
+    data: `${env.NEXT_PUBLIC_API_URL}/grid/tile/{h3index}?${columns}`,
     extent: [-85.3603, -28.5016, -29.8134, 10.8038],
+    visible: !!gridDatasets.length,
     getTileData: (tile) => {
       if (!tile.url) return Promise.resolve(null);
       return load(tile.url, ArrowLoader, {
@@ -153,6 +157,7 @@ export const getGridLayerProps = ({
           data: props.data,
           highPrecision: true,
           opacity: 1,
+          visible: zoom && zoom < 8 ? false : true,
           pickable: false,
           filled: false,
           extruded: false,
@@ -163,6 +168,9 @@ export const getGridLayerProps = ({
           getLineColor: [0, 154, 222, 255],
           getLineWidth: 1,
           lineWidthUnits: "pixels",
+          updateTriggers: {
+            getLineColor: [zoom],
+          },
         }),
       ];
     },
@@ -174,6 +182,11 @@ export default function GridLayer() {
   const [location] = useSyncLocation();
   const [gridFilters] = useSyncGridFilters();
   const [gridDatasets] = useSyncGridDatasets();
+
+  const map = useMap();
+  const [zoom, setZoom] = useState(map?.view.zoom);
+
+  map?.view.watch("zoom", setZoom);
 
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
@@ -227,6 +240,7 @@ export default function GridLayer() {
             gridMetaData,
             getFillColor,
             geometry: GEOMETRY,
+            zoom,
           }),
         ],
       });
@@ -241,11 +255,12 @@ export default function GridLayer() {
         gridMetaData,
         getFillColor,
         geometry: GEOMETRY,
+        zoom,
       }),
     ];
 
     return GRID_LAYER.current;
-  }, [gridDatasets, gridFilters, getFillColor, gridMetaData, GEOMETRY]);
+  }, [gridDatasets, gridFilters, getFillColor, gridMetaData, GEOMETRY, zoom]);
 
-  return <Layer index={0} layer={layer} />;
+  return <Layer index={5} layer={layer} />;
 }
