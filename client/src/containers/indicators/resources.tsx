@@ -37,7 +37,13 @@ export const ResourceMap = (props: Indicator) => {
         </Button>
       </div>
 
-      <div className="not-prose">{enabled && <MapIndicators {...props} />}</div>
+      <div className="not-prose">
+        {enabled && (
+          <div className="h-72">
+            <MapIndicators {...props} />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
@@ -62,7 +68,7 @@ export const ResourceQueryFeature = (
         <Button
           size="sm"
           onClick={() => {
-            const key = getQueryFeatureIdKey({ id, resource, type, geometry: GEOMETRY?.toJSON() });
+            const key = getQueryFeatureIdKey({ id, resource, type, geometry: GEOMETRY });
             queryClient.invalidateQueries({
               queryKey: key,
             });
@@ -75,7 +81,11 @@ export const ResourceQueryFeature = (
 
       <div className="not-prose">
         {type === "table" && enabled && <TableIndicators {...props} />}
-        {type === "chart" && enabled && <ChartIndicators {...props} />}
+        {type === "chart" && enabled && (
+          <div className="flex h-60 flex-col">
+            <ChartIndicators {...props} />
+          </div>
+        )}
         {type === "numeric" && enabled && <NumericIndicators {...props} />}
       </div>
     </div>
@@ -105,7 +115,7 @@ export const ResourceQueryImageryTile = (
               id,
               resource,
               type,
-              geometry: GEOMETRY?.toJSON(),
+              geometry: GEOMETRY,
             });
             queryClient.invalidateQueries({
               queryKey: key,
@@ -118,7 +128,11 @@ export const ResourceQueryImageryTile = (
       </div>
 
       <div className="not-prose">
-        {type === "chart" && enabled && <ChartImageryIndicators {...props} />}
+        {type === "chart" && enabled && (
+          <div className="flex h-60 flex-col">
+            <ChartImageryIndicators {...props} />
+          </div>
+        )}
       </div>
     </div>
   );
