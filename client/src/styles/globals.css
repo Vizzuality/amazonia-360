@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
     /* Amazonia */
@@ -20,7 +19,7 @@
     --hover-secondary: 200 29% 67%;
     --input: 201 24% 84%;
     --muted: 200 25% 95%;
-    --muted-foreground: 0 1% 23%;
+    --muted-foreground: 50 2% 52%;
     --popover: 0 0 100%;
     --popover-foreground: 0 0 12%;
     --primary: 198 100% 22%;
@@ -69,7 +68,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-semibold;
+    @apply bg-background font-semibold text-foreground;
   }
 
   .same-trigger-size {
@@ -79,6 +78,10 @@
 }
 
 @layer base {
+  .map .esri-view-surface:focus::after {
+    outline: none !important;
+  }
+
   .map .esri-widget {
     font-family: var(--montserrat);
   }
@@ -94,7 +97,6 @@
   .map .esri-feature__content-element {
     @apply p-0;
   }
-
 
   /*
     TABLE
@@ -113,7 +115,7 @@
 
   .map .esri-widget__table tr th,
   .map .esri-widget__table tr td {
-    @apply text-2xs p-0.5;
+    @apply p-0.5 text-2xs;
   }
 
   .map .esri-widget__table tr th {
@@ -127,11 +129,31 @@
 
 @media print {
   :root {
-    -webkit-print-color-adjust:exact !important;
-    print-color-adjust:exact !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .container {
     @apply p-0;
   }
+}
+
+.react-grid-placeholder {
+  border-radius: 16px;
+  border: 1px dashed #000;
+  pointer-events: none;
+  @apply bg-slate-200 !important;
+}
+
+.react-resizable-handle::after {
+  background: transparent !important;
+  border: none !important;
+}
+
+.react-resizable-handle {
+  background-image: none !important;
+}
+
+.react-grid-placeholder {
+  background-color: blueviolet;
 }

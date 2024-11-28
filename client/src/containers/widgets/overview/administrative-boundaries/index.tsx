@@ -68,7 +68,7 @@ export default function WidgetAdministrativeBoundaries() {
     <Card>
       <CardHeader>
         <CardTitle>Administrative Boundaries</CardTitle>
-        <CardInfo ids={["admin2", "ciudades_capitales"]} />
+        <CardInfo ids={[+"admin2", +"ciudades_capitales"]} />
       </CardHeader>
       <CardContent className="space-y-2">
         <CardLoader query={[queryAdmin, queryCities]} className="h-72">

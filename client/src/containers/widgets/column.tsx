@@ -8,10 +8,7 @@ export default function WidgetsColumn({
 }: PropsWithChildren<{ className?: string }>) {
   return (
     <div
-      className={cn(
-        "col-span-6 print:block flex flex-col relative grow print:grow-0",
-        className,
-      )}
+      className={cn("relative col-span-6 flex grow flex-col print:block print:grow-0", className)}
     >
       {children}
     </div>

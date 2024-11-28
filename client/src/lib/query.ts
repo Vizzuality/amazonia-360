@@ -1,17 +1,14 @@
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import * as geometryEngineAsync from "@arcgis/core/geometry/geometryEngineAsync";
-import * as projection from "@arcgis/core/geometry/projection";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import Query from "@arcgis/core/rest/support/Query";
-import {
-  QueryFunction,
-  UseQueryOptions,
-  useQuery,
-} from "@tanstack/react-query";
+import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
+import { omit } from "@/lib/utils";
+
 import { StatsOps } from "@/types/generated/api.schemas";
-import { exactZonalStatsExactZonalStatsPost } from "@/types/generated/default";
+import { exactZonalStatsExactZonalStatsPost } from "@/types/generated/raster";
 
 import { DATASETS, DatasetIds } from "@/constants/datasets";
 
@@ -24,7 +21,7 @@ import { DATASETS, DatasetIds } from "@/constants/datasets";
  */
 export type GetFeaturesParams = {
   query?: Query;
-  feature?: FeatureLayer;
+  feature?: Partial<__esri.FeatureLayer> | null;
 };
 export const getFeatures = async (params: GetFeaturesParams) => {
   const { feature, query } = params;
@@ -33,9 +30,10 @@ export const getFeatures = async (params: GetFeaturesParams) => {
     throw new Error("Feature and query are required");
   }
 
+  const f = new FeatureLayer(omit(feature, ["type"]));
   const q = query.clone();
 
-  return feature!.queryFeatures(q);
+  return f!.queryFeatures(q);
 };
 
 export const getFeaturesKey = (params: GetFeaturesParams) => {
@@ -54,8 +52,7 @@ export const getFeaturesOptions = <
   >,
 ) => {
   const queryKey = getFeaturesKey(params);
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getFeatures>>> = () =>
-    getFeatures(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getFeatures>>> = () => getFeatures(params);
   return { queryKey, queryFn, ...options } as UseQueryOptions<
     Awaited<ReturnType<typeof getFeatures>>,
     TError,
@@ -63,10 +60,7 @@ export const getFeaturesOptions = <
   >;
 };
 
-export const useGetFeatures = <
-  TData = Awaited<ReturnType<typeof getFeatures>>,
-  TError = unknown,
->(
+export const useGetFeatures = <TData = Awaited<ReturnType<typeof getFeatures>>, TError = unknown>(
   params: GetFeaturesParams,
   options?: Omit<
     UseQueryOptions<Awaited<ReturnType<typeof getFeatures>>, TError, TData>,
@@ -100,7 +94,7 @@ export const getFeaturesId = async (params: GetFeaturesIdParams) => {
     throw new Error("Feature and query are required");
   }
 
-  const f = feature.clone();
+  const f = new FeatureLayer(omit(feature, ["type"]));
   const q = query.clone();
 
   q!.where = `FID = ${params.id}`;
@@ -110,13 +104,7 @@ export const getFeaturesId = async (params: GetFeaturesIdParams) => {
 
 export const getFeaturesIdKey = (params: GetFeaturesIdParams) => {
   const { feature, query } = params;
-  return [
-    "arcgis",
-    "query",
-    params.id,
-    feature?.id,
-    query?.toJSON() ?? {},
-  ] as const;
+  return ["arcgis", "query", params.id, feature?.id, query?.toJSON() ?? {}] as const;
 };
 
 export const getFeaturesIdOptions = <
@@ -130,9 +118,8 @@ export const getFeaturesIdOptions = <
   >,
 ) => {
   const queryKey = getFeaturesIdKey(params);
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getFeaturesId>>
-  > = () => getFeaturesId(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getFeaturesId>>> = () =>
+    getFeaturesId(params);
   return { queryKey, queryFn, ...options } as UseQueryOptions<
     Awaited<ReturnType<typeof getFeaturesId>>,
     TError,
@@ -170,11 +157,7 @@ export const useGetFeaturesId = <
 export type GetIntersectionAnalysisParams = {
   id: Exclude<
     DatasetIds,
-    | "population"
-    | "deprivation_index"
-    | "land_cover"
-    | "fires"
-    | "elevation_ranges"
+    "population" | "deprivation_index" | "land_cover" | "fires" | "elevation_ranges"
   >;
   polygon?: __esri.Polygon | null;
 };
@@ -185,9 +168,7 @@ export type IntersectionAnalysisQueryOptions<TData, TError> = UseQueryOptions<
   TData
 >;
 
-export const getIntersectionAnalysis = async (
-  params: GetIntersectionAnalysisParams,
-) => {
+export const getIntersectionAnalysis = async (params: GetIntersectionAnalysisParams) => {
   const { id, polygon } = params;
 
   const d = DATASETS[id];
@@ -203,7 +184,7 @@ export const getIntersectionAnalysis = async (
     })
     .clone();
 
-  const f = d.layer.clone();
+  const f = new FeatureLayer(omit(d.layer, ["type"]));
 
   try {
     const featureSet = await f.queryFeatures(q);
@@ -218,19 +199,11 @@ export const getIntersectionAnalysis = async (
       polygon,
     )) as unknown as __esri.Polygon[];
 
-    const totalResults = (await geometryEngineAsync.union(
-      results,
-    )) as unknown as __esri.Polygon;
+    const totalResults = (await geometryEngineAsync.union(results)) as unknown as __esri.Polygon;
 
-    const totalResultsArea = await geometryEngine.geodesicArea(
-      totalResults,
-      "square-kilometers",
-    );
+    const totalResultsArea = await geometryEngine.geodesicArea(totalResults, "square-kilometers");
 
-    const polygonArea = geometryEngine.geodesicArea(
-      polygon,
-      "square-kilometers",
-    );
+    const polygonArea = geometryEngine.geodesicArea(polygon, "square-kilometers");
 
     return {
       features: featureSet.features.map((f, i) => ({
@@ -246,9 +219,7 @@ export const getIntersectionAnalysis = async (
   }
 };
 
-export const getIntersectionAnalysisKey = (
-  params: GetIntersectionAnalysisParams,
-) => {
+export const getIntersectionAnalysisKey = (params: GetIntersectionAnalysisParams) => {
   const { id, polygon } = params;
   return ["arcgis", "analysis", id, polygon?.toJSON()] as const;
 };
@@ -261,13 +232,9 @@ export const getIntersectionAnalysisOptions = <
   options?: Omit<IntersectionAnalysisQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const queryKey = getIntersectionAnalysisKey(params);
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getIntersectionAnalysis>>
-  > = () => getIntersectionAnalysis(params);
-  return { queryKey, queryFn, ...options } as IntersectionAnalysisQueryOptions<
-    TData,
-    TError
-  >;
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getIntersectionAnalysis>>> = () =>
+    getIntersectionAnalysis(params);
+  return { queryKey, queryFn, ...options } as IntersectionAnalysisQueryOptions<TData, TError>;
 };
 
 export const useGetIntersectionAnalysis = <
@@ -295,12 +262,7 @@ export const useGetIntersectionAnalysis = <
  ************************************************************
  */
 export type GetRasterAnalysisParams = {
-  id:
-    | "landcover"
-    | "population"
-    | "fires"
-    | "elevation_ranges"
-    | "deprivation_index";
+  id: "landcover" | "population" | "fires" | "elevation_ranges" | "deprivation_index";
   polygon?: __esri.Polygon | null;
   statistics?: StatsOps[];
 };
@@ -318,12 +280,6 @@ export const getRasterAnalysis = async (params: GetRasterAnalysisParams) => {
     throw new Error("Polygon is required");
   }
 
-  const projectedGeom = projection.project(polygon, {
-    wkid: 4326,
-  });
-
-  const geom = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
-
   return exactZonalStatsExactZonalStatsPost(
     {
       type: "FeatureCollection",
@@ -333,7 +289,7 @@ export const getRasterAnalysis = async (params: GetRasterAnalysisParams) => {
           properties: {},
           geometry: {
             type: "Polygon",
-            coordinates: geom.toJSON().rings,
+            coordinates: polygon.toJSON().rings,
           },
         },
       ],
@@ -358,13 +314,9 @@ export const getRasterAnalysisOptions = <
   options?: Omit<RasterAnalysisQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const queryKey = getRasterAnalysisKey(params);
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getRasterAnalysis>>
-  > = () => getRasterAnalysis(params);
-  return { queryKey, queryFn, ...options } as RasterAnalysisQueryOptions<
-    TData,
-    TError
-  >;
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getRasterAnalysis>>> = () =>
+    getRasterAnalysis(params);
+  return { queryKey, queryFn, ...options } as RasterAnalysisQueryOptions<TData, TError>;
 };
 
 export const useGetRasterAnalysis = <
@@ -391,7 +343,8 @@ export const useGetRasterAnalysis = <
  ************************************************************
  */
 export type GetMetadataParams = {
-  id: DatasetIds;
+  id: number;
+  url: string;
 };
 
 export type MetadataQueryOptions<TData, TError> = UseQueryOptions<
@@ -401,40 +354,32 @@ export type MetadataQueryOptions<TData, TError> = UseQueryOptions<
 >;
 
 export const getMetadata = async (params: GetMetadataParams) => {
-  const { id } = params;
+  const { id, url } = params;
 
   if (!id) {
     throw new Error("id is required");
   }
-
-  const DATASET = DATASETS[id];
-
-  if (!DATASET?.metadata?.url) {
-    return new Promise<{ id: DatasetIds; metadata: string }>((resolve) => {
-      resolve({
-        id,
-        metadata: "",
-      });
+  if (!url) {
+    return Promise.resolve({
+      id,
+      metadata: "",
     });
   }
 
-  return axios
-    .get(DATASET?.metadata?.url, {
-      headers: {
-        "Content-Type": "application/xml",
-      },
-    })
-    .then((res) => {
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(res.data, "text/xml");
+  const response = await axios.get(url, {
+    headers: {
+      "Content-Type": "application/xml",
+    },
+  });
 
-      const metadata = xmlDoc.getElementsByTagName("idAbs")[0];
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(response.data, "text/xml");
+  const metadataElement = xmlDoc.getElementsByTagName("idAbs")[0];
 
-      return {
-        id,
-        metadata: metadata?.textContent || "",
-      };
-    });
+  return {
+    id,
+    metadata: metadataElement?.textContent || "",
+  };
 };
 
 export const getMetadataKey = (params: GetMetadataParams) => {
@@ -450,18 +395,11 @@ export const getMetadataOptions = <
   options?: Omit<MetadataQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const queryKey = getMetadataKey(params);
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMetadata>>> = () =>
-    getMetadata(params);
-  return { queryKey, queryFn, ...options } as MetadataQueryOptions<
-    TData,
-    TError
-  >;
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMetadata>>> = () => getMetadata(params);
+  return { queryKey, queryFn, ...options } as MetadataQueryOptions<TData, TError>;
 };
 
-export const useGetMetadata = <
-  TData = Awaited<ReturnType<typeof getMetadata>>,
-  TError = unknown,
->(
+export const useGetMetadata = <TData = Awaited<ReturnType<typeof getMetadata>>, TError = unknown>(
   params: GetMetadataParams,
   options?: Omit<MetadataQueryOptions<TData, TError>, "queryKey">,
 ) => {

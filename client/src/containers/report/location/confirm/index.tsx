@@ -2,39 +2,34 @@
 
 import { useMemo } from "react";
 
-import Link from "next/link";
-
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import Polygon from "@arcgis/core/geometry/Polygon";
+import { useSetAtom } from "jotai";
 
 import { formatNumber } from "@/lib/formats";
 import { useLocationGeometry, useLocationTitle } from "@/lib/location";
 
-import { useSyncLocation, useSyncSearchParams } from "@/app/store";
+import { reportPanelAtom, useSyncLocation } from "@/app/store";
 
 import { Button } from "@/components/ui/button";
 
 export default function Confirm() {
-  const searchParams = useSyncSearchParams();
-
+  const setReportPanel = useSetAtom(reportPanelAtom);
   const [location, setLocation] = useSyncLocation();
   const TITLE = useLocationTitle(location);
   const GEOMETRY = useLocationGeometry(location);
 
   const AREA = useMemo(() => {
     if (!GEOMETRY) return 0;
-    return geometryEngine.geodesicArea(
-      GEOMETRY as Polygon,
-      "square-kilometers",
-    );
+    return geometryEngine.geodesicArea(GEOMETRY as Polygon, "square-kilometers");
   }, [GEOMETRY]);
 
   if (!location) return null;
 
   return (
-    <div className="flex w-full rounded-[16px] py-5 px-5 text-sm bg-white items-center overflow-hidden justify-between space-x-2">
-      <div className="grow">
-        <div className="text-lg font-bold leading-tight">{TITLE}</div>
+    <div className="flex w-full flex-col justify-between gap-4 overflow-hidden rounded-lg bg-blue-50 p-4 text-sm">
+      <div className="flex items-end justify-between">
+        <div className="text-sm font-semibold leading-tight">{TITLE}</div>
         <div className="text-gray-500">
           {formatNumber(AREA, {
             maximumFractionDigits: 0,
@@ -42,13 +37,14 @@ export default function Confirm() {
           km²
         </div>
       </div>
-      <div className="space-x-2 shrink-0">
-        <Button variant="outline" size="lg" onClick={() => setLocation(null)}>
+      <div className="flex items-center justify-between gap-2">
+        <Button variant="outline" size="lg" className="grow" onClick={() => setLocation(null)}>
           Clear
         </Button>
-        <Link href={`/report/topics${searchParams}`}>
-          <Button size="lg">Select</Button>
-        </Link>
+
+        <Button size="lg" className="grow" onClick={() => setReportPanel("topics")}>
+          Select
+        </Button>
       </div>
     </div>
   );

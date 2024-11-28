@@ -7,10 +7,7 @@ export const AXIOS_INSTANCE = Axios.create({
   baseURL: env.NEXT_PUBLIC_API_URL,
 });
 
-export const API = <T>(
-  config: AxiosRequestConfig,
-  options?: AxiosRequestConfig,
-): Promise<T> => {
+export const API = <T>(config: AxiosRequestConfig, options?: AxiosRequestConfig): Promise<T> => {
   const source = Axios.CancelToken.source();
 
   const promise = AXIOS_INSTANCE({

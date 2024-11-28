@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  HierarchyNode,
-  HierarchyRectangularNode,
-} from "@visx/hierarchy/lib/types";
+import { HierarchyNode, HierarchyRectangularNode } from "@visx/hierarchy/lib/types";
 import { scaleOrdinal } from "@visx/scale";
 import CHROMA from "chroma-js";
 
@@ -17,6 +14,7 @@ import { DATASETS } from "@/constants/datasets";
 
 import {
   Card,
+  CardControls,
   CardHeader,
   CardInfo,
   CardLoader,
@@ -77,9 +75,7 @@ export default function WidgetFundingByType() {
   const ordinalColorScale = scaleOrdinal({
     domain: query?.data?.map((d) => d),
     // range,
-    range: CHROMA.scale(["#2D6485", "#009ADE", "#B7DBF2"]).colors(
-      query?.data?.length || 0,
-    ),
+    range: CHROMA.scale(["#2D6485", "#009ADE", "#B7DBF2"]).colors(query?.data?.length || 0),
   });
 
   const FORMAT = (node: HierarchyRectangularNode<HierarchyNode<Data>>) => {
@@ -92,17 +88,15 @@ export default function WidgetFundingByType() {
     <Card className="grow">
       <CardHeader>
         <CardTitle>IDB funding by sector</CardTitle>
-        <CardInfo ids={["idb_operations"]} />
+        <CardControls>
+          <CardInfo ids={[+"idb_operations"]} />
+        </CardControls>
       </CardHeader>
 
       <CardLoader query={[query]} className="h-44">
         <CardNoData query={[query]}>
-          <div className="space-y-2 pt-2">
-            <MarimekkoChart
-              format={FORMAT}
-              colorScale={ordinalColorScale}
-              data={query.data || []}
-            />
+          <div className="flex grow flex-col space-y-2 pt-2">
+            <MarimekkoChart format={FORMAT} data={query.data || []} className="h-full grow" />
 
             <LegendOrdinal ordinalColorScale={ordinalColorScale} />
           </div>

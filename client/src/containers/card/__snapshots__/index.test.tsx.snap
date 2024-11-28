@@ -41,7 +41,7 @@ exports[`CardNoData renders CardNoData Children component when query is fetched 
 exports[`CardNoData renders CardNoData component when query is fetched and no data 1`] = `
 <div>
   <div
-    class="flex flex-col justify-center items-center space-y-6 py-12 grow"
+    class="flex grow flex-col items-center justify-center space-y-6 py-12"
   >
     <img
       alt="No data"
@@ -54,7 +54,7 @@ exports[`CardNoData renders CardNoData component when query is fetched and no da
       width="149"
     />
     <p
-      class="text-sm text-blue-900 font-medium text-center"
+      class="text-center text-sm font-medium text-blue-900"
     >
       No results for this location at the moment. 
       <br />
@@ -67,7 +67,7 @@ exports[`CardNoData renders CardNoData component when query is fetched and no da
 exports[`CardNoData renders CardNoData component without crashing 1`] = `
 <div>
   <div
-    class="flex flex-col justify-center items-center space-y-6 py-12 grow"
+    class="flex grow flex-col items-center justify-center space-y-6 py-12"
   >
     <img
       alt="No data"
@@ -80,7 +80,7 @@ exports[`CardNoData renders CardNoData component without crashing 1`] = `
       width="149"
     />
     <p
-      class="text-sm text-blue-900 font-medium text-center"
+      class="text-center text-sm font-medium text-blue-900"
     >
       No results for this location at the moment. 
       <br />

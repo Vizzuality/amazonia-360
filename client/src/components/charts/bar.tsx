@@ -35,28 +35,17 @@ export default function BarChart({ data }: BarChartProps) {
   }, [height]);
 
   return (
-    <div ref={parentRef} className="w-full h-12 relative">
+    <div ref={parentRef} className="relative h-12 w-full">
       <svg width={width} height={height}>
         <Group top={0} left={0}>
           {data.map((d, i) => {
             const w = xScale(d.x);
             const h = yScale((i + 1) / data.length);
 
-            const x = xScale(
-              data.slice(0, i).reduce((acc, curr) => acc + curr.x, 0),
-            );
+            const x = xScale(data.slice(0, i).reduce((acc, curr) => acc + curr.x, 0));
             const y = height - h;
 
-            return (
-              <rect
-                key={d.id}
-                x={x}
-                y={y}
-                width={w < 1 ? 1 : w}
-                height={h}
-                fill={d.color}
-              />
-            );
+            return <rect key={d.id} x={x} y={y} width={w < 1 ? 1 : w} height={h} fill={d.color} />;
           })}
         </Group>
       </svg>

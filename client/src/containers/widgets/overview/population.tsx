@@ -18,7 +18,9 @@ import {
 export default function WidgetPopulation() {
   const [location] = useSyncLocation();
 
-  const GEOMETRY = useLocationGeometry(location);
+  const GEOMETRY = useLocationGeometry(location, {
+    wkid: 4326,
+  });
 
   const query = useGetRasterAnalysis(
     {
@@ -41,7 +43,7 @@ export default function WidgetPopulation() {
     <Card>
       <CardHeader>
         <CardTitle>Population</CardTitle>
-        <CardInfo ids={["population"]} />
+        <CardInfo ids={[+"population"]} />
       </CardHeader>
 
       <CardLoader query={[query]} className="h-12">

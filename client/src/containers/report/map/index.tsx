@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 import dynamic from "next/dynamic";
 
@@ -9,12 +9,7 @@ import { useDebounce, useWindowSize } from "rooks";
 
 import { getGeometryWithBuffer } from "@/lib/location";
 
-import {
-  sketchAtom,
-  tmpBboxAtom,
-  useSyncBbox,
-  useSyncLocation,
-} from "@/app/store";
+import { sketchAtom, tmpBboxAtom, useSyncBbox, useSyncLocation } from "@/app/store";
 
 import LayerManager from "@/containers/report/map/layer-manager";
 
@@ -34,6 +29,15 @@ export default function MapContainer() {
   const [, setLocation] = useSyncLocation();
 
   const { innerWidth } = useWindowSize();
+
+  const padding = useMemo(() => {
+    return {
+      top: 50,
+      right: 50,
+      bottom: 50,
+      left: innerWidth ? innerWidth / 2 : 0,
+    };
+  }, [innerWidth]);
 
   const handleMapMove = useDebounce((extent: __esri.Extent) => {
     setBbox([extent.xmin, extent.ymin, extent.xmax, extent.ymax]);
@@ -60,18 +64,13 @@ export default function MapContainer() {
   }, [setSketch]);
 
   return (
-    <div className="w-full flex flex-col grow">
+    <div className="flex w-full grow flex-col">
       <Map
         id="default"
         defaultBbox={bbox}
         bbox={tmpBbox}
         onMapMove={handleMapMove}
-        padding={{
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: innerWidth ? innerWidth / 2 : 0,
-        }}
+        padding={padding}
       >
         <LayerManager />
 

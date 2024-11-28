@@ -50,9 +50,7 @@ export const LAND_COVER = {
 export const LAND_COVER_COLORMAP = Object.keys(LAND_COVER).reduce(
   (acc, key) => ({
     ...acc,
-    [key]: convertHexToRgbaArray(
-      LAND_COVER[key as keyof typeof LAND_COVER].color,
-    ),
+    [key]: convertHexToRgbaArray(LAND_COVER[key as keyof typeof LAND_COVER].color),
   }),
   {} as Record<keyof typeof LAND_COVER, string>,
 );
@@ -84,14 +82,14 @@ export const FIRES = {
     label: "Extremely high",
     color: "#bd0026",
   },
-  "7": {
-    label: "Urban, industrial, mining thermal anomaly",
-    color: "#08519c",
-  },
-  "8": {
-    label: "Geological thermal anomaly (volcanism)",
-    color: "#810f7c",
-  },
+  // "7": {
+  //   label: "Urban, industrial, mining thermal anomaly",
+  //   color: "#08519c",
+  // },
+  // "8": {
+  //   label: "Geological thermal anomaly (volcanism)",
+  //   color: "#810f7c",
+  // },
 };
 
 export const FIRES_COLORMAP = Object.keys(FIRES).reduce(
@@ -155,9 +153,7 @@ export const ELEVATION_RANGES = {
 export const ELEVATION_RANGES_COLORMAP = Object.keys(ELEVATION_RANGES).reduce(
   (acc, key) => ({
     ...acc,
-    [key]: convertHexToRgbaArray(
-      ELEVATION_RANGES[key as keyof typeof ELEVATION_RANGES].color,
-    ),
+    [key]: convertHexToRgbaArray(ELEVATION_RANGES[key as keyof typeof ELEVATION_RANGES].color),
   }),
   {} as Record<keyof typeof ELEVATION_RANGES, string>,
 );

@@ -9,10 +9,11 @@ import { LuLoader2, LuSearch, LuX } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
+import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 
 export type Option = {
+  active?: boolean;
   label: string;
   value: string;
   key: string;
@@ -26,6 +27,8 @@ export type SearchProps<T> = {
   placeholder?: string;
   onChange: (e: string) => void;
   onSelect: (o: T | null) => void;
+  children?: (option: Option) => React.ReactNode;
+  size?: "sm" | "md";
 } & UseQueryResult<unknown, unknown>;
 
 export function Search<T extends Option>({
@@ -37,24 +40,27 @@ export function Search<T extends Option>({
   isFetched,
   onChange,
   onSelect,
+  children,
+  size,
 }: SearchProps<T>) {
   const [opened, setOpened] = React.useState(false);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 
   return (
     <Popover onOpenChange={setOpened} open={opened}>
-      <PopoverTrigger ref={triggerRef} className="w-full relative">
-        <LuSearch className="absolute top-1/2 left-6 -translate-y-1/2 h-8 w-8 text-blue-500 stroke-1" />
+      <PopoverTrigger ref={triggerRef} className="relative w-full">
+        <LuSearch className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 stroke-1 text-black" />
         <div
           className={cn(
-            "flex w-full rounded-[32px] py-5 h-12 tall:2xl:h-16 pl-[70px] text-sm bg-white items-center",
+            "flex h-14 w-full items-center rounded-sm border border-input bg-white py-5 pl-10 text-sm",
             !value && "text-gray-500",
+            size === "sm" && "h-10 py-3",
           )}
         >
           {value || placeholder || "Search..."}
         </div>
 
-        <div className="absolute top-1/2 right-6 -translate-y-1/2">
+        <div className="absolute right-6 top-1/2 -translate-y-1/2">
           {isFetching && (
             <span className="h-4 w-4 animate-spin text-blue-500">
               <LuLoader2 className="text-current" />
@@ -63,7 +69,7 @@ export function Search<T extends Option>({
           {value && (
             <span
               role="button"
-              className="h-6 w-6 p-1 hover:text-cyan-500 focus:outline-none block bg-secondary rounded-full"
+              className="block h-6 w-6 rounded-full bg-secondary p-1 hover:text-cyan-500 focus:outline-none"
               onClick={() => {
                 onSelect(null);
               }}
@@ -78,29 +84,28 @@ export function Search<T extends Option>({
         <PopoverPrimitive.Content
           align="start"
           updatePositionStrategy="always"
-          sideOffset={
-            (triggerRef.current?.getBoundingClientRect()?.height || 0) * -1 ?? 0
-          }
+          sideOffset={(triggerRef.current?.getBoundingClientRect()?.height || 0) * -1}
           className={cn(
-            "z-50 w-popover-width border-0 rounded-[32px] bg-white overflow-hidden p-0 text-popover-foreground shadow-md outline-none",
+            "z-50 w-popover-width overflow-hidden rounded-sm border-0 bg-white p-0 text-popover-foreground shadow-md outline-none",
           )}
         >
           <Command shouldFilter={false}>
-            <div className="w-full relative" cmdk-input-wrapper="">
-              <LuSearch className="absolute top-1/2 left-6 -translate-y-1/2 h-8 w-8 text-blue-500 stroke-1" />
+            <div className="relative w-full" cmdk-input-wrapper="">
+              <LuSearch className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 stroke-1 text-black" />
 
               <CommandPrimitive.Input
                 value={value}
                 placeholder={placeholder ?? "Search..."}
                 className={cn(
-                  "flex w-full bg-transparent h-12 tall:2xl:h-16 py-5 pl-[70px] text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+                  "flex h-14 w-full items-center rounded-sm border border-input bg-white py-5 pl-10 text-sm placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+                  size === "sm" && "h-7",
                 )}
                 onValueChange={(e) => {
                   onChange(e);
                 }}
               />
 
-              <div className="absolute top-1/2 right-6 -translate-y-1/2 flex items-center space-x-2">
+              <div className="absolute right-6 top-1/2 flex -translate-y-1/2 items-center space-x-2">
                 {isFetching && (
                   <span className="h-4 w-4 animate-spin text-blue-500">
                     <LuLoader2 className="text-current" />
@@ -109,7 +114,7 @@ export function Search<T extends Option>({
                 {value && (
                   <span
                     role="button"
-                    className="h-6 w-6 p-1 hover:text-cyan-500 focus:outline-none block bg-secondary rounded-full"
+                    className="block h-6 w-6 rounded-full bg-secondary p-1 hover:text-cyan-500 focus:outline-none"
                     onClick={() => {
                       onSelect(null);
                     }}
@@ -124,20 +129,33 @@ export function Search<T extends Option>({
               <p className="py-6 text-center text-sm">No results found.</p>
             )}
 
-            {open && !!options.length && (
-              <CommandGroup className="px-2 pb-5">
-                {options.map((o) => (
-                  <CommandItem
-                    key={o.sourceIndex + o.key + o.value}
-                    value={o.value}
-                    className="px-4"
-                    onSelect={() => onSelect(o)}
-                  >
-                    {o.label} <span className="hidden">({o.value})</span>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            )}
+            <CommandList>
+              {open && !!options.length && (
+                <CommandGroup className="px-2 pb-5">
+                  {options.map((o) => (
+                    <CommandItem
+                      key={o.sourceIndex + o.key + o.value}
+                      value={o.value}
+                      className="px-4"
+                      onSelect={() => onSelect(o)}
+                    >
+                      {!children ? (
+                        <>
+                          {o.label}
+                          <span className="hidden">({o.value})</span>
+                        </>
+                      ) : (
+                        React.cloneElement(children(o) as React.ReactElement, {
+                          key: o.sourceIndex + o.key + o.value,
+                          value: o.value,
+                          onSelect: () => onSelect(o),
+                        })
+                      )}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
+            </CommandList>
           </Command>
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Portal>

@@ -5,9 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const getKeys = Object.keys as <T extends object>(
-  obj: T,
-) => Array<keyof T>;
+export const getKeys = Object.keys as <T extends object>(obj: T) => Array<keyof T>;
 
 export function joinWithAnd(arr: string[]) {
   if (arr.length === 0) return "";
@@ -18,16 +16,21 @@ export function joinWithAnd(arr: string[]) {
   return arr.join(", ") + " and " + lastItem;
 }
 
-export function convertHexToRgbaArray(
-  hex: string,
-  opacity: number = 1,
-): number[] {
+export function convertHexToRgbaArray(hex: string, opacity: number = 1): number[] {
   const hexValue = hex.replace(/^#/, "");
   const red = parseInt(hexValue.substring(0, 2), 16);
   const green = parseInt(hexValue.substring(2, 4), 16);
   const blue = parseInt(hexValue.substring(4, 6), 16);
   const alpha = opacity * 255;
   return [red, green, blue, alpha];
+}
+
+export function omit<T extends Record<string, unknown>, K extends keyof T>(
+  obj: T,
+  keys: K[],
+): Omit<T, K> {
+  const omitKeys = new Set(keys as string[]);
+  return Object.fromEntries(Object.entries(obj).filter(([k]) => !omitKeys.has(k))) as Omit<T, K>;
 }
 
 export const getTextSize = ({

@@ -31,7 +31,7 @@ describe("Header", () => {
 
   it("renders the badge", () => {
     render(<Header />);
-    expect(screen.getByText("Prototype")).toBeInTheDocument();
+    expect(screen.getByText("Beta")).toBeInTheDocument();
   });
 
   // Selected

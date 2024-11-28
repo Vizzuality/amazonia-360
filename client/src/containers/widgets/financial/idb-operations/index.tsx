@@ -46,7 +46,7 @@ export default function WidgetIDBOperations() {
     <Card>
       <CardHeader>
         <CardTitle>IDB operations</CardTitle>
-        <CardInfo ids={["idb_operations"]} />
+        <CardInfo ids={[+"idb_operations"]} />
       </CardHeader>
 
       <CardContent className="space-y-2">
