@@ -133,5 +133,99 @@
       "url": "https://tiledimageservices6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/landcover_test_3/ImageServer"
     },
     "visualization_types": ["map", "chart"]
+  },
+  {
+    "id": 4,
+    "name": "IDB operations",
+    "unit": "",
+    "topic": {
+      "id": 2,
+      "name": "IDB operations",
+      "image": "/images/topics/idb-operations.png",
+      "description": "IDB development operations and impact data.",
+      "default_visualization": [
+        {
+          "id": 4,
+          "type": "numeric",
+          "x": 0,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        {
+          "id": 5,
+          "type": "numeric",
+          "x": 1,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        { "id": 4, "type": "map", "x": 0, "y": 1, "w": 4, "h": 4 }
+      ]
+    },
+    "resource": {
+      "name": "IDB_operations",
+      "type": "feature",
+      "layer_id": 0,
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/IDB_Operations/FeatureServer",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "objectid",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      }
+    },
+    "visualization_types": ["map", "numeric"]
+  },
+  {
+    "id": 5,
+    "name": "IDB operations funding",
+    "unit": "$",
+    "topic": {
+      "id": 2,
+      "name": "IDB operations",
+      "image": "/images/topics/idb-operations.png",
+      "description": "IDB development operations and impact data.",
+      "default_visualization": [
+        {
+          "id": 4,
+          "type": "numeric",
+          "x": 0,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        {
+          "id": 5,
+          "type": "numeric",
+          "x": 1,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        { "id": 4, "type": "map", "x": 0, "y": 1, "w": 4, "h": 4 }
+      ]
+    },
+    "resource": {
+      "name": "IDB_operations",
+      "type": "feature",
+      "layer_id": 0,
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/IDB_Operations/FeatureServer",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "totalamount",
+            "outStatisticFieldName": "value",
+            "statisticType": "sum"
+          }
+        ]
+      }
+    },
+    "visualization_types": ["numeric"]
   }
 ]
