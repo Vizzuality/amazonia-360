@@ -6,22 +6,13 @@ import { useLocationGeometry } from "@/lib/location";
 import { Indicator, ResourceFeature } from "@/app/api/indicators/route";
 import { useSyncLocation } from "@/app/store";
 
-import {
-  Card,
-  CardContent,
-  // CardControls,
-  // CardInfo,
-  CardLoader,
-  CardTitle,
-  CardWidgetNumber,
-} from "@/containers/card";
+import { CardLoader, CardWidgetNumber } from "@/containers/card";
 
 export interface NumericIndicatorsProps extends Indicator {
   resource: ResourceFeature;
 }
-// extender indicator and limit to resource
 
-export const NumericIndicators = ({ id, name, resource }: NumericIndicatorsProps) => {
+export const NumericIndicators = ({ id, resource }: NumericIndicatorsProps) => {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
 
@@ -36,14 +27,8 @@ export const NumericIndicators = ({ id, name, resource }: NumericIndicatorsProps
   }, [query.data]);
 
   return (
-    <Card>
-      <CardTitle>{name}</CardTitle>
-
-      <CardContent>
-        <CardLoader query={[query]} className="h-12">
-          <CardWidgetNumber value={VALUE} />
-        </CardLoader>
-      </CardContent>
-    </Card>
+    <CardLoader query={[query]} className="h-12">
+      <CardWidgetNumber value={VALUE} />
+    </CardLoader>
   );
 };

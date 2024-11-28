@@ -64,7 +64,7 @@ export default function NumericWidget({ id }: { id: keyof typeof DATASETS }) {
       <CardHeader>
         <CardTitle>{dataset?.layer?.title}</CardTitle>
         <CardControls>
-          <CardInfo ids={[id]} />
+          <CardInfo ids={[+id]} />
         </CardControls>
       </CardHeader>
 

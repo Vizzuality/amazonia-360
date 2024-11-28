@@ -136,7 +136,7 @@ export default function Glance() {
           <ul className="space-y-2 text-sm">
             <li>
               <span>Global Human Settlement Layer (GHSL) - Population projection for 2025;</span>
-              <CardInfo ids={["population"]} className="relative top-0.5 inline-flex" />
+              <CardInfo ids={[+"population"]} className="relative top-0.5 inline-flex" />
             </li>
             <li>Cartographic area</li>
           </ul>

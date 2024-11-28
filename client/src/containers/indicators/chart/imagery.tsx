@@ -10,7 +10,7 @@ import { useLocationGeometry } from "@/lib/location";
 import { Indicator, ResourceImageryTile } from "@/app/api/indicators/route";
 import { useSyncLocation } from "@/app/store";
 
-import { Card, CardContent, CardLoader, CardTitle } from "@/containers/card";
+import { CardLoader } from "@/containers/card";
 
 import MarimekkoChart from "@/components/charts/marimekko";
 
@@ -18,7 +18,7 @@ export interface ChartImageryIndicatorsProps extends Indicator {
   resource: ResourceImageryTile;
 }
 
-export const ChartImageryIndicators = ({ id, name, resource }: ChartImageryIndicatorsProps) => {
+export const ChartImageryIndicators = ({ id, resource }: ChartImageryIndicatorsProps) => {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
 
@@ -70,17 +70,12 @@ export const ChartImageryIndicators = ({ id, name, resource }: ChartImageryIndic
   }, [query.data, TOTAL, COLOR_SCALE]);
 
   return (
-    <Card>
-      <CardTitle>{name}</CardTitle>
-      <CardContent>
-        <CardLoader query={[query]} className="grow">
-          <MarimekkoChart
-            data={DATA}
-            format={(d) => formatPercentage(d.value)}
-            className="h-full grow"
-          />
-        </CardLoader>
-      </CardContent>
-    </Card>
+    <CardLoader query={[query]} className="grow">
+      <MarimekkoChart
+        data={DATA}
+        format={(d) => formatPercentage(d.value)}
+        className="h-full grow"
+      />
+    </CardLoader>
   );
 };
