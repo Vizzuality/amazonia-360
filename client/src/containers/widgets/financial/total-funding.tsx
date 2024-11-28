@@ -58,7 +58,7 @@ export default function WidgetTotalFunding() {
     <Card>
       <CardHeader>
         <CardTitle>IDB total funding</CardTitle>
-        <CardInfo ids={["idb_operations"]} />
+        <CardInfo ids={[+"idb_operations"]} />
       </CardHeader>
 
       <CardLoader query={[query]} className="h-12">

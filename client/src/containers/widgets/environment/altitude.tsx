@@ -84,7 +84,7 @@ export default function WidgetAltitude() {
     <Card>
       <CardHeader>
         <CardTitle>Elevation</CardTitle>
-        <CardInfo ids={["elevation_ranges"]} />
+        <CardInfo ids={[+"elevation_ranges"]} />
       </CardHeader>
 
       <CardLoader query={[query]} className="h-20">

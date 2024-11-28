@@ -47,7 +47,7 @@ export default function WidgetResearchCenters() {
     <Card>
       <CardHeader>
         <CardTitle>Research centers</CardTitle>
-        <CardInfo ids={["institutional_tracking"]} />
+        <CardInfo ids={[+"institutional_tracking"]} />
       </CardHeader>
 
       <CardContent>
