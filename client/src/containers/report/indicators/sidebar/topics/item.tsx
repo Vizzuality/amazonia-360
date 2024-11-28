@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
@@ -14,10 +14,11 @@ import { useSyncTopics } from "@/app/store";
 import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
 
 import { Indicators } from "@/containers/report/indicators/sidebar/topics/indicators";
-import { CounterIndicatorsPill } from "@/containers/report/indicators/sidebar/topics/indicators/counter-indicators-pill";
 
 import { Switch } from "@/components/ui/switch";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
+import { CounterIndicatorsPill } from "./counter-indicators-pill";
 
 export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
   const [topics, setTopics] = useSyncTopics();
@@ -49,30 +50,31 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
     [setTopics],
   );
 
-  const activeIndicators = useMemo(() => {
-    return topics?.find(({ id }) => id === topic.id)?.indicators;
-  }, [topics, topic.id]);
-
-  const selectedIndicators = useMemo(() => {
-    return activeIndicators?.map(({ id }) => id);
-  }, [activeIndicators]);
-
   const handleResetTopic = useCallback(() => {
-    setTopics((prevTopics) => {
-      const updatedTopic = topics?.find((t) => t.id === topic.id);
-      if (!prevTopics || !updatedTopic) return prevTopics ?? [];
+    setTopics((prev) => {
+      const t = topics?.find((t) => t.id === topic.id);
+      if (!prev || !t) return prev ?? [];
 
-      const index = prevTopics.findIndex((t) => t.id === topic.id);
-      if (index === -1) return prevTopics;
+      const index = prev.findIndex((t) => t.id === topic.id);
+      if (index === -1) return prev;
 
-      const updatedTopics = [...prevTopics];
-      updatedTopics[index] = {
-        ...prevTopics[index],
-        ...updatedTopic,
+      prev[index] = {
+        id: topic.id,
+        indicators: topic.default_visualization?.map((indicator) => {
+          return {
+            id: indicator?.id,
+            type: indicator?.type,
+            x: indicator?.x || 0,
+            y: indicator?.y || 0,
+            w: indicator?.w || DEFAULT_VISUALIZATION_SIZES[indicator?.type].w,
+            h: indicator?.h || DEFAULT_VISUALIZATION_SIZES[indicator?.type].h,
+          };
+        }),
       };
-      return updatedTopics;
+
+      return prev;
     });
-  }, [topic.id, setTopics, topics]);
+  }, [topic, setTopics, topics]);
 
   return (
     <li
@@ -105,9 +107,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
 
                 <span className="whitespace flex-nowrap text-sm">{topic.name}</span>
 
-                {!!selectedIndicators && (
-                  <CounterIndicatorsPill activeIndicatorsLength={selectedIndicators?.length} />
-                )}
+                <CounterIndicatorsPill id={topic.id} />
               </div>
             </div>
           </CollapsibleTrigger>
@@ -136,7 +136,9 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
 
               <TooltipPortal>
                 <TooltipContent side="top" align="end">
-                  Clear all widgets and set’s the topic to it’s default view
+                  <div className="max-w-40">
+                    Clear all widgets and set’s the topic to it’s default view
+                  </div>
                   <TooltipArrow className="fill-foreground" width={10} height={5} />
                 </TooltipContent>
               </TooltipPortal>
