@@ -6,8 +6,7 @@ import dynamic from "next/dynamic";
 
 import { useLocationGeometry } from "@/lib/location";
 
-import { Location } from "@/app/parsers";
-// import { useSyncLocation } from "@/app/store";
+import { useSyncLocation } from "@/app/store";
 
 import { Card } from "@/containers/card";
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
@@ -25,24 +24,7 @@ interface WidgetMapProps extends __esri.MapViewProperties {
 }
 
 export default function WidgetMap({ layers, ...viewProps }: WidgetMapProps) {
-  // const [location] = useSyncLocation();
-  const location = {
-    type: "polygon",
-    geometry: {
-      spatialReference: { wkid: 102100 },
-      rings: [
-        [
-          [-7766471.038835982, -1329452.5803468754],
-          [-6879763.29221403, -1190719.3740093173],
-          [-6518254.366939386, -1425075.3027316048],
-          [-6563237.558085199, -1677317.4960726197],
-          [-7389177.867220452, -1682285.902911155],
-          [-7766471.038835982, -1329452.5803468754],
-        ],
-      ],
-    },
-  } as Location;
-
+  const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
 
   // We need to create our custom basemap and labels layers because if we use the default ones the labels will be on top of all layers, even markers

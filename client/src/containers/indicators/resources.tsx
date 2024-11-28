@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { getQueryFeatureIdKey, getQueryImageryTileIdKey } from "@/lib/indicators";
+import { useLocationGeometry } from "@/lib/location";
 
 import {
   Indicator,
@@ -10,6 +11,7 @@ import {
   ResourceImageryTile,
   VisualizationType,
 } from "@/app/api/indicators/route";
+import { useSyncLocation } from "@/app/store";
 
 import { ChartIndicators } from "@/containers/indicators/chart";
 import { ChartImageryIndicators } from "@/containers/indicators/chart/imagery";
@@ -46,7 +48,10 @@ export const ResourceQueryFeature = (
     resource: ResourceFeature;
   },
 ) => {
-  const { resource, type } = props;
+  const [location] = useSyncLocation();
+  const GEOMETRY = useLocationGeometry(location);
+
+  const { id, resource, type } = props;
   const queryClient = useQueryClient();
   const [enabled, setEnabled] = useState(false);
 
@@ -57,7 +62,7 @@ export const ResourceQueryFeature = (
         <Button
           size="sm"
           onClick={() => {
-            const key = getQueryFeatureIdKey({ resource, type });
+            const key = getQueryFeatureIdKey({ id, resource, type, geometry: GEOMETRY?.toJSON() });
             queryClient.invalidateQueries({
               queryKey: key,
             });
@@ -83,7 +88,10 @@ export const ResourceQueryImageryTile = (
     resource: ResourceImageryTile;
   },
 ) => {
-  const { resource, type } = props;
+  const [location] = useSyncLocation();
+  const GEOMETRY = useLocationGeometry(location);
+
+  const { id, resource, type } = props;
   const queryClient = useQueryClient();
   const [enabled, setEnabled] = useState(false);
 
@@ -93,7 +101,12 @@ export const ResourceQueryImageryTile = (
         <Button
           size="sm"
           onClick={() => {
-            const key = getQueryImageryTileIdKey({ resource, type });
+            const key = getQueryImageryTileIdKey({
+              id,
+              resource,
+              type,
+              geometry: GEOMETRY?.toJSON(),
+            });
             queryClient.invalidateQueries({
               queryKey: key,
             });

@@ -1,8 +1,10 @@
 import { useMemo } from "react";
 
 import { useQueryFeatureId } from "@/lib/indicators";
+import { useLocationGeometry } from "@/lib/location";
 
 import { Indicator, ResourceFeature } from "@/app/api/indicators/route";
+import { useSyncLocation } from "@/app/store";
 
 import { Card, CardContent, CardLoader, CardTitle } from "@/containers/card";
 import { DataTable } from "@/containers/table";
@@ -11,8 +13,11 @@ export interface TableIndicatorsProps extends Indicator {
   resource: ResourceFeature;
 }
 
-export const TableIndicators = ({ name, resource }: TableIndicatorsProps) => {
-  const query = useQueryFeatureId({ resource, type: "table" });
+export const TableIndicators = ({ id, name, resource }: TableIndicatorsProps) => {
+  const [location] = useSyncLocation();
+  const GEOMETRY = useLocationGeometry(location);
+
+  const query = useQueryFeatureId({ id, resource, type: "table", geometry: GEOMETRY });
 
   const DATA = useMemo(() => {
     if (!query.data) return [];

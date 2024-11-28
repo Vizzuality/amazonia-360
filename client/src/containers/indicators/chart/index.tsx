@@ -5,8 +5,10 @@ import CHROMA from "chroma-js";
 
 import { formatPercentage } from "@/lib/formats";
 import { useQueryFeatureId } from "@/lib/indicators";
+import { useLocationGeometry } from "@/lib/location";
 
 import { Indicator, ResourceFeature } from "@/app/api/indicators/route";
+import { useSyncLocation } from "@/app/store";
 
 import { Card, CardContent, CardLoader, CardTitle } from "@/containers/card";
 
@@ -16,8 +18,11 @@ export interface ChartIndicatorsProps extends Indicator {
   resource: ResourceFeature;
 }
 
-export const ChartIndicators = ({ name, resource }: ChartIndicatorsProps) => {
-  const query = useQueryFeatureId({ resource, type: "chart" });
+export const ChartIndicators = ({ id, name, resource }: ChartIndicatorsProps) => {
+  const [location] = useSyncLocation();
+  const GEOMETRY = useLocationGeometry(location);
+
+  const query = useQueryFeatureId({ id, resource, type: "chart", geometry: GEOMETRY });
 
   const COLOR_SCALE = useMemo(() => {
     return scaleOrdinal({
