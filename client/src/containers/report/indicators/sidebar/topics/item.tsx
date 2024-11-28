@@ -8,34 +8,18 @@ import { LuChevronRight, LuGripVertical } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
+import { Topic } from "@/app/api/topics/route";
 import { useSyncTopics } from "@/app/store";
 
-import { DEFAULT_VISUALIZATION_SIZES, TOPICS, Topic } from "@/constants/topics";
+import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
 
-import { CounterIndicatorsPill } from "@/containers/report/indicators/counter-indicators-pill";
+import { Indicators } from "@/containers/report/indicators/sidebar/topics/indicators";
+import { CounterIndicatorsPill } from "@/containers/report/indicators/sidebar/topics/indicators/counter-indicators-pill";
 
 import { Switch } from "@/components/ui/switch";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-import { TopicsReportItem } from "./sidebar-topic-item";
-
-const DEFAULT_TOPICS = TOPICS.map((topic) => {
-  return {
-    id: topic.id,
-    indicators: topic.default_visualization?.map((indicator) => {
-      return {
-        id: indicator.id,
-        type: indicator.type,
-        x: indicator?.x ?? 0,
-        y: indicator?.y ?? 0,
-        w: indicator?.w ?? DEFAULT_VISUALIZATION_SIZES[indicator?.type].w,
-        h: indicator?.h ?? DEFAULT_VISUALIZATION_SIZES[indicator?.type].h,
-      };
-    }),
-  };
-});
-
-export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
+export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
   const [topics, setTopics] = useSyncTopics();
   const [open, setOpen] = useState(false);
 
@@ -43,7 +27,6 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
     (topic: Topic, isChecked: boolean) => {
       setTopics((prevTopics) => {
         if (isChecked) {
-          // TO DO - save indicators selection in store to be able to recover them after toggling (maybe visible/hidden to topic)
           const newTopic = {
             id: topic.id,
             indicators: topic.default_visualization?.map((indicator) => {
@@ -76,18 +59,20 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
 
   const handleResetTopic = useCallback(() => {
     setTopics((prevTopics) => {
-      const D = DEFAULT_TOPICS.find((t) => t.id === topic.id);
-      if (!prevTopics) return [];
+      const updatedTopic = topics?.find((t) => t.id === topic.id);
+      if (!prevTopics || !updatedTopic) return prevTopics ?? [];
 
-      if (!D) return prevTopics;
+      const index = prevTopics.findIndex((t) => t.id === topic.id);
+      if (index === -1) return prevTopics;
 
-      const i = prevTopics?.findIndex((t) => t.id === topic.id);
-
-      prevTopics.slice(i);
-
-      return [...prevTopics.slice(0, i), D, ...prevTopics.slice(i + 1)];
+      const updatedTopics = [...prevTopics];
+      updatedTopics[index] = {
+        ...prevTopics[index],
+        ...updatedTopic,
+      };
+      return updatedTopics;
     });
-  }, [topic.id, setTopics]);
+  }, [topic.id, setTopics, topics]);
 
   return (
     <li
@@ -98,7 +83,11 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
       })}
     >
       <Collapsible open={open}>
-        <div className={cn({ "flex items-center space-x-4 py-2": true, "pb-0": open })}>
+        <div
+          className={cn({
+            "flex h-10 items-center space-x-4 rounded-[2px] px-0.5 py-2 hover:bg-secondary": true,
+          })}
+        >
           <CollapsibleTrigger
             className="flex w-full min-w-28 items-center justify-between text-sm"
             asChild
@@ -114,7 +103,7 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
                   className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? "rotate-90" : ""}`}
                 />
 
-                <span className="whitespace flex-nowrap text-sm">{topic.label}</span>
+                <span className="whitespace flex-nowrap text-sm">{topic.name}</span>
 
                 {!!selectedIndicators && (
                   <CounterIndicatorsPill activeIndicatorsLength={selectedIndicators?.length} />
@@ -125,19 +114,14 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: string }) {
           <Switch
             checked={!!topics?.find((t) => t.id === topic.id)}
             onCheckedChange={(e) => handleTopic(topic, e)}
-            id={topic.id}
+            id={`${topic.id}`}
             value={topic.id}
             className="h-4 w-8"
           />
         </div>
         <CollapsibleContent>
-          <ul className="space-y-1 py-2 pl-6 text-sm font-medium">
-            {topic?.indicators?.map((indicator) => (
-              <li key={`${indicator.value}-${topic.id}`}>
-                <TopicsReportItem {...{ topic, indicator }} />
-              </li>
-            ))}
-          </ul>
+          <Indicators topic={topic} />
+
           <div className="flex w-full justify-end">
             <Tooltip>
               <TooltipTrigger asChild>

@@ -1,6 +1,5 @@
+import { useGetTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
-
-import { TOPICS } from "@/constants/topics";
 
 import { Card } from "@/containers/card";
 import WidgetResearchCenters from "@/containers/widgets/bioeconomy/research-centers";
@@ -9,11 +8,12 @@ import WidgetMap from "@/containers/widgets/map";
 import WidgetsRow from "@/containers/widgets/row";
 
 export default function WidgetsBioeconomy({ index }: { index: number }) {
-  const T = TOPICS.find((t) => t.id === "climate");
+  const { data: topicsData } = useGetTopics();
+  const T = topicsData?.find((t) => t.id === 2);
 
   return (
     <div className="container print:break-before-page">
-      <h2 className="mb-4 text-xl">{T?.label}</h2>
+      <h2 className="mb-4 text-xl">{T?.name}</h2>
       <WidgetsRow>
         <WidgetsColumn
           className={cn(

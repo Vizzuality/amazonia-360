@@ -1,0 +1,352 @@
+[
+  {
+    "id": 1,
+    "label": "Nature",
+    "image": "/images/topics/nature.png",
+    "description": "Get data on life zones, ecosystems, habitats, and conservation areas.",
+    "indicators": [
+      {
+        "label": "Topographic Altitude",
+        "value": "topographic_altitude",
+        "visualization_types": ["map", "chart"]
+      },
+      {
+        "label": "Topographic Slope",
+        "value": "topographic_slope",
+        "visualization_types": ["map", "chart"]
+      },
+      {
+        "label": "Terrestrial Biome Types",
+        "value": "terrestrial_biome_types",
+        "visualization_types": ["map", "chart"]
+      },
+      {
+        "label": "Ecosystems",
+        "value": 7,
+        "visualization_types": ["map", "chart", "table"]
+      },
+      {
+        "label": "Selection of functional ecosystems",
+        "value": 6,
+        "visualization_types": ["map", "chart", "table"]
+      },
+      {
+        "label": "Coastal Influence Zone",
+        "value": 5,
+        "visualization_types": ["map", "chart", "table"]
+      },
+      {
+        "label": "Conservation Priority Indicator",
+        "value": 4,
+        "visualization_types": ["map", "chart", "table"]
+      },
+      {
+        "label": "Conservation Priority Indicator",
+        "value": "conservation_priority_indicator",
+        "visualization_types": ["map"]
+      },
+
+      {
+        "label": "Wetlands, Floodplains, Mangroves",
+        "value": 3,
+        "visualization_types": ["map"]
+      },
+      {
+        "label": "Protected Areas",
+        "value": 2,
+        "visualization_types": ["numeric"]
+      },
+      {
+        "label": "Indigenous territories",
+        "value": 1,
+        "visualization_types": ["map"]
+      },
+      {
+        "label": "WorldCover Class Coverage",
+        "value": "worldcover_class_coverage",
+        "visualization_types": ["chart"]
+      },
+      {
+        "label": "Cultivated Area Indicator",
+        "value": "",
+        "visualization_types": ["map"]
+      },
+      {
+        "label": "Soil Productivity Loss Indicator",
+        "value": "",
+        "visualization_types": ["map"]
+      },
+      {
+        "label": "Basic Species Count",
+        "value": "basic_species_count",
+        "visualization_types": ["numeric"]
+      },
+      {
+        "label": "Wetlands Presence",
+        "value": "",
+        "visualization_types": ["map"]
+      },
+      {
+        "label": "Mangroves",
+        "value": "",
+        "visualization_types": ["map"]
+      },
+      {
+        "label": "Carbon Sequestered in Biomass",
+        "value": "",
+        "visualization_types": ["map", "numeric"]
+      }
+    ],
+    "default_visualization": [
+      { "id": "conservation_priority_indicator", "type": "map", "x": 0, "y": 0, "w": 2, "h": 4 },
+      { "id": "ecosystems", "type": "map", "x": 2, "y": 0, "w": 2, "h": 4 },
+      { "id": "topographic_altitude", "type": "chart", "x": 0, "y": 4, "w": 2, "h": 2 },
+      { "id": "worldcover_class_coverage", "type": "chart", "x": 2, "y": 4, "w": 2, "h": 2 },
+      { "id": 2, "type": "numeric", "x": 0, "y": 6, "w": 1, "h": 1 },
+      { "id": "carbon_sequestered_biomass", "type": "numeric", "x": 1, "y": 6, "w": 1, "h": 1 },
+      { "id": "basic_species_count", "type": "numeric", "x": 2, "y": 6, "w": 1, "h": 1 }
+    ]
+  },
+  {
+    "id": "climate",
+    "label": "Climate",
+    "image": "/images/topics/climate.png",
+    "description": "Data on climate types, precipitation, temperature, and drought risk.",
+    "indicators": [
+      {
+        "label": "Köppen Climate Types",
+        "value": "koppen_climate_types",
+        "visualization_types": ["map"]
+      },
+      {
+        "label": "Annual Precipitation",
+        "value": "annual_precipitation",
+        "visualization_types": ["chart"]
+      },
+      {
+        "label": "Annual Temperature",
+        "value": "annual_temperature",
+        "visualization_types": []
+      },
+      {
+        "label": "Drought Risk Index",
+        "value": "drought_risk_index",
+        "visualization_types": ["numeric", "map"]
+      },
+      {
+        "label": "Fire Frequency",
+        "value": "fire_frequency",
+        "visualization_types": ["chart"]
+      },
+      {
+        "label": "Cumulative Forest Loss Indicator",
+        "value": "forest_loss_indicator",
+        "visualization_types": ["numeric"]
+      }
+    ],
+    "default_visualization": [
+      { "id": "koppen_climate_types", "type": "map", "x": 0, "y": 0, "w": 2, "h": 4 },
+      { "id": "annual_precipitation", "type": "chart", "x": 2, "y": 0, "w": 2, "h": 4 },
+      { "id": "fire_frequency", "type": "chart", "x": 0, "y": 4, "w": 2, "h": 2 },
+      { "id": "drought_risk_index", "type": "numeric", "x": 2, "y": 4, "w": 2, "h": 2 },
+      { "id": "forest_loss_indicator", "type": "numeric", "x": 0, "y": 6, "w": 2, "h": 2 }
+    ]
+  },
+  {
+    "id": "people",
+    "label": "People",
+    "image": "/images/topics/people.png",
+    "description": "Data on population, access to services, health, and education.",
+    "indicators": [
+      {
+        "label": "Total Population - GHSPOP 2025",
+        "value": "total_population_ghspop_2025",
+        "visualization_types": ["numeric"]
+      },
+      {
+        "label": "Access to Public Transport",
+        "value": "access_public_transport",
+        "visualization_types": ["numeric"]
+      },
+      {
+        "label": "Access to Electricity",
+        "value": "access_electricity",
+        "visualization_types": ["numeric"]
+      },
+      {
+        "label": "Higher Education Centers",
+        "value": "higher_education_centers",
+        "visualization_types": ["map"]
+      },
+      {
+        "label": "Primary Health Index",
+        "value": "primary_health_index",
+        "visualization_types": ["map"]
+      }
+    ],
+    "default_visualization": [
+      { "id": "primary_health_index", "type": "map", "x": 0, "y": 0, "w": 2, "h": 4 },
+      { "id": "higher_education_centers", "type": "map", "x": 2, "y": 0, "w": 2, "h": 4 },
+      { "id": "access_public_transport", "type": "numeric", "x": 0, "y": 4, "w": 1, "h": 1 },
+      { "id": "access_electricity", "type": "numeric", "x": 1, "y": 4, "w": 1, "h": 1 },
+      { "id": "total_population_ghspop_2025", "type": "numeric", "x": 2, "y": 4, "w": 1, "h": 1 }
+    ]
+  },
+  {
+    "id": "oil-mining-agriculture-energy",
+    "label": "Oil, Mining, Agriculture, Energy",
+    "image": "/images/topics/oil-mining-agriculture-energy.webp",
+    "description": "Data on resources including oil, mining, and agricultural indicators.",
+    "indicators": [
+      {
+        "label": "Mining Concession Indicator",
+        "value": "mining_concession_indicator",
+        "visualization_types": ["map", "table", "chart"]
+      },
+      {
+        "label": "Illegal Mining Indicator",
+        "value": "illegal_mining_indicator",
+        "visualization_types": ["map", "chart", "numeric"]
+      },
+      {
+        "label": "Oil Concession Indicator",
+        "value": "oil_concession_indicator",
+        "visualization_types": ["numeric", "map", "chart"]
+      },
+      {
+        "label": "Cultivated Area Indicator",
+        "value": "cultivated_area_indicator",
+        "visualization_types": ["numeric", "map", "chart"]
+      }
+    ],
+    "default_visualization": [
+      { "id": "cultivated_area_indicator", "type": "numeric", "x": 0, "y": 0, "w": 1, "h": 1 },
+      { "id": "illegal_mining_indicator", "type": "numeric", "x": 1, "y": 0, "w": 1, "h": 1 },
+      { "id": "oil_concession_indicator", "type": "numeric", "x": 0, "y": 1, "w": 1, "h": 1 },
+      { "id": "mining_concession_indicator", "type": "numeric", "x": 1, "y": 1, "w": 1, "h": 1 }
+    ]
+  },
+  {
+    "id": "knowledge",
+    "label": "Knowledge",
+    "image": "/images/topics/knowledge.png",
+    "description": "Database of knowledge products and resources.",
+    "indicators": [
+      {
+        "label": "Knowledge Products Database",
+        "value": "knowledge_products_database",
+        "visualization_types": ["table"]
+      }
+    ],
+    "default_visualization": [
+      {
+        "id": "knowledge_products_database",
+        "type": "table",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": "finance-and-business",
+    "label": "Finance and Business",
+    "image": "/images/topics/finance-and-business.webp",
+    "description": "Economic and financial data, including GDP and banking locations.",
+    "indicators": [
+      {
+        "label": "GDP",
+        "value": "gdp",
+        "visualization_types": ["map"]
+      },
+      {
+        "label": "Location of Banking Entities (OMS/Google)",
+        "value": "banking_entities_location",
+        "visualization_types": ["map"]
+      }
+    ],
+    "default_visualization": [
+      {
+        "id": "gdp",
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      },
+      {
+        "id": "banking_entities_location",
+        "type": "map",
+        "x": 2,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": "infrastructure-urbanization",
+    "label": "Infrastructure, Urbanization",
+    "image": "/images/topics/infrastructure-urbanization.webp",
+    "description": "Data on infrastructure such as ports, airports, and road networks.",
+    "indicators": [
+      {
+        "label": "Total Road Network",
+        "value": "total_road_network",
+        "visualization_types": ["map"]
+      },
+      {
+        "label": "Human Settlements (total 2025)",
+        "value": "human_settlements_2025",
+        "visualization_types": ["map"]
+      },
+      {
+        "label": "Ookla Connection Data",
+        "value": "ookla_connection_data",
+        "visualization_types": ["map"]
+      }
+    ],
+    "default_visualization": [
+      {
+        "id": "human_settlements_2025",
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      },
+      {
+        "id": "total_road_network",
+        "type": "map",
+        "x": 2,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": "idb-operations",
+    "label": "IDB Operations",
+    "image": "/images/topics/idb-operations.png",
+    "description": "IDB development operations and impact data.",
+    "indicators": [
+      {
+        "label": "Action Areas DB (#74) (exp)",
+        "value": "action_areas_database",
+        "visualization_types": ["numeric"]
+      }
+    ],
+    "default_visualization": [
+      {
+        "id": "action_areas_database",
+        "type": "numeric",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  }
+]

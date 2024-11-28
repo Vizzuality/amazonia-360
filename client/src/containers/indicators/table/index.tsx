@@ -2,16 +2,16 @@ import { useMemo } from "react";
 
 import { useQueryFeatureId } from "@/lib/indicators";
 
-import { ResourceFeature } from "@/app/api/indicators/route";
+import { Indicator, ResourceFeature } from "@/app/api/indicators/route";
 
 import { Card, CardContent, CardLoader, CardTitle } from "@/containers/card";
 import { DataTable } from "@/containers/table";
 
-export interface TableIndicatorsProps {
+export interface TableIndicatorsProps extends Indicator {
   resource: ResourceFeature;
 }
 
-export const TableIndicators = ({ resource }: TableIndicatorsProps) => {
+export const TableIndicators = ({ name, resource }: TableIndicatorsProps) => {
   const query = useQueryFeatureId({ resource, type: "table" });
 
   const DATA = useMemo(() => {
@@ -35,7 +35,7 @@ export const TableIndicators = ({ resource }: TableIndicatorsProps) => {
 
   return (
     <Card>
-      <CardTitle>{resource.name}</CardTitle>
+      <CardTitle>{name}</CardTitle>
       <CardContent>
         <CardLoader query={[query]} className="h-72">
           <DataTable
