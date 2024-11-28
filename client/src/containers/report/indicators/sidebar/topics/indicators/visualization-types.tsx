@@ -101,12 +101,12 @@ export function VisualizationTypes({
           const Icon = iconComponents[type];
 
           return (
-            <li key={type} className="flex rounded-[2px] px-1 hover:bg-primary/20">
+            <li key={type} className="rounded-[2px] px-1">
               <button
                 type="button"
                 className={cn({
-                  "flex items-center space-x-2": true,
-                  "cursor-none opacity-50": isDisabled,
+                  "flex w-full items-center space-x-2 hover:bg-primary/20": true,
+                  "pointer-events-none cursor-none opacity-50": isDisabled,
                 })}
                 disabled={isDisabled}
                 onClick={() => handleVisualizationType(type)}

@@ -66,8 +66,12 @@ export const ChartIndicators = ({ name, resource }: ChartIndicatorsProps) => {
     <Card>
       <CardTitle>{name}</CardTitle>
       <CardContent>
-        <CardLoader query={[query]} className="h-72">
-          <MarimekkoChart data={DATA} format={(d) => formatPercentage(d.value)} />
+        <CardLoader query={[query]} className="grow">
+          <MarimekkoChart
+            data={DATA}
+            format={(d) => formatPercentage(d.value)}
+            className="h-full grow"
+          />
         </CardLoader>
       </CardContent>
     </Card>

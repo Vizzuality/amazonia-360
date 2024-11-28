@@ -102,7 +102,7 @@
         ]
       }
     },
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": ["map", "table", "numeric", "chart"],
     "h3_grid_column_name": null
   },
   {
@@ -132,6 +132,6 @@
       "type": "imagery-tile",
       "url": "https://tiledimageservices6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/landcover_test_3/ImageServer"
     },
-    "visualization_types": ["map", "numeric"]
+    "visualization_types": ["map", "chart"]
   }
 ]

@@ -85,9 +85,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
       <Collapsible open={open}>
         <div
           className={cn({
-            "flex items-center space-x-4 rounded-[2px] py-2": true,
-            "pb-0": open,
-            "px-0.5 hover:bg-secondary": !open,
+            "flex h-10 items-center space-x-4 rounded-[2px] px-0.5 py-2 hover:bg-secondary": true,
           })}
         >
           <CollapsibleTrigger
