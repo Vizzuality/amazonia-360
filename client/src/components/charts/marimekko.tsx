@@ -46,7 +46,7 @@ const MarimekkoChart = <T extends Data>({
         id: "root",
         parent: null,
         size: 0,
-        label: "Land Cover",
+        label: "Root",
       } as T);
     }
 

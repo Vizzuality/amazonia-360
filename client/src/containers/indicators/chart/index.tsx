@@ -6,17 +6,17 @@ import CHROMA from "chroma-js";
 import { formatPercentage } from "@/lib/formats";
 import { useQueryFeatureId } from "@/lib/indicators";
 
-import { ResourceFeature } from "@/app/api/indicators/route";
+import { Indicator, ResourceFeature } from "@/app/api/indicators/route";
 
 import { Card, CardContent, CardLoader, CardTitle } from "@/containers/card";
 
 import MarimekkoChart from "@/components/charts/marimekko";
 
-export interface ChartIndicatorsProps {
+export interface ChartIndicatorsProps extends Indicator {
   resource: ResourceFeature;
 }
 
-export const ChartIndicators = ({ resource }: ChartIndicatorsProps) => {
+export const ChartIndicators = ({ name, resource }: ChartIndicatorsProps) => {
   const query = useQueryFeatureId({ resource, type: "chart" });
 
   const COLOR_SCALE = useMemo(() => {
@@ -64,10 +64,14 @@ export const ChartIndicators = ({ resource }: ChartIndicatorsProps) => {
 
   return (
     <Card>
-      <CardTitle>{resource.name}</CardTitle>
+      <CardTitle>{name}</CardTitle>
       <CardContent>
-        <CardLoader query={[query]} className="h-72">
-          <MarimekkoChart data={DATA} format={(d) => formatPercentage(d.value)} />
+        <CardLoader query={[query]} className="grow">
+          <MarimekkoChart
+            data={DATA}
+            format={(d) => formatPercentage(d.value)}
+            className="h-full grow"
+          />
         </CardLoader>
       </CardContent>
     </Card>

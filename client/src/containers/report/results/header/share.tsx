@@ -4,10 +4,11 @@ import { useCallback, useEffect, useState } from "react";
 
 import { usePathname } from "next/navigation";
 
+import { DialogTitle } from "@radix-ui/react-dialog";
 import { Share2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 export default function ShareReport() {
   const pathname = usePathname();
@@ -42,6 +43,7 @@ export default function ShareReport() {
       </DialogTrigger>
 
       <DialogContent>
+        <DialogTitle className="sr-only">Share Report</DialogTitle>
         <div className="mb-6 flex flex-col space-y-2">
           <h3 className="text-xl font-bold text-blue-500">Share</h3>
 
@@ -103,6 +105,7 @@ export default function ShareReport() {
               </LinkedinShareButton>
             </Button>
           </div> */}
+        <DialogClose />
       </DialogContent>
     </Dialog>
   );

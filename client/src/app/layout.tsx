@@ -6,7 +6,6 @@ import Script from "next/script";
 
 import LayoutProviders from "@/app/layout-providers";
 
-import DemoDisclaimer from "@/containers/disclaimers/demo";
 import Header from "@/containers/header";
 
 import "@arcgis/core/assets/esri/themes/light/main.css";
@@ -39,7 +38,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     >
       <html lang="en">
         <body className={`${montserrat.className} w-full overflow-x-hidden`}>
-          <DemoDisclaimer />
           <Header />
           {children}
         </body>

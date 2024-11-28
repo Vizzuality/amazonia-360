@@ -6,7 +6,7 @@ type Sortable = {
   handleIcon?: React.ReactNode;
 };
 
-type OnChangeOrder = (id: string[]) => void;
+type OnChangeOrder = (id: number[]) => void;
 
 export interface SortableListProps extends PropsWithChildren {
   className?: string;
@@ -15,6 +15,6 @@ export interface SortableListProps extends PropsWithChildren {
 }
 
 export interface SortableItemProps extends PropsWithChildren {
-  id: string;
+  id: number;
   sortable: Sortable;
 }

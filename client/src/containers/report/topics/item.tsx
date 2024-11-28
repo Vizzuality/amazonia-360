@@ -20,7 +20,7 @@ type TopicsItemProps = Topic & {
 
 export default function TopicsItem({
   id,
-  label,
+  name,
   image,
   size,
   interactive,
@@ -31,7 +31,7 @@ export default function TopicsItem({
   const descriptionRef = useRef<HTMLParagraphElement>(null);
 
   return (
-    <div key={id} className="w-full">
+    <div key={id} className="w-full max-w-52">
       <div
         className={cn(
           "group relative mx-auto cursor-pointer overflow-hidden rounded-2xl shadow after:absolute after:bottom-0 after:left-0 after:h-16 after:w-full after:bg-gradient-to-b after:from-transparent after:to-[#09090B]/85 after:content-['']",
@@ -57,7 +57,7 @@ export default function TopicsItem({
       >
         <Image
           src={image}
-          alt={label}
+          alt={name}
           priority
           fill
           sizes="100%"
@@ -94,7 +94,7 @@ export default function TopicsItem({
           )}
         >
           <div className="relative z-10">
-            <h3 className="text-sm font-bold">{label}</h3>
+            <h3 className="text-sm font-bold">{name}</h3>
 
             <div
               ref={descriptionRef}

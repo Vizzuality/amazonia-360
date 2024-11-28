@@ -11,7 +11,13 @@ import { DatasetIds } from "@/constants/datasets";
 
 import Info from "@/containers/info";
 
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { CONTROL_BUTTON_STYLES } from "./constants";
@@ -44,7 +50,9 @@ export const InfoControl: FC<InfoControlProps> = ({ ids, className }: InfoContro
         </TooltipTrigger>
 
         <DialogContent className="p-0">
+          <DialogTitle className="sr-only">About the data</DialogTitle>
           <Info ids={ids} />
+          <DialogClose />
         </DialogContent>
 
         <TooltipPortal>
