@@ -69,9 +69,9 @@ export const ResourceQueryFeature = (
       </div>
 
       <div className="not-prose">
-        {type === "table" && enabled && <TableIndicators resource={resource} />}
-        {type === "chart" && enabled && <ChartIndicators resource={resource} />}
-        {type === "numeric" && enabled && <NumericIndicators resource={resource} />}
+        {type === "table" && enabled && <TableIndicators {...props} />}
+        {type === "chart" && enabled && <ChartIndicators {...props} />}
+        {type === "numeric" && enabled && <NumericIndicators {...props} />}
       </div>
     </div>
   );

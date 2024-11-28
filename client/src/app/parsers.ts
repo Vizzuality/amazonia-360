@@ -1,25 +1,9 @@
-import {
-  parseAsArrayOf,
-  parseAsFloat,
-  parseAsJson,
-  parseAsString,
-  parseAsStringLiteral,
-} from "nuqs";
+import { parseAsArrayOf, parseAsFloat, parseAsJson, parseAsString } from "nuqs";
 
-import { DATASET_IDS, DatasetIds } from "@/constants/datasets";
+import { VisualizationType } from "./api/indicators/route";
 
-import { VisualizationType } from "@/containers/report/visualization-types/types";
-
-export const datasetsParser = parseAsArrayOf(parseAsStringLiteral(DATASET_IDS)).withDefault([]);
-
-export type TopicsParsed = {
-  id: string | number;
-  visible?: boolean;
-  indicators: Indicator[] | undefined;
-};
-
-export type Indicator = {
-  id: DatasetIds | string | number;
+export type IndicatorView = {
+  id: number;
   type: VisualizationType;
   w?: number;
   h?: number;
@@ -27,12 +11,12 @@ export type Indicator = {
   y?: number;
 };
 
-export type Topics = {
-  id: string | number;
-  indicators: Indicator[];
+export type Topic = {
+  id: number;
+  indicators: IndicatorView[] | undefined;
 };
 
-export const topicsParser = parseAsArrayOf(parseAsJson<Topics>());
+export const topicsParser = parseAsArrayOf(parseAsJson<Topic>());
 
 export const bboxParser = parseAsArrayOf(parseAsFloat).withDefault([
   -12497583.775253754, -2540944.9326481596, -4391589.799669538, 1362846.9759313238,

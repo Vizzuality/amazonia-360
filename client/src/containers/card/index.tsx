@@ -4,6 +4,7 @@ import { PropsWithChildren, MouseEvent } from "react";
 
 import Image from "next/image";
 
+import { DialogTitle } from "@radix-ui/react-dialog";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { UseQueryResult } from "@tanstack/react-query";
 import { LuInfo, LuSettings2 } from "react-icons/lu";
@@ -14,7 +15,7 @@ import { DatasetIds } from "@/constants/datasets";
 
 import Info from "@/containers/info";
 
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -79,7 +80,9 @@ export function CardInfo({ ids, className }: { ids: DatasetIds[]; className?: st
           </DialogTrigger>
         </TooltipTrigger>
         <DialogContent className="p-0">
+          <DialogTitle className="sr-only">About the data</DialogTitle>
           <Info ids={ids} />
+          <DialogClose />
         </DialogContent>
         <TooltipPortal>
           <TooltipContent sideOffset={0}>

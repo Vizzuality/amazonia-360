@@ -1,6 +1,6 @@
 "use client";
 
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { RxPencil1 } from "react-icons/rx";
 
 import { reportEditionModeAtom } from "@/app/store";
@@ -10,14 +10,14 @@ import { useSidebar } from "@/components/ui/sidebar";
 
 export default function IndicatorsReport() {
   const { toggleSidebar } = useSidebar();
-  const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
+  const setReportEditionMode = useSetAtom(reportEditionModeAtom);
 
   return (
     <Button
       className="space-x-2"
       onClick={() => {
+        setReportEditionMode(true);
         toggleSidebar();
-        setReportEditionMode(!reportEditionMode);
       }}
       variant="outline"
     >

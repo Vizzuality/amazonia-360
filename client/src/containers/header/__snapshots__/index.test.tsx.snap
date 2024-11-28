@@ -8,38 +8,50 @@ exports[`Header renders the Home link selected 1`] = `
     <div
       class="container mx-auto flex items-center justify-between"
     >
-      <a
-        href="/"
+      <div
+        class="flex items-center space-x-2"
       >
-        <h1
-          class="flex items-center space-x-4"
+        <a
+          href="/"
         >
-          <img
-            alt="IDB"
-            data-nimg="1"
-            decoding="async"
-            height="24"
-            loading="lazy"
-            src="/IDB-logo.svg"
-            style="color: transparent;"
-            width="65"
-          />
-          <div
-            class="space-x-2"
+          <h1
+            class="flex items-center space-x-4"
           >
-            <span
-              class="text-sm font-medium"
-            >
-              AmazoniaForever360+
-            </span>
+            <img
+              alt="IDB"
+              data-nimg="1"
+              decoding="async"
+              height="24"
+              loading="lazy"
+              src="/IDB-logo.svg"
+              style="color: transparent;"
+              width="65"
+            />
             <div
-              class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+              class="space-x-2"
             >
-              Prototype
+              <span
+                class="text-sm font-medium"
+              >
+                AmazoniaForever360+
+              </span>
             </div>
+          </h1>
+        </a>
+        <button
+          aria-controls="radix-:rc:"
+          aria-expanded="false"
+          aria-haspopup="dialog"
+          data-state="closed"
+          type="button"
+        >
+          <div
+            class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+          >
+            Beta
           </div>
-        </h1>
-      </a>
+        </button>
+      </div>
       <nav
         class="flex space-x-8 print:hidden"
       >
@@ -75,38 +87,50 @@ exports[`Header renders the Hub link selected 1`] = `
     <div
       class="container mx-auto flex items-center justify-between"
     >
-      <a
-        href="/"
+      <div
+        class="flex items-center space-x-2"
       >
-        <h1
-          class="flex items-center space-x-4"
+        <a
+          href="/"
         >
-          <img
-            alt="IDB"
-            data-nimg="1"
-            decoding="async"
-            height="24"
-            loading="lazy"
-            src="/IDB-logo.svg"
-            style="color: transparent;"
-            width="65"
-          />
-          <div
-            class="space-x-2"
+          <h1
+            class="flex items-center space-x-4"
           >
-            <span
-              class="text-sm font-medium"
-            >
-              AmazoniaForever360+
-            </span>
+            <img
+              alt="IDB"
+              data-nimg="1"
+              decoding="async"
+              height="24"
+              loading="lazy"
+              src="/IDB-logo.svg"
+              style="color: transparent;"
+              width="65"
+            />
             <div
-              class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+              class="space-x-2"
             >
-              Prototype
+              <span
+                class="text-sm font-medium"
+              >
+                AmazoniaForever360+
+              </span>
             </div>
+          </h1>
+        </a>
+        <button
+          aria-controls="radix-:ri:"
+          aria-expanded="false"
+          aria-haspopup="dialog"
+          data-state="closed"
+          type="button"
+        >
+          <div
+            class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+          >
+            Beta
           </div>
-        </h1>
-      </a>
+        </button>
+      </div>
       <nav
         class="flex space-x-8 print:hidden"
       >
@@ -142,38 +166,50 @@ exports[`Header renders the Report Tool link selected 1`] = `
     <div
       class="container mx-auto flex items-center justify-between"
     >
-      <a
-        href="/"
+      <div
+        class="flex items-center space-x-2"
       >
-        <h1
-          class="flex items-center space-x-4"
+        <a
+          href="/"
         >
-          <img
-            alt="IDB"
-            data-nimg="1"
-            decoding="async"
-            height="24"
-            loading="lazy"
-            src="/IDB-logo.svg"
-            style="color: transparent;"
-            width="65"
-          />
-          <div
-            class="space-x-2"
+          <h1
+            class="flex items-center space-x-4"
           >
-            <span
-              class="text-sm font-medium"
-            >
-              AmazoniaForever360+
-            </span>
+            <img
+              alt="IDB"
+              data-nimg="1"
+              decoding="async"
+              height="24"
+              loading="lazy"
+              src="/IDB-logo.svg"
+              style="color: transparent;"
+              width="65"
+            />
             <div
-              class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+              class="space-x-2"
             >
-              Prototype
+              <span
+                class="text-sm font-medium"
+              >
+                AmazoniaForever360+
+              </span>
             </div>
+          </h1>
+        </a>
+        <button
+          aria-controls="radix-:rf:"
+          aria-expanded="false"
+          aria-haspopup="dialog"
+          data-state="closed"
+          type="button"
+        >
+          <div
+            class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+          >
+            Beta
           </div>
-        </h1>
-      </a>
+        </button>
+      </div>
       <nav
         class="flex space-x-8 print:hidden"
       >

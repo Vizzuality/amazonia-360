@@ -37,13 +37,13 @@ export const SortableList: React.FC<SortableListProps> = ({
   onChangeOrder,
 }: SortableListProps) => {
   const uid = useId();
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [activeId, setActiveId] = useState<number | null>(null);
 
   const ActiveItem = useMemo(() => {
     const activeChildArray = Children.map(children, (Child) => {
       if (isValidElement(Child)) {
         const { props } = Child as ReactElement<unknown>;
-        const { id } = props as { id: string };
+        const { id } = props as { id: number };
 
         if (id === activeId) {
           return Child;
@@ -60,12 +60,12 @@ export const SortableList: React.FC<SortableListProps> = ({
     Children.map(children, (Child) => {
       if (isValidElement(Child)) {
         const { props } = Child as ReactElement<unknown>;
-        const { id } = props as { id: string };
+        const { id } = props as { id: number };
         return id;
       }
       return null;
     }) || []
-  ).filter((id): id is string => id !== null && id !== undefined);
+  ).filter((id): id is number => id !== null && id !== undefined);
 
   const sensors = useSensors(
     useSensor(KeyboardSensor, {
@@ -82,7 +82,7 @@ export const SortableList: React.FC<SortableListProps> = ({
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const { active } = event;
     if (!active) return;
-    setActiveId(active.id as string);
+    setActiveId(active.id as number);
   }, []);
 
   const handleDragEnd = useCallback(
@@ -91,8 +91,8 @@ export const SortableList: React.FC<SortableListProps> = ({
       setActiveId(null);
 
       if (active.id !== over?.id) {
-        const oldIndex = itemsIds?.indexOf(active.id as string);
-        const newIndex = itemsIds?.indexOf(over?.id as string);
+        const oldIndex = itemsIds?.indexOf(active.id as number);
+        const newIndex = itemsIds?.indexOf(over?.id as number);
 
         if (onChangeOrder && itemsIds && oldIndex !== undefined && newIndex !== undefined) {
           onChangeOrder(arrayMove(itemsIds, oldIndex, newIndex));
@@ -115,7 +115,7 @@ export const SortableList: React.FC<SortableListProps> = ({
       {Children.map(children, (Child) => {
         if (isValidElement(Child)) {
           const { props } = Child as ReactElement<unknown>;
-          const { id } = props as { id: string };
+          const { id } = props as { id: number };
 
           return (
             <SortableItem id={id} sortable={sortable}>

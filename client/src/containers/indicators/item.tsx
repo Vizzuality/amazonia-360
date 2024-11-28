@@ -20,7 +20,7 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
             <tr>
               <td className="w-60">Topic</td>
               <td>
-                {indicator?.topic_id} - {indicator?.topic_name}
+                {indicator?.topic.id} - {indicator?.topic.name}
               </td>
             </tr>
             <tr>
