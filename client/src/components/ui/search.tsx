@@ -145,7 +145,11 @@ export function Search<T extends Option>({
                           <span className="hidden">({o.value})</span>
                         </>
                       ) : (
-                        React.cloneElement(children(o) as React.ReactElement, { ...o })
+                        React.cloneElement(children(o) as React.ReactElement, {
+                          key: o.sourceIndex + o.key + o.value,
+                          value: o.value,
+                          onSelect: () => onSelect(o),
+                        })
                       )}
                     </CommandItem>
                   ))}

@@ -23,15 +23,11 @@ export function VisualizationTypes({
   indicatorId: Indicator["id"];
   topicId: Topic["id"];
 }) {
-  const numCols = 4;
   const [topics, setTopics] = useSyncTopics();
   const { data: topicsData } = useGetTopics();
 
   const handleVisualizationType = (visualizationType: VisualizationType) => {
     const widgetSize = DEFAULT_VISUALIZATION_SIZES[visualizationType];
-    const newTopics = [...(topics || [])];
-
-    const topicIndex = newTopics.findIndex((topic) => topic.id === topicId);
 
     const newIndicator = {
       type: visualizationType,
@@ -42,30 +38,34 @@ export function VisualizationTypes({
       h: widgetSize.h,
     };
 
-    if (topicIndex >= 0) {
-      const indicatorsArray = [...(newTopics[topicIndex].indicators || [])];
+    setTopics((prev) => {
+      if (!prev) return prev;
 
-      const exists = indicatorsArray.some(
-        (indicator) => indicator.id === indicatorId && indicator.type === visualizationType,
-      );
+      const i = prev.findIndex((topic) => topic.id === topicId);
 
-      if (!exists) {
-        const position = findFirstAvailablePosition(indicatorsArray, widgetSize, numCols);
-        newIndicator.x = position.x;
-        newIndicator.y = position.y;
+      if (i === -1) {
+        prev.push({
+          id: topicId,
+          indicators: [newIndicator],
+        });
 
-        newTopics[topicIndex] = {
-          ...newTopics[topicIndex],
-          indicators: [...indicatorsArray, newIndicator],
-        };
+        return prev;
       }
-    } else {
-      newTopics.push({
-        id: topicId,
-        indicators: [newIndicator],
-      });
-    }
-    setTopics(newTopics);
+
+      const indicators = prev[i].indicators || [];
+
+      const position = findFirstAvailablePosition(indicators, widgetSize, 4);
+      newIndicator.x = position.x;
+      newIndicator.y = position.y;
+      indicators.push(newIndicator);
+
+      prev[i] = {
+        ...prev[i],
+        indicators,
+      };
+
+      return prev;
+    });
   };
 
   const defaultVisualizations = useMemo(
@@ -104,12 +104,12 @@ export function VisualizationTypes({
             <li key={type} className="flex rounded-[2px] px-1 hover:bg-primary/20">
               <button
                 type="button"
-                onClick={() => handleVisualizationType(type)}
                 className={cn({
                   "flex items-center space-x-2": true,
                   "cursor-none opacity-50": isDisabled,
                 })}
                 disabled={isDisabled}
+                onClick={() => handleVisualizationType(type)}
               >
                 {Icon && <Icon className="h-4 w-4" />}
 

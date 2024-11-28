@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { Topic, TopicIndicator } from "@/app/api/topics/route";
 import { useSyncTopics } from "@/app/store";
 
-import { VisualizationTypes } from "@/containers/report/visualization-types";
+import { VisualizationTypes } from "@/containers/report/indicators/sidebar/topics/indicators/visualization-types";
 
 import {
   Dialog,
