@@ -7,8 +7,6 @@ import { LuX } from "react-icons/lu";
 
 import { reportEditionModeAtom } from "@/app/store";
 
-import TopicsList from "@/containers/report/topics/list";
-
 import {
   Sidebar,
   SidebarContent,
@@ -19,6 +17,7 @@ import {
 } from "@/components/ui/sidebar";
 
 import Search from "./search";
+import TopicsList from "./topics";
 
 export default function TopicsSidebar() {
   const { toggleSidebar } = useSidebar();

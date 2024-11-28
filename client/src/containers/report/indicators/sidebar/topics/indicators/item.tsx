@@ -9,10 +9,8 @@ import { LuChevronRight, LuPlus, LuInfo } from "react-icons/lu";
 import { useGetTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
-import { Indicator } from "@/app/api/indicators/route";
+import { Topic, TopicIndicator } from "@/app/api/topics/route";
 import { useSyncTopics } from "@/app/store";
-
-import { Topic } from "@/constants/topics";
 
 import { VisualizationTypes } from "@/containers/report/visualization-types";
 
@@ -26,19 +24,9 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-import { Badges } from "../badges";
+import { Badges } from "./badges";
 
-export function TopicsReportItem({
-  topic,
-  indicator,
-}: {
-  topic: Topic;
-  indicator: {
-    id: Indicator["id"];
-    name: Indicator["name"];
-    visualization_types: Indicator["visualization_types"];
-  };
-}) {
+export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: TopicIndicator }) {
   const [open, setOpen] = useState(true);
 
   const [topics] = useSyncTopics();

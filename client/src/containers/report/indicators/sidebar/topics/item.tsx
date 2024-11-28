@@ -8,17 +8,18 @@ import { LuChevronRight, LuGripVertical } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
+import { Topic } from "@/app/api/topics/route";
 import { useSyncTopics } from "@/app/store";
 
-import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
+import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
 
-import { CounterIndicatorsPill } from "@/containers/report/indicators/counter-indicators-pill";
-import { TopicsReportItem } from "@/containers/report/indicators/sidebar/sidebar-topic-item";
+import { Indicators } from "@/containers/report/indicators/sidebar/topics/indicators";
+import { CounterIndicatorsPill } from "@/containers/report/indicators/sidebar/topics/indicators/counter-indicators-pill";
 
 import { Switch } from "@/components/ui/switch";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-export function TopicsReportItems({ topic, id }: { topic: Topic; id: number }) {
+export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
   const [topics, setTopics] = useSyncTopics();
   const [open, setOpen] = useState(false);
 
@@ -121,13 +122,8 @@ export function TopicsReportItems({ topic, id }: { topic: Topic; id: number }) {
           />
         </div>
         <CollapsibleContent>
-          <ul className="space-y-1 py-2 pl-6 text-sm font-medium">
-            {topic?.indicators?.map((indicator) => (
-              <li key={`${indicator.id}-${topic.id}`}>
-                <TopicsReportItem {...{ topic, indicator }} />
-              </li>
-            ))}
-          </ul>
+          <Indicators topic={topic} />
+
           <div className="flex w-full justify-end">
             <Tooltip>
               <TooltipTrigger asChild>
