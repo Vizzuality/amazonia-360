@@ -89,7 +89,7 @@ export default function WidgetFundingByType() {
       <CardHeader>
         <CardTitle>IDB funding by sector</CardTitle>
         <CardControls>
-          <CardInfo ids={["idb_operations"]} />
+          <CardInfo ids={[+"idb_operations"]} />
         </CardControls>
       </CardHeader>
 

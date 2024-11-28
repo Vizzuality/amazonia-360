@@ -79,7 +79,7 @@ export default function WidgetLandCoverByType() {
     <Card className="grow">
       <CardHeader>
         <CardTitle>Land cover by type</CardTitle>
-        <CardInfo ids={["land_cover"]} />
+        <CardInfo ids={[+"land_cover"]} />
       </CardHeader>
 
       <CardLoader query={[query]} className="h-52">

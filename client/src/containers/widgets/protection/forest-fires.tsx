@@ -75,7 +75,7 @@ export default function WidgetForestFires() {
     <Card>
       <CardHeader>
         <CardTitle>Frequency of forest fires</CardTitle>
-        <CardInfo ids={["fires"]} />
+        <CardInfo ids={[+"fires"]} />
       </CardHeader>
 
       <CardContent className="space-y-2">

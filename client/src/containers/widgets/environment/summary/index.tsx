@@ -90,7 +90,7 @@ export default function WidgetEnvironmentSummary() {
     <Card>
       <CardHeader>
         <CardTitle>Environment summary</CardTitle>
-        <CardInfo ids={["tipos_climaticos", "cuencas_hidrograficas", "biomas"]} />
+        <CardInfo ids={[+"tipos_climaticos", +"cuencas_hidrograficas", +"biomas"]} />
       </CardHeader>
 
       <CardContent>

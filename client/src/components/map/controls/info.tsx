@@ -7,7 +7,7 @@ import { LuInfo } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { DatasetIds } from "@/constants/datasets";
+import { Indicator } from "@/app/api/indicators/route";
 
 import Info from "@/containers/info";
 
@@ -24,7 +24,7 @@ import { CONTROL_BUTTON_STYLES } from "./constants";
 
 interface InfoControlProps {
   className?: string;
-  ids: DatasetIds[];
+  ids: Indicator["id"][];
 }
 
 export const InfoControl: FC<InfoControlProps> = ({ ids, className }: InfoControlProps) => {
