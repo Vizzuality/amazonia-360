@@ -128,28 +128,14 @@ export const useResourceId = <TData = Awaited<ReturnType<typeof getResourceId>>,
  ************************************************************
  ************************************************************
  */
-
-const GEOMETRY = {
-  type: "polygon",
-  spatialReference: { wkid: 102100 },
-  rings: [
-    [
-      [-7766471.038835982, -1329452.5803468754],
-      [-6879763.29221403, -1190719.3740093173],
-      [-6518254.366939386, -1425075.3027316048],
-      [-6563237.558085199, -1677317.4960726197],
-      [-7389177.867220452, -1682285.902911155],
-      [-7766471.038835982, -1329452.5803468754],
-    ],
-  ],
-} as __esri.Polygon;
-
 export type QueryFeatureIdParams = {
+  id: Indicator["id"];
   type: VisualizationType;
   resource: ResourceFeature;
+  geometry: __esri.Polygon | null;
 };
 
-export const getQueryFeatureId = async ({ type, resource }: QueryFeatureIdParams) => {
+export const getQueryFeatureId = async ({ type, resource, geometry }: QueryFeatureIdParams) => {
   const f = new FeatureLayer({
     url: resource.url + resource.layer_id,
   });
@@ -158,15 +144,17 @@ export const getQueryFeatureId = async ({ type, resource }: QueryFeatureIdParams
 
   if (q) {
     const query = new Query(q);
-    query.geometry = GEOMETRY;
+    if (geometry) {
+      query.geometry = geometry;
+    }
     return f.queryFeatures(query);
   }
 
   return null;
 };
 
-export const getQueryFeatureIdKey = ({ type, resource }: QueryFeatureIdParams) => {
-  return ["query-feature", type, resource.url];
+export const getQueryFeatureIdKey = ({ id, type, resource, geometry }: QueryFeatureIdParams) => {
+  return ["query-feature", id, type, resource.url, geometry?.toJSON()];
 };
 
 export const getQueryFeatureIdOptions = <
@@ -199,12 +187,15 @@ export const useQueryFeatureId = <
 };
 
 export type QueryImageryTileIdParams = {
+  id: Indicator["id"];
   type: VisualizationType;
   resource: ResourceImageryTile;
+  geometry: __esri.Polygon | null;
 };
 
 export const getQueryImageryTileId = async ({
   resource,
+  geometry,
 }: QueryImageryTileIdParams): Promise<{
   RAT: {
     features: {
@@ -250,7 +241,7 @@ export const getQueryImageryTileId = async ({
       histograms: __esri.RasterHistogram[];
       statistics: __esri.RasterBandStatistics[];
     } = await f.computeStatisticsHistograms({
-      geometry: GEOMETRY,
+      ...(!!geometry && { geometry }),
     });
 
     return {
@@ -263,8 +254,13 @@ export const getQueryImageryTileId = async ({
   }
 };
 
-export const getQueryImageryTileIdKey = ({ type, resource }: QueryImageryTileIdParams) => {
-  return ["query-imagery-tile", type, resource.url];
+export const getQueryImageryTileIdKey = ({
+  id,
+  type,
+  resource,
+  geometry,
+}: QueryImageryTileIdParams) => {
+  return ["query-imagery-tile", id, type, resource.url, geometry?.toJSON()];
 };
 
 export const getQueryImageryTileIdOptions = <
