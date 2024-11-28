@@ -343,7 +343,8 @@ export const useGetRasterAnalysis = <
  ************************************************************
  */
 export type GetMetadataParams = {
-  id: DatasetIds;
+  id: number;
+  url: string;
 };
 
 export type MetadataQueryOptions<TData, TError> = UseQueryOptions<
@@ -353,40 +354,32 @@ export type MetadataQueryOptions<TData, TError> = UseQueryOptions<
 >;
 
 export const getMetadata = async (params: GetMetadataParams) => {
-  const { id } = params;
+  const { id, url } = params;
 
   if (!id) {
     throw new Error("id is required");
   }
-
-  const DATASET = DATASETS[id];
-
-  if (!DATASET?.metadata?.url) {
-    return new Promise<{ id: DatasetIds; metadata: string }>((resolve) => {
-      resolve({
-        id,
-        metadata: "",
-      });
+  if (!url) {
+    return Promise.resolve({
+      id,
+      metadata: "",
     });
   }
 
-  return axios
-    .get(DATASET?.metadata?.url, {
-      headers: {
-        "Content-Type": "application/xml",
-      },
-    })
-    .then((res) => {
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(res.data, "text/xml");
+  const response = await axios.get(url, {
+    headers: {
+      "Content-Type": "application/xml",
+    },
+  });
 
-      const metadata = xmlDoc.getElementsByTagName("idAbs")[0];
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(response.data, "text/xml");
+  const metadataElement = xmlDoc.getElementsByTagName("idAbs")[0];
 
-      return {
-        id,
-        metadata: metadata?.textContent || "",
-      };
-    });
+  return {
+    id,
+    metadata: metadataElement?.textContent || "",
+  };
 };
 
 export const getMetadataKey = (params: GetMetadataParams) => {

@@ -42,7 +42,7 @@ export default function WidgetsPopulationPopulation() {
       <div className="p-6">
         <CardHeader>
           <CardTitle>Population</CardTitle>
-          <CardInfo ids={["population"]} />
+          <CardInfo ids={[+"population"]} />
         </CardHeader>
         <CardContent>
           <CardLoader query={[query]} className="h-10">

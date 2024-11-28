@@ -46,7 +46,7 @@ export default function WidgetConservation() {
     <Card>
       <CardHeader>
         <CardTitle>Conservation</CardTitle>
-        <CardInfo ids={["areas_protegidas"]} />
+        <CardInfo ids={[+"areas_protegidas"]} />
       </CardHeader>
       <CardLoader query={[query]} className="h-12">
         <CardWidgetNumber

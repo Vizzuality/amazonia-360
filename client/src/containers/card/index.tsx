@@ -11,7 +11,7 @@ import { LuInfo, LuSettings2 } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { DatasetIds } from "@/constants/datasets";
+import { Indicator } from "@/app/api/indicators/route";
 
 import Info from "@/containers/info";
 
@@ -44,12 +44,12 @@ export function CardContent({ className, children }: PropsWithChildren<{ classNa
 export function CardSettings({
   id,
   onClick,
-}: PropsWithChildren<{ id: string; onClick?: (e: MouseEvent<HTMLElement>) => void }>) {
+}: PropsWithChildren<{ id: Indicator["id"]; onClick?: (e: MouseEvent<HTMLElement>) => void }>) {
   return (
     <Tooltip delayDuration={100}>
       <TooltipTrigger asChild>
         <button
-          id={id}
+          id={`${id}`}
           type="button"
           className="text-base font-semibold text-blue-600"
           onClick={onClick}
@@ -70,7 +70,7 @@ export function CardControls({ children }: PropsWithChildren) {
   return <div className="flex space-x-2">{children}</div>;
 }
 
-export function CardInfo({ ids, className }: { ids: DatasetIds[]; className?: string }) {
+export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className?: string }) {
   return (
     <Tooltip delayDuration={100}>
       <Dialog>

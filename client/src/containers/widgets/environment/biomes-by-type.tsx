@@ -78,7 +78,7 @@ export default function WidgetBiomesByType() {
     <Card className="grow">
       <CardHeader>
         <CardTitle>Biomes by type</CardTitle>
-        <CardInfo ids={["biomas"]} />
+        <CardInfo ids={[+"biomas"]} />
       </CardHeader>
 
       <CardLoader query={[query]} className="h-52">

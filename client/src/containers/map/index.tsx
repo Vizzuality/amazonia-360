@@ -110,7 +110,7 @@ export default function WidgetMap({ layers, ...viewProps }: WidgetMapProps) {
           <Controls>
             <FullscreenControl />
             <ZoomControl />
-            <InfoControl ids={["areas_protegidas"]} />
+            <InfoControl ids={[+"areas_protegidas"]} />
           </Controls>
         </Map>
       </Card>
