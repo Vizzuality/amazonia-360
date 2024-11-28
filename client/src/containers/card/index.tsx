@@ -9,6 +9,7 @@ import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { UseQueryResult } from "@tanstack/react-query";
 import { LuInfo, LuSettings2 } from "react-icons/lu";
 
+import { formatNumber } from "@/lib/formats";
 import { cn } from "@/lib/utils";
 
 import { Indicator } from "@/app/api/indicators/route";
@@ -146,7 +147,9 @@ export function CardWidgetNumber({
   return (
     <div>
       <div className="flex items-end space-x-2">
-        <span className="text-4xl font-bold text-blue-600">{value}</span>
+        <span className="text-4xl font-bold text-blue-600">
+          {typeof value === "number" ? formatNumber(value) : value}
+        </span>
 
         {!!unit && (
           <span className="relative bottom-1.5 text-xs font-medium text-gray-500">{unit}</span>
