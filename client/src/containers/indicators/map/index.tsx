@@ -1,14 +1,28 @@
-import { useMemo } from "react";
+import { useMemo, MouseEvent } from "react";
 
 import { useResourceId } from "@/lib/indicators";
 import { useSession } from "@/lib/session";
 
 import { Indicator } from "@/app/api/indicators/route";
 
-import { Card, CardContent, CardLoader, CardTitle } from "@/containers/card";
+import {
+  Card,
+  CardContent,
+  CardControls,
+  CardInfo,
+  CardHeader,
+  CardLoader,
+  CardTitle,
+  CardSettings,
+} from "@/containers/card";
+import InfoArcGis from "@/containers/info/arcgis";
 import WidgetMap from "@/containers/map";
 
-export const MapIndicators = ({ id, name, resource }: Indicator) => {
+export interface MapIndicatorsProps extends Indicator {
+  onEdit?: (e: MouseEvent<HTMLElement>) => void;
+}
+
+export const MapIndicators = ({ id, name, resource, onEdit }: MapIndicatorsProps) => {
   const { data: session } = useSession();
   const query = useResourceId({ resource, session });
 
@@ -38,7 +52,16 @@ export const MapIndicators = ({ id, name, resource }: Indicator) => {
 
   return (
     <Card>
-      <CardTitle>{name}</CardTitle>
+      <CardHeader>
+        <CardTitle>{name}</CardTitle>
+        <CardControls>
+          <CardInfo>
+            <InfoArcGis id={id} />
+          </CardInfo>
+
+          {onEdit && <CardSettings id={id} onClick={onEdit} />}
+        </CardControls>
+      </CardHeader>
       <CardContent>
         <CardLoader query={[query]} className="min-h-72 grow">
           <WidgetMap layers={[LAYER]} />

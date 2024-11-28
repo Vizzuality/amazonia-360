@@ -44,6 +44,9 @@
       },
       "query_chart": null
     },
+    "metadata": {
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Tierras_indigenas/FeatureServer/info/metadata"
+    },
     "h3_grid_column_name": null
   },
   {
@@ -103,6 +106,9 @@
       }
     },
     "visualization_types": ["map", "table", "numeric"],
+    "metadata": {
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Areas_protegidas/FeatureServer/info/metadata"
+    },
     "h3_grid_column_name": null
   },
   {
@@ -131,6 +137,9 @@
       "name": "landcover_cog_tiles",
       "type": "imagery-tile",
       "url": "https://tiledimageservices6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/landcover_test_3/ImageServer"
+    },
+    "metadata": {
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Areas_protegidas/FeatureServer/info/metadata"
     },
     "visualization_types": ["map", "numeric"]
   }

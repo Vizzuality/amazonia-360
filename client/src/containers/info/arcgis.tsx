@@ -1,26 +1,33 @@
 import parse from "html-react-parser";
 
+import { useIndicatorsId } from "@/lib/indicators";
 import { useGetMetadata } from "@/lib/query";
 
-import { DATASETS, DatasetIds } from "@/constants/datasets";
+import { Indicator } from "@/app/api/indicators/route";
 
 import { CardLoader } from "@/containers/card";
 
-export default function InfoArcGis({ id }: { id: DatasetIds }) {
-  const query = useGetMetadata({
-    id,
-  });
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-  const DATASET = DATASETS[id];
+export default function InfoArcGis({ id }: { id: Indicator["id"] }) {
+  const indicator = useIndicatorsId(id);
+  const query = useGetMetadata(
+    { id, url: `${indicator?.metadata?.url}` },
+    { enabled: !!indicator },
+  );
 
   return (
-    <div className="space-y-4 pt-4 first:pt-0">
-      <h2 className="text-xl">{DATASET?.layer?.title}</h2>
-      <CardLoader query={[query]} className="h-40">
-        <div className="prose-sm prose-a:break-words prose-a:underline">
-          {parse(query?.data?.metadata || "")}
+    <ScrollArea className="flex max-h-[calc(100svh_-_theme(space.20))] grow flex-col">
+      <div className="space-y-4 divide-y p-6">
+        <div className="space-y-4 pt-4 first:pt-0">
+          <h2 className="text-xl">{indicator?.name}</h2>
+          <CardLoader query={[query]} className="h-40">
+            <div className="prose-sm prose-a:break-words prose-a:underline">
+              {parse(query?.data?.metadata || "")}
+            </div>
+          </CardLoader>
         </div>
-      </CardLoader>
-    </div>
+      </div>
+    </ScrollArea>
   );
 }

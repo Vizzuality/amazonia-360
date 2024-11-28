@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, MouseEvent } from "react";
 
 import { scaleOrdinal } from "@visx/scale";
 import CHROMA from "chroma-js";
@@ -8,15 +8,25 @@ import { useQueryFeatureId } from "@/lib/indicators";
 
 import { Indicator, ResourceFeature } from "@/app/api/indicators/route";
 
-import { Card, CardContent, CardLoader, CardTitle } from "@/containers/card";
+import {
+  Card,
+  CardContent,
+  CardControls,
+  CardInfo,
+  CardLoader,
+  CardSettings,
+  CardTitle,
+} from "@/containers/card";
+import InfoArcGis from "@/containers/info/arcgis";
 
 import MarimekkoChart from "@/components/charts/marimekko";
 
 export interface ChartIndicatorsProps extends Indicator {
   resource: ResourceFeature;
+  onEdit?: (e: MouseEvent<HTMLElement>) => void;
 }
 
-export const ChartIndicators = ({ name, resource }: ChartIndicatorsProps) => {
+export const ChartIndicators = ({ name, id, resource, onEdit }: ChartIndicatorsProps) => {
   const query = useQueryFeatureId({ resource, type: "chart" });
 
   const COLOR_SCALE = useMemo(() => {
@@ -65,6 +75,12 @@ export const ChartIndicators = ({ name, resource }: ChartIndicatorsProps) => {
   return (
     <Card>
       <CardTitle>{name}</CardTitle>
+      <CardControls>
+        <CardInfo>
+          <InfoArcGis id={id} />
+        </CardInfo>
+        {onEdit && <CardSettings id={id} onClick={onEdit} />}
+      </CardControls>
       <CardContent>
         <CardLoader query={[query]} className="h-72">
           <MarimekkoChart data={DATA} format={(d) => formatPercentage(d.value)} />

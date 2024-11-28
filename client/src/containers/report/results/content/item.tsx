@@ -18,6 +18,8 @@ import MoveHandler from "@/containers/report/indicators/controls/drag";
 import ResizeHandler from "@/containers/report/indicators/controls/resize";
 import ReportResultsIndicator from "@/containers/report/results/indicator";
 
+import { useSidebar } from "@/components/ui/sidebar";
+
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 export interface ReportResultsContentItemProps {
@@ -25,9 +27,10 @@ export interface ReportResultsContentItemProps {
 }
 
 export const ReportResultsContentItem = ({ topic }: ReportResultsContentItemProps) => {
+  const { toggleSidebar } = useSidebar();
   const [, setTopics] = useSyncTopics();
   const [editionModeIndicator, setEditionModeIndicator] = useAtom(indicatorsEditionModeAtom);
-  const [reportEditionMode] = useAtom(reportEditionModeAtom);
+  const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
 
   const TOPIC = useGetTopicsId(topic.id);
 
@@ -85,6 +88,11 @@ export const ReportResultsContentItem = ({ topic }: ReportResultsContentItemProp
     [topic.id, setTopics, setEditionModeIndicator],
   );
 
+  const onEdit = useCallback(() => {
+    toggleSidebar();
+    setReportEditionMode(!reportEditionMode);
+  }, [toggleSidebar, setReportEditionMode, reportEditionMode]);
+
   return (
     <div key={topic.id} className="container relative print:break-before-page">
       <h2 className="mb-4 text-xl font-semibold">{TOPIC?.name}</h2>
@@ -130,14 +138,19 @@ export const ReportResultsContentItem = ({ topic }: ReportResultsContentItemProp
                 }
               }}
             >
-              {editionModeIndicator[`${id}-${type}`] && <MoveHandler />}
-              {editionModeIndicator[`${id}-${type}`] && (
+              {editionModeIndicator[`${id}-${type}`] && reportEditionMode && <MoveHandler />}
+              {editionModeIndicator[`${id}-${type}`] && reportEditionMode && (
                 <DeleteHandler indicatorId={id} type={type} onClick={onDeleteIndicator} />
               )}
 
-              <ReportResultsIndicator key={`${topic.id}-${id}`} id={id} type={type} />
+              <ReportResultsIndicator
+                key={`${topic.id}-${id}`}
+                onEdit={onEdit}
+                id={id}
+                type={type}
+              />
 
-              {editionModeIndicator[`${id}-${type}`] && <ResizeHandler />}
+              {editionModeIndicator[`${id}-${type}`] && reportEditionMode && <ResizeHandler />}
             </div>
           );
         })}

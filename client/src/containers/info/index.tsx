@@ -13,7 +13,7 @@ export default function Info({ ids }: { ids: DatasetIds[] }) {
           const DATASET = DATASETS[id];
 
           if (DATASET?.metadata?.type === "arcgis") {
-            return <InfoArcGis key={id} id={id} />;
+            return <InfoArcGis key={id} id={+id} />;
           }
 
           if (DATASET?.metadata?.type === "raster") {

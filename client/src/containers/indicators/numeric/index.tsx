@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, MouseEvent } from "react";
 
 import { useQueryFeatureId } from "@/lib/indicators";
 
@@ -7,19 +7,23 @@ import { Indicator, ResourceFeature } from "@/app/api/indicators/route";
 import {
   Card,
   CardContent,
-  // CardControls,
-  // CardInfo,
+  CardControls,
+  CardHeader,
+  CardInfo,
   CardLoader,
+  CardSettings,
   CardTitle,
   CardWidgetNumber,
 } from "@/containers/card";
+import InfoArcGis from "@/containers/info/arcgis";
 
 export interface NumericIndicatorsProps extends Indicator {
   resource: ResourceFeature;
+  onEdit?: (e: MouseEvent<HTMLElement>) => void;
 }
 // extender indicator and limit to resource
 
-export const NumericIndicators = ({ name, resource }: NumericIndicatorsProps) => {
+export const NumericIndicators = ({ name, id, resource, onEdit }: NumericIndicatorsProps) => {
   const query = useQueryFeatureId({ resource, type: "numeric" });
 
   const VALUE = useMemo(() => {
@@ -32,7 +36,15 @@ export const NumericIndicators = ({ name, resource }: NumericIndicatorsProps) =>
 
   return (
     <Card>
-      <CardTitle>{name}</CardTitle>
+      <CardHeader>
+        <CardTitle>{name}</CardTitle>
+        <CardControls>
+          <CardInfo>
+            <InfoArcGis id={id} />
+          </CardInfo>
+          {onEdit && <CardSettings id={id} onClick={onEdit} />}
+        </CardControls>
+      </CardHeader>
 
       <CardContent>
         <CardLoader query={[query]} className="h-12">

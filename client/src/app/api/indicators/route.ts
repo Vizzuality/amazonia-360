@@ -28,6 +28,10 @@ export type ResourceImageryTile = {
   type: "imagery-tile";
 };
 
+type IndicatorMetadata = {
+  url: string;
+};
+
 export type Indicator = {
   id: number;
   name: string;
@@ -38,6 +42,7 @@ export type Indicator = {
     image: string;
     default_visualization: IndicatorView[];
   };
+  metadata: IndicatorMetadata;
   visualization_types: VisualizationType[];
   resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
   h3_grid_column_name: string | null;

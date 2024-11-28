@@ -11,10 +11,6 @@ import { LuInfo, LuSettings2 } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { DatasetIds } from "@/constants/datasets";
-
-import Info from "@/containers/info";
-
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -44,12 +40,12 @@ export function CardContent({ className, children }: PropsWithChildren<{ classNa
 export function CardSettings({
   id,
   onClick,
-}: PropsWithChildren<{ id: string; onClick?: (e: MouseEvent<HTMLElement>) => void }>) {
+}: PropsWithChildren<{ id: number; onClick?: (e: MouseEvent<HTMLElement>) => void }>) {
   return (
     <Tooltip delayDuration={100}>
       <TooltipTrigger asChild>
         <button
-          id={id}
+          id={`${id}`}
           type="button"
           className="text-base font-semibold text-blue-600"
           onClick={onClick}
@@ -70,7 +66,11 @@ export function CardControls({ children }: PropsWithChildren) {
   return <div className="flex space-x-2">{children}</div>;
 }
 
-export function CardInfo({ ids, className }: { ids: DatasetIds[]; className?: string }) {
+export function CardInfo({
+  className,
+  children,
+}: PropsWithChildren<{ className?: string; ids?: string[] }>) {
+  // Remove ids when deleting/adapting the rest of the indicators
   return (
     <Tooltip delayDuration={100}>
       <Dialog>
@@ -81,7 +81,7 @@ export function CardInfo({ ids, className }: { ids: DatasetIds[]; className?: st
         </TooltipTrigger>
         <DialogContent className="p-0">
           <DialogTitle className="sr-only">About the data</DialogTitle>
-          <Info ids={ids} />
+          {children}
           <DialogClose />
         </DialogContent>
         <TooltipPortal>
