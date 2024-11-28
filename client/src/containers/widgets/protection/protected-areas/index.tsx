@@ -55,7 +55,7 @@ export default function WidgetProtectedAreas() {
       <CardHeader>
         <CardTitle>Protected areas</CardTitle>
         <CardControls>
-          <CardInfo ids={["areas_protegidas"]} />
+          <CardInfo ids={[+"areas_protegidas"]} />
         </CardControls>
       </CardHeader>
 

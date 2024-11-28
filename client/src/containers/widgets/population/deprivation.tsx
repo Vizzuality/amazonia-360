@@ -41,7 +41,7 @@ export default function WidgetsPopulationDeprivation() {
       <div className="p-6">
         <CardHeader>
           <CardTitle>Deprivation Index</CardTitle>
-          <CardInfo ids={["deprivation_index"]} />
+          <CardInfo ids={[+"deprivation_index"]} />
         </CardHeader>
 
         <CardContent>
