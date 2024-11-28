@@ -14,7 +14,6 @@ import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer"
 
 import Controls from "@/components/map/controls";
 import FullscreenControl from "@/components/map/controls/fullscreen";
-import InfoControl from "@/components/map/controls/info";
 import ZoomControl from "@/components/map/controls/zoom";
 
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
@@ -110,7 +109,6 @@ export default function WidgetMap({ layers, ...viewProps }: WidgetMapProps) {
           <Controls>
             <FullscreenControl />
             <ZoomControl />
-            <InfoControl ids={[+"areas_protegidas"]} />
           </Controls>
         </Map>
       </Card>

@@ -17,6 +17,7 @@ import DeleteHandler from "@/containers/report/indicators/controls/delete";
 import MoveHandler from "@/containers/report/indicators/controls/drag";
 import ResizeHandler from "@/containers/report/indicators/controls/resize";
 import ReportResultsIndicator from "@/containers/report/results/indicator";
+
 import { useSidebar } from "@/components/ui/sidebar";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
