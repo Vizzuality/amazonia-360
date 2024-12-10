@@ -2,15 +2,9 @@
 
 import { useSyncTopics } from "@/app/store";
 
-import { TOPICS, TopicIds } from "@/constants/topics";
-
-import WidgetsBioeconomy from "@/containers/widgets/bioeconomy";
-import WidgetsEnvironment from "@/containers/widgets/environment";
-import WidgetsFinancial from "@/containers/widgets/financial";
+import ReportResultsContentItem from "@/containers/report/results/content/item";
 import WidgetsOtherResources from "@/containers/widgets/other-resources";
 import WidgetsOverview from "@/containers/widgets/overview";
-import WidgetsDemographicAndSocieconomic from "@/containers/widgets/population";
-import WidgetsProtection from "@/containers/widgets/protection";
 
 export default function ReportResultsContent() {
   const [topics] = useSyncTopics();
@@ -20,29 +14,16 @@ export default function ReportResultsContent() {
       {/* OVERVIEW */}
       <WidgetsOverview />
 
-      {TOPICS?.filter((topic) => {
-        const id = topic.id as TopicIds;
-        return topics?.includes(id);
-      }).map((topic, index) => {
-        const id = topic.id as TopicIds;
+      {/* topicsData DASHBOARD */}
 
-        if (!topics?.includes(id)) return null;
+      {/* TO - DO - change topic dashboard (pass this to that component)*/}
+      <div className="space-y-20">
+        {topics?.map((topic) => {
+          return <ReportResultsContentItem key={topic.id} topic={topic} />;
+        })}
+      </div>
 
-        switch (id) {
-          case "natural-physical-environment":
-            return <WidgetsEnvironment key={id} index={index} />;
-          case "sociodemographics":
-            return <WidgetsDemographicAndSocieconomic key={id} />;
-          case "land-use-and-conservation":
-            return <WidgetsProtection key={id} index={index} />;
-          case "bioeconomy":
-            return <WidgetsBioeconomy key={id} index={index} />;
-          case "financial":
-            return <WidgetsFinancial key={id} />;
-          default:
-            return null;
-        }
-      })}
+      {/* OTHER RESOURCES */}
       <WidgetsOtherResources />
     </div>
   );

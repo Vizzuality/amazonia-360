@@ -4,10 +4,11 @@ import { useCallback, useEffect, useState } from "react";
 
 import { usePathname } from "next/navigation";
 
+import { DialogTitle } from "@radix-ui/react-dialog";
 import { Share2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 export default function ShareReport() {
   const pathname = usePathname();
@@ -36,27 +37,23 @@ export default function ShareReport() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="space-x-2">
-          <Share2 className="w-5 h-5" />
-          <span>Share</span>
+        <Button variant="outline">
+          <Share2 className="h-5 w-5" />
         </Button>
       </DialogTrigger>
 
       <DialogContent>
-        <div className="flex flex-col space-y-2 mb-6">
-          <h3 className="font-bold text-xl text-blue-500">Share</h3>
+        <DialogTitle className="sr-only">Share Report</DialogTitle>
+        <div className="mb-6 flex flex-col space-y-2">
+          <h3 className="text-xl font-bold text-blue-500">Share</h3>
 
-          <p className="text-base text-foreground font-medium">
-            Copy and paste link to share
-          </p>
+          <p className="text-base font-medium text-foreground">Copy and paste link to share</p>
         </div>
-        <div className="flex w-full space-x-2 mb-6">
-          <div className="bg-background flex h-10 rounded-sm border px-3 py-2 text-sm text-gray-900 w-[376px]">
-            <p className="truncate text-foreground text-base font-normal">
-              {currentUrl}
-            </p>
+        <div className="mb-6 flex w-full space-x-2">
+          <div className="flex h-10 w-[376px] rounded-sm border bg-background px-3 py-2 text-sm text-gray-900">
+            <p className="truncate text-base font-normal text-foreground">{currentUrl}</p>
           </div>
-          <Button className="py-5 w-20" onClick={copyShareLink}>
+          <Button className="w-20 py-5" onClick={copyShareLink}>
             {shareLinkBtnText}
           </Button>
         </div>
@@ -108,6 +105,7 @@ export default function ShareReport() {
               </LinkedinShareButton>
             </Button>
           </div> */}
+        <DialogClose />
       </DialogContent>
     </Dialog>
   );

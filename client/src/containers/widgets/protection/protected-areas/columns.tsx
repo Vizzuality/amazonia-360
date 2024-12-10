@@ -14,7 +14,7 @@ export const columns: ColumnDef<ProtectedAreas>[] = [
       const v = props.getValue<string>();
       return (
         <div className="flex space-x-2">
-          <LuTrees className="text-cyan-600 mt-px shrink-0" />
+          <LuTrees className="mt-px shrink-0 text-cyan-600" />
           <span>{v}</span>
         </div>
       );

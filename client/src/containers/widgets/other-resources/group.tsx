@@ -6,11 +6,7 @@ import { ResourceProps } from "@/containers/widgets/other-resources/types";
 import { DataPagination } from "@/containers/widgets/pagination";
 import WidgetsRow from "@/containers/widgets/row";
 
-export default function OtherResourcesGroup({
-  data,
-}: {
-  data?: ResourceProps[];
-}) {
+export default function OtherResourcesGroup({ data }: { data?: ResourceProps[] }) {
   const rowsPerPage = 8;
   const [page, setPage] = useState(0);
   const DATA = useMemo(() => {

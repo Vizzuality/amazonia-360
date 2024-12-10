@@ -1,7 +1,10 @@
+import "server-only";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 import { env } from "@/env.mjs";
+
+import { session } from "@/actions/session";
 
 // Step 1. HTTP Basic Auth Middleware for Challenge
 export default async function middleware(req: NextRequest) {
@@ -12,6 +15,8 @@ export default async function middleware(req: NextRequest) {
     });
   }
 
+  await session({ refresh: false });
+
   const response = NextResponse.next();
 
   return response;
@@ -19,16 +24,13 @@ export default async function middleware(req: NextRequest) {
 
 // Step 2. Check HTTP Basic Auth header if present
 function isAuthenticated(req: NextRequest) {
-  const authheader =
-    req.headers.get("authorization") || req.headers.get("Authorization");
+  const authheader = req.headers.get("authorization") || req.headers.get("Authorization");
 
   if (!authheader) {
     return false;
   }
 
-  const auth = Buffer.from(authheader.split(" ")[1], "base64")
-    .toString()
-    .split(":");
+  const auth = Buffer.from(authheader.split(" ")[1], "base64").toString().split(":");
   const user = auth[0];
   const pass = auth[1];
 

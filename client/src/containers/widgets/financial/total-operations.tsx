@@ -54,14 +54,11 @@ export default function WidgetTotalOperations() {
     <Card>
       <CardHeader>
         <CardTitle>IDB funding operations</CardTitle>
-        <CardInfo ids={["idb_operations"]} />
+        <CardInfo ids={[+"idb_operations"]} />
       </CardHeader>
 
       <CardLoader query={[query]} className="h-12">
-        <CardWidgetNumber
-          value={TOTAL}
-          unit={Pluralize("operation", query.data?.length ?? 0)}
-        />
+        <CardWidgetNumber value={TOTAL} unit={Pluralize("operation", query.data?.length ?? 0)} />
       </CardLoader>
     </Card>
   );

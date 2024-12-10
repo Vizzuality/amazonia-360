@@ -1,12 +1,17 @@
+"use client";
+
 import { useCallback, useEffect, useRef } from "react";
+
+import dynamic from "next/dynamic";
 
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 
 import { POINT_SYMBOL, POLYGON_SYMBOL, POLYLINE_SYMBOL } from "@/constants/map";
 
-import FeatureLayer from "@/components/map/layers/graphics";
 import { useMap } from "@/components/map/provider";
+
+const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
 export type SketchProps = {
   type?: "point" | "polygon" | "polyline";
@@ -15,12 +20,7 @@ export type SketchProps = {
   onCancel?: () => void;
 };
 
-export default function Sketch({
-  type,
-  enabled,
-  onCreate,
-  onCancel,
-}: SketchProps) {
+export default function Sketch({ type, enabled, onCreate, onCancel }: SketchProps) {
   const mapInstance = useMap();
 
   const layerRef = useRef<__esri.GraphicsLayer>(new GraphicsLayer());
@@ -99,5 +99,5 @@ export default function Sketch({
     );
   }, [type, enabled, handleSketchCreate]);
 
-  return <FeatureLayer layer={layerRef.current} index={100} />;
+  return <Layer layer={layerRef.current} index={100} />;
 }

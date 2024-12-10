@@ -10,6 +10,7 @@ import { DATASETS } from "@/constants/datasets";
 import {
   Card,
   CardContent,
+  CardControls,
   CardHeader,
   CardInfo,
   CardLoader,
@@ -53,20 +54,17 @@ export default function WidgetProtectedAreas() {
     <Card>
       <CardHeader>
         <CardTitle>Protected areas</CardTitle>
-        <CardInfo ids={["areas_protegidas"]} />
+        <CardControls>
+          <CardInfo ids={[+"areas_protegidas"]} />
+        </CardControls>
       </CardHeader>
 
-      <CardLoader
-        query={[queryProtected, queryProtectedCoverage]}
-        className="h-72"
-      >
+      <CardLoader query={[queryProtected, queryProtectedCoverage]} className="h-72">
         <CardNoData query={[queryProtected]}>
           <CardContent className="space-y-2">
             <WidgetProtectedAreasHeader
               protectedAreas={queryProtected.data ?? []}
-              protectedAreaCoverage={
-                queryProtectedCoverage.data?.percentage ?? 0
-              }
+              protectedAreaCoverage={queryProtectedCoverage.data?.percentage ?? 0}
             />
 
             <DataTable

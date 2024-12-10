@@ -54,13 +54,10 @@ export default function WidgetIndigenousLands() {
     <Card>
       <CardHeader>
         <CardTitle>Indigenous lands</CardTitle>
-        <CardInfo ids={["tierras_indigenas"]} />
+        <CardInfo ids={[+"tierras_indigenas"]} />
       </CardHeader>
 
-      <CardLoader
-        query={[queryIndigenousLands, queryIndigenousLandsCoverage]}
-        className="h-16"
-      >
+      <CardLoader query={[queryIndigenousLands, queryIndigenousLandsCoverage]} className="h-16">
         <CardWidgetNumber
           value={`${queryIndigenousLands.data?.length ?? 0}`}
           subvalue={`representing ${formatPercentage(

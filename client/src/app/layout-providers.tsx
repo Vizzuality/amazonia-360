@@ -1,11 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
-
-import esriConfig from "@arcgis/core/config";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { env } from "@/env.mjs";
+import { ArcGISProvider } from "@/containers/providers/arcgis-provider";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -41,8 +38,13 @@ function getQueryClient() {
 
 export default function LayoutProviders({
   children,
+  session,
 }: {
   children: React.ReactNode;
+  session: {
+    token: string | undefined;
+    expires_in: number;
+  };
 }) {
   // NOTE: Avoid useState when initializing the query client if you don't
   //       have a suspense boundary between this and the code that may
@@ -50,19 +52,11 @@ export default function LayoutProviders({
   //       render if it suspends and there is no boundary
   const queryClient = getQueryClient();
 
-  useMemo(() => {
-    esriConfig.apiKey = env.NEXT_PUBLIC_ARCGIS_API_KEY;
-    esriConfig.request.interceptors?.push({
-      urls: [env.NEXT_PUBLIC_API_URL],
-      headers: {
-        Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
-      },
-    });
-  }, []);
-
   return (
     <TooltipProvider>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <ArcGISProvider session={session}>{children}</ArcGISProvider>
+      </QueryClientProvider>
     </TooltipProvider>
   );
 }

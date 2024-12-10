@@ -20,8 +20,7 @@ export default function WidgetEnvironmentSummaryHydro({
 
   return (
     <>
-      Positioned within the hydrographic{" "}
-      {Pluralize("basin", STATISTICS.basin.size)} of the{" "}
+      Positioned within the hydrographic {Pluralize("basin", STATISTICS.basin.size)} of the{" "}
       <strong>{joinWithAnd(Array.from(STATISTICS.basin.values()))}</strong>
     </>
   );

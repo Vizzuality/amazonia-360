@@ -7,12 +7,7 @@ import Legend from "@/containers/legend";
 import LegendItem from "@/containers/legend/item";
 import WidgetMap from "@/containers/widgets/map";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 
 export default function WidgetsProtectionMap() {
   const [layer, setLayer] = useState<DatasetIds>("areas_protegidas");
@@ -20,7 +15,7 @@ export default function WidgetsProtectionMap() {
 
   return (
     <>
-      <div className="absolute top-4 left-4 z-10">
+      <div className="absolute left-4 top-4 z-10">
         <Select
           value={layer}
           onValueChange={(l) => {
@@ -40,9 +35,7 @@ export default function WidgetsProtectionMap() {
             <SelectItem value={DATASETS.tierras_indigenas.layer.id}>
               {DATASETS.tierras_indigenas.layer.title}
             </SelectItem>
-            <SelectItem value={DATASETS.fires.layer.id}>
-              {DATASETS.fires.layer.title}
-            </SelectItem>
+            <SelectItem value={DATASETS.fires.layer.id}>{DATASETS.fires.layer.title}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -55,7 +48,7 @@ export default function WidgetsProtectionMap() {
         </div>
       )}
 
-      <Card className="h-full p-0 relative">
+      <Card className="relative h-full p-0">
         <WidgetMap
           ids={[layer]}
           popup={{

@@ -1,10 +1,7 @@
 "use client";
 
 import { treemapDice } from "@visx/hierarchy";
-import {
-  HierarchyNode,
-  HierarchyRectangularNode,
-} from "@visx/hierarchy/lib/types";
+import { HierarchyNode, HierarchyRectangularNode } from "@visx/hierarchy/lib/types";
 import { scaleOrdinal } from "@visx/scale";
 
 import { formatPercentage } from "@/lib/formats";
@@ -15,14 +12,7 @@ import { useSyncLocation } from "@/app/store";
 
 import { FIRES, FireIds } from "@/constants/colors";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardInfo,
-  CardLoader,
-  CardTitle,
-} from "@/containers/card";
+import { Card, CardContent, CardHeader, CardInfo, CardLoader, CardTitle } from "@/containers/card";
 import LegendOrdinal from "@/containers/legend/ordinal";
 
 import MarimekkoChart, { Data } from "@/components/charts/marimekko";
@@ -30,7 +20,9 @@ import MarimekkoChart, { Data } from "@/components/charts/marimekko";
 export default function WidgetForestFires() {
   const [location] = useSyncLocation();
 
-  const GEOMETRY = useLocationGeometry(location);
+  const GEOMETRY = useLocationGeometry(location, {
+    wkid: 4326,
+  });
 
   const query = useGetRasterAnalysis(
     {
@@ -83,14 +75,13 @@ export default function WidgetForestFires() {
     <Card>
       <CardHeader>
         <CardTitle>Frequency of forest fires</CardTitle>
-        <CardInfo ids={["fires"]} />
+        <CardInfo ids={[+"fires"]} />
       </CardHeader>
 
       <CardContent className="space-y-2">
         <CardLoader query={[query]} className="h-16">
           <MarimekkoChart
             data={query?.data || []}
-            colorScale={ordinalColorScale}
             format={FORMAT}
             className="h-6"
             tile={treemapDice}

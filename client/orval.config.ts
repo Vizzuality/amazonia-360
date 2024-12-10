@@ -20,7 +20,7 @@ module.exports = {
       },
     },
     input: {
-      target: "http://15.188.19.207:8000/openapi.json",
+      target: "https://dev.api.amazonia360.dev-vizzuality.com/openapi.json",
       filters: {},
     },
   },
