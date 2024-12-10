@@ -78,6 +78,17 @@ const config = {
           "800": "#2D6485",
           "900": "#26536F",
         },
+        gray: {
+          "100": "#f2f2f2",
+          "200": "#b3b3b3",
+          "300": "#858585",
+          "400": "#585858",
+          "500": "#3b3b3b",
+          "600": "#303030",
+          "700": "#282828",
+          "800": "#242424",
+          "900": "#1e1e1e",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
