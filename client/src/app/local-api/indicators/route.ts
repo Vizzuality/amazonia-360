@@ -10,10 +10,10 @@ export type ResourceFeature = {
   url: string;
   layer_id: number;
   type: "feature";
-  query_map: __esri.QueryProperties | null;
-  query_table: __esri.QueryProperties | null;
-  query_chart: __esri.QueryProperties | null;
-  query_numeric: __esri.QueryProperties | null;
+  query_map: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
+  query_table: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
+  query_chart: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
+  query_numeric: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
 };
 
 export type ResourceWebTile = {

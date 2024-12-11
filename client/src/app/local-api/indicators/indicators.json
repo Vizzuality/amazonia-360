@@ -267,9 +267,15 @@
       "name": "NATTOPOALT",
       "type": "feature",
       "layer_id": 2,
-      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/NATTOPOALT/FeatureServer"
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/NATTOPOALT/FeatureServer",
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": true,
+        "returnIntersections": true,
+        "outFields": ["ALTIT as label", ","]
+      }
     },
-    "visualization_types": ["map"],
+    "visualization_types": ["map", "chart"],
     "h3": []
   }
 ]
