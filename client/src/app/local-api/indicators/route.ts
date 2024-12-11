@@ -1,4 +1,4 @@
-import { Topic } from "@/app/api/topics/route";
+import { Topic } from "@/app/local-api/topics/route";
 import { IndicatorView } from "@/app/parsers";
 
 import INDICATORS from "./indicators.json";
@@ -31,6 +31,7 @@ export type ResourceImageryTile = {
 export type Indicator = {
   id: number;
   name: string;
+  description: string;
   topic: {
     id: Topic["id"];
     name: string;
@@ -40,7 +41,7 @@ export type Indicator = {
   };
   visualization_types: VisualizationType[];
   resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
-  h3_grid_column_name: string | null;
+  h3: string[];
 };
 
 export async function GET() {

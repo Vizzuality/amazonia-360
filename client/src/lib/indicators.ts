@@ -9,7 +9,7 @@ import {
   ResourceImageryTile,
   ResourceWebTile,
   VisualizationType,
-} from "@/app/api/indicators/route";
+} from "@/app/local-api/indicators/route";
 /**
  ************************************************************
  ************************************************************
@@ -28,7 +28,7 @@ export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
 >;
 
 export const getIndicators = async () => {
-  return axios.get<Indicator[]>("/api/indicators").then((response) => response.data);
+  return axios.get<Indicator[]>("/local-api/indicators").then((response) => response.data);
 };
 
 export const getIndicatorsKey = () => {

@@ -9,7 +9,7 @@ import { LuChevronRight, LuPlus, LuInfo } from "react-icons/lu";
 import { useGetTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
-import { Topic, TopicIndicator } from "@/app/api/topics/route";
+import { Topic, TopicIndicator } from "@/app/local-api/topics/route";
 import { useSyncTopics } from "@/app/store";
 
 import { VisualizationTypes } from "@/containers/report/indicators/sidebar/topics/indicators/visualization-types";

@@ -13,6 +13,10 @@ jest.mock("query-string", () => ({
   stringify: jest.fn(),
 }));
 
+jest.mock("react-markdown", () => ({ children }: { children?: string }) => {
+  return children;
+});
+
 /****************
  * ArcGIS JS API
  ****************/

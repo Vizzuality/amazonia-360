@@ -1,6 +1,6 @@
 import { useIndicatorsId } from "@/lib/indicators";
 
-import { Indicator } from "@/app/api/indicators/route";
+import { Indicator } from "@/app/local-api/indicators/route";
 
 export default function InfoRaster({ id }: { id: Indicator["id"] }) {
   const indicator = useIndicatorsId(id);
