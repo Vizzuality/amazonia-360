@@ -36,6 +36,22 @@ class ArrowIPCResponse(Response):  # noqa: D101
     media_type = "application/octet-stream"
 
 
+def colum_filter(
+    columns: list[str] = Query(
+        [], description="Column/s to include in the tile. If empty, it returns only cell indexes."
+    ),
+):
+    return columns
+
+
+def feature_filter(geojson: Annotated[Feature, Body(description="GeoJSON feature used to filter the cells.")]):
+    return geojson
+
+
+ColumnDep = Annotated[list[str], Depends(colum_filter)]
+FeatureDep = Annotated[Feature, Depends(feature_filter)]
+
+
 def get_tile(
     tile_index: Annotated[str, Path(description="The `h3` index of the tile")], columns: list[str]
 ) -> tuple[pl.LazyFrame, int]:
@@ -85,9 +101,7 @@ def polars_to_string_ipc(df: pl.DataFrame) -> bytes:
 )
 def grid_tile(
     tile_index: Annotated[str, Path(description="The `h3` index of the tile")],
-    columns: list[str] = Query(
-        [], description="Colum/s to include in the tile. If empty, it returns only cell indexes."
-    ),
+    columns: ColumnDep,
 ) -> ArrowIPCResponse:
     """Get a tile of h3 cells with specified data columns"""
     tile, _ = get_tile(tile_index, columns)
@@ -107,11 +121,7 @@ def grid_tile(
     responses=tile_exception_responses,
 )
 def grid_tile_in_area(
-    tile_index: Annotated[str, Path(description="The `h3` index of the tile")],
-    geojson: Annotated[Feature, Body(description="GeoJSON feature used to filter the cells.")],
-    columns: list[str] = Query(
-        [], description="Colum/s to include in the tile. If empty, it returns only cell indexes."
-    ),
+    tile_index: Annotated[str, Path(description="The `h3` index of the tile")], geojson: FeatureDep, columns: ColumnDep
 ) -> ArrowIPCResponse:
     """Get a tile of h3 cells that are inside the polygon"""
     tile, tile_index_res = get_tile(tile_index, columns)
@@ -128,12 +138,9 @@ def grid_tile_in_area(
     return ArrowIPCResponse(polars_to_string_ipc(tile))
 
 
-@grid_router.get(
-    "/meta",
-    summary="Dataset metadata",
-)
-async def grid_dataset_metadata() -> MultiDatasetMeta:
-    """Get the grid dataset metadata"""
+@lru_cache
+def load_meta() -> MultiDatasetMeta:
+    """Load the metadata file and validate it"""
     file = os.path.join(get_settings().grid_tiles_path, "meta.json")
     with open(file) as f:
         raw = f.read()
@@ -147,11 +154,56 @@ async def grid_dataset_metadata() -> MultiDatasetMeta:
     return meta
 
 
+@grid_router.get(
+    "/meta",
+    summary="Dataset metadata",
+)
+async def grid_dataset_metadata() -> MultiDatasetMeta:
+    """Get the grid dataset metadata"""
+    return load_meta()
+
+
+@grid_router.post(
+    "/meta",
+    summary="Dataset metadata for feature selection",
+)
+async def grid_dataset_metadata_in_area(
+    geojson: FeatureDep,
+    columns: ColumnDep,
+    level: Annotated[int, Query(..., description="Tile level at which the query will be computed")] = 1,
+) -> MultiDatasetMeta:
+    """Get the grid dataset metadata with updated min and max for the area"""
+    meta = load_meta().model_dump()
+
+    files_path = pathlib.Path(get_settings().grid_tiles_path) / str(level)
+    if not files_path.exists():
+        raise HTTPException(404, detail=f"Level {level} does not exist") from None
+
+    lf = pl.scan_ipc(list(files_path.glob("*.arrow")))
+    if columns:
+        lf = lf.select(["cell", *columns])
+    if geojson is not None:
+        cell_res = level + get_settings().tile_to_cell_resolution_diff
+        geom = shapely.from_geojson(geojson.model_dump_json())
+        cells = cells_in_geojson(geom, cell_res)
+        lf = lf.join(cells, on="cell")
+
+    maxs = lf.select(pl.selectors.numeric().max()).collect()
+    mins = lf.select(pl.selectors.numeric().min()).collect()
+
+    for dataset in meta["datasets"]:
+        column = dataset["var_name"]
+        stats = dataset["legend"]["stats"][0]
+        stats["min"] = mins.select(pl.col(column)).item()
+        stats["max"] = maxs.select(pl.col(column)).item()
+    return MultiDatasetMeta.model_validate(meta)
+
+
 @grid_router.post("/table")
 def read_table(
     level: Annotated[int, Query(..., description="Tile level at which the query will be computed")],
+    geojson: FeatureDep,
     filters: TableFilters = Depends(),
-    geojson: Feature | None = None,
 ) -> TableResults:
     """Query tile dataset and return table data"""
     files_path = pathlib.Path(get_settings().grid_tiles_path) / str(level)
