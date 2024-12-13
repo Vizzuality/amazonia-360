@@ -12,6 +12,7 @@ import {
   ResourceWebTile,
   VisualizationType,
 } from "@/app/local-api/indicators/route";
+import { Topic } from "@/app/local-api/topics/route";
 /**
  ************************************************************
  ************************************************************
@@ -30,7 +31,16 @@ export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
 >;
 
 export const getIndicators = async () => {
-  return axios.get<Indicator[]>("/local-api/indicators").then((response) => response.data);
+  const indicators = await axios
+    .get<Indicator[]>("/local-api/indicators")
+    .then((response) => response.data);
+
+  const topics = await axios.get<Topic[]>("/local-api/topics").then((response) => response.data);
+
+  return indicators.map((indicator) => ({
+    ...indicator,
+    topic: topics.find((topic) => topic.id === indicator.topic),
+  })) as (Indicator & { topic: Topic })[];
 };
 
 export const getIndicatorsKey = () => {

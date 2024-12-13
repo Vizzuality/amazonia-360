@@ -1,6 +1,3 @@
-import { Topic } from "@/app/local-api/topics/route";
-import { IndicatorView } from "@/app/parsers";
-
 import INDICATORS from "./indicators.json";
 
 export type VisualizationType = "map" | "table" | "chart" | "numeric";
@@ -32,13 +29,7 @@ export type Indicator = {
   id: number;
   name: string;
   description: string;
-  topic: {
-    id: Topic["id"];
-    name: string;
-    description: string;
-    image: string;
-    default_visualization: IndicatorView[];
-  };
+  topic: number;
   visualization_types: VisualizationType[];
   resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
   h3: string[];

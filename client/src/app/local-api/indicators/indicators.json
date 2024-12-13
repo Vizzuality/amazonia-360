@@ -4,25 +4,7 @@
     "name": "Indigenous lands",
     "unit": "",
     "description": "# Markdown syntax guide\n\n## Headers\n\n# This is a Heading h1\n## This is a Heading h2\n###### This is a Heading h6\n\n## Emphasis\n\n*This text will be italic*  \n_This will also be italic_\n\n**This text will be bold**  \n__This will also be bold__\n\n_You **can** combine them_\n\n## Lists\n\n### Unordered\n\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n    * Item 3a\n    * Item 3b\n\n### Ordered\n\n1. Item 1\n2. Item 2\n3. Item 3\n    1. Item 3a\n    2. Item 3b\n\n## Images\n\n![This is an alt text.](https://placehold.co/600x400)\n\n## Links\n\nYou may be using [Markdown Live Preview](https://markdownlivepreview.com/).\n\n## Blockquotes\n\n> Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.\n>\n>> Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.",
-    "topic": {
-      "id": 1,
-      "name": "Nature",
-      "image": "/images/topics/nature.png",
-      "description": "Get data on life zones, ecosystems, habitats, and conservation areas.",
-      "default_visualization": [
-        {
-          "id": 1,
-          "type": "numeric",
-          "x": 0,
-          "y": 0,
-          "w": 2,
-          "h": 1
-        },
-        { "id": 2, "type": "numeric", "x": 2, "y": 0, "w": 2, "h": 1 },
-        { "id": 3, "type": "map", "x": 0, "y": 1, "w": 4, "h": 4 },
-        { "id": 6, "type": "map", "x": 0, "y": 5, "w": 4, "h": 4 }
-      ]
-    },
+    "topic": 1,
     "visualization_types": ["map", "table", "numeric"],
     "resource": {
       "name": "AFP_Tierras_indigenas",
@@ -53,25 +35,7 @@
     "name": "Protected areas",
     "unit": "",
     "description": "# Markdown syntax guide\n\n## Headers\n\n# This is a Heading h1\n## This is a Heading h2\n###### This is a Heading h6\n\n## Emphasis\n\n*This text will be italic*  \n_This will also be italic_\n\n**This text will be bold**  \n__This will also be bold__\n\n_You **can** combine them_\n\n## Lists\n\n### Unordered\n\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n    * Item 3a\n    * Item 3b\n\n### Ordered\n\n1. Item 1\n2. Item 2\n3. Item 3\n    1. Item 3a\n    2. Item 3b\n\n## Images\n\n![This is an alt text.](https://placehold.co/600x400)\n\n## Links\n\nYou may be using [Markdown Live Preview](https://markdownlivepreview.com/).\n\n## Blockquotes\n\n> Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.\n>\n>> Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.",
-    "topic": {
-      "id": 1,
-      "name": "Nature",
-      "image": "/images/topics/nature.png",
-      "description": "Get data on life zones, ecosystems, habitats, and conservation areas.",
-      "default_visualization": [
-        {
-          "id": 1,
-          "type": "numeric",
-          "x": 0,
-          "y": 0,
-          "w": 2,
-          "h": 1
-        },
-        { "id": 2, "type": "numeric", "x": 2, "y": 0, "w": 2, "h": 1 },
-        { "id": 3, "type": "map", "x": 0, "y": 1, "w": 4, "h": 4 },
-        { "id": 6, "type": "map", "x": 0, "y": 5, "w": 4, "h": 4 }
-      ]
-    },
+    "topic": 1,
     "resource": {
       "name": "AFP_Areas_protegidas",
       "type": "feature",
@@ -114,25 +78,7 @@
     "name": "Land cover",
     "description": "# Markdown syntax guide\n\n## Headers\n\n# This is a Heading h1\n## This is a Heading h2\n###### This is a Heading h6\n\n## Emphasis\n\n*This text will be italic*  \n_This will also be italic_\n\n**This text will be bold**  \n__This will also be bold__\n\n_You **can** combine them_\n\n## Lists\n\n### Unordered\n\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n    * Item 3a\n    * Item 3b\n\n### Ordered\n\n1. Item 1\n2. Item 2\n3. Item 3\n    1. Item 3a\n    2. Item 3b\n\n## Images\n\n![This is an alt text.](https://placehold.co/600x400)\n\n## Links\n\nYou may be using [Markdown Live Preview](https://markdownlivepreview.com/).\n\n## Blockquotes\n\n> Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.\n>\n>> Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.",
     "unit": "",
-    "topic": {
-      "id": 1,
-      "name": "Nature",
-      "image": "/images/topics/nature.png",
-      "description": "Get data on life zones, ecosystems, habitats, and conservation areas.",
-      "default_visualization": [
-        {
-          "id": 1,
-          "type": "numeric",
-          "x": 0,
-          "y": 0,
-          "w": 2,
-          "h": 1
-        },
-        { "id": 2, "type": "numeric", "x": 2, "y": 0, "w": 2, "h": 1 },
-        { "id": 3, "type": "map", "x": 0, "y": 1, "w": 4, "h": 4 },
-        { "id": 6, "type": "map", "x": 0, "y": 5, "w": 4, "h": 4 }
-      ]
-    },
+    "topic": 1,
     "resource": {
       "name": "landcover_cog_tiles",
       "type": "imagery-tile",
@@ -146,31 +92,7 @@
     "name": "IDB operations",
     "unit": "",
     "description": "# Markdown syntax guide\n\n## Headers\n\n# This is a Heading h1\n## This is a Heading h2\n###### This is a Heading h6\n\n## Emphasis\n\n*This text will be italic*  \n_This will also be italic_\n\n**This text will be bold**  \n__This will also be bold__\n\n_You **can** combine them_\n\n## Lists\n\n### Unordered\n\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n    * Item 3a\n    * Item 3b\n\n### Ordered\n\n1. Item 1\n2. Item 2\n3. Item 3\n    1. Item 3a\n    2. Item 3b\n\n## Images\n\n![This is an alt text.](https://placehold.co/600x400)\n\n## Links\n\nYou may be using [Markdown Live Preview](https://markdownlivepreview.com/).\n\n## Blockquotes\n\n> Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.\n>\n>> Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.",
-    "topic": {
-      "id": 2,
-      "name": "IDB operations",
-      "image": "/images/topics/idb-operations.png",
-      "description": "IDB development operations and impact data.",
-      "default_visualization": [
-        {
-          "id": 4,
-          "type": "numeric",
-          "x": 0,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        {
-          "id": 5,
-          "type": "numeric",
-          "x": 1,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        { "id": 4, "type": "map", "x": 0, "y": 1, "w": 4, "h": 4 }
-      ]
-    },
+    "topic": 2,
     "resource": {
       "name": "IDB_operations",
       "type": "feature",
@@ -195,31 +117,7 @@
     "name": "IDB operations funding",
     "unit": "$",
     "description": "# Markdown syntax guide\n\n## Headers\n\n# This is a Heading h1\n## This is a Heading h2\n###### This is a Heading h6\n\n## Emphasis\n\n*This text will be italic*  \n_This will also be italic_\n\n**This text will be bold**  \n__This will also be bold__\n\n_You **can** combine them_\n\n## Lists\n\n### Unordered\n\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n    * Item 3a\n    * Item 3b\n\n### Ordered\n\n1. Item 1\n2. Item 2\n3. Item 3\n    1. Item 3a\n    2. Item 3b\n\n## Images\n\n![This is an alt text.](https://placehold.co/600x400)\n\n## Links\n\nYou may be using [Markdown Live Preview](https://markdownlivepreview.com/).\n\n## Blockquotes\n\n> Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.\n>\n>> Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.",
-    "topic": {
-      "id": 2,
-      "name": "IDB operations",
-      "image": "/images/topics/idb-operations.png",
-      "description": "IDB development operations and impact data.",
-      "default_visualization": [
-        {
-          "id": 4,
-          "type": "numeric",
-          "x": 0,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        {
-          "id": 5,
-          "type": "numeric",
-          "x": 1,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        { "id": 4, "type": "map", "x": 0, "y": 1, "w": 4, "h": 4 }
-      ]
-    },
+    "topic": 2,
     "resource": {
       "name": "IDB_operations",
       "type": "feature",
@@ -244,25 +142,7 @@
     "name": "Elevation",
     "unit": "",
     "description": "# Markdown syntax guide\n\n## Headers\n\n# This is a Heading h1\n## This is a Heading h2\n###### This is a Heading h6\n\n## Emphasis\n\n*This text will be italic*  \n_This will also be italic_\n\n**This text will be bold**  \n__This will also be bold__\n\n_You **can** combine them_\n\n## Lists\n\n### Unordered\n\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n    * Item 3a\n    * Item 3b\n\n### Ordered\n\n1. Item 1\n2. Item 2\n3. Item 3\n    1. Item 3a\n    2. Item 3b\n\n## Images\n\n![This is an alt text.](https://placehold.co/600x400)\n\n## Links\n\nYou may be using [Markdown Live Preview](https://markdownlivepreview.com/).\n\n## Blockquotes\n\n> Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.\n>\n>> Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.",
-    "topic": {
-      "id": 1,
-      "name": "Nature",
-      "image": "/images/topics/nature.png",
-      "description": "Get data on life zones, ecosystems, habitats, and conservation areas.",
-      "default_visualization": [
-        {
-          "id": 1,
-          "type": "numeric",
-          "x": 0,
-          "y": 0,
-          "w": 2,
-          "h": 1
-        },
-        { "id": 2, "type": "numeric", "x": 2, "y": 0, "w": 2, "h": 1 },
-        { "id": 3, "type": "map", "x": 0, "y": 1, "w": 4, "h": 4 },
-        { "id": 6, "type": "map", "x": 0, "y": 5, "w": 4, "h": 4 }
-      ]
-    },
+    "topic": 1,
     "resource": {
       "name": "NATTOPOALT",
       "type": "feature",
