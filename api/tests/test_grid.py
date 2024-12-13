@@ -3,7 +3,7 @@ import json
 import polars as pl
 
 from app.models.grid import TableFilters
-from tests.conftest import HEADERS
+from tests.conftest import HEADERS, METADATA
 from tests.utils import test_client
 
 
@@ -60,11 +60,11 @@ def test_grid_tile_bad_index(grid_dataset):
     assert response.json() == {"detail": "Tile index is not a valid H3 cell"}
 
 
-def test_grid_metadata_fails_gracefully(grid_dataset):
+def test_grid_metadata(grid_dataset):
     res = test_client.get("/grid/meta", headers=HEADERS)
 
-    assert res.status_code == 500
-    assert res.json() == {"detail": "Metadata file is malformed. Please contact developer."}
+    assert res.status_code == 200
+    assert len(res.json()["datasets"]) == 2
 
 
 def test_table_filter_numerical_eq_to_sql():
@@ -219,7 +219,7 @@ def test_grid_table(grid_dataset):
     }
 
     response = test_client.post("/grid/table?level=4&order_by=-population", headers=HEADERS, content=json.dumps(body))
-    assert response.status_code == 200
+    assert response.status_code == 200, response.content
     assert json.loads(response.read()) == {
         "table": [
             {"column": "landcover", "values": [4, 1]},
@@ -284,3 +284,25 @@ def test_grid_tile_post_wrong_column(grid_dataset, geojson):
 
     assert response.status_code == 400
     assert response.json() == {"detail": "One or more of the specified columns is not valid"}
+
+
+def test_grid_metadata_filter(grid_dataset, geojson):
+    response = test_client.post(
+        "/grid/meta",
+        params={"level": 4},
+        headers=HEADERS,
+        content=geojson,
+    )
+    assert response.status_code == 200, response.content
+
+    meta = response.json()
+
+    assert len(meta["datasets"]) == 2
+    population = [ds for ds in meta["datasets"] if ds["var_name"] == "population"][0]
+
+    assert population["legend"]["stats"][0]["max"] == 100
+    assert population["legend"]["stats"][0]["min"] == 100
+
+
+
+

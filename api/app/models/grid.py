@@ -50,7 +50,6 @@ class DatasetMeta(BaseModel):
     nodata: str | None = Field(default=None, description="Nodata value used in grid")
     description: str = Field(description="Human readable indicator description.")
     unit: str | None = Field(description="Unit of the measurement")
-    lineage: list[str] | None = Field(default=None, description="Source data used to compute this dataset.")
     legend: CategoricalLegend | NumericalLegend = Field(discriminator="legend_type")
 
 
