@@ -193,6 +193,8 @@ async def grid_dataset_metadata_in_area(
 
     for dataset in meta["datasets"]:
         column = dataset["var_name"]
+        if dataset["legend"]["legend_type"] == "categorical":
+            continue
         stats = dataset["legend"]["stats"][0]
         stats["min"] = mins.select(pl.col(column)).item()
         stats["max"] = maxs.select(pl.col(column)).item()
