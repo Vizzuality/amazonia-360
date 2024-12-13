@@ -219,7 +219,7 @@ def test_grid_table(grid_dataset):
     }
 
     response = test_client.post("/grid/table?level=4&order_by=-population", headers=HEADERS, content=json.dumps(body))
-    assert response.status_code == 200
+    assert response.status_code == 200, response.content
     assert json.loads(response.read()) == {
         "table": [
             {"column": "landcover", "values": [4, 1]},
@@ -283,4 +283,15 @@ def test_grid_tile_post_wrong_column(grid_dataset, geojson):
     )
 
     assert response.status_code == 400
+    assert response.json() == {"detail": "One or more of the specified columns is not valid"}
+
+
+def test_grid_metadata_filter(grid_dataset, geojson):
+    response = test_client.post(
+        "/grid/meta",
+        params={"columns": ["population"]},
+        headers=HEADERS,
+        content=geojson,
+    )
+    assert response.status_code == 200
     assert response.json() == {"detail": "One or more of the specified columns is not valid"}

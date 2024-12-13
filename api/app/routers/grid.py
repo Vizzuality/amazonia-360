@@ -202,8 +202,8 @@ async def grid_dataset_metadata_in_area(
 @grid_router.post("/table")
 def read_table(
     level: Annotated[int, Query(..., description="Tile level at which the query will be computed")],
-    geojson: FeatureDep,
     filters: TableFilters = Depends(),
+    geojson: Feature | None = None,
 ) -> TableResults:
     """Query tile dataset and return table data"""
     files_path = pathlib.Path(get_settings().grid_tiles_path) / str(level)

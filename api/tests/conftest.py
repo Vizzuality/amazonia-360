@@ -76,7 +76,44 @@ def grid_dataset(setup_data_folder) -> str:
         }
     )
     with open(grid_dataset_path / "meta.json", "w") as f:
-        f.write("{}")
+        f.write(
+            json.dumps(
+                {
+                    "datasets": [
+                        {
+                            "var_name": "landcover",
+                            "var_dtype": "Int32",
+                            "label": "foo",
+                            "description": "foo",
+                            "unit": "",
+                            "legend": {
+                                "legend_type": "categorical",
+                                "entries": [{"value": 1, "color": "#ffffff", "label": "all"}],
+                            },
+                        },
+                        {
+                            "var_name": "population",
+                            "var_dtype": "Int32",
+                            "label": "bar",
+                            "description": "bar",
+                            "unit": "count",
+                            "legend": {
+                                "legend_type": "continuous",
+                                "colormap_name": "viridis",
+                                "stats": [{"level": 1, "min": 1, "max": 900}],
+                            },
+                        },
+                    ],
+                    "h3_grid_info": [
+                        {
+                            "level": 1,
+                            "h3_cells_resolution": 6,
+                            "h3_cells_count": 5,
+                        }
+                    ],
+                }
+            )
+        )
 
     with open(tile_path, "wb") as f:
         df.write_ipc(f)
