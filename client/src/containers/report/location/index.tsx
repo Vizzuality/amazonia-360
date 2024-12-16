@@ -3,7 +3,13 @@
 import { useAtom } from "jotai";
 import { LuArrowLeft } from "react-icons/lu";
 
-import { tabAtom, useSyncLocation, gridPanelAtom, reportPanelAtom } from "@/app/store";
+import {
+  tabAtom,
+  useSyncLocation,
+  gridPanelAtom,
+  reportPanelAtom,
+  useSyncGridDatasets,
+} from "@/app/store";
 
 import Confirm from "@/containers/report/location/confirm";
 import { GenerateReport } from "@/containers/report/location/generate";
@@ -23,6 +29,7 @@ export default function ReportLocation() {
   const [gridPanel, setGridPanel] = useAtom(gridPanelAtom);
 
   const [location] = useSyncLocation();
+  const [gridDatasets] = useSyncGridDatasets();
 
   return (
     <aside className="pointer-events-auto flex max-h-screen w-4/12 shrink-0 flex-col overflow-hidden tall:2xl:w-4/12">
@@ -119,6 +126,7 @@ export default function ReportLocation() {
                     onClick={() => setGridPanel("table")}
                     variant="outline"
                     className="w-full"
+                    disabled={!gridDatasets?.length}
                   >
                     View cells ranking
                   </Button>

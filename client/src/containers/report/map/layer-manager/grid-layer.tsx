@@ -24,6 +24,7 @@ import {
   gridCellHighlightAtom,
   useSyncGridDatasets,
   useSyncGridFilters,
+  useSyncGridSelectedDataset,
   useSyncLocation,
 } from "@/app/store";
 
@@ -208,6 +209,7 @@ export default function GridLayer() {
   const [location] = useSyncLocation();
   const [gridFilters] = useSyncGridFilters();
   const [gridDatasets] = useSyncGridDatasets();
+  const [gridSelectedDataset] = useSyncGridSelectedDataset();
   const gridCellHighlight = useAtomValue(gridCellHighlightAtom);
 
   const map = useMap();
@@ -224,11 +226,12 @@ export default function GridLayer() {
   const colorscale = useMemo(() => {
     if (!gridMetaData) return CHROMA.scale([]);
 
-    if (gridDatasets.length === 0) return CHROMA.scale([]);
+    if (!gridSelectedDataset) return CHROMA.scale([]);
 
-    if (gridDatasets.length === 1) {
-      const [g] = gridDatasets;
-      const dataset = gridMetaData.datasets.find((dataset) => dataset.var_name === g);
+    if (gridSelectedDataset) {
+      const dataset = gridMetaData.datasets.find(
+        (dataset) => dataset.var_name === gridSelectedDataset,
+      );
 
       if (dataset?.legend.legend_type === "continuous") {
         const s = dataset.legend.stats.find((stat) => stat.level === 1);
@@ -237,24 +240,14 @@ export default function GridLayer() {
       }
     }
 
-    return CHROMA.scale("viridis").domain([0, 35]);
-  }, [gridDatasets, gridMetaData]);
+    return CHROMA.scale("viridis").domain([0, 100]);
+  }, [gridSelectedDataset, gridMetaData]);
 
   const getFillColor = useCallback(
     (d: Record<string, number>): Color => {
-      if (gridDatasets.length === 1) {
-        const [dataset] = gridDatasets;
-
-        return colorscale(d[`${dataset}`]).rgb();
-      }
-
-      if (gridDatasets.length > 1) {
-        return [0, 100, 200, 255];
-      }
-
-      return [0, 0, 0, 0];
+      return colorscale(d[`${gridSelectedDataset}`]).rgb();
     },
-    [gridDatasets, colorscale],
+    [gridSelectedDataset, colorscale],
   );
 
   const layer = useMemo(() => {
