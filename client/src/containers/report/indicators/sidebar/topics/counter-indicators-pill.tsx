@@ -1,6 +1,6 @@
 "use client";
 
-import { Topic } from "@/app/api/topics/route";
+import { Topic } from "@/app/local-api/topics/route";
 import { useSyncTopics } from "@/app/store";
 
 export function CounterIndicatorsPill({ id }: { id: Topic["id"] }) {

@@ -7,7 +7,7 @@ import { useAtom } from "jotai";
 
 import { useGetTopicsId } from "@/lib/topics";
 
-import { VisualizationType } from "@/app/api/indicators/route";
+import { VisualizationType } from "@/app/local-api/indicators/route";
 import { Topic } from "@/app/parsers";
 import { indicatorsEditionModeAtom, reportEditionModeAtom, useSyncTopics } from "@/app/store";
 

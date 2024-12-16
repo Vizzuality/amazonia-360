@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { useQueryFeatureId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
-import { Indicator, ResourceFeature } from "@/app/api/indicators/route";
+import { Indicator, ResourceFeature } from "@/app/local-api/indicators/route";
 import { useSyncLocation } from "@/app/store";
 
 import { CardLoader, CardWidgetNumber } from "@/containers/card";

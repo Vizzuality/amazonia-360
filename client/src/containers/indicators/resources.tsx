@@ -10,7 +10,7 @@ import {
   ResourceFeature,
   ResourceImageryTile,
   VisualizationType,
-} from "@/app/api/indicators/route";
+} from "@/app/local-api/indicators/route";
 import { useSyncLocation } from "@/app/store";
 
 import { ChartIndicators } from "@/containers/indicators/chart";

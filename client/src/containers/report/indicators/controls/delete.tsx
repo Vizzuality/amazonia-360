@@ -1,7 +1,7 @@
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { Trash2 } from "lucide-react";
 
-import { VisualizationType } from "@/app/api/indicators/route";
+import { VisualizationType } from "@/app/local-api/indicators/route";
 
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 

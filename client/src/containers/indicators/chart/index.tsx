@@ -7,7 +7,7 @@ import { formatPercentage } from "@/lib/formats";
 import { useQueryFeatureId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
-import { Indicator, ResourceFeature } from "@/app/api/indicators/route";
+import { Indicator, ResourceFeature } from "@/app/local-api/indicators/route";
 import { useSyncLocation } from "@/app/store";
 
 import { CardLoader } from "@/containers/card";
@@ -36,17 +36,26 @@ export const ChartIndicators = ({ id, resource }: ChartIndicatorsProps) => {
   const TOTAL = useMemo(() => {
     if (!query.data) return 0;
 
+    const R = resource[`query_chart`];
+
+    if (R?.returnIntersections) {
+      return query.data.features.reduce((acc, curr) => {
+        return curr.attributes.total;
+      }, 0);
+    }
+
     return query.data.features.reduce((acc, curr) => {
       return acc + curr.attributes.value;
     }, 0);
-  }, [query.data]);
+  }, [resource, query.data]);
 
   const DATA = useMemo(() => {
     if (!query.data) return [];
 
-    return query.data.features.map((feature) => {
-      const GROUPS = resource[`query_chart`]?.groupByFieldsForStatistics;
+    const R = resource[`query_chart`];
+    const GROUPS = R?.groupByFieldsForStatistics;
 
+    return query.data.features.map((feature) => {
       if (!!GROUPS && GROUPS.length) {
         return {
           id: feature.attributes[GROUPS?.[0]],

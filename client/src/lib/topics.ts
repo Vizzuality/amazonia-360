@@ -7,7 +7,7 @@ import axios from "axios";
 
 import { useIndicators } from "@/lib/indicators";
 
-import { Topic } from "@/app/api/topics/route";
+import { Topic } from "@/app/local-api/topics/route";
 
 /**
  ************************************************************
@@ -27,7 +27,7 @@ export type TopicsQueryOptions<TData, TError> = UseQueryOptions<
 >;
 
 export const getTopics = async () => {
-  return axios.get<Topic[]>("/api/topics").then((response) => response.data);
+  return axios.get<Topic[]>("/local-api/topics").then((response) => response.data);
 };
 
 export const getTopicsKey = () => {
@@ -86,8 +86,10 @@ export const useGetTopics =
         topics[parseInt(topicId)].indicators = topicItems?.map((indicator) => ({
           name: indicator.name,
           id: indicator.id,
+          description: indicator.description,
           visualization_types: indicator.visualization_types || [],
           default_visualization: indicator.topic.default_visualization || [],
+          h3: indicator.h3,
         }));
       });
 

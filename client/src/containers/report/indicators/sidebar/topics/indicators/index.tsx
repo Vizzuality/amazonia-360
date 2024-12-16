@@ -1,4 +1,4 @@
-import { Topic } from "@/app/api/topics/route";
+import { Topic } from "@/app/local-api/topics/route";
 
 import { IndicatorsItem } from "./item";
 

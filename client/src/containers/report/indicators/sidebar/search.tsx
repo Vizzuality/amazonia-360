@@ -14,7 +14,7 @@ import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
 import { Search } from "@/components/ui/search";
 
 type Option = {
-  topicId: number;
+  topicId?: number;
   indicatorId: number;
   label: string;
   value: string;
@@ -40,7 +40,7 @@ export default function SearchC() {
                 ),
               );
               return {
-                topicId: indicator.topic.id,
+                topicId: indicator.topic?.id,
                 indicatorId: indicator.id,
                 label: indicator.name,
                 value: `${indicator.name}-${v}`,
@@ -83,7 +83,7 @@ export default function SearchC() {
       };
 
       setTopics((prev) => {
-        if (!prev) return prev;
+        if (!prev || !value.topicId) return prev;
 
         const i = prev.findIndex((topic) => topic.id === value.topicId);
 

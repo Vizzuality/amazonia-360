@@ -104,10 +104,10 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
                     {formatNumber(continousValue[0] || continousOptions.min || 0)}
                   </div>
                   <Input
-                    value={formatNumber(continousValue[0] || continousOptions.min || 0)}
+                    value={formatNumber(continousValue[0] ?? (continousOptions.min || 0))}
                     type="text"
                     min={continousOptions.min || 0}
-                    max={continousValue[1] || continousOptions.max || 100}
+                    max={continousValue[1] ?? (continousOptions.max || 100)}
                     onChange={(e) => {
                       const v = numeral(e.target.value).value();
 
@@ -135,9 +135,9 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
                     {formatNumber(continousValue[1] || continousOptions.min || 0)}
                   </div>
                   <Input
-                    value={formatNumber(continousValue[1] || continousOptions.max || 0)}
+                    value={formatNumber(continousValue[1] ?? (continousOptions.max || 0))}
                     type="text"
-                    min={continousValue[0] || continousOptions.min || 0}
+                    min={continousValue[0] ?? (continousOptions.min || 0)}
                     max={continousOptions.max || 100}
                     onChange={(e) => {
                       const v = numeral(e.target.value).value();

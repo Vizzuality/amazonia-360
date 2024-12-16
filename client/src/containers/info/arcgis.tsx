@@ -3,7 +3,7 @@ import parse from "html-react-parser";
 import { useIndicatorsId } from "@/lib/indicators";
 import { useGetMetadata } from "@/lib/query";
 
-import { Indicator } from "@/app/api/indicators/route";
+import { Indicator } from "@/app/local-api/indicators/route";
 
 import { CardLoader } from "@/containers/card";
 
