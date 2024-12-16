@@ -7,7 +7,7 @@ import { LuInfo } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { Indicator } from "@/app/api/indicators/route";
+import { Indicator } from "@/app/local-api/indicators/route";
 
 import Info from "@/containers/info";
 

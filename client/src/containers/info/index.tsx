@@ -1,19 +1,19 @@
 import { useIndicatorsId } from "@/lib/indicators";
 
-import { Indicator } from "@/app/api/indicators/route";
+import { Indicator } from "@/app/local-api/indicators/route";
 
-import InfoArcGis from "@/containers/info/arcgis";
-import InfoRaster from "@/containers/info/raster";
-
+import { Markdown } from "@/components/ui/markdown";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const InfoItem = ({ id }: { id: Indicator["id"] }) => {
   const indicator = useIndicatorsId(id);
+
   return (
-    <>
-      {indicator?.resource?.type === "imagery-tile" && <InfoRaster key={id} id={+id} />}
-      {indicator?.resource?.type === "feature" && <InfoArcGis key={id} id={id} />}
-    </>
+    <Markdown>{indicator?.description}</Markdown>
+    // <>
+    //   {indicator?.resource?.type === "imagery-tile" && <InfoRaster key={id} id={+id} />}
+    //   {indicator?.resource?.type === "feature" && <InfoArcGis key={id} id={id} />}
+    // </>
   );
 };
 

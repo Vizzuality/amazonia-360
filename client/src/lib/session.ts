@@ -21,7 +21,7 @@ export const getSession = async () => {
     .get<{
       token?: string;
       expires_in: number;
-    }>("/api/session")
+    }>("/local-api/session")
     .then((response) => response.data);
 };
 

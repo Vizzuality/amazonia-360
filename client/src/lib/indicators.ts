@@ -1,3 +1,5 @@
+import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
+import * as geometryEngineAsync from "@arcgis/core/geometry/geometryEngineAsync";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import Query from "@arcgis/core/rest/support/Query";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
@@ -9,7 +11,8 @@ import {
   ResourceImageryTile,
   ResourceWebTile,
   VisualizationType,
-} from "@/app/api/indicators/route";
+} from "@/app/local-api/indicators/route";
+import { Topic } from "@/app/local-api/topics/route";
 /**
  ************************************************************
  ************************************************************
@@ -28,7 +31,16 @@ export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
 >;
 
 export const getIndicators = async () => {
-  return axios.get<Indicator[]>("/api/indicators").then((response) => response.data);
+  const indicators = await axios
+    .get<Indicator[]>("/local-api/indicators")
+    .then((response) => response.data);
+
+  const topics = await axios.get<Topic[]>("/local-api/topics").then((response) => response.data);
+
+  return indicators.map((indicator) => ({
+    ...indicator,
+    topic: topics.find((topic) => topic.id === indicator.topic),
+  })) as (Indicator & { topic: Topic })[];
 };
 
 export const getIndicatorsKey = () => {
@@ -144,10 +156,45 @@ export const getQueryFeatureId = async ({ type, resource, geometry }: QueryFeatu
 
   if (q) {
     const query = new Query(q);
+
     if (geometry) {
       query.geometry = geometry;
     }
-    return f.queryFeatures(query);
+
+    if (q.returnIntersections) {
+      query.returnGeometry = true;
+    }
+
+    const fs = await f.queryFeatures(query);
+
+    if (q.returnIntersections) {
+      const geoms = fs.features.map((f) => f.geometry).filter(Boolean);
+
+      if (!geometry || geoms.length === 0) {
+        return null;
+      }
+
+      const intersections = (await geometryEngineAsync.intersect(
+        geoms,
+        geometry,
+      )) as unknown as __esri.Polygon[];
+
+      const geometryArea = geometryEngine.geodesicArea(geometry, "square-kilometers");
+
+      return new Promise<__esri.FeatureSet>((resolve) => {
+        fs.features.forEach((f, i) => {
+          f.setAttribute(
+            "value",
+            geometryEngine.geodesicArea(intersections[i], "square-kilometers"),
+          );
+          f.setAttribute("total", geometryArea);
+        });
+
+        resolve(fs);
+      });
+    }
+
+    return fs;
   }
 
   return null;

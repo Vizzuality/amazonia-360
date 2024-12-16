@@ -4,7 +4,7 @@ import { MouseEvent } from "react";
 
 import { useIndicatorsId } from "@/lib/indicators";
 
-import { Indicator, VisualizationType } from "@/app/api/indicators/route";
+import { Indicator, VisualizationType } from "@/app/local-api/indicators/route";
 
 import {
   Card,

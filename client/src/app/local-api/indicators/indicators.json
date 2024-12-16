@@ -1,0 +1,180 @@
+[
+  {
+    "id": 1,
+    "name": "Indigenous lands",
+    "unit": "",
+    "description": "# Markdown syntax guide\n\n## Headers\n\n# This is a Heading h1\n## This is a Heading h2\n###### This is a Heading h6\n\n## Emphasis\n\n*This text will be italic*  \n_This will also be italic_\n\n**This text will be bold**  \n__This will also be bold__\n\n_You **can** combine them_\n\n## Lists\n\n### Unordered\n\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n    * Item 3a\n    * Item 3b\n\n### Ordered\n\n1. Item 1\n2. Item 2\n3. Item 3\n    1. Item 3a\n    2. Item 3b\n\n## Images\n\n![This is an alt text.](https://placehold.co/600x400)\n\n## Links\n\nYou may be using [Markdown Live Preview](https://markdownlivepreview.com/).\n\n## Blockquotes\n\n> Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.\n>\n>> Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.",
+    "topic": 1,
+    "visualization_types": ["map", "table", "numeric"],
+    "resource": {
+      "name": "AFP_Tierras_indigenas",
+      "type": "feature",
+      "layer_id": 0,
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      },
+      "query_table": {
+        "where": "1=1",
+        "outFields": ["nombre as Name", "etnias as Ethnicity", ","],
+        "returnGeometry": false
+      },
+      "query_chart": null
+    },
+    "h3": []
+  },
+  {
+    "id": 2,
+    "name": "Protected areas",
+    "unit": "",
+    "description": "# Markdown syntax guide\n\n## Headers\n\n# This is a Heading h1\n## This is a Heading h2\n###### This is a Heading h6\n\n## Emphasis\n\n*This text will be italic*  \n_This will also be italic_\n\n**This text will be bold**  \n__This will also be bold__\n\n_You **can** combine them_\n\n## Lists\n\n### Unordered\n\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n    * Item 3a\n    * Item 3b\n\n### Ordered\n\n1. Item 1\n2. Item 2\n3. Item 3\n    1. Item 3a\n    2. Item 3b\n\n## Images\n\n![This is an alt text.](https://placehold.co/600x400)\n\n## Links\n\nYou may be using [Markdown Live Preview](https://markdownlivepreview.com/).\n\n## Blockquotes\n\n> Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.\n>\n>> Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.",
+    "topic": 1,
+    "resource": {
+      "name": "AFP_Areas_protegidas",
+      "type": "feature",
+      "layer_id": 0,
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Areas_protegidas/FeatureServer",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      },
+      "query_table": {
+        "where": "1=1",
+        "outFields": ["NAME", "DESIG_ENG as Designation", "IUCN_CAT as Category", ","],
+        "returnGeometry": false
+      },
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": false,
+        "groupByFieldsForStatistics": ["DESIG_ENG"],
+        "orderByFields": ["value DESC"],
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      }
+    },
+    "visualization_types": ["map", "table", "numeric", "chart"],
+    "h3": []
+  },
+  {
+    "id": 3,
+    "name": "Land cover",
+    "description": "# Markdown syntax guide\n\n## Headers\n\n# This is a Heading h1\n## This is a Heading h2\n###### This is a Heading h6\n\n## Emphasis\n\n*This text will be italic*  \n_This will also be italic_\n\n**This text will be bold**  \n__This will also be bold__\n\n_You **can** combine them_\n\n## Lists\n\n### Unordered\n\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n    * Item 3a\n    * Item 3b\n\n### Ordered\n\n1. Item 1\n2. Item 2\n3. Item 3\n    1. Item 3a\n    2. Item 3b\n\n## Images\n\n![This is an alt text.](https://placehold.co/600x400)\n\n## Links\n\nYou may be using [Markdown Live Preview](https://markdownlivepreview.com/).\n\n## Blockquotes\n\n> Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.\n>\n>> Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.",
+    "unit": "",
+    "topic": 1,
+    "resource": {
+      "name": "landcover_cog_tiles",
+      "type": "imagery-tile",
+      "url": "https://tiledimageservices6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/landcover_test_3/ImageServer"
+    },
+    "visualization_types": ["map", "chart"],
+    "h3": []
+  },
+  {
+    "id": 4,
+    "name": "IDB operations",
+    "unit": "",
+    "description": "# Markdown syntax guide\n\n## Headers\n\n# This is a Heading h1\n## This is a Heading h2\n###### This is a Heading h6\n\n## Emphasis\n\n*This text will be italic*  \n_This will also be italic_\n\n**This text will be bold**  \n__This will also be bold__\n\n_You **can** combine them_\n\n## Lists\n\n### Unordered\n\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n    * Item 3a\n    * Item 3b\n\n### Ordered\n\n1. Item 1\n2. Item 2\n3. Item 3\n    1. Item 3a\n    2. Item 3b\n\n## Images\n\n![This is an alt text.](https://placehold.co/600x400)\n\n## Links\n\nYou may be using [Markdown Live Preview](https://markdownlivepreview.com/).\n\n## Blockquotes\n\n> Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.\n>\n>> Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.",
+    "topic": 2,
+    "resource": {
+      "name": "IDB_operations",
+      "type": "feature",
+      "layer_id": 0,
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/IDB_Operations/FeatureServer",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "objectid",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      }
+    },
+    "visualization_types": ["map", "numeric"],
+    "h3": []
+  },
+  {
+    "id": 5,
+    "name": "IDB operations funding",
+    "unit": "$",
+    "description": "# Markdown syntax guide\n\n## Headers\n\n# This is a Heading h1\n## This is a Heading h2\n###### This is a Heading h6\n\n## Emphasis\n\n*This text will be italic*  \n_This will also be italic_\n\n**This text will be bold**  \n__This will also be bold__\n\n_You **can** combine them_\n\n## Lists\n\n### Unordered\n\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n    * Item 3a\n    * Item 3b\n\n### Ordered\n\n1. Item 1\n2. Item 2\n3. Item 3\n    1. Item 3a\n    2. Item 3b\n\n## Images\n\n![This is an alt text.](https://placehold.co/600x400)\n\n## Links\n\nYou may be using [Markdown Live Preview](https://markdownlivepreview.com/).\n\n## Blockquotes\n\n> Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.\n>\n>> Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.",
+    "topic": 2,
+    "resource": {
+      "name": "IDB_operations",
+      "type": "feature",
+      "layer_id": 0,
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/IDB_Operations/FeatureServer",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "totalamount",
+            "outStatisticFieldName": "value",
+            "statisticType": "sum"
+          }
+        ]
+      }
+    },
+    "visualization_types": ["numeric"],
+    "h3": []
+  },
+  {
+    "id": 6,
+    "name": "Elevation",
+    "unit": "",
+    "description": "# Markdown syntax guide\n\n## Headers\n\n# This is a Heading h1\n## This is a Heading h2\n###### This is a Heading h6\n\n## Emphasis\n\n*This text will be italic*  \n_This will also be italic_\n\n**This text will be bold**  \n__This will also be bold__\n\n_You **can** combine them_\n\n## Lists\n\n### Unordered\n\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n    * Item 3a\n    * Item 3b\n\n### Ordered\n\n1. Item 1\n2. Item 2\n3. Item 3\n    1. Item 3a\n    2. Item 3b\n\n## Images\n\n![This is an alt text.](https://placehold.co/600x400)\n\n## Links\n\nYou may be using [Markdown Live Preview](https://markdownlivepreview.com/).\n\n## Blockquotes\n\n> Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.\n>\n>> Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.",
+    "topic": 1,
+    "resource": {
+      "name": "NATTOPOALT",
+      "type": "feature",
+      "layer_id": 2,
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/NATTOPOALT/FeatureServer",
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": true,
+        "returnIntersections": true,
+        "outFields": ["ALTIT as label", ","]
+      }
+    },
+    "visualization_types": ["map", "chart"],
+    "h3": [
+      {
+        "id": 1,
+        "name": "Min elevation",
+        "description":"# Markdown syntax guide\n\n## Headers\n\n# This is a Heading h1\n## This is a Heading h2\n###### This is a Heading h6\n\n## Emphasis\n\n*This text will be italic*  \n_This will also be italic_\n\n**This text will be bold**  \n__This will also be bold__\n\n_You **can** combine them_\n\n## Lists\n\n### Unordered\n\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n    * Item 3a\n    * Item 3b\n\n### Ordered\n\n1. Item 1\n2. Item 2\n3. Item 3\n    1. Item 3a\n    2. Item 3b\n\n## Images\n\n![This is an alt text.](https://placehold.co/600x400)\n\n## Links\n\nYou may be using [Markdown Live Preview](https://markdownlivepreview.com/).\n\n## Blockquotes\n\n> Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.\n>\n>> Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.",
+        "column": "AMIN"
+      },
+      {
+        "id": 2,
+        "name": "Max elevation",
+        "description":"# Markdown syntax guide\n\n## Headers\n\n# This is a Heading h1\n## This is a Heading h2\n###### This is a Heading h6\n\n## Emphasis\n\n*This text will be italic*  \n_This will also be italic_\n\n**This text will be bold**  \n__This will also be bold__\n\n_You **can** combine them_\n\n## Lists\n\n### Unordered\n\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n    * Item 3a\n    * Item 3b\n\n### Ordered\n\n1. Item 1\n2. Item 2\n3. Item 3\n    1. Item 3a\n    2. Item 3b\n\n## Images\n\n![This is an alt text.](https://placehold.co/600x400)\n\n## Links\n\nYou may be using [Markdown Live Preview](https://markdownlivepreview.com/).\n\n## Blockquotes\n\n> Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.\n>\n>> Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.",
+        "column": "AMAX"
+      },
+      {
+        "id": 3,
+        "name": "Mean elevation",
+        "description":"# Markdown syntax guide\n\n## Headers\n\n# This is a Heading h1\n## This is a Heading h2\n###### This is a Heading h6\n\n## Emphasis\n\n*This text will be italic*  \n_This will also be italic_\n\n**This text will be bold**  \n__This will also be bold__\n\n_You **can** combine them_\n\n## Lists\n\n### Unordered\n\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n    * Item 3a\n    * Item 3b\n\n### Ordered\n\n1. Item 1\n2. Item 2\n3. Item 3\n    1. Item 3a\n    2. Item 3b\n\n## Images\n\n![This is an alt text.](https://placehold.co/600x400)\n\n## Links\n\nYou may be using [Markdown Live Preview](https://markdownlivepreview.com/).\n\n## Blockquotes\n\n> Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.\n>\n>> Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.",
+        "column": "AMEAN"
+      }
+    ]
+  }
+]

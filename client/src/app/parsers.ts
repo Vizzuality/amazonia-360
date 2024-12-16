@@ -1,6 +1,6 @@
 import { parseAsArrayOf, parseAsFloat, parseAsJson, parseAsString } from "nuqs";
 
-import { VisualizationType } from "./api/indicators/route";
+import { VisualizationType } from "./local-api/indicators/route";
 
 export type IndicatorView = {
   id: number;
