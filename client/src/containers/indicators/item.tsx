@@ -1,6 +1,6 @@
 import { useIndicatorsId } from "@/lib/indicators";
 
-import { Indicator } from "@/app/api/indicators/route";
+import { Indicator } from "@/app/local-api/indicators/route";
 
 import {
   ResourceMap,
@@ -87,7 +87,7 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
               })}
             <tr>
               <td className="w-60">H3 Grid Column Name</td>
-              <td>{indicator?.h3_grid_column_name || "-"}</td>
+              {/* <td>{indicator?.h3_grid_column_name || "-"}</td> */}
             </tr>
           </tbody>
         </table>

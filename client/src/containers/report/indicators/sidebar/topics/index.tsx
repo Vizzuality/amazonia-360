@@ -20,6 +20,18 @@ export default function TopicsList() {
         const aIndex = topics?.findIndex((t) => t.id === a.id) || 0;
         const bIndex = topics?.findIndex((t) => t.id === b.id) || 0;
 
+        if (aIndex === bIndex) {
+          return 0;
+        }
+
+        if (aIndex === -1) {
+          return 1;
+        }
+
+        if (bIndex === -1) {
+          return -1;
+        }
+
         return aIndex - bIndex;
       })
       ?.map((topic) => <TopicItem key={topic.id} topic={topic} id={topic.id} />);

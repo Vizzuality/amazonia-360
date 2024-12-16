@@ -8,8 +8,8 @@ import { findFirstAvailablePosition } from "@/lib/report";
 import { useGetTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
-import { Indicator } from "@/app/api/indicators/route";
-import { VisualizationType } from "@/app/api/indicators/route";
+import { Indicator } from "@/app/local-api/indicators/route";
+import { VisualizationType } from "@/app/local-api/indicators/route";
 import { useSyncTopics } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";

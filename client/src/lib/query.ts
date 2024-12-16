@@ -201,7 +201,7 @@ export const getIntersectionAnalysis = async (params: GetIntersectionAnalysisPar
 
     const totalResults = (await geometryEngineAsync.union(results)) as unknown as __esri.Polygon;
 
-    const totalResultsArea = await geometryEngine.geodesicArea(totalResults, "square-kilometers");
+    const totalResultsArea = geometryEngine.geodesicArea(totalResults, "square-kilometers");
 
     const polygonArea = geometryEngine.geodesicArea(polygon, "square-kilometers");
 

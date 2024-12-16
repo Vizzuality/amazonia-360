@@ -12,7 +12,7 @@ import { LuInfo, LuSettings2 } from "react-icons/lu";
 import { formatNumber } from "@/lib/formats";
 import { cn } from "@/lib/utils";
 
-import { Indicator } from "@/app/api/indicators/route";
+import { Indicator } from "@/app/local-api/indicators/route";
 
 import Info from "@/containers/info";
 
@@ -59,10 +59,12 @@ export function CardSettings({
         </button>
       </TooltipTrigger>
 
-      <TooltipContent sideOffset={0}>
-        Edit indicator
-        <TooltipArrow />
-      </TooltipContent>
+      <TooltipPortal>
+        <TooltipContent sideOffset={0}>
+          Edit indicator
+          <TooltipArrow />
+        </TooltipContent>
+      </TooltipPortal>
     </Tooltip>
   );
 }
