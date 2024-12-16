@@ -73,14 +73,20 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
         open={open}
         onOpenChange={onOpenChange}
         className={cn({
-          "relative rounded-lg px-3 py-2": true,
+          "group relative rounded-lg px-3 py-2 transition-colors hover:bg-blue-50": true,
           "bg-blue-50": open,
         })}
       >
         <CollapsibleTrigger className="flex w-full items-center justify-between">
           <h3 className="text-sm font-medium text-gray-400">{dataset.label}</h3>
 
-          <div className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded bg-blue-50">
+          <div
+            className={cn({
+              "absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded bg-blue-50 transition-colors hover:bg-blue-100":
+                true,
+              "group-hover:bg-blue-100": !open,
+            })}
+          >
             {!open && <LuPlus className="h-5 w-5 text-primary" />}
             {open && <LuX className="h-5 w-5 text-primary" />}
           </div>
