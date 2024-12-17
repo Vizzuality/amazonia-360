@@ -155,7 +155,7 @@ export default function ReportLocation() {
                 <div className="relative max-h-[50vh]">
                   <div className="pointer-events-none absolute left-0 right-0 top-0 h-2.5 bg-gradient-to-b from-white to-transparent" />
 
-                  <div className="max-h-[50vh] overflow-y-auto py-1">
+                  <div className="-mx-4 max-h-[50vh] overflow-y-auto px-4 py-1">
                     <GridTable />
                   </div>
                   <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />
