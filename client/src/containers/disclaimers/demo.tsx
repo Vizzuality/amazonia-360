@@ -12,22 +12,22 @@ export default function BetaDisclaimer({ onClose }: { onClose: (open: boolean) =
         <h1 className="flex items-center space-x-4">
           <Image src="/IDB-logo.svg" alt="IDB" width={65} height={24} />
           <div className="space-x-2">
-            <span className="text-sm font-medium">AmazoniaForever360+</span>
+            <span className="text-sm font-medium text-blue-500">AmazoniaForever360+</span>
 
             <Badge variant="secondary">Beta</Badge>
           </div>
         </h1>
         <div className="space-y-6">
-          <div className="space-y-4">
-            <span className="font-semibold">What does Beta mean?</span>
+          <div className="space-y-2">
+            <h3 className="font-semibold text-primary">What does Beta mean?</h3>
             <p className="font-medium">
-              This website is a prototype of AmazoniaForever360+, designed to facilitate co-creation
-              with select users. The contents and data are for demonstration purposes only and have
-              not been fully validated yet.
+              This website is a beta version of <strong>AmazoniaForever360+</strong>, designed to
+              facilitate co-creation with select users. The contents and data are for demonstration
+              purposes only and have not been fully validated yet.
             </p>
           </div>
-          <div className="space-y-4">
-            <span className="font-semibold">Why shouldn’t I share this link?</span>
+          <div className="space-y-2">
+            <h3 className="font-semibold text-primary">Why shouldn’t I share this link?</h3>
             <p className="font-medium">
               Please <strong>do not share this link</strong>, as the functionalities presented are
               intended for <strong>demonstration and testing purposes</strong> only.
