@@ -5,6 +5,7 @@ import Query from "@arcgis/core/rest/support/Query";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
+import INDICATORS from "@/app/local-api/indicators/indicators.json";
 import {
   Indicator,
   ResourceFeature,
@@ -13,6 +14,8 @@ import {
   VisualizationType,
 } from "@/app/local-api/indicators/route";
 import { Topic } from "@/app/local-api/topics/route";
+import TOPICS from "@/app/local-api/topics/topics.json";
+
 /**
  ************************************************************
  ************************************************************
@@ -31,11 +34,8 @@ export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
 >;
 
 export const getIndicators = async () => {
-  const indicators = await axios
-    .get<Indicator[]>("/local-api/indicators")
-    .then((response) => response.data);
-
-  const topics = await axios.get<Topic[]>("/local-api/topics").then((response) => response.data);
+  const indicators = INDICATORS as Indicator[];
+  const topics = TOPICS as Topic[];
 
   return indicators.map((indicator) => ({
     ...indicator,
@@ -182,6 +182,7 @@ export const getQueryFeatureId = async ({ type, resource, geometry }: QueryFeatu
       const geometryArea = geometryEngine.geodesicArea(geometry, "square-kilometers");
 
       return new Promise<__esri.FeatureSet>((resolve) => {
+        // TODO: intersections lenght could be more than the original features. So instead of looping the current feature set, we must create a new one with the intersections
         fs.features.forEach((f, i) => {
           f.setAttribute(
             "value",

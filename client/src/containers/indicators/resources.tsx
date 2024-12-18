@@ -17,6 +17,7 @@ import { ChartIndicators } from "@/containers/indicators/chart";
 import { ChartImageryIndicators } from "@/containers/indicators/chart/imagery";
 import { MapIndicators } from "@/containers/indicators/map";
 import { NumericIndicators } from "@/containers/indicators/numeric";
+import { NumericImageryIndicators } from "@/containers/indicators/numeric/imagery";
 import { TableIndicators } from "@/containers/indicators/table";
 
 import { Button } from "@/components/ui/button";
@@ -128,6 +129,7 @@ export const ResourceQueryImageryTile = (
       </div>
 
       <div className="not-prose">
+        {type === "numeric" && enabled && <NumericImageryIndicators {...props} />}
         {type === "chart" && enabled && (
           <div className="flex h-60 flex-col">
             <ChartImageryIndicators {...props} />
