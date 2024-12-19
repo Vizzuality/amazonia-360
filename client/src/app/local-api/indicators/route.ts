@@ -25,6 +25,13 @@ export type ResourceImageryTile = {
   type: "imagery-tile";
 };
 
+export type H3Indicator = {
+  id: number;
+  name: string;
+  description: string;
+  column: string;
+};
+
 export type Indicator = {
   id: number;
   name: string;
@@ -32,7 +39,7 @@ export type Indicator = {
   topic: number;
   visualization_types: VisualizationType[];
   resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
-  h3: string[];
+  h3: H3Indicator[];
 };
 
 export async function GET() {
