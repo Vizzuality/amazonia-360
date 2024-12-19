@@ -74,11 +74,13 @@ export default function GridTable() {
       return [...gridDatasets, "cell"].reduce(
         (acc, dataset) => {
           const d = queryTable?.data?.table.find((t) => t.column === dataset);
+          const cells = queryTable?.data?.cells ?? [];
           if (!d || !d.values.length) return acc;
 
           return {
             ...acc,
             id: i,
+            cell: cells[i],
             [dataset]: d.values[i],
           };
         },

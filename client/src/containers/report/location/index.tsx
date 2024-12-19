@@ -3,7 +3,13 @@
 import { useAtom } from "jotai";
 import { LuArrowLeft } from "react-icons/lu";
 
-import { tabAtom, useSyncLocation, gridPanelAtom, reportPanelAtom } from "@/app/store";
+import {
+  tabAtom,
+  useSyncLocation,
+  gridPanelAtom,
+  reportPanelAtom,
+  useSyncGridDatasets,
+} from "@/app/store";
 
 import Confirm from "@/containers/report/location/confirm";
 import { GenerateReport } from "@/containers/report/location/generate";
@@ -23,6 +29,7 @@ export default function ReportLocation() {
   const [gridPanel, setGridPanel] = useAtom(gridPanelAtom);
 
   const [location] = useSyncLocation();
+  const [gridDatasets] = useSyncGridDatasets();
 
   return (
     <aside className="pointer-events-auto flex max-h-screen w-4/12 shrink-0 flex-col overflow-hidden tall:2xl:w-4/12">
@@ -119,6 +126,7 @@ export default function ReportLocation() {
                     onClick={() => setGridPanel("table")}
                     variant="outline"
                     className="w-full"
+                    disabled={!gridDatasets?.length}
                   >
                     View cells ranking
                   </Button>
@@ -147,7 +155,7 @@ export default function ReportLocation() {
                 <div className="relative max-h-[50vh]">
                   <div className="pointer-events-none absolute left-0 right-0 top-0 h-2.5 bg-gradient-to-b from-white to-transparent" />
 
-                  <div className="max-h-[50vh] overflow-y-auto py-1">
+                  <div className="-mx-4 max-h-[50vh] overflow-y-auto px-4 py-1">
                     <GridTable />
                   </div>
                   <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />

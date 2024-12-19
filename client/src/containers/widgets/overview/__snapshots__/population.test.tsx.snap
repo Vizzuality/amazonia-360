@@ -9,7 +9,7 @@ exports[`WidgetPopulation renders WidgetPopulation component with loading state 
       class="flex items-start justify-between"
     >
       <h2
-        class="text-base font-semibold text-blue-600"
+        class="line-clamp-1 text-base font-semibold text-blue-600"
       >
         Population
       </h2>
@@ -64,7 +64,7 @@ exports[`WidgetPopulation renders WidgetPopulation component without crashing 1`
       class="flex items-start justify-between"
     >
       <h2
-        class="text-base font-semibold text-blue-600"
+        class="line-clamp-1 text-base font-semibold text-blue-600"
       >
         Population
       </h2>
