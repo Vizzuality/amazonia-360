@@ -5,6 +5,7 @@ import { createSerializer } from "nuqs/server";
 
 import {
   bboxParser,
+  gridDatasetSelectedParser,
   gridDatasetsParser,
   gridFiltersParser,
   locationParser,
@@ -33,6 +34,10 @@ export const useSyncGridFilters = () => {
 
 export const useSyncGridDatasets = () => {
   return useQueryState("gridDatasets", gridDatasetsParser);
+};
+
+export const useSyncGridSelectedDataset = () => {
+  return useQueryState("gridDatasetSelected", gridDatasetSelectedParser);
 };
 
 const searchParams = {

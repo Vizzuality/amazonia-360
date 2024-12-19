@@ -9,6 +9,7 @@ import { API } from "../../services/api";
 import type {
   BodyReadTableGridTablePost,
   Feature,
+  GridDatasetMetadataInAreaGridMetaPostParams,
   GridTileGridTileTileIndexGetParams,
   GridTileInAreaGridTileTileIndexPostParams,
   MultiDatasetMeta,
@@ -58,6 +59,26 @@ export const gridDatasetMetadataGridMetaGet = (options?: SecondParameter<typeof 
   return API<MultiDatasetMeta>({ url: `/grid/meta`, method: "GET" }, options);
 };
 /**
+ * Get the grid dataset metadata with updated min and max for the area
+ * @summary Dataset metadata for feature selection
+ */
+export const gridDatasetMetadataInAreaGridMetaPost = (
+  feature: Feature,
+  params?: GridDatasetMetadataInAreaGridMetaPostParams,
+  options?: SecondParameter<typeof API>,
+) => {
+  return API<MultiDatasetMeta>(
+    {
+      url: `/grid/meta`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: feature,
+      params,
+    },
+    options,
+  );
+};
+/**
  * Query tile dataset and return table data
  * @summary Read Table
  */
@@ -85,6 +106,9 @@ export type GridTileInAreaGridTileTileIndexPostResult = NonNullable<
 >;
 export type GridDatasetMetadataGridMetaGetResult = NonNullable<
   Awaited<ReturnType<typeof gridDatasetMetadataGridMetaGet>>
+>;
+export type GridDatasetMetadataInAreaGridMetaPostResult = NonNullable<
+  Awaited<ReturnType<typeof gridDatasetMetadataInAreaGridMetaPost>>
 >;
 export type ReadTableGridTablePostResult = NonNullable<
   Awaited<ReturnType<typeof readTableGridTablePost>>

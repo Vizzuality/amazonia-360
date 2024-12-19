@@ -36,3 +36,4 @@ export const locationParser = parseAsJson<Location>();
 
 export const gridFiltersParser = parseAsJson<Record<string, number[]>>();
 export const gridDatasetsParser = parseAsArrayOf(parseAsString).withDefault([]);
+export const gridDatasetSelectedParser = parseAsString;

@@ -2,12 +2,14 @@ import { useMemo } from "react";
 
 import Point from "@arcgis/core/geometry/Point";
 import * as projection from "@arcgis/core/geometry/projection";
+import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { cellToLatLng } from "h3-js";
 import { useSetAtom } from "jotai";
 
 import { formatNumberUnit } from "@/lib/formats";
 import { useGetGridMeta } from "@/lib/grid";
 import { getGeometryWithBuffer } from "@/lib/location";
+import { cn } from "@/lib/utils";
 
 import {
   gridCellHighlightAtom,
@@ -16,7 +18,19 @@ import {
   useSyncLocation,
 } from "@/app/store";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { HexagonIcon } from "@/components/ui/icons/hexagon";
+import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const GridTableItem = (
   props: Record<string, string | number> & { id: number; cell: string },
@@ -71,19 +85,58 @@ export const GridTableItem = (
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <button
-        className="flex min-w-16 shrink-0 items-center gap-2 rounded-sm bg-cyan-100 px-2 py-1"
-        onClick={handleClick}
-      >
-        <HexagonIcon className="h-4 w-4" />
-        <span className="text-sm font-semibold">{id + 1}º</span>
-      </button>
+      <AlertDialog>
+        <Tooltip>
+          <AlertDialogTrigger asChild>
+            <TooltipTrigger asChild>
+              <button className="flex min-w-16 shrink-0 items-center gap-2 rounded-sm bg-cyan-100 px-2 py-1 hover:bg-cyan-500 hover:text-white">
+                <HexagonIcon className="h-4 w-4" />
+                <span className="text-sm font-semibold">{id + 1}º</span>
+              </button>
+            </TooltipTrigger>
+          </AlertDialogTrigger>
+
+          <TooltipPortal>
+            <TooltipContent>
+              <TooltipArrow />
+              <p className="max-w-36 text-center text-sm font-medium">Redefine area</p>
+            </TooltipContent>
+          </TooltipPortal>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Redefine area</AlertDialogTitle>
+              <AlertDialogDescription>
+                By proceeding, the map will center around your selected cell, and the current area
+                selection will be redefined. This action will remove your existing selection.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+              <AlertDialogAction onClick={handleClick}>Redefine</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </Tooltip>
+      </AlertDialog>
 
       <ul className="grow">
-        {ITEMS.map((dataset) => (
-          <li key={dataset?.name} className="flex justify-between">
-            <span>{dataset?.name}</span>
-            <span>{formatNumberUnit(+(dataset?.value ?? 0), `${dataset?.unit}`)}</span>
+        {ITEMS.map((dataset, i) => (
+          <li key={dataset?.name} className="flex justify-between text-sm">
+            <span
+              className={cn({
+                "font-normal": i !== 0,
+              })}
+            >
+              {dataset?.name}
+            </span>
+            <span
+              className={cn({
+                "font-normal": i !== 0,
+              })}
+            >
+              {formatNumberUnit(+(dataset?.value ?? 0), `${dataset?.unit}`)}
+            </span>
           </li>
         ))}
       </ul>

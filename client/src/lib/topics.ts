@@ -1,14 +1,9 @@
-import {
-  QueryFunction,
-  UseQueryOptions,
-  // , useQuery
-} from "@tanstack/react-query";
-import axios from "axios";
+import { QueryFunction, UseQueryOptions } from "@tanstack/react-query";
 
 import { useIndicators } from "@/lib/indicators";
 
 import { Topic } from "@/app/local-api/topics/route";
-
+import TOPICS from "@/app/local-api/topics/topics.json";
 /**
  ************************************************************
  ************************************************************
@@ -27,7 +22,8 @@ export type TopicsQueryOptions<TData, TError> = UseQueryOptions<
 >;
 
 export const getTopics = async () => {
-  return axios.get<Topic[]>("/local-api/topics").then((response) => response.data);
+  const topics = TOPICS as Topic[];
+  return topics;
 };
 
 export const getTopicsKey = () => {

@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 import { DatasetMeta } from "@/types/generated/api.schemas";
 
-import { useSyncGridDatasets, useSyncGridFilters } from "@/app/store";
+import { useSyncGridDatasets, useSyncGridFilters, useSyncGridSelectedDataset } from "@/app/store";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -20,6 +20,7 @@ import { Slider } from "@/components/ui/slider";
 export default function GridFiltersItem(dataset: DatasetMeta) {
   const [gridFilters, setGridFilters] = useSyncGridFilters();
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
+  const [gridSelectedDataset, setGridSelectedDataset] = useSyncGridSelectedDataset();
 
   const open = gridDatasets?.includes(dataset.var_name);
 
@@ -51,11 +52,27 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
   }, [dataset.var_name, continousOptions, gridFilters]);
 
   const onOpenChange = (open: boolean) => {
-    setGridDatasets(
-      open
-        ? [...gridDatasets, dataset.var_name]
-        : gridDatasets?.filter((d) => d !== dataset.var_name),
-    );
+    setGridDatasets((prev) => {
+      if (open) {
+        if (!prev.length) {
+          setGridSelectedDataset(dataset.var_name);
+        }
+        return [...prev, dataset.var_name];
+      }
+
+      const d = prev.filter((d) => d !== dataset.var_name);
+      if (gridSelectedDataset === dataset.var_name) {
+        setGridSelectedDataset(d?.[0] || null);
+      }
+
+      // Sync filters
+      setGridFilters((prev) => {
+        const f = { ...prev };
+        delete f[dataset.var_name];
+        return f;
+      });
+      return d;
+    });
   };
 
   const onValueChange = (v: number[]) => {
