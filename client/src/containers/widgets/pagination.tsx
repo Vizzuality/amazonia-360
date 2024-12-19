@@ -30,8 +30,7 @@ export function DataPagination({
   const showLeftEllipsis =
     pageCount > totalPagesToDisplay && pageIndex + 1 > totalPagesToDisplay / 2;
   const showRightEllipsis =
-    pageCount > totalPagesToDisplay &&
-    pageCount - (pageIndex + 1) > totalPagesToDisplay / 2;
+    pageCount > totalPagesToDisplay && pageCount - (pageIndex + 1) > totalPagesToDisplay / 2;
 
   const getPageNumbers = () => {
     if (pageCount <= totalPagesToDisplay) {
@@ -81,10 +80,7 @@ export function DataPagination({
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious
-            disabled={pageIndex === 0}
-            onClick={() => onPagePrevious()}
-          />
+          <PaginationPrevious disabled={pageIndex === 0} onClick={() => onPagePrevious()} />
         </PaginationItem>
 
         {showLeftEllipsis && (
@@ -99,10 +95,7 @@ export function DataPagination({
           </PaginationItem>
         )}
         <PaginationItem>
-          <PaginationNext
-            disabled={pageIndex === pageCount - 1}
-            onClick={() => onPageNext()}
-          />
+          <PaginationNext disabled={pageIndex === pageCount - 1} onClick={() => onPageNext()} />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

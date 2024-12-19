@@ -1,20 +1,113 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
-import ArcGISLayer from "@arcgis/core/layers/Layer";
+import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
+import ImageryTileLayer from "@arcgis/core/layers/ImageryTileLayer";
+import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter";
+import VectorTileLayer from "@arcgis/core/layers/VectorTileLayer";
+import WebTileLayer from "@arcgis/core/layers/WebTileLayer";
+
+import { omit } from "@/lib/utils";
 
 import { useMap } from "@/components/map/provider";
 
 export default function Layer({
   layer,
   index,
+  GEOMETRY,
 }: {
-  layer: ArcGISLayer;
+  layer: Partial<__esri.Layer>;
   index: number;
+  GEOMETRY?: __esri.Polygon | null;
 }) {
   const mapInstance = useMap();
   const { id } = layer;
+
+  const addLayer = useCallback(async () => {
+    if (!mapInstance) {
+      return;
+    }
+
+    const { map, view } = mapInstance;
+
+    if (!map || !id) {
+      return;
+    }
+
+    if (layer.type === "feature") {
+      const l = new FeatureLayer(omit(layer, ["type"]));
+      map.add(l, index);
+
+      view.whenLayerView(l).then((layerView) => {
+        if (!!GEOMETRY && layerView) {
+          layerView.filter = new FeatureFilter({
+            geometry: GEOMETRY,
+            spatialRelationship: "intersects",
+          });
+        }
+      });
+
+      map.reorder(l, index);
+    }
+
+    if (layer.type === "graphics") {
+      map.add(layer as GraphicsLayer, index);
+
+      map.reorder(layer as GraphicsLayer, index);
+    }
+
+    if (layer.type === "vector-tile") {
+      const l = new VectorTileLayer(omit(layer, ["type"]));
+      map.add(l, index);
+
+      map.reorder(l, index);
+    }
+
+    if (layer.type === "web-tile") {
+      const l = new WebTileLayer(omit(layer, ["type"]));
+      map.add(l, index);
+
+      map.reorder(l, index);
+    }
+
+    if (layer.type === "imagery-tile") {
+      const l = new ImageryTileLayer(omit(layer, ["type"]));
+      map.add(l, index);
+
+      map.reorder(l, index);
+    }
+
+    if ("deck" in layer) {
+      const l = layer as unknown as __esri.Layer;
+      map.add(l, index);
+
+      map.reorder(l, index);
+    }
+  }, [id, index, layer, GEOMETRY, mapInstance]);
+
+  useEffect(() => {
+    if (!mapInstance) {
+      return;
+    }
+
+    const { map } = mapInstance;
+
+    if (!map || !id) {
+      return;
+    }
+
+    const l = map.findLayerById(id);
+
+    if (!l) {
+      addLayer();
+    }
+
+    if (l) {
+      map.reorder(l, index);
+    }
+  }, [id, index, layer, mapInstance, GEOMETRY, addLayer]);
 
   useEffect(() => {
     return () => {
@@ -24,7 +117,7 @@ export default function Layer({
 
       const { map } = mapInstance;
 
-      if (!map) {
+      if (!map || !id) {
         return;
       }
 
@@ -34,24 +127,6 @@ export default function Layer({
       }
     };
   }, [id, mapInstance]);
-
-  useEffect(() => {
-    if (!mapInstance) {
-      return;
-    }
-
-    const { map } = mapInstance;
-
-    if (!map) {
-      return;
-    }
-
-    if (!map.findLayerById(id)) {
-      map.add(layer, index);
-    }
-
-    map.reorder(layer, index);
-  }, [id, index, layer, mapInstance]);
 
   return null;
 }

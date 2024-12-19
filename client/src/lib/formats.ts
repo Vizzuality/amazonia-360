@@ -1,7 +1,4 @@
-export const formatNumber = (
-  v?: number,
-  options?: Intl.NumberFormatOptions,
-) => {
+export const formatNumber = (v?: number, options?: Intl.NumberFormatOptions) => {
   if (v === undefined) return "";
 
   const f = new Intl.NumberFormat("en-US", {
@@ -16,10 +13,7 @@ export const formatNumber = (
   return f.format(v);
 };
 
-export const formatPercentage = (
-  v?: number,
-  options?: Intl.NumberFormatOptions,
-) => {
+export const formatPercentage = (v?: number, options?: Intl.NumberFormatOptions) => {
   if (v === undefined) return "";
 
   const f = Intl.NumberFormat("en-US", {
@@ -34,10 +28,7 @@ export const formatPercentage = (
   return f.format(v);
 };
 
-export const formatCurrency = (
-  v?: number,
-  options?: Intl.NumberFormatOptions,
-) => {
+export const formatCurrency = (v?: number, options?: Intl.NumberFormatOptions) => {
   if (v === undefined) return "";
 
   const f = new Intl.NumberFormat("en-US", {
@@ -51,4 +42,16 @@ export const formatCurrency = (
   if (v < 0.01 && v > 0) return "~0";
 
   return f.format(v);
+};
+
+export const formatNumberUnit = (v?: number | null, unit?: string) => {
+  if (v === undefined || v === null) return "";
+
+  const fv = formatNumber(v);
+
+  if (fv && unit) {
+    return `${fv} ${unit}`;
+  }
+
+  return fv;
 };

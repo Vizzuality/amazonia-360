@@ -15,7 +15,7 @@ export default function LegendGradient({
       })}
     >
       <div
-        className="w-full h-2 rounded-2xl"
+        className="h-2 w-full rounded-2xl"
         style={{
           background: `linear-gradient(to right, ${items.map((i) => i.color).join(", ")})`,
         }}

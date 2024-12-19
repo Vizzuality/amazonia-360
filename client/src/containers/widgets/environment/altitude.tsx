@@ -1,10 +1,7 @@
 "use client";
 
 import { treemapDice } from "@visx/hierarchy";
-import {
-  HierarchyNode,
-  HierarchyRectangularNode,
-} from "@visx/hierarchy/lib/types";
+import { HierarchyNode, HierarchyRectangularNode } from "@visx/hierarchy/lib/types";
 import { scaleOrdinal } from "@visx/scale";
 
 import { formatPercentage } from "@/lib/formats";
@@ -15,13 +12,7 @@ import { useSyncLocation } from "@/app/store";
 
 import { ELEVATION_RANGES, ElevationRangeIds } from "@/constants/colors";
 
-import {
-  Card,
-  CardTitle,
-  CardLoader,
-  CardHeader,
-  CardInfo,
-} from "@/containers/card";
+import { Card, CardTitle, CardLoader, CardHeader, CardInfo } from "@/containers/card";
 import LegendOrdinal from "@/containers/legend/ordinal";
 
 import MarimekkoChart, { Data } from "@/components/charts/marimekko";
@@ -29,7 +20,9 @@ import MarimekkoChart, { Data } from "@/components/charts/marimekko";
 export default function WidgetAltitude() {
   const [location] = useSyncLocation();
 
-  const GEOMETRY = useLocationGeometry(location);
+  const GEOMETRY = useLocationGeometry(location, {
+    wkid: 4326,
+  });
 
   const query = useGetRasterAnalysis(
     {
@@ -91,14 +84,13 @@ export default function WidgetAltitude() {
     <Card>
       <CardHeader>
         <CardTitle>Elevation</CardTitle>
-        <CardInfo ids={["elevation_ranges"]} />
+        <CardInfo ids={[+"elevation_ranges"]} />
       </CardHeader>
 
       <CardLoader query={[query]} className="h-20">
         <div className="space-y-2 pt-2">
           <MarimekkoChart
             data={query?.data || []}
-            colorScale={ordinalColorScale}
             format={FORMAT}
             className="h-12"
             tile={treemapDice}

@@ -1,35 +1,32 @@
 "use client";
 
 // import { useGetFeatures } from "@/lib/query";
+import dynamic from "next/dynamic";
+
+import { useAtomValue } from "jotai";
+
+import { tabAtom, useSyncGridDatasets, useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
+import GridLayer from "@/containers/report/map/layer-manager/grid-layer";
+import PlaceholderGridLayer from "@/containers/report/map/layer-manager/placeholder-grid-layer";
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
 
-import FeatureLayer from "@/components/map/layers/feature";
+const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
 export default function LayerManager() {
-  // const { data } = useGetFeatures(
-  //   {
-  //     query: DATASETS.acu_knowledge.getFeatures(),
-  //     feature: DATASETS.acu_knowledge.layer,
-  //   },
-  //   {
-  //     select(data) {
-  //       return data.features.map((f) => f.attributes);
-  //     },
-  //   },
-  // );
-
-  // console.log(data);
+  const [location] = useSyncLocation();
+  const [gridDatasets] = useSyncGridDatasets();
+  const tab = useAtomValue(tabAtom);
 
   return (
     <>
-      <FeatureLayer index={0} layer={DATASETS.area_afp.layer} />
+      <Layer index={0} layer={DATASETS.area_afp.layer} />
+      <SelectedLayer location={location} />
 
-      {/* <FeatureLayer index={1} layer={DATASETS.acu_knowledge.layer} /> */}
-
-      <SelectedLayer />
+      {tab === "grid" && gridDatasets.length && <GridLayer />}
+      {tab === "grid" && !gridDatasets.length && <PlaceholderGridLayer />}
     </>
   );
 }

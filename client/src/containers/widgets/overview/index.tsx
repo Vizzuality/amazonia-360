@@ -25,7 +25,7 @@ export default function WidgetsOverview() {
           <WidgetIndigenous />
         </WidgetsColumn>
         <WidgetsColumn className="col-span-12 lg:col-span-6 print:col-span-12">
-          <Card className="h-full p-0 relative">
+          <Card className="relative h-full p-0">
             <WidgetMap
               ids={["ciudades_capitales"]}
               popup={{

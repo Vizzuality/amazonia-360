@@ -6,13 +6,8 @@ import { HtmlLabel } from "@visx/annotation";
 import { localPoint } from "@visx/event";
 import { Group } from "@visx/group";
 import { Treemap, hierarchy, stratify, treemapSquarify } from "@visx/hierarchy";
-import {
-  HierarchyNode,
-  HierarchyRectangularNode,
-  TileMethod,
-} from "@visx/hierarchy/lib/types";
+import { HierarchyNode, HierarchyRectangularNode, TileMethod } from "@visx/hierarchy/lib/types";
 import { useParentSize } from "@visx/responsive";
-import { ScaleTypeToD3Scale } from "@visx/scale";
 import { useTooltip, useTooltipInPortal } from "@visx/tooltip";
 import CHROMA from "chroma-js";
 
@@ -31,7 +26,6 @@ export type Data = {
 
 interface MarimekkoChartProps<DataT extends Data> {
   data: DataT[];
-  colorScale: ScaleTypeToD3Scale<string, DataT>["ordinal"];
   className?: string;
   format: (node: HierarchyRectangularNode<HierarchyNode<DataT>>) => string;
   tile?: TileMethod<HierarchyNode<DataT>> | undefined;
@@ -39,7 +33,6 @@ interface MarimekkoChartProps<DataT extends Data> {
 
 const MarimekkoChart = <T extends Data>({
   data = [],
-  colorScale,
   className = "h-52",
   format,
   tile,
@@ -53,7 +46,7 @@ const MarimekkoChart = <T extends Data>({
         id: "root",
         parent: null,
         size: 0,
-        label: "Land Cover",
+        label: "Root",
       } as T);
     }
 
@@ -68,14 +61,8 @@ const MarimekkoChart = <T extends Data>({
   const yMax = height - margin.top - margin.bottom;
   const root = hierarchy(DATA);
 
-  const {
-    tooltipOpen,
-    tooltipLeft,
-    tooltipTop,
-    tooltipData,
-    hideTooltip,
-    showTooltip,
-  } = useTooltip<HierarchyRectangularNode<HierarchyNode<T>>>();
+  const { tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip } =
+    useTooltip<HierarchyRectangularNode<HierarchyNode<T>>>();
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal({
     scroll: true,
@@ -102,17 +89,13 @@ const MarimekkoChart = <T extends Data>({
     });
 
     return {
-      id:
-        nodeWidth - padding * 2 >= idWidth &&
-        nodeHeight - padding * 2 >= idHeight + valueHeight,
-      value:
-        nodeWidth - padding * 2 >= valueWidth &&
-        nodeHeight - padding * 2 >= valueHeight,
+      id: nodeWidth - padding * 2 >= idWidth && nodeHeight - padding * 2 >= idHeight + valueHeight,
+      value: nodeWidth - padding * 2 >= valueWidth && nodeHeight - padding * 2 >= valueHeight,
     };
   };
 
   return (
-    <div className="space-y-2">
+    <div className="flex grow flex-col space-y-2">
       <div
         ref={parentRef}
         className={cn({
@@ -132,11 +115,9 @@ const MarimekkoChart = <T extends Data>({
               <Group>
                 {treemap.descendants().map((node) => {
                   const nodeWidth = node.x1 - node.x0;
-                  const nodeHeight =
-                    (node.y1 - node.y0) * (node.data.data?.percentage || 1);
+                  const nodeHeight = (node.y1 - node.y0) * (node.data.data?.percentage || 1);
 
-                  const { id: idVisible, value: valueVisible } =
-                    isVisible(node);
+                  const { id: idVisible, value: valueVisible } = isVisible(node);
 
                   return (
                     <Group key={node.data.id}>
@@ -149,18 +130,14 @@ const MarimekkoChart = <T extends Data>({
                           rx={4}
                           ry={4}
                           // fill={colorScale(node.value).hex()}
-                          fill={colorScale(node.data.data)}
+                          fill={node.data.data.color}
                           onMouseLeave={() => {
-                            tooltipTimeoutRef.current = window.setTimeout(
-                              () => {
-                                hideTooltip();
-                              },
-                              200,
-                            );
+                            tooltipTimeoutRef.current = window.setTimeout(() => {
+                              hideTooltip();
+                            }, 200);
                           }}
                           onMouseMove={(event) => {
-                            if (tooltipTimeoutRef.current)
-                              clearTimeout(tooltipTimeoutRef.current);
+                            if (tooltipTimeoutRef.current) clearTimeout(tooltipTimeoutRef.current);
 
                             const eventSvgCoords = localPoint(event);
 
@@ -185,14 +162,12 @@ const MarimekkoChart = <T extends Data>({
                             height: nodeHeight,
                           }}
                         >
-                          <div className="p-3 max-w-52">
+                          <div className="max-w-52 p-3">
                             {valueVisible && (
                               <p
                                 className={cn(
                                   "font-bold",
-                                  CHROMA(
-                                    colorScale(node.data.data),
-                                  ).luminance() > 0.5
+                                  CHROMA(node.data.data.color).luminance() > 0.5
                                     ? "text-foreground"
                                     : "text-white",
                                 )}
@@ -205,9 +180,7 @@ const MarimekkoChart = <T extends Data>({
                               <p
                                 className={cn(
                                   "text-sm font-medium text-white",
-                                  CHROMA(
-                                    colorScale(node.data.data),
-                                  ).luminance() > 0.5
+                                  CHROMA(node.data.data.color).luminance() > 0.5
                                     ? "text-foreground"
                                     : "text-white",
                                 )}
@@ -230,7 +203,7 @@ const MarimekkoChart = <T extends Data>({
         tooltipData &&
         (!isVisible(tooltipData).id || !isVisible(tooltipData).value) && (
           <TooltipInPortal top={tooltipTop} left={tooltipLeft}>
-            <div className="text-blue-900 flex flex-col space-y-1 text-sm">
+            <div className="flex flex-col space-y-1 text-sm text-blue-900">
               <p className="font-bold">{tooltipData.data.id}</p>
               <p>{format(tooltipData)}</p>
             </div>

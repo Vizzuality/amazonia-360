@@ -8,14 +8,7 @@ import { useSyncLocation } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardInfo,
-  CardLoader,
-  CardTitle,
-} from "@/containers/card";
+import { Card, CardContent, CardHeader, CardInfo, CardLoader, CardTitle } from "@/containers/card";
 import Legend from "@/containers/legend";
 import LegendItem from "@/containers/legend/item";
 import WidgetMap from "@/containers/widgets/map";
@@ -23,7 +16,9 @@ import WidgetMap from "@/containers/widgets/map";
 export default function WidgetsPopulationPopulation() {
   const [location] = useSyncLocation();
 
-  const GEOMETRY = useLocationGeometry(location);
+  const GEOMETRY = useLocationGeometry(location, {
+    wkid: 4326,
+  });
 
   const query = useGetRasterAnalysis(
     {
@@ -43,11 +38,11 @@ export default function WidgetsPopulationPopulation() {
   );
 
   return (
-    <Card className="h-full p-0 relative">
+    <Card className="relative h-full p-0">
       <div className="p-6">
         <CardHeader>
           <CardTitle>Population</CardTitle>
-          <CardInfo ids={["population"]} />
+          <CardInfo ids={[+"population"]} />
         </CardHeader>
         <CardContent>
           <CardLoader query={[query]} className="h-10">
@@ -58,8 +53,7 @@ export default function WidgetsPopulationPopulation() {
                   maximumFractionDigits: 0,
                 })}
               </strong>{" "}
-              inhabitants in 2025, according to the Global Human Settlement
-              (GHS) model
+              inhabitants in 2025, according to the Global Human Settlement (GHS) model
             </p>
           </CardLoader>
         </CardContent>

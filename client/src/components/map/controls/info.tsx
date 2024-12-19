@@ -7,29 +7,27 @@ import { LuInfo } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { DatasetIds } from "@/constants/datasets";
+import { Indicator } from "@/app/local-api/indicators/route";
 
 import Info from "@/containers/info";
 
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
-  Tooltip,
-  TooltipArrow,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { CONTROL_BUTTON_STYLES } from "./constants";
 
 interface InfoControlProps {
   className?: string;
-  ids: DatasetIds[];
+  ids: Indicator["id"][];
 }
 
-export const InfoControl: FC<InfoControlProps> = ({
-  ids,
-  className,
-}: InfoControlProps) => {
+export const InfoControl: FC<InfoControlProps> = ({ ids, className }: InfoControlProps) => {
   return (
     <Tooltip>
       <Dialog>
@@ -52,7 +50,9 @@ export const InfoControl: FC<InfoControlProps> = ({
         </TooltipTrigger>
 
         <DialogContent className="p-0">
+          <DialogTitle className="sr-only">About the data</DialogTitle>
           <Info ids={ids} />
+          <DialogClose />
         </DialogContent>
 
         <TooltipPortal>

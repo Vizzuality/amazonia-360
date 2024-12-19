@@ -1,24 +1,25 @@
-import {
-  parseAsArrayOf,
-  parseAsFloat,
-  parseAsJson,
-  parseAsStringLiteral,
-} from "nuqs";
+import { parseAsArrayOf, parseAsFloat, parseAsJson, parseAsString } from "nuqs";
 
-import { DATASET_IDS } from "@/constants/datasets";
-import { TOPICS } from "@/constants/topics";
+import { VisualizationType } from "./local-api/indicators/route";
 
-export const datasetsParser = parseAsArrayOf(
-  parseAsStringLiteral(DATASET_IDS),
-).withDefault([]);
+export type IndicatorView = {
+  id: number;
+  type: VisualizationType;
+  w?: number;
+  h?: number;
+  x?: number;
+  y?: number;
+};
 
-export const topicsParser = parseAsArrayOf(
-  parseAsStringLiteral(TOPICS.map((topic) => topic.id)),
-);
+export type Topic = {
+  id: number;
+  indicators: IndicatorView[] | undefined;
+};
+
+export const topicsParser = parseAsArrayOf(parseAsJson<Topic>());
 
 export const bboxParser = parseAsArrayOf(parseAsFloat).withDefault([
-  -9502265.057100412, -3312366.5313590243, -3318815.2169444375,
-  2249803.142895202,
+  -12497583.775253754, -2540944.9326481596, -4391589.799669538, 1362846.9759313238,
 ]);
 
 export type SearchLocation = {
@@ -32,3 +33,7 @@ export type CustomLocation = {
 
 export type Location = SearchLocation | CustomLocation;
 export const locationParser = parseAsJson<Location>();
+
+export const gridFiltersParser = parseAsJson<Record<string, number[]>>();
+export const gridDatasetsParser = parseAsArrayOf(parseAsString).withDefault([]);
+export const gridDatasetSelectedParser = parseAsString;

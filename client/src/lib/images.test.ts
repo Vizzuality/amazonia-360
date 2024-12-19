@@ -5,9 +5,7 @@ describe("images", () => {
     const svg = shimmer(100, 200);
     expect(svg).toContain('<svg width="100" height="200"');
     expect(svg).toContain('<rect width="100" height="200" fill="#004466" />');
-    expect(svg).toContain(
-      '<rect id="r" width="100" height="600" fill="url(#g)" />',
-    );
+    expect(svg).toContain('<rect id="r" width="100" height="600" fill="url(#g)" />');
   });
 
   test("toBase64 encodes correctly", () => {

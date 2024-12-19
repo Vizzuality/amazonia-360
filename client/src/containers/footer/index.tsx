@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 export default function Help() {
   return (
     <section className="bg-blue-700 text-white print:hidden">
-      <div className="container flex md:flex-row flex-col justify-between w-full py-4 items-center">
-        <div className="pb-16 md:pb-0 flex md:space-x-10 flex-col space-y-10 md:space-y-0 items-center md:flex-row">
+      <div className="container flex w-full flex-col items-center justify-between py-4 md:flex-row">
+        <div className="flex flex-col items-center space-y-10 pb-16 md:flex-row md:space-x-10 md:space-y-0 md:pb-0">
           <Image
             src={"/images/home/idb_logo.png"}
             alt="IDB Logo"
@@ -22,20 +22,14 @@ export default function Help() {
             className="text-white"
           />
         </div>
-        <div className="text-sm font-light flex md:flex-row flex-col">
-          <Button variant="link" className="text-white leading-1">
-            <a
-              href="https://www.iadb.org/en/home/terms-and-conditions"
-              target="_blank"
-            >
+        <div className="flex flex-col text-sm font-light md:flex-row">
+          <Button variant="link" className="leading-1 text-white">
+            <a href="https://www.iadb.org/en/home/terms-and-conditions" target="_blank">
               Terms & conditions
             </a>
           </Button>
-          <Button variant="link" className="text-white leading-1">
-            <a
-              href="https://www.iadb.org/en/home/privacy-notice"
-              target="_blank"
-            >
+          <Button variant="link" className="leading-1 text-white">
+            <a href="https://www.iadb.org/en/home/privacy-notice" target="_blank">
               Privacy Policy
             </a>
           </Button>

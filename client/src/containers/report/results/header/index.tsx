@@ -4,13 +4,15 @@ import { useState } from "react";
 
 import Link from "next/link";
 
-import { LuLayoutGrid, LuPlus } from "react-icons/lu";
+import { LuPlus } from "react-icons/lu";
 
 import { useLocationTitle } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/store";
 
 import DownloadReport from "@/containers/report/results/header/download";
+import IndicatorsReport from "@/containers/report/results/header/indicators";
+import ShareReport from "@/containers/report/results/header/share";
 import Topics from "@/containers/report/topics";
 
 import {
@@ -25,30 +27,31 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-
-import ShareReport from "./share";
+import { useSidebar } from "@/components/ui/sidebar";
 
 export default function ReportResultsHeader() {
   const [location] = useSyncLocation();
 
   const title = useLocationTitle(location);
 
-  const [open, setOpen] = useState(false);
+  const [open] = useState(false);
+
+  const { open: isSidebarOpen } = useSidebar();
 
   return (
-    <header className="pb-6 space-y-4">
+    <header className="space-y-4 pb-6">
       <div className="container">
         <div className="flex justify-between">
           {/* Name */}
-          <div className="flex items-center space-x-6 mr-4">
-            <h1 className="text-2xl lg:text-3xl tall:xl:text-4xl font-bold text-primary">
+          <div className="mr-4 flex items-center space-x-6">
+            <h1 className="text-2xl font-bold text-primary lg:text-3xl tall:xl:text-4xl">
               {title}
             </h1>
 
             <AlertDialog>
               <AlertDialogTrigger asChild className="print:hidden">
                 <Button variant="outline" className="space-x-2">
-                  <LuPlus className="w-5 h-5" />
+                  <LuPlus className="h-5 w-5" />
                   <span>New report</span>
                 </Button>
               </AlertDialogTrigger>
@@ -56,9 +59,9 @@ export default function ReportResultsHeader() {
                 <AlertDialogHeader>
                   <AlertDialogTitle>New report</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Proceed if you wish to generate a new report by selecting a
-                    new area. Note that switching areas will refresh your
-                    current session, and the existing report will be lost.
+                    Proceed if you wish to generate a new report by selecting a new area. Note that
+                    switching areas will refresh your current session, and the existing report will
+                    be lost.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -72,26 +75,18 @@ export default function ReportResultsHeader() {
             </AlertDialog>
           </div>
 
-          {/* Toolbar */}
-          <div className="flex items-center space-x-4 print:hidden">
-            <Button
-              variant={open ? "default" : "outline"}
-              className="space-x-2"
-              onClick={() => setOpen(!open)}
-            >
-              <LuLayoutGrid className="w-5 h-5" />
-              <span>Topics</span>
-            </Button>
-
-            <ShareReport />
-
-            <DownloadReport />
-          </div>
+          {!isSidebarOpen && (
+            <div className="flex items-center space-x-2 print:hidden">
+              <DownloadReport />
+              <ShareReport />
+              <IndicatorsReport />
+            </div>
+          )}
         </div>
       </div>
 
       {open && (
-        <div className="animate-in fade-in zoom-in-95 duration-300">
+        <div className="duration-300 animate-in fade-in zoom-in-95">
           <Topics size="sm" interactive />
         </div>
       )}
