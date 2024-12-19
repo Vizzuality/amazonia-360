@@ -285,6 +285,27 @@ export const getQueryImageryTileId = async ({
       })
       .then((response) => response.data);
 
+    // If we only use Dynamic Layers this is the way to get more statistics
+
+    // const statistics: {
+    //   histograms: __esri.RasterHistogram[];
+    //   statistics: __esri.RasterBandStatistics[];
+    // } = await axios
+    //   .request({
+    //     url: `${resource.url}/computeStatisticsHistograms`,
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/x-www-form-urlencoded",
+    //     },
+    //     data: {
+    //       geometryType: "esriGeometryPolygon",
+    //       geometry: JSON.stringify(geometry?.toJSON()),
+    //       processAsMultidimensional: JSON.stringify(true),
+    //       token,
+    //       f: "pjson",
+    //     },
+    //   })
+    //   .then((response) => response.data);
     const statistics: {
       histograms: __esri.RasterHistogram[];
       statistics: __esri.RasterBandStatistics[];

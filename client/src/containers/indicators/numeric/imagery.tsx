@@ -6,7 +6,7 @@ import { useLocationGeometry } from "@/lib/location";
 import { Indicator, ResourceImageryTile } from "@/app/local-api/indicators/route";
 import { useSyncLocation } from "@/app/store";
 
-import { CardLoader } from "@/containers/card";
+import { CardLoader, CardWidgetNumber } from "@/containers/card";
 
 export interface NumericImageryIndicatorsProps extends Indicator {
   resource: ResourceImageryTile;
@@ -18,20 +18,17 @@ export const NumericImageryIndicators = ({ id, resource }: NumericImageryIndicat
 
   const query = useQueryImageryTileId({ id, resource, type: "numeric", geometry: GEOMETRY });
 
-  const DATA = useMemo(() => {
-    if (!query.data) return [];
-
+  const VALUE = useMemo(() => {
+    if (!query.data || !("statistics" in query.data)) return 0;
     // const h = query.data.histograms[0];
-    // const s = query.data.statistics[0];
-
-    console.log(query.data);
+    return query.data.statistics.reduce((acc, curr) => {
+      return acc + (curr.sum ?? 0);
+    }, 0);
   }, [query.data]);
-
-  console.log(DATA);
 
   return (
     <CardLoader query={[query]} className="h-12 grow">
-      Hello
+      <CardWidgetNumber value={VALUE} />
     </CardLoader>
   );
 };
