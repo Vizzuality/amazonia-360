@@ -35,7 +35,7 @@ export function CardHeader({
 }
 
 export function CardTitle({ children }: PropsWithChildren) {
-  return <h2 className="text-base font-semibold text-blue-600">{children}</h2>;
+  return <h2 className="line-clamp-1 text-base font-semibold text-blue-600">{children}</h2>;
 }
 
 export function CardContent({ className, children }: PropsWithChildren<{ className?: string }>) {

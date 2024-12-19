@@ -19,6 +19,7 @@ import { ChartIndicators } from "@/containers/indicators/chart";
 import { ChartImageryIndicators } from "@/containers/indicators/chart/imagery";
 import { MapIndicators } from "@/containers/indicators/map";
 import { NumericIndicators } from "@/containers/indicators/numeric";
+import { NumericImageryIndicators } from "@/containers/indicators/numeric/imagery";
 import { TableIndicators } from "@/containers/indicators/table";
 
 export default function ReportResultsIndicator({
@@ -56,6 +57,9 @@ export default function ReportResultsIndicator({
           )}
           {type === "numeric" && indicator.resource.type === "feature" && (
             <NumericIndicators {...indicator} resource={indicator.resource} />
+          )}
+          {type === "numeric" && indicator.resource.type === "imagery-tile" && (
+            <NumericImageryIndicators {...indicator} resource={indicator.resource} />
           )}
           {type === "table" && indicator.resource.type === "feature" && (
             <TableIndicators {...indicator} resource={indicator.resource} />
