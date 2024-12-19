@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { useIndicators } from "@/lib/indicators";
 import { findFirstAvailablePosition } from "@/lib/report";
@@ -19,7 +19,6 @@ type Option = {
   label: string;
   value: string;
   key: string;
-  sourceIndex: number;
   active?: boolean;
 };
 
@@ -27,6 +26,7 @@ export default function SearchC() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [topics, setTopics] = useSyncTopics();
+
   const queryIndicators = useIndicators({
     select(data) {
       return (
@@ -40,11 +40,11 @@ export default function SearchC() {
                 ),
               );
               return {
-                topicId: indicator.topic?.id,
-                indicatorId: indicator.id,
+                key: v,
                 label: indicator.name,
                 value: `${indicator.name}-${v}`,
-                key: v,
+                indicatorId: indicator.id,
+                topicId: indicator.topic?.id,
                 sourceIndex: indicator.id,
                 active: isActive,
               };
@@ -54,6 +54,19 @@ export default function SearchC() {
       );
     },
   });
+
+  const OPTIONS = useMemo(() => {
+    if (search) {
+      return (
+        queryIndicators.data?.filter(
+          (o) =>
+            o.label.toLowerCase().includes(search.toLowerCase()) ||
+            o.key.toLowerCase().includes(search.toLowerCase()),
+        ) || []
+      );
+    }
+    return queryIndicators.data || [];
+  }, [search, queryIndicators.data]);
 
   const handleSearch = useCallback(
     (value: string) => {
@@ -120,7 +133,7 @@ export default function SearchC() {
         value={search}
         open={open}
         placeholder="Search indicator..."
-        options={queryIndicators.data || []}
+        options={OPTIONS}
         {...queryIndicators}
         onChange={handleSearch}
         onSelect={handleSelect}
@@ -129,7 +142,7 @@ export default function SearchC() {
         {(o) => (
           <div
             className={cn({
-              "flex w-full cursor-pointer justify-between py-1.5 text-sm": true,
+              "flex w-full cursor-pointer items-start justify-between gap-2 py-1 text-xs": true,
               "pointer-events-none opacity-50": o.active,
             })}
             role="button"
