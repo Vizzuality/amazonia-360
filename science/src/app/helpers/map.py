@@ -25,8 +25,12 @@ class FoliumMap(folium.Map):
         self.center = center
         self.zoom = zoom
         super().__init__(
-            location=self.center, zoom_start=self.zoom, control_scale=True,
-            attr='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', **kwargs)
+            location=self.center,
+            zoom_start=self.zoom,
+            control_scale=True,
+            attr='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            **kwargs,
+        )
 
         self.add_draw_control()
 
@@ -41,8 +45,8 @@ class FoliumMap(folium.Map):
                 "polygon": False,
                 "marker": False,
                 "circlemarker": False,
-                "rectangle": True
-            }
+                "rectangle": True,
+            },
         )
 
         draw.add_to(self)
