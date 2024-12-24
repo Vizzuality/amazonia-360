@@ -36,16 +36,16 @@ async def fetch_arcgis_data(arcgis_params) -> Dict:
     return data
 
 
-async def process_biomes(arcgis_data: Dict, geometry: str) -> Dict:
+def process_arcgis_data(arcgis_data: Dict, geometry: str) -> Dict:
     """
-    Process ArcGIS API data to extract and calculate biomes information.
+    Process ArcGIS API data to calculate area percentages.
 
     Parameters:
     - arcgis_data (dict): Data fetched from the ArcGIS API.
     - geometry (str): ArcGIS-compatible geometry in JSON format.
 
     Returns:
-    - dict: Processed biomes data.
+    - pd.DataFrame: Processed data with area percentages.
     """
     # Process geometries and Area of Interest (AOI)
     dt = process_geometries(arcgis_data)
@@ -61,8 +61,46 @@ async def process_biomes(arcgis_data: Dict, geometry: str) -> Dict:
         intersection["intersected_area"] / intersection["intersected_area"].sum() * 100
     )
 
+    return intersection
+
+
+async def process_biomes(arcgis_data: Dict, geometry: str) -> Dict:
+    """
+    Process ArcGIS API data to extract and calculate biomes information.
+
+    Parameters:
+    - arcgis_data (dict): Data fetched from the ArcGIS API.
+    - geometry (str): ArcGIS-compatible geometry in JSON format.
+
+    Returns:
+    - dict: Processed biomes data.
+    """
+    # Calculate intersected area and area percentages
+    intersection = process_arcgis_data(arcgis_data, geometry)
+
     # Rename and structure the result
     intersection.rename(columns={"BIOMADES": "Biome"}, inplace=True)
     data = intersection[["Biome", "area_percentage"]]
 
     return {"biomes": json.loads(data.to_json(orient="records"))}
+
+
+async def process_basins(arcgis_data: Dict, geometry: str) -> Dict:
+    """
+    Process ArcGIS API data to extract and calculate hydrographic basins information.
+
+    Parameters:
+    - arcgis_data (dict): Data fetched from the ArcGIS API.
+    - geometry (str): ArcGIS-compatible geometry in JSON format.
+
+    Returns:
+    - dict: Processed biomes data.
+    """
+    # Calculate intersected area and area percentages
+    intersection = process_arcgis_data(arcgis_data, geometry)
+
+    # Rename and structure the result
+    intersection.rename(columns={"MAJ_NAME": "Hydrographic basin"}, inplace=True)
+    data = intersection[["Hydrographic basin", "area_percentage"]]
+
+    return {"hydrographic basins": json.loads(data.to_json(orient="records"))}

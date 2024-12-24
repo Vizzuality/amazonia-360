@@ -29,7 +29,7 @@ async def generate_description(context_data, profile) -> dict[str, str] | str:
 
     # Format context and profile into the input message
     context = f"""
-    contextual data: {json.dumps(context_data)}
+    contextual data: {json.dumps(context_data.data)}
     audience profile: {profile.text}
     """
 

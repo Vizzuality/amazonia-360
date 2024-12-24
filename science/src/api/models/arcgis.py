@@ -9,3 +9,7 @@ class ArcGISParams(BaseModel):
 
 class ArcGISGeometry(BaseModel):
     geometry: str
+
+
+class ArcGISContextData(BaseModel):
+    data: dict
