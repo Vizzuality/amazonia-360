@@ -49,3 +49,34 @@ def get_aoi(geometry):
     gdf_poly = gdf_poly.to_crs(epsg=4326)
 
     return gdf_poly
+
+
+def transform_rings_to_geojson(geometry):
+    """
+    Transforms Geometry from rings to GeoJSON format.
+
+    Parameters:
+    geometry (str): The geometry in rings format.
+
+    Returns:
+    geometry (dict): The geometry in GeoJSON format.
+    """
+    # Transform geometry
+    polygon = json.loads(geometry)["rings"][0]
+    gdf_poly = gpd.GeoDataFrame([{"name": "polygon"}], geometry=[Polygon(polygon)])
+    # Set CRS to ESRI:102100
+    gdf_poly.set_crs(epsg=102100, inplace=True)
+    # Reproject to EPSG:4326
+    gdf_poly = gdf_poly.to_crs(epsg=4326)
+    geometry = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {},
+                "geometry": gdf_poly.geometry[0].__geo_interface__,
+            }
+        ],
+    }
+
+    return geometry
