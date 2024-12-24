@@ -3,11 +3,11 @@ import streamlit as st
 from config import API_BASE_URL
 
 
-def get_description(geometry, profile):
+def get_description(context_data, profile):
     """Get the description for the selected region."""
     response = requests.post(
         f"{API_BASE_URL}/description",
-        json={"arcgis_geometry": geometry.model_dump(), "audience_profile": profile.model_dump()},
+        json={"context_data": context_data.model_dump(), "audience_profile": profile.model_dump()},
         timeout=50,
     )
     if response.status_code == 200:
