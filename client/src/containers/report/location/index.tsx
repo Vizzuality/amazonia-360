@@ -14,6 +14,7 @@ import {
 import Confirm from "@/containers/report/location/confirm";
 import { GenerateReport } from "@/containers/report/location/generate";
 import GridFilters from "@/containers/report/location/grid/filters";
+import GridFiltersControls from "@/containers/report/location/grid/filters-controls";
 import GridTable from "@/containers/report/location/grid/table";
 import Search from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
@@ -115,10 +116,12 @@ export default function ReportLocation() {
                   </h1>
 
                   <p className="text-sm font-medium text-muted-foreground">
-                    Select indicators to filter the grid cells displayed on the map. This indicators
-                    may differ from the ones in the contextual viewer.
+                    Add indicators to filter the grid cells and highlight areas that meet specific
+                    criteria. You can select a maximum of 5 indicators.
                   </p>
                 </div>
+
+                <GridFiltersControls />
 
                 <div className="space-y-5">
                   <GridFilters />
