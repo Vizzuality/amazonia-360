@@ -71,3 +71,4 @@ export const tabAtom = atom<"contextual-viewer" | "grid">("contextual-viewer");
 export const reportPanelAtom = atom<"location" | "topics">("location");
 export const gridPanelAtom = atom<"filters" | "table">("filters");
 export const gridCellHighlightAtom = atom<string | undefined>(undefined);
+export const selectedFiltersViewAtom = atom<boolean>(false);
