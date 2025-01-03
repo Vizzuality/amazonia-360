@@ -2,9 +2,8 @@
 
 import { useMemo, useState } from "react";
 
-import numeral from "numeral";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
-
+import numeral from "numeral";
 import { LuPlus, LuX } from "react-icons/lu";
 
 import { formatNumber } from "@/lib/formats";

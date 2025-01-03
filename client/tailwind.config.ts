@@ -15,6 +15,9 @@ const config = {
       padding: "2rem",
     },
     extend: {
+      content: {
+        dots: '". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."',
+      },
       screens: {
         "2xl": "1441px",
         tall: {
