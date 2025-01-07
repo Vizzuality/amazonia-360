@@ -10,6 +10,18 @@ jest.mock("next/navigation", () => ({
 }));
 
 describe("Header", () => {
+  beforeAll(() => {
+    global.window.matchMedia = jest.fn().mockImplementation((query) => ({
+      matches: query === "(min-width: 768px)",
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }));
+  });
   beforeEach(() => {
     mockUsePathname.mockReturnValue("/");
   });

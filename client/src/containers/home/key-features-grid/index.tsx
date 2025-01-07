@@ -8,8 +8,8 @@ import animation from "./grid-animation-lottie.json";
 
 export default function KeyFeaturesGrid() {
   return (
-    <section className="flex bg-blue-50 px-4 md:px-0">
-      <div className="flex flex-col-reverse justify-between py-10 md:container md:flex-row md:py-28 lg:gap-80">
+    <section className="flex bg-blue-50 px-4">
+      <div className="flex flex-col-reverse justify-between md:container md:flex-row">
         <div className="h-full max-w-lg items-center">
           <CardsContainer />
         </div>
@@ -19,7 +19,7 @@ export default function KeyFeaturesGrid() {
             animationData={animation}
             loop={true}
             autoplay={true}
-            className="h-[600px] w-[600px]"
+            className="md:h-[500px] md:w-[500px] lg:h-[600px] lg:w-[600px] xl:h-[650px] xl:w-[650px]"
           />
         </div>
       </div>

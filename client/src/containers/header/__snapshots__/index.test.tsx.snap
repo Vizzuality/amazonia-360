@@ -6,10 +6,10 @@ exports[`Header renders the Home link selected 1`] = `
     class="flex h-16 flex-col justify-center bg-white backdrop-blur"
   >
     <div
-      class="container mx-auto flex items-center justify-between"
+      class="mx-4 flex items-center justify-between md:container md:mx-auto"
     >
       <div
-        class="flex items-center space-x-2"
+        class="z-[120] flex items-center space-x-2"
       >
         <a
           href="/"
@@ -31,7 +31,7 @@ exports[`Header renders the Home link selected 1`] = `
               class="space-x-2"
             >
               <span
-                class="text-sm font-medium"
+                class="text-sm font-medium text-blue-500"
               >
                 AmazoniaForever360+
               </span>
@@ -85,10 +85,10 @@ exports[`Header renders the Hub link selected 1`] = `
     class="flex h-16 flex-col justify-center bg-white backdrop-blur"
   >
     <div
-      class="container mx-auto flex items-center justify-between"
+      class="mx-4 flex items-center justify-between md:container md:mx-auto"
     >
       <div
-        class="flex items-center space-x-2"
+        class="z-[120] flex items-center space-x-2"
       >
         <a
           href="/"
@@ -110,7 +110,7 @@ exports[`Header renders the Hub link selected 1`] = `
               class="space-x-2"
             >
               <span
-                class="text-sm font-medium"
+                class="text-sm font-medium text-blue-500"
               >
                 AmazoniaForever360+
               </span>
@@ -164,10 +164,10 @@ exports[`Header renders the Report Tool link selected 1`] = `
     class="flex h-16 flex-col justify-center bg-white backdrop-blur"
   >
     <div
-      class="container mx-auto flex items-center justify-between"
+      class="mx-4 flex items-center justify-between md:container md:mx-auto"
     >
       <div
-        class="flex items-center space-x-2"
+        class="z-[120] flex items-center space-x-2"
       >
         <a
           href="/"
@@ -189,7 +189,7 @@ exports[`Header renders the Report Tool link selected 1`] = `
               class="space-x-2"
             >
               <span
-                class="text-sm font-medium"
+                class="text-sm font-medium text-blue-500"
               >
                 AmazoniaForever360+
               </span>
