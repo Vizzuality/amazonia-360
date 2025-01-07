@@ -7,7 +7,12 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { BodyReadTableGridTablePostFiltersItem } from "@/types/generated/api.schemas";
 
-import { useSyncGridDatasets, useSyncGridFilters, useSyncLocation } from "@/app/store";
+import {
+  useSyncGridDatasets,
+  useSyncGridFilters,
+  useSyncLocation,
+  useSyncGridFiltersSetUp,
+} from "@/app/store";
 
 import { CardLoader } from "@/containers/card";
 
@@ -19,6 +24,7 @@ export default function GridTable() {
   const [location] = useSyncLocation();
   const [gridDatasets] = useSyncGridDatasets();
   const [gridFilters] = useSyncGridFilters();
+  const [gridFiltersSetUp] = useSyncGridFiltersSetUp();
 
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
@@ -60,8 +66,8 @@ export default function GridTable() {
       },
       params: {
         level: 1,
-        order_by: [`-${gridDatasets[0]}`],
-        limit: gridFilters?.LIMIT?.[0] || LIMIT,
+        order_by: [`${gridFiltersSetUp?.DIRECTION === "asc" ? "" : "-"}${gridDatasets[0]}`],
+        limit: Number(gridFiltersSetUp?.LIMIT) || LIMIT,
         direction: "asc",
       },
     },

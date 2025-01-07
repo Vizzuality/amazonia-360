@@ -8,6 +8,7 @@ import {
   gridDatasetSelectedParser,
   gridDatasetsParser,
   gridFiltersParser,
+  gridFiltersSetUpParser,
   locationParser,
   topicsParser,
 } from "@/app/parsers";
@@ -38,6 +39,10 @@ export const useSyncGridDatasets = () => {
 
 export const useSyncGridSelectedDataset = () => {
   return useQueryState("gridDatasetSelected", gridDatasetSelectedParser);
+};
+
+export const useSyncGridFiltersSetUp = () => {
+  return useQueryState("gridFiltersSetUp", gridFiltersSetUpParser);
 };
 
 const searchParams = {

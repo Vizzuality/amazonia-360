@@ -43,7 +43,7 @@ export const getGridLayerProps = ({
   gridCellHighlight,
 }: {
   gridDatasets: string[];
-  gridFilters: Record<string, number[]> | null;
+  gridFilters: Record<string, number[] | Record<string, string | number>> | null;
   getFillColor: Accessor<Record<string, number>, Color>;
   gridMetaData: MultiDatasetMeta | undefined;
   geometry: __esri.Polygon | null;

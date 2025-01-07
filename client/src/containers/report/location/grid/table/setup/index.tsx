@@ -7,7 +7,7 @@ import { LuSettings2 } from "react-icons/lu";
 
 import { useGetGridMeta } from "@/lib/grid";
 
-import { useSyncGridDatasets, useSyncGridFilters } from "@/app/store";
+import { useSyncGridDatasets, useSyncGridFilters, useSyncGridFiltersSetUp } from "@/app/store";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,7 +34,8 @@ const RANKING_DIRECTION = [
 
 export default function GridTableSetup() {
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
-  const [gridFilters, setGridFilters] = useSyncGridFilters();
+  const [gridFilters] = useSyncGridFilters();
+  const [, setGridFiltersSetUp] = useSyncGridFiltersSetUp();
   const [selectedDirection, setDirection] = useState<string>("asc");
   const [selectedDataset, setDataset] = useState<string>(gridDatasets[0]);
   const [selectedLimit, setSelectedLimit] = useState<number>();
@@ -73,13 +74,16 @@ export default function GridTableSetup() {
     }
 
     if (selectedDirection) {
-      // TO - DO - handle direction
+      setGridFiltersSetUp((prev) => ({
+        ...prev,
+        DIRECTION: selectedDirection,
+      }));
     }
 
     if (selectedLimit) {
-      setGridFilters((prev) => ({
+      setGridFiltersSetUp((prev) => ({
         ...prev,
-        LIMIT: [selectedLimit],
+        LIMIT: selectedLimit,
       }));
     }
   }, [
@@ -88,7 +92,7 @@ export default function GridTableSetup() {
     selectedLimit,
     gridDatasets,
     setGridDatasets,
-    setGridFilters,
+    setGridFiltersSetUp,
   ]);
 
   return (
