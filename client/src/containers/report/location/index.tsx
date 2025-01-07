@@ -131,7 +131,14 @@ export default function ReportLocation() {
                 <GridFiltersControls />
 
                 <div className="space-y-5">
-                  <GridFilters />
+                  <div className="relative h-full max-h-[calc(100vh-440px)]">
+                    <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2.5 bg-gradient-to-b from-white to-transparent" />
+                    <div className="-mx-4 h-full max-h-[calc(100vh-440px)] overflow-y-auto px-4 py-1">
+                      <GridFilters />
+                    </div>
+                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />
+                  </div>
+
                   <Button
                     onClick={() => setGridPanel("table")}
                     variant="outline"

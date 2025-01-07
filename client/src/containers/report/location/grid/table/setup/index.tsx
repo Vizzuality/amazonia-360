@@ -1,10 +1,13 @@
 "use client";
 
+import { ChangeEvent } from "react";
+import { useCallback, useState } from "react";
+
 import { LuSettings2 } from "react-icons/lu";
 
 import { useGetGridMeta } from "@/lib/grid";
 
-import { useSyncGridDatasets } from "@/app/store";
+import { useSyncGridDatasets, useSyncGridFilters } from "@/app/store";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,7 +33,12 @@ const RANKING_DIRECTION = [
 ];
 
 export default function GridTableSetup() {
-  const [gridDatasets] = useSyncGridDatasets();
+  const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
+  const [gridFilters, setGridFilters] = useSyncGridFilters();
+  const [selectedDirection, setDirection] = useState<string>("asc");
+  const [selectedDataset, setDataset] = useState<string>(gridDatasets[0]);
+  const [selectedLimit, setSelectedLimit] = useState<number>();
+
   const { data: rankingOptions } = useGetGridMeta({
     select: (data) =>
       gridDatasets.map((d) => ({
@@ -38,6 +46,50 @@ export default function GridTableSetup() {
         label: data?.datasets?.find((dataset) => dataset.var_name === d)?.label,
       })),
   });
+
+  const handleRankingChange = useCallback(
+    (e: string) => {
+      setDataset(e);
+    },
+    [setDataset],
+  );
+
+  const handleDirectionChange = useCallback((e: string) => {
+    setDirection(e);
+  }, []);
+
+  const onInputChange = useCallback(
+    (v: ChangeEvent<HTMLInputElement>) => {
+      const value = parseFloat(v.target.value);
+      setSelectedLimit(value);
+    },
+    [setSelectedLimit],
+  );
+
+  const handleFilters = useCallback(() => {
+    if (selectedDataset) {
+      const updatedOrder = [selectedDataset, ...gridDatasets.filter((d) => d !== selectedDataset)];
+      setGridDatasets(updatedOrder);
+    }
+
+    if (selectedDirection) {
+      // TO - DO - handle direction
+    }
+
+    if (selectedLimit) {
+      setGridFilters((prev) => ({
+        ...prev,
+        LIMIT: [selectedLimit],
+      }));
+    }
+  }, [
+    selectedDataset,
+    selectedDirection,
+    selectedLimit,
+    gridDatasets,
+    setGridDatasets,
+    setGridFilters,
+  ]);
 
   return (
     <Popover>
@@ -53,12 +105,13 @@ export default function GridTableSetup() {
           <div className="gap-2">
             <span className="text-sm text-foreground">Order by</span>
             <div className="flex gap-2">
-              <Select>
+              <Select value={selectedDataset} onValueChange={handleRankingChange}>
                 <SelectTrigger className="h-10 flex-1 rounded-sm">
                   <SelectValue className="text-sm">
-                    {/* <p className="max-w-64 truncate md:max-w-80 lg:max-w-none">
-                    {[].find((opt) => opt.key === chartKey)?.label || ""}
-                  </p> */}
+                    <p className="max-w-64 truncate md:max-w-80 lg:max-w-none">
+                      {rankingOptions?.find((opt) => opt.key === selectedDataset)?.label ||
+                        "selectedDataset"}
+                    </p>
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent className="no-scrollbar max-h-96 overflow-y-auto border-none shadow-md">
@@ -70,9 +123,13 @@ export default function GridTableSetup() {
                     ))}
                 </SelectContent>
               </Select>
-              <Select>
+              <Select value={selectedDirection} onValueChange={handleDirectionChange}>
                 <SelectTrigger className="h-10 max-w-32 rounded-sm">
-                  <SelectValue className="text-sm">Bottom</SelectValue>
+                  <SelectValue className="text-sm">
+                    <p className="max-w-64 truncate md:max-w-80 lg:max-w-none">
+                      {RANKING_DIRECTION.find((opt) => opt.key === selectedDirection)?.label || ""}
+                    </p>
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent className="no-scrollbar max-h-96 overflow-y-auto border-none shadow-md">
                   {RANKING_DIRECTION &&
@@ -89,13 +146,20 @@ export default function GridTableSetup() {
             <Label htmlFor="cells-number" className="text-sm text-foreground">
               Max number of cells
             </Label>
-            <Input id="cell-number" className="h-10" />
+            <Input
+              placeholder={`${gridFilters?.LIMIT?.[0]}`}
+              id="cell-number"
+              type="number"
+              min={0}
+              className="h-10"
+              onChange={onInputChange}
+            />
             <span className="text-sm text-muted-foreground">
               Higher numbers will take more time.
             </span>
           </div>
           <div className="flex justify-end">
-            <Button>Apply</Button>
+            <Button onClick={handleFilters}>Apply</Button>
           </div>
         </div>
       </PopoverContent>
