@@ -61,7 +61,8 @@ export default function GridTable() {
       params: {
         level: 1,
         order_by: [`-${gridDatasets[0]}`],
-        limit: LIMIT,
+        limit: gridFilters?.LIMIT?.[0] || LIMIT,
+        direction: "asc",
       },
     },
     {

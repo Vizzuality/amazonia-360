@@ -1,12 +1,13 @@
 "use client";
 
-import { useSyncGridDatasets, selectedFiltersViewAtom } from "@/app/store";
+import { useCallback } from "react";
 
 import { useSetAtom } from "jotai";
 
+import { useSyncGridDatasets, selectedFiltersViewAtom } from "@/app/store";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { useCallback } from "react";
 
 export default function GridFiltersControls() {
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
@@ -14,11 +15,11 @@ export default function GridFiltersControls() {
 
   const handleFiltersView = useCallback(() => {
     setSelectedFiltersView((prev) => !prev);
-  }, []);
+  }, [setSelectedFiltersView]);
 
   const handleClick = useCallback(() => {
     setGridDatasets([]);
-  }, []);
+  }, [setGridDatasets]);
 
   return (
     <div className="flex items-center justify-between">
