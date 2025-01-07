@@ -1,11 +1,12 @@
 "use client";
 
+import { useAtom } from "jotai";
+
 import { useGetGridMeta } from "@/lib/grid";
 
-import GridFiltersItem from "./item";
 import { useSyncGridDatasets, selectedFiltersViewAtom } from "@/app/store";
 
-import { useAtom } from "jotai";
+import GridFiltersItem from "./item";
 
 export default function GridFilters() {
   const [gridDatasets] = useSyncGridDatasets();

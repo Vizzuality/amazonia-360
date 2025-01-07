@@ -17,6 +17,12 @@ export type ReadTableGridTablePostParams = {
    * Prepend '-' to column name to make it descending
    */
   order_by: string[];
+  /**
+   * Specifies the sorting direction for the query results.
+   * - "asc": Sorts in ascending order (e.g., smallest to largest or A to Z).
+   * - "desc": Sorts in descending order (e.g., largest to smallest or Z to A).
+   */
+  direction: "asc" | "desc";
 };
 
 export type GridDatasetMetadataInAreaGridMetaPostParams = {

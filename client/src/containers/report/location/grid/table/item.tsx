@@ -81,7 +81,7 @@ export const GridTableItem = (
 
   return (
     <div
-      className="flex items-start gap-2 py-2"
+      className="flex w-full items-start gap-2 py-2"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -119,19 +119,26 @@ export const GridTableItem = (
           </AlertDialogContent>
         </Tooltip>
       </AlertDialog>
-
-      <ul className="grow">
+      <ul className="w-full overflow-hidden">
         {ITEMS.map((dataset, i) => (
-          <li key={dataset?.name} className="flex justify-between text-sm">
+          <li key={dataset?.name} className="flex items-center justify-between text-sm">
+            {/* Left Side: Name */}
             <span
-              className={cn({
+              className={cn("whitespace-nowrap text-gray-400", {
                 "font-normal": i !== 0,
               })}
             >
               {dataset?.name}
             </span>
+
+            {/* Dots */}
+            <span className="mx-1 flex-grow overflow-hidden whitespace-nowrap font-extralight tracking-[2.5px] text-muted-foreground">
+              .........................................
+            </span>
+
+            {/* Right Side: Value */}
             <span
-              className={cn({
+              className={cn("whitespace-nowrap text-blue-700", {
                 "font-normal": i !== 0,
               })}
             >
