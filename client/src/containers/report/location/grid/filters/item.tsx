@@ -2,9 +2,8 @@
 
 import { useMemo, useState } from "react";
 
-import numeral from "numeral";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
-
+import numeral from "numeral";
 import { LuPlus, LuX } from "react-icons/lu";
 
 import { formatNumber } from "@/lib/formats";
@@ -28,7 +27,7 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
 
   const open = gridDatasets?.includes(dataset.var_name);
 
-  const continousOptions = useMemo(() => {
+  const continuosOptions = useMemo(() => {
     if (dataset.legend.legend_type === "continuous") {
       const s = dataset.legend.stats.find((stat) => stat.level === 1);
       return s;
@@ -41,19 +40,19 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
     }
   }, [dataset.legend]);
 
-  const continousValue = useMemo(() => {
-    if (continousOptions) {
+  const continuosValue = useMemo(() => {
+    if (continuosOptions) {
       if (gridFilters) {
         return (
-          gridFilters[dataset.var_name] || [continousOptions.min || 0, continousOptions.max || 100]
+          gridFilters[dataset.var_name] || [continuosOptions.min || 0, continuosOptions.max || 100]
         );
       }
 
-      return [continousOptions.min || 0, continousOptions.max || 100];
+      return [continuosOptions.min || 0, continuosOptions.max || 100];
     }
 
     return [-Infinity, Infinity];
-  }, [dataset.var_name, continousOptions, gridFilters]);
+  }, [dataset.var_name, continuosOptions, gridFilters]);
 
   const onOpenChange = (open: boolean) => {
     setGridDatasets((prev) => {
@@ -123,13 +122,13 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
           </TooltipTrigger>
 
           <CollapsibleContent className="py-2">
-            {dataset.legend.legend_type === "continuous" && continousOptions && (
+            {dataset.legend.legend_type === "continuous" && continuosOptions && (
               <div className="space-y-2">
                 <Slider
-                  min={continousOptions.min || 0}
-                  max={continousOptions.max || 100}
+                  min={continuosOptions.min || 0}
+                  max={continuosOptions.max || 100}
                   step={1}
-                  value={continousValue}
+                  value={continuosValue}
                   minStepsBetweenThumbs={1}
                   onValueChange={onValueChange}
                 />
@@ -137,23 +136,23 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
                 <div className="flex justify-between gap-20">
                   <div className="relative">
                     <div className="pointer-events-none h-6 min-w-20 p-1 text-center text-sm text-foreground opacity-0">
-                      {formatNumber(continousValue[0] || continousOptions.min || 0)}
+                      {formatNumber(continuosValue[0] || continuosOptions.min || 0)}
                     </div>
                     <Input
-                      value={formatNumber(continousValue[0] ?? (continousOptions.min || 0))}
+                      value={formatNumber(continuosValue[0] ?? (continuosOptions.min || 0))}
                       type="text"
-                      min={continousOptions.min || 0}
-                      max={continousValue[1] ?? (continousOptions.max || 100)}
+                      min={continuosOptions.min || 0}
+                      max={continuosValue[1] ?? (continuosOptions.max || 100)}
                       onChange={(e) => {
                         const v = numeral(e.target.value).value();
 
                         if (typeof v === "number") {
-                          onValueChange([v, continousValue[1]]);
+                          onValueChange([v, continuosValue[1]]);
                         }
                       }}
                       onBlur={() => {
-                        const v = continousValue[0];
-                        const max = continousValue[1] || continousOptions.max || 100;
+                        const v = continuosValue[0];
+                        const max = continuosValue[1] || continuosOptions.max || 100;
 
                         if (typeof v === "number") {
                           if (v > max) {
@@ -168,30 +167,30 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
                   </div>
                   <div className="relative">
                     <div className="pointer-events-none h-6 min-w-20 p-1 text-center text-sm text-foreground opacity-0">
-                      {formatNumber(continousValue[1] || continousOptions.min || 0)}
+                      {formatNumber(continuosValue[1] || continuosOptions.min || 0)}
                     </div>
                     <Input
-                      value={formatNumber(continousValue[1] ?? (continousOptions.max || 0))}
+                      value={formatNumber(continuosValue[1] ?? (continuosOptions.max || 0))}
                       type="text"
-                      min={continousValue[0] ?? (continousOptions.min || 0)}
-                      max={continousOptions.max || 100}
+                      min={continuosValue[0] ?? (continuosOptions.min || 0)}
+                      max={continuosOptions.max || 100}
                       onChange={(e) => {
                         const v = numeral(e.target.value).value();
 
                         if (typeof v === "number") {
-                          onValueChange([continousValue[0], v]);
+                          onValueChange([continuosValue[0], v]);
                         }
                       }}
                       onBlur={() => {
-                        const v = continousValue[1];
-                        const min = continousValue[0] || continousOptions.min || 0;
-                        const max = continousOptions.max || 100;
+                        const v = continuosValue[1];
+                        const min = continuosValue[0] || continuosOptions.min || 0;
+                        const max = continuosOptions.max || 100;
 
                         if (typeof v === "number") {
                           if (v < min) {
                             onValueChange([v, min]);
                           } else if (v > max) {
-                            onValueChange([continousValue[0], max]);
+                            onValueChange([continuosValue[0], max]);
                           } else {
                             onValueChange([min, v]);
                           }

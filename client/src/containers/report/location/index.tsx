@@ -3,6 +3,8 @@
 import { useAtom } from "jotai";
 import { LuArrowLeft } from "react-icons/lu";
 
+import { useGetGridMeta } from "@/lib/grid";
+
 import {
   tabAtom,
   useSyncLocation,
@@ -16,6 +18,7 @@ import { GenerateReport } from "@/containers/report/location/generate";
 import GridFilters from "@/containers/report/location/grid/filters";
 import GridFiltersControls from "@/containers/report/location/grid/filters-controls";
 import GridTable from "@/containers/report/location/grid/table";
+import GridTableSetup from "@/containers/report/location/grid/table/setup";
 import Search from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
 import Topics from "@/containers/report/location/topics";
@@ -31,6 +34,10 @@ export default function ReportLocation() {
 
   const [location] = useSyncLocation();
   const [gridDatasets] = useSyncGridDatasets();
+
+  const { data: rankingCriterion } = useGetGridMeta({
+    select: (data) => data?.datasets?.find((d) => d.var_name === gridDatasets[0])?.label,
+  });
 
   return (
     <aside className="pointer-events-auto flex max-h-screen w-4/12 shrink-0 flex-col overflow-hidden tall:2xl:w-4/12">
@@ -124,7 +131,14 @@ export default function ReportLocation() {
                 <GridFiltersControls />
 
                 <div className="space-y-5">
-                  <GridFilters />
+                  <div className="relative h-full max-h-[calc(100vh-440px)]">
+                    <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2.5 bg-gradient-to-b from-white to-transparent" />
+                    <div className="-mx-4 h-full max-h-[calc(100vh-440px)] overflow-y-auto px-4 py-1">
+                      <GridFilters />
+                    </div>
+                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />
+                  </div>
+
                   <Button
                     onClick={() => setGridPanel("table")}
                     variant="outline"
@@ -140,15 +154,19 @@ export default function ReportLocation() {
             {gridPanel === "table" && (
               <div className="relative space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
                 <div className="space-y-1">
-                  <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
-                    <button
-                      onClick={() => setGridPanel("filters")}
-                      className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50"
-                    >
-                      <LuArrowLeft className="h-4 w-4" />
-                    </button>
-                    Cells ranking
-                  </h1>
+                  <div className="flex items-center justify-between font-bold text-primary">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setGridPanel("filters")}
+                        className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50"
+                      >
+                        <LuArrowLeft className="h-4 w-4" />
+                      </button>
+                      <h1>Top cells ordered by {rankingCriterion}</h1>
+                    </div>
+
+                    <GridTableSetup />
+                  </div>
 
                   <p className="text-sm font-medium text-muted-foreground">
                     Click on a row in the table to redefine your area and center the map on the
