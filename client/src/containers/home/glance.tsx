@@ -1,5 +1,7 @@
 "use client";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
+
+import { useInView } from "react-intersection-observer";
 
 import { HierarchyNode, HierarchyRectangularNode } from "@visx/hierarchy/lib/types";
 import { scaleOrdinal } from "@visx/scale";
@@ -22,6 +24,16 @@ import {
 
 export default function Glance() {
   const [chartKey, setChartKey] = useState<MosaicIds>(MOSAIC_OPTIONS[4].key);
+  const [sectionInView, setImageInView] = useState(false);
+
+  const { ref: sectionRef, inView: isSectionInView } = useInView({
+    triggerOnce: false,
+    threshold: 0.5,
+  });
+
+  useEffect(() => {
+    if (isSectionInView) setImageInView(true);
+  }, [isSectionInView]);
 
   const ordinalColorScale = useMemo(() => {
     return scaleOrdinal({
@@ -94,25 +106,30 @@ export default function Glance() {
   };
 
   return (
-    <section className="container flex flex-col items-end py-10 md:flex-row md:space-x-28 md:py-28">
-      <div className="flex w-full flex-col space-y-5 md:w-1/2 md:space-y-44">
+    <section
+      ref={sectionRef}
+      className="container flex flex-col items-end py-10 md:flex-row md:space-x-28 md:py-28"
+    >
+      <div
+        className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-44 ${sectionInView ? "animate-left-to-right overflow-hidden" : "opacity-0"}`}
+      >
         <div>
           <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
             Amazonia at a glance
           </h3>
           <h2 className="pb-6 text-2xl text-blue-400 lg:text-3xl xl:text-4xl">
-            A Continent-sized Mosaic of Cultures and Nature Across Eight Countries
+            A mosaic of ecosystems and habitats
           </h2>
           <p className="text-base font-normal text-blue-900 lg:text-lg">
-            Amazonia spans over <span className="font-bold">8.3 million</span> square kilometers
+            Amazonia spans over <span className="font-bold">6.7 million square kilometers</span>{" "}
             across South America. This vital region is a confluence of cultural diversity and
             environmental significance.
           </p>
 
           <div className="mt-7 flex flex-col space-y-1">
-            <p className="text-xs font-semibold text-blue-900">View on the chart:</p>
+            <p className="text-xs font-semibold text-blue-900">View on the chart</p>
             <Select value={chartKey} onValueChange={handleSingleValueChange}>
-              <SelectTrigger className="h-14 w-full rounded-none">
+              <SelectTrigger className="h-9 w-full rounded-sm">
                 <SelectValue>
                   <p className="max-w-64 truncate md:max-w-80 lg:max-w-none">
                     {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.label || ""}
@@ -131,9 +148,9 @@ export default function Glance() {
           </div>
         </div>
 
-        <div className="space-y-1 text-blue-300">
+        <div className="space-y-1 text-sm text-blue-300">
           <p className="text-base">Source: </p>
-          <ul className="space-y-2 text-sm">
+          <ul className="space-y-2">
             <li>
               <span>Global Human Settlement Layer (GHSL) - Population projection for 2025;</span>
               <CardInfo ids={[+"population"]} className="relative top-0.5 inline-flex" />
@@ -142,7 +159,9 @@ export default function Glance() {
           </ul>
         </div>
       </div>
-      <div className="mt-20 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2">
+      <div
+        className={`mt-20 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${sectionInView ? "animate-right-to-left overflow-hidden" : "opacity-0"}`}
+      >
         <header className="space-y-1">
           <h3 className="text-xl font-semibold text-foreground">
             {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.label || ""}

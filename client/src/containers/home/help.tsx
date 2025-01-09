@@ -5,15 +5,15 @@ export default function Help() {
     <section className="bg-blue-700 text-white">
       <div className="container">
         <div className="flex flex-col items-center justify-between py-16 md:flex-row">
-          <p className="font-normal md:w-8/12">
-            AmazoniaForever360+ goes beyond simply presenting data, it&apos;s making sense of it.
-            Our goal is to become a focal point that unifies and amplifies the potential of
-            geospatial data and information produced by partners and initiatives dedicated to the
-            region. By achieving this, we aim to cultivate a collective intelligence to support the
-            Amazonia Forever program and its collaboration and coordination objectives.
-          </p>
-          <div className="flex flex-col items-center pt-16 md:py-0">
+          <div className="flex flex-col justify-start pt-16 md:py-0">
             <h3 className="text-lg font-bold">Help us improve!</h3>
+            <p className="max-w-2xl font-normal">
+              AmazoniaForever360+ is in active development, and your feedback is vital to helping us
+              improve. We invite you to share your thoughts and help shape the next phase of
+              AmazoniaForever360+!
+            </p>
+          </div>
+          <div className="flex flex-col items-center pt-16 md:py-0">
             <a
               href="https://survey123.arcgis.com/share/fadbaa4e81f04f068f5ed0abd99e4789"
               target="_blank"

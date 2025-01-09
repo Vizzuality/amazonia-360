@@ -122,10 +122,52 @@ const config = {
             height: "0",
           },
         },
+        growWidth: {
+          "0%": { width: "0", opacity: "0.5" },
+          "100%": { width: "100%", opacity: "1" },
+        },
+        "left-to-right": {
+          from: {
+            opacity: "0",
+            transform: "translateX(-100%)", // Starts off-screen on the left
+          },
+          to: {
+            opacity: "1",
+            transform: "translateX(0)",
+          },
+        },
+        "right-to-left": {
+          from: {
+            opacity: "0",
+            transform: "translateX(100%)",
+          },
+          to: {
+            opacity: "1",
+            transform: "translateX(0)",
+          },
+        },
+        slideUp: {
+          "0%": { transform: "translateY(300px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        slideDown: {
+          "0%": { transform: "translateY(-300px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        zoomOut: {
+          "0%": { transform: "scale(1.5)" },
+          "100%": { transform: "scale(1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "left-to-right": "left-to-right 1s ease-out",
+        "right-to-left": "right-to-left 1s ease-out",
+        "slide-up": "slideUp 1s ease-in forwards",
+        "slide-down": "slideDown 1s ease-in forwards",
+        "zoom-out": "zoomOut 1.2s ease-in-out",
+        growWidth: "growWidth 1s ease-out forwards",
       },
       fontSize: {
         "2xs": ["0.625rem", "0.75rem"],
@@ -142,7 +184,15 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
+    function ({ addUtilities }: { addUtilities: Function }) {
+      addUtilities({
+        ".delay-500": { "animation-delay": "500ms" },
+      });
+    },
+  ],
 } satisfies Config;
 
 export default config;

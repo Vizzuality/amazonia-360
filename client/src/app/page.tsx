@@ -9,7 +9,6 @@ import Hub from "@/containers/home/hub";
 import InformationOn from "@/containers/home/information-on";
 import KeyFeaturesGrid from "@/containers/home/key-features-grid";
 import KeyFeaturesReport from "@/containers/home/key-features-report";
-import Vision from "@/containers/home/vision";
 
 export const metadata: Metadata = {
   title: "AmazoniaForever360+",
@@ -25,7 +24,6 @@ export default function HomePage() {
       <KeyFeaturesGrid />
       <InformationOn />
       <Glance />
-      <Vision />
       <Hub />
       <Help />
       <Footer />
