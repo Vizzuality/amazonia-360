@@ -8,6 +8,7 @@ import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import ArcGISMap from "@arcgis/core/Map";
 import ArcGISMapView from "@arcgis/core/views/MapView";
 import ArcGISScaleBar from "@arcgis/core/widgets/ScaleBar";
+
 import { merge } from "ts-deepmerge";
 
 import { DEFAULT_MAP_VIEW_PROPERTIES } from "@/constants/map";

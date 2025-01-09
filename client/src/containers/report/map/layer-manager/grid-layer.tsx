@@ -261,7 +261,7 @@ export default function GridLayer() {
             getFillColor,
             geometry: GEOMETRY,
             zoom,
-            gridCellHighlight,
+            gridCellHighlight: gridCellHighlight.index,
           }),
         ],
       });
@@ -277,7 +277,7 @@ export default function GridLayer() {
         getFillColor,
         geometry: GEOMETRY,
         zoom,
-        gridCellHighlight,
+        gridCellHighlight: gridCellHighlight.index,
       }),
     ];
 
