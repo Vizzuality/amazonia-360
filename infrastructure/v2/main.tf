@@ -43,6 +43,27 @@ module client_ecr {
   repo_name = "client"
 }
 
+## Specifically for production, as the deployment points to the production region to push the images to the ECR
+## so we need to have a ECR in said region
+module client_prod_ecr {
+  providers = {
+    aws = aws.prod
+  }
+  source = "./modules/ecr"
+  project_name = var.project_name
+  repo_name = "client"
+}
+
+module api_prod_ecr {
+  providers = {
+    aws = aws.prod
+  }
+  source = "./modules/ecr"
+  project_name = var.project_name
+  repo_name = "api"
+}
+
+
 module "github" {
   source       = "./modules/github"
   repo_name    = var.repo_name
