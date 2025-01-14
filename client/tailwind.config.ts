@@ -158,6 +158,16 @@ const config = {
           "0%": { transform: "scale(1.5)" },
           "100%": { transform: "scale(1)" },
         },
+        rightBottomToLeftTop: {
+          "0%": {
+            transform: "translate(300px, 300px)",
+            opacity: "0",
+          },
+          "100%": {
+            transform: "translate(0, 0)",
+            opacity: "1",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -168,6 +178,7 @@ const config = {
         "slide-down": "slideDown 1s ease-in forwards",
         "zoom-out": "zoomOut 1.2s ease-in-out",
         growWidth: "growWidth 1s ease-out forwards",
+        "right-bottom-to-left-top": "rightBottomToLeftTop 1s ease-in-out forwards",
       },
       fontSize: {
         "2xs": ["0.625rem", "0.75rem"],

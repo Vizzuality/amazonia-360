@@ -58,7 +58,7 @@ export default function Hero() {
         alt="Amazonia"
         width={1500}
         height={1500}
-        className="absolute bottom-0 w-full animate-right-to-left overflow-hidden md:absolute md:right-0 md:top-[30%] md:w-6/12 md:object-cover"
+        className="absolute bottom-0 w-full animate-right-bottom-to-left-top overflow-hidden md:absolute md:right-0 md:top-[30%] md:w-6/12 md:object-cover"
       />
     </section>
   );

@@ -1,10 +1,16 @@
-import { gridCellHighlightAtom } from "@/app/store";
+import React, { useState, useEffect } from "react";
+
 import Point from "@arcgis/core/geometry/Point";
 import { cellToLatLng } from "h3-js";
 import { useAtom } from "jotai";
-import React, { useState, useEffect } from "react";
-import { useMap } from "./provider";
+
+import { cn } from "@/lib/utils";
+
+import { gridCellHighlightAtom } from "@/app/store";
+
 import { HexagonIcon } from "../ui/icons/hexagon";
+
+import { useMap } from "./provider";
 
 export const Tooltip = () => {
   const [cell] = useAtom(gridCellHighlightAtom);
@@ -13,6 +19,7 @@ export const Tooltip = () => {
   const map = useMap();
 
   const view = map?.view;
+  const zoom = map?.view.zoom;
 
   useEffect(() => {
     if (!cell.index || !view) {
@@ -35,14 +42,14 @@ export const Tooltip = () => {
 
   return (
     <div
-      className="absolute flex -translate-x-1/2 -translate-y-[40px] transform items-center space-x-2 rounded bg-cyan-500 px-2 text-white before:absolute before:left-1/2 before:top-full before:-translate-x-1/2 before:border-[6px] before:border-x-transparent before:border-b-transparent before:border-t-cyan-500"
+      className="absolute flex -translate-x-1/2 -translate-y-[200%] transform items-center space-x-2 rounded bg-cyan-500 px-2 text-white before:absolute before:left-1/2 before:top-full before:-translate-x-1/2 before:border-[6px] before:border-x-transparent before:border-b-transparent before:border-t-cyan-500"
       style={{
         top: position.y,
         left: position.x,
       }}
     >
-      <HexagonIcon className="h-4 w-4" />
-      <span>{+cell.id + 1}º</span>
+      <HexagonIcon className={cn("h-4 w-4", { "h-8 w-8": zoom && zoom >= 10 })} />
+      <span className={cn({ "p-3 text-2xl": zoom && zoom >= 10 })}>{+cell.id + 1}º</span>
     </div>
   );
 };
