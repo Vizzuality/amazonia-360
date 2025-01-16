@@ -35,7 +35,7 @@ export default function GridFilters() {
 
   const geometry4326: FeatureGeometry = {
     type: geometry3857.type,
-    coordinates: geometry3857.coordinates.map((ring) =>
+    coordinates: geometry3857?.coordinates?.map((ring) =>
       ring.map((point) => proj4("EPSG:3857", "EPSG:4326", point)),
     ),
   };
