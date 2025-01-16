@@ -57,7 +57,7 @@ export default function TopicsItem({
       >
         <Image
           src={image}
-          alt={name}
+          alt={`${name}`}
           priority
           fill
           sizes="100%"
