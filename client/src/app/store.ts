@@ -75,5 +75,8 @@ export const sketchAtom = atom<SketchProps>({
 export const tabAtom = atom<"contextual-viewer" | "grid">("contextual-viewer");
 export const reportPanelAtom = atom<"location" | "topics">("location");
 export const gridPanelAtom = atom<"filters" | "table">("filters");
-export const gridCellHighlightAtom = atom<string | undefined>(undefined);
+export const gridCellHighlightAtom = atom<{ id: number | null; index: string | undefined }>({
+  id: null,
+  index: undefined,
+});
 export const selectedFiltersViewAtom = atom<boolean>(false);

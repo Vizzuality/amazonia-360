@@ -33,6 +33,8 @@ const RANKING_DIRECTION = [
 ];
 
 export default function GridTableSetup() {
+  const [isOpen, setIsOpen] = useState(false);
+
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
   const [gridFilters] = useSyncGridFilters();
   const [, setGridFiltersSetUp] = useSyncGridFiltersSetUp();
@@ -76,16 +78,17 @@ export default function GridTableSetup() {
     if (selectedDirection) {
       setGridFiltersSetUp((prev) => ({
         ...prev,
-        DIRECTION: selectedDirection,
+        direction: selectedDirection,
       }));
     }
 
     if (selectedLimit) {
       setGridFiltersSetUp((prev) => ({
         ...prev,
-        LIMIT: selectedLimit,
+        limit: selectedLimit,
       }));
     }
+    setIsOpen(false);
   }, [
     selectedDataset,
     selectedDirection,
@@ -96,7 +99,7 @@ export default function GridTableSetup() {
   ]);
 
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger>
         <LuSettings2 className="h-4 w-4" />
       </PopoverTrigger>
@@ -151,7 +154,7 @@ export default function GridTableSetup() {
               Max number of cells
             </Label>
             <Input
-              placeholder={`${gridFilters?.LIMIT?.[0]}`}
+              placeholder={`${gridFilters?.limit?.[0]}`}
               id="cell-number"
               type="number"
               min={0}

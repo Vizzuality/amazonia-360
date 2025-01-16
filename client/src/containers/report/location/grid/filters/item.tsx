@@ -94,7 +94,8 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
           open={open}
           onOpenChange={onOpenChange}
           className={cn({
-            "group relative rounded-lg px-3 py-2 transition-colors hover:bg-blue-50": true,
+            "group relative rounded-lg px-3 py-2 text-left transition-colors hover:bg-blue-50":
+              true,
             "bg-blue-50": open,
           })}
           disabled={gridDatasets.length >= 5 && !gridDatasets.includes(dataset.var_name)}
@@ -106,7 +107,7 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
         >
           <TooltipTrigger asChild>
             <CollapsibleTrigger className="flex w-full items-center justify-between">
-              <h3 className="text-sm font-medium text-gray-400">{dataset.label}</h3>
+              <h3 className="text-left text-sm font-medium text-gray-400">{dataset.label}</h3>
 
               <div
                 className={cn({
@@ -228,7 +229,7 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
           </CollapsibleContent>
           <TooltipPortal>
             <TooltipContent side="left" align="center">
-              <div className="text-xxs">Limit reached: Remove a  filter to add a new one.</div>
+              <div className="text-xxs">Limit reached: Remove a filter to add a new one.</div>
 
               <TooltipArrow className="fill-foreground" width={10} height={5} />
             </TooltipContent>

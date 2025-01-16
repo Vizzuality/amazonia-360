@@ -14,7 +14,6 @@ export default function Topics() {
   const [topics, setTopics] = useSyncTopics();
 
   const { data: topicsData, isLoading: isLoadingTopicsData } = useGetTopics();
-
   const handleTopicChange = (topic: Topic, checked: boolean) => {
     setTopics((prev) => {
       if (checked) {

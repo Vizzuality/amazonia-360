@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 export default function Help() {
   return (
     <section className="bg-blue-700 text-white">
-      <div className="container">
-        <div className="flex flex-col items-center justify-between py-16 md:flex-row">
+      <div className="px-4 md:container">
+        <div className="flex flex-col items-start justify-between py-16 md:flex-row md:items-center">
           <div className="flex flex-col justify-start pt-16 md:py-0">
             <h3 className="text-lg font-bold">Help us improve!</h3>
             <p className="max-w-2xl font-normal">
@@ -13,7 +13,7 @@ export default function Help() {
               AmazoniaForever360+!
             </p>
           </div>
-          <div className="flex flex-col items-center pt-16 md:py-0">
+          <div className="flex flex-col items-center pt-16 md:items-center md:py-0">
             <a
               href="https://survey123.arcgis.com/share/fadbaa4e81f04f068f5ed0abd99e4789"
               target="_blank"

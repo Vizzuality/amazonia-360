@@ -195,7 +195,7 @@ export const getGridLayerProps = ({
           // LINE
           stroked: true,
           getFillColor: [0, 220, 0, 255],
-          getLineColor: [0, 220, 0, 255],
+          getLineColor: [0, 220, 255, 255],
           getLineWidth: 3,
           lineWidthUnits: "pixels",
         }),
@@ -261,7 +261,7 @@ export default function GridLayer() {
             getFillColor,
             geometry: GEOMETRY,
             zoom,
-            gridCellHighlight,
+            gridCellHighlight: gridCellHighlight.index,
           }),
         ],
       });
@@ -277,7 +277,7 @@ export default function GridLayer() {
         getFillColor,
         geometry: GEOMETRY,
         zoom,
-        gridCellHighlight,
+        gridCellHighlight: gridCellHighlight.index,
       }),
     ];
 

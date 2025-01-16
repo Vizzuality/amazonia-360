@@ -18,8 +18,6 @@ import { CardLoader } from "@/containers/card";
 
 import GridTableItem from "./item";
 
-const LIMIT = 10;
-
 export default function GridTable() {
   const [location] = useSyncLocation();
   const [gridDatasets] = useSyncGridDatasets();
@@ -66,8 +64,8 @@ export default function GridTable() {
       },
       params: {
         level: 1,
-        order_by: [`${gridFiltersSetUp?.DIRECTION === "asc" ? "" : "-"}${gridDatasets[0]}`],
-        limit: Number(gridFiltersSetUp?.LIMIT) || LIMIT,
+        order_by: [`${gridFiltersSetUp?.direction === "asc" ? "" : "-"}${gridDatasets[0]}`],
+        limit: gridFiltersSetUp?.limit,
         direction: "asc",
       },
     },
@@ -77,7 +75,7 @@ export default function GridTable() {
   );
 
   const ITEMS = useMemo(() => {
-    return Array.from({ length: LIMIT }, (_, i) => {
+    return Array.from({ length: gridFiltersSetUp?.limit }, (_, i) => {
       return [...gridDatasets, "cell"].reduce(
         (acc, dataset) => {
           const d = queryTable?.data?.table.find((t) => t.column === dataset);
@@ -94,7 +92,7 @@ export default function GridTable() {
         {} as Record<string, unknown> & { id: number; cell: string },
       );
     }).filter((i) => i.cell);
-  }, [gridDatasets, queryTable?.data]);
+  }, [gridDatasets, queryTable?.data, gridFiltersSetUp?.limit]);
 
   return (
     <div className="space-y-2">

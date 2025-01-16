@@ -3,7 +3,11 @@ import { IndicatorView } from "@/app/parsers";
 
 import TOPICS from "./topics.json";
 
-export type TopicIndicator = { name: string; id: number; visualization_types: VisualizationType[] };
+export type TopicIndicator = {
+  name: string;
+  id: number;
+  visualization_types: VisualizationType[];
+};
 
 export type Topic = {
   id: number;

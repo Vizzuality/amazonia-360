@@ -26,20 +26,26 @@ const HeroSection = () => {
 
   return (
     <Element name="moreInfo">
-      <section className="relative overflow-hidden bg-center text-white md:h-[calc(100svh_-_theme(space.80)_+_1px)]">
+      <section className="relative h-full overflow-hidden bg-center text-white md:h-[calc(100svh_-_theme(space.80)_+_1px)]">
         <div
           ref={imageRef}
-          className={`relative h-full ${imageInView ? "animate-zoom-out overflow-hidden" : "opacity-0"}`}
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(0, 0, 0, 0.60) 34.5%, rgba(0, 62, 90, 0.00) 74%), url('/images/home/globe-image.avif') lightgray 50% / cover no-repeat",
-          }}
+          className={`relative h-80 max-h-[250px] max-w-[250px] overflow-hidden md:h-[calc(100svh_-_theme(space.80)_+_1px)]`}
         >
-          <div className="container relative z-10 h-full w-full">
+          <div
+            className={`absolute inset-0 bg-cover bg-center ${
+              imageInView ? "md:animate-zoom-out" : "md:scale-150"
+            }`}
+            style={{
+              backgroundImage:
+                "linear-gradient(90deg, rgba(0, 0, 0, 0.60) 34.5%, rgba(0, 62, 90, 0.00) 74%), url('/images/home/globe-image.avif')",
+            }}
+          />
+
+          <div className="relative z-10 h-full w-full px-4 md:px-0">
             <div
               ref={textRef}
-              className={`container absolute bottom-0 left-0 max-w-[820px] bg-blue-700 p-10 ${
-                textInView ? "delay-50 animate-slide-up" : "opacity-0"
+              className={`absolute bottom-0 left-0 mx-auto w-full max-w-screen-lg bg-blue-700 p-4 md:p-10 ${
+                textInView ? "md:delay-50 animate-slide-up" : "md:opacity-0"
               }`}
             >
               <div className="flex flex-col items-start justify-start space-y-6">
