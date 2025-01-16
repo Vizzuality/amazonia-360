@@ -1,9 +1,77 @@
 [
   {
+    "id": 0,
+    "name": "Custom area",
+    "name_en": "Custom area",
+    "name_es": "Área personalizada",
+    "name_pt": "Área personalizada",
+    "image": null,
+    "description": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": "indicator_id / resource_id // Total area",
+        "type": "numeric",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 1
+      },
+      {
+        "id": "indicator_id / resource_id // Population",
+        "type": "numeric",
+        "x": 2,
+        "y": 0,
+        "w": 2,
+        "h": 1
+      },
+      {
+        "id": "indicator_id / resource_id // Conservation",
+        "type": "numeric",
+        "x": 4,
+        "y": 0,
+        "w": 2,
+        "h": 1
+      },
+      {
+        "id": "indicator_id / resource_id  // Indigenous lands",
+        "type": "numeric",
+        "x": 6,
+        "y": 0,
+        "w": 2,
+        "h": 1
+      },
+      {
+        "id": "indicator_id / resource_id // Protected areas",
+        "type": "map",
+        "x": 0,
+        "y": 1,
+        "w": 2,
+        "h": 2
+      },
+      {
+        "id": "indicator_id / resource_id // Administrative boundaries",
+        "type": "map",
+        "x": 2,
+        "y": 1,
+        "w": 2,
+        "h": 2
+      }
+    ]
+  },
+  {
     "id": 1,
     "name": "Nature",
-    "image": "/images/topics/nature.png",
+    "name_en": "Nature",
+    "name_es": "Naturaleza",
+    "name_pt": "Natureza",
+    "image": "/images/topics/nature.webp",
     "description": "Get data on life zones, ecosystems, habitats, and conservation areas.",
+    "description_en": "Get data on life zones, ecosystems, habitats, and conservation areas.",
+    "description_es": "Obtenga datos sobre zonas de vida, ecosistemas, hábitats y áreas de conservación.",
+    "description_pt": "Obtenha dados sobre zonas de vida, ecossistemas, habitats e áreas de conservação.",
     "default_visualization": [
       {
         "id": 1,
@@ -21,8 +89,14 @@
   {
     "id": 2,
     "name": "IDB operations",
-    "image": "/images/topics/idb-operations.png",
+    "name_en": "IDB operations",
+    "name_es": "Operaciones del BID",
+    "name_pt": "Operações do BID",
+    "image": "/images/topics/idb.webp",
     "description": "IDB development operations and impact data.",
+    "description_en": "IDB development operations and impact data.",
+    "description_es": "Operaciones de desarrollo del BID y datos de impacto.",
+    "description_pt": "Operações de desenvolvimento do BID e dados de impacto.",
     "default_visualization": [
       {
         "id": 4,

@@ -11,6 +11,7 @@ import {
   gridPanelAtom,
   reportPanelAtom,
   useSyncGridDatasets,
+  useSyncTopics,
 } from "@/app/store";
 
 import Confirm from "@/containers/report/location/confirm";
@@ -34,6 +35,7 @@ export default function ReportLocation() {
 
   const [location] = useSyncLocation();
   const [gridDatasets] = useSyncGridDatasets();
+  const [, setTopics] = useSyncTopics();
 
   const { data: rankingCriterion } = useGetGridMeta({
     select: (data) => data?.datasets?.find((d) => d.var_name === gridDatasets[0])?.label,
@@ -83,16 +85,23 @@ export default function ReportLocation() {
             {reportPanel === "topics" && (
               <div className="relative space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
                 <div className="space-y-1">
-                  <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
+                  <div className="flex items-baseline justify-between">
+                    <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
+                      <button
+                        onClick={() => setReportPanel("location")}
+                        className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50"
+                      >
+                        <LuArrowLeft className="h-4 w-4" />
+                      </button>
+                      Select Report topics
+                    </h1>
                     <button
-                      onClick={() => setReportPanel("location")}
-                      className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50"
+                      className="whitespace-nowrap text-xs font-bold text-foreground"
+                      onClick={() => setTopics([])}
                     >
-                      <LuArrowLeft className="h-4 w-4" />
+                      Unselect all
                     </button>
-                    Select Report topics
-                  </h1>
-
+                  </div>
                   <p className="text-sm font-medium text-muted-foreground">
                     Select <strong>one or more topics</strong> on which you want to get information
                     for this area.

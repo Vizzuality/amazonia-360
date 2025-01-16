@@ -107,12 +107,12 @@ exports[`WidgetPopulation renders WidgetPopulation component without crashing 1`
         class="flex items-end space-x-2"
       >
         <span
-          class="text-4xl font-bold text-blue-600"
+          class="text-4xl font-bold text-blue-500"
         >
           100,000
         </span>
         <span
-          class="relative bottom-1.5 text-xs font-medium text-gray-500"
+          class="relative bottom-1.5 text-xs font-medium text-gray-300"
         >
           inhabitants
         </span>

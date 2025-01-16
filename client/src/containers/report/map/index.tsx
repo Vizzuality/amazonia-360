@@ -17,6 +17,7 @@ import Controls from "@/components/map/controls";
 import BasemapControl from "@/components/map/controls/basemap";
 import ZoomControl from "@/components/map/controls/zoom";
 import Sketch from "@/components/map/sketch";
+import Tooltip from "@/components/map/tooltip";
 
 const Map = dynamic(() => import("@/components/map"), {
   ssr: false,
@@ -73,6 +74,7 @@ export default function MapContainer() {
         padding={padding}
       >
         <LayerManager />
+        <Tooltip />
 
         <Sketch
           type={sketch.type}
