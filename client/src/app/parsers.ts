@@ -35,5 +35,9 @@ export type Location = SearchLocation | CustomLocation;
 export const locationParser = parseAsJson<Location>();
 
 export const gridFiltersParser = parseAsJson<Record<string, number[]>>();
+export const gridFiltersSetUpParser = parseAsJson<{
+  [key: string]: number[] | number | string;
+  limit: number;
+}>().withDefault({ limit: 10 });
 export const gridDatasetsParser = parseAsArrayOf(parseAsString).withDefault([]);
 export const gridDatasetSelectedParser = parseAsString;

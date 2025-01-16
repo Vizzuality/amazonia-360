@@ -149,12 +149,12 @@ export function CardWidgetNumber({
   return (
     <div>
       <div className="flex items-end space-x-2">
-        <span className="text-4xl font-bold text-blue-600">
+        <span className="text-4xl font-bold text-blue-500">
           {typeof value === "number" ? formatNumber(value) : value}
         </span>
 
         {!!unit && (
-          <span className="relative bottom-1.5 text-xs font-medium text-gray-500">{unit}</span>
+          <span className="relative bottom-1.5 text-xs font-medium text-gray-300">{unit}</span>
         )}
       </div>
 

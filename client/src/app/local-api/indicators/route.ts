@@ -35,7 +35,13 @@ export type H3Indicator = {
 export type Indicator = {
   id: number;
   name: string;
-  description: string;
+  name_es?: string;
+  name_en?: string;
+  name_pt?: string;
+  description?: string;
+  description_es?: string;
+  description_en?: string;
+  description_pt?: string;
   topic: number;
   visualization_types: VisualizationType[];
   resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;

@@ -9,6 +9,7 @@ export type Session = {
   expires_in: number;
 };
 
+// URL ARCGIS ONLINE
 export async function login() {
   return fetch(
     `https://idb-gis.maps.arcgis.com/sharing/rest/oauth2/token/?client_id=${env.ARCGIS_CLIENT_ID}&client_secret=${env.ARCGIS_CLIENT_SECRET}&grant_type=client_credentials`,

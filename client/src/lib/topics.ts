@@ -52,6 +52,7 @@ export const useGetTopics =
       // });
 
       const topics: { [key: number]: Topic } = {};
+
       const { data: indicatorsData } = useIndicators();
 
       indicatorsData?.forEach((indicator) => {
@@ -82,7 +83,7 @@ export const useGetTopics =
         topics[parseInt(topicId)].indicators = topicItems?.map((indicator) => ({
           name: indicator.name,
           id: indicator.id,
-          description: indicator.description,
+          description: indicator.description_en,
           visualization_types: indicator.visualization_types || [],
           default_visualization: indicator.topic.default_visualization || [],
           h3: indicator.h3,

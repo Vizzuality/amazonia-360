@@ -252,7 +252,7 @@
   {
     "id": "finance-and-business",
     "label": "Finance and Business",
-    "image": "/images/topics/finance-and-business.webp",
+    "image": "/images/topics/finance.webp",
     "description": "Economic and financial data, including GDP and banking locations.",
     "indicators": [
       {
@@ -288,7 +288,7 @@
   {
     "id": "infrastructure-urbanization",
     "label": "Infrastructure, Urbanization",
-    "image": "/images/topics/infrastructure-urbanization.webp",
+    "image": "/images/topics/infrastructure.webp",
     "description": "Data on infrastructure such as ports, airports, and road networks.",
     "indicators": [
       {

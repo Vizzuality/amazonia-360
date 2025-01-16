@@ -22,17 +22,17 @@ export default function GridFiltersControls() {
   }, [setGridDatasets]);
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-start justify-between gap-4">
       <button className="flex items-center space-x-1" type="button" onClick={handleFiltersView}>
         <Checkbox id="selected-filters" />
-        <Label htmlFor="selected-filters" className="text-xs text-muted-foreground">
+        <Label htmlFor="selected-filters" className="text-start text-xs text-muted-foreground">
           View selected indicators only
         </Label>
       </button>
       <button
         type="button"
         disabled={!gridDatasets.length}
-        className="space-x-1 text-xs font-semibold text-primary"
+        className="space-x-1 whitespace-nowrap text-end text-xs font-semibold text-primary"
         onClick={handleClick}
       >
         <span>Clear selection</span>

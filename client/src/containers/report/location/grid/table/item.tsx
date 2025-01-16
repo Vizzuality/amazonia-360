@@ -72,82 +72,85 @@ export const GridTableItem = (
   };
 
   const handleMouseEnter = () => {
-    setGridCellHighlightAtom(cell);
+    setGridCellHighlightAtom({ id, index: cell });
   };
 
   const handleMouseLeave = () => {
-    setGridCellHighlightAtom(undefined);
+    setGridCellHighlightAtom({
+      id: null,
+      index: undefined,
+    });
   };
 
   return (
-    <div
-      className="flex w-full items-start gap-2 py-2"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <AlertDialog>
-        <Tooltip>
-          <AlertDialogTrigger asChild>
-            <TooltipTrigger asChild>
+    <AlertDialog>
+      <Tooltip>
+        <AlertDialogTrigger asChild>
+          <TooltipTrigger asChild>
+            <div
+              className="flex w-full items-start gap-2 rounded-lg px-1 py-2 hover:bg-blue-50"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
               <button className="flex min-w-16 shrink-0 items-center gap-2 rounded-sm bg-cyan-100 px-2 py-1 hover:bg-cyan-500 hover:text-white">
                 <HexagonIcon className="h-4 w-4" />
                 <span className="text-sm font-semibold">{id + 1}º</span>
               </button>
-            </TooltipTrigger>
-          </AlertDialogTrigger>
+              <ul className="w-full overflow-hidden">
+                {ITEMS.map((dataset, i) => (
+                  <li key={dataset?.name} className="flex items-center justify-between text-sm">
+                    {/* Left Side: Name */}
+                    <span
+                      className={cn("whitespace-nowrap text-gray-400", {
+                        "font-normal": i !== 0,
+                      })}
+                    >
+                      {dataset?.name}
+                    </span>
 
-          <TooltipPortal>
-            <TooltipContent>
-              <TooltipArrow />
-              <p className="max-w-36 text-center text-sm font-medium">Redefine area</p>
-            </TooltipContent>
-          </TooltipPortal>
+                    {/* Dots */}
+                    <span className="mx-1 flex-grow overflow-hidden whitespace-nowrap font-extralight tracking-[2.5px] text-muted-foreground">
+                      .........................................
+                    </span>
 
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Redefine area</AlertDialogTitle>
-              <AlertDialogDescription>
-                By proceeding, the map will center around your selected cell, and the current area
-                selection will be redefined. This action will remove your existing selection.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    {/* Right Side: Value */}
+                    <span
+                      className={cn("whitespace-nowrap text-blue-700", {
+                        "font-normal": i !== 0,
+                      })}
+                    >
+                      {formatNumberUnit(+(dataset?.value ?? 0), `${dataset?.unit}`)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </TooltipTrigger>
+        </AlertDialogTrigger>
 
-              <AlertDialogAction onClick={handleClick}>Redefine</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </Tooltip>
-      </AlertDialog>
-      <ul className="w-full overflow-hidden">
-        {ITEMS.map((dataset, i) => (
-          <li key={dataset?.name} className="flex items-center justify-between text-sm">
-            {/* Left Side: Name */}
-            <span
-              className={cn("whitespace-nowrap text-gray-400", {
-                "font-normal": i !== 0,
-              })}
-            >
-              {dataset?.name}
-            </span>
+        <TooltipPortal>
+          <TooltipContent>
+            <TooltipArrow />
+            <p className="max-w-36 text-center text-sm font-medium">Redefine area</p>
+          </TooltipContent>
+        </TooltipPortal>
 
-            {/* Dots */}
-            <span className="mx-1 flex-grow overflow-hidden whitespace-nowrap font-extralight tracking-[2.5px] text-muted-foreground">
-              .........................................
-            </span>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Redefine area</AlertDialogTitle>
+            <AlertDialogDescription>
+              By proceeding, the map will center around your selected cell, and the current area
+              selection will be redefined. This action will remove your existing selection.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
 
-            {/* Right Side: Value */}
-            <span
-              className={cn("whitespace-nowrap text-blue-700", {
-                "font-normal": i !== 0,
-              })}
-            >
-              {formatNumberUnit(+(dataset?.value ?? 0), `${dataset?.unit}`)}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </div>
+            <AlertDialogAction onClick={handleClick}>Redefine</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </Tooltip>
+    </AlertDialog>
   );
 };
 
