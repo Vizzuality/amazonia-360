@@ -13,15 +13,15 @@ export default function KeyFeatures() {
   });
 
   return (
-    <section className="container flex h-fit w-full justify-between">
+    <section className="flex h-fit w-full flex-col-reverse justify-between px-4 md:container md:flex-row md:px-0">
       <div className="w-full max-w-lg">
         <CardsContainer />
       </div>
       <div
         ref={refCol}
-        className="gap-4py-10 relative flex h-full w-full items-center justify-end md:py-28 lg:py-56"
+        className="relative m-auto h-full w-full flex-col justify-center gap-4 space-y-10 py-10 md:flex md:flex-row md:items-center md:justify-end md:py-28 lg:py-56"
       >
-        <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-36 bg-gradient-to-b from-white to-transparent" />
+        <div className="pointer-events-none absolute left-0 top-0 z-50 w-36 bg-gradient-to-b from-white to-transparent md:right-0 md:h-36 md:w-full" />
 
         <KeyFeaturesChartsColumn1 inView={inViewCol} />
 

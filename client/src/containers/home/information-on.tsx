@@ -3,11 +3,11 @@ import Topics from "@/containers/home/topics";
 export default function InformationOn() {
   return (
     <section className="bg-blue-700">
-      <div className="container flex flex-col py-10 md:py-28">
+      <div className="flex flex-col space-y-2 px-4 pt-20 md:container md:space-y-0 md:px-0 md:pt-28">
         <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
           information on
         </h3>
-        <div className="grid w-full grid-cols-2 justify-between gap-14">
+        <div className="flex w-full flex-col justify-between md:grid md:grid-cols-2 md:gap-14">
           <h2 className="text-2xl text-white lg:text-4xl">
             More than 60 indicators <br /> from different topics
           </h2>
@@ -17,7 +17,7 @@ export default function InformationOn() {
             you a comprehensive perspective.
           </p>
         </div>
-        <div className="mt-10 w-full">
+        <div className="w-full">
           <Topics />
         </div>
       </div>

@@ -27,10 +27,10 @@ export default function Topics() {
   const row2 = topicsData.length > 4 ? topicsData.slice(Math.ceil(topicsData.length / 2)) : [];
 
   return (
-    <section className="md:space-y-6" ref={imagesRef}>
+    <section className="mt-10 md:mt-16 md:space-y-6" ref={imagesRef}>
       <div className="flex flex-col items-center justify-center">
         <div
-          className={`flex ${imagesInView ? "animate-left-to-right overflow-hidden" : "opacity-0"}`}
+          className={`flex flex-col md:flex-row ${imagesInView ? "animate-left-to-right overflow-hidden" : "opacity-0"}`}
         >
           {!!row1?.length &&
             row1?.map((topic) => {
@@ -38,7 +38,7 @@ export default function Topics() {
             })}
         </div>
         <div
-          className={`flex ${imagesInView ? "animate-right-to-left overflow-hidden" : "opacity-0"}`}
+          className={`flex flex-col md:flex-row ${imagesInView ? "animate-right-to-left overflow-hidden" : "opacity-0"}`}
         >
           {!!row2.length &&
             row2?.map((topic) => {

@@ -148,6 +148,7 @@ const config = {
         },
         slideUp: {
           "0%": { transform: "translateY(300px)", opacity: "0" },
+          "50%": { transform: "translateY(-150)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
         },
         slideDown: {
@@ -168,17 +169,28 @@ const config = {
             opacity: "1",
           },
         },
+        halfRightBottomToLeftTop: {
+          "0%": {
+            transform: "translate(300px, 300px)",
+            opacity: "0",
+          },
+          "50%": {
+            transform: "translate(0, 0)",
+            opacity: "1",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "left-to-right": "left-to-right 1s ease-out",
+        "left-to-right": "left-to-right 0.8s ease-out",
         "right-to-left": "right-to-left 1s ease-out",
         "slide-up": "slideUp 1s ease-in forwards",
         "slide-down": "slideDown 1s ease-in forwards",
         "zoom-out": "zoomOut 1.2s ease-in-out",
         growWidth: "growWidth 1s ease-out forwards",
-        "right-bottom-to-left-top": "rightBottomToLeftTop 1s ease-in-out forwards",
+        "right-bottom-to-left-top": "rightBottomToLeftTop 0.8s ease-in-out forwards",
+        "half-right-bottom-to-left-top": "halfRightBottomToLeftTop 1.3s ease-out forwards",
       },
       fontSize: {
         "2xs": ["0.625rem", "0.75rem"],

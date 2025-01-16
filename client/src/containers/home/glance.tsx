@@ -108,16 +108,16 @@ export default function Glance() {
   return (
     <section
       ref={sectionRef}
-      className="container flex flex-col items-end py-10 md:flex-row md:space-x-28 md:py-28"
+      className="flex flex-col items-end px-4 pt-20 md:container md:flex-row md:space-x-28 md:py-28"
     >
       <div
-        className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-44 ${sectionInView ? "animate-left-to-right overflow-hidden" : "opacity-0"}`}
+        className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-10 lg:space-y-44 ${sectionInView ? "animate-left-to-right overflow-hidden" : "opacity-0"}`}
       >
         <div>
           <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
             Amazonia at a glance
           </h3>
-          <h2 className="pb-6 text-2xl text-blue-400 lg:text-3xl xl:text-4xl">
+          <h2 className="max-w-44 pb-6 text-2xl text-blue-400 md:max-w-[520px] lg:text-3xl xl:text-4xl">
             A mosaic of ecosystems and habitats
           </h2>
           <p className="text-base font-normal text-blue-900 lg:text-lg">
@@ -171,7 +171,7 @@ export default function Glance() {
           </p>
         </header>
         <div className="w-full">
-          <MarimekkoChart format={FORMAT[chartKey]} data={parsedData} className="h-[450px]" />
+          <MarimekkoChart format={FORMAT[chartKey]} data={parsedData} className="h-[510px]" />
         </div>
       </div>
     </section>
