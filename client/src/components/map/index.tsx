@@ -161,6 +161,33 @@ export function MapView({
     }
   }, [bbox]);
 
+  // useEffect(() => {
+  //   if (!mapViewRef.current) return;
+
+  //   const handlePointerMove = (event: __esri.ViewPointerMoveEvent) => {
+  //     mapViewRef.current?.hitTest(event).then((response) => {
+  //       const results = response.results.filter((result) => result.graphic && result.graphic.layer);
+
+  //       if (results.length > 0) {
+  //         const graphic = results[0].graphic;
+  //         console.log("Hovered Graphic Attributes:", graphic.attributes);
+
+  //         if (onHover) {
+  //           onHover(graphic);
+  //         }
+  //       } else {
+  //         console.log("No entity found under the pointer");
+  //       }
+  //     });
+  //   };
+
+  //   const pointerMoveHandle = mapViewRef.current.on("pointer-move", handlePointerMove);
+
+  //   return () => {
+  //     pointerMoveHandle.remove();
+  //   };
+  // }, []);
+
   return (
     <div ref={mapContainerRef} className="map h-full w-full grow">
       {loaded && children}
