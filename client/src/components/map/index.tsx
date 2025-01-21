@@ -27,6 +27,7 @@ export type MapProps = {
   mapProps?: Partial<__esri.MapProperties>;
   viewProps?: Partial<__esri.MapViewProperties>;
   children?: React.ReactNode;
+  onHover?: () => void;
   onMapMove?: (extent: __esri.Extent) => void;
 };
 

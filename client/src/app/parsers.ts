@@ -38,6 +38,8 @@ export const gridFiltersParser = parseAsJson<Record<string, number[]>>();
 export const gridFiltersSetUpParser = parseAsJson<{
   [key: string]: number[] | number | string;
   limit: number;
-}>().withDefault({ limit: 10 });
+  opacity: number;
+  direction: "asc" | "desc";
+}>().withDefault({ limit: 10, opacity: 1, direction: "asc" });
 export const gridDatasetsParser = parseAsArrayOf(parseAsString).withDefault([]);
 export const gridDatasetSelectedParser = parseAsString;

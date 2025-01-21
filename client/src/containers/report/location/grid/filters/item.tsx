@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import numeral from "numeral";
 import { LuPlus, LuX } from "react-icons/lu";
+import { LuInfo } from "react-icons/lu";
 
 import { formatNumber } from "@/lib/formats";
 import { cn } from "@/lib/utils";
@@ -15,6 +16,13 @@ import { useSyncGridDatasets, useSyncGridFilters, useSyncGridSelectedDataset } f
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Dialog,
+  DialogClose,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipArrow } from "@/components/ui/tooltip";
@@ -107,7 +115,37 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
         >
           <TooltipTrigger asChild>
             <CollapsibleTrigger className="flex w-full items-center justify-between">
-              <h3 className="text-left text-sm font-medium text-gray-400">{dataset.label}</h3>
+              <div className="relative flex max-w-72 items-start space-x-1">
+                <h3 className="max-w-80 text-left text-sm font-medium text-gray-400">
+                  {dataset.label} {` (${dataset.unit})`}
+                </h3>
+                <div className="flex-shrink-0">
+                  <Tooltip delayDuration={100}>
+                    <Dialog>
+                      <TooltipTrigger asChild>
+                        <DialogTrigger
+                          className={cn("flex h-4 w-4 cursor-pointer items-center justify-center")}
+                        >
+                          <LuInfo className="text-foreground" />
+                        </DialogTrigger>
+                      </TooltipTrigger>
+                      <DialogContent className="p-0">
+                        <DialogTitle className="sr-only">About the data</DialogTitle>
+                        <div className="p-4">
+                          <p>{dataset.description}</p>
+                        </div>
+                        <DialogClose />
+                      </DialogContent>
+                      <TooltipPortal>
+                        <TooltipContent sideOffset={0}>
+                          About the data
+                          <TooltipArrow />
+                        </TooltipContent>
+                      </TooltipPortal>
+                    </Dialog>
+                  </Tooltip>
+                </div>
+              </div>
 
               <div
                 className={cn({

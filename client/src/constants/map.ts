@@ -8,6 +8,14 @@ export const DEFAULT_MAP_VIEW_PROPERTIES: Partial<__esri.MapViewProperties> = {
     // maxZoom: 8, // The maximum allowed zoom level of the view.
     // maxScale: 1000000,
   },
+  popup: {
+    dockEnabled: true,
+    dockOptions: {
+      buttonEnabled: false,
+      breakpoint: false,
+    },
+  },
+  popupEnabled: true,
   spatialReference: {
     wkid: 102100,
   },

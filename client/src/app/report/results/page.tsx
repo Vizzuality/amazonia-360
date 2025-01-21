@@ -48,7 +48,7 @@ export default async function ReportResultsPage({ searchParams }: PageProps<Para
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className="relative bg-blue-50 py-12 print:bg-white">
+      <main className="relative bg-blue-50 pb-12 print:bg-white">
         <SidebarProvider>
           <div className="w-full flex-col">
             <ReportResultsHeader />

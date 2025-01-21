@@ -9,13 +9,20 @@ import { useDebounce, useWindowSize } from "rooks";
 
 import { getGeometryWithBuffer } from "@/lib/location";
 
-import { sketchAtom, tmpBboxAtom, useSyncBbox, useSyncLocation } from "@/app/store";
+import {
+  sketchAtom,
+  tmpBboxAtom,
+  useSyncBbox,
+  useSyncGridSelectedDataset,
+  useSyncLocation,
+} from "@/app/store";
 
 import LayerManager from "@/containers/report/map/layer-manager";
 
 import Controls from "@/components/map/controls";
 import BasemapControl from "@/components/map/controls/basemap";
 import ZoomControl from "@/components/map/controls/zoom";
+import Legend from "@/components/map/legend";
 import Sketch from "@/components/map/sketch";
 import Tooltip from "@/components/map/tooltip";
 
@@ -28,6 +35,7 @@ export default function MapContainer() {
   const [tmpBbox, setTmpBbox] = useAtom(tmpBboxAtom);
   const [sketch, setSketch] = useAtom(sketchAtom);
   const [, setLocation] = useSyncLocation();
+  const [gridSelectedDataset] = useSyncGridSelectedDataset();
 
   const { innerWidth } = useWindowSize();
 
@@ -64,6 +72,26 @@ export default function MapContainer() {
     setSketch({ enabled: false, type: undefined });
   }, [setSketch]);
 
+  // const handleUpdate = useCallback(
+  //   (graphic: __esri.Graphic) => {
+  //     // Update the location state with the updated geometry
+  //     setLocation({
+  //       type: graphic.geometry.type,
+  //       geometry: graphic.geometry.toJSON(),
+  //     });
+
+  //     // Optionally update the bounding box based on the updated geometry
+  //     const g = getGeometryWithBuffer(graphic.geometry);
+  //     if (g) {
+  //       setTmpBbox(g.extent);
+  //     }
+
+  //     // Log or handle other updates (e.g., update backend data)
+  //     console.info("Updated graphic:", graphic);
+  //   },
+  //   [setLocation, setTmpBbox],
+  // );
+
   return (
     <div className="flex w-full grow flex-col">
       <Map
@@ -81,12 +109,14 @@ export default function MapContainer() {
           enabled={sketch.enabled}
           onCreate={handleCreate}
           onCancel={handleCancel}
+          // onUpdate={handleUpdate}
         />
 
         <Controls>
           <ZoomControl />
           <BasemapControl />
         </Controls>
+        {gridSelectedDataset && <Legend />}
       </Map>
     </div>
   );
