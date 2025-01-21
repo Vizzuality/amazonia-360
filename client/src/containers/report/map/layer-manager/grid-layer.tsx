@@ -258,6 +258,8 @@ export default function GridLayer() {
 
   map?.view.watch("zoom", setZoom);
 
+  console.log(map?.view.hitTest({ x: 0, y: 0 }));
+
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
   });
