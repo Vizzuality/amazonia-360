@@ -101,7 +101,6 @@ export const getGridLayerProps = ({
         });
       });
     },
-
     pickable: true,
     onHover: (info) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -257,8 +256,6 @@ export default function GridLayer() {
   const [zoom, setZoom] = useState(map?.view.zoom);
 
   map?.view.watch("zoom", setZoom);
-
-  console.log(map?.view.hitTest({ x: 0, y: 0 }));
 
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
