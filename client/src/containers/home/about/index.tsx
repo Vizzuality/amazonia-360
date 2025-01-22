@@ -23,7 +23,7 @@ const HeroHome = () => {
   };
 
   return (
-    <Element name="moreInfo" className="-mt-2 w-screen">
+    <Element name="moreInfo" className="-mt-2 w-screen md:mt-0">
       <section
         className="relative h-full w-screen overflow-hidden bg-green-800 bg-center text-white md:h-[calc(100svh_-_theme(space.80)_+_1px)]"
         onMouseEnter={handleMouseEnter}

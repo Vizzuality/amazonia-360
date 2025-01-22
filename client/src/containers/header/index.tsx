@@ -10,7 +10,7 @@ export default function Header() {
   const isDesktop = useMedia("(min-width: 768px)");
 
   return (
-    <header className="flex h-16 flex-col justify-center bg-white backdrop-blur">
+    <header className="box-border flex h-16 flex-col justify-center bg-white backdrop-blur">
       <div className="mx-4 flex items-center justify-between md:container md:mx-auto">
         <LogoBetaInfo />
 
