@@ -99,6 +99,21 @@ const config = {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        viridis: {
+          100: "#FDE724",
+          200: "#B6DE2B",
+          300: "#6CCE5A",
+          400: "#1F9D8A",
+          500: "#26838F",
+          600: "#31688E",
+          700: "#3E4A89",
+          800: "#482576",
+          900: "#440154",
+        },
+      },
+      backgroundImage: {
+        viridis:
+          "linear-gradient(to right, #FDE724, #B6DE2B, #6CCE5A, #1F9D8A, #26838F, #31688E, #3E4A89, #482576, #440154)",
       },
       borderRadius: {
         lg: "var(--radius)",

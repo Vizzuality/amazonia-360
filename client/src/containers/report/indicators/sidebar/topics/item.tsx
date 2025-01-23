@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
@@ -76,6 +76,17 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
     });
   }, [topic, setTopics, topics]);
 
+  const selectedTopicIndicators = useMemo(
+    () => topics?.find(({ id }) => id === topic.id)?.indicators,
+    [topics, topic],
+  );
+
+  useEffect(() => {
+    if (!selectedTopicIndicators?.length) {
+      setTopics((prev) => prev?.filter((t) => t.id !== topic.id) || []);
+    }
+  }, [selectedTopicIndicators, topic.id, setTopics]);
+
   return (
     <li
       key={id}
@@ -112,7 +123,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
             </div>
           </CollapsibleTrigger>
           <Switch
-            checked={!!topics?.find((t) => t.id === topic.id)}
+            checked={!!topics?.find((t) => t.id === topic.id) && !!selectedTopicIndicators?.length}
             onCheckedChange={(e) => handleTopic(topic, e)}
             id={`${topic.id}`}
             value={topic.id}
