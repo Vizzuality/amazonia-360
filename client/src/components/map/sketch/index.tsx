@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 
 import dynamic from "next/dynamic";
 
+import Color from "@arcgis/core/Color";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 
@@ -18,15 +19,16 @@ export type SketchProps = {
   enabled?: boolean;
   onCreate?: (graphic: __esri.Graphic) => void;
   onCancel?: () => void;
+  onUpdate?: (graphic: __esri.Graphic) => void; // New callback for updates
 };
 
-export default function Sketch({ type, enabled, onCreate, onCancel }: SketchProps) {
+export default function Sketch({ type, enabled, onCreate, onCancel, onUpdate }: SketchProps) {
   const mapInstance = useMap();
 
   const layerRef = useRef<__esri.GraphicsLayer>(new GraphicsLayer());
-
   const sketchViewModelRef = useRef<SketchViewModel>();
   const sketchViewModelOnCreateRef = useRef<IHandle>();
+  const sketchViewModelOnUpdateRef = useRef<IHandle>();
 
   const handleSketchCreate = useCallback(
     (e: __esri.SketchViewModelCreateEvent) => {
@@ -47,14 +49,62 @@ export default function Sketch({ type, enabled, onCreate, onCancel }: SketchProp
     [type, onCreate, onCancel],
   );
 
-  // Create the sketch view model
+  const handleSketchUpdate = useCallback(
+    (e: __esri.SketchViewModelUpdateEvent) => {
+      e.graphics.forEach((graphic) => {
+        if (graphic.geometry.type === "polygon") {
+          graphic.symbol = {
+            type: "simple-fill",
+            color: new Color([0, 255, 255, 0.2]),
+            outline: {
+              type: "simple-line",
+              color: "black",
+              width: 2,
+              style: "dash",
+            },
+          } as unknown as __esri.SimpleFillSymbol;
+        }
+
+        if (graphic.geometry.type === "polyline") {
+          graphic.symbol = {
+            type: "simple-line",
+            color: "blue",
+            width: 2,
+            style: "dash",
+          } as unknown as __esri.SimpleLineSymbol;
+        }
+
+        if (graphic.geometry.type === "point") {
+          graphic.symbol = {
+            type: "simple-marker",
+            style: "circle",
+            color: "red",
+            size: "12px",
+            outline: {
+              type: "simple-line",
+              color: "black",
+              width: 1,
+            },
+          } as unknown as __esri.SimpleMarkerSymbol;
+        }
+      });
+
+      if (e.state === "complete" && e.graphics.length) {
+        const updatedGraphic = e.graphics[0].clone();
+        if (onUpdate) onUpdate(updatedGraphic);
+      }
+    },
+    [onUpdate],
+  );
+
+  // Initialize the sketch view model
   useEffect(() => {
     if (!mapInstance) return;
 
     const { view } = mapInstance;
     if (!view) return;
 
-    const sketchLayer = new GraphicsLayer();
+    const sketchLayer = layerRef.current;
 
     const sketchViewModel = new SketchViewModel({
       view,
@@ -65,6 +115,11 @@ export default function Sketch({ type, enabled, onCreate, onCancel }: SketchProp
       defaultCreateOptions: {
         hasZ: false,
       },
+      defaultUpdateOptions: {
+        tool: "reshape",
+        enableRotation: false,
+        toggleToolOnClick: false,
+      },
     });
 
     sketchViewModelRef.current = sketchViewModel;
@@ -74,30 +129,32 @@ export default function Sketch({ type, enabled, onCreate, onCancel }: SketchProp
     };
   }, [mapInstance]);
 
-  // Enable/disable the sketch view model
+  // Handle enabling/disabling sketch mode and setting up listeners
   useEffect(() => {
-    if (!sketchViewModelRef.current) {
-      return;
-    }
+    if (!sketchViewModelRef.current) return;
+
+    const sketchViewModel = sketchViewModelRef.current;
 
     if (!type) {
-      sketchViewModelRef.current.cancel();
+      sketchViewModel.cancel();
       return;
     }
 
-    // reset
+    // Reset layer and cancel any ongoing operations
     layerRef.current.removeAll();
+    sketchViewModel.cancel();
 
-    // sketchViewModelRef.current.cancel();
-    sketchViewModelRef.current.create(type);
+    // Enable create mode
+    sketchViewModel.create(type);
 
-    // Check if the sketch view model has the create event listener and remove it
+    // Remove old listeners
     sketchViewModelOnCreateRef.current?.remove();
-    sketchViewModelOnCreateRef.current = sketchViewModelRef.current.on(
-      "create",
-      handleSketchCreate,
-    );
-  }, [type, enabled, handleSketchCreate]);
+    sketchViewModelOnUpdateRef.current?.remove();
+
+    // Add new event listeners
+    sketchViewModelOnCreateRef.current = sketchViewModel.on("create", handleSketchCreate);
+    sketchViewModelOnUpdateRef.current = sketchViewModel.on("update", handleSketchUpdate);
+  }, [type, enabled, handleSketchCreate, handleSketchUpdate]);
 
   return <Layer layer={layerRef.current} index={100} />;
 }

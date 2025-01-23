@@ -23,12 +23,12 @@ export default function GridFiltersControls() {
 
   return (
     <div className="flex items-start justify-between gap-4">
-      <button className="flex items-center space-x-1" type="button" onClick={handleFiltersView}>
-        <Checkbox id="selected-filters" />
+      <div className="flex items-center space-x-1">
+        <Checkbox id="selected-filters" onCheckedChange={handleFiltersView} />
         <Label htmlFor="selected-filters" className="text-start text-xs text-muted-foreground">
           View selected indicators only
         </Label>
-      </button>
+      </div>
       <button
         type="button"
         disabled={!gridDatasets.length}

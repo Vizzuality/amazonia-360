@@ -11,7 +11,7 @@ import { H3HexagonLayer } from "@deck.gl/geo-layers";
 import { ArrowLoader } from "@loaders.gl/arrow";
 import { load } from "@loaders.gl/core";
 import CHROMA from "chroma-js";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 
 import { env } from "@/env.mjs";
 
@@ -21,9 +21,11 @@ import { useLocationGeometry } from "@/lib/location";
 import { MultiDatasetMeta } from "@/types/generated/api.schemas";
 
 import {
+  popupInfoAtom,
   gridCellHighlightAtom,
   useSyncGridDatasets,
   useSyncGridFilters,
+  useSyncGridFiltersSetUp,
   useSyncGridSelectedDataset,
   useSyncLocation,
 } from "@/app/store";
@@ -36,24 +38,36 @@ const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 export const getGridLayerProps = ({
   gridDatasets,
   gridFilters,
+  gridSetUpFilters,
   getFillColor,
   gridMetaData,
   geometry,
   zoom,
+  setPopupInfo,
   gridCellHighlight,
 }: {
   gridDatasets: string[];
   gridFilters: Record<string, number[] | Record<string, string | number>> | null;
+  gridSetUpFilters: {
+    [key: string]: number[] | number | string;
+    limit: number;
+    opacity: number;
+  };
   getFillColor: Accessor<Record<string, number>, Color>;
   gridMetaData: MultiDatasetMeta | undefined;
   geometry: __esri.Polygon | null;
   zoom?: number;
+  setPopupInfo: (info: {
+    id: number | null;
+    index: undefined | string;
+    x: number | null;
+    y: number | null;
+  }) => void;
   gridCellHighlight?: string;
 }) => {
   // Create array of 4n values
   const filters = [...Array(4).keys()];
   const columns = !!gridDatasets.length ? gridDatasets.map((d) => `columns=${d}`).join("&") : "";
-
   return new H3TileLayer({
     id: `tile-h3s`,
     data: `${env.NEXT_PUBLIC_API_URL}/grid/tile/{h3index}?${columns}`,
@@ -86,6 +100,30 @@ export const getGridLayerProps = ({
           length: data.data.numRows,
         });
       });
+    },
+
+    pickable: true,
+    onHover: (info) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      if (info && info.index === -1) {
+        setPopupInfo({
+          id: null,
+          index: undefined,
+          x: null,
+          y: null,
+        });
+      }
+      if (info && info.index !== -1) {
+        setPopupInfo({
+          id: info.index,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          index: info.sourceLayer?.props?.tile?.index?.h3index,
+          x: info.x,
+          y: info.y,
+        });
+      }
     },
     maxCacheSize: 300, // max number of tiles to keep in the cache
     _subLayerProps: {
@@ -144,8 +182,9 @@ export const getGridLayerProps = ({
           id: props.id,
           data: props.data,
           highPrecision: true,
-          opacity: 1,
+          opacity: gridSetUpFilters.opacity,
           pickable: true,
+
           filled: !!gridDatasets.length,
           extruded: false,
           stroked: false,
@@ -165,7 +204,7 @@ export const getGridLayerProps = ({
           id: `${props.id}-grid`,
           data: props.data,
           highPrecision: true,
-          opacity: 1,
+          opacity: gridSetUpFilters.opacity,
           visible: zoom && zoom < 8 ? false : true,
           pickable: false,
           filled: false,
@@ -185,7 +224,7 @@ export const getGridLayerProps = ({
           id: `${props.id}-grid-highlight`,
           data: !!gridCellHighlight ? [gridCellHighlight] : [],
           highPrecision: true,
-          opacity: 1,
+          opacity: gridSetUpFilters.opacity,
           visible: !!gridCellHighlight,
           pickable: false,
           filled: true,
@@ -208,9 +247,11 @@ export default function GridLayer() {
   const GRID_LAYER = useRef<typeof DeckLayer>();
   const [location] = useSyncLocation();
   const [gridFilters] = useSyncGridFilters();
+  const [gridSetUpFilters] = useSyncGridFiltersSetUp();
   const [gridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
   const gridCellHighlight = useAtomValue(gridCellHighlightAtom);
+  const setPopupInfo = useSetAtom(popupInfoAtom);
 
   const map = useMap();
   const [zoom, setZoom] = useState(map?.view.zoom);
@@ -257,8 +298,10 @@ export default function GridLayer() {
           getGridLayerProps({
             gridDatasets,
             gridFilters,
+            gridSetUpFilters,
             gridMetaData,
             getFillColor,
+            setPopupInfo,
             geometry: GEOMETRY,
             zoom,
             gridCellHighlight: gridCellHighlight.index,
@@ -273,16 +316,28 @@ export default function GridLayer() {
       getGridLayerProps({
         gridDatasets,
         gridFilters,
+        gridSetUpFilters,
         gridMetaData,
         getFillColor,
         geometry: GEOMETRY,
         zoom,
+        setPopupInfo,
         gridCellHighlight: gridCellHighlight.index,
       }),
     ];
 
     return GRID_LAYER.current;
-  }, [gridDatasets, gridFilters, getFillColor, gridMetaData, GEOMETRY, zoom, gridCellHighlight]);
+  }, [
+    gridDatasets,
+    gridFilters,
+    getFillColor,
+    gridMetaData,
+    GEOMETRY,
+    zoom,
+    gridCellHighlight,
+    gridSetUpFilters,
+    setPopupInfo,
+  ]);
 
   return <Layer index={0} layer={layer} />;
 }
