@@ -75,6 +75,7 @@ export const getGridLayerProps = ({
     visible: !!gridDatasets.length,
     getTileData: (tile) => {
       if (!tile.url) return Promise.resolve(null);
+      console.log(tile);
       return load(tile.url, ArrowLoader, {
         arrow: { shape: "arrow-table" },
         // arrow: { shape: "object-row-table" },
@@ -98,6 +99,7 @@ export const getGridLayerProps = ({
       }).then((data) => {
         return Object.assign(data.data, {
           length: data.data.numRows,
+          data: data.data.data,
         });
       });
     },
@@ -106,6 +108,7 @@ export const getGridLayerProps = ({
     onHover: (info) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
+      console.log(info);
       if (info && info.index === -1) {
         setPopupInfo({
           id: null,
