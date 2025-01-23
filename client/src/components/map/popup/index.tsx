@@ -6,19 +6,25 @@ import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { cellToLatLng } from "h3-js";
 import { useAtomValue, useSetAtom } from "jotai";
 
-import { useGetGridMeta, useGetGridTable } from "@/lib/grid";
-import { getGeometryWithBuffer, useLocationGeometry } from "@/lib/location";
+import {
+  useGetGridMeta,
+  // useGetGridTable
+} from "@/lib/grid";
+import {
+  getGeometryWithBuffer,
+  // useLocationGeometry
+} from "@/lib/location";
 
-import { BodyReadTableGridTablePostFiltersItem } from "@/types/generated/api.schemas";
+// import { BodyReadTableGridTablePostFiltersItem } from "@/types/generated/api.schemas";
 
 import {
   popupInfoAtom,
   tmpBboxAtom,
   useSyncGridDatasets,
   useSyncLocation,
-  useSyncGridFilters,
-  useSyncGridFiltersSetUp,
-  useSyncGridSelectedDataset,
+  // useSyncGridFilters,
+  // useSyncGridFiltersSetUp,
+  // useSyncGridSelectedDataset,
 } from "@/app/store";
 
 import {
@@ -42,11 +48,11 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/compone
 // const WGS84 = "EPSG:4326";
 
 export const MapPopup = (props: Record<string, string | number> & { cell: string }) => {
-  const [location, setLocation] = useSyncLocation();
+  const [, setLocation] = useSyncLocation();
   const popupInfo = useAtomValue(popupInfoAtom);
-  const [gridFilters] = useSyncGridFilters();
-  const [gridFiltersSetUp] = useSyncGridFiltersSetUp();
-  const [gridSelectedDataset] = useSyncGridSelectedDataset();
+  // const [gridFilters] = useSyncGridFilters();
+  // const [gridFiltersSetUp] = useSyncGridFiltersSetUp();
+  // const [gridSelectedDataset] = useSyncGridSelectedDataset();
 
   const [gridDatasets] = useSyncGridDatasets();
 
@@ -58,62 +64,58 @@ export const MapPopup = (props: Record<string, string | number> & { cell: string
 
   const { cell, ...rest } = props;
 
-  const GEOMETRY = useLocationGeometry(location, {
-    wkid: 4326,
-  });
+  // const GEOMETRY = useLocationGeometry(location, {
+  //   wkid: 4326,
+  // });
 
-  console.info({ popupInfo });
+  // const { data: queryTable } = useGetGridTable(
+  //   {
+  //     body: {
+  //       ...(!!GEOMETRY && {
+  //         geojson: {
+  //           type: "Feature",
+  //           properties: {},
+  //           geometry: {
+  //             type: "Polygon",
+  //             coordinates: GEOMETRY?.toJSON().rings,
+  //           },
+  //         },
+  //       }),
+  //       filters: (() => {
+  //         if (!gridSelectedDataset) return [];
 
-  const { data: queryTable } = useGetGridTable(
-    {
-      body: {
-        ...(!!GEOMETRY && {
-          geojson: {
-            type: "Feature",
-            properties: {},
-            geometry: {
-              type: "Polygon",
-              coordinates: GEOMETRY?.toJSON().rings,
-            },
-          },
-        }),
-        filters: (() => {
-          if (!gridSelectedDataset) return [];
+  //         const datasetMeta = queryMeta.data?.datasets.find(
+  //           (d) => d.var_name === gridSelectedDataset,
+  //         );
 
-          const datasetMeta = queryMeta.data?.datasets.find(
-            (d) => d.var_name === gridSelectedDataset,
-          );
-          console.log(queryMeta, datasetMeta, gridSelectedDataset);
-          if (!datasetMeta) return [];
+  //         if (!datasetMeta) return [];
 
-          if (datasetMeta.var_dtype === "Float64") {
-            return (gridFilters?.[gridSelectedDataset]?.map((f, i) => ({
-              filter_type: "numerical",
-              column_name: gridSelectedDataset,
-              operation: i === 0 ? "gte" : "lte",
-              value: f,
-            })) ?? []) satisfies BodyReadTableGridTablePostFiltersItem[];
-          }
+  //         if (datasetMeta.var_dtype === "Float64") {
+  //           return (gridFilters?.[gridSelectedDataset]?.map((f, i) => ({
+  //             filter_type: "numerical",
+  //             column_name: gridSelectedDataset,
+  //             operation: i === 0 ? "gte" : "lte",
+  //             value: f,
+  //           })) ?? []) satisfies BodyReadTableGridTablePostFiltersItem[];
+  //         }
 
-          return [];
-        })(),
-      },
-      params: {
-        level: 1,
-        order_by: [`${gridFiltersSetUp?.direction === "asc" ? "" : "-"}${gridSelectedDataset}`],
-        direction: gridFiltersSetUp?.direction || "asc",
-        limit: 30,
-      },
-    },
-    {
-      select: (data) => {
-        return data?.table.filter((t) => t.column === gridSelectedDataset);
-      },
-      enabled: !!gridSelectedDataset,
-    },
-  );
-
-  console.info(queryTable, rest);
+  //         return [];
+  //       })(),
+  //     },
+  //     params: {
+  //       level: 1,
+  //       order_by: [`${gridFiltersSetUp?.direction === "asc" ? "" : "-"}${gridSelectedDataset}`],
+  //       direction: gridFiltersSetUp?.direction || "asc",
+  //       limit: 30,
+  //     },
+  //   },
+  //   {
+  //     select: (data) => {
+  //       return data?.table.filter((t) => t.column === gridSelectedDataset);
+  //     },
+  //     enabled: !!gridSelectedDataset,
+  //   },
+  // );
 
   const ITEMS = useMemo(() => {
     return gridDatasets.map((dataset) => {
