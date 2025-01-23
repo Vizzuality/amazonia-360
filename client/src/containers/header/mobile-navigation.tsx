@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,83 +18,95 @@ export default function MobileNavigation() {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const [, setMenuVisibility] = useState<boolean>(false);
-
-  const handleClick = () => {
-    setIsOpen((prev) => !prev);
-    setMenuVisibility(false);
-    if (isOpen) {
-      setIsOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isOpen) {
-      setIsOpen(false);
-    }
-    //eslint-disable-next-line
-  }, [pathname]);
-
   return (
     <Dialog open={isOpen}>
       <DialogTrigger asChild>
         <button
-          onClick={handleClick}
           type="button"
-          className={`z-[1000] flex h-8 w-8 cursor-pointer flex-col flex-wrap justify-around`}
+          onClick={() => setIsOpen(!isOpen)}
+          className="fixed right-5 top-1/2 z-[110] flex h-6 w-6 -translate-y-1/2 transform cursor-pointer flex-col flex-wrap justify-around"
         >
           <div
-            className={`block h-0.5 w-8 origin-[1px] rounded bg-blue-600 transition-all ${
+            className={`block h-0.5 w-6 origin-[1px] rounded-full bg-blue-600 transition-all ${
               isOpen ? "rotate-45" : "rotate-0"
             }`}
           />
           <div
-            className={`block h-0.5 w-8 origin-[1px] rounded bg-blue-600 transition-all ${
+            className={`block h-0.5 w-6 origin-[1px] rounded bg-blue-600 transition-all ${
               isOpen ? "translate-x-full bg-transparent" : "translate-x-0"
             }`}
           />
           <div
-            className={`block h-0.5 w-8 origin-[1px] rounded bg-blue-600 transition-all ${
+            className={`block h-0.5 w-6 origin-[1px] rounded bg-blue-600 transition-all ${
               isOpen ? "rotate-[-45deg]" : "rotate-0"
             }`}
           />
         </button>
       </DialogTrigger>
-      <DialogContent className="absolute left-0 top-20 w-screen max-w-none !translate-x-0 !translate-y-0 px-0 py-0 text-blue-600">
-        <DialogHeader>
-          <LogoBetaInfo />
-          <DialogTitle className="sr-only">AmazoniaForever360+ beta version</DialogTitle>
-          <nav className="flex flex-col space-y-8 bg-white print:hidden">
-            <Link
-              className={cn({
-                "text-lg hover:text-cyan-500": true,
-                "text-cyan-500": pathname === "/",
-              })}
-              href="/"
-            >
-              Home
-            </Link>
 
-            <Link
-              className={cn({
-                "text-lg hover:text-cyan-500": true,
-                "text-cyan-500": pathname.includes("/report"),
-              })}
-              href="/report"
-            >
-              Report Tool
-            </Link>
-            <Link
-              className={cn({
-                "text-lg hover:text-cyan-500": true,
-                "text-cyan-500": pathname.includes("/hub"),
-              })}
-              href="/hub"
-            >
-              Hub
-            </Link>
-          </nav>
+      <DialogContent
+        className="absolute left-0 top-0 z-[100] w-screen max-w-none !translate-x-0 !translate-y-0 px-0 py-0 text-blue-600"
+        overlay={false}
+      >
+        <DialogHeader className="box-border flex h-[81px] w-full flex-col items-center border-b border-gray-200 bg-white text-center backdrop-blur sm:text-left">
+          <div className="flex h-full w-full flex-col justify-center bg-white backdrop-blur">
+            <div className="mx-4 flex items-center justify-between md:container md:mx-auto">
+              <DialogTitle className="sr-only">AmazoniaForever360+ beta version</DialogTitle>
+              <LogoBetaInfo />
+
+              <button
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                className="z-[110] flex h-6 w-6 transform cursor-pointer flex-col flex-wrap justify-around"
+              >
+                <div
+                  className={`block h-0.5 w-6 origin-[1px] rounded-full bg-blue-600 transition-all ${
+                    isOpen ? "rotate-45" : "rotate-0"
+                  }`}
+                />
+                <div
+                  className={`block h-0.5 w-6 origin-[1px] rounded bg-blue-600 transition-all ${
+                    isOpen ? "translate-x-full bg-transparent" : "translate-x-0"
+                  }`}
+                />
+                <div
+                  className={`block h-0.5 w-6 origin-[1px] rounded bg-blue-600 transition-all ${
+                    isOpen ? "rotate-[-45deg]" : "rotate-0"
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
         </DialogHeader>
+        <nav className="flex flex-col justify-start bg-white text-left print:hidden">
+          <Link
+            className={cn({
+              "px-6 py-4 text-lg text-blue-900 hover:bg-blue-200 hover:text-blue-500": true,
+              "text-blue-500": pathname === "/",
+            })}
+            href="/"
+          >
+            Home
+          </Link>
+          <Link
+            className={cn({
+              "px-6 py-4 text-lg text-blue-900 hover:bg-blue-200 hover:text-blue-500": true,
+              "text-blue-500": pathname.includes("/report"),
+            })}
+            href="/report"
+          >
+            Report Tool
+          </Link>
+          <Link
+            className={cn({
+              "px-6 py-4 text-lg text-blue-900 hover:bg-blue-200 hover:text-blue-500": true,
+              "text-blue-500": pathname.includes("/hub"),
+            })}
+            href="/hub"
+          >
+            Hub
+          </Link>
+        </nav>
       </DialogContent>
     </Dialog>
   );
