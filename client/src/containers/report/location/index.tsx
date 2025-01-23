@@ -50,7 +50,7 @@ export default function ReportLocation() {
       >
         <TabsList className="mb-2 w-full items-stretch rounded-lg border border-blue-100 bg-muted p-1">
           <TabsTrigger variant="primary" className="w-full" value="contextual-viewer">
-            Contextual viewer
+            Report
           </TabsTrigger>
           <TabsTrigger variant="primary" className="w-full" value="grid">
             Grid

@@ -4,6 +4,8 @@
  * Amazonia360 API
  * OpenAPI spec version: 0.1.0
  */
+import { useQuery, QueryFunction, UseQueryOptions, QueryKey } from "@tanstack/react-query";
+
 import { API } from "../../services/api";
 
 import type {
@@ -19,6 +21,14 @@ import type {
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
+export type GridTileQueryOptions<TData, TError> = Omit<
+  UseQueryOptions<TData, TError>,
+  "queryKey" | "queryFn"
+> & {
+  queryKey: QueryKey;
+  queryFn: () => Promise<TData>;
+};
+
 /**
  * Get a tile of h3 cells with specified data columns
  * @summary Get a grid tile
@@ -30,6 +40,42 @@ export const gridTileGridTileTileIndexGet = (
 ) => {
   return API<string>({ url: `/grid/tile/${tileIndex}`, method: "GET", params }, options);
 };
+
+export const getGridTileKey = (tileIndex: string, params?: GridTileGridTileTileIndexGetParams) => {
+  return ["grid", "tile", tileIndex, params];
+};
+
+export const getGridTileOptions = <
+  TData = Awaited<ReturnType<typeof gridTileGridTileTileIndexGet>>,
+  TError = unknown,
+>(
+  tileIndex: string,
+  params?: GridTileGridTileTileIndexGetParams,
+  options?: Omit<GridTileQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const queryKey = getGridTileKey(tileIndex, params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof gridTileGridTileTileIndexGet>>> = () =>
+    gridTileGridTileTileIndexGet(tileIndex, params);
+  return { queryKey, queryFn, ...options } as GridTileQueryOptions<TData, TError>;
+};
+
+export const useGetGridTile = <
+  TData = Awaited<ReturnType<typeof gridTileGridTileTileIndexGet>>,
+  TError = unknown,
+>(
+  tileIndex: string,
+  params?: GridTileGridTileTileIndexGetParams,
+  options?: Omit<GridTileQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const { queryKey, queryFn } = getGridTileOptions(tileIndex, params, options);
+
+  return useQuery({
+    queryKey,
+    queryFn,
+    ...options,
+  });
+};
+
 /**
  * Get a tile of h3 cells that are inside the polygon
  * @summary Get a grid tile with cells contained inside the GeoJSON

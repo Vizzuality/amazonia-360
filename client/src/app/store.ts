@@ -29,6 +29,7 @@ export const useSyncLocation = () => {
 };
 
 // GRID PARAMS
+// TO - DO - check if gridFilters and GridSetUpFilters should be unified
 export const useSyncGridFilters = () => {
   return useQueryState("gridFilters", gridFiltersParser);
 };
@@ -78,5 +79,17 @@ export const gridPanelAtom = atom<"filters" | "table">("filters");
 export const gridCellHighlightAtom = atom<{ id: number | null; index: string | undefined }>({
   id: null,
   index: undefined,
+});
+
+export const popupInfoAtom = atom<{
+  id: number | null;
+  index: string | undefined;
+  x: number | null;
+  y: number | null;
+}>({
+  id: null,
+  index: undefined,
+  x: null,
+  y: null,
 });
 export const selectedFiltersViewAtom = atom<boolean>(false);
