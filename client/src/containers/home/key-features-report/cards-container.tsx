@@ -44,9 +44,9 @@ export default function CardsContainer() {
         ref={cardRef}
         className="mt-6 flex flex-col gap-2 md:mt-20 md:grid md:grid-cols-3 lg:mt-6"
       >
-        <li className="flex">
+        <li className="flex w-full">
           <div
-            className={`flex w-full flex-row items-center justify-start space-x-6 space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 md:flex-col md:items-start ${
+            className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 ${
               cardInView ? "animate-left-to-right delay-0" : "opacity-0"
             }`}
           >
@@ -54,9 +54,9 @@ export default function CardsContainer() {
             <h4 className="font-bold text-blue-500">Select area of interest</h4>
           </div>
         </li>
-        <li className="flex">
+        <li className="flex w-full">
           <div
-            className={`flex w-full flex-row items-center justify-start space-x-6 space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 md:flex-col md:items-start ${
+            className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 ${
               cardInView ? "animate-left-to-right delay-300" : "opacity-0"
             }`}
           >
@@ -64,9 +64,10 @@ export default function CardsContainer() {
             <h4 className="font-bold text-blue-500">Define topics of interest</h4>
           </div>
         </li>
-        <li className="flex">
+
+        <li className="flex w-full">
           <div
-            className={`flex w-full flex-row items-center justify-start space-x-6 space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 md:flex-col md:items-start ${
+            className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 ${
               cardInView ? "animate-left-to-right delay-500" : "opacity-0"
             }`}
           >
