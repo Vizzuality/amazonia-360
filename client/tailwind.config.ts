@@ -189,7 +189,7 @@ const config = {
             transform: "translate(300px, 300px)",
             opacity: "0",
           },
-          "50%": {
+          "100%": {
             transform: "translate(0, 0)",
             opacity: "1",
           },
@@ -199,13 +199,14 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "left-to-right": "left-to-right 0.8s ease-out",
-        "right-to-left": "right-to-left 1s ease-out",
+        "right-to-left": "right-to-left 0.8s ease-out",
         "slide-up": "slideUp 1s ease-in forwards",
         "slide-down": "slideDown 1s ease-in forwards",
-        "zoom-out": "zoomOut 1.2s ease-in-out",
+        "zoom-out": "zoomOut 1.5s ease-in-out",
         growWidth: "growWidth 1s ease-out forwards",
         "right-bottom-to-left-top": "rightBottomToLeftTop 0.8s ease-in-out forwards",
-        "half-right-bottom-to-left-top": "halfRightBottomToLeftTop 1.3s ease-out forwards",
+        "half-right-bottom-to-left-top":
+          "halfRightBottomToLeftTop 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) 0.1s forwards",
       },
       fontSize: {
         "2xs": ["0.625rem", "0.75rem"],

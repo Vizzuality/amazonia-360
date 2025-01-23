@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 
 import { scroller } from "react-scroll";
+import { useMedia } from "react-use";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -12,6 +13,8 @@ import { LuArrowRight } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 
 export default function Hero() {
+  const isMobile = useMedia("(max-width: 767px)");
+
   const handleScroll = useCallback(() => {
     scroller.scrollTo("moreInfo", {
       duration: 1000,
@@ -21,13 +24,15 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative flex w-full flex-col overflow-hidden md:h-[calc(100svh_-_theme(space.20)_+_1px)] md:flex-row md:bg-blue-50">
+    <section className="relative flex w-full flex-col overflow-hidden md:h-[calc(100svh_-_64px)] md:flex-row md:space-x-10 md:bg-blue-50">
       <div className="relative px-4 md:container">
-        <div className="relative z-10 flex max-w-2xl flex-col space-y-6 py-8 md:absolute md:top-[30%] md:animate-left-to-right md:rounded md:px-10 md:py-12">
-          <h2 className="text-3xl font-bold text-blue-400 lg:text-4xl">
-            Understanding Amazonia like never before
+        <div className="relative z-10 flex max-w-2xl flex-col space-y-6 py-8 md:absolute md:top-[5%] md:max-w-none md:animate-left-to-right md:rounded md:px-0 md:py-12 lg:top-[20%]">
+          <h2 className="text-3xl font-bold text-blue-600 lg:text-4xl">
+            Understanding
+            <br /> Amazonia
+            <br /> like never before
           </h2>
-          <p className="text-base font-normal text-blue-900 lg:text-lg">
+          <p className="max-w-[45%] text-base font-normal text-blue-900 lg:text-lg">
             With <span className="font-bold">AmazoniaForever360+</span> get all the resources you
             need about one of the world&apos;s most diverse ecosystems. AmazoniaForever360+ is your
             gateway to understanding and help you achieving the greatest impact in this region.
@@ -35,7 +40,7 @@ export default function Hero() {
           <div className="flex space-x-4 py-4 md:py-6">
             <Link href="/report" prefetch>
               <Button size="lg" className="flex space-x-2.5 px-8">
-                <span className="font-semibold">Access report tool</span>
+                <span className="font-semibold">Access the tool</span>
                 <LuArrowRight size={20} strokeWidth={1} className="hidden md:block" />
               </Button>
             </Link>
@@ -52,11 +57,11 @@ export default function Hero() {
         </div>
       </div>
       <Image
-        src={"/images/home/hero.avif"}
+        src={`${isMobile ? "/images/home/hero-mobile.avif" : "/images/home/hero.avif"}`}
         alt="Amazonia"
-        width={1500}
-        height={1500}
-        className="w-full animate-half-right-bottom-to-left-top overflow-hidden md:absolute md:bottom-0 md:right-0 md:top-[30%] md:w-6/12 md:object-cover"
+        width={2500}
+        height={2500}
+        className="lg-top-[30%] w-full max-w-fit animate-half-right-bottom-to-left-top object-cover px-4 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]"
         draggable={false}
       />
     </section>
