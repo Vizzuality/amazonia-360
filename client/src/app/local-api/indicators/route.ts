@@ -1,3 +1,4 @@
+// import INDICATORS from "./indicators_test_4.json";
 import INDICATORS from "./indicators.json";
 
 export type VisualizationType = "map" | "table" | "chart" | "numeric";

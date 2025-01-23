@@ -17,19 +17,19 @@ const SKETCH_BUTTONS = [
   {
     id: "point",
     label: "Point",
-    description: "Click on the map to select a single point and get a buffer radius of 30km2",
+    description: "Click on the map to select a single point and get a buffer radius of 30km²",
     Icon: PointIcon,
   },
   {
     id: "polygon",
     label: "Area",
-    description: "Draw your custom area of interes",
+    description: "Draw your custom area of interest",
     Icon: PolygonIcon,
   },
   {
     id: "polyline",
     label: "Line",
-    description: "Draw a line a get a buffer around it of 10km2",
+    description: "Draw a line a get a buffer around it of 10km²",
     Icon: PolylineIcon,
   },
 ] as const;
@@ -60,7 +60,7 @@ export default function Sketch() {
   };
 
   return (
-    <div className={cn("flex w-full flex-col items-center space-y-2 overflow-hidden text-sm")}>
+    <div className={cn("flex w-full flex-col items-center space-y-2 overflow-y-scroll text-sm")}>
       {SKETCH_BUTTONS.map((button) => {
         const Icon = button.Icon;
 
@@ -68,7 +68,7 @@ export default function Sketch() {
           <button
             key={button.id}
             className={cn(
-              "h-full w-full grow overflow-hidden rounded-lg border border-border bg-white p-1 text-left transition-all duration-500",
+              "h-full w-full grow overflow-hidden rounded-lg border border-border bg-white p-1 text-left transition-all duration-500 hover:bg-primary/20",
               sketch.enabled && sketch.type === button.id && "border-cyan-500 bg-blue-50",
             )}
             onClick={(e) => handleClick(e, button.id)}

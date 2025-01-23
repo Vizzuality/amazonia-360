@@ -58,7 +58,7 @@ export const useGetTopics =
       indicatorsData?.forEach((indicator) => {
         const { topic } = indicator;
 
-        if (!topic.id || !topic.name) {
+        if (!topic?.id || !topic.name) {
           return;
         }
 

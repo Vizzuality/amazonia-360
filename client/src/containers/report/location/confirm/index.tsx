@@ -27,10 +27,10 @@ export default function Confirm() {
   if (!location) return null;
 
   return (
-    <div className="flex w-full flex-col justify-between gap-4 overflow-hidden rounded-lg bg-blue-50 p-4 text-sm">
+    <div className="flex w-full flex-col justify-between gap-2 overflow-hidden text-sm">
       <div className="flex items-end justify-between">
-        <div className="text-sm font-semibold leading-tight">{TITLE}</div>
-        <div className="text-gray-500">
+        <div className="text-sm font-semibold leading-tight text-foreground">{TITLE}</div>
+        <div className="text-xs text-gray-500">
           {formatNumber(AREA, {
             maximumFractionDigits: 0,
           })}{" "}
@@ -43,7 +43,7 @@ export default function Confirm() {
         </Button>
 
         <Button size="lg" className="grow" onClick={() => setReportPanel("topics")}>
-          Select
+          Confirm
         </Button>
       </div>
     </div>

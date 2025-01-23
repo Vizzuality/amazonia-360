@@ -20,6 +20,7 @@ import GridFilters from "@/containers/report/location/grid/filters";
 import GridFiltersControls from "@/containers/report/location/grid/filters-controls";
 import GridTable from "@/containers/report/location/grid/table";
 import GridTableSetup from "@/containers/report/location/grid/table/setup";
+import AmazoniaGridIntro from "@/containers/report/location/grid-intro";
 import Search from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
 import Topics from "@/containers/report/location/topics";
@@ -42,11 +43,12 @@ export default function ReportLocation() {
   });
 
   return (
-    <aside className="pointer-events-auto flex max-h-screen w-4/12 shrink-0 flex-col overflow-hidden tall:2xl:w-4/12">
+    //  height of the header + height of the footer + height of the tabs
+    <aside className="pointer-events-auto flex w-4/12 shrink-0 flex-col overflow-hidden tall:2xl:w-4/12">
       <Tabs
         defaultValue={tab}
         onValueChange={(t) => setTab(t as typeof tabAtom.init)}
-        className="flex grow flex-col"
+        className="test-class flex max-h-[calc(100vh_-_(64px_+_40px_+_28px))] grow flex-col"
       >
         <TabsList className="mb-2 w-full items-stretch rounded-lg border border-blue-100 bg-muted p-1">
           <TabsTrigger variant="primary" className="w-full" value="contextual-viewer">
@@ -57,16 +59,21 @@ export default function ReportLocation() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent className="flex grow flex-col" value="contextual-viewer">
-          <ScrollArea className="w-full grow">
+        <TabsContent
+          className="test-content flex max-h-full grow flex-col overflow-hidden"
+          value="contextual-viewer"
+        >
+          <ScrollArea className="h-full w-full grow">
             {reportPanel === "location" && (
-              <div className="relative space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
+              <div className="relative space-y-4 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
                 <div className="space-y-1">
-                  <h1 className="text-lg font-bold text-primary">Select your area of interest</h1>
+                  <h1 className="text-lg font-bold text-primary">
+                    Get insights on your area of interest
+                  </h1>
 
                   <p className="text-sm font-medium text-muted-foreground">
-                    Use the search or the drawing tools to select your area of interest and get a
-                    report on it.
+                    Define your area of interest to get started and access a customized report with
+                    insights tailored to your region.
                   </p>
                 </div>
 
@@ -79,24 +86,28 @@ export default function ReportLocation() {
                 )}
 
                 {location && <Confirm />}
+                {location && <div className="h-[1px] w-full bg-blue-100" />}
+                {location && <AmazoniaGridIntro />}
               </div>
             )}
 
             {reportPanel === "topics" && (
-              <div className="relative space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
+              <div className="relative h-full space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
                 <div className="space-y-1">
                   <div className="flex items-baseline justify-between">
                     <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
                       <button
+                        type="button"
                         onClick={() => setReportPanel("location")}
-                        className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50"
+                        className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-primary/20"
                       >
                         <LuArrowLeft className="h-4 w-4" />
                       </button>
                       Select Report topics
                     </h1>
                     <button
-                      className="whitespace-nowrap text-xs font-bold text-foreground"
+                      type="button"
+                      className="whitespace-nowrap text-xs font-bold text-foreground transition-all duration-500 ease-in-out hover:underline"
                       onClick={() => setTopics([])}
                     >
                       Unselect all
@@ -108,12 +119,12 @@ export default function ReportLocation() {
                   </p>
                 </div>
                 <div className="relative max-h-[calc(100vh-420px)]">
-                  <div className="pointer-events-none absolute left-0 right-0 top-0 h-2.5 bg-gradient-to-b from-white to-transparent" />
+                  <div className="pointer-events-none absolute left-0 right-0 top-0 h-2 bg-gradient-to-b from-white to-transparent" />
 
-                  <div className="max-h-[calc(100vh-420px)] overflow-y-auto py-1">
+                  <div className="max-h-[calc(100vh-420px)] overflow-y-auto py-1.5">
                     <Topics />
                   </div>
-                  <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />
+                  <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent" />
                 </div>
 
                 <GenerateReport />
@@ -122,13 +133,13 @@ export default function ReportLocation() {
           </ScrollArea>
         </TabsContent>
 
-        <TabsContent className="flex grow flex-col" value="grid">
+        <TabsContent className="flex h-full grow flex-col" value="grid">
           <ScrollArea className="w-full grow">
             {gridPanel === "filters" && (
-              <div className="relative space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
+              <div className="relative h-full space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
                 <div className="space-y-1">
                   <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
-                    Filter cells
+                    Refine your area of interest
                   </h1>
 
                   <p className="text-sm font-medium text-muted-foreground">
@@ -140,9 +151,9 @@ export default function ReportLocation() {
                 <GridFiltersControls />
 
                 <div className="space-y-5">
-                  <div className="relative h-full max-h-[calc(100vh-440px)]">
+                  <div className="relative h-full max-h-[calc(100vh-412px)]">
                     <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2.5 bg-gradient-to-b from-white to-transparent" />
-                    <div className="-mx-4 h-full max-h-[calc(100vh-440px)] overflow-y-auto px-4 py-1">
+                    <div className="-mx-4 h-full max-h-[calc(100vh-412px)] overflow-y-auto px-4 py-1">
                       <GridFilters />
                     </div>
                     <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />
@@ -161,20 +172,23 @@ export default function ReportLocation() {
             )}
 
             {gridPanel === "table" && (
-              <div className="relative space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
+              <div className="relative h-full space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
                 <div className="space-y-1">
-                  <div className="flex items-center justify-between font-bold text-primary">
-                    <div className="flex items-center gap-2">
+                  <div className="flex h-full items-center justify-between font-bold text-primary">
+                    <div className="flex items-start gap-2">
                       <button
                         onClick={() => setGridPanel("filters")}
-                        className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50"
+                        className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-primary/20"
                       >
                         <LuArrowLeft className="h-4 w-4" />
                       </button>
                       <h1>Top cells ordered by {rankingCriterion}</h1>
+                      <div className="flex h-full items-center gap-2">
+                        <div className="h-full shrink-0 p-2">
+                          <GridTableSetup />
+                        </div>
+                      </div>
                     </div>
-
-                    <GridTableSetup />
                   </div>
 
                   <p className="text-sm font-medium text-muted-foreground">
@@ -182,10 +196,10 @@ export default function ReportLocation() {
                     corresponding cell.
                   </p>
                 </div>
-                <div className="relative max-h-[50vh]">
+                <div className="relative overflow-y-auto">
                   <div className="pointer-events-none absolute left-0 right-0 top-0 h-2.5 bg-gradient-to-b from-white to-transparent" />
 
-                  <div className="-mx-4 max-h-[50vh] overflow-y-auto px-4 py-1">
+                  <div className="-mx-4 h-full max-h-[calc(100vh-64px-44px-216px)] overflow-y-auto px-4 py-1">
                     <GridTable />
                   </div>
                   <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />

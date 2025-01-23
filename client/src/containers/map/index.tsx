@@ -8,7 +8,6 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/store";
 
-import { Card } from "@/containers/card";
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
 
 import Controls from "@/components/map/controls";
@@ -49,51 +48,49 @@ export default function WidgetMap({ layers, ...viewProps }: WidgetMapProps) {
 
   return (
     <div className="relative h-full print:h-96">
-      <Card className="h-full p-0">
-        <Map
-          id="overview"
-          {...(GEOMETRY?.extent && {
-            defaultBbox: [
-              GEOMETRY?.extent.xmin,
-              GEOMETRY?.extent.ymin,
-              GEOMETRY?.extent.xmax,
-              GEOMETRY?.extent.ymax,
-            ],
-            bbox: undefined,
-          })}
-          mapProps={{
-            basemap: undefined,
-          }}
-          viewProps={{
-            navigation: {
-              mouseWheelZoomEnabled: false,
-              browserTouchPanEnabled: false,
-            },
-            ...viewProps,
-          }}
-        >
-          <Layer layer={BASEMAP_LAYER} index={0} />
+      <Map
+        id="overview"
+        {...(GEOMETRY?.extent && {
+          defaultBbox: [
+            GEOMETRY?.extent.xmin,
+            GEOMETRY?.extent.ymin,
+            GEOMETRY?.extent.xmax,
+            GEOMETRY?.extent.ymax,
+          ],
+          bbox: undefined,
+        })}
+        mapProps={{
+          basemap: undefined,
+        }}
+        viewProps={{
+          navigation: {
+            mouseWheelZoomEnabled: false,
+            browserTouchPanEnabled: false,
+          },
+          ...viewProps,
+        }}
+      >
+        <Layer layer={BASEMAP_LAYER} index={0} />
 
-          {layers.map((layer, index, arr) => {
-            const i = arr.length - index;
+        {layers.map((layer, index, arr) => {
+          const i = arr.length - index;
 
-            // if (layer.type === "feature" && "customParameters" in layer) {
-            //   i = layer?.customParameters?.position === "top" ? arr.length + 3 : arr.length - index;
-            // }
+          // if (layer.type === "feature" && "customParameters" in layer) {
+          //   i = layer?.customParameters?.position === "top" ? arr.length + 3 : arr.length - index;
+          // }
 
-            return <Layer key={layer.id} layer={layer} index={i} GEOMETRY={GEOMETRY} />;
-          })}
+          return <Layer key={layer.id} layer={layer} index={i} GEOMETRY={GEOMETRY} />;
+        })}
 
-          <SelectedLayer index={layers.length + 1} location={location} />
+        <SelectedLayer index={layers.length + 1} location={location} />
 
-          <Layer layer={LABELS_LAYER} index={layers.length + 2} />
+        <Layer layer={LABELS_LAYER} index={layers.length + 2} />
 
-          <Controls>
-            <FullscreenControl />
-            <ZoomControl />
-          </Controls>
-        </Map>
-      </Card>
+        <Controls>
+          <FullscreenControl />
+          <ZoomControl />
+        </Controls>
+      </Map>
     </div>
   );
 }
