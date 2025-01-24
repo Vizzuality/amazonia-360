@@ -9,4 +9,4 @@ __pycache__/
 
 # Infra
 /infrastructure/**/local.tfvars
-/infrastructure/**/.terraform/
+/infrastructure/.terraform/
