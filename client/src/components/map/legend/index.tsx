@@ -98,14 +98,17 @@ export const Legend: FC = () => {
               >
                 <div className="flex w-72 flex-col space-y-2 rounded-lg bg-white px-4 py-2 shadow-md">
                   <div className="text-sm">Grid opacity</div>
-                  <Slider
-                    min={0}
-                    max={100}
-                    step={1}
-                    value={[gridSetUpFilters.opacity]}
-                    minStepsBetweenThumbs={1}
-                    onValueChange={onValueChange}
-                  />
+                  <div className="py-2">
+                    <Slider
+                      min={0}
+                      max={100}
+                      step={1}
+                      value={[gridSetUpFilters.opacity]}
+                      minStepsBetweenThumbs={0.5}
+                      onValueChange={onValueChange}
+                      className="cursor-pointer"
+                    />
+                  </div>
                   <div className="flex w-full justify-between text-[10px] font-medium text-muted-foreground">
                     <span>0%</span>
                     <span>100%</span>

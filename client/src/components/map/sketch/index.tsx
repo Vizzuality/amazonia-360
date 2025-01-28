@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef } from "react";
 
 import dynamic from "next/dynamic";
 
-import Color from "@arcgis/core/Color";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 
@@ -19,7 +18,7 @@ export type SketchProps = {
   enabled?: boolean;
   onCreate?: (graphic: __esri.Graphic) => void;
   onCancel?: () => void;
-  onUpdate?: (graphic: __esri.Graphic) => void; // New callback for updates
+  onUpdate?: (graphic: __esri.Graphic) => void;
 };
 
 export default function Sketch({ type, enabled, onCreate, onCancel, onUpdate }: SketchProps) {
@@ -51,45 +50,74 @@ export default function Sketch({ type, enabled, onCreate, onCancel, onUpdate }: 
 
   const handleSketchUpdate = useCallback(
     (e: __esri.SketchViewModelUpdateEvent) => {
-      e.graphics.forEach((graphic) => {
-        if (graphic.geometry.type === "polygon") {
-          graphic.symbol = {
-            type: "simple-fill",
-            color: new Color([0, 255, 255, 0.2]),
-            outline: {
-              type: "simple-line",
-              color: "black",
-              width: 2,
-              style: "dash",
-            },
-          } as unknown as __esri.SimpleFillSymbol;
-        }
+      if (e.state === "start" && e.graphics.length) {
+        e.graphics.forEach((graphic) => {
+          if (graphic.geometry.type === "polygon") {
+            graphic.symbol = {
+              type: "simple-fill",
+              color: "#009ADE33",
+              outline: {
+                type: "line",
+                color: "#196E8C",
+                width: 1,
+                style: "long-dash",
+              },
+            } as unknown as __esri.SimpleFillSymbol;
 
-        if (graphic.geometry.type === "polyline") {
-          graphic.symbol = {
-            type: "simple-line",
-            color: "blue",
-            width: 2,
-            style: "dash",
-          } as unknown as __esri.SimpleLineSymbol;
-        }
+            // graphic.symbol = {
+            //   type: POLYGON_SYMBOL.type,
+            // } as unknown as __esri.SimpleFillSymbol;
+          }
 
-        if (graphic.geometry.type === "point") {
-          graphic.symbol = {
-            type: "simple-marker",
-            style: "circle",
-            color: "red",
-            size: "12px",
-            outline: {
+          if (graphic.geometry.type === "polyline") {
+            graphic.symbol = {
               type: "simple-line",
-              color: "black",
-              width: 1,
-            },
-          } as unknown as __esri.SimpleMarkerSymbol;
-        }
-      });
+              color: "red",
+              outline: {
+                type: "simple-line",
+                color: "#196E8C",
+                width: 1,
+                style: "long-dash",
+              },
+            } as unknown as __esri.SimpleLineSymbol;
+          }
+
+          if (graphic.geometry.type === "point") {
+            graphic.symbol = {
+              type: "simple-marker",
+              style: "circle",
+              color: "#009ADE",
+              opacity: 0.5,
+              size: "12px",
+              outline: {
+                type: "simple-line",
+                color: "black",
+                width: 1,
+              },
+            } as unknown as __esri.SimpleMarkerSymbol;
+          }
+        });
+      }
 
       if (e.state === "complete" && e.graphics.length) {
+        e.graphics.forEach((graphic) => {
+          if (graphic.geometry.type === "polygon") {
+            graphic.symbol = {
+              type: "simple-fill",
+              color: "#009ADE33",
+              outline: {
+                type: "simple-line",
+                color: "#196E8C",
+                width: 1,
+                style: "solid",
+              },
+            } as unknown as __esri.SimpleFillSymbol;
+
+            // graphic.symbol = {
+            //   type: POLYGON_SYMBOL.type,
+            // } as unknown as __esri.SimpleFillSymbol;
+          }
+        });
         const updatedGraphic = e.graphics[0].clone();
         if (onUpdate) onUpdate(updatedGraphic);
       }
@@ -112,14 +140,19 @@ export default function Sketch({ type, enabled, onCreate, onCancel, onUpdate }: 
       pointSymbol: POINT_SYMBOL,
       polylineSymbol: POLYLINE_SYMBOL,
       polygonSymbol: POLYGON_SYMBOL,
+      // tooltipOptions: {
+      //   enabled: true,
+      //   helpMessage: "Click to start drawing",
+      // },
       defaultCreateOptions: {
         hasZ: false,
       },
       defaultUpdateOptions: {
         tool: "reshape",
         enableRotation: false,
-        toggleToolOnClick: false,
+        toggleToolOnClick: true,
       },
+      updateOnGraphicClick: true,
     });
 
     sketchViewModelRef.current = sketchViewModel;

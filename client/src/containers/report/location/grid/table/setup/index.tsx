@@ -103,19 +103,25 @@ export default function GridTableSetup() {
       <PopoverTrigger>
         <LuSettings2 className="h-4 w-4" />
       </PopoverTrigger>
-      <PopoverContent side="left" align="start" className="w-auto bg-background p-2">
+      <PopoverContent
+        side="right"
+        alignOffset={-26}
+        sideOffset={32}
+        align="start"
+        className="w-auto max-w-80 bg-background p-2"
+      >
         <div className="space-y-4 p-4">
           <div className="space-y-1">
             <h2 className="text-sm font-semibold text-popover-foreground">Ranking setup</h2>
             <span className="text-sm text-muted-foreground">Define the order of the cells</span>
           </div>
-          <div className="gap-2">
+          <div className="w-full gap-2 overflow-hidden">
             <span className="text-sm text-foreground">Order by</span>
             <div className="flex gap-2">
               <Select value={selectedDataset} onValueChange={handleRankingChange}>
                 <SelectTrigger className="h-10 flex-1 rounded-sm">
                   <SelectValue className="text-sm">
-                    <p className="max-w-64 truncate md:max-w-80 lg:max-w-none">
+                    <p className="flex-grow truncate md:max-w-80 lg:max-w-none">
                       {rankingOptions?.find((opt) => opt.key === selectedDataset)?.label ||
                         "selectedDataset"}
                     </p>
@@ -133,7 +139,7 @@ export default function GridTableSetup() {
               <Select value={selectedDirection} onValueChange={handleDirectionChange}>
                 <SelectTrigger className="h-10 max-w-32 rounded-sm">
                   <SelectValue className="text-sm">
-                    <p className="max-w-64 truncate md:max-w-80 lg:max-w-none">
+                    <p className="w-fit max-w-64 flex-1 truncate md:max-w-80 lg:max-w-none">
                       {RANKING_DIRECTION.find((opt) => opt.key === selectedDirection)?.label || ""}
                     </p>
                   </SelectValue>
