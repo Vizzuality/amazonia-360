@@ -1,9 +1,7 @@
-name: CI / CD v2
+name: CI / CD
 on:
   workflow_dispatch:
   push:
-    branches:
-      - chore/infrastructure-migration
     paths:
       - "api/**"
       - ".github/workflows/*"
@@ -148,7 +146,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Generate docker compose file
-        working-directory: infrastructure/v2/source_bundle
+        working-directory: infrastructure/source_bundle
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY_API: ${{ secrets.TF_API_REPOSITORY_NAME }}
@@ -201,7 +199,7 @@ jobs:
           EOF
 
       - name: Generate .ebextensions/20_sync_data.config
-        working-directory: infrastructure/v2/source_bundle
+        working-directory: infrastructure/source_bundle
         env:
           PROJECT_NAME: ${{ vars.TF_PROJECT_NAME }}
           ENV_NAME: ${{ needs.set_environment.outputs.env_name }}
@@ -225,7 +223,7 @@ jobs:
           EOF
 
       - name: Generate zip file
-        working-directory: infrastructure/v2/source_bundle
+        working-directory: infrastructure/source_bundle
         run: |
           zip -r deploy.zip * .[^.]*
 
@@ -238,5 +236,5 @@ jobs:
           environment_name: ${{ vars.TF_PROJECT_NAME }}-${{ needs.set_environment.outputs.env_name }}-environment
           region: ${{ vars.TF_AWS_REGION }}
           version_label: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
-          deployment_package: infrastructure/v2/source_bundle/deploy.zip
+          deployment_package: infrastructure/source_bundle/deploy.zip
           wait_for_deployment: true
