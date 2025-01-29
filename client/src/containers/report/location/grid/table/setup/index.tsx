@@ -119,7 +119,7 @@ export default function GridTableSetup() {
             <span className="text-sm text-foreground">Order by</span>
             <div className="flex gap-2">
               <Select value={selectedDataset} onValueChange={handleRankingChange}>
-                <SelectTrigger className="h-10 flex-1 rounded-sm">
+                <SelectTrigger className="h-10 w-full max-w-36 rounded-sm">
                   <SelectValue className="text-sm">
                     <p className="flex-grow truncate md:max-w-80 lg:max-w-none">
                       {rankingOptions?.find((opt) => opt.key === selectedDataset)?.label ||
@@ -137,7 +137,7 @@ export default function GridTableSetup() {
                 </SelectContent>
               </Select>
               <Select value={selectedDirection} onValueChange={handleDirectionChange}>
-                <SelectTrigger className="h-10 max-w-32 rounded-sm">
+                <SelectTrigger className="h-10 w-32 rounded-sm">
                   <SelectValue className="text-sm">
                     <p className="w-fit max-w-64 flex-1 truncate md:max-w-80 lg:max-w-none">
                       {RANKING_DIRECTION.find((opt) => opt.key === selectedDirection)?.label || ""}

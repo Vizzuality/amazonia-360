@@ -2,7 +2,7 @@ import { ChevronRight } from "lucide-react";
 
 import { WandIcon } from "@/components/ui/icons/wand";
 
-export default function IaIntro() {
+export default function AmazoniaGridIntro() {
   return (
     <div className="flex space-x-3 rounded-sm bg-blue-50 p-2">
       <div>

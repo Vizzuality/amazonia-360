@@ -70,7 +70,7 @@ export const Legend: FC = () => {
 
   return (
     <div className="border-muted-background absolute bottom-16 right-4 flex w-72 flex-col space-y-5 rounded-lg border bg-white px-4 py-1 shadow-md">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-1">
         <div
           className={cn({
             "text-sm": true,
@@ -104,7 +104,7 @@ export const Legend: FC = () => {
                       max={100}
                       step={1}
                       value={[gridSetUpFilters.opacity]}
-                      minStepsBetweenThumbs={0.5}
+                      minStepsBetweenThumbs={1}
                       onValueChange={onValueChange}
                       className="cursor-pointer"
                     />

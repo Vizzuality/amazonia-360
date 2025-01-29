@@ -20,7 +20,7 @@ import GridFilters from "@/containers/report/location/grid/filters";
 import GridFiltersControls from "@/containers/report/location/grid/filters-controls";
 import GridTable from "@/containers/report/location/grid/table";
 import GridTableSetup from "@/containers/report/location/grid/table/setup";
-// import IaIntro from "@/containers/report/location/ia";
+import AmazoniaGridIntro from "@/containers/report/location/grid-intro";
 import Search from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
 import Topics from "@/containers/report/location/topics";
@@ -86,8 +86,8 @@ export default function ReportLocation() {
                 )}
 
                 {location && <Confirm />}
-                {/* {location && <div className="h-[1px] w-full bg-blue-100" />}
-                {location && <IaIntro />} */}
+                {location && <div className="h-[1px] w-full bg-blue-100" />}
+                {location && <AmazoniaGridIntro />}
               </div>
             )}
 
@@ -97,15 +97,17 @@ export default function ReportLocation() {
                   <div className="flex items-baseline justify-between">
                     <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
                       <button
+                        type="button"
                         onClick={() => setReportPanel("location")}
-                        className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50"
+                        className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-primary/20"
                       >
                         <LuArrowLeft className="h-4 w-4" />
                       </button>
                       Select Report topics
                     </h1>
                     <button
-                      className="whitespace-nowrap text-xs font-bold text-foreground"
+                      type="button"
+                      className="whitespace-nowrap text-xs font-bold text-foreground transition-all duration-500 ease-in-out hover:underline"
                       onClick={() => setTopics([])}
                     >
                       Unselect all
@@ -117,12 +119,12 @@ export default function ReportLocation() {
                   </p>
                 </div>
                 <div className="relative max-h-[calc(100vh-420px)]">
-                  <div className="pointer-events-none absolute left-0 right-0 top-0 h-2.5 bg-gradient-to-b from-white to-transparent" />
+                  <div className="pointer-events-none absolute left-0 right-0 top-0 h-2 bg-gradient-to-b from-white to-transparent" />
 
-                  <div className="max-h-[calc(100vh-420px)] overflow-y-auto py-1">
+                  <div className="max-h-[calc(100vh-420px)] overflow-y-auto py-1.5">
                     <Topics />
                   </div>
-                  <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />
+                  <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent" />
                 </div>
 
                 <GenerateReport />
@@ -176,7 +178,7 @@ export default function ReportLocation() {
                     <div className="flex items-start gap-2">
                       <button
                         onClick={() => setGridPanel("filters")}
-                        className="flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-3 py-2"
+                        className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-primary/20"
                       >
                         <LuArrowLeft className="h-4 w-4" />
                       </button>

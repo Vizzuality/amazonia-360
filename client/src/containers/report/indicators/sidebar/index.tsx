@@ -29,7 +29,7 @@ export default function TopicsSidebar() {
   }, [toggleSidebar, setReportEditionMode]);
 
   return (
-    <Sidebar className="absolute bottom-12 top-0 w-96 bg-white">
+    <Sidebar className="absolute bottom-0 top-0 h-full w-96 bg-white">
       <div className="sticky top-0 p-6">
         <SidebarHeader>
           <div className="flex w-full items-center justify-between">
@@ -40,9 +40,9 @@ export default function TopicsSidebar() {
             Add indicators to your report and view them in various formats—
             <span className="font-bold">map, table, chart, etc.</span>
           </p>
+          <Search />
         </SidebarHeader>
         <SidebarContent>
-          <Search />
           <TopicsList />
           <SidebarGroup />
         </SidebarContent>

@@ -68,7 +68,7 @@ export default function Sketch() {
           <button
             key={button.id}
             className={cn(
-              "h-full w-full grow overflow-hidden rounded-lg border border-border bg-white p-1 text-left transition-all duration-500",
+              "h-full w-full grow overflow-hidden rounded-lg border border-border bg-white p-1 text-left transition-all duration-500 hover:bg-primary/20",
               sketch.enabled && sketch.type === button.id && "border-cyan-500 bg-blue-50",
             )}
             onClick={(e) => handleClick(e, button.id)}

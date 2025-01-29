@@ -5,6 +5,7 @@ import Query from "@arcgis/core/rest/support/Query";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
+// import INDICATORS from "@/app/local-api/indicators/indicators_test_4.json";
 import INDICATORS from "@/app/local-api/indicators/indicators.json";
 import {
   Indicator,
