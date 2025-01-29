@@ -86,10 +86,18 @@ export const popupInfoAtom = atom<{
   index: string | undefined;
   x: number | null;
   y: number | null;
+  coordinates: number[] | undefined;
+  values: {
+    column: string;
+    value: string | number;
+  }[];
 }>({
   id: null,
   index: undefined,
   x: null,
   y: null,
+  values: [],
+  coordinates: undefined,
 });
+
 export const selectedFiltersViewAtom = atom<boolean>(false);

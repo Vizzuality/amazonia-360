@@ -9,6 +9,7 @@ import {
   Indicator,
   ResourceFeature,
   ResourceImageryTile,
+  ResourceWebTile,
   VisualizationType,
 } from "@/app/local-api/indicators/route";
 import { useSyncLocation } from "@/app/store";
@@ -22,7 +23,11 @@ import { TableIndicators } from "@/containers/indicators/table";
 
 import { Button } from "@/components/ui/button";
 
-export const ResourceMap = (props: Indicator) => {
+export const ResourceMap = (
+  props: Omit<Indicator, "resource"> & {
+    resource: ResourceWebTile | ResourceFeature | ResourceImageryTile;
+  },
+) => {
   const [enabled, setEnabled] = useState(false);
 
   return (

@@ -118,7 +118,7 @@ export default function MapContainer() {
           <BasemapControl />
         </Controls>
         {gridSelectedDataset && <Legend />}
-        <MapPopup cell={""} id={0} />
+        <MapPopup />
       </Map>
     </div>
   );

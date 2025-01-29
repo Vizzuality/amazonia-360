@@ -1,7 +1,8 @@
 import { VisualizationType } from "@/app/local-api/indicators/route";
 import { IndicatorView } from "@/app/parsers";
 
-import TOPICS from "./topics.json";
+// import TOPICS from "./topics.json";
+import TOPICS from "./topics.test3.json";
 
 export type TopicIndicator = {
   name: string;

@@ -5,8 +5,8 @@ import Query from "@arcgis/core/rest/support/Query";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-// import INDICATORS from "@/app/local-api/indicators/indicators_test_4.json";
-import INDICATORS from "@/app/local-api/indicators/indicators.json";
+import INDICATORS from "@/app/local-api/indicators/indicators_test_4.json";
+// import INDICATORS from "@/app/local-api/indicators/indicators.json";
 import {
   Indicator,
   ResourceFeature,
@@ -15,7 +15,8 @@ import {
   VisualizationType,
 } from "@/app/local-api/indicators/route";
 import { Topic } from "@/app/local-api/topics/route";
-import TOPICS from "@/app/local-api/topics/topics.json";
+// import TOPICS from "@/app/local-api/topics/topics.json";
+import TOPICS from "@/app/local-api/topics/topics.test3.json";
 
 /**
  ************************************************************

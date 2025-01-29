@@ -8,6 +8,7 @@ import { useSetAtom } from "jotai";
 
 import { formatNumberUnit } from "@/lib/formats";
 import { useGetGridMeta } from "@/lib/grid";
+import { useIndicators } from "@/lib/indicators";
 import { getGeometryWithBuffer } from "@/lib/location";
 import { cn } from "@/lib/utils";
 
@@ -40,25 +41,49 @@ export const GridTableItem = (
   const setGridCellHighlightAtom = useSetAtom(gridCellHighlightAtom);
   const setTmpBbox = useSetAtom(tmpBboxAtom);
 
-  const queryMeta = useGetGridMeta();
+  const { data: dataIndicators } = useIndicators();
+
+  const queryMeta = useGetGridMeta({
+    select: (data) =>
+      data.datasets
+        .map((dataset) => {
+          const matchingIndicator = dataIndicators?.find(
+            (indicator) =>
+              indicator.resource.type === "h3" &&
+              indicator.resource.column &&
+              indicator.resource.column === dataset.var_name,
+          );
+
+          if (!matchingIndicator) return null;
+
+          return {
+            ...dataset,
+            name: matchingIndicator.name,
+            unit: matchingIndicator.unit,
+          };
+        })
+        .filter(Boolean),
+  });
 
   const { id, cell, ...rest } = props;
 
   const ITEMS = useMemo(() => {
     return gridDatasets.map((dataset) => {
-      const d = queryMeta.data?.datasets.find((d) => d.var_name === dataset);
+      const d = queryMeta?.data?.find((d) => d?.var_name === dataset);
       if (!d) return null;
 
       return {
         name: d.label,
         value: rest[dataset],
         unit: d.unit,
+        column: d.var_name,
       };
     });
-  }, [gridDatasets, queryMeta.data?.datasets, rest]);
+  }, [gridDatasets, queryMeta.data, rest]);
 
   const handleClick = () => {
     const latLng = cellToLatLng(cell);
+
     const p = new Point({ x: latLng[1], y: latLng[0], spatialReference: { wkid: 4326 } });
     const projectedGeom = projection.project(p, { wkid: 102100 });
     const g = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;

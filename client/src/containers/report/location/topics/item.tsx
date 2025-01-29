@@ -24,7 +24,7 @@ export default function TopicsItem({
     <button
       key={id}
       className={cn(
-        "h-full w-full grow overflow-hidden rounded-lg border border-border bg-white p-1 text-left transition-all duration-500 ease-in-out hover:bg-primary/20",
+        "h-full w-full grow overflow-hidden rounded-lg border border-border bg-white p-1 text-left transition-all duration-500 ease-in-out hover:bg-blue-100",
         checked && "border-cyan-500 bg-blue-50",
       )}
       onClick={() => onChange(!checked)}

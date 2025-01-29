@@ -5,6 +5,11 @@ import { MouseEvent } from "react";
 import { useIndicatorsId } from "@/lib/indicators";
 
 import { Indicator, VisualizationType } from "@/app/local-api/indicators/route";
+import {
+  ResourceFeature,
+  ResourceImageryTile,
+  ResourceWebTile,
+} from "@/app/local-api/indicators/route";
 
 import {
   Card,
@@ -47,7 +52,13 @@ export default function ReportResultsIndicator({
           </CardControls>
         </CardHeader>
         <CardContent>
-          {type === "map" && <MapIndicators {...indicator} />}
+          {type === "map" && indicator.resource.type !== "h3" && (
+            <MapIndicators
+              {...(indicator as Omit<Indicator, "resource"> & {
+                resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
+              })}
+            />
+          )}
           {/* resource type Feature Indicators */}
           {type === "chart" && indicator.resource.type === "feature" && (
             <ChartIndicators {...indicator} resource={indicator.resource} />

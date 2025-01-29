@@ -4289,6 +4289,8 @@ export type DatasetMetaLegend = CategoricalLegend | NumericalLegend;
 export interface DatasetMeta {
   /** Human readable indicator description. */
   description: string;
+  /** Human readable indicator short description. */
+  description_short: string;
   /** Human readable name. */
   label: string;
   legend: DatasetMetaLegend;
