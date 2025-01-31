@@ -90,6 +90,7 @@ export default function SearchC() {
           value={search}
           open={open}
           placeholder="Search location..."
+          size="sm"
           options={
             (q.data?.results
               .map((r) =>

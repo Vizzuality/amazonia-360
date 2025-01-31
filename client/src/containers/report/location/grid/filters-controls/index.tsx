@@ -32,7 +32,7 @@ export default function GridFiltersControls() {
       <button
         type="button"
         disabled={!gridDatasets.length}
-        className="space-x-1 whitespace-nowrap text-end text-xs font-semibold text-primary"
+        className="cursor-pointer space-x-1 whitespace-nowrap text-end text-xs font-semibold text-primary transition-colors duration-500 ease-linear hover:underline"
         onClick={handleClick}
       >
         <span>Clear selection</span>

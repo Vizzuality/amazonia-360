@@ -9,10 +9,16 @@ import { CardLoader } from "@/containers/card";
 
 export default function InfoArcGis({ id }: { id: Indicator["id"] }) {
   const indicator = useIndicatorsId(id);
+
+  // TO - Do - improve this
   const query = useGetMetadata(
-    { id, url: `${indicator?.resource?.url}/info/metadata` },
-    { enabled: !!indicator },
+    indicator && indicator.resource.type !== "h3"
+      ? { id, url: `${indicator.resource.url}/info/metadata` }
+      : { id: 0, url: "" },
+    { enabled: !!indicator && indicator.resource.type !== "h3" },
   );
+
+  if (!indicator || indicator.resource.type === "h3") return null;
 
   return (
     <div className="space-y-4 pt-4 first:pt-0">
