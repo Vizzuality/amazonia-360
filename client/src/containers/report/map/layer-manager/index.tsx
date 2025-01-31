@@ -25,7 +25,7 @@ export default function LayerManager() {
       <Layer index={0} layer={DATASETS.area_afp.layer} />
       <SelectedLayer location={location} />
 
-      {tab === "grid" && gridDatasets.length && <GridLayer />}
+      {tab === "grid" && !!gridDatasets.length && <GridLayer />}
       {tab === "grid" && !gridDatasets.length && <PlaceholderGridLayer />}
     </>
   );

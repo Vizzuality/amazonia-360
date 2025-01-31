@@ -3,7 +3,9 @@ import { QueryFunction, UseQueryOptions } from "@tanstack/react-query";
 import { useIndicators } from "@/lib/indicators";
 
 import { Topic } from "@/app/local-api/topics/route";
-import TOPICS from "@/app/local-api/topics/topics.json";
+// import TOPICS from "@/app/local-api/topics/topics.json";
+import TOPICS from "@/app/local-api/topics/topics.test3.json";
+
 /**
  ************************************************************
  ************************************************************
@@ -58,7 +60,7 @@ export const useGetTopics =
       indicatorsData?.forEach((indicator) => {
         const { topic } = indicator;
 
-        if (!topic.id || !topic.name) {
+        if (!topic.id || !topic.name_es) {
           return;
         }
 
@@ -83,7 +85,7 @@ export const useGetTopics =
         topics[parseInt(topicId)].indicators = topicItems?.map((indicator) => ({
           name: indicator.name,
           id: indicator.id,
-          description: indicator.description_en,
+          description: indicator.description,
           visualization_types: indicator.visualization_types || [],
           default_visualization: indicator.topic.default_visualization || [],
           h3: indicator.h3,

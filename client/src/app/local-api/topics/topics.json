@@ -116,5 +116,36 @@
       },
       { "id": 4, "type": "map", "x": 0, "y": 1, "w": 4, "h": 4 }
     ]
+  },
+  {
+    "id": 3,
+    "name": "IDB operations",
+    "name_en": "IDB operations",
+    "name_es": "Operaciones del BID",
+    "name_pt": "Operações do BID",
+    "image": "/images/topics/idb.webp",
+    "description": "IDB development operations and impact data.",
+    "description_en": "IDB development operations and impact data.",
+    "description_es": "Operaciones de desarrollo del BID y datos de impacto.",
+    "description_pt": "Operações de desenvolvimento do BID e dados de impacto.",
+    "default_visualization": [
+      {
+        "id": 4,
+        "type": "numeric",
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 5,
+        "type": "numeric",
+        "x": 1,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      { "id": 4, "type": "map", "x": 0, "y": 1, "w": 4, "h": 4 }
+    ]
   }
 ]

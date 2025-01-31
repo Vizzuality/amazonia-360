@@ -8,6 +8,7 @@ import { DeckLayer } from "@deck.gl/arcgis";
 import { Accessor, Color } from "@deck.gl/core";
 import { DataFilterExtension, DataFilterExtensionProps } from "@deck.gl/extensions";
 import { H3HexagonLayer } from "@deck.gl/geo-layers";
+import { ArrowTable } from "@loaders.gl/arrow";
 import { ArrowLoader } from "@loaders.gl/arrow";
 import { load } from "@loaders.gl/core";
 import CHROMA from "chroma-js";
@@ -38,7 +39,7 @@ const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 export const getGridLayerProps = ({
   gridDatasets,
   gridFilters,
-  gridSetUpFilters,
+  opacity,
   getFillColor,
   gridMetaData,
   geometry,
@@ -48,11 +49,7 @@ export const getGridLayerProps = ({
 }: {
   gridDatasets: string[];
   gridFilters: Record<string, number[] | Record<string, string | number>> | null;
-  gridSetUpFilters: {
-    [key: string]: number[] | number | string;
-    limit: number;
-    opacity: number;
-  };
+  opacity: number;
   getFillColor: Accessor<Record<string, number>, Color>;
   gridMetaData: MultiDatasetMeta | undefined;
   geometry: __esri.Polygon | null;
@@ -60,8 +57,10 @@ export const getGridLayerProps = ({
   setPopupInfo: (info: {
     id: number | null;
     index: undefined | string;
+    values: { column: string; value: string | number }[];
     x: number | null;
     y: number | null;
+    coordinates: number[] | undefined;
   }) => void;
   gridCellHighlight?: string;
 }) => {
@@ -101,17 +100,22 @@ export const getGridLayerProps = ({
         });
       });
     },
-
     pickable: true,
     onHover: (info) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
+      const table = info?.tile?.content as ArrowTable["data"];
+      const row = table?.get(info.index);
+      const values = gridDatasets.map((column) => ({ column, value: row?.[column] }));
+
       if (info && info.index === -1) {
         setPopupInfo({
           id: null,
           index: undefined,
+          values: [],
           x: null,
           y: null,
+          coordinates: undefined,
         });
       }
       if (info && info.index !== -1) {
@@ -120,8 +124,10 @@ export const getGridLayerProps = ({
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           index: info.sourceLayer?.props?.tile?.index?.h3index,
+          values,
           x: info.x,
           y: info.y,
+          coordinates: info.coordinate,
         });
       }
     },
@@ -132,6 +138,7 @@ export const getGridLayerProps = ({
     },
     updateTriggers: {
       getTileData: [geometry],
+      opacity: [opacity],
     },
     renderSubLayers: (props) => {
       if (!props.data) {
@@ -170,7 +177,6 @@ export const getGridLayerProps = ({
           return [-1, 1] as [number, number];
         });
       };
-
       return [
         new H3HexagonLayer<
           {
@@ -179,12 +185,12 @@ export const getGridLayerProps = ({
           },
           DataFilterExtensionProps
         >({
-          id: props.id,
+          ...props,
+          id: `${props.id}-${opacity}`,
           data: props.data,
           highPrecision: true,
-          opacity: gridSetUpFilters.opacity,
+          opacity,
           pickable: true,
-
           filled: !!gridDatasets.length,
           extruded: false,
           stroked: false,
@@ -198,35 +204,42 @@ export const getGridLayerProps = ({
           updateTriggers: {
             getFillColor: [gridDatasets],
             getFilterValue: [gridDatasets],
+            opacity: [opacity],
           },
         }),
         new H3HexagonLayer({
-          id: `${props.id}-grid`,
+          ...props,
+          id: `${props.id}-grid-${opacity}`,
           data: props.data,
           highPrecision: true,
-          opacity: gridSetUpFilters.opacity,
+          opacity: opacity,
           visible: zoom && zoom < 8 ? false : true,
-          pickable: false,
+          pickable: true,
           filled: false,
           extruded: false,
           // HEXAGON
           getHexagon: (d) => `${d.cell}`,
           // LINE
+          onHover: (x) => {
+            console.info("hover from subLayer 2", { x });
+          },
           stroked: true,
           getLineColor: [0, 154, 222, 255],
           getLineWidth: 1,
           lineWidthUnits: "pixels",
           updateTriggers: {
             getLineColor: [zoom],
+            opacity: [opacity],
           },
         }),
         new H3HexagonLayer({
-          id: `${props.id}-grid-highlight`,
+          ...props,
+          id: `${props.id}-grid-highlight-${opacity}`,
           data: !!gridCellHighlight ? [gridCellHighlight] : [],
           highPrecision: true,
-          opacity: gridSetUpFilters.opacity,
+          opacity: opacity,
           visible: !!gridCellHighlight,
-          pickable: false,
+          pickable: true,
           filled: true,
           extruded: false,
           // HEXAGON
@@ -237,6 +250,9 @@ export const getGridLayerProps = ({
           getLineColor: [0, 220, 255, 255],
           getLineWidth: 3,
           lineWidthUnits: "pixels",
+          updateTriggers: {
+            opacity: [opacity],
+          },
         }),
       ];
     },
@@ -257,7 +273,6 @@ export default function GridLayer() {
   const [zoom, setZoom] = useState(map?.view.zoom);
 
   map?.view.watch("zoom", setZoom);
-
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
   });
@@ -285,11 +300,11 @@ export default function GridLayer() {
   }, [gridSelectedDataset, gridMetaData]);
 
   const getFillColor = useCallback(
-    (d: Record<string, number>): Color => {
-      return colorscale(d[`${gridSelectedDataset}`]).rgb();
-    },
+    (d: Record<string, number>): Color => colorscale(d[`${gridSelectedDataset}`]).rgb(),
     [gridSelectedDataset, colorscale],
   );
+
+  const opacity = useMemo(() => gridSetUpFilters.opacity * 0.01, [gridSetUpFilters]);
 
   const layer = useMemo(() => {
     if (!GRID_LAYER.current) {
@@ -298,7 +313,7 @@ export default function GridLayer() {
           getGridLayerProps({
             gridDatasets,
             gridFilters,
-            gridSetUpFilters,
+            opacity,
             gridMetaData,
             getFillColor,
             setPopupInfo,
@@ -316,7 +331,7 @@ export default function GridLayer() {
       getGridLayerProps({
         gridDatasets,
         gridFilters,
-        gridSetUpFilters,
+        opacity,
         gridMetaData,
         getFillColor,
         geometry: GEOMETRY,
@@ -331,11 +346,12 @@ export default function GridLayer() {
     gridDatasets,
     gridFilters,
     getFillColor,
+
     gridMetaData,
     GEOMETRY,
     zoom,
     gridCellHighlight,
-    gridSetUpFilters,
+    opacity,
     setPopupInfo,
   ]);
 

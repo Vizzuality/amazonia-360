@@ -3,12 +3,22 @@ import { useMemo } from "react";
 import { useResourceId } from "@/lib/indicators";
 import { useSession } from "@/lib/session";
 
+import {
+  ResourceFeature,
+  ResourceImageryTile,
+  ResourceWebTile,
+} from "@/app/local-api/indicators/route";
 import { Indicator } from "@/app/local-api/indicators/route";
 
 import { CardLoader } from "@/containers/card";
 import WidgetMap from "@/containers/map";
 
-export const MapIndicators = ({ id, resource }: Indicator) => {
+export const MapIndicators = ({
+  id,
+  resource,
+}: Omit<Indicator, "resource"> & {
+  resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
+}) => {
   const { data: session } = useSession();
   const query = useResourceId({ resource, session });
 

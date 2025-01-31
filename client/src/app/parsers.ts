@@ -40,6 +40,6 @@ export const gridFiltersSetUpParser = parseAsJson<{
   limit: number;
   opacity: number;
   direction: "asc" | "desc";
-}>().withDefault({ limit: 10, opacity: 1, direction: "asc" });
+}>().withDefault({ limit: 10, opacity: 100, direction: "asc" });
 export const gridDatasetsParser = parseAsArrayOf(parseAsString).withDefault([]);
 export const gridDatasetSelectedParser = parseAsString;
