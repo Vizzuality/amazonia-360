@@ -1,4 +1,5 @@
-import INDICATORS from "./indicators.json";
+import INDICATORS from "./indicators_test_4.json";
+// import INDICATORS from "./indicators.json";
 
 export type VisualizationType = "map" | "table" | "chart" | "numeric";
 
@@ -30,6 +31,8 @@ export type H3Indicator = {
   name: string;
   description: string;
   column: string;
+  type: "h3";
+  url?: string;
 };
 
 export type Indicator = {
@@ -42,10 +45,18 @@ export type Indicator = {
   description_es?: string;
   description_en?: string;
   description_pt?: string;
+  description_short?: string;
+  description_short_es?: string;
+  description_short_en?: string;
+  description_short_pt?: string;
+  unit: string;
+  unit_es?: string;
+  unit_en?: string;
+  unit_pt?: string;
   topic: number;
   visualization_types: VisualizationType[];
-  resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
-  h3: H3Indicator[];
+  resource: ResourceFeature | ResourceWebTile | ResourceImageryTile | H3Indicator;
+  h3?: H3Indicator[];
 };
 
 export async function GET() {

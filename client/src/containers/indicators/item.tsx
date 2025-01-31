@@ -1,6 +1,11 @@
 import { useIndicatorsId } from "@/lib/indicators";
 
 import { Indicator } from "@/app/local-api/indicators/route";
+import {
+  ResourceFeature,
+  ResourceImageryTile,
+  ResourceWebTile,
+} from "@/app/local-api/indicators/route";
 
 import {
   ResourceMap,
@@ -31,6 +36,7 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
               <td className="w-60">Resource Type</td>
               <td>{indicator?.resource.type}</td>
             </tr>
+
             <tr>
               <td className="w-60">Resource URL</td>
               <td>
@@ -44,16 +50,27 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
               <td>{indicator?.visualization_types.join(", ")}</td>
             </tr>
 
-            {indicator?.visualization_types
-              .filter((t) => t === "map")
-              .map((type) => (
-                <tr key={type}>
-                  <td>Map</td>
-                  <td>
-                    <ResourceMap {...indicator} />
-                  </td>
-                </tr>
-              ))}
+            {indicator?.resource.type !== "h3" &&
+              indicator?.visualization_types
+                .filter((t) => t === "map")
+                .map((type) => {
+                  return (
+                    <tr key={type}>
+                      <td>Map</td>
+                      <td>
+                        <ResourceMap
+                          {...indicator}
+                          resource={
+                            indicator.resource as
+                              | ResourceFeature
+                              | ResourceWebTile
+                              | ResourceImageryTile
+                          }
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
 
             {indicator?.visualization_types
               .filter((t) => t !== "map")

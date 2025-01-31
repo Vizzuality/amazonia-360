@@ -105,7 +105,7 @@ export function VisualizationTypes({
               <button
                 type="button"
                 className={cn({
-                  "flex w-full items-center space-x-2 hover:bg-primary/20": true,
+                  "flex w-full items-center space-x-2 hover:bg-blue-100": true,
                   "pointer-events-none cursor-none opacity-50": isDisabled,
                 })}
                 disabled={isDisabled}

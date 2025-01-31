@@ -1,4 +1,3 @@
-import { Card } from "@/containers/card";
 import WidgetsColumn from "@/containers/widgets/column";
 import WidgetMap from "@/containers/widgets/map";
 import WidgetAdministrativeBoundaries from "@/containers/widgets/overview/administrative-boundaries";
@@ -25,27 +24,25 @@ export default function WidgetsOverview() {
           <WidgetIndigenous />
         </WidgetsColumn>
         <WidgetsColumn className="col-span-12 lg:col-span-6 print:col-span-12">
-          <Card className="relative h-full p-0">
-            <WidgetMap
-              ids={["ciudades_capitales"]}
-              popup={{
-                dockEnabled: true,
-                dockOptions: {
-                  buttonEnabled: false,
-                  breakpoint: false,
-                  position: "bottom-right",
-                },
-                visibleElements: {
-                  featureNavigation: false,
-                },
-                viewModel: {
-                  includeDefaultActions: false,
-                  features: [],
-                },
-                collapseEnabled: false,
-              }}
-            />
-          </Card>
+          <WidgetMap
+            ids={["ciudades_capitales"]}
+            popup={{
+              dockEnabled: true,
+              dockOptions: {
+                buttonEnabled: false,
+                breakpoint: false,
+                position: "bottom-right",
+              },
+              visibleElements: {
+                featureNavigation: false,
+              },
+              viewModel: {
+                includeDefaultActions: false,
+                features: [],
+              },
+              collapseEnabled: false,
+            }}
+          />
         </WidgetsColumn>
         <WidgetsColumn className="col-span-12 lg:col-span-6 print:col-span-12">
           <WidgetAdministrativeBoundaries />
