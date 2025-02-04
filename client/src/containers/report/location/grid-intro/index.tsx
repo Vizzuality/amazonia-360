@@ -11,7 +11,7 @@ export default function AmazoniaGridIntro() {
   return (
     <button
       type="button"
-      className="flex space-x-3 rounded-sm bg-blue-50 p-2"
+      className="flex space-x-2 rounded-sm bg-blue-50 p-2"
       onClick={() => setTab("grid")}
     >
       <div>
@@ -19,7 +19,8 @@ export default function AmazoniaGridIntro() {
       </div>
       <div className="flex max-w-64 flex-col space-y-1 text-left text-sm md:max-w-96">
         <span className="font-semibold text-foreground">
-          Detect patterns within Amazonia using the Grid
+          Detect patterns within Amazonia
+          <br /> using the Grid
         </span>
         <div className="flex space-x-4">
           <p className="font-normal text-muted-foreground">

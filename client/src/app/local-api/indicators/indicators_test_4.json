@@ -1216,7 +1216,7 @@
     "visualization_types": ["map", "table", "numeric", "chart"],
     "resource": {
       "name": "AFP_Tierras_indigenas",
-      "type": "feature",
+      "type": "imagery-tile",
       "column": [],
       "layer_id": "0",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
@@ -1309,7 +1309,7 @@
     "visualization_types": ["map", "chart"],
     "resource": {
       "name": "landcover_cog_tiles",
-      "type": "imagery-tile",
+      "type": "feature",
       "column": [],
       "layer_id": "0",
       "url": "https://tiledimageservices6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/landcover_test_3/ImageServer",
@@ -1337,50 +1337,44 @@
     "name": "Electricity Access",
     "name_es": "Electricity Access",
     "name_pt": "Electricity Access",
-    "unit": "nº",
-    "unit_es": "nº",
-    "unit_pt": "nº",
-    "description": "",
-    "description_es": "",
-    "description_pt": "",
+    "unit": "%",
+    "unit_es": "%",
+    "unit_pt": "%",
+    "description": "### Electricity Access\n\nThis polygon layer, at the second administrative level (provinces, municipalities, cantons), represents the percentage of the population with access to the electricity supply network.\n\nElectricity access is a crucial factor for improving quality of life, economic growth, and environmental sustainability. This indicator helps identify regions with energy deficits, facilitating policy planning to expand electrical infrastructure in vulnerable areas. The Electricity Access indicator measures the proportion of the population with electricity access in a given geographic area and is a key component of Sustainable Development Goal 7 (SDG 7), which aims to ensure universal access to affordable, reliable, sustainable, and modern energy.\n\nThe dataset is based on a combination of satellite data and population models. First, WorldPop data---a global population distribution model---is used to estimate the number of inhabitants in each geographic unit. Then, this information is cross-referenced with VIIRS Nighttime Lights Version 2 (VNL V2) data, a set of satellite images mapping nighttime light intensity. It is assumed that illuminated areas have electricity access and that the population within these polygons has an electricity supply.\n\n**Compilation by AmazoniaForever360+** using original global data. The dataset includes municipal units that intersect or are contained within the Amazon region boundary. A highly simplified version of the original data structure is presented:\n\n[Earthdata NASA - SDG 7.1.1: Access to Electricity](https://www.earthdata.nasa.gov/data/catalog/sedac-ciesin-sedac-sdgi-accelec-2023-2023.00)\n\nThe layer represents second-level administrative units (**NAME_2**) located within first-level divisions (**NAME_1**) and countries (**NAME_0**). The **Pop_A2** field displays the estimated population for each second-level administrative unit, while **SDG711pct** indicates the percentage of the population with electricity access according to SDG 7.1.1. This percentage reflects the proportion of people within each administrative unit who have guaranteed electricity access, ranging from **0% (no access) to 100% (full access).**\n\nThe **SDG 7.1.1: Access to Electricity dataset (2023 edition, covering 2020-2022)** is provided by the Socioeconomic Data and Applications Center (SEDAC), operated by CIESIN at Columbia University, as part of NASA's data archive system. Its goal is to integrate socioeconomic data with environmental and geospatial information to support research and policymaking on topics such as sustainable development, climate change, and resource management.\n\nThe dataset can be accessed at:\\\n[SDG 7.1.1: Access to Electricity - SEDAC](https://sedac.ciesin.columbia.edu/data/set/sdgi-7-1-1-access-electricity-2023)",
+    "description_es": "### Acceso a la electricidad \n\nCapa poligonal, en unidades administrativas de nivel dos (provincias, municipio, cantones), que representa el porcentaje de la población con acceso a la red de suministro eléctrico. \n\nEl acceso a electricidad es un factor fundamental para mejorar calidad de vida, crecimiento económico y sostenibilidad ambiental. Este indicador permite identificar regiones con déficit energético, facilitando la planificación de políticas para expandir la infraestructura eléctrica en zonas vulnerables. El indicador de Acceso a la Electricidad mide la proporción de la población con acceso a electricidad en una determinada área geográfica y es un componente clave del Objetivo de Desarrollo Sostenible 7 (ODS 7), que busca garantizar el acceso universal a energía asequible, confiable, sostenible y moderna. Se basa en la combinación de datos satelitales y modelos de población. En primer lugar, se utilizan los datos de WorldPop, un modelo global de distribución de población, para estimar cuántas personas habitan en cada unidad geográfica. Luego, esta información se cruza con los datos de VIIRS Nighttime  Lights  Version 2 (VNL V2), un conjunto de imágenes satelitales que mapea la intensidad de la iluminación nocturna. Se asume que las áreas iluminadas tienen acceso a electricidad y que la población ubicada dentro de estos polígonos cuenta con suministro eléctrico. \n\nCompilación por AmazoniaForever360+ a partir de los datos globales originales. Se presentan las unidades municipales intersecadas o contenidas por el límite de la Amazonia. Se muestra una versión muy simplificada de la estructura de datos originales: \n\n<https://www.earthdata.nasa.gov/data/catalog/sedac-ciesin-sedac-sdgi-accelec-2023-2023.00> \n\nLa capa representa unidades administrativas de segundo nivel (NAME_2) ubicadas dentro de divisiones administrativas de primer nivel (NAME_1) y países (NAME_0). El campo (Pop_A2) muestra la población estimada de cada unidad administrativa de segundo nivel, mientras que SDG711pct indica el porcentaje de la población con acceso a electricidad, según el indicador SDG 7.1.1. Este porcentaje refleja la proporción de personas dentro de cada unidad administrativa que tienen acceso garantizado a electricidad, con valores que van del 0% (sin acceso) al 100% (acceso total). \n\nEl conjunto de datos Indicador ODS 7.1.1: Acceso a la Electricidad, Edición 2023 (2020-2022) es proporcionado por el Centro de Información Socioeconómica y Aplicaciones (SEDAC), operado por CIESIN en la Universidad de Columbia, como parte del sistema de archivos de datos de la NASA. Su objetivo es integrar datos socioeconómicos con información ambiental y geoespacial para apoyar la investigación y la formulación de políticas en temas como desarrollo sostenible, cambio climático y gestión de recursos. \n\nLos datos pueden consultarse en el siguiente enlace: \n\n<https://sedac.ciesin.columbia.edu/data/set/sdgi-7-1-1-access-electricity-2023>",
+    "description_pt": "### Electricity Access\n\nThis polygon layer, at the second administrative level (provinces, municipalities, cantons), represents the percentage of the population with access to the electricity supply network.\n\nElectricity access is a crucial factor for improving quality of life, economic growth, and environmental sustainability. This indicator helps identify regions with energy deficits, facilitating policy planning to expand electrical infrastructure in vulnerable areas. The Electricity Access indicator measures the proportion of the population with electricity access in a given geographic area and is a key component of Sustainable Development Goal 7 (SDG 7), which aims to ensure universal access to affordable, reliable, sustainable, and modern energy.\n\nThe dataset is based on a combination of satellite data and population models. First, WorldPop data---a global population distribution model---is used to estimate the number of inhabitants in each geographic unit. Then, this information is cross-referenced with VIIRS Nighttime Lights Version 2 (VNL V2) data, a set of satellite images mapping nighttime light intensity. It is assumed that illuminated areas have electricity access and that the population within these polygons has an electricity supply.\n\n**Compilation by AmazoniaForever360+** using original global data. The dataset includes municipal units that intersect or are contained within the Amazon region boundary. A highly simplified version of the original data structure is presented:\n\n[Earthdata NASA - SDG 7.1.1: Access to Electricity](https://www.earthdata.nasa.gov/data/catalog/sedac-ciesin-sedac-sdgi-accelec-2023-2023.00)\n\nThe layer represents second-level administrative units (**NAME_2**) located within first-level divisions (**NAME_1**) and countries (**NAME_0**). The **Pop_A2** field displays the estimated population for each second-level administrative unit, while **SDG711pct** indicates the percentage of the population with electricity access according to SDG 7.1.1. This percentage reflects the proportion of people within each administrative unit who have guaranteed electricity access, ranging from **0% (no access) to 100% (full access).**\n\nThe **SDG 7.1.1: Access to Electricity dataset (2023 edition, covering 2020-2022)** is provided by the Socioeconomic Data and Applications Center (SEDAC), operated by CIESIN at Columbia University, as part of NASA's data archive system. Its goal is to integrate socioeconomic data with environmental and geospatial information to support research and policymaking on topics such as sustainable development, climate change, and resource management.\n\nThe dataset can be accessed at:\\\n[SDG 7.1.1: Access to Electricity - SEDAC](https://sedac.ciesin.columbia.edu/data/set/sdgi-7-1-1-access-electricity-2023)",
     "description_short": "Distribution of electricity access across the region, indicating infrastructure development",
     "description_short_es": "Distribution of electricity access across the region, indicating infrastructure development",
     "description_short_pt": "Distribution of electricity access across the region, indicating infrastructure development",
-    "visualization_types": ["map", "table", "numeric", "chart"],
+    "visualization_types": ["map", "table", "numeric"],
     "resource": {
-      "name": "AFP_Tierras_indigenas",
+      "name": "Electricity_Access",
       "type": "feature",
       "column": [],
       "layer_id": "0",
-      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Electricity_Access/FeatureServer",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
           {
-            "onStatisticField": "FID",
+            "onStatisticField": "SDG711pct",
             "outStatisticFieldName": "value",
-            "statisticType": "count"
+            "statisticType": "mean"
           }
         ]
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["nombre as Name", "etnias as Ethnicity", ","],
+        "outFields": [
+          "NAME_0 as Country",
+          "NAME_2 as Locality",
+          "Pop_A2 as Population",
+          "SDG711pct as Perc_Access",
+          ","
+        ],
         "returnGeometry": false
       },
-      "query_chart": {
-        "where": "1=1",
-        "returnGeometry": false,
-        "groupByFieldsForStatistics": ["DESIG_ENG"],
-        "orderByFields": ["value DESC"],
-        "outStatistics": [
-          {
-            "onStatisticField": "FID",
-            "outStatisticFieldName": "value",
-            "statisticType": "count"
-          }
-        ]
-      }
+      "query_chart": ""
     }
   },
   {
@@ -1393,19 +1387,19 @@
     "unit": "nº",
     "unit_es": "nº",
     "unit_pt": "nº",
-    "description": "",
-    "description_es": "",
-    "description_pt": "",
+    "description": "### Higher Education Centers\n\nThis point layer represents the location of higher education centers.\n\nThese institutions play a crucial role in training professionals, scientists, and technicians involved in sustainable natural resource management, productive development, and territorial planning. Beyond their educational function, they serve as research and development hubs where methodologies, techniques, and knowledge products are generated to address development challenges in the Amazon.\n\nSpatial identification and analysis of these centers help evaluate their distribution, accessibility, and relationship with other territorial and socioeconomic factors. This also facilitates the integration of key information for designing strategies aimed at strengthening human capital and promoting technological innovation in strategic sectors. This layer is an essential resource for public policy planning, the development of cooperation initiatives, and the design of higher education programs aligned with sustainable development goals.\n\nThis dataset, compiled by **AmazoniaForever360+ (2023),** is an adaptation of publicly available data provided for illustrative and reference purposes only, with no application for emergency response. The data originate from the **OpenStreetMap (OSM) project.** The layer represents higher education centers as geographic points in OSM. The **Higher Education Center Type** field categorizes these institutions as **'universities,'** while the **Higher Education Center Name** field provides the specific name of each institution, such as *'Carrera de Geografía'* or *'Universidad Cooperativa.'*\n\n### **OpenStreetMap (OSM) Data**\n\nOpenStreetMap (OSM) is a collaborative, open-source geospatial database that collects information on infrastructure and services worldwide. OSM data are organized into **nodes, ways,** and **relations,** each labeled with **tags** describing their function. To extract relevant information on higher education, healthcare facilities, and security forces, specific tags are used, such as:\n\n-   **Universities and colleges:** `amenity=university`, `amenity=college`\n\nThese data are crucial for **territorial planning, service accessibility analysis,** and **emergency management** in the Amazon region.\n\n### **Sources for OSM Data:**\n\n-   **Geofabrik:** <https://download.geofabrik.de/>\n-   **HOT Export Tool:** A tool from the Humanitarian OpenStreetMap Team (HOT) for exporting customized OSM data in GIS-compatible formats: <https://export.hotosm.org/>\n-   **BBBike Extracts:** <https://extract.bbbike.org/>\n\n### **GIS Applications Using OpenStreetMap Data:**\n\nOSM data are widely used in open-source GIS platforms for multiple applications, including:\n\n-   **QGIS:** Importing and analyzing OSM data using plugins like **QuickOSM.**\n-   **PostGIS:** Integrating spatial databases for advanced analysis and **web mapping.**\n-   **GRASS GIS:** Modeling urban infrastructure and **service accessibility.**\n-   **Leaflet and OpenLayers:** Developing **web applications** with dynamic maps.",
+    "description_es": "### Centros de educación superior. \n\nCapa de puntos que representan la ubicación de centros de educación superior. \n\nEsta capa representa la ubicación de los centros de educación superior, fundamentales en la formación de los profesionales, científicos y técnicos involucrados en la gestión sostenible de los recursos naturales, el desarrollo productivo y la planificación territorial. Además de su función educativa, estas instituciones son centros de investigación y desarrollo donde se generan metodologías, técnicas y productos del conocimiento aplicables a la solución de los desafíos del desarrollo en la Amazonia. La identificación y análisis espacial de estos centros permite evaluar su distribución, accesibilidad y relación con otros factores territoriales y socioeconómicos. Asimismo, facilita la integración de información clave para la formulación de estrategias orientadas al fortalecimiento del capital humano y al impulso de la innovación tecnológica en sectores estratégicos. Esta capa es un insumo esencial para la planificación de políticas públicas, el desarrollo de iniciativas de cooperación y el diseño de programas de educación superior alineados con los objetivos del desarrollo sostenible. \n\nEsta capa es una adaptación por AmazoniaForever360+, 2023, de un conjunto de datos que se presentan a título ilustrativo y referencial, sin aplicaciones en la atención de emergencias. Los datos provienen del proyecto OpenStreetMap (OSM). La capa representa centros de educación superior identificados como puntos geográficos en OSM. El campo (Higher  Education Center Type) clasifica los centros según su categoría, en este caso, como 'universidades'. El campo (Higher  Education Center Name) proporciona el nombre específico de cada institución, como 'Carrera de Geografía', o 'Universidad Cooperativa' \n\nOpenStreetMap (OSM) es una base de datos geoespacial colaborativa y de código abierto que recopila información sobre la infraestructura y servicios en todo el mundo. Los datos de OSM están organizados en nodos, vías y relaciones, cada uno con etiquetas (tags) que describen su función. Para extraer información relevante sobre educación superior, centros de salud y fuerzas de seguridad, se utilizan etiquetas específicas, como: \n\n-Universidades e institutos: amenity=university, amenity=college \n\nEstos datos son cruciales para la planificación territorial, el análisis de accesibilidad a servicios y la gestión de emergencias en la Amazonia. \n\nAlgunas fuentes de datos OSM: \n\nGeofabrik: <https://download.geofabrik.de/> \n\nHOT Export Tool: herramienta de la Humanitarian  OpenStreetMap  Team (HOT) que permite exportar datos personalizados de OSM en formatos compatibles con GIS: <https://export.hotosm.org/> \n\nBBBike  Extracts: <https://extract.bbbike.org/> \n\nLos datos de OpenStreetMap son ampliamente utilizados en plataformas GIS de código abierto para múltiples aplicaciones, incluyendo: \n\nQGIS: Importación y análisis de datos OSM con plugins como QuickOSM. \n\nPostGIS: Integración con bases de datos espaciales para análisis avanzados y web mapping. \n\nGRASS GIS: Modelado de infraestructura urbana y accesibilidad a servicios. \n\nLeaflet y OpenLayers: Desarrollo de aplicaciones web con mapas dinámicos.",
+    "description_pt": "### Higher Education Centers\n\nThis point layer represents the location of higher education centers.\n\nThese institutions play a crucial role in training professionals, scientists, and technicians involved in sustainable natural resource management, productive development, and territorial planning. Beyond their educational function, they serve as research and development hubs where methodologies, techniques, and knowledge products are generated to address development challenges in the Amazon.\n\nSpatial identification and analysis of these centers help evaluate their distribution, accessibility, and relationship with other territorial and socioeconomic factors. This also facilitates the integration of key information for designing strategies aimed at strengthening human capital and promoting technological innovation in strategic sectors. This layer is an essential resource for public policy planning, the development of cooperation initiatives, and the design of higher education programs aligned with sustainable development goals.\n\nThis dataset, compiled by **AmazoniaForever360+ (2023),** is an adaptation of publicly available data provided for illustrative and reference purposes only, with no application for emergency response. The data originate from the **OpenStreetMap (OSM) project.** The layer represents higher education centers as geographic points in OSM. The **Higher Education Center Type** field categorizes these institutions as **'universities,'** while the **Higher Education Center Name** field provides the specific name of each institution, such as *'Carrera de Geografía'* or *'Universidad Cooperativa.'*\n\n### **OpenStreetMap (OSM) Data**\n\nOpenStreetMap (OSM) is a collaborative, open-source geospatial database that collects information on infrastructure and services worldwide. OSM data are organized into **nodes, ways,** and **relations,** each labeled with **tags** describing their function. To extract relevant information on higher education, healthcare facilities, and security forces, specific tags are used, such as:\n\n-   **Universities and colleges:** `amenity=university`, `amenity=college`\n\nThese data are crucial for **territorial planning, service accessibility analysis,** and **emergency management** in the Amazon region.\n\n### **Sources for OSM Data:**\n\n-   **Geofabrik:** <https://download.geofabrik.de/>\n-   **HOT Export Tool:** A tool from the Humanitarian OpenStreetMap Team (HOT) for exporting customized OSM data in GIS-compatible formats: <https://export.hotosm.org/>\n-   **BBBike Extracts:** <https://extract.bbbike.org/>\n\n### **GIS Applications Using OpenStreetMap Data:**\n\nOSM data are widely used in open-source GIS platforms for multiple applications, including:\n\n-   **QGIS:** Importing and analyzing OSM data using plugins like **QuickOSM.**\n-   **PostGIS:** Integrating spatial databases for advanced analysis and **web mapping.**\n-   **GRASS GIS:** Modeling urban infrastructure and **service accessibility.**\n-   **Leaflet and OpenLayers:** Developing **web applications** with dynamic maps.",
     "description_short": "Location of universities and other higher education institutions",
     "description_short_es": "Location of universities and other higher education institutions",
     "description_short_pt": "Location of universities and other higher education institutions",
     "visualization_types": ["map", "table", "numeric", "chart"],
     "resource": {
-      "name": "AFP_Tierras_indigenas",
+      "name": "Higher_Education_Centers",
       "type": "feature",
       "column": [],
       "layer_id": "0",
-      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Higher_Education_Centers/FeatureServer",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -1418,7 +1412,11 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["nombre as Name", "etnias as Ethnicity", ","],
+        "outFields": [
+          "Higher Education Centers class as Class",
+          "Higher Education Centers name as Name",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": {
@@ -1446,19 +1444,19 @@
     "unit": "nº",
     "unit_es": "nº",
     "unit_pt": "nº",
-    "description": "",
-    "description_es": "",
-    "description_pt": "",
+    "description": "### **Healthcare Service Centers**\n\nThis point layer represents the location of facilities providing healthcare-related services, including medical assistance, clinics, pharmacies, and more.\n\nThis dataset includes hospitals, clinics, and other healthcare infrastructures that are essential for ensuring access to medical care in the Amazon region. These establishments play a central role in **disease prevention and treatment, public health promotion,** and **emergency response to health crises and natural disasters.** Spatial analysis of these centers allows for evaluating their territorial distribution, assessing population accessibility to medical services, and identifying gaps in healthcare coverage. This information is also key to **planning strategies to strengthen health infrastructure and human resources,** ensuring that communities, especially those in remote areas, have access to adequate medical services.\n\nThis dataset, compiled by **AmazoniaForever360+ (2023),** is an adaptation of publicly available data provided for illustrative and reference purposes only, with no application for emergency response. The data originate from the **OpenStreetMap (OSM) project.** The layer represents healthcare service centers as geographic points.\n\n-   The **HEALSERV** field identifies the type of healthcare service provided, such as **'pharmacy' (pharmacy), 'dentist' (dentist), 'doctors' (general practitioners),** or **'clinic' (clinic).**\n-   The **DSIGN** field includes the specific name of the establishment, such as **'Farmacia La Caridad,' 'Dentista KIDS,'** or **'Casa 'Mi Salud'.'**\n\n### **OpenStreetMap (OSM) Data**\n\nOpenStreetMap (OSM) is a collaborative, open-source geospatial database that collects information on infrastructure and services worldwide. OSM data are organized into **nodes, ways,** and **relations,** each labeled with **tags** describing their function. To extract relevant information on **healthcare services, higher education institutions,** and **security forces,** specific tags are used, such as:\n\n-   **Healthcare facilities:** `amenity=hospital`, `amenity=clinic`, `healthcare=*`\n\nThese data are crucial for **territorial planning, service accessibility analysis,** and **emergency management** in the Amazon region.\n\n### **Sources for OSM Data:**\n\n-   **Geofabrik:** <https://download.geofabrik.de/>\n-   **HOT Export Tool:** A tool from the Humanitarian OpenStreetMap Team (HOT) for exporting customized OSM data in GIS-compatible formats: <https://export.hotosm.org/>\n-   **BBBike Extracts:** <https://extract.bbbike.org/>\n\n### **GIS Applications Using OpenStreetMap Data:**\n\nOSM data are widely used in open-source GIS platforms for multiple applications, including:\n\n-   **QGIS:** Importing and analyzing OSM data using plugins like **QuickOSM.**\n-   **PostGIS:** Integrating spatial databases for advanced analysis and **web mapping.**\n-   **GRASS GIS:** Modeling urban infrastructure and **service accessibility.**\n-   **MapServer and GeoServer:** Publishing **interactive maps** with OSM data.\n-   **Leaflet and OpenLayers:** Developing **web applications** with dynamic maps.",
+    "description_es": "### Centros de servicios de salud \n\nCapa de puntos que representa la ubicación de centros que prestan servicios relacionados con la salud: servicios médicos asistenciales, clínicas, farmacias etc. \n\nEsta capa representa la ubicación de los centros de servicios de salud, incluyendo hospitales, clínicas y otras infraestructuras sanitarias, esenciales para garantizar el acceso a la atención médica en la Amazonia. Estos establecimientos desempeñan un papel central en la prevención y tratamiento de enfermedades, la promoción de la salud pública y la respuesta ante emergencias sanitarias y desastres naturales. El análisis espacial de estos centros permite evaluar su distribución territorial, la accesibilidad de la población a los servicios médicos y la identificación de brechas en la cobertura de atención sanitaria. Además, esta información es clave para la planificación de estrategias orientadas a fortalecer la infraestructura y los recursos humanos en salud, asegurando que las comunidades, especialmente aquellas en áreas remotas, cuenten con servicios adecuados. \n\nEsta capa es una adaptación por AmazoniaForever360+, 2023, de un conjunto de datos que se presentan a título ilustrativo y referencial, sin aplicaciones en la atención de emergencias. Los datos provienen del proyecto OpenStreetMap (OSM). La capa representa centros de servicios de salud ubicados como puntos geográficos. El campo (HEALSERV) identifica el tipo de servicio de salud proporcionado, como 'pharmacy' (farmacia), 'dentist' (dentista), 'doctors' (médicos) o 'clinic' (clínica). El campo (DSIGN)incluye el nombre específico del establecimiento, como 'Farmacia La Caridad', 'Dentista KIDS' o 'Casa 'Mi Salud''. \n\nOpenStreetMap (OSM) es una base de datos geoespacial colaborativa y de código abierto que recopila información sobre la infraestructura y servicios en todo el mundo. Los datos de OSM están organizados en nodos, vías y relaciones, cada uno con etiquetas (tags) que describen su función. Para extraer información relevante sobre educación superior, centros de salud y fuerzas de seguridad, se utilizan etiquetas específicas, como: \n\n-Centros de salud: amenity=hospital, amenity=clinic, healthcare=* \n\nEstos datos son cruciales para la planificación territorial, el análisis de accesibilidad a servicios y la gestión de emergencias en la Amazonia. \n\nAlgunas fuentes de datos OSM: \n\nGeofabrik: <https://download.geofabrik.de/> \n\nHOT Export Tool: herramienta de la Humanitarian  OpenStreetMap  Team (HOT) que permite exportar datos personalizados de OSM en formatos compatibles con GIS: <https://export.hotosm.org/> \n\nBBBike  Extracts: <https://extract.bbbike.org/> \n\nLos datos de OpenStreetMap son ampliamente utilizados en plataformas GIS de código abierto para múltiples aplicaciones, incluyendo: \n\nQGIS: Importación y análisis de datos OSM con plugins como QuickOSM. \n\nPostGIS: Integración con bases de datos espaciales para análisis avanzados y web mapping. \n\nGRASS GIS: Modelado de infraestructura urbana y accesibilidad a servicios. \n\nMapServer y GeoServer: Publicación de mapas interactivos con datos OSM. \n\nLeaflet y OpenLayers: Desarrollo de aplicaciones web con mapas dinámicos.",
+    "description_pt": "### **Healthcare Service Centers**\n\nThis point layer represents the location of facilities providing healthcare-related services, including medical assistance, clinics, pharmacies, and more.\n\nThis dataset includes hospitals, clinics, and other healthcare infrastructures that are essential for ensuring access to medical care in the Amazon region. These establishments play a central role in **disease prevention and treatment, public health promotion,** and **emergency response to health crises and natural disasters.** Spatial analysis of these centers allows for evaluating their territorial distribution, assessing population accessibility to medical services, and identifying gaps in healthcare coverage. This information is also key to **planning strategies to strengthen health infrastructure and human resources,** ensuring that communities, especially those in remote areas, have access to adequate medical services.\n\nThis dataset, compiled by **AmazoniaForever360+ (2023),** is an adaptation of publicly available data provided for illustrative and reference purposes only, with no application for emergency response. The data originate from the **OpenStreetMap (OSM) project.** The layer represents healthcare service centers as geographic points.\n\n-   The **HEALSERV** field identifies the type of healthcare service provided, such as **'pharmacy' (pharmacy), 'dentist' (dentist), 'doctors' (general practitioners),** or **'clinic' (clinic).**\n-   The **DSIGN** field includes the specific name of the establishment, such as **'Farmacia La Caridad,' 'Dentista KIDS,'** or **'Casa 'Mi Salud'.'**\n\n### **OpenStreetMap (OSM) Data**\n\nOpenStreetMap (OSM) is a collaborative, open-source geospatial database that collects information on infrastructure and services worldwide. OSM data are organized into **nodes, ways,** and **relations,** each labeled with **tags** describing their function. To extract relevant information on **healthcare services, higher education institutions,** and **security forces,** specific tags are used, such as:\n\n-   **Healthcare facilities:** `amenity=hospital`, `amenity=clinic`, `healthcare=*`\n\nThese data are crucial for **territorial planning, service accessibility analysis,** and **emergency management** in the Amazon region.\n\n### **Sources for OSM Data:**\n\n-   **Geofabrik:** <https://download.geofabrik.de/>\n-   **HOT Export Tool:** A tool from the Humanitarian OpenStreetMap Team (HOT) for exporting customized OSM data in GIS-compatible formats: <https://export.hotosm.org/>\n-   **BBBike Extracts:** <https://extract.bbbike.org/>\n\n### **GIS Applications Using OpenStreetMap Data:**\n\nOSM data are widely used in open-source GIS platforms for multiple applications, including:\n\n-   **QGIS:** Importing and analyzing OSM data using plugins like **QuickOSM.**\n-   **PostGIS:** Integrating spatial databases for advanced analysis and **web mapping.**\n-   **GRASS GIS:** Modeling urban infrastructure and **service accessibility.**\n-   **MapServer and GeoServer:** Publishing **interactive maps** with OSM data.\n-   **Leaflet and OpenLayers:** Developing **web applications** with dynamic maps.",
     "description_short": "Distribution of healthcare facilities, from primary care centers to hospitals.",
     "description_short_es": "Distribution of healthcare facilities, from primary care centers to hospitals.",
     "description_short_pt": "Distribution of healthcare facilities, from primary care centers to hospitals.",
     "visualization_types": ["map", "table", "numeric", "chart"],
     "resource": {
-      "name": "AFP_Tierras_indigenas",
+      "name": "Health_Facilities",
       "type": "feature",
       "column": [],
       "layer_id": "0",
-      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Health_Facilities/FeatureServer",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -1471,7 +1469,7 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["nombre as Name", "etnias as Ethnicity", ","],
+        "outFields": ["HEALSERV as Type", "DSIGN as Name", ","],
         "returnGeometry": false
       },
       "query_chart": {
@@ -1499,19 +1497,19 @@
     "unit": "nº",
     "unit_es": "nº",
     "unit_pt": "nº",
-    "description": "",
-    "description_es": "",
-    "description_pt": "",
+    "description": "### **Security Forces and Emergency Response Centers**\n\nThis point layer represents the location of **state security forces and emergency response facilities,** including police stations, fire departments, and military bases.\n\nThese institutions play a crucial role in **public safety, emergency response, and combating illegal activities** that significantly impact the Amazon region's environment. Spatial analysis of these facilities allows for assessing their **territorial distribution and response capacity,** helping to identify areas with limited emergency response capabilities for **wildfires, natural disasters, and socio-environmental conflicts.**\n\nAdditionally, these entities are essential for **preventing and combating illicit activities** such as **illegal mining, unauthorized logging, and wildlife trafficking,** contributing to ecosystem protection and environmental law enforcement. This information serves as a **strategic resource for security policy planning and territorial management,** optimizing resource allocation and strengthening the operational capacity of institutions responsible for security and environmental protection.\n\nThis dataset, compiled by **AmazoniaForever360+ (2023),** is an adaptation of publicly available data provided for **illustrative and reference purposes only,** with no application for emergency response. The data originate from the **OpenStreetMap (OSM) project.** The layer represents **security forces and emergency response centers as geographic points.**\n\n-   The **GOBSERV** field identifies the type of institution, such as **'Military installation' (military base)** or **'Police Station' (police headquarters).**\n-   The **DESIGN** field includes the specific name of the establishment, such as **'Comando Marina,' 'Policía de Cotocollao,'** or **'Golden Grove Police Station.'**\n\n### **OpenStreetMap (OSM) Data**\n\nOpenStreetMap (OSM) is a **collaborative, open-source geospatial database** that collects information on infrastructure and services worldwide. OSM data are structured into **nodes, ways,** and **relations,** each labeled with **tags** describing their function. For **security forces, healthcare services,** and **higher education institutions,** specific tags are used, such as:\n\n-   **Security forces:** `amenity=police`, `emergency=fire_station`, `military=*`\n\nThese data are crucial for **territorial planning, service accessibility analysis,** and **emergency management** in the Amazon region.\n\n### **Sources for OSM Data:**\n\n-   **Geofabrik:** <https://download.geofabrik.de/>\n-   **HOT Export Tool:** A tool from the Humanitarian OpenStreetMap Team (HOT) for exporting customized OSM data in GIS-compatible formats: <https://export.hotosm.org/>\n-   **BBBike Extracts:** <https://extract.bbbike.org/>\n\n### **GIS Applications Using OpenStreetMap Data:**\n\nOSM data are widely used in **open-source GIS platforms** for multiple applications, including:\n\n-   **QGIS:** Importing and analyzing OSM data using plugins like **QuickOSM.**\n-   **PostGIS:** Integrating spatial databases for **advanced analysis** and **web mapping.**\n-   **GRASS GIS:** Modeling **urban infrastructure and service accessibility.**\n-   **MapServer and GeoServer:** Publishing **interactive maps** with OSM data.\n-   **Leaflet and OpenLayers:** Developing **web applications** with dynamic maps.",
+    "description_es": "### Fuerzas y cuerpos de seguridad, atención de emergencias \n\nCapa de puntos que representa la ubicación de instalaciones sedes de los cuerpos y fuerzas de seguridad del estado. \n\nEsta capa representa la ubicación de algunas de las sedes de fuerzas y cuerpos de seguridad del Estado, incluyendo estaciones de policía, cuerpos de bomberos y bases y puestos militares. Estas instituciones cumplen un papel fundamental en la seguridad ciudadana, la atención y respuesta ante emergencias y el control de actividades ilegales que generan impactos ambientales significativos en la Amazonia. El análisis espacial de estas sedes permite evaluar su distribución y cobertura territorial, facilitando la identificación de áreas con limitaciones en la capacidad de respuesta ante situaciones de riesgo, como incendios forestales, desastres naturales y conflictos socioambientales. Además son clave en la prevención y combate de actividades ilícitas, como la minería ilegal, la tala no autorizada y el tráfico de fauna silvestre, contribuyendo a la protección de los ecosistemas y al cumplimiento de normativas ambientales. Esta información es un insumo estratégico para la planificación de políticas de seguridad y gestión del territorio, permitiendo optimizar la asignación de recursos y fortalecer la capacidad operativa de las instituciones encargadas de la seguridad y la protección del medio ambiente. \n\nEsta capa es una adaptación por AmazoniaForever360+, 2023, de un conjunto de datos que se presentan a título ilustrativo y referencial, sin aplicaciones en la atención de emergencias. Los datos provienen del proyecto OpenStreetMap (OSM). La capa representa sedes de fuerzas y cuerpos de seguridad del Estado como puntos. El campo (GOBSERV) identifica el tipo de institución, como 'Military  installation' (instalaciones militares) o 'Police Station' (comisarías de policía). El campo (DESIGN) incluye el nombre específico del establecimiento, como 'Comando Marina', 'Policía de Cotocollao' o 'Golden Grove Police Station'. \n\nOpenStreetMap (OSM) es una base de datos geoespacial colaborativa y de código abierto que recopila información sobre la infraestructura y servicios en todo el mundo. Los datos de OSM están organizados en nodos, vías y relaciones, cada uno con etiquetas (tags) que describen su función. Para extraer información relevante sobre fuerzas de seguridad, se utilizan etiquetas específicas, como: \n\nCuerpos de seguridad: amenity=police, emergency=fire_station, military=* \n\nEstos datos son cruciales para la planificación territorial, el análisis de accesibilidad a servicios y la gestión de emergencias en la Amazonia. \n\nAlgunas fuentes de datos OSM: \n\nGeofabrik: <https://download.geofabrik.de/> \n\nHOT Export Tool: herramienta de la Humanitarian  OpenStreetMap  Team (HOT) que permite exportar datos personalizados de OSM en formatos compatibles con GIS: <https://export.hotosm.org/> \n\nBBBike  Extracts: <https://extract.bbbike.org/> \n\nLos datos de OpenStreetMap son ampliamente utilizados en plataformas GIS de código abierto para múltiples aplicaciones, incluyendo: \n\nQGIS: Importación y análisis de datos OSM con plugins como QuickOSM. \n\nPostGIS: Integración con bases de datos espaciales para análisis avanzados y web mapping. \n\nGRASS GIS: Modelado de infraestructura urbana y accesibilidad a servicios. \n\nMapServer y GeoServer: Publicación de mapas interactivos con datos OSM. \n\nLeaflet y OpenLayers: Desarrollo de aplicaciones web con mapas dinámicos.",
+    "description_pt": "### **Security Forces and Emergency Response Centers**\n\nThis point layer represents the location of **state security forces and emergency response facilities,** including police stations, fire departments, and military bases.\n\nThese institutions play a crucial role in **public safety, emergency response, and combating illegal activities** that significantly impact the Amazon region's environment. Spatial analysis of these facilities allows for assessing their **territorial distribution and response capacity,** helping to identify areas with limited emergency response capabilities for **wildfires, natural disasters, and socio-environmental conflicts.**\n\nAdditionally, these entities are essential for **preventing and combating illicit activities** such as **illegal mining, unauthorized logging, and wildlife trafficking,** contributing to ecosystem protection and environmental law enforcement. This information serves as a **strategic resource for security policy planning and territorial management,** optimizing resource allocation and strengthening the operational capacity of institutions responsible for security and environmental protection.\n\nThis dataset, compiled by **AmazoniaForever360+ (2023),** is an adaptation of publicly available data provided for **illustrative and reference purposes only,** with no application for emergency response. The data originate from the **OpenStreetMap (OSM) project.** The layer represents **security forces and emergency response centers as geographic points.**\n\n-   The **GOBSERV** field identifies the type of institution, such as **'Military installation' (military base)** or **'Police Station' (police headquarters).**\n-   The **DESIGN** field includes the specific name of the establishment, such as **'Comando Marina,' 'Policía de Cotocollao,'** or **'Golden Grove Police Station.'**\n\n### **OpenStreetMap (OSM) Data**\n\nOpenStreetMap (OSM) is a **collaborative, open-source geospatial database** that collects information on infrastructure and services worldwide. OSM data are structured into **nodes, ways,** and **relations,** each labeled with **tags** describing their function. For **security forces, healthcare services,** and **higher education institutions,** specific tags are used, such as:\n\n-   **Security forces:** `amenity=police`, `emergency=fire_station`, `military=*`\n\nThese data are crucial for **territorial planning, service accessibility analysis,** and **emergency management** in the Amazon region.\n\n### **Sources for OSM Data:**\n\n-   **Geofabrik:** <https://download.geofabrik.de/>\n-   **HOT Export Tool:** A tool from the Humanitarian OpenStreetMap Team (HOT) for exporting customized OSM data in GIS-compatible formats: <https://export.hotosm.org/>\n-   **BBBike Extracts:** <https://extract.bbbike.org/>\n\n### **GIS Applications Using OpenStreetMap Data:**\n\nOSM data are widely used in **open-source GIS platforms** for multiple applications, including:\n\n-   **QGIS:** Importing and analyzing OSM data using plugins like **QuickOSM.**\n-   **PostGIS:** Integrating spatial databases for **advanced analysis** and **web mapping.**\n-   **GRASS GIS:** Modeling **urban infrastructure and service accessibility.**\n-   **MapServer and GeoServer:** Publishing **interactive maps** with OSM data.\n-   **Leaflet and OpenLayers:** Developing **web applications** with dynamic maps.",
     "description_short": "Presence of law enforcement facilities as a measure of state presence. ",
     "description_short_es": "Presence of law enforcement facilities as a measure of state presence. ",
     "description_short_pt": "Presence of law enforcement facilities as a measure of state presence. ",
     "visualization_types": ["map", "table", "numeric", "chart"],
     "resource": {
-      "name": "AFP_Tierras_indigenas",
+      "name": "State_Presence",
       "type": "feature",
       "column": [],
-      "layer_id": "-1",
-      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
+      "layer_id": "0",
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/State_Presence/FeatureServer",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -1524,7 +1522,7 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["nombre as Name", "etnias as Ethnicity", ","],
+        "outFields": ["GOBSERV as Type", "DSIGN as Name", ","],
         "returnGeometry": false
       },
       "query_chart": {
@@ -1565,34 +1563,9 @@
       "column": [],
       "layer_id": "0",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
-      "query_numeric": {
-        "where": "1=1",
-        "outStatistics": [
-          {
-            "onStatisticField": "FID",
-            "outStatisticFieldName": "value",
-            "statisticType": "count"
-          }
-        ]
-      },
-      "query_table": {
-        "where": "1=1",
-        "outFields": ["nombre as Name", "etnias as Ethnicity", ","],
-        "returnGeometry": false
-      },
-      "query_chart": {
-        "where": "1=1",
-        "returnGeometry": false,
-        "groupByFieldsForStatistics": ["DESIG_ENG"],
-        "orderByFields": ["value DESC"],
-        "outStatistics": [
-          {
-            "onStatisticField": "FID",
-            "outStatisticFieldName": "value",
-            "statisticType": "count"
-          }
-        ]
-      }
+      "query_numeric": "",
+      "query_table": "",
+      "query_chart": ""
     }
   },
   {
@@ -1605,19 +1578,19 @@
     "unit": "nº",
     "unit_es": "nº",
     "unit_pt": "nº",
-    "description": "",
-    "description_es": "",
-    "description_pt": "",
+    "description": "### **Oil Extraction Areas**\n\n-   **Polygon layer** representing the **extent and location** of hydrocarbon exploration and extraction areas.\n-   **Oil blocks** refer to **geographically defined areas** granted to companies or consortia for the exploration and potential extraction of **oil and natural gas**.\n-   These **state-granted concessions** typically involve multiple phases:\n    -   **Prospecting**\n    -   **Drilling**\n    -   **Reserve evaluation**\n    -   **Production**\n-   The goal is to assess resource potential and, if viable, proceed with industrial extraction.\n\n#### **Environmental and Social Impacts**\n\n-   Oil operations can cause significant environmental and social impacts, including:\n    -   **Deforestation** for access roads and infrastructure.\n    -   **Soil and water contamination** due to spills and industrial waste.\n    -   **Conflicts with indigenous and local communities** whose ancestral lands overlap with concessions.\n-   Responsible management of oil blocks is crucial to balancing **energy resource exploitation** with **biodiversity protection** and **local community well-being**.\n\n#### **Data Source & Compilation**\n\n-   This dataset is an **adaptation by AmazoniaForever360+ (2023)** of the **'Amazon Oil Map' dataset** developed by the **Amazonian Network of Georeferenced Socio-Environmental Information (RAISG)**.\n-   The dataset was compiled from **official data**, supplemented with **fieldwork and independent sources** by **RAISG's technical team and local collaborators**.\n-   The **original database has been simplified** for visualization purposes. For detailed data, refer to the original sources.\n\n#### **RAISG, 2023 -- Consolidated Oil Block Data**\n\n-   **Sources referenced:**\n    -   **Bolivia:** Fundación Amigos de la Naturaleza (FAN), Viceministerio de Exploración y Explotación de Hidrocarburos (VMEEH, 2017).\n    -   **Brazil:** Instituto Socioambiental (ISA), Agência Nacional de Petróleo (ANP), Banco de Dados de Exploração e Produção (BDEP, 2023). [ANP Geoportal](http://geo.anp.gov.br/)\n    -   **Colombia:** Fundación Gaia (FGA), Agencia Nacional de Hidrocarburos (2023). [Colombian Oil Map](https://www.anh.gov.co/es/hidrocarburos/mapa-de-tierras/)\n    -   **Ecuador:** EcoCiencia, Ministry of Energy and Non-Renewable Resources (2021).\n    -   **Peru:** Instituto Bien Común (IBC), PeruPetro (2023).\n    -   **Venezuela:** Provita, Ministry of Energy and Petroleum (2009-2018), US EIA (2017).\n\n#### **Further Information**\n\n-   **RAISG Amazon Data Repository:** [https://raisg.socioambiental.org](https://raisg.socioambiental.org/)\n-   **Atlas Amazonía Bajo Presión (2020):** [https://atlas2020.amazoniasocioambiental.org](https://atlas2020.amazoniasocioambiental.org/)\n    -   Contains maps and data on socio-environmental pressures, including **oil, mining, and other extractive activities**.",
+    "description_es": "### **Oil Extraction Areas**\n\n-   **Polygon layer** representing the **extent and location** of hydrocarbon exploration and extraction areas.\n-   **Oil blocks** refer to **geographically defined areas** granted to companies or consortia for the exploration and potential extraction of **oil and natural gas**.\n-   These **state-granted concessions** typically involve multiple phases:\n    -   **Prospecting**\n    -   **Drilling**\n    -   **Reserve evaluation**\n    -   **Production**\n-   The goal is to assess resource potential and, if viable, proceed with industrial extraction.\n\n#### **Environmental and Social Impacts**\n\n-   Oil operations can cause significant environmental and social impacts, including:\n    -   **Deforestation** for access roads and infrastructure.\n    -   **Soil and water contamination** due to spills and industrial waste.\n    -   **Conflicts with indigenous and local communities** whose ancestral lands overlap with concessions.\n-   Responsible management of oil blocks is crucial to balancing **energy resource exploitation** with **biodiversity protection** and **local community well-being**.\n\n#### **Data Source & Compilation**\n\n-   This dataset is an **adaptation by AmazoniaForever360+ (2023)** of the **'Amazon Oil Map' dataset** developed by the **Amazonian Network of Georeferenced Socio-Environmental Information (RAISG)**.\n-   The dataset was compiled from **official data**, supplemented with **fieldwork and independent sources** by **RAISG's technical team and local collaborators**.\n-   The **original database has been simplified** for visualization purposes. For detailed data, refer to the original sources.\n\n#### **RAISG, 2023 -- Consolidated Oil Block Data**\n\n-   **Sources referenced:**\n    -   **Bolivia:** Fundación Amigos de la Naturaleza (FAN), Viceministerio de Exploración y Explotación de Hidrocarburos (VMEEH, 2017).\n    -   **Brazil:** Instituto Socioambiental (ISA), Agência Nacional de Petróleo (ANP), Banco de Dados de Exploração e Produção (BDEP, 2023). [ANP Geoportal](http://geo.anp.gov.br/)\n    -   **Colombia:** Fundación Gaia (FGA), Agencia Nacional de Hidrocarburos (2023). [Colombian Oil Map](https://www.anh.gov.co/es/hidrocarburos/mapa-de-tierras/)\n    -   **Ecuador:** EcoCiencia, Ministry of Energy and Non-Renewable Resources (2021).\n    -   **Peru:** Instituto Bien Común (IBC), PeruPetro (2023).\n    -   **Venezuela:** Provita, Ministry of Energy and Petroleum (2009-2018), US EIA (2017).\n\n#### **Further Information**\n\n-   **RAISG Amazon Data Repository:** [https://raisg.socioambiental.org](https://raisg.socioambiental.org/)\n-   **Atlas Amazonía Bajo Presión (2020):** [https://atlas2020.amazoniasocioambiental.org](https://atlas2020.amazoniasocioambiental.org/)\n    -   Contains maps and data on socio-environmental pressures, including **oil, mining, and other extractive activities**.",
+    "description_pt": "### **Oil Extraction Areas**\n\n-   **Polygon layer** representing the **extent and location** of hydrocarbon exploration and extraction areas.\n-   **Oil blocks** refer to **geographically defined areas** granted to companies or consortia for the exploration and potential extraction of **oil and natural gas**.\n-   These **state-granted concessions** typically involve multiple phases:\n    -   **Prospecting**\n    -   **Drilling**\n    -   **Reserve evaluation**\n    -   **Production**\n-   The goal is to assess resource potential and, if viable, proceed with industrial extraction.\n\n#### **Environmental and Social Impacts**\n\n-   Oil operations can cause significant environmental and social impacts, including:\n    -   **Deforestation** for access roads and infrastructure.\n    -   **Soil and water contamination** due to spills and industrial waste.\n    -   **Conflicts with indigenous and local communities** whose ancestral lands overlap with concessions.\n-   Responsible management of oil blocks is crucial to balancing **energy resource exploitation** with **biodiversity protection** and **local community well-being**.\n\n#### **Data Source & Compilation**\n\n-   This dataset is an **adaptation by AmazoniaForever360+ (2023)** of the **'Amazon Oil Map' dataset** developed by the **Amazonian Network of Georeferenced Socio-Environmental Information (RAISG)**.\n-   The dataset was compiled from **official data**, supplemented with **fieldwork and independent sources** by **RAISG's technical team and local collaborators**.\n-   The **original database has been simplified** for visualization purposes. For detailed data, refer to the original sources.\n\n#### **RAISG, 2023 -- Consolidated Oil Block Data**\n\n-   **Sources referenced:**\n    -   **Bolivia:** Fundación Amigos de la Naturaleza (FAN), Viceministerio de Exploración y Explotación de Hidrocarburos (VMEEH, 2017).\n    -   **Brazil:** Instituto Socioambiental (ISA), Agência Nacional de Petróleo (ANP), Banco de Dados de Exploração e Produção (BDEP, 2023). [ANP Geoportal](http://geo.anp.gov.br/)\n    -   **Colombia:** Fundación Gaia (FGA), Agencia Nacional de Hidrocarburos (2023). [Colombian Oil Map](https://www.anh.gov.co/es/hidrocarburos/mapa-de-tierras/)\n    -   **Ecuador:** EcoCiencia, Ministry of Energy and Non-Renewable Resources (2021).\n    -   **Peru:** Instituto Bien Común (IBC), PeruPetro (2023).\n    -   **Venezuela:** Provita, Ministry of Energy and Petroleum (2009-2018), US EIA (2017).\n\n#### **Further Information**\n\n-   **RAISG Amazon Data Repository:** [https://raisg.socioambiental.org](https://raisg.socioambiental.org/)\n-   **Atlas Amazonía Bajo Presión (2020):** [https://atlas2020.amazoniasocioambiental.org](https://atlas2020.amazoniasocioambiental.org/)\n    -   Contains maps and data on socio-environmental pressures, including **oil, mining, and other extractive activities**.",
     "description_short": "Areas designated for oil exploration and extraction activities",
     "description_short_es": "Areas designated for oil exploration and extraction activities",
     "description_short_pt": "Areas designated for oil exploration and extraction activities",
-    "visualization_types": ["map", "table", "numeric", "chart"],
+    "visualization_types": ["map", "table", "numeric"],
     "resource": {
-      "name": "AFP_Tierras_indigenas",
+      "name": "Oil_Extraction_Areas",
       "type": "feature",
       "column": [],
       "layer_id": "0",
-      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Oil_Extraction_Areas/FeatureServer",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -1630,22 +1603,10 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["nombre as Name", "etnias as Ethnicity", ","],
+        "outFields": ["nombre as Name", "pais as Country", ","],
         "returnGeometry": false
       },
-      "query_chart": {
-        "where": "1=1",
-        "returnGeometry": false,
-        "groupByFieldsForStatistics": ["DESIG_ENG"],
-        "orderByFields": ["value DESC"],
-        "outStatistics": [
-          {
-            "onStatisticField": "FID",
-            "outStatisticFieldName": "value",
-            "statisticType": "count"
-          }
-        ]
-      }
+      "query_chart": ""
     }
   },
   {
@@ -2392,7 +2353,6 @@
     "description_short": "Minimum altitude per cell",
     "description_short_es": "Minimum altitude per cell",
     "description_short_pt": "Minimum altitude per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_NATTOPOALT_H3L6",
       "type": "h3",
@@ -2420,7 +2380,6 @@
     "description_short": "Maximum altitude per cell",
     "description_short_es": "Maximum altitude per cell",
     "description_short_pt": "Maximum altitude per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_NATTOPOALT_H3L7",
       "type": "h3",
@@ -2448,7 +2407,6 @@
     "description_short": "Altitude range per cell",
     "description_short_es": "Altitude range per cell",
     "description_short_pt": "Altitude range per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_NATTOPOALT_H3L8",
       "type": "h3",
@@ -2476,7 +2434,6 @@
     "description_short": "Average altitude per cell",
     "description_short_es": "Average altitude per cell",
     "description_short_pt": "Average altitude per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_NATTOPOALT_H3L9",
       "type": "h3",
@@ -2504,7 +2461,6 @@
     "description_short": "Minimum slope per cell",
     "description_short_es": "Minimum slope per cell",
     "description_short_pt": "Minimum slope per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_NATTOPOSLOPE_H3L6",
       "type": "h3",
@@ -2532,7 +2488,6 @@
     "description_short": "Maximum slope per cell",
     "description_short_es": "Maximum slope per cell",
     "description_short_pt": "Maximum slope per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_NATTOPOSLOPE_H3L7",
       "type": "h3",
@@ -2560,7 +2515,6 @@
     "description_short": "Average slope per cell",
     "description_short_es": "Average slope per cell",
     "description_short_pt": "Average slope per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_NATTOPOSLOPE_H3L8",
       "type": "h3",
@@ -2588,7 +2542,6 @@
     "description_short": "Tree cover",
     "description_short_es": "Tree cover",
     "description_short_pt": "Tree cover",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_LNDCLSSCOVRG_H3L6",
       "type": "h3",
@@ -2616,7 +2569,6 @@
     "description_short": "Shrubland",
     "description_short_es": "Shrubland",
     "description_short_pt": "Shrubland",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_LNDCLSSCOVRG_H3L7",
       "type": "h3",
@@ -2644,7 +2596,6 @@
     "description_short": "Grassland",
     "description_short_es": "Grassland",
     "description_short_pt": "Grassland",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_LNDCLSSCOVRG_H3L8",
       "type": "h3",
@@ -2672,7 +2623,6 @@
     "description_short": "Cropland",
     "description_short_es": "Cropland",
     "description_short_pt": "Cropland",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_LNDCLSSCOVRG_H3L9",
       "type": "h3",
@@ -2700,7 +2650,6 @@
     "description_short": "Built-up",
     "description_short_es": "Built-up",
     "description_short_pt": "Built-up",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_LNDCLSSCOVRG_H3L10",
       "type": "h3",
@@ -2728,7 +2677,6 @@
     "description_short": "Bare / sparse vegetation",
     "description_short_es": "Bare / sparse vegetation",
     "description_short_pt": "Bare / sparse vegetation",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_LNDCLSSCOVRG_H3L11",
       "type": "h3",
@@ -2756,7 +2704,6 @@
     "description_short": "Snow and ice",
     "description_short_es": "Snow and ice",
     "description_short_pt": "Snow and ice",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_LNDCLSSCOVRG_H3L12",
       "type": "h3",
@@ -2784,7 +2731,6 @@
     "description_short": "Permanent water bodies",
     "description_short_es": "Permanent water bodies",
     "description_short_pt": "Permanent water bodies",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_LNDCLSSCOVRG_H3L13",
       "type": "h3",
@@ -2812,7 +2758,6 @@
     "description_short": "Herbaceous wetland",
     "description_short_es": "Herbaceous wetland",
     "description_short_pt": "Herbaceous wetland",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_LNDCLSSCOVRG_H3L14",
       "type": "h3",
@@ -2840,7 +2785,6 @@
     "description_short": "Mangroves",
     "description_short_es": "Mangroves",
     "description_short_pt": "Mangroves",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_LNDCLSSCOVRG_H3L15",
       "type": "h3",
@@ -2868,7 +2812,6 @@
     "description_short": "Moss and lichen",
     "description_short_es": "Moss and lichen",
     "description_short_pt": "Moss and lichen",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_LNDCLSSCOVRG_H3L16",
       "type": "h3",
@@ -2896,7 +2839,6 @@
     "description_short": "Number of recorded species per cell",
     "description_short_es": "Number of recorded species per cell",
     "description_short_pt": "Number of recorded species per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_BIOBASICSPEC_H3L6",
       "type": "h3",
@@ -2924,7 +2866,6 @@
     "description_short": "Tons of carbon fixed in biomass, per hectare (Minimum)",
     "description_short_es": "Tons of carbon fixed in biomass, per hectare (Minimum)",
     "description_short_pt": "Tons of carbon fixed in biomass, per hectare (Minimum)",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CRBSEQBIO_H3L6",
       "type": "h3",
@@ -2952,7 +2893,6 @@
     "description_short": "Tons of carbon fixed in biomass, per hectare (Maximum)",
     "description_short_es": "Tons of carbon fixed in biomass, per hectare (Maximum)",
     "description_short_pt": "Tons of carbon fixed in biomass, per hectare (Maximum)",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CRBSEQBIO_H3L7",
       "type": "h3",
@@ -2980,7 +2920,6 @@
     "description_short": "Tons of carbon fixed in biomass, per hectare (Mean)",
     "description_short_es": "Tons of carbon fixed in biomass, per hectare (Mean)",
     "description_short_pt": "Tons of carbon fixed in biomass, per hectare (Mean)",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CRBSEQBIO_H3L8",
       "type": "h3",
@@ -3008,7 +2947,6 @@
     "description_short": "Count of FIRMS fire points recorded per cell (January 2014 through January 2023).",
     "description_short_es": "Count of FIRMS fire points recorded per cell (January 2014 through January 2023).",
     "description_short_pt": "Count of FIRMS fire points recorded per cell (January 2014 through January 2023).",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CLIFIREFREQ_H3L6",
       "type": "h3",
@@ -3036,7 +2974,6 @@
     "description_short": "Minimum mean annual precipitation per cell",
     "description_short_es": "Minimum mean annual precipitation per cell",
     "description_short_pt": "Minimum mean annual precipitation per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CLIANNUALPREC_H3L6",
       "type": "h3",
@@ -3064,7 +3001,6 @@
     "description_short": "Maximum mean annual precipitation per cell",
     "description_short_es": "Maximum mean annual precipitation per cell",
     "description_short_pt": "Maximum mean annual precipitation per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CLIANNUALPREC_H3L7",
       "type": "h3",
@@ -3092,7 +3028,6 @@
     "description_short": "Average annual mean precipitation per cell",
     "description_short_es": "Average annual mean precipitation per cell",
     "description_short_pt": "Average annual mean precipitation per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CLIANNUALPREC_H3L8",
       "type": "h3",
@@ -3120,7 +3055,6 @@
     "description_short": "Range of mean annual precipitation per cell",
     "description_short_es": "Range of mean annual precipitation per cell",
     "description_short_pt": "Range of mean annual precipitation per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CLIANNUALPREC_H3L9",
       "type": "h3",
@@ -3148,7 +3082,6 @@
     "description_short": "Minimum annual mean temperature per cell",
     "description_short_es": "Minimum annual mean temperature per cell",
     "description_short_pt": "Minimum annual mean temperature per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CLIANNUALTEMP_H3L6",
       "type": "h3",
@@ -3176,7 +3109,6 @@
     "description_short": "Maximum annual mean temperature per cell",
     "description_short_es": "Maximum annual mean temperature per cell",
     "description_short_pt": "Maximum annual mean temperature per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CLIANNUALTEMP_H3L7",
       "type": "h3",
@@ -3204,7 +3136,6 @@
     "description_short": "Average annual mean temperature per cell",
     "description_short_es": "Average annual mean temperature per cell",
     "description_short_pt": "Average annual mean temperature per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CLIANNUALTEMP_H3L8",
       "type": "h3",
@@ -3232,7 +3163,6 @@
     "description_short": "Average annual mean temperature range per cell",
     "description_short_es": "Average annual mean temperature range per cell",
     "description_short_pt": "Average annual mean temperature range per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CLIANNUALTEMP_H3L9",
       "type": "h3",
@@ -3260,7 +3190,6 @@
     "description_short": "Estimated population for the year 20230 (GHS model)",
     "description_short_es": "Estimated population for the year 20230 (GHS model)",
     "description_short_pt": "Estimated population for the year 20230 (GHS model)",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_PPLDEM7530POP_H3L6",
       "type": "h3",
@@ -3288,7 +3217,6 @@
     "description_short": "Estimated population for the year 2025 (GHS model)",
     "description_short_es": "Estimated population for the year 2025 (GHS model)",
     "description_short_pt": "Estimated population for the year 2025 (GHS model)",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_PPLDEM7530POP_H3L7",
       "type": "h3",
@@ -3316,7 +3244,6 @@
     "description_short": "Estimated population for the year 2015 (GHS model)",
     "description_short_es": "Estimated population for the year 2015 (GHS model)",
     "description_short_pt": "Estimated population for the year 2015 (GHS model)",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_PPLDEM7530POP_H3L8",
       "type": "h3",
@@ -3344,7 +3271,6 @@
     "description_short": "Estimated population for the year 2000 (GHS model)",
     "description_short_es": "Estimated population for the year 2000 (GHS model)",
     "description_short_pt": "Estimated population for the year 2000 (GHS model)",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_PPLDEM7530POP_H3L9",
       "type": "h3",
@@ -3372,7 +3298,6 @@
     "description_short": "Estimated population for the year 1975 (GHS model)",
     "description_short_es": "Estimated population for the year 1975 (GHS model)",
     "description_short_pt": "Estimated population for the year 1975 (GHS model)",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_PPLDEM7530POP_H3L10",
       "type": "h3",
@@ -3400,7 +3325,6 @@
     "description_short": "Total difference in population 1975-2030",
     "description_short_es": "Total difference in population 1975-2030",
     "description_short_pt": "Total difference in population 1975-2030",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_PPLDEM7530POP_H3L11",
       "type": "h3",
@@ -3428,7 +3352,6 @@
     "description_short": "Undifferentiated total road length per cell",
     "description_short_es": "Undifferentiated total road length per cell",
     "description_short_pt": "Undifferentiated total road length per cell",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_INURBROADENS_H3L6",
       "type": "h3",
@@ -3456,7 +3379,6 @@
     "description_short": "Undifferentiated road density per cell area",
     "description_short_es": "Undifferentiated road density per cell area",
     "description_short_pt": "Undifferentiated road density per cell area",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_INURBROADENS_H3L6",
       "type": "h3",
@@ -3484,7 +3406,6 @@
     "description_short": "Fixed devices. Average download speed in kilobits per second recorded in the grid.",
     "description_short_es": "Fixed devices. Average download speed in kilobits per second recorded in the grid.",
     "description_short_pt": "Fixed devices. Average download speed in kilobits per second recorded in the grid.",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CONNECTSTATUSFX_H3L6",
       "type": "h3",
@@ -3512,7 +3433,6 @@
     "description_short": "Fixed devices. Average upload speed in kilobits per second recorded in the grid.",
     "description_short_es": "Fixed devices. Average upload speed in kilobits per second recorded in the grid.",
     "description_short_pt": "Fixed devices. Average upload speed in kilobits per second recorded in the grid.",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CONNECTSTATUSFX_H3L7",
       "type": "h3",
@@ -3540,7 +3460,6 @@
     "description_short": "Fixed devices. Average latency in milliseconds recorded in grid tests.",
     "description_short_es": "Fixed devices. Average latency in milliseconds recorded in grid tests.",
     "description_short_pt": "Fixed devices. Average latency in milliseconds recorded in grid tests.",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CONNECTSTATUSFX_H3L8",
       "type": "h3",
@@ -3568,7 +3487,6 @@
     "description_short": "Fixed devices. Total number of tests",
     "description_short_es": "Fixed devices. Total number of tests",
     "description_short_pt": "Fixed devices. Total number of tests",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CONNECTSTATUSFX_H3L9",
       "type": "h3",
@@ -3596,7 +3514,6 @@
     "description_short": "Fixed devices. Total number of devices used for testing",
     "description_short_es": "Fixed devices. Total number of devices used for testing",
     "description_short_pt": "Fixed devices. Total number of devices used for testing",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CONNECTSTATUSFX_H3L10",
       "type": "h3",
@@ -3624,7 +3541,6 @@
     "description_short": "Mobile devices. Average download speed in kilobits per second recorded in the grid.",
     "description_short_es": "Mobile devices. Average download speed in kilobits per second recorded in the grid.",
     "description_short_pt": "Mobile devices. Average download speed in kilobits per second recorded in the grid.",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CONNECTSTATUSMO_H3L6",
       "type": "h3",
@@ -3652,7 +3568,6 @@
     "description_short": "Mobile devices. Average upload speed in kilobits per second recorded in the grid.",
     "description_short_es": "Mobile devices. Average upload speed in kilobits per second recorded in the grid.",
     "description_short_pt": "Mobile devices. Average upload speed in kilobits per second recorded in the grid.",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CONNECTSTATUSMO_H3L7",
       "type": "h3",
@@ -3680,7 +3595,6 @@
     "description_short": "Mobile devices. Average latency in milliseconds recorded in grid tests.",
     "description_short_es": "Mobile devices. Average latency in milliseconds recorded in grid tests.",
     "description_short_pt": "Mobile devices. Average latency in milliseconds recorded in grid tests.",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CONNECTSTATUSMO_H3L8",
       "type": "h3",
@@ -3708,7 +3622,6 @@
     "description_short": "Mobile devices. Total number of tests",
     "description_short_es": "Mobile devices. Total number of tests",
     "description_short_pt": "Mobile devices. Total number of tests",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CONNECTSTATUSMO_H3L9",
       "type": "h3",
@@ -3736,7 +3649,6 @@
     "description_short": "Mobile devices. Total number of devices used for testing",
     "description_short_es": "Mobile devices. Total number of devices used for testing",
     "description_short_pt": "Mobile devices. Total number of devices used for testing",
-    "visualization_types": "",
     "resource": {
       "name": "AMZ_CONNECTSTATUSMO_H3L10",
       "type": "h3",

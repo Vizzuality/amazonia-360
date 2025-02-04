@@ -23,7 +23,7 @@ export default function Header() {
         "border-blue-100": isReport,
       })}
     >
-      <div className="mx-4 flex items-center justify-between md:container md:mx-auto">
+      <div className="container mx-4 flex items-center justify-between md:mx-auto">
         <LogoBetaInfo />
 
         {isDesktop && <DesktopNavigation />}

@@ -95,7 +95,7 @@ export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className
           <DialogClose />
         </DialogContent>
         <TooltipPortal>
-          <TooltipContent sideOffset={0} className="max-w-32">
+          <TooltipContent sideOffset={0} className="max-w-72">
             {description_short}
             <TooltipArrow />
           </TooltipContent>

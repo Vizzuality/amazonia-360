@@ -45,7 +45,7 @@ export default function GridTopicFiltersItem({
       <Collapsible open={open}>
         <div
           className={cn({
-            "flex h-10 items-center space-x-4 rounded-[2px] px-0.5 py-2 hover:bg-secondary": true,
+            "flex h-10 items-center space-x-4 rounded-lg px-0.5 py-2 hover:cursor-pointer": true,
           })}
         >
           <CollapsibleTrigger

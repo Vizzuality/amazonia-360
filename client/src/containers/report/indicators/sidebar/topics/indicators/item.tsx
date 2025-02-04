@@ -58,48 +58,48 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
 
               <span className="text-left">{indicator.name}</span>
             </button>
-            <Tooltip>
-              <Dialog>
-                <TooltipTrigger asChild>
-                  <DialogTrigger asChild>
-                    <button aria-label="Topic info" type="button">
-                      <LuInfo className="h-full w-full" />
-                    </button>
-                  </DialogTrigger>
-                </TooltipTrigger>
-
-                <DialogContent className="p-0">
-                  <DialogTitle className="sr-only">{indicator.description_short}</DialogTitle>
-                  <Info ids={[indicator.id]} />
-                  <DialogClose />
-                </DialogContent>
-
-                <TooltipPortal>
-                  <TooltipContent side="left" align="center">
-                    <div className="text-xxs">
-                      {indicator.description_short || "About the data"}
-                    </div>
-
-                    <TooltipArrow className="fill-foreground" width={10} height={5} />
-                  </TooltipContent>
-                </TooltipPortal>
-              </Dialog>
-            </Tooltip>
           </div>
         </CollapsibleTrigger>
+        <div className="flex items-center space-x-2">
+          <Tooltip>
+            <Dialog>
+              <TooltipTrigger asChild>
+                <DialogTrigger asChild>
+                  <button aria-label="Topic info" type="button">
+                    <LuInfo className="h-full w-full" />
+                  </button>
+                </DialogTrigger>
+              </TooltipTrigger>
 
-        <Popover>
-          <PopoverTrigger className="flex h-5 w-5 items-center justify-center rounded-sm bg-secondary">
-            <LuPlus />
-          </PopoverTrigger>
-          <PopoverContent side="left" align="start" className="w-auto bg-background p-2">
-            <VisualizationTypes
-              topicId={topic.id}
-              types={indicator.visualization_types}
-              indicatorId={indicator.id}
-            />
-          </PopoverContent>
-        </Popover>
+              <DialogContent className="max-w-2xl p-0">
+                <DialogTitle className="sr-only">{indicator.description_short}</DialogTitle>
+                <Info ids={[indicator.id]} />
+                <DialogClose />
+              </DialogContent>
+
+              <TooltipPortal>
+                <TooltipContent side="left" align="center" className="max-w-72">
+                  <div className="text-xxs">{indicator.description_short || "About the data"}</div>
+
+                  <TooltipArrow className="fill-foreground" width={10} height={5} />
+                </TooltipContent>
+              </TooltipPortal>
+            </Dialog>
+          </Tooltip>
+
+          <Popover>
+            <PopoverTrigger className="flex h-5 w-5 items-center justify-center rounded-sm bg-secondary">
+              <LuPlus />
+            </PopoverTrigger>
+            <PopoverContent side="left" align="start" className="w-auto bg-background p-2">
+              <VisualizationTypes
+                topicId={topic.id}
+                types={indicator.visualization_types}
+                indicatorId={indicator.id}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
       </div>
 
       <CollapsibleContent className="flex items-center space-x-2 pl-1 pt-2">
