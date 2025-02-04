@@ -6,12 +6,12 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/r
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { LuChevronRight, LuPlus, LuInfo } from "react-icons/lu";
 
-import { useGetTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { Topic, TopicIndicator } from "@/app/local-api/topics/route";
 import { useSyncTopics } from "@/app/store";
 
+import Info from "@/containers/info";
 import { VisualizationTypes } from "@/containers/report/indicators/sidebar/topics/indicators/visualization-types";
 
 import {
@@ -30,8 +30,6 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
   const [open, setOpen] = useState(true);
 
   const [topics] = useSyncTopics();
-
-  const { data: topicsData } = useGetTopics();
 
   const selectedTopicIndicators = topics?.find(({ id }) => id === topic.id)?.indicators;
   const selectedIndicator = selectedTopicIndicators?.find(({ id }) => id === indicator.id);
@@ -71,14 +69,16 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
                 </TooltipTrigger>
 
                 <DialogContent className="p-0">
-                  <DialogTitle className="sr-only">About the data</DialogTitle>
-                  <p>{topicsData?.find(({ id }) => topic.id === id)?.description}</p>
+                  <DialogTitle className="sr-only">{indicator.description_short}</DialogTitle>
+                  <Info ids={[indicator.id]} />
                   <DialogClose />
                 </DialogContent>
 
                 <TooltipPortal>
                   <TooltipContent side="left" align="center">
-                    <div className="text-xxs">About the data</div>
+                    <div className="text-xxs">
+                      {indicator.description_short || "About the data"}
+                    </div>
 
                     <TooltipArrow className="fill-foreground" width={10} height={5} />
                   </TooltipContent>

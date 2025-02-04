@@ -1,7 +1,8 @@
 "use client";
 
 import { useInView } from "react-intersection-observer";
-import { useMedia } from "react-use";
+
+import { useMediaQuery } from "usehooks-ts";
 
 import CardsContainer from "./cards-container";
 import KeyFeaturesChartsColumn1 from "./charts-column-1";
@@ -14,7 +15,7 @@ export default function KeyFeatures() {
     triggerOnce: false,
     threshold: 0.2,
   });
-  const isDesktop = useMedia("(min-width: 768px)");
+  const isDesktop = useMediaQuery("(min-width: 768px)", { defaultValue: false });
 
   return (
     <section className="relative mx-4 flex w-full flex-col-reverse justify-between md:container md:h-screen md:max-h-[720px] md:flex-row">

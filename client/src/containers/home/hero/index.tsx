@@ -3,17 +3,17 @@
 import { useCallback } from "react";
 
 import { scroller } from "react-scroll";
-import { useMedia } from "react-use";
 
 import Image from "next/image";
 import Link from "next/link";
 
 import { LuArrowRight } from "react-icons/lu";
+import { useMediaQuery } from "usehooks-ts";
 
 import { Button } from "@/components/ui/button";
 
 export default function Hero() {
-  const isMobile = useMedia("(max-width: 767px)");
+  const isMobile = useMediaQuery("(max-width: 768px)", { defaultValue: false });
 
   const handleScroll = useCallback(() => {
     scroller.scrollTo("moreInfo", {

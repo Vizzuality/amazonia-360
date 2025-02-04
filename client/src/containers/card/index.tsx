@@ -10,6 +10,7 @@ import { UseQueryResult } from "@tanstack/react-query";
 import { LuInfo, LuSettings2 } from "react-icons/lu";
 
 import { formatNumber } from "@/lib/formats";
+import { useIndicatorsId } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
 import { Indicator } from "@/app/local-api/indicators/route";
@@ -74,6 +75,12 @@ export function CardControls({ children }: PropsWithChildren) {
 }
 
 export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className?: string }) {
+  const indicator = useIndicatorsId(ids[0]);
+
+  if (!indicator) return null;
+
+  const { description_short } = indicator;
+
   return (
     <Tooltip delayDuration={100}>
       <Dialog>
@@ -83,13 +90,13 @@ export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className
           </DialogTrigger>
         </TooltipTrigger>
         <DialogContent className="p-0">
-          <DialogTitle className="sr-only">About the data</DialogTitle>
+          <DialogTitle className="sr-only">{description_short}</DialogTitle>
           <Info ids={ids} />
           <DialogClose />
         </DialogContent>
         <TooltipPortal>
-          <TooltipContent sideOffset={0}>
-            About the data
+          <TooltipContent sideOffset={0} className="max-w-32">
+            {description_short}
             <TooltipArrow />
           </TooltipContent>
         </TooltipPortal>
