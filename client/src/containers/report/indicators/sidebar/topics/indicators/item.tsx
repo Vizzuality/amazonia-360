@@ -6,12 +6,12 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/r
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { LuChevronRight, LuPlus, LuInfo } from "react-icons/lu";
 
-import { useGetTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { Topic, TopicIndicator } from "@/app/local-api/topics/route";
 import { useSyncTopics } from "@/app/store";
 
+import Info from "@/containers/info";
 import { VisualizationTypes } from "@/containers/report/indicators/sidebar/topics/indicators/visualization-types";
 
 import {
@@ -30,8 +30,6 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
   const [open, setOpen] = useState(true);
 
   const [topics] = useSyncTopics();
-
-  const { data: topicsData } = useGetTopics();
 
   const selectedTopicIndicators = topics?.find(({ id }) => id === topic.id)?.indicators;
   const selectedIndicator = selectedTopicIndicators?.find(({ id }) => id === indicator.id);
@@ -60,46 +58,48 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
 
               <span className="text-left">{indicator.name}</span>
             </button>
-            <Tooltip>
-              <Dialog>
-                <TooltipTrigger asChild>
-                  <DialogTrigger asChild>
-                    <button aria-label="Topic info" type="button">
-                      <LuInfo className="h-full w-full" />
-                    </button>
-                  </DialogTrigger>
-                </TooltipTrigger>
-
-                <DialogContent className="p-0">
-                  <DialogTitle className="sr-only">About the data</DialogTitle>
-                  <p>{topicsData?.find(({ id }) => topic.id === id)?.description}</p>
-                  <DialogClose />
-                </DialogContent>
-
-                <TooltipPortal>
-                  <TooltipContent side="left" align="center">
-                    <div className="text-xxs">About the data</div>
-
-                    <TooltipArrow className="fill-foreground" width={10} height={5} />
-                  </TooltipContent>
-                </TooltipPortal>
-              </Dialog>
-            </Tooltip>
           </div>
         </CollapsibleTrigger>
+        <div className="flex items-center space-x-2">
+          <Tooltip>
+            <Dialog>
+              <TooltipTrigger asChild>
+                <DialogTrigger asChild>
+                  <button aria-label="Topic info" type="button">
+                    <LuInfo className="h-full w-full" />
+                  </button>
+                </DialogTrigger>
+              </TooltipTrigger>
 
-        <Popover>
-          <PopoverTrigger className="flex h-5 w-5 items-center justify-center rounded-sm bg-secondary">
-            <LuPlus />
-          </PopoverTrigger>
-          <PopoverContent side="left" align="start" className="w-auto bg-background p-2">
-            <VisualizationTypes
-              topicId={topic.id}
-              types={indicator.visualization_types}
-              indicatorId={indicator.id}
-            />
-          </PopoverContent>
-        </Popover>
+              <DialogContent className="max-w-2xl p-0">
+                <DialogTitle className="sr-only">{indicator.description_short}</DialogTitle>
+                <Info ids={[indicator.id]} />
+                <DialogClose />
+              </DialogContent>
+
+              <TooltipPortal>
+                <TooltipContent side="left" align="center" className="max-w-72">
+                  <div className="text-xxs">{indicator.description_short || "About the data"}</div>
+
+                  <TooltipArrow className="fill-foreground" width={10} height={5} />
+                </TooltipContent>
+              </TooltipPortal>
+            </Dialog>
+          </Tooltip>
+
+          <Popover>
+            <PopoverTrigger className="flex h-5 w-5 items-center justify-center rounded-sm bg-secondary">
+              <LuPlus />
+            </PopoverTrigger>
+            <PopoverContent side="left" align="start" className="w-auto bg-background p-2">
+              <VisualizationTypes
+                topicId={topic.id}
+                types={indicator.visualization_types}
+                indicatorId={indicator.id}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
       </div>
 
       <CollapsibleContent className="flex items-center space-x-2 pl-1 pt-2">

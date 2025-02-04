@@ -57,11 +57,15 @@ export default function ReportLocation() {
     }
   }, [setTopics, topics, activeTopics]);
 
+  // const HEADER_HEIGHT = 64;
+  // const SIDEBAR_TOP_POSITION = 40;
+  // const TABS_HEADER_HEIGHT = 28;
+
   return (
-    //  height of the header + height of the footer + height of the tabs
-    <aside className="pointer-events-auto flex w-4/12 shrink-0 flex-col overflow-hidden tall:2xl:w-4/12">
+    <aside className="pointer-events-auto flex w-4/12 max-w-[400px] shrink-0 flex-col overflow-hidden tall:2xl:w-4/12">
       <Tabs
         defaultValue={tab}
+        value={tab}
         onValueChange={(t) => setTab(t as typeof tabAtom.init)}
         className="test-class flex max-h-[calc(100vh_-_(64px_+_40px_+_28px))] grow flex-col"
       >
@@ -153,7 +157,7 @@ export default function ReportLocation() {
               <div className="relative h-full space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
                 <div className="space-y-1">
                   <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
-                    Refine your area of interest
+                    Redefine your area of interest
                   </h1>
 
                   <p className="text-sm font-medium text-muted-foreground">
@@ -165,9 +169,9 @@ export default function ReportLocation() {
                 <GridFiltersControls />
 
                 <div className="space-y-5">
-                  <div className="relative h-full max-h-[calc(100vh-412px)]">
+                  <div className="relative h-full max-h-[calc(100vh_-_(64px_+_40px_+_310px))]">
                     <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2.5 bg-gradient-to-b from-white to-transparent" />
-                    <div className="-mx-4 h-full max-h-[calc(100vh-412px)] overflow-y-auto px-4 py-1">
+                    <div className="h-full max-h-[calc(100vh_-_(64px_+_40px_+_310px))] overflow-y-auto px-4 py-1">
                       <GridFilters />
                     </div>
                     <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />

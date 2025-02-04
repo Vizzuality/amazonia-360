@@ -103,13 +103,7 @@ export default function GridTable() {
           </div>
         )}
 
-        {!!ITEMS.length && (
-          <div className="space-y-2">
-            {ITEMS.map((t) => (
-              <GridTableItem key={`${t.id}`} {...t} />
-            ))}
-          </div>
-        )}
+        {!!ITEMS.length && ITEMS.map((t) => <GridTableItem key={`${t.id}`} {...t} />)}
       </CardLoader>
     </div>
   );

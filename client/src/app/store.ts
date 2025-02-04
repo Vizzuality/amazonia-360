@@ -50,6 +50,7 @@ const searchParams = {
   bbox: bboxParser,
   topics: topicsParser,
   location: locationParser,
+  gridFiltersSetUp: gridFiltersSetUpParser,
 };
 
 const serialize = createSerializer(searchParams);
@@ -58,8 +59,9 @@ export const useSyncSearchParams = () => {
   const [bbox] = useSyncBbox();
   const [topics] = useSyncTopics();
   const [location] = useSyncLocation();
+  const [gridFiltersSetUp] = useSyncGridFiltersSetUp();
 
-  return serialize({ bbox, topics, location });
+  return serialize({ bbox, topics, location, gridFiltersSetUp });
 };
 
 // JOTAI PARAMS
