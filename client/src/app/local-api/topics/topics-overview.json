@@ -1,0 +1,78 @@
+[
+  {
+    "id": 0,
+    "name": "Geographic Context",
+    "name_es": "Geographic Context",
+    "name_pt": "Geographic Context",
+    "image": "",
+    "description": "Capas Overview sistema para el uso interno de la app",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 2,
+        "id": 1
+      },
+      {
+        "type": "numeric",
+        "x": 2,
+        "y": 2,
+        "w": 2,
+        "h": 2,
+        "id": 2
+      },
+      {
+        "type": "map",
+        "x": 0,
+        "y": 4,
+        "w": 2,
+        "h": 2,
+        "id": 3
+      },
+      {
+        "type": "map",
+        "x": 2,
+        "y": 4,
+        "w": 2,
+        "h": 2,
+        "id": 4
+      },
+      {
+        "type": "map",
+        "x": 0,
+        "y": 6,
+        "w": 2,
+        "h": 2,
+        "id": 5
+      },
+      {
+        "type": "map",
+        "x": 2,
+        "y": 2,
+        "w": 2,
+        "h": 2,
+        "id": 6
+      },
+      {
+        "type": "map",
+        "x": 0,
+        "y": 8,
+        "w": 2,
+        "h": 2,
+        "id": 7
+      },
+      {
+        "type": "chart",
+        "x": 2,
+        "y": 8,
+        "w": 2,
+        "h": 1,
+        "id": 8
+      }
+    ]
+  }
+]

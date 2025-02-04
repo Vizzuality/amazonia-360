@@ -5,18 +5,20 @@ import Query from "@arcgis/core/rest/support/Query";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
+import INDICATORS_OVERVIEW from "@/app/local-api/indicators/indicators-overview.json";
 import INDICATORS from "@/app/local-api/indicators/indicators_test_4.json";
 // import INDICATORS from "@/app/local-api/indicators/indicators.json";
 import {
   Indicator,
+  IndicatorOverview,
   ResourceFeature,
   ResourceImageryTile,
   ResourceWebTile,
   VisualizationType,
 } from "@/app/local-api/indicators/route";
 import { Topic } from "@/app/local-api/topics/route";
-// import TOPICS from "@/app/local-api/topics/topics.json";
-import TOPICS from "@/app/local-api/topics/topics.test3.json";
+import TOPICS_OVERVIEW from "@/app/local-api/topics/topics-overview.json";
+import TOPICS from "@/app/local-api/topics/topics.json";
 
 /**
  ************************************************************
@@ -24,6 +26,7 @@ import TOPICS from "@/app/local-api/topics/topics.test3.json";
  * INDICATORS
  * - useIndicators
  * - useIndicatorsId
+ * - useGetIndicatorsOverview
  ************************************************************
  ************************************************************
  */
@@ -72,9 +75,29 @@ export const useIndicators = <TData = Awaited<ReturnType<typeof getIndicators>>,
   });
 };
 
+export const useGeIndicatorsOverview = <
+  TData = Awaited<ReturnType<typeof getIndicators>>,
+  TError = unknown,
+>(
+  options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const { queryKey, queryFn } = getIndicatorsOptions(options);
+
+  return useQuery({
+    queryKey,
+    queryFn,
+    ...options,
+  });
+};
+
 export const useIndicatorsId = (id: Indicator["id"]) => {
   const { data } = useIndicators();
 
+  return data?.find((indicator) => indicator.id === id);
+};
+
+export const useGetIndicatorsOverviewId = (id: Indicator["id"]) => {
+  const { data } = useGetIndicatorsOverview();
   return data?.find((indicator) => indicator.id === id);
 };
 
@@ -125,6 +148,47 @@ export const useResourceId = <TData = Awaited<ReturnType<typeof getResourceId>>,
   options?: Omit<ResourceIdQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const { queryKey, queryFn } = getResourceIdOptions(params, options);
+
+  return useQuery({
+    queryKey,
+    queryFn,
+    ...options,
+  });
+};
+
+export const getIndicatorsOverview = async () => {
+  const indicators = INDICATORS_OVERVIEW as IndicatorOverview[];
+  const topic = TOPICS_OVERVIEW.find((topic) => topic.id === 0) as Topic;
+
+  return indicators.map((indicator) => ({
+    ...indicator,
+    topic,
+  })) as (IndicatorOverview & { topic: Topic })[];
+};
+
+export const getIndicatorsOverviewKey = () => {
+  return ["indicators-overview"];
+};
+
+export const getIndicatorsOverviewOptions = <
+  TData = Awaited<ReturnType<typeof getIndicatorsOverview>>,
+  TError = unknown,
+>(
+  options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const queryKey = getIndicatorsOverviewKey();
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getIndicatorsOverview>>> = () =>
+    getIndicatorsOverview();
+  return { queryKey, queryFn, ...options } as IndicatorsQueryOptions<TData, TError>;
+};
+
+export const useGetIndicatorsOverview = <
+  TData = Awaited<ReturnType<typeof getIndicatorsOverview>>,
+  TError = unknown,
+>(
+  options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const { queryKey, queryFn } = getIndicatorsOverviewOptions(options);
 
   return useQuery({
     queryKey,

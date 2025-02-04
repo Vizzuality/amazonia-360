@@ -1,0 +1,270 @@
+[
+  {
+    "id": 1,
+    "topic": 0,
+    "order": 1,
+    "name": "Amazonia",
+    "name_es": "Amazonia",
+    "name_pt": "Amazonia",
+    "unit": "nº",
+    "unit_es": "nº",
+    "unit_pt": "nº",
+    "description": "# Amazonia, area of work of the Amazonia Forever Program\n\n## Polygons representing the operational area of the AFP.\n\nThis layer defines the spatial boundary of the Amazonia Forever program's work area, covering an area of approximately 8.3 million square kilometers. It acts as a key reference for coordinating conservation efforts and developing initiatives in the Amazon, allowing the delimitation of action areas and guiding activities towards the optimization of resource management and preservation.\n\nThis layer is a proprietary compilation of AmazoniaForever360+, 2023-2024. It was adapted from the map of Amazonia at its maximum extent (Panamazonia) presented by RAISG GIS. The operations performed included the fine delimitation of the work area boundaries based on geographic, ecological and regional planning criteria. The information includes relevant attributes such as the total surface of the area (ASQKM), the estimated population for 2025 (POPGHS25) and the average population density (DENS, inhabitants per square kilometer), which allows evaluating its geographic and demographic context\n\nThis RAISG map is available for download at: https://www.raisg.org/es/mapas/\n\nThe original data were adapted to the operational area of the Inter-American Development Bank expressed in the territories of the borrowing member countries. The represented boundary was then interpreted and redrawn using various sources: \n\n-   Referenced International Boundaries (Office of the Geographer and Global Issues; U.S. Department: Large Scale International Boundaries (LSIB).\\\n    https://www.geodata.state.gov/geonetwork/srv/eng/catalog.search#/metadata/3bdb81a0-c1b9-439a-a0b1-85dac30c59b2)\n-   Watersheds: HydroBASINS (WWF 2013); GRDC (2020): WMO Basins and Sub-basins / Online provided by Global Runoff Data Centre. 3 ed. Koblenz: Federal Institute of Hydrology (BfG), 2020.\\\n    Subnational administrative boundaries: National geographic institutes; GADM V4.1: https://gadm.org/download_world.html\n-   For the Brazilian Legal Amazon, the boundaries of the Amazônia Legal have been integrated, taken from IGBE: https://www.ibge.gov.br/geociencias/cartas-e-mapas/mapas-regionais/15819-amazonia-legal.html\n-   High resolution coastline derived from the Compernicus DEM: Copernicus Digital Elevation Model of 30 meters resolution.\\\n    https://spacedata.copernicus.eu/es/collections/copernicus-digital-elevation-model",
+    "description_es": "# Amazonia, area of work of the Amazonia Forever Program\n\n## Polygons representing the operational area of the AFP.\n\nThis layer defines the spatial boundary of the Amazonia Forever program's work area, covering an area of approximately 8.3 million square kilometers. It acts as a key reference for coordinating conservation efforts and developing initiatives in the Amazon, allowing the delimitation of action areas and guiding activities towards the optimization of resource management and preservation.\n\nThis layer is a proprietary compilation of AmazoniaForever360+, 2023-2024. It was adapted from the map of Amazonia at its maximum extent (Panamazonia) presented by RAISG GIS. The operations performed included the fine delimitation of the work area boundaries based on geographic, ecological and regional planning criteria. The information includes relevant attributes such as the total surface of the area (ASQKM), the estimated population for 2025 (POPGHS25) and the average population density (DENS, inhabitants per square kilometer), which allows evaluating its geographic and demographic context\n\nThis RAISG map is available for download at: https://www.raisg.org/es/mapas/\n\nThe original data were adapted to the operational area of the Inter-American Development Bank expressed in the territories of the borrowing member countries. The represented boundary was then interpreted and redrawn using various sources: \n\n-   Referenced International Boundaries (Office of the Geographer and Global Issues; U.S. Department: Large Scale International Boundaries (LSIB).\\\n    https://www.geodata.state.gov/geonetwork/srv/eng/catalog.search#/metadata/3bdb81a0-c1b9-439a-a0b1-85dac30c59b2)\n-   Watersheds: HydroBASINS (WWF 2013); GRDC (2020): WMO Basins and Sub-basins / Online provided by Global Runoff Data Centre. 3 ed. Koblenz: Federal Institute of Hydrology (BfG), 2020.\\\n    Subnational administrative boundaries: National geographic institutes; GADM V4.1: https://gadm.org/download_world.html\n-   For the Brazilian Legal Amazon, the boundaries of the Amazônia Legal have been integrated, taken from IGBE: https://www.ibge.gov.br/geociencias/cartas-e-mapas/mapas-regionais/15819-amazonia-legal.html\n-   High resolution coastline derived from the Compernicus DEM: Copernicus Digital Elevation Model of 30 meters resolution.\\\n    https://spacedata.copernicus.eu/es/collections/copernicus-digital-elevation-model",
+    "description_pt": "# Amazonia, area of work of the Amazonia Forever Program\n\n## Polygons representing the operational area of the AFP.\n\nThis layer defines the spatial boundary of the Amazonia Forever program's work area, covering an area of approximately 8.3 million square kilometers. It acts as a key reference for coordinating conservation efforts and developing initiatives in the Amazon, allowing the delimitation of action areas and guiding activities towards the optimization of resource management and preservation.\n\nThis layer is a proprietary compilation of AmazoniaForever360+, 2023-2024. It was adapted from the map of Amazonia at its maximum extent (Panamazonia) presented by RAISG GIS. The operations performed included the fine delimitation of the work area boundaries based on geographic, ecological and regional planning criteria. The information includes relevant attributes such as the total surface of the area (ASQKM), the estimated population for 2025 (POPGHS25) and the average population density (DENS, inhabitants per square kilometer), which allows evaluating its geographic and demographic context\n\nThis RAISG map is available for download at: https://www.raisg.org/es/mapas/\n\nThe original data were adapted to the operational area of the Inter-American Development Bank expressed in the territories of the borrowing member countries. The represented boundary was then interpreted and redrawn using various sources: \n\n-   Referenced International Boundaries (Office of the Geographer and Global Issues; U.S. Department: Large Scale International Boundaries (LSIB).\\\n    https://www.geodata.state.gov/geonetwork/srv/eng/catalog.search#/metadata/3bdb81a0-c1b9-439a-a0b1-85dac30c59b2)\n-   Watersheds: HydroBASINS (WWF 2013); GRDC (2020): WMO Basins and Sub-basins / Online provided by Global Runoff Data Centre. 3 ed. Koblenz: Federal Institute of Hydrology (BfG), 2020.\\\n    Subnational administrative boundaries: National geographic institutes; GADM V4.1: https://gadm.org/download_world.html\n-   For the Brazilian Legal Amazon, the boundaries of the Amazônia Legal have been integrated, taken from IGBE: https://www.ibge.gov.br/geociencias/cartas-e-mapas/mapas-regionais/15819-amazonia-legal.html\n-   High resolution coastline derived from the Compernicus DEM: Copernicus Digital Elevation Model of 30 meters resolution.\\\n    https://spacedata.copernicus.eu/es/collections/copernicus-digital-elevation-model",
+    "description_short": "Defines the geographical limits of the Amazonia according to the IDB-led Amazonia Forever program.  ",
+    "description_short_es": "Defines the geographical limits of the Amazonia according to the IDB-led Amazonia Forever program.  ",
+    "description_short_pt": "Defines the geographical limits of the Amazonia according to the IDB-led Amazonia Forever program.  ",
+    "visualization_types": ["map"],
+    "resource": {
+      "name": "Amazonia",
+      "type": "feature",
+      "column": [],
+      "layer_id": "0",
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Amazonia/FeatureServer",
+      "query_numeric": "",
+      "query_table": "",
+      "query_chart": ""
+    }
+  },
+  {
+    "id": 2,
+    "topic": 0,
+    "order": 2,
+    "name": "Amazonian Zones by Country",
+    "name_es": "Amazonian Zones by Country",
+    "name_pt": "Amazonian Zones by Country",
+    "unit": "nº",
+    "unit_es": "nº",
+    "unit_pt": "nº",
+    "description": "## Amazonian zones by country\n\nPolygons representing the sectors of the Amazonian countries that fall within the boundaries of the PFA study area.\n\nThis layer represents the sectors of the Amazonian countries that are within the boundaries of the AmazoniaForever360+ (AFP) project work area. Its objective is to provide a view of the territorial distribution of the Amazon in each country, and what it means in terms of population and extension, for each of them. This is essential, as a context, to identify priorities for biodiversity conservation and to support sustainable territorial planning.\n\nThe layer was developed through the cartographic intersection between the polygon that defines the boundaries of the Amazon and the territorial polygons of the Amazonian countries. The associated data include key information such as the total area of the Amazon in each country (ASQKMAMZ), the percentage of national territory in the Amazon (PERCAMZCOU), the total and projected Amazonian population by 2025 (TOTPOCOU25, AMZPOP25), as well as the Amazonian population density (DENSAMZ25). These indicators allow for an integrated assessment of the relationship between the Amazonian space and the demographic dynamics of the countries.\n\nInternational boundaries, shown for reference and illustrative purposes, are adapted from: Office of the Geographer and Global Issues; U.S. Department: Large Scale International Boundaries (LSIB).\n\nhttps://www.geodata.state.gov/geonetwork/srv/eng/catalog.search#/metadata/3bdb81a0-c1b9-439a-a0b1-85dac30c59b2\n\nFor the Brazilian Amazon, the boundaries of the Amazônia Legal, taken from IGBE, have been integrated: https://www.ibge.gov.br/geociencias/cartas-e-mapas/mapas-regionais/15819-amazonia-legal.html\n\nArea data have been added by GIS calculations on equiaxial projection data to estimate the proportion of the Amazon by country. The population estimates come from the GHS models (GHS-POP R2023A - GHS population grid multitemporal (1975-2030), particularly the dataset: GHS_POP_E2025_GLOBE_R2023A_4326_3ss_V1_0.zip Which can be found at: https://human-settlement.emergency.copernicus.eu/download.php?ds=pop\n\nMore information on GHS data can be found at: Carioli, Alessandra; Schiavina, Marcello; Freire, Sergio; MacManus, Kytt (2023): GHS-POP R2023A - GHS population grid multitemporal (1975-2030). European Commission, Joint Research Centre (JRC) [Dataset] doi: https://doi.org/10.2905/2FF68A52-5B5B-4A22-8F40-C41DA8332CFE",
+    "description_es": "## Amazonian zones by country\n\nPolygons representing the sectors of the Amazonian countries that fall within the boundaries of the PFA study area.\n\nThis layer represents the sectors of the Amazonian countries that are within the boundaries of the AmazoniaForever360+ (AFP) project work area. Its objective is to provide a view of the territorial distribution of the Amazon in each country, and what it means in terms of population and extension, for each of them. This is essential, as a context, to identify priorities for biodiversity conservation and to support sustainable territorial planning.\n\nThe layer was developed through the cartographic intersection between the polygon that defines the boundaries of the Amazon and the territorial polygons of the Amazonian countries. The associated data include key information such as the total area of the Amazon in each country (ASQKMAMZ), the percentage of national territory in the Amazon (PERCAMZCOU), the total and projected Amazonian population by 2025 (TOTPOCOU25, AMZPOP25), as well as the Amazonian population density (DENSAMZ25). These indicators allow for an integrated assessment of the relationship between the Amazonian space and the demographic dynamics of the countries.\n\nInternational boundaries, shown for reference and illustrative purposes, are adapted from: Office of the Geographer and Global Issues; U.S. Department: Large Scale International Boundaries (LSIB).\n\nhttps://www.geodata.state.gov/geonetwork/srv/eng/catalog.search#/metadata/3bdb81a0-c1b9-439a-a0b1-85dac30c59b2\n\nFor the Brazilian Amazon, the boundaries of the Amazônia Legal, taken from IGBE, have been integrated: https://www.ibge.gov.br/geociencias/cartas-e-mapas/mapas-regionais/15819-amazonia-legal.html\n\nArea data have been added by GIS calculations on equiaxial projection data to estimate the proportion of the Amazon by country. The population estimates come from the GHS models (GHS-POP R2023A - GHS population grid multitemporal (1975-2030), particularly the dataset: GHS_POP_E2025_GLOBE_R2023A_4326_3ss_V1_0.zip Which can be found at: https://human-settlement.emergency.copernicus.eu/download.php?ds=pop\n\nMore information on GHS data can be found at: Carioli, Alessandra; Schiavina, Marcello; Freire, Sergio; MacManus, Kytt (2023): GHS-POP R2023A - GHS population grid multitemporal (1975-2030). European Commission, Joint Research Centre (JRC) [Dataset] doi: https://doi.org/10.2905/2FF68A52-5B5B-4A22-8F40-C41DA8332CFE",
+    "description_pt": "## Amazonian zones by country\n\nPolygons representing the sectors of the Amazonian countries that fall within the boundaries of the PFA study area.\n\nThis layer represents the sectors of the Amazonian countries that are within the boundaries of the AmazoniaForever360+ (AFP) project work area. Its objective is to provide a view of the territorial distribution of the Amazon in each country, and what it means in terms of population and extension, for each of them. This is essential, as a context, to identify priorities for biodiversity conservation and to support sustainable territorial planning.\n\nThe layer was developed through the cartographic intersection between the polygon that defines the boundaries of the Amazon and the territorial polygons of the Amazonian countries. The associated data include key information such as the total area of the Amazon in each country (ASQKMAMZ), the percentage of national territory in the Amazon (PERCAMZCOU), the total and projected Amazonian population by 2025 (TOTPOCOU25, AMZPOP25), as well as the Amazonian population density (DENSAMZ25). These indicators allow for an integrated assessment of the relationship between the Amazonian space and the demographic dynamics of the countries.\n\nInternational boundaries, shown for reference and illustrative purposes, are adapted from: Office of the Geographer and Global Issues; U.S. Department: Large Scale International Boundaries (LSIB).\n\nhttps://www.geodata.state.gov/geonetwork/srv/eng/catalog.search#/metadata/3bdb81a0-c1b9-439a-a0b1-85dac30c59b2\n\nFor the Brazilian Amazon, the boundaries of the Amazônia Legal, taken from IGBE, have been integrated: https://www.ibge.gov.br/geociencias/cartas-e-mapas/mapas-regionais/15819-amazonia-legal.html\n\nArea data have been added by GIS calculations on equiaxial projection data to estimate the proportion of the Amazon by country. The population estimates come from the GHS models (GHS-POP R2023A - GHS population grid multitemporal (1975-2030), particularly the dataset: GHS_POP_E2025_GLOBE_R2023A_4326_3ss_V1_0.zip Which can be found at: https://human-settlement.emergency.copernicus.eu/download.php?ds=pop\n\nMore information on GHS data can be found at: Carioli, Alessandra; Schiavina, Marcello; Freire, Sergio; MacManus, Kytt (2023): GHS-POP R2023A - GHS population grid multitemporal (1975-2030). European Commission, Joint Research Centre (JRC) [Dataset] doi: https://doi.org/10.2905/2FF68A52-5B5B-4A22-8F40-C41DA8332CFE",
+    "description_short": "Quantifies each country's share of Amazonia, showing how the territory is distributed across national boundaries and jurisdictions",
+    "description_short_es": "Quantifies each country's share of Amazonia, showing how the territory is distributed across national boundaries and jurisdictions",
+    "description_short_pt": "Quantifies each country's share of Amazonia, showing how the territory is distributed across national boundaries and jurisdictions",
+    "visualization_types": ["map", "chart"],
+    "resource": {
+      "name": "Amazonian_zones_by_country",
+      "type": "feature",
+      "column": [],
+      "layer_id": "0",
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Amazonian_zones_by_country/FeatureServer",
+      "query_numeric": "",
+      "query_table": "",
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": false,
+        "groupByFieldsForStatistics": ["DENOMZON"],
+        "orderByFields": ["value DESC"],
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 3,
+    "topic": 0,
+    "order": 3,
+    "name": "Administrative Divisions level 0",
+    "name_es": "Administrative Divisions level 0",
+    "name_pt": "Administrative Divisions level 0",
+    "unit": "nº",
+    "unit_es": "nº",
+    "unit_pt": "nº",
+    "description": "**Political-administrative division of order 0.**\n\nLayer of polygons representing administrative units at adm0 (Country) level.\n\nThis layer provides information on the national context of the Amazonian countries, represented as polygons. The boundaries shown are illustrative and referential only. Each element has its name (NAME 0), the total cartographic area of the country in square kilometers (ASQKM), the projected population for 2025 (POPGHS25) derived from the Global Human Settlement Layer (GHSL) model, and the population density in inhabitants per square kilometer (DENS), calculated from the total area and the estimated population.\n\nOwn compilation AmazoniaForever360+, 2023-2024, with successive corrections.\n\nThis layer was assembled from the international boundaries, shown for reference and illustrative purposes, which have been adapted from: Office of the Geographer and Global Issues; U.S. Department: Large Scale International Boundaries (LSIB).\n\n<https://www.geodata.state.gov/geonetwork/srv/eng/catalog.search#/metadata/3bdb81a0-c1b9-439a-a0b1-85dac30c59b2>",
+    "description_es": "**Political-administrative division of order 0.**\n\nLayer of polygons representing administrative units at adm0 (Country) level.\n\nThis layer provides information on the national context of the Amazonian countries, represented as polygons. The boundaries shown are illustrative and referential only. Each element has its name (NAME 0), the total cartographic area of the country in square kilometers (ASQKM), the projected population for 2025 (POPGHS25) derived from the Global Human Settlement Layer (GHSL) model, and the population density in inhabitants per square kilometer (DENS), calculated from the total area and the estimated population.\n\nOwn compilation AmazoniaForever360+, 2023-2024, with successive corrections.\n\nThis layer was assembled from the international boundaries, shown for reference and illustrative purposes, which have been adapted from: Office of the Geographer and Global Issues; U.S. Department: Large Scale International Boundaries (LSIB).\n\n<https://www.geodata.state.gov/geonetwork/srv/eng/catalog.search#/metadata/3bdb81a0-c1b9-439a-a0b1-85dac30c59b2>",
+    "description_pt": "**Political-administrative division of order 0.**\n\nLayer of polygons representing administrative units at adm0 (Country) level.\n\nThis layer provides information on the national context of the Amazonian countries, represented as polygons. The boundaries shown are illustrative and referential only. Each element has its name (NAME 0), the total cartographic area of the country in square kilometers (ASQKM), the projected population for 2025 (POPGHS25) derived from the Global Human Settlement Layer (GHSL) model, and the population density in inhabitants per square kilometer (DENS), calculated from the total area and the estimated population.\n\nOwn compilation AmazoniaForever360+, 2023-2024, with successive corrections.\n\nThis layer was assembled from the international boundaries, shown for reference and illustrative purposes, which have been adapted from: Office of the Geographer and Global Issues; U.S. Department: Large Scale International Boundaries (LSIB).\n\n<https://www.geodata.state.gov/geonetwork/srv/eng/catalog.search#/metadata/3bdb81a0-c1b9-439a-a0b1-85dac30c59b2>",
+    "description_short": "Identifies the political-administrative units at different government levels (state, province, municipality) across Amazonia",
+    "description_short_es": "Identifies the political-administrative units at different government levels (state, province, municipality) across Amazonia",
+    "description_short_pt": "Identifies the political-administrative units at different government levels (state, province, municipality) across Amazonia",
+    "visualization_types": ["map", "table", "numeric", "chart"],
+    "resource": {
+      "name": "Political_administrative_division_of_order_0",
+      "type": "feature",
+      "column": [],
+      "layer_id": "0",
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Political_administrative_division_of_order_0/FeatureServer",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      },
+      "query_table": {
+        "where": "1=1",
+        "outFields": ["COMPNAME as Country", "POPGHS25 as Population2025", ","],
+        "returnGeometry": false
+      },
+      "query_chart": ""
+    }
+  },
+  {
+    "id": 4,
+    "topic": 0,
+    "order": 4,
+    "name": "Administrative Divisions level 1",
+    "name_es": "Administrative Divisions level 1",
+    "name_pt": "Administrative Divisions level 1",
+    "unit": "nº",
+    "unit_es": "nº",
+    "unit_pt": "nº",
+    "description": "**Political-administrative division of order 1.**\n\nLayer of polygons representing subnational administrative units of adm1 level (department, province, state). Provides a reference for the location in context of the first level subnational administrative units within the Amazon countries.\n\nThe units are identified by the name of the country to which they belong (NAME_0), the name of the administrative unit (NAME_1), their specific administrative designation (TYPE_1, e.g., 'Department', 'State' or 'District'), and a composite name that includes both (COMPNAME, e.g., 'Beni, BOL'). Includes information on total mapped area in square kilometers (ASQKM), projected population by 2025 (POPGHS25, based on the Global Human Settlement Layer model), and population density in inhabitants per square kilometer (DENS).\n\nThe limits shown are only illustrative and referential. They are a compilation of AmazoniaForever360+, 2023-2024, with successive corrections. This layer was assembled from the political-administrative division derived from the national cartographic services of the Amazonian countries. It includes additional information derived from GADM V4.1 data:\n\n<https://gadm.org/download_world.html>\n\nThe *Database of Global Administrative Areas *(GADM) provides detailed spatial data on the administrative areas of all countries and their subdivisions. The current version is 4.1, released on July 16, 2022, which delimits 400,276 administrative areas. The data are available for download in different formats, including GeoPackage and shapefiles.",
+    "description_es": "**Political-administrative division of order 1.**\n\nLayer of polygons representing subnational administrative units of adm1 level (department, province, state). Provides a reference for the location in context of the first level subnational administrative units within the Amazon countries.\n\nThe units are identified by the name of the country to which they belong (NAME_0), the name of the administrative unit (NAME_1), their specific administrative designation (TYPE_1, e.g., 'Department', 'State' or 'District'), and a composite name that includes both (COMPNAME, e.g., 'Beni, BOL'). Includes information on total mapped area in square kilometers (ASQKM), projected population by 2025 (POPGHS25, based on the Global Human Settlement Layer model), and population density in inhabitants per square kilometer (DENS).\n\nThe limits shown are only illustrative and referential. They are a compilation of AmazoniaForever360+, 2023-2024, with successive corrections. This layer was assembled from the political-administrative division derived from the national cartographic services of the Amazonian countries. It includes additional information derived from GADM V4.1 data:\n\n<https://gadm.org/download_world.html>\n\nThe *Database of Global Administrative Areas *(GADM) provides detailed spatial data on the administrative areas of all countries and their subdivisions. The current version is 4.1, released on July 16, 2022, which delimits 400,276 administrative areas. The data are available for download in different formats, including GeoPackage and shapefiles.",
+    "description_pt": "**Political-administrative division of order 1.**\n\nLayer of polygons representing subnational administrative units of adm1 level (department, province, state). Provides a reference for the location in context of the first level subnational administrative units within the Amazon countries.\n\nThe units are identified by the name of the country to which they belong (NAME_0), the name of the administrative unit (NAME_1), their specific administrative designation (TYPE_1, e.g., 'Department', 'State' or 'District'), and a composite name that includes both (COMPNAME, e.g., 'Beni, BOL'). Includes information on total mapped area in square kilometers (ASQKM), projected population by 2025 (POPGHS25, based on the Global Human Settlement Layer model), and population density in inhabitants per square kilometer (DENS).\n\nThe limits shown are only illustrative and referential. They are a compilation of AmazoniaForever360+, 2023-2024, with successive corrections. This layer was assembled from the political-administrative division derived from the national cartographic services of the Amazonian countries. It includes additional information derived from GADM V4.1 data:\n\n<https://gadm.org/download_world.html>\n\nThe *Database of Global Administrative Areas *(GADM) provides detailed spatial data on the administrative areas of all countries and their subdivisions. The current version is 4.1, released on July 16, 2022, which delimits 400,276 administrative areas. The data are available for download in different formats, including GeoPackage and shapefiles.",
+    "description_short": "Identifies the political-administrative units at different government levels (state, province, municipality) across Amazonia",
+    "description_short_es": "Identifies the political-administrative units at different government levels (state, province, municipality) across Amazonia",
+    "description_short_pt": "Identifies the political-administrative units at different government levels (state, province, municipality) across Amazonia",
+    "visualization_types": ["map", "table", "numeric", "chart"],
+    "resource": {
+      "name": "Political_administrative_division_of_order_1",
+      "type": "feature",
+      "column": [],
+      "layer_id": "0",
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      },
+      "query_table": {
+        "where": "1=1",
+        "outFields": ["COMPNAME as State", "POPGHS25 as Population2025", ","],
+        "returnGeometry": false
+      },
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": false,
+        "groupByFieldsForStatistics": ["COMPNAME"],
+        "orderByFields": ["value DESC"],
+        "outStatistics": [
+          {
+            "onStatisticField": "Population2025",
+            "outStatisticFieldName": "value",
+            "statisticType": "sum"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 5,
+    "topic": 0,
+    "order": 5,
+    "name": "Administrative Divisions level 2",
+    "name_es": "Administrative Divisions level 2",
+    "name_pt": "Administrative Divisions level 2",
+    "unit": "nº",
+    "unit_es": "nº",
+    "unit_pt": "nº",
+    "description": "**Political-administrative division of order 2.**\n\nLayer of polygons representing subnational administrative units of adm2 level (department, province, state). Provides a reference for the location in context of the second level subnational administrative units within the Amazon countries.\n\nThe units are identified by the name of the country to which they belong (NAME_0), the type of first level administrative unit (TYPE_1, for example, 'State' or 'Department'), the type of second level administrative unit (TYPE_2, such as 'Municipality' or 'District') and its specific name (NAME_2). Each unit also includes a compound name (COMPNAME) that refers to the country, department or state, and its name. For example, 'Acrelândia, Acre, BRA' dignifies the municipality, the state and the ISO acronym of the country. In addition, the total area of each unit in square kilometers (ASQKM), the projected population for 2025 derived from the Global Human Settlement Layer model (POPGHS25), and the population density in inhabitants per square kilometer (DENS) are provided.\n\nThe limits shown are only illustrative and referential. They are a compilation of AmazoniaForever360+, 2023-2024, with successive corrections. This layer was assembled from the political-administrative division derived from the national cartographic services of the Amazonian countries. With additional information derived from GADM V4.1 data:\n\n<https://gadm.org/download_world.html>\n\nThe *Database of Global Administrative Areas *(GADM) provides detailed spatial data on the administrative areas of all countries and their subdivisions. The current version is 4.1, released on July 16, 2022, which delineates 400,276 administrative areas. The data are available for download in different formats, including GeoPackage and shapefiles.",
+    "description_es": "**Political-administrative division of order 2.**\n\nLayer of polygons representing subnational administrative units of adm2 level (department, province, state). Provides a reference for the location in context of the second level subnational administrative units within the Amazon countries.\n\nThe units are identified by the name of the country to which they belong (NAME_0), the type of first level administrative unit (TYPE_1, for example, 'State' or 'Department'), the type of second level administrative unit (TYPE_2, such as 'Municipality' or 'District') and its specific name (NAME_2). Each unit also includes a compound name (COMPNAME) that refers to the country, department or state, and its name. For example, 'Acrelândia, Acre, BRA' dignifies the municipality, the state and the ISO acronym of the country. In addition, the total area of each unit in square kilometers (ASQKM), the projected population for 2025 derived from the Global Human Settlement Layer model (POPGHS25), and the population density in inhabitants per square kilometer (DENS) are provided.\n\nThe limits shown are only illustrative and referential. They are a compilation of AmazoniaForever360+, 2023-2024, with successive corrections. This layer was assembled from the political-administrative division derived from the national cartographic services of the Amazonian countries. With additional information derived from GADM V4.1 data:\n\n<https://gadm.org/download_world.html>\n\nThe *Database of Global Administrative Areas *(GADM) provides detailed spatial data on the administrative areas of all countries and their subdivisions. The current version is 4.1, released on July 16, 2022, which delineates 400,276 administrative areas. The data are available for download in different formats, including GeoPackage and shapefiles.",
+    "description_pt": "**Political-administrative division of order 2.**\n\nLayer of polygons representing subnational administrative units of adm2 level (department, province, state). Provides a reference for the location in context of the second level subnational administrative units within the Amazon countries.\n\nThe units are identified by the name of the country to which they belong (NAME_0), the type of first level administrative unit (TYPE_1, for example, 'State' or 'Department'), the type of second level administrative unit (TYPE_2, such as 'Municipality' or 'District') and its specific name (NAME_2). Each unit also includes a compound name (COMPNAME) that refers to the country, department or state, and its name. For example, 'Acrelândia, Acre, BRA' dignifies the municipality, the state and the ISO acronym of the country. In addition, the total area of each unit in square kilometers (ASQKM), the projected population for 2025 derived from the Global Human Settlement Layer model (POPGHS25), and the population density in inhabitants per square kilometer (DENS) are provided.\n\nThe limits shown are only illustrative and referential. They are a compilation of AmazoniaForever360+, 2023-2024, with successive corrections. This layer was assembled from the political-administrative division derived from the national cartographic services of the Amazonian countries. With additional information derived from GADM V4.1 data:\n\n<https://gadm.org/download_world.html>\n\nThe *Database of Global Administrative Areas *(GADM) provides detailed spatial data on the administrative areas of all countries and their subdivisions. The current version is 4.1, released on July 16, 2022, which delineates 400,276 administrative areas. The data are available for download in different formats, including GeoPackage and shapefiles.",
+    "description_short": "Identifies the political-administrative units at different government levels (state, province, municipality) across Amazonia",
+    "description_short_es": "Identifies the political-administrative units at different government levels (state, province, municipality) across Amazonia",
+    "description_short_pt": "Identifies the political-administrative units at different government levels (state, province, municipality) across Amazonia",
+    "visualization_types": ["map", "table", "numeric", "chart"],
+    "resource": {
+      "name": "Political_administrative_division_of_order_2",
+      "type": "feature",
+      "column": [],
+      "layer_id": "0",
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      },
+      "query_table": {
+        "where": "1=1",
+        "outFields": ["COMPNAME as Municipality", "POPGHS25 as Population2025", ","],
+        "returnGeometry": false
+      },
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": false,
+        "groupByFieldsForStatistics": ["COMPNAME"],
+        "orderByFields": ["value DESC"],
+        "outStatistics": [
+          {
+            "onStatisticField": "Population2025",
+            "outStatisticFieldName": "value",
+            "statisticType": "sum"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 8,
+    "topic": 0,
+    "order": 8,
+    "name": "Administrative Capitals",
+    "name_es": "Administrative Capitals",
+    "name_pt": "Administrative Capitals",
+    "unit": "nº",
+    "unit_es": "nº",
+    "unit_pt": "nº",
+    "description": "**Administrative capitals at adm0, adm1 and adm2 level.**\n\nLayer of points representing the administrative capitals for Amazonia, at national, regional and municipal levels.\n\nIt provides information on the administrative capitals involved in the management and development of the Amazon. This layer is essential for identifying decision centers and coordinating joint actions between governments and organizations working in the sustainable management of the territory\n\nThis layer represents the capitals of the political-administrative units in each territorial hierarchy within the Amazon countries, using dots to identify their geographic locations. Each capital is associated with a compound name that combines the capital and the corresponding administrative divisions (e.g., 'Trinidad, Cercado, Beni, Bolivia'). It also includes the name of the country to which it belongs (NAME_0) along with its ISO code (ISO) and a unique country identifier (ID_0). The administrative divisions are represented by the unit name of first level (NAME_1) and second level (NAME_2), while the NOMBCAP field specifies the name of the capital city.\n\nOwn compilation AmazoniaForever360+, 2023, with successive corrections. This layer was assembled from the political-administrative division GADM 4.1, and data from the national cartographic services of the Amazonian countries, correcting the position of the population centers manually, using ESRI base maps, in ArcGIS Pro work sessions. This is for the purpose of analyzing the proximity of administrative centers, as a component of the Amazonian regional urban system.\n\n<https://gadm.org/download_world.html>",
+    "description_es": "**Administrative capitals at adm0, adm1 and adm2 level.**\n\nLayer of points representing the administrative capitals for Amazonia, at national, regional and municipal levels.\n\nIt provides information on the administrative capitals involved in the management and development of the Amazon. This layer is essential for identifying decision centers and coordinating joint actions between governments and organizations working in the sustainable management of the territory\n\nThis layer represents the capitals of the political-administrative units in each territorial hierarchy within the Amazon countries, using dots to identify their geographic locations. Each capital is associated with a compound name that combines the capital and the corresponding administrative divisions (e.g., 'Trinidad, Cercado, Beni, Bolivia'). It also includes the name of the country to which it belongs (NAME_0) along with its ISO code (ISO) and a unique country identifier (ID_0). The administrative divisions are represented by the unit name of first level (NAME_1) and second level (NAME_2), while the NOMBCAP field specifies the name of the capital city.\n\nOwn compilation AmazoniaForever360+, 2023, with successive corrections. This layer was assembled from the political-administrative division GADM 4.1, and data from the national cartographic services of the Amazonian countries, correcting the position of the population centers manually, using ESRI base maps, in ArcGIS Pro work sessions. This is for the purpose of analyzing the proximity of administrative centers, as a component of the Amazonian regional urban system.\n\n<https://gadm.org/download_world.html>",
+    "description_pt": "**Administrative capitals at adm0, adm1 and adm2 level.**\n\nLayer of points representing the administrative capitals for Amazonia, at national, regional and municipal levels.\n\nIt provides information on the administrative capitals involved in the management and development of the Amazon. This layer is essential for identifying decision centers and coordinating joint actions between governments and organizations working in the sustainable management of the territory\n\nThis layer represents the capitals of the political-administrative units in each territorial hierarchy within the Amazon countries, using dots to identify their geographic locations. Each capital is associated with a compound name that combines the capital and the corresponding administrative divisions (e.g., 'Trinidad, Cercado, Beni, Bolivia'). It also includes the name of the country to which it belongs (NAME_0) along with its ISO code (ISO) and a unique country identifier (ID_0). The administrative divisions are represented by the unit name of first level (NAME_1) and second level (NAME_2), while the NOMBCAP field specifies the name of the capital city.\n\nOwn compilation AmazoniaForever360+, 2023, with successive corrections. This layer was assembled from the political-administrative division GADM 4.1, and data from the national cartographic services of the Amazonian countries, correcting the position of the population centers manually, using ESRI base maps, in ArcGIS Pro work sessions. This is for the purpose of analyzing the proximity of administrative centers, as a component of the Amazonian regional urban system.\n\n<https://gadm.org/download_world.html>",
+    "description_short": "Identifies the location of major administrative capital cities within Amazonia",
+    "description_short_es": "Identifies the location of major administrative capital cities within Amazonia",
+    "description_short_pt": "Identifies the location of major administrative capital cities within Amazonia",
+    "visualization_types": ["map", "table", "numeric"],
+    "resource": {
+      "name": "Administrative_capitals_at_admin_0_to_2_levels",
+      "type": "feature",
+      "column": [],
+      "layer_id": "0",
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Administrative_capitals_at_admin_0_to_2_levels/FeatureServer",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      },
+      "query_table": {
+        "where": "1=1",
+        "outFields": ["NOMBCAP as Name", "name as Description", ","],
+        "returnGeometry": false
+      },
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": false,
+        "groupByFieldsForStatistics": ["COMPNAME"],
+        "orderByFields": ["value DESC"],
+        "outStatistics": [
+          {
+            "onStatisticField": "Population2025",
+            "outStatisticFieldName": "value",
+            "statisticType": "sum"
+          }
+        ]
+      }
+    }
+  }
+]

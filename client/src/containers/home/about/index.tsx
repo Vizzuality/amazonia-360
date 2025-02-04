@@ -3,13 +3,14 @@
 import React, { useState } from "react";
 
 import { Element } from "react-scroll";
-import { useMedia } from "react-use";
+
+import { useMediaQuery } from "usehooks-ts";
 
 import AboutHeroHome from "./about";
 
 const HeroHome = () => {
-  const isDesktop = useMedia("(min-width: 768px)");
-  const isMobile = useMedia("(max-width: 767px)");
+  const isDesktop = useMediaQuery("(min-width: 768px)", { defaultValue: false });
+  const isMobile = useMediaQuery("(max-width: 768px)", { defaultValue: false });
   const [imageInView, setImageInView] = useState(false);
   const [textVisible, setTextVisible] = useState(false);
 
