@@ -1,8 +1,8 @@
 "use client";
 
-import { useMedia } from "react-use";
-
 import { usePathname } from "next/navigation";
+
+import { useMediaQuery } from "usehooks-ts";
 
 import { cn } from "@/lib/utils";
 
@@ -11,7 +11,7 @@ import LogoBetaInfo from "./logo-beta-info";
 import MobileNavigation from "./mobile-navigation";
 
 export default function Header() {
-  const isDesktop = useMedia("(min-width: 768px)");
+  const isDesktop = useMediaQuery("(min-width: 768px)", { defaultValue: false });
   const pathname = usePathname();
   const isReport = pathname.includes("/report");
 
@@ -23,7 +23,7 @@ export default function Header() {
         "border-blue-100": isReport,
       })}
     >
-      <div className="mx-4 flex items-center justify-between md:container md:mx-auto">
+      <div className="container mx-4 flex items-center justify-between md:mx-auto">
         <LogoBetaInfo />
 
         {isDesktop && <DesktopNavigation />}

@@ -1,0 +1,414 @@
+[
+  {
+    "id": 1,
+    "topic": 0,
+    "order": 0,
+    "name": "Amazonia AFP Work Area polygonal area",
+    "name_es": "",
+    "name_pt": "",
+    "unit": "",
+    "unit_es": "",
+    "unit_pt": "",
+    "description": "",
+    "description_es": "",
+    "description_pt": "",
+    "visualization_types": ["map", "numeric", "chart", "table"],
+    "visualization": {
+      "type": "map",
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 4,
+      "id": 1
+    },
+    "resource": {
+      "name": "AFP_Tierras_indigenas",
+      "type": "feature",
+      "column": "",
+      "layer_id": "0",
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      },
+      "query_table": {
+        "where": "1=1",
+        "outFields": ["nombre as Name", "etnias as Ethnicity", ","],
+        "returnGeometry": false
+      },
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": false,
+        "groupByFieldsForStatistics": ["DESIG_ENG"],
+        "orderByFields": ["value DESC"],
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 2,
+    "topic": 0,
+    "order": 0,
+    "name": "Amazonian Zones by Country",
+    "name_es": "",
+    "name_pt": "",
+    "unit": "",
+    "unit_es": "",
+    "unit_pt": "",
+    "description": "",
+    "description_es": "",
+    "description_pt": "",
+    "visualization_types": ["map", "chart"],
+    "visualization": {
+      "type": "map",
+      "x": 2,
+      "y": 0,
+      "w": 2,
+      "h": 4,
+      "id": 2
+    },
+    "resource": {
+      "name": "landcover_cog_tiles",
+      "type": "imagery-tile",
+      "column": "",
+      "layer_id": "0",
+      "url": "https://tiledimageservices6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/landcover_test_3/ImageServer",
+      "query_numeric": "",
+      "query_table": "",
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": false,
+        "groupByFieldsForStatistics": ["DESIG_ENG"],
+        "orderByFields": ["value DESC"],
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 3,
+    "topic": 0,
+    "order": 0,
+    "name": "Administrative level ADM0",
+    "name_es": "",
+    "name_pt": "",
+    "unit": "",
+    "unit_es": "",
+    "unit_pt": "",
+    "description": "",
+    "description_es": "",
+    "description_pt": "",
+    "visualization_types": ["map", "table", "numeric", "chart"],
+    "visualization": {
+      "type": "numeric",
+      "x": 2,
+      "y": 4,
+      "w": 1,
+      "h": 1,
+      "id": 3
+    },
+    "resource": {
+      "name": "AFP_Tierras_indigenas",
+      "type": "feature",
+      "column": "",
+      "layer_id": "0",
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      },
+      "query_table": {
+        "where": "1=1",
+        "outFields": ["nombre as Name", "etnias as Ethnicity", ","],
+        "returnGeometry": false
+      },
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": false,
+        "groupByFieldsForStatistics": ["DESIG_ENG"],
+        "orderByFields": ["value DESC"],
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 4,
+    "topic": 0,
+    "order": 0,
+    "name": "Administrative level ADM1",
+    "name_es": "",
+    "name_pt": "",
+    "unit": "",
+    "unit_es": "",
+    "unit_pt": "",
+    "description": "",
+    "description_es": "",
+    "description_pt": "",
+    "visualization_types": ["map", "chart"],
+    "visualization": {
+      "type": "chart",
+      "x": 0,
+      "y": 4,
+      "w": 2,
+      "h": 1,
+      "id": 4
+    },
+    "resource": {
+      "name": "landcover_cog_tiles",
+      "type": "imagery-tile",
+      "column": "",
+      "layer_id": "0",
+      "url": "https://tiledimageservices6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/landcover_test_3/ImageServer",
+      "query_numeric": "",
+      "query_table": "",
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": false,
+        "groupByFieldsForStatistics": ["DESIG_ENG"],
+        "orderByFields": ["value DESC"],
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 5,
+    "topic": 0,
+    "order": 0,
+    "name": "Administrative level ADM2",
+    "name_es": "",
+    "name_pt": "",
+    "unit": "",
+    "unit_es": "",
+    "unit_pt": "",
+    "description": "",
+    "description_es": "",
+    "description_pt": "",
+    "visualization_types": ["map", "table", "numeric", "chart"],
+    "visualization": {
+      "type": "numeric",
+      "x": 0,
+      "y": 4,
+      "w": 1,
+      "h": 1,
+      "id": 5
+    },
+    "resource": {
+      "name": "AFP_Tierras_indigenas",
+      "type": "feature",
+      "column": "",
+      "layer_id": "0",
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      },
+      "query_table": {
+        "where": "1=1",
+        "outFields": ["nombre as Name", "etnias as Ethnicity", ","],
+        "returnGeometry": false
+      },
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": false,
+        "groupByFieldsForStatistics": ["DESIG_ENG"],
+        "orderByFields": ["value DESC"],
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 6,
+    "topic": 0,
+    "order": 0,
+    "name": "Amazonia international border zone",
+    "name_es": "",
+    "name_pt": "",
+    "unit": "",
+    "unit_es": "",
+    "unit_pt": "",
+    "description": "",
+    "description_es": "",
+    "description_pt": "",
+    "visualization_types": ["map", "chart"],
+    "visualization": {
+      "type": "map",
+      "x": 2,
+      "y": 0,
+      "w": 2,
+      "h": 4,
+      "id": 6
+    },
+    "resource": {
+      "name": "landcover_cog_tiles",
+      "type": "imagery-tile",
+      "column": "",
+      "layer_id": "0",
+      "url": "https://tiledimageservices6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/landcover_test_3/ImageServer",
+      "query_numeric": "",
+      "query_table": "",
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": false,
+        "groupByFieldsForStatistics": ["DESIG_ENG"],
+        "orderByFields": ["value DESC"],
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 7,
+    "topic": 0,
+    "order": 0,
+    "name": "Amazonian Peripheral Zone",
+    "name_es": "",
+    "name_pt": "",
+    "unit": "",
+    "unit_es": "",
+    "unit_pt": "",
+    "description": "",
+    "description_es": "",
+    "description_pt": "",
+    "visualization_types": ["map", "table", "numeric", "chart"],
+    "visualization": {
+      "type": "map",
+      "x": 2,
+      "y": 6,
+      "w": 2,
+      "h": 4,
+      "id": 7
+    },
+    "resource": {
+      "name": "AFP_Tierras_indigenas",
+      "type": "feature",
+      "column": "",
+      "layer_id": "0",
+      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      },
+      "query_table": {
+        "where": "1=1",
+        "outFields": ["nombre as Name", "etnias as Ethnicity", ","],
+        "returnGeometry": false
+      },
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": false,
+        "groupByFieldsForStatistics": ["DESIG_ENG"],
+        "orderByFields": ["value DESC"],
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 8,
+    "topic": 0,
+    "order": 0,
+    "name": "Administrative capitals Adm0; Adm1; Adm2",
+    "name_es": "",
+    "name_pt": "",
+    "unit": "",
+    "unit_es": "",
+    "unit_pt": "",
+    "description": "",
+    "description_es": "",
+    "description_pt": "",
+    "visualization_types": ["map", "chart"],
+    "visualization": {
+      "type": "map",
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 4,
+      "id": 8
+    },
+    "resource": {
+      "name": "landcover_cog_tiles",
+      "type": "imagery-tile",
+      "column": "",
+      "layer_id": "0",
+      "url": "https://tiledimageservices6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/landcover_test_3/ImageServer",
+      "query_numeric": "",
+      "query_table": "",
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": false,
+        "groupByFieldsForStatistics": ["DESIG_ENG"],
+        "orderByFields": ["value DESC"],
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      }
+    }
+  }
+]

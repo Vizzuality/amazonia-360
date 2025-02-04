@@ -47,9 +47,9 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
             </tr>
             <tr>
               <td className="w-60">Visualization Types</td>
-              <td>{indicator?.visualization_types.join(", ")}</td>
+              <td>{indicator?.visualization_types?.join(", ")}</td>
             </tr>
-
+            {}
             {indicator?.resource.type !== "h3" &&
               indicator?.visualization_types
                 .filter((t) => t === "map")
@@ -72,36 +72,37 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
                   );
                 })}
 
-            {indicator?.visualization_types
-              .filter((t) => t !== "map")
-              .map((type) => {
-                if (indicator?.resource.type === "feature") {
-                  const r = indicator.resource;
+            {indicator?.resource.type !== "h3" &&
+              indicator?.visualization_types
+                .filter((t) => t !== "map")
+                .map((type) => {
+                  if (indicator?.resource.type === "feature") {
+                    const r = indicator.resource;
 
-                  return (
-                    <tr key={type}>
-                      <td>Query {type[0].toUpperCase() + type.slice(1)}</td>
-                      <td>
-                        <ResourceQueryFeature {...indicator} type={type} resource={r} />
-                      </td>
-                    </tr>
-                  );
-                }
+                    return (
+                      <tr key={type}>
+                        <td>Query {type[0].toUpperCase() + type.slice(1)}</td>
+                        <td>
+                          <ResourceQueryFeature {...indicator} type={type} resource={r} />
+                        </td>
+                      </tr>
+                    );
+                  }
 
-                if (indicator?.resource.type === "imagery-tile") {
-                  const r = indicator.resource;
-                  return (
-                    <tr key={type}>
-                      <td>Query {type[0].toUpperCase() + type.slice(1)}</td>
-                      <td>
-                        <ResourceQueryImageryTile {...indicator} type={type} resource={r} />
-                      </td>
-                    </tr>
-                  );
-                }
+                  if (indicator?.resource.type === "imagery-tile") {
+                    const r = indicator.resource;
+                    return (
+                      <tr key={type}>
+                        <td>Query {type[0].toUpperCase() + type.slice(1)}</td>
+                        <td>
+                          <ResourceQueryImageryTile {...indicator} type={type} resource={r} />
+                        </td>
+                      </tr>
+                    );
+                  }
 
-                return null;
-              })}
+                  return null;
+                })}
             <tr>
               <td className="w-60">H3 Grid Column Name</td>
               {/* <td>{indicator?.h3_grid_column_name || "-"}</td> */}
