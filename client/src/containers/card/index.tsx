@@ -89,7 +89,7 @@ export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className
             <LuInfo className="text-blue-600" />
           </DialogTrigger>
         </TooltipTrigger>
-        <DialogContent className="p-0">
+        <DialogContent className="max-w-2xl p-0">
           <DialogTitle className="sr-only">{description_short}</DialogTitle>
           <Info ids={ids} />
           <DialogClose />
