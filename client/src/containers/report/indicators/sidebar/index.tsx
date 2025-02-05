@@ -2,6 +2,7 @@
 
 import { useCallback } from "react";
 
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { useSetAtom } from "jotai";
 import { LuX } from "react-icons/lu";
 
@@ -43,8 +44,11 @@ export default function TopicsSidebar() {
           <Search />
         </SidebarHeader>
         <SidebarContent>
-          <TopicsList />
-          <SidebarGroup />
+          <ScrollArea className="h-[calc(100vh-245px)]">
+            <TopicsList />
+            <SidebarGroup />
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent" />
+          </ScrollArea>
         </SidebarContent>
         <SidebarFooter />
       </div>
