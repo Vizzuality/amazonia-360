@@ -72,7 +72,7 @@ export const useLocationTitle = (location?: Location | null) => {
     }
 
     if (location?.type && location?.type !== "search") {
-      return "Custom Area";
+      return "Selected area";
     }
 
     return null;

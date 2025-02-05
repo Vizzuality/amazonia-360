@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import { LuSettings2 } from "react-icons/lu";
 
 import { useGetGridMeta } from "@/lib/grid";
+import { cn } from "@/lib/utils";
 
 import { useSyncGridDatasets, useSyncGridFilters, useSyncGridFiltersSetUp } from "@/app/store";
 
@@ -100,7 +101,10 @@ export default function GridTableSetup() {
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger>
+      <PopoverTrigger
+        disabled={!gridDatasets.length}
+        className={cn({ "opacity-50": !gridDatasets.length })}
+      >
         <LuSettings2 className="h-4 w-4" />
       </PopoverTrigger>
       <PopoverContent

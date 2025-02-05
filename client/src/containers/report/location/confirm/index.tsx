@@ -46,6 +46,9 @@ export default function Confirm() {
           Confirm
         </Button>
       </div>
+      <p className="text-sm tracking-[0.14px] text-muted-foreground">
+        To edit the shape, <strong>double-click</strong> on the shape.
+      </p>
     </div>
   );
 }
