@@ -50,7 +50,7 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
             >
               <LuChevronRight
                 className={cn({
-                  "h-4 w-4 transition-transform duration-200": true,
+                  "h-4 w-4 shrink-0 transition-transform duration-200": true,
                   "rotate-90": open,
                   "rotate-0 opacity-50": !selectedIndicator,
                 })}
@@ -60,13 +60,13 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
             </button>
           </div>
         </CollapsibleTrigger>
-        <div className="flex items-center space-x-2">
+        <div className="flex shrink-0 items-center space-x-2">
           <Tooltip>
             <Dialog>
               <TooltipTrigger asChild>
                 <DialogTrigger asChild>
                   <button aria-label="Topic info" type="button">
-                    <LuInfo className="h-full w-full" />
+                    <LuInfo className="h-full w-full shrink-0" />
                   </button>
                 </DialogTrigger>
               </TooltipTrigger>
