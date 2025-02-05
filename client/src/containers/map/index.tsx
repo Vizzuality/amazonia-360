@@ -86,6 +86,14 @@ export default function WidgetMap({ layers, ...viewProps }: WidgetMapProps) {
 
         <Layer layer={LABELS_LAYER} index={layers.length + 2} />
 
+        {/* {!!legend && (
+          <div className="absolute bottom-4 left-4 z-10">
+            <Legend>
+              <LegendItem {...legend} direction="vertical" />
+            </Legend>
+          </div>
+        )} */}
+
         <Controls>
           <FullscreenControl />
           <ZoomControl />
