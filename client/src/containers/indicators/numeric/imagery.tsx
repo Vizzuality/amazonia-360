@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { useQueryImageryTileId } from "@/lib/indicators";
+import { useIndicatorsId, useQueryImageryTileId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
 import { Indicator, ResourceImageryTile } from "@/app/local-api/indicators/route";
@@ -15,6 +15,7 @@ export interface NumericImageryIndicatorsProps extends Indicator {
 export const NumericImageryIndicators = ({ id, resource }: NumericImageryIndicatorsProps) => {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
+  const indicator = useIndicatorsId(id);
 
   const query = useQueryImageryTileId({ id, resource, type: "numeric", geometry: GEOMETRY });
 
@@ -47,7 +48,7 @@ export const NumericImageryIndicators = ({ id, resource }: NumericImageryIndicat
 
   return (
     <CardLoader query={[query]} className="h-12 grow">
-      <CardWidgetNumber value={VALUE} />
+      <CardWidgetNumber value={VALUE} unit={indicator?.unit} />
     </CardLoader>
   );
 };
