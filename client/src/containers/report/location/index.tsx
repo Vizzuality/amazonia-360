@@ -200,7 +200,11 @@ export default function ReportLocation() {
                       >
                         <LuArrowLeft className="h-4 w-4" />
                       </button>
-                      <h1>Top cells ordered by {rankingCriterion}</h1>
+                      <h1>
+                        {rankingCriterion
+                          ? `Top cells ordered by ${rankingCriterion}`
+                          : "Please select filters to view top cells"}
+                      </h1>
                       <div className="flex h-full items-center gap-2">
                         <div className="h-full shrink-0 p-2">
                           <GridTableSetup />
