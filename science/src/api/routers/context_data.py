@@ -51,5 +51,5 @@ async def get_physical_environment_data(arcgis_geometry: ArcGISGeometry):
     """Fetch Natural Physical Environment data."""
     biomes_data = await get_biomes_data(arcgis_geometry)
     basins_data = await get_basins_data(arcgis_geometry)
-    land_cover_data = await get_land_cover_data(arcgis_geometry)
-    return {**biomes_data, **basins_data, **land_cover_data}
+    # land_cover_data = await get_land_cover_data(arcgis_geometry)
+    return {**biomes_data, **basins_data}  # {**biomes_data, **basins_data, **land_cover_data}
