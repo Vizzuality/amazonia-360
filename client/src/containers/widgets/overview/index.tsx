@@ -1,28 +1,28 @@
-// import WidgetsColumn from "@/containers/widgets/column";
-// import WidgetMap from "@/containers/widgets/map";
-// import WidgetAdministrativeBoundaries from "@/containers/widgets/overview/administrative-boundaries";
-// import WidgetConservation from "@/containers/widgets/overview/conservation";
-// import WidgetIndigenous from "@/containers/widgets/overview/indigenous-lands";
-// import WidgetPopulation from "@/containers/widgets/overview/population";
-// import WidgetTotalArea from "@/containers/widgets/overview/total-area";
-// import WidgetsRow from "@/containers/widgets/row";
+import WidgetsColumn from "@/containers/widgets/column";
+import WidgetMap from "@/containers/widgets/map";
+import WidgetAdministrativeBoundaries from "@/containers/widgets/overview/administrative-boundaries";
+import WidgetConservation from "@/containers/widgets/overview/conservation";
+import WidgetIndigenous from "@/containers/widgets/overview/indigenous-lands";
+import WidgetPopulation from "@/containers/widgets/overview/population";
+import WidgetTotalArea from "@/containers/widgets/overview/total-area";
+import WidgetsRow from "@/containers/widgets/row";
 
-import { Responsive, WidthProvider } from "react-grid-layout";
+// import { Responsive, WidthProvider } from "react-grid-layout";
 
-import { useGetIndicatorsOverview } from "@/lib/indicators";
+// import { useGetIndicatorsOverview } from "@/lib/indicators";
 
-import { MIN_VISUALIZATION_SIZES } from "@/constants/topics";
+// import { MIN_VISUALIZATION_SIZES } from "@/constants/topics";
 
-import ReportResultsIndicatorOverview from "@/containers/report/results/indicator-overview";
+// import ReportResultsIndicatorOverview from "@/containers/report/results/indicator-overview";
 
-const ResponsiveReactGridLayout = WidthProvider(Responsive);
+// const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 export default function WidgetsOverview() {
-  const { data: indicatorsOverview } = useGetIndicatorsOverview();
+  // const { data: indicatorsOverview } = useGetIndicatorsOverview();
 
   return (
     <div className="container">
-      {/* <WidgetsRow>
+      <WidgetsRow>
         <WidgetsColumn className="col-span-12 md:col-span-6 lg:col-span-3 print:col-span-6">
           <WidgetTotalArea />
         </WidgetsColumn>
@@ -59,9 +59,9 @@ export default function WidgetsOverview() {
         <WidgetsColumn className="col-span-12 lg:col-span-6 print:col-span-12">
           <WidgetAdministrativeBoundaries />
         </WidgetsColumn>
-      </WidgetsRow> */}
+      </WidgetsRow>
 
-      <div className="space-y-20">
+      {/* <div className="space-y-20">
         <ResponsiveReactGridLayout
           className="layout animated"
           cols={{ lg: 4, md: 4, sm: 1, xs: 1, xxs: 1 }}
@@ -98,7 +98,7 @@ export default function WidgetsOverview() {
             );
           })}
         </ResponsiveReactGridLayout>
-      </div>
+      </div> */}
     </div>
   );
 }
