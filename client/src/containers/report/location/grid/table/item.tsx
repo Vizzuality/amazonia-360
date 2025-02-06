@@ -38,7 +38,7 @@ export const GridTableItem = (
 ) => {
   const [, setLocation] = useSyncLocation();
   const [gridDatasets] = useSyncGridDatasets();
-  const setGridCellHighlightAtom = useSetAtom(gridCellHighlightAtom);
+  const setGridCellHighlight = useSetAtom(gridCellHighlightAtom);
   const setTmpBbox = useSetAtom(tmpBboxAtom);
 
   const { data: dataIndicators } = useIndicators();
@@ -97,11 +97,11 @@ export const GridTableItem = (
   };
 
   const handleMouseEnter = () => {
-    setGridCellHighlightAtom({ id, index: cell });
+    setGridCellHighlight({ id, index: cell });
   };
 
   const handleMouseLeave = () => {
-    setGridCellHighlightAtom({
+    setGridCellHighlight({
       id: null,
       index: undefined,
     });
@@ -123,27 +123,25 @@ export const GridTableItem = (
               </button>
               <ul className="w-full overflow-hidden">
                 {ITEMS.map((dataset, i) => (
-                  <li key={dataset?.name} className="flex items-center justify-between text-sm">
-                    {/* Left Side: Name */}
-                    <span
-                      className={cn("whitespace-nowrap text-gray-400", {
-                        "font-normal": i !== 0,
-                      })}
-                    >
-                      {dataset?.name}
-                    </span>
+                  <li
+                    key={dataset?.column}
+                    className="flex w-full items-end justify-between text-sm"
+                  >
+                    <div className="flex flex-1 items-end overflow-hidden">
+                      <span
+                        className={cn({
+                          "max-w-[250px] flex-shrink-0 break-words text-gray-400": true,
+                          "font-normal": i !== 0,
+                        })}
+                      >
+                        {dataset?.name}
+                        <span className="flex-grow overflow-hidden whitespace-nowrap font-extralight tracking-[2.5px] text-muted-foreground">
+                          {".".repeat(10)}
+                        </span>
+                      </span>
+                    </div>
 
-                    {/* Dots */}
-                    <span className="mx-1 flex-grow overflow-hidden whitespace-nowrap font-extralight tracking-[2.5px] text-muted-foreground">
-                      .........................................
-                    </span>
-
-                    {/* Right Side: Value */}
-                    <span
-                      className={cn("whitespace-nowrap text-blue-700", {
-                        "font-normal": i !== 0,
-                      })}
-                    >
+                    <span className="flex-shrink-0 whitespace-nowrap text-blue-700">
                       {formatNumberUnit(+(dataset?.value ?? 0), `${dataset?.unit}`)}
                     </span>
                   </li>
