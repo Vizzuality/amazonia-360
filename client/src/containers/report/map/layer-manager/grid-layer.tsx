@@ -12,6 +12,7 @@ import { ArrowTable } from "@loaders.gl/arrow";
 import { ArrowLoader } from "@loaders.gl/arrow";
 import { load } from "@loaders.gl/core";
 import CHROMA from "chroma-js";
+import { latLngToCell } from "h3-js";
 import { useAtomValue, useSetAtom } from "jotai";
 
 import { env } from "@/env.mjs";
@@ -45,6 +46,8 @@ export const getGridLayerProps = ({
   geometry,
   zoom,
   setPopupInfo,
+  hoveredCell,
+  setHoveredCell,
   gridCellHighlight,
 }: {
   gridDatasets: string[];
@@ -62,6 +65,8 @@ export const getGridLayerProps = ({
     y: number | null;
     coordinates: number[] | undefined;
   }) => void;
+  hoveredCell: string | null;
+  setHoveredCell: (arg: string | null) => void;
   gridCellHighlight?: string;
 }) => {
   // Create array of 4n values
@@ -109,6 +114,7 @@ export const getGridLayerProps = ({
       const values = gridDatasets.map((column) => ({ column, value: row?.[column] }));
 
       if (info && info.index === -1) {
+        setHoveredCell(null);
         setPopupInfo({
           id: null,
           index: undefined,
@@ -118,7 +124,9 @@ export const getGridLayerProps = ({
           coordinates: undefined,
         });
       }
-      if (info && info.index !== -1) {
+      if (info && info.index !== -1 && info.coordinate) {
+        const cell = latLngToCell(info?.coordinate?.[1], info.coordinate[0], 6);
+        setHoveredCell(cell);
         setPopupInfo({
           id: info.index,
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -235,10 +243,10 @@ export const getGridLayerProps = ({
         new H3HexagonLayer({
           ...props,
           id: `${props.id}-grid-highlight-${opacity}`,
-          data: !!gridCellHighlight ? [gridCellHighlight] : [],
+          data: [gridCellHighlight, hoveredCell].filter(Boolean),
           highPrecision: true,
           opacity: opacity,
-          visible: !!gridCellHighlight,
+          visible: !!gridCellHighlight || hoveredCell ? true : false,
           pickable: true,
           filled: true,
           extruded: false,
@@ -252,6 +260,9 @@ export const getGridLayerProps = ({
           lineWidthUnits: "pixels",
           updateTriggers: {
             opacity: [opacity],
+            handleGridCellHighlight: [gridCellHighlight],
+            gridCellHighlight: [gridCellHighlight],
+            hoveredCell: [hoveredCell],
           },
         }),
       ];
@@ -266,6 +277,7 @@ export default function GridLayer() {
   const [gridSetUpFilters] = useSyncGridFiltersSetUp();
   const [gridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
+  const [hoveredCell, setHoveredCell] = useState<string | null>(null);
   const gridCellHighlight = useAtomValue(gridCellHighlightAtom);
   const setPopupInfo = useSetAtom(popupInfoAtom);
 
@@ -319,6 +331,8 @@ export default function GridLayer() {
             setPopupInfo,
             geometry: GEOMETRY,
             zoom,
+            hoveredCell,
+            setHoveredCell,
             gridCellHighlight: gridCellHighlight.index,
           }),
         ],
@@ -336,6 +350,8 @@ export default function GridLayer() {
         getFillColor,
         geometry: GEOMETRY,
         zoom,
+        hoveredCell,
+        setHoveredCell,
         setPopupInfo,
         gridCellHighlight: gridCellHighlight.index,
       }),
@@ -352,6 +368,8 @@ export default function GridLayer() {
     zoom,
     gridCellHighlight,
     opacity,
+    hoveredCell,
+    setHoveredCell,
     setPopupInfo,
   ]);
 
