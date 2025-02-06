@@ -43,7 +43,7 @@ export default function WidgetPopulation() {
     <Card>
       <CardHeader>
         <CardTitle>Population</CardTitle>
-        <CardInfo ids={[+"population"]} />
+        <CardInfo ids={[42]} />
       </CardHeader>
 
       <CardLoader query={[query]} className="h-12">

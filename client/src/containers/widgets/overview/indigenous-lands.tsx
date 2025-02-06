@@ -46,7 +46,7 @@ export default function WidgetIndigenous() {
     <Card>
       <CardHeader>
         <CardTitle>Indigenous lands</CardTitle>
-        <CardInfo ids={[+"tierras_indigenas"]} />
+        <CardInfo ids={[16]} />
       </CardHeader>
       <CardLoader query={[query]} className="h-12">
         <CardWidgetNumber

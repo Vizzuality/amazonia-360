@@ -80,8 +80,8 @@ export const MapPopup = () => {
     <div
       className="absolute flex flex-col space-y-1.5 rounded-lg bg-white p-4 shadow-md"
       style={{
-        ...(popupInfo?.y && { top: popupInfo?.y }),
-        ...(popupInfo?.x && { left: popupInfo?.x }),
+        ...(popupInfo?.y && { top: popupInfo?.y + 10 }),
+        ...(popupInfo?.x && { left: popupInfo?.x + 10 }),
       }}
     >
       <div className="flex flex-col space-y-1">

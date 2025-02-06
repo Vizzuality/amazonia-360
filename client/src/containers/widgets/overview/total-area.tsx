@@ -9,7 +9,7 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/store";
 
-import { Card, CardWidgetNumber, CardTitle } from "@/containers/card";
+import { Card, CardWidgetNumber, CardTitle, CardHeader, CardInfo } from "@/containers/card";
 
 export default function WidgetTotalArea() {
   const [location] = useSyncLocation();
@@ -25,7 +25,10 @@ export default function WidgetTotalArea() {
 
   return (
     <Card>
-      <CardTitle>Total Area</CardTitle>
+      <CardHeader>
+        <CardTitle>Total Area</CardTitle>
+        <CardInfo ids={[+"population"]} />
+      </CardHeader>
       <CardWidgetNumber value={AREA} unit="km²" />
     </Card>
   );

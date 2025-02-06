@@ -65,7 +65,7 @@ export default function WidgetMap({ ids, ...viewProps }: WidgetMapProps) {
         <CardHeader className="p-6">
           <CardTitle>Map</CardTitle>
           <CardControls>
-            <CardInfo ids={[+ids]} />
+            <CardInfo ids={[8]} />
           </CardControls>
         </CardHeader>
 
