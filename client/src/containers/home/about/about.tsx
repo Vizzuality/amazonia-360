@@ -2,21 +2,15 @@
 
 import { cn } from "@/lib/utils";
 
-const AboutHeroHome = ({
-  textVisible,
-  isMobile = false,
-}: {
-  textVisible: boolean;
-  isMobile?: boolean;
-}) => {
+const AboutHeroHome = ({ textVisible }: { textVisible: boolean }) => {
   return (
     <div className="relative md:absolute md:bottom-0 md:left-0 md:right-0">
       <div className="md:container">
         <div
           className={cn({
             "relative max-w-[820px] bg-blue-700 opacity-100 md:p-10": true,
-            "delay-50 animate-slide-up": textVisible && !isMobile,
-            "opacity-0": !textVisible && !isMobile,
+            "delay-50 animate-slide-up": textVisible,
+            "opacity-0": !textVisible,
           })}
         >
           <div className="mx-4 flex flex-col items-start justify-start space-y-6 py-8 text-white">

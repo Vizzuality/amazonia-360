@@ -4,13 +4,11 @@ import React, { useState } from "react";
 
 import { Element } from "react-scroll";
 
-import { useMediaQuery } from "usehooks-ts";
+import { Media } from "@/containers/media";
 
 import AboutHeroHome from "./about";
 
 const HeroHome = () => {
-  const isDesktop = useMediaQuery("(min-width: 768px)", { defaultValue: false });
-  const isMobile = useMediaQuery("(max-width: 768px)", { defaultValue: false });
   const [imageInView, setImageInView] = useState(false);
   const [textVisible, setTextVisible] = useState(false);
 
@@ -42,11 +40,15 @@ const HeroHome = () => {
             }}
           />
 
-          {isDesktop && <AboutHeroHome textVisible={textVisible} />}
+          <Media greaterThanOrEqual="md">
+            <AboutHeroHome textVisible={textVisible} />
+          </Media>
         </div>
       </section>
 
-      {isMobile && <AboutHeroHome textVisible={true} isMobile={isMobile} />}
+      <Media lessThan="md">
+        <AboutHeroHome textVisible={true} />
+      </Media>
     </Element>
   );
 };
