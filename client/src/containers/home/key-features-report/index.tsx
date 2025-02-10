@@ -17,14 +17,17 @@ export default function KeyFeatures() {
   });
 
   return (
-    <section className="relative mx-4 flex w-full flex-col-reverse justify-between md:container md:h-screen md:max-h-[720px] md:flex-row">
+    <section className="container relative grid w-full grid-cols-12 overflow-hidden md:container md:max-h-[720px]">
       {/* Left Section */}
-      <div className="w-full max-w-lg">
+      <div className="order-2 col-span-12 md:order-1 md:col-span-5">
         <CardsContainer />
       </div>
 
       {/* Right Section */}
-      <div ref={refCol} className="relative h-full w-full overflow-hidden">
+      <div
+        ref={refCol}
+        className="relative order-1 col-span-12 md:order-2 md:col-span-6 md:col-start-7"
+      >
         {/* Gradients */}
         <Media greaterThanOrEqual="md">
           <>

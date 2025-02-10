@@ -18,8 +18,7 @@ export default function KeyFeaturesChartsColumn1Mobile({ inView }: { inView: boo
         src="/images/home/key-features-report/chart-06.png"
         height={132}
         width={240}
-        className="shrink-0"
-        objectFit="contain"
+        className="shrink-0 object-contain"
         draggable={false}
       />
 
@@ -28,8 +27,7 @@ export default function KeyFeaturesChartsColumn1Mobile({ inView }: { inView: boo
         src="/images/home/key-features-report/chart-03.avif"
         height={132}
         width={240}
-        className="shrink-0"
-        objectFit="contain"
+        className="shrink-0 object-contain"
         draggable={false}
       />
 
@@ -38,8 +36,7 @@ export default function KeyFeaturesChartsColumn1Mobile({ inView }: { inView: boo
         src="/images/home/key-features-report/chart-04.avif"
         height={132}
         width={240}
-        className="shrink-0"
-        objectFit="contain"
+        className="shrink-0 object-contain"
         draggable={false}
       />
 
@@ -48,8 +45,7 @@ export default function KeyFeaturesChartsColumn1Mobile({ inView }: { inView: boo
         src="/images/home/key-features-report/chart-05.png"
         height={132}
         width={240}
-        className="shrink-0"
-        objectFit="contain"
+        className="shrink-0 object-contain"
         draggable={false}
       />
 
@@ -58,8 +54,7 @@ export default function KeyFeaturesChartsColumn1Mobile({ inView }: { inView: boo
         src="/images/home/key-features-report/chart-07.png"
         height={132}
         width={240}
-        className="shrink-0"
-        objectFit="contain"
+        className="shrink-0 object-contain"
         draggable={false}
       />
     </div>

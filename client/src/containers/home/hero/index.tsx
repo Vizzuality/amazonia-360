@@ -23,15 +23,15 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative flex w-full flex-col overflow-hidden md:h-[calc(100svh_-_64px)] md:flex-row md:space-x-10 md:bg-blue-50">
-      <div className="relative px-4 md:container">
-        <div className="relative z-10 flex max-w-2xl flex-col space-y-6 py-8 md:absolute md:top-[5%] md:max-w-none md:rounded md:px-0 md:py-12 md:animate-in md:slide-in-from-left-40 lg:top-[20%]">
+    <section className="relative w-full overflow-hidden md:h-[calc(100svh_-_64px)] md:bg-blue-50">
+      <div className="container relative grid h-full w-full grid-cols-12 items-center">
+        <div className="relative z-10 col-span-5 flex max-w-2xl flex-col space-y-6 py-8 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-40">
           <h2 className="text-3xl font-bold text-blue-600 lg:text-4xl">
             Understanding
             <br /> Amazonia
             <br /> like never before
           </h2>
-          <p className="max-w-[45%] text-base font-normal text-blue-900 lg:text-lg">
+          <p className="text-base font-normal text-blue-900 lg:text-lg">
             With <span className="font-bold">AmazoniaForever360+</span> get all the resources you
             need about one of the world&apos;s most diverse ecosystems. AmazoniaForever360+ is your
             gateway to understanding and help you achieving the greatest impact in this region.
