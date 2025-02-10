@@ -17,23 +17,24 @@ def render_sidebar(btn_label, session_state):
 
     # Button to open the profile selector
     if st.button("Generate AI Summary"):
+        session_state.selected_description = None
         session_state.show_profile_selector = True
 
     # Conditional rendering for profile selection
     if session_state.show_profile_selector:
-        st.write("**Select the profile that best matches your audience:**")
+        st.write("**Select the description type to be generated:**")
         col1, col2, col3 = st.columns(3)
         with col1:
-            if st.button("General Public", key="general_public"):
-                session_state.selected_profile = "General Public"
+            if st.button("Sort", key="sort"):
+                session_state.selected_description = "Sort"
         with col2:
-            if st.button("Finances", key="finances"):
-                session_state.selected_profile = "Finances"
+            if st.button("Normal", key="normal"):
+                session_state.selected_description = "Normal"
         with col3:
-            if st.button("Conservationists", key="conservationists"):
-                session_state.selected_profile = "Conservationists"
+            if st.button("Long", key="long"):
+                session_state.selected_description = "Long"
 
         # Display selected profile
-        if session_state.selected_profile:
-            st.success(f"Selected Profile: **{session_state.selected_profile}**")
+        if session_state.selected_description:
+            st.success(f"Selected Description Type: **{session_state.selected_description}**")
             session_state.show_profile_selector = False  # Hide after selection
