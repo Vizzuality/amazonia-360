@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useMemo, useState, useEffect } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { useInView } from "react-intersection-observer";
 
@@ -24,16 +24,11 @@ import {
 
 export default function Glance() {
   const [chartKey, setChartKey] = useState<MosaicIds>(MOSAIC_OPTIONS[4].key);
-  const [sectionInView, setImageInView] = useState(false);
 
   const { ref: sectionRef, inView: isSectionInView } = useInView({
-    triggerOnce: false,
-    threshold: 0.5,
+    triggerOnce: true,
+    threshold: 0.25,
   });
-
-  useEffect(() => {
-    if (isSectionInView) setImageInView(true);
-  }, [isSectionInView]);
 
   const ordinalColorScale = useMemo(() => {
     return scaleOrdinal({
@@ -111,7 +106,7 @@ export default function Glance() {
       className="flex flex-col items-end px-4 pt-20 md:container md:flex-row md:space-x-28 md:py-28"
     >
       <div
-        className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-10 lg:space-y-44 ${sectionInView ? "animate-left-to-right overflow-hidden" : "opacity-0"}`}
+        className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-10 lg:space-y-44 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-20" : "opacity-0"}`}
       >
         <div>
           <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
@@ -160,7 +155,7 @@ export default function Glance() {
         </div>
       </div>
       <div
-        className={`mt-20 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${sectionInView ? "animate-right-to-left overflow-hidden" : "opacity-0"}`}
+        className={`mt-20 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-right-20" : "opacity-0"}`}
       >
         <header className="space-y-1">
           <h3 className="text-xl font-semibold text-foreground">

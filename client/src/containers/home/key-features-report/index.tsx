@@ -11,23 +11,23 @@ import KeyFeaturesChartsColumn2 from "./charts-column-2";
 import KeyFeaturesChartsColumn2Mobile from "./charts-column-2-mobile";
 
 export default function KeyFeatures() {
-  const [refCol, inViewCol] = useInView({
-    triggerOnce: false,
+  const [ref, inViewCol] = useInView({
+    triggerOnce: true,
     threshold: 0.2,
   });
 
   return (
-    <section className="container relative grid w-full grid-cols-12 overflow-hidden md:container md:max-h-[720px]">
+    <section
+      ref={ref}
+      className="container relative grid w-full grid-cols-12 overflow-hidden md:container md:max-h-[720px]"
+    >
       {/* Left Section */}
       <div className="order-2 col-span-12 md:order-1 md:col-span-5">
         <CardsContainer />
       </div>
 
       {/* Right Section */}
-      <div
-        ref={refCol}
-        className="relative order-1 col-span-12 md:order-2 md:col-span-6 md:col-start-7"
-      >
+      <div className="relative order-1 col-span-12 md:order-2 md:col-span-6 md:col-start-7">
         {/* Gradients */}
         <Media greaterThanOrEqual="md">
           <>

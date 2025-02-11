@@ -26,7 +26,7 @@ export default function Hero() {
     <section className="relative w-full overflow-hidden md:h-[calc(100svh_-_64px)] md:bg-blue-50">
       <div className="container relative grid h-full w-full grid-cols-12 items-center">
         <div className="relative z-10 col-span-5 flex max-w-2xl flex-col space-y-6 py-8 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-40">
-          <h2 className="text-3xl font-bold text-blue-600 lg:text-4xl">
+          <h2 className="text-4xl font-bold text-blue-600 lg:text-5xl">
             Understanding
             <br /> Amazonia
             <br /> like never before
