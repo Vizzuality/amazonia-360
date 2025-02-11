@@ -205,11 +205,7 @@ export default function ReportLocation() {
                           ? `Top cells ordered by ${rankingCriterion}`
                           : "Please select filters to view top cells"}
                       </h1>
-                      <div className="flex h-full items-center gap-2">
-                        <div className="h-full shrink-0 p-2">
-                          <GridTableSetup />
-                        </div>
-                      </div>
+                      <GridTableSetup />
                     </div>
                   </div>
 

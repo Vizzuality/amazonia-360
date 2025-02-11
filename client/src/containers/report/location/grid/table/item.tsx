@@ -127,17 +127,16 @@ export const GridTableItem = (
                     key={dataset?.column}
                     className="flex w-full items-end justify-between text-sm"
                   >
-                    <div className="flex flex-1 items-end overflow-hidden">
-                      <span
-                        className={cn({
-                          "max-w-[250px] flex-shrink-0 break-words text-gray-400": true,
+                    <div className="relative flex flex-1 items-end overflow-hidden">
+                      <p
+                        className={cn("inline-block max-w-max break-words text-gray-400", {
                           "font-normal": i !== 0,
                         })}
                       >
                         {dataset?.name}
-                        <span className="flex-grow overflow-hidden whitespace-nowrap font-extralight tracking-[2.5px] text-muted-foreground">
-                          {".".repeat(10)}
-                        </span>
+                      </p>
+                      <span className="flex-1 overflow-hidden whitespace-nowrap font-extralight tracking-[2.5px] text-muted-foreground">
+                        {".".repeat(200)}
                       </span>
                     </div>
 
