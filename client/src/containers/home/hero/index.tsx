@@ -8,13 +8,12 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { LuArrowRight } from "react-icons/lu";
-import { useMediaQuery } from "usehooks-ts";
+
+import { Media } from "@/containers/media";
 
 import { Button } from "@/components/ui/button";
 
 export default function Hero() {
-  const isMobile = useMediaQuery("(max-width: 768px)", { defaultValue: false });
-
   const handleScroll = useCallback(() => {
     scroller.scrollTo("moreInfo", {
       duration: 1000,
@@ -24,15 +23,15 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative flex w-full flex-col overflow-hidden md:h-[calc(100svh_-_64px)] md:flex-row md:space-x-10 md:bg-blue-50">
-      <div className="relative px-4 md:container">
-        <div className="relative z-10 flex max-w-2xl flex-col space-y-6 py-8 md:absolute md:top-[5%] md:max-w-none md:animate-left-to-right md:rounded md:px-0 md:py-12 lg:top-[20%]">
-          <h2 className="text-3xl font-bold text-blue-600 lg:text-4xl">
+    <section className="relative w-full overflow-hidden md:h-[calc(100svh_-_64px)] md:bg-blue-50">
+      <div className="container relative grid h-full w-full grid-cols-12 items-center">
+        <div className="relative z-10 col-span-12 flex flex-col space-y-6 py-8 md:col-span-5 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-40">
+          <h2 className="text-4xl font-bold text-blue-600 lg:text-5xl">
             Understanding
             <br /> Amazonia
             <br /> like never before
           </h2>
-          <p className="max-w-[45%] text-base font-normal text-blue-900 lg:text-lg">
+          <p className="text-base font-normal text-blue-900 lg:text-lg">
             With <span className="font-bold">AmazoniaForever360+</span> get all the resources you
             need about one of the world&apos;s most diverse ecosystems. AmazoniaForever360+ is your
             gateway to understanding and help you achieving the greatest impact in this region.
@@ -56,14 +55,26 @@ export default function Hero() {
           </div>
         </div>
       </div>
-      <Image
-        src={`${isMobile ? "/images/home/hero-mobile.avif" : "/images/home/hero.avif"}`}
-        alt="Amazonia"
-        width={2500}
-        height={2500}
-        className="lg-top-[30%] w-full max-w-fit animate-half-right-bottom-to-left-top object-cover px-4 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]"
-        draggable={false}
-      />
+      <Media greaterThanOrEqual="md">
+        <Image
+          src="/images/home/hero.avif"
+          alt="Amazonia"
+          width={2500}
+          height={2500}
+          className="lg-top-[30%] w-full max-w-fit animate-half-right-bottom-to-left-top object-cover px-4 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]"
+          draggable={false}
+        />
+      </Media>
+      <Media lessThan="md">
+        <Image
+          src="/images/home/hero-mobile.avif"
+          alt="Amazonia"
+          width={2500}
+          height={2500}
+          className="lg-top-[30%] w-full max-w-fit animate-half-right-bottom-to-left-top object-cover px-4 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]"
+          draggable={false}
+        />
+      </Media>
     </section>
   );
 }
