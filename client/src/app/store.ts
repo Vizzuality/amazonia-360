@@ -29,7 +29,6 @@ export const useSyncLocation = () => {
 };
 
 // GRID PARAMS
-// TO - DO - check if gridFilters and GridSetUpFilters should be unified
 export const useSyncGridFilters = () => {
   return useQueryState("gridFilters", gridFiltersParser);
 };

@@ -42,10 +42,15 @@ export const getIndicators = async () => {
   const indicators = INDICATORS as Indicator[];
   const topics = TOPICS as Topic[];
 
-  return indicators.map((indicator) => ({
-    ...indicator,
-    topic: topics.find((topic) => topic.id === indicator.topic),
-  })) as (Indicator & { topic: Topic })[];
+  return (
+    indicators
+      // TO - DO - delete this filter when indicator json gets fixed
+      .filter(({ topic }) => topic < 7)
+      .map((indicator) => ({
+        ...indicator,
+        topic: topics.find((topic) => topic.id === indicator.topic),
+      })) as (Indicator & { topic: Topic })[]
+  );
 };
 
 export const getIndicatorsKey = () => {

@@ -103,7 +103,11 @@ export default function GridTableSetup() {
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger
         disabled={!gridDatasets.length}
-        className={cn({ "opacity-50": !gridDatasets.length })}
+        className={cn({
+          "duration-400 flex shrink-0 items-center justify-center rounded-lg px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100":
+            true,
+          "opacity-50": !gridDatasets.length,
+        })}
       >
         <LuSettings2 className="h-4 w-4" />
       </PopoverTrigger>

@@ -362,7 +362,6 @@ export default function GridLayer() {
     gridDatasets,
     gridFilters,
     getFillColor,
-
     gridMetaData,
     GEOMETRY,
     zoom,

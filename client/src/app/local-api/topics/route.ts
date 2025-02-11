@@ -22,7 +22,7 @@ export type Topic = {
   description_es?: string;
   description_en?: string;
   description_pt?: string;
-  description_short: string;
+  description_short?: string;
   description_short_es?: string;
   description_short_en?: string;
   description_short_pt?: string;
