@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 
 import { env } from "@/env.mjs";
 
-import { session } from "@/actions/session";
+// import { session } from "@/actions/session";
 
 // Step 1. HTTP Basic Auth Middleware for Challenge
 export default async function middleware(req: NextRequest) {
@@ -15,7 +15,7 @@ export default async function middleware(req: NextRequest) {
     });
   }
 
-  await session({ refresh: false });
+  // await session({ refresh: false });
 
   const response = NextResponse.next();
 

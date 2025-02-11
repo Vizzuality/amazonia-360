@@ -11,6 +11,9 @@ importers:
       '@arcgis/core':
         specifier: ^4.30.9
         version: 4.30.9(@floating-ui/utils@0.2.8)
+      '@artsy/fresnel':
+        specifier: ^8.1.0
+        version: 8.1.0(react@18.3.1)
       '@deck.gl/arcgis':
         specifier: ^9.0.33
         version: 9.0.34(@arcgis/core@4.30.9(@floating-ui/utils@0.2.8))(@deck.gl/core@9.0.34)(@luma.gl/core@9.0.27)(@luma.gl/engine@9.0.27(@luma.gl/core@9.0.27))
@@ -239,9 +242,6 @@ importers:
       ts-deepmerge:
         specifier: ^7.0.1
         version: 7.0.1
-      usehooks-ts:
-        specifier: ^3.1.0
-        version: 3.1.0(react@18.3.1)
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -367,6 +367,12 @@ packages:
 
   '@arcgis/core@4.30.9':
     resolution: {integrity: sha512-tOM6QmXRikmD26uqIsFk2yxBwUpmAYJjp4vd9tl+VEfAXaLyArjHC8/op/OvyJZtfHNiL5zcSR7/YsiUddHPXA==}
+
+  '@artsy/fresnel@8.1.0':
+    resolution: {integrity: sha512-zlTUFfMDlJa2rmt631qC3/uwuZlGtLIpJtwddDEYdmy/p2P/rvZej+IXLHTP5a922CUMujWtEJHm/9wh93B2OQ==}
+    engines: {node: '>=12.20.2', yarn: 1.x.x}
+    peerDependencies:
+      react: '>=18.0.0'
 
   '@asyncapi/specs@4.3.1':
     resolution: {integrity: sha512-EfexhJu/lwF8OdQDm28NKLJHFkx0Gb6O+rcezhZYLPIoNYKXJMh2J1vFGpwmfAcTTh+ffK44Oc2Hs1Q4sLBp+A==}
@@ -6048,12 +6054,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
-  usehooks-ts@3.1.0:
-    resolution: {integrity: sha512-bBIa7yUyPhE1BCc0GmR96VU/15l/9gP1Ch5mYdLcFBaFGQsdmXkvjV0TtOqW1yUd6VjIwDunm+flSciCQXujiw==}
-    engines: {node: '>=16.15.0'}
-    peerDependencies:
-      react: ^16.8.0  || ^17 || ^18
-
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
@@ -6268,6 +6268,10 @@ snapshots:
       sortablejs: 1.15.3
     transitivePeerDependencies:
       - '@floating-ui/utils'
+
+  '@artsy/fresnel@8.1.0(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
 
   '@asyncapi/specs@4.3.1':
     dependencies:
@@ -13041,11 +13045,6 @@ snapshots:
 
   use-sync-external-store@1.2.2(react@18.3.1):
     dependencies:
-      react: 18.3.1
-
-  usehooks-ts@3.1.0(react@18.3.1):
-    dependencies:
-      lodash.debounce: 4.0.8
       react: 18.3.1
 
   util-deprecate@1.0.2: {}
