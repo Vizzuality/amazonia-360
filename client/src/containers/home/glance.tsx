@@ -106,7 +106,7 @@ export default function Glance() {
       className="flex flex-col items-end px-4 pt-20 md:container md:flex-row md:space-x-28 md:py-28"
     >
       <div
-        className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-10 lg:space-y-44 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-20" : "opacity-0"}`}
+        className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-10 lg:space-y-44 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-20" : "md:opacity-0"}`}
       >
         <div>
           <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">

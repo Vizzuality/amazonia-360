@@ -23,7 +23,8 @@ export default function CardsContainer() {
         ref={textRef}
         className={cn({
           "opacity-0": !isTextInView,
-          "delay-0 duration-700 animate-in fade-in-0 slide-in-from-top-10": isTextInView,
+          "md:delay-0 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-top-10":
+            isTextInView,
         })}
       >
         <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
@@ -43,7 +44,7 @@ export default function CardsContainer() {
           <div
             className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 ${
               isCardInView
-                ? "delay-0 duration-700 animate-in fade-in-0 slide-in-from-left-5"
+                ? "md:delay-0 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
                 : "opacity-0"
             }`}
           >
@@ -55,7 +56,7 @@ export default function CardsContainer() {
           <div
             className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 ${
               isCardInView
-                ? "delay-300 duration-700 animate-in fade-in-0 slide-in-from-left-5"
+                ? "md:delay-300 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
                 : "opacity-0"
             }`}
           >
@@ -68,7 +69,7 @@ export default function CardsContainer() {
           <div
             className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 ${
               isCardInView
-                ? "delay-500 duration-700 animate-in fade-in-0 slide-in-from-left-5"
+                ? "md:delay-500 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
                 : "opacity-0"
             }`}
           >
