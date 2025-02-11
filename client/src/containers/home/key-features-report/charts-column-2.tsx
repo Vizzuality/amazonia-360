@@ -12,7 +12,7 @@ export default function KeyFeaturesChartsColumn2({ inView }: { inView: boolean }
         src="/images/home/key-features-report/chart-right-01.avif"
         height={124}
         width={314}
-        objectFit="contain"
+        className="w-auto object-contain"
         draggable={false}
       />
 
@@ -21,7 +21,7 @@ export default function KeyFeaturesChartsColumn2({ inView }: { inView: boolean }
         src="/images/home/key-features-report/chart-right-02.avif"
         height={124}
         width={314}
-        objectFit="contain"
+        className="w-auto object-contain"
         draggable={false}
       />
 
@@ -30,7 +30,7 @@ export default function KeyFeaturesChartsColumn2({ inView }: { inView: boolean }
         src="/images/home/key-features-report/chart-right-04.avif"
         height={124}
         width={314}
-        objectFit="contain"
+        className="w-auto object-contain"
         draggable={false}
       />
       <Image
@@ -38,7 +38,7 @@ export default function KeyFeaturesChartsColumn2({ inView }: { inView: boolean }
         src="/images/home/key-features-report/chart-right-05.avif"
         height={124}
         width={314}
-        objectFit="contain"
+        className="w-auto object-contain"
         draggable={false}
       />
 
@@ -47,7 +47,7 @@ export default function KeyFeaturesChartsColumn2({ inView }: { inView: boolean }
         src="/images/home/key-features-report/chart-right-06.avif"
         height={124}
         width={314}
-        objectFit="contain"
+        className="w-auto object-contain"
         draggable={false}
       />
 
@@ -56,7 +56,7 @@ export default function KeyFeaturesChartsColumn2({ inView }: { inView: boolean }
         src="/images/home/key-features-report/chart-right-07.avif"
         height={124}
         width={314}
-        objectFit="contain"
+        className="w-auto object-contain"
         draggable={false}
       />
     </div>

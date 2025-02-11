@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+import { MediaContextProvider } from "@/containers/media";
 import { ArcGISProvider } from "@/containers/providers/arcgis-provider";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -53,10 +54,12 @@ export default function LayoutProviders({
   const queryClient = getQueryClient();
 
   return (
-    <TooltipProvider>
-      <QueryClientProvider client={queryClient}>
-        <ArcGISProvider session={session}>{children}</ArcGISProvider>
-      </QueryClientProvider>
-    </TooltipProvider>
+    <MediaContextProvider>
+      <TooltipProvider>
+        <QueryClientProvider client={queryClient}>
+          <ArcGISProvider session={session}>{children}</ArcGISProvider>
+        </QueryClientProvider>
+      </TooltipProvider>
+    </MediaContextProvider>
   );
 }

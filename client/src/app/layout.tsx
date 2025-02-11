@@ -4,6 +4,7 @@ import { Montserrat } from "next/font/google";
 import { cookies } from "next/headers";
 import Script from "next/script";
 
+import RootHead from "@/app/head";
 import LayoutProviders from "@/app/layout-providers";
 
 import Header from "@/containers/header";
@@ -37,6 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       }}
     >
       <html lang="en">
+        <RootHead />
         <body className={`${montserrat.className} w-full overflow-x-hidden`}>
           <Header />
           {children}

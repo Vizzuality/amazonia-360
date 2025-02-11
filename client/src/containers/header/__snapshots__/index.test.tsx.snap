@@ -6,7 +6,7 @@ exports[`Header renders the Home link selected 1`] = `
     class="box-border flex h-16 flex-col justify-center border-b border-blue-50 bg-white backdrop-blur"
   >
     <div
-      class="container mx-4 flex items-center justify-between md:mx-auto"
+      class="container flex items-center justify-between md:mx-auto"
     >
       <div
         class="z-[120] flex items-center space-x-2"
@@ -39,7 +39,7 @@ exports[`Header renders the Home link selected 1`] = `
           </h1>
         </a>
         <button
-          aria-controls="radix-:rc:"
+          aria-controls="radix-:r10:"
           aria-expanded="false"
           aria-haspopup="dialog"
           data-state="closed"
@@ -52,28 +52,54 @@ exports[`Header renders the Home link selected 1`] = `
           </div>
         </button>
       </div>
-      <nav
-        class="flex space-x-8 print:hidden"
+      <div
+        class="fresnel-container fresnel-greaterThanOrEqual-md fresnel-:r13:"
       >
-        <a
-          class="text-sm hover:text-cyan-500 text-cyan-500"
-          href="/"
+        <nav
+          class="flex space-x-8 print:hidden"
         >
-          Home
-        </a>
-        <a
-          class="text-sm hover:text-cyan-500"
-          href="/report"
+          <a
+            class="text-sm hover:text-cyan-500 text-cyan-500"
+            href="/"
+          >
+            Home
+          </a>
+          <a
+            class="text-sm hover:text-cyan-500"
+            href="/report"
+          >
+            Report Tool
+          </a>
+          <a
+            class="text-sm hover:text-cyan-500"
+            href="/hub"
+          >
+            Hub
+          </a>
+        </nav>
+      </div>
+      <div
+        class="fresnel-container fresnel-lessThan-md fresnel-:r14:"
+      >
+        <button
+          aria-controls="radix-:r15:"
+          aria-expanded="false"
+          aria-haspopup="dialog"
+          class="fixed right-5 top-1/2 z-[110] flex h-6 w-6 -translate-y-1/2 transform cursor-pointer flex-col flex-wrap justify-around"
+          data-state="closed"
+          type="button"
         >
-          Report Tool
-        </a>
-        <a
-          class="text-sm hover:text-cyan-500"
-          href="/hub"
-        >
-          Hub
-        </a>
-      </nav>
+          <div
+            class="block h-0.5 w-6 origin-[1px] rounded-full bg-blue-600 transition-all rotate-0"
+          />
+          <div
+            class="block h-0.5 w-6 origin-[1px] rounded bg-blue-600 transition-all translate-x-0"
+          />
+          <div
+            class="block h-0.5 w-6 origin-[1px] rounded bg-blue-600 transition-all rotate-0"
+          />
+        </button>
+      </div>
     </div>
   </header>
 </div>
@@ -85,7 +111,7 @@ exports[`Header renders the Hub link selected 1`] = `
     class="box-border flex h-16 flex-col justify-center border-b border-blue-50 bg-white backdrop-blur"
   >
     <div
-      class="container mx-4 flex items-center justify-between md:mx-auto"
+      class="container flex items-center justify-between md:mx-auto"
     >
       <div
         class="z-[120] flex items-center space-x-2"
@@ -118,7 +144,7 @@ exports[`Header renders the Hub link selected 1`] = `
           </h1>
         </a>
         <button
-          aria-controls="radix-:ri:"
+          aria-controls="radix-:r1g:"
           aria-expanded="false"
           aria-haspopup="dialog"
           data-state="closed"
@@ -131,28 +157,54 @@ exports[`Header renders the Hub link selected 1`] = `
           </div>
         </button>
       </div>
-      <nav
-        class="flex space-x-8 print:hidden"
+      <div
+        class="fresnel-container fresnel-greaterThanOrEqual-md fresnel-:r1j:"
       >
-        <a
-          class="text-sm hover:text-cyan-500"
-          href="/"
+        <nav
+          class="flex space-x-8 print:hidden"
         >
-          Home
-        </a>
-        <a
-          class="text-sm hover:text-cyan-500"
-          href="/report"
+          <a
+            class="text-sm hover:text-cyan-500"
+            href="/"
+          >
+            Home
+          </a>
+          <a
+            class="text-sm hover:text-cyan-500"
+            href="/report"
+          >
+            Report Tool
+          </a>
+          <a
+            class="text-sm hover:text-cyan-500 text-cyan-500"
+            href="/hub"
+          >
+            Hub
+          </a>
+        </nav>
+      </div>
+      <div
+        class="fresnel-container fresnel-lessThan-md fresnel-:r1k:"
+      >
+        <button
+          aria-controls="radix-:r1l:"
+          aria-expanded="false"
+          aria-haspopup="dialog"
+          class="fixed right-5 top-1/2 z-[110] flex h-6 w-6 -translate-y-1/2 transform cursor-pointer flex-col flex-wrap justify-around"
+          data-state="closed"
+          type="button"
         >
-          Report Tool
-        </a>
-        <a
-          class="text-sm hover:text-cyan-500 text-cyan-500"
-          href="/hub"
-        >
-          Hub
-        </a>
-      </nav>
+          <div
+            class="block h-0.5 w-6 origin-[1px] rounded-full bg-blue-600 transition-all rotate-0"
+          />
+          <div
+            class="block h-0.5 w-6 origin-[1px] rounded bg-blue-600 transition-all translate-x-0"
+          />
+          <div
+            class="block h-0.5 w-6 origin-[1px] rounded bg-blue-600 transition-all rotate-0"
+          />
+        </button>
+      </div>
     </div>
   </header>
 </div>
@@ -164,7 +216,7 @@ exports[`Header renders the Report Tool link selected 1`] = `
     class="box-border flex h-16 flex-col justify-center border-b bg-white backdrop-blur border-blue-100"
   >
     <div
-      class="container mx-4 flex items-center justify-between md:mx-auto"
+      class="container flex items-center justify-between md:mx-auto"
     >
       <div
         class="z-[120] flex items-center space-x-2"
@@ -197,7 +249,7 @@ exports[`Header renders the Report Tool link selected 1`] = `
           </h1>
         </a>
         <button
-          aria-controls="radix-:rf:"
+          aria-controls="radix-:r18:"
           aria-expanded="false"
           aria-haspopup="dialog"
           data-state="closed"
@@ -210,28 +262,54 @@ exports[`Header renders the Report Tool link selected 1`] = `
           </div>
         </button>
       </div>
-      <nav
-        class="flex space-x-8 print:hidden"
+      <div
+        class="fresnel-container fresnel-greaterThanOrEqual-md fresnel-:r1b:"
       >
-        <a
-          class="text-sm hover:text-cyan-500"
-          href="/"
+        <nav
+          class="flex space-x-8 print:hidden"
         >
-          Home
-        </a>
-        <a
-          class="text-sm hover:text-cyan-500 text-cyan-500"
-          href="/report"
+          <a
+            class="text-sm hover:text-cyan-500"
+            href="/"
+          >
+            Home
+          </a>
+          <a
+            class="text-sm hover:text-cyan-500 text-cyan-500"
+            href="/report"
+          >
+            Report Tool
+          </a>
+          <a
+            class="text-sm hover:text-cyan-500"
+            href="/hub"
+          >
+            Hub
+          </a>
+        </nav>
+      </div>
+      <div
+        class="fresnel-container fresnel-lessThan-md fresnel-:r1c:"
+      >
+        <button
+          aria-controls="radix-:r1d:"
+          aria-expanded="false"
+          aria-haspopup="dialog"
+          class="fixed right-5 top-1/2 z-[110] flex h-6 w-6 -translate-y-1/2 transform cursor-pointer flex-col flex-wrap justify-around"
+          data-state="closed"
+          type="button"
         >
-          Report Tool
-        </a>
-        <a
-          class="text-sm hover:text-cyan-500"
-          href="/hub"
-        >
-          Hub
-        </a>
-      </nav>
+          <div
+            class="block h-0.5 w-6 origin-[1px] rounded-full bg-blue-600 transition-all rotate-0"
+          />
+          <div
+            class="block h-0.5 w-6 origin-[1px] rounded bg-blue-600 transition-all translate-x-0"
+          />
+          <div
+            class="block h-0.5 w-6 origin-[1px] rounded bg-blue-600 transition-all rotate-0"
+          />
+        </button>
+      </div>
     </div>
   </header>
 </div>

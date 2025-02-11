@@ -1,37 +1,33 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import { useInView } from "react-intersection-observer";
+
+import { cn } from "@/lib/utils";
 
 import { HexagonIcon } from "@/components/ui/icons/hexagon";
 import { ReportIcon } from "@/components/ui/icons/report";
 import { WandIcon } from "@/components/ui/icons/wand";
 
 export default function CardsContainer() {
-  const [cardInView, setCardInView] = useState(false);
-  const [textInView, setTextInView] = useState(false);
-
   const { ref: cardRef, inView: isCardInView } = useInView({
-    triggerOnce: false,
+    triggerOnce: true,
     threshold: 0.5,
   });
 
   const { ref: textRef, inView: isTextInView } = useInView({
-    triggerOnce: false,
-    threshold: 0.2,
+    triggerOnce: true,
+    threshold: 0.5,
   });
-
-  useEffect(() => {
-    if (isCardInView) setCardInView(true);
-    if (isTextInView) setTextInView(true);
-  }, [isCardInView, isTextInView]);
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-10 py-10 md:py-28 lg:py-56">
       <div
         ref={textRef}
-        className={`text-left ${textInView ? "animate-slide-down delay-0" : "opacity-0"}`}
+        className={cn({
+          "md:opacity-0": !isTextInView,
+          "md:delay-0 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-top-10":
+            isTextInView,
+        })}
       >
         <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
           Key Features
@@ -52,7 +48,9 @@ export default function CardsContainer() {
         <li className="flex w-full flex-1 justify-start md:justify-center">
           <div
             className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-white p-4 ${
-              cardInView ? "animate-left-to-right delay-0" : "opacity-0"
+              isCardInView
+                ? "md:delay-0 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
+                : "md:opacity-0"
             }`}
           >
             <HexagonIcon className="h-8 w-8 text-cyan-600" />
@@ -62,7 +60,9 @@ export default function CardsContainer() {
         <li className="flex w-full flex-1 justify-start md:justify-center">
           <div
             className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-white p-4 ${
-              cardInView ? "animate-left-to-right delay-300" : "opacity-0"
+              isCardInView
+                ? "md:delay-300 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
+                : "md:opacity-0"
             }`}
           >
             <WandIcon className="text-cyan-600" />
@@ -72,7 +72,9 @@ export default function CardsContainer() {
         <li className="flex w-full flex-1 justify-start md:justify-center">
           <div
             className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-white p-4 ${
-              cardInView ? "animate-left-to-right delay-500" : "opacity-0"
+              isCardInView
+                ? "md:delay-500 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
+                : "md:opacity-0"
             }`}
           >
             <ReportIcon className="text-cyan-600" />
