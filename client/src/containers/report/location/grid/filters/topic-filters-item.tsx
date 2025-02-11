@@ -9,8 +9,7 @@ import { LuChevronRight } from "react-icons/lu";
 import { useGetTopicsId } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
-import { DatasetMeta } from "@/types/generated/api.schemas";
-
+import { H3Indicator } from "@/app/local-api/indicators/route";
 import { selectedFiltersViewAtom } from "@/app/store";
 
 import { GridCounterIndicators } from "./counter-filters";
@@ -22,12 +21,13 @@ export default function GridTopicFiltersItem({
   datasets,
 }: {
   id: number;
-  datasets: DatasetMeta[];
+  datasets: H3Indicator[];
 }) {
   const [open, setOpen] = useState(false);
   const topic = useGetTopicsId(id);
   const [selectedFiltersView] = useAtom(selectedFiltersViewAtom);
   const datasetsIds = datasets.map((d) => d.var_name);
+
   useEffect(() => {
     if (selectedFiltersView) {
       setOpen(true);
@@ -71,7 +71,7 @@ export default function GridTopicFiltersItem({
         <CollapsibleContent>
           <div className="ml-2.5 space-y-1 border-l border-blue-100 pl-2">
             {datasets.map((d) => (
-              <GridIndicatorFiltersItem key={d.label} {...d} label={d.label as string} />
+              <GridIndicatorFiltersItem key={d.name} {...d} />
             ))}
           </div>
         </CollapsibleContent>

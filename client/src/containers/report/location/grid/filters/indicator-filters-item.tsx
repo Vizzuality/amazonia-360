@@ -10,8 +10,7 @@ import { LuInfo } from "react-icons/lu";
 import { formatNumber } from "@/lib/formats";
 import { cn } from "@/lib/utils";
 
-import { DatasetMeta } from "@/types/generated/api.schemas";
-
+import { H3Indicator } from "@/app/local-api/indicators/route";
 import { useSyncGridDatasets, useSyncGridFilters, useSyncGridSelectedDataset } from "@/app/store";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -27,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipArrow } from "@/components/ui/tooltip";
 
-export default function GridFiltersItem(dataset: DatasetMeta) {
+export default function GridFiltersItem(dataset: H3Indicator) {
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [gridFilters, setGridFilters] = useSyncGridFilters();
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
@@ -116,14 +115,13 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
           onMouseLeave={() => setIsTooltipOpen(false)}
         >
           <TooltipTrigger asChild>
-            <CollapsibleTrigger className="flex w-full items-center justify-between">
-              <div>
-                <div className="relative flex max-w-64 items-start space-x-1">
-                  <h3 className="w-fit flex-wrap pr-5 text-left text-sm font-medium text-gray-400">
-                    {dataset.label} {!!dataset.unit && ` (${dataset.unit})`}
-                  </h3>
-                </div>
-                <div className="absolute right-9 top-1.5">
+            <CollapsibleTrigger asChild>
+              <div className="flex w-full items-start justify-between space-x-5">
+                <h3 className="text-left text-sm font-medium text-gray-400">
+                  {dataset.name} {!!dataset.unit && ` (${dataset.unit})`}
+                </h3>
+
+                <div className="flex items-center justify-between space-x-1">
                   <Tooltip delayDuration={100}>
                     <Dialog>
                       <TooltipTrigger asChild>
@@ -148,17 +146,17 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
                       </TooltipPortal>
                     </Dialog>
                   </Tooltip>
-                </div>
 
-                <div
-                  className={cn({
-                    "absolute right-1.5 top-1.5 flex items-center justify-center rounded bg-blue-50 p-0.5 transition-colors hover:bg-blue-100":
-                      true,
-                    "group-hover:bg-blue-100": !open,
-                  })}
-                >
-                  {!open && <LuPlus className="h-4 w-4 cursor-pointer text-primary" />}
-                  {open && <LuX className="h-4 w-4 cursor-pointer text-primary" />}
+                  <div
+                    className={cn({
+                      "flex items-center justify-center rounded bg-blue-50 p-0.5 transition-colors hover:bg-blue-100":
+                        true,
+                      "group-hover:bg-blue-100": !open,
+                    })}
+                  >
+                    {!open && <LuPlus className="h-4 w-4 cursor-pointer text-primary" />}
+                    {open && <LuX className="h-4 w-4 cursor-pointer text-primary" />}
+                  </div>
                 </div>
               </div>
             </CollapsibleTrigger>

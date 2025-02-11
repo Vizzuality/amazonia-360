@@ -89,7 +89,6 @@ export const useGetTopics =
           description_short: indicator.description_short || "",
           visualization_types: indicator.visualization_types || [],
           default_visualization: indicator.topic.default_visualization || [],
-          h3: indicator.h3,
         }));
       });
 
