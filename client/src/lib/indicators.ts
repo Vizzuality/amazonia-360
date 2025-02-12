@@ -80,6 +80,19 @@ export const useIndicators = <TData = Awaited<ReturnType<typeof getIndicators>>,
   });
 };
 
+export const useH3Indicators = () => {
+  const { data } = useIndicators();
+
+  const d = data
+    ?.filter((indicator) => indicator.resource.type === "h3")
+    .map((indicator) => ({
+      ...indicator,
+      resource: indicator.resource as Indicator["resource"] & { type: "h3" },
+    }));
+
+  return d;
+};
+
 export const useGeIndicatorsOverview = <
   TData = Awaited<ReturnType<typeof getIndicators>>,
   TError = unknown,
