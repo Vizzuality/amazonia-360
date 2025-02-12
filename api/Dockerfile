@@ -1,5 +1,11 @@
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS production
 
+# Requirement of fiona and gdal.
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends libexpat1; \
+	rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # Enable bytecode compilation
