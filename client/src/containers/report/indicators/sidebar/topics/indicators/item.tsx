@@ -8,7 +8,8 @@ import { LuChevronRight, LuPlus, LuInfo } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { Topic, TopicIndicator } from "@/app/local-api/topics/route";
+import { Indicator } from "@/app/local-api/indicators/route";
+import { Topic } from "@/app/local-api/topics/route";
 import { useSyncTopics } from "@/app/store";
 
 import Info from "@/containers/info";
@@ -26,7 +27,7 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/compone
 
 import { Badges } from "./badges";
 
-export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: TopicIndicator }) {
+export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: Indicator }) {
   const [open, setOpen] = useState(true);
 
   const [topics] = useSyncTopics();
@@ -72,14 +73,16 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
               </TooltipTrigger>
 
               <DialogContent className="max-w-2xl p-0">
-                <DialogTitle className="sr-only">{indicator.description_short}</DialogTitle>
+                <DialogTitle className="sr-only">{indicator.description_short_en}</DialogTitle>
                 <Info ids={[indicator.id]} />
                 <DialogClose />
               </DialogContent>
 
               <TooltipPortal>
                 <TooltipContent side="left" align="center" className="max-w-72">
-                  <div className="text-xxs">{indicator.description_short || "About the data"}</div>
+                  <div className="text-xxs">
+                    {indicator.description_short_en || "About the data"}
+                  </div>
 
                   <TooltipArrow className="fill-foreground" width={10} height={5} />
                 </TooltipContent>

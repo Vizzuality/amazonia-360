@@ -79,7 +79,7 @@ export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className
 
   if (!indicator) return null;
 
-  const { description_short } = indicator;
+  const { description_short_en } = indicator;
 
   return (
     <Tooltip delayDuration={100}>
@@ -90,13 +90,13 @@ export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className
           </DialogTrigger>
         </TooltipTrigger>
         <DialogContent className="max-w-2xl p-0">
-          <DialogTitle className="sr-only">{description_short}</DialogTitle>
+          <DialogTitle className="sr-only">{description_short_en}</DialogTitle>
           <Info ids={ids} />
           <DialogClose />
         </DialogContent>
         <TooltipPortal>
           <TooltipContent sideOffset={0} className="max-w-72">
-            {description_short}
+            {description_short_en}
             <TooltipArrow />
           </TooltipContent>
         </TooltipPortal>

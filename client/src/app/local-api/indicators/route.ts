@@ -1,3 +1,6 @@
+import { DatasetMeta } from "@/types/generated/api.schemas";
+
+import { Topic } from "@/app/local-api/topics/route";
 import { IndicatorView } from "@/app/parsers";
 
 import INDICATORS from "./indicators_test_4.json";
@@ -28,7 +31,7 @@ export type ResourceImageryTile = {
   type: "imagery-tile";
 };
 
-export type H3Indicator = {
+export type ResourceH3 = {
   id: number;
   name: string;
   description: string;
@@ -57,9 +60,14 @@ export type Indicator = {
   unit_pt?: string;
   topic: number;
   visualization_types: VisualizationType[];
-  resource: ResourceFeature | ResourceWebTile | ResourceImageryTile | H3Indicator;
-  h3?: H3Indicator[];
+  resource: ResourceFeature | ResourceWebTile | ResourceImageryTile | ResourceH3;
 };
+
+export type H3Indicator = Indicator &
+  Pick<DatasetMeta, "var_dtype" | "var_name" | "legend"> & {
+    resource: ResourceH3;
+    topic: Topic;
+  };
 
 export type IndicatorOverview = {
   id: number;
