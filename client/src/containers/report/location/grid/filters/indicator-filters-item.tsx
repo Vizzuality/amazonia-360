@@ -10,8 +10,7 @@ import { LuInfo } from "react-icons/lu";
 import { formatNumber } from "@/lib/formats";
 import { cn } from "@/lib/utils";
 
-import { DatasetMeta } from "@/types/generated/api.schemas";
-
+import { H3Indicator } from "@/app/local-api/indicators/route";
 import { useSyncGridDatasets, useSyncGridFilters, useSyncGridSelectedDataset } from "@/app/store";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -27,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipArrow } from "@/components/ui/tooltip";
 
-export default function GridFiltersItem(dataset: DatasetMeta) {
+export default function GridFiltersItem(dataset: H3Indicator) {
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [gridFilters, setGridFilters] = useSyncGridFilters();
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
@@ -105,7 +104,6 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
             "group relative rounded-lg px-3 py-2 text-left transition-colors hover:bg-blue-50":
               true,
             "bg-blue-50": open,
-            "hover:bg-transparent": !open,
           })}
           disabled={gridDatasets.length >= 5}
           // && !gridDatasets.includes(dataset.var_name)}
@@ -116,52 +114,51 @@ export default function GridFiltersItem(dataset: DatasetMeta) {
           onMouseLeave={() => setIsTooltipOpen(false)}
         >
           <TooltipTrigger asChild>
-            <CollapsibleTrigger className="flex w-full items-center justify-between">
-              <div>
-                <div className="relative flex max-w-64 items-start space-x-1">
-                  <h3 className="w-fit flex-wrap pr-5 text-left text-sm font-medium text-gray-400">
-                    {dataset.label} {!!dataset.unit && ` (${dataset.unit})`}
-                  </h3>
-                </div>
-                <div className="absolute right-9 top-1.5">
-                  <Tooltip delayDuration={100}>
-                    <Dialog>
-                      <TooltipTrigger asChild>
-                        <DialogTrigger
-                          className={cn("flex cursor-pointer items-center justify-center p-0.5")}
-                        >
-                          <LuInfo className="h-4 w-4 text-foreground" />
-                        </DialogTrigger>
-                      </TooltipTrigger>
-                      <DialogContent className="p-0">
-                        <DialogTitle className="sr-only">{dataset.description_short}</DialogTitle>
-                        <div className="p-4">
-                          <p>{!!dataset.description ? dataset.description : "Data coming soon"}</p>
-                        </div>
-                        <DialogClose />
-                      </DialogContent>
-                      <TooltipPortal>
-                        <TooltipContent sideOffset={0}>
-                          {dataset.description_short}
-                          <TooltipArrow />
-                        </TooltipContent>
-                      </TooltipPortal>
-                    </Dialog>
-                  </Tooltip>
-                </div>
+            <div className="flex w-full items-start justify-between space-x-5">
+              <CollapsibleTrigger>
+                <h3 className="text-left text-sm font-medium text-gray-400">
+                  {dataset.name} {!!dataset.unit && ` (${dataset.unit})`}
+                </h3>
+              </CollapsibleTrigger>
 
-                <div
+              <div className="flex items-center justify-between space-x-1">
+                <Tooltip delayDuration={100}>
+                  <Dialog>
+                    <TooltipTrigger asChild>
+                      <DialogTrigger
+                        className={cn("flex cursor-pointer items-center justify-center p-0.5")}
+                      >
+                        <LuInfo className="h-4 w-4 text-foreground" />
+                      </DialogTrigger>
+                    </TooltipTrigger>
+                    <DialogContent className="p-0">
+                      <DialogTitle className="sr-only">{dataset.description_short_en}</DialogTitle>
+                      <div className="p-4">
+                        <p>{!!dataset.description ? dataset.description : "Data coming soon"}</p>
+                      </div>
+                      <DialogClose />
+                    </DialogContent>
+                    <TooltipPortal>
+                      <TooltipContent sideOffset={0}>
+                        {dataset.description_short_en}
+                        <TooltipArrow />
+                      </TooltipContent>
+                    </TooltipPortal>
+                  </Dialog>
+                </Tooltip>
+
+                <CollapsibleTrigger
                   className={cn({
-                    "absolute right-1.5 top-1.5 flex items-center justify-center rounded bg-blue-50 p-0.5 transition-colors hover:bg-blue-100":
+                    "flex items-center justify-center rounded bg-blue-50 p-0.5 transition-colors hover:bg-blue-100":
                       true,
                     "group-hover:bg-blue-100": !open,
                   })}
                 >
                   {!open && <LuPlus className="h-4 w-4 cursor-pointer text-primary" />}
                   {open && <LuX className="h-4 w-4 cursor-pointer text-primary" />}
-                </div>
+                </CollapsibleTrigger>
               </div>
-            </CollapsibleTrigger>
+            </div>
           </TooltipTrigger>
 
           <CollapsibleContent className="py-2">
