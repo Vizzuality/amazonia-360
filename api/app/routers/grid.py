@@ -14,9 +14,9 @@ from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from fastapi.params import Body
 from fastapi.responses import Response
 from geojson_pydantic import Feature
-from h3 import H3CellError
-from h3ronpy.polars import cells_to_string
-from h3ronpy.polars.vector import geometry_to_cells
+from h3 import H3CellInvalidError
+from h3ronpy import cells_to_string
+from h3ronpy.vector import geometry_to_cells
 from pydantic import ValidationError
 
 from app.config.config import get_settings
@@ -57,8 +57,8 @@ def get_tile(
 ) -> tuple[pl.LazyFrame, int]:
     """Get the tile from filesystem filtered by column and the resolution of the tile index"""
     try:
-        z = h3.api.basic_str.h3_get_resolution(tile_index)
-    except (H3CellError, ValueError):
+        z = h3.get_resolution(tile_index)
+    except (H3CellInvalidError, ValueError):
         raise HTTPException(status_code=400, detail="Tile index is not a valid H3 cell") from None
     tile_path = os.path.join(get_settings().grid_tiles_path, f"{z}/{tile_index}.arrow")
     if not os.path.exists(tile_path):
