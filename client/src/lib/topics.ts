@@ -70,7 +70,7 @@ export const useGetTopics =
             name: topic.name,
             image: `${topic.image}`,
             description: topic.description,
-            description_short: topic.description_short,
+            description_short: topic.description_short_en,
             indicators: [],
             default_visualization: topic.default_visualization || [],
           };
@@ -78,18 +78,9 @@ export const useGetTopics =
       });
 
       Object.keys(topics).forEach((topicId) => {
-        const topicItems = indicatorsData?.filter(
+        topics[parseInt(topicId)].indicators = indicatorsData?.filter(
           (indicator) => indicator.topic.id === parseInt(topicId),
         );
-
-        topics[parseInt(topicId)].indicators = topicItems?.map((indicator) => ({
-          name: indicator.name,
-          id: indicator.id,
-          description: indicator.description || "",
-          description_short: indicator.description_short || "",
-          visualization_types: indicator.visualization_types || [],
-          default_visualization: indicator.topic.default_visualization || [],
-        }));
       });
 
       return {
@@ -149,7 +140,7 @@ export const useGetTopicsOverview =
             name: topic.name,
             image: `${topic.image}`,
             description: topic.description,
-            description_short: topic.description_short,
+            description_short: topic.description_short_en,
             indicators: [],
             default_visualization: topic.default_visualization || [],
           };
@@ -157,18 +148,9 @@ export const useGetTopicsOverview =
       });
 
       Object.keys(topics).forEach((topicId) => {
-        const topicItems = indicatorsData?.filter(
+        topics[parseInt(topicId)].indicators = indicatorsData?.filter(
           (indicator) => indicator.topic.id === parseInt(topicId),
         );
-
-        topics[parseInt(topicId)].indicators = topicItems?.map((indicator) => ({
-          name: indicator.name,
-          id: indicator.id,
-          description: indicator.description || "",
-          description_short: indicator.description || "",
-          visualization_types: indicator.visualization_types || [],
-          default_visualization: indicator.topic.default_visualization || [],
-        }));
       });
 
       return {
