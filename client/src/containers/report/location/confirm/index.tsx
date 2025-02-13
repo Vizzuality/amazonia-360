@@ -69,21 +69,28 @@ export default function Confirm() {
       </p>
 
       {location.type !== "search" && LOCATION?.geometry.type !== "polygon" && (
-        <div className="space-y-1 px-1">
-          <Slider
-            min={1}
-            max={100}
-            step={1}
-            value={[location.buffer || BUFFERS[LOCATION?.geometry.type || "point"]]}
-            minStepsBetweenThumbs={1}
-            onValueChange={onValueChange}
-          />
+        <>
+          <p className="text-sm tracking-[0.14px] text-muted-foreground">
+            You can adjust the buffer (
+            {`${location.buffer || BUFFERS[LOCATION?.geometry.type || "point"]} km`}) by{" "}
+            <strong>moving</strong> the following slider.
+          </p>
+          <div className="space-y-1 px-1">
+            <Slider
+              min={1}
+              max={100}
+              step={1}
+              value={[location.buffer || BUFFERS[LOCATION?.geometry.type || "point"]]}
+              minStepsBetweenThumbs={1}
+              onValueChange={onValueChange}
+            />
 
-          <div className="flex w-full justify-between text-2xs font-bold text-muted-foreground">
-            <span>1 km</span>
-            <span>100 km</span>
+            <div className="flex w-full justify-between text-2xs font-bold text-muted-foreground">
+              <span>1 km</span>
+              <span>100 km</span>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
