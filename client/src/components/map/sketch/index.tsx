@@ -4,6 +4,8 @@ import { useCallback, useEffect, useRef } from "react";
 
 import dynamic from "next/dynamic";
 
+import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
+import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 
@@ -11,11 +13,15 @@ import { POINT_BUFFER, POLYLINE_BUFFER, useLocation } from "@/lib/location";
 
 import { Location } from "@/app/parsers";
 
-import { BUFFER_SYMBOL, POINT_SYMBOL, POLYGON_SYMBOL, POLYLINE_SYMBOL, SYMBOLS } from "@/constants/map";
+import {
+  BUFFER_SYMBOL,
+  POINT_SYMBOL,
+  POLYGON_SYMBOL,
+  POLYLINE_SYMBOL,
+  SYMBOLS,
+} from "@/constants/map";
 
 import { useMap } from "@/components/map/provider";
-import Graphic from "@arcgis/core/Graphic";
-import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
@@ -46,6 +52,27 @@ export default function Sketch({
   const sketchViewModelOnCreateRef = useRef<IHandle>();
   const sketchViewModelOnUpdateRef = useRef<IHandle>();
 
+  const addBuffer = useCallback((location: __esri.Graphic) => {
+    if (!location) return;
+
+    bufferRef.current.removeAll();
+
+    const buffer = new Graphic({
+      symbol: BUFFER_SYMBOL,
+    });
+
+    if (location.geometry.type === "point" || location.geometry.type === "polyline") {
+      const k = location.geometry.type === "point" ? POINT_BUFFER : POLYLINE_BUFFER;
+      const g = geometryEngine.geodesicBuffer(location.geometry, k, "kilometers");
+
+      buffer.geometry = Array.isArray(g) ? g[0] : g;
+    }
+
+    if (buffer.geometry) {
+      bufferRef.current.add(buffer);
+    }
+  }, []);
+
   const handleSketchCreate = useCallback(
     (e: __esri.SketchViewModelCreateEvent) => {
       if (e.state === "complete" && sketchViewModelRef.current) {
@@ -67,9 +94,7 @@ export default function Sketch({
 
   const handleSketchUpdate = useCallback(
     (e: __esri.SketchViewModelUpdateEvent) => {
-
       if (e.state === "active") {
-        console.log("update", e);
         addBuffer(e.graphics[0].clone());
       }
 
@@ -78,29 +103,26 @@ export default function Sketch({
         if (onUpdate) onUpdate(updatedGraphic);
       }
     },
-    [onUpdate],
+    [onUpdate, addBuffer],
   );
 
-  const addBuffer = useCallback((location: __esri.Graphic) => {
-    if (!location) return;
+  const handleListeners = useCallback(() => {
+    if (sketchViewModelRef.current) {
+      // Remove old listeners
+      sketchViewModelOnCreateRef.current?.remove();
+      sketchViewModelOnUpdateRef.current?.remove();
 
-    bufferRef.current.removeAll();
-
-    const buffer = new Graphic({
-      symbol: BUFFER_SYMBOL,
-    });
-
-    if (location.geometry.type === "point" || location.geometry.type === "polyline") {
-      const k = location.geometry.type === "point" ? POINT_BUFFER : POLYLINE_BUFFER;
-      const g = geometryEngine.geodesicBuffer(location.geometry, k, "kilometers");
-
-      buffer.geometry = Array.isArray(g) ? g[0] : g;
+      // Add new event listeners
+      sketchViewModelOnCreateRef.current = sketchViewModelRef.current.on(
+        "create",
+        handleSketchCreate,
+      );
+      sketchViewModelOnUpdateRef.current = sketchViewModelRef.current.on(
+        "update",
+        handleSketchUpdate,
+      );
     }
-
-    if (buffer.geometry) {
-      bufferRef.current.add(buffer);
-    }
-  }, []);
+  }, [handleSketchCreate, handleSketchUpdate]);
 
   // Initialize the sketch view model
   useEffect(() => {
@@ -124,8 +146,16 @@ export default function Sketch({
         toggleToolOnClick: true,
       },
       updateOnGraphicClick: true,
+      // tooltipOptions: {
+      //   enabled: true,
+      //   helpMessage: "Click to start drawing",
+      //   visibleElements: {
+      //     distance: false,
+      //     helpMessage: true,
+      //     size: true,
+      //   },
+      // },
     });
-
 
     sketchViewModelRef.current = sketchViewModel;
 
@@ -138,10 +168,8 @@ export default function Sketch({
   useEffect(() => {
     if (!sketchViewModelRef.current) return;
 
-    const sketchViewModel = sketchViewModelRef.current;
-
     if (!type) {
-      sketchViewModel.cancel();
+      sketchViewModelRef.current.cancel();
       return;
     }
 
@@ -149,19 +177,14 @@ export default function Sketch({
     layerRef.current.removeAll();
     bufferRef.current.removeAll();
 
-    sketchViewModel.cancel();
+    sketchViewModelRef.current.cancel();
 
     // Enable create mode
-    sketchViewModel.create(type);
+    sketchViewModelRef.current.create(type);
 
     // Remove old listeners
-    sketchViewModelOnCreateRef.current?.remove();
-    sketchViewModelOnUpdateRef.current?.remove();
-
-    // Add new event listeners
-    sketchViewModelOnCreateRef.current = sketchViewModel.on("create", handleSketchCreate);
-    sketchViewModelOnUpdateRef.current = sketchViewModel.on("update", handleSketchUpdate);
-  }, [type, enabled, handleSketchCreate, handleSketchUpdate]);
+    handleListeners();
+  }, [type, enabled, handleListeners]);
 
   useEffect(() => {
     layerRef.current.removeAll();
@@ -173,10 +196,14 @@ export default function Sketch({
 
       addBuffer(LOCATION);
     }
-  }, [location, LOCATION, addBuffer]);
 
-  return <>
-    <Layer layer={bufferRef.current} index={99} />
-    <Layer layer={layerRef.current} index={100} />
-  </>;
+    handleListeners();
+  }, [location, LOCATION, addBuffer, handleListeners]);
+
+  return (
+    <>
+      <Layer layer={bufferRef.current} index={99} />
+      <Layer layer={layerRef.current} index={100} />
+    </>
+  );
 }

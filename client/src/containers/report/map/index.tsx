@@ -86,9 +86,6 @@ export default function MapContainer() {
       if (g) {
         setTmpBbox(g.extent);
       }
-
-      // Log or handle other updates (e.g., update backend data)
-      console.info("Updated graphic:", graphic);
     },
     [setLocation, setTmpBbox],
   );
