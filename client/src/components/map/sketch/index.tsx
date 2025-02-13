@@ -7,13 +7,15 @@ import dynamic from "next/dynamic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 
-import { useLocation } from "@/lib/location";
+import { POINT_BUFFER, POLYLINE_BUFFER, useLocation } from "@/lib/location";
 
 import { Location } from "@/app/parsers";
 
-import { POINT_SYMBOL, POLYGON_SYMBOL, POLYLINE_SYMBOL } from "@/constants/map";
+import { BUFFER_SYMBOL, POINT_SYMBOL, POLYGON_SYMBOL, POLYLINE_SYMBOL, SYMBOLS } from "@/constants/map";
 
 import { useMap } from "@/components/map/provider";
+import Graphic from "@arcgis/core/Graphic";
+import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
@@ -39,6 +41,7 @@ export default function Sketch({
   const LOCATION = useLocation(location);
 
   const layerRef = useRef<__esri.GraphicsLayer>(new GraphicsLayer());
+  const bufferRef = useRef<__esri.GraphicsLayer>(new GraphicsLayer());
   const sketchViewModelRef = useRef<SketchViewModel>();
   const sketchViewModelOnCreateRef = useRef<IHandle>();
   const sketchViewModelOnUpdateRef = useRef<IHandle>();
@@ -64,43 +67,40 @@ export default function Sketch({
 
   const handleSketchUpdate = useCallback(
     (e: __esri.SketchViewModelUpdateEvent) => {
-      if (e.state === "start" && e.graphics.length) {
-        e.graphics.forEach((graphic) => {
-          if (graphic.geometry.type === "polygon") {
-            graphic.symbol = POLYGON_SYMBOL;
-          }
 
-          if (graphic.geometry.type === "polyline") {
-            graphic.symbol = POLYLINE_SYMBOL;
-          }
-
-          if (graphic.geometry.type === "point") {
-            graphic.symbol = POINT_SYMBOL;
-          }
-        });
+      if (e.state === "active") {
+        console.log("update", e);
+        addBuffer(e.graphics[0].clone());
       }
 
       if (e.state === "complete" && e.graphics.length) {
-        e.graphics.forEach((graphic) => {
-          if (graphic.geometry.type === "polygon") {
-            graphic.symbol = {
-              type: "simple-fill",
-              color: "#009ADE33",
-              outline: {
-                type: "simple-line",
-                color: "#196E8C",
-                width: 1,
-                style: "solid",
-              },
-            } as unknown as __esri.SimpleFillSymbol;
-          }
-        });
         const updatedGraphic = e.graphics[0].clone();
         if (onUpdate) onUpdate(updatedGraphic);
       }
     },
     [onUpdate],
   );
+
+  const addBuffer = useCallback((location: __esri.Graphic) => {
+    if (!location) return;
+
+    bufferRef.current.removeAll();
+
+    const buffer = new Graphic({
+      symbol: BUFFER_SYMBOL,
+    });
+
+    if (location.geometry.type === "point" || location.geometry.type === "polyline") {
+      const k = location.geometry.type === "point" ? POINT_BUFFER : POLYLINE_BUFFER;
+      const g = geometryEngine.geodesicBuffer(location.geometry, k, "kilometers");
+
+      buffer.geometry = Array.isArray(g) ? g[0] : g;
+    }
+
+    if (buffer.geometry) {
+      bufferRef.current.add(buffer);
+    }
+  }, []);
 
   // Initialize the sketch view model
   useEffect(() => {
@@ -109,11 +109,9 @@ export default function Sketch({
     const { view } = mapInstance;
     if (!view) return;
 
-    const sketchLayer = layerRef.current;
-
     const sketchViewModel = new SketchViewModel({
       view,
-      layer: sketchLayer,
+      layer: layerRef.current,
       pointSymbol: POINT_SYMBOL,
       polylineSymbol: POLYLINE_SYMBOL,
       polygonSymbol: POLYGON_SYMBOL,
@@ -127,6 +125,7 @@ export default function Sketch({
       },
       updateOnGraphicClick: true,
     });
+
 
     sketchViewModelRef.current = sketchViewModel;
 
@@ -148,6 +147,8 @@ export default function Sketch({
 
     // Reset layer and cancel any ongoing operations
     layerRef.current.removeAll();
+    bufferRef.current.removeAll();
+
     sketchViewModel.cancel();
 
     // Enable create mode
@@ -164,23 +165,18 @@ export default function Sketch({
 
   useEffect(() => {
     layerRef.current.removeAll();
+    bufferRef.current.removeAll();
 
     if (LOCATION) {
-      if (LOCATION.geometry.type === "polygon") {
-        LOCATION.symbol = POLYGON_SYMBOL;
-      }
-
-      if (LOCATION.geometry.type === "polyline") {
-        LOCATION.symbol = POLYLINE_SYMBOL;
-      }
-
-      if (LOCATION.geometry.type === "point") {
-        LOCATION.symbol = POINT_SYMBOL;
-      }
+      LOCATION.symbol = SYMBOLS[LOCATION.geometry.type];
       layerRef.current.add(LOCATION);
+
+      addBuffer(LOCATION);
     }
-  }, [location, LOCATION]);
+  }, [location, LOCATION, addBuffer]);
 
-
-  return <Layer layer={layerRef.current} index={100} />;
+  return <>
+    <Layer layer={bufferRef.current} index={99} />
+    <Layer layer={layerRef.current} index={100} />
+  </>;
 }
