@@ -66,3 +66,13 @@ export const SYMBOLS = {
   multipoint: POINT_SYMBOL,
   multipolygon: POLYGON_SYMBOL,
 } as const;
+
+export const BUFFERS = {
+  point: 60,
+  polyline: 30,
+  polygon: 0,
+  mesh: 0,
+  extent: 0,
+  multipoint: 0,
+  multipolygon: 0,
+};

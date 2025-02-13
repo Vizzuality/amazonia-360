@@ -7,22 +7,39 @@ import Polygon from "@arcgis/core/geometry/Polygon";
 import { useSetAtom } from "jotai";
 
 import { formatNumber } from "@/lib/formats";
-import { useLocationGeometry, useLocationTitle } from "@/lib/location";
+import { useLocation, useLocationGeometry, useLocationTitle } from "@/lib/location";
 
 import { reportPanelAtom, useSyncLocation } from "@/app/store";
 
+import { BUFFERS } from "@/constants/map";
+
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 
 export default function Confirm() {
   const setReportPanel = useSetAtom(reportPanelAtom);
+
   const [location, setLocation] = useSyncLocation();
   const TITLE = useLocationTitle(location);
+  const LOCATION = useLocation(location);
   const GEOMETRY = useLocationGeometry(location);
 
   const AREA = useMemo(() => {
     if (!GEOMETRY) return 0;
     return geometryEngine.geodesicArea(GEOMETRY as Polygon, "square-kilometers");
   }, [GEOMETRY]);
+
+  const onValueChange = (value: number[]) => {
+    setLocation((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          buffer: value[0],
+        };
+      }
+      return prev;
+    });
+  };
 
   if (!location) return null;
 
@@ -46,9 +63,28 @@ export default function Confirm() {
           Confirm
         </Button>
       </div>
+
       <p className="text-sm tracking-[0.14px] text-muted-foreground">
-        To edit the shape, <strong>double-click</strong> on the shape.
+        To edit the shape, <strong>click</strong> on the shape.
       </p>
+
+      {location.type !== "search" && LOCATION?.geometry.type !== "polygon" && (
+        <div className="space-y-1 px-1">
+          <Slider
+            min={1}
+            max={100}
+            step={1}
+            value={[location.buffer || BUFFERS[LOCATION?.geometry.type || "point"]]}
+            minStepsBetweenThumbs={1}
+            onValueChange={onValueChange}
+          />
+
+          <div className="flex w-full justify-between text-2xs font-bold text-muted-foreground">
+            <span>1 km</span>
+            <span>100 km</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

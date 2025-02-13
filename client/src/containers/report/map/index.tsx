@@ -17,6 +17,8 @@ import {
   useSyncLocation,
 } from "@/app/store";
 
+import { BUFFERS } from "@/constants/map";
+
 import LayerManager from "@/containers/report/map/layer-manager";
 
 import Controls from "@/components/map/controls";
@@ -59,9 +61,10 @@ export default function MapContainer() {
       setLocation({
         type: graphic.geometry.type,
         geometry: graphic.geometry.toJSON(),
+        buffer: BUFFERS[graphic.geometry.type],
       });
 
-      const g = getGeometryWithBuffer(graphic.geometry);
+      const g = getGeometryWithBuffer(graphic.geometry, BUFFERS[graphic.geometry.type]);
       if (g) {
         setTmpBbox(g.extent);
       }
@@ -75,19 +78,22 @@ export default function MapContainer() {
 
   const handleUpdate = useCallback(
     (graphic: __esri.Graphic) => {
+      if (!location) return;
+      const b = location.type !== "search" ? location.buffer : BUFFERS[graphic.geometry.type];
       // Update the location state with the updated geometry
       setLocation({
         type: graphic.geometry.type,
         geometry: graphic.geometry.toJSON(),
+        buffer: b,
       });
 
       // Optionally update the bounding box based on the updated geometry
-      const g = getGeometryWithBuffer(graphic.geometry);
+      const g = getGeometryWithBuffer(graphic.geometry, b);
       if (g) {
         setTmpBbox(g.extent);
       }
     },
-    [setLocation, setTmpBbox],
+    [location, setLocation, setTmpBbox],
   );
 
   return (

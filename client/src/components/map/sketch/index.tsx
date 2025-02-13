@@ -9,12 +9,13 @@ import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 
-import { POINT_BUFFER, POLYLINE_BUFFER, useLocation } from "@/lib/location";
+import { useLocation } from "@/lib/location";
 
 import { Location } from "@/app/parsers";
 
 import {
   BUFFER_SYMBOL,
+  BUFFERS,
   POINT_SYMBOL,
   POLYGON_SYMBOL,
   POLYLINE_SYMBOL,
@@ -52,26 +53,32 @@ export default function Sketch({
   const sketchViewModelOnCreateRef = useRef<IHandle>();
   const sketchViewModelOnUpdateRef = useRef<IHandle>();
 
-  const addBuffer = useCallback((location: __esri.Graphic) => {
-    if (!location) return;
+  const addBuffer = useCallback(
+    (l: __esri.Graphic) => {
+      if (!l) return;
 
-    bufferRef.current.removeAll();
+      bufferRef.current.removeAll();
 
-    const buffer = new Graphic({
-      symbol: BUFFER_SYMBOL,
-    });
+      const buffer = new Graphic({
+        symbol: BUFFER_SYMBOL,
+      });
 
-    if (location.geometry.type === "point" || location.geometry.type === "polyline") {
-      const k = location.geometry.type === "point" ? POINT_BUFFER : POLYLINE_BUFFER;
-      const g = geometryEngine.geodesicBuffer(location.geometry, k, "kilometers");
+      if (l.geometry.type === "point" || l.geometry.type === "polyline") {
+        const b =
+          location?.type !== "search"
+            ? location?.buffer || BUFFERS[l.geometry.type]
+            : BUFFERS[l.geometry.type];
+        const g = geometryEngine.geodesicBuffer(l.geometry, b, "kilometers");
 
-      buffer.geometry = Array.isArray(g) ? g[0] : g;
-    }
+        buffer.geometry = Array.isArray(g) ? g[0] : g;
+      }
 
-    if (buffer.geometry) {
-      bufferRef.current.add(buffer);
-    }
-  }, []);
+      if (buffer.geometry) {
+        bufferRef.current.add(buffer);
+      }
+    },
+    [location],
+  );
 
   const handleSketchCreate = useCallback(
     (e: __esri.SketchViewModelCreateEvent) => {
