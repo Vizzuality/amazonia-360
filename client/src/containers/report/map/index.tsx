@@ -35,7 +35,7 @@ export default function MapContainer() {
   const [bbox, setBbox] = useSyncBbox();
   const [tmpBbox, setTmpBbox] = useAtom(tmpBboxAtom);
   const [sketch, setSketch] = useAtom(sketchAtom);
-  const [, setLocation] = useSyncLocation();
+  const [location, setLocation] = useSyncLocation();
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
 
   const { innerWidth } = useWindowSize();
@@ -73,25 +73,25 @@ export default function MapContainer() {
     setSketch({ enabled: false, type: undefined });
   }, [setSketch]);
 
-  // const handleUpdate = useCallback(
-  //   (graphic: __esri.Graphic) => {
-  //     // Update the location state with the updated geometry
-  //     setLocation({
-  //       type: graphic.geometry.type,
-  //       geometry: graphic.geometry.toJSON(),
-  //     });
+  const handleUpdate = useCallback(
+    (graphic: __esri.Graphic) => {
+      // Update the location state with the updated geometry
+      setLocation({
+        type: graphic.geometry.type,
+        geometry: graphic.geometry.toJSON(),
+      });
 
-  //     // Optionally update the bounding box based on the updated geometry
-  //     const g = getGeometryWithBuffer(graphic.geometry);
-  //     if (g) {
-  //       setTmpBbox(g.extent);
-  //     }
+      // Optionally update the bounding box based on the updated geometry
+      const g = getGeometryWithBuffer(graphic.geometry);
+      if (g) {
+        setTmpBbox(g.extent);
+      }
 
-  //     // Log or handle other updates (e.g., update backend data)
-  //     console.info("Updated graphic:", graphic);
-  //   },
-  //   [setLocation, setTmpBbox],
-  // );
+      // Log or handle other updates (e.g., update backend data)
+      console.info("Updated graphic:", graphic);
+    },
+    [setLocation, setTmpBbox],
+  );
 
   return (
     <div className="flex w-full grow flex-col">
@@ -108,9 +108,10 @@ export default function MapContainer() {
         <Sketch
           type={sketch.type}
           enabled={sketch.enabled}
+          location={location}
           onCreate={handleCreate}
           onCancel={handleCancel}
-          // onUpdate={handleUpdate}
+          onUpdate={handleUpdate}
         />
 
         <Controls>
