@@ -79,8 +79,6 @@ export const sketchActionAtom = atom<{
   geometryType?: __esri.Geometry["type"];
 }>({});
 
-export const bufferAtom = atom<number | undefined>();
-
 export const tabAtom = atom<"contextual-viewer" | "grid">("contextual-viewer");
 export const reportPanelAtom = atom<"location" | "topics">("location");
 export const gridPanelAtom = atom<"filters" | "table">("filters");

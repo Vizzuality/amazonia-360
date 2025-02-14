@@ -136,10 +136,10 @@ export const SketchTooltips = () => {
     return null;
 
   return (
-    <div className="absolute bottom-6 left-0 z-10 w-full duration-300 animate-in fade-in-0">
+    <div className="pointer-events-none absolute left-0 top-10 z-10 w-full duration-300 animate-in fade-in-0">
       <div className="container">
         <div className="grid grid-cols-12">
-          <div className="col-span-5 col-start-7">
+          <div className="col-span-5 col-start-8">
             <div className="flex justify-center">
               <div className="rounded bg-white p-2 shadow-md">
                 <p className="text-center text-sm font-light text-foreground">
