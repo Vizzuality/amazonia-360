@@ -2,11 +2,11 @@
 
 import { MouseEvent } from "react";
 
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 import { cn } from "@/lib/utils";
 
-import { sketchAtom, useSyncLocation } from "@/app/store";
+import { sketchActionAtom, sketchAtom, useSyncLocation } from "@/app/store";
 
 import { SketchProps } from "@/components/map/sketch";
 import { PointIcon } from "@/components/ui/icons/point";
@@ -36,6 +36,7 @@ const SKETCH_BUTTONS = [
 
 export default function Sketch() {
   const [sketch, setSketch] = useAtom(sketchAtom);
+  const setSketchAction = useSetAtom(sketchActionAtom);
   const [, setLocation] = useSyncLocation();
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>, type: SketchProps["type"]) => {
@@ -44,6 +45,7 @@ export default function Sketch() {
 
     if (sketch.enabled && sketch.type === type) {
       setSketch({ enabled: false, type: undefined });
+      setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
     }
 
     if (sketch.enabled && sketch.type !== type) {
@@ -51,11 +53,13 @@ export default function Sketch() {
 
       setTimeout(() => {
         setSketch({ enabled: true, type });
+        setSketchAction({ type: "create", state: "start", geometryType: type });
       }, 0);
     }
 
     if (!sketch.enabled) {
       setSketch({ enabled: true, type });
+      setSketchAction({ type: "create", state: "start", geometryType: type });
     }
   };
 

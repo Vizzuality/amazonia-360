@@ -10,6 +10,8 @@ import { getGeometryWithBuffer } from "@/lib/location";
 import { Indicator } from "@/app/local-api/indicators/route";
 import { popupInfoAtom, tmpBboxAtom, useSyncLocation } from "@/app/store";
 
+import { BUFFERS } from "@/constants/map";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -66,9 +68,9 @@ export const MapPopup = () => {
     const projectedGeom = projection.project(p, { wkid: 102100 });
     const g = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
 
-    setLocation({ type: "point", geometry: g.toJSON() });
+    setLocation({ type: "point", geometry: g.toJSON(), buffer: BUFFERS.point });
 
-    const gWithBuffer = getGeometryWithBuffer(g);
+    const gWithBuffer = getGeometryWithBuffer(g, BUFFERS.point);
     if (gWithBuffer) {
       setTmpBbox(gWithBuffer.extent);
     }

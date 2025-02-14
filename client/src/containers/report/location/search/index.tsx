@@ -66,11 +66,12 @@ export default function SearchC() {
               const geo = getGeometryByType({
                 type: data.type,
                 geometry: data.geometry,
+                buffer: 0,
               });
 
               if (!geo) return;
 
-              const g = getGeometryWithBuffer(geo);
+              const g = getGeometryWithBuffer(geo, 0);
 
               if (g) {
                 setTmpBbox(g.extent);
