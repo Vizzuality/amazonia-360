@@ -29,6 +29,7 @@ export type SearchLocation = {
 export type CustomLocation = {
   type: __esri.Geometry["type"];
   geometry: Record<string, unknown>;
+  buffer: number;
 };
 
 export type Location = SearchLocation | CustomLocation;

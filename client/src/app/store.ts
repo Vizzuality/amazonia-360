@@ -73,6 +73,11 @@ export const sketchAtom = atom<SketchProps>({
   enabled: false,
   type: undefined,
 });
+export const sketchActionAtom = atom<{
+  type?: "create" | "update" | "delete";
+  state?: "start" | "active" | "complete" | "cancel";
+  geometryType?: __esri.Geometry["type"];
+}>({});
 
 export const tabAtom = atom<"contextual-viewer" | "grid">("contextual-viewer");
 export const reportPanelAtom = atom<"location" | "topics">("location");

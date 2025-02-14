@@ -10,15 +10,12 @@ import Graphic from "@arcgis/core/Graphic";
 import { useGetFeatures } from "@/lib/query";
 import { useGetSearch } from "@/lib/search";
 
-import { CustomLocation, Location, SearchLocation } from "@/app/parsers";
+import { Location, SearchLocation } from "@/app/parsers";
 
 import { DATASETS } from "@/constants/datasets";
+import { BUFFERS } from "@/constants/map";
 
 import { AdministrativeBoundary } from "@/containers/widgets/overview/administrative-boundaries/types";
-
-export const POINT_BUFFER = 60;
-
-export const POLYLINE_BUFFER = 30;
 
 export const useLocation = (location?: Location | null) => {
   const { data: searchData } = useGetSearch(
@@ -33,6 +30,7 @@ export const useLocation = (location?: Location | null) => {
       const geo = getGeometryByType({
         type: searchData.type,
         geometry: searchData.geometry,
+        buffer: 0,
       });
 
       if (!geo) return null;
@@ -87,7 +85,8 @@ export const useLocationGeometry = (
 
   const GEOMETRY = useMemo(() => {
     if (LOCATION) {
-      const g = getGeometryWithBuffer(LOCATION.geometry);
+      const b = location?.type !== "search" ? location?.buffer : BUFFERS[LOCATION.geometry.type];
+      const g = getGeometryWithBuffer(LOCATION.geometry, b || BUFFERS[LOCATION.geometry.type]);
 
       if (!g) return null;
 
@@ -102,7 +101,7 @@ export const useLocationGeometry = (
     }
 
     return null;
-  }, [LOCATION, outSpatialReference]);
+  }, [LOCATION, location, outSpatialReference]);
 
   return GEOMETRY;
 };
@@ -139,7 +138,7 @@ export const useLocationGadm = (location?: Location | null) => {
   return query;
 };
 
-export const getGeometryByType = (location: CustomLocation) => {
+export const getGeometryByType = (location: Location) => {
   if (location?.type === "point") {
     return Point.fromJSON(location.geometry);
   }
@@ -155,17 +154,20 @@ export const getGeometryByType = (location: CustomLocation) => {
   return null;
 };
 
-export const getGeometryWithBuffer = (geometry: __esri.Geometry | null): __esri.Polygon | null => {
+export const getGeometryWithBuffer = (
+  geometry: __esri.Geometry | null,
+  buffer: number,
+): __esri.Polygon | null => {
   if (!geometry) return null;
 
   if (geometry.type === "point") {
-    const g = geometryEngine.geodesicBuffer(geometry, POINT_BUFFER, "kilometers");
+    const g = geometryEngine.geodesicBuffer(geometry, buffer, "kilometers");
 
     return Array.isArray(g) ? g[0] : g;
   }
 
   if (geometry.type === "polyline") {
-    const g = geometryEngine.geodesicBuffer(geometry, POLYLINE_BUFFER, "kilometers");
+    const g = geometryEngine.geodesicBuffer(geometry, buffer, "kilometers");
 
     return Array.isArray(g) ? g[0] : g;
   }

@@ -62,7 +62,7 @@ export default function ReportLocation() {
   // const TABS_HEADER_HEIGHT = 28;
 
   return (
-    <aside className="pointer-events-auto flex w-4/12 max-w-[400px] shrink-0 flex-col overflow-hidden tall:2xl:w-4/12">
+    <aside className="pointer-events-auto flex w-full shrink-0 flex-col overflow-hidden">
       <Tabs
         defaultValue={tab}
         value={tab}

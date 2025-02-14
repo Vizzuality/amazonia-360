@@ -19,6 +19,8 @@ import {
   useSyncLocation,
 } from "@/app/store";
 
+import { BUFFERS } from "@/constants/map";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -88,9 +90,9 @@ export const GridTableItem = (
     const projectedGeom = projection.project(p, { wkid: 102100 });
     const g = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
 
-    setLocation({ type: "point", geometry: g.toJSON() });
+    setLocation({ type: "point", geometry: g.toJSON(), buffer: BUFFERS.point });
 
-    const gWithBuffer = getGeometryWithBuffer(g);
+    const gWithBuffer = getGeometryWithBuffer(g, BUFFERS.point);
     if (gWithBuffer) {
       setTmpBbox(gWithBuffer.extent);
     }

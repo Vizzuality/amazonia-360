@@ -92,6 +92,7 @@ export const mockUseSyncLocation = jest
           ],
         ],
       },
+      buffer: 0,
     },
   ]);
 
