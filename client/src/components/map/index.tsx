@@ -2,6 +2,7 @@
 
 import { useContext, useEffect, useRef, useState } from "react";
 
+import Color from "@arcgis/core/Color";
 import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
 import Extent from "@arcgis/core/geometry/Extent";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
@@ -96,6 +97,11 @@ export function MapView({
             },
           },
         }),
+        highlightOptions: {
+          color: new Color("#009AFF"),
+          haloOpacity: 0.9,
+          fillOpacity: 0.2,
+        },
         // padding: {
         //   top: padding?.top ?? 16,
         //   right: padding?.right ?? 16,

@@ -53,7 +53,23 @@ export default function Sketch({
   const sketchViewModelOnCreateRef = useRef<IHandle>();
   const sketchViewModelOnUpdateRef = useRef<IHandle>();
 
-  const addBuffer = useCallback(
+  // const drawHighlight = useCallback(() => {
+  //   // @ts-expect-error - Internal graphics layer
+  //   const ig: __esri.GraphicsLayer = sketchViewModelRef?.current?._internalGraphicsLayer; // Internal graphics layer
+
+  //   // console.log(ig.graphics);
+
+  //   ig?.graphics.map((g) => {
+  //     if (g.geometry.type === "point") {
+  //       if ("pointIndex" in g.attributes) {
+  //         g.symbol = POINT_SYMBOL;
+  //       }
+  //       console.log(g.attributes);
+  //     }
+  //   });
+  // }, []);
+
+  const drawBuffer = useCallback(
     (l: __esri.Graphic) => {
       if (!l) return;
 
@@ -102,7 +118,7 @@ export default function Sketch({
   const handleSketchUpdate = useCallback(
     (e: __esri.SketchViewModelUpdateEvent) => {
       if (e.state === "active") {
-        addBuffer(e.graphics[0].clone());
+        drawBuffer(e.graphics[0].clone());
       }
 
       if (e.state === "complete" && e.graphics.length) {
@@ -110,7 +126,7 @@ export default function Sketch({
         if (onUpdate) onUpdate(updatedGraphic);
       }
     },
-    [onUpdate, addBuffer],
+    [onUpdate, drawBuffer],
   );
 
   const handleListeners = useCallback(() => {
@@ -147,6 +163,7 @@ export default function Sketch({
       defaultCreateOptions: {
         hasZ: false,
       },
+      activeFillSymbol: POLYGON_SYMBOL,
       defaultUpdateOptions: {
         tool: "reshape",
         enableRotation: false,
@@ -201,11 +218,11 @@ export default function Sketch({
       LOCATION.symbol = SYMBOLS[LOCATION.geometry.type];
       layerRef.current.add(LOCATION);
 
-      addBuffer(LOCATION);
+      drawBuffer(LOCATION);
     }
 
     handleListeners();
-  }, [location, LOCATION, addBuffer, handleListeners]);
+  }, [location, LOCATION, drawBuffer, handleListeners]);
 
   return (
     <>
