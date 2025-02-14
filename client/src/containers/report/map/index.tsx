@@ -1,15 +1,16 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 
 import dynamic from "next/dynamic";
 
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useDebounce, useWindowSize } from "rooks";
 
 import { getGeometryWithBuffer } from "@/lib/location";
 
 import {
+  sketchActionAtom,
   sketchAtom,
   tmpBboxAtom,
   useSyncBbox,
@@ -20,6 +21,7 @@ import {
 import { BUFFERS } from "@/constants/map";
 
 import LayerManager from "@/containers/report/map/layer-manager";
+import { SketchTooltips } from "@/containers/report/map/sketch-tooltips";
 
 import Controls from "@/components/map/controls";
 import BasemapControl from "@/components/map/controls/basemap";
@@ -36,7 +38,11 @@ const Map = dynamic(() => import("@/components/map"), {
 export default function MapContainer() {
   const [bbox, setBbox] = useSyncBbox();
   const [tmpBbox, setTmpBbox] = useAtom(tmpBboxAtom);
+
   const [sketch, setSketch] = useAtom(sketchAtom);
+  const setSketchAction = useSetAtom(sketchActionAtom);
+  const sketchActionTimeoutRef = useRef<NodeJS.Timeout>();
+
   const [location, setLocation] = useSyncLocation();
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
 
@@ -58,6 +64,7 @@ export default function MapContainer() {
   const handleCreate = useCallback(
     (graphic: __esri.Graphic) => {
       setSketch({ enabled: false, type: undefined });
+
       setLocation({
         type: graphic.geometry.type,
         geometry: graphic.geometry.toJSON(),
@@ -68,13 +75,28 @@ export default function MapContainer() {
       if (g) {
         setTmpBbox(g.extent);
       }
+
+      sketchActionTimeoutRef.current = setTimeout(() => {
+        setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
+      }, 5000);
     },
-    [setTmpBbox, setSketch, setLocation],
+    [setTmpBbox, setSketch, setLocation, setSketchAction],
+  );
+
+  const handleCreateChange = useCallback(
+    (e: __esri.SketchViewModelCreateEvent) => {
+      if (sketchActionTimeoutRef.current) {
+        clearTimeout(sketchActionTimeoutRef.current);
+      }
+      setSketchAction({ type: "create", state: e.state, geometryType: sketch.type });
+    },
+    [setSketchAction, sketch.type],
   );
 
   const handleCancel = useCallback(() => {
     setSketch({ enabled: false, type: undefined });
-  }, [setSketch]);
+    setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
+  }, [setSketch, setSketchAction]);
 
   const handleUpdate = useCallback(
     (graphic: __esri.Graphic) => {
@@ -92,8 +114,24 @@ export default function MapContainer() {
       if (g) {
         setTmpBbox(g.extent);
       }
+
+      setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
     },
-    [location, setLocation, setTmpBbox],
+    [location, setLocation, setTmpBbox, setSketchAction],
+  );
+
+  const handleUpdateChange = useCallback(
+    (e: __esri.SketchViewModelUpdateEvent) => {
+      if (sketchActionTimeoutRef.current) {
+        clearTimeout(sketchActionTimeoutRef.current);
+      }
+      setSketchAction({
+        type: "update",
+        state: e.state,
+        geometryType: e.graphics[0].geometry.type,
+      });
+    },
+    [setSketchAction],
   );
 
   return (
@@ -113,17 +151,23 @@ export default function MapContainer() {
           enabled={sketch.enabled}
           location={location}
           onCreate={handleCreate}
+          onCreateChange={handleCreateChange}
           onCancel={handleCancel}
           onUpdate={handleUpdate}
+          onUpdateChange={handleUpdateChange}
         />
 
         <Controls>
           <ZoomControl />
           <BasemapControl />
         </Controls>
+
         {gridSelectedDataset && <Legend />}
+
         <MapPopup />
       </Map>
+
+      <SketchTooltips />
     </div>
   );
 }

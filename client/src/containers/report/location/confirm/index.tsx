@@ -9,7 +9,7 @@ import { useSetAtom } from "jotai";
 import { formatNumber } from "@/lib/formats";
 import { useLocation, useLocationGeometry, useLocationTitle } from "@/lib/location";
 
-import { reportPanelAtom, useSyncLocation } from "@/app/store";
+import { reportPanelAtom, sketchActionAtom, useSyncLocation } from "@/app/store";
 
 import { BUFFERS } from "@/constants/map";
 
@@ -18,6 +18,7 @@ import { Slider } from "@/components/ui/slider";
 
 export default function Confirm() {
   const setReportPanel = useSetAtom(reportPanelAtom);
+  const setSketchAction = useSetAtom(sketchActionAtom);
 
   const [location, setLocation] = useSyncLocation();
   const TITLE = useLocationTitle(location);
@@ -55,7 +56,15 @@ export default function Confirm() {
         </div>
       </div>
       <div className="flex items-center justify-between gap-2">
-        <Button variant="outline" size="lg" className="grow" onClick={() => setLocation(null)}>
+        <Button
+          variant="outline"
+          size="lg"
+          className="grow"
+          onClick={() => {
+            setLocation(null);
+            setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
+          }}
+        >
           Clear
         </Button>
 

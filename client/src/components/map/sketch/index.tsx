@@ -31,8 +31,10 @@ export type SketchProps = {
   enabled?: boolean;
   location?: Location | null;
   onCreate?: (graphic: __esri.Graphic) => void;
+  onCreateChange?: (e: __esri.SketchViewModelCreateEvent) => void;
   onCancel?: () => void;
   onUpdate?: (graphic: __esri.Graphic) => void;
+  onUpdateChange?: (e: __esri.SketchViewModelUpdateEvent) => void;
 };
 
 export default function Sketch({
@@ -40,8 +42,10 @@ export default function Sketch({
   enabled,
   location,
   onCreate,
+  onCreateChange,
   onCancel,
   onUpdate,
+  onUpdateChange,
 }: SketchProps) {
   const mapInstance = useMap();
 
@@ -98,6 +102,8 @@ export default function Sketch({
 
   const handleSketchCreate = useCallback(
     (e: __esri.SketchViewModelCreateEvent) => {
+      if (onCreateChange) onCreateChange(e);
+
       if (e.state === "complete" && sketchViewModelRef.current) {
         const g = e.graphic.clone();
 
@@ -112,11 +118,13 @@ export default function Sketch({
         if (onCancel) onCancel();
       }
     },
-    [type, onCreate, onCancel],
+    [type, onCreate, onCreateChange, onCancel],
   );
 
   const handleSketchUpdate = useCallback(
     (e: __esri.SketchViewModelUpdateEvent) => {
+      if (onUpdateChange) onUpdateChange(e);
+
       if (e.state === "active") {
         drawBuffer(e.graphics[0].clone());
       }
@@ -126,7 +134,7 @@ export default function Sketch({
         if (onUpdate) onUpdate(updatedGraphic);
       }
     },
-    [onUpdate, drawBuffer],
+    [onUpdate, onUpdateChange, drawBuffer],
   );
 
   const handleListeners = useCallback(() => {
@@ -163,7 +171,6 @@ export default function Sketch({
       defaultCreateOptions: {
         hasZ: false,
       },
-      activeFillSymbol: POLYGON_SYMBOL,
       defaultUpdateOptions: {
         tool: "reshape",
         enableRotation: false,
@@ -172,11 +179,12 @@ export default function Sketch({
       updateOnGraphicClick: true,
       // tooltipOptions: {
       //   enabled: true,
-      //   helpMessage: "Click to start drawing",
       //   visibleElements: {
       //     distance: false,
       //     helpMessage: true,
       //     size: true,
+      //     coordinates: false,
+      //     area: true,
       //   },
       // },
     });
