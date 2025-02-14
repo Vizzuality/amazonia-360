@@ -8,11 +8,11 @@ import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 
-import { POINT_BUFFER, POLYLINE_BUFFER, useLocation } from "@/lib/location";
+import { useLocation } from "@/lib/location";
 
 import { Location } from "@/app/parsers";
 
-import { BUFFER_SYMBOL, SYMBOLS } from "@/constants/map";
+import { BUFFER_SYMBOL, BUFFERS, SYMBOLS } from "@/constants/map";
 
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
@@ -38,8 +38,11 @@ export default function SelectedLayer({
       });
 
       if (graphic.geometry.type === "point" || graphic.geometry.type === "polyline") {
-        const k = graphic.geometry.type === "point" ? POINT_BUFFER : POLYLINE_BUFFER;
-        const g = geometryEngine.geodesicBuffer(graphic.geometry, k, "kilometers");
+        const b =
+          location?.type !== "search"
+            ? location?.buffer || BUFFERS[graphic.geometry.type]
+            : BUFFERS[graphic.geometry.type];
+        const g = geometryEngine.geodesicBuffer(graphic.geometry, b, "kilometers");
 
         buffer.geometry = Array.isArray(g) ? g[0] : g;
       }
@@ -57,7 +60,7 @@ export default function SelectedLayer({
     if (!graphic) {
       graphicsLayerRef.current.removeAll();
     }
-  }, [graphic]);
+  }, [location, graphic]);
 
   return <Layer index={index} layer={graphicsLayerRef.current} />;
 }
