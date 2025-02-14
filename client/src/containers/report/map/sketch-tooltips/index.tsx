@@ -8,59 +8,64 @@ const CREATE_MESSAGES = {
   polygon: {
     start: (
       <>
-        <strong>Click</strong> to start drawing a polygon
+        <strong className="font-bold">Click</strong> on the map to start drawing a polygon. You can
+        press <strong className="font-bold">ESC</strong> to cancel.
       </>
     ),
     active: (
       <>
-        <strong>Double-click</strong> to finish drawing a polygon,
+        <strong className="font-bold">Click</strong> to add points and{" "}
+        <strong className="font-bold">double-click</strong> to finish drawing. You can also press{" "}
+        <strong className="font-bold">Enter</strong> to finish the polygon.
       </>
     ),
     complete: (
       <>
-        Nice!! If you want to <strong>edit the shape</strong> you can click on it to enable the
-        edition mode
+        Nice!! If you want to <strong className="font-bold">edit the shape</strong> you can click on
+        it to enable the edition mode.
       </>
     ),
-    cancel: <>Canceled</>,
+    cancel: null,
   },
   polyline: {
     start: (
       <>
-        <strong>Click</strong> to start drawing a line
+        <strong className="font-bold">Click</strong> to start drawing a line.
       </>
     ),
     active: (
       <>
-        <strong>Click</strong> to continue drawing a line
+        <strong className="font-bold">Click</strong> to add points and{" "}
+        <strong className="font-bold">double-click</strong> to finish drawing. You can also press{" "}
+        <strong className="font-bold">Enter</strong> to finish the line.
       </>
     ),
     complete: (
       <>
-        Nice!! If you want to <strong>edit the line</strong> you can click on it to enable the
-        edition mode
+        Nice!! If you want to <strong className="font-bold">edit the line</strong> you can click on
+        it to enable the edition mode.
       </>
     ),
-    cancel: <>Canceled</>,
+    cancel: null,
   },
   point: {
     start: (
       <>
-        <strong>Click</strong> on the map to add a point
+        <strong className="font-bold">Click</strong> on the map to add a point.
       </>
     ),
     active: (
       <>
-        <strong>Click</strong> on the map to add a point
+        <strong className="font-bold">Click</strong> on the map to add a point.
       </>
     ),
     complete: (
       <>
-        Nice!! If you want to <strong>move the point</strong> you can click on it to enable the
-        edition mode
+        Nice!! If you want to <strong className="font-bold">move the point</strong> you can click on
+        it to enable the edition mode.
       </>
     ),
-    cancel: <>Canceled</>,
+    cancel: null,
   },
 } as const;
 
@@ -68,50 +73,53 @@ const UPDATE_MESSAGES = {
   polygon: {
     start: (
       <>
-        Use the <strong>handles</strong> to edit the polygon. You can move them, add new ones or
-        remove them
+        Use the <strong className="font-bold">handles</strong> to edit the polygon. You can move
+        them, add new ones or remove them. You can press <strong className="font-bold">ESC</strong>{" "}
+        to cancel.
       </>
     ),
     active: (
       <>
-        To confirm the new shape, please <strong>click out</strong> of the shape or press{" "}
-        <strong>ESC</strong>
+        To confirm the new shape, please <strong className="font-bold">click out</strong> of the
+        shape or press <strong className="font-bold">ESC</strong>.
       </>
     ),
-    complete: <>Nice</>,
-    cancel: <>Canceled</>,
+    complete: null,
+    cancel: null,
   },
   polyline: {
     start: (
       <>
-        Use the <strong>handles</strong> to edit the line. You can move them, add new ones or remove
-        them. You can use the slider to change the buffer size
+        Use the <strong className="font-bold">handles</strong> to edit the line. You can move them,
+        add new ones or remove them. You can use the slider to change the buffer size. You can press{" "}
+        <strong className="font-bold">ESC</strong> to cancel.
       </>
     ),
     active: (
       <>
-        To confirm the new shape, please <strong>click out</strong> of the shape or press{" "}
-        <strong>ESC</strong>
+        To confirm the new shape, please <strong className="font-bold">click out</strong> of the
+        shape or press <strong className="font-bold">ESC</strong>.
       </>
     ),
-    complete: <>Nice</>,
-    cancel: <>Canceled</>,
+    complete: null,
+    cancel: null,
   },
   point: {
     start: (
       <>
-        Use the <strong>handle</strong> to move the point. You can use the slider to change the
-        buffer size
+        Use the <strong className="font-bold">handle</strong> to move the point. You can use the
+        slider to change the buffer size. You can press <strong className="font-bold">ESC</strong>{" "}
+        to cancel.
       </>
     ),
     active: (
       <>
-        To confirm the new position, please <strong>click out</strong> of the point or press{" "}
-        <strong>ESC</strong>
+        To confirm the new position, please <strong className="font-bold">click out</strong> of the
+        point or press <strong className="font-bold">ESC</strong>
       </>
     ),
-    complete: <>Nice</>,
-    cancel: <>Canceled</>,
+    complete: null,
+    cancel: null,
   },
 } as const;
 
@@ -134,7 +142,7 @@ export const SketchTooltips = () => {
           <div className="col-span-5 col-start-7">
             <div className="flex justify-center">
               <div className="rounded bg-white p-2 shadow-md">
-                <p className="text-center text-sm text-foreground">
+                <p className="text-center text-sm font-light text-foreground">
                   {sketchAction.type === "create" &&
                     CREATE_MESSAGES[`${sketchAction.geometryType}`][sketchAction?.state ?? "start"]}
 
