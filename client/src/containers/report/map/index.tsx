@@ -4,7 +4,7 @@ import { useCallback, useMemo, useRef } from "react";
 
 import dynamic from "next/dynamic";
 
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useDebounce, useWindowSize } from "rooks";
 
 import { getGeometryWithBuffer } from "@/lib/location";
@@ -12,6 +12,7 @@ import { getGeometryWithBuffer } from "@/lib/location";
 import {
   sketchActionAtom,
   sketchAtom,
+  tabAtom,
   tmpBboxAtom,
   useSyncBbox,
   useSyncGridSelectedDataset,
@@ -37,6 +38,7 @@ const Map = dynamic(() => import("@/components/map"), {
 
 export default function MapContainer() {
   const [bbox, setBbox] = useSyncBbox();
+  const tab = useAtomValue(tabAtom);
   const [tmpBbox, setTmpBbox] = useAtom(tmpBboxAtom);
 
   const [sketch, setSketch] = useAtom(sketchAtom);
@@ -162,7 +164,7 @@ export default function MapContainer() {
           <BasemapControl />
         </Controls>
 
-        {gridSelectedDataset && <Legend />}
+        {gridSelectedDataset && tab === "grid" && <Legend />}
 
         <MapPopup />
       </Map>

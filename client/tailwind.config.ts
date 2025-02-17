@@ -120,7 +120,7 @@ const config = {
       },
       backgroundImage: {
         viridis:
-          "linear-gradient(to right, #FDE724, #B6DE2B, #6CCE5A, #1F9D8A, #26838F, #31688E, #3E4A89, #482576, #440154)",
+          "linear-gradient(to right, #440154, #482576, #3E4A89, #31688E, #26838F, #1F9D8A, #6CCE5A, #B6DE2B, #FDE724)",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -230,15 +230,7 @@ const config = {
       },
     },
   },
-  plugins: [
-    require("tailwindcss-animate"),
-    require("@tailwindcss/typography"),
-    function ({ addUtilities }: { addUtilities: Function }) {
-      addUtilities({
-        ".delay-500": { "animation-delay": "500ms" },
-      });
-    },
-  ],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;
 
 export default config;
