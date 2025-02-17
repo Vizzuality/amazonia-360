@@ -49,7 +49,10 @@ export const getIndicators = async () => {
       .map((indicator) => ({
         ...indicator,
         topic: topics.find((topic) => topic.id === indicator.topic),
-      })) as (Indicator & { topic: Topic })[]
+      }))
+      .sort((a, b) => (a.name_en || "")?.localeCompare(b.name_en || "")) as (Indicator & {
+      topic: Topic;
+    })[]
   );
 };
 

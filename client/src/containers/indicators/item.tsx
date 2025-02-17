@@ -47,7 +47,7 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
             </tr>
             <tr>
               <td className="w-60">Visualization Types</td>
-              <td>{indicator?.visualization_types?.join(", ")}</td>
+              <td>{(indicator?.visualization_types || [])?.join(", ")}</td>
             </tr>
             {}
             {indicator?.resource.type !== "h3" &&
