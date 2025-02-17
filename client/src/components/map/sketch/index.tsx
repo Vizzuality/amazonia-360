@@ -198,7 +198,7 @@ export default function Sketch({
 
   // Handle enabling/disabling sketch mode and setting up listeners
   useEffect(() => {
-    if (!sketchViewModelRef.current) return;
+    if (!sketchViewModelRef.current || !mapInstance?.view) return;
 
     if (!type) {
       sketchViewModelRef.current.cancel();
@@ -216,7 +216,7 @@ export default function Sketch({
 
     // Remove old listeners
     handleListeners();
-  }, [type, enabled, handleListeners]);
+  }, [mapInstance, type, enabled, handleListeners]);
 
   useEffect(() => {
     layerRef.current.removeAll();
@@ -230,6 +230,11 @@ export default function Sketch({
     }
 
     handleListeners();
+
+    if (sketchViewModelRef.current) {
+      const updateOnGraphicClick = location?.type !== "search";
+      sketchViewModelRef.current.updateOnGraphicClick = updateOnGraphicClick;
+    }
   }, [location, LOCATION, drawBuffer, handleListeners]);
 
   return (
