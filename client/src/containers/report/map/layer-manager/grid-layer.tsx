@@ -13,7 +13,7 @@ import { ArrowLoader } from "@loaders.gl/arrow";
 import { load } from "@loaders.gl/core";
 import CHROMA from "chroma-js";
 import { latLngToCell } from "h3-js";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 
 import { env } from "@/env.mjs";
 
@@ -23,13 +23,14 @@ import { useLocationGeometry } from "@/lib/location";
 import { MultiDatasetMeta } from "@/types/generated/api.schemas";
 
 import {
-  popupInfoAtom,
+  gridHoverAtom,
   gridCellHighlightAtom,
   useSyncGridDatasets,
   useSyncGridFilters,
   useSyncGridFiltersSetUp,
   useSyncGridSelectedDataset,
   useSyncLocation,
+  GridHoverType,
 } from "@/app/store";
 
 import H3TileLayer from "@/components/map/layers/h3-tile-layer";
@@ -46,9 +47,8 @@ export const getGridLayerProps = ({
   gridMetaData,
   geometry,
   zoom,
-  setPopupInfo,
-  hoveredCell,
-  setHoveredCell,
+  gridHover,
+  setGridHover,
   gridCellHighlight,
 }: {
   gridDatasets: string[];
@@ -59,16 +59,8 @@ export const getGridLayerProps = ({
   gridMetaData: MultiDatasetMeta | undefined;
   geometry: __esri.Polygon | null;
   zoom?: number;
-  setPopupInfo: (info: {
-    id: number | null;
-    index: undefined | string;
-    values: { column: string; value: string | number }[];
-    x: number | null;
-    y: number | null;
-    coordinates: number[] | undefined;
-  }) => void;
-  hoveredCell: string | null;
-  setHoveredCell: (arg: string | null) => void;
+  gridHover: GridHoverType;
+  setGridHover: (props: GridHoverType) => void;
   gridCellHighlight?: string;
 }) => {
   // Create array of 4n values
@@ -117,9 +109,10 @@ export const getGridLayerProps = ({
       const values = gridDatasets.map((column) => ({ column, value: row?.[column] }));
 
       if (info && info.index === -1) {
-        setHoveredCell(null);
-        setPopupInfo({
+        // setHoveredCell(null);
+        setGridHover({
           id: null,
+          cell: undefined,
           index: undefined,
           values: [],
           x: null,
@@ -127,11 +120,12 @@ export const getGridLayerProps = ({
           coordinates: undefined,
         });
       }
+
       if (info && info.index !== -1 && info.coordinate) {
         const cell = latLngToCell(info?.coordinate?.[1], info.coordinate[0], 6);
-        setHoveredCell(cell);
-        setPopupInfo({
+        setGridHover({
           id: info.index,
+          cell,
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           index: info.sourceLayer?.props?.tile?.index?.h3index,
@@ -231,9 +225,6 @@ export const getGridLayerProps = ({
           // HEXAGON
           getHexagon: (d) => `${d.cell}`,
           // LINE
-          onHover: (x) => {
-            console.info("hover from subLayer 2", { x });
-          },
           stroked: true,
           getLineColor: [0, 154, 222, 255],
           getLineWidth: 1,
@@ -246,11 +237,11 @@ export const getGridLayerProps = ({
         new H3HexagonLayer({
           ...props,
           id: `${props.id}-grid-highlight-${opacity}`,
-          data: [gridCellHighlight, hoveredCell].filter(Boolean),
+          data: [gridCellHighlight, gridHover.cell].filter(Boolean),
           highPrecision: true,
           opacity: opacity,
-          visible: !!gridCellHighlight || hoveredCell ? true : false,
-          pickable: true,
+          visible: !!gridCellHighlight || gridHover.cell ? true : false,
+          pickable: false,
           filled: true,
           extruded: false,
           // HEXAGON
@@ -263,9 +254,6 @@ export const getGridLayerProps = ({
           lineWidthUnits: "pixels",
           updateTriggers: {
             opacity: [opacity],
-            handleGridCellHighlight: [gridCellHighlight],
-            gridCellHighlight: [gridCellHighlight],
-            hoveredCell: [hoveredCell],
           },
         }),
       ];
@@ -280,9 +268,8 @@ export default function GridLayer() {
   const [gridSetUpFilters] = useSyncGridFiltersSetUp();
   const [gridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
-  const [hoveredCell, setHoveredCell] = useState<string | null>(null);
   const gridCellHighlight = useAtomValue(gridCellHighlightAtom);
-  const setPopupInfo = useSetAtom(popupInfoAtom);
+  const [gridHover, setGridHover] = useAtom(gridHoverAtom);
 
   const map = useMap();
   const [zoom, setZoom] = useState(map?.view.zoom);
@@ -332,11 +319,10 @@ export default function GridLayer() {
             gridMetaData,
             opacity,
             getFillColor,
-            setPopupInfo,
             geometry: GEOMETRY,
             zoom,
-            hoveredCell,
-            setHoveredCell,
+            gridHover,
+            setGridHover,
             gridCellHighlight: gridCellHighlight.index,
           }),
         ],
@@ -355,9 +341,8 @@ export default function GridLayer() {
         getFillColor,
         geometry: GEOMETRY,
         zoom,
-        hoveredCell,
-        setHoveredCell,
-        setPopupInfo,
+        gridHover,
+        setGridHover,
         gridCellHighlight: gridCellHighlight.index,
       }),
     ];
@@ -373,9 +358,8 @@ export default function GridLayer() {
     zoom,
     gridCellHighlight,
     opacity,
-    hoveredCell,
-    setHoveredCell,
-    setPopupInfo,
+    gridHover,
+    setGridHover,
   ]);
 
   return <Layer index={0} layer={layer} />;
