@@ -56,7 +56,7 @@ export default function CardsContainer() {
           <div
             className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 ${
               isCardInView
-                ? "md:delay-300 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
+                ? "md:delay-150 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
                 : "opacity-0"
             }`}
           >
@@ -69,7 +69,7 @@ export default function CardsContainer() {
           <div
             className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 ${
               isCardInView
-                ? "md:delay-500 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
+                ? "md:delay-300 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
                 : "opacity-0"
             }`}
           >
