@@ -19,21 +19,36 @@ dependencies = [
     "titiler-core>=0.21.1",
 ]
 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "app",
+ "mypy>=1.15.0",
+ "pytest>=8.3.4",
+ "ruff>=0.9.6",
+]
+
+[tool.uv.sources]
+app = { workspace = true }
+
 [tool.ruff]
 line-length = 120
 extend-include = ["*.ipynb"]
-src = ["."]
+src = ["src"]
 
 [tool.ruff.lint]
 select = [
-    "D1",   # pydocstyle errors
-    "E",    # pycodestyle errors
-    "W",    # pycodestyle warnings
-    "F",    # flake8
-    "C",    # flake8-comprehensions
-    "B",    # flake8-bugbear
-    "N",    # Naming conventions
-    "I",    # isort
+    "D1", # pydocstyle errors
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # flake8
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+    "N",  # Naming conventions
+    "I",  # isort
 ]
 ignore = [
     "D100", # Missing docstring in public module
@@ -41,17 +56,18 @@ ignore = [
 ]
 
 [tool.ruff.lint.flake8-bugbear]
-extend-immutable-calls = ["fastapi.Depends", "fastapi.params.Depends", "fastapi.Query", "fastapi.params.Query"]
+extend-immutable-calls = [
+    "fastapi.Depends",
+    "fastapi.params.Depends",
+    "fastapi.Query",
+    "fastapi.params.Query",
+]
 
 [tool.ruff.lint.per-file-ignores]
-"**/{tests}/*" = ["D103"]  # Missing docstring in public function
+"**/{tests}/*" = ["D103"] # Missing docstring in public function
 
 [tool.mypy]
 disable_error_code = ["import-untyped", "attr-defined"]
 
-[tool.uv]
-dev-dependencies = [
-    "mypy>=1.15.0",
-    "pytest>=8.3.4",
-    "ruff>=0.9.6",
-]
+[tool.pytest.ini_options]
+testpaths = ["tests"]

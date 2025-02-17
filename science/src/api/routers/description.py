@@ -1,6 +1,5 @@
 from fastapi import APIRouter
-from models.arcgis import ArcGISContextData
-from models.description import DescriptionType, Language
+from models import ArcGISContextData, DescriptionType, Language
 from services.openai_service import generate_description
 
 router = APIRouter()

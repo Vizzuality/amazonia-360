@@ -3,8 +3,7 @@ from components.map import render_map
 from components.sidebar import render_sidebar
 from config import BTN_LABEL, MAP_CENTER, MAP_ZOOM, MAX_ALLOWED_AREA_SIZE
 from helpers.transform import transform_polygon_to_rings
-from models.arcgis import ArcGISContextData, ArcGISGeometry
-from models.description import DescriptionType, Language
+from models import ArcGISContextData, ArcGISGeometry, DescriptionType, Language
 from services.context_data import get_physical_environment_data
 from services.description import get_description
 from utils.validation import selected_bbox_in_boundary, selected_bbox_too_large
