@@ -40,6 +40,7 @@ const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 export const getGridLayerProps = ({
   gridDatasets,
   gridFilters,
+  gridSelectedDataset,
   opacity,
   getFillColor,
   gridMetaData,
@@ -52,6 +53,7 @@ export const getGridLayerProps = ({
 }: {
   gridDatasets: string[];
   gridFilters: Record<string, number[] | Record<string, string | number>> | null;
+  gridSelectedDataset: string | null;
   opacity: number;
   getFillColor: Accessor<Record<string, number>, Color>;
   gridMetaData: MultiDatasetMeta | undefined;
@@ -72,11 +74,12 @@ export const getGridLayerProps = ({
   // Create array of 4n values
   const filters = [...Array(4).keys()];
   const columns = !!gridDatasets.length ? gridDatasets.map((d) => `columns=${d}`).join("&") : "";
+
   return new H3TileLayer({
     id: `tile-h3s`,
     data: `${env.NEXT_PUBLIC_API_URL}/grid/tile/{h3index}?${columns}`,
     extent: [-85.3603, -28.5016, -29.8134, 10.8038],
-    visible: !!gridDatasets.length,
+    visible: !!gridDatasets.length && gridSelectedDataset !== "no-layer",
     getTileData: (tile) => {
       if (!tile.url) return Promise.resolve(null);
       return load(tile.url, ArrowLoader, {
@@ -210,7 +213,7 @@ export const getGridLayerProps = ({
             new DataFilterExtension({ filterSize: filters.length as 0 | 1 | 2 | 3 | 4 }),
           ],
           updateTriggers: {
-            getFillColor: [gridDatasets],
+            getFillColor: [getFillColor],
             getFilterValue: [gridDatasets],
             opacity: [opacity],
           },
@@ -325,8 +328,9 @@ export default function GridLayer() {
           getGridLayerProps({
             gridDatasets,
             gridFilters,
-            opacity,
+            gridSelectedDataset,
             gridMetaData,
+            opacity,
             getFillColor,
             setPopupInfo,
             geometry: GEOMETRY,
@@ -345,8 +349,9 @@ export default function GridLayer() {
       getGridLayerProps({
         gridDatasets,
         gridFilters,
-        opacity,
+        gridSelectedDataset,
         gridMetaData,
+        opacity,
         getFillColor,
         geometry: GEOMETRY,
         zoom,
@@ -361,8 +366,9 @@ export default function GridLayer() {
   }, [
     gridDatasets,
     gridFilters,
-    getFillColor,
+    gridSelectedDataset,
     gridMetaData,
+    getFillColor,
     GEOMETRY,
     zoom,
     gridCellHighlight,
