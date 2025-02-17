@@ -22,12 +22,12 @@ import {
 import { BUFFERS } from "@/constants/map";
 
 import LayerManager from "@/containers/report/map/layer-manager";
+import Legend from "@/containers/report/map/legend";
 import { SketchTooltips } from "@/containers/report/map/sketch-tooltips";
 
 import Controls from "@/components/map/controls";
 import BasemapControl from "@/components/map/controls/basemap";
 import ZoomControl from "@/components/map/controls/zoom";
-import Legend from "@/components/map/legend";
 import MapPopup from "@/components/map/popup";
 import Sketch from "@/components/map/sketch";
 import Tooltip from "@/components/map/tooltip";

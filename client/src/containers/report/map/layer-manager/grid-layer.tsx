@@ -17,7 +17,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 
 import { env } from "@/env.mjs";
 
-import { useGetGridMeta } from "@/lib/grid";
+import { useMeta } from "@/lib/grid";
 import { useLocationGeometry } from "@/lib/location";
 
 import { MultiDatasetMeta } from "@/types/generated/api.schemas";
@@ -289,7 +289,7 @@ export default function GridLayer() {
     wkid: 4326,
   });
 
-  const { data: gridMetaData } = useGetGridMeta();
+  const { META: gridMetaData } = useMeta(GEOMETRY);
 
   const colorscale = useMemo(() => {
     if (!gridMetaData) return CHROMA.scale([]);
