@@ -5,11 +5,17 @@ import { useMemo } from "react";
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import { useSetAtom } from "jotai";
+import { useDebounce } from "rooks";
 
 import { formatNumber } from "@/lib/formats";
-import { useLocation, useLocationGeometry, useLocationTitle } from "@/lib/location";
+import {
+  getGeometryWithBuffer,
+  useLocation,
+  useLocationGeometry,
+  useLocationTitle,
+} from "@/lib/location";
 
-import { reportPanelAtom, sketchActionAtom, useSyncLocation } from "@/app/store";
+import { reportPanelAtom, sketchActionAtom, tmpBboxAtom, useSyncLocation } from "@/app/store";
 
 import { BUFFERS } from "@/constants/map";
 
@@ -19,11 +25,21 @@ import { Slider } from "@/components/ui/slider";
 export default function Confirm() {
   const setReportPanel = useSetAtom(reportPanelAtom);
   const setSketchAction = useSetAtom(sketchActionAtom);
+  const setTmpBbox = useSetAtom(tmpBboxAtom);
 
   const [location, setLocation] = useSyncLocation();
   const TITLE = useLocationTitle(location);
   const LOCATION = useLocation(location);
   const GEOMETRY = useLocationGeometry(location);
+
+  const onValueChangeDebounced = useDebounce(() => {
+    if (!location || (location.type !== "point" && location.type !== "polyline")) return;
+    const gWithBuffer = getGeometryWithBuffer(GEOMETRY, location.buffer);
+
+    if (gWithBuffer) {
+      setTmpBbox(gWithBuffer.extent);
+    }
+  }, 500);
 
   const AREA = useMemo(() => {
     if (!GEOMETRY) return 0;
@@ -40,50 +56,51 @@ export default function Confirm() {
       }
       return prev;
     });
+
+    onValueChangeDebounced();
   };
 
   if (!location) return null;
 
   return (
-    <div className="flex w-full flex-col justify-between gap-2 overflow-hidden text-sm">
-      <div className="flex items-end justify-between">
-        <div className="text-sm font-semibold leading-tight text-foreground">{TITLE}</div>
-        <div className="text-xs text-gray-500">
-          {formatNumber(AREA, {
-            maximumFractionDigits: 0,
-          })}{" "}
-          km²
+    <div className="flex w-full flex-col justify-between gap-4 overflow-hidden text-sm">
+      <section className="space-y-2">
+        <div className="flex items-end justify-between">
+          <div className="text-sm font-semibold leading-none text-blue-500">{TITLE}</div>
+          <div className="text-xs leading-none text-foreground">
+            {formatNumber(AREA, {
+              maximumFractionDigits: 0,
+            })}{" "}
+            km²
+          </div>
         </div>
-      </div>
-      <div className="flex items-center justify-between gap-2">
-        <Button
-          variant="outline"
-          size="lg"
-          className="grow"
-          onClick={() => {
-            setLocation(null);
-            setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
-          }}
-        >
-          Clear
-        </Button>
+        <div className="flex items-center justify-between gap-2">
+          <Button
+            variant="outline"
+            size="lg"
+            className="grow"
+            onClick={() => {
+              setLocation(null);
+              setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
+            }}
+          >
+            Clear
+          </Button>
 
-        <Button size="lg" className="grow" onClick={() => setReportPanel("topics")}>
-          Confirm
-        </Button>
-      </div>
-
-      <p className="text-sm tracking-[0.14px] text-muted-foreground">
-        To edit the shape, <strong>click</strong> on the shape.
-      </p>
+          <Button size="lg" className="grow" onClick={() => setReportPanel("topics")}>
+            Confirm
+          </Button>
+        </div>
+      </section>
 
       {location.type !== "search" && LOCATION?.geometry.type !== "polygon" && (
-        <>
-          <p className="text-sm tracking-[0.14px] text-muted-foreground">
-            You can adjust the buffer (
-            {`${location.buffer || BUFFERS[LOCATION?.geometry.type || "point"]} km`}) by{" "}
-            <strong>moving</strong> the following slider.
-          </p>
+        <section className="space-y-2">
+          <div className="flex items-end justify-between">
+            <div className="text-sm font-semibold leading-none text-blue-500">Buffer size</div>
+            <div className="text-xs leading-none text-foreground">
+              {`${location.buffer || BUFFERS[LOCATION?.geometry.type || "point"]} km`}
+            </div>
+          </div>
           <div className="space-y-1 px-1">
             <Slider
               min={1}
@@ -99,7 +116,13 @@ export default function Confirm() {
               <span>100 km</span>
             </div>
           </div>
-        </>
+        </section>
+      )}
+
+      {location.type !== "search" && (
+        <p className="text-sm tracking-[0.14px] text-muted-foreground">
+          <strong>Click</strong> on the shape to enable edit mode.
+        </p>
       )}
     </div>
   );

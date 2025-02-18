@@ -8,21 +8,20 @@ const CREATE_MESSAGES = {
   polygon: {
     start: (
       <>
-        <strong className="font-bold">Click</strong> on the map to start drawing a polygon. You can
-        press <strong className="font-bold">ESC</strong> to cancel.
+        To get started, <strong className="font-bold">click</strong> on the map to add point. Press{" "}
+        <strong className="font-bold">ESC</strong> to cancel.
       </>
     ),
     active: (
       <>
-        <strong className="font-bold">Click</strong> to add points and{" "}
-        <strong className="font-bold">double-click</strong> to finish drawing. You can also press{" "}
-        <strong className="font-bold">Enter</strong> to finish the polygon.
+        Click to add points, then <strong className="font-bold">double-click</strong> or press{" "}
+        <strong className="font-bold">Enter</strong> to finish drawing.
       </>
     ),
     complete: (
       <>
-        Nice!! If you want to <strong className="font-bold">edit the shape</strong> you can click on
-        it to enable the edition mode.
+        Great! To <strong className="font-bold">edit the shape</strong>,{" "}
+        <strong className="font-bold">click</strong> on it to enable edit mode.
       </>
     ),
     cancel: null,
@@ -30,20 +29,20 @@ const CREATE_MESSAGES = {
   polyline: {
     start: (
       <>
-        <strong className="font-bold">Click</strong> to start drawing a line.
+        To get started, <strong className="font-bold">click</strong> on the map to add point. Press{" "}
+        <strong className="font-bold">ESC</strong> to cancel.
       </>
     ),
     active: (
       <>
-        <strong className="font-bold">Click</strong> to add points and{" "}
-        <strong className="font-bold">double-click</strong> to finish drawing. You can also press{" "}
-        <strong className="font-bold">Enter</strong> to finish the line.
+        Click to add points, then <strong className="font-bold">double-click</strong> or press{" "}
+        <strong className="font-bold">Enter</strong> to finish drawing.
       </>
     ),
     complete: (
       <>
-        Nice!! If you want to <strong className="font-bold">edit the line</strong> you can click on
-        it to enable the edition mode.
+        Great! To <strong className="font-bold">edit the shape</strong>,{" "}
+        <strong className="font-bold">click</strong> on it to enable edit mode.
       </>
     ),
     cancel: null,
@@ -51,18 +50,20 @@ const CREATE_MESSAGES = {
   point: {
     start: (
       <>
-        <strong className="font-bold">Click</strong> on the map to add a point.
+        To get started, <strong className="font-bold">click</strong> on the map to add point. Press{" "}
+        <strong className="font-bold">ESC</strong> to cancel.
       </>
     ),
     active: (
       <>
-        <strong className="font-bold">Click</strong> on the map to add a point.
+        To get started, <strong className="font-bold">click</strong> on the map to add point. Press{" "}
+        <strong className="font-bold">ESC</strong> to cancel.
       </>
     ),
     complete: (
       <>
-        Nice!! If you want to <strong className="font-bold">move the point</strong> you can click on
-        it to enable the edition mode.
+        Great! To <strong className="font-bold">move the point</strong>, just{" "}
+        <strong className="font-bold">click</strong> on it and drag it to a new location.
       </>
     ),
     cancel: null,
@@ -73,9 +74,9 @@ const UPDATE_MESSAGES = {
   polygon: {
     start: (
       <>
-        Use the <strong className="font-bold">handles</strong> to edit the polygon. You can move
-        them, add new ones or remove them. You can press <strong className="font-bold">ESC</strong>{" "}
-        to cancel.
+        Use the <strong className="font-bold">handles</strong> to edit the polygon — move, add, or
+        remove points as needed. You can press <strong className="font-bold">ESC</strong> to
+        confirm.
       </>
     ),
     active: (
@@ -90,9 +91,9 @@ const UPDATE_MESSAGES = {
   polyline: {
     start: (
       <>
-        Use the <strong className="font-bold">handles</strong> to edit the line. You can move them,
-        add new ones or remove them. You can use the slider to change the buffer size. You can press{" "}
-        <strong className="font-bold">ESC</strong> to cancel.
+        Use the <strong className="font-bold">handles</strong> to edit the line — move, add, or
+        remove points as needed. You can press <strong className="font-bold">ESC</strong> to
+        confirm.
       </>
     ),
     active: (
@@ -109,13 +110,13 @@ const UPDATE_MESSAGES = {
       <>
         Use the <strong className="font-bold">handle</strong> to move the point. You can use the
         slider to change the buffer size. You can press <strong className="font-bold">ESC</strong>{" "}
-        to cancel.
+        to confirm.
       </>
     ),
     active: (
       <>
-        To confirm the new position, please <strong className="font-bold">click out</strong> of the
-        point or press <strong className="font-bold">ESC</strong>
+        <strong className="font-bold">Click</strong> outside the point or press{" "}
+        <strong className="font-bold">ESC</strong> to confirm the new position.
       </>
     ),
     complete: null,
