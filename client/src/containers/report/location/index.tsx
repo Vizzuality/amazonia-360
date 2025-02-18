@@ -192,19 +192,21 @@ export default function ReportLocation() {
             {gridPanel === "table" && (
               <div className="relative h-full space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
                 <div className="space-y-1">
-                  <div className="flex h-full items-center justify-between font-bold text-primary">
-                    <div className="flex items-start gap-2">
-                      <button
-                        onClick={() => setGridPanel("filters")}
-                        className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
-                      >
-                        <LuArrowLeft className="h-4 w-4" />
-                      </button>
-                      <h1>
-                        {rankingCriterion
-                          ? `Top cells ordered by ${rankingCriterion}`
-                          : "Please select filters to view top cells"}
-                      </h1>
+                  <div className="font-bold text-primary">
+                    <div className="flex items-start justify-between gap-2">
+                      <header className="flex items-start gap-2">
+                        <button
+                          onClick={() => setGridPanel("filters")}
+                          className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
+                        >
+                          <LuArrowLeft className="h-4 w-4" />
+                        </button>
+                        <h1 className="mt-1.5">
+                          {rankingCriterion
+                            ? `Top cells ordered by ${rankingCriterion}`
+                            : "Please select filters to view top cells"}
+                        </h1>
+                      </header>
                       <GridTableSetup />
                     </div>
                   </div>

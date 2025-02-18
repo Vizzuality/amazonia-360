@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 import { useAtom } from "jotai";
 
@@ -21,6 +21,12 @@ export default function GridFiltersControls() {
     setSelectedFiltersView(false);
     setGridDatasets([]);
   }, [setGridDatasets, setSelectedFiltersView]);
+
+  useEffect(() => {
+    if (gridDatasets.length === 0) {
+      setSelectedFiltersView(false);
+    }
+  }, [gridDatasets, setSelectedFiltersView]);
 
   return (
     <div className="flex items-start justify-between gap-4">

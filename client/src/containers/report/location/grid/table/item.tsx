@@ -115,7 +115,7 @@ export const GridTableItem = (
         <AlertDialogTrigger asChild>
           <TooltipTrigger asChild>
             <div
-              className="flex w-full items-start gap-2 rounded-lg px-1 py-2 hover:bg-blue-50"
+              className="flex w-full cursor-pointer items-start gap-2 rounded-lg px-1 py-2 hover:bg-blue-50"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
