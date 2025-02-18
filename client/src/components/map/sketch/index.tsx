@@ -29,6 +29,7 @@ const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 export type SketchProps = {
   type?: "point" | "polygon" | "polyline";
   enabled?: boolean;
+  updatable?: boolean;
   location?: Location | null;
   onCreate?: (graphic: __esri.Graphic) => void;
   onCreateChange?: (e: __esri.SketchViewModelCreateEvent) => void;
@@ -40,6 +41,7 @@ export type SketchProps = {
 export default function Sketch({
   type,
   enabled,
+  updatable = true,
   location,
   onCreate,
   onCreateChange,
@@ -232,10 +234,9 @@ export default function Sketch({
     handleListeners();
 
     if (sketchViewModelRef.current) {
-      const updateOnGraphicClick = location?.type !== "search";
-      sketchViewModelRef.current.updateOnGraphicClick = updateOnGraphicClick;
+      sketchViewModelRef.current.updateOnGraphicClick = updatable;
     }
-  }, [location, LOCATION, drawBuffer, handleListeners]);
+  }, [location, updatable, LOCATION, drawBuffer, handleListeners]);
 
   return (
     <>

@@ -10,6 +10,7 @@ import { useDebounce, useWindowSize } from "rooks";
 import { getGeometryWithBuffer } from "@/lib/location";
 
 import {
+  gridHoverAtom,
   sketchActionAtom,
   sketchAtom,
   tabAtom,
@@ -22,12 +23,12 @@ import {
 import { BUFFERS } from "@/constants/map";
 
 import LayerManager from "@/containers/report/map/layer-manager";
+import Legend from "@/containers/report/map/legend";
 import { SketchTooltips } from "@/containers/report/map/sketch-tooltips";
 
 import Controls from "@/components/map/controls";
 import BasemapControl from "@/components/map/controls/basemap";
 import ZoomControl from "@/components/map/controls/zoom";
-import Legend from "@/components/map/legend";
 import MapPopup from "@/components/map/popup";
 import Sketch from "@/components/map/sketch";
 import Tooltip from "@/components/map/tooltip";
@@ -44,6 +45,8 @@ export default function MapContainer() {
   const [sketch, setSketch] = useAtom(sketchAtom);
   const setSketchAction = useSetAtom(sketchActionAtom);
   const sketchActionTimeoutRef = useRef<NodeJS.Timeout>();
+
+  const setGridHover = useSetAtom(gridHoverAtom);
 
   const [location, setLocation] = useSyncLocation();
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
@@ -136,6 +139,18 @@ export default function MapContainer() {
     [setSketchAction],
   );
 
+  const handlePointerLeave = useCallback(() => {
+    setGridHover({
+      id: null,
+      cell: undefined,
+      index: undefined,
+      values: [],
+      x: null,
+      y: null,
+      coordinates: undefined,
+    });
+  }, [setGridHover]);
+
   return (
     <div className="flex w-full grow flex-col">
       <Map
@@ -143,6 +158,7 @@ export default function MapContainer() {
         defaultBbox={bbox}
         bbox={tmpBbox}
         onMapMove={handleMapMove}
+        onPointerLeave={handlePointerLeave}
         padding={padding}
       >
         <LayerManager />
@@ -151,6 +167,7 @@ export default function MapContainer() {
         <Sketch
           type={sketch.type}
           enabled={sketch.enabled}
+          updatable={location?.type !== "search" && tab === "contextual-viewer"}
           location={location}
           onCreate={handleCreate}
           onCreateChange={handleCreateChange}
