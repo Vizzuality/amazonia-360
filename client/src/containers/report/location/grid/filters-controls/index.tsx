@@ -18,8 +18,9 @@ export default function GridFiltersControls() {
   }, [setSelectedFiltersView]);
 
   const handleClick = useCallback(() => {
+    setSelectedFiltersView(false);
     setGridDatasets([]);
-  }, [setGridDatasets]);
+  }, [setGridDatasets, setSelectedFiltersView]);
 
   return (
     <div className="flex items-start justify-between gap-4">
