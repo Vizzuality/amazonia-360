@@ -44,13 +44,15 @@ export const MapPopup = () => {
       <div className="flex flex-col space-y-1">
         {VALUES.map((v) => (
           <div key={`${v?.name}-${v?.value}`} className="flex justify-between space-x-2">
-            <p className="text-sm font-medium">{v?.name}</p>
-            <p className="text-sm font-medium">{v?.value}</p>
+            <p className="text-sm font-semibold text-foreground">{v?.name}</p>
+            <p className="text-sm font-medium text-foreground">{v?.value}</p>
           </div>
         ))}
       </div>
 
-      <p className="text-xs text-gray-400">Click on the cell to redefine the area of interest</p>
+      <p className="text-xs italic text-muted-foreground">
+        Click on the cell to redefine the area of interest
+      </p>
     </div>
   );
 };

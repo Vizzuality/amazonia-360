@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 
-import { useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 
 import { useSyncGridDatasets, selectedFiltersViewAtom } from "@/app/store";
 
@@ -11,9 +11,9 @@ import { Label } from "@/components/ui/label";
 
 export default function GridFiltersControls() {
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
-  const setSelectedFiltersView = useSetAtom(selectedFiltersViewAtom);
+  const [selectedFiltersView, setSelectedFiltersView] = useAtom(selectedFiltersViewAtom);
 
-  const handleFiltersView = useCallback(() => {
+  const handleCheckedChange = useCallback(() => {
     setSelectedFiltersView((prev) => !prev);
   }, [setSelectedFiltersView]);
 
@@ -25,7 +25,12 @@ export default function GridFiltersControls() {
   return (
     <div className="flex items-start justify-between gap-4">
       <div className="flex items-center space-x-1">
-        <Checkbox id="selected-filters" onCheckedChange={handleFiltersView} />
+        <Checkbox
+          id="selected-filters"
+          disabled={!gridDatasets.length}
+          checked={selectedFiltersView}
+          onCheckedChange={handleCheckedChange}
+        />
         <Label htmlFor="selected-filters" className="text-start text-xs text-muted-foreground">
           View selected indicators only
         </Label>

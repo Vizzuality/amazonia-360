@@ -4,21 +4,23 @@ import { useCallback, useMemo, useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
 
+import Point from "@arcgis/core/geometry/Point";
+import * as projection from "@arcgis/core/geometry/projection";
 import { DeckLayer } from "@deck.gl/arcgis";
-import { Accessor, Color } from "@deck.gl/core";
+import { Accessor, Color, PickingInfo } from "@deck.gl/core";
 import { DataFilterExtension, DataFilterExtensionProps } from "@deck.gl/extensions";
 import { H3HexagonLayer } from "@deck.gl/geo-layers";
 import { ArrowTable } from "@loaders.gl/arrow";
 import { ArrowLoader } from "@loaders.gl/arrow";
 import { load } from "@loaders.gl/core";
 import CHROMA from "chroma-js";
-import { latLngToCell } from "h3-js";
-import { useAtom, useAtomValue } from "jotai";
+import { cellToLatLng, latLngToCell } from "h3-js";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 
 import { env } from "@/env.mjs";
 
 import { useMeta } from "@/lib/grid";
-import { useLocationGeometry } from "@/lib/location";
+import { getGeometryWithBuffer, useLocationGeometry } from "@/lib/location";
 
 import { MultiDatasetMeta } from "@/types/generated/api.schemas";
 
@@ -31,7 +33,10 @@ import {
   useSyncGridSelectedDataset,
   useSyncLocation,
   GridHoverType,
+  tmpBboxAtom,
 } from "@/app/store";
+
+import { BUFFERS } from "@/constants/map";
 
 import H3TileLayer from "@/components/map/layers/h3-tile-layer";
 import { useMap } from "@/components/map/provider";
@@ -50,6 +55,7 @@ export const getGridLayerProps = ({
   gridHover,
   setGridHover,
   gridCellHighlight,
+  onCellClick,
 }: {
   gridDatasets: string[];
   gridFilters: Record<string, number[] | Record<string, string | number>> | null;
@@ -62,6 +68,7 @@ export const getGridLayerProps = ({
   gridHover: GridHoverType;
   setGridHover: (props: GridHoverType) => void;
   gridCellHighlight?: string;
+  onCellClick?: (info: PickingInfo) => void;
 }) => {
   // Create array of 4n values
   const filters = [...Array(4).keys()];
@@ -101,7 +108,10 @@ export const getGridLayerProps = ({
       });
     },
     pickable: true,
-    onHover: (info) => {
+    onClick: (info: PickingInfo) => {
+      if (onCellClick) onCellClick(info);
+    },
+    onHover: (info: PickingInfo) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const table = info?.tile?.content as ArrowTable["data"];
@@ -263,13 +273,14 @@ export const getGridLayerProps = ({
 
 export default function GridLayer() {
   const GRID_LAYER = useRef<typeof DeckLayer>();
-  const [location] = useSyncLocation();
+  const [location, setLocation] = useSyncLocation();
   const [gridFilters] = useSyncGridFilters();
   const [gridSetUpFilters] = useSyncGridFiltersSetUp();
   const [gridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
   const gridCellHighlight = useAtomValue(gridCellHighlightAtom);
   const [gridHover, setGridHover] = useAtom(gridHoverAtom);
+  const setTmpBbox = useSetAtom(tmpBboxAtom);
 
   const map = useMap();
   const [zoom, setZoom] = useState(map?.view.zoom);
@@ -306,6 +317,27 @@ export default function GridLayer() {
     [gridSelectedDataset, colorscale],
   );
 
+  const onCellClick = useCallback(
+    (info: PickingInfo) => {
+      if (!info?.coordinate) return;
+      const cell = latLngToCell(info?.coordinate?.[1], info.coordinate[0], 6);
+
+      const latLng = cellToLatLng(cell);
+
+      const p = new Point({ x: latLng[1], y: latLng[0], spatialReference: { wkid: 4326 } });
+      const projectedGeom = projection.project(p, { wkid: 102100 });
+      const g = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
+
+      setLocation({ type: "point", geometry: g.toJSON(), buffer: BUFFERS.point });
+
+      const gWithBuffer = getGeometryWithBuffer(g, BUFFERS.point);
+      if (gWithBuffer) {
+        setTmpBbox(gWithBuffer.extent);
+      }
+    },
+    [setLocation, setTmpBbox],
+  );
+
   const opacity = useMemo(() => gridSetUpFilters.opacity * 0.01, [gridSetUpFilters]);
 
   const layer = useMemo(() => {
@@ -317,13 +349,14 @@ export default function GridLayer() {
             gridFilters,
             gridSelectedDataset,
             gridMetaData,
-            opacity,
             getFillColor,
+            opacity,
             geometry: GEOMETRY,
             zoom,
             gridHover,
             setGridHover,
             gridCellHighlight: gridCellHighlight.index,
+            onCellClick,
           }),
         ],
       });
@@ -337,13 +370,14 @@ export default function GridLayer() {
         gridFilters,
         gridSelectedDataset,
         gridMetaData,
-        opacity,
         getFillColor,
+        opacity,
         geometry: GEOMETRY,
         zoom,
         gridHover,
         setGridHover,
         gridCellHighlight: gridCellHighlight.index,
+        onCellClick,
       }),
     ];
 
@@ -354,13 +388,18 @@ export default function GridLayer() {
     gridSelectedDataset,
     gridMetaData,
     getFillColor,
+    opacity,
     GEOMETRY,
     zoom,
-    gridCellHighlight,
-    opacity,
     gridHover,
     setGridHover,
+    gridCellHighlight,
+    onCellClick,
   ]);
 
-  return <Layer index={0} layer={layer} />;
+  return (
+    <>
+      <Layer index={0} layer={layer} />
+    </>
+  );
 }
