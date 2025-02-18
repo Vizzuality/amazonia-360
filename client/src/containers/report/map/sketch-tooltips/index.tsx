@@ -74,9 +74,9 @@ const UPDATE_MESSAGES = {
   polygon: {
     start: (
       <>
-        Use the <strong className="font-bold">handles</strong> to edit the polygon — move, add, or
-        remove points as needed. You can press <strong className="font-bold">ESC</strong> to
-        confirm.
+        Use the <strong className="font-bold">handles</strong> to edit the polygon - move (drag a
+        handle), add (left-click on a white handle), or remove (right-click on a handle) points as
+        needed. You can press <strong className="font-bold">ESC</strong> to confirm.
       </>
     ),
     active: (
@@ -91,9 +91,9 @@ const UPDATE_MESSAGES = {
   polyline: {
     start: (
       <>
-        Use the <strong className="font-bold">handles</strong> to edit the line — move, add, or
-        remove points as needed. You can press <strong className="font-bold">ESC</strong> to
-        confirm.
+        Use the <strong className="font-bold">handles</strong> to edit the polygon - move (drag a
+        handle), add (left-click on a white handle), or remove (right-click on a handle) points as
+        needed. You can press <strong className="font-bold">ESC</strong> to confirm.
       </>
     ),
     active: (
