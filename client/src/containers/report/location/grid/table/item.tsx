@@ -127,7 +127,7 @@ export const GridTableItem = (
                 {ITEMS.map((dataset, i) => (
                   <li
                     key={dataset?.column}
-                    className="flex w-full items-end justify-between text-sm"
+                    className="flex w-full items-end justify-between gap-2 text-sm"
                   >
                     <div className="relative flex flex-1 items-end overflow-hidden">
                       <p
