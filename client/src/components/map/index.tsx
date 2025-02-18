@@ -30,6 +30,7 @@ export type MapProps = {
   children?: React.ReactNode;
   onHover?: () => void;
   onMapMove?: (extent: __esri.Extent) => void;
+  onPointerLeave?: () => void;
 };
 
 export default function Map(mapProps: MapProps) {
@@ -54,6 +55,7 @@ export function MapView({
   mapProps,
   viewProps,
   onMapMove,
+  onPointerLeave,
 }: MapProps) {
   const mapRef = useRef<ArcGISMap>();
   const mapViewRef = useRef<ArcGISMapView>();
@@ -120,6 +122,10 @@ export function MapView({
       });
 
       mapViewRef.current.ui.add(scaleBar, "bottom-right");
+
+      mapViewRef.current.on("pointer-leave", () => {
+        if (onPointerLeave) onPointerLeave();
+      });
 
       // check if the map is loaded
       mapViewRef.current.when(() => {

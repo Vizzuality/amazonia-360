@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 
 import {
@@ -5,6 +7,7 @@ import {
   ReadTableGridTablePostParams,
   GridDatasetMetadataInAreaGridMetaPostParams,
   Feature,
+  FeatureGeometry,
 } from "@/types/generated/api.schemas";
 import {
   gridDatasetMetadataGridMetaGet,
@@ -167,4 +170,42 @@ export const useGetGridTable = <TData = Awaited<ReturnType<typeof getGridTable>>
     queryFn,
     ...options,
   });
+};
+
+export const useMeta = (GEOMETRY: __esri.Polygon | null) => {
+  const feature = useMemo<Feature>(() => {
+    return {
+      type: "Feature",
+      geometry: {
+        type: "Polygon",
+        coordinates: GEOMETRY?.toJSON().rings,
+      } as FeatureGeometry,
+      properties: {},
+      id: null,
+    };
+  }, [GEOMETRY]);
+
+  const queryMeta = useGetGridMeta({
+    enabled: !GEOMETRY,
+  });
+
+  const queryMetaFromGeometry = useGetGridMetaFromGeometry(
+    feature,
+    {},
+    {
+      enabled: !!GEOMETRY,
+    },
+  );
+
+  const META = useMemo(() => {
+    if (GEOMETRY) return queryMetaFromGeometry.data;
+
+    return queryMeta.data;
+  }, [queryMeta, queryMetaFromGeometry, GEOMETRY]);
+
+  return {
+    META,
+    queryMeta,
+    queryMetaFromGeometry,
+  };
 };
