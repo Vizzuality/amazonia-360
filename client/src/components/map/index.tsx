@@ -148,7 +148,6 @@ export function MapView({
       );
 
       return () => {
-        mapViewRef.current?.removeHandles("pointer-leave");
         onMapUnmount();
       };
     }

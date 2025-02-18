@@ -71,11 +71,11 @@ export const Legend: FC = () => {
   );
 
   return (
-    <div className="border-muted-background absolute bottom-16 right-4 flex w-72 flex-col space-y-5 rounded-lg border bg-white px-4 py-1 shadow-md">
+    <div className="border-muted-background absolute bottom-16 right-4 flex w-72 flex-col space-y-1 rounded-lg border bg-white shadow-md">
       <div className="flex items-center justify-between gap-1">
         <div
           className={cn({
-            "text-sm": true,
+            "px-4 py-2 text-sm text-foreground": true,
             "opacity-50": !gridDatasets.length || gridSelectedDataset === "no-layer",
           })}
         >
@@ -83,12 +83,13 @@ export const Legend: FC = () => {
             ? GRID_SELECTED_DATASET.label
             : "Select layer to display"}
         </div>
-        <div className="flex space-x-2">
+
+        <div className="flex space-x-2 pr-2">
           <Popover>
             <Tooltip>
               <PopoverTrigger asChild>
                 <TooltipTrigger className="p-0">
-                  <TbChartCircles className="h-6 w-6" />
+                  <TbChartCircles className="h-6 w-6 stroke-blue-500" />
                 </TooltipTrigger>
               </PopoverTrigger>
 
@@ -128,6 +129,7 @@ export const Legend: FC = () => {
               </TooltipPortal>
             </Tooltip>
           </Popover>
+
           <Select value={gridSelectedDataset || gridDatasets[0]} onValueChange={onChangeDataset}>
             <Tooltip>
               <SelectTrigger
@@ -135,7 +137,7 @@ export const Legend: FC = () => {
                 hasArrow={false}
               >
                 <TooltipTrigger asChild>
-                  <LuSettings2 className="h-6 w-6" />
+                  <LuSettings2 className="h-6 w-6 stroke-blue-500" />
                 </TooltipTrigger>
               </SelectTrigger>
 
@@ -165,7 +167,7 @@ export const Legend: FC = () => {
       </div>
 
       {!!GRID_SELECTED_DATASET && GRID_SELECTED_DATASET.key !== "no-layer" && (
-        <div className="flex flex-col space-y-1">
+        <div className="flex flex-col space-y-1 px-4 pb-2">
           {GRID_SELECTED_DATASET?.legend?.legend_type === "continuous" && (
             <>
               <div className="h-2 w-full rounded-full bg-viridis" />
