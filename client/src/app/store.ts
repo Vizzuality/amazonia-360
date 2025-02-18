@@ -87,8 +87,9 @@ export const gridCellHighlightAtom = atom<{ id: number | null; index: string | u
   index: undefined,
 });
 
-export const popupInfoAtom = atom<{
+export type GridHoverType = {
   id: number | null;
+  cell: string | undefined;
   index: string | undefined;
   x: number | null;
   y: number | null;
@@ -97,8 +98,11 @@ export const popupInfoAtom = atom<{
     column: string;
     value: string | number;
   }[];
-}>({
+};
+
+export const gridHoverAtom = atom<GridHoverType>({
   id: null,
+  cell: undefined,
   index: undefined,
   x: null,
   y: null,

@@ -5,11 +5,9 @@ import { useMemo } from "react";
 import { flatGroup } from "@visx/vendor/d3-array";
 import { useAtom } from "jotai";
 
-import { useGetGridMeta, useGetGridMetaFromGeometry } from "@/lib/grid";
+import { useMeta } from "@/lib/grid";
 import { useH3Indicators } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
-
-import { Feature, FeatureGeometry } from "@/types/generated/api.schemas";
 
 import { H3Indicator } from "@/app/local-api/indicators/route";
 import { selectedFiltersViewAtom, useSyncGridDatasets } from "@/app/store";
@@ -27,45 +25,13 @@ export default function GridFilters() {
   const [selectedFiltersView] = useAtom(selectedFiltersViewAtom);
   const [gridDatasets] = useSyncGridDatasets();
 
-  const feature = useMemo<Feature>(() => {
-    return {
-      type: "Feature",
-      geometry: {
-        type: "Polygon",
-        coordinates: GEOMETRY?.toJSON().rings,
-      } as FeatureGeometry,
-      properties: {},
-      id: null,
-    };
-  }, [GEOMETRY]);
-
   const dataIndicators = useH3Indicators();
+  const { META, queryMeta, queryMetaFromGeometry } = useMeta(GEOMETRY);
 
-  const {
-    data: gridMetaData,
-    isFetched: gridMetaIsFetched,
-    isFetching: gridMetaIsFetching,
-  } = useGetGridMeta({
-    enabled: !GEOMETRY,
-  });
+  const { isFetched: gridMetaIsFetched, isFetching: gridMetaIsFetching } = queryMeta;
 
-  const {
-    data: gridMetaFromGeometryData,
-    isFetched: gridMetaFromGeometryIsFetched,
-    isFetching: gridMetaFromGeometryIsFetching,
-  } = useGetGridMetaFromGeometry(
-    feature,
-    {},
-    {
-      enabled: !!GEOMETRY,
-    },
-  );
-
-  const META = useMemo(() => {
-    if (GEOMETRY) return gridMetaFromGeometryData;
-
-    return gridMetaData;
-  }, [gridMetaData, gridMetaFromGeometryData, GEOMETRY]);
+  const { isFetched: gridMetaFromGeometryIsFetched, isFetching: gridMetaFromGeometryIsFetching } =
+    queryMetaFromGeometry;
 
   const INDICATORS = useMemo(() => {
     if (!dataIndicators || !META) return [];

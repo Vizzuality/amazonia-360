@@ -168,7 +168,7 @@ export default function GridTableSetup() {
               Max number of cells
             </Label>
             <Input
-              placeholder={`${gridFilters?.limit?.[0]}`}
+              placeholder={`${gridFilters?.limit?.[0] ?? 10}`}
               id="cell-number"
               type="number"
               min={0}
