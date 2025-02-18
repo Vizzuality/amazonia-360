@@ -176,7 +176,7 @@ export default function Sketch({
       defaultUpdateOptions: {
         tool: "reshape",
         enableRotation: false,
-        toggleToolOnClick: true,
+        toggleToolOnClick: false,
       },
       updateOnGraphicClick: true,
       // tooltipOptions: {
