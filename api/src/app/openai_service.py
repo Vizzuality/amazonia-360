@@ -28,7 +28,7 @@ def generate_description(context_data: dict, description_type: str, language: st
             f"You are a helpful assistant tasked with generating region descriptions based on "
             f"provided data. The description must be in {language}. "
             "Based on the requested description type, adjust the style as follows:\n"
-            "- **Sort:** Provide a concise, executive-style overview.\n"
+            "- **Short:** Provide a concise, executive-style overview.\n"
             "- **Normal:** Provide a standard, balanced description.\n"
             "- **Long:** Provide a detailed description with a focus on environmental aspects.\n"
             "The description should be engaging and formatted in Markdown, for example, formatting "

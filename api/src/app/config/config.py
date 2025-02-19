@@ -4,11 +4,13 @@ from functools import lru_cache
 
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings
+from pydantic_settings.main import SettingsConfigDict
 
 
 class Settings(BaseSettings):
     """Global configuration for the application."""
 
+    model_config = SettingsConfigDict(env_file=".env")
     auth_token: str
     tiff_path: str
     grid_tiles_path: str

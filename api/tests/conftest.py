@@ -50,6 +50,7 @@ TEST_ROOT = Path(__file__).resolve().parent
 os.environ["AUTH_TOKEN"] = "secret"
 os.environ["TIFF_PATH"] = str(TEST_ROOT / "data")
 os.environ["GRID_TILES_PATH"] = str(TEST_ROOT / "data" / "grid")
+os.environ["OPENAI_TOKEN"] = "fake-token"
 
 FILES = ["raster.tif", "raster2.tif", "raster3.tif"]
 HEADERS = {"Authorization": f"Bearer {get_settings().auth_token}"}
