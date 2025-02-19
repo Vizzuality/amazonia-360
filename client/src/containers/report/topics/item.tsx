@@ -20,11 +20,11 @@ type TopicsItemProps = Topic & {
 
 export default function TopicsItem({
   id,
-  name,
+  name_en,
   image,
   size,
   interactive,
-  description,
+  description_en,
   checked,
   onChange,
 }: TopicsItemProps) {
@@ -94,7 +94,7 @@ export default function TopicsItem({
           )}
         >
           <div className="relative z-10">
-            <h3 className="text-sm font-bold">{name}</h3>
+            <h3 className="text-sm font-bold">{name_en}</h3>
 
             <div
               ref={descriptionRef}
@@ -103,7 +103,7 @@ export default function TopicsItem({
                 !interactive && "max-h-none lg:max-h-0 xl:max-h-none",
               )}
             >
-              <p className="pt-2">{description}</p>
+              <p className="pt-2">{description_en}</p>
             </div>
           </div>
         </div>

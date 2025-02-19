@@ -95,7 +95,7 @@ export const ReportResultsContentItem = ({ topic }: ReportResultsContentItemProp
 
   return (
     <div key={topic.id} className="container relative print:break-before-page">
-      <h2 className="mb-4 text-xl font-semibold">{TOPIC?.name}</h2>
+      <h2 className="mb-4 text-xl font-semibold">{TOPIC?.name_en}</h2>
 
       <ResponsiveReactGridLayout
         className="layout animated"

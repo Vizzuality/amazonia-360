@@ -45,7 +45,6 @@ export const getIndicators = async () => {
   return (
     indicators
       // TO - DO - delete this filter when indicator json gets fixed
-      .filter(({ topic }) => topic < 7)
       .map((indicator) => ({
         ...indicator,
         topic: topics.find((topic) => topic.id === indicator.topic),

@@ -19,7 +19,7 @@ export default function WidgetsEnvironment() {
 
   return (
     <div className="container print:break-before-page">
-      <h2 className="mb-4 text-xl">{T?.name}</h2>
+      <h2 className="mb-4 text-xl">{T?.name_en}</h2>
       {/* <GridContainer>
         {indicatorsByTopic?.map(({ id, type, size }) => {
           return (

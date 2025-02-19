@@ -41,53 +41,41 @@ export const getTopicsOptions = <TData = Awaited<ReturnType<typeof getTopics>>, 
 
 export const useGetTopics =
   // <TData = Awaited<ReturnType<typeof getTopics>>, TError = unknown>
-  () =>
-    // options?: Omit<TopicsQueryOptions<TData, TError>, "queryKey">,
-    {
-      // const { queryKey, queryFn } = getTopicsOptions(options);
+  () => {
+    const topics: { [key: number]: Topic } = {};
 
-      // return useQuery({
-      //   queryKey,
-      //   queryFn,
-      //   ...options,
-      // });
+    const { data: indicatorsData } = useIndicators();
 
-      const topics: { [key: number]: Topic } = {};
+    indicatorsData?.forEach((indicator) => {
+      const { topic } = indicator;
 
-      const { data: indicatorsData } = useIndicators();
+      if (!topic?.id) {
+        return;
+      }
 
-      indicatorsData?.forEach((indicator) => {
-        const { topic } = indicator;
-
-        if (!topic.id || !topic.name) {
-          return;
-        }
-
-        // Initialize the topic if it doesn't exist
-        if (!topics[topic.id]) {
-          topics[topic.id] = {
-            id: topic.id,
-            name: topic.name,
-            image: `${topic.image}`,
-            description: topic.description,
-            description_short: topic.description_short_en,
+      // Initialize the topic if it doesn't exist
+      if (!topics[topic.id]) {
+        if (typeof topic !== "number") {
+          const t = topic as Topic;
+          topics[t.id] = {
+            ...t,
             indicators: [],
-            default_visualization: topic.default_visualization || [],
           };
         }
-      });
+      }
+    });
 
-      Object.keys(topics).forEach((topicId) => {
-        topics[parseInt(topicId)].indicators = indicatorsData?.filter(
-          (indicator) => indicator.topic.id === parseInt(topicId),
-        );
-      });
+    Object.keys(topics).forEach((topicId) => {
+      topics[parseInt(topicId)].indicators = indicatorsData?.filter(
+        (indicator) => indicator.topic.id === parseInt(topicId),
+      );
+    });
 
-      return {
-        data: Object.values(topics),
-        isLoading: false,
-      };
+    return {
+      data: Object.values(topics),
+      isLoading: false,
     };
+  };
 
 export const getTopicsOverview = async () => {
   const topics = TOPICS as Topic[];
@@ -129,21 +117,19 @@ export const useGetTopicsOverview =
       indicatorsData?.forEach((indicator) => {
         const { topic } = indicator;
 
-        if (topic.id !== 0 || !topic.name_es) {
+        if (topic?.id !== 0) {
           return;
         }
 
         // Initialize the topic if it doesn't exist
         if (!topics[topic.id]) {
-          topics[topic.id] = {
-            id: topic.id,
-            name: topic.name,
-            image: `${topic.image}`,
-            description: topic.description,
-            description_short: topic.description_short_en,
-            indicators: [],
-            default_visualization: topic.default_visualization || [],
-          };
+          if (typeof topic !== "number") {
+            const t = topic as Topic;
+            topics[t.id] = {
+              ...t,
+              indicators: [],
+            };
+          }
         }
       });
 
