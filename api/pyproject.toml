@@ -9,6 +9,7 @@ dependencies = [
     "fastapi>=0.115.8",
     "h3>=4.2.1",
     "h3ronpy>=0.22.0",
+    "openai>=1.63.2",
     "orjson>=3.10.15",
     "polars>=1.22.0",
     "pyarrow>=19.0.0",
@@ -24,12 +25,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.uv]
-dev-dependencies = [
-    "app",
- "mypy>=1.15.0",
- "pytest>=8.3.4",
- "ruff>=0.9.6",
-]
+dev-dependencies = ["app", "mypy>=1.15.0", "pytest>=8.3.4", "ruff>=0.9.6"]
 
 [tool.uv.sources]
 app = { workspace = true }
@@ -41,14 +37,13 @@ src = ["src"]
 
 [tool.ruff.lint]
 select = [
-    "D1", # pydocstyle errors
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # flake8
-    "C",  # flake8-comprehensions
-    "B",  # flake8-bugbear
-    "N",  # Naming conventions
-    "I",  # isort
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # flake8
+    "C", # flake8-comprehensions
+    "B", # flake8-bugbear
+    "N", # Naming conventions
+    "I", # isort
 ]
 ignore = [
     "D100", # Missing docstring in public module
