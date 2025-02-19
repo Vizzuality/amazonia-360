@@ -2,12 +2,12 @@
 
 import { useInView } from "react-intersection-observer";
 
-import { useGetTopics } from "@/lib/topics";
+import { useGetDefaultTopics } from "@/lib/topics";
 
 import TopicsItem from "@/containers/home/topics/item";
 
 export default function Topics() {
-  const { data: topicsData } = useGetTopics();
+  const { data: topicsData } = useGetDefaultTopics();
 
   const { ref: imagesRef, inView: isImagesInView } = useInView({
     triggerOnce: true,

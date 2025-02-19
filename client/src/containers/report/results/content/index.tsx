@@ -5,7 +5,6 @@ import { useSyncTopics } from "@/app/store";
 
 import ReportResultsContentItem from "@/containers/report/results/content/item";
 import WidgetsOtherResources from "@/containers/widgets/other-resources";
-import WidgetsOverview from "@/containers/widgets/overview";
 
 export interface ReportResultsContentItemProps {
   topic: TopicView;
@@ -17,7 +16,7 @@ export default function ReportResultsContent() {
   return (
     <div className="flex flex-col space-y-20 print:space-y-6">
       {/* OVERVIEW */}
-      <WidgetsOverview />
+      {/* <WidgetsOverview /> */}
 
       {/* topicsData DASHBOARD */}
       <div className="space-y-20">

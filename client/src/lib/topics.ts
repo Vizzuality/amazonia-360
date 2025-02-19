@@ -1,6 +1,4 @@
-import { QueryFunction, UseQueryOptions } from "@tanstack/react-query";
-
-import { useIndicators } from "@/lib/indicators";
+import { QueryFunction, useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 import { Topic } from "@/app/local-api/topics/route";
 import TOPICS from "@/app/local-api/topics/topics_v17_02_2025.json";
@@ -39,24 +37,37 @@ export const getTopicsOptions = <TData = Awaited<ReturnType<typeof getTopics>>, 
   return { queryKey, queryFn, ...options } as TopicsQueryOptions<TData, TError>;
 };
 
-export const useGetTopics =
-  // <TData = Awaited<ReturnType<typeof getTopics>>, TError = unknown>
-  () => {
-    const { data: indicatorsData } = useIndicators();
+export const useGetTopics = <TData = Awaited<ReturnType<typeof getTopics>>, TError = unknown>(
+  options?: Omit<TopicsQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const { queryKey, queryFn } = getTopicsOptions(options);
 
-    // get an unique array of topics based on the indicators using reduce
-    const topics = indicatorsData?.reduce((acc, indicator) => {
-      if (indicator.topic && !acc.find((topic) => topic.id === indicator.topic.id)) {
-        acc.push(indicator.topic);
-      }
-      return acc;
-    }, [] as Topic[]);
+  return useQuery({
+    queryKey,
+    queryFn,
+    ...options,
+  });
+};
 
-    return {
-      data: topics,
-      isLoading: false,
-    };
-  };
+export const useGetDefaultTopics = () => {
+  const query = useGetTopics({
+    select(data) {
+      return data.filter((topic) => topic.id !== 0);
+    },
+  });
+
+  return query;
+};
+
+export const useGetOverviewTopics = () => {
+  const query = useGetTopics({
+    select(data) {
+      return data.filter((topic) => topic.id === 0);
+    },
+  });
+
+  return query;
+};
 
 export const useGetTopicsId = (id: Topic["id"]) => {
   const { data } = useGetTopics();

@@ -6,7 +6,7 @@ import { useAtom } from "jotai";
 import { LuArrowLeft } from "react-icons/lu";
 
 import { useGetGridMeta } from "@/lib/grid";
-import { useGetTopics } from "@/lib/topics";
+import { useGetDefaultTopics } from "@/lib/topics";
 
 import {
   tabAtom,
@@ -41,7 +41,7 @@ export default function ReportLocation() {
   const [gridDatasets] = useSyncGridDatasets();
   const [activeTopics, setTopics] = useSyncTopics();
 
-  const { data: topics } = useGetTopics();
+  const { data: topics } = useGetDefaultTopics();
 
   const { data: rankingCriterion } = useGetGridMeta({
     select: (data) => data?.datasets?.find((d) => d.var_name === gridDatasets[0])?.label,
