@@ -51,9 +51,14 @@ export default function ReportLocation() {
     if (topics?.length === activeTopics?.length) {
       setTopics([]);
     } else {
-      setTopics(
-        topics?.map(({ id, default_visualization }) => ({ id, indicators: default_visualization })),
-      );
+      if (topics) {
+        setTopics(
+          topics?.map(({ id, default_visualization }) => ({
+            id,
+            indicators: default_visualization,
+          })),
+        );
+      }
     }
   }, [setTopics, topics, activeTopics]);
 

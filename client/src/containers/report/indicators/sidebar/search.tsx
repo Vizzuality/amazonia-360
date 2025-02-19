@@ -41,8 +41,8 @@ export default function SearchC() {
               );
               return {
                 key: v,
-                label: indicator.name,
-                value: `${indicator.name}-${v}`,
+                label: indicator.name_en,
+                value: `${indicator.name_en}-${v}`,
                 indicatorId: indicator.id,
                 topicId: indicator.topic?.id,
                 sourceIndex: indicator.id,

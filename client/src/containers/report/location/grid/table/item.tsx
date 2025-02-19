@@ -60,8 +60,8 @@ export const GridTableItem = (
 
           return {
             ...dataset,
-            name: matchingIndicator.name,
-            unit: matchingIndicator.unit,
+            name: matchingIndicator.name_en,
+            unit: matchingIndicator.unit_en,
           };
         })
         .filter(Boolean),

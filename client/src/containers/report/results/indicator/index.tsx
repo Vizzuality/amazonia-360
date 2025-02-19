@@ -43,7 +43,7 @@ export default function ReportResultsIndicator({
     <div className="flex h-full flex-col">
       <Card>
         <CardHeader>
-          <CardTitle>{indicator?.name}</CardTitle>
+          <CardTitle>{indicator?.name_en}</CardTitle>
           <CardControls>
             <CardInfo ids={[indicator.id]} />
 

@@ -19,8 +19,8 @@ export const MapPopup = () => {
 
         if (match) {
           return {
-            name: match.name,
-            unit: match.unit,
+            name: match.name_en,
+            unit: match.unit_en,
             ...v,
             value: typeof v.value === "number" ? formatNumber(v.value) : undefined,
           };

@@ -29,7 +29,7 @@ export const NumericIndicators = ({ id, resource }: NumericIndicatorsProps) => {
 
   return (
     <CardLoader query={[query]} className="h-12">
-      <CardWidgetNumber value={VALUE} unit={indicator?.unit} />
+      <CardWidgetNumber value={VALUE} unit={indicator?.unit_en} />
     </CardLoader>
   );
 };

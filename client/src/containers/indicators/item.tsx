@@ -18,7 +18,7 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
 
   return (
     <div className="space-y-5">
-      <h2 className="text-3xl">{indicator?.name}</h2>
+      <h2 className="text-3xl">{indicator?.name_en}</h2>
       <div className="prose prose-sm max-w-none">
         <table className="w-full">
           <tbody>

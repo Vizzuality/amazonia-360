@@ -8,7 +8,7 @@ import { useAtom } from "jotai";
 import { useGetTopicsId } from "@/lib/topics";
 
 import { VisualizationType } from "@/app/local-api/indicators/route";
-import { Topic } from "@/app/parsers";
+import { TopicView } from "@/app/parsers";
 import { indicatorsEditionModeAtom, reportEditionModeAtom, useSyncTopics } from "@/app/store";
 
 import { MIN_VISUALIZATION_SIZES } from "@/constants/topics";
@@ -23,7 +23,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 export interface ReportResultsContentItemProps {
-  topic: Topic;
+  topic: TopicView;
 }
 
 export const ReportResultsContentItem = ({ topic }: ReportResultsContentItemProps) => {

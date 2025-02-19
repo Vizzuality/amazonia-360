@@ -71,7 +71,7 @@ export default function GridTopicFiltersItem({
         <CollapsibleContent>
           <div className="ml-2.5 space-y-1 border-l border-blue-100 pl-2">
             {datasets.map((d) => (
-              <GridIndicatorFiltersItem key={d.name} {...d} />
+              <GridIndicatorFiltersItem key={d.name_en} {...d} />
             ))}
           </div>
         </CollapsibleContent>

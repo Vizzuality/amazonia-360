@@ -9,7 +9,7 @@ const InfoItem = ({ id }: { id: Indicator["id"] }) => {
   const indicator = useIndicatorsId(id);
 
   return (
-    <Markdown>{indicator?.description}</Markdown>
+    <Markdown>{indicator?.description_en}</Markdown>
     // <>
     //   {indicator?.resource?.type === "imagery-tile" && <InfoRaster key={id} id={+id} />}
     //   {indicator?.resource?.type === "feature" && <InfoArcGis key={id} id={id} />}

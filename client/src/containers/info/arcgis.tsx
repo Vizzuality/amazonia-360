@@ -22,7 +22,7 @@ export default function InfoArcGis({ id }: { id: Indicator["id"] }) {
 
   return (
     <div className="space-y-4 pt-4 first:pt-0">
-      <h2 className="text-xl">{indicator?.name}</h2>
+      <h2 className="text-xl">{indicator?.name_en}</h2>
       <CardLoader query={[query]} className="h-40">
         <div className="prose-sm prose-a:break-words prose-a:underline">
           {parse(query?.data?.metadata || "")}
