@@ -1,11 +1,11 @@
 import json
 
-from openai import OpenAI
+from openai import OpenAI, OpenAIError
 
 from app.config.config import get_settings
 
 
-def generate_description(context_data: dict, description_type: str, language: str) -> dict[str, str] | str:
+def generate_description(context_data: dict, description_type: str, language: str) -> str:
     """
     Generate a description using OpenAI's Chat Completions API based on context data, a
     description type, and the desired language.
@@ -50,24 +50,16 @@ def generate_description(context_data: dict, description_type: str, language: st
     # Initialize the OpenAI client
     client = OpenAI(api_key=get_settings().openai_token.get_secret_value())
 
-    try:
-        # Make the API call
-        completion = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[system_message, user_message],
-            max_tokens=1024,
-            temperature=0.7,
-        )
-    except Exception as e:
-        # Handle API errors
-        return {"error": f"API request failed: {str(e)}"}
+    # Make the API call
+    completion = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[system_message, user_message],  # type: ignore
+        max_tokens=1024,
+        temperature=0.7,
+    )
 
     # Extract and validate the response content
     if not completion or not completion.choices[0] or not completion.choices[0].message.content:
-        return {"error": "API response was empty or invalid."}
-
+        raise OpenAIError("OpenAI API response was empty or invalid")
     description = completion.choices[0].message.content.strip()
-    if not description:
-        return {"error": "Description generation failed."}
-
     return description

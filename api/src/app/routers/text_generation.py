@@ -14,10 +14,14 @@ class Context(BaseModel):
     description_type: Literal["Short", "Normal", "Long"] = "Normal"
 
 
+class DescritionResponse(BaseModel):
+    description: str
+
+
 @router.post("/")
 def generate_description_text(
     context: Context,
-):
+) -> DescritionResponse:
     """Generate a description based on context data and audience profile."""
     description = generate_description(context.data, context.description_type, context.language)
-    return {"description": description}
+    return DescritionResponse(description=description)

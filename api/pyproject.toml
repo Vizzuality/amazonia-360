@@ -26,7 +26,12 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.uv]
-dev-dependencies = ["app", "mypy>=1.15.0", "pytest>=8.3.4", "ruff>=0.9.6"]
+dev-dependencies = [
+    "app",
+ "mypy>=1.15.0",
+ "pytest>=8.3.4",
+ "ruff>=0.9.6",
+]
 
 [tool.uv.sources]
 app = { workspace = true }

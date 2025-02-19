@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     """Global configuration for the application."""
 
     model_config = SettingsConfigDict(env_file=".env")
+
     auth_token: str
     tiff_path: str
     grid_tiles_path: str
@@ -21,4 +22,4 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     """Return the global configuration."""
-    return Settings()
+    return Settings()  # type: ignore
