@@ -37,10 +37,12 @@ type COMPONENT_INDICATORS_KEYS = keyof typeof COMPONENT_INDICATORS;
 export default function ReportResultsIndicator({
   id,
   type,
+  editable,
   onEdit,
 }: {
   id: Indicator["id"];
   type: VisualizationType;
+  editable: boolean;
   onEdit?: (e: MouseEvent<HTMLElement>) => void;
 }) {
   const indicator = useGetIndicatorsId(id);
@@ -54,7 +56,7 @@ export default function ReportResultsIndicator({
           <CardControls>
             <CardInfo ids={[indicator.id]} />
 
-            {onEdit && <CardSettings id={indicator?.id} onClick={onEdit} />}
+            {editable && <CardSettings id={indicator?.id} onClick={onEdit} />}
           </CardControls>
         </CardHeader>
         <CardContent>
