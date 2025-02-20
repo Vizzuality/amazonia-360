@@ -1,9 +1,7 @@
-import { QueryFunction, UseQueryOptions } from "@tanstack/react-query";
-
-import { useGetIndicatorsOverview, useIndicators } from "@/lib/indicators";
+import { QueryFunction, useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 import { Topic } from "@/app/local-api/topics/route";
-import TOPICS from "@/app/local-api/topics/topics.json";
+import TOPICS from "@/app/local-api/topics/topics_v19_02_2025.json";
 
 /**
  ************************************************************
@@ -39,125 +37,37 @@ export const getTopicsOptions = <TData = Awaited<ReturnType<typeof getTopics>>, 
   return { queryKey, queryFn, ...options } as TopicsQueryOptions<TData, TError>;
 };
 
-export const useGetTopics =
-  // <TData = Awaited<ReturnType<typeof getTopics>>, TError = unknown>
-  () =>
-    // options?: Omit<TopicsQueryOptions<TData, TError>, "queryKey">,
-    {
-      // const { queryKey, queryFn } = getTopicsOptions(options);
-
-      // return useQuery({
-      //   queryKey,
-      //   queryFn,
-      //   ...options,
-      // });
-
-      const topics: { [key: number]: Topic } = {};
-
-      const { data: indicatorsData } = useIndicators();
-
-      indicatorsData?.forEach((indicator) => {
-        const { topic } = indicator;
-
-        if (!topic.id || !topic.name) {
-          return;
-        }
-
-        // Initialize the topic if it doesn't exist
-        if (!topics[topic.id]) {
-          topics[topic.id] = {
-            id: topic.id,
-            name: topic.name,
-            image: `${topic.image}`,
-            description: topic.description,
-            description_short: topic.description_short_en,
-            indicators: [],
-            default_visualization: topic.default_visualization || [],
-          };
-        }
-      });
-
-      Object.keys(topics).forEach((topicId) => {
-        topics[parseInt(topicId)].indicators = indicatorsData?.filter(
-          (indicator) => indicator.topic.id === parseInt(topicId),
-        );
-      });
-
-      return {
-        data: Object.values(topics),
-        isLoading: false,
-      };
-    };
-
-export const getTopicsOverview = async () => {
-  const topics = TOPICS as Topic[];
-  return topics;
-};
-
-export const getTopicsOverviewKey = () => {
-  return ["topics-overview"];
-};
-
-export const getTopicsOverviewOptions = <
-  TData = Awaited<ReturnType<typeof getTopicsOverview>>,
-  TError = unknown,
->(
+export const useGetTopics = <TData = Awaited<ReturnType<typeof getTopics>>, TError = unknown>(
   options?: Omit<TopicsQueryOptions<TData, TError>, "queryKey">,
 ) => {
-  const queryKey = getTopicsOverviewKey();
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getTopicsOverview>>> = () =>
-    getTopicsOverview();
-  return { queryKey, queryFn, ...options } as TopicsQueryOptions<TData, TError>;
+  const { queryKey, queryFn } = getTopicsOptions(options);
+
+  return useQuery({
+    queryKey,
+    queryFn,
+    ...options,
+  });
 };
 
-export const useGetTopicsOverview =
-  // <TData = Awaited<ReturnType<typeof getTopicsOverview>>, TError = unknown>
-  () =>
-    // options?: Omit<TopicsQueryOptions<TData, TError>, "queryKey">,
-    {
-      // const { queryKey, queryFn } = getTopicsOverviewOptions(options);
+export const useGetDefaultTopics = () => {
+  const query = useGetTopics({
+    select(data) {
+      return data.filter((topic) => topic.id !== 0).sort((a, b) => a.id - b.id);
+    },
+  });
 
-      // return useQuery({
-      //   queryKey,
-      //   queryFn,
-      //   ...options,
-      // });
+  return query;
+};
 
-      const topics: { [key: number]: Topic } = {};
+export const useGetOverviewTopics = () => {
+  const query = useGetTopics({
+    select(data) {
+      return data.filter((topic) => topic.id === 0);
+    },
+  });
 
-      const { data: indicatorsData } = useGetIndicatorsOverview();
-      indicatorsData?.forEach((indicator) => {
-        const { topic } = indicator;
-
-        if (topic.id !== 0 || !topic.name_es) {
-          return;
-        }
-
-        // Initialize the topic if it doesn't exist
-        if (!topics[topic.id]) {
-          topics[topic.id] = {
-            id: topic.id,
-            name: topic.name,
-            image: `${topic.image}`,
-            description: topic.description,
-            description_short: topic.description_short_en,
-            indicators: [],
-            default_visualization: topic.default_visualization || [],
-          };
-        }
-      });
-
-      Object.keys(topics).forEach((topicId) => {
-        topics[parseInt(topicId)].indicators = indicatorsData?.filter(
-          (indicator) => indicator.topic.id === parseInt(topicId),
-        );
-      });
-
-      return {
-        data: Object.values(topics),
-        isLoading: false,
-      };
-    };
+  return query;
+};
 
 export const useGetTopicsId = (id: Topic["id"]) => {
   const { data } = useGetTopics();

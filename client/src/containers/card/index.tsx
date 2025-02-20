@@ -10,7 +10,7 @@ import { UseQueryResult } from "@tanstack/react-query";
 import { LuInfo, LuSettings2 } from "react-icons/lu";
 
 import { formatNumber } from "@/lib/formats";
-import { useIndicatorsId } from "@/lib/indicators";
+import { useGetIndicatorsId } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
 import { Indicator } from "@/app/local-api/indicators/route";
@@ -75,11 +75,13 @@ export function CardControls({ children }: PropsWithChildren) {
 }
 
 export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className?: string }) {
-  const indicator = useIndicatorsId(ids[0]);
+  const indicator = useGetIndicatorsId(ids[0]);
 
   if (!indicator) return null;
 
   const { description_short_en } = indicator;
+
+  if (!description_short_en) return null;
 
   return (
     <Tooltip delayDuration={100}>

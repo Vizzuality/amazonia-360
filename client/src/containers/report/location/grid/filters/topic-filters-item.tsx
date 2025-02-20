@@ -62,7 +62,7 @@ export default function GridTopicFiltersItem({
                   className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? "rotate-90" : ""}`}
                 />
 
-                <span className="whitespace flex-nowrap text-sm">{topic?.name}</span>
+                <span className="whitespace flex-nowrap text-sm">{topic?.name_en}</span>
               </div>
               <GridCounterIndicators total={datasets.length} datasetsIds={datasetsIds} />
             </div>
@@ -71,7 +71,7 @@ export default function GridTopicFiltersItem({
         <CollapsibleContent>
           <div className="ml-2.5 space-y-1 border-l border-blue-100 pl-2">
             {datasets.map((d) => (
-              <GridIndicatorFiltersItem key={d.name} {...d} />
+              <GridIndicatorFiltersItem key={d.name_en} {...d} />
             ))}
           </div>
         </CollapsibleContent>

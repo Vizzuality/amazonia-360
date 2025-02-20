@@ -7,11 +7,12 @@ import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import { formatNumber } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
 
+import { Indicator } from "@/app/local-api/indicators/route";
 import { useSyncLocation } from "@/app/store";
 
-import { Card, CardWidgetNumber, CardTitle, CardHeader, CardInfo } from "@/containers/card";
+import { CardWidgetNumber } from "@/containers/card";
 
-export default function WidgetTotalArea() {
+export const TotalArea = ({ indicator }: { indicator: Indicator }) => {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
 
@@ -23,13 +24,5 @@ export default function WidgetTotalArea() {
     });
   }, [GEOMETRY]);
 
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Total Area</CardTitle>
-        <CardInfo ids={[+"population"]} />
-      </CardHeader>
-      <CardWidgetNumber value={AREA} unit="km²" />
-    </Card>
-  );
-}
+  return <CardWidgetNumber value={AREA} unit={indicator?.unit_en} />;
+};

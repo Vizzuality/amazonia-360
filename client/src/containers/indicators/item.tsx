@@ -1,4 +1,4 @@
-import { useIndicatorsId } from "@/lib/indicators";
+import { useGetIndicatorsId } from "@/lib/indicators";
 
 import { Indicator } from "@/app/local-api/indicators/route";
 import {
@@ -14,18 +14,18 @@ import {
 } from "@/containers/indicators/resources";
 
 export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
-  const indicator = useIndicatorsId(id);
+  const indicator = useGetIndicatorsId(id);
 
   return (
     <div className="space-y-5">
-      <h2 className="text-3xl">{indicator?.name}</h2>
+      <h2 className="text-3xl">{indicator?.name_en}</h2>
       <div className="prose prose-sm max-w-none">
         <table className="w-full">
           <tbody>
             <tr>
               <td className="w-60">Topic</td>
               <td>
-                {indicator?.topic.id} - {indicator?.topic.name}
+                {indicator?.topic.id} - {indicator?.topic.name_en}
               </td>
             </tr>
             <tr>
@@ -37,14 +37,16 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
               <td>{indicator?.resource.type}</td>
             </tr>
 
-            <tr>
-              <td className="w-60">Resource URL</td>
-              <td>
-                <a href={indicator?.resource.url} target="_blank" rel="noreferrer">
-                  {indicator?.resource.url}
-                </a>
-              </td>
-            </tr>
+            {"url" in indicator!.resource && (
+              <tr>
+                <td className="w-60">Resource URL</td>
+                <td>
+                  <a href={indicator?.resource.url} target="_blank" rel="noreferrer">
+                    {indicator?.resource.url}
+                  </a>
+                </td>
+              </tr>
+            )}
             <tr>
               <td className="w-60">Visualization Types</td>
               <td>{(indicator?.visualization_types || [])?.join(", ")}</td>

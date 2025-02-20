@@ -2,12 +2,12 @@
 
 import { useInView } from "react-intersection-observer";
 
-import { useGetTopics } from "@/lib/topics";
+import { useGetDefaultTopics } from "@/lib/topics";
 
 import TopicsItem from "@/containers/home/topics/item";
 
 export default function Topics() {
-  const { data: topicsData } = useGetTopics();
+  const { data: topicsData } = useGetDefaultTopics();
 
   const { ref: imagesRef, inView: isImagesInView } = useInView({
     triggerOnce: true,
@@ -15,8 +15,11 @@ export default function Topics() {
   });
 
   const row1 =
-    topicsData.length > 4 ? topicsData.slice(0, Math.ceil(topicsData.length / 2)) : topicsData;
-  const row2 = topicsData.length > 4 ? topicsData.slice(Math.ceil(topicsData.length / 2)) : [];
+    topicsData && topicsData?.length > 4
+      ? topicsData?.slice(0, Math.ceil(topicsData.length / 2))
+      : topicsData;
+  const row2 =
+    topicsData && topicsData?.length > 4 ? topicsData?.slice(Math.ceil(topicsData.length / 2)) : [];
 
   return (
     <section className="mt-10 md:mt-16 md:space-y-6" ref={imagesRef}>

@@ -3,8 +3,7 @@ import { DatasetMeta } from "@/types/generated/api.schemas";
 import { Topic } from "@/app/local-api/topics/route";
 import { IndicatorView } from "@/app/parsers";
 
-import INDICATORS from "./indicators_test_4.json";
-// import INDICATORS from "./indicators.json";
+import INDICATORS from "./indicators_v19_02_2025.json";
 
 export type VisualizationType = "map" | "table" | "chart" | "numeric";
 
@@ -40,27 +39,33 @@ export type ResourceH3 = {
   url?: string;
 };
 
+export type ResourceComponent = {
+  name: string;
+  type: "component";
+};
+
 export type Indicator = {
   id: number;
-  name: string;
-  name_es?: string;
-  name_en?: string;
-  name_pt?: string;
-  description?: string;
-  description_es?: string;
-  description_en?: string;
-  description_pt?: string;
-  description_short?: string;
-  description_short_es?: string;
-  description_short_en?: string;
-  description_short_pt?: string;
-  unit: string;
-  unit_es?: string;
-  unit_en?: string;
-  unit_pt?: string;
-  topic: number;
+  name_es: string;
+  name_en: string;
+  name_pt: string;
+  description_es: string;
+  description_en: string;
+  description_pt: string;
+  description_short_es: string;
+  description_short_en: string;
+  description_short_pt: string;
+  unit_es: string;
+  unit_en: string;
+  unit_pt: string;
+  topic: Topic;
   visualization_types: VisualizationType[];
-  resource: ResourceFeature | ResourceWebTile | ResourceImageryTile | ResourceH3;
+  resource:
+    | ResourceFeature
+    | ResourceWebTile
+    | ResourceImageryTile
+    | ResourceH3
+    | ResourceComponent;
 };
 
 export type H3Indicator = Indicator &
@@ -71,28 +76,24 @@ export type H3Indicator = Indicator &
 
 export type IndicatorOverview = {
   id: number;
-  name: string;
-  name_es?: string;
-  name_en?: string;
-  name_pt?: string;
-  description?: string;
-  description_es?: string;
-  description_en?: string;
-  description_pt?: string;
-  description_short?: string;
-  description_short_es?: string;
-  description_short_en?: string;
-  description_short_pt?: string;
+  name_es: string;
+  name_en: string;
+  name_pt: string;
+  description_es: string;
+  description_en: string;
+  description_pt: string;
+  description_short_es: string;
+  description_short_en: string;
+  description_short_pt: string;
   visualization: IndicatorView;
-  unit: string;
-  unit_es?: string;
-  unit_en?: string;
-  unit_pt?: string;
+  unit_es: string;
+  unit_en: string;
+  unit_pt: string;
   topic: number;
   visualization_types: VisualizationType[];
   resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
 };
 
 export async function GET() {
-  return Response.json(INDICATORS as Indicator[]);
+  return Response.json(INDICATORS);
 }
