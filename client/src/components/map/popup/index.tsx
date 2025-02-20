@@ -3,14 +3,14 @@ import { useMemo } from "react";
 import { useAtomValue } from "jotai";
 
 import { formatNumber } from "@/lib/formats";
-import { useH3Indicators } from "@/lib/indicators";
+import { useGetH3Indicators } from "@/lib/indicators";
 
 import { gridHoverAtom } from "@/app/store";
 
 export const MapPopup = () => {
   const gridHover = useAtomValue(gridHoverAtom);
 
-  const dataIndicators = useH3Indicators();
+  const { data: dataIndicators } = useGetH3Indicators();
 
   const VALUES = useMemo(() => {
     return gridHover.values

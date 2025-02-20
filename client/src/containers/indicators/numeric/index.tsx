@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { useIndicatorsId, useQueryFeatureId } from "@/lib/indicators";
+import { useGetIndicatorsId, useQueryFeatureId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
 import { Indicator, ResourceFeature } from "@/app/local-api/indicators/route";
@@ -15,7 +15,7 @@ export interface NumericIndicatorsProps extends Indicator {
 export const NumericIndicators = ({ id, resource }: NumericIndicatorsProps) => {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
-  const indicator = useIndicatorsId(id);
+  const indicator = useGetIndicatorsId(id);
 
   const query = useQueryFeatureId({ id, resource, type: "numeric", geometry: GEOMETRY });
 

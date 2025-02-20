@@ -20,8 +20,8 @@ import TOPICS from "@/app/local-api/topics/topics_v17_02_2025.json";
  ************************************************************
  ************************************************************
  * INDICATORS
- * - useIndicators
- * - useIndicatorsId
+ * - useGetIndicators
+ * - useGetIndicatorsId
  * - useGetIndicatorsOverview
  ************************************************************
  ************************************************************
@@ -64,7 +64,10 @@ export const getIndicatorsOptions = <
   return { queryKey, queryFn, ...options } as IndicatorsQueryOptions<TData, TError>;
 };
 
-export const useIndicators = <TData = Awaited<ReturnType<typeof getIndicators>>, TError = unknown>(
+export const useGetIndicators = <
+  TData = Awaited<ReturnType<typeof getIndicators>>,
+  TError = unknown,
+>(
   options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const { queryKey, queryFn } = getIndicatorsOptions(options);
@@ -76,17 +79,33 @@ export const useIndicators = <TData = Awaited<ReturnType<typeof getIndicators>>,
   });
 };
 
-export const useH3Indicators = () => {
-  const { data } = useIndicators();
+export const useGetDefaultIndicators = ({ topic_id }: { topic_id?: Topic["id"] }) => {
+  const query = useGetIndicators({
+    select(data) {
+      return data.filter((indicator) => {
+        const t = topic_id ? indicator.topic.id === topic_id : true;
 
-  const d = data
-    ?.filter((indicator) => indicator.resource.type === "h3")
-    .map((indicator) => ({
-      ...indicator,
-      resource: indicator.resource as Indicator["resource"] & { type: "h3" },
-    }));
+        return indicator.topic.id !== 0 && indicator.resource.type !== "h3" && t;
+      });
+    },
+  });
 
-  return d;
+  return query;
+};
+
+export const useGetH3Indicators = () => {
+  const query = useGetIndicators({
+    select(data) {
+      return data
+        .filter((indicator) => indicator.resource.type === "h3")
+        .map((indicator) => ({
+          ...indicator,
+          resource: indicator.resource as Indicator["resource"] & { type: "h3" },
+        }));
+    },
+  });
+
+  return query;
 };
 
 export const useGeIndicatorsOverview = <
@@ -104,8 +123,8 @@ export const useGeIndicatorsOverview = <
   });
 };
 
-export const useIndicatorsId = (id: Indicator["id"]) => {
-  const { data } = useIndicators();
+export const useGetIndicatorsId = (id: Indicator["id"]) => {
+  const { data } = useGetIndicators();
 
   return data?.find((indicator) => indicator.id === id);
 };

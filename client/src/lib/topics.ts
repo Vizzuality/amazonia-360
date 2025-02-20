@@ -52,7 +52,7 @@ export const useGetTopics = <TData = Awaited<ReturnType<typeof getTopics>>, TErr
 export const useGetDefaultTopics = () => {
   const query = useGetTopics({
     select(data) {
-      return data.filter((topic) => topic.id !== 0);
+      return data.filter((topic) => topic.id !== 0).sort((a, b) => a.id - b.id);
     },
   });
 

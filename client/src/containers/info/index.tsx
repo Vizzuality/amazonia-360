@@ -1,4 +1,4 @@
-import { useIndicatorsId } from "@/lib/indicators";
+import { useGetIndicatorsId } from "@/lib/indicators";
 
 import { Indicator } from "@/app/local-api/indicators/route";
 
@@ -6,7 +6,7 @@ import { Markdown } from "@/components/ui/markdown";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const InfoItem = ({ id }: { id: Indicator["id"] }) => {
-  const indicator = useIndicatorsId(id);
+  const indicator = useGetIndicatorsId(id);
 
   return (
     <Markdown>{indicator?.description_en}</Markdown>

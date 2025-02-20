@@ -2,7 +2,7 @@
 
 import { MouseEvent } from "react";
 
-import { useIndicatorsId } from "@/lib/indicators";
+import { useGetIndicatorsId } from "@/lib/indicators";
 
 import { Indicator, VisualizationType } from "@/app/local-api/indicators/route";
 import {
@@ -36,7 +36,7 @@ export default function ReportResultsIndicator({
   type: VisualizationType;
   onEdit?: (e: MouseEvent<HTMLElement>) => void;
 }) {
-  const indicator = useIndicatorsId(id);
+  const indicator = useGetIndicatorsId(id);
 
   if (!indicator) return null;
   return (

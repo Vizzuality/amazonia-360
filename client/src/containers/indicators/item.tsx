@@ -1,4 +1,4 @@
-import { useIndicatorsId } from "@/lib/indicators";
+import { useGetIndicatorsId } from "@/lib/indicators";
 
 import { Indicator } from "@/app/local-api/indicators/route";
 import {
@@ -14,7 +14,7 @@ import {
 } from "@/containers/indicators/resources";
 
 export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
-  const indicator = useIndicatorsId(id);
+  const indicator = useGetIndicatorsId(id);
 
   return (
     <div className="space-y-5">

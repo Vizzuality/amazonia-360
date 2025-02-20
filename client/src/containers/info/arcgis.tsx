@@ -1,6 +1,6 @@
 import parse from "html-react-parser";
 
-import { useIndicatorsId } from "@/lib/indicators";
+import { useGetIndicatorsId } from "@/lib/indicators";
 import { useGetMetadata } from "@/lib/query";
 
 import { Indicator } from "@/app/local-api/indicators/route";
@@ -8,7 +8,7 @@ import { Indicator } from "@/app/local-api/indicators/route";
 import { CardLoader } from "@/containers/card";
 
 export default function InfoArcGis({ id }: { id: Indicator["id"] }) {
-  const indicator = useIndicatorsId(id);
+  const indicator = useGetIndicatorsId(id);
 
   // TO - Do - improve this
   const query = useGetMetadata(

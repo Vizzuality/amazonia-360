@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 
-import { useIndicators } from "@/lib/indicators";
+import { useGetIndicators } from "@/lib/indicators";
 import { findFirstAvailablePosition } from "@/lib/report";
 import { cn } from "@/lib/utils";
 
@@ -27,29 +27,33 @@ export default function SearchC() {
   const [search, setSearch] = useState("");
   const [topics, setTopics] = useSyncTopics();
 
-  const queryIndicators = useIndicators({
+  const queryIndicators = useGetIndicators({
     select(data) {
       return (
         data
-          ?.map((indicator) =>
-            indicator.visualization_types.map((v) => {
-              const isActive = topics?.some((topic) =>
-                topic?.indicators?.some(
-                  (topicIndicator) =>
-                    topicIndicator.id === indicator.id && topicIndicator.type === v,
-                ),
-              );
-              return {
-                key: v,
-                label: indicator.name_en,
-                value: `${indicator.name_en}-${v}`,
-                indicatorId: indicator.id,
-                topicId: indicator.topic?.id,
-                sourceIndex: indicator.id,
-                active: isActive,
-              };
-            }),
-          )
+          ?.map((indicator) => {
+            if (!!indicator.visualization_types && Array.isArray(indicator.visualization_types)) {
+              return indicator.visualization_types.map((v) => {
+                const isActive = topics?.some((topic) =>
+                  topic?.indicators?.some(
+                    (topicIndicator) =>
+                      topicIndicator.id === indicator.id && topicIndicator.type === v,
+                  ),
+                );
+                return {
+                  key: v,
+                  label: indicator.name_en,
+                  value: `${indicator.name_en}-${v}`,
+                  indicatorId: indicator.id,
+                  topicId: indicator.topic?.id,
+                  sourceIndex: indicator.id,
+                  active: isActive,
+                };
+              });
+            }
+
+            return [];
+          })
           .flat() || []
       );
     },

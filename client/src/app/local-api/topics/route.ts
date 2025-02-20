@@ -1,4 +1,3 @@
-import { Indicator } from "@/app/local-api/indicators/route";
 import { IndicatorView } from "@/app/parsers";
 
 import TOPICS from "./topics_v17_02_2025.json";
@@ -13,7 +12,6 @@ export type Topic = {
   description_en: string;
   description_pt: string;
   default_visualization: IndicatorView[];
-  indicators?: Indicator[];
 };
 
 export async function GET() {
