@@ -117,7 +117,7 @@ export default function GridFiltersItem(dataset: H3Indicator) {
             <div className="flex w-full items-start justify-between space-x-5">
               <CollapsibleTrigger>
                 <h3 className="text-left text-sm font-medium text-gray-400">
-                  {dataset.name} {!!dataset.unit && ` (${dataset.unit})`}
+                  {dataset.name_en} {!!dataset.unit_en && ` (${dataset.unit_en})`}
                 </h3>
               </CollapsibleTrigger>
 
@@ -134,7 +134,9 @@ export default function GridFiltersItem(dataset: H3Indicator) {
                     <DialogContent className="p-0">
                       <DialogTitle className="sr-only">{dataset.description_short_en}</DialogTitle>
                       <div className="p-4">
-                        <p>{!!dataset.description ? dataset.description : "Data coming soon"}</p>
+                        <p>
+                          {!!dataset.description_en ? dataset.description_en : "Data coming soon"}
+                        </p>
                       </div>
                       <DialogClose />
                     </DialogContent>

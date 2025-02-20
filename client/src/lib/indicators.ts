@@ -5,27 +5,24 @@ import Query from "@arcgis/core/rest/support/Query";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-import INDICATORS_OVERVIEW from "@/app/local-api/indicators/indicators-overview.json";
-import INDICATORS from "@/app/local-api/indicators/indicators_test_4.json";
-// import INDICATORS from "@/app/local-api/indicators/indicators.json";
+import INDICATORS from "@/app/local-api/indicators/indicators_v19_02_2025.json";
 import {
   Indicator,
-  IndicatorOverview,
   ResourceFeature,
   ResourceImageryTile,
   ResourceWebTile,
   VisualizationType,
 } from "@/app/local-api/indicators/route";
 import { Topic } from "@/app/local-api/topics/route";
-import TOPICS_OVERVIEW from "@/app/local-api/topics/topics-overview.json";
-import TOPICS from "@/app/local-api/topics/topics.json";
+import TOPICS from "@/app/local-api/topics/topics_v19_02_2025.json";
 
 /**
  ************************************************************
  ************************************************************
  * INDICATORS
- * - useIndicators
- * - useIndicatorsId
+ * - useGetIndicators
+ * - useGetDefaultIndicators
+ * - useGetIndicatorsId
  * - useGetIndicatorsOverview
  ************************************************************
  ************************************************************
@@ -39,21 +36,18 @@ export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
 >;
 
 export const getIndicators = async () => {
-  const indicators = INDICATORS as Indicator[];
+  const indicators = INDICATORS;
   const topics = TOPICS as Topic[];
 
-  return (
-    indicators
-      // TO - DO - delete this filter when indicator json gets fixed
-      .filter(({ topic }) => topic < 7)
-      .map((indicator) => ({
-        ...indicator,
-        topic: topics.find((topic) => topic.id === indicator.topic),
-      }))
-      .sort((a, b) => (a.name_en || "")?.localeCompare(b.name_en || "")) as (Indicator & {
-      topic: Topic;
-    })[]
-  );
+  return indicators
+    .map(
+      (indicator) =>
+        ({
+          ...indicator,
+          topic: topics.find((topic) => topic.id === indicator.topic),
+        }) as Indicator,
+    )
+    .sort((a, b) => (a.name_en || "")?.localeCompare(b.name_en || ""));
 };
 
 export const getIndicatorsKey = () => {
@@ -71,7 +65,10 @@ export const getIndicatorsOptions = <
   return { queryKey, queryFn, ...options } as IndicatorsQueryOptions<TData, TError>;
 };
 
-export const useIndicators = <TData = Awaited<ReturnType<typeof getIndicators>>, TError = unknown>(
+export const useGetIndicators = <
+  TData = Awaited<ReturnType<typeof getIndicators>>,
+  TError = unknown,
+>(
   options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const { queryKey, queryFn } = getIndicatorsOptions(options);
@@ -83,17 +80,37 @@ export const useIndicators = <TData = Awaited<ReturnType<typeof getIndicators>>,
   });
 };
 
-export const useH3Indicators = () => {
-  const { data } = useIndicators();
+export const useGetDefaultIndicators = (
+  topic_id: Topic["id"] | undefined,
+  options: Omit<IndicatorsQueryOptions<Indicator[], unknown>, "queryKey"> = {},
+) => {
+  const query = useGetIndicators({
+    select(data) {
+      return data.filter((indicator) => {
+        const t = topic_id ? indicator.topic.id === topic_id : true;
 
-  const d = data
-    ?.filter((indicator) => indicator.resource.type === "h3")
-    .map((indicator) => ({
-      ...indicator,
-      resource: indicator.resource as Indicator["resource"] & { type: "h3" },
-    }));
+        return indicator.topic.id !== 0 && indicator.resource.type !== "h3" && t;
+      });
+    },
+    ...options,
+  });
 
-  return d;
+  return query;
+};
+
+export const useGetH3Indicators = () => {
+  const query = useGetIndicators({
+    select(data) {
+      return data
+        .filter((indicator) => indicator.resource.type === "h3")
+        .map((indicator) => ({
+          ...indicator,
+          resource: indicator.resource as Indicator["resource"] & { type: "h3" },
+        }));
+    },
+  });
+
+  return query;
 };
 
 export const useGeIndicatorsOverview = <
@@ -111,14 +128,9 @@ export const useGeIndicatorsOverview = <
   });
 };
 
-export const useIndicatorsId = (id: Indicator["id"]) => {
-  const { data } = useIndicators();
+export const useGetIndicatorsId = (id: Indicator["id"]) => {
+  const { data } = useGetIndicators();
 
-  return data?.find((indicator) => indicator.id === id);
-};
-
-export const useGetIndicatorsOverviewId = (id: Indicator["id"]) => {
-  const { data } = useGetIndicatorsOverview();
   return data?.find((indicator) => indicator.id === id);
 };
 
@@ -169,47 +181,6 @@ export const useResourceId = <TData = Awaited<ReturnType<typeof getResourceId>>,
   options?: Omit<ResourceIdQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const { queryKey, queryFn } = getResourceIdOptions(params, options);
-
-  return useQuery({
-    queryKey,
-    queryFn,
-    ...options,
-  });
-};
-
-export const getIndicatorsOverview = async () => {
-  const indicators = INDICATORS_OVERVIEW as IndicatorOverview[];
-  const topic = TOPICS_OVERVIEW.find((topic) => topic.id === 0) as Topic;
-
-  return indicators.map((indicator) => ({
-    ...indicator,
-    topic,
-  })) as (IndicatorOverview & { topic: Topic })[];
-};
-
-export const getIndicatorsOverviewKey = () => {
-  return ["indicators-overview"];
-};
-
-export const getIndicatorsOverviewOptions = <
-  TData = Awaited<ReturnType<typeof getIndicatorsOverview>>,
-  TError = unknown,
->(
-  options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
-) => {
-  const queryKey = getIndicatorsOverviewKey();
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getIndicatorsOverview>>> = () =>
-    getIndicatorsOverview();
-  return { queryKey, queryFn, ...options } as IndicatorsQueryOptions<TData, TError>;
-};
-
-export const useGetIndicatorsOverview = <
-  TData = Awaited<ReturnType<typeof getIndicatorsOverview>>,
-  TError = unknown,
->(
-  options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
-) => {
-  const { queryKey, queryFn } = getIndicatorsOverviewOptions(options);
 
   return useQuery({
     queryKey,

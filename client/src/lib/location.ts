@@ -15,7 +15,32 @@ import { Location, SearchLocation } from "@/app/parsers";
 import { DATASETS } from "@/constants/datasets";
 import { BUFFERS } from "@/constants/map";
 
-import { AdministrativeBoundary } from "@/containers/widgets/overview/administrative-boundaries/types";
+export type AdministrativeBoundary = {
+  FID: string | number;
+  GID_0: string;
+  NAME_1: string;
+  NAME_2: string;
+  TYPE_2: string;
+  NAME_0: string;
+  TYPE_1: string;
+  COMPNAME: string;
+  ASQKM: number;
+  POPGHS25: number;
+  DENS: number;
+  Shape__Area: number;
+  Shape__Length: number;
+};
+
+export type City = {
+  FID: string;
+  ID_0: string;
+  ISO: string;
+  NAME_0: string;
+  NAME_1: string;
+  NAME_2: string;
+  NOMBCAP: string;
+  COMPNAME: string;
+};
 
 export const useLocation = (location?: Location | null) => {
   const { data: searchData } = useGetSearch(

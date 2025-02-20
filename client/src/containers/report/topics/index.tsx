@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetTopics } from "@/lib/topics";
+import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { useSyncTopics } from "@/app/store";
@@ -17,7 +17,7 @@ export interface TopicsProps {
 export default function Topics({ interactive = true, size = "md" }: TopicsProps) {
   const [topics, setTopics] = useSyncTopics();
 
-  const { data: topicsData } = useGetTopics();
+  const { data: topicsData } = useGetDefaultTopics();
 
   const handleTopicChange = (topic: Topic, checked: boolean) => {
     if (checked) {

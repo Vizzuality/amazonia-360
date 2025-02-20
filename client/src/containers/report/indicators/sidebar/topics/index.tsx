@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from "react";
 
-import { useGetTopics } from "@/lib/topics";
+import { useGetDefaultTopics } from "@/lib/topics";
 
 import { useSyncTopics } from "@/app/store";
 
@@ -12,7 +12,7 @@ import SortableList from "./sortable";
 export default function TopicsList() {
   const [topics, setTopics] = useSyncTopics();
 
-  const { data: topicsData } = useGetTopics();
+  const { data: topicsData } = useGetDefaultTopics();
 
   const ITEMS = useMemo(() => {
     return topicsData

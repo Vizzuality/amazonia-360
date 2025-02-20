@@ -1,11 +1,11 @@
 "use client";
 
-import { useIndicators } from "@/lib/indicators";
+import { useGetIndicators } from "@/lib/indicators";
 
 import { IndicatorItem } from "@/containers/indicators/item";
 
 export const IndicatorsList = () => {
-  const { data } = useIndicators({
+  const { data } = useGetIndicators({
     refetchOnWindowFocus: "always",
     refetchOnMount: "always",
     refetchOnReconnect: "always",
