@@ -6,7 +6,7 @@ import { flatGroup } from "@visx/vendor/d3-array";
 import { useAtom } from "jotai";
 
 import { useMeta } from "@/lib/grid";
-import { useH3Indicators } from "@/lib/indicators";
+import { useGetH3Indicators } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
 import { H3Indicator } from "@/app/local-api/indicators/route";
@@ -25,7 +25,7 @@ export default function GridFilters() {
   const [selectedFiltersView] = useAtom(selectedFiltersViewAtom);
   const [gridDatasets] = useSyncGridDatasets();
 
-  const dataIndicators = useH3Indicators();
+  const { data: dataIndicators } = useGetH3Indicators();
   const { META, queryMeta, queryMetaFromGeometry } = useMeta(GEOMETRY);
 
   const { isFetched: gridMetaIsFetched, isFetching: gridMetaIsFetching } = queryMeta;
@@ -66,7 +66,7 @@ export default function GridFilters() {
 
     const groups = flatGroup(INDICATORS, (d) => d.topic.id);
 
-    return groups;
+    return groups.sort((a, b) => a[0] - b[0]);
   }, [INDICATORS]);
 
   return (

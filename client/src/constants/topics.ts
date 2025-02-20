@@ -2,9 +2,9 @@ import { IndicatorView } from "@/app/parsers";
 
 export type Topic = {
   id: number;
-  name: string;
+  name_en?: string;
   image: string;
-  description: string;
+  description_en?: string;
   default_visualization?: IndicatorView[];
 };
 

@@ -116,7 +116,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
                   className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? "rotate-90" : ""}`}
                 />
 
-                <span className="whitespace flex-nowrap text-sm">{topic.name}</span>
+                <span className="whitespace flex-nowrap text-sm">{topic.name_en}</span>
 
                 <CounterIndicatorsPill id={topic.id} />
               </div>

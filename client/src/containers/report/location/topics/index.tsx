@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetTopics } from "@/lib/topics";
+import { useGetDefaultTopics } from "@/lib/topics";
 
 import { useSyncTopics } from "@/app/store";
 
@@ -13,7 +13,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function Topics() {
   const [topics, setTopics] = useSyncTopics();
 
-  const { data: topicsData, isLoading: isLoadingTopicsData } = useGetTopics();
+  const { data: topicsData, isLoading: isLoadingTopicsData } = useGetDefaultTopics();
+
   const handleTopicChange = (topic: Topic, checked: boolean) => {
     setTopics((prev) => {
       if (checked) {

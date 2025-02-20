@@ -57,7 +57,7 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
                 })}
               />
 
-              <span className="text-left">{indicator.name}</span>
+              <span className="text-left">{indicator.name_en}</span>
             </button>
           </div>
         </CollapsibleTrigger>
