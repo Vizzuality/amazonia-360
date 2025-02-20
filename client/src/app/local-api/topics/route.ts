@@ -1,6 +1,6 @@
 import { IndicatorView } from "@/app/parsers";
 
-import TOPICS from "./topics_v17_02_2025.json";
+import TOPICS from "./topics_v19_02_2025.json";
 
 export type Topic = {
   id: number;

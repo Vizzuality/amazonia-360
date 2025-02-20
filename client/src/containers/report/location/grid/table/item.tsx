@@ -8,7 +8,7 @@ import { useSetAtom } from "jotai";
 
 import { formatNumberUnit } from "@/lib/formats";
 import { useGetGridMeta } from "@/lib/grid";
-import { useGetIndicators } from "@/lib/indicators";
+import { useGetH3Indicators } from "@/lib/indicators";
 import { getGeometryWithBuffer } from "@/lib/location";
 import { cn } from "@/lib/utils";
 
@@ -43,7 +43,7 @@ export const GridTableItem = (
   const setGridCellHighlight = useSetAtom(gridCellHighlightAtom);
   const setTmpBbox = useSetAtom(tmpBboxAtom);
 
-  const { data: dataIndicators } = useGetIndicators();
+  const { data: dataIndicators } = useGetH3Indicators();
 
   const queryMeta = useGetGridMeta({
     select: (data) =>

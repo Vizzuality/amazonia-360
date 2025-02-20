@@ -5,7 +5,7 @@ import Query from "@arcgis/core/rest/support/Query";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-import INDICATORS from "@/app/local-api/indicators/indicators_v17_02_2025.json";
+import INDICATORS from "@/app/local-api/indicators/indicators_v19_02_2025.json";
 import {
   Indicator,
   ResourceFeature,
@@ -14,13 +14,14 @@ import {
   VisualizationType,
 } from "@/app/local-api/indicators/route";
 import { Topic } from "@/app/local-api/topics/route";
-import TOPICS from "@/app/local-api/topics/topics_v17_02_2025.json";
+import TOPICS from "@/app/local-api/topics/topics_v19_02_2025.json";
 
 /**
  ************************************************************
  ************************************************************
  * INDICATORS
  * - useGetIndicators
+ * - useGetDefaultIndicators
  * - useGetIndicatorsId
  * - useGetIndicatorsOverview
  ************************************************************
@@ -79,7 +80,10 @@ export const useGetIndicators = <
   });
 };
 
-export const useGetDefaultIndicators = ({ topic_id }: { topic_id?: Topic["id"] }) => {
+export const useGetDefaultIndicators = (
+  topic_id: Topic["id"] | undefined,
+  options: Omit<IndicatorsQueryOptions<Indicator[], unknown>, "queryKey"> = {},
+) => {
   const query = useGetIndicators({
     select(data) {
       return data.filter((indicator) => {
@@ -88,6 +92,7 @@ export const useGetDefaultIndicators = ({ topic_id }: { topic_id?: Topic["id"] }
         return indicator.topic.id !== 0 && indicator.resource.type !== "h3" && t;
       });
     },
+    ...options,
   });
 
   return query;
