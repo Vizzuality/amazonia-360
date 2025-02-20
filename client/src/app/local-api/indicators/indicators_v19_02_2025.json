@@ -337,19 +337,11 @@
             },
             "query_chart": {
                 "where": "1=1",
-                "returnGeometry": false,
-                "groupByFieldsForStatistics": [
-                    "BIOMADES"
-                ],
-                "orderByFields": [
-                    "value DESC"
-                ],
-                "outStatistics": [
-                    {
-                        "onStatisticField": "FID",
-                        "outStatisticFieldName": "value",
-                        "statisticType": "count"
-                    }
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "BIOMADES as label",
+                    ","
                 ]
             }
         }
@@ -403,19 +395,11 @@
             },
             "query_chart": {
                 "where": "1=1",
-                "returnGeometry": false,
-                "groupByFieldsForStatistics": [
-                    "ECOSYNAM"
-                ],
-                "orderByFields": [
-                    "value DESC"
-                ],
-                "outStatistics": [
-                    {
-                        "onStatisticField": "FID",
-                        "outStatisticFieldName": "value",
-                        "statisticType": "count"
-                    }
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "ECOSYNAM as label",
+                    ","
                 ]
             }
         }
@@ -462,7 +446,7 @@
             "query_table": {
                 "where": "1=1",
                 "outFields": [
-                    "BIOME as Biome",
+                    "BIOME",
                     "DESCRIP as Description",
                     ","
                 ],
@@ -604,19 +588,11 @@
             },
             "query_chart": {
                 "where": "1=1",
-                "returnGeometry": false,
-                "groupByFieldsForStatistics": [
-                    "BIOME"
-                ],
-                "orderByFields": [
-                    "value DESC"
-                ],
-                "outStatistics": [
-                    {
-                        "onStatisticField": "FID",
-                        "outStatisticFieldName": "value",
-                        "statisticType": "count"
-                    }
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "nombre as label",
+                    ","
                 ]
             }
         }
@@ -1200,7 +1176,7 @@
             "query_table": {
                 "where": "1=1",
                 "outFields": [
-                    "NAME as Name",
+                    "NAME",
                     "DESIG as Designation",
                     "DESIG_ENG as Desig_en",
                     ","
@@ -1422,19 +1398,11 @@
             },
             "query_chart": {
                 "where": "1=1",
-                "returnGeometry": false,
-                "groupByFieldsForStatistics": [
-                    "carbonfix"
-                ],
-                "orderByFields": [
-                    "value DESC"
-                ],
-                "outStatistics": [
-                    {
-                        "onStatisticField": "FID",
-                        "outStatisticFieldName": "value",
-                        "statisticType": "count"
-                    }
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "carbonfix as label",
+                    ","
                 ]
             }
         }
@@ -1471,8 +1439,8 @@
             "query_table": {
                 "where": "1=1",
                 "outFields": [
-                    "CODE as Code",
-                    "NAME as Name",
+                    "CODE",
+                    "NAME",
                     "DESCRP as Description",
                     ","
                 ],
@@ -1480,19 +1448,11 @@
             },
             "query_chart": {
                 "where": "1=1",
-                "returnGeometry": false,
-                "groupByFieldsForStatistics": [
-                    "CODE"
-                ],
-                "orderByFields": [
-                    "value DESC"
-                ],
-                "outStatistics": [
-                    {
-                        "onStatisticField": "FID",
-                        "outStatisticFieldName": "value",
-                        "statisticType": "count"
-                    }
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "NAME as label",
+                    ","
                 ]
             }
         }
@@ -1991,7 +1951,7 @@
                 "where": "1=1",
                 "outFields": [
                     "GOBSERV as Type",
-                    "DSIGN as Name",
+                    "DESIGN as Name",
                     ","
                 ],
                 "returnGeometry": false
@@ -2447,7 +2407,7 @@
             "query_table": {
                 "where": "1=1",
                 "outFields": [
-                    "country as Country",
+                    "country",
                     "orgname as Name",
                     ","
                 ],
@@ -2498,7 +2458,7 @@
             "query_table": {
                 "where": "1=1",
                 "outFields": [
-                    "type as Type",
+                    "type",
                     "FolderPath as Name",
                     ","
                 ],
@@ -2619,8 +2579,8 @@
                     "opername as Name",
                     "opernum as Number",
                     "focusarea as Focus_Area",
-                    "phase as Phase",
-                    "country as Country",
+                    "phase",
+                    "country",
                     ","
                 ],
                 "returnGeometry": false
