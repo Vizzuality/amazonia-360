@@ -37,14 +37,16 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
               <td>{indicator?.resource.type}</td>
             </tr>
 
-            <tr>
-              <td className="w-60">Resource URL</td>
-              <td>
-                <a href={indicator?.resource.url} target="_blank" rel="noreferrer">
-                  {indicator?.resource.url}
-                </a>
-              </td>
-            </tr>
+            {"url" in indicator!.resource && (
+              <tr>
+                <td className="w-60">Resource URL</td>
+                <td>
+                  <a href={indicator?.resource.url} target="_blank" rel="noreferrer">
+                    {indicator?.resource.url}
+                  </a>
+                </td>
+              </tr>
+            )}
             <tr>
               <td className="w-60">Visualization Types</td>
               <td>{(indicator?.visualization_types || [])?.join(", ")}</td>

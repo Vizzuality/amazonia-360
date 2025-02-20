@@ -39,6 +39,11 @@ export type ResourceH3 = {
   url?: string;
 };
 
+export type ResourceComponent = {
+  name: string;
+  type: "component";
+};
+
 export type Indicator = {
   id: number;
   name_es: string;
@@ -55,7 +60,12 @@ export type Indicator = {
   unit_pt: string;
   topic: Topic;
   visualization_types: VisualizationType[];
-  resource: ResourceFeature | ResourceWebTile | ResourceImageryTile | ResourceH3;
+  resource:
+    | ResourceFeature
+    | ResourceWebTile
+    | ResourceImageryTile
+    | ResourceH3
+    | ResourceComponent;
 };
 
 export type H3Indicator = Indicator &

@@ -81,6 +81,8 @@ export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className
 
   const { description_short_en } = indicator;
 
+  if (!description_short_en) return null;
+
   return (
     <Tooltip delayDuration={100}>
       <Dialog>

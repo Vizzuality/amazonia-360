@@ -10,9 +10,8 @@ import { CardLoader } from "@/containers/card";
 export default function InfoArcGis({ id }: { id: Indicator["id"] }) {
   const indicator = useGetIndicatorsId(id);
 
-  // TO - Do - improve this
   const query = useGetMetadata(
-    indicator && indicator.resource.type !== "h3"
+    indicator && indicator.resource.type !== "h3" && "url" in indicator.resource
       ? { id, url: `${indicator.resource.url}/info/metadata` }
       : { id: 0, url: "" },
     { enabled: !!indicator && indicator.resource.type !== "h3" },

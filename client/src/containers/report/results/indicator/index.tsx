@@ -1,6 +1,6 @@
 "use client";
 
-import { MouseEvent } from "react";
+import { createElement, MouseEvent } from "react";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
 
@@ -25,7 +25,14 @@ import { ChartImageryIndicators } from "@/containers/indicators/chart/imagery";
 import { MapIndicators } from "@/containers/indicators/map";
 import { NumericIndicators } from "@/containers/indicators/numeric";
 import { NumericImageryIndicators } from "@/containers/indicators/numeric/imagery";
+import { TotalArea } from "@/containers/indicators/numeric/total-area";
 import { TableIndicators } from "@/containers/indicators/table";
+
+const COMPONENT_INDICATORS = {
+  "total-area": TotalArea,
+} as const;
+
+type COMPONENT_INDICATORS_KEYS = keyof typeof COMPONENT_INDICATORS;
 
 export default function ReportResultsIndicator({
   id,
@@ -65,6 +72,13 @@ export default function ReportResultsIndicator({
           {type === "chart" && indicator.resource.type === "imagery-tile" && (
             <ChartImageryIndicators {...indicator} resource={indicator.resource} />
           )}
+          {type === "numeric" &&
+            indicator.resource.type === "component" &&
+            !!COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS] &&
+            createElement(
+              COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS],
+              { indicator },
+            )}
           {type === "numeric" && indicator.resource.type === "feature" && (
             <NumericIndicators {...indicator} resource={indicator.resource} />
           )}
