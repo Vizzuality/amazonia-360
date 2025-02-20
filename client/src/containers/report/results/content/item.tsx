@@ -24,13 +24,19 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 export interface ReportResultsContentItemProps {
   topic: TopicView;
+  editable: boolean;
 }
 
-export const ReportResultsContentItem = ({ topic }: ReportResultsContentItemProps) => {
+export const ReportResultsContentItem = ({
+  topic,
+  editable = true,
+}: ReportResultsContentItemProps) => {
   const [, setTopics] = useSyncTopics();
   const [editionModeIndicator, setEditionModeIndicator] = useAtom(indicatorsEditionModeAtom);
   const { toggleSidebar } = useSidebar();
   const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
+
+  const EDITABLE = editable && reportEditionMode;
 
   const TOPIC = useGetTopicsId(topic.id);
 
@@ -102,8 +108,8 @@ export const ReportResultsContentItem = ({ topic }: ReportResultsContentItemProp
         cols={{ lg: 4, md: 4, sm: 1, xs: 1, xxs: 1 }}
         rowHeight={122}
         containerPadding={[0, 0]}
-        isDraggable={reportEditionMode}
-        isResizable={reportEditionMode}
+        isDraggable={EDITABLE}
+        isResizable={EDITABLE}
         resizeHandles={["sw", "nw", "se", "ne"]}
         resizeHandle={false}
         compactType="vertical"
@@ -128,29 +134,31 @@ export const ReportResultsContentItem = ({ topic }: ReportResultsContentItemProp
               className="flex h-full flex-col"
               data-grid={dataGridConfig}
               onMouseEnter={() => {
-                if (reportEditionMode) {
+                if (EDITABLE) {
                   setEditionModeIndicator({ [`${id}-${type}`]: true });
                 }
               }}
               onMouseLeave={() => {
-                if (reportEditionMode) {
+                if (EDITABLE) {
                   setEditionModeIndicator({ [`${id}-${type}`]: false });
                 }
               }}
             >
-              {editionModeIndicator[`${id}-${type}`] && reportEditionMode && <MoveHandler />}
-              {editionModeIndicator[`${id}-${type}`] && reportEditionMode && (
+              {editionModeIndicator[`${id}-${type}`] && EDITABLE && <MoveHandler />}
+              {editionModeIndicator[`${id}-${type}`] && EDITABLE && (
                 <DeleteHandler indicatorId={id} type={type} onClick={onDeleteIndicator} />
               )}
 
               <ReportResultsIndicator
                 key={`${topic.id}-${id}`}
-                onEdit={onEdit}
                 id={id}
                 type={type}
+                {...(EDITABLE && {
+                  onEdit,
+                })}
               />
 
-              {editionModeIndicator[`${id}-${type}`] && reportEditionMode && <ResizeHandler />}
+              {editionModeIndicator[`${id}-${type}`] && EDITABLE && <ResizeHandler />}
             </div>
           );
         })}

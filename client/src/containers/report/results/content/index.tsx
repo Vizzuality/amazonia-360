@@ -22,7 +22,7 @@ export default function ReportResultsContent() {
       {/* topicsData DASHBOARD */}
       <div className="space-y-20">
         {topics?.map((topic) => {
-          return <ReportResultsContentItem key={topic.id} topic={topic} />;
+          return <ReportResultsContentItem editable key={topic.id} topic={topic} />;
         })}
       </div>
 
