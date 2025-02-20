@@ -94,7 +94,7 @@ export const ReportResultsContentItem = ({
     [topic.id, setTopics, setEditionModeIndicator],
   );
 
-  const onEdit = useCallback(() => {
+  const handleEdit = useCallback(() => {
     toggleSidebar();
     setReportEditionMode(!reportEditionMode);
   }, [toggleSidebar, setReportEditionMode, reportEditionMode]);
@@ -153,9 +153,8 @@ export const ReportResultsContentItem = ({
                 key={`${topic.id}-${id}`}
                 id={id}
                 type={type}
-                {...(EDITABLE && {
-                  onEdit,
-                })}
+                editable={editable}
+                onEdit={handleEdit}
               />
 
               {editionModeIndicator[`${id}-${type}`] && EDITABLE && <ResizeHandler />}
