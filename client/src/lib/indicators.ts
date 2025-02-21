@@ -5,7 +5,7 @@ import Query from "@arcgis/core/rest/support/Query";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-import INDICATORS from "@/app/local-api/indicators/indicators_v19_02_2025.json";
+import INDICATORS from "@/app/local-api/indicators/indicators_v20_02_2025.json";
 import {
   Indicator,
   ResourceFeature,
@@ -14,7 +14,7 @@ import {
   VisualizationType,
 } from "@/app/local-api/indicators/route";
 import { Topic } from "@/app/local-api/topics/route";
-import TOPICS from "@/app/local-api/topics/topics_v19_02_2025.json";
+import TOPICS from "@/app/local-api/topics/topics_v20_02_2025.json";
 
 /**
  ************************************************************
@@ -22,8 +22,8 @@ import TOPICS from "@/app/local-api/topics/topics_v19_02_2025.json";
  * INDICATORS
  * - useGetIndicators
  * - useGetDefaultIndicators
+ * - useGetH3Indicators
  * - useGetIndicatorsId
- * - useGetIndicatorsOverview
  ************************************************************
  ************************************************************
  */
@@ -113,27 +113,21 @@ export const useGetH3Indicators = () => {
   return query;
 };
 
-export const useGeIndicatorsOverview = <
-  TData = Awaited<ReturnType<typeof getIndicators>>,
-  TError = unknown,
->(
-  options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
-) => {
-  const { queryKey, queryFn } = getIndicatorsOptions(options);
-
-  return useQuery({
-    queryKey,
-    queryFn,
-    ...options,
-  });
-};
-
 export const useGetIndicatorsId = (id: Indicator["id"]) => {
   const { data } = useGetIndicators();
 
   return data?.find((indicator) => indicator.id === id);
 };
 
+/**
+ ************************************************************
+ ************************************************************
+ * RESOURCE ID
+ * - useResourceId
+ * - useResourceFeatureLayerId
+ ************************************************************
+ ************************************************************
+ */
 export type ResourceIdParams = {
   resource: ResourceFeature | ResourceImageryTile | ResourceWebTile;
   session?: {
@@ -181,6 +175,59 @@ export const useResourceId = <TData = Awaited<ReturnType<typeof getResourceId>>,
   options?: Omit<ResourceIdQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const { queryKey, queryFn } = getResourceIdOptions(params, options);
+
+  return useQuery({
+    queryKey,
+    queryFn,
+    ...options,
+  });
+};
+
+export type ResourceFeatureLayerIdParams = {
+  resource: ResourceFeature;
+};
+
+export type ResourceFeatureLayerIdQueryOptions<TData, TError> = UseQueryOptions<
+  Awaited<ReturnType<typeof getResourceFeatureLayerId>>,
+  TError,
+  TData
+>;
+
+export const getResourceFeatureLayerId = async ({ resource }: ResourceFeatureLayerIdParams) => {
+  return axios
+    .get(`${resource.url}/${resource.layer_id}`, {
+      params: {
+        f: "json",
+      },
+    })
+    .then((response) => response.data);
+};
+
+export const getResourceFeatureLayerIdKey = ({ resource }: ResourceFeatureLayerIdParams) => {
+  return ["resource", resource.url, resource.layer_id];
+};
+
+export const getResourceFeatureLayerIdOptions = <
+  TData = Awaited<ReturnType<typeof getResourceFeatureLayerId>>,
+  TError = unknown,
+>(
+  params: ResourceFeatureLayerIdParams,
+  options?: Omit<ResourceFeatureLayerIdQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const queryKey = getResourceFeatureLayerIdKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getResourceFeatureLayerId>>> = () =>
+    getResourceFeatureLayerId(params);
+  return { queryKey, queryFn, ...options } as ResourceFeatureLayerIdQueryOptions<TData, TError>;
+};
+
+export const useResourceFeatureLayerId = <
+  TData = Awaited<ReturnType<typeof getResourceFeatureLayerId>>,
+  TError = unknown,
+>(
+  params: ResourceFeatureLayerIdParams,
+  options?: Omit<ResourceFeatureLayerIdQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const { queryKey, queryFn } = getResourceFeatureLayerIdOptions(params, options);
 
   return useQuery({
     queryKey,
