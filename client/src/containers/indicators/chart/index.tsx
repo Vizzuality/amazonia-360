@@ -32,12 +32,44 @@ export const ChartIndicators = (indicator: ChartIndicatorsProps) => {
   const COLOR_SCALE = useMemo(() => {
     const range =
       query.data?.features?.map((d) => {
-        const uniqueValue: __esri.UniqueValueInfo =
-          queryResourceFeatureLayer.data?.drawingInfo?.renderer?.uniqueValueInfos?.find(
-            (u: __esri.UniqueValueInfo) => u.value === d.attributes.label,
+        const renderer = queryResourceFeatureLayer.data?.drawingInfo?.renderer;
+
+        if (renderer?.type === "simple") {
+          const r = renderer as __esri.SimpleRenderer;
+          const c = new Color(r.symbol.color);
+          return c.toHex() ?? "#009ADE";
+        }
+
+        if (renderer?.type === "uniqueValue") {
+          const r = renderer as __esri.UniqueValueRenderer;
+
+          const uniqueValue = r.uniqueValueInfos?.find(
+            // @ts-expect-error- I don't know why the type does not correspond to the real data.
+            // It's true that the documentation says that "field1" does not exists https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-UniqueValueRenderer.html#field
+            (u) => `${u.value}` === `${d.attributes[r.field1]}`,
           );
-        const c = new Color(uniqueValue?.symbol.color);
-        return c.toHex() ?? "#009ADE";
+
+          if (uniqueValue) {
+            const c = new Color(uniqueValue?.symbol.color);
+            return c.toHex() ?? "#009ADE";
+          }
+        }
+
+        if (renderer?.type === "classBreaks") {
+          const r = renderer as __esri.ClassBreaksRenderer;
+          const classBreak = r.classBreakInfos?.find(
+            // @ts-expect-error- I don't know why the type does not correspond to the real data.
+            // It's true that the documentation says that "classMaxValue" does not exists https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-support-ClassBreakInfo.html
+            (u) => `${u.classMaxValue}` === `${d.attributes[r.field]}`,
+          );
+
+          if (classBreak) {
+            const c = new Color(classBreak?.symbol.color);
+            return c.toHex() ?? "#009ADE";
+          }
+        }
+
+        return "#009ADE";
       }) ?? [];
 
     return scaleOrdinal({

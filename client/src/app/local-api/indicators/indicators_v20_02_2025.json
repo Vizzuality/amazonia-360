@@ -1469,6 +1469,7 @@
                 "returnGeometry": true,
                 "returnIntersections": true,
                 "outFields": [
+                    "NAME",
                     "NAME as label",
                     ","
                 ]
@@ -1501,7 +1502,7 @@
             "type": "feature",
             "column": [
             ],
-            "layer_id": "0",
+            "layer_id": "3",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Annual_Rainfall_Regimes_Layer/FeatureServer",
             "query_numeric": "",
             "query_table": {
@@ -1509,26 +1510,19 @@
                 "outFields": [
                     "YEARLPP as Precip_mm",
                     "YPPDESCP as Description",
-                    "top as Max_mm",
+                    "top_ as Max_mm",
                     ","
                 ],
                 "returnGeometry": false
             },
             "query_chart": {
                 "where": "1=1",
-                "returnGeometry": false,
-                "groupByFieldsForStatistics": [
-                    "YEARLPP"
-                ],
-                "orderByFields": [
-                    "value DESC"
-                ],
-                "outStatistics": [
-                    {
-                        "onStatisticField": "FID",
-                        "outStatisticFieldName": "value",
-                        "statisticType": "count"
-                    }
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "YEARLPP as label",
+                    "top_",
+                    ","
                 ]
             }
         }
@@ -1559,7 +1553,7 @@
             "type": "feature",
             "column": [
             ],
-            "layer_id": "0",
+            "layer_id": "4",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Drought_Risk_Layer/FeatureServer",
             "query_numeric": "",
             "query_table": {
@@ -1573,19 +1567,12 @@
             },
             "query_chart": {
                 "where": "1=1",
-                "returnGeometry": false,
-                "groupByFieldsForStatistics": [
-                    "RISKLEV "
-                ],
-                "orderByFields": [
-                    "value DESC"
-                ],
-                "outStatistics": [
-                    {
-                        "onStatisticField": "FID",
-                        "outStatisticFieldName": "value",
-                        "statisticType": "count"
-                    }
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "RISKLEV",
+                    "RISKLEV as label",
+                    ","
                 ]
             }
         }
@@ -1616,7 +1603,7 @@
             "type": "feature",
             "column": [
             ],
-            "layer_id": "0",
+            "layer_id": "5",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Forest_Fire_Frequency/FeatureServer",
             "query_numeric": "",
             "query_table": {
@@ -1630,19 +1617,12 @@
             },
             "query_chart": {
                 "where": "1=1",
-                "returnGeometry": false,
-                "groupByFieldsForStatistics": [
-                    "firepfreq"
-                ],
-                "orderByFields": [
-                    "value DESC"
-                ],
-                "outStatistics": [
-                    {
-                        "onStatisticField": "FID",
-                        "outStatisticFieldName": "value",
-                        "statisticType": "count"
-                    }
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "gridcode",
+                    "firepfreq as label",
+                    ","
                 ]
             }
         }
