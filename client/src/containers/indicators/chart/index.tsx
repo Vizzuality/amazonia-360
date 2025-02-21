@@ -4,7 +4,7 @@ import { scaleOrdinal } from "@visx/scale";
 import CHROMA from "chroma-js";
 
 import { formatPercentage } from "@/lib/formats";
-import { useQueryFeatureId } from "@/lib/indicators";
+import { useQueryFeatureId, useResourceFeatureLayerId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
 import { Indicator, ResourceFeature } from "@/app/local-api/indicators/route";
@@ -18,11 +18,15 @@ export interface ChartIndicatorsProps extends Indicator {
   resource: ResourceFeature;
 }
 
-export const ChartIndicators = ({ id, resource }: ChartIndicatorsProps) => {
+export const ChartIndicators = (indicator: ChartIndicatorsProps) => {
+  const { id, resource } = indicator;
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
 
   const query = useQueryFeatureId({ id, resource, type: "chart", geometry: GEOMETRY });
+  const queryResourceFeatureLayer = useResourceFeatureLayerId(indicator);
+
+  // console.log("LAYER", queryResourceFeatureLayer.data);
 
   const COLOR_SCALE = useMemo(() => {
     return scaleOrdinal({
@@ -77,7 +81,7 @@ export const ChartIndicators = ({ id, resource }: ChartIndicatorsProps) => {
   }, [resource, query.data, TOTAL, COLOR_SCALE]);
 
   return (
-    <CardLoader query={[query]} className="grow">
+    <CardLoader query={[query, queryResourceFeatureLayer]} className="grow">
       <MarimekkoChart
         data={DATA}
         format={(d) => formatPercentage(d.value)}
