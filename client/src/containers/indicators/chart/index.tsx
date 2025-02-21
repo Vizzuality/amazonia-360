@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 
+import Color from "@arcgis/core/Color";
 import { scaleOrdinal } from "@visx/scale";
 import CHROMA from "chroma-js";
 
@@ -29,13 +30,21 @@ export const ChartIndicators = (indicator: ChartIndicatorsProps) => {
   // console.log("LAYER", queryResourceFeatureLayer.data);
 
   const COLOR_SCALE = useMemo(() => {
+    const range =
+      query.data?.features?.map((d) => {
+        const uniqueValue: __esri.UniqueValueInfo =
+          queryResourceFeatureLayer.data?.drawingInfo?.renderer?.uniqueValueInfos?.find(
+            (u: __esri.UniqueValueInfo) => u.value === d.attributes.label,
+          );
+        const c = new Color(uniqueValue?.symbol.color);
+        return c.toHex() ?? "#009ADE";
+      }) ?? [];
+
     return scaleOrdinal({
-      domain: query.data?.features?.map((d) => d.attributes) ?? [],
-      range: CHROMA.scale(["#009ADE", "#93CAEB", "#DBEDF8"]).colors(
-        query.data?.features?.length || 1,
-      ),
+      domain: query.data?.features?.map((d) => d.attributes.label) ?? [],
+      range: range.length ? range : CHROMA.scale("Spectral").colors(10),
     });
-  }, [query.data]);
+  }, [query.data, queryResourceFeatureLayer.data]);
 
   const TOTAL = useMemo(() => {
     if (!query.data) return 0;

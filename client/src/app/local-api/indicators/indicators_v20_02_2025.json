@@ -1469,7 +1469,7 @@
                 "returnGeometry": true,
                 "returnIntersections": true,
                 "outFields": [
-                    "CODE as label",
+                    "NAME as label",
                     ","
                 ]
             }
