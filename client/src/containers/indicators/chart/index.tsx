@@ -27,8 +27,6 @@ export const ChartIndicators = (indicator: ChartIndicatorsProps) => {
   const query = useQueryFeatureId({ id, resource, type: "chart", geometry: GEOMETRY });
   const queryResourceFeatureLayer = useResourceFeatureLayerId(indicator);
 
-  // console.log("LAYER", queryResourceFeatureLayer.data);
-
   const COLOR_SCALE = useMemo(() => {
     const range =
       query.data?.features?.map((d) => {
