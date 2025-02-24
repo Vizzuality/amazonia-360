@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import Point from "@arcgis/core/geometry/Point";
 import { cellToLatLng } from "h3-js";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 
 import { cn } from "@/lib/utils";
 
@@ -13,7 +13,7 @@ import { HexagonIcon } from "../ui/icons/hexagon";
 import { useMap } from "./provider";
 
 export const Tooltip = () => {
-  const [cell] = useAtom(gridCellHighlightAtom);
+  const cell = useAtomValue(gridCellHighlightAtom);
   const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
 
   const map = useMap();
@@ -38,7 +38,7 @@ export const Tooltip = () => {
     setPosition({ x: screenPoint.x, y: screenPoint.y });
   }, [cell, view]);
 
-  if (!position || !cell.id) return null;
+  if (!position || typeof cell.id !== "number") return null;
 
   return (
     <div
