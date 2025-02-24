@@ -51,10 +51,10 @@ export default function Resource({
           </div>
         </header>
         <footer>
-          <div className="flex w-full space-x-4">
+          <div className="flex w-full flex-col gap-x-2 gap-y-1 lg:flex-row">
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="outline" className="w-1/2">
+                <Button variant="outline" className="w-full lg:w-1/2">
                   Info
                 </Button>
               </DialogTrigger>
@@ -106,7 +106,12 @@ export default function Resource({
             </Dialog>
 
             {!!URL && (
-              <a className="inline-block w-1/2" href={URL} target="_blank" rel="noreferrer">
+              <a
+                className="inline-block w-full lg:w-1/2"
+                href={URL}
+                target="_blank"
+                rel="noreferrer"
+              >
                 <Button className="w-full">Download</Button>
               </a>
             )}
