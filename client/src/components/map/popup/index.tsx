@@ -10,12 +10,12 @@ import { gridHoverAtom } from "@/app/store";
 export const MapPopup = () => {
   const gridHover = useAtomValue(gridHoverAtom);
 
-  const { data: dataIndicators } = useGetH3Indicators();
+  const { data: H3IndicatorsData } = useGetH3Indicators();
 
   const VALUES = useMemo(() => {
     return gridHover.values
       .map((v) => {
-        const match = dataIndicators?.find((i) => v.column === i.resource.column);
+        const match = H3IndicatorsData?.find((i) => v.column === i.resource.column);
 
         if (match) {
           return {
@@ -29,7 +29,7 @@ export const MapPopup = () => {
         return null;
       })
       .filter((v) => v);
-  }, [dataIndicators, gridHover.values]);
+  }, [H3IndicatorsData, gridHover.values]);
 
   if (!gridHover.x || !gridHover.y) return null;
 
