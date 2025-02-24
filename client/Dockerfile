@@ -28,7 +28,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN corepack enable pnpm
 RUN pnpm install
 
 RUN pnpm build
