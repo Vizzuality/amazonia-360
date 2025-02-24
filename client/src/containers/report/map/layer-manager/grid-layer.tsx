@@ -116,7 +116,10 @@ export const getGridLayerProps = ({
       // @ts-ignore
       const table = info?.tile?.content as ArrowTable["data"];
       const row = table?.get(info.index);
-      const values = gridDatasets.map((column) => ({ column, value: row?.[column] }));
+      const values = gridDatasets.map((column) => ({
+        column,
+        value: row?.[column],
+      }));
 
       if (info && info.index === -1) {
         // setHoveredCell(null);
@@ -214,7 +217,9 @@ export const getGridLayerProps = ({
           getFilterValue,
           filterRange: filterRange(),
           extensions: [
-            new DataFilterExtension({ filterSize: filters.length as 0 | 1 | 2 | 3 | 4 }),
+            new DataFilterExtension({
+              filterSize: filters.length as 0 | 1 | 2 | 3 | 4,
+            }),
           ],
           updateTriggers: {
             getFillColor: [getFillColor],
@@ -324,11 +329,19 @@ export default function GridLayer() {
 
       const latLng = cellToLatLng(cell);
 
-      const p = new Point({ x: latLng[1], y: latLng[0], spatialReference: { wkid: 4326 } });
+      const p = new Point({
+        x: latLng[1],
+        y: latLng[0],
+        spatialReference: { wkid: 4326 },
+      });
       const projectedGeom = projection.project(p, { wkid: 102100 });
       const g = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
 
-      setLocation({ type: "point", geometry: g.toJSON(), buffer: BUFFERS.point });
+      setLocation({
+        type: "point",
+        geometry: g.toJSON(),
+        buffer: BUFFERS.point,
+      });
 
       const gWithBuffer = getGeometryWithBuffer(g, BUFFERS.point);
       if (gWithBuffer) {
