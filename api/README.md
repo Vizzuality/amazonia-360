@@ -4,11 +4,12 @@
 
 ### Production
 
-Use the `requirements.txt` file to install the required packages
+This projecty uses `uv`. To install dependencies in a virtual environment use
 
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
+Must be called from inside the `api/` folder. 
 
 ### Development
 
@@ -19,15 +20,5 @@ First create a virtual environment with virtualenv or uv.
 Then install the dependencies with the following command:
 
 ```bash
-pip-sync requirements.txt requirements-dev.txt
+uv sync --dev
 ```
-
-or with `uv`:
-
-```bash
-uv pip sync requirements.txt requirements-dev.txt
-```
-
-To add a new production dependency, add it to the `requirements.in` file and
-run `uv pip compile requirements.in -o requirements.txt` (or `pip-compile requirements.in -o requirements.txt`).
-To add a new development dependency repeat the same process with the `requirements-dev.in` and `requirement-dev.txt` file.
