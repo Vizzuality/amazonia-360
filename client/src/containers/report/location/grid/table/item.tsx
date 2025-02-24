@@ -43,13 +43,13 @@ export const GridTableItem = (
   const setGridCellHighlight = useSetAtom(gridCellHighlightAtom);
   const setTmpBbox = useSetAtom(tmpBboxAtom);
 
-  const { data: dataIndicators } = useGetH3Indicators();
+  const { data: H3IndicatorsData } = useGetH3Indicators();
 
   const queryMeta = useGetGridMeta({
     select: (data) =>
       data.datasets
         .map((dataset) => {
-          const matchingIndicator = dataIndicators?.find(
+          const matchingIndicator = H3IndicatorsData?.find(
             (indicator) =>
               indicator.resource.type === "h3" &&
               indicator.resource.column &&

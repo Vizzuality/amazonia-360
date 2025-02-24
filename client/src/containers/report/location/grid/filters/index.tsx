@@ -25,7 +25,7 @@ export default function GridFilters() {
   const [selectedFiltersView] = useAtom(selectedFiltersViewAtom);
   const [gridDatasets] = useSyncGridDatasets();
 
-  const { data: dataIndicators } = useGetH3Indicators();
+  const { data: H3IndicatorsData } = useGetH3Indicators();
   const { META, queryMeta, queryMetaFromGeometry } = useMeta(GEOMETRY);
 
   const { isFetched: gridMetaIsFetched, isFetching: gridMetaIsFetching } = queryMeta;
@@ -34,12 +34,11 @@ export default function GridFilters() {
     queryMetaFromGeometry;
 
   const INDICATORS = useMemo(() => {
-    if (!dataIndicators || !META) return [];
+    if (!H3IndicatorsData || !META) return [];
 
-    return dataIndicators
-      .filter(
-        (indicator) => !selectedFiltersView || gridDatasets.includes(indicator.resource.column), // Additional filtering
-      )
+    return H3IndicatorsData.filter(
+      (indicator) => !selectedFiltersView || gridDatasets.includes(indicator.resource.column), // Additional filtering
+    )
       .filter((indicator) => {
         const matchingDataset = META.datasets.find(
           (dataset) => dataset.var_name === indicator.resource.column,
@@ -59,7 +58,7 @@ export default function GridFilters() {
           legend: matchingDataset?.legend,
         } as H3Indicator;
       });
-  }, [dataIndicators, META, gridDatasets, selectedFiltersView]);
+  }, [H3IndicatorsData, META, gridDatasets, selectedFiltersView]);
 
   const TOPICS = useMemo(() => {
     if (!INDICATORS) return [];
