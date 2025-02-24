@@ -123,7 +123,7 @@ export const GridTableItem = (
                 <HexagonIcon className="h-4 w-4" />
                 <span className="text-sm font-semibold">{id + 1}º</span>
               </button>
-              <ul className="w-full overflow-hidden">
+              <ul className="w-full overflow-hidden pt-1">
                 {ITEMS.map((dataset, i) => (
                   <li
                     key={dataset?.column}
@@ -153,7 +153,7 @@ export const GridTableItem = (
         </AlertDialogTrigger>
 
         <TooltipPortal>
-          <TooltipContent>
+          <TooltipContent side="right">
             <TooltipArrow />
             <p className="max-w-36 text-center text-sm font-medium">Redefine area</p>
           </TooltipContent>
