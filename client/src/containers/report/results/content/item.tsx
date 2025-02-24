@@ -105,7 +105,7 @@ export const ReportResultsContentItem = ({
 
       <ResponsiveReactGridLayout
         className="layout animated"
-        cols={{ lg: 4, md: 4, sm: 1, xs: 1, xxs: 1 }}
+        cols={{ lg: 4, md: 4, sm: 4, xs: 4, xxs: 1 }}
         rowHeight={122}
         containerPadding={[0, 0]}
         isDraggable={EDITABLE}
