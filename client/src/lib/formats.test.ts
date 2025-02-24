@@ -2,13 +2,13 @@ import { formatNumber, formatPercentage, formatCurrency, formatNumberUnit } from
 
 describe("formats", () => {
   test("formatNumber formats correctly", () => {
-    expect(formatNumber(123456.789)).toBe("123,456.79");
+    expect(formatNumber(123456.789)).toBe("123K");
     expect(formatNumber(0.005)).toBe("~0");
     expect(formatNumber(undefined)).toBe("");
   });
 
   test("formatNumber with options formats correctly", () => {
-    expect(formatNumber(123456.789, { maximumFractionDigits: 0 })).toBe("123,457");
+    expect(formatNumber(123456.789, { maximumFractionDigits: 0 })).toBe("123K");
     expect(formatNumber(0.005, { maximumFractionDigits: 0 })).toBe("~0");
   });
 
@@ -35,8 +35,14 @@ describe("formats", () => {
   });
 
   test("formatNumberUnit formats correctly", () => {
-    expect(formatNumberUnit(123456.789, "unit")).toBe("123,456.79 unit");
+    expect(formatNumberUnit(123456.789, "unit")).toBe("123K unit");
+    expect(formatNumberUnit(1111111111111111, "unit")).toBe("1110T unit");
+    expect(formatNumberUnit(1234567891011121, "unit")).toBe("1230T unit");
     expect(formatNumberUnit(0.005, "unit")).toBe("~0 unit");
     expect(formatNumberUnit(undefined, "unit")).toBe("");
+  });
+
+  test("formatNumberDigits max significant 3 after formatting and rounded", () => {
+    expect(formatNumberUnit(9123456, "unit")).toBe("9.12M unit");
   });
 });
