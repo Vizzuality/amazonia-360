@@ -3,8 +3,12 @@ export const formatNumber = (v?: number, options?: Intl.NumberFormatOptions) => 
 
   const f = new Intl.NumberFormat("en-US", {
     style: "decimal",
+    // For consistent formatting across all locales, it’s better to use a custom implementation
+    notation: "compact",
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
+    // https://www.raymondcamden.com/2023/01/04/using-intl-for-short-number-formatting
+    maximumSignificantDigits: 3,
     ...options,
   });
 
