@@ -1,0 +1,5 @@
+.venv
+.env
+Dockerfile
+.pytest_cache
+.ruff_cache

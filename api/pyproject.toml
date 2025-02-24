@@ -1,29 +1,68 @@
+[project]
+name = "app"
+version = "0.1.0"
+description = "Amazonia 360 API"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "exactextract>=0.2.0",
+    "fastapi>=0.115.8",
+    "h3>=4.2.1",
+    "h3ronpy>=0.22.0",
+    "openai>=1.63.2",
+    "orjson>=3.10.15",
+    "polars>=1.22.0",
+    "pyarrow>=19.0.0",
+    "pydantic-extra-types>=2.10.2",
+    "pydantic-settings>=2.7.1",
+    "shapely>=2.0.7",
+    "sqlalchemy>=2.0.38",
+    "titiler-core>=0.21.1",
+    "uvicorn>=0.34.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "app",
+ "mypy>=1.15.0",
+ "pytest>=8.3.4",
+ "ruff>=0.9.6",
+]
+
+[tool.uv.sources]
+app = { workspace = true }
+
 [tool.ruff]
 line-length = 120
 extend-include = ["*.ipynb"]
-src = ["."]
+src = ["src"]
 
 [tool.ruff.lint]
 select = [
-    "D1",   # pydocstyle errors
-    "E",    # pycodestyle errors
-    "W",    # pycodestyle warnings
-    "F",    # flake8
-    "C",    # flake8-comprehensions
-    "B",    # flake8-bugbear
-    "N",    # Naming conventions
-    "I",    # isort
-]
-ignore = [
-    "D100", # Missing docstring in public module
-    "D104", # Missing docstring in __init__
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # flake8
+    "C", # flake8-comprehensions
+    "B", # flake8-bugbear
+    "N", # Naming conventions
+    "I", # isort
 ]
 
 [tool.ruff.lint.flake8-bugbear]
-extend-immutable-calls = ["fastapi.Depends", "fastapi.params.Depends", "fastapi.Query", "fastapi.params.Query"]
+extend-immutable-calls = [
+    "fastapi.Depends",
+    "fastapi.params.Depends",
+    "fastapi.Query",
+    "fastapi.params.Query",
+]
 
-[tool.ruff.lint.per-file-ignores]
-"**/{tests}/*" = ["D103"]  # Missing docstring in public function
 
 [tool.mypy]
 disable_error_code = ["import-untyped", "attr-defined"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

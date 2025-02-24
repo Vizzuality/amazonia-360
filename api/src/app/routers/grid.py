@@ -14,13 +14,18 @@ from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from fastapi.params import Body
 from fastapi.responses import Response
 from geojson_pydantic import Feature
-from h3 import H3CellError
-from h3ronpy.polars import cells_to_string
-from h3ronpy.polars.vector import geometry_to_cells
+from h3 import H3CellInvalidError
+from h3ronpy import cells_to_string
+from h3ronpy.vector import geometry_to_cells
 from pydantic import ValidationError
 
 from app.config.config import get_settings
-from app.models.grid import MultiDatasetMeta, TableFilters, TableResultColumn, TableResults
+from app.models.grid import (
+    MultiDatasetMeta,
+    TableFilters,
+    TableResultColumn,
+    TableResults,
+)
 
 log = logging.getLogger("uvicorn.error")  # Show the logs in the uvicorn runner logs
 
@@ -36,15 +41,18 @@ class ArrowIPCResponse(Response):  # noqa: D101
     media_type = "application/octet-stream"
 
 
-def colum_filter(
+def colum_filter(  # noqa: D103
     columns: list[str] = Query(
-        [], description="Column/s to include in the tile. If empty, it returns only cell indexes."
+        [],
+        description="Column/s to include in the tile. If empty, it returns only cell indexes.",
     ),
 ):
     return columns
 
 
-def feature_filter(geojson: Annotated[Feature, Body(description="GeoJSON feature used to filter the cells.")]):
+def feature_filter(  # noqa: D103
+    geojson: Annotated[Feature, Body(description="GeoJSON feature used to filter the cells.")],
+):
     return geojson
 
 
@@ -53,12 +61,13 @@ FeatureDep = Annotated[Feature, Depends(feature_filter)]
 
 
 def get_tile(
-    tile_index: Annotated[str, Path(description="The `h3` index of the tile")], columns: list[str]
+    tile_index: Annotated[str, Path(description="The `h3` index of the tile")],
+    columns: list[str],
 ) -> tuple[pl.LazyFrame, int]:
     """Get the tile from filesystem filtered by column and the resolution of the tile index"""
     try:
-        z = h3.api.basic_str.h3_get_resolution(tile_index)
-    except (H3CellError, ValueError):
+        z = h3.get_resolution(tile_index)
+    except (H3CellInvalidError, ValueError):
         raise HTTPException(status_code=400, detail="Tile index is not a valid H3 cell") from None
     tile_path = os.path.join(get_settings().grid_tiles_path, f"{z}/{tile_index}.arrow")
     if not os.path.exists(tile_path):
@@ -121,7 +130,9 @@ def grid_tile(
     responses=tile_exception_responses,
 )
 def grid_tile_in_area(
-    tile_index: Annotated[str, Path(description="The `h3` index of the tile")], geojson: FeatureDep, columns: ColumnDep
+    tile_index: Annotated[str, Path(description="The `h3` index of the tile")],
+    geojson: FeatureDep,
+    columns: ColumnDep,
 ) -> ArrowIPCResponse:
     """Get a tile of h3 cells that are inside the polygon"""
     tile, tile_index_res = get_tile(tile_index, columns)
@@ -150,7 +161,10 @@ def load_meta() -> MultiDatasetMeta:
         # validation error is our fault because meta file is internal. We don't want to show internal error details
         # so raise controlled 500
         log.exception(e)
-        raise HTTPException(status_code=500, detail="Metadata file is malformed. Please contact developer.") from None
+        raise HTTPException(
+            status_code=500,
+            detail="Metadata file is malformed. Please contact developer.",
+        ) from None
     return meta
 
 

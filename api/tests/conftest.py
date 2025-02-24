@@ -1,5 +1,6 @@
 import json
 import os
+from collections.abc import Generator
 from pathlib import Path
 
 import numpy as np
@@ -50,6 +51,7 @@ TEST_ROOT = Path(__file__).resolve().parent
 os.environ["AUTH_TOKEN"] = "secret"
 os.environ["TIFF_PATH"] = str(TEST_ROOT / "data")
 os.environ["GRID_TILES_PATH"] = str(TEST_ROOT / "data" / "grid")
+os.environ["OPENAI_TOKEN"] = "fake-token"
 
 FILES = ["raster.tif", "raster2.tif", "raster3.tif"]
 HEADERS = {"Authorization": f"Bearer {get_settings().auth_token}"}
@@ -80,7 +82,7 @@ def geojson() -> str:
 
 
 @pytest.fixture()
-def grid_dataset(setup_data_folder) -> str:
+def grid_dataset(setup_data_folder) -> Generator[str]:
     """Create an empty binary file to be used as grid dataset stub
     for a level 0 tile. like:
            data
@@ -145,7 +147,7 @@ def tif_file(setup_data_folder):
     The bbox is BoundingBox(left=0.0, bottom=7.0, right=3.0, top=10.0)
     """
     data = np.array([[0, 1, 0], [1, 9, 1], [0, 1, 0]])
-    transform = rasterio.transform.from_origin(0, 10, 1, 1)
+    transform = rasterio.transform.from_origin(0, 10, 1, 1)  # pyright: ignore
     with rasterio.open(
         f"{get_settings().tiff_path}/raster.tif",
         "w",

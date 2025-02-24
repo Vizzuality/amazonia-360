@@ -1,5 +1,4 @@
-FROM python:3.11-slim as base
-LABEL maintainer="hello@vizzuality.com"
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS production
 
 # Requirement of fiona and gdal.
 RUN set -eux; \
@@ -7,22 +6,34 @@ RUN set -eux; \
 	apt-get install -y --no-install-recommends libexpat1; \
 	rm -rf /var/lib/apt/lists/*
 
+WORKDIR /app
 
-FROM base as production
-ENV NAME api
-ENV APP_HOME /opt/$NAME
-ENV DATA_HOME ${APP_HOME}/data
+# Enable bytecode compilation
+ENV UV_COMPILE_BYTECODE=1
 
-WORKDIR $APP_HOME
+# Copy from the cache instead of linking since it's a mounted volume
+ENV UV_LINK_MODE=copy
 
-COPY . .
+# Install the project's dependencies using the lockfile and settings
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --frozen --no-install-project --no-dev
 
-RUN pip install --no-cache-dir -r requirements.txt
+# Then, add the rest of the project source code and install it
+# Installing separately from its dependencies allows optimal layer caching
+ADD . /app
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev
 
-EXPOSE 8000
+# Place executables in the environment at the front of the path
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Reset the entrypoint, don't invoke `uv`
+ENTRYPOINT []
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--root-path", "/api/"]
 
-FROM production as development
+FROM production AS development
 
-RUN pip install --no-cache-dir -r requirements-dev.txt
+RUN uv sync --frozen --dev

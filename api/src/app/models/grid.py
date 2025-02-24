@@ -4,7 +4,7 @@ from enum import Enum
 from typing import Annotated, Literal
 
 from fastapi import Query
-from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
+from pydantic import BaseModel, ConfigDict, Field
 from pydantic_extra_types.color import Color
 from sqlalchemy.sql import column, desc, nullslast, select, table
 
