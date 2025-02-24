@@ -88,7 +88,6 @@ export const useGetDefaultIndicators = (
     select(data) {
       return data.filter((indicator) => {
         const t = topic_id ? indicator.topic.id === topic_id : true;
-
         return indicator.topic.id !== 0 && indicator.resource.type !== "h3" && t;
       });
     },

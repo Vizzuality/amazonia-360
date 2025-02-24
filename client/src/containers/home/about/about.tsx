@@ -20,10 +20,11 @@ const AboutHeroHome = ({ textVisible }: { textVisible: boolean }) => {
                   About AmazoniaForever360+
                 </h3>
                 <p className="text-lg font-normal md:text-xl">
-                  AmazoniaForever360+ is not just presenting data; it’s making sense of it. Our goal
-                  is to become a focal point that unifies and amplifies the assets from various
-                  initiatives dedicated to this region, fostering a shared, profound engagement with
-                  Amazonia.
+                  AmazoniaForever360+ is a free tool initiated by the IDB as part of its Amazonia
+                  Forever program to help all those involved in the development and conservation of
+                  the Amazon to better understand this immense and complex territory. Starting from
+                  this first beta version, we will continue to develop this platform in
+                  collaboration with key actors in the region and beyond. Stay tuned.
                 </p>
               </div>
             </div>

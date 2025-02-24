@@ -32,9 +32,11 @@ export default function Hero() {
             <br /> like never before
           </h2>
           <p className="text-base font-normal text-blue-900 lg:text-lg">
-            With <span className="font-bold">AmazoniaForever360+</span> get all the resources you
-            need about one of the world&apos;s most diverse ecosystems. AmazoniaForever360+ is your
-            gateway to understanding and help you achieving the greatest impact in this region.
+            With <span className="font-bold">AmazoniaForever360+</span>, unlock powerful insights
+            about one of the planet&apos;s most vital ecosystem mosaics. Our intuitive platform
+            transforms complex territorial data into actionable knowledge—no technical expertise
+            needed. From biodiversity to infrastructure, explore and analyze to drive sustainable
+            impact across Amazonia.
           </p>
           <div className="flex space-x-4 py-4 md:py-6">
             <Link href="/report" prefetch>
