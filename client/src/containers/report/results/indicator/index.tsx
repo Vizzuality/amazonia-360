@@ -3,6 +3,7 @@
 import { createElement, MouseEvent } from "react";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
+import { cn } from "@/lib/utils";
 
 import { Indicator, VisualizationType } from "@/app/local-api/indicators/route";
 import {
@@ -50,8 +51,8 @@ export default function ReportResultsIndicator({
   if (!indicator) return null;
   return (
     <div className="flex h-full flex-col">
-      <Card>
-        <CardHeader>
+      <Card className={cn(type === "map" && "p-0")}>
+        <CardHeader className={cn(type === "map" && "px-6 pt-6")}>
           <CardTitle>{indicator?.name_en}</CardTitle>
           <CardControls>
             <CardInfo ids={[indicator.id]} />
