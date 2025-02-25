@@ -10,7 +10,7 @@ import {
   ResourceFeature,
   ResourceImageryTile,
   ResourceWebTile,
-  VisualizationType,
+  VisualizationTypes,
 } from "@/app/local-api/indicators/route";
 import { useSyncLocation } from "@/app/store";
 
@@ -56,7 +56,7 @@ export const ResourceMap = (
 
 export const ResourceQueryFeature = (
   props: Indicator & {
-    type: VisualizationType;
+    type: VisualizationTypes;
     resource: ResourceFeature;
   },
 ) => {
@@ -100,7 +100,7 @@ export const ResourceQueryFeature = (
 
 export const ResourceQueryImageryTile = (
   props: Indicator & {
-    type: VisualizationType;
+    type: VisualizationTypes;
     resource: ResourceImageryTile;
   },
 ) => {

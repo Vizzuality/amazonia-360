@@ -1,14 +1,14 @@
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { Trash2 } from "lucide-react";
 
-import { VisualizationType } from "@/app/local-api/indicators/route";
+import { VisualizationTypes } from "@/app/local-api/indicators/route";
 
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 type DeleteHandlerProps = {
   indicatorId: number;
-  type: VisualizationType;
-  onClick: (indicatorId: number, type: VisualizationType) => void;
+  type: VisualizationTypes;
+  onClick: (indicatorId: number, type: VisualizationTypes) => void;
 };
 
 const DeleteHandler = ({ indicatorId, type, onClick }: DeleteHandlerProps) => (

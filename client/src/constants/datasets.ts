@@ -12,7 +12,7 @@ import { env } from "@/env.mjs";
 import { convertHexToRgbaArray, getKeys } from "@/lib/utils";
 
 import {
-  BIOMES,
+  // BIOMES,
   CLIMATE_TYPES,
   DEPRIVATION_INDEX,
   ELEVATION_RANGES,
@@ -20,7 +20,7 @@ import {
   FIRES,
   FIRES_COLORMAP,
   INDIGENOUS_LANDS,
-  LAND_COVER,
+  // LAND_COVER,
   // LAND_COVER_COLORMAP,
   POPULATION,
   PROTECTED_AREAS,
@@ -305,16 +305,7 @@ export const DATASETS = {
         content: [],
       }),
     } satisfies FeatureLayer,
-    legend: {
-      type: "basic" as const,
-      items: getKeys(CLIMATE_TYPES)
-        .toSorted((a, b) => CLIMATE_TYPES[a].label.localeCompare(CLIMATE_TYPES[b].label))
-        .map((k) => ({
-          id: k,
-          label: CLIMATE_TYPES[k].label,
-          color: CLIMATE_TYPES[k].color,
-        })),
-    },
+    legend: null,
     metadata: {
       type: "arcgis",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Tipos_climaticos_KOEPEN/FeatureServer/info/metadata",
@@ -334,41 +325,32 @@ export const DATASETS = {
       type: "feature",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Biomas/FeatureServer/0",
       maxScale: 0,
-      renderer: new UniqueValueRenderer({
-        field: "BIOME",
-        defaultSymbol: new SimpleFillSymbol({
-          color: [227, 139, 79, 0.8],
-          outline: {
-            color: [230, 230, 230, 0.8],
-            width: 1,
-          },
-        }),
-        uniqueValueInfos: getKeys(BIOMES).map((k) => ({
-          value: k,
-          symbol: new SimpleFillSymbol({
-            color: BIOMES[k].color,
-            outline: {
-              color: [0, 0, 0, 0.25],
-              width: 0.5,
-            },
-          }),
-        })),
-      }),
+      // renderer: new UniqueValueRenderer({
+      //   field: "BIOME",
+      //   defaultSymbol: new SimpleFillSymbol({
+      //     color: [227, 139, 79, 0.8],
+      //     outline: {
+      //       color: [230, 230, 230, 0.8],
+      //       width: 1,
+      //     },
+      //   }),
+      //   uniqueValueInfos: getKeys(BIOMES).map((k) => ({
+      //     value: k,
+      //     symbol: new SimpleFillSymbol({
+      //       color: BIOMES[k].color,
+      //       outline: {
+      //         color: [0, 0, 0, 0.25],
+      //         width: 0.5,
+      //       },
+      //     }),
+      //   })),
+      // }),
       popupEnabled: true,
       popupTemplate: new PopupTemplate({
         title: "{BIOMADES}",
       }),
     } satisfies FeatureLayer,
-    legend: {
-      type: "basic" as const,
-      items: getKeys(BIOMES)
-        .toSorted((a, b) => BIOMES[a].label.localeCompare(BIOMES[b].label))
-        .map((k) => ({
-          id: k,
-          label: BIOMES[k].label,
-          color: BIOMES[k].color,
-        })),
-    },
+    legend: null,
     metadata: {
       type: "arcgis",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_Biomas/FeatureServer/info/metadata",
@@ -587,16 +569,7 @@ export const DATASETS = {
       title: "Land cover",
       url: "https://iservices6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/landcover_cog/ImageServer",
     },
-    legend: {
-      type: "basic" as const,
-      items: getKeys(LAND_COVER)
-        .toSorted((a, b) => LAND_COVER[a].label.localeCompare(LAND_COVER[b].label))
-        .map((k) => ({
-          id: k,
-          label: LAND_COVER[k].label,
-          color: LAND_COVER[k].color,
-        })),
-    },
+    legend: null,
     metadata: {
       type: "raster",
       url: null,

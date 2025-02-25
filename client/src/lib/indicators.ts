@@ -11,7 +11,7 @@ import {
   ResourceFeature,
   ResourceImageryTile,
   ResourceWebTile,
-  VisualizationType,
+  VisualizationTypes,
 } from "@/app/local-api/indicators/route";
 import { Topic } from "@/app/local-api/topics/route";
 import TOPICS from "@/app/local-api/topics/topics.json";
@@ -242,7 +242,7 @@ export const useResourceFeatureLayerId = <
  */
 export type QueryFeatureIdParams = {
   id: Indicator["id"];
-  type: VisualizationType;
+  type: VisualizationTypes;
   resource: ResourceFeature;
   geometry: __esri.Polygon | null;
 };
@@ -336,7 +336,7 @@ export const useQueryFeatureId = <
 
 export type QueryImageryTileIdParams = {
   id: Indicator["id"];
-  type: VisualizationType;
+  type: VisualizationTypes;
   resource: ResourceImageryTile;
   geometry: __esri.Polygon | null;
 };
