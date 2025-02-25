@@ -3,7 +3,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { MediaContextProvider } from "@/containers/media";
-import { ArcGISProvider } from "@/containers/providers/arcgis-provider";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -37,16 +36,7 @@ function getQueryClient() {
   }
 }
 
-export default function LayoutProviders({
-  children,
-  session,
-}: {
-  children: React.ReactNode;
-  session: {
-    token: string | undefined;
-    expires_in: number;
-  };
-}) {
+export default function LayoutProviders({ children }: { children: React.ReactNode }) {
   // NOTE: Avoid useState when initializing the query client if you don't
   //       have a suspense boundary between this and the code that may
   //       suspend because React will throw away the client on the initial
@@ -56,9 +46,7 @@ export default function LayoutProviders({
   return (
     <MediaContextProvider>
       <TooltipProvider>
-        <QueryClientProvider client={queryClient}>
-          <ArcGISProvider session={session}>{children}</ArcGISProvider>
-        </QueryClientProvider>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
       </TooltipProvider>
     </MediaContextProvider>
   );
