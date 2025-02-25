@@ -26,7 +26,9 @@ export default function ReportPage() {
           </div>
         </div>
 
-        <Map />
+        <Suspense fallback={null}>
+          <Map />
+        </Suspense>
       </main>
     </PageProviders>
   );
