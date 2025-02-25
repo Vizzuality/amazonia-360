@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { Montserrat } from "next/font/google";
-import { cookies } from "next/headers";
 import Script from "next/script";
 
 import RootHead from "@/app/head";
@@ -26,17 +25,8 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const cookiesStore = await cookies();
-  const sessionCookie = cookiesStore.get("session");
-  const sessionExpireCookie = cookiesStore.get("session_expire");
-
   return (
-    <LayoutProviders
-      session={{
-        token: sessionCookie?.value,
-        expires_in: +(sessionExpireCookie?.value || 0),
-      }}
-    >
+    <LayoutProviders>
       <html lang="en">
         <RootHead />
         <body className={`${montserrat.className} w-full overflow-x-hidden`}>
