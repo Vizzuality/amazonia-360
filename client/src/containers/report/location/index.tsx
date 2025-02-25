@@ -96,8 +96,8 @@ export default function ReportLocation() {
                   </h1>
 
                   <p className="text-sm font-medium text-muted-foreground">
-                    Define your area of interest to get started and access a customized report with
-                    insights tailored to your region.
+                    Select your area of interest to get started and access a customized report with
+                    insights tailored to your selection.
                   </p>
                 </div>
 
