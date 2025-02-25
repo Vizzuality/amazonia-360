@@ -34,7 +34,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {children}
         </body>
 
-        <Script id="fullstory" strategy="afterInteractive">
+        <Script id="fullstory" strategy="lazyOnload">
           {`
               window['_fs_host'] = 'fullstory.com';
               window['_fs_script'] = 'edge.fullstory.com/s/fs.js';
