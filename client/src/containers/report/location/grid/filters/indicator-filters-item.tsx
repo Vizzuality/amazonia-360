@@ -61,6 +61,10 @@ export default function GridFiltersItem(dataset: H3Indicator) {
   }, [dataset.var_name, continuosOptions, gridFilters]);
 
   const onOpenChange = (open: boolean) => {
+    if (open && gridDatasets.length >= 4) {
+      return;
+    }
+
     setGridDatasets((prev) => {
       if (open) {
         if (!prev.length) {
@@ -102,7 +106,6 @@ export default function GridFiltersItem(dataset: H3Indicator) {
           "group relative rounded-lg px-3 py-2 text-left transition-colors hover:bg-blue-50": true,
           "bg-blue-50": open,
         })}
-        disabled={gridDatasets.length >= 5}
       >
         <div className="flex w-full items-start justify-between space-x-5">
           <CollapsibleTrigger>
@@ -137,16 +140,28 @@ export default function GridFiltersItem(dataset: H3Indicator) {
               </Dialog>
             </Tooltip>
 
-            <CollapsibleTrigger
-              className={cn({
-                "flex items-center justify-center rounded bg-blue-50 p-0.5 transition-colors hover:bg-blue-100":
-                  true,
-                "group-hover:bg-blue-100": !open,
-              })}
-            >
-              {!open && <LuPlus className="h-4 w-4 cursor-pointer text-primary" />}
-              {open && <LuX className="h-4 w-4 cursor-pointer text-primary" />}
-            </CollapsibleTrigger>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <CollapsibleTrigger
+                  className={cn({
+                    "flex items-center justify-center rounded bg-blue-50 p-0.5 transition-colors hover:bg-blue-100":
+                      true,
+                    "group-hover:bg-blue-100": !open,
+                  })}
+                >
+                  {!open && <LuPlus className="h-4 w-4 cursor-pointer text-primary" />}
+                  {open && <LuX className="h-4 w-4 cursor-pointer text-primary" />}
+                </CollapsibleTrigger>
+              </TooltipTrigger>
+              {!open && gridDatasets.length >= 4 && (
+                <TooltipPortal>
+                  <TooltipContent sideOffset={0}>
+                    You can only select up to 4 layers
+                    <TooltipArrow />
+                  </TooltipContent>
+                </TooltipPortal>
+              )}
+            </Tooltip>
           </div>
         </div>
 
