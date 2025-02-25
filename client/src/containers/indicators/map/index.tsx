@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 
 import { useResourceId } from "@/lib/indicators";
-import { useSession } from "@/lib/session";
 
 import {
   ResourceFeature,
@@ -19,8 +18,7 @@ export const MapIndicators = ({
 }: Omit<Indicator, "resource"> & {
   resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
 }) => {
-  const { data: session } = useSession();
-  const query = useResourceId({ resource, session });
+  const query = useResourceId({ resource });
 
   const LAYER: Partial<__esri.Layer> = useMemo(() => {
     if (resource.type === "web-tile") {

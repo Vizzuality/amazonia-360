@@ -130,10 +130,6 @@ export const useGetIndicatorsId = (id: Indicator["id"]) => {
  */
 export type ResourceIdParams = {
   resource: ResourceFeature | ResourceImageryTile | ResourceWebTile;
-  session?: {
-    token?: string;
-    expires_in: number;
-  };
 };
 
 export type ResourceIdQueryOptions<TData, TError> = UseQueryOptions<
@@ -142,12 +138,11 @@ export type ResourceIdQueryOptions<TData, TError> = UseQueryOptions<
   TData
 >;
 
-export const getResourceId = async ({ resource, session }: ResourceIdParams) => {
+export const getResourceId = async ({ resource }: ResourceIdParams) => {
   return axios
     .get(resource.url, {
       params: {
         f: "json",
-        token: session?.token,
       },
     })
     .then((response) => response.data);
