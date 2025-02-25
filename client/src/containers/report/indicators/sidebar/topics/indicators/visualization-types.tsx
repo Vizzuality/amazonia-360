@@ -9,24 +9,24 @@ import { useGetTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { Indicator } from "@/app/local-api/indicators/route";
-import { VisualizationType } from "@/app/local-api/indicators/route";
+import { VisualizationTypes } from "@/app/local-api/indicators/route";
 import { useSyncTopics } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
 
-export function VisualizationTypes({
+export function VisualizationType({
   types = ["map", "table", "chart", "numeric"],
   indicatorId,
   topicId,
 }: {
-  types: VisualizationType[];
+  types: VisualizationTypes[];
   indicatorId: Indicator["id"];
   topicId: Topic["id"];
 }) {
   const [topics, setTopics] = useSyncTopics();
   const { data: topicsData } = useGetTopics();
 
-  const handleVisualizationType = (visualizationType: VisualizationType) => {
+  const handleVisualizationType = (visualizationType: VisualizationTypes) => {
     const widgetSize = DEFAULT_VISUALIZATION_SIZES[visualizationType];
 
     const newIndicator = {
@@ -90,8 +90,10 @@ export function VisualizationTypes({
     numeric: HashIcon,
   };
   return (
-    <>
-      <span className="text-xs font-semibold text-primary">Visualization types</span>
+    <div className="p-1">
+      <span className="px-2 py-1.5 text-xs font-semibold text-muted-foreground/90">
+        Visualization type
+      </span>
       <ul className="flex flex-col">
         {types.map((type) => {
           const isDisabled = !!activeVisualizationsPerIndicatorAndTopic?.find(
@@ -101,11 +103,12 @@ export function VisualizationTypes({
           const Icon = iconComponents[type];
 
           return (
-            <li key={type} className="rounded-[2px] px-1">
+            <li key={type}>
               <button
                 type="button"
                 className={cn({
-                  "flex w-full items-center space-x-2 hover:bg-blue-100": true,
+                  "flex w-full items-center space-x-2 rounded-[2px] px-2 py-1.5 hover:bg-blue-100":
+                    true,
                   "pointer-events-none cursor-none opacity-50": isDisabled,
                 })}
                 disabled={isDisabled}
@@ -115,7 +118,8 @@ export function VisualizationTypes({
 
                 <span
                   className={cn({
-                    "p-1 text-xs font-semibold capitalize text-foreground transition-colors": true,
+                    "text-xs font-semibold capitalize text-foreground transition-colors hover:text-accent-foreground":
+                      true,
                   })}
                 >
                   {type}
@@ -131,6 +135,6 @@ export function VisualizationTypes({
           );
         })}
       </ul>
-    </>
+    </div>
   );
 }

@@ -5,7 +5,7 @@ import { IndicatorView } from "@/app/parsers";
 
 import INDICATORS from "./indicators.json";
 
-export type VisualizationType = "map" | "table" | "chart" | "numeric";
+export type VisualizationTypes = "map" | "table" | "chart" | "numeric";
 
 export type ResourceFeature = {
   name: string;
@@ -59,7 +59,7 @@ export type Indicator = {
   unit_en: string;
   unit_pt: string;
   topic: Topic;
-  visualization_types: VisualizationType[];
+  visualization_types: VisualizationTypes[];
   resource:
     | ResourceFeature
     | ResourceWebTile
@@ -90,7 +90,7 @@ export type IndicatorOverview = {
   unit_en: string;
   unit_pt: string;
   topic: number;
-  visualization_types: VisualizationType[];
+  visualization_types: VisualizationTypes[];
   resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
 };
 

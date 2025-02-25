@@ -13,8 +13,9 @@ import { Topic } from "@/app/local-api/topics/route";
 import { useSyncTopics } from "@/app/store";
 
 import Info from "@/containers/info";
-import { VisualizationTypes } from "@/containers/report/indicators/sidebar/topics/indicators/visualization-types";
+import { VisualizationType } from "@/containers/report/indicators/sidebar/topics/indicators/visualization-types";
 
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -91,11 +92,18 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
           </Tooltip>
 
           <Popover>
-            <PopoverTrigger className="flex h-5 w-5 items-center justify-center rounded-sm bg-secondary">
-              <LuPlus />
+            <PopoverTrigger>
+              <Button
+                aria-label="Visualization type"
+                type="button"
+                variant="secondary"
+                className="h-5 w-5 rounded-sm p-0"
+              >
+                <LuPlus />
+              </Button>
             </PopoverTrigger>
-            <PopoverContent side="left" align="start" className="w-auto bg-background p-2">
-              <VisualizationTypes
+            <PopoverContent side="left" align="start" className="w-auto bg-background p-0">
+              <VisualizationType
                 topicId={topic.id}
                 types={indicator.visualization_types}
                 indicatorId={indicator.id}
@@ -105,7 +113,7 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
         </div>
       </div>
 
-      <CollapsibleContent className="flex items-center space-x-2 pl-1 pt-2">
+      <CollapsibleContent className="flex items-center space-x-2 pl-1">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="7"

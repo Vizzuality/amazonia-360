@@ -5,7 +5,7 @@ import { createElement, MouseEvent } from "react";
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
-import { Indicator, VisualizationType } from "@/app/local-api/indicators/route";
+import { Indicator, VisualizationTypes } from "@/app/local-api/indicators/route";
 import {
   ResourceFeature,
   ResourceImageryTile,
@@ -42,7 +42,7 @@ export default function ReportResultsIndicator({
   onEdit,
 }: {
   id: Indicator["id"];
-  type: VisualizationType;
+  type: VisualizationTypes;
   editable: boolean;
   onEdit?: (e: MouseEvent<HTMLElement>) => void;
 }) {

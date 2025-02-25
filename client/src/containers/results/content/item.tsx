@@ -7,7 +7,7 @@ import { useAtom } from "jotai";
 
 import { useGetTopicsId } from "@/lib/topics";
 
-import { VisualizationType } from "@/app/local-api/indicators/route";
+import { VisualizationTypes } from "@/app/local-api/indicators/route";
 import { TopicView } from "@/app/parsers";
 import { indicatorsEditionModeAtom, reportEditionModeAtom, useSyncTopics } from "@/app/store";
 
@@ -72,7 +72,7 @@ export const ReportResultsContentItem = ({
   );
 
   const onDeleteIndicator = useCallback(
-    (indicatorId: number, type: VisualizationType) => {
+    (indicatorId: number, type: VisualizationTypes) => {
       setTopics((prev) => {
         if (!prev) return prev;
 
