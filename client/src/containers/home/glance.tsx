@@ -116,9 +116,12 @@ export default function Glance() {
             A mosaic of ecosystems and habitats
           </h2>
           <p className="text-base font-normal text-blue-900 lg:text-lg">
-            Amazonia spans over <span className="font-bold">6.7 million square kilometers</span>{" "}
-            across South America. This vital region is a confluence of cultural diversity and
-            environmental significance.
+            <span className="font-bold">
+              {" "}
+              A Continent-sized Mosaic of Cultures and Nature Across Eight Countries
+            </span>
+            Spanning 8.4 million square kilometers across eight South American countries, Amazonia
+            represents one of the planet&apos;s most diverse confluences of cultures and ecosystems.
           </p>
 
           <div className="mt-7 flex flex-col space-y-1">

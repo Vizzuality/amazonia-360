@@ -37,8 +37,10 @@ export default function CardsContainer() {
           <br /> Amazonia Grid
         </h2>
         <p className="text-base font-normal text-blue-900 lg:text-lg">
-          Whether you&apos;re focusing on population, biodiversity, or other key metrics, this tool
-          lets you filter and select only the regions that meet your chosen criteria.
+          <span className="font-bold">Grid-Powered Analytics</span> Beyond the report, dive deeper
+          into your selected area using our standardized hexagonal grid system to play with
+          indicators and identify locations that match your specific criteria, from biodiversity
+          hotspots to demographic patterns.
         </p>
       </div>
       <ul

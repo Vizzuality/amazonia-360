@@ -30,10 +30,12 @@ export default function CardsContainer() {
         <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
           Key Features
         </h3>
-        <h2 className="m-auto pb-6 text-2xl text-blue-400 lg:text-4xl">Generate quick reports</h2>
+        <h2 className="m-auto pb-6 text-2xl text-blue-400 lg:text-4xl">
+          Generate Reports in Minutes
+        </h2>
         <p className="text-base font-normal text-blue-900 lg:text-lg">
-          Personalize your experience with reports that adapt to your focus areas, providing you
-          with the targeted insights you need to make informed decisions.
+          Create customized reports focused on your areas of interest, with actionable insights and
+          data visualizations generated instantly from our comprehensive territorial knowledge base.
         </p>
       </div>
       <ul
