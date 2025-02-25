@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { Metadata } from "next";
 
 import PageProviders from "@/app/report/page-providers";
@@ -17,7 +19,9 @@ export default function ReportPage() {
         <div className="pointer-events-none absolute bottom-8 left-0 top-10 z-10 w-full">
           <div className="container grid grid-cols-12">
             <div className="col-span-6 xl:col-span-5">
-              <ReportLocation />
+              <Suspense fallback={null}>
+                <ReportLocation />
+              </Suspense>
             </div>
           </div>
         </div>
