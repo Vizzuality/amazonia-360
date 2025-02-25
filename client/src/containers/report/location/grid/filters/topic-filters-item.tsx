@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { useAtom } from "jotai";
@@ -26,7 +26,7 @@ export default function GridTopicFiltersItem({
   const [open, setOpen] = useState(false);
   const topic = useGetTopicsId(id);
   const [selectedFiltersView] = useAtom(selectedFiltersViewAtom);
-  const datasetsIds = datasets.map((d) => d.var_name);
+  const datasetsIds = useMemo(() => datasets.map((d) => d.var_name), [datasets]);
 
   useEffect(() => {
     if (selectedFiltersView) {

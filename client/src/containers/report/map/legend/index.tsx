@@ -7,6 +7,7 @@ import { TbChartCircles } from "react-icons/tb";
 
 import { formatNumber } from "@/lib/formats";
 import { useMeta } from "@/lib/grid";
+import { useGetH3Indicators } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 import { cn } from "@/lib/utils";
 
@@ -28,29 +29,31 @@ export const Legend: FC = () => {
     wkid: 4326,
   });
 
+  const { data: H3IndicatorsData } = useGetH3Indicators();
+
   const [gridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset, setGridSelectedDataset] = useSyncGridSelectedDataset();
   const [gridSetUpFilters, setGridSetUpFilters] = useSyncGridFiltersSetUp();
 
   const { META } = useMeta(GEOMETRY);
 
-  const layersOptions = useMemo(
-    () => [
+  const OPTIONS = useMemo(() => {
+    return [
       ...(gridDatasets?.map((d) => ({
         key: d,
-        ...META?.datasets?.find((dataset) => dataset.var_name === d),
+        ...H3IndicatorsData?.find((i) => i.resource.column === d),
+        ...META?.datasets.find((ds) => ds.var_name === d),
       })) || []),
       {
         key: "no-layer",
-        label: "None",
+        name_en: "None",
       },
-    ],
-    [META, gridDatasets],
-  );
+    ];
+  }, [H3IndicatorsData, META, gridDatasets]);
 
   const GRID_SELECTED_DATASET = useMemo(
-    () => layersOptions?.find((opt) => opt.key === gridSelectedDataset) || layersOptions[0],
-    [gridSelectedDataset, layersOptions],
+    () => OPTIONS?.find((opt) => opt.key === gridSelectedDataset) || OPTIONS[0],
+    [gridSelectedDataset, OPTIONS],
   );
 
   const onValueChange = useCallback(
@@ -80,8 +83,10 @@ export const Legend: FC = () => {
           })}
         >
           {!!gridDatasets.length && GRID_SELECTED_DATASET.key !== "no-layer"
-            ? GRID_SELECTED_DATASET.label
+            ? GRID_SELECTED_DATASET.name_en
             : "Select layer to display"}
+
+          {GRID_SELECTED_DATASET.unit_en && ` (${GRID_SELECTED_DATASET.unit_en})`}
         </div>
 
         <div className="flex space-x-2 pr-2">
@@ -147,10 +152,10 @@ export const Legend: FC = () => {
                 align="start"
                 className="no-scrollbar max-h-96 w-72 translate-x-[-6px] overflow-y-auto border-none shadow-md"
               >
-                {layersOptions &&
-                  layersOptions.map((opt) => (
+                {OPTIONS &&
+                  OPTIONS.map((opt) => (
                     <SelectItem key={opt.key} value={opt.key} className="cursor-pointer">
-                      {opt.label}
+                      {opt.name_en}
                     </SelectItem>
                   ))}
               </SelectContent>
