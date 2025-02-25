@@ -60,8 +60,7 @@ export const GridTableItem = (
 
           return {
             ...dataset,
-            name: matchingIndicator.name_en,
-            unit: matchingIndicator.unit_en,
+            ...matchingIndicator,
           };
         })
         .filter(Boolean),
@@ -75,10 +74,8 @@ export const GridTableItem = (
       if (!d) return null;
 
       return {
-        name: d.label,
+        ...d,
         value: rest[dataset],
-        unit: d.unit,
-        column: d.var_name,
       };
     });
   }, [gridDatasets, queryMeta.data, rest]);
@@ -126,7 +123,7 @@ export const GridTableItem = (
               <ul className="w-full overflow-hidden pt-1">
                 {ITEMS.map((dataset, i) => (
                   <li
-                    key={dataset?.column}
+                    key={dataset?.id}
                     className="flex w-full items-end justify-between gap-2 text-sm"
                   >
                     <div className="relative flex flex-1 items-end overflow-hidden">
@@ -135,7 +132,7 @@ export const GridTableItem = (
                           "font-normal": i !== 0,
                         })}
                       >
-                        {dataset?.name}
+                        {dataset?.name_en}
                       </p>
                       <span className="flex-1 overflow-hidden whitespace-nowrap font-extralight tracking-[2.5px] text-muted-foreground">
                         {".".repeat(200)}
@@ -143,7 +140,7 @@ export const GridTableItem = (
                     </div>
 
                     <span className="flex-shrink-0 whitespace-nowrap text-blue-700">
-                      {formatNumberUnit(+(dataset?.value ?? 0), `${dataset?.unit}`)}
+                      {formatNumberUnit(+(dataset?.value ?? 0), `${dataset?.unit_en}`)}
                     </span>
                   </li>
                 ))}
