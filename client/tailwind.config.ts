@@ -221,6 +221,9 @@ const config = {
         "2xs": ["0.625rem", "0.75rem"],
         "4xl": ["2.5rem", "3rem"],
       },
+      fontFamily: {
+        montserrat: "var(--montserrat)",
+      },
       width: {
         "popover-width": "var(--radix-popover-trigger-width)",
       },

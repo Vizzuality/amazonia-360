@@ -2,8 +2,8 @@ import { FC, useCallback, useMemo } from "react";
 
 import { PopoverArrow } from "@radix-ui/react-popover";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
+import { LucideBlend } from "lucide-react";
 import { LuSettings2 } from "react-icons/lu";
-import { TbChartCircles } from "react-icons/tb";
 
 import { formatNumber } from "@/lib/formats";
 import { useMeta } from "@/lib/grid";
@@ -31,7 +31,7 @@ export const GridLegend: FC = () => {
 
   const { data: H3IndicatorsData } = useGetH3Indicators();
 
-  const [gridDatasets] = useSyncGridDatasets();
+  const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset, setGridSelectedDataset] = useSyncGridSelectedDataset();
   const [gridSetUpFilters, setGridSetUpFilters] = useSyncGridFiltersSetUp();
 
@@ -68,17 +68,20 @@ export const GridLegend: FC = () => {
 
   const onChangeDataset = useCallback(
     (e: string) => {
-      setGridSelectedDataset(e);
+      if (e === "no-layer") {
+        setGridSelectedDataset(null);
+        setGridDatasets([]);
+      } else setGridSelectedDataset(e);
     },
-    [setGridSelectedDataset],
+    [setGridSelectedDataset, setGridDatasets],
   );
 
   return (
-    <div className="border-muted-background absolute bottom-16 right-4 flex w-72 flex-col space-y-1 rounded-lg border bg-white shadow-md">
-      <div className="flex items-center justify-between gap-1">
+    <div className="border-muted-background absolute bottom-16 right-4 flex w-72 flex-col space-y-1 rounded-lg border bg-white font-montserrat shadow-md">
+      <div className="flex items-center justify-between gap-1 px-4 py-2">
         <div
           className={cn({
-            "px-4 py-2 text-sm text-foreground": true,
+            "text-xs text-foreground": true,
             "opacity-50": !gridDatasets.length || gridSelectedDataset === "no-layer",
           })}
         >
@@ -89,12 +92,12 @@ export const GridLegend: FC = () => {
           {GRID_SELECTED_DATASET.unit_en && ` (${GRID_SELECTED_DATASET.unit_en})`}
         </div>
 
-        <div className="flex space-x-2 pr-2">
+        <div className="flex items-center justify-end">
           <Popover>
             <Tooltip>
               <PopoverTrigger asChild>
-                <TooltipTrigger className="p-0">
-                  <TbChartCircles className="h-6 w-6 stroke-blue-500" />
+                <TooltipTrigger className="h-6 w-6 rounded-sm px-1 hover:bg-blue-100">
+                  <LucideBlend className="h-4 w-4 stroke-blue-500 stroke-1" />
                 </TooltipTrigger>
               </PopoverTrigger>
 
@@ -138,11 +141,11 @@ export const GridLegend: FC = () => {
           <Select value={gridSelectedDataset || gridDatasets[0]} onValueChange={onChangeDataset}>
             <Tooltip>
               <SelectTrigger
-                className="border-none p-0 shadow-none focus:border-none focus:ring-0 focus:ring-transparent"
+                className="flex h-6 w-6 items-center justify-center rounded-sm border-none p-0 shadow-none hover:bg-blue-100 focus:border-none focus:ring-0 focus:ring-transparent"
                 hasArrow={false}
               >
                 <TooltipTrigger asChild>
-                  <LuSettings2 className="h-6 w-6 stroke-blue-500" />
+                  <LuSettings2 className="h-4 w-4 stroke-blue-500 stroke-1" />
                 </TooltipTrigger>
               </SelectTrigger>
 
