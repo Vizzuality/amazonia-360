@@ -53,7 +53,7 @@ export const WidgetLegend = ({
         items: r.uniqueValueInfos?.map((u) => ({
           id: u.value,
           color: new Color(u.symbol.color).toHex(),
-          label: `${u.value}`,
+          label: `${u.label}`,
         })),
       };
     }
