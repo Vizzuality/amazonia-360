@@ -18,12 +18,7 @@ import type {
   TileTilesTileMatrixSetIdZXYGetParams,
   TileTilesTileMatrixSetIdZXYScaleXFormatGetParams,
   TileTilesTileMatrixSetIdZXYScaleXGetParams,
-  TileTilesZXYFormatGetParams,
-  TileTilesZXYGetParams,
-  TileTilesZXYScaleXFormatGetParams,
-  TileTilesZXYScaleXGetParams,
   TilejsonTileMatrixSetIdTilejsonJsonGetParams,
-  TilejsonTilejsonJsonGetParams,
 } from "./api.schemas";
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
@@ -187,69 +182,6 @@ export const tileTilesTileMatrixSetIdZXYGet = (
   );
 };
 /**
- * Create map tile from a dataset.
- * @deprecated
- * @summary Tile
- */
-export const tileTilesZXYScaleXFormatGet = (
-  z: number,
-  x: number,
-  y: number,
-  scale: number,
-  format: ImageType,
-  params: TileTilesZXYScaleXFormatGetParams,
-  options?: SecondParameter<typeof API>,
-) => {
-  return API<unknown>(
-    { url: `/tiles/${z}/${x}/${y}@${scale}x.${format}`, method: "GET", params },
-    options,
-  );
-};
-/**
- * Create map tile from a dataset.
- * @deprecated
- * @summary Tile
- */
-export const tileTilesZXYScaleXGet = (
-  z: number,
-  x: number,
-  y: number,
-  scale: number,
-  params: TileTilesZXYScaleXGetParams,
-  options?: SecondParameter<typeof API>,
-) => {
-  return API<unknown>({ url: `/tiles/${z}/${x}/${y}@${scale}x`, method: "GET", params }, options);
-};
-/**
- * Create map tile from a dataset.
- * @deprecated
- * @summary Tile
- */
-export const tileTilesZXYFormatGet = (
-  z: number,
-  x: number,
-  y: number,
-  format: ImageType,
-  params: TileTilesZXYFormatGetParams,
-  options?: SecondParameter<typeof API>,
-) => {
-  return API<unknown>({ url: `/tiles/${z}/${x}/${y}.${format}`, method: "GET", params }, options);
-};
-/**
- * Create map tile from a dataset.
- * @deprecated
- * @summary Tile
- */
-export const tileTilesZXYGet = (
-  z: number,
-  x: number,
-  y: number,
-  params: TileTilesZXYGetParams,
-  options?: SecondParameter<typeof API>,
-) => {
-  return API<unknown>({ url: `/tiles/${z}/${x}/${y}`, method: "GET", params }, options);
-};
-/**
  * Return TileJSON document for a dataset.
  * @summary Tilejson
  */
@@ -277,17 +209,6 @@ export const tilejsonTileMatrixSetIdTilejsonJsonGet = (
   );
 };
 /**
- * Return TileJSON document for a dataset.
- * @deprecated
- * @summary Tilejson
- */
-export const tilejsonTilejsonJsonGet = (
-  params: TilejsonTilejsonJsonGetParams,
-  options?: SecondParameter<typeof API>,
-) => {
-  return API<TileJSON>({ url: `/tilejson.json`, method: "GET", params }, options);
-};
-/**
  * List all available tif files.
  * @summary List Files
  */
@@ -312,20 +233,7 @@ export type TileTilesTileMatrixSetIdZXYFormatGetResult = NonNullable<
 export type TileTilesTileMatrixSetIdZXYGetResult = NonNullable<
   Awaited<ReturnType<typeof tileTilesTileMatrixSetIdZXYGet>>
 >;
-export type TileTilesZXYScaleXFormatGetResult = NonNullable<
-  Awaited<ReturnType<typeof tileTilesZXYScaleXFormatGet>>
->;
-export type TileTilesZXYScaleXGetResult = NonNullable<
-  Awaited<ReturnType<typeof tileTilesZXYScaleXGet>>
->;
-export type TileTilesZXYFormatGetResult = NonNullable<
-  Awaited<ReturnType<typeof tileTilesZXYFormatGet>>
->;
-export type TileTilesZXYGetResult = NonNullable<Awaited<ReturnType<typeof tileTilesZXYGet>>>;
 export type TilejsonTileMatrixSetIdTilejsonJsonGetResult = NonNullable<
   Awaited<ReturnType<typeof tilejsonTileMatrixSetIdTilejsonJsonGet>>
->;
-export type TilejsonTilejsonJsonGetResult = NonNullable<
-  Awaited<ReturnType<typeof tilejsonTilejsonJsonGet>>
 >;
 export type ListFilesTifsGetResult = NonNullable<Awaited<ReturnType<typeof listFilesTifsGet>>>;

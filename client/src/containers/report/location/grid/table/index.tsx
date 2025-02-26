@@ -66,7 +66,6 @@ export default function GridTable() {
         level: 1,
         order_by: [`${gridFiltersSetUp?.direction === "asc" ? "" : "-"}${gridDatasets[0]}`],
         limit: gridFiltersSetUp?.limit,
-        direction: gridFiltersSetUp?.direction || "asc",
       },
     },
     {

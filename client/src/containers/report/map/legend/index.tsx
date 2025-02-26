@@ -176,10 +176,13 @@ export const Legend: FC = () => {
           {GRID_SELECTED_DATASET?.legend?.legend_type === "continuous" && (
             <>
               <div className="h-2 w-full rounded-full bg-viridis" />
-              <div className="flex w-full justify-between text-[10px] font-medium text-muted-foreground">
-                <span>{formatNumber(GRID_SELECTED_DATASET.legend.stats[0].min ?? 0)}</span>
-                <span>{formatNumber(GRID_SELECTED_DATASET.legend.stats[0].max ?? 1)}</span>
-              </div>
+
+              {"stats" in GRID_SELECTED_DATASET.legend && (
+                <div className="flex w-full justify-between text-[10px] font-medium text-muted-foreground">
+                  <span>{formatNumber(GRID_SELECTED_DATASET.legend.stats[0].min ?? 0)}</span>
+                  <span>{formatNumber(GRID_SELECTED_DATASET.legend.stats[0].max ?? 1)}</span>
+                </div>
+              )}
             </>
           )}
         </div>

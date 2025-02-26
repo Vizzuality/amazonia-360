@@ -34,14 +34,14 @@ export default function GridFiltersItem(dataset: H3Indicator) {
   const open = gridDatasets?.includes(dataset.var_name);
 
   const continuosOptions = useMemo(() => {
-    if (dataset.legend?.legend_type === "continuous") {
+    if (dataset.legend?.legend_type === "continuous" && "stats" in dataset.legend) {
       const s = dataset.legend.stats.find((stat) => stat.level === 1);
       return s;
     }
   }, [dataset.legend]);
 
   const categoricalOptions = useMemo(() => {
-    if (dataset.legend.legend_type === "categorical") {
+    if (dataset.legend.legend_type === "categorical" && "entries" in dataset.legend) {
       return dataset.legend.entries;
     }
   }, [dataset.legend]);
