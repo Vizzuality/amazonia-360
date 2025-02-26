@@ -10,7 +10,7 @@ export default function Legend({ children }: PropsWithChildren) {
     <Collapsible
       open={open}
       onOpenChange={setOpen}
-      className="rounded-3xl border border-blue-100 bg-white px-4 py-2"
+      className="rounded-lg border border-blue-100 bg-white px-4 py-2"
     >
       <CollapsibleTrigger className="flex w-full min-w-28 items-center justify-between text-sm">
         <span>Legend</span>
