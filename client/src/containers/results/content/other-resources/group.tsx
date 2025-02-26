@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 
+import Resource from "@/containers/results/content/other-resources/resource";
+import { ResourceProps } from "@/containers/results/content/other-resources/types";
 import WidgetsColumn from "@/containers/widgets/column";
-import Resource from "@/containers/widgets/other-resources/resource";
-import { ResourceProps } from "@/containers/widgets/other-resources/types";
-import { DataPagination } from "@/containers/widgets/pagination";
 import WidgetsRow from "@/containers/widgets/row";
+import { DataPagination } from "@/containers/widgets/table/pagination";
 
 export default function OtherResourcesGroup({ data }: { data?: ResourceProps[] }) {
   const rowsPerPage = 8;

@@ -75,10 +75,6 @@ export default function WidgetMap({ layers, ...viewProps }: WidgetMapProps) {
         {layers.map((layer, index, arr) => {
           const i = arr.length - index;
 
-          // if (layer.type === "feature" && "customParameters" in layer) {
-          //   i = layer?.customParameters?.position === "top" ? arr.length + 3 : arr.length - index;
-          // }
-
           return <Layer key={layer.id} layer={layer} index={i} GEOMETRY={GEOMETRY} />;
         })}
 

@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-import { LegendItemProps } from "@/containers/legend/item";
+import { LegendItemProps } from "@/components/map/legend/item";
 
 export default function LegendBasic({
   items,

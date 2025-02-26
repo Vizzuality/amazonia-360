@@ -1,5 +1,5 @@
-import LegendBasic from "@/containers/legend/basic";
-import LegendGradient from "@/containers/legend/gradient";
+import LegendBasic from "@/components/map/legend/basic";
+import LegendGradient from "@/components/map/legend/gradient";
 
 export interface LegendItemProps {
   type: "basic" | "gradient";

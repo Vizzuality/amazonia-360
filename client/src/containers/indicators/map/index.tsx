@@ -10,7 +10,7 @@ import {
 import { Indicator } from "@/app/local-api/indicators/route";
 
 import { CardLoader } from "@/containers/card";
-import WidgetMap from "@/containers/map";
+import WidgetMap from "@/containers/widgets/map";
 
 export const MapIndicators = ({
   id,
