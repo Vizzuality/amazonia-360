@@ -35,7 +35,7 @@ export const Tooltip = () => {
 
     const screenPoint = view.toScreen(point);
 
-    setPosition({ x: screenPoint.x, y: screenPoint.y });
+    setPosition({ x: screenPoint?.x, y: screenPoint?.y });
   }, [cell, view]);
 
   if (!position || typeof cell.id !== "number") return null;

@@ -10,7 +10,7 @@ export function CounterIndicatorsPill({ id }: { id: Topic["id"] }) {
   if (!t || !t.indicators || !t.indicators?.length) return null;
 
   return (
-    <span className="rounded-full border border-border bg-secondary px-2.5 py-0.5 text-xs font-semibold text-primary">
+    <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-primary">
       {t.indicators.length}
     </span>
   );
