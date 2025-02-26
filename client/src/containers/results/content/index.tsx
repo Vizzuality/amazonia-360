@@ -3,7 +3,7 @@
 import { TopicView } from "@/app/parsers";
 import { useSyncTopics } from "@/app/store";
 
-import ReportResultsContentItem from "@/containers/report/results/content/item";
+import ReportResultsContentItem from "@/containers/results/content/item";
 import WidgetsOtherResources from "@/containers/widgets/other-resources";
 import { WidgetsOverview } from "@/containers/widgets/overview";
 

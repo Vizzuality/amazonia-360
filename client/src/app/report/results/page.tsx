@@ -11,8 +11,8 @@ import { PageProps } from "@/app/types";
 
 import DataDisclaimer from "@/containers/disclaimers/data";
 import TopicsSidebar from "@/containers/report/indicators/sidebar";
-import ReportResultsContent from "@/containers/report/results/content";
-import ReportResultsHeader from "@/containers/report/results/header";
+import ReportResultsContent from "@/containers/results/content";
+import ReportResultsHeader from "@/containers/results/header";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
 

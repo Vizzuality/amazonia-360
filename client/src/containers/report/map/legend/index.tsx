@@ -23,7 +23,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/u
 import { Slider } from "@/components/ui/slider";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-export const Legend: FC = () => {
+export const GridLegend: FC = () => {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
@@ -191,4 +191,4 @@ export const Legend: FC = () => {
   );
 };
 
-export default Legend;
+export default GridLegend;

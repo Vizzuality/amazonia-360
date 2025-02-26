@@ -5,8 +5,6 @@ export interface ReportResultsSummaryProps {
 }
 
 export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
-  console.log(topic);
-
   return (
     <div>
       <h1>Summary {topic?.id}</h1>

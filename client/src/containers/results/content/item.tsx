@@ -13,11 +13,11 @@ import { indicatorsEditionModeAtom, reportEditionModeAtom, useSyncTopics } from 
 
 import { MIN_VISUALIZATION_SIZES } from "@/constants/topics";
 
-import DeleteHandler from "@/containers/report/indicators/controls/delete";
-import MoveHandler from "@/containers/report/indicators/controls/drag";
-import ResizeHandler from "@/containers/report/indicators/controls/resize";
+import DeleteHandler from "@/containers/results/content/controls/delete";
+import MoveHandler from "@/containers/results/content/controls/drag";
+import ResizeHandler from "@/containers/results/content/controls/resize";
 // import { ReportResultsSummary } from "@/containers/report/results/content/summary";
-import ReportResultsIndicator from "@/containers/report/results/indicator";
+import ReportResultsIndicator from "@/containers/results/content/indicator";
 
 import { useSidebar } from "@/components/ui/sidebar";
 
