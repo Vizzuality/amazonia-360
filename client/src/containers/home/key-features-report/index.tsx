@@ -38,8 +38,8 @@ export default function KeyFeatures() {
 
         <Media lessThan="md">
           <>
-            <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-5 bg-gradient-to-r from-white to-transparent" />
-            <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 w-5 bg-gradient-to-l from-white to-transparent" />
+            <div className="pointer-events-none absolute -left-8 bottom-0 top-0 z-10 w-5 bg-gradient-to-r from-white to-transparent" />
+            <div className="pointer-events-none absolute -right-8 bottom-0 top-0 z-10 w-5 bg-gradient-to-l from-white to-transparent" />
           </>
         </Media>
 

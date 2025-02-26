@@ -23,7 +23,9 @@ const config = {
     },
     extend: {
       screens: {
-        "2xl": "1441px",
+        xl: "1280px", // Applies max-width: 400px
+        "2xl": "1441px", // Applies max-width: 512px
+        "3xl": "100%", // Anything above 1441px remains full width
         tall: {
           raw: "(min-height: 800px)",
         },

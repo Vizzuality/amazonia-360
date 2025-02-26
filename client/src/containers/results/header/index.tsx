@@ -44,7 +44,7 @@ export default function ReportResultsHeader() {
         <div className="relative flex h-full justify-between">
           {/* Name */}
           <div className="mr-4 flex items-center space-x-6">
-            <h1 className="text-2xl font-bold text-primary lg:text-3xl tall:xl:text-4xl">
+            <h1 className="tall:xl:text-4xl text-2xl font-bold text-primary lg:text-3xl">
               {title}
             </h1>
 
