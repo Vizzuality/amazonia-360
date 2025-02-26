@@ -3,7 +3,7 @@ import { DatasetMeta } from "@/types/generated/api.schemas";
 import { Topic } from "@/app/local-api/topics/route";
 import { IndicatorView } from "@/app/parsers";
 
-import INDICATORS from "./indicators_v25_02_2025.json";
+import INDICATORS from "./indicators.json";
 
 export type VisualizationType = "map" | "table" | "chart" | "numeric";
 
