@@ -5,7 +5,6 @@ import { useCallback, useEffect } from "react";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import ImageryTileLayer from "@arcgis/core/layers/ImageryTileLayer";
-import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter";
 import VectorTileLayer from "@arcgis/core/layers/VectorTileLayer";
 import WebTileLayer from "@arcgis/core/layers/WebTileLayer";
 
@@ -30,7 +29,7 @@ export default function Layer({
       return;
     }
 
-    const { map, view } = mapInstance;
+    const { map } = mapInstance;
 
     if (!map || !id) {
       return;
@@ -39,15 +38,6 @@ export default function Layer({
     if (layer.type === "feature") {
       const l = new FeatureLayer(omit(layer, ["type"]));
       map.add(l, index);
-
-      view.whenLayerView(l).then((layerView) => {
-        if (!!GEOMETRY && layerView) {
-          layerView.filter = new FeatureFilter({
-            geometry: GEOMETRY,
-            spatialRelationship: "intersects",
-          });
-        }
-      });
 
       map.reorder(l, index);
     }
@@ -85,7 +75,7 @@ export default function Layer({
 
       map.reorder(l, index);
     }
-  }, [id, index, layer, GEOMETRY, mapInstance]);
+  }, [id, index, layer, mapInstance]);
 
   useEffect(() => {
     if (!mapInstance) {
