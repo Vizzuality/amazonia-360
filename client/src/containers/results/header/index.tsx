@@ -10,10 +10,10 @@ import { useLocationTitle } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/store";
 
+import Topics from "@/containers/report/topics";
 import DownloadReport from "@/containers/results/header/download";
 import IndicatorsReport from "@/containers/results/header/indicators";
 import ShareReport from "@/containers/results/header/share";
-import Topics from "@/containers/report/topics";
 
 import {
   AlertDialog,
