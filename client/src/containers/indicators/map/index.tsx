@@ -10,14 +10,14 @@ import {
 import { Indicator } from "@/app/local-api/indicators/route";
 
 import { CardLoader } from "@/containers/card";
-import WidgetMap from "@/containers/map";
+import WidgetMap from "@/containers/widgets/map";
 
-export const MapIndicators = ({
-  id,
-  resource,
-}: Omit<Indicator, "resource"> & {
-  resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
-}) => {
+export const MapIndicators = (
+  indicator: Omit<Indicator, "resource"> & {
+    resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
+  },
+) => {
+  const { id, resource } = indicator;
   const query = useResourceId({ resource });
 
   const LAYER: Partial<__esri.Layer> = useMemo(() => {
@@ -46,7 +46,7 @@ export const MapIndicators = ({
 
   return (
     <CardLoader query={[query]} className="min-h-72 grow">
-      <WidgetMap layers={[LAYER]} />
+      <WidgetMap indicator={indicator} layers={[LAYER]} />
     </CardLoader>
   );
 };

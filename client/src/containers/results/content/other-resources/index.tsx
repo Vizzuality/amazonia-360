@@ -10,8 +10,8 @@ import { useSyncLocation } from "@/app/store";
 import { DATASETS } from "@/constants/datasets";
 
 import { CardLoader, CardNoData } from "@/containers/card";
-import OtherResourcesGroup from "@/containers/widgets/other-resources/group";
-import { ResourceProps } from "@/containers/widgets/other-resources/types";
+import OtherResourcesGroup from "@/containers/results/content/other-resources/group";
+import { ResourceProps } from "@/containers/results/content/other-resources/types";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 

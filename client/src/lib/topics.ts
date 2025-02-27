@@ -1,7 +1,7 @@
 import { QueryFunction, useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 import { Topic } from "@/app/local-api/topics/route";
-import TOPICS from "@/app/local-api/topics/topics_v24_02_2025_v1.json";
+import TOPICS from "@/app/local-api/topics/topics.json";
 
 /**
  ************************************************************

@@ -7,7 +7,7 @@ import { Indicator, ResourceFeature } from "@/app/local-api/indicators/route";
 import { useSyncLocation } from "@/app/store";
 
 import { CardLoader } from "@/containers/card";
-import { DataTable } from "@/containers/table";
+import { DataTable } from "@/containers/widgets/table";
 
 export interface TableIndicatorsProps extends Indicator {
   resource: ResourceFeature;

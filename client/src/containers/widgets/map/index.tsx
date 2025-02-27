@@ -6,9 +6,11 @@ import dynamic from "next/dynamic";
 
 import { useLocationGeometry } from "@/lib/location";
 
+import { Indicator, ResourceFeature } from "@/app/local-api/indicators/route";
 import { useSyncLocation } from "@/app/store";
 
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
+import { WidgetLegend } from "@/containers/widgets/map/legend";
 
 import Controls from "@/components/map/controls";
 import FullscreenControl from "@/components/map/controls/fullscreen";
@@ -18,10 +20,11 @@ const Map = dynamic(() => import("@/components/map"), { ssr: false });
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
 interface WidgetMapProps extends __esri.MapViewProperties {
+  indicator: Indicator;
   layers: Partial<__esri.Layer>[];
 }
 
-export default function WidgetMap({ layers, ...viewProps }: WidgetMapProps) {
+export default function WidgetMap({ indicator, layers, ...viewProps }: WidgetMapProps) {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
 
@@ -75,10 +78,6 @@ export default function WidgetMap({ layers, ...viewProps }: WidgetMapProps) {
         {layers.map((layer, index, arr) => {
           const i = arr.length - index;
 
-          // if (layer.type === "feature" && "customParameters" in layer) {
-          //   i = layer?.customParameters?.position === "top" ? arr.length + 3 : arr.length - index;
-          // }
-
           return <Layer key={layer.id} layer={layer} index={i} GEOMETRY={GEOMETRY} />;
         })}
 
@@ -86,13 +85,13 @@ export default function WidgetMap({ layers, ...viewProps }: WidgetMapProps) {
 
         <Layer layer={LABELS_LAYER} index={layers.length + 2} />
 
-        {/* {!!legend && (
-          <div className="absolute bottom-4 left-4 z-10">
-            <Legend>
-              <LegendItem {...legend} direction="vertical" />
-            </Legend>
-          </div>
-        )} */}
+        {indicator.resource.type === "feature" && (
+          <WidgetLegend
+            {...(indicator as Omit<Indicator, "resource"> & {
+              resource: ResourceFeature;
+            })}
+          />
+        )}
 
         <Controls>
           <FullscreenControl />

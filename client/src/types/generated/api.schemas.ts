@@ -17,12 +17,6 @@ export type ReadTableGridTablePostParams = {
    * Prepend '-' to column name to make it descending
    */
   order_by: string[];
-  /**
-   * Specifies the sorting direction for the query results.
-   * - "asc": Sorts in ascending order (e.g., smallest to largest or A to Z).
-   * - "desc": Sorts in descending order (e.g., largest to smallest or Z to A).
-   */
-  direction: "asc" | "desc";
 };
 
 export type GridDatasetMetadataInAreaGridMetaPostParams = {
@@ -48,372 +42,6 @@ export type GridTileGridTileTileIndexGetParams = {
    * Column/s to include in the tile. If empty, it returns only cell indexes.
    */
   columns?: string[];
-};
-
-export type TilejsonTilejsonJsonGetColormapName =
-  (typeof TilejsonTilejsonJsonGetColormapName)[keyof typeof TilejsonTilejsonJsonGetColormapName];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TilejsonTilejsonJsonGetColormapName = {
-  accent: "accent",
-  accent_r: "accent_r",
-  afmhot: "afmhot",
-  afmhot_r: "afmhot_r",
-  algae: "algae",
-  algae_r: "algae_r",
-  amp: "amp",
-  amp_r: "amp_r",
-  autumn: "autumn",
-  autumn_r: "autumn_r",
-  balance: "balance",
-  balance_r: "balance_r",
-  binary: "binary",
-  binary_r: "binary_r",
-  blues: "blues",
-  blues_r: "blues_r",
-  bone: "bone",
-  bone_r: "bone_r",
-  brbg: "brbg",
-  brbg_r: "brbg_r",
-  brg: "brg",
-  brg_r: "brg_r",
-  bugn: "bugn",
-  bugn_r: "bugn_r",
-  bupu: "bupu",
-  bupu_r: "bupu_r",
-  bwr: "bwr",
-  bwr_r: "bwr_r",
-  cfastie: "cfastie",
-  cividis: "cividis",
-  cividis_r: "cividis_r",
-  cmrmap: "cmrmap",
-  cmrmap_r: "cmrmap_r",
-  cool: "cool",
-  cool_r: "cool_r",
-  coolwarm: "coolwarm",
-  coolwarm_r: "coolwarm_r",
-  copper: "copper",
-  copper_r: "copper_r",
-  cubehelix: "cubehelix",
-  cubehelix_r: "cubehelix_r",
-  curl: "curl",
-  curl_r: "curl_r",
-  dark2: "dark2",
-  dark2_r: "dark2_r",
-  deep: "deep",
-  deep_r: "deep_r",
-  delta: "delta",
-  delta_r: "delta_r",
-  dense: "dense",
-  dense_r: "dense_r",
-  diff: "diff",
-  diff_r: "diff_r",
-  flag: "flag",
-  flag_r: "flag_r",
-  gist_earth: "gist_earth",
-  gist_earth_r: "gist_earth_r",
-  gist_gray: "gist_gray",
-  gist_gray_r: "gist_gray_r",
-  gist_heat: "gist_heat",
-  gist_heat_r: "gist_heat_r",
-  gist_ncar: "gist_ncar",
-  gist_ncar_r: "gist_ncar_r",
-  gist_rainbow: "gist_rainbow",
-  gist_rainbow_r: "gist_rainbow_r",
-  gist_stern: "gist_stern",
-  gist_stern_r: "gist_stern_r",
-  gist_yarg: "gist_yarg",
-  gist_yarg_r: "gist_yarg_r",
-  gnbu: "gnbu",
-  gnbu_r: "gnbu_r",
-  gnuplot: "gnuplot",
-  gnuplot2: "gnuplot2",
-  gnuplot2_r: "gnuplot2_r",
-  gnuplot_r: "gnuplot_r",
-  gray: "gray",
-  gray_r: "gray_r",
-  greens: "greens",
-  greens_r: "greens_r",
-  greys: "greys",
-  greys_r: "greys_r",
-  haline: "haline",
-  haline_r: "haline_r",
-  hot: "hot",
-  hot_r: "hot_r",
-  hsv: "hsv",
-  hsv_r: "hsv_r",
-  ice: "ice",
-  ice_r: "ice_r",
-  inferno: "inferno",
-  inferno_r: "inferno_r",
-  jet: "jet",
-  jet_r: "jet_r",
-  magma: "magma",
-  magma_r: "magma_r",
-  matter: "matter",
-  matter_r: "matter_r",
-  nipy_spectral: "nipy_spectral",
-  nipy_spectral_r: "nipy_spectral_r",
-  ocean: "ocean",
-  ocean_r: "ocean_r",
-  oranges: "oranges",
-  oranges_r: "oranges_r",
-  orrd: "orrd",
-  orrd_r: "orrd_r",
-  oxy: "oxy",
-  oxy_r: "oxy_r",
-  paired: "paired",
-  paired_r: "paired_r",
-  pastel1: "pastel1",
-  pastel1_r: "pastel1_r",
-  pastel2: "pastel2",
-  pastel2_r: "pastel2_r",
-  phase: "phase",
-  phase_r: "phase_r",
-  pink: "pink",
-  pink_r: "pink_r",
-  piyg: "piyg",
-  piyg_r: "piyg_r",
-  plasma: "plasma",
-  plasma_r: "plasma_r",
-  prgn: "prgn",
-  prgn_r: "prgn_r",
-  prism: "prism",
-  prism_r: "prism_r",
-  pubu: "pubu",
-  pubu_r: "pubu_r",
-  pubugn: "pubugn",
-  pubugn_r: "pubugn_r",
-  puor: "puor",
-  puor_r: "puor_r",
-  purd: "purd",
-  purd_r: "purd_r",
-  purples: "purples",
-  purples_r: "purples_r",
-  rain: "rain",
-  rain_r: "rain_r",
-  rainbow: "rainbow",
-  rainbow_r: "rainbow_r",
-  rdbu: "rdbu",
-  rdbu_r: "rdbu_r",
-  rdgy: "rdgy",
-  rdgy_r: "rdgy_r",
-  rdpu: "rdpu",
-  rdpu_r: "rdpu_r",
-  rdylbu: "rdylbu",
-  rdylbu_r: "rdylbu_r",
-  rdylgn: "rdylgn",
-  rdylgn_r: "rdylgn_r",
-  reds: "reds",
-  reds_r: "reds_r",
-  rplumbo: "rplumbo",
-  schwarzwald: "schwarzwald",
-  seismic: "seismic",
-  seismic_r: "seismic_r",
-  set1: "set1",
-  set1_r: "set1_r",
-  set2: "set2",
-  set2_r: "set2_r",
-  set3: "set3",
-  set3_r: "set3_r",
-  solar: "solar",
-  solar_r: "solar_r",
-  spectral: "spectral",
-  spectral_r: "spectral_r",
-  speed: "speed",
-  speed_r: "speed_r",
-  spring: "spring",
-  spring_r: "spring_r",
-  summer: "summer",
-  summer_r: "summer_r",
-  tab10: "tab10",
-  tab10_r: "tab10_r",
-  tab20: "tab20",
-  tab20_r: "tab20_r",
-  tab20b: "tab20b",
-  tab20b_r: "tab20b_r",
-  tab20c: "tab20c",
-  tab20c_r: "tab20c_r",
-  tarn: "tarn",
-  tarn_r: "tarn_r",
-  tempo: "tempo",
-  tempo_r: "tempo_r",
-  terrain: "terrain",
-  terrain_r: "terrain_r",
-  thermal: "thermal",
-  thermal_r: "thermal_r",
-  topo: "topo",
-  topo_r: "topo_r",
-  turbid: "turbid",
-  turbid_r: "turbid_r",
-  turbo: "turbo",
-  turbo_r: "turbo_r",
-  twilight: "twilight",
-  twilight_r: "twilight_r",
-  twilight_shifted: "twilight_shifted",
-  twilight_shifted_r: "twilight_shifted_r",
-  viridis: "viridis",
-  viridis_r: "viridis_r",
-  winter: "winter",
-  winter_r: "winter_r",
-  wistia: "wistia",
-  wistia_r: "wistia_r",
-  ylgn: "ylgn",
-  ylgn_r: "ylgn_r",
-  ylgnbu: "ylgnbu",
-  ylgnbu_r: "ylgnbu_r",
-  ylorbr: "ylorbr",
-  ylorbr_r: "ylorbr_r",
-  ylorrd: "ylorrd",
-  ylorrd_r: "ylorrd_r",
-} as const;
-
-export type TilejsonTilejsonJsonGetAlgorithm =
-  (typeof TilejsonTilejsonJsonGetAlgorithm)[keyof typeof TilejsonTilejsonJsonGetAlgorithm];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TilejsonTilejsonJsonGetAlgorithm = {
-  hillshade: "hillshade",
-  contours: "contours",
-  normalizedIndex: "normalizedIndex",
-  terrarium: "terrarium",
-  terrainrgb: "terrainrgb",
-} as const;
-
-export type TilejsonTilejsonJsonGetReproject =
-  (typeof TilejsonTilejsonJsonGetReproject)[keyof typeof TilejsonTilejsonJsonGetReproject];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TilejsonTilejsonJsonGetReproject = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  sum: "sum",
-  rms: "rms",
-} as const;
-
-export type TilejsonTilejsonJsonGetResampling =
-  (typeof TilejsonTilejsonJsonGetResampling)[keyof typeof TilejsonTilejsonJsonGetResampling];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TilejsonTilejsonJsonGetResampling = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  gauss: "gauss",
-  rms: "rms",
-} as const;
-
-export type TilejsonTilejsonJsonGetTileMatrixSetId =
-  (typeof TilejsonTilejsonJsonGetTileMatrixSetId)[keyof typeof TilejsonTilejsonJsonGetTileMatrixSetId];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TilejsonTilejsonJsonGetTileMatrixSetId = {
-  CDB1GlobalGrid: "CDB1GlobalGrid",
-  CanadianNAD83_LCC: "CanadianNAD83_LCC",
-  EuropeanETRS89_LAEAQuad: "EuropeanETRS89_LAEAQuad",
-  GNOSISGlobalGrid: "GNOSISGlobalGrid",
-  LINZAntarticaMapTilegrid: "LINZAntarticaMapTilegrid",
-  NZTM2000Quad: "NZTM2000Quad",
-  UPSAntarcticWGS84Quad: "UPSAntarcticWGS84Quad",
-  UPSArcticWGS84Quad: "UPSArcticWGS84Quad",
-  UTM31WGS84Quad: "UTM31WGS84Quad",
-  WGS1984Quad: "WGS1984Quad",
-  WebMercatorQuad: "WebMercatorQuad",
-  WorldCRS84Quad: "WorldCRS84Quad",
-  WorldMercatorWGS84Quad: "WorldMercatorWGS84Quad",
-} as const;
-
-export type TilejsonTilejsonJsonGetParams = {
-  tileMatrixSetId?: TilejsonTilejsonJsonGetTileMatrixSetId;
-  /**
-   * Default will be automatically defined if the output image needs a mask (png) or not (jpeg).
-   */
-  tile_format?: ImageType | null;
-  /**
-   * Tile size scale. 1=256x256, 2=512x512...
-   */
-  tile_scale?: number;
-  /**
-   * Overwrite default minzoom.
-   */
-  minzoom?: number | null;
-  /**
-   * Overwrite default maxzoom.
-   */
-  maxzoom?: number | null;
-  /**
-   * Raster filename.
-   */
-  raster_filename: string;
-  /**
-   * Dataset band indexes
-   */
-  bidx?: number[] | null;
-  /**
-   * rio-tiler's band math expression
-   */
-  expression?: string | null;
-  /**
-   * Overwrite internal Nodata value
-   */
-  nodata?: string | number | number | null;
-  /**
-   * Apply internal Scale/Offset. Defaults to `False`.
-   */
-  unscale?: boolean;
-  /**
-   * RasterIO resampling algorithm. Defaults to `nearest`.
-   */
-  resampling?: TilejsonTilejsonJsonGetResampling;
-  /**
-   * WarpKernel resampling algorithm (only used when doing re-projection). Defaults to `nearest`.
-   */
-  reproject?: TilejsonTilejsonJsonGetReproject;
-  /**
-   * Buffer on each side of the given tile. It must be a multiple of `0.5`. Output **tilesize** will be expanded to `tilesize + 2 * buffer` (e.g 0.5 = 257x257, 1.0 = 258x258).
-   */
-  buffer?: number | null;
-  /**
-   * Padding to apply to each tile edge. Helps reduce resampling artefacts along edges. Defaults to `0`.
-   */
-  padding?: number | null;
-  /**
-   * Algorithm name
-   */
-  algorithm?: TilejsonTilejsonJsonGetAlgorithm;
-  /**
-   * Algorithm parameter
-   */
-  algorithm_params?: string | null;
-  /**
-   * comma (',') delimited Min,Max range. Can set multiple time for multiple bands.
-   */
-  rescale?: string[] | null;
-  /**
-   * rio-color formula (info: https://github.com/mapbox/rio-color)
-   */
-  color_formula?: string | null;
-  /**
-   * Colormap name
-   */
-  colormap_name?: TilejsonTilejsonJsonGetColormapName;
-  /**
-   * JSON encoded custom Colormap
-   */
-  colormap?: string | null;
-  /**
-   * Add mask to the output data. Defaults to `True`
-   */
-  return_mask?: boolean;
 };
 
 export type TilejsonTileMatrixSetIdTilejsonJsonGetColormapName =
@@ -640,42 +268,14 @@ export type TilejsonTileMatrixSetIdTilejsonJsonGetAlgorithm =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TilejsonTileMatrixSetIdTilejsonJsonGetAlgorithm = {
   hillshade: "hillshade",
+  slope: "slope",
   contours: "contours",
   normalizedIndex: "normalizedIndex",
   terrarium: "terrarium",
   terrainrgb: "terrainrgb",
-} as const;
-
-export type TilejsonTileMatrixSetIdTilejsonJsonGetReproject =
-  (typeof TilejsonTileMatrixSetIdTilejsonJsonGetReproject)[keyof typeof TilejsonTileMatrixSetIdTilejsonJsonGetReproject];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TilejsonTileMatrixSetIdTilejsonJsonGetReproject = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  sum: "sum",
-  rms: "rms",
-} as const;
-
-export type TilejsonTileMatrixSetIdTilejsonJsonGetResampling =
-  (typeof TilejsonTileMatrixSetIdTilejsonJsonGetResampling)[keyof typeof TilejsonTileMatrixSetIdTilejsonJsonGetResampling];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TilejsonTileMatrixSetIdTilejsonJsonGetResampling = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  gauss: "gauss",
-  rms: "rms",
+  cast: "cast",
+  ceil: "ceil",
+  floor: "floor",
 } as const;
 
 export type TilejsonTileMatrixSetIdTilejsonJsonGetParams = {
@@ -700,6 +300,14 @@ export type TilejsonTileMatrixSetIdTilejsonJsonGetParams = {
    */
   raster_filename: string;
   /**
+   * Buffer on each side of the given tile. It must be a multiple of `0.5`. Output **tilesize** will be expanded to `tilesize + 2 * buffer` (e.g 0.5 = 257x257, 1.0 = 258x258).
+   */
+  buffer?: number | null;
+  /**
+   * Padding to apply to each tile edge. Helps reduce resampling artefacts along edges. Defaults to `0`.
+   */
+  padding?: number | null;
+  /**
    * Dataset band indexes
    */
   bidx?: number[] | null;
@@ -710,27 +318,39 @@ export type TilejsonTileMatrixSetIdTilejsonJsonGetParams = {
   /**
    * Overwrite internal Nodata value
    */
-  nodata?: string | number | number | null;
+  nodata?: number | number | string | null;
   /**
    * Apply internal Scale/Offset. Defaults to `False`.
    */
-  unscale?: boolean;
+  unscale?: boolean | null;
   /**
    * RasterIO resampling algorithm. Defaults to `nearest`.
    */
-  resampling?: TilejsonTileMatrixSetIdTilejsonJsonGetResampling;
+  resampling?:
+    | "nearest"
+    | "bilinear"
+    | "cubic"
+    | "cubic_spline"
+    | "lanczos"
+    | "average"
+    | "mode"
+    | "gauss"
+    | "rms"
+    | null;
   /**
    * WarpKernel resampling algorithm (only used when doing re-projection). Defaults to `nearest`.
    */
-  reproject?: TilejsonTileMatrixSetIdTilejsonJsonGetReproject;
-  /**
-   * Buffer on each side of the given tile. It must be a multiple of `0.5`. Output **tilesize** will be expanded to `tilesize + 2 * buffer` (e.g 0.5 = 257x257, 1.0 = 258x258).
-   */
-  buffer?: number | null;
-  /**
-   * Padding to apply to each tile edge. Helps reduce resampling artefacts along edges. Defaults to `0`.
-   */
-  padding?: number | null;
+  reproject?:
+    | "nearest"
+    | "bilinear"
+    | "cubic"
+    | "cubic_spline"
+    | "lanczos"
+    | "average"
+    | "mode"
+    | "sum"
+    | "rms"
+    | null;
   /**
    * Algorithm name
    */
@@ -740,14 +360,6 @@ export type TilejsonTileMatrixSetIdTilejsonJsonGetParams = {
    */
   algorithm_params?: string | null;
   /**
-   * comma (',') delimited Min,Max range. Can set multiple time for multiple bands.
-   */
-  rescale?: string[] | null;
-  /**
-   * rio-color formula (info: https://github.com/mapbox/rio-color)
-   */
-  color_formula?: string | null;
-  /**
    * Colormap name
    */
   colormap_name?: TilejsonTileMatrixSetIdTilejsonJsonGetColormapName;
@@ -756,342 +368,6 @@ export type TilejsonTileMatrixSetIdTilejsonJsonGetParams = {
    */
   colormap?: string | null;
   /**
-   * Add mask to the output data. Defaults to `True`
-   */
-  return_mask?: boolean;
-};
-
-export type TileTilesZXYGetColormapName =
-  (typeof TileTilesZXYGetColormapName)[keyof typeof TileTilesZXYGetColormapName];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYGetColormapName = {
-  accent: "accent",
-  accent_r: "accent_r",
-  afmhot: "afmhot",
-  afmhot_r: "afmhot_r",
-  algae: "algae",
-  algae_r: "algae_r",
-  amp: "amp",
-  amp_r: "amp_r",
-  autumn: "autumn",
-  autumn_r: "autumn_r",
-  balance: "balance",
-  balance_r: "balance_r",
-  binary: "binary",
-  binary_r: "binary_r",
-  blues: "blues",
-  blues_r: "blues_r",
-  bone: "bone",
-  bone_r: "bone_r",
-  brbg: "brbg",
-  brbg_r: "brbg_r",
-  brg: "brg",
-  brg_r: "brg_r",
-  bugn: "bugn",
-  bugn_r: "bugn_r",
-  bupu: "bupu",
-  bupu_r: "bupu_r",
-  bwr: "bwr",
-  bwr_r: "bwr_r",
-  cfastie: "cfastie",
-  cividis: "cividis",
-  cividis_r: "cividis_r",
-  cmrmap: "cmrmap",
-  cmrmap_r: "cmrmap_r",
-  cool: "cool",
-  cool_r: "cool_r",
-  coolwarm: "coolwarm",
-  coolwarm_r: "coolwarm_r",
-  copper: "copper",
-  copper_r: "copper_r",
-  cubehelix: "cubehelix",
-  cubehelix_r: "cubehelix_r",
-  curl: "curl",
-  curl_r: "curl_r",
-  dark2: "dark2",
-  dark2_r: "dark2_r",
-  deep: "deep",
-  deep_r: "deep_r",
-  delta: "delta",
-  delta_r: "delta_r",
-  dense: "dense",
-  dense_r: "dense_r",
-  diff: "diff",
-  diff_r: "diff_r",
-  flag: "flag",
-  flag_r: "flag_r",
-  gist_earth: "gist_earth",
-  gist_earth_r: "gist_earth_r",
-  gist_gray: "gist_gray",
-  gist_gray_r: "gist_gray_r",
-  gist_heat: "gist_heat",
-  gist_heat_r: "gist_heat_r",
-  gist_ncar: "gist_ncar",
-  gist_ncar_r: "gist_ncar_r",
-  gist_rainbow: "gist_rainbow",
-  gist_rainbow_r: "gist_rainbow_r",
-  gist_stern: "gist_stern",
-  gist_stern_r: "gist_stern_r",
-  gist_yarg: "gist_yarg",
-  gist_yarg_r: "gist_yarg_r",
-  gnbu: "gnbu",
-  gnbu_r: "gnbu_r",
-  gnuplot: "gnuplot",
-  gnuplot2: "gnuplot2",
-  gnuplot2_r: "gnuplot2_r",
-  gnuplot_r: "gnuplot_r",
-  gray: "gray",
-  gray_r: "gray_r",
-  greens: "greens",
-  greens_r: "greens_r",
-  greys: "greys",
-  greys_r: "greys_r",
-  haline: "haline",
-  haline_r: "haline_r",
-  hot: "hot",
-  hot_r: "hot_r",
-  hsv: "hsv",
-  hsv_r: "hsv_r",
-  ice: "ice",
-  ice_r: "ice_r",
-  inferno: "inferno",
-  inferno_r: "inferno_r",
-  jet: "jet",
-  jet_r: "jet_r",
-  magma: "magma",
-  magma_r: "magma_r",
-  matter: "matter",
-  matter_r: "matter_r",
-  nipy_spectral: "nipy_spectral",
-  nipy_spectral_r: "nipy_spectral_r",
-  ocean: "ocean",
-  ocean_r: "ocean_r",
-  oranges: "oranges",
-  oranges_r: "oranges_r",
-  orrd: "orrd",
-  orrd_r: "orrd_r",
-  oxy: "oxy",
-  oxy_r: "oxy_r",
-  paired: "paired",
-  paired_r: "paired_r",
-  pastel1: "pastel1",
-  pastel1_r: "pastel1_r",
-  pastel2: "pastel2",
-  pastel2_r: "pastel2_r",
-  phase: "phase",
-  phase_r: "phase_r",
-  pink: "pink",
-  pink_r: "pink_r",
-  piyg: "piyg",
-  piyg_r: "piyg_r",
-  plasma: "plasma",
-  plasma_r: "plasma_r",
-  prgn: "prgn",
-  prgn_r: "prgn_r",
-  prism: "prism",
-  prism_r: "prism_r",
-  pubu: "pubu",
-  pubu_r: "pubu_r",
-  pubugn: "pubugn",
-  pubugn_r: "pubugn_r",
-  puor: "puor",
-  puor_r: "puor_r",
-  purd: "purd",
-  purd_r: "purd_r",
-  purples: "purples",
-  purples_r: "purples_r",
-  rain: "rain",
-  rain_r: "rain_r",
-  rainbow: "rainbow",
-  rainbow_r: "rainbow_r",
-  rdbu: "rdbu",
-  rdbu_r: "rdbu_r",
-  rdgy: "rdgy",
-  rdgy_r: "rdgy_r",
-  rdpu: "rdpu",
-  rdpu_r: "rdpu_r",
-  rdylbu: "rdylbu",
-  rdylbu_r: "rdylbu_r",
-  rdylgn: "rdylgn",
-  rdylgn_r: "rdylgn_r",
-  reds: "reds",
-  reds_r: "reds_r",
-  rplumbo: "rplumbo",
-  schwarzwald: "schwarzwald",
-  seismic: "seismic",
-  seismic_r: "seismic_r",
-  set1: "set1",
-  set1_r: "set1_r",
-  set2: "set2",
-  set2_r: "set2_r",
-  set3: "set3",
-  set3_r: "set3_r",
-  solar: "solar",
-  solar_r: "solar_r",
-  spectral: "spectral",
-  spectral_r: "spectral_r",
-  speed: "speed",
-  speed_r: "speed_r",
-  spring: "spring",
-  spring_r: "spring_r",
-  summer: "summer",
-  summer_r: "summer_r",
-  tab10: "tab10",
-  tab10_r: "tab10_r",
-  tab20: "tab20",
-  tab20_r: "tab20_r",
-  tab20b: "tab20b",
-  tab20b_r: "tab20b_r",
-  tab20c: "tab20c",
-  tab20c_r: "tab20c_r",
-  tarn: "tarn",
-  tarn_r: "tarn_r",
-  tempo: "tempo",
-  tempo_r: "tempo_r",
-  terrain: "terrain",
-  terrain_r: "terrain_r",
-  thermal: "thermal",
-  thermal_r: "thermal_r",
-  topo: "topo",
-  topo_r: "topo_r",
-  turbid: "turbid",
-  turbid_r: "turbid_r",
-  turbo: "turbo",
-  turbo_r: "turbo_r",
-  twilight: "twilight",
-  twilight_r: "twilight_r",
-  twilight_shifted: "twilight_shifted",
-  twilight_shifted_r: "twilight_shifted_r",
-  viridis: "viridis",
-  viridis_r: "viridis_r",
-  winter: "winter",
-  winter_r: "winter_r",
-  wistia: "wistia",
-  wistia_r: "wistia_r",
-  ylgn: "ylgn",
-  ylgn_r: "ylgn_r",
-  ylgnbu: "ylgnbu",
-  ylgnbu_r: "ylgnbu_r",
-  ylorbr: "ylorbr",
-  ylorbr_r: "ylorbr_r",
-  ylorrd: "ylorrd",
-  ylorrd_r: "ylorrd_r",
-} as const;
-
-export type TileTilesZXYGetAlgorithm =
-  (typeof TileTilesZXYGetAlgorithm)[keyof typeof TileTilesZXYGetAlgorithm];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYGetAlgorithm = {
-  hillshade: "hillshade",
-  contours: "contours",
-  normalizedIndex: "normalizedIndex",
-  terrarium: "terrarium",
-  terrainrgb: "terrainrgb",
-} as const;
-
-export type TileTilesZXYGetReproject =
-  (typeof TileTilesZXYGetReproject)[keyof typeof TileTilesZXYGetReproject];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYGetReproject = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  sum: "sum",
-  rms: "rms",
-} as const;
-
-export type TileTilesZXYGetResampling =
-  (typeof TileTilesZXYGetResampling)[keyof typeof TileTilesZXYGetResampling];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYGetResampling = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  gauss: "gauss",
-  rms: "rms",
-} as const;
-
-export type TileTilesZXYGetTileMatrixSetId =
-  (typeof TileTilesZXYGetTileMatrixSetId)[keyof typeof TileTilesZXYGetTileMatrixSetId];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYGetTileMatrixSetId = {
-  CDB1GlobalGrid: "CDB1GlobalGrid",
-  CanadianNAD83_LCC: "CanadianNAD83_LCC",
-  EuropeanETRS89_LAEAQuad: "EuropeanETRS89_LAEAQuad",
-  GNOSISGlobalGrid: "GNOSISGlobalGrid",
-  LINZAntarticaMapTilegrid: "LINZAntarticaMapTilegrid",
-  NZTM2000Quad: "NZTM2000Quad",
-  UPSAntarcticWGS84Quad: "UPSAntarcticWGS84Quad",
-  UPSArcticWGS84Quad: "UPSArcticWGS84Quad",
-  UTM31WGS84Quad: "UTM31WGS84Quad",
-  WGS1984Quad: "WGS1984Quad",
-  WebMercatorQuad: "WebMercatorQuad",
-  WorldCRS84Quad: "WorldCRS84Quad",
-  WorldMercatorWGS84Quad: "WorldMercatorWGS84Quad",
-} as const;
-
-export type TileTilesZXYGetParams = {
-  tileMatrixSetId?: TileTilesZXYGetTileMatrixSetId;
-  scale?: number;
-  format?: ImageType;
-  /**
-   * Raster filename.
-   */
-  raster_filename: string;
-  /**
-   * Dataset band indexes
-   */
-  bidx?: number[] | null;
-  /**
-   * rio-tiler's band math expression
-   */
-  expression?: string | null;
-  /**
-   * Overwrite internal Nodata value
-   */
-  nodata?: string | number | number | null;
-  /**
-   * Apply internal Scale/Offset. Defaults to `False`.
-   */
-  unscale?: boolean;
-  /**
-   * RasterIO resampling algorithm. Defaults to `nearest`.
-   */
-  resampling?: TileTilesZXYGetResampling;
-  /**
-   * WarpKernel resampling algorithm (only used when doing re-projection). Defaults to `nearest`.
-   */
-  reproject?: TileTilesZXYGetReproject;
-  /**
-   * Buffer on each side of the given tile. It must be a multiple of `0.5`. Output **tilesize** will be expanded to `tilesize + 2 * buffer` (e.g 0.5 = 257x257, 1.0 = 258x258).
-   */
-  buffer?: number | null;
-  /**
-   * Padding to apply to each tile edge. Helps reduce resampling artefacts along edges. Defaults to `0`.
-   */
-  padding?: number | null;
-  /**
-   * Algorithm name
-   */
-  algorithm?: TileTilesZXYGetAlgorithm;
-  /**
-   * Algorithm parameter
-   */
-  algorithm_params?: string | null;
-  /**
    * comma (',') delimited Min,Max range. Can set multiple time for multiple bands.
    */
   rescale?: string[] | null;
@@ -1100,1069 +376,9 @@ export type TileTilesZXYGetParams = {
    */
   color_formula?: string | null;
   /**
-   * Colormap name
-   */
-  colormap_name?: TileTilesZXYGetColormapName;
-  /**
-   * JSON encoded custom Colormap
-   */
-  colormap?: string | null;
-  /**
    * Add mask to the output data. Defaults to `True`
    */
-  return_mask?: boolean;
-};
-
-export type TileTilesZXYFormatGetColormapName =
-  (typeof TileTilesZXYFormatGetColormapName)[keyof typeof TileTilesZXYFormatGetColormapName];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYFormatGetColormapName = {
-  accent: "accent",
-  accent_r: "accent_r",
-  afmhot: "afmhot",
-  afmhot_r: "afmhot_r",
-  algae: "algae",
-  algae_r: "algae_r",
-  amp: "amp",
-  amp_r: "amp_r",
-  autumn: "autumn",
-  autumn_r: "autumn_r",
-  balance: "balance",
-  balance_r: "balance_r",
-  binary: "binary",
-  binary_r: "binary_r",
-  blues: "blues",
-  blues_r: "blues_r",
-  bone: "bone",
-  bone_r: "bone_r",
-  brbg: "brbg",
-  brbg_r: "brbg_r",
-  brg: "brg",
-  brg_r: "brg_r",
-  bugn: "bugn",
-  bugn_r: "bugn_r",
-  bupu: "bupu",
-  bupu_r: "bupu_r",
-  bwr: "bwr",
-  bwr_r: "bwr_r",
-  cfastie: "cfastie",
-  cividis: "cividis",
-  cividis_r: "cividis_r",
-  cmrmap: "cmrmap",
-  cmrmap_r: "cmrmap_r",
-  cool: "cool",
-  cool_r: "cool_r",
-  coolwarm: "coolwarm",
-  coolwarm_r: "coolwarm_r",
-  copper: "copper",
-  copper_r: "copper_r",
-  cubehelix: "cubehelix",
-  cubehelix_r: "cubehelix_r",
-  curl: "curl",
-  curl_r: "curl_r",
-  dark2: "dark2",
-  dark2_r: "dark2_r",
-  deep: "deep",
-  deep_r: "deep_r",
-  delta: "delta",
-  delta_r: "delta_r",
-  dense: "dense",
-  dense_r: "dense_r",
-  diff: "diff",
-  diff_r: "diff_r",
-  flag: "flag",
-  flag_r: "flag_r",
-  gist_earth: "gist_earth",
-  gist_earth_r: "gist_earth_r",
-  gist_gray: "gist_gray",
-  gist_gray_r: "gist_gray_r",
-  gist_heat: "gist_heat",
-  gist_heat_r: "gist_heat_r",
-  gist_ncar: "gist_ncar",
-  gist_ncar_r: "gist_ncar_r",
-  gist_rainbow: "gist_rainbow",
-  gist_rainbow_r: "gist_rainbow_r",
-  gist_stern: "gist_stern",
-  gist_stern_r: "gist_stern_r",
-  gist_yarg: "gist_yarg",
-  gist_yarg_r: "gist_yarg_r",
-  gnbu: "gnbu",
-  gnbu_r: "gnbu_r",
-  gnuplot: "gnuplot",
-  gnuplot2: "gnuplot2",
-  gnuplot2_r: "gnuplot2_r",
-  gnuplot_r: "gnuplot_r",
-  gray: "gray",
-  gray_r: "gray_r",
-  greens: "greens",
-  greens_r: "greens_r",
-  greys: "greys",
-  greys_r: "greys_r",
-  haline: "haline",
-  haline_r: "haline_r",
-  hot: "hot",
-  hot_r: "hot_r",
-  hsv: "hsv",
-  hsv_r: "hsv_r",
-  ice: "ice",
-  ice_r: "ice_r",
-  inferno: "inferno",
-  inferno_r: "inferno_r",
-  jet: "jet",
-  jet_r: "jet_r",
-  magma: "magma",
-  magma_r: "magma_r",
-  matter: "matter",
-  matter_r: "matter_r",
-  nipy_spectral: "nipy_spectral",
-  nipy_spectral_r: "nipy_spectral_r",
-  ocean: "ocean",
-  ocean_r: "ocean_r",
-  oranges: "oranges",
-  oranges_r: "oranges_r",
-  orrd: "orrd",
-  orrd_r: "orrd_r",
-  oxy: "oxy",
-  oxy_r: "oxy_r",
-  paired: "paired",
-  paired_r: "paired_r",
-  pastel1: "pastel1",
-  pastel1_r: "pastel1_r",
-  pastel2: "pastel2",
-  pastel2_r: "pastel2_r",
-  phase: "phase",
-  phase_r: "phase_r",
-  pink: "pink",
-  pink_r: "pink_r",
-  piyg: "piyg",
-  piyg_r: "piyg_r",
-  plasma: "plasma",
-  plasma_r: "plasma_r",
-  prgn: "prgn",
-  prgn_r: "prgn_r",
-  prism: "prism",
-  prism_r: "prism_r",
-  pubu: "pubu",
-  pubu_r: "pubu_r",
-  pubugn: "pubugn",
-  pubugn_r: "pubugn_r",
-  puor: "puor",
-  puor_r: "puor_r",
-  purd: "purd",
-  purd_r: "purd_r",
-  purples: "purples",
-  purples_r: "purples_r",
-  rain: "rain",
-  rain_r: "rain_r",
-  rainbow: "rainbow",
-  rainbow_r: "rainbow_r",
-  rdbu: "rdbu",
-  rdbu_r: "rdbu_r",
-  rdgy: "rdgy",
-  rdgy_r: "rdgy_r",
-  rdpu: "rdpu",
-  rdpu_r: "rdpu_r",
-  rdylbu: "rdylbu",
-  rdylbu_r: "rdylbu_r",
-  rdylgn: "rdylgn",
-  rdylgn_r: "rdylgn_r",
-  reds: "reds",
-  reds_r: "reds_r",
-  rplumbo: "rplumbo",
-  schwarzwald: "schwarzwald",
-  seismic: "seismic",
-  seismic_r: "seismic_r",
-  set1: "set1",
-  set1_r: "set1_r",
-  set2: "set2",
-  set2_r: "set2_r",
-  set3: "set3",
-  set3_r: "set3_r",
-  solar: "solar",
-  solar_r: "solar_r",
-  spectral: "spectral",
-  spectral_r: "spectral_r",
-  speed: "speed",
-  speed_r: "speed_r",
-  spring: "spring",
-  spring_r: "spring_r",
-  summer: "summer",
-  summer_r: "summer_r",
-  tab10: "tab10",
-  tab10_r: "tab10_r",
-  tab20: "tab20",
-  tab20_r: "tab20_r",
-  tab20b: "tab20b",
-  tab20b_r: "tab20b_r",
-  tab20c: "tab20c",
-  tab20c_r: "tab20c_r",
-  tarn: "tarn",
-  tarn_r: "tarn_r",
-  tempo: "tempo",
-  tempo_r: "tempo_r",
-  terrain: "terrain",
-  terrain_r: "terrain_r",
-  thermal: "thermal",
-  thermal_r: "thermal_r",
-  topo: "topo",
-  topo_r: "topo_r",
-  turbid: "turbid",
-  turbid_r: "turbid_r",
-  turbo: "turbo",
-  turbo_r: "turbo_r",
-  twilight: "twilight",
-  twilight_r: "twilight_r",
-  twilight_shifted: "twilight_shifted",
-  twilight_shifted_r: "twilight_shifted_r",
-  viridis: "viridis",
-  viridis_r: "viridis_r",
-  winter: "winter",
-  winter_r: "winter_r",
-  wistia: "wistia",
-  wistia_r: "wistia_r",
-  ylgn: "ylgn",
-  ylgn_r: "ylgn_r",
-  ylgnbu: "ylgnbu",
-  ylgnbu_r: "ylgnbu_r",
-  ylorbr: "ylorbr",
-  ylorbr_r: "ylorbr_r",
-  ylorrd: "ylorrd",
-  ylorrd_r: "ylorrd_r",
-} as const;
-
-export type TileTilesZXYFormatGetAlgorithm =
-  (typeof TileTilesZXYFormatGetAlgorithm)[keyof typeof TileTilesZXYFormatGetAlgorithm];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYFormatGetAlgorithm = {
-  hillshade: "hillshade",
-  contours: "contours",
-  normalizedIndex: "normalizedIndex",
-  terrarium: "terrarium",
-  terrainrgb: "terrainrgb",
-} as const;
-
-export type TileTilesZXYFormatGetReproject =
-  (typeof TileTilesZXYFormatGetReproject)[keyof typeof TileTilesZXYFormatGetReproject];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYFormatGetReproject = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  sum: "sum",
-  rms: "rms",
-} as const;
-
-export type TileTilesZXYFormatGetResampling =
-  (typeof TileTilesZXYFormatGetResampling)[keyof typeof TileTilesZXYFormatGetResampling];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYFormatGetResampling = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  gauss: "gauss",
-  rms: "rms",
-} as const;
-
-export type TileTilesZXYFormatGetTileMatrixSetId =
-  (typeof TileTilesZXYFormatGetTileMatrixSetId)[keyof typeof TileTilesZXYFormatGetTileMatrixSetId];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYFormatGetTileMatrixSetId = {
-  CDB1GlobalGrid: "CDB1GlobalGrid",
-  CanadianNAD83_LCC: "CanadianNAD83_LCC",
-  EuropeanETRS89_LAEAQuad: "EuropeanETRS89_LAEAQuad",
-  GNOSISGlobalGrid: "GNOSISGlobalGrid",
-  LINZAntarticaMapTilegrid: "LINZAntarticaMapTilegrid",
-  NZTM2000Quad: "NZTM2000Quad",
-  UPSAntarcticWGS84Quad: "UPSAntarcticWGS84Quad",
-  UPSArcticWGS84Quad: "UPSArcticWGS84Quad",
-  UTM31WGS84Quad: "UTM31WGS84Quad",
-  WGS1984Quad: "WGS1984Quad",
-  WebMercatorQuad: "WebMercatorQuad",
-  WorldCRS84Quad: "WorldCRS84Quad",
-  WorldMercatorWGS84Quad: "WorldMercatorWGS84Quad",
-} as const;
-
-export type TileTilesZXYFormatGetParams = {
-  tileMatrixSetId?: TileTilesZXYFormatGetTileMatrixSetId;
-  scale?: number;
-  /**
-   * Raster filename.
-   */
-  raster_filename: string;
-  /**
-   * Dataset band indexes
-   */
-  bidx?: number[] | null;
-  /**
-   * rio-tiler's band math expression
-   */
-  expression?: string | null;
-  /**
-   * Overwrite internal Nodata value
-   */
-  nodata?: string | number | number | null;
-  /**
-   * Apply internal Scale/Offset. Defaults to `False`.
-   */
-  unscale?: boolean;
-  /**
-   * RasterIO resampling algorithm. Defaults to `nearest`.
-   */
-  resampling?: TileTilesZXYFormatGetResampling;
-  /**
-   * WarpKernel resampling algorithm (only used when doing re-projection). Defaults to `nearest`.
-   */
-  reproject?: TileTilesZXYFormatGetReproject;
-  /**
-   * Buffer on each side of the given tile. It must be a multiple of `0.5`. Output **tilesize** will be expanded to `tilesize + 2 * buffer` (e.g 0.5 = 257x257, 1.0 = 258x258).
-   */
-  buffer?: number | null;
-  /**
-   * Padding to apply to each tile edge. Helps reduce resampling artefacts along edges. Defaults to `0`.
-   */
-  padding?: number | null;
-  /**
-   * Algorithm name
-   */
-  algorithm?: TileTilesZXYFormatGetAlgorithm;
-  /**
-   * Algorithm parameter
-   */
-  algorithm_params?: string | null;
-  /**
-   * comma (',') delimited Min,Max range. Can set multiple time for multiple bands.
-   */
-  rescale?: string[] | null;
-  /**
-   * rio-color formula (info: https://github.com/mapbox/rio-color)
-   */
-  color_formula?: string | null;
-  /**
-   * Colormap name
-   */
-  colormap_name?: TileTilesZXYFormatGetColormapName;
-  /**
-   * JSON encoded custom Colormap
-   */
-  colormap?: string | null;
-  /**
-   * Add mask to the output data. Defaults to `True`
-   */
-  return_mask?: boolean;
-};
-
-export type TileTilesZXYScaleXGetColormapName =
-  (typeof TileTilesZXYScaleXGetColormapName)[keyof typeof TileTilesZXYScaleXGetColormapName];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYScaleXGetColormapName = {
-  accent: "accent",
-  accent_r: "accent_r",
-  afmhot: "afmhot",
-  afmhot_r: "afmhot_r",
-  algae: "algae",
-  algae_r: "algae_r",
-  amp: "amp",
-  amp_r: "amp_r",
-  autumn: "autumn",
-  autumn_r: "autumn_r",
-  balance: "balance",
-  balance_r: "balance_r",
-  binary: "binary",
-  binary_r: "binary_r",
-  blues: "blues",
-  blues_r: "blues_r",
-  bone: "bone",
-  bone_r: "bone_r",
-  brbg: "brbg",
-  brbg_r: "brbg_r",
-  brg: "brg",
-  brg_r: "brg_r",
-  bugn: "bugn",
-  bugn_r: "bugn_r",
-  bupu: "bupu",
-  bupu_r: "bupu_r",
-  bwr: "bwr",
-  bwr_r: "bwr_r",
-  cfastie: "cfastie",
-  cividis: "cividis",
-  cividis_r: "cividis_r",
-  cmrmap: "cmrmap",
-  cmrmap_r: "cmrmap_r",
-  cool: "cool",
-  cool_r: "cool_r",
-  coolwarm: "coolwarm",
-  coolwarm_r: "coolwarm_r",
-  copper: "copper",
-  copper_r: "copper_r",
-  cubehelix: "cubehelix",
-  cubehelix_r: "cubehelix_r",
-  curl: "curl",
-  curl_r: "curl_r",
-  dark2: "dark2",
-  dark2_r: "dark2_r",
-  deep: "deep",
-  deep_r: "deep_r",
-  delta: "delta",
-  delta_r: "delta_r",
-  dense: "dense",
-  dense_r: "dense_r",
-  diff: "diff",
-  diff_r: "diff_r",
-  flag: "flag",
-  flag_r: "flag_r",
-  gist_earth: "gist_earth",
-  gist_earth_r: "gist_earth_r",
-  gist_gray: "gist_gray",
-  gist_gray_r: "gist_gray_r",
-  gist_heat: "gist_heat",
-  gist_heat_r: "gist_heat_r",
-  gist_ncar: "gist_ncar",
-  gist_ncar_r: "gist_ncar_r",
-  gist_rainbow: "gist_rainbow",
-  gist_rainbow_r: "gist_rainbow_r",
-  gist_stern: "gist_stern",
-  gist_stern_r: "gist_stern_r",
-  gist_yarg: "gist_yarg",
-  gist_yarg_r: "gist_yarg_r",
-  gnbu: "gnbu",
-  gnbu_r: "gnbu_r",
-  gnuplot: "gnuplot",
-  gnuplot2: "gnuplot2",
-  gnuplot2_r: "gnuplot2_r",
-  gnuplot_r: "gnuplot_r",
-  gray: "gray",
-  gray_r: "gray_r",
-  greens: "greens",
-  greens_r: "greens_r",
-  greys: "greys",
-  greys_r: "greys_r",
-  haline: "haline",
-  haline_r: "haline_r",
-  hot: "hot",
-  hot_r: "hot_r",
-  hsv: "hsv",
-  hsv_r: "hsv_r",
-  ice: "ice",
-  ice_r: "ice_r",
-  inferno: "inferno",
-  inferno_r: "inferno_r",
-  jet: "jet",
-  jet_r: "jet_r",
-  magma: "magma",
-  magma_r: "magma_r",
-  matter: "matter",
-  matter_r: "matter_r",
-  nipy_spectral: "nipy_spectral",
-  nipy_spectral_r: "nipy_spectral_r",
-  ocean: "ocean",
-  ocean_r: "ocean_r",
-  oranges: "oranges",
-  oranges_r: "oranges_r",
-  orrd: "orrd",
-  orrd_r: "orrd_r",
-  oxy: "oxy",
-  oxy_r: "oxy_r",
-  paired: "paired",
-  paired_r: "paired_r",
-  pastel1: "pastel1",
-  pastel1_r: "pastel1_r",
-  pastel2: "pastel2",
-  pastel2_r: "pastel2_r",
-  phase: "phase",
-  phase_r: "phase_r",
-  pink: "pink",
-  pink_r: "pink_r",
-  piyg: "piyg",
-  piyg_r: "piyg_r",
-  plasma: "plasma",
-  plasma_r: "plasma_r",
-  prgn: "prgn",
-  prgn_r: "prgn_r",
-  prism: "prism",
-  prism_r: "prism_r",
-  pubu: "pubu",
-  pubu_r: "pubu_r",
-  pubugn: "pubugn",
-  pubugn_r: "pubugn_r",
-  puor: "puor",
-  puor_r: "puor_r",
-  purd: "purd",
-  purd_r: "purd_r",
-  purples: "purples",
-  purples_r: "purples_r",
-  rain: "rain",
-  rain_r: "rain_r",
-  rainbow: "rainbow",
-  rainbow_r: "rainbow_r",
-  rdbu: "rdbu",
-  rdbu_r: "rdbu_r",
-  rdgy: "rdgy",
-  rdgy_r: "rdgy_r",
-  rdpu: "rdpu",
-  rdpu_r: "rdpu_r",
-  rdylbu: "rdylbu",
-  rdylbu_r: "rdylbu_r",
-  rdylgn: "rdylgn",
-  rdylgn_r: "rdylgn_r",
-  reds: "reds",
-  reds_r: "reds_r",
-  rplumbo: "rplumbo",
-  schwarzwald: "schwarzwald",
-  seismic: "seismic",
-  seismic_r: "seismic_r",
-  set1: "set1",
-  set1_r: "set1_r",
-  set2: "set2",
-  set2_r: "set2_r",
-  set3: "set3",
-  set3_r: "set3_r",
-  solar: "solar",
-  solar_r: "solar_r",
-  spectral: "spectral",
-  spectral_r: "spectral_r",
-  speed: "speed",
-  speed_r: "speed_r",
-  spring: "spring",
-  spring_r: "spring_r",
-  summer: "summer",
-  summer_r: "summer_r",
-  tab10: "tab10",
-  tab10_r: "tab10_r",
-  tab20: "tab20",
-  tab20_r: "tab20_r",
-  tab20b: "tab20b",
-  tab20b_r: "tab20b_r",
-  tab20c: "tab20c",
-  tab20c_r: "tab20c_r",
-  tarn: "tarn",
-  tarn_r: "tarn_r",
-  tempo: "tempo",
-  tempo_r: "tempo_r",
-  terrain: "terrain",
-  terrain_r: "terrain_r",
-  thermal: "thermal",
-  thermal_r: "thermal_r",
-  topo: "topo",
-  topo_r: "topo_r",
-  turbid: "turbid",
-  turbid_r: "turbid_r",
-  turbo: "turbo",
-  turbo_r: "turbo_r",
-  twilight: "twilight",
-  twilight_r: "twilight_r",
-  twilight_shifted: "twilight_shifted",
-  twilight_shifted_r: "twilight_shifted_r",
-  viridis: "viridis",
-  viridis_r: "viridis_r",
-  winter: "winter",
-  winter_r: "winter_r",
-  wistia: "wistia",
-  wistia_r: "wistia_r",
-  ylgn: "ylgn",
-  ylgn_r: "ylgn_r",
-  ylgnbu: "ylgnbu",
-  ylgnbu_r: "ylgnbu_r",
-  ylorbr: "ylorbr",
-  ylorbr_r: "ylorbr_r",
-  ylorrd: "ylorrd",
-  ylorrd_r: "ylorrd_r",
-} as const;
-
-export type TileTilesZXYScaleXGetAlgorithm =
-  (typeof TileTilesZXYScaleXGetAlgorithm)[keyof typeof TileTilesZXYScaleXGetAlgorithm];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYScaleXGetAlgorithm = {
-  hillshade: "hillshade",
-  contours: "contours",
-  normalizedIndex: "normalizedIndex",
-  terrarium: "terrarium",
-  terrainrgb: "terrainrgb",
-} as const;
-
-export type TileTilesZXYScaleXGetReproject =
-  (typeof TileTilesZXYScaleXGetReproject)[keyof typeof TileTilesZXYScaleXGetReproject];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYScaleXGetReproject = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  sum: "sum",
-  rms: "rms",
-} as const;
-
-export type TileTilesZXYScaleXGetResampling =
-  (typeof TileTilesZXYScaleXGetResampling)[keyof typeof TileTilesZXYScaleXGetResampling];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYScaleXGetResampling = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  gauss: "gauss",
-  rms: "rms",
-} as const;
-
-export type TileTilesZXYScaleXGetTileMatrixSetId =
-  (typeof TileTilesZXYScaleXGetTileMatrixSetId)[keyof typeof TileTilesZXYScaleXGetTileMatrixSetId];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYScaleXGetTileMatrixSetId = {
-  CDB1GlobalGrid: "CDB1GlobalGrid",
-  CanadianNAD83_LCC: "CanadianNAD83_LCC",
-  EuropeanETRS89_LAEAQuad: "EuropeanETRS89_LAEAQuad",
-  GNOSISGlobalGrid: "GNOSISGlobalGrid",
-  LINZAntarticaMapTilegrid: "LINZAntarticaMapTilegrid",
-  NZTM2000Quad: "NZTM2000Quad",
-  UPSAntarcticWGS84Quad: "UPSAntarcticWGS84Quad",
-  UPSArcticWGS84Quad: "UPSArcticWGS84Quad",
-  UTM31WGS84Quad: "UTM31WGS84Quad",
-  WGS1984Quad: "WGS1984Quad",
-  WebMercatorQuad: "WebMercatorQuad",
-  WorldCRS84Quad: "WorldCRS84Quad",
-  WorldMercatorWGS84Quad: "WorldMercatorWGS84Quad",
-} as const;
-
-export type TileTilesZXYScaleXGetParams = {
-  tileMatrixSetId?: TileTilesZXYScaleXGetTileMatrixSetId;
-  format?: ImageType;
-  /**
-   * Raster filename.
-   */
-  raster_filename: string;
-  /**
-   * Dataset band indexes
-   */
-  bidx?: number[] | null;
-  /**
-   * rio-tiler's band math expression
-   */
-  expression?: string | null;
-  /**
-   * Overwrite internal Nodata value
-   */
-  nodata?: string | number | number | null;
-  /**
-   * Apply internal Scale/Offset. Defaults to `False`.
-   */
-  unscale?: boolean;
-  /**
-   * RasterIO resampling algorithm. Defaults to `nearest`.
-   */
-  resampling?: TileTilesZXYScaleXGetResampling;
-  /**
-   * WarpKernel resampling algorithm (only used when doing re-projection). Defaults to `nearest`.
-   */
-  reproject?: TileTilesZXYScaleXGetReproject;
-  /**
-   * Buffer on each side of the given tile. It must be a multiple of `0.5`. Output **tilesize** will be expanded to `tilesize + 2 * buffer` (e.g 0.5 = 257x257, 1.0 = 258x258).
-   */
-  buffer?: number | null;
-  /**
-   * Padding to apply to each tile edge. Helps reduce resampling artefacts along edges. Defaults to `0`.
-   */
-  padding?: number | null;
-  /**
-   * Algorithm name
-   */
-  algorithm?: TileTilesZXYScaleXGetAlgorithm;
-  /**
-   * Algorithm parameter
-   */
-  algorithm_params?: string | null;
-  /**
-   * comma (',') delimited Min,Max range. Can set multiple time for multiple bands.
-   */
-  rescale?: string[] | null;
-  /**
-   * rio-color formula (info: https://github.com/mapbox/rio-color)
-   */
-  color_formula?: string | null;
-  /**
-   * Colormap name
-   */
-  colormap_name?: TileTilesZXYScaleXGetColormapName;
-  /**
-   * JSON encoded custom Colormap
-   */
-  colormap?: string | null;
-  /**
-   * Add mask to the output data. Defaults to `True`
-   */
-  return_mask?: boolean;
-};
-
-export type TileTilesZXYScaleXFormatGetColormapName =
-  (typeof TileTilesZXYScaleXFormatGetColormapName)[keyof typeof TileTilesZXYScaleXFormatGetColormapName];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYScaleXFormatGetColormapName = {
-  accent: "accent",
-  accent_r: "accent_r",
-  afmhot: "afmhot",
-  afmhot_r: "afmhot_r",
-  algae: "algae",
-  algae_r: "algae_r",
-  amp: "amp",
-  amp_r: "amp_r",
-  autumn: "autumn",
-  autumn_r: "autumn_r",
-  balance: "balance",
-  balance_r: "balance_r",
-  binary: "binary",
-  binary_r: "binary_r",
-  blues: "blues",
-  blues_r: "blues_r",
-  bone: "bone",
-  bone_r: "bone_r",
-  brbg: "brbg",
-  brbg_r: "brbg_r",
-  brg: "brg",
-  brg_r: "brg_r",
-  bugn: "bugn",
-  bugn_r: "bugn_r",
-  bupu: "bupu",
-  bupu_r: "bupu_r",
-  bwr: "bwr",
-  bwr_r: "bwr_r",
-  cfastie: "cfastie",
-  cividis: "cividis",
-  cividis_r: "cividis_r",
-  cmrmap: "cmrmap",
-  cmrmap_r: "cmrmap_r",
-  cool: "cool",
-  cool_r: "cool_r",
-  coolwarm: "coolwarm",
-  coolwarm_r: "coolwarm_r",
-  copper: "copper",
-  copper_r: "copper_r",
-  cubehelix: "cubehelix",
-  cubehelix_r: "cubehelix_r",
-  curl: "curl",
-  curl_r: "curl_r",
-  dark2: "dark2",
-  dark2_r: "dark2_r",
-  deep: "deep",
-  deep_r: "deep_r",
-  delta: "delta",
-  delta_r: "delta_r",
-  dense: "dense",
-  dense_r: "dense_r",
-  diff: "diff",
-  diff_r: "diff_r",
-  flag: "flag",
-  flag_r: "flag_r",
-  gist_earth: "gist_earth",
-  gist_earth_r: "gist_earth_r",
-  gist_gray: "gist_gray",
-  gist_gray_r: "gist_gray_r",
-  gist_heat: "gist_heat",
-  gist_heat_r: "gist_heat_r",
-  gist_ncar: "gist_ncar",
-  gist_ncar_r: "gist_ncar_r",
-  gist_rainbow: "gist_rainbow",
-  gist_rainbow_r: "gist_rainbow_r",
-  gist_stern: "gist_stern",
-  gist_stern_r: "gist_stern_r",
-  gist_yarg: "gist_yarg",
-  gist_yarg_r: "gist_yarg_r",
-  gnbu: "gnbu",
-  gnbu_r: "gnbu_r",
-  gnuplot: "gnuplot",
-  gnuplot2: "gnuplot2",
-  gnuplot2_r: "gnuplot2_r",
-  gnuplot_r: "gnuplot_r",
-  gray: "gray",
-  gray_r: "gray_r",
-  greens: "greens",
-  greens_r: "greens_r",
-  greys: "greys",
-  greys_r: "greys_r",
-  haline: "haline",
-  haline_r: "haline_r",
-  hot: "hot",
-  hot_r: "hot_r",
-  hsv: "hsv",
-  hsv_r: "hsv_r",
-  ice: "ice",
-  ice_r: "ice_r",
-  inferno: "inferno",
-  inferno_r: "inferno_r",
-  jet: "jet",
-  jet_r: "jet_r",
-  magma: "magma",
-  magma_r: "magma_r",
-  matter: "matter",
-  matter_r: "matter_r",
-  nipy_spectral: "nipy_spectral",
-  nipy_spectral_r: "nipy_spectral_r",
-  ocean: "ocean",
-  ocean_r: "ocean_r",
-  oranges: "oranges",
-  oranges_r: "oranges_r",
-  orrd: "orrd",
-  orrd_r: "orrd_r",
-  oxy: "oxy",
-  oxy_r: "oxy_r",
-  paired: "paired",
-  paired_r: "paired_r",
-  pastel1: "pastel1",
-  pastel1_r: "pastel1_r",
-  pastel2: "pastel2",
-  pastel2_r: "pastel2_r",
-  phase: "phase",
-  phase_r: "phase_r",
-  pink: "pink",
-  pink_r: "pink_r",
-  piyg: "piyg",
-  piyg_r: "piyg_r",
-  plasma: "plasma",
-  plasma_r: "plasma_r",
-  prgn: "prgn",
-  prgn_r: "prgn_r",
-  prism: "prism",
-  prism_r: "prism_r",
-  pubu: "pubu",
-  pubu_r: "pubu_r",
-  pubugn: "pubugn",
-  pubugn_r: "pubugn_r",
-  puor: "puor",
-  puor_r: "puor_r",
-  purd: "purd",
-  purd_r: "purd_r",
-  purples: "purples",
-  purples_r: "purples_r",
-  rain: "rain",
-  rain_r: "rain_r",
-  rainbow: "rainbow",
-  rainbow_r: "rainbow_r",
-  rdbu: "rdbu",
-  rdbu_r: "rdbu_r",
-  rdgy: "rdgy",
-  rdgy_r: "rdgy_r",
-  rdpu: "rdpu",
-  rdpu_r: "rdpu_r",
-  rdylbu: "rdylbu",
-  rdylbu_r: "rdylbu_r",
-  rdylgn: "rdylgn",
-  rdylgn_r: "rdylgn_r",
-  reds: "reds",
-  reds_r: "reds_r",
-  rplumbo: "rplumbo",
-  schwarzwald: "schwarzwald",
-  seismic: "seismic",
-  seismic_r: "seismic_r",
-  set1: "set1",
-  set1_r: "set1_r",
-  set2: "set2",
-  set2_r: "set2_r",
-  set3: "set3",
-  set3_r: "set3_r",
-  solar: "solar",
-  solar_r: "solar_r",
-  spectral: "spectral",
-  spectral_r: "spectral_r",
-  speed: "speed",
-  speed_r: "speed_r",
-  spring: "spring",
-  spring_r: "spring_r",
-  summer: "summer",
-  summer_r: "summer_r",
-  tab10: "tab10",
-  tab10_r: "tab10_r",
-  tab20: "tab20",
-  tab20_r: "tab20_r",
-  tab20b: "tab20b",
-  tab20b_r: "tab20b_r",
-  tab20c: "tab20c",
-  tab20c_r: "tab20c_r",
-  tarn: "tarn",
-  tarn_r: "tarn_r",
-  tempo: "tempo",
-  tempo_r: "tempo_r",
-  terrain: "terrain",
-  terrain_r: "terrain_r",
-  thermal: "thermal",
-  thermal_r: "thermal_r",
-  topo: "topo",
-  topo_r: "topo_r",
-  turbid: "turbid",
-  turbid_r: "turbid_r",
-  turbo: "turbo",
-  turbo_r: "turbo_r",
-  twilight: "twilight",
-  twilight_r: "twilight_r",
-  twilight_shifted: "twilight_shifted",
-  twilight_shifted_r: "twilight_shifted_r",
-  viridis: "viridis",
-  viridis_r: "viridis_r",
-  winter: "winter",
-  winter_r: "winter_r",
-  wistia: "wistia",
-  wistia_r: "wistia_r",
-  ylgn: "ylgn",
-  ylgn_r: "ylgn_r",
-  ylgnbu: "ylgnbu",
-  ylgnbu_r: "ylgnbu_r",
-  ylorbr: "ylorbr",
-  ylorbr_r: "ylorbr_r",
-  ylorrd: "ylorrd",
-  ylorrd_r: "ylorrd_r",
-} as const;
-
-export type TileTilesZXYScaleXFormatGetAlgorithm =
-  (typeof TileTilesZXYScaleXFormatGetAlgorithm)[keyof typeof TileTilesZXYScaleXFormatGetAlgorithm];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYScaleXFormatGetAlgorithm = {
-  hillshade: "hillshade",
-  contours: "contours",
-  normalizedIndex: "normalizedIndex",
-  terrarium: "terrarium",
-  terrainrgb: "terrainrgb",
-} as const;
-
-export type TileTilesZXYScaleXFormatGetReproject =
-  (typeof TileTilesZXYScaleXFormatGetReproject)[keyof typeof TileTilesZXYScaleXFormatGetReproject];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYScaleXFormatGetReproject = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  sum: "sum",
-  rms: "rms",
-} as const;
-
-export type TileTilesZXYScaleXFormatGetResampling =
-  (typeof TileTilesZXYScaleXFormatGetResampling)[keyof typeof TileTilesZXYScaleXFormatGetResampling];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYScaleXFormatGetResampling = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  gauss: "gauss",
-  rms: "rms",
-} as const;
-
-export type TileTilesZXYScaleXFormatGetTileMatrixSetId =
-  (typeof TileTilesZXYScaleXFormatGetTileMatrixSetId)[keyof typeof TileTilesZXYScaleXFormatGetTileMatrixSetId];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesZXYScaleXFormatGetTileMatrixSetId = {
-  CDB1GlobalGrid: "CDB1GlobalGrid",
-  CanadianNAD83_LCC: "CanadianNAD83_LCC",
-  EuropeanETRS89_LAEAQuad: "EuropeanETRS89_LAEAQuad",
-  GNOSISGlobalGrid: "GNOSISGlobalGrid",
-  LINZAntarticaMapTilegrid: "LINZAntarticaMapTilegrid",
-  NZTM2000Quad: "NZTM2000Quad",
-  UPSAntarcticWGS84Quad: "UPSAntarcticWGS84Quad",
-  UPSArcticWGS84Quad: "UPSArcticWGS84Quad",
-  UTM31WGS84Quad: "UTM31WGS84Quad",
-  WGS1984Quad: "WGS1984Quad",
-  WebMercatorQuad: "WebMercatorQuad",
-  WorldCRS84Quad: "WorldCRS84Quad",
-  WorldMercatorWGS84Quad: "WorldMercatorWGS84Quad",
-} as const;
-
-export type TileTilesZXYScaleXFormatGetParams = {
-  tileMatrixSetId?: TileTilesZXYScaleXFormatGetTileMatrixSetId;
-  /**
-   * Raster filename.
-   */
-  raster_filename: string;
-  /**
-   * Dataset band indexes
-   */
-  bidx?: number[] | null;
-  /**
-   * rio-tiler's band math expression
-   */
-  expression?: string | null;
-  /**
-   * Overwrite internal Nodata value
-   */
-  nodata?: string | number | number | null;
-  /**
-   * Apply internal Scale/Offset. Defaults to `False`.
-   */
-  unscale?: boolean;
-  /**
-   * RasterIO resampling algorithm. Defaults to `nearest`.
-   */
-  resampling?: TileTilesZXYScaleXFormatGetResampling;
-  /**
-   * WarpKernel resampling algorithm (only used when doing re-projection). Defaults to `nearest`.
-   */
-  reproject?: TileTilesZXYScaleXFormatGetReproject;
-  /**
-   * Buffer on each side of the given tile. It must be a multiple of `0.5`. Output **tilesize** will be expanded to `tilesize + 2 * buffer` (e.g 0.5 = 257x257, 1.0 = 258x258).
-   */
-  buffer?: number | null;
-  /**
-   * Padding to apply to each tile edge. Helps reduce resampling artefacts along edges. Defaults to `0`.
-   */
-  padding?: number | null;
-  /**
-   * Algorithm name
-   */
-  algorithm?: TileTilesZXYScaleXFormatGetAlgorithm;
-  /**
-   * Algorithm parameter
-   */
-  algorithm_params?: string | null;
-  /**
-   * comma (',') delimited Min,Max range. Can set multiple time for multiple bands.
-   */
-  rescale?: string[] | null;
-  /**
-   * rio-color formula (info: https://github.com/mapbox/rio-color)
-   */
-  color_formula?: string | null;
-  /**
-   * Colormap name
-   */
-  colormap_name?: TileTilesZXYScaleXFormatGetColormapName;
-  /**
-   * JSON encoded custom Colormap
-   */
-  colormap?: string | null;
-  /**
-   * Add mask to the output data. Defaults to `True`
-   */
-  return_mask?: boolean;
+  return_mask?: boolean | null;
 };
 
 export type TileTilesTileMatrixSetIdZXYGetColormapName =
@@ -2389,42 +605,14 @@ export type TileTilesTileMatrixSetIdZXYGetAlgorithm =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TileTilesTileMatrixSetIdZXYGetAlgorithm = {
   hillshade: "hillshade",
+  slope: "slope",
   contours: "contours",
   normalizedIndex: "normalizedIndex",
   terrarium: "terrarium",
   terrainrgb: "terrainrgb",
-} as const;
-
-export type TileTilesTileMatrixSetIdZXYGetReproject =
-  (typeof TileTilesTileMatrixSetIdZXYGetReproject)[keyof typeof TileTilesTileMatrixSetIdZXYGetReproject];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesTileMatrixSetIdZXYGetReproject = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  sum: "sum",
-  rms: "rms",
-} as const;
-
-export type TileTilesTileMatrixSetIdZXYGetResampling =
-  (typeof TileTilesTileMatrixSetIdZXYGetResampling)[keyof typeof TileTilesTileMatrixSetIdZXYGetResampling];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesTileMatrixSetIdZXYGetResampling = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  gauss: "gauss",
-  rms: "rms",
+  cast: "cast",
+  ceil: "ceil",
+  floor: "floor",
 } as const;
 
 export type TileTilesTileMatrixSetIdZXYGetParams = {
@@ -2434,6 +622,14 @@ export type TileTilesTileMatrixSetIdZXYGetParams = {
    * Raster filename.
    */
   raster_filename: string;
+  /**
+   * Buffer on each side of the given tile. It must be a multiple of `0.5`. Output **tilesize** will be expanded to `tilesize + 2 * buffer` (e.g 0.5 = 257x257, 1.0 = 258x258).
+   */
+  buffer?: number | null;
+  /**
+   * Padding to apply to each tile edge. Helps reduce resampling artefacts along edges. Defaults to `0`.
+   */
+  padding?: number | null;
   /**
    * Dataset band indexes
    */
@@ -2445,27 +641,39 @@ export type TileTilesTileMatrixSetIdZXYGetParams = {
   /**
    * Overwrite internal Nodata value
    */
-  nodata?: string | number | number | null;
+  nodata?: number | number | string | null;
   /**
    * Apply internal Scale/Offset. Defaults to `False`.
    */
-  unscale?: boolean;
+  unscale?: boolean | null;
   /**
    * RasterIO resampling algorithm. Defaults to `nearest`.
    */
-  resampling?: TileTilesTileMatrixSetIdZXYGetResampling;
+  resampling?:
+    | "nearest"
+    | "bilinear"
+    | "cubic"
+    | "cubic_spline"
+    | "lanczos"
+    | "average"
+    | "mode"
+    | "gauss"
+    | "rms"
+    | null;
   /**
    * WarpKernel resampling algorithm (only used when doing re-projection). Defaults to `nearest`.
    */
-  reproject?: TileTilesTileMatrixSetIdZXYGetReproject;
-  /**
-   * Buffer on each side of the given tile. It must be a multiple of `0.5`. Output **tilesize** will be expanded to `tilesize + 2 * buffer` (e.g 0.5 = 257x257, 1.0 = 258x258).
-   */
-  buffer?: number | null;
-  /**
-   * Padding to apply to each tile edge. Helps reduce resampling artefacts along edges. Defaults to `0`.
-   */
-  padding?: number | null;
+  reproject?:
+    | "nearest"
+    | "bilinear"
+    | "cubic"
+    | "cubic_spline"
+    | "lanczos"
+    | "average"
+    | "mode"
+    | "sum"
+    | "rms"
+    | null;
   /**
    * Algorithm name
    */
@@ -2475,14 +683,6 @@ export type TileTilesTileMatrixSetIdZXYGetParams = {
    */
   algorithm_params?: string | null;
   /**
-   * comma (',') delimited Min,Max range. Can set multiple time for multiple bands.
-   */
-  rescale?: string[] | null;
-  /**
-   * rio-color formula (info: https://github.com/mapbox/rio-color)
-   */
-  color_formula?: string | null;
-  /**
    * Colormap name
    */
   colormap_name?: TileTilesTileMatrixSetIdZXYGetColormapName;
@@ -2491,9 +691,17 @@ export type TileTilesTileMatrixSetIdZXYGetParams = {
    */
   colormap?: string | null;
   /**
+   * comma (',') delimited Min,Max range. Can set multiple time for multiple bands.
+   */
+  rescale?: string[] | null;
+  /**
+   * rio-color formula (info: https://github.com/mapbox/rio-color)
+   */
+  color_formula?: string | null;
+  /**
    * Add mask to the output data. Defaults to `True`
    */
-  return_mask?: boolean;
+  return_mask?: boolean | null;
 };
 
 export type TileTilesTileMatrixSetIdZXYFormatGetColormapName =
@@ -2720,42 +928,14 @@ export type TileTilesTileMatrixSetIdZXYFormatGetAlgorithm =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TileTilesTileMatrixSetIdZXYFormatGetAlgorithm = {
   hillshade: "hillshade",
+  slope: "slope",
   contours: "contours",
   normalizedIndex: "normalizedIndex",
   terrarium: "terrarium",
   terrainrgb: "terrainrgb",
-} as const;
-
-export type TileTilesTileMatrixSetIdZXYFormatGetReproject =
-  (typeof TileTilesTileMatrixSetIdZXYFormatGetReproject)[keyof typeof TileTilesTileMatrixSetIdZXYFormatGetReproject];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesTileMatrixSetIdZXYFormatGetReproject = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  sum: "sum",
-  rms: "rms",
-} as const;
-
-export type TileTilesTileMatrixSetIdZXYFormatGetResampling =
-  (typeof TileTilesTileMatrixSetIdZXYFormatGetResampling)[keyof typeof TileTilesTileMatrixSetIdZXYFormatGetResampling];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesTileMatrixSetIdZXYFormatGetResampling = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  gauss: "gauss",
-  rms: "rms",
+  cast: "cast",
+  ceil: "ceil",
+  floor: "floor",
 } as const;
 
 export type TileTilesTileMatrixSetIdZXYFormatGetParams = {
@@ -2764,6 +944,14 @@ export type TileTilesTileMatrixSetIdZXYFormatGetParams = {
    * Raster filename.
    */
   raster_filename: string;
+  /**
+   * Buffer on each side of the given tile. It must be a multiple of `0.5`. Output **tilesize** will be expanded to `tilesize + 2 * buffer` (e.g 0.5 = 257x257, 1.0 = 258x258).
+   */
+  buffer?: number | null;
+  /**
+   * Padding to apply to each tile edge. Helps reduce resampling artefacts along edges. Defaults to `0`.
+   */
+  padding?: number | null;
   /**
    * Dataset band indexes
    */
@@ -2775,27 +963,39 @@ export type TileTilesTileMatrixSetIdZXYFormatGetParams = {
   /**
    * Overwrite internal Nodata value
    */
-  nodata?: string | number | number | null;
+  nodata?: number | number | string | null;
   /**
    * Apply internal Scale/Offset. Defaults to `False`.
    */
-  unscale?: boolean;
+  unscale?: boolean | null;
   /**
    * RasterIO resampling algorithm. Defaults to `nearest`.
    */
-  resampling?: TileTilesTileMatrixSetIdZXYFormatGetResampling;
+  resampling?:
+    | "nearest"
+    | "bilinear"
+    | "cubic"
+    | "cubic_spline"
+    | "lanczos"
+    | "average"
+    | "mode"
+    | "gauss"
+    | "rms"
+    | null;
   /**
    * WarpKernel resampling algorithm (only used when doing re-projection). Defaults to `nearest`.
    */
-  reproject?: TileTilesTileMatrixSetIdZXYFormatGetReproject;
-  /**
-   * Buffer on each side of the given tile. It must be a multiple of `0.5`. Output **tilesize** will be expanded to `tilesize + 2 * buffer` (e.g 0.5 = 257x257, 1.0 = 258x258).
-   */
-  buffer?: number | null;
-  /**
-   * Padding to apply to each tile edge. Helps reduce resampling artefacts along edges. Defaults to `0`.
-   */
-  padding?: number | null;
+  reproject?:
+    | "nearest"
+    | "bilinear"
+    | "cubic"
+    | "cubic_spline"
+    | "lanczos"
+    | "average"
+    | "mode"
+    | "sum"
+    | "rms"
+    | null;
   /**
    * Algorithm name
    */
@@ -2805,14 +1005,6 @@ export type TileTilesTileMatrixSetIdZXYFormatGetParams = {
    */
   algorithm_params?: string | null;
   /**
-   * comma (',') delimited Min,Max range. Can set multiple time for multiple bands.
-   */
-  rescale?: string[] | null;
-  /**
-   * rio-color formula (info: https://github.com/mapbox/rio-color)
-   */
-  color_formula?: string | null;
-  /**
    * Colormap name
    */
   colormap_name?: TileTilesTileMatrixSetIdZXYFormatGetColormapName;
@@ -2821,9 +1013,17 @@ export type TileTilesTileMatrixSetIdZXYFormatGetParams = {
    */
   colormap?: string | null;
   /**
+   * comma (',') delimited Min,Max range. Can set multiple time for multiple bands.
+   */
+  rescale?: string[] | null;
+  /**
+   * rio-color formula (info: https://github.com/mapbox/rio-color)
+   */
+  color_formula?: string | null;
+  /**
    * Add mask to the output data. Defaults to `True`
    */
-  return_mask?: boolean;
+  return_mask?: boolean | null;
 };
 
 export type TileTilesTileMatrixSetIdZXYScaleXGetColormapName =
@@ -3050,42 +1250,14 @@ export type TileTilesTileMatrixSetIdZXYScaleXGetAlgorithm =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TileTilesTileMatrixSetIdZXYScaleXGetAlgorithm = {
   hillshade: "hillshade",
+  slope: "slope",
   contours: "contours",
   normalizedIndex: "normalizedIndex",
   terrarium: "terrarium",
   terrainrgb: "terrainrgb",
-} as const;
-
-export type TileTilesTileMatrixSetIdZXYScaleXGetReproject =
-  (typeof TileTilesTileMatrixSetIdZXYScaleXGetReproject)[keyof typeof TileTilesTileMatrixSetIdZXYScaleXGetReproject];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesTileMatrixSetIdZXYScaleXGetReproject = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  sum: "sum",
-  rms: "rms",
-} as const;
-
-export type TileTilesTileMatrixSetIdZXYScaleXGetResampling =
-  (typeof TileTilesTileMatrixSetIdZXYScaleXGetResampling)[keyof typeof TileTilesTileMatrixSetIdZXYScaleXGetResampling];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesTileMatrixSetIdZXYScaleXGetResampling = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  gauss: "gauss",
-  rms: "rms",
+  cast: "cast",
+  ceil: "ceil",
+  floor: "floor",
 } as const;
 
 export type TileTilesTileMatrixSetIdZXYScaleXGetParams = {
@@ -3094,6 +1266,14 @@ export type TileTilesTileMatrixSetIdZXYScaleXGetParams = {
    * Raster filename.
    */
   raster_filename: string;
+  /**
+   * Buffer on each side of the given tile. It must be a multiple of `0.5`. Output **tilesize** will be expanded to `tilesize + 2 * buffer` (e.g 0.5 = 257x257, 1.0 = 258x258).
+   */
+  buffer?: number | null;
+  /**
+   * Padding to apply to each tile edge. Helps reduce resampling artefacts along edges. Defaults to `0`.
+   */
+  padding?: number | null;
   /**
    * Dataset band indexes
    */
@@ -3105,27 +1285,39 @@ export type TileTilesTileMatrixSetIdZXYScaleXGetParams = {
   /**
    * Overwrite internal Nodata value
    */
-  nodata?: string | number | number | null;
+  nodata?: number | number | string | null;
   /**
    * Apply internal Scale/Offset. Defaults to `False`.
    */
-  unscale?: boolean;
+  unscale?: boolean | null;
   /**
    * RasterIO resampling algorithm. Defaults to `nearest`.
    */
-  resampling?: TileTilesTileMatrixSetIdZXYScaleXGetResampling;
+  resampling?:
+    | "nearest"
+    | "bilinear"
+    | "cubic"
+    | "cubic_spline"
+    | "lanczos"
+    | "average"
+    | "mode"
+    | "gauss"
+    | "rms"
+    | null;
   /**
    * WarpKernel resampling algorithm (only used when doing re-projection). Defaults to `nearest`.
    */
-  reproject?: TileTilesTileMatrixSetIdZXYScaleXGetReproject;
-  /**
-   * Buffer on each side of the given tile. It must be a multiple of `0.5`. Output **tilesize** will be expanded to `tilesize + 2 * buffer` (e.g 0.5 = 257x257, 1.0 = 258x258).
-   */
-  buffer?: number | null;
-  /**
-   * Padding to apply to each tile edge. Helps reduce resampling artefacts along edges. Defaults to `0`.
-   */
-  padding?: number | null;
+  reproject?:
+    | "nearest"
+    | "bilinear"
+    | "cubic"
+    | "cubic_spline"
+    | "lanczos"
+    | "average"
+    | "mode"
+    | "sum"
+    | "rms"
+    | null;
   /**
    * Algorithm name
    */
@@ -3135,14 +1327,6 @@ export type TileTilesTileMatrixSetIdZXYScaleXGetParams = {
    */
   algorithm_params?: string | null;
   /**
-   * comma (',') delimited Min,Max range. Can set multiple time for multiple bands.
-   */
-  rescale?: string[] | null;
-  /**
-   * rio-color formula (info: https://github.com/mapbox/rio-color)
-   */
-  color_formula?: string | null;
-  /**
    * Colormap name
    */
   colormap_name?: TileTilesTileMatrixSetIdZXYScaleXGetColormapName;
@@ -3151,9 +1335,17 @@ export type TileTilesTileMatrixSetIdZXYScaleXGetParams = {
    */
   colormap?: string | null;
   /**
+   * comma (',') delimited Min,Max range. Can set multiple time for multiple bands.
+   */
+  rescale?: string[] | null;
+  /**
+   * rio-color formula (info: https://github.com/mapbox/rio-color)
+   */
+  color_formula?: string | null;
+  /**
    * Add mask to the output data. Defaults to `True`
    */
-  return_mask?: boolean;
+  return_mask?: boolean | null;
 };
 
 export type TileTilesTileMatrixSetIdZXYScaleXFormatGetColormapName =
@@ -3380,42 +1572,14 @@ export type TileTilesTileMatrixSetIdZXYScaleXFormatGetAlgorithm =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TileTilesTileMatrixSetIdZXYScaleXFormatGetAlgorithm = {
   hillshade: "hillshade",
+  slope: "slope",
   contours: "contours",
   normalizedIndex: "normalizedIndex",
   terrarium: "terrarium",
   terrainrgb: "terrainrgb",
-} as const;
-
-export type TileTilesTileMatrixSetIdZXYScaleXFormatGetReproject =
-  (typeof TileTilesTileMatrixSetIdZXYScaleXFormatGetReproject)[keyof typeof TileTilesTileMatrixSetIdZXYScaleXFormatGetReproject];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesTileMatrixSetIdZXYScaleXFormatGetReproject = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  sum: "sum",
-  rms: "rms",
-} as const;
-
-export type TileTilesTileMatrixSetIdZXYScaleXFormatGetResampling =
-  (typeof TileTilesTileMatrixSetIdZXYScaleXFormatGetResampling)[keyof typeof TileTilesTileMatrixSetIdZXYScaleXFormatGetResampling];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const TileTilesTileMatrixSetIdZXYScaleXFormatGetResampling = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  gauss: "gauss",
-  rms: "rms",
+  cast: "cast",
+  ceil: "ceil",
+  floor: "floor",
 } as const;
 
 export type TileTilesTileMatrixSetIdZXYScaleXFormatGetParams = {
@@ -3423,6 +1587,14 @@ export type TileTilesTileMatrixSetIdZXYScaleXFormatGetParams = {
    * Raster filename.
    */
   raster_filename: string;
+  /**
+   * Buffer on each side of the given tile. It must be a multiple of `0.5`. Output **tilesize** will be expanded to `tilesize + 2 * buffer` (e.g 0.5 = 257x257, 1.0 = 258x258).
+   */
+  buffer?: number | null;
+  /**
+   * Padding to apply to each tile edge. Helps reduce resampling artefacts along edges. Defaults to `0`.
+   */
+  padding?: number | null;
   /**
    * Dataset band indexes
    */
@@ -3434,27 +1606,39 @@ export type TileTilesTileMatrixSetIdZXYScaleXFormatGetParams = {
   /**
    * Overwrite internal Nodata value
    */
-  nodata?: string | number | number | null;
+  nodata?: number | number | string | null;
   /**
    * Apply internal Scale/Offset. Defaults to `False`.
    */
-  unscale?: boolean;
+  unscale?: boolean | null;
   /**
    * RasterIO resampling algorithm. Defaults to `nearest`.
    */
-  resampling?: TileTilesTileMatrixSetIdZXYScaleXFormatGetResampling;
+  resampling?:
+    | "nearest"
+    | "bilinear"
+    | "cubic"
+    | "cubic_spline"
+    | "lanczos"
+    | "average"
+    | "mode"
+    | "gauss"
+    | "rms"
+    | null;
   /**
    * WarpKernel resampling algorithm (only used when doing re-projection). Defaults to `nearest`.
    */
-  reproject?: TileTilesTileMatrixSetIdZXYScaleXFormatGetReproject;
-  /**
-   * Buffer on each side of the given tile. It must be a multiple of `0.5`. Output **tilesize** will be expanded to `tilesize + 2 * buffer` (e.g 0.5 = 257x257, 1.0 = 258x258).
-   */
-  buffer?: number | null;
-  /**
-   * Padding to apply to each tile edge. Helps reduce resampling artefacts along edges. Defaults to `0`.
-   */
-  padding?: number | null;
+  reproject?:
+    | "nearest"
+    | "bilinear"
+    | "cubic"
+    | "cubic_spline"
+    | "lanczos"
+    | "average"
+    | "mode"
+    | "sum"
+    | "rms"
+    | null;
   /**
    * Algorithm name
    */
@@ -3464,14 +1648,6 @@ export type TileTilesTileMatrixSetIdZXYScaleXFormatGetParams = {
    */
   algorithm_params?: string | null;
   /**
-   * comma (',') delimited Min,Max range. Can set multiple time for multiple bands.
-   */
-  rescale?: string[] | null;
-  /**
-   * rio-color formula (info: https://github.com/mapbox/rio-color)
-   */
-  color_formula?: string | null;
-  /**
    * Colormap name
    */
   colormap_name?: TileTilesTileMatrixSetIdZXYScaleXFormatGetColormapName;
@@ -3480,9 +1656,17 @@ export type TileTilesTileMatrixSetIdZXYScaleXFormatGetParams = {
    */
   colormap?: string | null;
   /**
+   * comma (',') delimited Min,Max range. Can set multiple time for multiple bands.
+   */
+  rescale?: string[] | null;
+  /**
+   * rio-color formula (info: https://github.com/mapbox/rio-color)
+   */
+  color_formula?: string | null;
+  /**
    * Add mask to the output data. Defaults to `True`
    */
-  return_mask?: boolean;
+  return_mask?: boolean | null;
 };
 
 /**
@@ -3500,38 +1684,6 @@ export type ExactZonalStatsExactZonalStatsPostParams = {
    */
   raster_filename: string;
 };
-
-export type PointPointLonLatGetReproject =
-  (typeof PointPointLonLatGetReproject)[keyof typeof PointPointLonLatGetReproject];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const PointPointLonLatGetReproject = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  sum: "sum",
-  rms: "rms",
-} as const;
-
-export type PointPointLonLatGetResampling =
-  (typeof PointPointLonLatGetResampling)[keyof typeof PointPointLonLatGetResampling];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const PointPointLonLatGetResampling = {
-  nearest: "nearest",
-  bilinear: "bilinear",
-  cubic: "cubic",
-  cubic_spline: "cubic_spline",
-  lanczos: "lanczos",
-  average: "average",
-  mode: "mode",
-  gauss: "gauss",
-  rms: "rms",
-} as const;
 
 export type PointPointLonLatGetParams = {
   /**
@@ -3553,19 +1705,39 @@ export type PointPointLonLatGetParams = {
   /**
    * Overwrite internal Nodata value
    */
-  nodata?: string | number | number | null;
+  nodata?: number | number | string | null;
   /**
    * Apply internal Scale/Offset. Defaults to `False`.
    */
-  unscale?: boolean;
+  unscale?: boolean | null;
   /**
    * RasterIO resampling algorithm. Defaults to `nearest`.
    */
-  resampling?: PointPointLonLatGetResampling;
+  resampling?:
+    | "nearest"
+    | "bilinear"
+    | "cubic"
+    | "cubic_spline"
+    | "lanczos"
+    | "average"
+    | "mode"
+    | "gauss"
+    | "rms"
+    | null;
   /**
    * WarpKernel resampling algorithm (only used when doing re-projection). Defaults to `nearest`.
    */
-  reproject?: PointPointLonLatGetReproject;
+  reproject?:
+    | "nearest"
+    | "bilinear"
+    | "cubic"
+    | "cubic_spline"
+    | "lanczos"
+    | "average"
+    | "mode"
+    | "sum"
+    | "rms"
+    | null;
 };
 
 export type ValidationErrorLocItem = string | number;
@@ -3918,13 +2090,6 @@ export type Position3D = [number, number, number];
  */
 export type Position2D = [number, number];
 
-export type PolygonType = (typeof PolygonType)[keyof typeof PolygonType];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const PolygonType = {
-  Polygon: "Polygon",
-} as const;
-
 export type PolygonCoordinatesItemItem = Position2D | Position3D;
 
 export type PolygonBbox =
@@ -3938,8 +2103,10 @@ export type PolygonBbox =
 export interface Polygon {
   bbox?: PolygonBbox;
   coordinates: PolygonCoordinatesItemItem[][];
-  type: PolygonType;
+  type: string;
 }
+
+export type PointOutputValuesItem = number | null;
 
 /**
  * Point model.
@@ -3949,15 +2116,8 @@ response model for `/point` endpoints
 export interface PointOutput {
   band_names: string[];
   coordinates: number[];
-  values: number[];
+  values: PointOutputValuesItem[];
 }
-
-export type PointInputType = (typeof PointInputType)[keyof typeof PointInputType];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const PointInputType = {
-  Point: "Point",
-} as const;
 
 export type PointInputCoordinates = Position2D | Position3D;
 
@@ -3972,7 +2132,7 @@ export type PointInputBbox =
 export interface PointInput {
   bbox?: PointInputBbox;
   coordinates: PointInputCoordinates;
-  type: PointInputType;
+  type: string;
 }
 
 export type NumericalOperators = (typeof NumericalOperators)[keyof typeof NumericalOperators];
@@ -3987,11 +2147,7 @@ export const NumericalOperators = {
   not_eq: "not_eq",
 } as const;
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const NumericalLegendLegendType = {
-  discrete: "discrete",
-  continuous: "continuous",
-} as const;
+export type NumericalLegendLegendType = string | string;
 
 /**
  * suggestion of color map to use
@@ -4001,34 +2157,19 @@ export type NumericalLegendColormapName = string | null;
 export interface NumericalLegend {
   /** suggestion of color map to use */
   colormap_name?: NumericalLegendColormapName;
-  legend_type: (typeof NumericalLegendLegendType)[keyof typeof NumericalLegendLegendType];
+  legend_type: NumericalLegendLegendType;
   stats: LevelStats[];
 }
-
-export type NumericalFilterFilterType =
-  (typeof NumericalFilterFilterType)[keyof typeof NumericalFilterFilterType];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const NumericalFilterFilterType = {
-  numerical: "numerical",
-} as const;
 
 export interface NumericalFilter {
   /** Name of the column to which the filter will apply. */
   column_name: string;
-  filter_type: NumericalFilterFilterType;
+  filter_type: string;
   /** Operation to use in compare. */
   operation: NumericalOperators;
   /** Value to compare with. */
   value: number;
 }
-
-export type MultiPolygonType = (typeof MultiPolygonType)[keyof typeof MultiPolygonType];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const MultiPolygonType = {
-  MultiPolygon: "MultiPolygon",
-} as const;
 
 export type MultiPolygonCoordinatesItemItemItem = Position2D | Position3D;
 
@@ -4043,15 +2184,8 @@ export type MultiPolygonBbox =
 export interface MultiPolygon {
   bbox?: MultiPolygonBbox;
   coordinates: MultiPolygonCoordinatesItemItemItem[][][];
-  type: MultiPolygonType;
+  type: string;
 }
-
-export type MultiPointType = (typeof MultiPointType)[keyof typeof MultiPointType];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const MultiPointType = {
-  MultiPoint: "MultiPoint",
-} as const;
 
 export type MultiPointCoordinatesItem = Position2D | Position3D;
 
@@ -4066,15 +2200,8 @@ export type MultiPointBbox =
 export interface MultiPoint {
   bbox?: MultiPointBbox;
   coordinates: MultiPointCoordinatesItem[];
-  type: MultiPointType;
+  type: string;
 }
-
-export type MultiLineStringType = (typeof MultiLineStringType)[keyof typeof MultiLineStringType];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const MultiLineStringType = {
-  MultiLineString: "MultiLineString",
-} as const;
 
 export type MultiLineStringCoordinatesItemItem = Position2D | Position3D;
 
@@ -4089,7 +2216,7 @@ export type MultiLineStringBbox =
 export interface MultiLineString {
   bbox?: MultiLineStringBbox;
   coordinates: MultiLineStringCoordinatesItemItem[][];
-  type: MultiLineStringType;
+  type: string;
 }
 
 export interface MultiDatasetMeta {
@@ -4098,13 +2225,6 @@ export interface MultiDatasetMeta {
   /** H3 related information. */
   h3_grid_info: H3GridInfo[];
 }
-
-export type LineStringType = (typeof LineStringType)[keyof typeof LineStringType];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const LineStringType = {
-  LineString: "LineString",
-} as const;
 
 export type LineStringCoordinatesItem = Position2D | Position3D;
 
@@ -4120,7 +2240,7 @@ export interface LineString {
   bbox?: LineStringBbox;
   /** @minItems 2 */
   coordinates: LineStringCoordinatesItem[];
-  type: LineStringType;
+  type: string;
 }
 
 /**
@@ -4181,14 +2301,6 @@ export interface H3GridInfo {
   level: number;
 }
 
-export type GeometryCollectionType =
-  (typeof GeometryCollectionType)[keyof typeof GeometryCollectionType];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const GeometryCollectionType = {
-  GeometryCollection: "GeometryCollection",
-} as const;
-
 export type GeometryCollectionGeometriesItem =
   | PointInput
   | MultiPoint
@@ -4209,16 +2321,8 @@ export type GeometryCollectionBbox =
 export interface GeometryCollection {
   bbox?: GeometryCollectionBbox;
   geometries: GeometryCollectionGeometriesItem[];
-  type: GeometryCollectionType;
+  type: string;
 }
-
-export type FeatureCollectionType =
-  (typeof FeatureCollectionType)[keyof typeof FeatureCollectionType];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const FeatureCollectionType = {
-  FeatureCollection: "FeatureCollection",
-} as const;
 
 export type FeatureCollectionBbox =
   | [number, number, number, number]
@@ -4231,21 +2335,25 @@ export type FeatureCollectionBbox =
 export interface FeatureCollection {
   bbox?: FeatureCollectionBbox;
   features: Feature[];
-  type: FeatureCollectionType;
+  type: string;
 }
-
-export type FeatureType = (typeof FeatureType)[keyof typeof FeatureType];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const FeatureType = {
-  Feature: "Feature",
-} as const;
 
 export type FeaturePropertiesAnyOf = { [key: string]: unknown };
 
 export type FeatureProperties = FeaturePropertiesAnyOf | BaseModel | null;
 
 export type FeatureId = number | string | null;
+
+/**
+ * Feature Model
+ */
+export interface Feature {
+  bbox?: FeatureBbox;
+  geometry: FeatureGeometry;
+  id?: FeatureId;
+  properties: FeatureProperties;
+  type: string;
+}
 
 export type FeatureGeometryAnyOf =
   | PointInput
@@ -4263,15 +2371,8 @@ export type FeatureBbox =
   | [number, number, number, number, number, number]
   | null;
 
-/**
- * Feature Model
- */
-export interface Feature {
-  bbox?: FeatureBbox;
-  geometry: FeatureGeometry;
-  id?: FeatureId;
-  properties: FeatureProperties;
-  type: FeatureType;
+export interface DescritionResponse {
+  description: string;
 }
 
 /**
@@ -4289,8 +2390,6 @@ export type DatasetMetaLegend = CategoricalLegend | NumericalLegend;
 export interface DatasetMeta {
   /** Human readable indicator description. */
   description: string;
-  /** Human readable indicator short description. */
-  description_short: string;
   /** Human readable name. */
   label: string;
   legend: DatasetMetaLegend;
@@ -4302,6 +2401,33 @@ export interface DatasetMeta {
   var_dtype: string;
   /** Column name. */
   var_name: string;
+}
+
+export type ContextLanguage = (typeof ContextLanguage)[keyof typeof ContextLanguage];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ContextLanguage = {
+  en: "en",
+  es: "es",
+  pt: "pt",
+} as const;
+
+export type ContextDescriptionType =
+  (typeof ContextDescriptionType)[keyof typeof ContextDescriptionType];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ContextDescriptionType = {
+  Short: "Short",
+  Normal: "Normal",
+  Long: "Long",
+} as const;
+
+export type ContextData = { [key: string]: unknown };
+
+export interface Context {
+  data: ContextData;
+  description_type?: ContextDescriptionType;
+  language?: ContextLanguage;
 }
 
 export type CategoricalOperators = (typeof CategoricalOperators)[keyof typeof CategoricalOperators];
@@ -4321,31 +2447,15 @@ export interface CategoricalLegendEntry {
   value: CategoricalLegendEntryValue;
 }
 
-export type CategoricalLegendLegendType =
-  (typeof CategoricalLegendLegendType)[keyof typeof CategoricalLegendLegendType];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const CategoricalLegendLegendType = {
-  categorical: "categorical",
-} as const;
-
 export interface CategoricalLegend {
   entries: CategoricalLegendEntry[];
-  legend_type: CategoricalLegendLegendType;
+  legend_type: string;
 }
-
-export type CategoricalFilterFilterType =
-  (typeof CategoricalFilterFilterType)[keyof typeof CategoricalFilterFilterType];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const CategoricalFilterFilterType = {
-  categorical: "categorical",
-} as const;
 
 export interface CategoricalFilter {
   /** Name of the column to which the filter will apply. */
   column_name: string;
-  filter_type: CategoricalFilterFilterType;
+  filter_type: string;
   operation: CategoricalOperators;
   /** Value to compare with. */
   value: number[];

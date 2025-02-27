@@ -2,9 +2,9 @@
 
 import { useGetOverviewTopics } from "@/lib/topics";
 
-import ReportResultsContentItem from "@/containers/report/results/content/item";
+import ReportResultsContentItem from "@/containers/results/content/item";
 
-export const WidgetsOverview = () => {
+export const ReportResultsContentOverview = () => {
   const { data } = useGetOverviewTopics();
 
   return data?.map((topic) => {
@@ -16,3 +16,5 @@ export const WidgetsOverview = () => {
     return <ReportResultsContentItem editable={false} key={topic.id} topic={T} />;
   });
 };
+
+export default ReportResultsContentOverview;

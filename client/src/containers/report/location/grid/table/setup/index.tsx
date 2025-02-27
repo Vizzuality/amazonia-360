@@ -39,7 +39,7 @@ export default function GridTableSetup() {
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
   const [gridFilters] = useSyncGridFilters();
   const [, setGridFiltersSetUp] = useSyncGridFiltersSetUp();
-  const [selectedDirection, setDirection] = useState<"asc" | "desc">("asc");
+  const [selectedDirection, setDirection] = useState<"asc" | "desc">("desc");
   const [selectedDataset, setDataset] = useState<string>(gridDatasets[0]);
   const [selectedLimit, setSelectedLimit] = useState<number>();
 

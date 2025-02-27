@@ -180,7 +180,7 @@ export const getGridLayerProps = ({
               (dataset) => dataset.var_name === gridDatasets[f],
             )?.legend;
 
-            if (legend?.legend_type === "continuous") {
+            if (legend?.legend_type === "continuous" && "stats" in legend) {
               const stats = legend?.stats?.find((s) => s.level === 1);
 
               return (gridFilters?.[gridDatasets[f]] || [stats?.min, stats?.max]) as [
@@ -307,7 +307,7 @@ export default function GridLayer() {
         (dataset) => dataset.var_name === gridSelectedDataset,
       );
 
-      if (dataset?.legend.legend_type === "continuous") {
+      if (dataset?.legend.legend_type === "continuous" && "stats" in dataset.legend) {
         const s = dataset.legend.stats.find((stat) => stat.level === 1);
 
         return CHROMA.scale("viridis").domain([s?.min || 0, s?.max || 100]);

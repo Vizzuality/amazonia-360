@@ -14,7 +14,7 @@ import { LuArrowUpDown } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { DataPagination } from "@/containers/widgets/pagination";
+import { DataPagination } from "@/containers/widgets/table/pagination";
 
 import {
   Table,
