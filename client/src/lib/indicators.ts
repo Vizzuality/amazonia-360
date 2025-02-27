@@ -267,7 +267,7 @@ export const getQueryFeatureId = async ({ type, resource, geometry }: QueryFeatu
 
     const fs = await f.queryFeatures(query);
 
-    if (q.returnIntersections) {
+    if (q.returnIntersections && fs.geometryType === "polygon") {
       const geoms = fs.features.map((f) => f.geometry).filter(Boolean);
 
       if (!geometry || geoms.length === 0) {
