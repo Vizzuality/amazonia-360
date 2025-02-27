@@ -1,5 +1,7 @@
 import ReactMarkdown from "react-markdown";
 
-export const Markdown = ({ children }: { children?: string }) => {
-  return <ReactMarkdown className="prose prose-sm">{children}</ReactMarkdown>;
+import { cn } from "@/lib/utils";
+
+export const Markdown = ({ children, className }: { children?: string; className?: string }) => {
+  return <ReactMarkdown className={cn("prose prose-sm", className)}>{children}</ReactMarkdown>;
 };

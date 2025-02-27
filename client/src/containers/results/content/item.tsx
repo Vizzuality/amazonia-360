@@ -17,8 +17,8 @@ import { MIN_VISUALIZATION_SIZES } from "@/constants/topics";
 import DeleteHandler from "@/containers/results/content/controls/delete";
 import MoveHandler from "@/containers/results/content/controls/drag";
 import ResizeHandler from "@/containers/results/content/controls/resize";
-// import { ReportResultsSummary } from "@/containers/report/results/content/summary";
 import ReportResultsIndicator from "@/containers/results/content/indicator";
+import { ReportResultsSummary } from "@/containers/results/content/summary";
 
 import { useSidebar } from "@/components/ui/sidebar";
 
@@ -104,11 +104,14 @@ export const ReportResultsContentItem = ({
   return (
     <div
       key={topic.id}
-      className={cn({ "container relative print:break-before-page": true, "pr-6": isSidebarOpen })}
+      className={cn({
+        "container relative space-y-4 print:break-before-page": true,
+        "pr-6": isSidebarOpen,
+      })}
     >
-      <h2 className="mb-4 text-xl font-semibold">{TOPIC?.name_en}</h2>
+      <h2 className="text-xl font-semibold">{TOPIC?.name_en}</h2>
 
-      {/* <ReportResultsSummary topic={TOPIC} /> */}
+      {TOPIC?.id !== 0 && <ReportResultsSummary topic={TOPIC} />}
 
       <ResponsiveReactGridLayout
         className="layout animated"
