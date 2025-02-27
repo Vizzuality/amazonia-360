@@ -19,13 +19,14 @@ const config = {
         lg: "2rem", // Large screens
         xl: "4rem", // Extra large screens
         "2xl": "6rem", // Extra-extra large screens
+        "3xl": "0", // Extra-extra-extra large screens
       },
     },
     extend: {
       screens: {
-        xl: "1280px", // Applies max-width: 400px
-        "2xl": "1441px", // Applies max-width: 512px
-        "3xl": "100%", // Anything above 1441px remains full width
+        xl: "1260px",
+        "2xl": "1660px",
+        "3xl": "100%", // Anything above  1660px remains full width
         tall: {
           raw: "(min-height: 800px)",
         },

@@ -4,9 +4,6 @@
 
 @layer base {
   :root {
-    /* Font family */
-    --montserrat: "Montserrat", sans-serif;
-
     /* Amazonia */
     /* colors */
     --accent: 200 25% 95%;

@@ -77,7 +77,7 @@ export const GridLegend: FC = () => {
   );
 
   return (
-    <div className="border-muted-background absolute bottom-16 right-4 flex w-72 flex-col space-y-1 rounded-lg border bg-white font-montserrat shadow-md">
+    <div className="border-muted-background absolute bottom-16 right-4 flex w-72 flex-col space-y-1 rounded-lg border bg-white shadow-md">
       <div className="flex items-center justify-between gap-1 px-4 py-2">
         <div
           className={cn({

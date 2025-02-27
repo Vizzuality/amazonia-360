@@ -18,7 +18,7 @@ export default function ReportPage() {
       <main className="relative flex min-h-[calc(100svh_-_theme(space.20)_+_20px)] flex-col">
         <div className="pointer-events-none absolute bottom-8 left-0 top-10 z-10 w-full">
           <div className="container grid grid-cols-12">
-            <div className="col-span-6 xl:col-span-5">
+            <div className="col-span-6 2xl:col-span-4">
               <Suspense fallback={null}>
                 <ReportLocation />
               </Suspense>

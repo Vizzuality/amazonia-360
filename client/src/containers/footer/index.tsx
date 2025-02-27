@@ -23,7 +23,7 @@ export default function Footer() {
                 src={"/images/home/amazonia_forever_logo.png"}
                 alt="KF Logo"
                 width={65}
-                height={48}
+                height={40}
                 className="text-white"
               />
             </div>

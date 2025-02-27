@@ -23,7 +23,7 @@ import {
   // LAND_COVER,
   // LAND_COVER_COLORMAP,
   POPULATION,
-  PROTECTED_AREAS,
+  // PROTECTED_AREAS,
 } from "@/constants/colors";
 
 export interface FeatureLayer extends __esri.FeatureLayerProperties {
@@ -440,12 +440,12 @@ export const DATASETS = {
       }),
     } satisfies FeatureLayer,
     legend: {
-      type: "basic" as const,
-      items: getKeys(PROTECTED_AREAS).map((k) => ({
-        id: k,
-        label: PROTECTED_AREAS[k].label,
-        color: PROTECTED_AREAS[k].color,
-      })),
+      // type: "basic" as const,
+      // items: getKeys(PROTECTED_AREAS).map((k) => ({
+      //   id: k,
+      //   label: PROTECTED_AREAS[k].label,
+      //   color: PROTECTED_AREAS[k].color,
+      // })),
     },
     metadata: {
       type: "arcgis",

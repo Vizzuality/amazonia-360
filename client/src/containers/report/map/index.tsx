@@ -181,10 +181,9 @@ export default function MapContainer() {
           <BasemapControl />
         </Controls>
 
-        {gridSelectedDataset && tab === "grid" && <GridLegend />}
-
         <MapPopup />
       </Map>
+      {gridSelectedDataset && tab === "grid" && <GridLegend />}
 
       <SketchTooltips />
     </div>
