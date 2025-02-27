@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 import { Layout } from "react-grid-layout";
 import { Responsive, WidthProvider } from "react-grid-layout";
@@ -8,16 +8,12 @@ import { useAtom } from "jotai";
 import { useGetTopicsId } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
-import { VisualizationTypes } from "@/app/local-api/indicators/route";
 import { TopicView } from "@/app/parsers";
-import { indicatorsEditionModeAtom, reportEditionModeAtom, useSyncTopics } from "@/app/store";
+import { reportEditionModeAtom, useSyncTopics } from "@/app/store";
 
 import { MIN_VISUALIZATION_SIZES } from "@/constants/topics";
 
-import DeleteHandler from "@/containers/results/content/controls/delete";
-import MoveHandler from "@/containers/results/content/controls/drag";
-import ResizeHandler from "@/containers/results/content/controls/resize";
-import ReportResultsIndicator from "@/containers/results/content/indicator";
+import { ReportResultsContentIndicatorItem } from "@/containers/results/content/indicators/item";
 import { ReportResultsSummary } from "@/containers/results/content/summary";
 
 import { useSidebar } from "@/components/ui/sidebar";
@@ -33,10 +29,9 @@ export const ReportResultsContentItem = ({
   topic,
   editable = true,
 }: ReportResultsContentItemProps) => {
+  const { open: isSidebarOpen } = useSidebar();
   const [, setTopics] = useSyncTopics();
-  const [editionModeIndicator, setEditionModeIndicator] = useAtom(indicatorsEditionModeAtom);
-  const { open: isSidebarOpen, toggleSidebar } = useSidebar();
-  const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
+  const [reportEditionMode] = useAtom(reportEditionModeAtom);
 
   const EDITABLE = editable && reportEditionMode;
 
@@ -72,34 +67,33 @@ export const ReportResultsContentItem = ({
     [topic.id, setTopics],
   );
 
-  const onDeleteIndicator = useCallback(
-    (indicatorId: number, type: VisualizationTypes) => {
-      setTopics((prev) => {
-        if (!prev) return prev;
+  const INDICATORS = useMemo(() => {
+    return topic?.indicators?.map(({ type, id, w, h, x, y }) => {
+      const dataGridConfig = {
+        x: x ?? 0,
+        y: y ?? 0,
+        w: w,
+        h: h,
+        minW: MIN_VISUALIZATION_SIZES[type]?.w ?? 1,
+        minH: MIN_VISUALIZATION_SIZES[type]?.h ?? 1,
+      };
 
-        const i = prev?.findIndex((t) => t.id === topic.id);
-
-        if (i === -1) return prev;
-
-        prev[i] = {
-          id: topic.id,
-          indicators: prev[i]?.indicators?.filter(
-            (i) => !(i.id === indicatorId && i.type === type),
-          ),
-        };
-
-        return prev;
-      });
-
-      setEditionModeIndicator({});
-    },
-    [topic.id, setTopics, setEditionModeIndicator],
-  );
-
-  const handleEdit = useCallback(() => {
-    toggleSidebar();
-    setReportEditionMode(!reportEditionMode);
-  }, [toggleSidebar, setReportEditionMode, reportEditionMode]);
+      return (
+        <div
+          key={`{"topic":${topic.id},"indicator":${id},"type":"${type}"}`}
+          id={`${id}-${type}`}
+          className="flex h-full flex-col"
+          data-grid={dataGridConfig}
+        >
+          <ReportResultsContentIndicatorItem
+            topic={topic}
+            indicator={{ id, type }}
+            editable={EDITABLE}
+          />
+        </div>
+      );
+    });
+  }, [topic, EDITABLE]);
 
   return (
     <div
@@ -127,50 +121,7 @@ export const ReportResultsContentItem = ({
         onDragStop={handleDrop}
         onResizeStop={handleDrop}
       >
-        {topic?.indicators?.map(({ type, id, w, h, x, y }) => {
-          const dataGridConfig = {
-            x: x ?? 0,
-            y: y ?? 0,
-            w: w,
-            h: h,
-            minW: MIN_VISUALIZATION_SIZES[type]?.w ?? 1,
-            minH: MIN_VISUALIZATION_SIZES[type]?.h ?? 1,
-          };
-
-          return (
-            <div
-              key={`{"topic":${topic.id},"indicator":${id},"type":"${type}"}`}
-              id={`${id}-${type}`}
-              className="flex h-full flex-col"
-              data-grid={dataGridConfig}
-              onMouseEnter={() => {
-                if (EDITABLE) {
-                  setEditionModeIndicator({ [`${id}-${type}`]: true });
-                }
-              }}
-              onMouseLeave={() => {
-                if (EDITABLE) {
-                  setEditionModeIndicator({ [`${id}-${type}`]: false });
-                }
-              }}
-            >
-              {editionModeIndicator[`${id}-${type}`] && EDITABLE && <MoveHandler />}
-              {editionModeIndicator[`${id}-${type}`] && EDITABLE && (
-                <DeleteHandler indicatorId={id} type={type} onClick={onDeleteIndicator} />
-              )}
-
-              <ReportResultsIndicator
-                key={`${topic.id}-${id}`}
-                id={id}
-                type={type}
-                editable={editable}
-                onEdit={handleEdit}
-              />
-
-              {editionModeIndicator[`${id}-${type}`] && EDITABLE && <ResizeHandler />}
-            </div>
-          );
-        })}
+        {INDICATORS}
       </ResponsiveReactGridLayout>
     </div>
   );
