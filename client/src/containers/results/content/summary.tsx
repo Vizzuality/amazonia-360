@@ -90,10 +90,11 @@ export const useGetSummaryTopic = (topic?: Topic) => {
           "Don't use blockquotes",
           "Don't use headings",
           "Try to emphasize the most important information by putting in bold",
+          "Try to use percentages every time is possible",
         ],
       },
       language: "en",
-      description_type: "Short",
+      description_type: "Normal",
     },
     {
       enabled: indicatorsIsFetched && !indicatorsIsFetching,
@@ -118,7 +119,7 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
       )}
 
       {isFetched && !isFetching && data && !!data.description && (
-        <Markdown className="max-w-none">{data.description}</Markdown>
+        <Markdown className="max-w-none prose-strong:font-bold">{data.description}</Markdown>
       )}
     </div>
   );
