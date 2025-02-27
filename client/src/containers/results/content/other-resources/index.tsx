@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo, useState } from "react";
 
 import { flatGroup } from "@visx/vendor/d3-array";
