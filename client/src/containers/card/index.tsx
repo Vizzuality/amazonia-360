@@ -7,7 +7,7 @@ import Image from "next/image";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { UseQueryResult } from "@tanstack/react-query";
-import { LuInfo, LuSettings2 } from "react-icons/lu";
+import { LuInfo, LuPen } from "react-icons/lu";
 
 import { formatNumber } from "@/lib/formats";
 import { useGetIndicatorsId } from "@/lib/indicators";
@@ -56,7 +56,7 @@ export function CardSettings({
           className="text-base font-semibold text-blue-600"
           onClick={onClick}
         >
-          <LuSettings2 className="text-blue-600" />
+          <LuPen className="text-blue-600" />
         </button>
       </TooltipTrigger>
 

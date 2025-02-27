@@ -6,6 +6,7 @@ import { Responsive, WidthProvider } from "react-grid-layout";
 import { useAtom } from "jotai";
 
 import { useGetTopicsId } from "@/lib/topics";
+import { cn } from "@/lib/utils";
 
 import { VisualizationTypes } from "@/app/local-api/indicators/route";
 import { TopicView } from "@/app/parsers";
@@ -34,7 +35,7 @@ export const ReportResultsContentItem = ({
 }: ReportResultsContentItemProps) => {
   const [, setTopics] = useSyncTopics();
   const [editionModeIndicator, setEditionModeIndicator] = useAtom(indicatorsEditionModeAtom);
-  const { toggleSidebar } = useSidebar();
+  const { open: isSidebarOpen, toggleSidebar } = useSidebar();
   const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
 
   const EDITABLE = editable && reportEditionMode;
@@ -101,7 +102,10 @@ export const ReportResultsContentItem = ({
   }, [toggleSidebar, setReportEditionMode, reportEditionMode]);
 
   return (
-    <div key={topic.id} className="container relative print:break-before-page">
+    <div
+      key={topic.id}
+      className={cn({ "container relative print:break-before-page": true, "pr-6": isSidebarOpen })}
+    >
       <h2 className="mb-4 text-xl font-semibold">{TOPIC?.name_en}</h2>
 
       {/* <ReportResultsSummary topic={TOPIC} /> */}

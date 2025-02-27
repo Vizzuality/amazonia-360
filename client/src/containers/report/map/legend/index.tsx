@@ -97,7 +97,7 @@ export const GridLegend: FC = () => {
             <Tooltip>
               <PopoverTrigger asChild>
                 <TooltipTrigger className="h-6 w-6 rounded-sm px-1 hover:bg-blue-100">
-                  <LucideBlend className="h-4 w-4 stroke-blue-500 stroke-1" />
+                  <LucideBlend className="h-4 w-4 stroke-blue-500" />
                 </TooltipTrigger>
               </PopoverTrigger>
 
@@ -145,7 +145,7 @@ export const GridLegend: FC = () => {
                 hasArrow={false}
               >
                 <TooltipTrigger asChild>
-                  <LuSettings2 className="h-4 w-4 stroke-blue-500 stroke-1" />
+                  <LuSettings2 className="h-4 w-4 stroke-blue-500" />
                 </TooltipTrigger>
               </SelectTrigger>
 

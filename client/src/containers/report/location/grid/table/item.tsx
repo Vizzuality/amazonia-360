@@ -112,11 +112,11 @@ export const GridTableItem = (
         <AlertDialogTrigger asChild>
           <TooltipTrigger asChild>
             <div
-              className="flex w-full cursor-pointer items-start gap-2 rounded-lg px-1 py-2 hover:bg-blue-50"
+              className="group flex w-full cursor-pointer items-start gap-2 rounded-lg px-1 py-2 hover:bg-blue-50"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              <button className="flex min-w-16 shrink-0 items-center gap-2 rounded-sm bg-cyan-100 px-2 py-1 hover:bg-cyan-500 hover:text-white">
+              <button className="flex min-w-16 shrink-0 items-center gap-2 rounded-sm bg-cyan-100 px-2 py-1 hover:text-white group-hover:bg-cyan-500">
                 <HexagonIcon className="h-4 w-4" />
                 <span className="text-sm font-semibold">{id + 1}º</span>
               </button>

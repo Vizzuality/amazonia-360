@@ -104,8 +104,9 @@ export default function GridTableSetup() {
       <PopoverTrigger
         disabled={!gridDatasets.length}
         className={cn({
-          "duration-400 flex shrink-0 items-center justify-center rounded-lg px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100":
+          "duration-400 flex shrink-0 items-center justify-center rounded-lg px-2.5 py-2.5 transition-colors ease-in-out":
             true,
+          "hover:bg-blue-100": gridDatasets.length,
           "opacity-50": !gridDatasets.length,
         })}
       >

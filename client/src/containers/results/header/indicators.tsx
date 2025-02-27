@@ -1,7 +1,7 @@
 "use client";
 
 import { useSetAtom } from "jotai";
-import { RxPencil1 } from "react-icons/rx";
+import { LuPen } from "react-icons/lu";
 
 import { reportEditionModeAtom } from "@/app/store";
 
@@ -21,7 +21,7 @@ export default function IndicatorsReport() {
       }}
       variant="outline"
     >
-      <RxPencil1 className="h-5 w-5" />
+      <LuPen className="h-5 w-5" />
       <span>Indicators</span>
     </Button>
   );
