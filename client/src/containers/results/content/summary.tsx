@@ -36,12 +36,11 @@ export const useGetSummaryTopicData = (topic?: Topic) => {
                 id: indicator.id,
                 resource: {
                   ...indicator.resource,
-                  query_chart: null,
-                  query_map: null,
-                  query_numeric: null,
                   query_table: {
                     returnGeometry: true,
                     returnIntersections: true,
+                    outFields: ["*"],
+                    where: "1=1",
                   },
                 },
                 type: "table",
