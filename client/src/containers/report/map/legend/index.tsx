@@ -69,7 +69,6 @@ export const GridLegend: FC = () => {
   const onChangeDataset = useCallback(
     (e: string) => {
       if (e === "no-layer") {
-        setGridSelectedDataset(null);
         setGridDatasets([]);
       } else setGridSelectedDataset(e);
     },

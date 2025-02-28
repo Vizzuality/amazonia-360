@@ -10,7 +10,12 @@ import { useGetDefaultIndicators, useGetH3Indicators } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 import { cn } from "@/lib/utils";
 
-import { selectedFiltersViewAtom, useSyncGridDatasets, useSyncLocation } from "@/app/store";
+import {
+  selectedFiltersViewAtom,
+  useSyncGridDatasets,
+  useSyncGridSelectedDataset,
+  useSyncLocation,
+} from "@/app/store";
 
 import { Search } from "@/components/ui/search";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipArrow } from "@/components/ui/tooltip";
@@ -28,6 +33,7 @@ export default function SearchC({ className }: { className?: string }) {
   const [search, setSearch] = useState("");
   const [selectedFiltersView] = useAtom(selectedFiltersViewAtom);
   const [gridDatasets, setSelectedDatasets] = useSyncGridDatasets();
+  const [gridSelectedDataset, setGridSelectedDataset] = useSyncGridSelectedDataset();
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
@@ -86,6 +92,8 @@ export default function SearchC({ className }: { className?: string }) {
         return;
       }
 
+      if (!gridSelectedDataset) setGridSelectedDataset(value.value);
+
       if (gridDatasets.length < 4) {
         setSelectedDatasets((prev) => {
           if (!value.value) return prev;
@@ -93,7 +101,7 @@ export default function SearchC({ className }: { className?: string }) {
         });
       }
     },
-    [setSelectedDatasets, gridDatasets],
+    [setSelectedDatasets, setGridSelectedDataset, gridDatasets, gridSelectedDataset],
   );
 
   return (
