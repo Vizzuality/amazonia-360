@@ -41,6 +41,7 @@ export default function SearchC() {
                     topicIndicator.id === indicator.id && topicIndicator.type === v,
                 ),
               );
+
               return {
                 key: v,
                 label: indicator.name_en,
@@ -88,8 +89,9 @@ export default function SearchC() {
         return;
       }
 
-      const widgetSize = DEFAULT_VISUALIZATION_SIZES[value.key as IndicatorView["type"]];
+      if (value.active) return;
 
+      const widgetSize = DEFAULT_VISUALIZATION_SIZES[value.key as IndicatorView["type"]];
       const newIndicator = {
         type: value.key as IndicatorView["type"],
         id: value.indicatorId,
@@ -102,30 +104,31 @@ export default function SearchC() {
       setTopics((prev) => {
         if (!prev || !value.topicId) return prev;
 
-        const i = prev.findIndex((topic) => topic.id === value.topicId);
+        const newTopics = [...prev];
+        const i = newTopics.findIndex((topic) => topic.id === value.topicId);
 
         if (i === -1) {
-          prev.push({
+          newTopics.push({
             id: value.topicId,
             indicators: [newIndicator],
           });
 
-          return prev;
+          return newTopics;
         }
 
-        const indicators = prev[i].indicators || [];
+        const indicators = [...(newTopics[i]?.indicators || [])];
 
         const position = findFirstAvailablePosition(indicators, widgetSize, 4);
         newIndicator.x = position.x;
         newIndicator.y = position.y;
         indicators.push(newIndicator);
 
-        prev[i] = {
-          ...prev[i],
+        newTopics[i] = {
+          ...newTopics[i],
           indicators,
         };
 
-        return prev;
+        return newTopics;
       });
     },
     [setTopics],
@@ -140,7 +143,7 @@ export default function SearchC() {
         options={OPTIONS}
         {...queryIndicators}
         onChange={handleSearch}
-        onSelect={handleSelect}
+        onSelect={(e) => handleSelect(e)}
         size="sm"
       >
         {(o) => (
