@@ -1,6 +1,8 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+import { IndicatorView } from "@/app/parsers";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -93,3 +95,17 @@ export const getTextSize = ({
     height: 0,
   };
 };
+
+export function areArraysEqual(
+  arr1: IndicatorView[] | undefined,
+  arr2: IndicatorView[] | undefined,
+) {
+  if (arr1?.length !== arr2?.length || !arr1?.length || !arr2?.length) return false;
+
+  const normalize = (obj: IndicatorView): string => JSON.stringify(Object.entries(obj).sort());
+
+  const sortedArr1 = arr1.map(normalize).sort();
+  const sortedArr2 = arr2.map(normalize).sort();
+
+  return JSON.stringify(sortedArr1) === JSON.stringify(sortedArr2);
+}

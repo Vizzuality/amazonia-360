@@ -17,6 +17,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
+import SidebarClearIndicators from "./clear-indicators";
 import Search from "./search";
 import TopicsList from "./topics";
 
@@ -45,6 +46,9 @@ export default function TopicsSidebar() {
         </SidebarHeader>
         <SidebarContent>
           <ScrollArea className="h-[calc(100vh-245px)]">
+            <div className="flex w-full justify-end">
+              <SidebarClearIndicators />
+            </div>
             <TopicsList />
             <SidebarGroup />
             <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent" />
