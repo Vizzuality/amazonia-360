@@ -27,7 +27,15 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -58,7 +66,15 @@
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Amazonia/FeatureServer",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -98,7 +114,15 @@
                 ]
             },
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -138,7 +162,15 @@
                 ]
             },
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -188,7 +220,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -245,6 +285,14 @@
                         "statisticType": "sum"
                     }
                 ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
             }
         }
     },
@@ -285,6 +333,14 @@
                     "ALTIT",
                     "ALTIT as label",
                     ","
+                ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
                 ]
             }
         }
@@ -337,6 +393,14 @@
                     "BIOMADES as label",
                     ","
                 ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
             }
         }
     },
@@ -386,7 +450,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -436,7 +508,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -486,7 +566,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -536,7 +624,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -586,7 +682,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -636,7 +740,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -686,7 +798,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -736,7 +856,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -786,7 +914,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -836,7 +972,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -886,7 +1030,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -953,6 +1105,14 @@
                         "outStatisticFieldName": "value",
                         "statisticType": "count"
                     }
+                ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
                 ]
             }
         }
@@ -1023,6 +1183,14 @@
                         "statisticType": "count"
                     }
                 ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
             }
         }
     },
@@ -1091,6 +1259,14 @@
                         "statisticType": "count"
                     }
                 ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
             }
         }
     },
@@ -1141,6 +1317,14 @@
                     "SPRange  as label",
                     ","
                 ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
             }
         }
     },
@@ -1190,6 +1374,14 @@
                     "carbonfix ",
                     "carbonfix as label",
                     ","
+                ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
                 ]
             }
         }
@@ -1242,6 +1434,14 @@
                     "NAME as label",
                     ","
                 ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
             }
         }
     },
@@ -1293,6 +1493,14 @@
                     "YEARLPP as label",
                     ","
                 ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
             }
         }
     },
@@ -1343,6 +1551,14 @@
                     "RISKLEV  as label",
                     ","
                 ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
             }
         }
     },
@@ -1392,6 +1608,14 @@
                     "gridcode",
                     "firepfreq as label",
                     ","
+                ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
                 ]
             }
         }
@@ -1445,7 +1669,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -1511,6 +1743,14 @@
                         "outStatisticFieldName": "value",
                         "statisticType": "count"
                     }
+                ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
                 ]
             }
         }
@@ -1579,6 +1819,14 @@
                         "statisticType": "count"
                     }
                 ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
             }
         }
     },
@@ -1645,6 +1893,14 @@
                         "outStatisticFieldName": "value",
                         "statisticType": "count"
                     }
+                ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
                 ]
             }
         }
@@ -1714,6 +1970,14 @@
                         "statisticType": "count"
                     }
                 ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
             }
         }
     },
@@ -1756,7 +2020,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -1806,7 +2078,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -1856,7 +2136,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -1923,6 +2211,14 @@
                         "statisticType": "count"
                     }
                 ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
             }
         }
     },
@@ -1974,7 +2270,15 @@
                 ],
                 "returnGeometry": false
             },
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
+            }
         }
     },
     {
@@ -2044,6 +2348,14 @@
                         "statisticType": "count"
                     }
                 ]
+            },
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "*"
+                ]
             }
         }
     },
@@ -2073,7 +2385,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2102,7 +2415,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2131,7 +2445,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2160,7 +2475,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2189,7 +2505,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2218,7 +2535,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2247,7 +2565,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2276,7 +2595,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2305,7 +2625,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2334,7 +2655,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2363,7 +2685,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2392,7 +2715,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2421,7 +2745,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2450,7 +2775,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2479,7 +2805,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2508,7 +2835,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2537,7 +2865,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2566,7 +2895,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2595,7 +2925,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2624,7 +2955,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2653,7 +2985,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2682,7 +3015,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2711,7 +3045,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2740,7 +3075,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2769,7 +3105,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2798,7 +3135,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2827,7 +3165,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2856,7 +3195,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2885,7 +3225,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2914,7 +3255,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2943,7 +3285,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -2972,7 +3315,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3001,7 +3345,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3030,7 +3375,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3059,7 +3405,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3088,7 +3435,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3117,7 +3465,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3146,7 +3495,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3175,7 +3525,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3204,7 +3555,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3233,7 +3585,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3262,7 +3615,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3291,7 +3645,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3320,7 +3675,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3349,7 +3705,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3378,7 +3735,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3407,7 +3765,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3436,7 +3795,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     },
     {
@@ -3465,7 +3825,8 @@
             "url": "",
             "query_numeric": "",
             "query_table": "",
-            "query_chart": ""
+            "query_chart": "",
+            "query_ai": ""
         }
     }
 ]

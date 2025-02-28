@@ -34,16 +34,8 @@ export const useGetSummaryTopicData = (topic?: Topic) => {
             return getQueryFeatureIdOptions(
               {
                 id: indicator.id,
-                resource: {
-                  ...indicator.resource,
-                  query_table: {
-                    returnGeometry: true,
-                    returnIntersections: true,
-                    outFields: ["*"],
-                    where: "1=1",
-                  },
-                },
-                type: "table",
+                resource: indicator.resource,
+                type: "ai",
                 geometry: GEOMETRY,
               },
               {
