@@ -31,7 +31,7 @@ export const GridLegend: FC = () => {
 
   const { data: H3IndicatorsData } = useGetH3Indicators();
 
-  const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
+  const [gridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset, setGridSelectedDataset] = useSyncGridSelectedDataset();
   const [gridSetUpFilters, setGridSetUpFilters] = useSyncGridFiltersSetUp();
 
@@ -68,11 +68,9 @@ export const GridLegend: FC = () => {
 
   const onChangeDataset = useCallback(
     (e: string) => {
-      if (e === "no-layer") {
-        setGridDatasets([]);
-      } else setGridSelectedDataset(e);
+      setGridSelectedDataset(e);
     },
-    [setGridSelectedDataset, setGridDatasets],
+    [setGridSelectedDataset],
   );
 
   return (

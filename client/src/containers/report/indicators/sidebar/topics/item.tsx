@@ -146,8 +146,13 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
                 {/* Case 2: Show Reset button when:
                 - Counter is hidden, the panel is closed, and it's not the default view
                 - OR the panel is open and it's not the default view */}
-                {((!counterVisibility && !open && !isTopicDefaultView && !!topics?.length) ||
-                  (open && !isTopicDefaultView && !!topics?.length)) && (
+                {((!counterVisibility &&
+                  !open &&
+                  !isTopicDefaultView &&
+                  !!topics?.find(({ id }) => id === topic.id)?.indicators) ||
+                  (open &&
+                    !isTopicDefaultView &&
+                    !!topics?.find(({ id }) => id === topic.id)?.indicators)) && (
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
