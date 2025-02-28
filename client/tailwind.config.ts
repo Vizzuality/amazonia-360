@@ -19,11 +19,14 @@ const config = {
         lg: "2rem", // Large screens
         xl: "4rem", // Extra large screens
         "2xl": "6rem", // Extra-extra large screens
+        "3xl": "2rem", // Extra-extra-extra large screens
       },
     },
     extend: {
       screens: {
-        "2xl": "1441px",
+        xl: "1260px",
+        "2xl": "1660px",
+        "3xl": "1900px",
         tall: {
           raw: "(min-height: 800px)",
         },

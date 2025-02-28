@@ -23,7 +23,7 @@ import {
 import { BUFFERS } from "@/constants/map";
 
 import LayerManager from "@/containers/report/map/layer-manager";
-import Legend from "@/containers/report/map/legend";
+import GridLegend from "@/containers/report/map/legend";
 import { SketchTooltips } from "@/containers/report/map/sketch-tooltips";
 
 import Controls from "@/components/map/controls";
@@ -181,10 +181,9 @@ export default function MapContainer() {
           <BasemapControl />
         </Controls>
 
-        {gridSelectedDataset && tab === "grid" && <Legend />}
-
         <MapPopup />
       </Map>
+      {gridSelectedDataset && tab === "grid" && <GridLegend />}
 
       <SketchTooltips />
     </div>

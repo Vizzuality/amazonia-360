@@ -20,17 +20,20 @@ import {
 import Confirm from "@/containers/report/location/confirm";
 import { GenerateReport } from "@/containers/report/location/generate";
 import GridFilters from "@/containers/report/location/grid/filters";
+import SearchIndicators from "@/containers/report/location/grid/filters/search";
 import GridFiltersControls from "@/containers/report/location/grid/filters-controls";
 import GridTable from "@/containers/report/location/grid/table";
 import GridTableSetup from "@/containers/report/location/grid/table/setup";
 import AmazoniaGridIntro from "@/containers/report/location/grid-intro";
-import Search from "@/containers/report/location/search";
+import SearchLocation from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
 import Topics from "@/containers/report/location/topics";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import GridClearFilters from "./grid/filters-controls/clear";
 
 export default function ReportLocation() {
   const [tab, setTab] = useAtom(tabAtom);
@@ -103,7 +106,7 @@ export default function ReportLocation() {
 
                 {!location && (
                   <div className="space-y-4">
-                    <Search />
+                    <SearchLocation />
 
                     <Sketch />
                   </div>
@@ -161,22 +164,26 @@ export default function ReportLocation() {
             {gridPanel === "filters" && (
               <div className="relative h-full space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
                 <div className="space-y-1">
-                  <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
-                    Redefine your area of interest
-                  </h1>
+                  <div className="flex items-center justify-between">
+                    <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
+                      Redefine your area of interest
+                    </h1>
+                    <GridClearFilters />
+                  </div>
 
                   <p className="text-sm font-medium text-muted-foreground">
                     Add indicators to filter the grid cells and highlight areas that meet specific
-                    criteria. You can select a maximum of 5 indicators.
+                    criteria. You can select a maximum 4 indicators.
                   </p>
                 </div>
+                <SearchIndicators className="py-0" />
 
                 <GridFiltersControls />
 
                 <div className="space-y-5">
                   <div className="relative h-full max-h-[calc(100vh_-_(64px_+_40px_+_310px))]">
                     <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2.5 bg-gradient-to-b from-white to-transparent" />
-                    <div className="h-full max-h-[calc(100vh_-_(64px_+_40px_+_310px))] overflow-y-auto px-4 py-1">
+                    <div className="h-full max-h-[calc(100vh_-_(64px_+_40px_+_310px_+_46px))] overflow-y-auto px-1 py-1">
                       <GridFilters />
                     </div>
                     <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />
@@ -221,7 +228,7 @@ export default function ReportLocation() {
                     corresponding cell.
                   </p>
                 </div>
-                <div className="relative overflow-y-auto">
+                <div className="relative overflow-y-auto overflow-x-hidden">
                   <div className="pointer-events-none absolute left-0 right-0 top-0 h-2.5 bg-gradient-to-b from-white to-transparent" />
 
                   <div className="-mx-4 h-full max-h-[calc(100vh-64px-44px-216px)] overflow-y-auto px-4 py-1">

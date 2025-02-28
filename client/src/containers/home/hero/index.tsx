@@ -7,8 +7,6 @@ import { scroller } from "react-scroll";
 import Image from "next/image";
 import Link from "next/link";
 
-import { LuArrowRight } from "react-icons/lu";
-
 import { Media } from "@/containers/media";
 
 import { Button } from "@/components/ui/button";
@@ -38,11 +36,10 @@ export default function Hero() {
             needed. From biodiversity to infrastructure, explore and analyze to drive sustainable
             impact across Amazonia.
           </p>
-          <div className="flex space-x-4 py-4 md:py-6">
+          <div className="flex space-x-4 py-4 font-semibold md:py-6">
             <Link href="/report" prefetch>
               <Button size="lg" className="flex space-x-2.5 px-8">
-                <span className="font-semibold">Access the tool</span>
-                <LuArrowRight size={20} strokeWidth={1} className="hidden md:block" />
+                Access the tool
               </Button>
             </Link>
             <Button
@@ -51,8 +48,7 @@ export default function Hero() {
               variant="outline"
               onClick={handleScroll}
             >
-              <span className="font-semibold">More info</span>
-              <LuArrowRight size={20} strokeWidth={1} className="hidden md:block" />
+              More info
             </Button>
           </div>
         </div>

@@ -12,7 +12,7 @@ import { env } from "@/env.mjs";
 import { convertHexToRgbaArray, getKeys } from "@/lib/utils";
 
 import {
-  // BIOMES,
+  BIOMES,
   CLIMATE_TYPES,
   DEPRIVATION_INDEX,
   ELEVATION_RANGES,
@@ -20,8 +20,6 @@ import {
   FIRES,
   FIRES_COLORMAP,
   INDIGENOUS_LANDS,
-  // LAND_COVER,
-  // LAND_COVER_COLORMAP,
   POPULATION,
   PROTECTED_AREAS,
 } from "@/constants/colors";
@@ -325,26 +323,26 @@ export const DATASETS = {
       type: "feature",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Biomas/FeatureServer/0",
       maxScale: 0,
-      // renderer: new UniqueValueRenderer({
-      //   field: "BIOME",
-      //   defaultSymbol: new SimpleFillSymbol({
-      //     color: [227, 139, 79, 0.8],
-      //     outline: {
-      //       color: [230, 230, 230, 0.8],
-      //       width: 1,
-      //     },
-      //   }),
-      //   uniqueValueInfos: getKeys(BIOMES).map((k) => ({
-      //     value: k,
-      //     symbol: new SimpleFillSymbol({
-      //       color: BIOMES[k].color,
-      //       outline: {
-      //         color: [0, 0, 0, 0.25],
-      //         width: 0.5,
-      //       },
-      //     }),
-      //   })),
-      // }),
+      renderer: new UniqueValueRenderer({
+        field: "BIOME",
+        defaultSymbol: new SimpleFillSymbol({
+          color: [227, 139, 79, 0.8],
+          outline: {
+            color: [230, 230, 230, 0.8],
+            width: 1,
+          },
+        }),
+        uniqueValueInfos: getKeys(BIOMES).map((k) => ({
+          value: k,
+          symbol: new SimpleFillSymbol({
+            color: BIOMES[k].color,
+            outline: {
+              color: [0, 0, 0, 0.25],
+              width: 0.5,
+            },
+          }),
+        })),
+      }),
       popupEnabled: true,
       popupTemplate: new PopupTemplate({
         title: "{BIOMADES}",

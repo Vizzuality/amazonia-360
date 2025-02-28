@@ -11,12 +11,11 @@ export default function AmazoniaGridIntro() {
   return (
     <button
       type="button"
-      className="flex space-x-2 rounded-sm bg-blue-50 p-2"
+      className="flex items-start gap-2 rounded-sm bg-blue-50 p-2"
       onClick={() => setTab("grid")}
     >
-      <div className="p-1">
-        <WandIcon className="h-6 w-6" />
-      </div>
+      <WandIcon className="h-6 w-6 shrink-0" />
+
       <div className="flex flex-col space-y-1 pb-1.5 pt-1 text-left text-sm">
         <span className="font-semibold text-foreground">
           Detect patterns within Amazonia

@@ -7,10 +7,9 @@ import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { LuChevronRight, LuGripVertical } from "react-icons/lu";
 
 import { useGetTopicsId } from "@/lib/topics";
-import { cn } from "@/lib/utils";
+import { cn, areArraysEqual } from "@/lib/utils";
 
 import { Topic } from "@/app/local-api/topics/route";
-import { IndicatorView } from "@/app/parsers";
 import { useSyncTopics } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
@@ -22,17 +21,6 @@ import { Switch } from "@/components/ui/switch";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { CounterIndicatorsPill } from "./counter-indicators-pill";
-
-function areArraysEqual(arr1: IndicatorView[] | undefined, arr2: IndicatorView[] | undefined) {
-  if (arr1?.length !== arr2?.length || !arr1?.length || !arr2?.length) return false;
-
-  const normalize = (obj: IndicatorView): string => JSON.stringify(Object.entries(obj).sort());
-
-  const sortedArr1 = arr1.map(normalize).sort();
-  const sortedArr2 = arr2.map(normalize).sort();
-
-  return JSON.stringify(sortedArr1) === JSON.stringify(sortedArr2);
-}
 
 export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
   const [topics, setTopics] = useSyncTopics();
@@ -158,8 +146,13 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
                 {/* Case 2: Show Reset button when:
                 - Counter is hidden, the panel is closed, and it's not the default view
                 - OR the panel is open and it's not the default view */}
-                {((!counterVisibility && !open && !isTopicDefaultView) ||
-                  (open && !isTopicDefaultView)) && (
+                {((!counterVisibility &&
+                  !open &&
+                  !isTopicDefaultView &&
+                  !!topics?.find(({ id }) => id === topic.id)?.indicators) ||
+                  (open &&
+                    !isTopicDefaultView &&
+                    !!topics?.find(({ id }) => id === topic.id)?.indicators)) && (
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
