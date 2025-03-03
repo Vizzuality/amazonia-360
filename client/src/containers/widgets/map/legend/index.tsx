@@ -77,7 +77,7 @@ export const WidgetLegend = ({
   if (!LEGEND || !isFetched || isFetching) return null;
 
   return (
-    <div className="absolute bottom-4 left-4 z-10 duration-700 animate-in fade-in-0">
+    <div className="absolute bottom-4 left-4 z-10 max-w-[calc(50%_-_theme(spacing[8]))] shadow-sm duration-700 animate-in fade-in-0">
       <Legend defaultOpen={true}>
         <LegendItem {...LEGEND} direction="vertical" />
       </Legend>

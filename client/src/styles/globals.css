@@ -83,15 +83,24 @@
   }
 
   .map .esri-popup--is-docked {
-    @apply m-0;
+    @apply m-4;
   }
 
-  .map .esri-popup--shadow {
-    @apply shadow-lg;
+  .map .esri-popup__main-container {
+    @apply shadow-sm rounded-lg border border-blue-100;
+    max-width: calc(50% - 2rem)
   }
 
   .map .esri-feature__content-element {
     @apply p-0;
+  }
+
+  .map .header-content {
+    @apply py-2 px-4;
+  }
+
+  .map h2.esri-widget__heading {
+    @apply text-sm font-semibold;
   }
 
   /*

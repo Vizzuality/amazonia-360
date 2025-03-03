@@ -17,7 +17,12 @@ export default function Layer({
   index,
   GEOMETRY,
 }: {
-  layer: Partial<__esri.Layer>;
+  layer:
+    | Partial<__esri.WebTileLayer>
+    | Partial<__esri.ImageryTileLayer>
+    | Partial<__esri.FeatureLayer>
+    | Partial<__esri.GraphicsLayer>
+    | Partial<__esri.VectorTileLayer>;
   index: number;
   GEOMETRY?: __esri.Polygon | null;
 }) {
@@ -37,6 +42,11 @@ export default function Layer({
 
     if (layer.type === "feature") {
       const l = new FeatureLayer(omit(layer, ["type"]));
+
+      if (layer.popupTemplate) {
+        l.popupEnabled = true;
+        l.popupTemplate = layer.popupTemplate;
+      }
       map.add(l, index);
 
       map.reorder(l, index);
