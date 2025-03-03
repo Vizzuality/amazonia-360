@@ -3,8 +3,13 @@ import { PropsWithChildren, useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 
-export default function Legend({ children }: PropsWithChildren) {
-  const [open, setOpen] = useState(false);
+export default function Legend({
+  children,
+  defaultOpen,
+}: PropsWithChildren<{
+  defaultOpen?: boolean;
+}>) {
+  const [open, setOpen] = useState(defaultOpen ?? false);
 
   return (
     <Collapsible

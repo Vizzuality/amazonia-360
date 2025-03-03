@@ -78,7 +78,7 @@ export const WidgetLegend = ({
 
   return (
     <div className="absolute bottom-4 left-4 z-10 duration-700 animate-in fade-in-0">
-      <Legend>
+      <Legend defaultOpen={true}>
         <LegendItem {...LEGEND} direction="vertical" />
       </Legend>
     </div>
