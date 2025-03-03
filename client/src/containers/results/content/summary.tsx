@@ -5,6 +5,7 @@ import { useQueries } from "@tanstack/react-query";
 import { useGetAISummary } from "@/lib/ai";
 import { getQueryFeatureIdOptions, useGetDefaultIndicators } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
+import { omit } from "@/lib/utils";
 
 import { Topic } from "@/app/local-api/topics/route";
 import { useSyncLocation } from "@/app/store";
@@ -57,7 +58,7 @@ export const useGetSummaryTopicData = (topic?: Topic) => {
     isFetching,
     data: queries.map((q) => {
       if (q.data?.features) {
-        return q.data.features.map((f) => f.attributes);
+        return q.data.features.map((f) => omit(f.attributes, ["Shape__Area", "Shape__Length"]));
       }
 
       return [];
@@ -88,7 +89,7 @@ export const useGetSummaryTopic = (topic?: Topic) => {
       description_type: "Normal",
     },
     {
-      enabled: indicatorsIsFetched && !indicatorsIsFetching,
+      enabled: !!indicatorsData?.length && indicatorsIsFetched && !indicatorsIsFetching,
     },
   );
 

@@ -98,25 +98,27 @@ export const ChartIndicators = (indicator: ChartIndicatorsProps) => {
     const R = resource[`query_chart`];
     const GROUPS = R?.groupByFieldsForStatistics;
 
-    return query.data.features.map((feature) => {
-      if (!!GROUPS && GROUPS.length) {
-        return {
-          id: feature.attributes[GROUPS?.[0]],
-          parent: "root",
-          label: feature.attributes[GROUPS?.[0]],
-          size: feature.attributes.value / TOTAL,
-          color: COLOR_SCALE(feature.attributes[GROUPS?.[0]]),
-        };
-      }
+    return query.data.features
+      .map((feature) => {
+        if (!!GROUPS && GROUPS.length) {
+          return {
+            id: feature.attributes[GROUPS?.[0]],
+            parent: "root",
+            label: feature.attributes[GROUPS?.[0]],
+            size: feature.attributes.value / TOTAL,
+            color: COLOR_SCALE(feature.attributes[GROUPS?.[0]]),
+          };
+        }
 
-      return {
-        id: feature.attributes.label,
-        parent: "root",
-        label: feature.attributes.label,
-        size: feature.attributes.value / TOTAL,
-        color: COLOR_SCALE(feature.attributes.label),
-      };
-    });
+        return {
+          id: feature.attributes.label,
+          parent: "root",
+          label: feature.attributes.label,
+          size: feature.attributes.value / TOTAL,
+          color: COLOR_SCALE(feature.attributes.label),
+        };
+      })
+      .sort((a, b) => b.size - a.size);
   }, [resource, query.data, TOTAL, COLOR_SCALE]);
 
   return (

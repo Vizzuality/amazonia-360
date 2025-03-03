@@ -1245,19 +1245,11 @@
             },
             "query_chart": {
                 "where": "1=1",
-                "returnGeometry": false,
-                "groupByFieldsForStatistics": [
-                    "categoria"
-                ],
-                "orderByFields": [
-                    "value DESC"
-                ],
-                "outStatistics": [
-                    {
-                        "onStatisticField": "FID",
-                        "outStatisticFieldName": "value",
-                        "statisticType": "count"
-                    }
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "nombre as label",
+                    ","
                 ]
             },
             "query_ai": {
@@ -1722,8 +1714,8 @@
             "query_table": {
                 "where": "1=1",
                 "outFields": [
-                    "Higher Education Centers class as Class",
-                    "Higher Education Centers name as Name",
+                    "DESIGN as Name",
+                    "Type as Type",
                     ","
                 ],
                 "returnGeometry": false
@@ -1732,7 +1724,7 @@
                 "where": "1=1",
                 "returnGeometry": false,
                 "groupByFieldsForStatistics": [
-                    "DESIG_ENG"
+                    "Type"
                 ],
                 "orderByFields": [
                     "value DESC"
@@ -1747,8 +1739,6 @@
             },
             "query_ai": {
                 "where": "1=1",
-                "returnGeometry": true,
-                "returnIntersections": true,
                 "outFields": [
                     "*"
                 ]
@@ -1807,7 +1797,7 @@
                 "where": "1=1",
                 "returnGeometry": false,
                 "groupByFieldsForStatistics": [
-                    "DESIG_ENG"
+                    "HEALSERV"
                 ],
                 "orderByFields": [
                     "value DESC"
@@ -1822,8 +1812,6 @@
             },
             "query_ai": {
                 "where": "1=1",
-                "returnGeometry": true,
-                "returnIntersections": true,
                 "outFields": [
                     "*"
                 ]
@@ -1882,7 +1870,7 @@
                 "where": "1=1",
                 "returnGeometry": false,
                 "groupByFieldsForStatistics": [
-                    "DESIG_ENG"
+                    "GOBSERV"
                 ],
                 "orderByFields": [
                     "value DESC"
@@ -1897,8 +1885,6 @@
             },
             "query_ai": {
                 "where": "1=1",
-                "returnGeometry": true,
-                "returnIntersections": true,
                 "outFields": [
                     "*"
                 ]
@@ -1973,8 +1959,6 @@
             },
             "query_ai": {
                 "where": "1=1",
-                "returnGeometry": true,
-                "returnIntersections": true,
                 "outFields": [
                     "*"
                 ]
@@ -2115,7 +2099,7 @@
             "type": "feature",
             "column": [
             ],
-            "layer_id": "12",
+            "layer_id": "2",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Bioeconomy_Centers/FeatureServer",
             "query_numeric": {
                 "where": "1=1",
@@ -2139,8 +2123,7 @@
             "query_chart": "",
             "query_ai": {
                 "where": "1=1",
-                "returnGeometry": true,
-                "returnIntersections": true,
+                "returnGeometry": false,
                 "outFields": [
                     "*"
                 ]
@@ -2325,9 +2308,8 @@
                 "outFields": [
                     "opername as Name",
                     "opernum as Number",
-                    "focusarea as Focus_Area",
-                    "phase",
-                    "country",
+                    "phase as phase",
+                    "country as country",
                     ","
                 ],
                 "returnGeometry": false
@@ -2336,7 +2318,7 @@
                 "where": "1=1",
                 "returnGeometry": false,
                 "groupByFieldsForStatistics": [
-                    "focusarea"
+                    "opername"
                 ],
                 "orderByFields": [
                     "value DESC"
@@ -2351,8 +2333,6 @@
             },
             "query_ai": {
                 "where": "1=1",
-                "returnGeometry": true,
-                "returnIntersections": true,
                 "outFields": [
                     "*"
                 ]
