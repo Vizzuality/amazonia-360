@@ -111,7 +111,9 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
       )}
 
       {isFetched && !isFetching && data && !!data.description && (
-        <Markdown className="max-w-none prose-strong:font-bold">{data.description}</Markdown>
+        <Markdown className="max-w-none xl:prose-base prose-strong:font-bold">
+          {data.description}
+        </Markdown>
       )}
     </div>
   );
