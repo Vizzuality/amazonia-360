@@ -1,43 +1,49 @@
 "use client";
 
+import { useCallback } from "react";
+
+import { VisualizationTypes } from "@/app/local-api/indicators/route";
 import { useSyncTopics } from "@/app/store";
 
 import { Badge } from "@/components/ui/badge";
 
 export function Badges({ topicId, indicatorId }: { topicId: number; indicatorId: number }) {
-  const [indicators, setIndicators] = useSyncTopics();
+  const [topics, setTopics] = useSyncTopics();
 
-  const topic = indicators?.find(({ id }) => id === topicId);
+  const topic = topics?.find(({ id }) => id === topicId);
   const indicatorsDisplay = topic?.indicators?.filter(({ id }) => indicatorId === id);
 
-  const handleClick = () => {
-    setIndicators((prevIndicators) => {
-      const newIndicators = [...(prevIndicators || [])];
+  const handleDelete = useCallback(
+    (indicatorId: number, type: VisualizationTypes) => {
+      setTopics((prev) => {
+        if (!prev || !topic) return prev;
 
-      const topicIndex = newIndicators.findIndex((topic) => topic.id === topicId);
+        const i = prev?.findIndex((t) => t.id === topic.id);
 
-      if (topicIndex >= 0) {
-        const indicatorsArray = [...(newIndicators[topicIndex].indicators || [])];
+        if (i === -1) return prev;
 
-        const indicatorIndex = indicatorsArray.findIndex(
-          (indicator) => indicator.id === indicatorId,
-        );
+        prev[i] = {
+          id: topic?.id,
+          indicators: prev[i]?.indicators?.filter(
+            (i) => !(i.id === indicatorId && i.type === type),
+          ),
+        };
 
-        if (indicatorIndex >= 0) {
-          indicatorsArray.splice(indicatorIndex, 1);
-        }
-
-        newIndicators[topicIndex].indicators = indicatorsArray;
-      }
-
-      return newIndicators;
-    });
-  };
+        return prev;
+      });
+    },
+    [topic, setTopics],
+  );
 
   return (
     <div className="flex flex-wrap gap-1 py-1.5">
-      {indicatorsDisplay?.map(({ type }) => (
-        <Badge onClick={handleClick} variant="secondary" className="capitalize" key={type}>
+      {indicatorsDisplay?.map(({ id, type }) => (
+        <Badge
+          onClick={() => handleDelete(id, type)}
+          variant="secondary"
+          className="capitalize"
+          key={type}
+        >
           {type}
         </Badge>
       ))}

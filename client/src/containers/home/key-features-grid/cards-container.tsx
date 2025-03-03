@@ -45,9 +45,9 @@ export default function CardsContainer() {
       </div>
       <ul
         ref={cardRef}
-        className="mt-6 flex w-full flex-col gap-2 md:mt-20 md:grid md:grid-cols-3 lg:mt-6"
+        className="mt-6 flex w-full flex-col gap-2 md:mt-20 md:grid md:grid-cols-12 lg:mt-6"
       >
-        <li className="flex w-full flex-1 justify-start md:justify-center">
+        <li className="col-span-4 flex w-full flex-1 justify-start md:justify-center">
           <div
             className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-white p-4 ${
               isCardInView
@@ -59,7 +59,7 @@ export default function CardsContainer() {
             <h4 className="font-bold text-blue-500">Identify hotspots</h4>
           </div>
         </li>
-        <li className="flex w-full flex-1 justify-start md:justify-center">
+        <li className="col-span-4 flex w-full flex-1 justify-start md:justify-center">
           <div
             className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-white p-4 ${
               isCardInView
@@ -71,7 +71,7 @@ export default function CardsContainer() {
             <h4 className="font-bold text-blue-500">Redefine your area</h4>
           </div>
         </li>
-        <li className="flex w-full flex-1 justify-start md:justify-center">
+        <li className="col-span-4 flex w-full flex-1 justify-start md:justify-center">
           <div
             className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-white p-4 ${
               isCardInView

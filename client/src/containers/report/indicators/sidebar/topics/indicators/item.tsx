@@ -66,10 +66,8 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
           <Tooltip>
             <Dialog>
               <TooltipTrigger asChild>
-                <DialogTrigger asChild>
-                  <button aria-label="Topic info" type="button">
-                    <LuInfo className="h-full w-full shrink-0" />
-                  </button>
+                <DialogTrigger>
+                  <LuInfo className="h-full w-full shrink-0" aria-label="Topic info" />
                 </DialogTrigger>
               </TooltipTrigger>
 
@@ -92,7 +90,7 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
           </Tooltip>
 
           <Popover>
-            <PopoverTrigger>
+            <PopoverTrigger asChild>
               <Button
                 aria-label="Visualization type"
                 type="button"
