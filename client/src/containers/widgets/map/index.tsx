@@ -21,7 +21,11 @@ const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
 interface WidgetMapProps extends __esri.MapViewProperties {
   indicator: Indicator;
-  layers: Partial<__esri.Layer>[];
+  layers: (
+    | Partial<__esri.WebTileLayer>
+    | Partial<__esri.ImageryTileLayer>
+    | Partial<__esri.FeatureLayer>
+  )[];
 }
 
 export default function WidgetMap({ indicator, layers, ...viewProps }: WidgetMapProps) {

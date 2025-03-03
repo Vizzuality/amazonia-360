@@ -20,13 +20,13 @@ export const MapIndicators = (
   const { id, resource } = indicator;
   const query = useResourceId({ resource });
 
-  const LAYER: Partial<__esri.Layer> = useMemo(() => {
+  const LAYER = useMemo(() => {
     if (resource.type === "web-tile") {
       return {
         id: `${id}`,
         url: resource.url,
         type: "web-tile",
-      };
+      } as Partial<__esri.WebTileLayer>;
     }
 
     if (resource.type === "imagery-tile") {
@@ -34,14 +34,15 @@ export const MapIndicators = (
         id: `${id}`,
         url: resource.url,
         type: "imagery-tile",
-      };
+      } as Partial<__esri.ImageryTileLayer>;
     }
 
     return {
       id: `${id}`,
       url: resource.url + resource.layer_id,
-      type: resource.type,
-    };
+      type: "feature",
+      popupTemplate: resource.popupTemplate,
+    } as Partial<__esri.FeatureLayer>;
   }, [id, resource]);
 
   return (

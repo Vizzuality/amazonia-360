@@ -17,6 +17,7 @@ export type ResourceFeature = {
   query_chart: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
   query_numeric: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
   query_ai: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
+  popupTemplate?: __esri.PopupTemplateProperties;
 };
 
 export type ResourceWebTile = {

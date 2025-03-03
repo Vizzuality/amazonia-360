@@ -13,7 +13,14 @@ export const DEFAULT_MAP_VIEW_PROPERTIES: Partial<__esri.MapViewProperties> = {
     dockOptions: {
       buttonEnabled: false,
       breakpoint: false,
+      position: "bottom-right",
     },
+    visibleElements: {
+      actionBar: false,
+      collapseButton: false,
+      featureListLayerTitle: false,
+    },
+    features: [],
   },
   popupEnabled: true,
   spatialReference: {
