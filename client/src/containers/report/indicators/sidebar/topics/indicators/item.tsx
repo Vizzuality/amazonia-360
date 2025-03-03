@@ -8,7 +8,7 @@ import { LuChevronRight, LuPlus, LuInfo } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { Indicator, VisualizationType } from "@/app/local-api/indicators/route";
+import { Indicator, VisualizationTypes } from "@/app/local-api/indicators/route";
 import { Topic } from "@/app/local-api/topics/route";
 import { useSyncTopics } from "@/app/store";
 
@@ -105,7 +105,7 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
             <PopoverContent side="left" align="start" className="w-auto bg-background p-0">
               <VisualizationType
                 topicId={topic.id}
-                types={indicator.visualization_types as Exclude<VisualizationType, "ai">[]}
+                types={indicator.visualization_types as Exclude<VisualizationTypes, "ai">[]}
                 indicatorId={indicator.id}
               />
             </PopoverContent>

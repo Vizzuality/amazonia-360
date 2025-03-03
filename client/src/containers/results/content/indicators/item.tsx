@@ -3,7 +3,7 @@ import { useCallback, useMemo } from "react";
 
 import { useAtom } from "jotai";
 
-import { VisualizationType } from "@/app/local-api/indicators/route";
+import { VisualizationTypes } from "@/app/local-api/indicators/route";
 import { IndicatorView, TopicView } from "@/app/parsers";
 import { indicatorsEditionModeAtom, reportEditionModeAtom, useSyncTopics } from "@/app/store";
 
@@ -35,7 +35,7 @@ export const ReportResultsContentIndicatorItem = ({
   const EDITABLE = editable && reportEditionMode;
 
   const handleDelete = useCallback(
-    (indicatorId: number, type: VisualizationType) => {
+    (indicatorId: number, type: VisualizationTypes) => {
       setTopics((prev) => {
         if (!prev) return prev;
 
