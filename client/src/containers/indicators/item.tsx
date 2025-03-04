@@ -10,6 +10,7 @@ import {
 import {
   ResourceMap,
   ResourceQueryFeature,
+  ResourceQueryImagery,
   ResourceQueryImageryTile,
 } from "@/containers/indicators/resources";
 
@@ -86,6 +87,18 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
                         <td>Query {type[0].toUpperCase() + type.slice(1)}</td>
                         <td>
                           <ResourceQueryFeature {...indicator} type={type} resource={r} />
+                        </td>
+                      </tr>
+                    );
+                  }
+
+                  if (indicator?.resource.type === "imagery") {
+                    const r = indicator.resource;
+                    return (
+                      <tr key={type}>
+                        <td>Query {type[0].toUpperCase() + type.slice(1)}</td>
+                        <td>
+                          <ResourceQueryImagery {...indicator} type={type} resource={r} />
                         </td>
                       </tr>
                     );

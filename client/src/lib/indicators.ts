@@ -388,6 +388,64 @@ export const useQueryFeatures = (
   }, {});
 };
 
+export type QueryImageryIdParams = {
+  id: Indicator["id"];
+  type: VisualizationTypes;
+  resource: ResourceImagery;
+  geometry: __esri.Polygon | null;
+};
+
+export const getQueryImageryId = async ({
+  resource,
+  geometry,
+}: QueryImageryIdParams): Promise<{
+  histograms: __esri.RasterHistogram[];
+  statistics: __esri.RasterBandStatistics[];
+} | null> => {
+  const ImageryLayer = (await import("@arcgis/core/layers/ImageryLayer")).default;
+  const f = new ImageryLayer({
+    url: resource.url,
+  });
+
+  return f.computeStatisticsHistograms({
+    ...(!!geometry && { geometry }),
+    rasterFunction: resource.rasterFunction,
+  });
+};
+
+export const getQueryImageryIdKey = ({ id, type, resource, geometry }: QueryImageryIdParams) => {
+  return ["query-imagery", id, type, resource.url, geometry?.toJSON()];
+};
+
+export const getQueryImageryIdOptions = <
+  TData = Awaited<ReturnType<typeof getQueryImageryId>>,
+  TError = unknown,
+>(
+  params: QueryImageryIdParams,
+  options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const queryKey = getQueryImageryIdKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getQueryImageryId>>> = () =>
+    getQueryImageryId(params);
+  return { queryKey, queryFn, ...options } as IndicatorsQueryOptions<TData, TError>;
+};
+
+export const useQueryImageryId = <
+  TData = Awaited<ReturnType<typeof getQueryImageryId>>,
+  TError = unknown,
+>(
+  params: QueryImageryIdParams,
+  options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const { queryKey, queryFn } = getQueryImageryIdOptions(params, options);
+
+  return useQuery({
+    queryKey,
+    queryFn,
+    ...options,
+  });
+};
+
 export type QueryImageryTileIdParams = {
   id: Indicator["id"];
   type: VisualizationTypes;

@@ -1,23 +1,26 @@
 import { useMemo } from "react";
 
-import { useGetIndicatorsId, useQueryImageryId } from "@/lib/indicators";
+import { useGetIndicatorsId, useQueryImageryTileId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
-import { Indicator, ResourceImagery } from "@/app/local-api/indicators/route";
+import { Indicator, ResourceImageryTile } from "@/app/local-api/indicators/route";
 import { useSyncLocation } from "@/app/store";
 
 import { CardLoader, CardWidgetNumber } from "@/containers/card";
 
-export interface NumericImageryIndicatorsProps extends Indicator {
-  resource: ResourceImagery;
+export interface NumericImageryTileIndicatorsProps extends Indicator {
+  resource: ResourceImageryTile;
 }
 
-export const NumericImageryIndicators = ({ id, resource }: NumericImageryIndicatorsProps) => {
+export const NumericImageryTileIndicators = ({
+  id,
+  resource,
+}: NumericImageryTileIndicatorsProps) => {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
   const indicator = useGetIndicatorsId(id);
 
-  const query = useQueryImageryId({ id, resource, type: "numeric", geometry: GEOMETRY });
+  const query = useQueryImageryTileId({ id, resource, type: "numeric", geometry: GEOMETRY });
 
   const VALUE = useMemo(() => {
     if (!query.data || !("statistics" in query.data)) return 0;

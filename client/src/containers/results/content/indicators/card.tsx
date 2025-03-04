@@ -23,9 +23,15 @@ import {
 } from "@/containers/card";
 import { ChartIndicators } from "@/containers/indicators/chart";
 import { ChartImageryIndicators } from "@/containers/indicators/chart/imagery";
+import { ChartImageryTileIndicators } from "@/containers/indicators/chart/imagery-tile";
 import { MapIndicators } from "@/containers/indicators/map";
 import { NumericIndicators } from "@/containers/indicators/numeric";
 import { NumericImageryIndicators } from "@/containers/indicators/numeric/imagery";
+<<<<<<< HEAD
+=======
+import { NumericImageryTileIndicators } from "@/containers/indicators/numeric/imagery-tile";
+import { TotalArea } from "@/containers/indicators/numeric/total-area";
+>>>>>>> a1d4ced (Sorting and isolated components)
 import { TableIndicators } from "@/containers/indicators/table";
 
 // custom indicators
@@ -73,14 +79,29 @@ export default function ReportResultsIndicator({
               })}
             />
           )}
-          {/* resource type Feature Indicators */}
+
+          {/*
+            Charts
+          */}
           {type === "chart" && indicator.resource.type === "feature" && (
             <ChartIndicators {...indicator} resource={indicator.resource} />
           )}
-          {type === "chart" && indicator.resource.type === "imagery-tile" && (
+          {type === "chart" && indicator.resource.type === "imagery" && (
             <ChartImageryIndicators {...indicator} resource={indicator.resource} />
           )}
+<<<<<<< HEAD
           {indicator.resource.type === "component" &&
+=======
+          {type === "chart" && indicator.resource.type === "imagery-tile" && (
+            <ChartImageryTileIndicators {...indicator} resource={indicator.resource} />
+          )}
+
+          {/*
+            Numerics
+          */}
+          {type === "numeric" &&
+            indicator.resource.type === "component" &&
+>>>>>>> a1d4ced (Sorting and isolated components)
             !!COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS] &&
             createElement(
               COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS],
@@ -90,9 +111,16 @@ export default function ReportResultsIndicator({
           {type === "numeric" && indicator.resource.type === "feature" && (
             <NumericIndicators {...indicator} resource={indicator.resource} />
           )}
-          {type === "numeric" && indicator.resource.type === "imagery-tile" && (
+          {type === "numeric" && indicator.resource.type === "imagery" && (
             <NumericImageryIndicators {...indicator} resource={indicator.resource} />
           )}
+          {type === "numeric" && indicator.resource.type === "imagery-tile" && (
+            <NumericImageryTileIndicators {...indicator} resource={indicator.resource} />
+          )}
+
+          {/*
+            Table
+          */}
           {type === "table" && indicator.resource.type === "feature" && (
             <TableIndicators {...indicator} resource={indicator.resource} />
           )}
