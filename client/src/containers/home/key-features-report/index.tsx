@@ -22,12 +22,12 @@ export default function KeyFeatures() {
       className="container relative grid w-full grid-cols-12 overflow-hidden md:container md:max-h-[720px]"
     >
       {/* Left Section */}
-      <div className="order-2 col-span-12 md:order-1 md:col-span-5">
+      <div className="order-2 col-span-12 md:order-1 md:col-span-6">
         <CardsContainer />
       </div>
 
       {/* Right Section */}
-      <div className="relative order-1 col-span-12 md:order-2 md:col-span-6 md:col-start-7">
+      <div className="relative order-1 col-span-12 md:order-2 md:col-span-5 md:col-start-8">
         {/* Gradients */}
         <Media greaterThanOrEqual="md">
           <>

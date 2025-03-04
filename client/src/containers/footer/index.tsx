@@ -35,7 +35,7 @@ export default function Footer() {
               Terms & conditions
             </a>
           </Button>
-          <Button variant="link" className="leading-1 text-white">
+          <Button variant="link" className="leading-1 p-0 text-white">
             <a href="https://www.iadb.org/en/home/privacy-notice" target="_blank">
               Privacy Policy
             </a>

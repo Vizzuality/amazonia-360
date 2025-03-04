@@ -2,17 +2,16 @@
 
 import { useCallback } from "react";
 
-import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { useSetAtom } from "jotai";
 import { LuX } from "react-icons/lu";
 
 import { reportEditionModeAtom } from "@/app/store";
 
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
   SidebarHeader,
   useSidebar,
 } from "@/components/ui/sidebar";
@@ -45,14 +44,17 @@ export default function TopicsSidebar() {
           <Search />
         </SidebarHeader>
         <SidebarContent>
-          <ScrollArea className="h-[calc(100vh-245px)]">
-            <div className="flex w-full justify-end">
-              <SidebarClearIndicators />
-            </div>
-            <TopicsList />
-            <SidebarGroup />
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent" />
-          </ScrollArea>
+          <div className="mb-4 flex w-full justify-end pr-2">
+            <SidebarClearIndicators />
+          </div>
+          <div className="relative flex h-full w-full grow">
+            <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2 bg-gradient-to-b from-white to-transparent" />
+
+            <ScrollArea className="h-[calc(100vh-225px)] w-[calc(100%+40px)] overflow-hidden pr-2">
+              <TopicsList />
+              <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent" />
+            </ScrollArea>
+          </div>
         </SidebarContent>
         <SidebarFooter />
       </div>

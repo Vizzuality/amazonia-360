@@ -40,7 +40,7 @@ export default function CardsContainer() {
       </div>
       <ul
         ref={cardRef}
-        className="mt-6 flex flex-col gap-2 md:mt-20 md:grid md:grid-cols-3 lg:mt-6"
+        className="mt-6 flex flex-col gap-2 sm:grid-cols-3 md:mt-20 md:grid lg:mt-6"
       >
         <li className="flex w-full">
           <div
