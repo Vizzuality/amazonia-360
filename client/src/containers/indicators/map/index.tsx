@@ -34,6 +34,7 @@ export const MapIndicators = (
         id: `${id}`,
         url: resource.url,
         type: "imagery-tile",
+        rasterFunction: resource.rasterFunction,
       } as Partial<__esri.ImageryTileLayer>;
     }
 

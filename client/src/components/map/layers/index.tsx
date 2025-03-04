@@ -4,7 +4,8 @@ import { useCallback, useEffect } from "react";
 
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
-import ImageryTileLayer from "@arcgis/core/layers/ImageryTileLayer";
+// import ImageryTileLayer from "@arcgis/core/layers/ImageryTileLayer";
+import ImageryLayer from "@arcgis/core/layers/ImageryLayer";
 import VectorTileLayer from "@arcgis/core/layers/VectorTileLayer";
 import WebTileLayer from "@arcgis/core/layers/WebTileLayer";
 
@@ -73,7 +74,8 @@ export default function Layer({
     }
 
     if (layer.type === "imagery-tile") {
-      const l = new ImageryTileLayer(omit(layer, ["type"]));
+      // const l = new ImageryTileLayer(omit(layer, ["type"]));
+      const l = new ImageryLayer(omit(layer, ["type"]));
       map.add(l, index);
 
       map.reorder(l, index);

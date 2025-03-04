@@ -30,6 +30,7 @@ export type ResourceImageryTile = {
   name: string;
   url: string;
   type: "imagery-tile";
+  rasterFunction: __esri.RasterFunctionProperties;
 };
 
 export type ResourceH3 = {
