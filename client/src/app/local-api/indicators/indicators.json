@@ -28,6 +28,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -67,6 +68,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -115,6 +117,7 @@
             },
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -163,6 +166,7 @@
             },
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -221,6 +225,7 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -286,6 +291,24 @@
                     }
                 ]
             },
+            "popupTemplate": {
+                "title": "{NOMBCAP}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "NAME_1",
+                                "label": "State"
+                            },
+                            {
+                                "fieldName": "NAME_0",
+                                "label": "Country"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -293,10 +316,6 @@
                 "outFields": [
                     "*"
                 ]
-            },
-            "popupTemplate": {
-                "title": "{NOMBCAP}",
-                "content":[{"type":"fields","fieldInfos":[{"fieldName":"NAME_1","label":"State"},{"fieldName":"NAME_0","label":"Country"}]}]
             }
         }
     },
@@ -339,6 +358,7 @@
                     ","
                 ]
             },
+            "popupTemplate": "",
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -398,6 +418,7 @@
                     ","
                 ]
             },
+            "popupTemplate": "",
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -455,6 +476,9 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": {
+                "title": "{ECOSYNAM }"
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -513,6 +537,20 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -571,6 +609,20 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -629,6 +681,20 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -687,6 +753,20 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -745,6 +825,20 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -803,6 +897,20 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -861,6 +969,20 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -919,6 +1041,20 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -977,6 +1113,20 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -1035,6 +1185,20 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -1089,25 +1253,31 @@
                 "outFields": [
                     "ENG as Description",
                     "PRIOCONENG as Priority",
-                    "FID as FeatureID",
                     ","
                 ],
                 "returnGeometry": false
             },
             "query_chart": {
                 "where": "1=1",
-                "returnGeometry": false,
-                "groupByFieldsForStatistics": [
-                    "PRIOCONENG"
-                ],
-                "orderByFields": [
-                    "value DESC"
-                ],
-                "outStatistics": [
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "PRIOCONENG",
+                    "PRIOCONENG as label",
+                    ","
+                ]
+            },
+            "popupTemplate": {
+                "title": "{PRIOCONENG}",
+                "content": [
                     {
-                        "onStatisticField": "FID",
-                        "outStatisticFieldName": "value",
-                        "statisticType": "count"
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "ENG",
+                                "label": "Description"
+                            }
+                        ]
                     }
                 ]
             },
@@ -1173,18 +1343,29 @@
             },
             "query_chart": {
                 "where": "1=1",
-                "returnGeometry": false,
-                "groupByFieldsForStatistics": [
-                    "DESIG_ENG"
-                ],
-                "orderByFields": [
-                    "value DESC"
-                ],
-                "outStatistics": [
+                "returnGeometry": true,
+                "returnIntersections": true,
+                "outFields": [
+                    "IUCN_CAT",
+                    "IUCN_CAT as label",
+                    ","
+                ]
+            },
+            "popupTemplate": {
+                "title": "{NAME}",
+                "content": [
                     {
-                        "onStatisticField": "FID",
-                        "outStatisticFieldName": "value",
-                        "statisticType": "count"
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "IUCN_CAT",
+                                "label": "IUCN Category"
+                            },
+                            {
+                                "fieldName": "DESIG_ENG",
+                                "label": "Designation"
+                            }
+                        ]
                     }
                 ]
             },
@@ -1195,20 +1376,6 @@
                 "outFields": [
                     "*"
                 ]
-            },
-            "popupTemplate": {
-                "title": "{NAME}",
-                "content": [{
-                    "type": "fields",
-                    "fieldInfos": [{
-                        "fieldName": "IUCN_CAT",
-                        "label": "IUCNCategory"
-                    },
-                    {
-                        "fieldName": "DESIG_ENG",
-                        "label": "Designation"
-                    }]
-                }]
             }
         }
     },
@@ -1270,6 +1437,24 @@
                     ","
                 ]
             },
+            "popupTemplate": {
+                "title": "{nombre}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "categoria",
+                                "label": "Category"
+                            },
+                            {
+                                "fieldName": "etnias",
+                                "label": "Ethnicities"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -1277,8 +1462,7 @@
                 "outFields": [
                     "*"
                 ]
-            },
-            "popupTemplate": {"title":"{nombre}","content":[{"type":"fields","fieldInfos":[{"fieldName":"categoria","label":"Category"},{"fieldName":"etnias","label":"Ethnicities"}]}]}
+            }
         }
     },
     {
@@ -1329,6 +1513,9 @@
                     ","
                 ]
             },
+            "popupTemplate": {
+                "title": "{SPRange}"
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -1336,8 +1523,7 @@
                 "outFields": [
                     "*"
                 ]
-            },
-            "popupTemplate": {"title":"{SPRange}"}
+            }
         }
     },
     {
@@ -1383,9 +1569,23 @@
                 "returnGeometry": true,
                 "returnIntersections": true,
                 "outFields": [
-                    "carbonfix ",
+                    "carbonfix",
                     "carbonfix as label",
                     ","
+                ]
+            },
+            "popupTemplate": {
+                "title": "{carbonfix}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "cfixclass",
+                                "label": "Class"
+                            }
+                        ]
+                    }
                 ]
             },
             "query_ai": {
@@ -1447,6 +1647,24 @@
                     ","
                 ]
             },
+            "popupTemplate": {
+                "title": "{NAME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRP",
+                                "label": "Description"
+                            },
+                            {
+                                "fieldName": "CODE",
+                                "label": "Code"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -1504,6 +1722,24 @@
                     "YEARLPP",
                     "YEARLPP as label",
                     ","
+                ]
+            },
+            "popupTemplate": {
+                "title": "{YEARLPP}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "YPPDESCP",
+                                "label": "Description"
+                            },
+                            {
+                                "fieldName": "top_",
+                                "label": "Max mm"
+                            }
+                        ]
+                    }
                 ]
             },
             "query_ai": {
@@ -1564,6 +1800,20 @@
                     ","
                 ]
             },
+            "popupTemplate": {
+                "title": "{RISKLEV}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "RISKDES",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -1620,6 +1870,20 @@
                     "gridcode",
                     "firepfreq as label",
                     ","
+                ]
+            },
+            "popupTemplate": {
+                "title": "{firepfreq}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "FIREPclass",
+                                "label": "Class"
+                            }
+                        ]
+                    }
                 ]
             },
             "query_ai": {
@@ -1682,6 +1946,9 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": {
+                "title": "{SDG711pct}"
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -1734,8 +2001,8 @@
             "query_table": {
                 "where": "1=1",
                 "outFields": [
-                    "DESIGN as Name",
-                    "Type as Type",
+                    "DESIGN as Class",
+                    "Type",
                     ","
                 ],
                 "returnGeometry": false
@@ -1754,6 +2021,20 @@
                         "onStatisticField": "FID",
                         "outStatisticFieldName": "value",
                         "statisticType": "count"
+                    }
+                ]
+            },
+            "popupTemplate": {
+                "title": "{DESIGN}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "FIREPclass",
+                                "label": "Type"
+                            }
+                        ]
                     }
                 ]
             },
@@ -1830,6 +2111,20 @@
                     }
                 ]
             },
+            "popupTemplate": {
+                "title": "{DSIGN}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "HEALSERV",
+                                "label": "Type"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "outFields": [
@@ -1900,6 +2195,20 @@
                         "onStatisticField": "FID",
                         "outStatisticFieldName": "value",
                         "statisticType": "count"
+                    }
+                ]
+            },
+            "popupTemplate": {
+                "title": "{DESIGN}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "GOBSERV",
+                                "label": "Type"
+                            }
+                        ]
                     }
                 ]
             },
@@ -1977,13 +2286,30 @@
                     }
                 ]
             },
+            "popupTemplate": {
+                "title": "{event_type}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "disorder_t",
+                                "label": "Type"
+                            },
+                            {
+                                "fieldName": "sub_event_",
+                                "label": "SubEvent"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "outFields": [
                     "*"
                 ]
-            },
-            "popupTemplate": {"title":"{event_type}","content":[{"type":"fields","fieldInfos":[{"fieldName":"disorder_t","label":"Type"},{"fieldName":"sub_event_","label":"SubEvent"}]}]}
+            }
         }
     },
     {
@@ -2026,6 +2352,24 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": {
+                "title": "{NAME_1}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "Homicide_n",
+                                "label": "Homicide nb"
+                            },
+                            {
+                                "fieldName": "Homicide_r",
+                                "label": "Homicide rate"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -2084,6 +2428,9 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": {
+                "title": "{nombre}"
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -2142,9 +2489,11 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": {
+                "title": "{orgname}"
+            },
             "query_ai": {
                 "where": "1=1",
-                "returnGeometry": false,
                 "outFields": [
                     "*"
                 ]
@@ -2216,6 +2565,20 @@
                     }
                 ]
             },
+            "popupTemplate": {
+                "title": "{FolderPath}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "type",
+                                "label": "Type"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -2258,9 +2621,9 @@
                 "where": "1=1",
                 "outStatistics": [
                     {
-                        "onStatisticField": "POPGHS2025",
+                        "onStatisticField": "FID",
                         "outStatisticFieldName": "value",
-                        "statisticType": "sum"
+                        "statisticType": "count"
                     }
                 ]
             },
@@ -2275,6 +2638,20 @@
                 "returnGeometry": false
             },
             "query_chart": "",
+            "popupTemplate": {
+                "title": "{POPGHS2025}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DENSHABKM",
+                                "label": "Density"
+                            }
+                        ]
+                    }
+                ]
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -2304,8 +2681,7 @@
         "visualization_types": [
             "map",
             "table",
-            "numeric",
-            "chart"
+            "numeric"
         ],
         "resource": {
             "name": "IDB_operations_AF360",
@@ -2329,26 +2705,32 @@
                 "outFields": [
                     "opername as Name",
                     "opernum as Number",
-                    "phase as phase",
-                    "country as country",
+                    "phase",
+                    "country",
                     ","
                 ],
                 "returnGeometry": false
             },
-            "query_chart": {
-                "where": "1=1",
-                "returnGeometry": false,
-                "groupByFieldsForStatistics": [
-                    "opername"
-                ],
-                "orderByFields": [
-                    "value DESC"
-                ],
-                "outStatistics": [
+            "query_chart": "",
+            "popupTemplate": {
+                "title": "{opernum}",
+                "content": [
                     {
-                        "onStatisticField": "FID",
-                        "outStatisticFieldName": "value",
-                        "statisticType": "count"
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "opername",
+                                "label": "Name"
+                            },
+                            {
+                                "fieldName": "phase",
+                                "label": "Phase"
+                            },
+                            {
+                                "fieldName": "pipeyr",
+                                "label": "Pipe year"
+                            }
+                        ]
                     }
                 ]
             },
@@ -2387,6 +2769,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2417,6 +2800,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2447,6 +2831,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2477,6 +2862,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2507,6 +2893,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2537,6 +2924,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2567,6 +2955,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2597,6 +2986,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2627,6 +3017,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2657,6 +3048,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2687,6 +3079,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2717,6 +3110,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2747,6 +3141,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2777,6 +3172,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2807,6 +3203,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2837,6 +3234,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2867,6 +3265,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2897,6 +3296,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2927,6 +3327,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2957,6 +3358,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -2987,6 +3389,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3017,6 +3420,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3047,6 +3451,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3077,6 +3482,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3107,6 +3513,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3137,6 +3544,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3167,6 +3575,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3197,6 +3606,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3227,6 +3637,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3257,6 +3668,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3287,6 +3699,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3317,6 +3730,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3347,6 +3761,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3377,6 +3792,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3407,6 +3823,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3437,6 +3854,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3467,6 +3885,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3497,6 +3916,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3527,6 +3947,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3557,6 +3978,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3587,6 +4009,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3617,6 +4040,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3647,6 +4071,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3677,6 +4102,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3707,6 +4133,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3737,6 +4164,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3767,6 +4195,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3797,6 +4226,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     },
@@ -3827,6 +4257,7 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
+            "popupTemplate": "",
             "query_ai": ""
         }
     }

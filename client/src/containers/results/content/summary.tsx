@@ -81,6 +81,13 @@ export const useGetSummaryTopic = (topic?: Topic) => {
         ai_notes: [
           "Don't use blockquotes",
           "Don't use headings",
+          "Don't use lists",
+          "Don't use tables",
+          "Don't use images",
+          "Don't use links",
+          "Don't use code blocks",
+          "Don't use horizontal rules",
+          "Don't use footnotes",
           "Try to emphasize the most important information by putting in bold",
           "Try to use percentages every time is possible",
         ],

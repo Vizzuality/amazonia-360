@@ -77,7 +77,7 @@ const MarimekkoChart = <T extends Data>({
     const padding = 24;
 
     const { width: idWidth, height: idHeight } = getTextSize({
-      text: node.data.id ?? "",
+      text: node.data.data.label ?? "",
       maxWidth: nodeWidth,
       padding,
       font: "500 14px / 20px __Montserrat_6f749a, __Montserrat_Fallback_6f749a",
@@ -185,7 +185,7 @@ const MarimekkoChart = <T extends Data>({
                                     : "text-white",
                                 )}
                               >
-                                {node.data.id}
+                                {node.data.data.label}
                               </p>
                             )}
                           </div>

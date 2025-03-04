@@ -268,31 +268,30 @@ export const getQueryFeatureId = async ({ type, resource, geometry }: QueryFeatu
     const fs = await f.queryFeatures(query);
 
     if (q.returnIntersections && fs.geometryType === "polygon") {
-      const geoms = fs.features.map((f) => f.geometry).filter(Boolean);
-
-      if (!geometry || geoms.length === 0) {
+      if (!geometry) {
         return null;
       }
-
-      const intersections = (await geometryEngineAsync.intersect(
-        geoms,
-        geometry,
-      )) as unknown as __esri.Polygon[];
-
       const geometryArea = geometryEngine.geodesicArea(geometry, "square-kilometers");
 
-      return new Promise<__esri.FeatureSet>((resolve) => {
-        // TODO: intersections lenght could be more than the original features. So instead of looping the current feature set, we must create a new one with the intersections
-        fs.features.forEach((f, i) => {
+      await Promise.all(
+        fs.features.map(async (f) => {
+          if (!f.geometry) return null;
+
+          const intersections = (await geometryEngineAsync.intersect(
+            [f.geometry],
+            geometry,
+          )) as unknown as __esri.Polygon[];
+
           f.setAttribute(
             "value",
-            geometryEngine.geodesicArea(intersections[i], "square-kilometers"),
+            intersections.reduce(
+              (acc, i) => acc + geometryEngine.geodesicArea(i, "square-kilometers"),
+              0,
+            ),
           );
           f.setAttribute("total", geometryArea);
-        });
-
-        resolve(fs);
-      });
+        }),
+      );
     }
 
     return fs;

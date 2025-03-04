@@ -99,7 +99,7 @@ export const ChartIndicators = (indicator: ChartIndicatorsProps) => {
     const GROUPS = R?.groupByFieldsForStatistics;
 
     return query.data.features
-      .map((feature) => {
+      .map((feature, i) => {
         if (!!GROUPS && GROUPS.length) {
           return {
             id: feature.attributes[GROUPS?.[0]],
@@ -111,7 +111,7 @@ export const ChartIndicators = (indicator: ChartIndicatorsProps) => {
         }
 
         return {
-          id: feature.attributes.label,
+          id: feature.attributes.label + i,
           parent: "root",
           label: feature.attributes.label,
           size: feature.attributes.value / TOTAL,
