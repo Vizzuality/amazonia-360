@@ -106,7 +106,9 @@ export const ReportResultsContentItem = ({
     >
       <h2 className="text-xl font-semibold">{TOPIC?.name_en}</h2>
 
-      {TOPIC?.id !== 0 && ai_summary && <ReportResultsSummary topic={TOPIC} />}
+      {TOPIC?.id !== 0 && Object.keys(ai_summary).length !== 0 && (
+        <ReportResultsSummary topic={TOPIC} />
+      )}
 
       <ResponsiveReactGridLayout
         className="layout animated"

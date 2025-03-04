@@ -1,6 +1,7 @@
 "use client";
 
 import { useQueries } from "@tanstack/react-query";
+import { useSetAtom } from "jotai";
 
 import { useGetAISummary } from "@/lib/ai";
 import { getQueryFeatureIdOptions, useGetDefaultIndicators } from "@/lib/indicators";
@@ -8,7 +9,7 @@ import { useLocationGeometry } from "@/lib/location";
 import { omit } from "@/lib/utils";
 
 import { Topic } from "@/app/local-api/topics/route";
-import { useSyncLocation } from "@/app/store";
+import { generatingAIReportAtom, useSyncLocation } from "@/app/store";
 
 import { Markdown } from "@/components/ui/markdown";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -105,6 +106,11 @@ export const useGetSummaryTopic = (topic?: Topic) => {
 
 export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
   const { data, isFetching, isFetched, isPending } = useGetSummaryTopic(topic);
+  const setIsGeneratingAIReport = useSetAtom(generatingAIReportAtom);
+
+  if (isPending || isFetching) {
+    setIsGeneratingAIReport(true);
+  } else setIsGeneratingAIReport(false);
 
   return (
     <div className="relative">

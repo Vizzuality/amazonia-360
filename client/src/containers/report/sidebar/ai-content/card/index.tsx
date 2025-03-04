@@ -2,30 +2,30 @@
 
 import { cn } from "@/lib/utils";
 
-import { useSyncAiSummary } from "@/app/store";
-
 import { Label } from "@/components/ui/label";
 import { RadioGroupItem } from "@/components/ui/radio-group";
 
 export default function AiSidebarContentCard({
   option,
+  active,
 }: {
   option: { value: string; label: string; description: string };
+  active: boolean;
 }) {
-  const [ai_summary] = useSyncAiSummary();
-
   return (
-    <div
+    <Label
+      htmlFor={option.value}
       className={cn({
-        "flex flex-col space-y-1 rounded-sm border p-4 text-sm": true,
-        "border-foreground": ai_summary.type === option.value,
+        "flex cursor-pointer flex-col space-y-1 rounded-sm border p-4 text-sm transition-all duration-200 hover:border-[1.5px] hover:border-foreground":
+          true,
+        "border-foreground": active,
       })}
     >
       <div key={option.value} className="flex items-center space-x-4 text-foreground">
-        <RadioGroupItem value={option.value} />
-        <Label className="font-bold">{option.label}</Label>
+        <RadioGroupItem id={option.value} value={option.value} />
+        <span className="font-bold">{option.label}</span>
       </div>
       <p className="font-medium text-muted-foreground">{option.description}</p>
-    </div>
+    </Label>
   );
 }

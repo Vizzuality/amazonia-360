@@ -16,6 +16,8 @@ export type TopicView = {
   indicators: IndicatorView[] | undefined;
 };
 
+export type AIAudience = "standard" | "executive" | "comprehensive";
+
 export const topicsParser = parseAsArrayOf(parseAsJson<TopicView>());
 
 export const bboxParser = parseAsArrayOf(parseAsFloat).withDefault([
@@ -46,6 +48,6 @@ export const gridDatasetsParser = parseAsArrayOf(parseAsString).withDefault([]);
 export const gridDatasetSelectedParser = parseAsString;
 
 export const aiSummaryParser = parseAsJson<{
-  type?: "general" | "finance" | "conservationist";
+  type?: AIAudience;
   only_active?: boolean;
 }>().withDefault({});

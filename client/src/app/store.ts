@@ -117,3 +117,5 @@ export const gridHoverAtom = atom<GridHoverType>({
 });
 
 export const selectedFiltersViewAtom = atom<boolean>(false);
+
+export const generatingAIReportAtom = atom<boolean>(false);

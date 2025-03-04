@@ -14,7 +14,7 @@ import { useSyncTopics } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
 
-import { Indicators } from "@/containers/report/indicators/sidebar/topics/indicators";
+import { Indicators } from "@/containers/report/sidebar/indicators/topics/indicators";
 
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -99,14 +99,14 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
     <li
       key={id}
       className={cn({
-        "flex flex-col": true,
-        "b-2 box-border border-b border-b-primary/20": open,
+        "flex flex-col pr-2": true,
+        "box-border border-b border-b-primary/20": open,
       })}
     >
       <Collapsible open={open}>
         <div
           className={cn({
-            "flex h-10 items-center space-x-4 rounded-lg px-0.5 py-2 hover:bg-secondary": true,
+            "flex h-10 items-center space-x-4 rounded-lg py-2 pl-2 hover:bg-secondary": true,
           })}
         >
           <CollapsibleTrigger
