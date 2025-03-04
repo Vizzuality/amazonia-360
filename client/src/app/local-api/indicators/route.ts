@@ -33,6 +33,13 @@ export type ResourceImageryTile = {
   rasterFunction: __esri.RasterFunctionProperties;
 };
 
+export type ResourceImagery = {
+  name: string;
+  url: string;
+  type: "imagery";
+  rasterFunction: __esri.RasterFunctionProperties;
+};
+
 export type ResourceH3 = {
   id: number;
   name: string;
@@ -66,6 +73,7 @@ export type Indicator = {
   resource:
     | ResourceFeature
     | ResourceWebTile
+    | ResourceImagery
     | ResourceImageryTile
     | ResourceH3
     | ResourceComponent;

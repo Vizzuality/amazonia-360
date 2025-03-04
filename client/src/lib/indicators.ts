@@ -9,6 +9,7 @@ import INDICATORS from "@/app/local-api/indicators/indicators.json";
 import {
   Indicator,
   ResourceFeature,
+  ResourceImagery,
   ResourceImageryTile,
   ResourceWebTile,
   VisualizationTypes,
@@ -129,7 +130,7 @@ export const useGetIndicatorsId = (id: Indicator["id"]) => {
  ************************************************************
  */
 export type ResourceIdParams = {
-  resource: ResourceFeature | ResourceImageryTile | ResourceWebTile;
+  resource: ResourceFeature | ResourceImageryTile | ResourceWebTile | ResourceImagery;
 };
 
 export type ResourceIdQueryOptions<TData, TError> = UseQueryOptions<

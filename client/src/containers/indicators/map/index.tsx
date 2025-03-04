@@ -4,6 +4,7 @@ import { useResourceId } from "@/lib/indicators";
 
 import {
   ResourceFeature,
+  ResourceImagery,
   ResourceImageryTile,
   ResourceWebTile,
 } from "@/app/local-api/indicators/route";
@@ -14,7 +15,7 @@ import WidgetMap from "@/containers/widgets/map";
 
 export const MapIndicators = (
   indicator: Omit<Indicator, "resource"> & {
-    resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
+    resource: ResourceFeature | ResourceWebTile | ResourceImageryTile | ResourceImagery;
   },
 ) => {
   const { id, resource } = indicator;
@@ -36,6 +37,15 @@ export const MapIndicators = (
         type: "imagery-tile",
         rasterFunction: resource.rasterFunction,
       } as Partial<__esri.ImageryTileLayer>;
+    }
+
+    if (resource.type === "imagery") {
+      return {
+        id: `${id}`,
+        url: resource.url,
+        type: "imagery",
+        rasterFunction: resource.rasterFunction,
+      } as Partial<__esri.ImageryLayer>;
     }
 
     return {

@@ -24,6 +24,7 @@ interface WidgetMapProps extends __esri.MapViewProperties {
   layers: (
     | Partial<__esri.WebTileLayer>
     | Partial<__esri.ImageryTileLayer>
+    | Partial<__esri.ImageryLayer>
     | Partial<__esri.FeatureLayer>
   )[];
 }
