@@ -44,3 +44,8 @@ export const gridFiltersSetUpParser = parseAsJson<{
 }>().withDefault({ limit: 10, opacity: 100, direction: "desc" });
 export const gridDatasetsParser = parseAsArrayOf(parseAsString).withDefault([]);
 export const gridDatasetSelectedParser = parseAsString;
+
+export const aiSummaryParser = parseAsJson<{
+  type?: "general" | "finance" | "conservationist";
+  only_active?: boolean;
+}>().withDefault({});

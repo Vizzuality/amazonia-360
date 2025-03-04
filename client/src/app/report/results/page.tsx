@@ -10,7 +10,7 @@ import { locationParser } from "@/app/parsers";
 import { PageProps } from "@/app/types";
 
 import DataDisclaimer from "@/containers/disclaimers/data";
-import TopicsSidebar from "@/containers/report/indicators/sidebar";
+import ReportSidebar from "@/containers/report/sidebar";
 import ReportResultsContent from "@/containers/results/content";
 import ReportResultsHeader from "@/containers/results/header";
 
@@ -55,7 +55,7 @@ export default async function ReportResultsPage({ searchParams }: PageProps<Para
             <ReportResultsContent />
           </div>
           <div className="relative">
-            <TopicsSidebar />
+            <ReportSidebar />
           </div>
         </SidebarProvider>
       </main>
