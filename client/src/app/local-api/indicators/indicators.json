@@ -316,10 +316,6 @@
                 "outFields": [
                     "*"
                 ]
-            },
-            "popupTemplate": {
-                "title": "{NOMBCAP}",
-                "content":[{"type":"fields","fieldInfos":[{"fieldName":"NAME_1","label":"State"},{"fieldName":"NAME_0","label":"Country"}]}]
             }
         }
     },
@@ -1380,20 +1376,6 @@
                 "outFields": [
                     "*"
                 ]
-            },
-            "popupTemplate": {
-                "title": "{NAME}",
-                "content": [{
-                    "type": "fields",
-                    "fieldInfos": [{
-                        "fieldName": "IUCN_CAT",
-                        "label": "IUCNCategory"
-                    },
-                    {
-                        "fieldName": "DESIG_ENG",
-                        "label": "Designation"
-                    }]
-                }]
             }
         }
     },
@@ -1480,8 +1462,7 @@
                 "outFields": [
                     "*"
                 ]
-            },
-            "popupTemplate": {"title":"{nombre}","content":[{"type":"fields","fieldInfos":[{"fieldName":"categoria","label":"Category"},{"fieldName":"etnias","label":"Ethnicities"}]}]}
+            }
         }
     },
     {
@@ -1542,8 +1523,7 @@
                 "outFields": [
                     "*"
                 ]
-            },
-            "popupTemplate": {"title":"{SPRange}"}
+            }
         }
     },
     {
@@ -2329,8 +2309,7 @@
                 "outFields": [
                     "*"
                 ]
-            },
-            "popupTemplate": {"title":"{event_type}","content":[{"type":"fields","fieldInfos":[{"fieldName":"disorder_t","label":"Type"},{"fieldName":"sub_event_","label":"SubEvent"}]}]}
+            }
         }
     },
     {
