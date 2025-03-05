@@ -9,12 +9,16 @@ import { useGetTopicsId } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { TopicView } from "@/app/parsers";
-import { reportEditionModeAtom, useSyncAiSummary, useSyncTopics } from "@/app/store";
+import {
+  reportEditionModeAtom,
+  // useSyncAiSummary,
+  useSyncTopics,
+} from "@/app/store";
 
 import { MIN_VISUALIZATION_SIZES } from "@/constants/topics";
 
 import { ReportResultsContentIndicatorItem } from "@/containers/results/content/indicators/item";
-import { ReportResultsSummary } from "@/containers/results/content/summary";
+// import { ReportResultsSummary } from "@/containers/results/content/summary";
 
 import { useSidebar } from "@/components/ui/sidebar";
 
@@ -31,7 +35,7 @@ export const ReportResultsContentItem = ({
 }: ReportResultsContentItemProps) => {
   const { open: isSidebarOpen } = useSidebar();
   const [, setTopics] = useSyncTopics();
-  const [ai_summary] = useSyncAiSummary();
+  // const [ai_summary] = useSyncAiSummary();
   const [reportEditionMode] = useAtom(reportEditionModeAtom);
 
   const EDITABLE = editable && reportEditionMode;
@@ -106,9 +110,9 @@ export const ReportResultsContentItem = ({
     >
       <h2 className="text-xl font-semibold">{TOPIC?.name_en}</h2>
 
-      {TOPIC?.id !== 0 && Object.keys(ai_summary).length !== 0 && (
+      {/* {TOPIC?.id !== 0 && Object.keys(ai_summary).length !== 0 && (
         <ReportResultsSummary topic={TOPIC} />
-      )}
+      )} */}
 
       <ResponsiveReactGridLayout
         className="layout animated"
