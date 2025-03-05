@@ -10,7 +10,7 @@ export default function IndicatorsSidebarContent() {
   return (
     <div className="relative rounded-md bg-white shadow-md">
       <div className="relative h-full">
-        <div className="flex flex-col gap-2 p-2">
+        <div className="py-2">
           <div className="flex w-full items-center justify-between">
             <h3 className="text-2xl text-primary">Report indicators</h3>
           </div>

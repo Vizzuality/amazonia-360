@@ -83,7 +83,7 @@ export default function ReportSidebar() {
             "h-[calc(100vh-64px)]": isSticky,
           })}
         >
-          <TabsContent value="indicators" className="h-full">
+          <TabsContent value="indicators" className="h-full pr-2">
             <IndicatorsSidebarContent />
           </TabsContent>
 
