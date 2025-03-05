@@ -141,6 +141,10 @@
   .container {
     @apply p-0;
   }
+
+  main {
+    @apply p-0;
+  }
 }
 
 .react-grid-placeholder {

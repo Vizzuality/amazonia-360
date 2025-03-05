@@ -8,7 +8,7 @@ export default function ReportResultsContentList() {
   const [topics] = useSyncTopics();
 
   return (
-    <div className="space-y-20">
+    <div className="space-y-20 print:max-w-96">
       {topics?.map((topic) => {
         return <ReportResultsContentItem editable key={topic.id} topic={topic} />;
       })}

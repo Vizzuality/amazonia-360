@@ -48,13 +48,13 @@ export default async function ReportResultsPage({ searchParams }: PageProps<Para
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className="relative bg-blue-50 pb-5 print:bg-white">
+      <main className="relative bg-blue-50 pb-5 print:w-full print:bg-white print:p-0">
         <SidebarProvider>
-          <div className="w-full flex-col">
+          <div className="w-full flex-col print:w-full">
             <ReportResultsHeader />
             <ReportResultsContent />
           </div>
-          <div className="relative">
+          <div className="relative print:hidden">
             <ReportSidebar />
           </div>
         </SidebarProvider>
