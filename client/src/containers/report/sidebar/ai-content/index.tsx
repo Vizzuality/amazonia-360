@@ -73,7 +73,7 @@ export default function AiSidebarContent() {
                 <div className="space-y-2">
                   <span className="text-sm font-semibold text-foreground">Summary text style</span>
                   <RadioGroup
-                    defaultValue="general"
+                    defaultValue="standard"
                     className="flex flex-col gap-1.5"
                     onValueChange={(value: AIAudience) => setAiAudience(value)}
                   >

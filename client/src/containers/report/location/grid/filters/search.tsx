@@ -117,7 +117,7 @@ export default function SearchC({ className }: { className?: string }) {
         size="sm"
       >
         {(o) => (
-          <Tooltip>
+          <Tooltip delayDuration={0}>
             <TooltipTrigger className="w-full">
               <div
                 className={cn({

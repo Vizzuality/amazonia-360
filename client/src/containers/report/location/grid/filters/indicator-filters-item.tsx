@@ -140,7 +140,7 @@ export default function GridFiltersItem(dataset: H3Indicator) {
               </Dialog>
             </Tooltip>
 
-            <Tooltip>
+            <Tooltip delayDuration={0}>
               <TooltipTrigger asChild>
                 <CollapsibleTrigger
                   className={cn({

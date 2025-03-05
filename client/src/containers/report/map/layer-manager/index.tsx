@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 
 import { useAtomValue } from "jotai";
 
-import { tabAtom, useSyncGridDatasets } from "@/app/store";
+import { tabAtom, useSyncGridDatasets, useSyncGridSelectedDataset } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
@@ -18,6 +18,7 @@ const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 export default function LayerManager() {
   // const [location] = useSyncLocation();
   const [gridDatasets] = useSyncGridDatasets();
+  const [gridSelectedDataset] = useSyncGridSelectedDataset();
   const tab = useAtomValue(tabAtom);
 
   return (
@@ -26,7 +27,10 @@ export default function LayerManager() {
       {/* <SelectedLayer location={location} /> */}
 
       {tab === "grid" && !!gridDatasets.length && <GridLayer />}
-      {tab === "grid" && !gridDatasets.length && <PlaceholderGridLayer />}
+      {tab === "grid" &&
+        (!gridDatasets.length || (!!gridDatasets.length && gridSelectedDataset === "no-layer")) && (
+          <PlaceholderGridLayer />
+        )}
     </>
   );
 }
