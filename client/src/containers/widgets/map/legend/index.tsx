@@ -1,88 +1,52 @@
 import { useMemo } from "react";
 
-import Color from "@arcgis/core/Color";
+import {
+  Indicator,
+  ResourceFeature,
+  ResourceImagery,
+  ResourceImageryTile,
+} from "@/app/local-api/indicators/route";
 
-import { useResourceFeatureLayerId } from "@/lib/indicators";
-
-import { Indicator, ResourceFeature } from "@/app/local-api/indicators/route";
-
-import Legend from "@/components/map/legend";
-import LegendItem, { LegendItemProps } from "@/components/map/legend/item";
+import { FeatureLegend } from "@/containers/widgets/map/legend/feature";
+import { ImageryLegend } from "@/containers/widgets/map/legend/imagery";
 
 export interface WidgetLegendProps {
   indicator: Indicator;
 }
 
-export const WidgetLegend = ({
-  name_en,
-  resource,
-}: Omit<Indicator, "resource"> & {
-  resource: ResourceFeature;
-}) => {
-  const { data: layerData, isFetched, isFetching } = useResourceFeatureLayerId({ resource });
+export const WidgetLegend = (
+  indicator: Omit<Indicator, "resource"> & {
+    resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
+  },
+) => {
+  const LEGEND = useMemo(() => {
+    switch (indicator.resource.type) {
+      case "feature": {
+        const i = indicator as Omit<Indicator, "resource"> & {
+          resource: ResourceFeature;
+        };
+        return <FeatureLegend {...i} />;
+      }
 
-  const LEGEND = useMemo<LegendItemProps | null>(() => {
-    if (!layerData) return null;
+      case "imagery": {
+        const i = indicator as Omit<Indicator, "resource"> & {
+          resource: ResourceImagery;
+        };
+        return <ImageryLegend {...i} />;
+      }
 
-    const renderer = layerData?.drawingInfo?.renderer;
-
-    if (renderer?.type === "simple") {
-      const r = renderer as __esri.SimpleRenderer;
-
-      if (!r.symbol) return null;
-
-      if (!("color" in r.symbol)) return null;
-
-      return {
-        type: "basic",
-        items: [
-          {
-            id: "1",
-            color: new Color(r.symbol.color).toHex(),
-            label: name_en,
-          },
-        ],
-      };
+      case "imagery-tile": {
+        const i = indicator as Omit<Indicator, "resource"> & {
+          resource: ResourceImageryTile;
+        };
+        return <ImageryLegend {...i} />;
+      }
     }
-
-    if (renderer?.type === "uniqueValue") {
-      const r = renderer as __esri.UniqueValueRenderer;
-
-      return {
-        type: "basic",
-        items: r.uniqueValueInfos?.map((u) => ({
-          id: u.value,
-          color: new Color(u.symbol.color).toHex(),
-          label: `${u.label}`,
-        })),
-      };
-    }
-
-    if (renderer?.type === "classBreaks") {
-      const r = renderer as __esri.ClassBreaksRenderer;
-
-      return {
-        type: "basic",
-        items: r.classBreakInfos?.map((c) => ({
-          id: c.label,
-          color: new Color(c.symbol.color).toHex(),
-          label: `${c.label}`,
-        })),
-      };
-    }
-
-    return null;
-  }, [name_en, layerData]);
-
-  if (!LEGEND || !isFetched || isFetching) return null;
+  }, [indicator]);
 
   return (
     <div className="absolute bottom-4 left-4 z-10 max-w-[calc(50%_-_theme(spacing[8]))] shadow-sm duration-700 animate-in fade-in-0">
-      <Legend defaultOpen={true}>
-        <LegendItem {...LEGEND} direction="vertical" />
-      </Legend>
+      {LEGEND}
     </div>
   );
-
-  return "Legend";
 };

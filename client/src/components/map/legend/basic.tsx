@@ -21,7 +21,14 @@ export default function LegendBasic({
           <div
             className="mr-1 mt-0.5 h-2 w-2 shrink-0 rounded-[2px] shadow-[0_0_1px_0px_rgba(0,0,0,0.25)]"
             style={{
-              backgroundColor: item.color,
+              ...(!!item.image && {
+                backgroundImage: `url("data:image/png;base64,${item.image}")`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }),
+              ...(!!item.color && {
+                backgroundColor: item.color,
+              }),
             }}
           />
           <span className="text-2xs font-semibold text-foreground">{item.label} </span>

@@ -6,7 +6,12 @@ import dynamic from "next/dynamic";
 
 import { useLocationGeometry } from "@/lib/location";
 
-import { Indicator, ResourceFeature } from "@/app/local-api/indicators/route";
+import {
+  Indicator,
+  ResourceFeature,
+  ResourceImagery,
+  ResourceImageryTile,
+} from "@/app/local-api/indicators/route";
 import { useSyncLocation } from "@/app/store";
 
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
@@ -90,10 +95,12 @@ export default function WidgetMap({ indicator, layers, ...viewProps }: WidgetMap
 
         <Layer layer={LABELS_LAYER} index={layers.length + 2} />
 
-        {indicator.resource.type === "feature" && (
+        {(indicator.resource.type === "feature" ||
+          indicator.resource.type === "imagery" ||
+          indicator.resource.type === "imagery-tile") && (
           <WidgetLegend
             {...(indicator as Omit<Indicator, "resource"> & {
-              resource: ResourceFeature;
+              resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
             })}
           />
         )}

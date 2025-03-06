@@ -126,6 +126,7 @@ export const useGetIndicatorsId = (id: Indicator["id"]) => {
  * RESOURCE ID
  * - useResourceId
  * - useResourceFeatureLayerId
+ * - useResourceImageryLegendId
  ************************************************************
  ************************************************************
  */
@@ -232,6 +233,71 @@ export const useResourceFeatureLayerId = <
   });
 };
 
+export type ResourceImageryLegendIdParams = {
+  resource: ResourceImagery | ResourceImageryTile;
+};
+
+export type ResourceImageryLegendIdQueryOptions<TData, TError> = UseQueryOptions<
+  Awaited<ReturnType<typeof getResourceImageryLegendId>>,
+  TError,
+  TData
+>;
+
+export const getResourceImageryLegendId = async ({ resource }: ResourceImageryLegendIdParams) => {
+  return axios
+    .get(`${resource.url}/legend`, {
+      params: {
+        // renderingRule: JSON.stringify(resource.rasterFunction),
+        f: "json",
+      },
+    })
+    .then(
+      (response) =>
+        response.data as {
+          layers: {
+            id: number;
+            title: string;
+            legend: {
+              label: string;
+              imageData: string;
+            }[];
+          }[];
+        },
+    );
+};
+
+export const getResourceImageryLegendIdKey = ({ resource }: ResourceImageryLegendIdParams) => {
+  return ["legend", resource.url, resource.rasterFunction];
+};
+
+export const getResourceImageryLegendIdOptions = <
+  TData = Awaited<ReturnType<typeof getResourceImageryLegendId>>,
+  TError = unknown,
+>(
+  params: ResourceImageryLegendIdParams,
+  options?: Omit<ResourceImageryLegendIdQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const queryKey = getResourceImageryLegendIdKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getResourceImageryLegendId>>> = () =>
+    getResourceImageryLegendId(params);
+  return { queryKey, queryFn, ...options } as ResourceImageryLegendIdQueryOptions<TData, TError>;
+};
+
+export const useResourceImageryLegendId = <
+  TData = Awaited<ReturnType<typeof getResourceImageryLegendId>>,
+  TError = unknown,
+>(
+  params: ResourceImageryLegendIdParams,
+  options?: Omit<ResourceImageryLegendIdQueryOptions<TData, TError>, "queryKey">,
+) => {
+  const { queryKey, queryFn } = getResourceImageryLegendIdOptions(params, options);
+
+  return useQuery({
+    queryKey,
+    queryFn,
+    ...options,
+  });
+};
 /**
  ************************************************************
  ************************************************************
