@@ -145,6 +145,17 @@
   main {
     @apply p-0;
   }
+
+  body {
+    zoom: 80%; /* Adjust percentage as needed */
+    transform: scale(1); /* Ensures consistent scaling */
+  }
+
+  /* Optional: Force page size */
+  @page {
+    size: A4 portrait; /* Change to landscape if needed */
+    margin: 10mm; /* Adjust margins to fit content */
+  }
 }
 
 .react-grid-placeholder {

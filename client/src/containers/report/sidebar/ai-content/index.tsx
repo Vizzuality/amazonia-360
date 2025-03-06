@@ -8,8 +8,8 @@ import { LuLoader2, LuSparkles } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { AIAudience } from "@/app/parsers";
-import { generatingAIReportAtom, useSyncAiSummary } from "@/app/store";
+import { AiSummary } from "@/app/parsers";
+import { isGeneratingAIReportAtom, useSyncAiSummary } from "@/app/store";
 
 import { Button } from "@/components/ui/button";
 import { RadioGroup } from "@/components/ui/radio-group";
@@ -20,52 +20,53 @@ import AiSidebarContentCard from "./card";
 
 const AUDIENCES = [
   {
-    value: "standard",
+    value: "Short",
     label: "Standard",
     description: "For clear and balanced information to suit any audience.",
   },
   {
-    value: "executive",
+    value: "Normal",
     label: "Executive",
     description: "Quick, focused insights to convey key data effectively.",
   },
   {
-    value: "comprehensive",
+    value: "Long",
     label: "Comprehensive",
     description: "Detailed and thorough for deep understanding and context.",
   },
 ];
 
 export default function AiSidebarContent() {
-  const [ai_audience, setAiAudience] = useState<AIAudience>();
-  const [ai_only_active, setAiOnlyActive] = useState<boolean>();
-  const isGeneratingAIReport = useAtomValue(generatingAIReportAtom);
+  const [aiSummary, setAiSummary] = useSyncAiSummary();
+  const [ai_audience, setAiAudience] = useState<AiSummary["type"]>(aiSummary.type);
+  const [ai_only_active, setAiOnlyActive] = useState<AiSummary["only_active"]>(
+    aiSummary.only_active,
+  );
 
-  const [, setAiSummary] = useSyncAiSummary();
+  const isGeneratingAIReport = useAtomValue(isGeneratingAIReportAtom);
 
   const handleClickAiGenerateSummary = useCallback(() => {
     setAiSummary({
       type: ai_audience,
       only_active: ai_only_active,
+      enabled: true,
     });
   }, [ai_audience, ai_only_active, setAiSummary]);
 
   const handleClickClearAiSummary = useCallback(() => {
-    setAiSummary(null, { shallow: true });
-  }, [setAiSummary]);
+    setAiSummary({ ...aiSummary, enabled: false });
+  }, [setAiSummary, aiSummary]);
 
   const handleClickAIAudience = useCallback(
-    (value: AIAudience) => {
+    (value: AiSummary["type"]) => {
       setAiAudience(value);
-      setAiSummary(null);
     },
-    [setAiAudience, setAiSummary],
+    [setAiAudience],
   );
 
   const handleClickAIOnlyActive = useCallback(() => {
     setAiOnlyActive((prev) => !prev);
-    setAiSummary(null, { shallow: true });
-  }, [setAiOnlyActive, setAiSummary]);
+  }, [setAiOnlyActive]);
 
   return (
     <div className="relative flex h-full flex-col justify-between">
@@ -84,9 +85,9 @@ export default function AiSidebarContent() {
               <div className="space-y-2">
                 <span className="text-sm font-semibold text-foreground">Summary text style</span>
                 <RadioGroup
-                  defaultValue="standard"
+                  defaultValue={ai_audience}
                   className="flex flex-col gap-1.5"
-                  onValueChange={handleClickAIAudience}
+                  onValueChange={(v) => handleClickAIAudience(v as AiSummary["type"])}
                 >
                   {AUDIENCES.map((option) => (
                     <AiSidebarContentCard
@@ -105,7 +106,11 @@ export default function AiSidebarContent() {
                   <span className="text-sm font-medium text-foreground">
                     Active indicators only
                   </span>
-                  <Switch className="h-4 w-8" onCheckedChange={handleClickAIOnlyActive} />
+                  <Switch
+                    className="h-4 w-8"
+                    onCheckedChange={handleClickAIOnlyActive}
+                    defaultChecked={aiSummary.only_active}
+                  />
                 </div>
                 <p className="pb-2 text-sm font-medium text-muted-foreground">
                   Include only active indicators in the generated summaries. Changes to the
