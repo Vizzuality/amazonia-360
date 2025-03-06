@@ -20,17 +20,17 @@ const searchVM = new SearchVM({
   includeDefaultSources: false,
 
   sources: [
-    // {
-    //   name: "Admin0",
-    //   layer: DATASETS.admin0.layer,
-    //   searchFields: ["NAME_0"],
-    //   displayField: "COMPNAME",
-    //   outFields: ["*"],
-    //   maxResults: 1,
-    //   maxSuggestions: 2,
-    //   suggestionsEnabled: true,
-    //   minSuggestCharacters: 1,
-    // },
+    {
+      name: "Admin0",
+      layer: new FeatureLayer(omit(DATASETS.admin0.layer, ["type"])),
+      searchFields: ["NAME_0"],
+      displayField: "COMPNAME",
+      outFields: ["*"],
+      maxResults: 1,
+      maxSuggestions: 1,
+      suggestionsEnabled: true,
+      minSuggestCharacters: 2,
+    },
     {
       name: "Admin1",
       layer: new FeatureLayer(omit(DATASETS.admin1.layer, ["type"])),
