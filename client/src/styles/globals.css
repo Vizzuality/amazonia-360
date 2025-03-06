@@ -87,8 +87,8 @@
   }
 
   .map .esri-popup__main-container {
-    @apply shadow-sm rounded-lg border border-blue-100;
-    max-width: calc(50% - 2rem)
+    @apply rounded-lg border border-blue-100 shadow-sm;
+    max-width: calc(50% - 2rem);
   }
 
   .map .esri-feature__content-element {
@@ -96,7 +96,7 @@
   }
 
   .map .header-content {
-    @apply py-2 px-4;
+    @apply px-4 py-2;
   }
 
   .map h2.esri-widget__heading {
@@ -140,6 +140,21 @@
 
   .container {
     @apply p-0;
+  }
+
+  main {
+    @apply p-0;
+  }
+
+  body {
+    zoom: 80%; /* Adjust percentage as needed */
+    transform: scale(1); /* Ensures consistent scaling */
+  }
+
+  /* Optional: Force page size */
+  @page {
+    size: A4 portrait; /* Change to landscape if needed */
+    margin: 10mm; /* Adjust margins to fit content */
   }
 }
 

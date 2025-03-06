@@ -1,5 +1,7 @@
 import { parseAsArrayOf, parseAsFloat, parseAsJson, parseAsString } from "nuqs";
 
+import { ContextDescriptionType } from "@/types/generated/api.schemas";
+
 import { VisualizationTypes } from "./local-api/indicators/route";
 
 export type IndicatorView = {
@@ -14,6 +16,12 @@ export type IndicatorView = {
 export type TopicView = {
   id: number;
   indicators: IndicatorView[] | undefined;
+};
+
+export type AiSummary = {
+  type?: ContextDescriptionType;
+  only_active?: boolean;
+  enabled?: boolean;
 };
 
 export const topicsParser = parseAsArrayOf(parseAsJson<TopicView>());
@@ -44,3 +52,9 @@ export const gridFiltersSetUpParser = parseAsJson<{
 }>().withDefault({ limit: 10, opacity: 100, direction: "desc" });
 export const gridDatasetsParser = parseAsArrayOf(parseAsString).withDefault([]);
 export const gridDatasetSelectedParser = parseAsString;
+
+export const aiSummaryParser = parseAsJson<AiSummary>().withDefault({
+  type: "Short",
+  only_active: false,
+  enabled: false,
+});

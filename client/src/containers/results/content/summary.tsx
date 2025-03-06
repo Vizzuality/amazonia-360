@@ -1,14 +1,22 @@
 "use client";
 
 import { useQueries } from "@tanstack/react-query";
+import { useSetAtom } from "jotai";
 
 import { useGetAISummary } from "@/lib/ai";
 import { getQueryFeatureIdOptions, useGetDefaultIndicators } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 import { omit } from "@/lib/utils";
 
+import { Indicator } from "@/app/local-api/indicators/route";
 import { Topic } from "@/app/local-api/topics/route";
-import { useSyncLocation } from "@/app/store";
+import { AiSummary } from "@/app/parsers";
+import {
+  isGeneratingAIReportAtom,
+  useSyncAiSummary,
+  useSyncLocation,
+  useSyncTopics,
+} from "@/app/store";
 
 import { Markdown } from "@/components/ui/markdown";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -17,10 +25,17 @@ export interface ReportResultsSummaryProps {
   topic?: Topic;
 }
 
-export const useGetSummaryTopicData = (topic?: Topic) => {
+export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id"][]) => {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
-  const queryIndicators = useGetDefaultIndicators(topic?.id);
+  const queryIndicators = useGetDefaultIndicators(topic?.id, {
+    select: (data) => {
+      return data?.filter((indicator) => {
+        if (!indicators) return true;
+        return indicators.includes(indicator.id);
+      });
+    },
+  });
 
   const { data: queryIndicatorsData } = queryIndicators;
 
@@ -66,12 +81,17 @@ export const useGetSummaryTopicData = (topic?: Topic) => {
   };
 };
 
-export const useGetSummaryTopic = (topic?: Topic) => {
+export const useGetSummaryTopic = (
+  topic?: Topic,
+  options?: AiSummary,
+  activeIndicators?: Indicator["id"][],
+) => {
+  const indicators = options?.only_active ? activeIndicators : undefined;
   const {
     data: indicatorsData,
     isFetching: indicatorsIsFetching,
     isFetched: indicatorsIsFetched,
-  } = useGetSummaryTopicData(topic);
+  } = useGetSummaryTopicData(topic, indicators);
 
   const q = useGetAISummary(
     {
@@ -93,7 +113,7 @@ export const useGetSummaryTopic = (topic?: Topic) => {
         ],
       },
       language: "en",
-      description_type: "Normal",
+      description_type: options?.type,
     },
     {
       enabled: !!indicatorsData?.length && indicatorsIsFetched && !indicatorsIsFetching,
@@ -104,7 +124,22 @@ export const useGetSummaryTopic = (topic?: Topic) => {
 };
 
 export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
-  const { data, isFetching, isFetched, isPending } = useGetSummaryTopic(topic);
+  const [topics] = useSyncTopics();
+  const activeIndicators = topics?.find((t) => t.id === topic?.id)?.indicators?.map(({ id }) => id);
+  const [aiSummary] = useSyncAiSummary();
+  const { data, isFetching, isFetched, isPending } = useGetSummaryTopic(
+    topic,
+    aiSummary,
+    activeIndicators,
+  );
+
+  const setIsGeneratingReport = useSetAtom(isGeneratingAIReportAtom);
+
+  if (isFetching || isPending) {
+    setIsGeneratingReport(true);
+  } else {
+    setIsGeneratingReport(false);
+  }
 
   return (
     <div className="relative">

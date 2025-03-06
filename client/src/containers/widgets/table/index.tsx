@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef } from "react";
+
 import {
   ColumnDef,
   TableOptions,
@@ -36,6 +38,8 @@ export function DataTable<TData, TValue>({
   data,
   tableOptions,
 }: DataTableProps<TData, TValue>) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const table = useReactTable({
     data,
     columns,
@@ -48,8 +52,11 @@ export function DataTable<TData, TValue>({
   const { pageIndex } = table.getState().pagination;
 
   return (
-    <div className="flex grow flex-col">
-      <div className="flex min-h-80 grow flex-col justify-between rounded-md print:min-h-0">
+    <div className="flex h-full grow flex-col overflow-hidden bg-green-300">
+      <div
+        ref={containerRef}
+        className="flex h-full min-h-80 grow flex-col justify-between overflow-hidden rounded-md bg-violet-300 print:min-h-0"
+      >
         <Table className="border-foreground">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -95,7 +102,7 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="whitespace-nowrap">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -110,6 +117,7 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
+        ¡{" "}
         <footer className="mt-4 flex items-center justify-between">
           <p className="text-xs font-medium text-gray-500">{`${data.length} ${Pluralize("result", data.length)}`}</p>
           <DataPagination

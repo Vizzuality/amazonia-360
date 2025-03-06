@@ -22,7 +22,7 @@ export default function IndicatorsReport() {
       variant="outline"
     >
       <LuPen className="h-5 w-5" />
-      <span>Indicators</span>
+      <span>Edit report</span>
     </Button>
   );
 }

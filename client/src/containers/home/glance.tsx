@@ -6,24 +6,21 @@ import { useInView } from "react-intersection-observer";
 import { HierarchyNode, HierarchyRectangularNode } from "@visx/hierarchy/lib/types";
 import { scaleOrdinal } from "@visx/scale";
 import CHROMA from "chroma-js";
+import { LuCheck, LuChevronDown } from "react-icons/lu";
 
 import { formatNumber, formatPercentage } from "@/lib/formats";
+import { cn } from "@/lib/utils";
 
 import { CardInfo } from "@/containers/card";
 import { MOSAIC_DATA, MOSAIC_OPTIONS, type MosaicIds } from "@/containers/home/constants";
 
 import MarimekkoChart from "@/components/charts/marimekko";
 import { type Data } from "@/components/charts/marimekko";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-  SelectTrigger,
-} from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export default function Glance() {
   const [chartKey, setChartKey] = useState<MosaicIds>(MOSAIC_OPTIONS[4].key);
+  const [open, setOpen] = useState<boolean>(false);
 
   const { ref: sectionRef, inView: isSectionInView } = useInView({
     triggerOnce: true,
@@ -51,6 +48,7 @@ export default function Glance() {
 
   const handleSingleValueChange = useCallback((e: MosaicIds) => {
     setChartKey(e);
+    setOpen(false);
   }, []);
 
   const FORMAT = {
@@ -125,24 +123,41 @@ export default function Glance() {
           </p>
 
           <div className="mt-7 flex flex-col space-y-1">
-            <p className="text-xs font-semibold text-blue-900">View on the chart</p>
-            <Select value={chartKey} onValueChange={handleSingleValueChange}>
-              <SelectTrigger className="h-9 w-full rounded-sm">
-                <SelectValue>
-                  <p className="max-w-64 truncate md:max-w-80 lg:max-w-none">
-                    {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.label || ""}
-                  </p>
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent className="no-scrollbar max-h-96 overflow-y-auto border-none shadow-md">
+            <p className="text-xs font-semibold text-blue-900">Select indicator</p>
+
+            <Popover open={open}>
+              <PopoverTrigger
+                className="relative h-9 w-full rounded-sm border border-input focus:border-foreground active:border-foreground"
+                onClick={() => setOpen(!open)}
+              >
+                <p className="max-w-64 truncate px-3 py-2 text-left text-sm md:max-w-80 lg:max-w-none">
+                  {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.label || ""}
+                </p>
+                <LuChevronDown className="absolute right-2 top-2 h-5 w-5 text-blue-900" />
+              </PopoverTrigger>
+
+              <PopoverContent
+                align="start"
+                alignOffset={-2}
+                className="no-scrollbar group z-10 max-h-96 w-popover-width overflow-y-auto border-none border-input bg-white px-1 py-3 text-sm shadow-md"
+              >
                 {MOSAIC_OPTIONS &&
                   MOSAIC_OPTIONS.map((opt) => (
-                    <SelectItem key={opt.key} value={opt.key} className="cursor-pointer">
-                      {opt.label}
-                    </SelectItem>
+                    <div
+                      key={opt.key}
+                      className={cn({
+                        "flex cursor-pointer items-center justify-between rounded-sm px-3 py-2 hover:bg-blue-50":
+                          true,
+                        "bg-blue-50 group-hover:bg-transparent": opt.key === chartKey,
+                      })}
+                      onClick={() => handleSingleValueChange(opt.key)}
+                    >
+                      <span>{opt.label}</span>
+                      {opt.key === chartKey && <LuCheck className="text-blue-900" />}
+                    </div>
                   ))}
-              </SelectContent>
-            </Select>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
 

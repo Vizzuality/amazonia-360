@@ -13,7 +13,7 @@ import { Topic } from "@/app/local-api/topics/route";
 import { useSyncTopics } from "@/app/store";
 
 import Info from "@/containers/info";
-import { VisualizationType } from "@/containers/report/indicators/sidebar/topics/indicators/visualization-types";
+import { VisualizationType } from "@/containers/report/sidebar/indicators/topics/indicators/visualization-types";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -43,7 +43,7 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
           <div className="flex items-center space-x-1">
             <button
               type="button"
-              className="flex w-full min-w-28 cursor-pointer items-center space-x-1 text-sm"
+              className="flex w-full min-w-28 cursor-pointer items-center space-x-1 pl-8 text-sm"
               onClick={(e) => {
                 e.stopPropagation();
                 setOpen(!open);
@@ -111,7 +111,7 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
         </div>
       </div>
 
-      <CollapsibleContent className="flex items-center space-x-2 pl-1">
+      <CollapsibleContent className="flex items-center space-x-2 pl-9">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="7"

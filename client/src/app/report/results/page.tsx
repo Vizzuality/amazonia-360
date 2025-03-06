@@ -10,7 +10,7 @@ import { locationParser } from "@/app/parsers";
 import { PageProps } from "@/app/types";
 
 import DataDisclaimer from "@/containers/disclaimers/data";
-import TopicsSidebar from "@/containers/report/indicators/sidebar";
+import ReportSidebar from "@/containers/report/sidebar";
 import ReportResultsContent from "@/containers/results/content";
 import ReportResultsHeader from "@/containers/results/header";
 
@@ -48,14 +48,14 @@ export default async function ReportResultsPage({ searchParams }: PageProps<Para
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className="relative bg-blue-50 pb-5 print:bg-white">
+      <main className="relative bg-blue-50 pb-5 print:w-full print:bg-white print:p-0">
         <SidebarProvider>
-          <div className="w-full flex-col">
+          <div className="w-full flex-col print:w-full">
             <ReportResultsHeader />
             <ReportResultsContent />
           </div>
-          <div className="relative">
-            <TopicsSidebar />
+          <div className="relative print:hidden">
+            <ReportSidebar />
           </div>
         </SidebarProvider>
       </main>

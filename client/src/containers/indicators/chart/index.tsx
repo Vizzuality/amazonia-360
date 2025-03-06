@@ -14,6 +14,7 @@ import { useSyncLocation } from "@/app/store";
 import { CardLoader } from "@/containers/card";
 
 import MarimekkoChart from "@/components/charts/marimekko";
+import LegendBasic from "@/components/map/legend/basic";
 
 export interface ChartIndicatorsProps extends Indicator {
   resource: ResourceFeature;
@@ -128,6 +129,9 @@ export const ChartIndicators = (indicator: ChartIndicatorsProps) => {
         format={(d) => formatPercentage(d.value)}
         className="h-full grow"
       />
+      <div className="py-1">
+        <LegendBasic items={DATA} type="basic" />
+      </div>
     </CardLoader>
   );
 };

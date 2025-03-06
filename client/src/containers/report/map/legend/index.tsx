@@ -70,6 +70,7 @@ export const GridLegend: FC = () => {
     (e: string) => {
       setGridSelectedDataset(e);
     },
+
     [setGridSelectedDataset],
   );
 

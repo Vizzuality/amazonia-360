@@ -11,6 +11,7 @@ import {
   gridFiltersSetUpParser,
   locationParser,
   topicsParser,
+  aiSummaryParser,
 } from "@/app/parsers";
 
 import { SketchProps } from "@/components/map/sketch";
@@ -43,6 +44,11 @@ export const useSyncGridSelectedDataset = () => {
 
 export const useSyncGridFiltersSetUp = () => {
   return useQueryState("gridFiltersSetUp", gridFiltersSetUpParser);
+};
+
+// AI SUMMARY PARAMS
+export const useSyncAiSummary = () => {
+  return useQueryState("aiSummary", aiSummaryParser);
 };
 
 const searchParams = {
@@ -111,3 +117,5 @@ export const gridHoverAtom = atom<GridHoverType>({
 });
 
 export const selectedFiltersViewAtom = atom<boolean>(false);
+
+export const isGeneratingAIReportAtom = atom<boolean>(false);

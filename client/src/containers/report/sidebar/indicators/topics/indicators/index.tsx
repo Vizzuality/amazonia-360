@@ -10,7 +10,7 @@ export const Indicators = ({ topic }: { topic: Topic }) => {
   const { data } = useGetDefaultIndicators(topic.id);
 
   return (
-    <ul className="space-y-1 py-2 pl-6 text-sm font-medium">
+    <ul className="space-y-1 p-2 text-sm font-medium">
       {data?.map((indicator) => {
         if (!indicator || !indicator.visualization_types.length) return null;
         return (
