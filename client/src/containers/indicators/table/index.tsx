@@ -1,5 +1,8 @@
 import { useMemo } from "react";
 
+import { AccessorKeyColumnDefBase } from "@tanstack/react-table";
+
+import { formatNumber } from "@/lib/formats";
 import { useQueryFeatureId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
@@ -27,13 +30,21 @@ export const TableIndicators = ({ id, resource }: TableIndicatorsProps) => {
     });
   }, [query.data]);
 
-  const COLUMNS = useMemo(() => {
+  const COLUMNS = useMemo<AccessorKeyColumnDefBase<unknown>[]>(() => {
     if (!query.data) return [];
 
     return query.data.fields.map((field) => {
       return {
         header: field.alias || field.name,
         accessorKey: field.alias || field.name,
+        sortDescFirst: field.type === "double",
+        cell: (props) => {
+          const v = props.getValue();
+          if (typeof v === "number") {
+            return formatNumber(v);
+          }
+          return v;
+        },
       };
     });
   }, [query.data]);
@@ -48,7 +59,7 @@ export const TableIndicators = ({ id, resource }: TableIndicatorsProps) => {
             sorting: [
               {
                 id: COLUMNS[0]?.accessorKey,
-                desc: false,
+                desc: !!COLUMNS[0]?.sortDescFirst,
               },
             ],
           },
