@@ -1,7 +1,5 @@
 "use client";
 
-import { useRef } from "react";
-
 import {
   ColumnDef,
   TableOptions,
@@ -38,8 +36,6 @@ export function DataTable<TData, TValue>({
   data,
   tableOptions,
 }: DataTableProps<TData, TValue>) {
-  const containerRef = useRef<HTMLDivElement>(null);
-
   const table = useReactTable({
     data,
     columns,
@@ -53,10 +49,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="flex h-full grow flex-col overflow-hidden bg-green-300">
-      <div
-        ref={containerRef}
-        className="flex h-full min-h-80 grow flex-col justify-between overflow-hidden rounded-md bg-violet-300 print:min-h-0"
-      >
+      <div className="flex h-full min-h-80 grow flex-col justify-between overflow-hidden rounded-md print:min-h-0">
         <Table className="border-foreground">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
