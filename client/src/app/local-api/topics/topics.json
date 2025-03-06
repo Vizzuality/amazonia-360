@@ -104,76 +104,68 @@
         "description_pt": "Get data on natural environment, ecosystems, biodiversity and protected areas in your area",
         "default_visualization": [
             {
-                "id": 12,
+                "id": 26,
                 "type": "numeric",
-                "x": 0,
-                "y": 0,
                 "w": 1,
-                "h": 1
+                "h": 1,
+                "x": 3,
+                "y": 0
             },
             {
                 "id": 26,
+                "type": "map",
+                "w": 2,
+                "h": 4,
+                "x": 2,
+                "y": 3
+            },
+            {
+                "id": 10,
+                "type": "chart",
+                "w": 2,
+                "h": 2,
+                "x": 2,
+                "y": 1
+            },
+            {
+                "id": 13,
                 "type": "numeric",
-                "x": 1,
-                "y": 0,
                 "w": 1,
-                "h": 1
+                "h": 1,
+                "x": 0,
+                "y": 0
             },
             {
                 "id": 25,
                 "type": "numeric",
-                "x": 2,
-                "y": 0,
                 "w": 1,
-                "h": 1
+                "h": 1,
+                "x": 2,
+                "y": 0
             },
             {
-                "id": 24,
+                "id": 12,
                 "type": "numeric",
-                "x": 3,
-                "y": 0,
                 "w": 1,
-                "h": 1
+                "h": 1,
+                "x": 1,
+                "y": 0
             },
             {
-                "id": 12,
-                "type": "chart",
-                "x": 0,
-                "y": 1,
-                "w": 2,
-                "h": 3
-            },
-            {
-                "id": 12,
+                "id": 29,
                 "type": "map",
-                "x": 2,
-                "y": 1,
                 "w": 2,
-                "h": 4
-            },
-            {
-                "id": 24,
-                "type": "map",
+                "h": 4,
                 "x": 0,
-                "y": 4,
-                "w": 2,
-                "h": 4
+                "y": 5
             },
             {
                 "id": 24,
                 "type": "chart",
-                "x": 2,
-                "y": 5,
                 "w": 2,
-                "h": 3
-            },
-            {
-                "id": 26,
-                "type": "map",
+                "h": 2,
                 "x": 0,
-                "y": 8,
-                "w": 4,
-                "h": 4
+                "y": 1
             }
         ]
     },
@@ -189,36 +181,36 @@
         "description_pt": "Understand climate types, risks, and challenges in your region",
         "default_visualization": [
             {
-                "id": 32,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            },
-            {
                 "id": 35,
                 "type": "map",
+                "w": 2,
+                "h": 4,
                 "x": 2,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            },
-            {
-                "id": 33,
-                "type": "map",
-                "x": 0,
-                "y": 5,
-                "w": 2,
-                "h": 4
+                "y": 2
             },
             {
                 "id": 34,
                 "type": "map",
-                "x": 2,
-                "y": 5,
                 "w": 2,
-                "h": 4
+                "h": 4,
+                "x": 0,
+                "y": 2
+            },
+            {
+                "id": 32,
+                "type": "chart",
+                "w": 2,
+                "h": 2,
+                "x": 0,
+                "y": 0
+            },
+            {
+                "id": 33,
+                "type": "chart",
+                "w": 2,
+                "h": 2,
+                "x": 2,
+                "y": 0
             }
         ]
     },
@@ -234,48 +226,48 @@
         "description_pt": "Access demographic data and social indicators for your area of interest",
         "default_visualization": [
             {
-                "id": 49,
-                "type": "numeric",
-                "x": 0,
-                "y": 0,
-                "w": 1,
-                "h": 1
-            },
-            {
                 "id": 46,
                 "type": "numeric",
-                "x": 1,
-                "y": 0,
                 "w": 1,
-                "h": 1
+                "h": 1,
+                "x": 1,
+                "y": 0
             },
             {
                 "id": 47,
                 "type": "numeric",
-                "x": 2,
-                "y": 0,
                 "w": 1,
-                "h": 1
+                "h": 1,
+                "x": 0,
+                "y": 0
             },
             {
                 "id": 48,
                 "type": "numeric",
-                "x": 3,
-                "y": 0,
                 "w": 1,
-                "h": 1
+                "h": 1,
+                "x": 3,
+                "y": 0
             },
             {
+                "id": 45,
+                "type": "numeric",
+                "w": 1,
+                "h": 1,
+                "x": 2,
+                "y": 0
+            },
+            {
+                "type": "map",
                 "id": 49,
-                "type": "chart",
                 "x": 0,
                 "y": 1,
                 "w": 2,
                 "h": 4
             },
             {
-                "id": 50,
                 "type": "map",
+                "id": 50,
                 "x": 2,
                 "y": 1,
                 "w": 2,
@@ -295,20 +287,20 @@
         "description_pt": "Get information on economic sectors and production systems",
         "default_visualization": [
             {
-                "id": 58,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            },
-            {
                 "id": 72,
                 "type": "map",
-                "x": 2,
-                "y": 0,
                 "w": 2,
-                "h": 4
+                "h": 4,
+                "x": 0,
+                "y": 0
+            },
+            {
+                "id": 58,
+                "type": "map",
+                "w": 2,
+                "h": 4,
+                "x": 2,
+                "y": 0
             }
         ]
     },
@@ -324,20 +316,36 @@
         "description_pt": "Explore urban development, connectivity and transportation",
         "default_visualization": [
             {
-                "id": 74,
+                "id": 73,
                 "type": "map",
-                "x": 0,
-                "y": 0,
                 "w": 2,
-                "h": 5
+                "h": 5,
+                "x": 2,
+                "y": 0
+            },
+            {
+                "id": 74,
+                "type": "numeric",
+                "w": 1,
+                "h": 1,
+                "x": 0,
+                "y": 0
             },
             {
                 "id": 73,
-                "type": "map",
-                "x": 2,
-                "y": 0,
+                "type": "numeric",
+                "w": 1,
+                "h": 1,
+                "x": 1,
+                "y": 0
+            },
+            {
+                "id": 74,
+                "type": "table",
                 "w": 2,
-                "h": 5
+                "h": 4,
+                "x": 0,
+                "y": 1
             }
         ]
     },
@@ -355,26 +363,18 @@
             {
                 "id": 83,
                 "type": "map",
-                "x": 0,
-                "y": 0,
                 "w": 2,
-                "h": 5
+                "h": 4,
+                "x": 0,
+                "y": 1
             },
             {
                 "id": 83,
                 "type": "table",
-                "x": 2,
-                "y": 1,
                 "w": 2,
-                "h": 4
-            },
-            {
-                "id": 83,
-                "type": "numeric",
+                "h": 4,
                 "x": 2,
-                "y": 0,
-                "w": 2,
-                "h": 1
+                "y": 0
             }
         ]
     }
