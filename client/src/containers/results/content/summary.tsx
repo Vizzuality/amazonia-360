@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { useQueries } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
 
@@ -39,8 +41,8 @@ export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id
 
   const { data: queryIndicatorsData } = queryIndicators;
 
-  const queries = useQueries({
-    queries:
+  const QUERIES = useMemo(() => {
+    return (
       queryIndicatorsData
         ?.map((indicator) => {
           if (!indicator) return null;
@@ -62,7 +64,12 @@ export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id
 
           return null;
         })
-        .filter((q) => !!q) || [],
+        .filter((q) => !!q) || []
+    );
+  }, [queryIndicatorsData, GEOMETRY]);
+
+  const queries = useQueries({
+    queries: QUERIES,
   });
 
   const isFetched = queries.every((q) => q.isFetched);
@@ -135,11 +142,9 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
 
   const setIsGeneratingReport = useSetAtom(isGeneratingAIReportAtom);
 
-  if (isFetching || isPending) {
-    setIsGeneratingReport(true);
-  } else {
-    setIsGeneratingReport(false);
-  }
+  useMemo(() => {
+    setIsGeneratingReport(isFetching || isPending);
+  }, [isFetching, isPending, setIsGeneratingReport]);
 
   return (
     <div className="relative">
