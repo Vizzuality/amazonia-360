@@ -48,8 +48,8 @@ export function DataTable<TData, TValue>({
   const { pageIndex } = table.getState().pagination;
 
   return (
-    <div className="flex grow flex-col">
-      <div className="flex min-h-80 grow flex-col justify-between rounded-md print:min-h-0">
+    <div className="flex h-full grow flex-col overflow-hidden">
+      <div className="flex h-full min-h-80 grow flex-col justify-between overflow-hidden rounded-md print:min-h-0">
         <Table className="border-foreground">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -110,6 +110,7 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
+        ¡{" "}
         <footer className="mt-4 flex items-center justify-between">
           <p className="text-xs font-medium text-gray-500">{`${data.length} ${Pluralize("result", data.length)}`}</p>
           <DataPagination
