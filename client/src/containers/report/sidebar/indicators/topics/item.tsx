@@ -99,14 +99,14 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
     <li
       key={id}
       className={cn({
-        "flex flex-col pr-2": true,
+        "flex flex-col pr-0.5": true,
         "box-border border-b border-b-primary/20": open,
       })}
     >
       <Collapsible open={open}>
         <div
           className={cn({
-            "flex h-10 items-center space-x-4 rounded-lg py-2 pl-2 hover:bg-secondary": true,
+            "flex h-10 items-center space-x-4 rounded-lg p-2 hover:bg-secondary": true,
           })}
         >
           <CollapsibleTrigger
