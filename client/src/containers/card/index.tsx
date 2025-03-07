@@ -19,7 +19,13 @@ import Info from "@/containers/info";
 
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipArrow,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface CardProps {
   padding?: boolean;
@@ -48,7 +54,7 @@ export function CardSettings({
   onClick,
 }: PropsWithChildren<{ id: Indicator["id"]; onClick?: (e: MouseEvent<HTMLElement>) => void }>) {
   return (
-    <Tooltip delayDuration={100}>
+    <Tooltip>
       <TooltipTrigger asChild>
         <button
           id={`${id}`}
@@ -71,7 +77,11 @@ export function CardSettings({
 }
 
 export function CardControls({ children }: PropsWithChildren) {
-  return <div className="flex space-x-2">{children}</div>;
+  return (
+    <div className="flex space-x-2">
+      <TooltipProvider delayDuration={500}>{children}</TooltipProvider>
+    </div>
+  );
 }
 
 export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className?: string }) {
@@ -84,7 +94,7 @@ export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className
   if (!description_short_en) return null;
 
   return (
-    <Tooltip delayDuration={100}>
+    <Tooltip>
       <Dialog>
         <TooltipTrigger asChild>
           <DialogTrigger className={cn("flex h-6 w-6 items-center justify-center", className)}>

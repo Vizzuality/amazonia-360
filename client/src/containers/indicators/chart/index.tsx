@@ -15,6 +15,7 @@ import { CardLoader } from "@/containers/card";
 
 import MarimekkoChart from "@/components/charts/marimekko";
 import LegendBasic from "@/components/map/legend/basic";
+import { LegendItemProps } from "@/components/map/legend/item";
 
 export interface ChartIndicatorsProps extends Indicator {
   resource: ResourceFeature;
@@ -27,6 +28,53 @@ export const ChartIndicators = (indicator: ChartIndicatorsProps) => {
 
   const query = useQueryFeatureId({ id, resource, type: "chart", geometry: GEOMETRY });
   const queryResourceFeatureLayer = useResourceFeatureLayerId(indicator);
+
+  const LEGEND = useMemo<LegendItemProps["items"] | null>(() => {
+    const renderer = queryResourceFeatureLayer.data?.drawingInfo?.renderer;
+    if (renderer?.type === "simple") {
+      const r = renderer as __esri.SimpleRenderer;
+      const c = new Color(r.symbol.color);
+      return [
+        {
+          id: indicator.name_en,
+          label: indicator.name_en,
+          color: c.toHex() ?? "#009ADE",
+        },
+      ];
+    }
+
+    if (renderer?.type === "uniqueValue") {
+      const r = renderer as __esri.UniqueValueRenderer;
+
+      return r.uniqueValueInfos?.map((u) => {
+        const c = new Color(u.symbol.color);
+        return {
+          id: u.value,
+          label: u.label,
+          color: c.toHex() ?? "#009ADE",
+        };
+      });
+    }
+
+    if (renderer?.type === "classBreaks") {
+      const r = renderer as __esri.ClassBreaksRenderer;
+
+      return r.classBreakInfos?.map((u) => {
+        const c = new Color(u.symbol.color);
+        return {
+          // @ts-expect-error- I don't know why the type does not correspond to the real data.
+          // It's true that the documentation says that "classMaxValue" does not exists https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-support-ClassBreakInfo.html
+          id: `${u.classMinValue} - ${u.classMaxValue}`,
+          // @ts-expect-error- I don't know why the type does not correspond to the real data.
+          // It's true that the documentation says that "classMaxValue" does not exists https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-support-ClassBreakInfo.html
+          label: `${u.classMinValue} - ${u.classMaxValue}`,
+          color: c.toHex() ?? "#009ADE",
+        };
+      });
+    }
+
+    return null;
+  }, [indicator, queryResourceFeatureLayer.data]);
 
   const COLOR_SCALE = useMemo(() => {
     const range =
@@ -129,9 +177,11 @@ export const ChartIndicators = (indicator: ChartIndicatorsProps) => {
         format={(d) => formatPercentage(d.value)}
         className="h-full grow"
       />
-      <div className="py-1">
-        <LegendBasic items={DATA} type="basic" />
-      </div>
+      {!!LEGEND && (
+        <div className="pt-2">
+          <LegendBasic items={LEGEND} type="basic" />
+        </div>
+      )}
     </CardLoader>
   );
 };
