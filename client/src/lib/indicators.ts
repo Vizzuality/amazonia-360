@@ -292,6 +292,21 @@ export const getQueryFeatureId = async ({ type, resource, geometry }: QueryFeatu
           f.setAttribute("total", geometryArea);
         }),
       );
+
+      // Group all results by label
+      const features = fs.features.reduce((acc, curr) => {
+        const index = acc.findIndex((f) => f.attributes.label === curr.attributes.label);
+
+        if (index === -1) {
+          acc.push(curr);
+        } else {
+          acc[index].setAttribute("value", acc[index].attributes.value + curr.attributes.value);
+          acc[index].setAttribute("total", geometryArea);
+        }
+
+        return acc;
+      }, [] as __esri.Graphic[]);
+      fs.features = features;
     }
 
     return fs;

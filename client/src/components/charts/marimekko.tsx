@@ -204,7 +204,7 @@ const MarimekkoChart = <T extends Data>({
         (!isVisible(tooltipData).id || !isVisible(tooltipData).value) && (
           <TooltipInPortal top={tooltipTop} left={tooltipLeft}>
             <div className="flex flex-col space-y-1 text-sm text-blue-900">
-              <p className="font-bold">{tooltipData.data.id}</p>
+              <p className="font-bold">{tooltipData.data.data.label}</p>
               <p>{format(tooltipData)}</p>
             </div>
           </TooltipInPortal>
