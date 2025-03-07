@@ -56,7 +56,7 @@ export default function TopicsList() {
   );
 
   return (
-    <ul className="relative flex h-full flex-col gap-2 overflow-y-auto">
+    <ul className="relative flex h-full flex-col gap-2 overflow-y-auto pt-1">
       <SortableList onChangeOrder={handleChangeOrder} sortable={{ handle: true, enabled: true }}>
         {ITEMS}
       </SortableList>

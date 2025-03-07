@@ -71,7 +71,7 @@ export default function AiSidebarContent() {
   return (
     <div className="relative flex h-full flex-col justify-between">
       <div className="h-full w-full flex-1 space-y-4">
-        <p className="font-medium leading-5 text-muted-foreground">
+        <p className="text-sm font-medium leading-5 text-muted-foreground">
           Select your preferred text style to generate descriptive summaries for each of the active
           topics in your report.
         </p>
