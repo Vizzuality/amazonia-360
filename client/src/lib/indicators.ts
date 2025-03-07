@@ -292,6 +292,23 @@ export const getQueryFeatureId = async ({ type, resource, geometry }: QueryFeatu
           f.setAttribute("total", geometryArea);
         }),
       );
+
+      // Group all results by label
+      const features = fs.features.reduce((acc, curr) => {
+        const index = acc.findIndex((f) => f.attributes.label === curr.attributes.label);
+
+        if (index === -1) {
+          // If no feature with the same label exists, add the current feature to the accumulator
+          acc.push(curr);
+        } else {
+          // If a feature with the same label exists, aggregate the values and update the total
+          acc[index].setAttribute("value", acc[index].attributes.value + curr.attributes.value);
+          acc[index].setAttribute("total", geometryArea);
+        }
+
+        return acc;
+      }, [] as __esri.Graphic[]);
+      fs.features = features;
     }
 
     return fs;

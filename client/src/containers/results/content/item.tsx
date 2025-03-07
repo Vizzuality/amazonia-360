@@ -89,12 +89,12 @@ export const ReportResultsContentItem = ({
           <ReportResultsContentIndicatorItem
             topic={topic}
             indicator={{ id, type }}
-            editable={EDITABLE}
+            editable={editable}
           />
         </div>
       );
     });
-  }, [topic, EDITABLE]);
+  }, [topic, editable]);
 
   return (
     <div
@@ -115,7 +115,7 @@ export const ReportResultsContentItem = ({
         containerPadding={[0, 0]}
         isDraggable={EDITABLE}
         isResizable={EDITABLE}
-        resizeHandles={["sw", "nw", "se", "ne"]}
+        resizeHandles={["sw", "se"]}
         resizeHandle={false}
         compactType="vertical"
         onDrop={handleDrop}
