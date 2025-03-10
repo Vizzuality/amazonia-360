@@ -103,7 +103,9 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
             <PopoverContent side="left" align="start" className="w-auto bg-background p-0">
               <VisualizationType
                 topicId={topic.id}
-                types={indicator.visualization_types as Exclude<VisualizationTypes, "ai">[]}
+                types={
+                  indicator.visualization_types as Exclude<VisualizationTypes, "ai" | "custom">[]
+                }
                 indicatorId={indicator.id}
               />
             </PopoverContent>

@@ -176,7 +176,7 @@
     "visualization_types": ["table", "numeric"],
     "resource": {
       "name": "AMZ_LOCADM2",
-      "type": "component",
+      "type": "feature",
       "column": [],
       "layer_id": "6",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Political_administrative_division_of_order_2/FeatureServer",
@@ -1601,56 +1601,10 @@
     "visualization_types": ["map", "numeric"],
     "resource": {
       "name": "test_dynamique_layer",
-      "type": "imagery",
+      "type": "imagery-tile",
       "column": [],
       "layer_id": "0",
       "url": "https://atlas.iadb.org/image/rest/services/Imagery/test_dynamique_layer/ImageServer",
-      "rasterFunction": {
-        "functionName": "Colormap",
-        "functionArguments": {
-          "colormap": [
-            [1, 0, 47, 97],
-            [2, 0, 118, 145],
-            [3, 0, 181, 153],
-            [4, 92, 235, 108],
-            [5, 255, 255, 0]
-          ],
-          "raster": {
-            "functionName": "Remap",
-            "functionArguments": {
-              "inputRanges": [0, 50, 50, 100, 100, 500, 500, 2000, 2000, 5000000],
-              "outputValues": [1, 2, 3, 4, 5],
-              "raster": "$$"
-            }
-          }
-        },
-        "outputPixelType": "U8"
-      },
-      "legend": {
-        "type": "basic",
-        "items": [
-            {
-                "label": "0 - 50",
-                "color": "#002F61"
-            },
-            {
-                "label": "50 - 100",
-                "color": "#007691"
-            },
-            {
-                "label": "100 - 500",
-                "color": "#00B599"
-            },
-            {
-                "label": "500 - 2000",
-                "color": "#5CEB6C"
-            },
-            {
-                "label": "2000 - 5000000",
-                "color": "#FFFF00"
-            }
-        ]
-      },
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",

@@ -19,7 +19,7 @@ export function VisualizationType({
   indicatorId,
   topicId,
 }: {
-  types: Exclude<VisualizationTypes, "ai">[];
+  types: Exclude<VisualizationTypes, "ai" | "custom">[];
   indicatorId: Indicator["id"];
   topicId: Topic["id"];
 }) {
