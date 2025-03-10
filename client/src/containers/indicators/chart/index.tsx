@@ -31,6 +31,7 @@ export const ChartIndicators = (indicator: ChartIndicatorsProps) => {
 
   const LEGEND = useMemo<LegendItemProps["items"] | null>(() => {
     const renderer = queryResourceFeatureLayer.data?.drawingInfo?.renderer;
+
     if (renderer?.type === "simple") {
       const r = renderer as __esri.SimpleRenderer;
       const c = new Color(r.symbol.color);

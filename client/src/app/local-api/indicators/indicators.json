@@ -337,7 +337,7 @@
             "name": "AMZ_NATTOPOALT_SINGL",
             "type": "feature",
             "column": [],
-            "layer_id": "15",
+            "layer_id": "9",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Altitude_ranges/FeatureServer",
             "query_numeric": "",
             "query_table": "",
