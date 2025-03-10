@@ -21,8 +21,7 @@
         "resource": {
             "name": "total-area",
             "type": "component",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "0",
             "url": "",
             "query_numeric": "",
@@ -61,8 +60,7 @@
         "resource": {
             "name": "Amazonia",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "2",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Amazonia/FeatureServer",
             "query_numeric": "",
@@ -99,11 +97,10 @@
             "numeric"
         ],
         "resource": {
-            "name": "Political_administrative_division_of_order_0",
+            "name": "AMZ_LOCADM0",
             "type": "feature",
-            "column": [
-            ],
-            "layer_id": "6",
+            "column": [],
+            "layer_id": "2",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Political_administrative_division_of_order_0/FeatureServer",
             "query_numeric": {
                 "where": "1=1",
@@ -148,11 +145,10 @@
             "numeric"
         ],
         "resource": {
-            "name": "Political_administrative_division_of_order_1",
+            "name": "AMZ_LOCADM1",
             "type": "feature",
-            "column": [
-            ],
-            "layer_id": "7",
+            "column": [],
+            "layer_id": "4",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Political_administrative_division_of_order_1/FeatureServer",
             "query_numeric": {
                 "where": "1=1",
@@ -198,11 +194,10 @@
             "numeric"
         ],
         "resource": {
-            "name": "Political_administrative_division_of_order_2",
+            "name": "AMZ_LOCADM2",
             "type": "feature",
-            "column": [
-            ],
-            "layer_id": "8",
+            "column": [],
+            "layer_id": "6",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Political_administrative_division_of_order_2/FeatureServer",
             "query_numeric": {
                 "where": "1=1",
@@ -259,8 +254,7 @@
         "resource": {
             "name": "Administrative_capitals_at_admin_0_to_2_levels",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "9",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Administrative_capitals_at_admin_0_to_2_levels/FeatureServer",
             "query_numeric": {
@@ -340,11 +334,10 @@
             "chart"
         ],
         "resource": {
-            "name": "Altitude_ranges",
+            "name": "AMZ_NATTOPOALT_SINGL",
             "type": "feature",
-            "column": [
-            ],
-            "layer_id": "12",
+            "column": [],
+            "layer_id": "15",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Altitude_ranges/FeatureServer",
             "query_numeric": "",
             "query_table": "",
@@ -358,7 +351,9 @@
                     ","
                 ]
             },
-            "popupTemplate": "",
+            "popupTemplate": {
+                "title": "{ALTIT}"
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -393,8 +388,7 @@
         "resource": {
             "name": "Large_terrestrial_biomes_in_the_Amazon",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "13",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Large_terrestrial_biomes_in_the_Amazon/FeatureServer",
             "query_numeric": {
@@ -418,7 +412,9 @@
                     ","
                 ]
             },
-            "popupTemplate": "",
+            "popupTemplate": {
+                "title": "{BIOMADES}"
+            },
             "query_ai": {
                 "where": "1=1",
                 "returnGeometry": true,
@@ -453,8 +449,7 @@
         "resource": {
             "name": "Ecosystem_Types",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "14",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Ecosystem_Types/FeatureServer",
             "query_numeric": {
@@ -513,8 +508,7 @@
         "resource": {
             "name": "Tropical_Lowland_Rainforest",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "15",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Tropical_Lowland_Rainforest/FeatureServer",
             "query_numeric": {
@@ -585,8 +579,7 @@
         "resource": {
             "name": "Tropical_Heath_Forest",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "16",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Tropical_Heath_Forest/FeatureServer",
             "query_numeric": {
@@ -657,8 +650,7 @@
         "resource": {
             "name": "AFP_Tierras_indigenas",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "17",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
             "query_numeric": {
@@ -729,8 +721,7 @@
         "resource": {
             "name": "Amazonian_Croplands",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "18",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Amazonian_Croplands/FeatureServer",
             "query_numeric": {
@@ -801,8 +792,7 @@
         "resource": {
             "name": "Managed_Grasslands",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "19",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Managed_Grasslands/FeatureServer",
             "query_numeric": {
@@ -873,8 +863,7 @@
         "resource": {
             "name": "Built_Areas",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "20",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Built_Areas/FeatureServer",
             "query_numeric": {
@@ -945,8 +934,7 @@
         "resource": {
             "name": "Natural_Regeneration_Areas",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "21",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Natural_Regeneration_Areas/FeatureServer",
             "query_numeric": {
@@ -1017,8 +1005,7 @@
         "resource": {
             "name": "Peat_Flooded_Forests",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "22",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Peat_Flooded_Forests/FeatureServer",
             "query_numeric": {
@@ -1089,8 +1076,7 @@
         "resource": {
             "name": "Permanent_Wetlands",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "23",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Permanent_Wetlands/FeatureServer",
             "query_numeric": {
@@ -1161,8 +1147,7 @@
         "resource": {
             "name": "Seasonal_Floodplain",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "24",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Seasonal_Floodplain/FeatureServer",
             "query_numeric": {
@@ -1234,8 +1219,7 @@
         "resource": {
             "name": "Conservation_priority",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "25",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Conservation_priority/FeatureServer",
             "query_numeric": {
@@ -1316,8 +1300,7 @@
         "resource": {
             "name": "Protected_Areas",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "26",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Protected_Areas/FeatureServer",
             "query_numeric": {
@@ -1374,7 +1357,8 @@
                 "returnGeometry": false,
                 "returnIntersections": false,
                 "outFields": [
-                    "NAME", "IUCN_CAT"
+                    "NAME",
+                    "IUCN_CAT"
                 ]
             }
         }
@@ -1404,8 +1388,7 @@
         "resource": {
             "name": "Indigenous_territories",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "27",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Indigenous_territories/FeatureServer",
             "query_numeric": {
@@ -1460,7 +1443,9 @@
                 "returnGeometry": false,
                 "returnIntersections": false,
                 "outFields": [
-                    "nombre", "categoria", "etnias"
+                    "nombre",
+                    "categoria",
+                    "etnias"
                 ]
             }
         }
@@ -1489,8 +1474,7 @@
         "resource": {
             "name": "Species_Richness",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "30",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Species_Richness/FeatureServer",
             "query_numeric": "",
@@ -1550,8 +1534,7 @@
         "resource": {
             "name": "Carbon_Storage",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "29",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Carbon_Storage/FeatureServer",
             "query_numeric": "",
@@ -1622,8 +1605,7 @@
         "resource": {
             "name": "Climatic_Types_According_to_the_K%C3%B6ppen_Classification",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "2",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Climatic_Types_According_to_the_K%C3%B6ppen_Classification/FeatureServer",
             "query_numeric": "",
@@ -1699,8 +1681,7 @@
         "resource": {
             "name": "Annual_Rainfall_Regimes_Layer",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "3",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Annual_Rainfall_Regimes_Layer/FeatureServer",
             "query_numeric": "",
@@ -1776,8 +1757,7 @@
         "resource": {
             "name": "Drought_Risk_Layer",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "4",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Drought_Risk_Layer/FeatureServer",
             "query_numeric": "",
@@ -1848,8 +1828,7 @@
         "resource": {
             "name": "Forest_Fire_Frequency",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "5",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Forest_Fire_Frequency/FeatureServer",
             "query_numeric": "",
@@ -1897,6 +1876,39 @@
         }
     },
     {
+        "id": 42,
+        "topic": 3,
+        "order": 42,
+        "name_en": "Population Distribution",
+        "name_es": "Population Distribution",
+        "name_pt": "Population Distribution",
+        "unit_en": "inh.",
+        "unit_es": "inh.",
+        "unit_pt": "inh.",
+        "description_en": "### **Population for the Year 2025**\n\nThis raster model represents population expressed as the number of inhabitants per 180-meter pixel.\n\nThe *Global Human Settlement Layer (GHSL)* is a product developed by the *Joint Research Centre (JRC) of the European Commission* that provides detailed information on population distribution and the expansion of human settlements in raster format. It is based on high-resolution pixels (100 meters per pixel), enabling detailed analysis of land occupation and population density at various scales. Having population data in this format allows for a more accurate understanding of the true distribution pattern of the human population, making it possible to assess the relationship between settlements and environmental factors, infrastructure, and climate change.\n\nPopulation values in GHSL come from multiple sources, including national censuses, household surveys, and spatial distribution models. Additionally, satellite data from the *Sentinel-1* and *Sentinel-2* missions of the *Copernicus* program help identify structures and built-up areas, improving accuracy in detecting urban and rural settlements. This approach ensures a more realistic representation of population distribution, particularly in regions with limited or outdated census data.\n\nThis layer is an adaptation by *AmazoniaForever360+* (2023) of the GHSL dataset *GHS_POP_E2025_GLOBE_R2023A_4326_3ss_V1_0.tif*. Data were extracted for northern South America and resampled to meet the requirements of the zonal viewer. The resolution of the original model (90 meters) was aggregated to 180 meters for better visualization.\n\nThe *Global Human Settlement Layer (GHSL)* is a product of the *Joint Research Centre (JRC) of the European Commission*, published by the *Publications Office of the European Union, Luxembourg, 2022*. More information can be found on the GHSL website: <https://ghsl.jrc.ec.europa.eu/ghs_pop.php>.\n\nThe original data can be downloaded from <https://human-settlement.emergency.copernicus.eu/download.php?ds=pop>.\n\nThe methodology and details of the 2023A publication are explained in *GHSL Data Package 2023*, authored by Schiavina, M., Melchiorri, M., Pesaresi, M., Politis, P., Carneiro Freire, S.M., Maffenini, L., Florio, P., Ehrlich, D., Goch, K., Carioli, A., Uhl, J., Tommasi, P., and Kemper, T., published by the *Publications Office of the European Union, Luxembourg, 2023*. The publication has ISBN 978-92-68-02341-9 and DOI 10.2760/098587, JRC133256.\n\nA full report on this dataset is available at <https://human-settlement.emergency.copernicus.eu/documents/GHSL_Data_Package_2023.pdf?t=1727170839>.",
+        "description_es": "### **Population for the Year 2025**\n\nThis raster model represents population expressed as the number of inhabitants per 180-meter pixel.\n\nThe *Global Human Settlement Layer (GHSL)* is a product developed by the *Joint Research Centre (JRC) of the European Commission* that provides detailed information on population distribution and the expansion of human settlements in raster format. It is based on high-resolution pixels (100 meters per pixel), enabling detailed analysis of land occupation and population density at various scales. Having population data in this format allows for a more accurate understanding of the true distribution pattern of the human population, making it possible to assess the relationship between settlements and environmental factors, infrastructure, and climate change.\n\nPopulation values in GHSL come from multiple sources, including national censuses, household surveys, and spatial distribution models. Additionally, satellite data from the *Sentinel-1* and *Sentinel-2* missions of the *Copernicus* program help identify structures and built-up areas, improving accuracy in detecting urban and rural settlements. This approach ensures a more realistic representation of population distribution, particularly in regions with limited or outdated census data.\n\nThis layer is an adaptation by *AmazoniaForever360+* (2023) of the GHSL dataset *GHS_POP_E2025_GLOBE_R2023A_4326_3ss_V1_0.tif*. Data were extracted for northern South America and resampled to meet the requirements of the zonal viewer. The resolution of the original model (90 meters) was aggregated to 180 meters for better visualization.\n\nThe *Global Human Settlement Layer (GHSL)* is a product of the *Joint Research Centre (JRC) of the European Commission*, published by the *Publications Office of the European Union, Luxembourg, 2022*. More information can be found on the GHSL website: <https://ghsl.jrc.ec.europa.eu/ghs_pop.php>.\n\nThe original data can be downloaded from <https://human-settlement.emergency.copernicus.eu/download.php?ds=pop>.\n\nThe methodology and details of the 2023A publication are explained in *GHSL Data Package 2023*, authored by Schiavina, M., Melchiorri, M., Pesaresi, M., Politis, P., Carneiro Freire, S.M., Maffenini, L., Florio, P., Ehrlich, D., Goch, K., Carioli, A., Uhl, J., Tommasi, P., and Kemper, T., published by the *Publications Office of the European Union, Luxembourg, 2023*. The publication has ISBN 978-92-68-02341-9 and DOI 10.2760/098587, JRC133256.\n\nA full report on this dataset is available at <https://human-settlement.emergency.copernicus.eu/documents/GHSL_Data_Package_2023.pdf?t=1727170839>.",
+        "description_pt": "### **Population for the Year 2025**\n\nThis raster model represents population expressed as the number of inhabitants per 180-meter pixel.\n\nThe *Global Human Settlement Layer (GHSL)* is a product developed by the *Joint Research Centre (JRC) of the European Commission* that provides detailed information on population distribution and the expansion of human settlements in raster format. It is based on high-resolution pixels (100 meters per pixel), enabling detailed analysis of land occupation and population density at various scales. Having population data in this format allows for a more accurate understanding of the true distribution pattern of the human population, making it possible to assess the relationship between settlements and environmental factors, infrastructure, and climate change.\n\nPopulation values in GHSL come from multiple sources, including national censuses, household surveys, and spatial distribution models. Additionally, satellite data from the *Sentinel-1* and *Sentinel-2* missions of the *Copernicus* program help identify structures and built-up areas, improving accuracy in detecting urban and rural settlements. This approach ensures a more realistic representation of population distribution, particularly in regions with limited or outdated census data.\n\nThis layer is an adaptation by *AmazoniaForever360+* (2023) of the GHSL dataset *GHS_POP_E2025_GLOBE_R2023A_4326_3ss_V1_0.tif*. Data were extracted for northern South America and resampled to meet the requirements of the zonal viewer. The resolution of the original model (90 meters) was aggregated to 180 meters for better visualization.\n\nThe *Global Human Settlement Layer (GHSL)* is a product of the *Joint Research Centre (JRC) of the European Commission*, published by the *Publications Office of the European Union, Luxembourg, 2022*. More information can be found on the GHSL website: <https://ghsl.jrc.ec.europa.eu/ghs_pop.php>.\n\nThe original data can be downloaded from <https://human-settlement.emergency.copernicus.eu/download.php?ds=pop>.\n\nThe methodology and details of the 2023A publication are explained in *GHSL Data Package 2023*, authored by Schiavina, M., Melchiorri, M., Pesaresi, M., Politis, P., Carneiro Freire, S.M., Maffenini, L., Florio, P., Ehrlich, D., Goch, K., Carioli, A., Uhl, J., Tommasi, P., and Kemper, T., published by the *Publications Office of the European Union, Luxembourg, 2023*. The publication has ISBN 978-92-68-02341-9 and DOI 10.2760/098587, JRC133256.\n\nA full report on this dataset is available at <https://human-settlement.emergency.copernicus.eu/documents/GHSL_Data_Package_2023.pdf?t=1727170839>.",
+        "description_short_en": "Spatial distribution of human population across Amazonia that captures both urban and rural settlement ",
+        "description_short_es": "Spatial distribution of human population across Amazonia that captures both urban and rural settlement ",
+        "description_short_pt": "Spatial distribution of human population across Amazonia that captures both urban and rural settlement ",
+        "visualization_types": [
+            "map",
+            "numeric"
+        ],
+        "resource": {
+            "name": "test_dynamique_layer",
+            "type": "imagery-tile",
+            "column": [],
+            "layer_id": "0",
+            "url": "https://atlas.iadb.org/image/rest/services/Imagery/test_dynamique_layer/ImageServer",
+            "query_numeric": "",
+            "query_table": "",
+            "query_chart": "",
+            "popupTemplate": "",
+            "query_ai": ""
+        }
+    },
+    {
         "id": 45,
         "topic": 3,
         "order": 45,
@@ -1920,8 +1932,7 @@
         "resource": {
             "name": "Electricity_Access",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "5",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Electricity_Access/FeatureServer",
             "query_numeric": {
@@ -1984,8 +1995,7 @@
         "resource": {
             "name": "Higher_Education_Centers",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "8",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Higher_Education_Centers/FeatureServer",
             "query_numeric": {
@@ -2071,8 +2081,7 @@
         "resource": {
             "name": "Health_Facilities",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "9",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Health_Facilities/FeatureServer",
             "query_numeric": {
@@ -2158,8 +2167,7 @@
         "resource": {
             "name": "State_Presence",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "8",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/State_Presence/FeatureServer",
             "query_numeric": {
@@ -2245,8 +2253,7 @@
         "resource": {
             "name": "Conflict_Locations",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "11",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Conflict_Locations/FeatureServer",
             "query_numeric": {
@@ -2335,8 +2342,7 @@
         "resource": {
             "name": "Homicides_Rate",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "12",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Homicides_Rate/FeatureServer",
             "query_numeric": "",
@@ -2404,8 +2410,7 @@
         "resource": {
             "name": "Oil_Extraction_Areas",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "3",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Oil_Extraction_Areas/FeatureServer",
             "query_numeric": {
@@ -2465,8 +2470,7 @@
         "resource": {
             "name": "Bioenconomy_Centers",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "2",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Bioeconomy_Centers/FeatureServer",
             "query_numeric": {
@@ -2525,8 +2529,7 @@
         "resource": {
             "name": "Transport_Corridors",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "4",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Transport_Corridors/FeatureServer",
             "query_numeric": {
@@ -2613,8 +2616,7 @@
         "resource": {
             "name": "Human_Settlements",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "5",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Human_Settlements/FeatureServer",
             "query_numeric": {
@@ -2686,8 +2688,7 @@
         "resource": {
             "name": "IDB_operations_AF360",
             "type": "feature",
-            "column": [
-            ],
+            "column": [],
             "layer_id": "10",
             "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/IDB_operations_AF360/FeatureServer",
             "query_numeric": {
@@ -2758,8 +2759,7 @@
         "description_short_en": "Minimum altitude per cell",
         "description_short_es": "Minimum altitude per cell",
         "description_short_pt": "Minimum altitude per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_NATTOPOALT_H3L6",
             "type": "h3",
@@ -2789,8 +2789,7 @@
         "description_short_en": "Maximum altitude per cell",
         "description_short_es": "Maximum altitude per cell",
         "description_short_pt": "Maximum altitude per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_NATTOPOALT_H3L7",
             "type": "h3",
@@ -2820,8 +2819,7 @@
         "description_short_en": "Altitude range per cell",
         "description_short_es": "Altitude range per cell",
         "description_short_pt": "Altitude range per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_NATTOPOALT_H3L8",
             "type": "h3",
@@ -2851,8 +2849,7 @@
         "description_short_en": "Average altitude per cell",
         "description_short_es": "Average altitude per cell",
         "description_short_pt": "Average altitude per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_NATTOPOALT_H3L9",
             "type": "h3",
@@ -2882,8 +2879,7 @@
         "description_short_en": "Minimum slope per cell",
         "description_short_es": "Minimum slope per cell",
         "description_short_pt": "Minimum slope per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_NATTOPOSLOPE_H3L6",
             "type": "h3",
@@ -2913,8 +2909,7 @@
         "description_short_en": "Maximum slope per cell",
         "description_short_es": "Maximum slope per cell",
         "description_short_pt": "Maximum slope per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_NATTOPOSLOPE_H3L7",
             "type": "h3",
@@ -2944,8 +2939,7 @@
         "description_short_en": "Average slope per cell",
         "description_short_es": "Average slope per cell",
         "description_short_pt": "Average slope per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_NATTOPOSLOPE_H3L8",
             "type": "h3",
@@ -2975,8 +2969,7 @@
         "description_short_en": "Tree cover",
         "description_short_es": "Tree cover",
         "description_short_pt": "Tree cover",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L6",
             "type": "h3",
@@ -3006,8 +2999,7 @@
         "description_short_en": "Shrubland",
         "description_short_es": "Shrubland",
         "description_short_pt": "Shrubland",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L7",
             "type": "h3",
@@ -3037,8 +3029,7 @@
         "description_short_en": "Grassland",
         "description_short_es": "Grassland",
         "description_short_pt": "Grassland",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L8",
             "type": "h3",
@@ -3068,8 +3059,7 @@
         "description_short_en": "Cropland",
         "description_short_es": "Cropland",
         "description_short_pt": "Cropland",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L9",
             "type": "h3",
@@ -3099,8 +3089,7 @@
         "description_short_en": "Built-up",
         "description_short_es": "Built-up",
         "description_short_pt": "Built-up",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L10",
             "type": "h3",
@@ -3130,8 +3119,7 @@
         "description_short_en": "Bare / sparse vegetation",
         "description_short_es": "Bare / sparse vegetation",
         "description_short_pt": "Bare / sparse vegetation",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L11",
             "type": "h3",
@@ -3161,8 +3149,7 @@
         "description_short_en": "Snow and ice",
         "description_short_es": "Snow and ice",
         "description_short_pt": "Snow and ice",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L12",
             "type": "h3",
@@ -3192,8 +3179,7 @@
         "description_short_en": "Permanent water bodies",
         "description_short_es": "Permanent water bodies",
         "description_short_pt": "Permanent water bodies",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L13",
             "type": "h3",
@@ -3223,8 +3209,7 @@
         "description_short_en": "Herbaceous wetland",
         "description_short_es": "Herbaceous wetland",
         "description_short_pt": "Herbaceous wetland",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L14",
             "type": "h3",
@@ -3254,8 +3239,7 @@
         "description_short_en": "Mangroves",
         "description_short_es": "Mangroves",
         "description_short_pt": "Mangroves",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L15",
             "type": "h3",
@@ -3285,8 +3269,7 @@
         "description_short_en": "Moss and lichen",
         "description_short_es": "Moss and lichen",
         "description_short_pt": "Moss and lichen",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L16",
             "type": "h3",
@@ -3316,8 +3299,7 @@
         "description_short_en": "Number of recorded species per cell",
         "description_short_es": "Number of recorded species per cell",
         "description_short_pt": "Number of recorded species per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_BIOBASICSPEC_H3L6",
             "type": "h3",
@@ -3347,8 +3329,7 @@
         "description_short_en": "Tons of carbon fixed in biomass, per hectare (Minimum)",
         "description_short_es": "Tons of carbon fixed in biomass, per hectare (Minimum)",
         "description_short_pt": "Tons of carbon fixed in biomass, per hectare (Minimum)",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CRBSEQBIO_H3L6",
             "type": "h3",
@@ -3378,8 +3359,7 @@
         "description_short_en": "Tons of carbon fixed in biomass, per hectare (Maximum)",
         "description_short_es": "Tons of carbon fixed in biomass, per hectare (Maximum)",
         "description_short_pt": "Tons of carbon fixed in biomass, per hectare (Maximum)",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CRBSEQBIO_H3L7",
             "type": "h3",
@@ -3409,8 +3389,7 @@
         "description_short_en": "Tons of carbon fixed in biomass, per hectare (Mean)",
         "description_short_es": "Tons of carbon fixed in biomass, per hectare (Mean)",
         "description_short_pt": "Tons of carbon fixed in biomass, per hectare (Mean)",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CRBSEQBIO_H3L8",
             "type": "h3",
@@ -3440,8 +3419,7 @@
         "description_short_en": "Count of FIRMS fire points recorded per cell (January 2014 through January 2023).",
         "description_short_es": "Count of FIRMS fire points recorded per cell (January 2014 through January 2023).",
         "description_short_pt": "Count of FIRMS fire points recorded per cell (January 2014 through January 2023).",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CLIFIREFREQ_H3L6",
             "type": "h3",
@@ -3471,8 +3449,7 @@
         "description_short_en": "Minimum mean annual precipitation per cell",
         "description_short_es": "Minimum mean annual precipitation per cell",
         "description_short_pt": "Minimum mean annual precipitation per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CLIANNUALPREC_H3L6",
             "type": "h3",
@@ -3502,8 +3479,7 @@
         "description_short_en": "Maximum mean annual precipitation per cell",
         "description_short_es": "Maximum mean annual precipitation per cell",
         "description_short_pt": "Maximum mean annual precipitation per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CLIANNUALPREC_H3L7",
             "type": "h3",
@@ -3533,8 +3509,7 @@
         "description_short_en": "Average annual mean precipitation per cell",
         "description_short_es": "Average annual mean precipitation per cell",
         "description_short_pt": "Average annual mean precipitation per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CLIANNUALPREC_H3L8",
             "type": "h3",
@@ -3564,8 +3539,7 @@
         "description_short_en": "Range of mean annual precipitation per cell",
         "description_short_es": "Range of mean annual precipitation per cell",
         "description_short_pt": "Range of mean annual precipitation per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CLIANNUALPREC_H3L9",
             "type": "h3",
@@ -3595,8 +3569,7 @@
         "description_short_en": "Minimum annual mean temperature per cell",
         "description_short_es": "Minimum annual mean temperature per cell",
         "description_short_pt": "Minimum annual mean temperature per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CLIANNUALTEMP_H3L6",
             "type": "h3",
@@ -3626,8 +3599,7 @@
         "description_short_en": "Maximum annual mean temperature per cell",
         "description_short_es": "Maximum annual mean temperature per cell",
         "description_short_pt": "Maximum annual mean temperature per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CLIANNUALTEMP_H3L7",
             "type": "h3",
@@ -3657,8 +3629,7 @@
         "description_short_en": "Average annual mean temperature per cell",
         "description_short_es": "Average annual mean temperature per cell",
         "description_short_pt": "Average annual mean temperature per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CLIANNUALTEMP_H3L8",
             "type": "h3",
@@ -3688,8 +3659,7 @@
         "description_short_en": "Average annual mean temperature range per cell",
         "description_short_es": "Average annual mean temperature range per cell",
         "description_short_pt": "Average annual mean temperature range per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CLIANNUALTEMP_H3L9",
             "type": "h3",
@@ -3719,8 +3689,7 @@
         "description_short_en": "Estimated population for the year 20230 (GHS model)",
         "description_short_es": "Estimated population for the year 20230 (GHS model)",
         "description_short_pt": "Estimated population for the year 20230 (GHS model)",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_PPLDEM7530POP_H3L6",
             "type": "h3",
@@ -3750,8 +3719,7 @@
         "description_short_en": "Estimated population for the year 2025 (GHS model)",
         "description_short_es": "Estimated population for the year 2025 (GHS model)",
         "description_short_pt": "Estimated population for the year 2025 (GHS model)",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_PPLDEM7530POP_H3L7",
             "type": "h3",
@@ -3781,8 +3749,7 @@
         "description_short_en": "Estimated population for the year 2015 (GHS model)",
         "description_short_es": "Estimated population for the year 2015 (GHS model)",
         "description_short_pt": "Estimated population for the year 2015 (GHS model)",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_PPLDEM7530POP_H3L8",
             "type": "h3",
@@ -3812,8 +3779,7 @@
         "description_short_en": "Estimated population for the year 2000 (GHS model)",
         "description_short_es": "Estimated population for the year 2000 (GHS model)",
         "description_short_pt": "Estimated population for the year 2000 (GHS model)",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_PPLDEM7530POP_H3L9",
             "type": "h3",
@@ -3843,8 +3809,7 @@
         "description_short_en": "Estimated population for the year 1975 (GHS model)",
         "description_short_es": "Estimated population for the year 1975 (GHS model)",
         "description_short_pt": "Estimated population for the year 1975 (GHS model)",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_PPLDEM7530POP_H3L10",
             "type": "h3",
@@ -3874,8 +3839,7 @@
         "description_short_en": "Total difference in population 1975-2030",
         "description_short_es": "Total difference in population 1975-2030",
         "description_short_pt": "Total difference in population 1975-2030",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_PPLDEM7530POP_H3L11",
             "type": "h3",
@@ -3905,8 +3869,7 @@
         "description_short_en": "Undifferentiated total road length per cell",
         "description_short_es": "Undifferentiated total road length per cell",
         "description_short_pt": "Undifferentiated total road length per cell",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_INURBROADENS_H3L6",
             "type": "h3",
@@ -3936,8 +3899,7 @@
         "description_short_en": "Undifferentiated road density per cell area",
         "description_short_es": "Undifferentiated road density per cell area",
         "description_short_pt": "Undifferentiated road density per cell area",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_INURBROADENS_H3L6",
             "type": "h3",
@@ -3967,8 +3929,7 @@
         "description_short_en": "Fixed devices. Average download speed in kilobits per second recorded in the grid.",
         "description_short_es": "Fixed devices. Average download speed in kilobits per second recorded in the grid.",
         "description_short_pt": "Fixed devices. Average download speed in kilobits per second recorded in the grid.",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CONNECTSTATUSFX_H3L6",
             "type": "h3",
@@ -3998,8 +3959,7 @@
         "description_short_en": "Fixed devices. Average upload speed in kilobits per second recorded in the grid.",
         "description_short_es": "Fixed devices. Average upload speed in kilobits per second recorded in the grid.",
         "description_short_pt": "Fixed devices. Average upload speed in kilobits per second recorded in the grid.",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CONNECTSTATUSFX_H3L7",
             "type": "h3",
@@ -4029,8 +3989,7 @@
         "description_short_en": "Fixed devices. Average latency in milliseconds recorded in grid tests.",
         "description_short_es": "Fixed devices. Average latency in milliseconds recorded in grid tests.",
         "description_short_pt": "Fixed devices. Average latency in milliseconds recorded in grid tests.",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CONNECTSTATUSFX_H3L8",
             "type": "h3",
@@ -4060,8 +4019,7 @@
         "description_short_en": "Total number of tests performed for fixed devices statistics.",
         "description_short_es": "Total number of tests performed for fixed devices statistics.",
         "description_short_pt": "Total number of tests performed for fixed devices statistics.",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CONNECTSTATUSFX_H3L9",
             "type": "h3",
@@ -4091,8 +4049,7 @@
         "description_short_en": "Fixed devices. Total number of devices used for testing",
         "description_short_es": "Fixed devices. Total number of devices used for testing",
         "description_short_pt": "Fixed devices. Total number of devices used for testing",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CONNECTSTATUSFX_H3L10",
             "type": "h3",
@@ -4122,8 +4079,7 @@
         "description_short_en": "Mobile devices. Average download speed in kilobits per second recorded in the grid.",
         "description_short_es": "Mobile devices. Average download speed in kilobits per second recorded in the grid.",
         "description_short_pt": "Mobile devices. Average download speed in kilobits per second recorded in the grid.",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CONNECTSTATUSMO_H3L6",
             "type": "h3",
@@ -4153,8 +4109,7 @@
         "description_short_en": "Mobile devices. Average upload speed in kilobits per second recorded in the grid.",
         "description_short_es": "Mobile devices. Average upload speed in kilobits per second recorded in the grid.",
         "description_short_pt": "Mobile devices. Average upload speed in kilobits per second recorded in the grid.",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CONNECTSTATUSMO_H3L7",
             "type": "h3",
@@ -4184,8 +4139,7 @@
         "description_short_en": "Mobile devices. Average latency in milliseconds recorded in grid tests.",
         "description_short_es": "Mobile devices. Average latency in milliseconds recorded in grid tests.",
         "description_short_pt": "Mobile devices. Average latency in milliseconds recorded in grid tests.",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CONNECTSTATUSMO_H3L8",
             "type": "h3",
@@ -4215,8 +4169,7 @@
         "description_short_en": "Total number of tests performed for mobile devices statistics.",
         "description_short_es": "Total number of tests performed for mobile devices statistics.",
         "description_short_pt": "Total number of tests performed for mobile devices statistics.",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CONNECTSTATUSMO_H3L9",
             "type": "h3",
@@ -4246,8 +4199,7 @@
         "description_short_en": "Mobile devices. Total number of devices used for testing",
         "description_short_es": "Mobile devices. Total number of devices used for testing",
         "description_short_pt": "Mobile devices. Total number of devices used for testing",
-        "visualization_types": [
-        ],
+        "visualization_types": [],
         "resource": {
             "name": "AMZ_CONNECTSTATUSMO_H3L10",
             "type": "h3",
