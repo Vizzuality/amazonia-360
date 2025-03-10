@@ -95,7 +95,7 @@ const MarimekkoChart = <T extends Data>({
   };
 
   return (
-    <div className="flex grow flex-col space-y-2">
+    <div className="flex grow flex-col space-y-2 overflow-hidden">
       <div
         ref={parentRef}
         className={cn({
