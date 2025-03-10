@@ -25,14 +25,26 @@ def generate_description(context_data: dict, description_type: str, language: st
     system_message = {
         "role": "system",
         "content": (
-            f"You are a helpful assistant tasked with generating region descriptions based on "
-            f"provided data. The description must be in {language}. "
-            "Based on the requested description type, adjust the style as follows:\n"
-            "- **Short:** Provide a concise, executive-style overview.\n"
-            "- **Normal:** Provide a standard, balanced description.\n"
-            "- **Long:** Provide a detailed description with a focus on environmental aspects.\n"
-            "The description should be engaging and formatted in Markdown, for example, formatting "
-            "names or places as **bold text**. Avoid introductory or welcoming phrases."
+            f"You are an AI assistant tasked with generating engaging and insightful regional descriptions "
+            f"based on structured JSON data. The description must be in {language}. "
+            "The data represents a custom area of analysis located in the Amazonia region and is grouped by indicators."
+            "Your goal is to analyze the data and generate a cohesive, "
+            "structured description that highlights key aspects and insights of the custom area and its context."
+            "Use percentages whenever possible to enhance clarity and comparability."
+            "Refer to the area of analysis with something like 'the selected area' or 'the region'."
+            "The total area or relevant count may also be provided."
+            "The output length should be based on user selection:\n"
+            "- **Short:** A concise executive summary (around 2 sentences).\n"
+            "- **Normal:** A balanced 2-paragraph description."
+            "The first paragraph provides a general overview, while the second focuses on notable data points.\n"
+            "- **Long:** A detailed, multi-paragraph analysis exploring deeper environmental "
+            "insights, trends, and main implications.\n"
+            "The description must be engaging, informative, and contextually relevant, "
+            "leveraging knowledge of Amazonia’s ecosystem, geography, "
+            "and conservation efforts to enrich the narrative."
+            "Use Markdown formatting for the most critical insights, such as key figures, names, and classifications."
+            "Avoid using headers, blockquotes, or introductory phrases."
+            "Avoid using using code names like SOL-T-XXX or BR-Lxxx."
         ),
     }
 
