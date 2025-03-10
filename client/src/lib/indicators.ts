@@ -2,7 +2,7 @@ import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import * as geometryEngineAsync from "@arcgis/core/geometry/geometryEngineAsync";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import Query from "@arcgis/core/rest/support/Query";
-import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
+import { QueryFunction, UseQueryOptions, useQuery, useQueries } from "@tanstack/react-query";
 import axios from "axios";
 
 import INDICATORS from "@/app/local-api/indicators/indicators.json";
@@ -348,6 +348,41 @@ export const useQueryFeatureId = <
     queryFn,
     ...options,
   });
+};
+
+export const useQueryFeature = (
+  indicators: Indicator[],
+  geometry: QueryFeatureIdParams["geometry"],
+) => {
+  const queries = useQueries({
+    queries: indicators?.map(({ id, resource }) => ({
+      queryKey: ["featureId", id, resource],
+      queryFn: () =>
+        getQueryFeatureId({
+          id,
+          resource: resource as ResourceFeature,
+          type: "numeric",
+          geometry,
+        }),
+      enabled: !!id && !!resource && !!geometry,
+    })),
+  });
+
+  return queries.reduce((acc: { [key: string]: number }, query, index) => {
+    const name_en = indicators[index]?.name_en || `Unknown (${indicators[index]?.id})`;
+
+    if (!query.data) {
+      acc[name_en] = 0;
+      return acc;
+    }
+
+    const total = query.data.features.reduce((sum, curr) => {
+      return sum + (curr.attributes?.value || 0);
+    }, 0);
+
+    acc[name_en] = total;
+    return acc;
+  }, {});
 };
 
 export type QueryImageryTileIdParams = {

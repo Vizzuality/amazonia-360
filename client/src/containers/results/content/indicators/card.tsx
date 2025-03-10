@@ -23,6 +23,7 @@ import {
 } from "@/containers/card";
 import { ChartIndicators } from "@/containers/indicators/chart";
 import { ChartImageryIndicators } from "@/containers/indicators/chart/imagery";
+import { CustomTableIndicators } from "@/containers/indicators/custom-table";
 import { MapIndicators } from "@/containers/indicators/map";
 import { NumericIndicators } from "@/containers/indicators/numeric";
 import { NumericImageryIndicators } from "@/containers/indicators/numeric/imagery";
@@ -49,6 +50,7 @@ export default function ReportResultsIndicator({
   const indicator = useGetIndicatorsId(id);
 
   if (!indicator) return null;
+
   return (
     <div className="flex h-full flex-col">
       <Card className={cn(type === "map" && "p-0")}>
@@ -90,6 +92,10 @@ export default function ReportResultsIndicator({
           )}
           {type === "table" && indicator.resource.type === "feature" && (
             <TableIndicators {...indicator} resource={indicator.resource} />
+          )}
+
+          {type === "custom" && indicator.resource.type === "feature" && (
+            <CustomTableIndicators {...indicator} resource={indicator.resource} />
           )}
         </CardContent>
       </Card>

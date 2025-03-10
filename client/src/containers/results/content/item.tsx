@@ -109,7 +109,7 @@ export const ReportResultsContentItem = ({
       {TOPIC?.id !== 0 && ai_summary.enabled && <ReportResultsSummary topic={TOPIC} />}
 
       <ResponsiveReactGridLayout
-        className="layout animated"
+        className="layout animated print:break-after-page print:px-0"
         cols={{ lg: 4, md: 4, sm: 4, xs: 4, xxs: 1 }}
         rowHeight={122}
         containerPadding={[0, 0]}
