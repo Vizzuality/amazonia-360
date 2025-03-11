@@ -16,8 +16,8 @@ export default function LegendBasic({
         "flex-row flex-wrap gap-x-2": direction === "horizontal",
       })}
     >
-      {items.map((item) => (
-        <div key={`legend-quantile-${item.id}`} className="flex">
+      {items.map((item, i) => (
+        <div key={`legend-quantile-${item.color}-${item.id}-${item.label}-${i}`} className="flex">
           <div
             className="mr-1 mt-0.5 h-2 w-2 shrink-0 rounded-[2px] shadow-[0_0_1px_0px_rgba(0,0,0,0.25)]"
             style={{
