@@ -280,14 +280,15 @@ export const getQueryFeatureId = async ({ type, resource, geometry }: QueryFeatu
           const intersections = (await geometryEngineAsync.intersect(
             [f.geometry],
             geometry,
-          )) as unknown as __esri.Polygon[];
+          )) as unknown as __esri.Polygon[] | null[];
 
           f.setAttribute(
             "value",
-            intersections.reduce(
-              (acc, i) => acc + geometryEngine.geodesicArea(i, "square-kilometers"),
-              0,
-            ),
+            intersections.reduce((acc, i) => {
+              if (!i) return acc;
+
+              return acc + geometryEngine.geodesicArea(i, "square-kilometers");
+            }, 0),
           );
           f.setAttribute("total", geometryArea);
         }),
@@ -308,6 +309,7 @@ export const getQueryFeatureId = async ({ type, resource, geometry }: QueryFeatu
 
         return acc;
       }, [] as __esri.Graphic[]);
+
       fs.features = features;
     }
 
