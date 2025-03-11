@@ -30,55 +30,53 @@ export interface ReportResultsSummaryProps {
 export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id"][]) => {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
-  const queryIndicators = useGetDefaultIndicators(topic?.id, {
-    select: (data) => {
-      return data?.filter((indicator) => {
-        if (!indicators) return true;
-        return indicators.includes(indicator.id);
-      });
-    },
-  });
+  const queryIndicators = useGetDefaultIndicators(topic?.id);
 
   const {
-    data: queryIndicatorsData,
+    data: queryIndicatorsData = [],
     isFetching: queryIsFetching,
     isFetched: queryIsFetched,
     isPending: queryIsPending,
   } = queryIndicators;
 
+  const DATA = useMemo(() => {
+    return queryIndicatorsData?.filter((indicator) => {
+      if (!indicators) return true;
+      return indicators.includes(indicator.id);
+    });
+  }, [indicators, queryIndicatorsData]);
+
   const QUERIES = useMemo(() => {
     return (
-      queryIndicatorsData
-        ?.map((indicator) => {
-          if (!indicator) return null;
-          if (!indicator.resource) return null;
+      DATA?.map((indicator) => {
+        if (!indicator) return null;
+        if (!indicator.resource) return null;
 
-          if (indicator.resource.type === "feature") {
-            return getQueryFeatureIdOptions(
-              {
-                id: indicator.id,
-                resource: indicator.resource,
-                type: "ai",
-                geometry: GEOMETRY,
-              },
-              {
-                enabled: !!GEOMETRY && !!indicator,
-              },
-            );
-          }
+        if (indicator.resource.type === "feature") {
+          return getQueryFeatureIdOptions(
+            {
+              id: indicator.id,
+              resource: indicator.resource,
+              type: "ai",
+              geometry: GEOMETRY,
+            },
+            {
+              enabled: !!GEOMETRY && !!indicator,
+            },
+          );
+        }
 
-          // if (indicator.resource.type === "imagery") {
-          //   return {
-          //     queryKey: ["imagery", indicator.id],
-          //     queryFn: () => Promise.resolve({ features: [] }),
-          //   };
-          // }
+        // if (indicator.resource.type === "imagery") {
+        //   return {
+        //     queryKey: ["imagery", indicator.id],
+        //     queryFn: () => Promise.resolve({ features: [] }),
+        //   };
+        // }
 
-          return null;
-        })
-        .filter((q) => !!q) || []
+        return null;
+      }).filter((q) => !!q) || []
     );
-  }, [queryIndicatorsData, GEOMETRY]);
+  }, [DATA, GEOMETRY]);
 
   const queries = useQueries({
     queries: QUERIES,
