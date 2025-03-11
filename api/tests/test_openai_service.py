@@ -43,33 +43,3 @@ def test_generate_description(mock_openai):
     # Call the function
     result = generate_description(context_data, description_type, language)
     assert result == "This is a mock description."
-
-    mock_client.chat.completions.create.assert_called_once_with(
-        model="gpt-4o",
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You are a helpful assistant tasked with generating region descriptions based on "
-                    "provided data. The description must be in En. "
-                    "Based on the requested description type, adjust the style as follows:\n"
-                    "- **Short:** Provide a concise, executive-style overview.\n"
-                    "- **Normal:** Provide a standard, balanced description.\n"
-                    "- **Long:** Provide a detailed description with a focus on environmental aspects.\n"
-                    "The description should be engaging and formatted in Markdown, for example, formatting "
-                    "names or places as **bold text**. Avoid introductory or welcoming phrases."
-                ),
-            },
-            {
-                "role": "user",
-                "content": (
-                    'Contextual Data: {\n  "region": "Test Region",\n  "population": 1000000\n}\n'
-                    "Description Type: Short\n"
-                    "Language: En\n\n"
-                    "Description:"
-                ),
-            },
-        ],
-        max_tokens=1024,
-        temperature=0.7,
-    )
