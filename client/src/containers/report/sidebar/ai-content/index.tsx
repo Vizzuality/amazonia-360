@@ -22,12 +22,12 @@ import AiSidebarContentCard from "./card";
 
 const AUDIENCES = [
   {
-    value: "Short",
+    value: "Normal",
     label: "Standard",
     description: "For clear and balanced information to suit any audience.",
   },
   {
-    value: "Normal",
+    value: "Short",
     label: "Executive",
     description: "Quick, focused insights to convey key data effectively.",
   },
