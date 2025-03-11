@@ -176,7 +176,7 @@
     "visualization_types": ["table", "numeric"],
     "resource": {
       "name": "AMZ_LOCADM2",
-      "type": "feature",
+      "type": "component",
       "column": [],
       "layer_id": "6",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Political_administrative_division_of_order_2/FeatureServer",
