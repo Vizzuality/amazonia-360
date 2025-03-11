@@ -128,6 +128,12 @@ export const ChartIndicators = (indicator: ChartIndicatorsProps) => {
             const c = new Color(uniqueValue?.symbol.color);
             return c.toHex() ?? "#009ADE";
           }
+
+          if (r.defaultSymbol?.color) {
+            const defaultColor = new Color(r.defaultSymbol?.color);
+
+            return defaultColor.toHex() ?? "#009ADE";
+          }
         }
 
         if (renderer?.type === "classBreaks") {
