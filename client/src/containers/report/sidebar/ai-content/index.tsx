@@ -71,14 +71,15 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
   }, [setAiOnlyActive]);
 
   return (
-    <div className="relative flex h-full flex-col justify-between">
-      <div className="h-full w-full flex-1 space-y-4">
+    <div className="relative flex h-full max-h-[calc(100vh-180px)] flex-col justify-between">
+      <div className="relative h-full w-full flex-1 space-y-4">
         <p className="text-sm font-medium leading-5 text-muted-foreground">
           Choose a text style to create summaries for the active topics in your report.
         </p>
         <ScrollArea
           className={cn({
-            "h-screen max-h-[calc(100vh-320px)] w-full": true,
+            "h-screen max-h-[calc(100vh-305px)] w-full": true,
+            "max-h-[calc(100vh-375px)]": isSticky,
           })}
         >
           <div className="h-full w-full flex-1 space-y-4">
@@ -148,23 +149,23 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
             )}
           </div>
         </ScrollArea>
-      </div>
-      <div className="relative flex w-full flex-col justify-end">
-        <div className="flex items-start space-x-4 rounded-sm border border-border bg-blue-50 p-3">
-          <CircleAlert className="text-alert h-4 w-4 shrink-0" />
-          <p className="text-sm font-medium text-foreground">
-            AI generated summaries can be inaccurate. We encourage you to verify the content
-            carefully.
-          </p>
-        </div>
-        <div className="mt-4 flex justify-between space-x-2">
-          <Button variant="outline" className="w-full" onClick={handleClickClearAiSummary}>
-            Clear
-          </Button>
-          <Button className="w-full space-x-2" onClick={handleClickAiGenerateSummary}>
-            <LuSparkles />
-            <span>Generate</span>
-          </Button>
+        <div className="relative flex w-full flex-col justify-end">
+          <div className="flex items-start space-x-4 rounded-sm border border-border bg-blue-50 p-3">
+            <CircleAlert className="text-alert h-4 w-4 shrink-0" />
+            <p className="text-xs font-medium text-foreground">
+              AI generated summaries can be inaccurate. We encourage you to verify the content
+              carefully.
+            </p>
+          </div>
+          <div className="mt-4 flex justify-between space-x-2">
+            <Button variant="outline" className="w-full" onClick={handleClickClearAiSummary}>
+              Clear
+            </Button>
+            <Button className="w-full space-x-2" onClick={handleClickAiGenerateSummary}>
+              <LuSparkles />
+              <span>Generate</span>
+            </Button>
+          </div>
         </div>
       </div>
     </div>
