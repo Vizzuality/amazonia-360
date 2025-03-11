@@ -3,6 +3,8 @@ import { DatasetMeta } from "@/types/generated/api.schemas";
 import { Topic } from "@/app/local-api/topics/route";
 import { IndicatorView } from "@/app/parsers";
 
+import { LegendItemProps } from "@/components/map/legend/item";
+
 import INDICATORS from "./indicators.json";
 
 export type VisualizationTypes = "map" | "table" | "chart" | "numeric" | "ai";
@@ -31,6 +33,7 @@ export type ResourceImageryTile = {
   url: string;
   type: "imagery-tile";
   rasterFunction: __esri.RasterFunctionProperties;
+  legend: LegendItemProps;
 };
 
 export type ResourceImagery = {
@@ -38,6 +41,7 @@ export type ResourceImagery = {
   url: string;
   type: "imagery";
   rasterFunction: __esri.RasterFunctionProperties;
+  legend: LegendItemProps;
 };
 
 export type ResourceH3 = {
