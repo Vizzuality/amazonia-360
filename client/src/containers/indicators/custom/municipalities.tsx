@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { AccessorKeyColumnDefBase } from "@tanstack/react-table";
 
 import { formatNumber } from "@/lib/formats";
-import { useGetIndicators, useQueryFeature, useQueryFeatureId } from "@/lib/indicators";
+import { useGetIndicators, useQueryFeatures, useQueryFeatureId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
 import { Indicator, ResourceFeature } from "@/app/local-api/indicators/route";
@@ -12,19 +12,14 @@ import { useSyncLocation } from "@/app/store";
 import { CardLoader } from "@/containers/card";
 import { DataTable } from "@/containers/widgets/table";
 
-export interface CustomTableIndicatorsProps extends Indicator {
-  resource: ResourceFeature;
-}
-
-// TO - DO - Add to indicators.json
 const INDICATORS = [
   { id: 8, name_en: "Administrative Capitals" },
   { id: 3, name_en: "Countries" },
-  { id: 6, name_en: "Municipalities" },
+  { id: 5, name_en: "Municipalities" },
   { id: 4, name_en: "States" },
 ];
 
-export const CustomTableIndicators = ({ id, resource }: CustomTableIndicatorsProps) => {
+export const Municipalities = ({ indicator }: { indicator: Indicator }) => {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
 
@@ -32,9 +27,16 @@ export const CustomTableIndicators = ({ id, resource }: CustomTableIndicatorsPro
     select: (data) => data.filter((i) => INDICATORS.some((indicator) => indicator.id === i.id)),
   });
 
-  const indicatorsTotals = useQueryFeature(indicatorsData ?? [], GEOMETRY);
+  const { id, resource } = indicator;
 
-  const query = useQueryFeatureId({ id, resource, type: "table", geometry: GEOMETRY });
+  const indicatorsTotals = useQueryFeatures(indicatorsData ?? [], GEOMETRY);
+
+  const query = useQueryFeatureId({
+    id,
+    resource: resource as ResourceFeature,
+    type: "table",
+    geometry: GEOMETRY,
+  });
 
   const DATA = useMemo(() => {
     if (!query.data) return [];
@@ -65,19 +67,25 @@ export const CustomTableIndicators = ({ id, resource }: CustomTableIndicatorsPro
 
   return (
     <CardLoader query={[query]} className="h-72">
-      <p className="px-2 text-sm font-medium text-muted-foreground">
+      <p className="pb-4 pt-2 text-sm font-medium text-muted-foreground">
         The selected area intersects{" "}
         <span className="font-bold">
-          {indicatorsTotals["Countries"]}{" "}
-          {indicatorsTotals["Countries"] !== 1 ? "countries" : "country"},{" "}
-          {indicatorsTotals["States"]} {indicatorsTotals["States"] !== 1 ? "states" : "state"},{" "}
-          {indicatorsTotals["Municipalities"]}{" "}
-          {indicatorsTotals["Municipalities"] !== 1 ? "municipalities" : "municipality"},
+          {indicatorsTotals[3] || indicatorsTotals["Countries"]}{" "}
+          {indicatorsTotals[3] || indicatorsTotals["Countries"] !== 1 ? "countries" : "country"},{" "}
+          {indicatorsTotals[4] || indicatorsTotals["States"]}{" "}
+          {indicatorsTotals[4] || indicatorsTotals["States"] !== 1 ? "states" : "state"},{" "}
+          {indicatorsTotals[5] || indicatorsTotals["Municipalities"]}{" "}
+          {indicatorsTotals[5] || indicatorsTotals["Municipalities"] !== 1
+            ? "municipalities"
+            : "municipality"}
+          ,
         </span>{" "}
         and{" "}
         <span className="font-bold">
-          {indicatorsTotals["Administrative Capitals"]}{" "}
-          {indicatorsTotals["Administrative Capitals"] !== 1 ? "capital cities" : "capital city"}
+          {indicatorsTotals[8] || indicatorsTotals["Administrative Capitals"]}{" "}
+          {indicatorsTotals[8] || indicatorsTotals["Administrative Capitals"] !== 1
+            ? "capital cities"
+            : "capital city"}
         </span>{" "}
         .
       </p>

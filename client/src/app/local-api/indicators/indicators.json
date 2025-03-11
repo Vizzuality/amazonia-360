@@ -173,58 +173,10 @@
     "description_short_en": "Identifies the political-administrative units at level 2 government levels (Municipality) across Amazonia",
     "description_short_es": "Identifies the political-administrative units at level 2 government levels (Municipality) across Amazonia",
     "description_short_pt": "Identifies the political-administrative units at level 2 government levels (Municipality) across Amazonia",
-    "visualization_types": ["custom"],
-    "resource": {
-      "name": "AMZ_LOCADM2",
-      "type": "feature",
-      "column": [],
-      "layer_id": "6",
-      "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Political_administrative_division_of_order_2/FeatureServer",
-      "query_numeric": {
-        "where": "1=1",
-        "outStatistics": [
-          {
-            "onStatisticField": "FID",
-            "outStatisticFieldName": "value",
-            "statisticType": "count"
-          }
-        ]
-      },
-      "query_table": {
-        "where": "1=1",
-        "outFields": ["NAME_0 as Country", "NAME_1 as State", "NAME_2 as Municipality", ","],
-        "returnGeometry": false
-      },
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": {
-        "where": "1=1",
-        "returnGeometry": true,
-        "returnIntersections": true,
-        "outFields": ["*"]
-      }
-    }
-  },
-  {
-    "id": 6,
-    "topic": 0,
-    "order": 6,
-    "name_en": "Municipalities",
-    "name_es": "Municipalities",
-    "name_pt": "Municipalities",
-    "unit_en": "",
-    "unit_es": "",
-    "unit_pt": "",
-    "description_en": "**Political-administrative division of order 2.**\n\nLayer of polygons representing subnational administrative units of adm2 level (department, province, state). Provides a reference for the location in context of the second level subnational administrative units within the Amazon countries.\n\nThe units are identified by the name of the country to which they belong (NAME_0), the type of first level administrative unit (TYPE_1, for example, 'State' or 'Department'), the type of second level administrative unit (TYPE_2, such as 'Municipality' or 'District') and its specific name (NAME_2). Each unit also includes a compound name (COMPNAME) that refers to the country, department or state, and its name. For example, 'Acrelândia, Acre, BRA' dignifies the municipality, the state and the ISO acronym of the country. In addition, the total area of each unit in square kilometers (ASQKM), the projected population for 2025 derived from the Global Human Settlement Layer model (POPGHS25), and the population density in inhabitants per square kilometer (DENS) are provided.\n\nThe limits shown are only illustrative and referential. They are a compilation of AmazoniaForever360+, 2023-2024, with successive corrections. This layer was assembled from the political-administrative division derived from the national cartographic services of the Amazonian countries. With additional information derived from GADM V4.1 data:\n\n<https://gadm.org/download_world.html>\n\nThe *Database of Global Administrative Areas *(GADM) provides detailed spatial data on the administrative areas of all countries and their subdivisions. The current version is 4.1, released on July 16, 2022, which delineates 400,276 administrative areas. The data are available for download in different formats, including GeoPackage and shapefiles.   \n\n[Catalogo de Datos](https://idb-gis.maps.arcgis.com/home/search.html?restrict=true&sortField=relevance&sortOrder=desc&searchTerm=tags%3A%22AmazoniaForever360+%22#content )",
-    "description_es": "**Political-administrative division of order 2.**\n\nLayer of polygons representing subnational administrative units of adm2 level (department, province, state). Provides a reference for the location in context of the second level subnational administrative units within the Amazon countries.\n\nThe units are identified by the name of the country to which they belong (NAME_0), the type of first level administrative unit (TYPE_1, for example, 'State' or 'Department'), the type of second level administrative unit (TYPE_2, such as 'Municipality' or 'District') and its specific name (NAME_2). Each unit also includes a compound name (COMPNAME) that refers to the country, department or state, and its name. For example, 'Acrelândia, Acre, BRA' dignifies the municipality, the state and the ISO acronym of the country. In addition, the total area of each unit in square kilometers (ASQKM), the projected population for 2025 derived from the Global Human Settlement Layer model (POPGHS25), and the population density in inhabitants per square kilometer (DENS) are provided.\n\nThe limits shown are only illustrative and referential. They are a compilation of AmazoniaForever360+, 2023-2024, with successive corrections. This layer was assembled from the political-administrative division derived from the national cartographic services of the Amazonian countries. With additional information derived from GADM V4.1 data:\n\n<https://gadm.org/download_world.html>\n\nThe *Database of Global Administrative Areas *(GADM) provides detailed spatial data on the administrative areas of all countries and their subdivisions. The current version is 4.1, released on July 16, 2022, which delineates 400,276 administrative areas. The data are available for download in different formats, including GeoPackage and shapefiles.",
-    "description_pt": "**Political-administrative division of order 2.**\n\nLayer of polygons representing subnational administrative units of adm2 level (department, province, state). Provides a reference for the location in context of the second level subnational administrative units within the Amazon countries.\n\nThe units are identified by the name of the country to which they belong (NAME_0), the type of first level administrative unit (TYPE_1, for example, 'State' or 'Department'), the type of second level administrative unit (TYPE_2, such as 'Municipality' or 'District') and its specific name (NAME_2). Each unit also includes a compound name (COMPNAME) that refers to the country, department or state, and its name. For example, 'Acrelândia, Acre, BRA' dignifies the municipality, the state and the ISO acronym of the country. In addition, the total area of each unit in square kilometers (ASQKM), the projected population for 2025 derived from the Global Human Settlement Layer model (POPGHS25), and the population density in inhabitants per square kilometer (DENS) are provided.\n\nThe limits shown are only illustrative and referential. They are a compilation of AmazoniaForever360+, 2023-2024, with successive corrections. This layer was assembled from the political-administrative division derived from the national cartographic services of the Amazonian countries. With additional information derived from GADM V4.1 data:\n\n<https://gadm.org/download_world.html>\n\nThe *Database of Global Administrative Areas *(GADM) provides detailed spatial data on the administrative areas of all countries and their subdivisions. The current version is 4.1, released on July 16, 2022, which delineates 400,276 administrative areas. The data are available for download in different formats, including GeoPackage and shapefiles.",
-    "description_short_en": "Identifies the political-administrative units at level 2 government levels (Municipality) across Amazonia",
-    "description_short_es": "Identifies the political-administrative units at level 2 government levels (Municipality) across Amazonia",
-    "description_short_pt": "Identifies the political-administrative units at level 2 government levels (Municipality) across Amazonia",
     "visualization_types": ["table", "numeric"],
     "resource": {
       "name": "AMZ_LOCADM2",
-      "type": "feature",
+      "type": "component",
       "column": [],
       "layer_id": "6",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Political_administrative_division_of_order_2/FeatureServer",

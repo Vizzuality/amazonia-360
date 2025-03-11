@@ -5,7 +5,7 @@ import { IndicatorView } from "@/app/parsers";
 
 import INDICATORS from "./indicators.json";
 
-export type VisualizationTypes = "map" | "table" | "chart" | "numeric" | "ai" | "custom";
+export type VisualizationTypes = "map" | "table" | "chart" | "numeric" | "ai";
 
 export type ResourceFeature = {
   name: string;
@@ -17,7 +17,6 @@ export type ResourceFeature = {
   query_chart: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
   query_numeric: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
   query_ai: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
-  query_custom: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
   popupTemplate?: __esri.PopupTemplateProperties;
 };
 

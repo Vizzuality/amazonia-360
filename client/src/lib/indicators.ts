@@ -350,7 +350,7 @@ export const useQueryFeatureId = <
   });
 };
 
-export const useQueryFeature = (
+export const useQueryFeatures = (
   indicators: Indicator[],
   geometry: QueryFeatureIdParams["geometry"],
 ) => {
@@ -369,10 +369,10 @@ export const useQueryFeature = (
   });
 
   return queries.reduce((acc: { [key: string]: number }, query, index) => {
-    const name_en = indicators[index]?.name_en || `Unknown (${indicators[index]?.id})`;
+    const id = indicators[index]?.id || `Unknown (${indicators[index]?.name_en})`;
 
     if (!query.data) {
-      acc[name_en] = 0;
+      acc[id] = 0;
       return acc;
     }
 
@@ -380,7 +380,7 @@ export const useQueryFeature = (
       return sum + (curr.attributes?.value || 0);
     }, 0);
 
-    acc[name_en] = total;
+    acc[id] = total;
     return acc;
   }, {});
 };

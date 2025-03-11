@@ -23,15 +23,18 @@ import {
 } from "@/containers/card";
 import { ChartIndicators } from "@/containers/indicators/chart";
 import { ChartImageryIndicators } from "@/containers/indicators/chart/imagery";
-import { CustomTableIndicators } from "@/containers/indicators/custom-table";
 import { MapIndicators } from "@/containers/indicators/map";
 import { NumericIndicators } from "@/containers/indicators/numeric";
 import { NumericImageryIndicators } from "@/containers/indicators/numeric/imagery";
-import { TotalArea } from "@/containers/indicators/numeric/total-area";
 import { TableIndicators } from "@/containers/indicators/table";
+
+// custom indicators
+import { TotalArea } from "@/containers/indicators/custom/total-area";
+import { Municipalities } from "@/containers/indicators/custom/municipalities";
 
 const COMPONENT_INDICATORS = {
   "total-area": TotalArea,
+  AMZ_LOCADM2: Municipalities,
 } as const;
 
 type COMPONENT_INDICATORS_KEYS = keyof typeof COMPONENT_INDICATORS;
@@ -77,13 +80,13 @@ export default function ReportResultsIndicator({
           {type === "chart" && indicator.resource.type === "imagery-tile" && (
             <ChartImageryIndicators {...indicator} resource={indicator.resource} />
           )}
-          {type === "numeric" &&
-            indicator.resource.type === "component" &&
+          {indicator.resource.type === "component" &&
             !!COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS] &&
             createElement(
               COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS],
               { indicator },
             )}
+
           {type === "numeric" && indicator.resource.type === "feature" && (
             <NumericIndicators {...indicator} resource={indicator.resource} />
           )}
@@ -92,10 +95,6 @@ export default function ReportResultsIndicator({
           )}
           {type === "table" && indicator.resource.type === "feature" && (
             <TableIndicators {...indicator} resource={indicator.resource} />
-          )}
-
-          {type === "custom" && indicator.resource.type === "feature" && (
-            <CustomTableIndicators {...indicator} resource={indicator.resource} />
           )}
         </CardContent>
       </Card>

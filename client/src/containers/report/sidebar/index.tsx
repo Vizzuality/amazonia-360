@@ -78,9 +78,9 @@ export default function ReportSidebar() {
 
         <SidebarContent
           className={cn({
-            "h-full w-full flex-1": true,
+            "h-[calc(100vh-64px-80px)] w-full flex-1": true,
             "h-[calc(100vh-64px-80px)]": !isSticky,
-            "h-[calc(100vh-64px)]": isSticky,
+            // "h-[calc(100vh-64px-80px)]": isSticky,
           })}
         >
           <TabsContent value="indicators" className="h-full pr-2">
@@ -88,7 +88,7 @@ export default function ReportSidebar() {
           </TabsContent>
 
           <TabsContent value="ai_summaries" className="h-full">
-            <AiSidebarContent />
+            <AiSidebarContent isSticky={isSticky} />
           </TabsContent>
         </SidebarContent>
       </Tabs>
