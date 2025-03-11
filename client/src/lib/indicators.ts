@@ -475,7 +475,6 @@ export const getQueryImageryId = async ({
 
   return f.computeStatisticsHistograms({
     ...(!!geometry && { geometry }),
-    rasterFunction: resource.rasterFunction,
   });
 };
 
