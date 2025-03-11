@@ -55,6 +55,6 @@ export const gridDatasetSelectedParser = parseAsString;
 
 export const aiSummaryParser = parseAsJson<AiSummary>().withDefault({
   type: "Short",
-  only_active: false,
+  only_active: true,
   enabled: false,
 });

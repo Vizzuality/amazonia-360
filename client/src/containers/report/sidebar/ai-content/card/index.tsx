@@ -21,11 +21,11 @@ export default function AiSidebarContentCard({
         "border-foreground": active,
       })}
     >
-      <div key={option.value} className="flex items-start space-x-4 text-foreground">
+      <div key={option.value} className="flex items-start space-x-4">
         <RadioGroupItem id={option.value} value={option.value} />
         <div className="flex flex-col">
-          <span className="font-bold">{option.label}</span>
-          <p className="font-medium text-muted-foreground">{option.description}</p>
+          <span className="font-bold text-primary">{option.label}</span>
+          <p className="font-medium text-foreground">{option.description}</p>
         </div>
       </div>
     </Label>

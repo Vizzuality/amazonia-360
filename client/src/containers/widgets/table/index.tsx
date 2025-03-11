@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 
 import { DataPagination } from "@/containers/widgets/table/pagination";
 
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Table,
   TableBody,
@@ -49,69 +50,71 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="flex h-full grow flex-col overflow-hidden">
-      <div className="flex h-full min-h-80 grow flex-col justify-between overflow-hidden rounded-md print:min-h-0">
-        <Table className="border-foreground">
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="hover:bg-white">
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder ? null : (
-                        <div
-                          className={cn(
-                            "flex items-center space-x-1",
-                            header.column.getCanSort() &&
-                              "cursor-pointer select-none hover:underline",
-                          )}
-                          style={{ width: `${header.getSize()}px` }}
-                          title={
-                            header.column.getCanSort()
-                              ? header.column.getNextSortingOrder() === "asc"
-                                ? "Sort ascending"
-                                : header.column.getNextSortingOrder() === "desc"
-                                  ? "Sort descending"
-                                  : "Clear sort"
-                              : undefined
-                          }
-                          onClick={header.column.getToggleSortingHandler()}
-                        >
-                          <span>
-                            {flexRender(header.column.columnDef.header, header.getContext())}
-                          </span>
-                          {header.column.getIsSorted() && (
-                            <LuArrowUpDown className="h-4 w-4 shrink-0 text-muted-foreground" />
-                          )}
-                        </div>
-                      )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="whitespace-nowrap">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+      <div className="flex min-h-80 grow flex-col justify-between overflow-hidden rounded-md print:min-h-0">
+        <ScrollArea className="h-full max-h-[calc(100%-3rem)] w-full grow">
+          <Table className="border-foreground">
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id} className="hover:bg-white">
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder ? null : (
+                          <div
+                            className={cn(
+                              "flex items-center space-x-1",
+                              header.column.getCanSort() &&
+                                "cursor-pointer select-none hover:underline",
+                            )}
+                            style={{ width: `${header.getSize()}px` }}
+                            title={
+                              header.column.getCanSort()
+                                ? header.column.getNextSortingOrder() === "asc"
+                                  ? "Sort ascending"
+                                  : header.column.getNextSortingOrder() === "desc"
+                                    ? "Sort descending"
+                                    : "Clear sort"
+                                : undefined
+                            }
+                            onClick={header.column.getToggleSortingHandler()}
+                          >
+                            <span>
+                              {flexRender(header.column.columnDef.header, header.getContext())}
+                            </span>
+                            {header.column.getIsSorted() && (
+                              <LuArrowUpDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+                            )}
+                          </div>
+                        )}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </ScrollArea>
 
-        <footer className="mt-4 flex items-center justify-between">
+        <footer className="mb-6 mt-2 flex items-center justify-between">
           <p className="text-xs font-medium text-gray-500">{`${data.length} ${Pluralize("result", data.length)}`}</p>
           <DataPagination
             pageIndex={pageIndex}

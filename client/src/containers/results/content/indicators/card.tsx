@@ -26,11 +26,15 @@ import { ChartImageryIndicators } from "@/containers/indicators/chart/imagery";
 import { MapIndicators } from "@/containers/indicators/map";
 import { NumericIndicators } from "@/containers/indicators/numeric";
 import { NumericImageryIndicators } from "@/containers/indicators/numeric/imagery";
-import { TotalArea } from "@/containers/indicators/numeric/total-area";
 import { TableIndicators } from "@/containers/indicators/table";
+
+// custom indicators
+import { TotalArea } from "@/containers/indicators/custom/total-area";
+import { Municipalities } from "@/containers/indicators/custom/municipalities";
 
 const COMPONENT_INDICATORS = {
   "total-area": TotalArea,
+  AMZ_LOCADM2: Municipalities,
 } as const;
 
 type COMPONENT_INDICATORS_KEYS = keyof typeof COMPONENT_INDICATORS;
@@ -49,6 +53,7 @@ export default function ReportResultsIndicator({
   const indicator = useGetIndicatorsId(id);
 
   if (!indicator) return null;
+
   return (
     <div className="flex h-full flex-col">
       <Card className={cn(type === "map" && "p-0")}>
@@ -75,13 +80,13 @@ export default function ReportResultsIndicator({
           {type === "chart" && indicator.resource.type === "imagery-tile" && (
             <ChartImageryIndicators {...indicator} resource={indicator.resource} />
           )}
-          {type === "numeric" &&
-            indicator.resource.type === "component" &&
+          {indicator.resource.type === "component" &&
             !!COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS] &&
             createElement(
               COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS],
               { indicator },
             )}
+
           {type === "numeric" && indicator.resource.type === "feature" && (
             <NumericIndicators {...indicator} resource={indicator.resource} />
           )}
