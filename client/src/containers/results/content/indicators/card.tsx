@@ -24,19 +24,15 @@ import {
 import { ChartIndicators } from "@/containers/indicators/chart";
 import { ChartImageryIndicators } from "@/containers/indicators/chart/imagery";
 import { ChartImageryTileIndicators } from "@/containers/indicators/chart/imagery-tile";
+import { Municipalities } from "@/containers/indicators/custom/municipalities";
+import { TotalArea } from "@/containers/indicators/custom/total-area";
 import { MapIndicators } from "@/containers/indicators/map";
 import { NumericIndicators } from "@/containers/indicators/numeric";
 import { NumericImageryIndicators } from "@/containers/indicators/numeric/imagery";
-<<<<<<< HEAD
-=======
 import { NumericImageryTileIndicators } from "@/containers/indicators/numeric/imagery-tile";
-import { TotalArea } from "@/containers/indicators/numeric/total-area";
->>>>>>> a1d4ced (Sorting and isolated components)
 import { TableIndicators } from "@/containers/indicators/table";
 
 // custom indicators
-import { TotalArea } from "@/containers/indicators/custom/total-area";
-import { Municipalities } from "@/containers/indicators/custom/municipalities";
 
 const COMPONENT_INDICATORS = {
   "total-area": TotalArea,
@@ -89,19 +85,11 @@ export default function ReportResultsIndicator({
           {type === "chart" && indicator.resource.type === "imagery" && (
             <ChartImageryIndicators {...indicator} resource={indicator.resource} />
           )}
-<<<<<<< HEAD
-          {indicator.resource.type === "component" &&
-=======
           {type === "chart" && indicator.resource.type === "imagery-tile" && (
             <ChartImageryTileIndicators {...indicator} resource={indicator.resource} />
           )}
 
-          {/*
-            Numerics
-          */}
-          {type === "numeric" &&
-            indicator.resource.type === "component" &&
->>>>>>> a1d4ced (Sorting and isolated components)
+          {indicator.resource.type === "component" &&
             !!COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS] &&
             createElement(
               COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS],
