@@ -39,7 +39,12 @@ export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id
     },
   });
 
-  const { data: queryIndicatorsData } = queryIndicators;
+  const {
+    data: queryIndicatorsData,
+    isFetching: queryIsFetching,
+    isFetched: queryIsFetched,
+    isPending: queryIsPending,
+  } = queryIndicators;
 
   const QUERIES = useMemo(() => {
     return (
@@ -62,6 +67,13 @@ export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id
             );
           }
 
+          // if (indicator.resource.type === "imagery") {
+          //   return {
+          //     queryKey: ["imagery", indicator.id],
+          //     queryFn: () => Promise.resolve({ features: [] }),
+          //   };
+          // }
+
           return null;
         })
         .filter((q) => !!q) || []
@@ -72,15 +84,19 @@ export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id
     queries: QUERIES,
   });
 
-  const isFetched = queries.every((q) => q.isFetched);
-  const isFetching = queries.some((q) => q.isFetching);
+  const isPending = queries.some((q) => q.isPending) || queryIsPending;
+  const isFetched = queries.every((q) => q.isFetched) && queryIsFetched;
+  const isFetching = queries.some((q) => q.isFetching) || queryIsFetching;
 
   return {
     isFetched,
     isFetching,
+    isPending,
     data: queries.map((q) => {
       if (q.data?.features) {
-        return q.data.features.map((f) => omit(f.attributes, ["Shape__Area", "Shape__Length"]));
+        return q.data.features.map((f) =>
+          omit(f.attributes, ["Shape__Area", "Shape__Length", "FID"]),
+        );
       }
 
       return [];
@@ -96,6 +112,7 @@ export const useGetSummaryTopic = (
   const indicators = options?.only_active ? activeIndicators : undefined;
   const {
     data: indicatorsData,
+    isPending: indicatorsIsPending,
     isFetching: indicatorsIsFetching,
     isFetched: indicatorsIsFetched,
   } = useGetSummaryTopicData(topic, indicators);
@@ -123,7 +140,7 @@ export const useGetSummaryTopic = (
       description_type: options?.type,
     },
     {
-      enabled: !!indicatorsData?.length && indicatorsIsFetched && !indicatorsIsFetching,
+      enabled: !indicatorsIsPending && indicatorsIsFetched && !indicatorsIsFetching,
     },
   );
 
@@ -148,7 +165,7 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
 
   return (
     <div className="relative">
-      {(isPending || isFetching) && (
+      {(isPending || (isFetching && !isFetched)) && (
         <div className="space-y-1.5">
           <p>Generating summary...</p>
           <Skeleton className="h-4" />

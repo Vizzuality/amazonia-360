@@ -23,14 +23,16 @@ import {
 } from "@/containers/card";
 import { ChartIndicators } from "@/containers/indicators/chart";
 import { ChartImageryIndicators } from "@/containers/indicators/chart/imagery";
+import { ChartImageryTileIndicators } from "@/containers/indicators/chart/imagery-tile";
+import { Municipalities } from "@/containers/indicators/custom/municipalities";
+import { TotalArea } from "@/containers/indicators/custom/total-area";
 import { MapIndicators } from "@/containers/indicators/map";
 import { NumericIndicators } from "@/containers/indicators/numeric";
 import { NumericImageryIndicators } from "@/containers/indicators/numeric/imagery";
+import { NumericImageryTileIndicators } from "@/containers/indicators/numeric/imagery-tile";
 import { TableIndicators } from "@/containers/indicators/table";
 
 // custom indicators
-import { TotalArea } from "@/containers/indicators/custom/total-area";
-import { Municipalities } from "@/containers/indicators/custom/municipalities";
 
 const COMPONENT_INDICATORS = {
   "total-area": TotalArea,
@@ -73,13 +75,20 @@ export default function ReportResultsIndicator({
               })}
             />
           )}
-          {/* resource type Feature Indicators */}
+
+          {/*
+            Charts
+          */}
           {type === "chart" && indicator.resource.type === "feature" && (
             <ChartIndicators {...indicator} resource={indicator.resource} />
           )}
-          {type === "chart" && indicator.resource.type === "imagery-tile" && (
+          {type === "chart" && indicator.resource.type === "imagery" && (
             <ChartImageryIndicators {...indicator} resource={indicator.resource} />
           )}
+          {type === "chart" && indicator.resource.type === "imagery-tile" && (
+            <ChartImageryTileIndicators {...indicator} resource={indicator.resource} />
+          )}
+
           {indicator.resource.type === "component" &&
             !!COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS] &&
             createElement(
@@ -90,9 +99,16 @@ export default function ReportResultsIndicator({
           {type === "numeric" && indicator.resource.type === "feature" && (
             <NumericIndicators {...indicator} resource={indicator.resource} />
           )}
-          {type === "numeric" && indicator.resource.type === "imagery-tile" && (
+          {type === "numeric" && indicator.resource.type === "imagery" && (
             <NumericImageryIndicators {...indicator} resource={indicator.resource} />
           )}
+          {type === "numeric" && indicator.resource.type === "imagery-tile" && (
+            <NumericImageryTileIndicators {...indicator} resource={indicator.resource} />
+          )}
+
+          {/*
+            Table
+          */}
           {type === "table" && indicator.resource.type === "feature" && (
             <TableIndicators {...indicator} resource={indicator.resource} />
           )}

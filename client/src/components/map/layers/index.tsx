@@ -4,6 +4,7 @@ import { useCallback, useEffect } from "react";
 
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
+import ImageryLayer from "@arcgis/core/layers/ImageryLayer";
 import ImageryTileLayer from "@arcgis/core/layers/ImageryTileLayer";
 import VectorTileLayer from "@arcgis/core/layers/VectorTileLayer";
 import WebTileLayer from "@arcgis/core/layers/WebTileLayer";
@@ -19,6 +20,7 @@ export default function Layer({
 }: {
   layer:
     | Partial<__esri.WebTileLayer>
+    | Partial<__esri.ImageryLayer>
     | Partial<__esri.ImageryTileLayer>
     | Partial<__esri.FeatureLayer>
     | Partial<__esri.GraphicsLayer>
@@ -74,6 +76,13 @@ export default function Layer({
 
     if (layer.type === "imagery-tile") {
       const l = new ImageryTileLayer(omit(layer, ["type"]));
+      map.add(l, index);
+
+      map.reorder(l, index);
+    }
+
+    if (layer.type === "imagery") {
+      const l = new ImageryLayer(omit(layer, ["type"]));
       map.add(l, index);
 
       map.reorder(l, index);
