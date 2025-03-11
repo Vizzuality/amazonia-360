@@ -13,7 +13,7 @@ export default function TopicsItem({ id, name_en, image, description_en }: Topic
   const descriptionRef = useRef<HTMLParagraphElement>(null);
 
   return (
-    <div key={id} className="h-20 w-screen md:h-96 md:w-96">
+    <div key={id} className="h-20 w-screen md:h-96 md:w-64 lg:w-96">
       <div className="group relative cursor-pointer overflow-hidden shadow after:absolute after:bottom-0 after:left-0 after:h-16 after:w-full after:bg-gradient-to-b after:from-transparent after:to-[#09090B]/85 after:content-['']">
         <div className="h-20 w-screen md:h-96 md:w-96">
           <Image
