@@ -14,7 +14,7 @@ export default function KeyFeaturesGrid() {
           <CardsContainer />
         </div>
         <div className="col-span-12 m-auto py-10 lg:col-span-6 lg:py-12 xl:py-56">
-          <div className="m-auto h-80 w-80 sm:h-[600px] sm:w-[600px] xl:h-[650px] xl:w-[650px]">
+          <div className="m-auto h-80 w-80 sm:h-[600px] sm:w-[450px] xl:h-[650px] xl:w-[650px]">
             <LazyLottieComponent
               id="grid-animation"
               animationData={animation}

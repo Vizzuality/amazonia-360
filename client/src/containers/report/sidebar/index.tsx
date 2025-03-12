@@ -84,7 +84,7 @@ export default function ReportSidebar() {
 
           <SidebarContent
             className={cn({
-              "h-[calc(100vh_-_64px_-_80px)] w-full flex-1 pt-6": true,
+              "min-h-screen w-full flex-1 pt-6": true,
             })}
           >
             <TabsContent value="indicators" className="h-full pr-2">

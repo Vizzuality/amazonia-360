@@ -140,6 +140,8 @@
 
   .container {
     @apply mx-0 w-screen p-0;
+    max-width: 2480px !important;
+    padding: 0 !important;
   }
 
   main {
@@ -147,8 +149,8 @@
   }
 
   @page {
-    size: A4 portrait; /* Change to landscape if needed */
-    margin: 5mm; /* Adjust margins to fit content */
+    size: A4 portrait !important;
+    margin: 5mm;
   }
 }
 
