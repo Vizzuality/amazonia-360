@@ -54,7 +54,7 @@ export const gridDatasetsParser = parseAsArrayOf(parseAsString).withDefault([]);
 export const gridDatasetSelectedParser = parseAsString;
 
 export const aiSummaryParser = parseAsJson<AiSummary>().withDefault({
-  type: "Short",
+  type: "Normal",
   only_active: true,
   enabled: false,
 });

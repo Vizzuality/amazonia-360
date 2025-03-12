@@ -2102,7 +2102,16 @@
         "outFields": ["nombre as Name", "pais as Country", ","],
         "returnGeometry": false
       },
-      "query_chart": "",
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": true,
+        "returnIntersections": true,
+        "outFields": [
+          "nombre",
+          "nombre as label",
+          ","
+        ]
+      },
       "popupTemplate": {
         "title": "{nombre}"
       },
@@ -2229,8 +2238,8 @@
       },
       "query_ai": {
         "where": "1=1",
-        "returnGeometry": true,
-        "returnIntersections": true,
+        "returnGeometry": false,
+        "returnIntersections": false,
         "outFields": ["*"]
       }
     }
@@ -2295,8 +2304,8 @@
       },
       "query_ai": {
         "where": "1=1",
-        "returnGeometry": true,
-        "returnIntersections": true,
+        "returnGeometry": false,
+        "returnIntersections": false,
         "outFields": ["*"]
       }
     }
