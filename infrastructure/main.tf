@@ -75,9 +75,12 @@ module "github" {
 
     # API
     TF_API_REPOSITORY_NAME             = module.api_ecr.repository_name
+    OPENAI_TOKEN                       = var.openai_token
 
     # Client
     TF_CLIENT_REPOSITORY_NAME          = module.client_ecr.repository_name
+
+
   }
   global_variable_map = {
     TF_PROJECT_NAME                    = var.project_name

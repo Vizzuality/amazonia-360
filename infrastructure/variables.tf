@@ -3,6 +3,11 @@ variable "aws_profile" {
   description = "AWS profile to use to perform TF operations"
 }
 
+variable openai_token {
+    type = string
+    description = "OpenAI API token"
+}
+
 variable "allowed_account_id" {
   type        = string
   description = "AWS account id"
