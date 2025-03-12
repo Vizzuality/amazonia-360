@@ -96,7 +96,7 @@ export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id
       return {
         indicator_name: d.name_en,
         data:
-          q.data?.features.map((f) =>
+          q?.data?.features.map((f) =>
             omit(f.attributes, ["Shape__Area", "Shape__Length", "FID", "Id", "OBJECTID"]),
           ) || [],
       };

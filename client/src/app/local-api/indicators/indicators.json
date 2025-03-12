@@ -1679,7 +1679,7 @@
       "name": "Electricity_Access",
       "type": "feature",
       "column": [],
-      "layer_id": "5",
+      "layer_id": "6",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Electricity_Access/FeatureServer",
       "query_numeric": {
         "where": "1=1",
@@ -1687,7 +1687,7 @@
           {
             "onStatisticField": "SDG711pct",
             "outStatisticFieldName": "value",
-            "statisticType": "mean"
+            "statisticType": "avg"
           }
         ]
       },
@@ -1877,7 +1877,7 @@
       "name": "State_Presence",
       "type": "feature",
       "column": [],
-      "layer_id": "8",
+      "layer_id": "10",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/State_Presence/FeatureServer",
       "query_numeric": {
         "where": "1=1",
