@@ -16,8 +16,6 @@ import { MIN_VISUALIZATION_SIZES } from "@/constants/topics";
 import { ReportResultsContentIndicatorItem } from "@/containers/results/content/indicators/item";
 import { ReportResultsSummary } from "@/containers/results/content/summary";
 
-import { useSidebar } from "@/components/ui/sidebar";
-
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 export interface ReportResultsContentItemProps {
@@ -29,7 +27,6 @@ export const ReportResultsContentItem = ({
   topic,
   editable = true,
 }: ReportResultsContentItemProps) => {
-  const { open: isSidebarOpen } = useSidebar();
   const [, setTopics] = useSyncTopics();
   const [ai_summary] = useSyncAiSummary();
   const [reportEditionMode] = useAtom(reportEditionModeAtom);
@@ -101,7 +98,6 @@ export const ReportResultsContentItem = ({
       key={topic.id}
       className={cn({
         "container relative space-y-4 print:max-w-96 print:break-before-page print:px-0": true,
-        "pr-6": isSidebarOpen,
       })}
     >
       <h2 className="text-xl font-semibold">{TOPIC?.name_en}</h2>
