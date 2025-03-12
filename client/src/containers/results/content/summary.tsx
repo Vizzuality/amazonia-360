@@ -90,14 +90,16 @@ export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id
     isFetched,
     isFetching,
     isPending,
-    data: queries.map((q) => {
-      if (q.data?.features) {
-        return q.data.features.map((f) =>
-          omit(f.attributes, ["Shape__Area", "Shape__Length", "FID"]),
-        );
-      }
+    data: DATA.map((d, i) => {
+      const q = queries[i];
 
-      return [];
+      return {
+        indicator_name: d.name_en,
+        data:
+          q.data?.features.map((f) =>
+            omit(f.attributes, ["Shape__Area", "Shape__Length", "FID", "Id", "OBJECTID"]),
+          ) || [],
+      };
     }),
   };
 };
