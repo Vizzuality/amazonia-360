@@ -183,7 +183,7 @@ module "prod" {
     aws = aws.prod
   }
 
-  domain                                        = "amazonia360.dev-vizzuality.com"
+  domain                                        = "beta.amazoniaforever360.org"
   project                                       = var.project_name
   environment                                   = "production"
   aws_region                                    = var.prod.aws_region
