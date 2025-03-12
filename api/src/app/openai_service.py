@@ -42,6 +42,8 @@ def generate_description(context_data: dict, description_type: str, language: st
             "The description must be engaging, informative, and contextually relevant, "
             "leveraging knowledge of Amazonia’s ecosystem, geography, "
             "and conservation efforts to enrich the narrative."
+            "If no occurrence data is provided for an indicator, just mention that no data is available, "
+            "avoiding empty sentences."
             "Use Markdown formatting for the most critical insights, such as key figures, names, and classifications."
             "Avoid using headers, blockquotes, or introductory phrases."
             "Avoid using using code names like SOL-T-XXX or BR-Lxxx."
