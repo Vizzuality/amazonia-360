@@ -425,7 +425,7 @@ export const useQueryFeatures = (
 ) => {
   const queries = useQueries({
     queries: indicators?.map(({ id, resource }) => ({
-      queryKey: ["featureId", id, resource],
+      queryKey: ["featureId", id, resource, geometry?.toJSON()],
       queryFn: () =>
         getQueryFeatureId({
           id,
