@@ -2102,7 +2102,16 @@
         "outFields": ["nombre as Name", "pais as Country", ","],
         "returnGeometry": false
       },
-      "query_chart": "",
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": true,
+        "returnIntersections": true,
+        "outFields": [
+          "nombre",
+          "nombre as label",
+          ","
+        ]
+      },
       "popupTemplate": {
         "title": "{nombre}"
       },
