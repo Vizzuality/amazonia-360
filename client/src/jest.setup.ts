@@ -25,13 +25,32 @@ jest.mock("@arcgis/core/views/MapView", () => class MapView {});
 jest.mock("@arcgis/core/widgets/Search/SearchViewModel", () => class SearchViewModel {});
 
 // Layers
-jest.mock("@arcgis/core/layers/FeatureLayer", () => class FeatureLayer {});
+jest.mock(
+  "@arcgis/core/layers/FeatureLayer",
+  () =>
+    class FeatureLayer {
+      queryFeatures = mockQueryFeatures;
+    },
+);
 jest.mock("@arcgis/core/layers/WebTileLayer", () => class WebTileLayer {});
 jest.mock("@arcgis/core/layers/GraphicsLayer", () => class GraphicsLayer {});
 jest.mock("@arcgis/core/layers/VectorTileLayer", () => class VectorTileLayer {});
 jest.mock("@arcgis/core/layers/GeoJSONLayer", () => class GeoJSONLayer {});
 jest.mock("@arcgis/core/layers/MapImageLayer", () => class MapImageLayer {});
-jest.mock("@arcgis/core/layers/ImageryTileLayer", () => class ImageryTileLayer {});
+jest.mock(
+  "@arcgis/core/layers/ImageryLayer",
+  () =>
+    class ImageryTileLayer {
+      computeStatisticsHistograms = mockComputeStatisticsHistograms;
+    },
+);
+jest.mock(
+  "@arcgis/core/layers/ImageryTileLayer",
+  () =>
+    class ImageryTileLayer {
+      computeStatisticsHistograms = mockComputeStatisticsHistograms;
+    },
+);
 
 // Layer support
 jest.mock("@arcgis/core/layers/support/FeatureFilter", () => class FeatureFilter {});
@@ -127,6 +146,14 @@ jest.mock("@/lib/location", () => ({
 /****************
  * QUERY
  ******************** */
+export const mockQueryFeatures = jest.fn().mockResolvedValue({
+  features: [],
+});
+
+export const mockComputeStatisticsHistograms = jest.fn().mockResolvedValue({
+  features: [],
+});
+
 export const mockUseGetRasterAnalysis = jest
   .fn<Partial<UseQueryResult>, unknown[]>()
   .mockReturnValue({
