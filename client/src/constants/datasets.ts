@@ -35,7 +35,7 @@ export const DATASETS = {
       id: "admin0",
       type: "feature",
       title: "Administrative boundaries (Adm0)",
-      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM0/FeatureServer/0",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_0/FeatureServer/2",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({
           color: [0, 0, 0, 0.25],
@@ -50,7 +50,7 @@ export const DATASETS = {
     legend: null,
     metadata: {
       type: "arcgis",
-      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_ADM0/FeatureServer/info/metadata",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_0/FeatureServer/info/metadata",
       data: null,
     },
     getFeatures: (props?: __esri.QueryProperties) =>
@@ -65,7 +65,7 @@ export const DATASETS = {
       id: "admin1",
       type: "feature",
       title: "Administrative boundaries (Adm1)",
-      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM1/FeatureServer/0",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer/4",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({
           color: [0, 0, 0, 0.25],
@@ -80,7 +80,7 @@ export const DATASETS = {
     legend: null,
     metadata: {
       type: "arcgis",
-      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_ADM1/FeatureServer/info/metadata",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer/info/metadata",
       data: null,
     },
     getFeatures: (props?: __esri.QueryProperties) =>
@@ -95,7 +95,7 @@ export const DATASETS = {
       id: "admin2",
       title: "Administrative boundaries (Adm2)",
       type: "feature",
-      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_ADM2/FeatureServer/0",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer/6",
       renderer: new SimpleRenderer({
         symbol: new SimpleFillSymbol({
           color: [0, 0, 0, 0.25],
@@ -110,7 +110,7 @@ export const DATASETS = {
     legend: null,
     metadata: {
       type: "arcgis",
-      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/AFP_ADM2/FeatureServer/info/metadata",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer/info/metadata",
       data: null,
     },
     getFeatures: (props?: __esri.QueryProperties) =>

@@ -9,6 +9,8 @@ import { useGetMutationSearch, useGetSuggestions } from "@/lib/search";
 
 import { tmpBboxAtom, useSyncLocation } from "@/app/store";
 
+import { BUFFERS } from "@/constants/map";
+
 import { Search } from "@/components/ui/search";
 
 type Option = {
@@ -66,12 +68,12 @@ export default function SearchC() {
               const geo = getGeometryByType({
                 type: data.type,
                 geometry: data.geometry,
-                buffer: 0,
+                buffer: BUFFERS[data.type],
               });
 
               if (!geo) return;
 
-              const g = getGeometryWithBuffer(geo, 0);
+              const g = getGeometryWithBuffer(geo, BUFFERS[data.type]);
 
               if (g) {
                 setTmpBbox(g.extent);

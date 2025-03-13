@@ -55,7 +55,7 @@ export const useLocation = (location?: Location | null) => {
       const geo = getGeometryByType({
         type: searchData.type,
         geometry: searchData.geometry,
-        buffer: 0,
+        buffer: BUFFERS[searchData.type],
       });
 
       if (!geo) return null;

@@ -60,7 +60,7 @@ export default function Confirm() {
     onValueChangeDebounced();
   };
 
-  if (!location) return null;
+  if (!location || !LOCATION) return null;
 
   return (
     <div className="flex w-full flex-col justify-between gap-4 overflow-hidden text-sm">

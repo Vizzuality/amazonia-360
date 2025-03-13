@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 
-import { getSearchQueryOptions } from "@/lib/search";
+// import { getSearchQueryOptions } from "@/lib/search";
 
 import { locationParser } from "@/app/parsers";
 import { PageProps } from "@/app/types";
@@ -37,14 +37,14 @@ export default async function ReportResultsPage({ searchParams }: PageProps<Para
     redirect("/report");
   }
 
-  if (l && l.type === "search") {
-    const { queryKey, queryFn } = getSearchQueryOptions(l);
+  // if (l && l.type === "search") {
+  //   const { queryKey, queryFn } = getSearchQueryOptions(l);
 
-    await queryClient.prefetchQuery({
-      queryKey,
-      queryFn,
-    });
-  }
+  //   await queryClient.prefetchQuery({
+  //     queryKey,
+  //     queryFn,
+  //   });
+  // }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
