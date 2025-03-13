@@ -71,8 +71,8 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
   }, [setAiOnlyActive]);
 
   return (
-    <div className="relative flex h-full flex-col justify-between">
-      <div className="h-full w-full flex-1 space-y-4">
+    <div className="relative flex h-full max-h-[calc(100vh-180px)] flex-col justify-between">
+      <div className="relative h-full w-full flex-1 space-y-4">
         <p className="text-sm font-medium leading-5 text-muted-foreground">
           Choose a text style to create summaries for the active topics in your report.
         </p>

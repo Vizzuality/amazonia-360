@@ -4,7 +4,7 @@ export default function Help() {
   return (
     <section className="bg-blue-700 text-white">
       <div className="px-4 py-10 sm:container">
-        <div className="flex flex-col items-start justify-between md:flex-row md:items-center md:py-16">
+        <div className="flex flex-col items-start justify-between lg:flex-row lg:items-center lg:py-16">
           <div className="flex flex-col justify-start md:py-0 md:pt-16">
             <h3 className="text-lg font-bold">Help us improve!</h3>
             <p className="max-w-2xl font-normal">
@@ -13,7 +13,7 @@ export default function Help() {
               AmazoniaForever360+!
             </p>
           </div>
-          <div className="flex flex-col items-center md:items-center md:py-0 md:pt-16">
+          <div className="flex flex-col items-center md:items-center md:pt-8 lg:pt-16">
             <a
               href="https://survey123.arcgis.com/share/fadbaa4e81f04f068f5ed0abd99e4789"
               target="_blank"

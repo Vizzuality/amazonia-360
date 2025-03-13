@@ -1629,26 +1629,26 @@
       "legend": {
         "type": "basic",
         "items": [
-            {
-                "label": "0 - 50",
-                "color": "#002F61"
-            },
-            {
-                "label": "50 - 100",
-                "color": "#007691"
-            },
-            {
-                "label": "100 - 500",
-                "color": "#00B599"
-            },
-            {
-                "label": "500 - 2000",
-                "color": "#5CEB6C"
-            },
-            {
-                "label": "2000 - 5000000",
-                "color": "#FFFF00"
-            }
+          {
+            "label": "0 - 50",
+            "color": "#002F61"
+          },
+          {
+            "label": "50 - 100",
+            "color": "#007691"
+          },
+          {
+            "label": "100 - 500",
+            "color": "#00B599"
+          },
+          {
+            "label": "500 - 2000",
+            "color": "#5CEB6C"
+          },
+          {
+            "label": "2000 - 5000000",
+            "color": "#FFFF00"
+          }
         ]
       },
       "query_numeric": "",
