@@ -46,7 +46,11 @@ export function CardTitle({ children }: PropsWithChildren) {
 }
 
 export function CardContent({ className, children }: PropsWithChildren<{ className?: string }>) {
-  return <div className={cn("mt-2 flex h-full grow flex-col", className)}>{children}</div>;
+  return (
+    <div className={cn("mt-2 flex h-full grow flex-col overflow-hidden", className)}>
+      {children}
+    </div>
+  );
 }
 
 export function CardSettings({

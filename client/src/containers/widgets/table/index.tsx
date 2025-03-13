@@ -49,9 +49,9 @@ export function DataTable<TData, TValue>({
   const { pageIndex } = table.getState().pagination;
 
   return (
-    <div className="flex h-full grow flex-col overflow-hidden">
-      <div className="flex min-h-80 grow flex-col justify-between overflow-hidden rounded-md print:min-h-0">
-        <ScrollArea className="h-full max-h-[calc(100%-3rem)] w-full grow">
+    <div className="h-full overflow-hidden">
+      <div className="flex h-full grow flex-col justify-between gap-2 overflow-hidden rounded-md print:min-h-0">
+        <ScrollArea className="w-full">
           <Table className="border-foreground">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -114,7 +114,7 @@ export function DataTable<TData, TValue>({
           </Table>
         </ScrollArea>
 
-        <footer className="mt-2 flex items-center justify-between">
+        <footer className="flex shrink-0 items-center justify-between">
           <p className="text-xs font-medium text-gray-500">{`${data.length} ${Pluralize("result", data.length)}`}</p>
           <DataPagination
             pageIndex={pageIndex}

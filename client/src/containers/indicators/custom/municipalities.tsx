@@ -100,6 +100,9 @@ export const Municipalities = ({ indicator }: { indicator: Indicator }) => {
                 desc: !!COLUMNS[0]?.sortDescFirst,
               },
             ],
+            pagination: {
+              pageSize: 9,
+            },
           },
         }}
       />
