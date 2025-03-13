@@ -114,7 +114,7 @@ export function DataTable<TData, TValue>({
           </Table>
         </ScrollArea>
 
-        <footer className="mb-6 mt-2 flex items-center justify-between">
+        <footer className="mt-2 flex items-center justify-between">
           <p className="text-xs font-medium text-gray-500">{`${data.length} ${Pluralize("result", data.length)}`}</p>
           <DataPagination
             pageIndex={pageIndex}
