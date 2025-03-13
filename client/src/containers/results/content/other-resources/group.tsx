@@ -28,7 +28,7 @@ export default function OtherResourcesGroup({ data }: { data?: ResourceProps[] }
         ))}
       </WidgetsRow>
 
-      <div className="flex justify-start">
+      <div className="flex justify-center sm:justify-start">
         <DataPagination
           pageIndex={page}
           pageCount={Math.ceil((data?.length || 0) / rowsPerPage) || 1}
