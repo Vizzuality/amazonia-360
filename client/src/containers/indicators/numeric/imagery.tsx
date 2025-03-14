@@ -36,14 +36,16 @@ export const NumericImageryIndicators = ({ id, resource }: NumericImageryIndicat
     // console.log(countPixel)
     // const h = query.data.histograms[0];
 
-    return query.data.histograms.reduce((acc, curr) => {
-      return (
-        acc +
-        [...curr.counts].reduce((a, c, i) => {
-          return a + c * (curr.min + (i * curr.max) / (curr.size - 1));
-        }, 0)
-      );
-    }, 0);
+    return (
+      query.data?.histograms?.reduce((acc, curr) => {
+        return (
+          acc +
+          [...curr.counts].reduce((a, c, i) => {
+            return a + c * (curr.min + (i * curr.max) / (curr.size - 1));
+          }, 0)
+        );
+      }, 0) ?? "-"
+    );
   }, [query.data]);
 
   return (

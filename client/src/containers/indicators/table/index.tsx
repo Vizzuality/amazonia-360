@@ -62,6 +62,9 @@ export const TableIndicators = ({ id, resource }: TableIndicatorsProps) => {
                 desc: !!COLUMNS[0]?.sortDescFirst,
               },
             ],
+            pagination: {
+              pageSize: 9,
+            },
           },
         }}
       />

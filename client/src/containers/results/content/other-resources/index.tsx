@@ -28,7 +28,7 @@ export default function OtherResources() {
     {
       query: DATASETS.acu_knowledge.getFeatures({
         ...(!!queryGadm.data?.gid0 && {
-          orderByFields: ["Name"],
+          orderByFields: ["Year DESC", "Month DESC"],
           where: `CountryIso in (${queryGadm.data?.gid0.map((g) => `'${g}'`)})`,
         }),
       }),
