@@ -26,20 +26,28 @@ export default function Resource({
       <div className="flex grow flex-col items-center justify-between space-y-4 text-center">
         <header className="space-y-2">
           <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
-            {Type === "Publication" && (
-              <LuFiles size={40} strokeWidth={1.5} className="text-blue-400" />
-            )}
-            {Type === "Multimedia" && (
+            {Type === "Blogs" && (
               <LuFileVideo2 size={40} strokeWidth={1.5} className="text-blue-400" />
             )}
-            {Type === "Database" && (
+            {Type === "Catalogs and Brochures" && (
               <LuDatabase size={40} strokeWidth={1.5} className="text-blue-400" />
             )}
-            {Type === "Survey" && (
+            {Type === "Co-Publications" && (
+              <LuFiles size={40} strokeWidth={1.5} className="text-blue-400" />
+            )}
+            {Type === "Discussion Papers" && (
               <LuListTodo size={40} strokeWidth={1.5} className="text-blue-400" />
             )}
-            {Type === "Map" && <LuMap size={40} strokeWidth={1.5} className="text-blue-400" />}
-            {Type === "Evaluations" && (
+            {Type === "Magazines" && (
+              <LuMap size={40} strokeWidth={1.5} className="text-blue-400" />
+            )}
+            {Type === "Monographs" && (
+              <LuBarChart size={40} strokeWidth={1.5} className="text-blue-400" />
+            )}
+            {Type === "Technical Notes" && (
+              <LuBarChart size={40} strokeWidth={1.5} className="text-blue-400" />
+            )}
+            {Type === "Working Papers" && (
               <LuBarChart size={40} strokeWidth={1.5} className="text-blue-400" />
             )}
           </div>
@@ -47,7 +55,9 @@ export default function Resource({
             <h3 title={Name} className="line-clamp-3 text-base font-semibold text-blue-500">
               {Name}
             </h3>
-            <p className="text-xs font-normal text-gray-500">Topic: {Topic}</p>
+            <p className="text-xs font-semibold text-muted-foreground">
+              {Month} {Year} - {Country}
+            </p>
           </div>
         </header>
         <footer>
