@@ -100,7 +100,7 @@ module "dev" {
     aws = aws.dev
   }
 
-  domain                                        = "dev.amazonia360.dev-vizzuality.com"
+  domain                                        = "dev.amazoniaforever360.org"
   project                                       = var.project_name
   environment                                   = "develop"
   aws_region                                    = var.dev.aws_region
@@ -143,7 +143,7 @@ module "staging" {
     aws = aws.dev
   }
 
-  domain                                        = "staging.amazonia360.dev-vizzuality.com"
+  domain                                        = "staging.amazoniaforever360.org"
   project                                       = var.project_name
   environment                                   = "staging"
   aws_region                                    = var.staging.aws_region
