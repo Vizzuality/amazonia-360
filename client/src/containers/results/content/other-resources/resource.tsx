@@ -1,5 +1,13 @@
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { LuBarChart, LuDatabase, LuFileVideo2, LuFiles, LuListTodo, LuMap } from "react-icons/lu";
+import { LucideBookOpenText, LucideFilePenLine } from "lucide-react";
+import {
+  LuBook,
+  LuFileText,
+  LuMessagesSquare,
+  LuNewspaper,
+  LuPenLine,
+  LuUsers,
+} from "react-icons/lu";
 
 import { Card } from "@/containers/card";
 
@@ -27,28 +35,28 @@ export default function Resource({
         <header className="space-y-2">
           <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
             {Type === "Blogs" && (
-              <LuFileVideo2 size={40} strokeWidth={1.5} className="text-blue-400" />
+              <LuPenLine size={40} strokeWidth={1.5} className="text-blue-400" />
             )}
             {Type === "Catalogs and Brochures" && (
-              <LuDatabase size={40} strokeWidth={1.5} className="text-blue-400" />
+              <LucideBookOpenText size={40} strokeWidth={1.5} className="text-blue-400" />
             )}
             {Type === "Co-Publications" && (
-              <LuFiles size={40} strokeWidth={1.5} className="text-blue-400" />
+              <LuUsers size={40} strokeWidth={1.5} className="text-blue-400" />
             )}
             {Type === "Discussion Papers" && (
-              <LuListTodo size={40} strokeWidth={1.5} className="text-blue-400" />
+              <LuMessagesSquare size={40} strokeWidth={1.5} className="text-blue-400" />
             )}
             {Type === "Magazines" && (
-              <LuMap size={40} strokeWidth={1.5} className="text-blue-400" />
+              <LuNewspaper size={40} strokeWidth={1.5} className="text-blue-400" />
             )}
             {Type === "Monographs" && (
-              <LuBarChart size={40} strokeWidth={1.5} className="text-blue-400" />
+              <LuBook size={40} strokeWidth={1.5} className="text-blue-400" />
             )}
             {Type === "Technical Notes" && (
-              <LuBarChart size={40} strokeWidth={1.5} className="text-blue-400" />
+              <LucideFilePenLine size={40} strokeWidth={1.5} className="text-blue-400" />
             )}
             {Type === "Working Papers" && (
-              <LuBarChart size={40} strokeWidth={1.5} className="text-blue-400" />
+              <LuFileText size={40} strokeWidth={1.5} className="text-blue-400" />
             )}
           </div>
           <div className="flex flex-col space-y-2">
