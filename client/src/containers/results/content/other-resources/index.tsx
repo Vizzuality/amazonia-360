@@ -56,7 +56,7 @@ export default function OtherResources() {
 
       <CardLoader query={[query]} className="h-80">
         <CardNoData query={[query]}>
-          <Tabs defaultValue={tab} className="flex flex-col items-start space-y-4">
+          <Tabs defaultValue={tab} className="flex flex-col items-start space-y-4 print:hidden">
             <TabsList className="flex-wrap justify-start gap-x-4 gap-y-1 space-x-0">
               <TabsTrigger value="all" onClick={() => setTab("all")}>
                 All ({query.data?.length || 0})

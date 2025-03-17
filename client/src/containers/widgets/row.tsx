@@ -9,13 +9,6 @@ export default function WidgetsRow({
   children,
 }: PropsWithChildren<{ className?: string }>) {
   return (
-    <div
-      className={cn(
-        "grid grow grid-cols-12 items-stretch gap-2 print:grow-0 print:items-start",
-        className,
-      )}
-    >
-      {children}
-    </div>
+    <div className={cn("grid grow grid-cols-12 items-stretch gap-2", className)}>{children}</div>
   );
 }

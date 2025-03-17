@@ -73,6 +73,7 @@
     "numeral": "^2.0.6",
     "nuqs": "^1.20.0",
     "pluralize": "^8.0.0",
+    "puppeteer": "^24.4.0",
     "query-string": "^9.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
