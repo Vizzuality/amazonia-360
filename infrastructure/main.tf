@@ -115,12 +115,14 @@ module "dev" {
   github_additional_environment_variables = {
     TF_AWS_REGION   = var.dev.aws_region
 
+
     # API
     TF_API_TIFF_PATH                       = var.dev.api.tiff_path
     TF_API_GRID_TILES_PATH                 = var.dev.api.grid_tiles_path
 
     # Client
     TF_CLIENT_NEXT_PUBLIC_API_URL = var.dev.client.next_public_api_url
+    TF_CLIENT_BASIC_AUTH_ENABLED = var.dev.client.basic_auth_enabled
   }
   github_additional_environment_secrets = {
     # API
@@ -131,7 +133,6 @@ module "dev" {
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.dev.client.next_public_arcgis_api_key
     TF_CLIENT_ARCGIS_CLIENT_ID = var.dev.client.arcgis_client_id
     TF_CLIENT_ARCGIS_CLIENT_SECRET = var.dev.client.arcgis_client_secret
-    TF_CLIENT_BASIC_AUTH_ENABLED = var.dev.client.basic_auth_enabled
     TF_CLIENT_BASIC_AUTH_USER = var.dev.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD = var.dev.client.basic_auth_password
     TF_CLIENT_SESSION_SECRET = var.dev.client.session_secret
@@ -165,6 +166,7 @@ module "staging" {
 
     # Client
     TF_CLIENT_NEXT_PUBLIC_API_URL = var.staging.client.next_public_api_url
+    TF_CLIENT_BASIC_AUTH_ENABLED = var.staging.client.basic_auth_enabled
   }
   github_additional_environment_secrets = {
     # API
@@ -175,7 +177,7 @@ module "staging" {
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.staging.client.next_public_arcgis_api_key
     TF_CLIENT_ARCGIS_CLIENT_ID = var.staging.client.arcgis_client_id
     TF_CLIENT_ARCGIS_CLIENT_SECRET = var.staging.client.arcgis_client_secret
-    TF_CLIENT_BASIC_AUTH_ENABLED = var.staging.client.basic_auth_enabled
+
     TF_CLIENT_BASIC_AUTH_USER = var.staging.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD = var.staging.client.basic_auth_password
     TF_CLIENT_SESSION_SECRET = var.staging.client.session_secret
@@ -209,6 +211,7 @@ module "prod" {
 
     # Client
     TF_CLIENT_NEXT_PUBLIC_API_URL = var.prod.client.next_public_api_url
+    TF_CLIENT_BASIC_AUTH_ENABLED = var.prod.client.basic_auth_enabled
   }
   github_additional_environment_secrets = {
     # API
@@ -219,7 +222,6 @@ module "prod" {
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.prod.client.next_public_arcgis_api_key
     TF_CLIENT_ARCGIS_CLIENT_ID = var.prod.client.arcgis_client_id
     TF_CLIENT_ARCGIS_CLIENT_SECRET = var.prod.client.arcgis_client_secret
-    TF_CLIENT_BASIC_AUTH_ENABLED = var.prod.client.basic_auth_enabled
     TF_CLIENT_BASIC_AUTH_USER = var.prod.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD = var.prod.client.basic_auth_password
     TF_CLIENT_SESSION_SECRET = var.prod.client.session_secret
