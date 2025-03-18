@@ -20,7 +20,7 @@ export const NumericImageryIndicators = ({ id, resource }: NumericImageryIndicat
   const query = useQueryImageryId({ id, resource, type: "numeric", geometry: GEOMETRY });
 
   const VALUE = useMemo(() => {
-    if (!query.data || !("statistics" in query.data)) return 0;
+    if (!query.data || !("statistics" in query.data)) return null;
 
     // let sumproducto = 0;
     // let countPixel = 0;
@@ -50,7 +50,7 @@ export const NumericImageryIndicators = ({ id, resource }: NumericImageryIndicat
 
   return (
     <CardLoader query={[query]} className="h-12 grow">
-      <CardWidgetNumber value={VALUE} unit={indicator?.unit_en} />
+      <CardWidgetNumber value={VALUE ?? "-"} unit={!!VALUE ? indicator?.unit_en : undefined} />
     </CardLoader>
   );
 };
