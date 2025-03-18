@@ -15,13 +15,17 @@
     "description_short_en": "Area selected for the contextual report.",
     "description_short_es": "Area selected for the contextual report.",
     "description_short_pt": "Area selected for the contextual report.",
-    "visualization_types": ["map"],
+    "visualization_types": [
+      "map"
+    ],
     "resource": {
       "name": "total-area",
       "type": "component",
       "column": [],
       "layer_id": "0",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -30,7 +34,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -50,13 +56,17 @@
     "description_short_en": "Defines the geographical limits of the Amazonia according to the IDB-led Amazonia Forever program.  ",
     "description_short_es": "Defines the geographical limits of the Amazonia according to the IDB-led Amazonia Forever program.  ",
     "description_short_pt": "Defines the geographical limits of the Amazonia according to the IDB-led Amazonia Forever program.  ",
-    "visualization_types": ["map"],
+    "visualization_types": [
+      "map"
+    ],
     "resource": {
       "name": "Amazonia",
       "type": "feature",
       "column": [],
       "layer_id": "2",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Amazonia/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -65,7 +75,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -85,13 +97,17 @@
     "description_short_en": "Identifies the political-administrative units at level 0 government levels (Country) across Amazonia",
     "description_short_es": "Identifies the political-administrative units at level 0 government levels (Country) across Amazonia",
     "description_short_pt": "Identifies the political-administrative units at level 0 government levels (Country) across Amazonia",
-    "visualization_types": ["numeric"],
+    "visualization_types": [
+      "numeric"
+    ],
     "resource": {
       "name": "AMZ_LOCADM0",
       "type": "feature",
       "column": [],
       "layer_id": "2",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Political_administrative_division_of_order_0/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -109,7 +125,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -129,13 +147,17 @@
     "description_short_en": "Identifies the political-administrative units at level 1 government levels (State or Province) across Amazonia",
     "description_short_es": "Identifies the political-administrative units at level 1 government levels (State or Province) across Amazonia",
     "description_short_pt": "Identifies the political-administrative units at level 1 government levels (State or Province) across Amazonia",
-    "visualization_types": ["numeric"],
+    "visualization_types": [
+      "numeric"
+    ],
     "resource": {
       "name": "AMZ_LOCADM1",
       "type": "feature",
       "column": [],
       "layer_id": "4",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -153,7 +175,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -173,13 +197,18 @@
     "description_short_en": "Identifies the political-administrative units at level 2 government levels (Municipality) across Amazonia",
     "description_short_es": "Identifies the political-administrative units at level 2 government levels (Municipality) across Amazonia",
     "description_short_pt": "Identifies the political-administrative units at level 2 government levels (Municipality) across Amazonia",
-    "visualization_types": ["table", "numeric"],
+    "visualization_types": [
+      "table",
+      "numeric"
+    ],
     "resource": {
       "name": "AMZ_LOCADM2",
-      "type": "component",
+      "type": "feature",
       "column": [],
       "layer_id": "6",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -192,7 +221,12 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["NAME_0 as Country", "NAME_1 as State", "NAME_2 as Municipality", ","],
+        "outFields": [
+          "NAME_0 as Country",
+          "NAME_1 as State",
+          "NAME_2 as Municipality",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": "",
@@ -201,7 +235,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -221,13 +257,18 @@
     "description_short_en": "Identifies the location of major administrative capital cities within Amazonia",
     "description_short_es": "Identifies the location of major administrative capital cities within Amazonia",
     "description_short_pt": "Identifies the location of major administrative capital cities within Amazonia",
-    "visualization_types": ["map", "numeric"],
+    "visualization_types": [
+      "map",
+      "numeric"
+    ],
     "resource": {
       "name": "Administrative_capitals_at_admin_0_to_2_levels",
       "type": "feature",
       "column": [],
       "layer_id": "9",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Administrative_capitals_at_admin_0_to_2_levels/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -242,8 +283,12 @@
       "query_chart": {
         "where": "1=1",
         "returnGeometry": false,
-        "groupByFieldsForStatistics": ["COMPNAME"],
-        "orderByFields": ["value DESC"],
+        "groupByFieldsForStatistics": [
+          "COMPNAME"
+        ],
+        "orderByFields": [
+          "value DESC"
+        ],
         "outStatistics": [
           {
             "onStatisticField": "Population2025",
@@ -274,7 +319,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -294,20 +341,29 @@
     "description_short_en": "Layers of polygons representing altitude ranges for the entire Amazon",
     "description_short_es": "Layers of polygons representing altitude ranges for the entire Amazon",
     "description_short_pt": "Layers of polygons representing altitude ranges for the entire Amazon",
-    "visualization_types": ["map", "chart"],
+    "visualization_types": [
+      "map",
+      "chart"
+    ],
     "resource": {
       "name": "AMZ_NATTOPOALT_SINGL",
       "type": "feature",
       "column": [],
       "layer_id": "9",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Altitude_ranges/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": {
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["ALTIT", "ALTIT as label", ","]
+        "outFields": [
+          "ALTIT",
+          "ALTIT as label",
+          ","
+        ]
       },
       "popupTemplate": {
         "title": "{ALTIT}"
@@ -316,7 +372,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -336,13 +394,19 @@
     "description_short_en": "Categorizes the major ecological terrestrial communities present in Amazonia, defining areas with similar climate, flora, and fauna characteristics (WWF)",
     "description_short_es": "Categorizes the major ecological terrestrial communities present in Amazonia, defining areas with similar climate, flora, and fauna characteristics (WWF)",
     "description_short_pt": "Categorizes the major ecological terrestrial communities present in Amazonia, defining areas with similar climate, flora, and fauna characteristics (WWF)",
-    "visualization_types": ["map", "numeric", "chart"],
+    "visualization_types": [
+      "map",
+      "numeric",
+      "chart"
+    ],
     "resource": {
       "name": "Large_terrestrial_biomes_in_the_Amazon",
       "type": "feature",
       "column": [],
       "layer_id": "13",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Large_terrestrial_biomes_in_the_Amazon/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -358,7 +422,11 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["BIOMADES", "BIOMADES as label", ","]
+        "outFields": [
+          "BIOMADES",
+          "BIOMADES as label",
+          ","
+        ]
       },
       "popupTemplate": {
         "title": "{BIOMADES}"
@@ -367,7 +435,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -387,13 +457,19 @@
     "description_short_en": "Distribution and classification of terrestrial  ecosystems in Amazonia, categorizing areas based on their biological communities, physical environment, and ecological processes (WWF)",
     "description_short_es": "Distribution and classification of terrestrial  ecosystems in Amazonia, categorizing areas based on their biological communities, physical environment, and ecological processes (WWF)",
     "description_short_pt": "Distribution and classification of terrestrial  ecosystems in Amazonia, categorizing areas based on their biological communities, physical environment, and ecological processes (WWF)",
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric"
+    ],
     "resource": {
       "name": "Ecosystem_Types",
       "type": "feature",
       "column": [],
       "layer_id": "14",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Ecosystem_Types/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -406,7 +482,10 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["ECOSYNAM as Ecosystem", ","],
+        "outFields": [
+          "ECOSYNAM as Ecosystem",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": "",
@@ -417,7 +496,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -437,13 +518,19 @@
     "description_short_en": "Tropical forest ecosystems occurring below 500m elevation, characterized by high rainfall, dense canopy cover, and year-round growing conditions",
     "description_short_es": "Tropical forest ecosystems occurring below 500m elevation, characterized by high rainfall, dense canopy cover, and year-round growing conditions",
     "description_short_pt": "Tropical forest ecosystems occurring below 500m elevation, characterized by high rainfall, dense canopy cover, and year-round growing conditions",
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric"
+    ],
     "resource": {
       "name": "Tropical_Lowland_Rainforest",
       "type": "feature",
       "column": [],
       "layer_id": "15",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Tropical_Lowland_Rainforest/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -456,7 +543,11 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["BIOME", "DESCRIP as Description", ","],
+        "outFields": [
+          "BIOME",
+          "DESCRIP as Description",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": "",
@@ -478,7 +569,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -498,13 +591,19 @@
     "description_short_en": "Tropical forests growing on nutrient-poor, white sand soils, characterized by shorter canopy height, specialized flora, and unique adaptations to low soil fertility.'",
     "description_short_es": "Tropical forests growing on nutrient-poor, white sand soils, characterized by shorter canopy height, specialized flora, and unique adaptations to low soil fertility.'",
     "description_short_pt": "Tropical forests growing on nutrient-poor, white sand soils, characterized by shorter canopy height, specialized flora, and unique adaptations to low soil fertility.'",
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric"
+    ],
     "resource": {
       "name": "Tropical_Heath_Forest",
       "type": "feature",
       "column": [],
       "layer_id": "16",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Tropical_Heath_Forest/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -517,7 +616,11 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["BIOME", "DESCRIP as Description", ","],
+        "outFields": [
+          "BIOME",
+          "DESCRIP as Description",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": "",
@@ -539,7 +642,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -559,13 +664,19 @@
     "description_short_en": "Fire-dependent savanna ecosystems characterized by clumped grasses, scattered trees, and regular natural burning cycles that maintain ecosystem health and biodiversity",
     "description_short_es": "Fire-dependent savanna ecosystems characterized by clumped grasses, scattered trees, and regular natural burning cycles that maintain ecosystem health and biodiversity",
     "description_short_pt": "Fire-dependent savanna ecosystems characterized by clumped grasses, scattered trees, and regular natural burning cycles that maintain ecosystem health and biodiversity",
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric"
+    ],
     "resource": {
       "name": "AFP_Tierras_indigenas",
       "type": "feature",
       "column": [],
       "layer_id": "17",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_Tierras_indigenas/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -578,7 +689,11 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["BIOME", "DESCRIP as Description", ","],
+        "outFields": [
+          "BIOME",
+          "DESCRIP as Description",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": "",
@@ -600,7 +715,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -620,13 +737,19 @@
     "description_short_en": "Areas transformed for crop production and agriculture, representing human-modified ecosystems that interact with and impact surrounding natural systems in the Amazon region",
     "description_short_es": "Areas transformed for crop production and agriculture, representing human-modified ecosystems that interact with and impact surrounding natural systems in the Amazon region",
     "description_short_pt": "Areas transformed for crop production and agriculture, representing human-modified ecosystems that interact with and impact surrounding natural systems in the Amazon region",
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric"
+    ],
     "resource": {
       "name": "Amazonian_Croplands",
       "type": "feature",
       "column": [],
       "layer_id": "18",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Amazonian_Croplands/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -639,7 +762,11 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["BIOME", "DESCRIP as Description", ","],
+        "outFields": [
+          "BIOME",
+          "DESCRIP as Description",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": "",
@@ -661,7 +788,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -681,13 +810,19 @@
     "description_short_en": "Areas intentionally converted to pastures and managed grasslands for livestock, representing cultivated ecosystems that maintain specific ecological processes despite being human-modified",
     "description_short_es": "Areas intentionally converted to pastures and managed grasslands for livestock, representing cultivated ecosystems that maintain specific ecological processes despite being human-modified",
     "description_short_pt": "Areas intentionally converted to pastures and managed grasslands for livestock, representing cultivated ecosystems that maintain specific ecological processes despite being human-modified",
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric"
+    ],
     "resource": {
       "name": "Managed_Grasslands",
       "type": "feature",
       "column": [],
       "layer_id": "19",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Managed_Grasslands/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -700,7 +835,11 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["BIOME", "DESCRIP as Description", ","],
+        "outFields": [
+          "BIOME",
+          "DESCRIP as Description",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": "",
@@ -722,7 +861,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -742,13 +883,19 @@
     "description_short_en": "Urbanized and industrialized areas that function as novel ecosystems, with distinct environmental processes, species interactions, and human-nature dynamics",
     "description_short_es": "Urbanized and industrialized areas that function as novel ecosystems, with distinct environmental processes, species interactions, and human-nature dynamics",
     "description_short_pt": "Urbanized and industrialized areas that function as novel ecosystems, with distinct environmental processes, species interactions, and human-nature dynamics",
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric"
+    ],
     "resource": {
       "name": "Built_Areas",
       "type": "feature",
       "column": [],
       "layer_id": "20",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Built_Areas/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -761,7 +908,11 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["BIOME", "DESCRIP as Description", ","],
+        "outFields": [
+          "BIOME",
+          "DESCRIP as Description",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": "",
@@ -783,7 +934,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -803,13 +956,19 @@
     "description_short_en": "Abandoned agricultural areas undergoing natural regeneration, where ecological succession processes are gradually restoring native vegetation and ecosystem functions in Amazonia",
     "description_short_es": "Abandoned agricultural areas undergoing natural regeneration, where ecological succession processes are gradually restoring native vegetation and ecosystem functions in Amazonia",
     "description_short_pt": "Abandoned agricultural areas undergoing natural regeneration, where ecological succession processes are gradually restoring native vegetation and ecosystem functions in Amazonia",
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric"
+    ],
     "resource": {
       "name": "Natural_Regeneration_Areas",
       "type": "feature",
       "column": [],
       "layer_id": "21",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Natural_Regeneration_Areas/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -822,7 +981,11 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["BIOME", "DESCRIP as Description", ","],
+        "outFields": [
+          "BIOME",
+          "DESCRIP as Description",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": "",
@@ -844,7 +1007,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -864,13 +1029,19 @@
     "description_short_en": "Forested wetland ecosystems characterized by waterlogged peat soils, hosting specialized vegetation adapted to permanent flooding and organic soil conditions in Amazonia",
     "description_short_es": "Forested wetland ecosystems characterized by waterlogged peat soils, hosting specialized vegetation adapted to permanent flooding and organic soil conditions in Amazonia",
     "description_short_pt": "Forested wetland ecosystems characterized by waterlogged peat soils, hosting specialized vegetation adapted to permanent flooding and organic soil conditions in Amazonia",
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric"
+    ],
     "resource": {
       "name": "Peat_Flooded_Forests",
       "type": "feature",
       "column": [],
       "layer_id": "22",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Peat_Flooded_Forests/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -883,7 +1054,11 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["BIOME", "DESCRIP as Description", ","],
+        "outFields": [
+          "BIOME",
+          "DESCRIP as Description",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": "",
@@ -905,7 +1080,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -925,13 +1102,19 @@
     "description_short_en": "Freshwater marsh ecosystems that maintain year-round inundation, featuring specialized aquatic vegetation, unique biodiversity patterns, and vital hydrological functions in Amazonia",
     "description_short_es": "Freshwater marsh ecosystems that maintain year-round inundation, featuring specialized aquatic vegetation, unique biodiversity patterns, and vital hydrological functions in Amazonia",
     "description_short_pt": "Freshwater marsh ecosystems that maintain year-round inundation, featuring specialized aquatic vegetation, unique biodiversity patterns, and vital hydrological functions in Amazonia",
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric"
+    ],
     "resource": {
       "name": "Permanent_Wetlands",
       "type": "feature",
       "column": [],
       "layer_id": "23",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Permanent_Wetlands/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -944,7 +1127,11 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["BIOME", "DESCRIP as Description", ","],
+        "outFields": [
+          "BIOME",
+          "DESCRIP as Description",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": "",
@@ -966,7 +1153,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -986,13 +1175,19 @@
     "description_short_en": "Wetland ecosystems that alternate between flooded and dry phases throughout the year, supporting distinct plant communities adapted to these natural water level fluctuations in Amazonia",
     "description_short_es": "Wetland ecosystems that alternate between flooded and dry phases throughout the year, supporting distinct plant communities adapted to these natural water level fluctuations in Amazonia",
     "description_short_pt": "Wetland ecosystems that alternate between flooded and dry phases throughout the year, supporting distinct plant communities adapted to these natural water level fluctuations in Amazonia",
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric"
+    ],
     "resource": {
       "name": "Seasonal_Floodplain",
       "type": "feature",
       "column": [],
       "layer_id": "24",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Seasonal_Floodplain/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -1005,7 +1200,11 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["BIOME", "DESCRIP as Description", ","],
+        "outFields": [
+          "BIOME",
+          "DESCRIP as Description",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": "",
@@ -1027,7 +1226,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -1047,13 +1248,20 @@
     "description_short_en": "Ranks areas based on their conservation importance, considering biodiversity, threat levels, and ecological significance",
     "description_short_es": "Ranks areas based on their conservation importance, considering biodiversity, threat levels, and ecological significance",
     "description_short_pt": "Ranks areas based on their conservation importance, considering biodiversity, threat levels, and ecological significance",
-    "visualization_types": ["map", "table", "numeric", "chart"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric",
+      "chart"
+    ],
     "resource": {
       "name": "Conservation_priority",
       "type": "feature",
       "column": [],
       "layer_id": "25",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Conservation_priority/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -1066,14 +1274,22 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["ENG as Description", "PRIOCONENG as Priority", ","],
+        "outFields": [
+          "ENG as Description",
+          "PRIOCONENG as Priority",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": {
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["PRIOCONENG", "PRIOCONENG as label", ","]
+        "outFields": [
+          "PRIOCONENG",
+          "PRIOCONENG as label",
+          ","
+        ]
       },
       "popupTemplate": {
         "title": "{PRIOCONENG}",
@@ -1093,7 +1309,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -1113,13 +1331,20 @@
     "description_short_en": "Legally protected zones including national parks, reserves, and other conservation areas within Amazonia",
     "description_short_es": "Legally protected zones including national parks, reserves, and other conservation areas within Amazonia",
     "description_short_pt": "Legally protected zones including national parks, reserves, and other conservation areas within Amazonia",
-    "visualization_types": ["map", "table", "numeric", "chart"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric",
+      "chart"
+    ],
     "resource": {
       "name": "Protected_Areas",
       "type": "feature",
       "column": [],
       "layer_id": "26",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Protected_Areas/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -1145,7 +1370,11 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["IUCN_CAT", "IUCN_CAT as label", ","]
+        "outFields": [
+          "IUCN_CAT",
+          "IUCN_CAT as label",
+          ","
+        ]
       },
       "popupTemplate": {
         "title": "{NAME}",
@@ -1169,7 +1398,10 @@
         "where": "1=1",
         "returnGeometry": false,
         "returnIntersections": false,
-        "outFields": ["NAME", "IUCN_CAT"]
+        "outFields": [
+          "NAME",
+          "IUCN_CAT"
+        ]
       }
     }
   },
@@ -1189,13 +1421,20 @@
     "description_short_en": "Lands officially recognized as belonging to or reserved for indigenous peoples, crucial for rights protection and cultural preservation",
     "description_short_es": "Lands officially recognized as belonging to or reserved for indigenous peoples, crucial for rights protection and cultural preservation",
     "description_short_pt": "Lands officially recognized as belonging to or reserved for indigenous peoples, crucial for rights protection and cultural preservation",
-    "visualization_types": ["map", "table", "numeric", "chart"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric",
+      "chart"
+    ],
     "resource": {
       "name": "Indigenous_territories",
       "type": "feature",
       "column": [],
       "layer_id": "27",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Indigenous_territories/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -1208,14 +1447,22 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["nombre as Name", "categoria as Category", "etnias as ethnic_group", ","],
+        "outFields": [
+          "nombre as Name",
+          "categoria as Category",
+          "etnias as ethnic_group",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": {
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["nombre as label", ","]
+        "outFields": [
+          "nombre as label",
+          ","
+        ]
       },
       "popupTemplate": {
         "title": "{nombre}",
@@ -1239,7 +1486,11 @@
         "where": "1=1",
         "returnGeometry": false,
         "returnIntersections": false,
-        "outFields": ["nombre", "categoria", "etnias"]
+        "outFields": [
+          "nombre",
+          "categoria",
+          "etnias"
+        ]
       }
     }
   },
@@ -1259,24 +1510,38 @@
     "description_short_en": "Quantifies the number of documented species across taxonomic groups in different areas of Amazonia, providing a baseline measure of biodiversity distribution and concentration",
     "description_short_es": "Quantifies the number of documented species across taxonomic groups in different areas of Amazonia, providing a baseline measure of biodiversity distribution and concentration",
     "description_short_pt": "Quantifies the number of documented species across taxonomic groups in different areas of Amazonia, providing a baseline measure of biodiversity distribution and concentration",
-    "visualization_types": ["map", "table", "chart"],
+    "visualization_types": [
+      "map",
+      "table",
+      "chart"
+    ],
     "resource": {
       "name": "Species_Richness",
       "type": "feature",
       "column": [],
       "layer_id": "30",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Species_Richness/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": {
         "where": "1=1",
-        "outFields": ["SPClass1 as Name", "SPRange as Range", ","],
+        "outFields": [
+          "SPClass1 as Name",
+          "SPRange as Range",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": {
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["SPRange", "SPRange  as label", ","]
+        "outFields": [
+          "SPRange",
+          "SPRange  as label",
+          ","
+        ]
       },
       "popupTemplate": {
         "title": "{SPRange}"
@@ -1285,7 +1550,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -1305,24 +1572,38 @@
     "description_short_en": "Measures the amount of carbon stored in living biomass, important for understanding the region's role in climate change mitigation.",
     "description_short_es": "Measures the amount of carbon stored in living biomass, important for understanding the region's role in climate change mitigation.",
     "description_short_pt": "Measures the amount of carbon stored in living biomass, important for understanding the region's role in climate change mitigation.",
-    "visualization_types": ["map", "table", "chart"],
+    "visualization_types": [
+      "map",
+      "table",
+      "chart"
+    ],
     "resource": {
       "name": "Carbon_Storage",
       "type": "feature",
       "column": [],
       "layer_id": "29",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Carbon_Storage/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": {
         "where": "1=1",
-        "outFields": ["carbonfix as Name", "cfixclass as Class", ","],
+        "outFields": [
+          "carbonfix as Name",
+          "cfixclass as Class",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": {
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["carbonfix", "carbonfix as label", ","]
+        "outFields": [
+          "carbonfix",
+          "carbonfix as label",
+          ","
+        ]
       },
       "popupTemplate": {
         "title": "{carbonfix}",
@@ -1342,7 +1623,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -1362,24 +1645,39 @@
     "description_short_en": "Classifies areas according to the Köppen climate zones  showing different climate patterns across Amazonia. ",
     "description_short_es": "Classifies areas according to the Köppen climate zones  showing different climate patterns across Amazonia. ",
     "description_short_pt": "Classifies areas according to the Köppen climate zones  showing different climate patterns across Amazonia. ",
-    "visualization_types": ["map", "table", "chart"],
+    "visualization_types": [
+      "map",
+      "table",
+      "chart"
+    ],
     "resource": {
       "name": "Climatic_Types_According_to_the_K%C3%B6ppen_Classification",
       "type": "feature",
       "column": [],
       "layer_id": "2",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Climatic_Types_According_to_the_K%C3%B6ppen_Classification/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": {
         "where": "1=1",
-        "outFields": ["CODE", "NAME", "DESCRP as Description", ","],
+        "outFields": [
+          "CODE",
+          "NAME",
+          "DESCRP as Description",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": {
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["NAME", "NAME as label", ","]
+        "outFields": [
+          "NAME",
+          "NAME as label",
+          ","
+        ]
       },
       "popupTemplate": {
         "title": "{NAME}",
@@ -1403,7 +1701,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -1423,24 +1723,39 @@
     "description_short_en": "Measures the annual mean rainfall across different areas, crucial for understanding water availability and ecosystem distribution",
     "description_short_es": "Measures the annual mean rainfall across different areas, crucial for understanding water availability and ecosystem distribution",
     "description_short_pt": "Measures the annual mean rainfall across different areas, crucial for understanding water availability and ecosystem distribution",
-    "visualization_types": ["map", "table", "chart"],
+    "visualization_types": [
+      "map",
+      "table",
+      "chart"
+    ],
     "resource": {
       "name": "Annual_Rainfall_Regimes_Layer",
       "type": "feature",
       "column": [],
       "layer_id": "3",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Annual_Rainfall_Regimes_Layer/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": {
         "where": "1=1",
-        "outFields": ["YEARLPP as Precip_mm", "YPPDESCP as Description", "top_ as Max_mm", ","],
+        "outFields": [
+          "YEARLPP as Precip_mm",
+          "YPPDESCP as Description",
+          "top_ as Max_mm",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": {
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["YEARLPP", "YEARLPP as label", ","]
+        "outFields": [
+          "YEARLPP",
+          "YEARLPP as label",
+          ","
+        ]
       },
       "popupTemplate": {
         "title": "{YEARLPP}",
@@ -1464,7 +1779,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -1484,24 +1801,38 @@
     "description_short_en": "Assesses the risk of different areas to drought conditions, considering historical patterns and climate projections. ",
     "description_short_es": "Assesses the risk of different areas to drought conditions, considering historical patterns and climate projections. ",
     "description_short_pt": "Assesses the risk of different areas to drought conditions, considering historical patterns and climate projections. ",
-    "visualization_types": ["map", "table", "chart"],
+    "visualization_types": [
+      "map",
+      "table",
+      "chart"
+    ],
     "resource": {
       "name": "Drought_Risk_Layer",
       "type": "feature",
       "column": [],
       "layer_id": "4",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Drought_Risk_Layer/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": {
         "where": "1=1",
-        "outFields": ["RISKLEV as Drought_risk", "RISKDES as Description", ","],
+        "outFields": [
+          "RISKLEV as Drought_risk",
+          "RISKDES as Description",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": {
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["RISKLEV", "RISKLEV  as label", ","]
+        "outFields": [
+          "RISKLEV",
+          "RISKLEV  as label",
+          ","
+        ]
       },
       "popupTemplate": {
         "title": "{RISKLEV}",
@@ -1521,7 +1852,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -1541,24 +1874,38 @@
     "description_short_en": "Tracks the frequency and distribution of fires across the region, both natural and human-caused.",
     "description_short_es": "Tracks the frequency and distribution of fires across the region, both natural and human-caused.",
     "description_short_pt": "Tracks the frequency and distribution of fires across the region, both natural and human-caused.",
-    "visualization_types": ["map", "table", "chart"],
+    "visualization_types": [
+      "map",
+      "table",
+      "chart"
+    ],
     "resource": {
       "name": "Forest_Fire_Frequency",
       "type": "feature",
       "column": [],
       "layer_id": "5",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Forest_Fire_Frequency/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": {
         "where": "1=1",
-        "outFields": ["firepfreq as Frequency", "FIREPclass as Class", ","],
+        "outFields": [
+          "firepfreq as Frequency",
+          "FIREPclass as Class",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": {
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["gridcode", "firepfreq as label", ","]
+        "outFields": [
+          "gridcode",
+          "firepfreq as label",
+          ","
+        ]
       },
       "popupTemplate": {
         "title": "{firepfreq}",
@@ -1578,7 +1925,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -1586,9 +1935,9 @@
     "id": 42,
     "topic": 3,
     "order": 42,
-    "name_en": "Population Distribution",
-    "name_es": "Population Distribution",
-    "name_pt": "Population Distribution",
+    "name_en": "Population in Amazonia",
+    "name_es": "Population in Amazonia",
+    "name_pt": "Population in Amazonia",
     "unit_en": "inh.",
     "unit_es": "inh.",
     "unit_pt": "inh.",
@@ -1598,7 +1947,10 @@
     "description_short_en": "Spatial distribution of human population across Amazonia that captures both urban and rural settlement ",
     "description_short_es": "Spatial distribution of human population across Amazonia that captures both urban and rural settlement ",
     "description_short_pt": "Spatial distribution of human population across Amazonia that captures both urban and rural settlement ",
-    "visualization_types": ["map", "numeric"],
+    "visualization_types": [
+      "map",
+      "numeric"
+    ],
     "resource": {
       "name": "test_dynamique_layer",
       "type": "imagery",
@@ -1609,17 +1961,59 @@
         "functionName": "Colormap",
         "functionArguments": {
           "colormap": [
-            [1, 0, 47, 97],
-            [2, 0, 118, 145],
-            [3, 0, 181, 153],
-            [4, 92, 235, 108],
-            [5, 255, 255, 0]
+            [
+              1,
+              0,
+              47,
+              97
+            ],
+            [
+              2,
+              0,
+              118,
+              145
+            ],
+            [
+              3,
+              0,
+              181,
+              153
+            ],
+            [
+              4,
+              92,
+              235,
+              108
+            ],
+            [
+              5,
+              255,
+              255,
+              0
+            ]
           ],
           "raster": {
             "functionName": "Remap",
             "functionArguments": {
-              "inputRanges": [0, 50, 50, 100, 100, 500, 500, 2000, 2000, 5000000],
-              "outputValues": [1, 2, 3, 4, 5],
+              "inputRanges": [
+                0,
+                5,
+                5,
+                50,
+                50,
+                200,
+                200,
+                1000,
+                1000,
+                5000000
+              ],
+              "outputValues": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
               "raster": "$$"
             }
           }
@@ -1630,23 +2024,23 @@
         "type": "basic",
         "items": [
           {
-            "label": "0 - 50",
+            "label": "0 - 5",
             "color": "#002F61"
           },
           {
-            "label": "50 - 100",
+            "label": "5- 50",
             "color": "#007691"
           },
           {
-            "label": "100 - 500",
+            "label": "50- 200",
             "color": "#00B599"
           },
           {
-            "label": "500 - 2000",
+            "label": "200- 1000",
             "color": "#5CEB6C"
           },
           {
-            "label": "2000 - 5000000",
+            "label": "1000 - 5000000",
             "color": "#FFFF00"
           }
         ]
@@ -1674,13 +2068,19 @@
     "description_short_en": "Distribution of electricity access across the region, indicating infrastructure development",
     "description_short_es": "Distribution of electricity access across the region, indicating infrastructure development",
     "description_short_pt": "Distribution of electricity access across the region, indicating infrastructure development",
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric"
+    ],
     "resource": {
       "name": "Electricity_Access",
       "type": "feature",
       "column": [],
       "layer_id": "6",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Electricity_Access/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -1710,7 +2110,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -1730,13 +2132,20 @@
     "description_short_en": "Location of universities and other higher education institutions",
     "description_short_es": "Location of universities and other higher education institutions",
     "description_short_pt": "Location of universities and other higher education institutions",
-    "visualization_types": ["map", "table", "numeric", "chart"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric",
+      "chart"
+    ],
     "resource": {
       "name": "Higher_Education_Centers",
       "type": "feature",
       "column": [],
       "layer_id": "8",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Higher_Education_Centers/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -1749,14 +2158,22 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["DESIGN as Class", "Type", ","],
+        "outFields": [
+          "DESIGN as Class",
+          "Type",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": {
         "where": "1=1",
         "returnGeometry": false,
-        "groupByFieldsForStatistics": ["Type"],
-        "orderByFields": ["value DESC"],
+        "groupByFieldsForStatistics": [
+          "Type"
+        ],
+        "orderByFields": [
+          "value DESC"
+        ],
         "outStatistics": [
           {
             "onStatisticField": "FID",
@@ -1781,7 +2198,9 @@
       },
       "query_ai": {
         "where": "1=1",
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -1801,13 +2220,20 @@
     "description_short_en": "Distribution of healthcare facilities, from primary care centers to hospitals.",
     "description_short_es": "Distribution of healthcare facilities, from primary care centers to hospitals.",
     "description_short_pt": "Distribution of healthcare facilities, from primary care centers to hospitals.",
-    "visualization_types": ["map", "table", "numeric", "chart"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric",
+      "chart"
+    ],
     "resource": {
       "name": "Health_Facilities",
       "type": "feature",
       "column": [],
       "layer_id": "9",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Health_Facilities/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -1820,14 +2246,22 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["HEALSERV as Type", "DSIGN as Name", ","],
+        "outFields": [
+          "HEALSERV as Type",
+          "DSIGN as Name",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": {
         "where": "1=1",
         "returnGeometry": false,
-        "groupByFieldsForStatistics": ["HEALSERV"],
-        "orderByFields": ["value DESC"],
+        "groupByFieldsForStatistics": [
+          "HEALSERV"
+        ],
+        "orderByFields": [
+          "value DESC"
+        ],
         "outStatistics": [
           {
             "onStatisticField": "FID",
@@ -1852,7 +2286,9 @@
       },
       "query_ai": {
         "where": "1=1",
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -1872,13 +2308,20 @@
     "description_short_en": "Presence of law enforcement facilities as a measure of state presence. ",
     "description_short_es": "Presence of law enforcement facilities as a measure of state presence. ",
     "description_short_pt": "Presence of law enforcement facilities as a measure of state presence. ",
-    "visualization_types": ["map", "table", "numeric", "chart"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric",
+      "chart"
+    ],
     "resource": {
       "name": "State_Presence",
       "type": "feature",
       "column": [],
       "layer_id": "10",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/State_Presence/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -1891,14 +2334,22 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["GOBSERV as Type", "DESIGN as Name", ","],
+        "outFields": [
+          "GOBSERV as Type",
+          "DESIGN as Name",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": {
         "where": "1=1",
         "returnGeometry": false,
-        "groupByFieldsForStatistics": ["GOBSERV"],
-        "orderByFields": ["value DESC"],
+        "groupByFieldsForStatistics": [
+          "GOBSERV"
+        ],
+        "orderByFields": [
+          "value DESC"
+        ],
         "outStatistics": [
           {
             "onStatisticField": "FID",
@@ -1923,7 +2374,9 @@
       },
       "query_ai": {
         "where": "1=1",
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -1943,13 +2396,20 @@
     "description_short_en": "Map of conflict and violence events recorded by ACLED, including protests, clashes, and attacks across different regions.",
     "description_short_es": "Map of conflict and violence events recorded by ACLED, including protests, clashes, and attacks across different regions.",
     "description_short_pt": "Map of conflict and violence events recorded by ACLED, including protests, clashes, and attacks across different regions.",
-    "visualization_types": ["map", "table", "numeric", "chart"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric",
+      "chart"
+    ],
     "resource": {
       "name": "Conflict_Locations",
       "type": "feature",
       "column": [],
       "layer_id": "11",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Conflict_Locations/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -1962,14 +2422,23 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["disorder_t as Type", "event_type as Event", "sub_event_ as SubEvent", ","],
+        "outFields": [
+          "disorder_t as Type",
+          "event_type as Event",
+          "sub_event_ as SubEvent",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": {
         "where": "1=1",
         "returnGeometry": false,
-        "groupByFieldsForStatistics": ["disorder_t"],
-        "orderByFields": ["value DESC"],
+        "groupByFieldsForStatistics": [
+          "disorder_t"
+        ],
+        "orderByFields": [
+          "value DESC"
+        ],
         "outStatistics": [
           {
             "onStatisticField": "FID",
@@ -1998,7 +2467,9 @@
       },
       "query_ai": {
         "where": "1=1",
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -2018,13 +2489,18 @@
     "description_short_en": "This layer shows the total number of homicides and homicide rates per 100,000 inhabitants by administrative region, providing insights into security conditions and governance challenges.",
     "description_short_es": "This layer shows the total number of homicides and homicide rates per 100,000 inhabitants by administrative region, providing insights into security conditions and governance challenges.",
     "description_short_pt": "This layer shows the total number of homicides and homicide rates per 100,000 inhabitants by administrative region, providing insights into security conditions and governance challenges.",
-    "visualization_types": ["map", "table"],
+    "visualization_types": [
+      "map",
+      "table"
+    ],
     "resource": {
       "name": "Homicides_Rate",
       "type": "feature",
       "column": [],
       "layer_id": "12",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Homicides_Rate/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": {
         "where": "1=1",
@@ -2060,7 +2536,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -2080,13 +2558,20 @@
     "description_short_en": "Areas designated for oil exploration and extraction activities",
     "description_short_es": "Areas designated for oil exploration and extraction activities",
     "description_short_pt": "Areas designated for oil exploration and extraction activities",
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric",
+      "chart"
+    ],
     "resource": {
       "name": "Oil_Extraction_Areas",
       "type": "feature",
       "column": [],
       "layer_id": "3",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Oil_Extraction_Areas/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -2099,7 +2584,11 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["nombre as Name", "pais as Country", ","],
+        "outFields": [
+          "nombre as Name",
+          "pais as Country",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": {
@@ -2119,7 +2608,9 @@
         "where": "1=1",
         "returnGeometry": true,
         "returnIntersections": true,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -2139,13 +2630,19 @@
     "description_short_en": "Research Centers or Bioeconomy Product Development Centers",
     "description_short_es": "Research Centers or Bioeconomy Product Development Centers",
     "description_short_pt": "Research Centers or Bioeconomy Product Development Centers",
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric"
+    ],
     "resource": {
       "name": "Bioenconomy_Centers",
       "type": "feature",
       "column": [],
       "layer_id": "2",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Bioeconomy_Centers/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -2158,7 +2655,11 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["country", "orgname as Name", ","],
+        "outFields": [
+          "country",
+          "orgname as Name",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": "",
@@ -2167,7 +2668,9 @@
       },
       "query_ai": {
         "where": "1=1",
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -2187,13 +2690,20 @@
     "description_short_en": "Primary transportation corridors that connect urban centers, ports, and economic zones across the Amazon region, including major roads, waterways, and planned infrastructure routes essential for regional mobility and commerce.",
     "description_short_es": "Primary transportation corridors that connect urban centers, ports, and economic zones across the Amazon region, including major roads, waterways, and planned infrastructure routes essential for regional mobility and commerce.",
     "description_short_pt": "Primary transportation corridors that connect urban centers, ports, and economic zones across the Amazon region, including major roads, waterways, and planned infrastructure routes essential for regional mobility and commerce.",
-    "visualization_types": ["map", "table", "numeric", "chart"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric",
+      "chart"
+    ],
     "resource": {
       "name": "Transport_Corridors",
       "type": "feature",
       "column": [],
       "layer_id": "4",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Transport_Corridors/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -2206,14 +2716,22 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["type", "FolderPath as Name", ","],
+        "outFields": [
+          "type",
+          "FolderPath as Name",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": {
         "where": "1=1",
         "returnGeometry": false,
-        "groupByFieldsForStatistics": ["type"],
-        "orderByFields": ["value DESC"],
+        "groupByFieldsForStatistics": [
+          "type"
+        ],
+        "orderByFields": [
+          "value DESC"
+        ],
         "outStatistics": [
           {
             "onStatisticField": "FID",
@@ -2240,7 +2758,9 @@
         "where": "1=1",
         "returnGeometry": false,
         "returnIntersections": false,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -2260,13 +2780,19 @@
     "description_short_en": "Distribution of human settlements of all sizes across the region",
     "description_short_es": "Distribution of human settlements of all sizes across the region",
     "description_short_pt": "Distribution of human settlements of all sizes across the region",
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric"
+    ],
     "resource": {
       "name": "Human_Settlements",
       "type": "feature",
       "column": [],
       "layer_id": "5",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Human_Settlements/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -2306,7 +2832,9 @@
         "where": "1=1",
         "returnGeometry": false,
         "returnIntersections": false,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
     }
   },
@@ -2326,13 +2854,19 @@
     "description_short_en": "Geographic distribution of IDB-supported development initiatives across Amazonia",
     "description_short_es": "Geographic distribution of IDB-supported development initiatives across Amazonia",
     "description_short_pt": "Geographic distribution of IDB-supported development initiatives across Amazonia",
-    "visualization_types": ["map", "table", "numeric"],
+    "visualization_types": [
+      "map",
+      "table",
+      "numeric"
+    ],
     "resource": {
       "name": "IDB_operations_AF360",
       "type": "feature",
       "column": [],
       "layer_id": "10",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/IDB_operations_AF360/FeatureServer",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": {
         "where": "1=1",
         "outStatistics": [
@@ -2345,7 +2879,13 @@
       },
       "query_table": {
         "where": "1=1",
-        "outFields": ["opername as Name", "opernum as Number", "phase", "country", ","],
+        "outFields": [
+          "opername as Name",
+          "opernum as Number",
+          "phase",
+          "country",
+          ","
+        ],
         "returnGeometry": false
       },
       "query_chart": "",
@@ -2373,98 +2913,10 @@
       },
       "query_ai": {
         "where": "1=1",
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       }
-    }
-  },
-  {
-    "id": 86,
-    "topic": 1,
-    "order": 86,
-    "name_en": "Minimum altitude per cell",
-    "name_es": "Minimum altitude per cell",
-    "name_pt": "Minimum altitude per cell",
-    "unit_en": "m",
-    "unit_es": "m",
-    "unit_pt": "m",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Minimum altitude per cell",
-    "description_short_es": "Minimum altitude per cell",
-    "description_short_pt": "Minimum altitude per cell",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_NATTOPOALT_H3L6",
-      "type": "h3",
-      "column": "ALTMIN",
-      "layer_id": "0",
-      "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 87,
-    "topic": 1,
-    "order": 87,
-    "name_en": "Maximum altitude per cell",
-    "name_es": "Maximum altitude per cell",
-    "name_pt": "Maximum altitude per cell",
-    "unit_en": "m",
-    "unit_es": "m",
-    "unit_pt": "m",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Maximum altitude per cell",
-    "description_short_es": "Maximum altitude per cell",
-    "description_short_pt": "Maximum altitude per cell",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_NATTOPOALT_H3L7",
-      "type": "h3",
-      "column": "ALTMAX",
-      "layer_id": "0",
-      "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 88,
-    "topic": 1,
-    "order": 88,
-    "name_en": "Altitude range per cell",
-    "name_es": "Altitude range per cell",
-    "name_pt": "Altitude range per cell",
-    "unit_en": "m",
-    "unit_es": "m",
-    "unit_pt": "m",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Altitude range per cell",
-    "description_short_es": "Altitude range per cell",
-    "description_short_pt": "Altitude range per cell",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_NATTOPOALT_H3L8",
-      "type": "h3",
-      "column": "ALTRANGE",
-      "layer_id": "0",
-      "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
     }
   },
   {
@@ -2490,66 +2942,8 @@
       "column": "ALTMEAN",
       "layer_id": "0",
       "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 90,
-    "topic": 1,
-    "order": 90,
-    "name_en": "Minimum slope per cell",
-    "name_es": "Minimum slope per cell",
-    "name_pt": "Minimum slope per cell",
-    "unit_en": "°",
-    "unit_es": "°",
-    "unit_pt": "°",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Minimum slope per cell",
-    "description_short_es": "Minimum slope per cell",
-    "description_short_pt": "Minimum slope per cell",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_NATTOPOSLOPE_H3L6",
-      "type": "h3",
-      "column": "SLOMIN",
-      "layer_id": "0",
-      "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 91,
-    "topic": 1,
-    "order": 91,
-    "name_en": "Maximum slope per cell",
-    "name_es": "Maximum slope per cell",
-    "name_pt": "Maximum slope per cell",
-    "unit_en": "°",
-    "unit_es": "°",
-    "unit_pt": "°",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Maximum slope per cell",
-    "description_short_es": "Maximum slope per cell",
-    "description_short_pt": "Maximum slope per cell",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_NATTOPOSLOPE_H3L7",
-      "type": "h3",
-      "column": "SLOMAX",
-      "layer_id": "0",
-      "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -2580,6 +2974,8 @@
       "column": "SLOMEAN",
       "layer_id": "0",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -2610,6 +3006,8 @@
       "column": "TREECOV",
       "layer_id": "0",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -2640,6 +3038,8 @@
       "column": "SHRUBLND",
       "layer_id": "0",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -2670,6 +3070,8 @@
       "column": "GRASSLND",
       "layer_id": "0",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -2700,6 +3102,8 @@
       "column": "CROPLND",
       "layer_id": "0",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -2730,6 +3134,8 @@
       "column": "BUILDUP",
       "layer_id": "0",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -2760,6 +3166,8 @@
       "column": "BARESPARS",
       "layer_id": "0",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -2790,6 +3198,8 @@
       "column": "SNOW",
       "layer_id": "0",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -2820,6 +3230,8 @@
       "column": "WATER",
       "layer_id": "",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -2850,6 +3262,8 @@
       "column": "HERBWTLN",
       "layer_id": "",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -2880,6 +3294,8 @@
       "column": "MANGROV",
       "layer_id": "",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -2910,6 +3326,8 @@
       "column": "MOSSLICHEN",
       "layer_id": "",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -2940,66 +3358,8 @@
       "column": "SPCOUNT",
       "layer_id": "",
       "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 105,
-    "topic": 1,
-    "order": 105,
-    "name_en": "Minimum Biomass",
-    "name_es": "Minimum Biomass",
-    "name_pt": "Minimum Biomass",
-    "unit_en": "T/ha",
-    "unit_es": "T/ha",
-    "unit_pt": "T/ha",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Tons of carbon fixed in biomass, per hectare (Minimum)",
-    "description_short_es": "Tons of carbon fixed in biomass, per hectare (Minimum)",
-    "description_short_pt": "Tons of carbon fixed in biomass, per hectare (Minimum)",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_CRBSEQBIO_H3L6",
-      "type": "h3",
-      "column": "MINtonha",
-      "layer_id": "",
-      "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 106,
-    "topic": 1,
-    "order": 106,
-    "name_en": "Maximum Biomass",
-    "name_es": "Maximum Biomass",
-    "name_pt": "Maximum Biomass",
-    "unit_en": "T/ha",
-    "unit_es": "T/ha",
-    "unit_pt": "T/ha",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Tons of carbon fixed in biomass, per hectare (Maximum)",
-    "description_short_es": "Tons of carbon fixed in biomass, per hectare (Maximum)",
-    "description_short_pt": "Tons of carbon fixed in biomass, per hectare (Maximum)",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_CRBSEQBIO_H3L7",
-      "type": "h3",
-      "column": "MAXtonha",
-      "layer_id": "",
-      "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -3030,6 +3390,8 @@
       "column": "MEANtonha",
       "layer_id": "",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -3060,66 +3422,8 @@
       "column": "FPCOUNT",
       "layer_id": "",
       "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 109,
-    "topic": 2,
-    "order": 109,
-    "name_en": "Minimum precipitation",
-    "name_es": "Minimum precipitation",
-    "name_pt": "Minimum precipitation",
-    "unit_en": "mm",
-    "unit_es": "mm",
-    "unit_pt": "mm",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Minimum mean annual precipitation per cell",
-    "description_short_es": "Minimum mean annual precipitation per cell",
-    "description_short_pt": "Minimum mean annual precipitation per cell",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_CLIANNUALPREC_H3L6",
-      "type": "h3",
-      "column": "PPAMMIN",
-      "layer_id": "",
-      "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 110,
-    "topic": 2,
-    "order": 110,
-    "name_en": "Maximum precipitation",
-    "name_es": "Maximum precipitation",
-    "name_pt": "Maximum precipitation",
-    "unit_en": "mm",
-    "unit_es": "mm",
-    "unit_pt": "mm",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Maximum mean annual precipitation per cell",
-    "description_short_es": "Maximum mean annual precipitation per cell",
-    "description_short_pt": "Maximum mean annual precipitation per cell",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_CLIANNUALPREC_H3L7",
-      "type": "h3",
-      "column": "PPAMMAX",
-      "layer_id": "",
-      "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -3150,96 +3454,8 @@
       "column": "PPAMMEAN",
       "layer_id": "",
       "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 112,
-    "topic": 2,
-    "order": 112,
-    "name_en": "Range of mean annual precipitation per cell",
-    "name_es": "Range of mean annual precipitation per cell",
-    "name_pt": "Range of mean annual precipitation per cell",
-    "unit_en": "mm",
-    "unit_es": "mm",
-    "unit_pt": "mm",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Range of mean annual precipitation per cell",
-    "description_short_es": "Range of mean annual precipitation per cell",
-    "description_short_pt": "Range of mean annual precipitation per cell",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_CLIANNUALPREC_H3L9",
-      "type": "h3",
-      "column": "PPAMRANGE",
-      "layer_id": "",
-      "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 113,
-    "topic": 2,
-    "order": 113,
-    "name_en": "Minimummean temperature",
-    "name_es": "Minimummean temperature",
-    "name_pt": "Minimummean temperature",
-    "unit_en": "C°",
-    "unit_es": "C°",
-    "unit_pt": "C°",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Minimum annual mean temperature per cell",
-    "description_short_es": "Minimum annual mean temperature per cell",
-    "description_short_pt": "Minimum annual mean temperature per cell",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_CLIANNUALTEMP_H3L6",
-      "type": "h3",
-      "column": "MATMIN",
-      "layer_id": "",
-      "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 114,
-    "topic": 2,
-    "order": 114,
-    "name_en": "Maximum temperature",
-    "name_es": "Maximum temperature",
-    "name_pt": "Maximum temperature",
-    "unit_en": "C°",
-    "unit_es": "C°",
-    "unit_pt": "C°",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Maximum annual mean temperature per cell",
-    "description_short_es": "Maximum annual mean temperature per cell",
-    "description_short_pt": "Maximum annual mean temperature per cell",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_CLIANNUALTEMP_H3L7",
-      "type": "h3",
-      "column": "MATMAX",
-      "layer_id": "",
-      "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -3270,36 +3486,8 @@
       "column": "MATRANGE",
       "layer_id": "",
       "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 116,
-    "topic": 2,
-    "order": 116,
-    "name_en": "Mean temperature range",
-    "name_es": "Mean temperature range",
-    "name_pt": "Mean temperature range",
-    "unit_en": "C°",
-    "unit_es": "C°",
-    "unit_pt": "C°",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Average annual mean temperature range per cell",
-    "description_short_es": "Average annual mean temperature range per cell",
-    "description_short_pt": "Average annual mean temperature range per cell",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_CLIANNUALTEMP_H3L9",
-      "type": "h3",
-      "column": "MATMEAN",
-      "layer_id": "",
-      "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -3330,6 +3518,8 @@
       "column": "POP_E2030",
       "layer_id": "",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -3360,6 +3550,8 @@
       "column": "POP_E2025",
       "layer_id": "",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -3390,6 +3582,8 @@
       "column": "POP_E2015",
       "layer_id": "",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -3420,6 +3614,8 @@
       "column": "POP_E2000",
       "layer_id": "",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -3450,6 +3646,8 @@
       "column": "POP_E1975",
       "layer_id": "",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -3480,6 +3678,8 @@
       "column": "DIF30_75",
       "layer_id": "",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -3489,7 +3689,7 @@
   },
   {
     "id": 123,
-    "topic": 6,
+    "topic": 5,
     "order": 123,
     "name_en": "Road length",
     "name_es": "Road length",
@@ -3510,6 +3710,8 @@
       "column": "LENGHT",
       "layer_id": "",
       "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -3519,7 +3721,7 @@
   },
   {
     "id": 124,
-    "topic": 6,
+    "topic": 5,
     "order": 124,
     "name_en": "Road density",
     "name_es": "Road density",
@@ -3540,66 +3742,8 @@
       "column": "DENSROAD",
       "layer_id": "",
       "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 125,
-    "topic": 6,
-    "order": 125,
-    "name_en": "Fixed devices download speed",
-    "name_es": "Fixed devices download speed",
-    "name_pt": "Fixed devices download speed",
-    "unit_en": "kbps",
-    "unit_es": "kbps",
-    "unit_pt": "kbps",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Fixed devices. Average download speed in kilobits per second recorded in the grid.",
-    "description_short_es": "Fixed devices. Average download speed in kilobits per second recorded in the grid.",
-    "description_short_pt": "Fixed devices. Average download speed in kilobits per second recorded in the grid.",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_CONNECTSTATUSFX_H3L6",
-      "type": "h3",
-      "column": "FXavd_kbps",
-      "layer_id": "",
-      "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 126,
-    "topic": 6,
-    "order": 126,
-    "name_en": "Fixed devices upload speed",
-    "name_es": "Fixed devices upload speed",
-    "name_pt": "Fixed devices upload speed",
-    "unit_en": "kbps",
-    "unit_es": "kbps",
-    "unit_pt": "kbps",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Fixed devices. Average upload speed in kilobits per second recorded in the grid.",
-    "description_short_es": "Fixed devices. Average upload speed in kilobits per second recorded in the grid.",
-    "description_short_pt": "Fixed devices. Average upload speed in kilobits per second recorded in the grid.",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_CONNECTSTATUSFX_H3L7",
-      "type": "h3",
-      "column": "FXavu_kbps",
-      "layer_id": "",
-      "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -3609,7 +3753,7 @@
   },
   {
     "id": 127,
-    "topic": 6,
+    "topic": 5,
     "order": 127,
     "name_en": "Fixed devices latency",
     "name_es": "Fixed devices latency",
@@ -3630,126 +3774,8 @@
       "column": "FXavlat_ms",
       "layer_id": "",
       "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 128,
-    "topic": 6,
-    "order": 128,
-    "name_en": "Fixed devices test number",
-    "name_es": "Fixed devices test number",
-    "name_pt": "Fixed devices test number",
-    "unit_en": "",
-    "unit_es": "",
-    "unit_pt": "",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Total number of tests performed for fixed devices statistics.",
-    "description_short_es": "Total number of tests performed for fixed devices statistics.",
-    "description_short_pt": "Total number of tests performed for fixed devices statistics.",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_CONNECTSTATUSFX_H3L9",
-      "type": "h3",
-      "column": "FXtests",
-      "layer_id": "",
-      "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 129,
-    "topic": 6,
-    "order": 129,
-    "name_en": "Fixed devices used for testing",
-    "name_es": "Fixed devices used for testing",
-    "name_pt": "Fixed devices used for testing",
-    "unit_en": "",
-    "unit_es": "",
-    "unit_pt": "",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Fixed devices. Total number of devices used for testing",
-    "description_short_es": "Fixed devices. Total number of devices used for testing",
-    "description_short_pt": "Fixed devices. Total number of devices used for testing",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_CONNECTSTATUSFX_H3L10",
-      "type": "h3",
-      "column": "FXdevices",
-      "layer_id": "",
-      "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 130,
-    "topic": 6,
-    "order": 130,
-    "name_en": "Mobile download speed",
-    "name_es": "Mobile download speed",
-    "name_pt": "Mobile download speed",
-    "unit_en": "kbps",
-    "unit_es": "kbps",
-    "unit_pt": "kbps",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Mobile devices. Average download speed in kilobits per second recorded in the grid.",
-    "description_short_es": "Mobile devices. Average download speed in kilobits per second recorded in the grid.",
-    "description_short_pt": "Mobile devices. Average download speed in kilobits per second recorded in the grid.",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_CONNECTSTATUSMO_H3L6",
-      "type": "h3",
-      "column": "MOavd_kbps",
-      "layer_id": "",
-      "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 131,
-    "topic": 6,
-    "order": 131,
-    "name_en": "Mobile upload speed",
-    "name_es": "Mobile upload speed",
-    "name_pt": "Mobile upload speed",
-    "unit_en": "kbps",
-    "unit_es": "kbps",
-    "unit_pt": "kbps",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Mobile devices. Average upload speed in kilobits per second recorded in the grid.",
-    "description_short_es": "Mobile devices. Average upload speed in kilobits per second recorded in the grid.",
-    "description_short_pt": "Mobile devices. Average upload speed in kilobits per second recorded in the grid.",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_CONNECTSTATUSMO_H3L7",
-      "type": "h3",
-      "column": "MOavu_kbps",
-      "layer_id": "",
-      "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
@@ -3759,7 +3785,7 @@
   },
   {
     "id": 132,
-    "topic": 6,
+    "topic": 5,
     "order": 132,
     "name_en": "Mobile latency",
     "name_es": "Mobile latency",
@@ -3780,66 +3806,8 @@
       "column": "MOavlat_ms",
       "layer_id": "",
       "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 133,
-    "topic": 6,
-    "order": 133,
-    "name_en": "Mobile test number",
-    "name_es": "Mobile test number",
-    "name_pt": "Mobile test number",
-    "unit_en": "",
-    "unit_es": "",
-    "unit_pt": "",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Total number of tests performed for mobile devices statistics.",
-    "description_short_es": "Total number of tests performed for mobile devices statistics.",
-    "description_short_pt": "Total number of tests performed for mobile devices statistics.",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_CONNECTSTATUSMO_H3L9",
-      "type": "h3",
-      "column": "MOtests",
-      "layer_id": "",
-      "url": "",
-      "query_numeric": "",
-      "query_table": "",
-      "query_chart": "",
-      "popupTemplate": "",
-      "query_ai": ""
-    }
-  },
-  {
-    "id": 134,
-    "topic": 6,
-    "order": 134,
-    "name_en": "Mobile devices used for testing",
-    "name_es": "Mobile devices used for testing",
-    "name_pt": "Mobile devices used for testing",
-    "unit_en": "",
-    "unit_es": "",
-    "unit_pt": "",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
-    "description_short_en": "Mobile devices. Total number of devices used for testing",
-    "description_short_es": "Mobile devices. Total number of devices used for testing",
-    "description_short_pt": "Mobile devices. Total number of devices used for testing",
-    "visualization_types": [],
-    "resource": {
-      "name": "AMZ_CONNECTSTATUSMO_H3L10",
-      "type": "h3",
-      "column": "MOdevices",
-      "layer_id": "",
-      "url": "",
+      "rasterFunction": "",
+      "legend": "",
       "query_numeric": "",
       "query_table": "",
       "query_chart": "",
