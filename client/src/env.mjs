@@ -3,6 +3,7 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
+    BASIC_AUTH_ENABLED: z.string().transform((value) => value === "true"),
     BASIC_AUTH_USER: z.string(),
     BASIC_AUTH_PASSWORD: z.string(),
     ARCGIS_CLIENT_ID: z.string(),
@@ -15,6 +16,7 @@ export const env = createEnv({
     NEXT_PUBLIC_ARCGIS_API_KEY: z.string(),
   },
   runtimeEnv: {
+    BASIC_AUTH_ENABLED: process.env.BASIC_AUTH_ENABLED,
     BASIC_AUTH_USER: process.env.BASIC_AUTH_USER,
     BASIC_AUTH_PASSWORD: process.env.BASIC_AUTH_PASSWORD,
     ARCGIS_CLIENT_ID: process.env.ARCGIS_CLIENT_ID,

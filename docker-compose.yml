@@ -25,6 +25,7 @@ services:
         NEXT_PUBLIC_API_KEY: ""
         ARCGIS_CLIENT_ID: ""
         ARCGIS_CLIENT_SECRET: ""
+        BASIC_AUTH_ENABLED: "true"
         BASIC_AUTH_USER: amazonia360
         BASIC_AUTH_PASSWORD: amazonia360
     ports:
