@@ -122,6 +122,7 @@ jobs:
             NEXT_PUBLIC_API_KEY=${{ secrets.TF_CLIENT_NEXT_PUBLIC_API_KEY }}
             ARCGIS_CLIENT_ID=${{ secrets.TF_CLIENT_ARCGIS_CLIENT_ID }}
             ARCGIS_CLIENT_SECRET=${{ secrets.TF_CLIENT_ARCGIS_CLIENT_SECRET }}
+            BASIC_AUTH_ENABLED=${{ secrets.TF_CLIENT_BASIC_AUTH_ENABLED }}
             BASIC_AUTH_USER=${{ secrets.TF_CLIENT_BASIC_AUTH_USER }}
             BASIC_AUTH_PASSWORD=${{ secrets.TF_CLIENT_BASIC_AUTH_PASSWORD }}
           context: client

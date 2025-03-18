@@ -20,6 +20,10 @@ export default async function middleware(req: NextRequest) {
 
 // Step 2. Check HTTP Basic Auth header if present
 function isAuthenticated(req: NextRequest) {
+  if (!env.BASIC_AUTH_ENABLED) {
+    return true;
+  }
+
   const authheader = req.headers.get("authorization") || req.headers.get("Authorization");
 
   if (!authheader) {
