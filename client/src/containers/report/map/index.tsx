@@ -152,7 +152,7 @@ export default function MapContainer() {
   }, [setGridHover]);
 
   return (
-    <div className="flex w-full grow flex-col">
+    <div className="relative flex w-full grow flex-col">
       <Map
         id="default"
         defaultBbox={bbox}
