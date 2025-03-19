@@ -3,7 +3,7 @@ import Topics from "@/containers/home/topics";
 export default function InformationOn() {
   return (
     <section className="bg-blue-700">
-      <div className="flex flex-col space-y-2 px-4 pt-20 md:container md:space-y-0 md:pt-28">
+      <div className="container flex flex-col space-y-2 pt-20 md:space-y-0 md:pt-28">
         <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
           information on
         </h3>
