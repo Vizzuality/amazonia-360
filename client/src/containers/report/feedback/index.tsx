@@ -1,6 +1,6 @@
 export default function FeedbackButton() {
   return (
-    <div className="fixed right-0 top-1/2 -translate-y-1/2 print:hidden">
+    <div className="fixed right-0 top-1/2 hidden -translate-y-1/2 lg:block print:hidden">
       <a
         href="https://survey123.arcgis.com/share/fadbaa4e81f04f068f5ed0abd99e4789"
         target="_blank"

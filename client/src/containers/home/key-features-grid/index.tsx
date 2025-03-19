@@ -8,8 +8,8 @@ import animation from "./grid-animation-lottie.json";
 
 export default function KeyFeaturesGrid() {
   return (
-    <section className="flex bg-blue-50 px-4">
-      <div className="container flex flex-col items-center justify-center space-x-6 md:grid md:grid-cols-12">
+    <section className="flex bg-blue-50">
+      <div className="container flex flex-col items-center justify-center md:grid md:grid-cols-12 md:space-x-6">
         <div className="col-span-12 h-full max-w-lg items-center lg:col-span-6">
           <CardsContainer />
         </div>

@@ -101,7 +101,7 @@ export default function Glance() {
   return (
     <section
       ref={sectionRef}
-      className="flex flex-col items-end px-4 pt-20 md:container md:flex-row md:items-start md:space-x-28 md:py-28"
+      className="container flex flex-col items-end pt-20 md:flex-row md:items-start md:space-x-28 md:py-28"
     >
       <div
         className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-10 lg:space-y-44 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-20" : "md:opacity-0"}`}
@@ -173,7 +173,7 @@ export default function Glance() {
         </div>
       </div>
       <div
-        className={`mt-20 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-right-20" : "opacity-0"}`}
+        className={`mt-10 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-right-20" : "opacity-0"}`}
       >
         <header className="space-y-1">
           <h3 className="text-xl font-semibold text-foreground">

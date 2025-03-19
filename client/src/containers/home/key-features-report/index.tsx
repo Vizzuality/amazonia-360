@@ -19,7 +19,7 @@ export default function KeyFeatures() {
   return (
     <section
       ref={ref}
-      className="container relative grid w-full grid-cols-12 overflow-hidden md:container md:max-h-[720px]"
+      className="container relative grid w-full grid-cols-12 overflow-hidden md:max-h-[720px]"
     >
       {/* Left Section */}
       <div className="order-2 col-span-12 md:order-1 md:col-span-6">

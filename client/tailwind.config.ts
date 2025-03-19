@@ -13,7 +13,7 @@ const config = {
     container: {
       center: true,
       padding: {
-        DEFAULT: "2rem", // Default padding for medium screens
+        DEFAULT: "1rem", // Default padding for medium screens
         sm: "1rem", // Small screens
         md: "1rem", // Medium screens
         lg: "2rem", // Large screens

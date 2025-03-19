@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 export default function Footer() {
   return (
     <section className="bg-blue-900 text-white print:hidden">
-      <div className="m-auto flex w-full max-w-[100%] flex-col items-center justify-between px-4 py-4 sm:container md:flex-row md:items-center">
+      <div className="container m-auto flex w-full max-w-[100%] flex-col items-center justify-between py-4 md:flex-row md:items-center">
         <div className="flex h-full w-full flex-col items-start space-y-10 pb-6 sm:flex-row md:items-center md:space-x-10 md:space-y-0 md:pb-0">
           <div className="flex w-full items-center justify-start space-x-10">
             <div className="flex items-center justify-center">

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 export default function Hub() {
   return (
     <section
-      className="bg-center py-28 text-white"
+      className="bg-center py-20 text-white sm:py-28"
       style={{
         background:
           "linear-gradient(90deg, rgba(0, 0, 0, 0.60) 34.5%, rgba(0, 62, 90, 0.00) 74%), url('/images/home/hub.jpeg') lightgray 50% / cover no-repeat",

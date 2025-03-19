@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 export default function Help() {
   return (
     <section className="bg-blue-700 text-white">
-      <div className="px-4 py-10 sm:container">
+      <div className="container py-10">
         <div className="flex flex-col items-start justify-between lg:flex-row lg:items-center lg:py-16">
           <div className="flex flex-col justify-start md:py-0 md:pt-16">
             <h3 className="text-lg font-bold">Help us improve!</h3>
