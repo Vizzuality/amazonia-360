@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 import { useQueries } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
+import { usePreviousDifferent } from "rooks";
 
 import { useGetAISummary } from "@/lib/ai";
 import { getQueryFeatureIdOptions, useGetDefaultIndicators } from "@/lib/indicators";
@@ -149,23 +150,38 @@ export const useGetSummaryTopic = (
 
 export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
   const [topics] = useSyncTopics();
-  const activeIndicators = topics?.find((t) => t.id === topic?.id)?.indicators?.map(({ id }) => id);
-  const [aiSummary] = useSyncAiSummary();
-  const { data, isFetching, isFetched, isPending } = useGetSummaryTopic(
-    topic,
-    aiSummary,
-    activeIndicators,
-  );
+  const activeIndicators = useMemo(() => {
+    return topics?.find((t) => t.id === topic?.id)?.indicators?.map(({ id }) => id);
+  }, [topic, topics]);
+  const previousActiveIndicators = usePreviousDifferent(activeIndicators ?? undefined);
+  const [aiSummary, setAiSummary] = useSyncAiSummary();
+  const { data, isFetching, isPending } = useGetSummaryTopic(topic, aiSummary, activeIndicators);
 
   const setIsGeneratingReport = useSetAtom(isGeneratingAIReportAtom);
 
   useMemo(() => {
-    setIsGeneratingReport(isFetching || isPending);
-  }, [isFetching, isPending, setIsGeneratingReport]);
+    if (!topic) return;
+    setIsGeneratingReport((prev) => {
+      return {
+        ...prev,
+        [`${topic?.id}`]: isFetching || isPending,
+      };
+    });
+  }, [topic, isFetching, isPending, setIsGeneratingReport]);
+
+  useMemo(() => {
+    if (
+      !!previousActiveIndicators &&
+      !!activeIndicators &&
+      activeIndicators.join("") !== previousActiveIndicators.join("")
+    ) {
+      setAiSummary((prev) => ({ ...prev, enabled: false }));
+    }
+  }, [activeIndicators, previousActiveIndicators, setAiSummary]);
 
   return (
     <div className="relative">
-      {(isPending || (isFetching && !isFetched)) && (
+      {(isPending || isFetching) && (
         <div className="space-y-1.5">
           <p>Generating summary...</p>
           <Skeleton className="h-4" />
@@ -174,7 +190,7 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
         </div>
       )}
 
-      {isFetched && !isFetching && data && !!data.description && (
+      {!isFetching && data && !!data.description && (
         <Markdown className="max-w-none xl:prose-base 3xl:prose-lg prose-strong:font-bold">
           {data.description}
         </Markdown>
