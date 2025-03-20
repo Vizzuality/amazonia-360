@@ -50,7 +50,7 @@ export const NumericImageryIndicators = ({ id, resource }: NumericImageryIndicat
 
   return (
     <CardLoader query={[query]} className="h-12 grow">
-      <CardWidgetNumber value={VALUE ?? "-"} unit={!!VALUE ? indicator?.unit_en : undefined} />
+      <CardWidgetNumber value={VALUE ?? "n.d."} unit={!!VALUE ? indicator?.unit_en : undefined} />
     </CardLoader>
   );
 };
