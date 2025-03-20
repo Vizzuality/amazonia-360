@@ -2,11 +2,13 @@ import puppeteer from "puppeteer";
 
 async function getBrowser() {
   return await puppeteer.launch({
-    // args: ["—no-sandbox", "—disable-setuid-sandbox"],
-    // browser: "chrome",
+    args: ["—no-sandbox", "—disable-setuid-sandbox"],
+    browser: "chrome",
     headless: true,
   });
 }
+
+const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 export async function POST(request: Request) {
   try {
@@ -14,7 +16,19 @@ export async function POST(request: Request) {
 
     const browser = await getBrowser();
     const page = await browser.newPage();
+
+    // set Headers
+    const Authorization = request.headers.get("Authorization");
+
+    if (Authorization) {
+      await page.setExtraHTTPHeaders({ Authorization });
+    }
+
     await page.goto(url, { waitUntil: "networkidle0" });
+
+    await sleep(20000); // Wait for page to load
+
+    // Generate PDF
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
