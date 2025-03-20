@@ -160,8 +160,14 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
   const setIsGeneratingReport = useSetAtom(isGeneratingAIReportAtom);
 
   useMemo(() => {
-    setIsGeneratingReport(isFetching || isPending);
-  }, [isFetching, isPending, setIsGeneratingReport]);
+    if (!topic) return;
+    setIsGeneratingReport((prev) => {
+      return {
+        ...prev,
+        [`${topic?.id}`]: isFetching || isPending,
+      };
+    });
+  }, [topic, isFetching, isPending, setIsGeneratingReport]);
 
   return (
     <div className="relative">

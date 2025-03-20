@@ -46,6 +46,9 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
   );
 
   const isGeneratingAIReport = useAtomValue(isGeneratingAIReportAtom);
+  const isGenerating = !!isGeneratingAIReport && Object.values(isGeneratingAIReport).some((v) => v);
+
+  console.log({ isGeneratingAIReport, isGenerating });
 
   const handleClickAiGenerateSummary = useCallback(() => {
     setAiSummary({
@@ -83,7 +86,7 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
           })}
         >
           <div className="h-full w-full flex-1 space-y-4">
-            {!isGeneratingAIReport && (
+            {!isGenerating && (
               <div className="space-y-2">
                 <span className="text-sm font-semibold text-foreground">Summary text style</span>
                 <RadioGroup
@@ -102,7 +105,7 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
               </div>
             )}
 
-            {!isGeneratingAIReport && (
+            {!isGenerating && (
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex space-x-2">
@@ -135,7 +138,7 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
               </div>
             )}
 
-            {isGeneratingAIReport && (
+            {isGenerating && (
               <div className="flex h-full w-full items-center justify-center py-20">
                 <div className="flex w-full flex-col items-center justify-center space-y-2">
                   <span className="h-6 w-6 animate-spin text-blue-500">
