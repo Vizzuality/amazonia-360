@@ -2286,8 +2286,12 @@
       },
       "query_ai": {
         "where": "1=1",
-        "outFields": [
-          "*"
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
         ]
       }
     }

@@ -48,8 +48,6 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
   const isGeneratingAIReport = useAtomValue(isGeneratingAIReportAtom);
   const isGenerating = !!isGeneratingAIReport && Object.values(isGeneratingAIReport).some((v) => v);
 
-  console.log({ isGeneratingAIReport, isGenerating });
-
   const handleClickAiGenerateSummary = useCallback(() => {
     setAiSummary({
       type: ai_audience,
