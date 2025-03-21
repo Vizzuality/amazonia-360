@@ -1,21 +1,41 @@
-import puppeteer from "puppeteer";
+import chromium from "@sparticuz/chromium-min";
+import puppeteer, { Browser } from "puppeteer";
+import puppeteerCore, { Browser as CoreBrowser } from "puppeteer-core";
 
 import { env } from "@/env.mjs";
 
+export const dynamic = "force-dynamic";
+
+const remoteExecutablePath =
+  "https://github.com/Sparticuz/chromium/releases/download/v133.0.0/chromium-v133.0.0-pack.tar";
+let browser: Browser | CoreBrowser;
+
 async function getBrowser() {
-  return await puppeteer.launch({
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-web-security",
-      "--disable-features=IsolateOrigins",
-      "--disable-site-isolation-trials",
-      "--disable-features=BlockInsecurePrivateNetworkRequests",
-    ],
-    browser: "chrome",
-    headless: true,
-    timeout: 0,
-  });
+  if (browser) return browser;
+
+  if (process.env.NEXT_PUBLIC_VERCEL_ENVIRONMENT === "production") {
+    browser = await puppeteerCore.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath(remoteExecutablePath),
+      headless: true,
+    });
+  } else {
+    browser = await puppeteer.launch({
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-web-security",
+        "--disable-features=IsolateOrigins",
+        "--disable-site-isolation-trials",
+        "--disable-features=BlockInsecurePrivateNetworkRequests",
+      ],
+      browser: "chrome",
+      headless: true,
+      timeout: 0,
+    });
+  }
+
+  return browser;
 }
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
