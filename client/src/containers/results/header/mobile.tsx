@@ -30,7 +30,7 @@ export default function ReportResultsHeaderMobile() {
   const title = useLocationTitle(location);
 
   return (
-    <header className="space-y-4 bg-blue-50 py-6">
+    <header className="space-y-4 bg-blue-50 py-6 print:hidden">
       <div className="container">
         <div className="relative flex h-full justify-between">
           {/* Name */}

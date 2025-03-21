@@ -39,7 +39,7 @@ export default function ReportResultsHeaderDesktop() {
   const { open: isSidebarOpen } = useSidebar();
 
   return (
-    <header className="sticky right-0 top-0 z-10 space-y-4 bg-blue-50 py-6">
+    <header className="sticky right-0 top-0 z-10 space-y-4 bg-blue-50 py-6 print:hidden">
       <div className="container">
         <div className="relative flex h-full justify-between">
           {/* Name */}

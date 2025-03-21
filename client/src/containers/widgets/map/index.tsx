@@ -62,7 +62,7 @@ export default function WidgetMap({ indicator, layers, ...viewProps }: WidgetMap
   if (!GEOMETRY) return null;
 
   return (
-    <div className="relative h-full print:h-96">
+    <div className="relative h-full">
       <Map
         id="overview"
         {...(GEOMETRY?.extent && {

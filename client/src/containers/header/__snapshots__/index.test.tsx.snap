@@ -3,7 +3,7 @@
 exports[`Header renders the Home link selected 1`] = `
 <div>
   <header
-    class="box-border flex h-16 flex-col justify-center border-b border-blue-50 bg-white backdrop-blur"
+    class="box-border flex h-16 flex-col justify-center border-b border-blue-50 bg-white backdrop-blur print:hidden"
   >
     <div
       class="container flex items-center justify-between md:mx-auto"
@@ -108,7 +108,7 @@ exports[`Header renders the Home link selected 1`] = `
 exports[`Header renders the Hub link selected 1`] = `
 <div>
   <header
-    class="box-border flex h-16 flex-col justify-center border-b border-blue-50 bg-white backdrop-blur"
+    class="box-border flex h-16 flex-col justify-center border-b border-blue-50 bg-white backdrop-blur print:hidden"
   >
     <div
       class="container flex items-center justify-between md:mx-auto"
@@ -213,7 +213,7 @@ exports[`Header renders the Hub link selected 1`] = `
 exports[`Header renders the Report Tool link selected 1`] = `
 <div>
   <header
-    class="box-border flex h-16 flex-col justify-center border-b bg-white backdrop-blur border-blue-100"
+    class="box-border flex h-16 flex-col justify-center border-b bg-white backdrop-blur print:hidden border-blue-100"
   >
     <div
       class="container flex items-center justify-between md:mx-auto"

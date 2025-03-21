@@ -17,7 +17,7 @@ export default function Header() {
   return (
     <header
       className={cn({
-        "box-border flex h-16 flex-col justify-center border-b border-blue-50 bg-white backdrop-blur":
+        "box-border flex h-16 flex-col justify-center border-b border-blue-50 bg-white backdrop-blur print:hidden":
           true,
         "border-blue-100": isReport,
       })}
