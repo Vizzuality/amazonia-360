@@ -1,8 +1,12 @@
 import puppeteer from "puppeteer";
 
+import { env } from "@/env.mjs";
+
 async function getBrowser() {
   return await puppeteer.launch({
     args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
       "--disable-web-security",
       "--disable-features=IsolateOrigins",
       "--disable-site-isolation-trials",
@@ -10,6 +14,7 @@ async function getBrowser() {
     ],
     browser: "chrome",
     headless: true,
+    timeout: 0,
   });
 }
 
@@ -22,12 +27,10 @@ export async function POST(request: Request) {
     const browser = await getBrowser();
     const page = await browser.newPage();
 
-    // set Headers
-    const Authorization = request.headers.get("Authorization");
-
-    if (Authorization) {
-      await page.setExtraHTTPHeaders({ Authorization });
-    }
+    await page.authenticate({
+      username: env.BASIC_AUTH_USER,
+      password: env.BASIC_AUTH_PASSWORD,
+    });
 
     await page.goto(url, { waitUntil: "networkidle0" });
 

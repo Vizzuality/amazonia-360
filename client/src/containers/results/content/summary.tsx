@@ -154,6 +154,7 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
     return topics?.find((t) => t.id === topic?.id)?.indicators?.map(({ id }) => id);
   }, [topic, topics]);
   const previousActiveIndicators = usePreviousDifferent(activeIndicators ?? undefined);
+
   const [aiSummary, setAiSummary] = useSyncAiSummary();
   const { data, isFetching, isPending } = useGetSummaryTopic(topic, aiSummary, activeIndicators);
 
