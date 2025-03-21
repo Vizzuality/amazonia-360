@@ -31,7 +31,7 @@ async function getBrowser() {
       ],
       browser: "chrome",
       headless: true,
-      timeout: 0,
+      timeout: 120000,
     });
   }
 
