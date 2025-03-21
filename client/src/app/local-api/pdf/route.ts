@@ -13,11 +13,12 @@ let browser: Browser | CoreBrowser;
 async function getBrowser() {
   if (browser) return browser;
 
-  if (process.env.NEXT_PUBLIC_VERCEL_ENVIRONMENT === "production") {
+  if (!!process.env.NEXT_PUBLIC_VERCEL_ENV) {
     browser = await puppeteerCore.launch({
       args: chromium.args,
       executablePath: await chromium.executablePath(remoteExecutablePath),
-      headless: true,
+      headless: chromium.headless,
+      timeout: 120000,
     });
   } else {
     browser = await puppeteer.launch({
