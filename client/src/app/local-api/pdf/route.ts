@@ -2,7 +2,12 @@ import puppeteer from "puppeteer";
 
 async function getBrowser() {
   return await puppeteer.launch({
-    args: ["—no-sandbox", "—disable-setuid-sandbox"],
+    args: [
+      "--disable-web-security",
+      "--disable-features=IsolateOrigins",
+      "--disable-site-isolation-trials",
+      "--disable-features=BlockInsecurePrivateNetworkRequests",
+    ],
     browser: "chrome",
     headless: true,
   });
@@ -26,7 +31,7 @@ export async function POST(request: Request) {
 
     await page.goto(url, { waitUntil: "networkidle0" });
 
-    await sleep(20000); // Wait for page to load
+    await sleep(1000); // Wait for page to load
 
     // Generate PDF
     const pdfBuffer = await page.pdf({
