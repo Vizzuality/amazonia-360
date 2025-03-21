@@ -1956,7 +1956,7 @@
       "type": "imagery",
       "column": [],
       "layer_id": "0",
-      "url": "https://atlas.iadb.org/image/rest/services/Imagery/test_dynamique_layer/ImageServer",
+      "url": "https://atlas.iadb.org/image/rest/services/population25_amazonia/ImageServer",
       "rasterFunction": {
         "functionName": "Colormap",
         "functionArguments": {
