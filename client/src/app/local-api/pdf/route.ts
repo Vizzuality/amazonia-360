@@ -20,8 +20,14 @@ async function getBrowser() {
       headless: chromium.headless,
       timeout: 120000,
     });
-  } else {
+
+    return browser;
+  }
+
+  if (process.env.NODE_ENV === "production") {
     browser = await puppeteer.launch({
+      headless: true,
+      executablePath: "/usr/bin/chromium-browser",
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
@@ -30,11 +36,25 @@ async function getBrowser() {
         "--disable-site-isolation-trials",
         "--disable-features=BlockInsecurePrivateNetworkRequests",
       ],
-      browser: "chrome",
-      headless: true,
       timeout: 120000,
     });
+
+    return browser;
   }
+
+  browser = await puppeteer.launch({
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-web-security",
+      "--disable-features=IsolateOrigins",
+      "--disable-site-isolation-trials",
+      "--disable-features=BlockInsecurePrivateNetworkRequests",
+    ],
+    browser: "chrome",
+    headless: true,
+    timeout: 120000,
+  });
 
   return browser;
 }

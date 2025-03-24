@@ -30,6 +30,23 @@ ENV COREPACK_INTEGRITY_KEYS 0
 
 ENV NODE_OPTIONS --no-experimental-global-navigator
 
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+# Install Google Chrome Stable and fonts
+# Note: this installs the necessary libs to make the browser work with Puppeteer.
+RUN apk add --no-cache \
+    udev \
+    ttf-freefont \
+    chromium \
+    nss \
+    freetype \
+    freetype-dev \
+    harfbuzz \
+    ca-certificates \
+    fontconfig \
+    curl
+
 WORKDIR /app
 
 COPY . .
