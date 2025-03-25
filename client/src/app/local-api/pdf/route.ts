@@ -35,6 +35,9 @@ async function getBrowser() {
         "--disable-features=IsolateOrigins",
         "--disable-site-isolation-trials",
         "--disable-features=BlockInsecurePrivateNetworkRequests",
+        "--use-gl=angle",
+        "--use-angle=swiftshader",
+        "--in-process-gpu",
       ],
       timeout: 120000,
     });
