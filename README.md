@@ -14,14 +14,15 @@ AmazoniaForever 360+ is designed to serve spatial and statistical data through a
 The platform uses ArcGIS Online to host and serve most raster and vector data, including zonal statistics, administrative boundaries, and thematic layers. A custom Python microservice is used for serving the H3 grid data in Apache Arrow format.
 
 # Architecture
+
 AmazoniaForever 360+ uses a hybrid architecture that combines ArcGIS Online services with a custom backend for performance-sensitive data processing.
 
 ## Components
 
-- `client/`: React frontend using Mapbox GL JS and ArcGIS SDK
-- `api/`:  python FastAPI service for h3 data server and AI  summary generation
-- `infra/`: Infrastructure management with Terraform
-- `science/`: python prototypes and data management sketches.
+- [Front-end](client/README.md): `client/`. React frontend using Mapbox GL JS and ArcGIS SDK
+- [Backend API](api/README.md): `api/`. Python FastAPI service for h3 data server and AI  summary generation
+- [Infrastructure](infrastructure/README.md): `infrastructure/`. Infrastructure management with Terraform
+- [Science and prototypes](science/README.md): `science/`. Python prototypes and data management sketches.
 
 ## Tech Stack
 
