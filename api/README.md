@@ -1,24 +1,58 @@
-# Amazonia360+ API
+# AmazoniaForever 360+ API
 
-## Python setup
+The app is done in python and FastAPI.
 
-### Production
+## Development
 
-This projecty uses `uv`. To install dependencies in a virtual environment use
+### Dependencies
+
+The dependencies to run the app can be found at `pyproject.toml`. This project uses `uv`. To make a virtual-environment
+and install the dependencies use
 
 ```bash
 uv sync
 ```
-Must be called from inside the `api/` folder. 
 
-### Development
+note that this must be called from inside the `api/` folder.
 
-We use and recommend [pip-tools](https://pip-tools.readthedocs.io/en/stable/) or [uv](https://github.com/astral-sh/uv) to manage the dependencies.
+### Test
 
-First create a virtual environment with virtualenv or uv.
+Testing is done via `pytest`
 
-Then install the dependencies with the following command:
+from within the virtualenv, run it with
+
+```shell
+pytest
+```
+
+or
+
+```shell
+uv run pytest
+```
+
+### Running the app
+
+To run the app use:
 
 ```bash
-uv sync --dev
+uv run uvicorn app.main:app
 ```
+
+To run the app in development mode use the `--reload` flag.
+
+Or use the `docker-compose.yml` from the root of the project to spin only the api service with:
+
+```shell
+docker compose up api
+```
+
+## Architecture
+
+The application is composed of two main parts: H3 grid service and AI summary service.
+
+### H3 Grid
+
+### AI Summary
+
+

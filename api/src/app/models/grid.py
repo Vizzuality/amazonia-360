@@ -118,17 +118,17 @@ class TableFilters(BaseModel):
             "not_eq": "__ne__",
             "in": "in_",
         }
-        filters_to_apply = []
-        for _filter in self.filters:
-            if _filter is None:
+        filters = []
+        for filter_ in self.filters:
+            if filter_ is None:
                 continue
-            col = column(_filter.column_name)
-            param = getattr(col, op_to_python_dunder.get(_filter.operation, _filter.operation))(_filter.value)
-            filters_to_apply.append(param)
+            col = column(filter_.column_name)
+            param = getattr(col, op_to_python_dunder.get(filter_.operation, filter_.operation))(filter_.value)
+            filters.append(param)
         query = (
             select("*")
             .select_from(table(table_name))
-            .where(*filters_to_apply)
+            .where(*filters)
             .limit(self.limit)
             .order_by(
                 *[nullslast(desc(column(col[1:]))) if col.startswith("-") else column(col) for col in self.order_by]
