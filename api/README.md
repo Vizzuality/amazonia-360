@@ -1,24 +1,27 @@
 # Amazonia360+ API
+Welcome to the Amazonia360+ API documentation. The app is done in python and FastAPI library.
 
-## Python setup
+## Dependencies
 
-### Production
-
-This projecty uses `uv`. To install dependencies in a virtual environment use
+This project uses `uv`. To make a virtual-environment and install the dependencies use
 
 ```bash
 uv sync
 ```
-Must be called from inside the `api/` folder. 
 
-### Development
+note that this must be called from inside the `api/` folder.
 
-We use and recommend [pip-tools](https://pip-tools.readthedocs.io/en/stable/) or [uv](https://github.com/astral-sh/uv) to manage the dependencies.
 
-First create a virtual environment with virtualenv or uv.
+## Running the app
 
-Then install the dependencies with the following command:
+To run the app use:
 
 ```bash
-uv sync --dev
+uv run uvicorn app.main:app
 ```
+
+To run the app in development mode use the `--reload` flag.
+
+### In production
+
+Use the `Dockerfile` in the module to build the image and run the app in production environments.
