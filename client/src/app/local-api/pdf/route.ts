@@ -76,7 +76,7 @@ export async function POST(request: Request) {
       password: env.BASIC_AUTH_PASSWORD,
     });
 
-    await page.goto(url, { waitUntil: "networkidle0", timeout: 0 });
+    await page.goto(url, { waitUntil: "networkidle0", timeout: 120000 });
 
     await sleep(1000); // Wait for page to load
 

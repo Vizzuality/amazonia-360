@@ -20,10 +20,6 @@ export default function Hub() {
             Access our mapped knowledge library, where georeferenced research and resources from IDB
             and partners guide you straight to information about your area of interest.
           </p>
-          <p className="max-w-lg font-normal">
-            Remove access to the Hub. Perhaps a shortcut to the GeoKnow (Knowledge products
-            section?)
-          </p>
           <Link href="/hub">
             <Button size="lg" variant="secondary" className="mt-4 flex space-x-2.5">
               <p>Access hub</p>
