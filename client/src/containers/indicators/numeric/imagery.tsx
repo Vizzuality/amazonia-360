@@ -22,6 +22,12 @@ export const NumericImageryIndicators = ({ id, resource }: NumericImageryIndicat
   const VALUE = useMemo(() => {
     if (!query.data || !("statistics" in query.data)) return null;
 
+    const [s] = query.data.statistics;
+
+    if (!s) return null;
+
+    if (s.min === s.max) return null;
+
     // let sumproducto = 0;
     // let countPixel = 0;
     // for (let i=0; i<hs.histograms[0].size; i++) {
@@ -36,16 +42,14 @@ export const NumericImageryIndicators = ({ id, resource }: NumericImageryIndicat
     // console.log(countPixel)
     // const h = query.data.histograms[0];
 
-    return (
-      query.data?.histograms?.reduce((acc, curr) => {
-        return (
-          acc +
-          [...curr.counts].reduce((a, c, i) => {
-            return a + c * (curr.min + (i * curr.max) / (curr.size - 1));
-          }, 0)
-        );
-      }, 0) ?? "-"
-    );
+    return query.data?.histograms?.reduce((acc, curr) => {
+      return (
+        acc +
+        [...curr.counts].reduce((a, c, i) => {
+          return a + c * (curr.min + (i * curr.max) / (curr.size - 1));
+        }, 0)
+      );
+    }, 0);
   }, [query.data]);
 
   return (

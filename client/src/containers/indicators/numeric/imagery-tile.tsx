@@ -25,6 +25,12 @@ export const NumericImageryTileIndicators = ({
   const VALUE = useMemo(() => {
     if (!query.data || !("statistics" in query.data)) return null;
 
+    const [s] = query.data.statistics;
+
+    if (!s) return null;
+
+    if (s.min === s.max) return null;
+
     // let sumproducto = 0;
     // let countPixel = 0;
     // for (let i=0; i<hs.histograms[0].size; i++) {

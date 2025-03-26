@@ -97,7 +97,7 @@ export const ReportResultsContentItem = ({
     <div
       key={topic.id}
       className={cn({
-        "container relative space-y-4 print:break-before-page print:px-0": true,
+        "container relative space-y-4 print:break-before-auto print:px-0": true,
       })}
     >
       <h2 className="text-xl font-semibold">{TOPIC?.name_en}</h2>
