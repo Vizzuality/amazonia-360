@@ -17,10 +17,10 @@ export default function OtherResourcesGroup({ data }: { data?: ResourceProps[] }
 
   return (
     <div className="space-y-4">
-      <WidgetsRow className="print:grid-cols-2">
+      <WidgetsRow className="print:grid-cols-12">
         {DATA?.map((r, idx) => (
           <WidgetsColumn
-            className="col-span-12 sm:col-span-4 lg:col-span-3 print:col-span-1 print:[&:nth-child(7n)]:break-before-page"
+            className="col-span-12 sm:col-span-4 lg:col-span-3 print:col-span-4 print:[&:nth-child(7n)]:break-before-page"
             key={idx}
           >
             <Resource key={idx} {...r} />
