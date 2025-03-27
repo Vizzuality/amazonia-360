@@ -91,7 +91,7 @@ export const ReportResultsContentItem = ({
         </div>
       );
     });
-  }, [topic, editable]);
+  }, [topic, editable, EDITABLE]); // eslint-disable-line
 
   return (
     <div
