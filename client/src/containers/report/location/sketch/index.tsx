@@ -64,7 +64,7 @@ export default function Sketch() {
   };
 
   return (
-    <div className={cn("flex w-full flex-col items-center space-y-2 overflow-y-scroll text-sm")}>
+    <div className={cn("flex w-full flex-col items-center space-y-2 text-sm")}>
       {SKETCH_BUTTONS.map((button) => {
         const Icon = button.Icon;
 
