@@ -12,21 +12,23 @@ export default function DownloadReport() {
   const mutation = useGetMutationPDF();
 
   const handleClick = async () => {
-    mutation.mutate(
-      { url: window.location.href },
-      {
-        onSuccess: (response) => {
-          if (!response?.data) return;
-          const url = window.URL.createObjectURL(response.data);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `report.pdf`;
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-        },
-      },
-    );
+    window.print();
+
+    // mutation.mutate(
+    //   { url: window.location.href },
+    //   {
+    //     onSuccess: (response) => {
+    //       if (!response?.data) return;
+    //       const url = window.URL.createObjectURL(response.data);
+    //       const link = document.createElement("a");
+    //       link.href = url;
+    //       link.download = `report.pdf`;
+    //       document.body.appendChild(link);
+    //       link.click();
+    //       link.remove();
+    //     },
+    //   },
+    // );
   };
 
   return (
