@@ -157,9 +157,11 @@ export default function MapContainer() {
         id="default"
         defaultBbox={bbox}
         bbox={tmpBbox}
+        viewProps={{
+          padding,
+        }}
         onMapMove={handleMapMove}
         onPointerLeave={handlePointerLeave}
-        padding={padding}
       >
         <LayerManager />
         <Tooltip />

@@ -45,12 +45,6 @@ export function MapView({
   id = "default",
   defaultBbox,
   bbox,
-  // padding = {
-  //   top: 50,
-  //   right: 50,
-  //   bottom: 50,
-  //   left: 50,
-  // },
   children,
   mapProps,
   viewProps,
@@ -159,7 +153,7 @@ export function MapView({
       const b = bbox.clone();
 
       const e = new Extent({
-        xmin: b.xmin - (b.xmax - b.xmin),
+        xmin: b.xmin,
         ymin: b.ymin,
         xmax: b.xmax,
         ymax: b.ymax,
