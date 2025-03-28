@@ -2,7 +2,13 @@ import "server-only";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+import createMiddleware from "next-intl/middleware";
+
 import { env } from "@/env.mjs";
+
+import { routing } from "@/i18n/routing";
+
+const intlMiddleware = createMiddleware(routing);
 
 // Step 1. HTTP Basic Auth Middleware for Challenge
 export default async function middleware(req: NextRequest) {
@@ -13,9 +19,7 @@ export default async function middleware(req: NextRequest) {
     });
   }
 
-  const response = NextResponse.next();
-
-  return response;
+  return intlMiddleware(req);
 }
 
 // Step 2. Check HTTP Basic Auth header if present

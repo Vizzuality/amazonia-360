@@ -2,10 +2,13 @@
 
 import { useCallback } from "react";
 
+import ReactMarkdown from "react-markdown";
 import { scroller } from "react-scroll";
 
 import Image from "next/image";
 import Link from "next/link";
+
+import { useTranslations } from "next-intl";
 
 import { Media } from "@/containers/media";
 
@@ -20,35 +23,31 @@ export default function Hero() {
     });
   }, []);
 
+  const t = useTranslations();
+
   return (
     <section className="relative w-full overflow-hidden md:h-[calc(100svh_-_64px)] md:bg-blue-50">
       <div className="container relative grid h-full w-full grid-cols-12 items-center">
         <div className="relative z-10 col-span-12 flex flex-col space-y-6 py-8 md:col-span-5 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-40">
-          <h2 className="text-4xl font-bold text-blue-600 lg:text-5xl">
-            Understanding
-            <br /> Amazonia
-            <br /> like never before
+          <h2 className="text-4xl text-blue-600 lg:text-5xl">
+            <ReactMarkdown>{t("landing-hero-title")}</ReactMarkdown>
           </h2>
           <p className="text-base font-normal text-blue-900 lg:text-lg">
-            With <span className="font-bold">AmazoniaForever360+</span>, unlock powerful insights
-            about one of the planet&apos;s most vital ecosystem mosaics. Our intuitive platform
-            transforms complex territorial data into actionable knowledge—no technical expertise
-            needed. From biodiversity to infrastructure, explore and analyze to drive sustainable
-            impact across Amazonia.
+            <ReactMarkdown>{t("landing-hero-description")}</ReactMarkdown>
           </p>
           <div className="flex space-x-4 py-4 font-semibold md:py-6">
             <Link href="/report" prefetch>
               <Button size="lg" className="flex space-x-2.5 px-8">
-                Access the tool
+                {t("landing-hero-buttons-access-the-tool")}
               </Button>
             </Link>
             <Button
               size="lg"
-              className="flex space-x-2.5 px-8"
+              className="flex space-x-2.5 px-8 capitalize"
               variant="outline"
               onClick={handleScroll}
             >
-              More info
+              {t("landing-hero-buttons-more-info")}
             </Button>
           </div>
         </div>

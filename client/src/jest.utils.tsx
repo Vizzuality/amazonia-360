@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, RenderOptions } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -18,9 +19,11 @@ const createQueryClient = () => {
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   const queryClient = createQueryClient();
   return (
-    <TooltipProvider>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </TooltipProvider>
+    <NextIntlClientProvider>
+      <TooltipProvider>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      </TooltipProvider>
+    </NextIntlClientProvider>
   );
 };
 

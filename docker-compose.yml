@@ -1,9 +1,9 @@
 services:
   api:
     build:
-        context: ./api
-        dockerfile: Dockerfile
-        target: production
+      context: ./api
+      dockerfile: Dockerfile
+      target: production
     ports:
       - "8000:8000"
     environment:
@@ -34,9 +34,9 @@ services:
       - amazonia360-network
   test:
     build:
-        context: ./api
-        dockerfile: Dockerfile
-        target: development
+      context: ./api
+      dockerfile: Dockerfile
+      target: development
     networks:
       - amazonia360-network
 
