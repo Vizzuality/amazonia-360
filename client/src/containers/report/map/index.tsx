@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useRef } from "react";
 
 import dynamic from "next/dynamic";
 
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { useDebounce, useWindowSize } from "rooks";
+import { useDebounce } from "rooks";
 
 import { getGeometryWithBuffer } from "@/lib/location";
 
@@ -37,7 +37,7 @@ const Map = dynamic(() => import("@/components/map"), {
   ssr: false,
 });
 
-export default function MapContainer() {
+export default function MapContainer({ sidebar }: { sidebar?: boolean }) {
   const [bbox, setBbox] = useSyncBbox();
   const tab = useAtomValue(tabAtom);
   const [tmpBbox, setTmpBbox] = useAtom(tmpBboxAtom);
@@ -50,17 +50,6 @@ export default function MapContainer() {
 
   const [location, setLocation] = useSyncLocation();
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
-
-  const { innerWidth } = useWindowSize();
-
-  const padding = useMemo(() => {
-    return {
-      top: 50,
-      right: 50,
-      bottom: 50,
-      left: innerWidth ? innerWidth / 2 : 0,
-    };
-  }, [innerWidth]);
 
   const handleMapMove = useDebounce((extent: __esri.Extent) => {
     setBbox([extent.xmin, extent.ymin, extent.xmax, extent.ymax]);
@@ -157,9 +146,7 @@ export default function MapContainer() {
         id="default"
         defaultBbox={bbox}
         bbox={tmpBbox}
-        viewProps={{
-          padding,
-        }}
+        padding={sidebar}
         onMapMove={handleMapMove}
         onPointerLeave={handlePointerLeave}
       >
