@@ -24,9 +24,9 @@ export const NumericImageryIndicators = ({ id, resource }: NumericImageryIndicat
 
     const [s] = query.data.statistics;
 
-    if (!s) return null;
+    if (!s) return 0;
 
-    if (s.min === s.max) return null;
+    if ("sum" in s) return s.sum;
 
     // let sumproducto = 0;
     // let countPixel = 0;

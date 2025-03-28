@@ -27,10 +27,11 @@ export const NumericImageryTileIndicators = ({
 
     const [s] = query.data.statistics;
 
-    if (!s) return null;
+    if (!s) return 0;
 
-    if (s.min === s.max) return null;
+    if ("sum" in s) return s.sum;
 
+    // This is not used anymore unless we need to calculate the sum from the histogram
     // let sumproducto = 0;
     // let countPixel = 0;
     // for (let i=0; i<hs.histograms[0].size; i++) {
