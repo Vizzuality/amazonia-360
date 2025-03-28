@@ -27,7 +27,7 @@ export type AiSummary = {
 export const topicsParser = parseAsArrayOf(parseAsJson<TopicView>());
 
 export const bboxParser = parseAsArrayOf(parseAsFloat).withDefault([
-  -12497583.775253754, -2540944.9326481596, -4391589.799669538, 1362846.9759313238,
+  -8023275.442182404, -2047352.8224967439, -5014714.008878666, 799773.6070687444,
 ]);
 
 export type SearchLocation = {
