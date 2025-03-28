@@ -87,11 +87,13 @@ export const useGetDefaultIndicators = (
 ) => {
   const query = useGetIndicators({
     select(data) {
-      return data.filter((indicator) => {
-        const t = topic_id ? indicator.topic.id === topic_id : true;
+      return data
+        .filter((indicator) => {
+          const t = topic_id ? indicator.topic.id === topic_id : true;
 
-        return indicator.topic.id !== 0 && indicator.resource.type !== "h3" && t;
-      });
+          return indicator.topic.id !== 0 && indicator.resource.type !== "h3" && t;
+        })
+        .sort((a, b) => a.order - b.order);
     },
     ...options,
   });
@@ -107,7 +109,8 @@ export const useGetH3Indicators = () => {
         .map((indicator) => ({
           ...indicator,
           resource: indicator.resource as Indicator["resource"] & { type: "h3" },
-        }));
+        }))
+        .sort((a, b) => a.order - b.order);
     },
   });
 

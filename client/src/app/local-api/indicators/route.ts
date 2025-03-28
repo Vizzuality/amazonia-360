@@ -73,6 +73,7 @@ export type Indicator = {
   unit_en: string;
   unit_pt: string;
   topic: Topic;
+  order: number;
   visualization_types: VisualizationTypes[];
   resource:
     | ResourceFeature
