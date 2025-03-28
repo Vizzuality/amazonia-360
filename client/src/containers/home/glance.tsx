@@ -2,10 +2,12 @@
 import { useCallback, useMemo, useState } from "react";
 
 import { useInView } from "react-intersection-observer";
+import ReactMarkdown from "react-markdown";
 
 import { HierarchyNode, HierarchyRectangularNode } from "@visx/hierarchy/lib/types";
 import { scaleOrdinal } from "@visx/scale";
 import CHROMA from "chroma-js";
+import { useTranslations, useLocale } from "next-intl";
 import { LuCheck, LuChevronDown } from "react-icons/lu";
 
 import { formatNumber, formatPercentage } from "@/lib/formats";
@@ -19,8 +21,11 @@ import { type Data } from "@/components/charts/marimekko";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export default function Glance() {
+  const t = useTranslations();
   const [chartKey, setChartKey] = useState<MosaicIds>(MOSAIC_OPTIONS[4].key);
   const [open, setOpen] = useState<boolean>(false);
+
+  const locale = useLocale();
 
   const { ref: sectionRef, inView: isSectionInView } = useInView({
     triggerOnce: true,
@@ -108,22 +113,19 @@ export default function Glance() {
       >
         <div>
           <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
-            Amazonia at a glance
+            {t("landing-glance-note")}
           </h3>
           <h2 className="max-w-44 pb-6 text-2xl text-blue-400 md:max-w-[520px] lg:text-3xl xl:text-4xl">
-            A mosaic of ecosystems and habitats
+            {t("landing-glance-title")}
           </h2>
           <p className="text-base font-normal text-blue-900 lg:text-lg">
-            <span className="font-bold">
-              {" "}
-              A Continent-sized Mosaic of Cultures and Nature Across Eight Countries
-            </span>
-            Spanning 8.4 million square kilometers across eight South American countries, Amazonia
-            represents one of the planet&apos;s most diverse confluences of cultures and ecosystems.
+            <ReactMarkdown>{t("landing-glance-description")}</ReactMarkdown>
           </p>
 
           <div className="mt-7 flex flex-col space-y-1">
-            <p className="text-xs font-semibold text-blue-900">Select indicator</p>
+            <p className="text-xs font-semibold text-blue-900">
+              {t("landing-glance-chart-select")}
+            </p>
 
             <Popover open={open}>
               <PopoverTrigger
@@ -131,7 +133,9 @@ export default function Glance() {
                 onClick={() => setOpen(!open)}
               >
                 <p className="max-w-64 truncate px-3 py-2 text-left text-sm md:max-w-80 lg:max-w-none">
-                  {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.label || ""}
+                  {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.[
+                    `label_${locale}` as keyof (typeof MOSAIC_OPTIONS)[number]
+                  ] ?? ""}
                 </p>
                 <LuChevronDown className="absolute right-2 top-2 h-5 w-5 text-blue-900" />
               </PopoverTrigger>
@@ -152,7 +156,7 @@ export default function Glance() {
                       })}
                       onClick={() => handleSingleValueChange(opt.key)}
                     >
-                      <span>{opt.label}</span>
+                      <span>{opt[`label_${locale}` as keyof typeof opt]}</span>
                       {opt.key === chartKey && <LuCheck className="text-blue-900" />}
                     </div>
                   ))}
@@ -162,13 +166,13 @@ export default function Glance() {
         </div>
 
         <div className="space-y-1 text-sm text-blue-300">
-          <p className="text-base">Source: </p>
+          <p className="text-base"> {t("landing-glance-chart-source-note")}</p>
           <ul className="space-y-2">
             <li>
-              <span>Global Human Settlement Layer (GHSL) - Population projection for 2025;</span>
+              <span>{t("landing-glance-chart-source-title")}</span>
               <CardInfo ids={[+"population"]} className="relative top-0.5 inline-flex" />
             </li>
-            <li>Cartographic area</li>
+            <li>{t("landing-glance-chart-source")}</li>
           </ul>
         </div>
       </div>
@@ -177,10 +181,14 @@ export default function Glance() {
       >
         <header className="space-y-1">
           <h3 className="text-xl font-semibold text-foreground">
-            {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.label || ""}
+            {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.[
+              `label_${locale}` as keyof (typeof MOSAIC_OPTIONS)[number]
+            ] || ""}
           </h3>
           <p className="text-xs font-medium text-foreground">
-            {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.description || ""}
+            {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.[
+              `description_${locale}` as keyof (typeof MOSAIC_OPTIONS)[number]
+            ] || ""}
           </p>
         </header>
         <div className="w-full">

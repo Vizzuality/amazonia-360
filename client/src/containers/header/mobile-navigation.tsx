@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 
 import { usePrevious } from "@dnd-kit/utilities";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
@@ -15,6 +16,7 @@ import { Dialog, DialogContent, DialogTrigger, DialogHeader } from "@/components
 import LogoBetaInfo from "./logo-beta-info";
 
 export default function MobileNavigation() {
+  const t = useTranslations();
   const pathname = usePathname();
   const previousPathname = usePrevious(pathname);
 
@@ -95,7 +97,7 @@ export default function MobileNavigation() {
               })}
               href="/"
             >
-              Home
+              {t("header-home")}
             </Link>
             <Link
               className={cn({
@@ -104,7 +106,7 @@ export default function MobileNavigation() {
               })}
               href="/report"
             >
-              Report Tool
+              {t("header-report-tool")}
             </Link>
             <Link
               className={cn({
@@ -113,7 +115,7 @@ export default function MobileNavigation() {
               })}
               href="/hub"
             >
-              Hub
+              {t("header-hub")}
             </Link>
           </nav>
         </div>

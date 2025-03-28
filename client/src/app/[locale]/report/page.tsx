@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
-import PageProviders from "@/app/report/page-providers";
+import PageProviders from "@/app/[locale]/report/page-providers";
 
 import ReportLocation from "@/containers/report/location";
 

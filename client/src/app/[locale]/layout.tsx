@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
 
 import { Montserrat } from "next/font/google";
+import { notFound } from "next/navigation";
 import Script from "next/script";
+
+import { hasLocale, NextIntlClientProvider } from "next-intl";
 
 import RootHead from "@/app/head";
 import LayoutProviders from "@/app/layout-providers";
 
 import Header from "@/containers/header";
+
+import { routing } from "@/i18n/routing";
 
 import "@arcgis/core/assets/esri/themes/light/main.css";
 import "@/styles/globals.css";
@@ -38,14 +43,27 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
+
   return (
     <LayoutProviders>
-      <html lang="en">
+      <html lang={locale}>
         <RootHead />
         <body className={`${montserrat.className} w-full overflow-x-hidden`}>
-          <Header />
-          {children}
+          <NextIntlClientProvider locale={locale}>
+            <Header />
+            {children}
+          </NextIntlClientProvider>
         </body>
 
         <Script id="fullstory" strategy="lazyOnload">

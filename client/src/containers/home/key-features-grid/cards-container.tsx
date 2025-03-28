@@ -1,6 +1,9 @@
 "use client";
 
 import { useInView } from "react-intersection-observer";
+import ReactMarkdown from "react-markdown";
+
+import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
@@ -9,6 +12,8 @@ import { ReportIcon } from "@/components/ui/icons/report";
 import { WandIcon } from "@/components/ui/icons/wand";
 
 export default function CardsContainer() {
+  const t = useTranslations();
+
   const { ref: cardRef, inView: isCardInView } = useInView({
     triggerOnce: true,
     threshold: 0.5,
@@ -30,17 +35,13 @@ export default function CardsContainer() {
         })}
       >
         <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
-          Key Features
+          {t("landing-key-features-note")}
         </h3>
         <h2 className="pb-6 text-2xl text-blue-400 md:text-4xl">
-          The power of
-          <br /> Amazonia Grid
+          {t("landing-key-features-grid-title")}
         </h2>
         <p className="text-base font-normal text-blue-900 lg:text-lg">
-          <span className="font-bold">Grid-Powered Analytics</span> Beyond the report, dive deeper
-          into your selected area using our standardized hexagonal grid system to play with
-          indicators and identify locations that match your specific criteria, from biodiversity
-          hotspots to demographic patterns.
+          <ReactMarkdown>{t("landing-key-features-grid-description")}</ReactMarkdown>
         </p>
       </div>
       <ul
@@ -56,7 +57,9 @@ export default function CardsContainer() {
             }`}
           >
             <HexagonIcon className="h-8 w-8 text-cyan-600" />
-            <h4 className="font-bold text-blue-500">Identify hotspots</h4>
+            <h4 className="font-bold text-blue-500">
+              {t("landing-key-features-grid-buttons-identify-hot-spots")}
+            </h4>
           </div>
         </li>
         <li className="col-span-4 flex w-full flex-1 justify-start md:justify-center">
@@ -68,7 +71,9 @@ export default function CardsContainer() {
             }`}
           >
             <WandIcon className="text-cyan-600" />
-            <h4 className="font-bold text-blue-500">Redefine your area</h4>
+            <h4 className="font-bold text-blue-500">
+              {t("landing-key-features-grid-buttons-identify-hot-spots")}
+            </h4>
           </div>
         </li>
         <li className="col-span-4 flex w-full flex-1 justify-start md:justify-center">
@@ -80,7 +85,9 @@ export default function CardsContainer() {
             }`}
           >
             <ReportIcon className="text-cyan-600" />
-            <h4 className="font-bold text-blue-500">Create report</h4>
+            <h4 className="font-bold text-blue-500">
+              {t("landing-key-features-grid-buttons-create-report")}
+            </h4>
           </div>
         </li>
       </ul>

@@ -1,8 +1,11 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { cn } from "@/lib/utils";
 
 const AboutHeroHome = ({ textVisible }: { textVisible: boolean }) => {
+  const t = useTranslations();
   return (
     <div className="relative md:absolute md:bottom-0 md:left-0 md:right-0">
       <div className="md:container">
@@ -17,15 +20,9 @@ const AboutHeroHome = ({ textVisible }: { textVisible: boolean }) => {
             <div className="container md:px-0">
               <div className="flex flex-col items-start justify-start space-y-6 py-8 text-white">
                 <h3 className="text-sm font-bold uppercase tracking-[0.7px]">
-                  About AmazoniaForever360+
+                  {t("landing-about-title")}
                 </h3>
-                <p className="text-lg font-normal md:text-xl">
-                  AmazoniaForever360+ is a free tool initiated by the IDB as part of its Amazonia
-                  Forever program to help all those involved in the development and conservation of
-                  the Amazon to better understand this immense and complex territory. Starting from
-                  this first beta version, we will continue to develop this platform in
-                  collaboration with key actors in the region and beyond. Stay tuned.
-                </p>
+                <p className="text-lg font-normal md:text-xl">{t("landing-about-description")}</p>
               </div>
             </div>
           </div>

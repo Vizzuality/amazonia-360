@@ -3,10 +3,13 @@
 import { useInView } from "react-intersection-observer";
 
 import { LayoutDashboard, MapPinned, Share2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
 export default function CardsContainer() {
+  const t = useTranslations();
+
   const { ref: textRef, inView: isTextInView } = useInView({
     triggerOnce: true,
     threshold: 0.5,
@@ -28,14 +31,13 @@ export default function CardsContainer() {
         })}
       >
         <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
-          Key Features
+          {t("landing-key-features-note")}
         </h3>
         <h2 className="m-auto pb-6 text-2xl text-blue-400 lg:text-4xl">
-          Generate Reports in Minutes
+          {t("landing-key-features-report-title")}
         </h2>
         <p className="text-base font-normal text-blue-900 lg:text-lg">
-          Create customized reports focused on your areas of interest, with actionable insights and
-          data visualizations generated instantly from our comprehensive territorial knowledge base.
+          {t("landing-key-features-report-description")}
         </p>
       </div>
       <ul
@@ -51,7 +53,9 @@ export default function CardsContainer() {
             }`}
           >
             <MapPinned size={32} strokeWidth={1} className="text-cyan-600" />
-            <h4 className="font-bold text-blue-500">Select area of interest</h4>
+            <h4 className="font-bold text-blue-500">
+              {t("landing-key-features-report-buttons-select-area-of-interest")}
+            </h4>
           </div>
         </li>
         <li className="flex w-full">
@@ -63,7 +67,9 @@ export default function CardsContainer() {
             }`}
           >
             <LayoutDashboard size={32} strokeWidth={1} className="text-cyan-600" />
-            <h4 className="font-bold text-blue-500">Define topics of interest</h4>
+            <h4 className="font-bold text-blue-500">
+              {t("landing-key-features-report-buttons-define-topics-of-interest")}
+            </h4>
           </div>
         </li>
 
@@ -76,7 +82,9 @@ export default function CardsContainer() {
             }`}
           >
             <Share2 size={32} strokeWidth={1} className="h-8 w-8 text-cyan-600" />
-            <h4 className="font-bold text-blue-500">Share and download</h4>
+            <h4 className="font-bold text-blue-500">
+              {t("landing-key-features-report-buttons-share-and-download")}
+            </h4>
           </div>
         </li>
       </ul>
