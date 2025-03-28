@@ -33,6 +33,12 @@ export default function ReportLocation() {
           <MapContainer />
         </Media>
       </Suspense>
+
+      <Suspense fallback={null}>
+        <Media lessThan="lg" className="relative flex w-full grow flex-col">
+          <MapContainer />
+        </Media>
+      </Suspense>
     </>
   );
 }
