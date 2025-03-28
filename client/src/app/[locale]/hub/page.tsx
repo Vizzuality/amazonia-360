@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
-import PageProviders from "@/app/report/page-providers";
+import PageProviders from "@/app/[locale]/report/page-providers";
 
 import Footer from "@/containers/footer";
 import Hub from "@/containers/hub";
