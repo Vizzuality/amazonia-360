@@ -1,7 +1,5 @@
 "use client";
 
-import { Suspense } from "react";
-
 import { useAtom, useAtomValue } from "jotai";
 
 import { tabAtom, gridPanelAtom, reportPanelAtom } from "@/app/store";
@@ -25,50 +23,46 @@ export default function ReportLocationDesktop() {
       <div className="pointer-events-none z-10 w-full lg:absolute lg:bottom-8 lg:left-0 lg:top-10">
         <div className="container grid grid-cols-12">
           <div className="col-span-12 lg:col-span-5 2xl:col-span-4">
-            <Suspense fallback={null}>
-              <aside className="pointer-events-auto flex w-full shrink-0 flex-col overflow-hidden">
-                <Tabs
-                  defaultValue={tab}
-                  value={tab}
-                  onValueChange={(t) => setTab(t as typeof tabAtom.init)}
-                  className="test-class flex max-h-[calc(100vh_-_(64px_+_40px_+_28px))] grow flex-col"
+            <aside className="pointer-events-auto flex w-full shrink-0 flex-col overflow-hidden">
+              <Tabs
+                defaultValue={tab}
+                value={tab}
+                onValueChange={(t) => setTab(t as typeof tabAtom.init)}
+                className="test-class flex max-h-[calc(100vh_-_(64px_+_40px_+_28px))] grow flex-col"
+              >
+                <TabsList className="mb-2 w-full items-stretch rounded-lg border border-blue-100 bg-muted p-1">
+                  <TabsTrigger variant="primary" className="w-full" value="contextual-viewer">
+                    Report
+                  </TabsTrigger>
+                  <TabsTrigger variant="primary" className="w-full" value="grid">
+                    Grid
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent
+                  className="flex max-h-full grow flex-col overflow-hidden"
+                  value="contextual-viewer"
                 >
-                  <TabsList className="mb-2 w-full items-stretch rounded-lg border border-blue-100 bg-muted p-1">
-                    <TabsTrigger variant="primary" className="w-full" value="contextual-viewer">
-                      Report
-                    </TabsTrigger>
-                    <TabsTrigger variant="primary" className="w-full" value="grid">
-                      Grid
-                    </TabsTrigger>
-                  </TabsList>
+                  <ScrollArea className="h-full w-full grow">
+                    {reportPanel === "location" && <TabsLocation />}
+                    {reportPanel === "topics" && <TabsTopics />}
+                  </ScrollArea>
+                </TabsContent>
 
-                  <TabsContent
-                    className="flex max-h-full grow flex-col overflow-hidden"
-                    value="contextual-viewer"
-                  >
-                    <ScrollArea className="h-full w-full grow">
-                      {reportPanel === "location" && <TabsLocation />}
-                      {reportPanel === "topics" && <TabsTopics />}
-                    </ScrollArea>
-                  </TabsContent>
+                <TabsContent className="flex h-full grow flex-col" value="grid">
+                  <ScrollArea className="w-full grow">
+                    {gridPanel === "filters" && <TabsFilters />}
 
-                  <TabsContent className="flex h-full grow flex-col" value="grid">
-                    <ScrollArea className="w-full grow">
-                      {gridPanel === "filters" && <TabsFilters />}
-
-                      {gridPanel === "table" && <TabsTable />}
-                    </ScrollArea>
-                  </TabsContent>
-                </Tabs>
-              </aside>
-            </Suspense>
+                    {gridPanel === "table" && <TabsTable />}
+                  </ScrollArea>
+                </TabsContent>
+              </Tabs>
+            </aside>
           </div>
         </div>
       </div>
 
-      <Suspense fallback={null}>
-        <MapContainer desktop />
-      </Suspense>
+      <MapContainer desktop />
     </>
   );
 }

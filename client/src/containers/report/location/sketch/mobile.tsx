@@ -47,8 +47,8 @@ export default function SketchMobile() {
       )}
     >
       <Button
-        variant="default"
-        className={cn(sketch.enabled && sketch.type === "polygon" && "border-cyan-500 bg-blue-50")}
+        variant={sketch.enabled && sketch.type === "polygon" ? "secondary" : "default"}
+        className="w-full"
         onClick={(e) => handleClick(e, "polygon")}
         type="button"
       >
