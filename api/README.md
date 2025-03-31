@@ -1,6 +1,6 @@
-# AmazoniaForever 360+ API
+# AmazoniaForever360+ API
 
-The app is done in python and FastAPI.
+This module contains the api for the h3 grid and the AI summary. It is a FastAPI python app.
 
 ## Development
 

@@ -1,3 +1,6 @@
+# AmazoniaForever360+ Infrastructure
+Terraform module to manage the infrastructure supporting the application and services.
+
 ## Terraform state
 ### Initializing terraform state
 `terraform init` was executed with a local backend first.
