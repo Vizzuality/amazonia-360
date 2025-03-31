@@ -1,6 +1,7 @@
 "use client";
 
 import { useSetAtom } from "jotai";
+import { useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
 
 import { useGetGridMeta } from "@/lib/grid";
@@ -11,6 +12,7 @@ import GridTable from "@/containers/report/location/grid/table";
 import GridTableSetup from "@/containers/report/location/grid/table/setup";
 
 export default function TabsTable() {
+  const t = useTranslations();
   const setGridPanel = useSetAtom(gridPanelAtom);
 
   const [gridDatasets] = useSyncGridDatasets();
@@ -33,8 +35,8 @@ export default function TabsTable() {
               </button>
               <h1 className="mt-1.5">
                 {rankingCriterion
-                  ? `Top cells ordered by ${rankingCriterion}`
-                  : "Please select filters to view top cells"}
+                  ? `${t("grid-sidebar-grid-filters-ranking-title")} ${rankingCriterion}`
+                  : t("grid-sidebar-grid-filters-ranking-title-no-filter")}
               </h1>
             </header>
             <GridTableSetup />
@@ -42,8 +44,7 @@ export default function TabsTable() {
         </div>
 
         <p className="text-sm font-medium text-muted-foreground">
-          Click on a row in the table to redefine your area and center the map on the corresponding
-          cell.
+          {t("grid-sidebar-grid-filters-ranking-description")}
         </p>
       </div>
       <div className="relative overflow-y-auto overflow-x-hidden">

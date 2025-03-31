@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useAtom } from "jotai";
+import { useTranslations } from "next-intl";
 
 import { useMeta } from "@/lib/grid";
 import { useGetDefaultIndicators, useGetH3Indicators } from "@/lib/indicators";
@@ -29,6 +30,7 @@ type Option = {
 };
 
 export default function SearchC({ className }: { className?: string }) {
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedFiltersView] = useAtom(selectedFiltersViewAtom);
@@ -109,7 +111,7 @@ export default function SearchC({ className }: { className?: string }) {
       <Search
         value={search}
         open={open}
-        placeholder="Search indicator..."
+        placeholder={`${t("grid-sidebar-report-location-filters-search")}...`}
         options={OPTIONS}
         {...queryIndicators}
         onChange={handleSearch}

@@ -40,9 +40,9 @@ export default function CardsContainer() {
         <h2 className="pb-6 text-2xl text-blue-400 md:text-4xl">
           {t("landing-key-features-grid-title")}
         </h2>
-        <p className="text-base font-normal text-blue-900 lg:text-lg">
+        <div className="text-base font-normal text-blue-900 lg:text-lg">
           <ReactMarkdown>{t("landing-key-features-grid-description")}</ReactMarkdown>
-        </p>
+        </div>
       </div>
       <ul
         ref={cardRef}

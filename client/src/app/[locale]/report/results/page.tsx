@@ -1,8 +1,7 @@
-import { Metadata } from "next";
-
 import { redirect } from "next/navigation";
 
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import { getTranslations } from "next-intl/server";
 
 // import { getSearchQueryOptions } from "@/lib/search";
 
@@ -16,13 +15,17 @@ import ReportResultsHeader from "@/containers/results/header";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
 
-export const metadata: Metadata = {
-  title: "Report | results",
-  description: "Report results description",
-};
+type Params = Promise<{ locale: string }>;
 
-// Define the types for the page parameters
-export interface Params {}
+export async function generateMetadata({ params }: { params: Params }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+
+  return {
+    title: t("metadata-report-results-page-title"),
+    description: t("metadata-report-results-page-description"),
+  };
+}
 
 export interface SearchParams {
   location: string;

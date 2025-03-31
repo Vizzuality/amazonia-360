@@ -1,6 +1,7 @@
 "use client";
 
 import { useSetAtom } from "jotai";
+import { useTranslations } from "next-intl";
 
 import { gridPanelAtom, useSyncGridDatasets } from "@/app/store";
 
@@ -12,6 +13,7 @@ import GridClearFilters from "@/containers/report/location/grid/filters-controls
 import { Button } from "@/components/ui/button";
 
 export default function TabsFilters() {
+  const t = useTranslations();
   const setGridPanel = useSetAtom(gridPanelAtom);
 
   const [gridDatasets] = useSyncGridDatasets();
@@ -21,14 +23,13 @@ export default function TabsFilters() {
       <div className="space-y-1">
         <div className="flex items-center justify-between">
           <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
-            Redefine your area of interest
+            {t("grid-sidebar-grid-filters-title")}
           </h1>
           <GridClearFilters />
         </div>
 
         <p className="text-sm font-medium text-muted-foreground">
-          Add indicators to filter the grid cells and highlight areas that meet specific criteria.
-          You can select a maximum 4 indicators.
+          {t("grid-sidebar-grid-filters-description")}
         </p>
       </div>
       <SearchIndicators className="py-0" />
@@ -50,7 +51,7 @@ export default function TabsFilters() {
           className="w-full"
           disabled={!gridDatasets?.length}
         >
-          View cells ranking
+          {t("grid-sidebar-grid-filters-button-view-cells-ranking")}
         </Button>
       </div>
     </div>

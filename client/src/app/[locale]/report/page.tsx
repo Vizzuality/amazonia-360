@@ -1,13 +1,20 @@
-import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 import PageProviders from "@/app/[locale]/report/page-providers";
 
 import ReportLocation from "@/containers/report/location";
 
-export const metadata: Metadata = {
-  title: "Report | location",
-  description: "Report description",
-};
+type Params = Promise<{ locale: string }>;
+
+export async function generateMetadata({ params }: { params: Params }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale });
+
+  return {
+    title: t("metadata-report-page-title"),
+    description: t("metadata-report-page-description"),
+  };
+}
 
 export default function ReportPage() {
   return (

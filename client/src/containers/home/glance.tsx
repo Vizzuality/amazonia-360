@@ -118,9 +118,9 @@ export default function Glance() {
           <h2 className="max-w-44 pb-6 text-2xl text-blue-400 md:max-w-[520px] lg:text-3xl xl:text-4xl">
             {t("landing-glance-title")}
           </h2>
-          <p className="text-base font-normal text-blue-900 lg:text-lg">
+          <div className="text-base font-normal text-blue-900 lg:text-lg">
             <ReactMarkdown>{t("landing-glance-description")}</ReactMarkdown>
-          </p>
+          </div>
 
           <div className="mt-7 flex flex-col space-y-1">
             <p className="text-xs font-semibold text-blue-900">

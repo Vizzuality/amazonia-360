@@ -2,9 +2,12 @@
 
 import { useMemo } from "react";
 
+import ReactMarkdown from "react-markdown";
+
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import { useSetAtom } from "jotai";
+import { useTranslations } from "next-intl";
 import { useDebounce } from "rooks";
 
 import { formatNumber } from "@/lib/formats";
@@ -23,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 
 export default function Confirm() {
+  const t = useTranslations();
   const setReportPanel = useSetAtom(reportPanelAtom);
   const setSketchAction = useSetAtom(sketchActionAtom);
   const setTmpBbox = useSetAtom(tmpBboxAtom);
@@ -84,11 +88,11 @@ export default function Confirm() {
               setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
             }}
           >
-            Clear
+            {t("grid-sidebar-report-location-button-clear")}
           </Button>
 
           <Button size="lg" className="grow" onClick={() => setReportPanel("topics")}>
-            Confirm
+            {t("grid-sidebar-report-location-button-confirm")}
           </Button>
         </div>
       </section>
@@ -96,7 +100,9 @@ export default function Confirm() {
       {location.type !== "search" && LOCATION?.geometry.type !== "polygon" && (
         <section className="space-y-2">
           <div className="flex items-end justify-between">
-            <div className="text-sm font-semibold leading-none text-blue-500">Buffer size</div>
+            <div className="text-sm font-semibold leading-none text-blue-500">
+              {t("grid-sidebar-report-location-buffer-size")}
+            </div>
             <div className="text-xs leading-none text-foreground">
               {`${location.buffer || BUFFERS[LOCATION?.geometry.type || "point"]} km`}
             </div>
@@ -120,9 +126,9 @@ export default function Confirm() {
       )}
 
       {location.type !== "search" && (
-        <p className="text-sm tracking-[0.14px] text-muted-foreground">
-          <strong>Click</strong> on the shape to enable edit mode.
-        </p>
+        <div className="text-sm tracking-[0.14px] text-muted-foreground">
+          <ReactMarkdown>{t("grid-sidebar-report-location-note")}</ReactMarkdown>
+        </div>
       )}
     </div>
   );

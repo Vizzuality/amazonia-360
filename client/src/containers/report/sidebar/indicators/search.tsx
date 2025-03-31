@@ -2,6 +2,8 @@
 
 import { useCallback, useMemo, useState } from "react";
 
+import { useTranslations } from "next-intl";
+
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import { findFirstAvailablePosition } from "@/lib/report";
 import { cn } from "@/lib/utils";
@@ -23,6 +25,7 @@ type Option = {
 };
 
 export default function SearchC() {
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [topics, setTopics] = useSyncTopics();
@@ -139,7 +142,7 @@ export default function SearchC() {
       <Search
         value={search}
         open={open}
-        placeholder="Search indicator..."
+        placeholder={`${t("grid-sidebar-report-location-filters-search")}...`}
         options={OPTIONS}
         {...queryIndicators}
         onChange={handleSearch}
