@@ -45,6 +45,7 @@ export const getIndicators = async () => {
       (indicator) =>
         ({
           ...indicator,
+          description: indicator.description_en,
           topic: topics.find((topic) => topic.id === indicator.topic),
         }) as Indicator,
     )

@@ -9,10 +9,10 @@ import { usePreviousDifferent } from "rooks";
 import { useGetAISummary } from "@/lib/ai";
 import { getQueryFeatureIdOptions, useGetDefaultIndicators } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
+import { TranslatedTopic } from "@/lib/topics";
 import { omit } from "@/lib/utils";
 
 import { Indicator } from "@/app/local-api/indicators/route";
-import { Topic } from "@/app/local-api/topics/route";
 import { AiSummary } from "@/app/parsers";
 import {
   isGeneratingAIReportAtom,
@@ -25,10 +25,10 @@ import { Markdown } from "@/components/ui/markdown";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export interface ReportResultsSummaryProps {
-  topic?: Topic;
+  topic?: TranslatedTopic;
 }
 
-export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id"][]) => {
+export const useGetSummaryTopicData = (topic?: TranslatedTopic, indicators?: Indicator["id"][]) => {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
   const queryIndicators = useGetDefaultIndicators(topic?.id);
@@ -106,7 +106,7 @@ export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id
 };
 
 export const useGetSummaryTopic = (
-  topic?: Topic,
+  topic?: TranslatedTopic,
   options?: AiSummary,
   activeIndicators?: Indicator["id"][],
 ) => {
@@ -122,7 +122,7 @@ export const useGetSummaryTopic = (
     {
       data: {
         indicators: indicatorsData,
-        topic: topic?.name_en,
+        topic: topic?.topic_name,
         ai_notes: [
           "Don't use blockquotes",
           "Don't use headings",

@@ -6,10 +6,10 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/r
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { LuChevronRight, LuPlus, LuInfo } from "react-icons/lu";
 
+import { TranslatedTopic } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { Indicator, VisualizationTypes } from "@/app/local-api/indicators/route";
-import { Topic } from "@/app/local-api/topics/route";
 import { useSyncTopics } from "@/app/store";
 
 import Info from "@/containers/info";
@@ -28,7 +28,13 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/compone
 
 import { Badges } from "./badges";
 
-export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: Indicator }) {
+export function IndicatorsItem({
+  topic,
+  indicator,
+}: {
+  topic: TranslatedTopic;
+  indicator: Indicator;
+}) {
   const [open, setOpen] = useState(true);
 
   const [topics] = useSyncTopics();

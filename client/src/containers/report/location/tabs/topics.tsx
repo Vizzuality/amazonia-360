@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 
 import { useSetAtom } from "jotai";
+import { useLocale } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
 
 import { useGetDefaultTopics } from "@/lib/topics";
@@ -14,10 +15,11 @@ import { GenerateReport } from "@/containers/report/location/generate";
 import Topics from "@/containers/report/location/topics";
 
 export default function TabsTopics() {
+  const locale = useLocale();
   const setReportPanel = useSetAtom(reportPanelAtom);
   const [activeTopics, setTopics] = useSyncTopics();
 
-  const { data: topics } = useGetDefaultTopics();
+  const { data: topics } = useGetDefaultTopics({ locale });
 
   const handleTopicsSelection = useCallback(() => {
     if (topics?.length === activeTopics?.length) {

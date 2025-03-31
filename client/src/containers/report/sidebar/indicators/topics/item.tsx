@@ -4,12 +4,12 @@ import { useState, useCallback, useMemo, useEffect, MouseEvent } from "react";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
+import { useLocale } from "next-intl";
 import { LuChevronRight, LuGripVertical } from "react-icons/lu";
 
-import { useGetTopicsId } from "@/lib/topics";
+import { TranslatedTopic, useGetTopicsId } from "@/lib/topics";
 import { cn, areArraysEqual } from "@/lib/utils";
 
-import { Topic } from "@/app/local-api/topics/route";
 import { useSyncTopics } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
@@ -22,13 +22,14 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/compone
 
 import { CounterIndicatorsPill } from "./counter-indicators-pill";
 
-export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
+export function TopicItem({ topic, id }: { topic: TranslatedTopic; id: number }) {
+  const locale = useLocale();
   const [topics, setTopics] = useSyncTopics();
   const [counterVisibility, toggleCounterVisibility] = useState<boolean>(true);
   const [open, setOpen] = useState(false);
 
   const handleTopic = useCallback(
-    (topic: Topic, isChecked: boolean) => {
+    (topic: TranslatedTopic, isChecked: boolean) => {
       setTopics((prevTopics) => {
         if (isChecked) {
           const newTopic = {
@@ -85,7 +86,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
     [topics, topic],
   );
 
-  const defaultTopic = useGetTopicsId(topic.id)?.default_visualization;
+  const defaultTopic = useGetTopicsId(topic.id, locale)?.default_visualization;
 
   const isTopicDefaultView = areArraysEqual(defaultTopic, selectedTopicIndicators);
 
@@ -126,7 +127,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
                   className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? "rotate-90" : ""}`}
                 />
                 <span className="whitespace w-full flex-1 flex-nowrap text-sm">
-                  {topic.name_en}
+                  {topic.topic_name}
                 </span>
               </div>
               <div className="flex justify-end">

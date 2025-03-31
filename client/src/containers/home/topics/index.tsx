@@ -2,12 +2,15 @@
 
 import { useInView } from "react-intersection-observer";
 
+import { useLocale } from "next-intl";
+
 import { useGetDefaultTopics } from "@/lib/topics";
 
 import TopicsItem from "@/containers/home/topics/item";
 
 export default function Topics() {
-  const { data: topicsData } = useGetDefaultTopics();
+  const locale = useLocale();
+  const { data: topicsData } = useGetDefaultTopics({ locale });
 
   const { ref: imagesRef, inView: isImagesInView } = useInView({
     triggerOnce: true,

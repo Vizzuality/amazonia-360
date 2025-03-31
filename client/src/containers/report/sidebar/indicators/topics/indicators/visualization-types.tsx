@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 
 import { MapIcon, TableIcon, PieChartIcon, HashIcon } from "lucide-react";
+import { useLocale } from "next-intl";
 
 import { findFirstAvailablePosition } from "@/lib/report";
 import { useGetTopics } from "@/lib/topics";
@@ -23,8 +24,9 @@ export function VisualizationType({
   indicatorId: Indicator["id"];
   topicId: Topic["id"];
 }) {
+  const locale = useLocale();
   const [topics, setTopics] = useSyncTopics();
-  const { data: topicsData } = useGetTopics();
+  const { data: topicsData } = useGetTopics(locale);
 
   const handleVisualizationType = (visualizationType: VisualizationTypes) => {
     const widgetSize = DEFAULT_VISUALIZATION_SIZES[visualizationType];

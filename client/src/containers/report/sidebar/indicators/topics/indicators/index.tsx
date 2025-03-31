@@ -2,11 +2,11 @@
 
 import { useGetDefaultIndicators } from "@/lib/indicators";
 
-import { Topic } from "@/app/local-api/topics/route";
+import { TranslatedTopic } from "@/lib/topics";
 
 import { IndicatorsItem } from "./item";
 
-export const Indicators = ({ topic }: { topic: Topic }) => {
+export const Indicators = ({ topic }: { topic: TranslatedTopic }) => {
   const { data } = useGetDefaultIndicators(topic.id);
 
   return (

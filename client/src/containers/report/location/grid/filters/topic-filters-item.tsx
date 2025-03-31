@@ -24,7 +24,8 @@ export default function GridTopicFiltersItem({
   datasets: H3Indicator[];
 }) {
   const [open, setOpen] = useState(false);
-  const topic = useGetTopicsId(id);
+  const locale = "pt";
+  const topic = useGetTopicsId(id, locale);
   const [selectedFiltersView] = useAtom(selectedFiltersViewAtom);
   const datasetsIds = useMemo(() => datasets.map((d) => d.var_name), [datasets]);
 
@@ -62,7 +63,7 @@ export default function GridTopicFiltersItem({
                   className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? "rotate-90" : ""}`}
                 />
 
-                <span className="whitespace flex-nowrap text-sm">{topic?.name_en}</span>
+                <span className="whitespace flex-nowrap text-sm">{topic?.topic_name}</span>
               </div>
               <GridCounterIndicators total={datasets.length} datasetsIds={datasetsIds} />
             </div>

@@ -32,8 +32,8 @@ export const ReportResultsContentItem = ({
   const [reportEditionMode] = useAtom(reportEditionModeAtom);
 
   const EDITABLE = editable && reportEditionMode;
-
-  const TOPIC = useGetTopicsId(topic.id);
+  const locale = "pt";
+  const TOPIC = useGetTopicsId(topic.id, locale);
 
   const handleDrop = useCallback(
     (layout: Layout[]) => {
@@ -100,7 +100,7 @@ export const ReportResultsContentItem = ({
         "container relative space-y-4 print:break-before-auto print:px-0": true,
       })}
     >
-      <h2 className="text-xl font-semibold">{TOPIC?.name_en}</h2>
+      <h2 className="text-xl font-semibold">{TOPIC?.topic_name}</h2>
 
       {TOPIC?.id !== 0 && ai_summary.enabled && <ReportResultsSummary topic={TOPIC} />}
 

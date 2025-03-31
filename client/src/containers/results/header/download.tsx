@@ -1,6 +1,7 @@
 "use client";
 
 import { Download } from "lucide-react";
+import { useLocale } from "next-intl";
 
 import { useGetMutationPDF } from "@/lib/pdf";
 import { useGetOverviewTopics } from "@/lib/topics";
@@ -8,7 +9,8 @@ import { useGetOverviewTopics } from "@/lib/topics";
 import { Button } from "@/components/ui/button";
 
 export default function DownloadReport() {
-  const { data, isLoading } = useGetOverviewTopics();
+  const locale = useLocale();
+  const { data, isLoading } = useGetOverviewTopics({ locale });
   const mutation = useGetMutationPDF();
 
   const handleClick = async () => {

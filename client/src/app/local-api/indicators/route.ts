@@ -60,10 +60,11 @@ export type ResourceComponent = {
 
 export type Indicator = {
   id: number;
-  name_es: string;
+  name_sp: string;
   name_en: string;
   name_pt: string;
-  description_es: string;
+  description: string;
+  description_sp: string;
   description_en: string;
   description_pt: string;
   description_short_es: string;
@@ -92,10 +93,10 @@ export type H3Indicator = Indicator &
 
 export type IndicatorOverview = {
   id: number;
-  name_es: string;
+  name_sp: string;
   name_en: string;
   name_pt: string;
-  description_es: string;
+  description_sp: string;
   description_en: string;
   description_pt: string;
   description_short_es: string;

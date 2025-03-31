@@ -1,14 +1,17 @@
 import { useCallback, useMemo } from "react";
 
+import { useLocale } from "next-intl";
+
 import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { useSyncTopics } from "@/app/store";
 
 export default function SidebarClearIndicators() {
+  const locale = useLocale();
   const [topics, setTopics] = useSyncTopics();
 
-  const { data: defaultTopics } = useGetDefaultTopics();
+  const { data: defaultTopics } = useGetDefaultTopics({ locale });
 
   const defaultIndicators = useMemo(
     () =>

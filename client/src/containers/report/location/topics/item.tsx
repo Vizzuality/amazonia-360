@@ -14,9 +14,9 @@ type TopicsItemProps = Topic & {
 
 export default function TopicsItem({
   id,
-  name_en,
+  topic_name,
   image,
-  description_en,
+  topic_description,
   checked,
   onChange,
 }: TopicsItemProps) {
@@ -33,7 +33,7 @@ export default function TopicsItem({
         <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-sm bg-cyan-100">
           <Image
             src={image}
-            alt={`${name_en}`}
+            alt={`${topic_name}`}
             priority
             fill
             sizes="100%"
@@ -44,8 +44,8 @@ export default function TopicsItem({
           />
         </div>
         <div className="flex flex-col items-start justify-start space-y-1">
-          <span className="text-base font-bold transition-none">{name_en}</span>
-          <span className="text-xs font-medium text-muted-foreground">{description_en}</span>
+          <span className="text-base font-bold transition-none">{topic_name}</span>
+          <span className="text-xs font-medium text-muted-foreground">{topic_description}</span>
         </div>
       </div>
     </button>

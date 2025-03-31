@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "next-intl";
+
 import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
@@ -15,9 +17,10 @@ export interface TopicsProps {
 }
 
 export default function Topics({ interactive = true, size = "md" }: TopicsProps) {
+  const locale = useLocale();
   const [topics, setTopics] = useSyncTopics();
 
-  const { data: topicsData } = useGetDefaultTopics();
+  const { data: topicsData } = useGetDefaultTopics({ locale });
 
   const handleTopicChange = (topic: Topic, checked: boolean) => {
     if (checked) {
