@@ -29,7 +29,11 @@ export default function ReportLocationMobile() {
         </div>
       </div>
 
-      {reportPanel === "location" && <MapContainer sidebar={false} />}
+      {reportPanel === "location" && (
+        <Suspense fallback={null}>
+          <MapContainer sidebar={false} />
+        </Suspense>
+      )}
     </>
   );
 }
