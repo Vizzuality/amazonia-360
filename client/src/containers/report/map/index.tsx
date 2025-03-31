@@ -37,7 +37,7 @@ const Map = dynamic(() => import("@/components/map"), {
   ssr: false,
 });
 
-export default function MapContainer({ sidebar }: { sidebar?: boolean }) {
+export default function MapContainer({ desktop }: { desktop?: boolean }) {
   const [bbox, setBbox] = useSyncBbox();
   const tab = useAtomValue(tabAtom);
   const [tmpBbox, setTmpBbox] = useAtom(tmpBboxAtom);
@@ -146,7 +146,7 @@ export default function MapContainer({ sidebar }: { sidebar?: boolean }) {
         id="default"
         defaultBbox={bbox}
         bbox={tmpBbox}
-        padding={sidebar}
+        padding={desktop}
         onMapMove={handleMapMove}
         onPointerLeave={handlePointerLeave}
       >

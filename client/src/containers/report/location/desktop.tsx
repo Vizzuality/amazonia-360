@@ -67,7 +67,7 @@ export default function ReportLocationDesktop() {
       </div>
 
       <Suspense fallback={null}>
-        <MapContainer sidebar />
+        <MapContainer desktop />
       </Suspense>
     </>
   );
