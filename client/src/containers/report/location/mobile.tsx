@@ -4,6 +4,7 @@ import { useAtomValue } from "jotai";
 
 import { reportPanelAtom, useSyncLocation } from "@/app/store";
 
+import ReportMobileWarning from "@/containers/report/location/mobile-warning";
 import SketchMobile from "@/containers/report/location/sketch/mobile";
 import TabsLocation from "@/containers/report/location/tabs/location";
 import TabsTopics from "@/containers/report/location/tabs/topics";
@@ -30,6 +31,8 @@ export default function ReportLocationMobile() {
       {reportPanel === "location" && <MapContainer desktop={false} />}
 
       {reportPanel === "location" && !location && <SketchMobile />}
+
+      <ReportMobileWarning />
     </>
   );
 }
