@@ -15,7 +15,7 @@ exports[`Header renders the Home link selected 1`] = `
           href="/"
         >
           <h1
-            class="flex items-center space-x-4"
+            class="flex items-center space-x-2 lg:space-x-4"
           >
             <img
               alt="IDB"
@@ -31,7 +31,7 @@ exports[`Header renders the Home link selected 1`] = `
               class="space-x-2"
             >
               <span
-                class="text-sm font-medium text-blue-500"
+                class="text-xs font-medium text-blue-500 lg:text-sm"
               >
                 AmazoniaForever360+
               </span>
@@ -46,7 +46,7 @@ exports[`Header renders the Home link selected 1`] = `
           type="button"
         >
           <div
-            class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-blue-100"
+            class="inline-flex items-center rounded-md border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-blue-100 text-xs lg:text-sm"
           >
             Beta
           </div>
@@ -120,7 +120,7 @@ exports[`Header renders the Hub link selected 1`] = `
           href="/"
         >
           <h1
-            class="flex items-center space-x-4"
+            class="flex items-center space-x-2 lg:space-x-4"
           >
             <img
               alt="IDB"
@@ -136,7 +136,7 @@ exports[`Header renders the Hub link selected 1`] = `
               class="space-x-2"
             >
               <span
-                class="text-sm font-medium text-blue-500"
+                class="text-xs font-medium text-blue-500 lg:text-sm"
               >
                 AmazoniaForever360+
               </span>
@@ -151,7 +151,7 @@ exports[`Header renders the Hub link selected 1`] = `
           type="button"
         >
           <div
-            class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-blue-100"
+            class="inline-flex items-center rounded-md border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-blue-100 text-xs lg:text-sm"
           >
             Beta
           </div>
@@ -225,7 +225,7 @@ exports[`Header renders the Report Tool link selected 1`] = `
           href="/"
         >
           <h1
-            class="flex items-center space-x-4"
+            class="flex items-center space-x-2 lg:space-x-4"
           >
             <img
               alt="IDB"
@@ -241,7 +241,7 @@ exports[`Header renders the Report Tool link selected 1`] = `
               class="space-x-2"
             >
               <span
-                class="text-sm font-medium text-blue-500"
+                class="text-xs font-medium text-blue-500 lg:text-sm"
               >
                 AmazoniaForever360+
               </span>
@@ -256,7 +256,7 @@ exports[`Header renders the Report Tool link selected 1`] = `
           type="button"
         >
           <div
-            class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-blue-100"
+            class="inline-flex items-center rounded-md border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-blue-100 text-xs lg:text-sm"
           >
             Beta
           </div>

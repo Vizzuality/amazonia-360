@@ -19,12 +19,7 @@ export type MapProps = {
   id: string;
   defaultBbox?: number[];
   bbox?: __esri.Extent;
-  padding?: {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-  };
+  padding?: boolean;
   mapProps?: Partial<__esri.MapProperties>;
   viewProps?: Partial<__esri.MapViewProperties>;
   children?: React.ReactNode;
@@ -45,13 +40,8 @@ export function MapView({
   id = "default",
   defaultBbox,
   bbox,
-  // padding = {
-  //   top: 50,
-  //   right: 50,
-  //   bottom: 50,
-  //   left: 50,
-  // },
   children,
+  padding,
   mapProps,
   viewProps,
   onMapMove,
@@ -104,12 +94,12 @@ export function MapView({
           haloOpacity: 0.9,
           fillOpacity: 0.2,
         },
-        // padding: {
-        //   top: padding?.top ?? 16,
-        //   right: padding?.right ?? 16,
-        //   bottom: padding?.bottom ?? 16,
-        //   left: padding?.left ?? 16,
-        // },
+        padding: {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+        },
         ...mergedViewProps,
       });
 
@@ -158,20 +148,27 @@ export function MapView({
     if (bbox && mapViewRef.current) {
       const b = bbox.clone();
 
+      const xmin = padding ? b.xmin - (b.xmax - b.xmin) : b.xmin;
+      const ymin = b.ymin;
+      const xmax = b.xmax;
+      const ymax = b.ymax;
+
       const e = new Extent({
-        xmin: b.xmin - (b.xmax - b.xmin),
-        ymin: b.ymin,
-        xmax: b.xmax,
-        ymax: b.ymax,
+        xmin,
+        ymin,
+        xmax,
+        ymax,
         spatialReference: mapViewRef.current.spatialReference,
       });
 
-      mapViewRef.current.goTo(e, {
-        duration: 1000,
-        easing: "ease-in-out",
-      });
+      if (mapViewRef?.current.isFulfilled()) {
+        mapViewRef?.current?.goTo(e, {
+          duration: 1000,
+          easing: "ease-in-out",
+        });
+      }
     }
-  }, [bbox]);
+  }, [bbox, padding]);
 
   return (
     <div ref={mapContainerRef} className="map h-full w-full grow">

@@ -17,16 +17,20 @@ export default function LogoBetaInfo() {
   return (
     <div className="z-[120] flex items-center space-x-2">
       <Link href="/">
-        <h1 className="flex items-center space-x-4">
+        <h1 className="flex items-center space-x-2 lg:space-x-4">
           <Image src="/IDB-logo.svg" alt="IDB" width={65} height={24} />
           <div className="space-x-2">
-            <span className="text-sm font-medium text-blue-500">AmazoniaForever360+</span>
+            <span className="text-xs font-medium text-blue-500 lg:text-sm">
+              AmazoniaForever360+
+            </span>
           </div>
         </h1>
       </Link>
       <Dialog open={open}>
         <DialogTrigger onClick={() => setOpen(!open)}>
-          <Badge variant="secondary">Beta</Badge>
+          <Badge className="text-xs lg:text-sm" variant="secondary">
+            Beta
+          </Badge>
         </DialogTrigger>
 
         <DialogContent className="p-0">

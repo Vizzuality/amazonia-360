@@ -137,13 +137,13 @@ export const SketchTooltips = () => {
     return null;
 
   return (
-    <div className="pointer-events-none absolute left-0 top-10 z-10 w-full duration-300 animate-in fade-in-0">
+    <div className="pointer-events-none absolute left-0 top-4 z-10 w-full duration-300 animate-in fade-in-0 lg:top-10">
       <div className="container">
         <div className="grid grid-cols-12">
-          <div className="col-span-5 col-start-8">
+          <div className="col-span-10 lg:col-span-5 lg:col-start-8">
             <div className="flex justify-center">
               <div className="rounded bg-white p-2 shadow-md">
-                <p className="text-center text-sm font-light text-foreground">
+                <p className="text-2xs font-light text-foreground lg:text-center lg:text-sm">
                   {sketchAction.type === "create" &&
                     CREATE_MESSAGES[`${sketchAction.geometryType}`][sketchAction?.state ?? "start"]}
 

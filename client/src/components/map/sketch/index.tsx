@@ -59,22 +59,6 @@ export default function Sketch({
   const sketchViewModelOnCreateRef = useRef<IHandle>();
   const sketchViewModelOnUpdateRef = useRef<IHandle>();
 
-  // const drawHighlight = useCallback(() => {
-  //   // @ts-expect-error - Internal graphics layer
-  //   const ig: __esri.GraphicsLayer = sketchViewModelRef?.current?._internalGraphicsLayer; // Internal graphics layer
-
-  //   // console.log(ig.graphics);
-
-  //   ig?.graphics.map((g) => {
-  //     if (g.geometry.type === "point") {
-  //       if ("pointIndex" in g.attributes) {
-  //         g.symbol = POINT_SYMBOL;
-  //       }
-  //       console.log(g.attributes);
-  //     }
-  //   });
-  // }, []);
-
   const drawBuffer = useCallback(
     (l: __esri.Graphic) => {
       if (!l) return;
