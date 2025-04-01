@@ -25,7 +25,7 @@ AmazoniaForever360+ is designed to serve spatial and statistical data through a 
 - Querying aggregated data by area or administrative boundary through zonal statistics.
 - Filtering geographies based on custom polygons or map extent.
 - Generating reports with AI-assisted summaries.
--
+
 The platform uses ArcGIS Online to host and serve most raster and vector data, including zonal statistics, administrative boundaries,
 and thematic layers. The h3 data server and AI summary reports are build in an independent python application.
 
