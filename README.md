@@ -18,7 +18,7 @@ AmazoniaForever360+ is a platform developed to provide critical geospatial and t
 4. [License](#licence)
 
 # Platform Overview <a name="overview"></a>
-AmazoniaForever 360+ is designed to serve spatial and statistical data through a user-friendly interface that supports:
+AmazoniaForever360+ is designed to serve spatial and statistical data through a user-friendly interface that supports:
 - Exploring pre-processed geospatial indicators structured over an H3-based hexagonal grid. This allows quick access to
     large number of datasets and the ability to easily cross-filter any of them.
 - An in-depth report for all available data sources.
@@ -31,7 +31,7 @@ and thematic layers. The h3 data server and AI summary reports are build in an i
 
 # Architecture <a name="arch"></a>
 
-AmazoniaForever 360+ uses a hybrid architecture that combines ArcGIS Online services with a custom backend for performance-sensitive data processing.
+AmazoniaForever360+ uses a hybrid architecture that combines ArcGIS Online services with a custom backend for performance-sensitive data processing.
 
 ## Components <a name="components"></a>
 
@@ -48,7 +48,7 @@ AmazoniaForever 360+ uses a hybrid architecture that combines ArcGIS Online serv
 
 # Running it locally <a name="run"></a>
 
-To set up AmazoniaForever 360+ on your local machine first create a `.env` file from the template `.env.default`
+To set up AmazoniaForever360+ on your local machine first create a `.env` file from the template `.env.default`
 at the root of the project and fill in the needed environment variables.
 
 Then run
