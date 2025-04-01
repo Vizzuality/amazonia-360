@@ -4,6 +4,7 @@ import { FC, useCallback, MouseEvent, useRef, useMemo, useState, useEffect } fro
 
 import ZoomVM from "@arcgis/core/widgets/Zoom/ZoomViewModel";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
+import { useTranslations } from "next-intl";
 import { LuMinus, LuPlus } from "react-icons/lu";
 import { useDebounce } from "rooks";
 
@@ -19,6 +20,7 @@ interface ZoomControlProps {
 }
 
 export const ZoomControl: FC<ZoomControlProps> = ({ className }: ZoomControlProps) => {
+  const t = useTranslations();
   const zoomViewModelRef = useRef<ZoomVM>();
 
   const map = useMap();
@@ -74,7 +76,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({ className }: ZoomControlProp
               [CONTROL_BUTTON_STYLES.disabled]: zoom === maxZoom,
               "rounded-none border-0": true,
             })}
-            aria-label="Zoom in"
+            aria-label={t("zoom-in")}
             type="button"
             disabled={zoom === maxZoom}
             onClick={increaseZoom}
@@ -85,7 +87,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({ className }: ZoomControlProp
 
         <TooltipPortal>
           <TooltipContent side="left" align="center">
-            <div className="text-xxs">Zoom in</div>
+            <div className="text-xxs">{t("zoom-in")}</div>
 
             <TooltipArrow className="fill-foreground" width={10} height={5} />
           </TooltipContent>
@@ -102,7 +104,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({ className }: ZoomControlProp
               [CONTROL_BUTTON_STYLES.disabled]: zoom === minZoom,
               "rounded-none border-0": true,
             })}
-            aria-label="Zoom out"
+            aria-label={t("zoom-out")}
             type="button"
             disabled={zoom === minZoom}
             onClick={decreaseZoom}
@@ -113,7 +115,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({ className }: ZoomControlProp
 
         <TooltipPortal>
           <TooltipContent side="left" align="center">
-            <div className="text-xxs">Zoom out</div>
+            <div className="text-xxs">{t("zoom-out")}</div>
 
             <TooltipArrow className="fill-foreground" width={10} height={5} />
           </TooltipContent>

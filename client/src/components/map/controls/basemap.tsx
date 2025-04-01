@@ -7,6 +7,7 @@ import Image from "next/image";
 import Basemap from "@arcgis/core/Basemap";
 import { PopoverArrow } from "@radix-ui/react-popover";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
+import { useTranslations } from "next-intl";
 import { LuLayers } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
@@ -16,7 +17,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { CONTROL_BUTTON_STYLES } from "./constants";
-
 const BASEMAPS = [
   {
     id: "gray-vector",
@@ -59,7 +59,6 @@ const BASEMAPS = [
     basemap: Basemap.fromId("terrain"),
   },
 ] as const;
-
 export type BasemapIds = (typeof BASEMAPS)[number]["id"];
 
 interface BasemapControlProps {
@@ -67,6 +66,8 @@ interface BasemapControlProps {
 }
 
 export const BasemapControl: FC<BasemapControlProps> = ({ className }: BasemapControlProps) => {
+  const t = useTranslations();
+
   const map = useMap();
 
   const handleBasemap = useCallback(
@@ -90,7 +91,7 @@ export const BasemapControl: FC<BasemapControlProps> = ({ className }: BasemapCo
                 [CONTROL_BUTTON_STYLES.active]: true,
                 [`${className}`]: !!className,
               })}
-              aria-label="Basemap"
+              aria-label={t("basemap")}
               type="button"
             >
               <LuLayers className="h-full w-full" />
@@ -115,7 +116,7 @@ export const BasemapControl: FC<BasemapControlProps> = ({ className }: BasemapCo
                     <div className="w-16 shrink-0 shadow-sm">
                       <Image
                         src={b.basemap.thumbnailUrl}
-                        alt={b.label}
+                        alt={t(`${b.label}`)}
                         width={200}
                         height={133}
                         className="transition-transform duration-200 ease-in-out group-hover:scale-105"
@@ -127,7 +128,7 @@ export const BasemapControl: FC<BasemapControlProps> = ({ className }: BasemapCo
                         "text-background": map?.map.basemap?.id === b.id,
                       })}
                     >
-                      {b.label}
+                      {t(`${b.label}`)}
                     </span>
                   </button>
                 </li>
@@ -140,7 +141,7 @@ export const BasemapControl: FC<BasemapControlProps> = ({ className }: BasemapCo
 
         <TooltipPortal>
           <TooltipContent side="left" align="center">
-            Basemap
+            {t("basemap")}
             <TooltipArrow className="fill-foreground" width={10} height={5} />
           </TooltipContent>
         </TooltipPortal>
