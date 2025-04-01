@@ -45,6 +45,8 @@ To lint the code use
 ruff check .
 ```
 
+The project can also use a `pre-commit` hook that will run the linter and formatter before each commit. The pre-commit hook is defined in `.pre-commit-config.yaml`, and can be found at the root of the repository since it shares configuration with other modules.
+
 ### Running the app
 
 To run the app use:
