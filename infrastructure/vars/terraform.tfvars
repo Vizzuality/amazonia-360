@@ -18,12 +18,9 @@ dev = {
         next_public_api_url=""
         next_public_api_key=""
         next_public_arcgis_api_key=""
-        arcgis_client_id=""
-        arcgis_client_secret=""
         basic_auth_enabled=""
         basic_auth_user=""
         basic_auth_password=""
-        session_secret=""
     }
 }
 
@@ -40,12 +37,9 @@ staging = {
         next_public_api_url=""
         next_public_api_key=""
         next_public_arcgis_api_key=""
-        arcgis_client_id=""
-        arcgis_client_secret=""
         basic_auth_enabled=""
         basic_auth_user=""
         basic_auth_password=""
-        session_secret=""
     }
 }
 
@@ -62,11 +56,8 @@ prod = {
         next_public_api_url=""
         next_public_api_key=""
         next_public_arcgis_api_key=""
-        arcgis_client_id=""
-        arcgis_client_secret=""
         basic_auth_enabled=""
         basic_auth_user=""
         basic_auth_password=""
-        session_secret=""
     }
 }

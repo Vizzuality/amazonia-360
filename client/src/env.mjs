@@ -6,8 +6,6 @@ export const env = createEnv({
     BASIC_AUTH_ENABLED: z.string().transform((value) => value === "true"),
     BASIC_AUTH_USER: z.string(),
     BASIC_AUTH_PASSWORD: z.string(),
-    ARCGIS_CLIENT_ID: z.string(),
-    ARCGIS_CLIENT_SECRET: z.string(),
   },
   client: {
     NEXT_PUBLIC_URL: z.string().url(),
@@ -19,8 +17,6 @@ export const env = createEnv({
     BASIC_AUTH_ENABLED: process.env.BASIC_AUTH_ENABLED,
     BASIC_AUTH_USER: process.env.BASIC_AUTH_USER,
     BASIC_AUTH_PASSWORD: process.env.BASIC_AUTH_PASSWORD,
-    ARCGIS_CLIENT_ID: process.env.ARCGIS_CLIENT_ID,
-    ARCGIS_CLIENT_SECRET: process.env.ARCGIS_CLIENT_SECRET,
     NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     NEXT_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_API_KEY,

@@ -1,4 +1,4 @@
-# AmazoniaForever 360+ 
+# AmazoniaForever360+ 
 
 ![Screenshot 2025-03-21 at 10 10 45](https://github.com/user-attachments/assets/c5f0bc2e-46a7-490d-9262-abf8fe9ff7a1)
 
@@ -9,6 +9,10 @@ AmazoniaForever 360+ is a platform developed to provide critical geospatial and 
 1. [Platform Overview](#overview)
 2. [Architecture](#arch)
    1. [Components](#components)
+      1. [Front-end](client/README.md)
+      2. [Backend API](api/README.md)
+      3. [Infrastructure](infrastructure/README.md)
+      4. [Science and prototypes](science/README.md)
    2. [Tech Stack](#stack)
 3. [Running the Platform Locally](#run)
 4. [License](#licence)

@@ -45,12 +45,9 @@ variable "dev" {
       next_public_api_url      = string
       next_public_api_key      = string
       next_public_arcgis_api_key = string
-      arcgis_client_id         = string
-      arcgis_client_secret     = string
       basic_auth_enabled       = string
       basic_auth_user          = string
       basic_auth_password      = string
-      session_secret           = string
     })
   })
 }
@@ -67,12 +64,9 @@ variable "staging" {
       next_public_api_url      = string
       next_public_api_key      = string
       next_public_arcgis_api_key = string
-      arcgis_client_id         = string
-      arcgis_client_secret     = string
       basic_auth_enabled       = string
       basic_auth_user          = string
       basic_auth_password      = string
-      session_secret           = string
     })
   })
 }
@@ -89,12 +83,9 @@ variable "prod" {
       next_public_api_url      = string
       next_public_api_key      = string
       next_public_arcgis_api_key = string
-      arcgis_client_id         = string
-      arcgis_client_secret     = string
       basic_auth_enabled       = string
       basic_auth_user          = string
       basic_auth_password      = string
-      session_secret           = string
     })
   })
 }

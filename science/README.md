@@ -1,4 +1,6 @@
-# Amazon360 - AI Summaries of Regions
+# AmazoniaForever360+ prototypes
+
+> ⚠ Note: This module is **not for production**. Just used for prototyping purposes.
 
 This Python package contains a [FastAPI](https://fastapi.tiangolo.com/) API and [Streamlit](https://streamlit.io/) APP that generates a description of a region based on a bounding box and a description request. 
 It uses the [ArcGIS API](https://developers.arcgis.com/rest/) and the [OpenAI API](https://openai.com/blog/openai-api) for getting contextual data and geodescribing the region, respectively.
