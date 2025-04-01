@@ -1,4 +1,4 @@
-# AmazoniaForever360+ 
+# AmazoniaForever360+
 
 ![Screenshot 2025-03-21 at 10 10 45](https://github.com/user-attachments/assets/c5f0bc2e-46a7-490d-9262-abf8fe9ff7a1)
 
@@ -25,8 +25,8 @@ AmazoniaForever 360+ is designed to serve spatial and statistical data through a
 - Querying aggregated data by area or administrative boundary through zonal statistics.
 - Filtering geographies based on custom polygons or map extent.
 - Generating reports with AI-assisted summaries.
-- 
-The platform uses ArcGIS Online to host and serve most raster and vector data, including zonal statistics, administrative boundaries, 
+-
+The platform uses ArcGIS Online to host and serve most raster and vector data, including zonal statistics, administrative boundaries,
 and thematic layers. The h3 data server and AI summary reports are build in an independent python application.
 
 # Architecture <a name="arch"></a>
@@ -42,15 +42,14 @@ AmazoniaForever 360+ uses a hybrid architecture that combines ArcGIS Online serv
 
 ## Tech Stack <a name="stack"></a>
 
-- Frontend: React, Next.js,  ArcGIS SDK
-- Backend: python FastpAPI
-- Geospatial Services: 
+- Frontend: React, Next.js, ArcGIS SDK
+- Backend: python FastAPI
 - Infrastructure: Terraform
 
 # Running it locally <a name="run"></a>
 
 To set up AmazoniaForever 360+ on your local machine first create a `.env` file from the template `.env.default`
-at the root of the project and fill in the needed environment variables. 
+at the root of the project and fill in the needed environment variables.
 
 Then run
 
@@ -58,10 +57,10 @@ Then run
 docker compose up –build
 ```
 
-from the root directory to spin all the services (client and api). 
+from the root directory to spin all the services (client and api).
 Now visiting localhost:3000 in any browser should show the landing page.
 
-Note that some environment variables are secret tokens needed to authorize the use of some parts of the API like 
+Note that some environment variables are secret tokens needed to authorize the use of some parts of the API like
 ArcGIS services which may be crucial for some of the application features.
 
 # License <a name="licence"></a>
