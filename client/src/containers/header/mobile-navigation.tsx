@@ -10,7 +10,13 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 
 import { cn } from "@/lib/utils";
 
-import { Dialog, DialogContent, DialogTrigger, DialogHeader } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogHeader,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 import LogoBetaInfo from "./logo-beta-info";
 
@@ -51,6 +57,8 @@ export default function MobileNavigation() {
           />
         </button>
       </DialogTrigger>
+
+      <DialogDescription className="sr-only">AmazoniaForever360+ menu</DialogDescription>
 
       <DialogContent
         className="absolute left-0 top-0 z-[100] h-full w-screen max-w-none !translate-x-0 !translate-y-0 border-none px-0 py-0 text-blue-600"

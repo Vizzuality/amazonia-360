@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 
 import dynamic from "next/dynamic";
 
@@ -50,6 +50,15 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
 
   const [location, setLocation] = useSyncLocation();
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
+
+  const defaultBbox = useMemo(() => {
+    if (bbox) return bbox;
+
+    if (desktop)
+      return [-12710193.369428927, -2766739.914202488, -4682470.91080871, 1719196.4017967433];
+
+    return [-8999366.738755312, -4376503.729887867, -4792272.701940329, 2354846.7290161047];
+  }, [bbox, desktop]);
 
   const handleMapMove = useDebounce((extent: __esri.Extent) => {
     setBbox([extent.xmin, extent.ymin, extent.xmax, extent.ymax]);
@@ -144,7 +153,7 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
     <div className="relative flex w-full grow flex-col">
       <Map
         id="default"
-        defaultBbox={bbox}
+        defaultBbox={defaultBbox}
         bbox={tmpBbox}
         padding={desktop}
         onMapMove={handleMapMove}

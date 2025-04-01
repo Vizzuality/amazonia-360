@@ -2,10 +2,8 @@
 
 import { useMemo, useState } from "react";
 
-import { DialogDescription } from "@radix-ui/react-dialog";
-
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export default function ReportMobileWarning() {
   const [open, setOpen] = useState(false);

@@ -55,7 +55,7 @@ export default function Hero() {
       </div>
       <Media greaterThanOrEqual="md">
         <Image
-          src="/images/home/hero.avif"
+          src="/images/home/hero2.avif"
           alt="Amazonia"
           width={2500}
           height={2500}

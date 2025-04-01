@@ -8,7 +8,7 @@ import Link from "next/link";
 import { DialogTitle } from "@radix-ui/react-dialog";
 
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 
 import BetaDisclaimer from "../disclaimers/demo";
 
@@ -32,6 +32,8 @@ export default function LogoBetaInfo() {
             Beta
           </Badge>
         </DialogTrigger>
+
+        <DialogDescription className="sr-only">AmazoniaForever360+ beta version</DialogDescription>
 
         <DialogContent className="p-0">
           <DialogTitle className="sr-only">AmazoniaForever360+ beta version</DialogTitle>

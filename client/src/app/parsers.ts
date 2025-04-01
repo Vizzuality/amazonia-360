@@ -26,9 +26,7 @@ export type AiSummary = {
 
 export const topicsParser = parseAsArrayOf(parseAsJson<TopicView>());
 
-export const bboxParser = parseAsArrayOf(parseAsFloat).withDefault([
-  -8023275.442182404, -2047352.8224967439, -5014714.008878666, 799773.6070687444,
-]);
+export const bboxParser = parseAsArrayOf(parseAsFloat);
 
 export type SearchLocation = {
   type: "search";

@@ -51,6 +51,12 @@ exports[`Header renders the Home link selected 1`] = `
             Beta
           </div>
         </button>
+        <p
+          class="text-sm text-muted-foreground sr-only"
+          id="radix-:r12:"
+        >
+          AmazoniaForever360+ beta version
+        </p>
       </div>
       <div
         class="fresnel-container fresnel-greaterThanOrEqual-md fresnel-:r13:"
@@ -99,6 +105,12 @@ exports[`Header renders the Home link selected 1`] = `
             class="block h-0.5 w-6 origin-[1px] rounded bg-blue-600 transition-all rotate-0"
           />
         </button>
+        <p
+          class="text-sm text-muted-foreground sr-only"
+          id="radix-:r17:"
+        >
+          AmazoniaForever360+ menu
+        </p>
       </div>
     </div>
   </header>
@@ -156,6 +168,12 @@ exports[`Header renders the Hub link selected 1`] = `
             Beta
           </div>
         </button>
+        <p
+          class="text-sm text-muted-foreground sr-only"
+          id="radix-:r1i:"
+        >
+          AmazoniaForever360+ beta version
+        </p>
       </div>
       <div
         class="fresnel-container fresnel-greaterThanOrEqual-md fresnel-:r1j:"
@@ -204,6 +222,12 @@ exports[`Header renders the Hub link selected 1`] = `
             class="block h-0.5 w-6 origin-[1px] rounded bg-blue-600 transition-all rotate-0"
           />
         </button>
+        <p
+          class="text-sm text-muted-foreground sr-only"
+          id="radix-:r1n:"
+        >
+          AmazoniaForever360+ menu
+        </p>
       </div>
     </div>
   </header>
@@ -261,6 +285,12 @@ exports[`Header renders the Report Tool link selected 1`] = `
             Beta
           </div>
         </button>
+        <p
+          class="text-sm text-muted-foreground sr-only"
+          id="radix-:r1a:"
+        >
+          AmazoniaForever360+ beta version
+        </p>
       </div>
       <div
         class="fresnel-container fresnel-greaterThanOrEqual-md fresnel-:r1b:"
@@ -309,6 +339,12 @@ exports[`Header renders the Report Tool link selected 1`] = `
             class="block h-0.5 w-6 origin-[1px] rounded bg-blue-600 transition-all rotate-0"
           />
         </button>
+        <p
+          class="text-sm text-muted-foreground sr-only"
+          id="radix-:r1f:"
+        >
+          AmazoniaForever360+ menu
+        </p>
       </div>
     </div>
   </header>
