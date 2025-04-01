@@ -1,8 +1,11 @@
 # AmazoniaForever360+ Infrastructure
-Terraform module to manage the infrastructure supporting the application and services.
+
+AmazoniaForever360+ is deployed in AWS's Elastic Beanstalk. All the resources are managed using **Terraform**.
 
 ## Terraform state
+
 ### Initializing terraform state
+
 `terraform init` was executed with a local backend first.
 ```
 terraform {

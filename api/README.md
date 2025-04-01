@@ -31,6 +31,20 @@ or
 uv run pytest
 ```
 
+### Linting and formatting
+
+This project uses `ruff`. To format the code use
+
+```shell
+ruff format .
+```
+
+To lint the code use
+
+```shell
+ruff check .
+```
+
 ### Running the app
 
 To run the app use:
