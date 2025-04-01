@@ -80,7 +80,7 @@ export default function Resource({
               </DialogTrigger>
 
               <DialogContent>
-                <DialogTitle className="sr-only">{t("resource-info")}</DialogTitle>
+                <DialogTitle className="sr-only">{t("other-resources-resource-info")}</DialogTitle>
                 <div className="flex flex-col space-y-4">
                   <h3 className="pr-4 text-lg font-semibold text-blue-500">{Name}</h3>
                   <p className="text-sm font-medium text-foreground">{Description}</p>

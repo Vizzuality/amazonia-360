@@ -17,7 +17,7 @@ export default function ShareReport() {
 
   const [currentUrl, setCurrentUrl] = useState<string>("");
 
-  const [shareLinkBtnText, setShareLinkBtnText] = useState("Copy");
+  const [shareLinkBtnText, setShareLinkBtnText] = useState("copy");
   useEffect(() => {
     setCurrentUrl(window.location.href);
   }, [pathname]);
@@ -26,9 +26,9 @@ export default function ShareReport() {
     navigator.clipboard
       .writeText(currentUrl)
       .then(() => {
-        setShareLinkBtnText("Copied");
+        setShareLinkBtnText("copied");
         setTimeout(function () {
-          setShareLinkBtnText("Copy");
+          setShareLinkBtnText("copy");
         }, 1000);
       })
       .catch((err: ErrorEvent) => {
