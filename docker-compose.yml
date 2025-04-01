@@ -23,8 +23,6 @@ services:
         NEXT_PUBLIC_API_URL: "http://api:8000"
         NEXT_PUBLIC_ARCGIS_API_KEY: ""
         NEXT_PUBLIC_API_KEY: ""
-        ARCGIS_CLIENT_ID: ""
-        ARCGIS_CLIENT_SECRET: ""
         BASIC_AUTH_ENABLED: "true"
         BASIC_AUTH_USER: amazonia360
         BASIC_AUTH_PASSWORD: amazonia360
