@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 
 import { useAtomValue } from "jotai";
+import { useLocale } from "next-intl";
 
 import { formatNumber } from "@/lib/formats";
 import { useGetH3Indicators } from "@/lib/indicators";
@@ -8,9 +9,10 @@ import { useGetH3Indicators } from "@/lib/indicators";
 import { gridHoverAtom } from "@/app/store";
 
 export const MapPopup = () => {
+  const locale = useLocale();
   const gridHover = useAtomValue(gridHoverAtom);
 
-  const { data: H3IndicatorsData } = useGetH3Indicators();
+  const { data: H3IndicatorsData } = useGetH3Indicators(locale);
 
   const VALUES = useMemo(() => {
     return gridHover.values
@@ -19,8 +21,8 @@ export const MapPopup = () => {
 
         if (match) {
           return {
-            name: match.name_en,
-            unit: match.unit_en,
+            name: match.name,
+            unit: match.unit,
             ...v,
             value: typeof v.value === "number" ? formatNumber(v.value) : undefined,
           };

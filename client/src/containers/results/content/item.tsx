@@ -100,7 +100,7 @@ export const ReportResultsContentItem = ({
         "container relative space-y-4 print:break-before-auto print:px-0": true,
       })}
     >
-      <h2 className="text-xl font-semibold">{TOPIC?.topic_name}</h2>
+      <h2 className="text-xl font-semibold">{TOPIC?.name}</h2>
 
       {TOPIC?.id !== 0 && ai_summary.enabled && <ReportResultsSummary topic={TOPIC} />}
 

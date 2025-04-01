@@ -13,8 +13,8 @@ export const MOSAIC_OPTIONS = [
     description_en: "Total area of the Amazonia Forever work area within a country",
     label_pt: "Área da Amazônia por país (km²)",
     description_pt: "Área total da região de atuação da Amazônia Forever dentro de um país",
-    label_sp: "Área amazónica por país (km²)",
-    description_sp: "Área total de la región de trabajo de Amazonia Forever dentro de un país",
+    label_es: "Área amazónica por país (km²)",
+    description_es: "Área total de la región de trabajo de Amazonia Forever dentro de un país",
   },
   {
     key: "proportion_of_amazonia_area_by_country_percentage",
@@ -22,8 +22,8 @@ export const MOSAIC_OPTIONS = [
     description_en: "Percentage of a country covered by the Amazonia Forever work area",
     label_pt: "Cobertura amazônica no país (%)",
     description_pt: "Porcentagem de um país coberta pela região de atuação da Amazônia Forever",
-    label_sp: "Cobertura amazónica en el país (%)",
-    description_sp: "Porcentaje de un país cubierto por la región de trabajo de Amazonia Forever",
+    label_es: "Cobertura amazónica en el país (%)",
+    description_es: "Porcentaje de un país cubierto por la región de trabajo de Amazonia Forever",
   },
   {
     key: "proportion_of_total_area_of_the_afp_by_country_percentage",
@@ -31,8 +31,8 @@ export const MOSAIC_OPTIONS = [
     description_en: "Percentage of the total Amazonia Forever work area located within a country",
     label_pt: "Participação do país na Amazônia total (%)",
     description_pt: "Porcentagem da região de atuação da Amazônia Forever localizada em um país",
-    label_sp: "Participación del país en la Amazonía total (%)",
-    description_sp: "Porcentaje de la región de trabajo de Amazonia Forever ubicada en un país",
+    label_es: "Participación del país en la Amazonía total (%)",
+    description_es: "Porcentaje de la región de trabajo de Amazonia Forever ubicada en un país",
   },
   {
     key: "population_density_of_the_afp_zones_by_country_inhabitants_per_sqkm",
@@ -40,8 +40,8 @@ export const MOSAIC_OPTIONS = [
     description_en: "Population density within a country's Amazonia Forever work area",
     label_pt: "Densidade populacional da Amazônia no país (habitantes/km²)",
     description_pt: "Densidade populacional na região amazônica de um país",
-    label_sp: "Densidad poblacional amazónica en el país (habitantes/km²)",
-    description_sp: "Densidad poblacional en la región amazónica de un país",
+    label_es: "Densidad poblacional amazónica en el país (habitantes/km²)",
+    description_es: "Densidad poblacional en la región amazónica de un país",
   },
   {
     key: "proportion_of_the_population_of_the_amazonia_zone_by_country_percentage",
@@ -50,8 +50,8 @@ export const MOSAIC_OPTIONS = [
       "Percentage of a country's population residing in its Amazonia Forever work area",
     label_pt: "População amazônica no país (%)",
     description_pt: "Porcentagem da população do país que reside na região da Amazônia Forever",
-    label_sp: "Población amazónica en el país (%)",
-    description_sp:
+    label_es: "Población amazónica en el país (%)",
+    description_es:
       "Porcentaje de la población del país que reside en la región de Amazonia Forever",
   },
   {
@@ -61,8 +61,8 @@ export const MOSAIC_OPTIONS = [
       "Percentage of the total Amazonia Forever work area population residing within a country",
     label_pt: "Participação do país na população amazônica total (%)",
     description_pt: "Porcentagem da população total da Amazônia Forever que reside em um país",
-    label_sp: "Participación del país en la población amazónica total (%)",
-    description_sp: "Porcentaje de la población total de Amazonia Forever que reside en un país",
+    label_es: "Participación del país en la población amazónica total (%)",
+    description_es: "Porcentaje de la población total de Amazonia Forever que reside en un país",
   },
 ] as const;
 

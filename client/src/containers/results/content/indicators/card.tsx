@@ -2,6 +2,8 @@
 
 import { createElement, MouseEvent } from "react";
 
+import { useLocale } from "next-intl";
+
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
@@ -52,7 +54,8 @@ export default function ReportResultsIndicator({
   editable: boolean;
   onEdit?: (e: MouseEvent<HTMLElement>) => void;
 }) {
-  const indicator = useGetIndicatorsId(id);
+  const locale = useLocale();
+  const indicator = useGetIndicatorsId(id, locale);
 
   if (!indicator) return null;
 
@@ -60,7 +63,7 @@ export default function ReportResultsIndicator({
     <div className="flex h-full flex-col">
       <Card className={cn(type === "map" && "p-0")}>
         <CardHeader className={cn(type === "map" && "px-6 pt-6")}>
-          <CardTitle>{indicator?.name_en}</CardTitle>
+          <CardTitle>{indicator?.name}</CardTitle>
           <CardControls>
             <CardInfo ids={[indicator.id]} />
 

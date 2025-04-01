@@ -7,7 +7,7 @@ export interface LegendItemProps {
   type: "basic" | "gradient" | "choropleth";
   items: {
     id: string | number;
-    label: string | null;
+    label?: string;
     color?: string;
     image?: string;
   }[];

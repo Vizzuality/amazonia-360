@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: Params }) {
 
   return {
     title: t("metadata-app-layout-title"),
-    description: t("metadata--app-layout-description"),
+    description: t("metadata-app-layout-description"),
     icons: {
       icon: [
         { url: "/favicon.ico", type: "image/x-icon" },

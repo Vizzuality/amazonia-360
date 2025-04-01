@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { useAtom } from "jotai";
+import { useLocale } from "next-intl";
 import { LuChevronRight } from "react-icons/lu";
 
 import { useGetTopicsId } from "@/lib/topics";
@@ -24,7 +25,7 @@ export default function GridTopicFiltersItem({
   datasets: H3Indicator[];
 }) {
   const [open, setOpen] = useState(false);
-  const locale = "pt";
+  const locale = useLocale();
   const topic = useGetTopicsId(id, locale);
   const [selectedFiltersView] = useAtom(selectedFiltersViewAtom);
   const datasetsIds = useMemo(() => datasets.map((d) => d.var_name), [datasets]);
@@ -63,7 +64,7 @@ export default function GridTopicFiltersItem({
                   className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? "rotate-90" : ""}`}
                 />
 
-                <span className="whitespace flex-nowrap text-sm">{topic?.topic_name}</span>
+                <span className="whitespace flex-nowrap text-sm">{topic?.name}</span>
               </div>
               <GridCounterIndicators total={datasets.length} datasetsIds={datasetsIds} />
             </div>
@@ -72,7 +73,7 @@ export default function GridTopicFiltersItem({
         <CollapsibleContent>
           <div className="ml-2.5 space-y-1 border-l border-blue-100 pl-2">
             {datasets.map((d) => (
-              <GridIndicatorFiltersItem key={d.name_en} {...d} />
+              <GridIndicatorFiltersItem key={d.name} {...d} />
             ))}
           </div>
         </CollapsibleContent>

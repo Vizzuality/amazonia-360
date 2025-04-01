@@ -4,15 +4,16 @@ import { useMemo } from "react";
 
 import { useQueries } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
+import { useLocale } from "next-intl";
 import { usePreviousDifferent } from "rooks";
 
 import { useGetAISummary } from "@/lib/ai";
 import { getQueryFeatureIdOptions, useGetDefaultIndicators } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
-import { TranslatedTopic } from "@/lib/topics";
 import { omit } from "@/lib/utils";
 
 import { Indicator } from "@/app/local-api/indicators/route";
+import { Topic } from "@/app/local-api/topics/route";
 import { AiSummary } from "@/app/parsers";
 import {
   isGeneratingAIReportAtom,
@@ -25,13 +26,14 @@ import { Markdown } from "@/components/ui/markdown";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export interface ReportResultsSummaryProps {
-  topic?: TranslatedTopic;
+  topic?: Topic;
 }
 
-export const useGetSummaryTopicData = (topic?: TranslatedTopic, indicators?: Indicator["id"][]) => {
+export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id"][]) => {
+  const locale = useLocale();
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
-  const queryIndicators = useGetDefaultIndicators(topic?.id);
+  const queryIndicators = useGetDefaultIndicators(topic?.id, locale);
 
   const {
     data: queryIndicatorsData = [],
@@ -95,7 +97,7 @@ export const useGetSummaryTopicData = (topic?: TranslatedTopic, indicators?: Ind
       const q = queries[i];
 
       return {
-        indicator_name: d.name_en,
+        name: d[`name_${locale}` as keyof Indicator],
         data:
           q?.data?.features.map((f) =>
             omit(f.attributes, ["Shape__Area", "Shape__Length", "FID", "Id", "OBJECTID"]),
@@ -106,7 +108,7 @@ export const useGetSummaryTopicData = (topic?: TranslatedTopic, indicators?: Ind
 };
 
 export const useGetSummaryTopic = (
-  topic?: TranslatedTopic,
+  topic?: Topic,
   options?: AiSummary,
   activeIndicators?: Indicator["id"][],
 ) => {
@@ -122,7 +124,7 @@ export const useGetSummaryTopic = (
     {
       data: {
         indicators: indicatorsData,
-        topic: topic?.topic_name,
+        topic: topic?.name,
         ai_notes: [
           "Don't use blockquotes",
           "Don't use headings",

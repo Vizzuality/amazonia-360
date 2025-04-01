@@ -4,12 +4,13 @@ import { useState, useCallback, useMemo, useEffect, MouseEvent } from "react";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { LuChevronRight, LuGripVertical } from "react-icons/lu";
 
-import { TranslatedTopic, useGetTopicsId } from "@/lib/topics";
+import { useGetTopicsId } from "@/lib/topics";
 import { cn, areArraysEqual } from "@/lib/utils";
 
+import { Topic } from "@/app/local-api/topics/route";
 import { useSyncTopics } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
@@ -22,14 +23,15 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/compone
 
 import { CounterIndicatorsPill } from "./counter-indicators-pill";
 
-export function TopicItem({ topic, id }: { topic: TranslatedTopic; id: number }) {
+export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
+  const t = useTranslations();
   const locale = useLocale();
   const [topics, setTopics] = useSyncTopics();
   const [counterVisibility, toggleCounterVisibility] = useState<boolean>(true);
   const [open, setOpen] = useState(false);
 
   const handleTopic = useCallback(
-    (topic: TranslatedTopic, isChecked: boolean) => {
+    (topic: Topic, isChecked: boolean) => {
       setTopics((prevTopics) => {
         if (isChecked) {
           const newTopic = {
@@ -126,9 +128,7 @@ export function TopicItem({ topic, id }: { topic: TranslatedTopic; id: number })
                 <LuChevronRight
                   className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? "rotate-90" : ""}`}
                 />
-                <span className="whitespace w-full flex-1 flex-nowrap text-sm">
-                  {topic.topic_name}
-                </span>
+                <span className="whitespace w-full flex-1 flex-nowrap text-sm">{topic.name}</span>
               </div>
               <div className="flex justify-end">
                 {/* Case 1: Show Counter if closed and counter is visible OR if open and it's the default view */}
@@ -167,15 +167,13 @@ export function TopicItem({ topic, id }: { topic: TranslatedTopic; id: number })
                         className="rounded-full text-xs"
                         onMouseLeave={() => toggleCounterVisibility(true)}
                       >
-                        Reset
+                        {t("reset")}
                       </Button>
                     </TooltipTrigger>
 
                     <TooltipPortal>
                       <TooltipContent side="top" align="end">
-                        <div className="max-w-40">
-                          Clear all widgets and set the topic to its default view
-                        </div>
+                        <div className="max-w-40">{t("reset-topics-info-tooltip")}</div>
                         <TooltipArrow className="fill-foreground" width={10} height={5} />
                       </TooltipContent>
                     </TooltipPortal>

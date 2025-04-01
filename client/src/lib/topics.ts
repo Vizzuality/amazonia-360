@@ -14,30 +14,20 @@ import TOPICS from "@/app/local-api/topics/topics.json";
  */
 export type TopicsParams = unknown;
 
-export type TranslatedTopic = Omit<
-  Topic,
-  "name_en" | "name_sp" | "name_pt" | "description_en" | "description_sp" | "description_pt"
-> & {
-  topic_name: string;
-  topic_description: string;
-};
-
 export type TopicsQueryOptions<TData, TError> = UseQueryOptions<
   Awaited<ReturnType<typeof getTopics>>,
   TError,
   TData
 >;
 
-export const getTopics = async ({ locale }: { locale: string }): Promise<TranslatedTopic[]> => {
+export const getTopics = async ({ locale }: { locale: string }): Promise<Topic[]> => {
   const topics = TOPICS as Topic[];
 
-  const topicsTranslated: TranslatedTopic[] = topics.map((topic) => {
+  const topicsTranslated: Topic[] = topics.map((topic) => {
     return {
-      id: topic.id,
-      image: topic.image,
-      default_visualization: topic.default_visualization,
-      topic_name: topic[`name_${locale}` as keyof Topic] as string,
-      topic_description: topic[`description_${locale}` as keyof Topic] as string,
+      ...topic,
+      name: topic[`name_${locale}` as keyof Topic] as string,
+      description: topic[`description_${locale}` as keyof Topic] as string,
     };
   });
 

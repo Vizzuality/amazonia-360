@@ -3,11 +3,11 @@
     "id": 0,
     "Numerotation": "0",
     "name_en": "Geographic Context",
-    "name_sp": "Geographic Context",
+    "name_es": "Geographic Context",
     "name_pt": "Geographic Context",
     "image": "",
     "description_en": "Capas Overview sistema para el uso interno de la app",
-    "description_sp": "Capas Overview sistema para el uso interno de la app",
+    "description_es": "Capas Overview sistema para el uso interno de la app",
     "description_pt": "Capas Overview sistema para el uso interno de la app",
     "default_visualization": [
       {
@@ -64,12 +64,12 @@
     "id": 1,
     "Numerotation": "1",
     "name_en": "Nature",
-    "name_sp": "Naturaleza",
+    "name_es": "Naturaleza",
     "name_pt": "Naturaleza",
     "image": "/images/topics/nature.webp",
     "description_en": "Get data on natural environment, ecosystems, biodiversity and protected areas in your area",
-    "description_sp": "Get data on natural environment, ecosystems, biodiversity and protected areas in your area",
-    "description_pt": "Get data on natural environment, ecosystems, biodiversity and protected areas in your area",
+    "description_es": "Obtén información sobre el entorno natural, los ecosistemas, la biodiversidad y las áreas protegidas en tu zona",
+    "description_pt": "Obtenha dados sobre o meio ambiente natural, ecossistemas, biodiversidade e áreas protegidas na sua região",
     "default_visualization": [
       {
         "id": 26,
@@ -141,11 +141,11 @@
     "id": 2,
     "Numerotation": "2",
     "name_en": "Climate",
-    "name_sp": "Climate",
+    "name_es": "Climate",
     "name_pt": "Climate",
     "image": "/images/topics/climate.webp",
     "description_en": "Understand climate types, risks, and challenges in your region",
-    "description_sp": "Understand climate types, risks, and challenges in your region",
+    "description_es": "Understand climate types, risks, and challenges in your region",
     "description_pt": "Understand climate types, risks, and challenges in your region",
     "default_visualization": [
       {
@@ -186,11 +186,11 @@
     "id": 3,
     "Numerotation": "3",
     "name_en": "People",
-    "name_sp": "People",
+    "name_es": "People",
     "name_pt": "People",
     "image": "/images/topics/people.webp",
     "description_en": "Access demographic data and social indicators for your area of interest",
-    "description_sp": "Access demographic data and social indicators for your area of interest",
+    "description_es": "Access demographic data and social indicators for your area of interest",
     "description_pt": "Access demographic data and social indicators for your area of interest",
     "default_visualization": [
       {
@@ -247,11 +247,11 @@
     "id": 4,
     "Numerotation": "4",
     "name_en": "Productive Activities",
-    "name_sp": "Productive Activities",
+    "name_es": "Productive Activities",
     "name_pt": "Productive Activities",
     "image": "/images/topics/productive.webp",
     "description_en": "Get information on economic sectors and production systems",
-    "description_sp": "Get information on economic sectors and production systems",
+    "description_es": "Get information on economic sectors and production systems",
     "description_pt": "Get information on economic sectors and production systems",
     "default_visualization": [
       {
@@ -276,11 +276,11 @@
     "id": 5,
     "Numerotation": "5",
     "name_en": " Infrastructure and Cities",
-    "name_sp": " Infrastructure and Cities",
+    "name_es": " Infrastructure and Cities",
     "name_pt": " Infrastructure and Cities",
     "image": "/images/topics/infrastructure.webp",
     "description_en": "Explore urban development, connectivity and transportation",
-    "description_sp": "Explore urban development, connectivity and transportation",
+    "description_es": "Explore urban development, connectivity and transportation",
     "description_pt": "Explore urban development, connectivity and transportation",
     "default_visualization": [
       {
@@ -321,11 +321,11 @@
     "id": 6,
     "Numerotation": "6",
     "name_en": "IDB Operations",
-    "name_sp": "IDB Operations",
+    "name_es": "IDB Operations",
     "name_pt": "IDB Operations",
     "image": "/images/topics/operations.webp",
     "description_en": "Understand IDB's work and projects in your area of interest",
-    "description_sp": "Understand IDB's work and projects in your area of interest",
+    "description_es": "Understand IDB's work and projects in your area of interest",
     "description_pt": "Understand IDB's work and projects in your area of interest",
     "default_visualization": [
       {

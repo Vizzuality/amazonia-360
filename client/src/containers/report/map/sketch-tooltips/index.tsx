@@ -1,130 +1,56 @@
 "use client";
 
+import ReactMarkdown from "react-markdown";
+
 import { useAtomValue } from "jotai";
+import { useTranslations } from "next-intl";
 
 import { sketchActionAtom } from "@/app/store";
 
-const CREATE_MESSAGES = {
-  polygon: {
-    start: (
-      <>
-        To get started, <strong className="font-bold">click</strong> on the map to add point. Press{" "}
-        <strong className="font-bold">ESC</strong> to cancel.
-      </>
-    ),
-    active: (
-      <>
-        Click to add points, then <strong className="font-bold">double-click</strong> or press{" "}
-        <strong className="font-bold">Enter</strong> to finish drawing.
-      </>
-    ),
-    complete: (
-      <>
-        Great! To <strong className="font-bold">edit the shape</strong>,{" "}
-        <strong className="font-bold">click</strong> on it to enable edit mode.
-      </>
-    ),
-    cancel: null,
-  },
-  polyline: {
-    start: (
-      <>
-        To get started, <strong className="font-bold">click</strong> on the map to add point. Press{" "}
-        <strong className="font-bold">ESC</strong> to cancel.
-      </>
-    ),
-    active: (
-      <>
-        Click to add points, then <strong className="font-bold">double-click</strong> or press{" "}
-        <strong className="font-bold">Enter</strong> to finish drawing.
-      </>
-    ),
-    complete: (
-      <>
-        Great! To <strong className="font-bold">edit the shape</strong>,{" "}
-        <strong className="font-bold">click</strong> on it to enable edit mode.
-      </>
-    ),
-    cancel: null,
-  },
-  point: {
-    start: (
-      <>
-        To get started, <strong className="font-bold">click</strong> on the map to add point. Press{" "}
-        <strong className="font-bold">ESC</strong> to cancel.
-      </>
-    ),
-    active: (
-      <>
-        To get started, <strong className="font-bold">click</strong> on the map to add point. Press{" "}
-        <strong className="font-bold">ESC</strong> to cancel.
-      </>
-    ),
-    complete: (
-      <>
-        Great! To <strong className="font-bold">move the point</strong>, just{" "}
-        <strong className="font-bold">click</strong> on it and drag it to a new location.
-      </>
-    ),
-    cancel: null,
-  },
-} as const;
-
-const UPDATE_MESSAGES = {
-  polygon: {
-    start: (
-      <>
-        Use the <strong className="font-bold">handles</strong> to edit the polygon - move (drag a
-        handle), add (left-click on a white handle), or remove (right-click on a handle) points as
-        needed. You can press <strong className="font-bold">ESC</strong> to confirm.
-      </>
-    ),
-    active: (
-      <>
-        To confirm the new shape, please <strong className="font-bold">click out</strong> of the
-        shape or press <strong className="font-bold">ESC</strong>.
-      </>
-    ),
-    complete: null,
-    cancel: null,
-  },
-  polyline: {
-    start: (
-      <>
-        Use the <strong className="font-bold">handles</strong> to edit the polygon - move (drag a
-        handle), add (left-click on a white handle), or remove (right-click on a handle) points as
-        needed. You can press <strong className="font-bold">ESC</strong> to confirm.
-      </>
-    ),
-    active: (
-      <>
-        To confirm the new shape, please <strong className="font-bold">click out</strong> of the
-        shape or press <strong className="font-bold">ESC</strong>.
-      </>
-    ),
-    complete: null,
-    cancel: null,
-  },
-  point: {
-    start: (
-      <>
-        Use the <strong className="font-bold">handle</strong> to move the point. You can use the
-        slider to change the buffer size. You can press <strong className="font-bold">ESC</strong>{" "}
-        to confirm.
-      </>
-    ),
-    active: (
-      <>
-        <strong className="font-bold">Click</strong> outside the point or press{" "}
-        <strong className="font-bold">ESC</strong> to confirm the new position.
-      </>
-    ),
-    complete: null,
-    cancel: null,
-  },
-} as const;
-
 export const SketchTooltips = () => {
+  const t = useTranslations();
+
+  const CREATE_MESSAGES = {
+    polygon: {
+      start: <ReactMarkdown>{t("grid-sketch-tooltip-create-start-polygon")}</ReactMarkdown>,
+      active: <ReactMarkdown>{t("grid-sketch-tooltip-create-active-polygon")}</ReactMarkdown>,
+      complete: <ReactMarkdown>{t("grid-sketch-tooltip-create-complete-polygon")}</ReactMarkdown>,
+      cancel: null,
+    },
+    polyline: {
+      start: <ReactMarkdown>{t("grid-sketch-tooltip-create-start-polyline")}</ReactMarkdown>,
+      active: <ReactMarkdown>{t("grid-sketch-tooltip-create-active-polyline")}</ReactMarkdown>,
+      complete: <ReactMarkdown>{t("grid-sketch-tooltip-create-complete-polyline")}</ReactMarkdown>,
+      cancel: null,
+    },
+    point: {
+      start: <ReactMarkdown>{t("grid-sketch-tooltip-create-start-point")}</ReactMarkdown>,
+      active: <ReactMarkdown>{t("grid-sketch-tooltip-create-active-point")}</ReactMarkdown>,
+      complete: <ReactMarkdown>{t("grid-sketch-tooltip-create-complete-point")}</ReactMarkdown>,
+      cancel: null,
+    },
+  } as const;
+
+  const UPDATE_MESSAGES = {
+    polygon: {
+      start: <ReactMarkdown>{t("grid-sketch-tooltip-update-start-polygon")}</ReactMarkdown>,
+      active: <ReactMarkdown>{t("grid-sketch-tooltip-update-active-polygon")}</ReactMarkdown>,
+      complete: null,
+      cancel: null,
+    },
+    polyline: {
+      start: <ReactMarkdown>{t("grid-sketch-tooltip-update-start-polyline")}</ReactMarkdown>,
+      active: <ReactMarkdown>{t("grid-sketch-tooltip-update-active-polyline")}</ReactMarkdown>,
+      complete: null,
+      cancel: null,
+    },
+    point: {
+      start: <ReactMarkdown>{t("grid-sketch-tooltip-update-start-point")}</ReactMarkdown>,
+      active: <ReactMarkdown>{t("grid-sketch-tooltip-update-active-point")}</ReactMarkdown>,
+      complete: null,
+      cancel: null,
+    },
+  } as const;
   const sketchAction = useAtomValue(sketchActionAtom);
 
   if (

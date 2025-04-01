@@ -2,11 +2,14 @@
 
 import { PropsWithChildren, MouseEvent } from "react";
 
+import ReactMarkdown from "react-markdown";
+
 import Image from "next/image";
 
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { UseQueryResult } from "@tanstack/react-query";
+import { useLocale, useTranslations } from "next-intl";
 import { LuInfo, LuPen } from "react-icons/lu";
 
 import { formatNumber } from "@/lib/formats";
@@ -57,6 +60,7 @@ export function CardSettings({
   id,
   onClick,
 }: PropsWithChildren<{ id: Indicator["id"]; onClick?: (e: MouseEvent<HTMLElement>) => void }>) {
+  const t = useTranslations();
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -72,7 +76,7 @@ export function CardSettings({
 
       <TooltipPortal>
         <TooltipContent sideOffset={0}>
-          Edit indicator
+          {t("edit-indicator")}
           <TooltipArrow />
         </TooltipContent>
       </TooltipPortal>
@@ -89,13 +93,14 @@ export function CardControls({ children }: PropsWithChildren) {
 }
 
 export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className?: string }) {
-  const indicator = useGetIndicatorsId(ids[0]);
+  const locale = useLocale();
+  const indicator = useGetIndicatorsId(ids[0], locale);
 
   if (!indicator) return null;
 
-  const { description_short_en } = indicator;
+  const { description_short } = indicator;
 
-  if (!description_short_en) return null;
+  if (!description_short) return null;
 
   return (
     <Tooltip>
@@ -106,13 +111,13 @@ export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className
           </DialogTrigger>
         </TooltipTrigger>
         <DialogContent className="max-w-2xl p-0">
-          <DialogTitle className="sr-only">{description_short_en}</DialogTitle>
+          <DialogTitle className="sr-only">{description_short}</DialogTitle>
           <Info ids={ids} />
           <DialogClose />
         </DialogContent>
         <TooltipPortal>
           <TooltipContent sideOffset={0} className="max-w-72">
-            {description_short_en}
+            {description_short}
             <TooltipArrow />
           </TooltipContent>
         </TooltipPortal>
@@ -143,6 +148,7 @@ export function CardNoData({
   query: UseQueryResult<unknown, unknown>[];
   children: React.ReactNode;
 }) {
+  const t = useTranslations();
   if (
     query.every((q) => q.isFetched) &&
     !query.some((q) => q.data && Array.isArray(q.data) && !!q.data.length)
@@ -150,10 +156,9 @@ export function CardNoData({
     return (
       <div className="flex grow flex-col items-center justify-center space-y-6 py-12">
         <Image src={"/images/no-data.svg"} alt="No data" width={149} height={96} />
-        <p className="text-center text-sm font-medium text-blue-900">
-          No results for this location at the moment. <br /> Feel free to adjust your search
-          criteria or check back later!
-        </p>
+        <div className="text-center text-sm font-medium text-blue-900">
+          <ReactMarkdown>{t("card-no-results")}</ReactMarkdown>
+        </div>
       </div>
     );
   }

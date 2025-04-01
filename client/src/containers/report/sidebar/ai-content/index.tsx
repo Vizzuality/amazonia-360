@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useAtomValue } from "jotai";
 import { CircleAlert } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { LuInfo, LuLoader2, LuSparkles } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
@@ -20,25 +21,26 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/compone
 
 import AiSidebarContentCard from "./card";
 
-const AUDIENCES = [
-  {
-    value: "Normal",
-    label: "Standard",
-    description: "For clear and balanced information to suit any audience.",
-  },
-  {
-    value: "Short",
-    label: "Executive",
-    description: "Quick, focused insights to convey key data effectively.",
-  },
-  {
-    value: "Long",
-    label: "Comprehensive",
-    description: "Detailed and thorough for deep understanding and context.",
-  },
-];
-
 export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
+  const t = useTranslations();
+  const AUDIENCES = [
+    {
+      value: "Normal",
+      label: t("report-results-sidebar-ai-summaries-audience-normal-title"),
+      description: t("report-results-sidebar-ai-summaries-audience-normal-description"),
+    },
+    {
+      value: "Short",
+      label: t("report-results-sidebar-ai-summaries-audience-short-title"),
+      description: t("report-results-sidebar-ai-summaries-audience-short-description"),
+    },
+    {
+      value: "Long",
+      label: t("report-results-sidebar-ai-summaries-audience-long-title"),
+      description: t("report-results-sidebar-ai-summaries-audience-long-description"),
+    },
+  ];
+
   const [aiSummary, setAiSummary] = useSyncAiSummary();
   const [ai_audience, setAiAudience] = useState<AiSummary["type"]>(aiSummary.type);
   const [ai_only_active, setAiOnlyActive] = useState<AiSummary["only_active"]>(
@@ -78,7 +80,7 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
     <div className="relative flex h-full max-h-[calc(100vh-180px)] flex-col justify-between">
       <div className="relative h-full w-full flex-1 space-y-4">
         <p className="text-sm font-medium leading-5 text-muted-foreground">
-          Choose a text style to create summaries for the active topics in your report.
+          {t("report-results-sidebar-ai-summaries-description")}
         </p>
         <ScrollArea
           className={cn({
@@ -89,7 +91,9 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
           <div className="h-full w-full flex-1 space-y-4">
             {!isGenerating && (
               <div className="space-y-2">
-                <span className="text-sm font-semibold text-foreground">Summary text style</span>
+                <span className="text-sm font-semibold text-foreground">
+                  {t("report-results-sidebar-ai-summaries-audience-title")}
+                </span>
                 <RadioGroup
                   defaultValue={ai_audience}
                   className="flex flex-col gap-1.5"
@@ -111,7 +115,7 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
                 <div className="flex items-center justify-between">
                   <div className="flex space-x-2">
                     <span className="text-sm font-medium text-foreground">
-                      Active indicators only
+                      {t("report-results-sidebar-ai-summaries-checkbox-active-indicators")}
                     </span>
                     <Tooltip>
                       <TooltipTrigger>
@@ -121,8 +125,9 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
                       <TooltipPortal>
                         <TooltipContent side="top" align="center">
                           <p className="max-w-80">
-                            Include only active indicators in the generated summaries. Changes to
-                            the indicators will require generating new summaries.
+                            {t(
+                              "report-results-sidebar-ai-summaries-checkbox-active-indicators-info",
+                            )}
                           </p>
 
                           <TooltipArrow className="fill-foreground" width={10} height={5} />
@@ -146,7 +151,7 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
                     <LuLoader2 className="h-6 w-6 text-foreground" />
                   </span>
                   <span className="text-sm font-medium text-muted-foreground">
-                    Generating AI summaries
+                    {t("report-results-sidebar-ai-summaries-generating")}
                   </span>
                 </div>
               </div>
@@ -157,17 +162,16 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
           <div className="flex items-start space-x-4 rounded-sm border border-border bg-blue-50 p-3">
             <CircleAlert className="text-alert h-4 w-4 shrink-0" />
             <p className="text-xs font-medium text-foreground">
-              AI generated summaries can be inaccurate. We encourage you to verify the content
-              carefully.
+              {t("report-results-sidebar-ai-summaries-generating-info")}.
             </p>
           </div>
           <div className="mt-4 flex justify-between space-x-2">
             <Button variant="outline" className="w-full" onClick={handleClickClearAiSummary}>
-              Clear
+              {t("clear")}
             </Button>
             <Button className="w-full space-x-2" onClick={handleClickAiGenerateSummary}>
               <LuSparkles />
-              <span>Generate</span>
+              <span>{t("generate")}</span>
             </Button>
           </div>
         </div>

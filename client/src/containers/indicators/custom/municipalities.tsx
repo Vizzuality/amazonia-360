@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 
 import { AccessorKeyColumnDefBase } from "@tanstack/react-table";
+import { useLocale } from "next-intl";
 
 import { formatNumber } from "@/lib/formats";
 import { useGetIndicators, useQueryFeatures, useQueryFeatureId } from "@/lib/indicators";
@@ -20,10 +21,11 @@ const INDICATORS = [
 ];
 
 export const Municipalities = ({ indicator }: { indicator: Indicator }) => {
+  const locale = useLocale();
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
 
-  const { data: indicatorsData } = useGetIndicators({
+  const { data: indicatorsData } = useGetIndicators(locale, {
     select: (data) => data.filter((i) => INDICATORS.some((indicator) => indicator.id === i.id)),
   });
 

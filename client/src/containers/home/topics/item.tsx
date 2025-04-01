@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 import { Topic } from "@/constants/topics";
 
-export default function TopicsItem({ id, topic_name, image, topic_description }: Topic) {
+export default function TopicsItem({ id, name, image, description }: Topic) {
   const descriptionRef = useRef<HTMLParagraphElement>(null);
 
   return (
@@ -18,7 +18,7 @@ export default function TopicsItem({ id, topic_name, image, topic_description }:
         <div className="relative h-20 w-screen md:h-96 md:w-96">
           <Image
             src={image}
-            alt={`${topic_name}`}
+            alt={`${name}`}
             priority
             fill
             sizes="100%"
@@ -44,7 +44,7 @@ export default function TopicsItem({ id, topic_name, image, topic_description }:
           )}
         >
           <div className="relative z-10">
-            <h3 className="text-sm font-bold">{topic_name}</h3>
+            <h3 className="text-sm font-bold">{name}</h3>
 
             <div
               ref={descriptionRef}
@@ -52,7 +52,7 @@ export default function TopicsItem({ id, topic_name, image, topic_description }:
                 "max-h-0 overflow-hidden text-xs font-semibold transition-all duration-300 ease-in-out",
               )}
             >
-              <p className="pt-2">{topic_description}</p>
+              <p className="pt-2">{description}</p>
             </div>
           </div>
         </div>

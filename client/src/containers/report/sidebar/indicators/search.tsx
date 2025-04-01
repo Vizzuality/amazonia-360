@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import { findFirstAvailablePosition } from "@/lib/report";
@@ -18,7 +18,7 @@ import { Search } from "@/components/ui/search";
 type Option = {
   topicId?: number;
   indicatorId: number;
-  label: string;
+  label?: string;
   value: string;
   key: string;
   active?: boolean;
@@ -26,11 +26,12 @@ type Option = {
 
 export default function SearchC() {
   const t = useTranslations();
+  const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [topics, setTopics] = useSyncTopics();
 
-  const queryIndicators = useGetDefaultIndicators(undefined);
+  const queryIndicators = useGetDefaultIndicators(undefined, locale);
 
   const DATA = useMemo(() => {
     return (
@@ -47,8 +48,8 @@ export default function SearchC() {
 
               return {
                 key: v,
-                label: indicator.name_en,
-                value: `${indicator.name_en}-${v}`,
+                label: indicator.name,
+                value: `${indicator.name}-${v}`,
                 indicatorId: indicator.id,
                 topicId: indicator.topic?.id,
                 sourceIndex: indicator.id,
@@ -68,7 +69,7 @@ export default function SearchC() {
       return (
         DATA?.filter(
           (o) =>
-            o.label.toLowerCase().includes(search.toLowerCase()) ||
+            o.label?.toLowerCase().includes(search.toLowerCase()) ||
             o.key.toLowerCase().includes(search.toLowerCase()),
         ) || []
       );

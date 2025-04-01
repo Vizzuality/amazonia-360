@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import Link from "next/link";
 
+import { useTranslations } from "next-intl";
 import { LuPlus } from "react-icons/lu";
 
 import { useLocationTitle } from "@/lib/location";
@@ -30,6 +31,7 @@ import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 
 export default function ReportResultsHeaderDesktop() {
+  const t = useTranslations();
   const [location] = useSyncLocation();
 
   const title = useLocationTitle(location);
@@ -52,23 +54,21 @@ export default function ReportResultsHeaderDesktop() {
               <AlertDialogTrigger asChild className="print:hidden">
                 <Button variant="outline" className="space-x-2">
                   <LuPlus className="h-5 w-5" />
-                  <span>New report</span>
+                  <span>{t("report-results-buttons-new-report")}</span>
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>New report</AlertDialogTitle>
+                  <AlertDialogTitle>{t("report-results-buttons-new-report")}</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Proceed if you wish to generate a new report by selecting a new area. Note that
-                    switching areas will refresh your current session, and the existing report will
-                    be lost.
+                    {t("report-results-buttons-new-report-description")}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter className="flex w-full justify-end space-x-2 justify-self-end">
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
 
                   <Link href="/report">
-                    <AlertDialogAction>Continue</AlertDialogAction>
+                    <AlertDialogAction>{t("continue")}</AlertDialogAction>
                   </Link>
                 </AlertDialogFooter>
               </AlertDialogContent>

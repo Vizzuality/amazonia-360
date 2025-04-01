@@ -1,3 +1,5 @@
+import { useLocale, useTranslations } from "next-intl";
+
 import { useGetIndicatorsId } from "@/lib/indicators";
 
 import { Indicator } from "@/app/local-api/indicators/route";
@@ -15,32 +17,34 @@ import {
 } from "@/containers/indicators/resources";
 
 export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
-  const indicator = useGetIndicatorsId(id);
+  const t = useTranslations();
+  const locale = useLocale();
+  const indicator = useGetIndicatorsId(id, locale);
 
   return (
     <div className="space-y-5">
-      <h2 className="text-3xl">{indicator?.name_en}</h2>
+      <h2 className="text-3xl">{indicator?.name}</h2>
       <div className="prose prose-sm max-w-none">
         <table className="w-full">
           <tbody>
             <tr>
-              <td className="w-60">Topic</td>
+              <td className="w-60">{t("topic")}</td>
               <td>
-                {indicator?.topic.id} - {indicator?.topic.name_en}
+                {indicator?.topic.id} - {indicator?.topic.name}
               </td>
             </tr>
             <tr>
-              <td className="w-60">Resource</td>
+              <td className="w-60">{t("resource")}</td>
               <td>{indicator?.resource.name}</td>
             </tr>
             <tr>
-              <td className="w-60">Resource Type</td>
+              <td className="w-60">{t("resource-type")}</td>
               <td>{indicator?.resource.type}</td>
             </tr>
 
             {"url" in indicator!.resource && (
               <tr>
-                <td className="w-60">Resource URL</td>
+                <td className="w-60">{t("resource-url")}</td>
                 <td>
                   <a href={indicator?.resource.url} target="_blank" rel="noreferrer">
                     {indicator?.resource.url}
@@ -49,7 +53,7 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
               </tr>
             )}
             <tr>
-              <td className="w-60">Visualization Type</td>
+              <td className="w-60">{t("visualization-type")}</td>
               <td>{(indicator?.visualization_types || [])?.join(", ")}</td>
             </tr>
             {}
@@ -59,7 +63,7 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
                 .map((type) => {
                   return (
                     <tr key={type}>
-                      <td>Map</td>
+                      <td>{t("map")}</td>
                       <td>
                         <ResourceMap
                           {...indicator}
@@ -84,7 +88,9 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
 
                     return (
                       <tr key={type}>
-                        <td>Query {type[0].toUpperCase() + type.slice(1)}</td>
+                        <td>
+                          {t("query")} {type[0].toUpperCase() + type.slice(1)}
+                        </td>
                         <td>
                           <ResourceQueryFeature {...indicator} type={type} resource={r} />
                         </td>
@@ -96,7 +102,9 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
                     const r = indicator.resource;
                     return (
                       <tr key={type}>
-                        <td>Query {type[0].toUpperCase() + type.slice(1)}</td>
+                        <td>
+                          {t("query")} {type[0].toUpperCase() + type.slice(1)}
+                        </td>
                         <td>
                           <ResourceQueryImagery {...indicator} type={type} resource={r} />
                         </td>
@@ -108,7 +116,9 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
                     const r = indicator.resource;
                     return (
                       <tr key={type}>
-                        <td>Query {type[0].toUpperCase() + type.slice(1)}</td>
+                        <td>
+                          {t("query")} {type[0].toUpperCase() + type.slice(1)}
+                        </td>
                         <td>
                           <ResourceQueryImageryTile {...indicator} type={type} resource={r} />
                         </td>
@@ -119,7 +129,7 @@ export const IndicatorItem = ({ id }: { id: Indicator["id"] }) => {
                   return null;
                 })}
             <tr>
-              <td className="w-60">H3 Grid Column Name</td>
+              <td className="w-60">{t("h3-grid-column-name")}</td>
               {/* <td>{indicator?.h3_grid_column_name || "-"}</td> */}
             </tr>
           </tbody>

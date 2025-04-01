@@ -3,6 +3,7 @@
 import { FC } from "react";
 
 import { TooltipPortal } from "@radix-ui/react-tooltip";
+import { useTranslations } from "next-intl";
 import { LuInfo } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
@@ -28,6 +29,7 @@ interface InfoControlProps {
 }
 
 export const InfoControl: FC<InfoControlProps> = ({ ids, className }: InfoControlProps) => {
+  const t = useTranslations();
   return (
     <Tooltip>
       <Dialog>
@@ -50,14 +52,14 @@ export const InfoControl: FC<InfoControlProps> = ({ ids, className }: InfoContro
         </TooltipTrigger>
 
         <DialogContent className="p-0">
-          <DialogTitle className="sr-only">About the data</DialogTitle>
+          <DialogTitle className="sr-only">{t("about-the-data")}</DialogTitle>
           <Info ids={ids} />
           <DialogClose />
         </DialogContent>
 
         <TooltipPortal>
           <TooltipContent side="left" align="center">
-            <div className="text-xxs">About the data</div>
+            <div className="text-xxs">{t("about-the-data")}</div>
 
             <TooltipArrow className="fill-foreground" width={10} height={5} />
           </TooltipContent>

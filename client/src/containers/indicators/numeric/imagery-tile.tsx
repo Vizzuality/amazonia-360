@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 
+import { useLocale } from "next-intl";
+
 import { useGetIndicatorsId, useQueryImageryTileId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
@@ -16,9 +18,10 @@ export const NumericImageryTileIndicators = ({
   id,
   resource,
 }: NumericImageryTileIndicatorsProps) => {
+  const locale = useLocale();
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
-  const indicator = useGetIndicatorsId(id);
+  const indicator = useGetIndicatorsId(id, locale);
 
   const query = useQueryImageryTileId({ id, resource, type: "numeric", geometry: GEOMETRY });
 
@@ -60,7 +63,7 @@ export const NumericImageryTileIndicators = ({
 
   return (
     <CardLoader query={[query]} className="h-12 grow">
-      <CardWidgetNumber value={VALUE ?? "n.d."} unit={!!VALUE ? indicator?.unit_en : undefined} />
+      <CardWidgetNumber value={VALUE ?? "n.d."} unit={!!VALUE ? indicator?.unit : undefined} />
     </CardLoader>
   );
 };

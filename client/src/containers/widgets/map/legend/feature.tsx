@@ -16,7 +16,7 @@ export interface FeatureLegendProps {
 }
 
 export const FeatureLegend = ({
-  name_en,
+  name,
   resource,
 }: Omit<Indicator, "resource"> & {
   resource: ResourceFeature;
@@ -42,7 +42,7 @@ export const FeatureLegend = ({
           {
             id: "1",
             color: new Color(r.symbol.color).toHex(),
-            label: name_en,
+            label: name,
           },
         ],
       };
@@ -75,7 +75,7 @@ export const FeatureLegend = ({
     }
 
     return null;
-  }, [name_en, layerData]);
+  }, [name, layerData]);
 
   return (
     <Legend defaultOpen>
