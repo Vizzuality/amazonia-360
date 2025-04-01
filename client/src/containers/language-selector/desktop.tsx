@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 
 import { useLocale } from "next-intl";
 
-import { LOCALES, localeLabels } from "@/lib/locales";
+import { LOCALES, localeLabelsShort, localeLabelsLong } from "@/lib/locales";
 import { cn } from "@/lib/utils";
 
 import {
@@ -31,8 +31,8 @@ const LanguageSelector = () => {
   };
   return (
     <Select value={locale} onValueChange={onSelectLocale}>
-      <SelectTrigger className="w-fit rounded-sm border-none p-0 shadow-none outline-none hover:bg-secondary focus:ring-0">
-        <SelectValue className="flex text-sm">{localeLabels[locale]}</SelectValue>
+      <SelectTrigger className="w-fit rounded-sm border-none shadow-none outline-none hover:bg-secondary focus:ring-0">
+        <SelectValue className="flex text-sm">{localeLabelsShort[locale]}</SelectValue>
       </SelectTrigger>
       <SelectContent className="no-scrollbar max-h-96 overflow-y-auto border-none shadow-md">
         {LOCALES.map((l) => (
@@ -45,7 +45,7 @@ const LanguageSelector = () => {
               "cursor-pointer": l !== locale,
             })}
           >
-            {localeLabels[l]}
+            {localeLabelsLong[l]}
           </SelectItem>
         ))}
       </SelectContent>

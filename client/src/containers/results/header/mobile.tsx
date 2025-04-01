@@ -52,7 +52,9 @@ export default function ReportResultsHeaderMobile() {
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>{t("report-results-buttons-new-report")}</AlertDialogTitle>
-                    <AlertDialogDescription>{t("new-report-description")}</AlertDialogDescription>
+                    <AlertDialogDescription>
+                      {t("report-results-new-report-description")}
+                    </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter className="flex flex-row items-baseline justify-center space-x-2">
                     <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>

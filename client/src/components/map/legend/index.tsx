@@ -1,8 +1,8 @@
 import { PropsWithChildren, useState } from "react";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
-import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 import { useTranslations } from "next-intl";
+import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 
 export default function Legend({
   children,

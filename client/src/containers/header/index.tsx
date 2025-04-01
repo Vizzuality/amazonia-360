@@ -9,6 +9,7 @@ import { Media } from "@/containers/media";
 import DesktopNavigation from "./desktop-navigation";
 import LogoBetaInfo from "./logo-beta-info";
 import MobileNavigation from "./mobile-navigation";
+import LanguageSelector from "@/containers/language-selector/desktop";
 
 export default function Header() {
   const pathname = usePathname();
@@ -25,8 +26,9 @@ export default function Header() {
       <div className="container flex items-center justify-between md:mx-auto">
         <LogoBetaInfo />
 
-        <Media greaterThanOrEqual="md">
+        <Media greaterThanOrEqual="md" className="flex items-center space-x-4">
           <DesktopNavigation />
+          <LanguageSelector />
         </Media>
 
         <Media lessThan="md">

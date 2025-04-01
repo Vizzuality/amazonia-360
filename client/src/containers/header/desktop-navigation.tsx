@@ -4,8 +4,6 @@ import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
-import LanguageSelector from "@/containers/language-selector";
-
 import { Link } from "@/i18n/navigation";
 
 export default function DesktopNavigation() {
@@ -42,7 +40,6 @@ export default function DesktopNavigation() {
       >
         {t("header-hub")}
       </Link>
-      <LanguageSelector />
 
       {/* <Link className="text-blue-600 hover:text-blue-700" href="#">
             Amazonia Forever
