@@ -2,7 +2,7 @@
 
 ![Screenshot 2025-03-21 at 10 10 45](https://github.com/user-attachments/assets/c5f0bc2e-46a7-490d-9262-abf8fe9ff7a1)
 
-AmazoniaForever 360+ is a platform developed to provide critical geospatial and territorial data, supporting conservation and sustainable efforts in the Amazon region. Designed for non-expert users, it equips government officials, NGOs, local communities, and professionals working in environmental planning and development with tools to monitor environmental changes and implement strategic actions.
+AmazoniaForever360+ is a platform developed to provide critical geospatial and territorial data, supporting conservation and sustainable efforts in the Amazon region. Designed for non-expert users, it equips government officials, NGOs, local communities, and professionals working in environmental planning and development with tools to monitor environmental changes and implement strategic actions.
 
 # Table of contents
 
