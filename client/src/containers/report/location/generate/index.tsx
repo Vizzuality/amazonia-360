@@ -1,10 +1,10 @@
-import Link from "next/link";
-
 import { useTranslations } from "next-intl";
 
 import { useSyncSearchParams, useSyncTopics } from "@/app/store";
 
 import { Button } from "@/components/ui/button";
+
+import { Link } from "@/i18n/navigation";
 
 export const GenerateReport = () => {
   const t = useTranslations();

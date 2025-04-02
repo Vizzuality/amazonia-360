@@ -2,14 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { usePathname } from "next/navigation";
-
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Share2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+
+import { usePathname } from "@/i18n/navigation";
 
 export default function ShareReport() {
   const t = useTranslations();

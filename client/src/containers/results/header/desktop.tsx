@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 
-import Link from "next/link";
-
 import { useTranslations } from "next-intl";
 import { LuPlus } from "react-icons/lu";
 
@@ -29,6 +27,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
+
+import { Link } from "@/i18n/navigation";
 
 export default function ReportResultsHeaderDesktop() {
   const t = useTranslations();

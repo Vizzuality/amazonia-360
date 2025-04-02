@@ -1,9 +1,9 @@
-import Link from "next/link";
-
 import { useTranslations } from "next-intl";
 import { LuArrowRight } from "react-icons/lu";
 
 import { Button } from "@/components/ui/button";
+
+import { Link } from "@/i18n/navigation";
 
 export default function Hub() {
   const t = useTranslations();

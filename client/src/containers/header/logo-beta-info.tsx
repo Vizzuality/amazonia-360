@@ -3,12 +3,13 @@
 import { useState } from "react";
 
 import Image from "next/image";
-import Link from "next/link";
 
 import { DialogTitle } from "@radix-ui/react-dialog";
 
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
+
+import { Link } from "@/i18n/navigation";
 
 import BetaDisclaimer from "../disclaimers/demo";
 

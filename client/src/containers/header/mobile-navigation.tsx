@@ -2,9 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-
 import { usePrevious } from "@dnd-kit/utilities";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { useTranslations } from "next-intl";
@@ -20,6 +17,8 @@ import {
   DialogHeader,
   DialogDescription,
 } from "@/components/ui/dialog";
+
+import { usePathname, Link } from "@/i18n/navigation";
 
 import LogoBetaInfo from "./logo-beta-info";
 

@@ -1,7 +1,5 @@
 import { Metadata } from "next";
 
-import { redirect } from "next/navigation";
-
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { getTranslations } from "next-intl/server";
 
@@ -16,6 +14,8 @@ import ReportResultsContent from "@/containers/results/content";
 import ReportResultsHeader from "@/containers/results/header";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
+
+import { redirect } from "@/i18n/navigation";
 
 type Params = Promise<{ locale: string }>;
 
@@ -34,12 +34,19 @@ export interface SearchParams {
   topics: string;
 }
 
-export default async function ReportResultsPage({ searchParams }: PageProps<Params, SearchParams>) {
+export default async function ReportResultsPage({
+  params,
+  searchParams,
+}: PageProps<Params, SearchParams>) {
+  const { locale } = await params;
   const queryClient = new QueryClient();
   const l = locationParser.parseServerSide((await searchParams).location);
 
   if (!l) {
-    redirect("/report");
+    redirect({
+      href: "/report",
+      locale,
+    });
   }
 
   return (

@@ -1,11 +1,10 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-
 import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
+import { usePathname } from "@/i18n/navigation";
 import { Link } from "@/i18n/navigation";
 
 export default function DesktopNavigation() {
