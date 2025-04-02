@@ -60,6 +60,7 @@ export default function Hero() {
           height={2500}
           className="lg-top-[30%] w-full max-w-fit animate-half-right-bottom-to-left-top object-cover px-4 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]"
           draggable={false}
+          priority
         />
       </Media>
       <Media lessThan="md">
@@ -70,6 +71,7 @@ export default function Hero() {
           height={2500}
           className="lg-top-[30%] w-full max-w-fit animate-half-right-bottom-to-left-top object-cover px-4 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]"
           draggable={false}
+          priority
         />
       </Media>
     </section>
