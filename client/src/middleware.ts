@@ -51,6 +51,6 @@ export const config = {
     // - /api
     // - /_next
     // - all static files like .png, .ico, etc.
-    "/((?!api|_next|.*\\..*).*)",
+    "/((?!local-api|_next|.*\\..*).*)",
   ],
 };
