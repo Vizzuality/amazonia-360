@@ -1,3 +1,5 @@
+"use client";
+
 import ReactMarkdown from "react-markdown";
 
 import Image from "next/image";

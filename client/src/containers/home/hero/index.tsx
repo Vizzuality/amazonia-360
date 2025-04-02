@@ -58,7 +58,7 @@ export default function Hero() {
           alt="Amazonia"
           width={2500}
           height={2500}
-          className="lg-top-[30%] w-full max-w-fit animate-half-right-bottom-to-left-top object-cover px-4 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]"
+          className="lg-top-[30%] w-full max-w-fit object-cover px-4 duration-700 animate-in slide-in-from-bottom-40 slide-in-from-right-72 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]"
           draggable={false}
           priority
         />
@@ -69,7 +69,7 @@ export default function Hero() {
           alt="Amazonia"
           width={2500}
           height={2500}
-          className="lg-top-[30%] w-full max-w-fit animate-half-right-bottom-to-left-top object-cover px-4 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]"
+          className="lg-top-[30%] w-full max-w-fit object-cover px-4 duration-700 animate-in slide-in-from-bottom-40 slide-in-from-right-72 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]"
           draggable={false}
           priority
         />

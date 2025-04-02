@@ -20,42 +20,42 @@ import { CONTROL_BUTTON_STYLES } from "./constants";
 const BASEMAPS = [
   {
     id: "gray-vector",
-    label: "Gray",
+    label: "basemap-gray",
     basemap: Basemap.fromId("gray-vector"),
   },
   {
     id: "dark-gray-vector",
-    label: "Dark Gray",
+    label: "basemap-dark-gray",
     basemap: Basemap.fromId("dark-gray-vector"),
   },
   {
     id: "satellite",
-    label: "Satellite",
+    label: "basemap-satellite",
     basemap: Basemap.fromId("satellite"),
   },
   {
     id: "streets",
-    label: "Streets",
+    label: "basemap-streets",
     basemap: Basemap.fromId("streets"),
   },
   {
     id: "hybrid",
-    label: "Hybrid",
+    label: "basemap-hybrid",
     basemap: Basemap.fromId("hybrid"),
   },
   {
     id: "osm",
-    label: "OSM",
+    label: "basemap-osm",
     basemap: Basemap.fromId("osm"),
   },
   {
     id: "topo-vector",
-    label: "Topographic",
+    label: "basemap-topographic",
     basemap: Basemap.fromId("topo-vector"),
   },
   {
     id: "terrain",
-    label: "Terrain",
+    label: "basemap-terrain",
     basemap: Basemap.fromId("terrain"),
   },
 ] as const;

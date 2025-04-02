@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { Metadata } from "next";
 
 import { Montserrat } from "next/font/google";
@@ -5,7 +7,7 @@ import { notFound } from "next/navigation";
 import Script from "next/script";
 
 import { hasLocale, NextIntlClientProvider } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import RootHead from "@/app/head";
 import LayoutProviders from "@/app/layout-providers";
@@ -20,6 +22,12 @@ import "@/styles/grid-layout.css";
 import "react-resizable/css/styles.css";
 
 type Params = Promise<{ locale: string }>;
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({
+    locale,
+  }));
+}
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale } = await params;
@@ -63,15 +71,20 @@ export default async function RootLayout({
     notFound();
   }
 
+  // Enable static rendering
+  setRequestLocale(locale);
+
   return (
     <LayoutProviders>
       <html lang={locale}>
         <RootHead />
         <body className={`${montserrat.className} w-full overflow-x-hidden`}>
-          <NextIntlClientProvider locale={locale}>
-            <Header />
-            {children}
-          </NextIntlClientProvider>
+          <Suspense fallback={null}>
+            <NextIntlClientProvider locale={locale}>
+              <Header />
+              {children}
+            </NextIntlClientProvider>
+          </Suspense>
         </body>
 
         <Script id="fullstory" strategy="lazyOnload">

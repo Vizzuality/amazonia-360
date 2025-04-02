@@ -42,15 +42,6 @@ export default async function ReportResultsPage({ searchParams }: PageProps<Para
     redirect("/report");
   }
 
-  // if (l && l.type === "search") {
-  //   const { queryKey, queryFn } = getSearchQueryOptions(l);
-
-  //   await queryClient.prefetchQuery({
-  //     queryKey,
-  //     queryFn,
-  //   });
-  // }
-
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="relative bg-blue-50 pb-5 print:w-full print:bg-white print:p-0">
