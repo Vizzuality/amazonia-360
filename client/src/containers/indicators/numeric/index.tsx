@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 
+import { useLocale } from "next-intl";
+
 import { useGetIndicatorsId, useQueryFeatureId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
@@ -13,9 +15,10 @@ export interface NumericIndicatorsProps extends Indicator {
 }
 
 export const NumericIndicators = ({ id, resource }: NumericIndicatorsProps) => {
+  const locale = useLocale();
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
-  const indicator = useGetIndicatorsId(id);
+  const indicator = useGetIndicatorsId(id, locale);
 
   const query = useQueryFeatureId({ id, resource, type: "numeric", geometry: GEOMETRY });
 
@@ -29,7 +32,7 @@ export const NumericIndicators = ({ id, resource }: NumericIndicatorsProps) => {
 
   return (
     <CardLoader query={[query]} className="h-12">
-      <CardWidgetNumber value={VALUE} unit={indicator?.unit_en} />
+      <CardWidgetNumber value={VALUE} unit={indicator?.unit} />
     </CardLoader>
   );
 };

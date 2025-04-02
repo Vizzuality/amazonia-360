@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 
 import { useAtom } from "jotai";
+import { useTranslations } from "next-intl";
 
 import { useSyncGridDatasets, selectedFiltersViewAtom } from "@/app/store";
 
@@ -8,6 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
 export default function GridFiltersControls() {
+  const t = useTranslations();
   const [gridDatasets] = useSyncGridDatasets();
   const [selectedFiltersView, setSelectedFiltersView] = useAtom(selectedFiltersViewAtom);
 
@@ -24,7 +26,7 @@ export default function GridFiltersControls() {
         onCheckedChange={handleCheckedChange}
       />
       <Label htmlFor="selected-filters" className="text-start text-xs text-muted-foreground">
-        View selected indicators only
+        {t("grid-sidebar-grid-filters-checkbox-selected-indicators")}
       </Label>
     </div>
   );

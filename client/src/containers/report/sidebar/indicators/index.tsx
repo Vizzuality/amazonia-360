@@ -1,5 +1,11 @@
 "use client";
 
+import React from "react";
+
+import ReactMarkdown from "react-markdown";
+
+import { useTranslations } from "next-intl";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import SidebarClearIndicators from "./clear-indicators";
@@ -7,13 +13,13 @@ import Search from "./search";
 import TopicsList from "./topics";
 
 export default function IndicatorsSidebarContent() {
+  const t = useTranslations();
   return (
     <div className="relative h-full">
       <div className="space-y-4">
-        <p className="text-sm font-medium leading-5 text-muted-foreground">
-          Add indicators to your report and view them in various formats—
-          <span className="font-semibold">map, table, chart, etc.</span>
-        </p>
+        <div className="text-sm font-medium leading-5 text-muted-foreground">
+          <ReactMarkdown>{t("report-results-sidebar-indicators-description")}</ReactMarkdown>
+        </div>
         <Search />
       </div>
 

@@ -2,7 +2,10 @@
 
 import { useCallback } from "react";
 
+import ReactMarkdown from "react-markdown";
+
 import { useSetAtom } from "jotai";
+import { useLocale, useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
 
 import { useGetDefaultTopics } from "@/lib/topics";
@@ -14,10 +17,12 @@ import { GenerateReport } from "@/containers/report/location/generate";
 import Topics from "@/containers/report/location/topics";
 
 export default function TabsTopics() {
+  const t = useTranslations();
+  const locale = useLocale();
   const setReportPanel = useSetAtom(reportPanelAtom);
   const [activeTopics, setTopics] = useSyncTopics();
 
-  const { data: topics } = useGetDefaultTopics();
+  const { data: topics } = useGetDefaultTopics({ locale });
 
   const handleTopicsSelection = useCallback(() => {
     if (topics?.length === activeTopics?.length) {
@@ -51,20 +56,19 @@ export default function TabsTopics() {
             >
               <LuArrowLeft className="h-4 w-4" />
             </button>
-            Select Report topics
+            {t("grid-sidebar-report-location-topics-title")}
           </h1>
           <button
             type="button"
             className="whitespace-nowrap text-xs font-bold text-foreground transition-all duration-500 ease-in-out hover:underline"
             onClick={handleTopicsSelection}
           >
-            {topics?.length !== activeTopics?.length ? "Select all" : "Unselect all"}
+            {topics?.length !== activeTopics?.length ? t("select-all") : t("unselect-all")}
           </button>
         </div>
-        <p className="text-sm font-medium text-muted-foreground">
-          Select <strong>one or more topics</strong> on which you want to get information for this
-          area.
-        </p>
+        <div className="text-sm font-medium text-muted-foreground">
+          <ReactMarkdown>{t("grid-sidebar-report-location-topics-description")}</ReactMarkdown>
+        </div>
       </div>
       <div className="relative overflow-hidden lg:h-full lg:max-h-[calc(100vh_-_(64px_+_40px_+_263px))]">
         <div className="py-1.5 lg:max-h-[calc(100vh_-_(64px_+_40px_+_263px))] lg:overflow-y-auto">

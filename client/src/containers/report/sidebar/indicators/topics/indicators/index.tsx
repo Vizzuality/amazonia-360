@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "next-intl";
+
 import { useGetDefaultIndicators } from "@/lib/indicators";
 
 import { Topic } from "@/app/local-api/topics/route";
@@ -7,7 +9,8 @@ import { Topic } from "@/app/local-api/topics/route";
 import { IndicatorsItem } from "./item";
 
 export const Indicators = ({ topic }: { topic: Topic }) => {
-  const { data } = useGetDefaultIndicators(topic.id);
+  const locale = useLocale();
+  const { data } = useGetDefaultIndicators(topic.id, locale);
 
   return (
     <ul className="space-y-1 p-2 text-sm font-medium">

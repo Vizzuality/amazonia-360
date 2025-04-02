@@ -3,6 +3,7 @@
 import { ChangeEvent } from "react";
 import { useCallback, useState } from "react";
 
+import { useTranslations } from "next-intl";
 import { LuSettings2 } from "react-icons/lu";
 
 import { useGetGridMeta } from "@/lib/grid";
@@ -22,18 +23,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const RANKING_DIRECTION = [
-  {
-    key: "asc",
-    label: "Bottom",
-  },
-  {
-    key: "desc",
-    label: "Top",
-  },
-];
-
 export default function GridTableSetup() {
+  const t = useTranslations();
+  const RANKING_DIRECTION = [
+    {
+      key: "asc",
+      label: t("grid-sidebar-grid-filters-ranking-set-up-order-by-ascending"),
+    },
+    {
+      key: "desc",
+      label: t("grid-sidebar-grid-filters-ranking-set-up-order-by-descending"),
+    },
+  ];
   const [isOpen, setIsOpen] = useState(false);
 
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
@@ -121,11 +122,17 @@ export default function GridTableSetup() {
       >
         <div className="space-y-4 p-4">
           <div className="space-y-1">
-            <h2 className="text-sm font-semibold text-popover-foreground">Ranking setup</h2>
-            <span className="text-sm text-muted-foreground">Define the order of the cells</span>
+            <h2 className="text-sm font-semibold text-popover-foreground">
+              {t("grid-sidebar-grid-filters-ranking-set-up-title")}
+            </h2>
+            <span className="text-sm text-muted-foreground">
+              {t("grid-sidebar-grid-filters-ranking-set-up-description")}
+            </span>
           </div>
           <div className="w-full gap-2 overflow-hidden">
-            <span className="text-sm text-foreground">Order by</span>
+            <span className="text-sm text-foreground">
+              {t("grid-sidebar-grid-filters-ranking-set-up-order-by")}
+            </span>
             <div className="flex gap-2">
               <Select value={selectedDataset} onValueChange={handleRankingChange}>
                 <SelectTrigger className="h-10 w-full max-w-36 rounded-sm">
@@ -166,7 +173,7 @@ export default function GridTableSetup() {
           </div>
           <div className="gap-2">
             <Label htmlFor="cells-number" className="text-sm text-foreground">
-              Max number of cells
+              {t("grid-sidebar-grid-filters-ranking-set-up-max-number-cell")}
             </Label>
             <Input
               placeholder={`${gridFilters?.limit?.[0] ?? 10}`}
@@ -177,11 +184,13 @@ export default function GridTableSetup() {
               onChange={onInputChange}
             />
             <span className="text-sm text-muted-foreground">
-              Higher numbers will take more time.
+              {t("grid-sidebar-grid-filters-ranking-set-up-max-number-cell-note")}.
             </span>
           </div>
           <div className="flex justify-end">
-            <Button onClick={handleFilters}>Apply</Button>
+            <Button onClick={handleFilters}>
+              {t("grid-sidebar-grid-filters-ranking-set-up-button-apply")}
+            </Button>
           </div>
         </div>
       </PopoverContent>

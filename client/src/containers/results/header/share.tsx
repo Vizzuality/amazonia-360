@@ -6,16 +6,18 @@ import { usePathname } from "next/navigation";
 
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Share2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 export default function ShareReport() {
+  const t = useTranslations();
   const pathname = usePathname();
 
   const [currentUrl, setCurrentUrl] = useState<string>("");
 
-  const [shareLinkBtnText, setShareLinkBtnText] = useState("Copy");
+  const [shareLinkBtnText, setShareLinkBtnText] = useState("copy");
   useEffect(() => {
     setCurrentUrl(window.location.href);
   }, [pathname]);
@@ -24,9 +26,9 @@ export default function ShareReport() {
     navigator.clipboard
       .writeText(currentUrl)
       .then(() => {
-        setShareLinkBtnText("Copied");
+        setShareLinkBtnText("copied");
         setTimeout(function () {
-          setShareLinkBtnText("Copy");
+          setShareLinkBtnText("copy");
         }, 1000);
       })
       .catch((err: ErrorEvent) => {
@@ -43,18 +45,20 @@ export default function ShareReport() {
       </DialogTrigger>
 
       <DialogContent className="w-full">
-        <DialogTitle className="sr-only">Share Report</DialogTitle>
+        <DialogTitle className="sr-only">{t("report-results-copy-title")}</DialogTitle>
         <div className="mb-6 flex max-w-fit flex-col space-y-2">
-          <h3 className="text-xl font-bold text-blue-500">Share</h3>
+          <h3 className="text-xl font-bold text-blue-500"> {t("share")}</h3>
 
-          <p className="text-base font-medium text-foreground">Copy and paste link to share</p>
+          <p className="text-base font-medium text-foreground">
+            {t("report-results-copy-description")}
+          </p>
         </div>
         <div className="mb-6 flex w-full space-x-2">
           <div className="flex h-10 w-[calc(100vw-138px)] rounded-sm border bg-background px-3 py-2 text-sm text-gray-900 sm:w-[376px]">
             <p className="truncate text-base font-normal text-foreground">{currentUrl}</p>
           </div>
           <Button className="w-20 py-5" onClick={copyShareLink}>
-            {shareLinkBtnText}
+            {t(`${shareLinkBtnText}`)}
           </Button>
         </div>
         {/* <div className="flex space-x-2">

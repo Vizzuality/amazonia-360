@@ -9,6 +9,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useTranslations } from "next-intl";
 import Pluralize from "pluralize";
 import { LuArrowUpDown } from "react-icons/lu";
 
@@ -37,6 +38,7 @@ export function DataTable<TData, TValue>({
   data,
   tableOptions,
 }: DataTableProps<TData, TValue>) {
+  const t = useTranslations();
   const table = useReactTable({
     data,
     columns,
@@ -106,7 +108,7 @@ export function DataTable<TData, TValue>({
               ) : (
                 <TableRow>
                   <TableCell colSpan={columns.length} className="h-24 text-center">
-                    No results.
+                    {t("no-results")}.
                   </TableCell>
                 </TableRow>
               )}
@@ -115,7 +117,7 @@ export function DataTable<TData, TValue>({
         </ScrollArea>
 
         <footer className="flex shrink-0 items-center justify-between">
-          <p className="text-xs font-medium text-gray-500">{`${data.length} ${Pluralize("result", data.length)}`}</p>
+          <p className="text-xs font-medium text-gray-500">{`${data.length} ${Pluralize(t("result"), data.length)}`}</p>
           <DataPagination
             pageIndex={pageIndex}
             pageCount={table.getPageCount()}

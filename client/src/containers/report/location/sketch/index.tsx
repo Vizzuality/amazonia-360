@@ -3,6 +3,7 @@
 import { MouseEvent } from "react";
 
 import { useAtom, useSetAtom } from "jotai";
+import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
@@ -13,28 +14,29 @@ import { PointIcon } from "@/components/ui/icons/point";
 import { PolygonIcon } from "@/components/ui/icons/polygon";
 import { PolylineIcon } from "@/components/ui/icons/polyline";
 
-const SKETCH_BUTTONS = [
-  {
-    id: "point",
-    label: "Point",
-    description: "Click on the map to select a single point and get a buffer radius of 30km²",
-    Icon: PointIcon,
-  },
-  {
-    id: "polygon",
-    label: "Area",
-    description: "Draw your custom area of interest",
-    Icon: PolygonIcon,
-  },
-  {
-    id: "polyline",
-    label: "Line",
-    description: "Draw a line a get a buffer around it of 10km²",
-    Icon: PolylineIcon,
-  },
-] as const;
-
 export default function Sketch() {
+  const t = useTranslations();
+
+  const SKETCH_BUTTONS = [
+    {
+      id: "point",
+      label: t("grid-sidebar-report-sketch-point"),
+      description: t("grid-sidebar-report-sketch-point-description"),
+      Icon: PointIcon,
+    },
+    {
+      id: "polygon",
+      label: t("grid-sidebar-report-sketch-area"),
+      description: t("grid-sidebar-report-sketch-area-description"),
+      Icon: PolygonIcon,
+    },
+    {
+      id: "polyline",
+      label: t("grid-sidebar-report-sketch-line"),
+      description: t("grid-sidebar-report-sketch-line-description"),
+      Icon: PolylineIcon,
+    },
+  ] as const;
   const [sketch, setSketch] = useAtom(sketchAtom);
   const setSketchAction = useSetAtom(sketchActionAtom);
   const [, setLocation] = useSyncLocation();

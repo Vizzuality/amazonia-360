@@ -1,6 +1,7 @@
 "use client";
 
 import { useAtom, useAtomValue } from "jotai";
+import { useTranslations } from "next-intl";
 
 import { tabAtom, gridPanelAtom, reportPanelAtom } from "@/app/store";
 
@@ -17,6 +18,7 @@ export default function ReportLocationDesktop() {
   const [tab, setTab] = useAtom(tabAtom);
   const [reportPanel] = useAtom(reportPanelAtom);
   const gridPanel = useAtomValue(gridPanelAtom);
+  const t = useTranslations();
 
   return (
     <>
@@ -32,10 +34,10 @@ export default function ReportLocationDesktop() {
               >
                 <TabsList className="mb-2 w-full items-stretch rounded-lg border border-blue-100 bg-muted p-1">
                   <TabsTrigger variant="primary" className="w-full" value="contextual-viewer">
-                    Report
+                    {t("grid-sidebar-report-tab")}
                   </TabsTrigger>
                   <TabsTrigger variant="primary" className="w-full" value="grid">
-                    Grid
+                    {t("grid-sidebar-grid-tab")}
                   </TabsTrigger>
                 </TabsList>
 

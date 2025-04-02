@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 
+import LanguageSelector from "@/containers/language-selector/desktop";
 import { Media } from "@/containers/media";
 
 import DesktopNavigation from "./desktop-navigation";
@@ -25,8 +26,9 @@ export default function Header() {
       <div className="container flex items-center justify-between md:mx-auto">
         <LogoBetaInfo />
 
-        <Media greaterThanOrEqual="md">
+        <Media greaterThanOrEqual="md" className="flex items-center space-x-4">
           <DesktopNavigation />
+          <LanguageSelector />
         </Media>
 
         <Media lessThan="md">

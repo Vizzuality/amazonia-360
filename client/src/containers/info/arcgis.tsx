@@ -1,4 +1,5 @@
 import parse from "html-react-parser";
+import { useLocale } from "next-intl";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { useGetMetadata } from "@/lib/query";
@@ -8,7 +9,8 @@ import { Indicator } from "@/app/local-api/indicators/route";
 import { CardLoader } from "@/containers/card";
 
 export default function InfoArcGis({ id }: { id: Indicator["id"] }) {
-  const indicator = useGetIndicatorsId(id);
+  const locale = useLocale();
+  const indicator = useGetIndicatorsId(id, locale);
 
   const query = useGetMetadata(
     indicator && indicator.resource.type !== "h3" && "url" in indicator.resource
@@ -21,7 +23,7 @@ export default function InfoArcGis({ id }: { id: Indicator["id"] }) {
 
   return (
     <div className="space-y-4 pt-4 first:pt-0">
-      <h2 className="text-xl">{indicator?.name_en}</h2>
+      <h2 className="text-xl">{indicator?.name}</h2>
       <CardLoader query={[query]} className="h-40">
         <div className="prose-sm prose-a:break-words prose-a:underline">
           {parse(query?.data?.metadata || "")}

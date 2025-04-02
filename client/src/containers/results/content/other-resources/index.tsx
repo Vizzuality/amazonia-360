@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 
 import { flatGroup } from "@visx/vendor/d3-array";
+import { useTranslations } from "next-intl";
 
 import { useLocationGadm } from "@/lib/location";
 import { useGetFeatures } from "@/lib/query";
@@ -18,6 +19,7 @@ import { ResourceProps } from "@/containers/results/content/other-resources/type
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function OtherResources() {
+  const t = useTranslations();
   const [tab, setTab] = useState("all");
 
   const [location] = useSyncLocation();
@@ -52,14 +54,14 @@ export default function OtherResources() {
 
   return (
     <div className="container print:break-before-page">
-      <h2 className="mb-4 text-xl font-semibold">Knowledge resources</h2>
+      <h2 className="mb-4 text-xl font-semibold">{t("knowledge-resources")}</h2>
 
       <CardLoader query={[query]} className="h-80">
         <CardNoData query={[query]}>
           <Tabs defaultValue={tab} className="flex flex-col items-start space-y-4">
             <TabsList className="flex-wrap justify-start gap-x-4 gap-y-1 space-x-0 print:hidden">
               <TabsTrigger value="all" onClick={() => setTab("all")}>
-                All ({query.data?.length || 0})
+                {t("all")} ({query.data?.length || 0})
               </TabsTrigger>
 
               {GROUPS.map((group) => (

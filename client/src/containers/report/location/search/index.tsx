@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 
 import { useSetAtom } from "jotai";
+import { useTranslations } from "next-intl";
 
 import { getGeometryByType, getGeometryWithBuffer } from "@/lib/location";
 import { useGetMutationSearch, useGetSuggestions } from "@/lib/search";
@@ -21,6 +22,7 @@ type Option = {
 };
 
 export default function SearchC() {
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [, setLocation] = useSyncLocation();
@@ -92,7 +94,7 @@ export default function SearchC() {
         <Search
           value={search}
           open={open}
-          placeholder="Search location..."
+          placeholder={`${t("grid-sidebar-report-location-search")}...`}
           size="sm"
           options={
             (q.data?.results

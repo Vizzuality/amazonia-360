@@ -36,7 +36,7 @@ export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
   TData
 >;
 
-export const getIndicators = async () => {
+export const getIndicators = async (locale: string) => {
   const indicators = INDICATORS;
   const topics = TOPICS as Topic[];
 
@@ -45,24 +45,28 @@ export const getIndicators = async () => {
       (indicator) =>
         ({
           ...indicator,
+          description: indicator[`description_${locale}` as keyof typeof indicator] as string,
+          name: indicator[`name_${locale}` as keyof typeof indicator] as string,
           topic: topics.find((topic) => topic.id === indicator.topic),
         }) as Indicator,
     )
-    .sort((a, b) => (a.name_en || "")?.localeCompare(b.name_en || ""));
+    .sort((a, b) => (a.name || "")?.localeCompare(b.name || ""));
 };
 
-export const getIndicatorsKey = () => {
-  return ["indicators"];
+export const getIndicatorsKey = (locale: string) => {
+  return ["indicators", locale];
 };
 
 export const getIndicatorsOptions = <
   TData = Awaited<ReturnType<typeof getIndicators>>,
   TError = unknown,
 >(
+  locale: string,
   options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
 ) => {
-  const queryKey = getIndicatorsKey();
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getIndicators>>> = () => getIndicators();
+  const queryKey = getIndicatorsKey(locale);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getIndicators>>> = () =>
+    getIndicators(locale);
   return { queryKey, queryFn, ...options } as IndicatorsQueryOptions<TData, TError>;
 };
 
@@ -70,9 +74,10 @@ export const useGetIndicators = <
   TData = Awaited<ReturnType<typeof getIndicators>>,
   TError = unknown,
 >(
+  locale: string,
   options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
 ) => {
-  const { queryKey, queryFn } = getIndicatorsOptions(options);
+  const { queryKey, queryFn } = getIndicatorsOptions(locale, options);
 
   return useQuery({
     queryKey,
@@ -83,9 +88,10 @@ export const useGetIndicators = <
 
 export const useGetDefaultIndicators = (
   topic_id: Topic["id"] | undefined,
+  locale: string,
   options: Omit<IndicatorsQueryOptions<Indicator[], unknown>, "queryKey"> = {},
 ) => {
-  const query = useGetIndicators({
+  const query = useGetIndicators(locale, {
     select(data) {
       return data
         .filter((indicator) => {
@@ -101,8 +107,8 @@ export const useGetDefaultIndicators = (
   return query;
 };
 
-export const useGetH3Indicators = () => {
-  const query = useGetIndicators({
+export const useGetH3Indicators = (locale: string) => {
+  const query = useGetIndicators(locale, {
     select(data) {
       return data
         .filter((indicator) => indicator.resource.type === "h3")
@@ -117,8 +123,8 @@ export const useGetH3Indicators = () => {
   return query;
 };
 
-export const useGetIndicatorsId = (id: Indicator["id"]) => {
-  const { data } = useGetIndicators();
+export const useGetIndicatorsId = (id: Indicator["id"], locale: string) => {
+  const { data } = useGetIndicators(locale);
 
   return data?.find((indicator) => indicator.id === id);
 };
@@ -444,7 +450,7 @@ export const useQueryFeatures = (
   });
 
   return queries.reduce((acc: { [key: string]: number }, query, index) => {
-    const id = indicators[index]?.id || `Unknown (${indicators[index]?.name_en})`;
+    const id = indicators[index]?.id || `Unknown (${indicators[index]?.name})`;
 
     if (!query.data) {
       acc[id] = 0;

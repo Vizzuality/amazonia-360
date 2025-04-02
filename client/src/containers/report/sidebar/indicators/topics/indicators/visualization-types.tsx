@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 
 import { MapIcon, TableIcon, PieChartIcon, HashIcon } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 
 import { findFirstAvailablePosition } from "@/lib/report";
 import { useGetTopics } from "@/lib/topics";
@@ -23,8 +24,10 @@ export function VisualizationType({
   indicatorId: Indicator["id"];
   topicId: Topic["id"];
 }) {
+  const t = useTranslations();
+  const locale = useLocale();
   const [topics, setTopics] = useSyncTopics();
-  const { data: topicsData } = useGetTopics();
+  const { data: topicsData } = useGetTopics(locale);
 
   const handleVisualizationType = (visualizationType: VisualizationTypes) => {
     const widgetSize = DEFAULT_VISUALIZATION_SIZES[visualizationType];
@@ -92,7 +95,7 @@ export function VisualizationType({
   return (
     <div className="p-1">
       <span className="px-2 py-1.5 text-xs font-semibold text-muted-foreground/90">
-        Visualization type
+        {t("visualization-type")}
       </span>
       <ul className="flex flex-col">
         {types.map((type) => {
@@ -122,12 +125,12 @@ export function VisualizationType({
                       true,
                   })}
                 >
-                  {type}
+                  {t(`${type}`)}
                 </span>
 
                 {defaultVisualizationsPerIndicator === type && (
                   <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold">
-                    Default
+                    {t("default")}
                   </span>
                 )}
               </button>

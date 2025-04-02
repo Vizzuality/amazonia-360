@@ -5,6 +5,7 @@ import * as projection from "@arcgis/core/geometry/projection";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { cellToLatLng } from "h3-js";
 import { useSetAtom } from "jotai";
+import { useLocale, useTranslations } from "next-intl";
 
 import { formatNumberUnit } from "@/lib/formats";
 import { useGetGridMeta } from "@/lib/grid";
@@ -38,12 +39,14 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/compone
 export const GridTableItem = (
   props: Record<string, string | number> & { id: number; cell: string },
 ) => {
+  const t = useTranslations();
+  const locale = useLocale();
   const [, setLocation] = useSyncLocation();
   const [gridDatasets] = useSyncGridDatasets();
   const setGridCellHighlight = useSetAtom(gridCellHighlightAtom);
   const setTmpBbox = useSetAtom(tmpBboxAtom);
 
-  const { data: H3IndicatorsData } = useGetH3Indicators();
+  const { data: H3IndicatorsData } = useGetH3Indicators(locale);
 
   const queryMeta = useGetGridMeta({
     select: (data) =>
@@ -132,7 +135,7 @@ export const GridTableItem = (
                           "font-normal": i !== 0,
                         })}
                       >
-                        {dataset?.name_en}
+                        {dataset?.name}
                       </p>
                       <span className="flex-1 overflow-hidden whitespace-nowrap font-extralight tracking-[2.5px] text-muted-foreground">
                         {".".repeat(200)}
@@ -140,7 +143,7 @@ export const GridTableItem = (
                     </div>
 
                     <span className="flex-shrink-0 whitespace-nowrap text-blue-700">
-                      {formatNumberUnit(+(dataset?.value ?? 0), `${dataset?.unit_en}`)}
+                      {formatNumberUnit(+(dataset?.value ?? 0), `${dataset?.unit}`)}
                     </span>
                   </li>
                 ))}
@@ -152,22 +155,25 @@ export const GridTableItem = (
         <TooltipPortal>
           <TooltipContent side="right">
             <TooltipArrow />
-            <p className="max-w-36 text-center text-sm font-medium">Redefine area</p>
+            <p className="max-w-36 text-center text-sm font-medium">
+              {t("grid-sidebar-report-location-filters-alert-redefine-area-title")}
+            </p>
           </TooltipContent>
         </TooltipPortal>
 
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Redefine area</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t("grid-sidebar-report-location-filters-alert-redefine-area-title")}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              By proceeding, the map will center around your selected cell, and the current area
-              selection will be redefined. This action will remove your existing selection.
+              {t("grid-sidebar-report-location-filters-alert-redefine-area-description")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
 
-            <AlertDialogAction onClick={handleClick}>Redefine</AlertDialogAction>
+            <AlertDialogAction onClick={handleClick}>{t("redefine")}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </Tooltip>

@@ -1,11 +1,14 @@
 "use client";
 
+import { useLocale } from "next-intl";
+
 import { useGetIndicators } from "@/lib/indicators";
 
 import { IndicatorItem } from "@/containers/indicators/item";
 
 export const IndicatorsList = () => {
-  const { data } = useGetIndicators({
+  const locale = useLocale();
+  const { data } = useGetIndicators(locale, {
     refetchOnWindowFocus: "always",
     refetchOnMount: "always",
     refetchOnReconnect: "always",

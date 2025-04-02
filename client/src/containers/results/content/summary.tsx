@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 import { useQueries } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
+import { useLocale } from "next-intl";
 import { usePreviousDifferent } from "rooks";
 
 import { useGetAISummary } from "@/lib/ai";
@@ -29,9 +30,10 @@ export interface ReportResultsSummaryProps {
 }
 
 export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id"][]) => {
+  const locale = useLocale();
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
-  const queryIndicators = useGetDefaultIndicators(topic?.id);
+  const queryIndicators = useGetDefaultIndicators(topic?.id, locale);
 
   const {
     data: queryIndicatorsData = [],
@@ -95,7 +97,7 @@ export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id
       const q = queries[i];
 
       return {
-        indicator_name: d.name_en,
+        name: d[`name_${locale}` as keyof Indicator],
         data:
           q?.data?.features.map((f) =>
             omit(f.attributes, ["Shape__Area", "Shape__Length", "FID", "Id", "OBJECTID"]),
@@ -122,7 +124,7 @@ export const useGetSummaryTopic = (
     {
       data: {
         indicators: indicatorsData,
-        topic: topic?.name_en,
+        topic: topic?.name,
         ai_notes: [
           "Don't use blockquotes",
           "Don't use headings",

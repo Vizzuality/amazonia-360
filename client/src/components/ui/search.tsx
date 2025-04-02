@@ -5,6 +5,7 @@ import * as React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { UseQueryResult } from "@tanstack/react-query";
 import { Command as CommandPrimitive } from "cmdk";
+import { useTranslations } from "next-intl";
 import { LuLoader2, LuSearch, LuX } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
@@ -14,7 +15,7 @@ import { Popover, PopoverTrigger } from "@/components/ui/popover";
 
 export type Option = {
   active?: boolean;
-  label: string;
+  label?: string;
   value: string;
   key: string;
   sourceIndex: number;
@@ -43,6 +44,7 @@ export function Search<T extends Option>({
   children,
   size,
 }: SearchProps<T>) {
+  const t = useTranslations();
   const [opened, setOpened] = React.useState(false);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 
@@ -126,7 +128,7 @@ export function Search<T extends Option>({
             </div>
 
             {open && !options.length && !!value && !isFetching && isFetched && (
-              <p className="py-6 text-center text-sm">No results found.</p>
+              <p className="py-6 text-center text-sm">{t("no-results-found")}.</p>
             )}
 
             <CommandList>

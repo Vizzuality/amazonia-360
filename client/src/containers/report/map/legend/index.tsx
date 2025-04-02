@@ -3,6 +3,7 @@ import { FC, useCallback, useMemo } from "react";
 import { PopoverArrow } from "@radix-ui/react-popover";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { LucideBlend } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { LuSettings2 } from "react-icons/lu";
 
 import { formatNumber } from "@/lib/formats";
@@ -24,12 +25,14 @@ import { Slider } from "@/components/ui/slider";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const GridLegend: FC = () => {
+  const locale = useLocale();
+  const t = useTranslations();
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
   });
 
-  const { data: H3IndicatorsData } = useGetH3Indicators();
+  const { data: H3IndicatorsData } = useGetH3Indicators(locale);
 
   const [gridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset, setGridSelectedDataset] = useSyncGridSelectedDataset();
@@ -46,10 +49,10 @@ export const GridLegend: FC = () => {
       })) || []),
       {
         key: "no-layer",
-        name_en: "None",
+        name: t("none"),
       },
     ];
-  }, [H3IndicatorsData, META, gridDatasets]);
+  }, [H3IndicatorsData, META, gridDatasets, t]);
 
   const GRID_SELECTED_DATASET = useMemo(
     () => OPTIONS?.find((opt) => opt.key === gridSelectedDataset) || OPTIONS[0],
@@ -84,10 +87,10 @@ export const GridLegend: FC = () => {
           })}
         >
           {!!gridDatasets.length && GRID_SELECTED_DATASET.key !== "no-layer"
-            ? GRID_SELECTED_DATASET.name_en
-            : "Select layer to display"}
+            ? GRID_SELECTED_DATASET.name
+            : t("grid-report-map-legend-select-layer-to-display")}
 
-          {GRID_SELECTED_DATASET.unit_en && ` (${GRID_SELECTED_DATASET.unit_en})`}
+          {GRID_SELECTED_DATASET.unit && ` (${GRID_SELECTED_DATASET.unit})`}
         </div>
 
         <div className="flex items-center justify-end">
@@ -106,7 +109,7 @@ export const GridLegend: FC = () => {
                 sideOffset={10}
               >
                 <div className="flex w-72 flex-col space-y-2 rounded-lg bg-white px-4 py-2 shadow-md">
-                  <div className="text-sm">Grid opacity</div>
+                  <div className="text-sm">{t("grid-report-map-legend-grid-opacity")}</div>
                   <div className="py-2">
                     <Slider
                       min={0}
@@ -129,7 +132,7 @@ export const GridLegend: FC = () => {
 
               <TooltipPortal>
                 <TooltipContent side="top" align="center">
-                  Opacity: {gridSetUpFilters.opacity}%
+                  {t("opacity")}: {gridSetUpFilters.opacity}%
                   <TooltipArrow className="fill-foreground" width={10} height={5} />
                 </TooltipContent>
               </TooltipPortal>
@@ -156,14 +159,14 @@ export const GridLegend: FC = () => {
                 {OPTIONS &&
                   OPTIONS.map((opt) => (
                     <SelectItem key={opt.key} value={opt.key} className="cursor-pointer">
-                      {opt.name_en}
+                      {opt.name}
                     </SelectItem>
                   ))}
               </SelectContent>
 
               <TooltipPortal>
                 <TooltipContent align="center">
-                  Select layer
+                  {t("grid-report-map-legend-select-layer")}
                   <TooltipArrow className="fill-foreground" width={10} height={5} />
                 </TooltipContent>
               </TooltipPortal>

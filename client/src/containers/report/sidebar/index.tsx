@@ -3,6 +3,7 @@
 import { useCallback, useState, useRef, useEffect } from "react";
 
 import { useSetAtom } from "jotai";
+import { useTranslations } from "next-intl";
 import { LuX } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
@@ -18,6 +19,7 @@ import IndicatorsSidebarContent from "./indicators";
 type ReportResultsTab = "indicators" | "ai_summaries";
 
 export default function ReportSidebar() {
+  const t = useTranslations();
   const { toggleSidebar } = useSidebar();
   const [, setTab] = useState<ReportResultsTab>("indicators");
   const setReportEditionMode = useSetAtom(reportEditionModeAtom);
@@ -67,14 +69,14 @@ export default function ReportSidebar() {
                 value="indicators"
                 className="px-0 text-lg font-bold text-muted-foreground"
               >
-                Indicators
+                {t("report-results-sidebar-indicators-title")}
               </TabsTrigger>
 
               <TabsTrigger
                 value="ai_summaries"
                 className="m-0 px-0 text-lg font-bold text-muted-foreground"
               >
-                AI Summaries
+                {t("report-results-sidebar-ai-summaries-title")}
               </TabsTrigger>
             </TabsList>
             <div className="h-6 justify-start bg-transparent">

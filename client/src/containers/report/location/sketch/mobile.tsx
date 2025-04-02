@@ -3,6 +3,7 @@
 import { MouseEvent } from "react";
 
 import { useAtom, useSetAtom } from "jotai";
+import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
@@ -12,6 +13,7 @@ import { SketchProps } from "@/components/map/sketch";
 import { Button } from "@/components/ui/button";
 
 export default function SketchMobile() {
+  const t = useTranslations();
   const [sketch, setSketch] = useAtom(sketchAtom);
   const setSketchAction = useSetAtom(sketchActionAtom);
   const [, setLocation] = useSyncLocation();
@@ -52,7 +54,7 @@ export default function SketchMobile() {
         onClick={(e) => handleClick(e, "polygon")}
         type="button"
       >
-        Start drawing
+        {t("grid-sketch-start-drawing")}
       </Button>
     </div>
   );

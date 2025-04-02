@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "next-intl";
+
 import { useGetDefaultTopics } from "@/lib/topics";
 
 import { useSyncTopics } from "@/app/store";
@@ -12,8 +14,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Topics() {
   const [topics, setTopics] = useSyncTopics();
+  const locale = useLocale();
 
-  const { data: topicsData, isLoading: isLoadingTopicsData } = useGetDefaultTopics();
+  const { data: topicsData, isLoading: isLoadingTopicsData } = useGetDefaultTopics({
+    locale,
+  });
 
   const handleTopicChange = (topic: Topic, checked: boolean) => {
     setTopics((prev) => {

@@ -1,5 +1,6 @@
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { LucideBookOpenText, LucideFilePenLine } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   LuBook,
   LuFileText,
@@ -29,6 +30,7 @@ export default function Resource({
   Department,
   OrgUnit,
 }: ResourceProps) {
+  const t = useTranslations();
   return (
     <Card>
       <div className="flex grow flex-col items-center justify-between space-y-4 text-center">
@@ -73,49 +75,50 @@ export default function Resource({
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="outline" className="w-full lg:w-1/2">
-                  Info
+                  {t("info")}
                 </Button>
               </DialogTrigger>
 
               <DialogContent>
-                <DialogTitle className="sr-only">Resource Info</DialogTitle>
+                <DialogTitle className="sr-only">{t("other-resources-resource-info")}</DialogTitle>
                 <div className="flex flex-col space-y-4">
                   <h3 className="pr-4 text-lg font-semibold text-blue-500">{Name}</h3>
                   <p className="text-sm font-medium text-foreground">{Description}</p>
                   <div className="space-y-2 text-xs font-medium text-foreground">
                     <p>
-                      <span className="font-semibold">Type:</span> {Type}
+                      <span className="font-semibold">{t("type")}:</span> {Type}
                     </p>
                     <p>
-                      <span className="font-semibold">Topic:</span> {Topic}
+                      <span className="font-semibold">{t("topic")}:</span> {Topic}
                     </p>
                     <p>
-                      <span className="font-semibold">Year:</span> {Year}
+                      <span className="font-semibold">{t("year")}:</span> {Year}
                     </p>
                     {Month && (
                       <p>
-                        <span className="font-semibold">Month:</span> {Month}
+                        <span className="font-semibold">{t("month")}:</span> {Month}
                       </p>
                     )}
                     <p>
-                      <span className="font-semibold">URL:</span>{" "}
+                      <span className="font-semibold">{t("URL")}:</span>{" "}
                       <a href={URL} target="_blank" rel="noreferrer">
                         {URL}
                       </a>
                     </p>
                     {Author && (
                       <p>
-                        <span className="font-semibold">Author:</span> {Author}
+                        <span className="font-semibold">{t("author")}:</span> {Author}
                       </p>
                     )}
                     <p>
-                      <span className="font-semibold">Country:</span> {Country}
+                      <span className="font-semibold capitalize">{t("country")}:</span> {Country}
                     </p>
                     <p>
-                      <span className="font-semibold">Department:</span> {Department}
+                      <span className="font-semibold">{t("department")}:</span> {Department}
                     </p>
                     <p>
-                      <span className="font-semibold">OrgUnit:</span> {OrgUnit}
+                      {/* TO - DO - is this correct? OrgUnit */}
+                      <span className="font-semibold">{t("org-unit")}:</span> {OrgUnit}
                     </p>
                   </div>
                 </div>
@@ -130,7 +133,7 @@ export default function Resource({
                 target="_blank"
                 rel="noreferrer"
               >
-                <Button className="w-full">Download</Button>
+                <Button className="w-full">{t("download")}</Button>
               </a>
             )}
           </div>

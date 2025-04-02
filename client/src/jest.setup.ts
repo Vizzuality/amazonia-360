@@ -17,6 +17,12 @@ jest.mock("react-markdown", () => ({ children }: { children?: string }) => {
   return children;
 });
 
+jest.mock("next-intl", () => {
+  return {
+    useTranslations: jest.fn().mockReturnValue(() => "translated"),
+  };
+});
+
 /****************
  * ArcGIS JS API
  ****************/

@@ -1,14 +1,18 @@
 import { useCallback, useMemo } from "react";
 
+import { useLocale, useTranslations } from "next-intl";
+
 import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { useSyncTopics } from "@/app/store";
 
 export default function SidebarClearIndicators() {
+  const t = useTranslations();
+  const locale = useLocale();
   const [topics, setTopics] = useSyncTopics();
 
-  const { data: defaultTopics } = useGetDefaultTopics();
+  const { data: defaultTopics } = useGetDefaultTopics({ locale });
 
   const defaultIndicators = useMemo(
     () =>
@@ -39,7 +43,7 @@ export default function SidebarClearIndicators() {
       })}
       onClick={handleClick}
     >
-      <span>{!!topics?.length && topics?.length > 0 ? "Clear all" : "Select all"}</span>
+      <span>{!!topics?.length && topics?.length > 0 ? t("clear-all") : t("select-all")}</span>
       {!!topics?.length && <span>({indicatorCount})</span>}
     </button>
   );

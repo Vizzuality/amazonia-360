@@ -1,10 +1,14 @@
 "use client";
 
-import LazyLottieComponent from "lottie-react";
+import dynamic from "next/dynamic";
 
 import CardsContainer from "@/containers/home/key-features-grid/cards-container";
 
 import animation from "./grid-animation-lottie.json";
+
+const LazyLottieComponent = dynamic(() => import("lottie-react"), {
+  ssr: false,
+});
 
 export default function KeyFeaturesGrid() {
   return (

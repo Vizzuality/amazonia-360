@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { cn } from "@/lib/utils";
 
 import { useSyncLocation } from "@/app/store";
@@ -12,6 +14,7 @@ import Sketch from "@/containers/report/location/sketch";
 
 export default function TabsLocation() {
   const [location] = useSyncLocation();
+  const t = useTranslations();
 
   return (
     <div
@@ -21,11 +24,10 @@ export default function TabsLocation() {
       })}
     >
       <div className="space-y-1">
-        <h1 className="text-lg font-bold text-primary">Get insights on your area of interest</h1>
+        <h1 className="text-lg font-bold text-primary">{t("grid-sidebar-report-title")}</h1>
 
         <p className="text-sm font-medium text-muted-foreground">
-          Select your area of interest to get started and access a customized report with insights
-          tailored to your selection.
+          {t("grid-sidebar-report-description")}
         </p>
       </div>
 

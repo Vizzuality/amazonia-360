@@ -24,5 +24,5 @@ export const TotalArea = ({ indicator }: { indicator: Indicator }) => {
     });
   }, [GEOMETRY]);
 
-  return <CardWidgetNumber value={AREA} unit={indicator?.unit_en} />;
+  return <CardWidgetNumber value={AREA} unit={indicator?.unit} />;
 };

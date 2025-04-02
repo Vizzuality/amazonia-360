@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 
 import { TooltipPortal } from "@radix-ui/react-tooltip";
+import { useTranslations } from "next-intl";
 import numeral from "numeral";
 import { LuPlus, LuX } from "react-icons/lu";
 import { LuInfo } from "react-icons/lu";
@@ -27,6 +28,7 @@ import { Slider } from "@/components/ui/slider";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipArrow } from "@/components/ui/tooltip";
 
 export default function GridFiltersItem(dataset: H3Indicator) {
+  const t = useTranslations();
   const [gridFilters, setGridFilters] = useSyncGridFilters();
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset, setGridSelectedDataset] = useSyncGridSelectedDataset();
@@ -110,7 +112,7 @@ export default function GridFiltersItem(dataset: H3Indicator) {
         <div className="flex w-full items-start justify-between space-x-5">
           <CollapsibleTrigger>
             <h3 className="text-left text-sm font-medium text-gray-400">
-              {dataset.name_en} {!!dataset.unit_en && ` (${dataset.unit_en})`}
+              {dataset.name} {!!dataset.unit && ` (${dataset.unit})`}
             </h3>
           </CollapsibleTrigger>
 
@@ -125,15 +127,15 @@ export default function GridFiltersItem(dataset: H3Indicator) {
                   </DialogTrigger>
                 </TooltipTrigger>
                 <DialogContent className="p-0">
-                  <DialogTitle className="sr-only">{dataset.description_short_en}</DialogTitle>
+                  <DialogTitle className="sr-only">{dataset.description_short}</DialogTitle>
                   <div className="p-4">
-                    <p>{!!dataset.description_en ? dataset.description_en : "Data coming soon"}</p>
+                    <p>{!!dataset.description ? dataset.description : t("data-coming-soon")}</p>
                   </div>
                   <DialogClose />
                 </DialogContent>
                 <TooltipPortal>
                   <TooltipContent sideOffset={0}>
-                    {dataset.description_short_en}
+                    {dataset.description_short}
                     <TooltipArrow />
                   </TooltipContent>
                 </TooltipPortal>
@@ -156,7 +158,7 @@ export default function GridFiltersItem(dataset: H3Indicator) {
               {!open && gridDatasets.length >= 4 && (
                 <TooltipPortal>
                   <TooltipContent sideOffset={0}>
-                    You can only select up to 4 layers
+                    {t("grid-sidebar-report-location-filters-alert-maximum-selected")}
                     <TooltipArrow />
                   </TooltipContent>
                 </TooltipPortal>

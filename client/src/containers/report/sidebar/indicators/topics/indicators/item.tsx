@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
+import { useTranslations } from "next-intl";
 import { LuChevronRight, LuPlus, LuInfo } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
@@ -29,6 +30,7 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/compone
 import { Badges } from "./badges";
 
 export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: Indicator }) {
+  const t = useTranslations();
   const [open, setOpen] = useState(true);
 
   const [topics] = useSyncTopics();
@@ -58,7 +60,7 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
                 })}
               />
 
-              <span className="text-left">{indicator.name_en}</span>
+              <span className="text-left">{indicator.name}</span>
             </button>
           </div>
         </CollapsibleTrigger>
@@ -72,7 +74,7 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
               </TooltipTrigger>
 
               <DialogContent className="max-w-2xl p-0">
-                <DialogTitle className="sr-only">{indicator.description_short_en}</DialogTitle>
+                <DialogTitle className="sr-only">{indicator.description_short}</DialogTitle>
                 <Info ids={[indicator.id]} />
                 <DialogClose />
               </DialogContent>
@@ -80,7 +82,7 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
               <TooltipPortal>
                 <TooltipContent side="left" align="center" className="max-w-72">
                   <div className="text-xxs">
-                    {indicator.description_short_en || "About the data"}
+                    {indicator.description_short || t("about-the-data")}
                   </div>
 
                   <TooltipArrow className="fill-foreground" width={10} height={5} />
@@ -92,7 +94,7 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
           <Popover>
             <PopoverTrigger asChild>
               <Button
-                aria-label="Visualization type"
+                aria-label={t("visualization-type")}
                 type="button"
                 variant="secondary"
                 className="h-5 w-5 rounded-sm p-0"

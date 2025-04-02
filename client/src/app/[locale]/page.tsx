@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 
+import { getTranslations } from "next-intl/server";
+
 import Footer from "@/containers/footer";
 import About from "@/containers/home/about";
 import Glance from "@/containers/home/glance";
@@ -10,10 +12,17 @@ import InformationOn from "@/containers/home/information-on";
 import KeyFeaturesGrid from "@/containers/home/key-features-grid";
 import KeyFeaturesReport from "@/containers/home/key-features-report";
 
-export const metadata: Metadata = {
-  title: "AmazoniaForever360+",
-  description: "",
-};
+type Params = Promise<{ locale: string }>;
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale });
+
+  return {
+    title: t("metadata-home-page-title"),
+    description: t("metadata-home-page-description"),
+  };
+}
 
 export default function HomePage() {
   return (

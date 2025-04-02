@@ -1,11 +1,14 @@
 "use client";
 
+import { useLocale } from "next-intl";
+
 import { useGetOverviewTopics } from "@/lib/topics";
 
 import ReportResultsContentItem from "@/containers/results/content/item";
 
 export const ReportResultsContentOverview = () => {
-  const { data } = useGetOverviewTopics();
+  const locale = useLocale();
+  const { data } = useGetOverviewTopics({ locale });
 
   return data?.map((topic) => {
     const T = {

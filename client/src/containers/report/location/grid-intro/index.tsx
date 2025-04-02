@@ -1,11 +1,13 @@
 import { useSetAtom } from "jotai";
 import { ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { tabAtom } from "@/app/store";
 
 import { WandIcon } from "@/components/ui/icons/wand";
 
 export default function AmazoniaGridIntro() {
+  const t = useTranslations();
   const setTab = useSetAtom(tabAtom);
 
   return (
@@ -18,13 +20,11 @@ export default function AmazoniaGridIntro() {
 
       <div className="flex flex-col space-y-1 pb-1.5 pt-1 text-left text-sm">
         <span className="font-semibold text-foreground">
-          Detect patterns within Amazonia
-          <br /> using the Grid
+          {t("grid-sidebar-report-location-ai-title")}
         </span>
         <div className="flex space-x-4">
           <p className="font-normal text-muted-foreground">
-            Redefine your area selection by using the grid. Add indicators to highlight areas that
-            meet specific criteria.
+            {t("grid-sidebar-report-location-ai-description")}
           </p>
         </div>
       </div>

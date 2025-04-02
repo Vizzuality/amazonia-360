@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 
 import { AccessorKeyColumnDefBase } from "@tanstack/react-table";
+import { useLocale, useTranslations } from "next-intl";
 
 import { formatNumber } from "@/lib/formats";
 import { useGetIndicators, useQueryFeatures, useQueryFeatureId } from "@/lib/indicators";
@@ -20,10 +21,12 @@ const INDICATORS = [
 ];
 
 export const Municipalities = ({ indicator }: { indicator: Indicator }) => {
+  const locale = useLocale();
+  const t = useTranslations();
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
 
-  const { data: indicatorsData } = useGetIndicators({
+  const { data: indicatorsData } = useGetIndicators(locale, {
     select: (data) => data.filter((i) => INDICATORS.some((indicator) => indicator.id === i.id)),
   });
 
@@ -68,19 +71,21 @@ export const Municipalities = ({ indicator }: { indicator: Indicator }) => {
   return (
     <CardLoader query={[query]} className="h-72">
       <p className="pb-4 pt-2 text-sm font-medium text-muted-foreground">
-        The selected area intersects{" "}
+        {t("indicators-custom-municipalities-selected-area-intersects")}{" "}
         <span className="font-bold">
           {indicatorsTotals[3] || indicatorsTotals["Countries"]}{" "}
-          {indicatorsTotals[3] || indicatorsTotals["Countries"] !== 1 ? "countries" : "country"},{" "}
-          {indicatorsTotals[4] || indicatorsTotals["States"]}{" "}
-          {indicatorsTotals[4] || indicatorsTotals["States"] !== 1 ? "states" : "state"},{" "}
+          {indicatorsTotals[3] || indicatorsTotals["Countries"] !== 1
+            ? t("countries")
+            : t("country")}
+          , {indicatorsTotals[4] || indicatorsTotals["States"]}{" "}
+          {indicatorsTotals[4] || indicatorsTotals["States"] !== 1 ? t("states") : t("state")},{" "}
           {indicatorsTotals[5] || indicatorsTotals["Municipalities"]}{" "}
           {indicatorsTotals[5] || indicatorsTotals["Municipalities"] !== 1
             ? "municipalities"
             : "municipality"}
           ,
         </span>{" "}
-        and{" "}
+        {t("and")}{" "}
         <span className="font-bold">
           {indicatorsTotals[8] || indicatorsTotals["Administrative Capitals"]}{" "}
           {indicatorsTotals[8] || indicatorsTotals["Administrative Capitals"] !== 1

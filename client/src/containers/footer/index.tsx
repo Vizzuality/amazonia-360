@@ -1,8 +1,13 @@
+"use client";
+
 import Image from "next/image";
+
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 
 export default function Footer() {
+  const t = useTranslations();
   return (
     <section className="bg-blue-900 text-white print:hidden">
       <div className="container m-auto flex w-full max-w-[100%] flex-col items-center justify-between py-4 md:flex-row md:items-center">
@@ -32,12 +37,12 @@ export default function Footer() {
         <div className="flex w-full items-center justify-start space-x-0 text-sm font-light sm:space-x-6 md:justify-end">
           <Button variant="link" className="leading-1 p-0 text-white">
             <a href="https://www.iadb.org/en/home/terms-and-conditions" target="_blank">
-              Terms & conditions
+              {t("terms-and-conditions")}
             </a>
           </Button>
           <Button variant="link" className="leading-1 p-0 text-white">
             <a href="https://www.iadb.org/en/home/privacy-notice" target="_blank">
-              Privacy Policy
+              {t("privacy-policy")}
             </a>
           </Button>
         </div>

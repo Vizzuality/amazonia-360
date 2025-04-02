@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useAtom } from "jotai";
+import { useLocale, useTranslations } from "next-intl";
 
 import { useMeta } from "@/lib/grid";
 import { useGetDefaultIndicators, useGetH3Indicators } from "@/lib/indicators";
@@ -29,6 +30,8 @@ type Option = {
 };
 
 export default function SearchC({ className }: { className?: string }) {
+  const t = useTranslations();
+  const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedFiltersView] = useAtom(selectedFiltersViewAtom);
@@ -38,9 +41,9 @@ export default function SearchC({ className }: { className?: string }) {
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
   });
-  const queryIndicators = useGetDefaultIndicators(undefined);
+  const queryIndicators = useGetDefaultIndicators(undefined, locale);
 
-  const { data: H3IndicatorsData } = useGetH3Indicators();
+  const { data: H3IndicatorsData } = useGetH3Indicators(locale);
   const { META } = useMeta(GEOMETRY);
 
   const INDICATORS = useMemo(() => {
@@ -109,7 +112,7 @@ export default function SearchC({ className }: { className?: string }) {
       <Search
         value={search}
         open={open}
-        placeholder="Search indicator..."
+        placeholder={`${t("grid-sidebar-report-location-filters-search")}...`}
         options={OPTIONS}
         {...queryIndicators}
         onChange={handleSearch}
@@ -134,7 +137,7 @@ export default function SearchC({ className }: { className?: string }) {
             {gridDatasets.length >= 4 && (
               <TooltipPortal>
                 <TooltipContent sideOffset={0}>
-                  You can only select up to 4 layers
+                  {t("grid-sidebar-report-location-filters-alert-maximum-selected")}
                   <TooltipArrow />
                 </TooltipContent>
               </TooltipPortal>

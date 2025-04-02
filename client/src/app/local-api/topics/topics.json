@@ -64,12 +64,12 @@
     "id": 1,
     "Numerotation": "1",
     "name_en": "Nature",
-    "name_es": "Nature",
-    "name_pt": "Nature",
+    "name_es": "Naturaleza",
+    "name_pt": "Naturaleza",
     "image": "/images/topics/nature.webp",
     "description_en": "Get data on natural environment, ecosystems, biodiversity and protected areas in your area",
-    "description_es": "Get data on natural environment, ecosystems, biodiversity and protected areas in your area",
-    "description_pt": "Get data on natural environment, ecosystems, biodiversity and protected areas in your area",
+    "description_es": "Obtén información sobre el entorno natural, los ecosistemas, la biodiversidad y las áreas protegidas en tu zona",
+    "description_pt": "Obtenha dados sobre o meio ambiente natural, ecossistemas, biodiversidade e áreas protegidas na sua região",
     "default_visualization": [
       {
         "id": 26,

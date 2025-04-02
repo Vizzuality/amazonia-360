@@ -53,13 +53,11 @@ exports[`CardNoData renders CardNoData component when query is fetched and no da
       style="color: transparent;"
       width="149"
     />
-    <p
+    <div
       class="text-center text-sm font-medium text-blue-900"
     >
-      No results for this location at the moment. 
-      <br />
-       Feel free to adjust your search criteria or check back later!
-    </p>
+      translated
+    </div>
   </div>
 </div>
 `;
@@ -79,13 +77,11 @@ exports[`CardNoData renders CardNoData component without crashing 1`] = `
       style="color: transparent;"
       width="149"
     />
-    <p
+    <div
       class="text-center text-sm font-medium text-blue-900"
     >
-      No results for this location at the moment. 
-      <br />
-       Feel free to adjust your search criteria or check back later!
-    </p>
+      translated
+    </div>
   </div>
 </div>
 `;

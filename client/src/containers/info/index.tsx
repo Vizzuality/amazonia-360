@@ -1,3 +1,5 @@
+import { useLocale } from "next-intl";
+
 import { useGetIndicatorsId } from "@/lib/indicators";
 
 import { Indicator } from "@/app/local-api/indicators/route";
@@ -6,10 +8,11 @@ import { Markdown } from "@/components/ui/markdown";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const InfoItem = ({ id }: { id: Indicator["id"] }) => {
-  const indicator = useGetIndicatorsId(id);
+  const locale = useLocale();
+  const indicator = useGetIndicatorsId(id, locale);
 
   return (
-    <Markdown>{indicator?.description_en}</Markdown>
+    <Markdown>{indicator?.description}</Markdown>
     // <>
     //   {indicator?.resource?.type === "imagery-tile" && <InfoRaster key={id} id={+id} />}
     //   {indicator?.resource?.type === "feature" && <InfoArcGis key={id} id={id} />}

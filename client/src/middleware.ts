@@ -2,10 +2,24 @@ import "server-only";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+import createMiddleware from "next-intl/middleware";
+
 import { env } from "@/env.mjs";
 
-// Step 1. HTTP Basic Auth Middleware for Challenge
+import { routing } from "@/i18n/routing";
+
+// Initialize the i18n middleware
+const intlMiddleware = createMiddleware(routing);
+
+// Main middleware handler
 export default async function middleware(req: NextRequest) {
+  // Step 1: Ignore requests for static files like images, icons, etc.
+  const PUBLIC_FILE = /\.(.*)$/;
+  if (PUBLIC_FILE.test(req.nextUrl.pathname)) {
+    return NextResponse.next();
+  }
+
+  // Step 2: Apply HTTP Basic Auth if enabled in the environment
   if (!isAuthenticated(req)) {
     return new NextResponse("Authentication required", {
       status: 401,
@@ -13,35 +27,30 @@ export default async function middleware(req: NextRequest) {
     });
   }
 
-  const response = NextResponse.next();
-
-  return response;
+  // Step 3: Apply locale-based routing using next-intl
+  return intlMiddleware(req);
 }
 
-// Step 2. Check HTTP Basic Auth header if present
+// HTTP Basic Auth logic
 function isAuthenticated(req: NextRequest) {
-  if (!env.BASIC_AUTH_ENABLED) {
-    return true;
-  }
+  // Skip auth if disabled via environment config
+  if (!env.BASIC_AUTH_ENABLED) return true;
 
-  const authheader = req.headers.get("authorization") || req.headers.get("Authorization");
+  const authHeader = req.headers.get("authorization") || req.headers.get("Authorization");
+  if (!authHeader?.startsWith("Basic ")) return false;
 
-  if (!authheader) {
-    return false;
-  }
+  const [user, pass] = Buffer.from(authHeader.split(" ")[1], "base64").toString().split(":");
 
-  const auth = Buffer.from(authheader.split(" ")[1], "base64").toString().split(":");
-  const user = auth[0];
-  const pass = auth[1];
-
-  if (user == env.BASIC_AUTH_USER && pass == env.BASIC_AUTH_PASSWORD) {
-    return true;
-  } else {
-    return false;
-  }
+  return user === env.BASIC_AUTH_USER && pass === env.BASIC_AUTH_PASSWORD;
 }
 
-// Step 3. Configure "Matching Paths" below to protect routes with HTTP Basic Auth
+// Middleware matcher: apply to all routes except static assets and Next.js internals
 export const config = {
-  matcher: "/((?!local-api|_next/static|_next/image|favicon.ico|manifest.json).*)",
+  matcher: [
+    // This pattern skips:
+    // - /api
+    // - /_next
+    // - all static files like .png, .ico, etc.
+    "/((?!local-api|_next|.*\\..*).*)",
+  ],
 };

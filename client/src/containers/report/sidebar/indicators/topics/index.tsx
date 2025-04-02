@@ -2,6 +2,8 @@
 
 import { useCallback, useMemo } from "react";
 
+import { useLocale } from "next-intl";
+
 import { useGetDefaultTopics } from "@/lib/topics";
 
 import { useSyncTopics } from "@/app/store";
@@ -10,9 +12,10 @@ import { TopicItem } from "./item";
 import SortableList from "./sortable";
 
 export default function TopicsList() {
+  const locale = useLocale();
   const [topics, setTopics] = useSyncTopics();
 
-  const { data: topicsData } = useGetDefaultTopics();
+  const { data: topicsData } = useGetDefaultTopics({ locale });
 
   const ITEMS = useMemo(() => {
     return topicsData
