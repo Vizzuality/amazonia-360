@@ -1,3 +1,5 @@
+import { Metadata } from "next";
+
 import { Montserrat } from "next/font/google";
 import { notFound } from "next/navigation";
 import Script from "next/script";
@@ -19,7 +21,7 @@ import "react-resizable/css/styles.css";
 
 type Params = Promise<{ locale: string }>;
 
-export async function generateMetadata({ params }: { params: Params }) {
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale });
 

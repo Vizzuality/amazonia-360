@@ -1,3 +1,5 @@
+import { Metadata } from "next";
+
 import { getTranslations } from "next-intl/server";
 
 import Footer from "@/containers/footer";
@@ -12,7 +14,7 @@ import KeyFeaturesReport from "@/containers/home/key-features-report";
 
 type Params = Promise<{ locale: string }>;
 
-export async function generateMetadata({ params }: { params: Params }) {
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale });
 

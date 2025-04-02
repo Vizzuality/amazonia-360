@@ -1,3 +1,5 @@
+import { Metadata } from "next";
+
 import { redirect } from "next/navigation";
 
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
@@ -17,7 +19,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 
 type Params = Promise<{ locale: string }>;
 
-export async function generateMetadata({ params }: { params: Params }) {
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale });
 
