@@ -49,10 +49,10 @@ export const GridLegend: FC = () => {
       })) || []),
       {
         key: "no-layer",
-        name: "None",
+        name: t("none"),
       },
     ];
-  }, [H3IndicatorsData, META, gridDatasets]);
+  }, [H3IndicatorsData, META, gridDatasets, t]);
 
   const GRID_SELECTED_DATASET = useMemo(
     () => OPTIONS?.find((opt) => opt.key === gridSelectedDataset) || OPTIONS[0],
@@ -88,7 +88,7 @@ export const GridLegend: FC = () => {
         >
           {!!gridDatasets.length && GRID_SELECTED_DATASET.key !== "no-layer"
             ? GRID_SELECTED_DATASET.name
-            : "Select layer to display"}
+            : t("grid-report-map-legend-select-layer-to-display")}
 
           {GRID_SELECTED_DATASET.unit && ` (${GRID_SELECTED_DATASET.unit})`}
         </div>

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import { useAtomValue } from "jotai";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { formatNumber } from "@/lib/formats";
 import { useGetH3Indicators } from "@/lib/indicators";
@@ -9,6 +9,7 @@ import { useGetH3Indicators } from "@/lib/indicators";
 import { gridHoverAtom } from "@/app/store";
 
 export const MapPopup = () => {
+  const t = useTranslations();
   const locale = useLocale();
   const gridHover = useAtomValue(gridHoverAtom);
 
@@ -52,9 +53,7 @@ export const MapPopup = () => {
         ))}
       </div>
 
-      <p className="text-xs italic text-muted-foreground">
-        Click on the cell to redefine the area of interest
-      </p>
+      <p className="text-xs italic text-muted-foreground">{t("grid-map-tooltip")}</p>
     </div>
   );
 };

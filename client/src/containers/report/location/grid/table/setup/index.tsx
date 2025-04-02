@@ -130,7 +130,9 @@ export default function GridTableSetup() {
             </span>
           </div>
           <div className="w-full gap-2 overflow-hidden">
-            <span className="text-sm text-foreground">Order by</span>
+            <span className="text-sm text-foreground">
+              {t("grid-sidebar-grid-filters-ranking-set-up-order-by")}
+            </span>
             <div className="flex gap-2">
               <Select value={selectedDataset} onValueChange={handleRankingChange}>
                 <SelectTrigger className="h-10 w-full max-w-36 rounded-sm">

@@ -111,7 +111,7 @@ export default function Resource({
                       </p>
                     )}
                     <p>
-                      <span className="font-semibold">{t("country")}:</span> {Country}
+                      <span className="font-semibold capitalize">{t("country")}:</span> {Country}
                     </p>
                     <p>
                       <span className="font-semibold">{t("department")}:</span> {Department}

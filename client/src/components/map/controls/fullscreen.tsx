@@ -4,6 +4,7 @@ import { FC, useCallback, useMemo, useRef, useState } from "react";
 
 import FullscreenVM from "@arcgis/core/widgets/Fullscreen/FullscreenViewModel";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
+import { useTranslations } from "next-intl";
 import { LuExpand, LuMinimize } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
@@ -20,6 +21,7 @@ interface FullscreenControlProps {
 export const FullscreenControl: FC<FullscreenControlProps> = ({
   className,
 }: FullscreenControlProps) => {
+  const t = useTranslations();
   const fullscreenModelViewRef = useRef<FullscreenVM>();
   const [active, setActive] = useState(false);
 
@@ -49,7 +51,7 @@ export const FullscreenControl: FC<FullscreenControlProps> = ({
             [CONTROL_BUTTON_STYLES.active]: true,
             [`${className}`]: !!className,
           })}
-          aria-label="Fullscreen in"
+          aria-label={t("fullscreen-in")}
           type="button"
           onClick={handleFullscreen}
         >
@@ -60,7 +62,7 @@ export const FullscreenControl: FC<FullscreenControlProps> = ({
 
       <TooltipPortal>
         <TooltipContent side="left" align="center">
-          <div className="text-xxs">Fullscreen</div>
+          <div className="text-xxs">{t("fullscreen")}</div>
 
           <TooltipArrow className="fill-foreground" width={10} height={5} />
         </TooltipContent>

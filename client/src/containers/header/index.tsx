@@ -4,12 +4,12 @@ import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 
+import LanguageSelector from "@/containers/language-selector/desktop";
 import { Media } from "@/containers/media";
 
 import DesktopNavigation from "./desktop-navigation";
 import LogoBetaInfo from "./logo-beta-info";
 import MobileNavigation from "./mobile-navigation";
-import LanguageSelector from "@/containers/language-selector/desktop";
 
 export default function Header() {
   const pathname = usePathname();

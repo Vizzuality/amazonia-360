@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-import MobileLanguageSelector from "@/containers/language-selector/mobile";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -12,6 +10,8 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
+
+import MobileLanguageSelector from "@/containers/language-selector/mobile";
 
 import {
   Dialog,

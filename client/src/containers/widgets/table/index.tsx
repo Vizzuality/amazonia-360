@@ -117,7 +117,7 @@ export function DataTable<TData, TValue>({
         </ScrollArea>
 
         <footer className="flex shrink-0 items-center justify-between">
-          <p className="text-xs font-medium text-gray-500">{`${data.length} ${Pluralize("result", data.length)}`}</p>
+          <p className="text-xs font-medium text-gray-500">{`${data.length} ${Pluralize(t("result"), data.length)}`}</p>
           <DataPagination
             pageIndex={pageIndex}
             pageCount={table.getPageCount()}

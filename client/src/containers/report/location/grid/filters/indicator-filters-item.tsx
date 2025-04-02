@@ -129,7 +129,7 @@ export default function GridFiltersItem(dataset: H3Indicator) {
                 <DialogContent className="p-0">
                   <DialogTitle className="sr-only">{dataset.description_short}</DialogTitle>
                   <div className="p-4">
-                    <p>{!!dataset.description ? dataset.description : "Data coming soon"}</p>
+                    <p>{!!dataset.description ? dataset.description : t("data-coming-soon")}</p>
                   </div>
                   <DialogClose />
                 </DialogContent>
