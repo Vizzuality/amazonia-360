@@ -77,7 +77,7 @@ export const getGridLayerProps = ({
   return new H3TileLayer({
     id: `tile-h3s`,
     data: `${env.NEXT_PUBLIC_API_URL}/grid/tile/{h3index}?${columns}`,
-    extent: [-85.3603, -28.5016, -29.8134, 10.8038],
+    extent: [-80.3603, -36.5016, -43.8134, 20.8038],
     visible: !!gridDatasets.length && gridSelectedDataset !== "no-layer",
     getTileData: (tile) => {
       if (!tile.url) return Promise.resolve(null);
@@ -216,6 +216,7 @@ export const getGridLayerProps = ({
           getFillColor,
           getFilterValue,
           filterRange: filterRange(),
+
           extensions: [
             new DataFilterExtension({
               filterSize: filters.length as 0 | 1 | 2 | 3 | 4,

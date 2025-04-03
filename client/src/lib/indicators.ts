@@ -45,8 +45,9 @@ export const getIndicators = async (locale: string) => {
       (indicator) =>
         ({
           ...indicator,
-          description: indicator[`description_${locale}` as keyof typeof indicator] as string,
-          name: indicator[`name_${locale}` as keyof typeof indicator] as string,
+          name: indicator[`name_${locale}` as keyof typeof indicator],
+          description: indicator[`description_${locale}` as keyof typeof indicator],
+          description_short: indicator[`description_short_${locale}` as keyof typeof indicator],
           topic: topics.find((topic) => topic.id === indicator.topic),
         }) as Indicator,
     )
