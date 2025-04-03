@@ -116,22 +116,24 @@ export function DataTable<TData, TValue>({
           </Table>
         </ScrollArea>
 
-        <footer className="flex shrink-0 items-center justify-between">
-          <TableTotal
-            total={data.length}
-            pageIndex={pageIndex}
-            pageSize={table.getState().pagination.pageSize}
-          />
-          {/* <p className="text-xs font-medium text-gray-500">{`${data.length} ${Pluralize(t("result"), data.length)}`}</p> */}
-          <DataPagination
-            pageIndex={pageIndex}
-            pageCount={table.getPageCount()}
-            totalPagesToDisplay={5}
-            onPagePrevious={table.previousPage}
-            onPageNext={table.nextPage}
-            onPageIndex={table.setPageIndex}
-          />
-        </footer>
+        {!!data.length && (
+          <footer className="flex shrink-0 items-center justify-between">
+            <TableTotal
+              total={data.length}
+              pageIndex={pageIndex}
+              pageSize={table.getState().pagination.pageSize}
+            />
+
+            <DataPagination
+              pageIndex={pageIndex}
+              pageCount={table.getPageCount()}
+              totalPagesToDisplay={5}
+              onPagePrevious={table.previousPage}
+              onPageNext={table.nextPage}
+              onPageIndex={table.setPageIndex}
+            />
+          </footer>
+        )}
       </div>
     </div>
   );
