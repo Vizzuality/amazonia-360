@@ -18,6 +18,26 @@ const nextConfig = {
   experimental: {
     // optimizePackageImports: ["react-icons/*"], If you add this your dev server will last forever trying to start
   },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "header",
+            key: "Authorization",
+            value: "Hidden",
+          },
+        ],
+        headers: [
+          {
+            key: "Authorization",
+            value: "Hidden",
+          },
+        ],
+      },
+    ];
+  }
 };
 
 const withNextIntl = createNextIntlPlugin();

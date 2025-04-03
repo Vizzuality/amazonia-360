@@ -13,6 +13,18 @@ const intlMiddleware = createMiddleware(routing);
 
 // Main middleware handler
 export default async function middleware(req: NextRequest) {
+  // Define the API URL for rewrite or proxy
+  const API_URL = /\/custom-api/;
+  if (API_URL.test(req.nextUrl.pathname)) {
+    const url = req.nextUrl.clone();
+    url.pathname = req.nextUrl.pathname.replace(API_URL, "");
+    return NextResponse.rewrite(env.NEXT_PUBLIC_API_URL + url.pathname, {
+      headers: {
+        Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
+      },
+    });
+  }
+
   // Step 1: Ignore requests for static files like images, icons, etc.
   const PUBLIC_FILE = /\.(.*)$/;
   if (PUBLIC_FILE.test(req.nextUrl.pathname)) {
