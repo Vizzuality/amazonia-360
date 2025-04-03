@@ -76,6 +76,10 @@ export function DataPagination({
     ));
   };
 
+  if (pageCount <= 1) {
+    return null; // Don't render pagination if there's only one page
+  }
+
   return (
     <Pagination>
       <PaginationContent>
