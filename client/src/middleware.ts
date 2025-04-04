@@ -18,6 +18,9 @@ export default async function middleware(req: NextRequest) {
   if (API_URL.test(req.nextUrl.pathname)) {
     const url = req.nextUrl.clone();
     url.pathname = req.nextUrl.pathname.replace(API_URL, "");
+    console.log(`Rewriting request to ${env.NEXT_PUBLIC_API_URL}${url.pathname}`);
+    console.log(`API key ${env.NEXT_PUBLIC_API_KEY}`);
+
     return NextResponse.rewrite(env.NEXT_PUBLIC_API_URL + url.pathname, {
       headers: {
         Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
