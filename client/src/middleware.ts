@@ -21,11 +21,14 @@ export default async function middleware(req: NextRequest) {
     console.log(`Rewriting request to ${env.NEXT_PUBLIC_API_URL}${url.pathname}`);
     console.log(`API key ${env.NEXT_PUBLIC_API_KEY}`);
 
-    return NextResponse.rewrite(env.NEXT_PUBLIC_API_URL + url.pathname, {
-      headers: {
-        Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
+    return NextResponse.rewrite(
+      new URL(env.NEXT_PUBLIC_API_URL + url.pathname, req.nextUrl.origin),
+      {
+        headers: {
+          Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
+        },
       },
-    });
+    );
   }
 
   // Step 1: Ignore requests for static files like images, icons, etc.
