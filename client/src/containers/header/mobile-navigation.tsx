@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
-import MobileLanguageSelector from "@/containers/language-selector/mobile";
+import MobileLanguageSelector from "@/containers/header/language-selector/mobile";
 
 import {
   Dialog,
@@ -63,10 +63,7 @@ export default function MobileNavigation() {
 
       <DialogDescription className="sr-only">AmazoniaForever360+ menu</DialogDescription>
 
-      <DialogContent
-        className="absolute left-0 top-0 z-[100] h-full w-screen max-w-none !translate-x-0 !translate-y-0 border-none px-0 py-0 text-blue-600"
-        overlay={false}
-      >
+      <DialogContent className="absolute left-0 top-0 z-[100] h-full w-screen max-w-none !translate-x-0 !translate-y-0 border-none px-0 py-0 text-blue-600">
         <div>
           <DialogHeader className="flex h-16 w-full flex-col items-center bg-white text-center backdrop-blur sm:text-left">
             <div className="flex h-full w-full flex-col justify-center bg-white backdrop-blur">
@@ -126,6 +123,7 @@ export default function MobileNavigation() {
             >
               {t("header-hub")}
             </Link>
+
             <MobileLanguageSelector />
           </nav>
         </div>
