@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 
-import LanguageSelector from "@/containers/language-selector/desktop";
+import LanguageSelector from "@/containers/header/language-selector/desktop";
 import { Media } from "@/containers/media";
 
 import { usePathname } from "@/i18n/navigation";
