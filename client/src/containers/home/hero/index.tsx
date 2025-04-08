@@ -66,7 +66,7 @@ export default function Hero() {
         </div>
       </div>
       <Media greaterThanOrEqual="md">
-        <div className="w-full duration-700 animate-in slide-in-from-bottom-40 slide-in-from-right-72 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%] shadow-2xl aspect-[2326/1334] rounded-3xl">
+        <div className="aspect-[2326/1334] w-full rounded-3xl shadow-2xl duration-700 animate-in slide-in-from-bottom-40 slide-in-from-right-72 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]">
           <Image
             src="/images/home/hero1.avif"
             alt="Amazonia"
