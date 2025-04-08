@@ -13,6 +13,38 @@ const intlMiddleware = createMiddleware(routing);
 
 // Main middleware handler
 export default async function middleware(req: NextRequest) {
+  // Define the API URL for rewrite or proxy
+  const API_URL = /\/custom-api/;
+  if (API_URL.test(req.nextUrl.pathname)) {
+    const url = req.nextUrl.clone();
+    url.pathname = req.nextUrl.pathname.replace(API_URL, "");
+    console.log(`Rewriting request to ${env.NEXT_PUBLIC_API_URL}${url.pathname}`);
+    console.log(`API key ${env.NEXT_PUBLIC_API_KEY}`);
+
+    const res = NextResponse.rewrite(
+      new URL(env.NEXT_PUBLIC_API_URL + url.pathname, req.nextUrl.origin),
+    );
+
+    // Set CORS headers for the response
+    res.headers.set("Authorization", `Bearer ${env.NEXT_PUBLIC_API_KEY}`);
+    res.headers.set("Access-Control-Allow-Origin", "*");
+    res.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.headers.set(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+    );
+    res.headers.set("Access-Control-Allow-Credentials", "true");
+    res.headers.set("Access-Control-Expose-Headers", "Content-Disposition");
+    res.headers.set("Access-Control-Max-Age", "86400");
+
+    // Handle pre-flight requests
+    if (req.method === "OPTIONS") {
+      return new NextResponse("ok", { status: 200 });
+    }
+
+    return res;
+  }
+
   // Step 1: Ignore requests for static files like images, icons, etc.
   const PUBLIC_FILE = /\.(.*)$/;
   if (PUBLIC_FILE.test(req.nextUrl.pathname)) {
