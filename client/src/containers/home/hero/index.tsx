@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import ReactMarkdown from "react-markdown";
 import { scroller } from "react-scroll";
@@ -8,6 +8,9 @@ import { scroller } from "react-scroll";
 import Image from "next/image";
 
 import { useTranslations } from "next-intl";
+import { useIntervalWhen } from "rooks";
+
+import { cn } from "@/lib/utils";
 
 import { Media } from "@/containers/media";
 
@@ -16,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 
 export default function Hero() {
+  const [img, setImg] = useState(0);
   const handleScroll = useCallback(() => {
     scroller.scrollTo("moreInfo", {
       duration: 1000,
@@ -25,6 +29,14 @@ export default function Hero() {
   }, []);
 
   const t = useTranslations();
+
+  useIntervalWhen(
+    () => {
+      setImg((prev) => (prev + 1) % 2);
+    },
+    4000,
+    true,
+  );
 
   return (
     <section className="relative w-full overflow-hidden md:h-[calc(100svh_-_64px)] md:bg-blue-50">
@@ -54,15 +66,36 @@ export default function Hero() {
         </div>
       </div>
       <Media greaterThanOrEqual="md">
-        <Image
-          src="/images/home/hero2.avif"
-          alt="Amazonia"
-          width={2500}
-          height={2500}
-          className="lg-top-[30%] w-full max-w-fit object-cover px-4 duration-700 animate-in slide-in-from-bottom-40 slide-in-from-right-72 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]"
-          draggable={false}
-          priority
-        />
+        <div className="w-full object-cover duration-700 animate-in slide-in-from-bottom-40 slide-in-from-right-72 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]">
+          <Image
+            src="/images/home/hero1.avif"
+            alt="Amazonia"
+            width={2362}
+            height={1350}
+            className={cn({
+              "absolute left-0 top-0 w-full object-cover opacity-0 transition-opacity duration-1000":
+                true,
+              "z-20 opacity-100": img === 0,
+              "opacity-0 delay-500": img === 1,
+            })}
+            draggable={false}
+            priority
+          />
+          <Image
+            src="/images/home/hero2.avif"
+            alt="Amazonia"
+            width={2362}
+            height={1350}
+            className={cn({
+              "absolute left-0 top-0 w-full object-cover opacity-0 transition-opacity duration-1000":
+                true,
+              "z-20 opacity-100": img === 1,
+              "opacity-0 delay-500": img === 0,
+            })}
+            draggable={false}
+            priority
+          />
+        </div>
       </Media>
       <Media lessThan="md">
         <Image
