@@ -21,7 +21,7 @@ export default async function middleware(req: NextRequest) {
     console.log(`Rewriting request to ${env.NEXT_PUBLIC_API_URL}${url.pathname}`);
     console.log(`API key ${env.NEXT_PUBLIC_API_KEY}`);
 
-    return NextResponse.rewrite(
+    const res = NextResponse.rewrite(
       new URL(env.NEXT_PUBLIC_API_URL + url.pathname, req.nextUrl.origin),
       {
         headers: {
@@ -29,6 +29,21 @@ export default async function middleware(req: NextRequest) {
         },
       },
     );
+
+    res.headers.append("Access-Control-Allow-Origin", "*");
+    res.headers.append("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.headers.append(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+    );
+    res.headers.append("Access-Control-Allow-Credentials", "true");
+
+    // Handle pre-flight requests
+    if (req.method === "OPTIONS") {
+      return new NextResponse("ok", { status: 200 });
+    }
+
+    return res;
   }
 
   // Step 1: Ignore requests for static files like images, icons, etc.
