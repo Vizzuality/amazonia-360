@@ -66,12 +66,12 @@ export default function Hero() {
         </div>
       </div>
       <Media greaterThanOrEqual="md">
-        <div className="w-full object-cover duration-700 animate-in slide-in-from-bottom-40 slide-in-from-right-72 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]">
+        <div className="w-full duration-700 animate-in slide-in-from-bottom-40 slide-in-from-right-72 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%] shadow-2xl aspect-[2326/1334] rounded-3xl">
           <Image
             src="/images/home/hero1.avif"
             alt="Amazonia"
-            width={2362}
-            height={1350}
+            width={2326}
+            height={1334}
             className={cn({
               "absolute left-0 top-0 w-full object-cover opacity-0 transition-opacity duration-1000":
                 true,
@@ -84,8 +84,8 @@ export default function Hero() {
           <Image
             src="/images/home/hero2.avif"
             alt="Amazonia"
-            width={2362}
-            height={1350}
+            width={2326}
+            height={1334}
             className={cn({
               "absolute left-0 top-0 w-full object-cover opacity-0 transition-opacity duration-1000":
                 true,
