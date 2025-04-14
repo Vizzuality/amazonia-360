@@ -69,13 +69,13 @@ export const SketchTooltips = () => {
           <div className="col-span-10 lg:col-span-5 lg:col-start-8">
             <div className="flex justify-center">
               <div className="rounded bg-white p-2 shadow-md">
-                <p className="text-2xs font-light text-foreground lg:text-center lg:text-sm">
+                <div className="text-2xs font-light text-foreground lg:text-center lg:text-sm">
                   {sketchAction.type === "create" &&
                     CREATE_MESSAGES[`${sketchAction.geometryType}`][sketchAction?.state ?? "start"]}
 
                   {sketchAction.type === "update" &&
                     UPDATE_MESSAGES[`${sketchAction.geometryType}`][sketchAction?.state ?? "start"]}
-                </p>
+                </div>
               </div>
             </div>
           </div>
