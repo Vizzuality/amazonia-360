@@ -31,18 +31,6 @@ export default async function middleware(req: NextRequest) {
       },
     );
 
-    // Set CORS headers for the response
-    // res.headers.set("Authorization", `Bearer ${env.NEXT_PUBLIC_API_KEY}`);
-    // res.headers.set("Access-Control-Allow-Origin", "*");
-    // res.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    // res.headers.set(
-    //   "Access-Control-Allow-Headers",
-    //   "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-    // );
-    // res.headers.set("Access-Control-Allow-Credentials", "true");
-    // res.headers.set("Access-Control-Expose-Headers", "Content-Disposition");
-    // res.headers.set("Access-Control-Max-Age", "86400");
-
     return res;
   }
 
