@@ -1,6 +1,5 @@
-import "./src/env.mjs";
-
 import createNextIntlPlugin from "next-intl/plugin";
+import "./src/env.mjs";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
