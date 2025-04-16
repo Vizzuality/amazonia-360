@@ -19,26 +19,29 @@ export default async function middleware(req: NextRequest) {
     const url = req.nextUrl.clone();
     url.pathname = req.nextUrl.pathname.replace(API_URL, "");
 
+    const requestHeaders = new Headers(req.headers);
+    requestHeaders.set("Authorization", `Bearer ${env.NEXT_PUBLIC_API_KEY}`);
+
     const res = NextResponse.rewrite(
-      new URL(env.NEXT_PUBLIC_API_URL + url.pathname, req.nextUrl.origin),
+      new URL(`${env.NEXT_PUBLIC_API_URL}${url.pathname}?${url.search}`, req.url),
+      {
+        request: {
+          headers: requestHeaders,
+        },
+      },
     );
 
     // Set CORS headers for the response
-    res.headers.set("Authorization", `Bearer ${env.NEXT_PUBLIC_API_KEY}`);
-    res.headers.set("Access-Control-Allow-Origin", "*");
-    res.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.headers.set(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-    );
-    res.headers.set("Access-Control-Allow-Credentials", "true");
-    res.headers.set("Access-Control-Expose-Headers", "Content-Disposition");
-    res.headers.set("Access-Control-Max-Age", "86400");
-
-    // Handle pre-flight requests
-    if (req.method === "OPTIONS") {
-      return new NextResponse("ok", { status: 200 });
-    }
+    // res.headers.set("Authorization", `Bearer ${env.NEXT_PUBLIC_API_KEY}`);
+    // res.headers.set("Access-Control-Allow-Origin", "*");
+    // res.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    // res.headers.set(
+    //   "Access-Control-Allow-Headers",
+    //   "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+    // );
+    // res.headers.set("Access-Control-Allow-Credentials", "true");
+    // res.headers.set("Access-Control-Expose-Headers", "Content-Disposition");
+    // res.headers.set("Access-Control-Max-Age", "86400");
 
     return res;
   }
