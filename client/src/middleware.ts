@@ -23,7 +23,7 @@ export default async function middleware(req: NextRequest) {
     requestHeaders.set("Authorization", `Bearer ${env.NEXT_PUBLIC_API_KEY}`);
 
     const res = NextResponse.rewrite(
-      new URL(`${env.NEXT_PUBLIC_API_URL}${url.pathname}?${url.search}`, req.url),
+      new URL(`${env.NEXT_PUBLIC_API_URL}${url.pathname}?${url.search}`, req.nextUrl.origin),
       {
         request: {
           headers: requestHeaders,
