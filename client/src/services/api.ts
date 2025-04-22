@@ -1,8 +1,9 @@
+import { env } from "@/env.mjs";
 import Axios, { AxiosError, AxiosRequestConfig } from "axios";
 import qs from "query-string";
 
 export const AXIOS_INSTANCE = Axios.create({
-  baseURL: "/custom-api",
+  baseURL: env.NEXT_PUBLIC_API_URL,
 });
 
 export const API = <T>(config: AxiosRequestConfig, options?: AxiosRequestConfig): Promise<T> => {
@@ -11,6 +12,11 @@ export const API = <T>(config: AxiosRequestConfig, options?: AxiosRequestConfig)
   const promise = AXIOS_INSTANCE({
     ...config,
     ...options,
+    headers: {
+      ...config.headers,
+      ...options?.headers,
+      Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
+    },
     cancelToken: source.token,
     paramsSerializer: (params) => {
       return qs.stringify(params);
