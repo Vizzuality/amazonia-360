@@ -1,6 +1,7 @@
-import { env } from "@/env.mjs";
 import Axios, { AxiosError, AxiosRequestConfig } from "axios";
 import qs from "query-string";
+
+import { env } from "@/env.mjs";
 
 export const AXIOS_INSTANCE = Axios.create({
   baseURL: env.NEXT_PUBLIC_API_URL,
