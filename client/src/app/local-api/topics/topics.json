@@ -3,12 +3,12 @@
     "id": 0,
     "Numerotation": "0",
     "name_en": "Geographic Context",
-    "name_es": "Geographic Context",
-    "name_pt": "Geographic Context",
+    "name_es": "Contexto geográfico",
+    "name_pt": "Contexto geográfico",
     "image": "",
     "description_en": "Capas Overview sistema para el uso interno de la app",
-    "description_es": "Capas Overview sistema para el uso interno de la app",
-    "description_pt": "Capas Overview sistema para el uso interno de la app",
+    "description_es": "Vista general de capas – sistema para uso interno de la app",
+    "description_pt": "Visão geral das camadas – sistema para uso interno do app",
     "default_visualization": [
       {
         "id": 0,
@@ -57,6 +57,38 @@
         "y": 2,
         "w": 2,
         "h": 4
+      },
+      {
+        "id": 3,
+        "type": "numeric",
+        "x": 0,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 4,
+        "type": "numeric",
+        "x": 1,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 5,
+        "type": "numeric",
+        "x": 2,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 8,
+        "type": "numeric",
+        "x": 3,
+        "y": 1,
+        "w": 1,
+        "h": 1
       }
     ]
   },
@@ -65,11 +97,11 @@
     "Numerotation": "1",
     "name_en": "Nature",
     "name_es": "Naturaleza",
-    "name_pt": "Naturaleza",
+    "name_pt": "Natureza",
     "image": "/images/topics/nature.webp",
     "description_en": "Get data on natural environment, ecosystems, biodiversity and protected areas in your area",
-    "description_es": "Obtén información sobre el entorno natural, los ecosistemas, la biodiversidad y las áreas protegidas en tu zona",
-    "description_pt": "Obtenha dados sobre o meio ambiente natural, ecossistemas, biodiversidade e áreas protegidas na sua região",
+    "description_es": "Obtén datos sobre el entorno natural, los ecosistemas, la biodiversidad y las áreas protegidas en tu zona",
+    "description_pt": "Obtenha dados sobre o meio ambiente, ecossistemas, biodiversidade e áreas protegidas na sua região",
     "default_visualization": [
       {
         "id": 26,
@@ -141,12 +173,12 @@
     "id": 2,
     "Numerotation": "2",
     "name_en": "Climate",
-    "name_es": "Climate",
-    "name_pt": "Climate",
+    "name_es": "Clima",
+    "name_pt": "Clima",
     "image": "/images/topics/climate.webp",
     "description_en": "Understand climate types, risks, and challenges in your region",
-    "description_es": "Understand climate types, risks, and challenges in your region",
-    "description_pt": "Understand climate types, risks, and challenges in your region",
+    "description_es": "Comprende los tipos de clima, los riesgos y los desafíos en tu región",
+    "description_pt": "Entenda os tipos de clima, riscos e desafios da sua região",
     "default_visualization": [
       {
         "id": 35,
@@ -186,12 +218,12 @@
     "id": 3,
     "Numerotation": "3",
     "name_en": "People",
-    "name_es": "People",
-    "name_pt": "People",
+    "name_es": "Personas",
+    "name_pt": "Pessoas",
     "image": "/images/topics/people.webp",
     "description_en": "Access demographic data and social indicators for your area of interest",
-    "description_es": "Access demographic data and social indicators for your area of interest",
-    "description_pt": "Access demographic data and social indicators for your area of interest",
+    "description_es": "Accede a datos demográficos e indicadores sociales de tu área de interés",
+    "description_pt": "Acesse dados demográficos e indicadores sociais da sua área de interesse",
     "default_visualization": [
       {
         "id": 46,
@@ -247,12 +279,12 @@
     "id": 4,
     "Numerotation": "4",
     "name_en": "Productive Activities",
-    "name_es": "Productive Activities",
-    "name_pt": "Productive Activities",
+    "name_es": "Actividades productivas",
+    "name_pt": "Atividades produtivas",
     "image": "/images/topics/productive.webp",
     "description_en": "Get information on economic sectors and production systems",
-    "description_es": "Get information on economic sectors and production systems",
-    "description_pt": "Get information on economic sectors and production systems",
+    "description_es": "Obtén información sobre sectores económicos y sistemas de producción",
+    "description_pt": "Obtenha informações sobre os setores econômicos e sistemas de produção",
     "default_visualization": [
       {
         "id": 72,
@@ -276,17 +308,17 @@
     "id": 5,
     "Numerotation": "5",
     "name_en": " Infrastructure and Cities",
-    "name_es": " Infrastructure and Cities",
-    "name_pt": " Infrastructure and Cities",
+    "name_es": "Infraestructura y ciudades",
+    "name_pt": "Infraestrutura e cidades",
     "image": "/images/topics/infrastructure.webp",
     "description_en": "Explore urban development, connectivity and transportation",
-    "description_es": "Explore urban development, connectivity and transportation",
-    "description_pt": "Explore urban development, connectivity and transportation",
+    "description_es": "Explora el desarrollo urbano, la conectividad y el transporte",
+    "description_pt": "Explore o desenvolvimento urbano, conectividade e transporte",
     "default_visualization": [
       {
         "id": 73,
         "type": "map",
-        "x": 2,
+        "x": 0,
         "y": 2,
         "w": 2,
         "h": 5
@@ -321,12 +353,12 @@
     "id": 6,
     "Numerotation": "6",
     "name_en": "IDB Operations",
-    "name_es": "IDB Operations",
-    "name_pt": "IDB Operations",
+    "name_es": "Operaciones del BID",
+    "name_pt": "Operações do BID",
     "image": "/images/topics/operations.webp",
     "description_en": "Understand IDB's work and projects in your area of interest",
-    "description_es": "Understand IDB's work and projects in your area of interest",
-    "description_pt": "Understand IDB's work and projects in your area of interest",
+    "description_es": "Comprende el trabajo y los proyectos del BID en tu área de interés",
+    "description_pt": "Entenda o trabalho e os projetos do BID na sua área de interesse",
     "default_visualization": [
       {
         "id": 83,
