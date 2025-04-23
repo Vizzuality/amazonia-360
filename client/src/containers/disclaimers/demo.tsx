@@ -32,8 +32,7 @@ export default function BetaDisclaimer({ onClose }: { onClose: (open: boolean) =
             </div>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-primary"></h3>
-            <p className="font-medium">{t("beta-disclaimer-title-2")}</p>
+            <h3 className="font-semibold text-primary">{t("beta-disclaimer-title-2")}</h3>
             <div className="font-medium">
               <ReactMarkdown>{t("beta-disclaimer-description-2")}</ReactMarkdown>
             </div>

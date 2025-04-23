@@ -21,9 +21,7 @@ export default function Hub() {
             <ReactMarkdown>{t("hub-title")}</ReactMarkdown>
           </h2>
           <div className="flex flex-col space-y-2 pb-5 text-sm font-normal text-blue-900 tall:xl:pb-10 tall:xl:text-base">
-            <p>
-              <ReactMarkdown>{t("hub-intro-1")}</ReactMarkdown>
-            </p>
+            <ReactMarkdown>{t("hub-intro-1")}</ReactMarkdown>
             <p>{t("hub-intro-2")}</p>
           </div>
           <Link href="/report">

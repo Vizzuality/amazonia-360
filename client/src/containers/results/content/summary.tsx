@@ -12,6 +12,8 @@ import { getQueryFeatureIdOptions, useGetDefaultIndicators } from "@/lib/indicat
 import { useLocationGeometry } from "@/lib/location";
 import { omit } from "@/lib/utils";
 
+import { ContextLanguage } from "@/types/generated/api.schemas";
+
 import { Indicator } from "@/app/local-api/indicators/route";
 import { Topic } from "@/app/local-api/topics/route";
 import { AiSummary } from "@/app/parsers";
@@ -112,6 +114,7 @@ export const useGetSummaryTopic = (
   options?: AiSummary,
   activeIndicators?: Indicator["id"][],
 ) => {
+  const locale = useLocale();
   const indicators = options?.only_active ? activeIndicators : undefined;
   const {
     data: indicatorsData,
@@ -139,7 +142,7 @@ export const useGetSummaryTopic = (
           "Try to use percentages every time is possible",
         ],
       },
-      language: "en",
+      language: locale as ContextLanguage,
       description_type: options?.type,
     },
     {
