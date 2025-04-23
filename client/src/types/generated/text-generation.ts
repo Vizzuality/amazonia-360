@@ -19,7 +19,7 @@ export const generateDescriptionTextAiPost = (
   options?: SecondParameter<typeof API>,
 ) => {
   return API<DescritionResponse>(
-    { url: `/ai/`, method: "POST", headers: { "Content-Type": "application/json" }, data: context },
+    { url: `/ai`, method: "POST", headers: { "Content-Type": "application/json" }, data: context },
     options,
   );
 };
