@@ -23,8 +23,5 @@ def generate_description_text(
     context: Context,
 ) -> DescritionResponse:
     """Generate a description based on context data and audience profile."""
-    print("****DEBUGGING REQUEST****")
-    print(context)
     description = generate_description(context.data, context.description_type, context.language)
-    print("****DEBUGGING RESPONSE****")
     return DescritionResponse(description=description)

@@ -22,21 +22,6 @@ export default async function middleware(req: NextRequest) {
     const requestHeaders = new Headers(req.headers);
     requestHeaders.set("Authorization", `Bearer ${env.NEXT_PUBLIC_API_KEY}`);
 
-    const URLObject = new URL(
-      `${env.NEXT_PUBLIC_API_URL}${url.pathname}?${url.search}`,
-      req.nextUrl.origin,
-    );
-
-    console.error("*********DEBUGGING PROXY ******");
-    console.error({
-      fullUrl: `${env.NEXT_PUBLIC_API_URL}${url.pathname}?${url.search}`,
-      pathanme: url.pathname,
-      search: url.search,
-      headers: JSON.stringify(requestHeaders, null, 2),
-      origin: req.nextUrl.origin,
-      URLObject: JSON.stringify(URLObject, null, 2),
-    });
-
     const res = NextResponse.rewrite(
       new URL(`${env.NEXT_PUBLIC_API_URL}${url.pathname}?${url.search}`, req.nextUrl.origin),
       {
@@ -45,13 +30,6 @@ export default async function middleware(req: NextRequest) {
         },
       },
     );
-
-    console.error("*********DEBUGGING RESPONSE ******");
-    console.error({
-      status: res.status,
-      headers: res.headers,
-      body: JSON.stringify(res.body),
-    });
 
     return res;
   }
