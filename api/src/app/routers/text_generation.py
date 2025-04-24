@@ -18,7 +18,7 @@ class DescritionResponse(BaseModel):
     description: str
 
 
-@router.post("/")
+@router.post("")
 def generate_description_text(
     context: Context,
 ) -> DescritionResponse:
