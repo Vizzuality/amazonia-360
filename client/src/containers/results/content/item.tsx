@@ -4,6 +4,7 @@ import { Layout } from "react-grid-layout";
 import { Responsive, WidthProvider } from "react-grid-layout";
 
 import { useAtom } from "jotai";
+import { useLocale } from "next-intl";
 
 import { useGetTopicsId } from "@/lib/topics";
 import { cn } from "@/lib/utils";
@@ -27,12 +28,12 @@ export const ReportResultsContentItem = ({
   topic,
   editable = true,
 }: ReportResultsContentItemProps) => {
+  const locale = useLocale();
   const [, setTopics] = useSyncTopics();
   const [ai_summary] = useSyncAiSummary();
   const [reportEditionMode] = useAtom(reportEditionModeAtom);
 
   const EDITABLE = editable && reportEditionMode;
-  const locale = "pt";
   const TOPIC = useGetTopicsId(topic.id, locale);
 
   const handleDrop = useCallback(
