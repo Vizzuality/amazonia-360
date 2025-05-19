@@ -113,10 +113,20 @@ export const getGridLayerProps = ({
       // @ts-ignore
       const table = info?.tile?.content as ArrowTable["data"];
       const row = table?.get(info.index);
-      const values = gridDatasets.map((column) => ({
-        column,
-        value: row?.[column],
-      }));
+
+      const values = gridDatasets.map((column) => {
+        const value = row?.[column];
+        if (typeof value === "bigint") {
+          return {
+            column,
+            value: Number(value),
+          };
+        }
+        return {
+          column,
+          value,
+        };
+      });
 
       if (info && info.index === -1) {
         // setHoveredCell(null);
@@ -316,7 +326,13 @@ export default function GridLayer() {
   }, [gridSelectedDataset, gridMetaData]);
 
   const getFillColor = useCallback(
-    (d: Record<string, number>): Color => colorscale(d[`${gridSelectedDataset}`]).rgb(),
+    (d: Record<string, number>): Color => {
+      if (typeof d[`${gridSelectedDataset}`] === "bigint") {
+        const value = Number(d[`${gridSelectedDataset}`]);
+        return colorscale(value).rgb();
+      }
+      return colorscale(d[`${gridSelectedDataset}`]).rgb();
+    },
     [gridSelectedDataset, colorscale],
   );
 
