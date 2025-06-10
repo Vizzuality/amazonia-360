@@ -23,17 +23,7 @@ export default function SketchMobile() {
     setLocation(null);
 
     if (sketch.enabled && sketch.type === type) {
-      setSketch({ enabled: false, type: undefined });
-      setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
-    }
-
-    if (sketch.enabled && sketch.type !== type) {
-      setSketch({ enabled: false, type: undefined });
-
-      setTimeout(() => {
-        setSketch({ enabled: true, type });
-        setSketchAction({ type: "create", state: "start", geometryType: type });
-      }, 0);
+      setSketchAction({ type: "create", state: "complete", geometryType: type });
     }
 
     if (!sketch.enabled) {
@@ -54,7 +44,8 @@ export default function SketchMobile() {
         onClick={(e) => handleClick(e, "polygon")}
         type="button"
       >
-        {t("grid-sketch-start-drawing")}
+        {sketch.enabled && sketch.type === "polygon" && t("grid-sketch-finish-drawing")}
+        {!sketch.enabled && t("grid-sketch-start-drawing")}
       </Button>
     </div>
   );

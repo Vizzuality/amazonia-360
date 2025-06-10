@@ -30,6 +30,7 @@ export type SketchProps = {
   type?: "point" | "polygon" | "polyline";
   enabled?: boolean;
   updatable?: boolean;
+  completed?: boolean;
   location?: Location | null;
   onCreate?: (graphic: __esri.Graphic) => void;
   onCreateChange?: (e: __esri.SketchViewModelCreateEvent) => void;
@@ -41,6 +42,7 @@ export type SketchProps = {
 export default function Sketch({
   type,
   enabled,
+  completed = false,
   updatable = true,
   location,
   onCreate,
@@ -156,6 +158,7 @@ export default function Sketch({
       polygonSymbol: POLYGON_SYMBOL,
       defaultCreateOptions: {
         hasZ: false,
+        mode: "click",
       },
       defaultUpdateOptions: {
         tool: "reshape",
@@ -221,6 +224,12 @@ export default function Sketch({
       sketchViewModelRef.current.updateOnGraphicClick = updatable;
     }
   }, [location, updatable, LOCATION, drawBuffer, handleListeners]);
+
+  useEffect(() => {
+    if (completed) {
+      sketchViewModelRef.current?.complete();
+    }
+  }, [completed]);
 
   return (
     <>
