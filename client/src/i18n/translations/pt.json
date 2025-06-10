@@ -99,6 +99,7 @@
   "grid-sidebar-grid-filters-ranking-set-up-max-number-cell-note": "Números mais elevados requerem mais tempo",
   "grid-sidebar-grid-filters-ranking-set-up-button-apply": "Aplicar",
   "grid-sketch-start-drawing": "Começar a desenhar",
+  "grid-sketch-finish-drawing": "Terminar o desenho",
   "grid-sketch-tooltip-create-start-polygon": "Para começar, **clique** no mapa para adicionar um ponto. Aperte **ESC** para cancelar.",
   "grid-sketch-tooltip-create-active-polygon": "Clique para adicionar pontos e, em seguida, **clique duas vezes** ou aperte **Enter** para finalizar o desenho.",
   "grid-sketch-tooltip-create-complete-polygon": "Ótimo. Para **editar a forma**, **clique** na mesma para ativar o modo de edição.",

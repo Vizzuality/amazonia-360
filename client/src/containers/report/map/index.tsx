@@ -43,7 +43,7 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
   const [tmpBbox, setTmpBbox] = useAtom(tmpBboxAtom);
 
   const [sketch, setSketch] = useAtom(sketchAtom);
-  const setSketchAction = useSetAtom(sketchActionAtom);
+  const [sketchAction, setSketchAction] = useAtom(sketchActionAtom);
   const sketchActionTimeoutRef = useRef<NodeJS.Timeout>();
 
   const setGridHover = useSetAtom(gridHoverAtom);
@@ -166,6 +166,7 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
           type={sketch.type}
           enabled={sketch.enabled}
           updatable={location?.type !== "search" && tab === "contextual-viewer"}
+          completed={sketchAction.type === "create" && sketchAction.state === "complete"}
           location={location}
           onCreate={handleCreate}
           onCreateChange={handleCreateChange}
