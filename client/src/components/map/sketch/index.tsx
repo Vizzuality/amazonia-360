@@ -93,13 +93,17 @@ export default function Sketch({
       if (onCreateChange) onCreateChange(e);
 
       if (e.state === "complete" && sketchViewModelRef.current) {
-        const g = e.graphic.clone();
+        if (e.graphic.geometry) {
+          const g = e.graphic.clone();
 
-        if (type !== undefined) {
-          g.symbol = sketchViewModelRef.current[`${type}Symbol`].clone();
+          if (type !== undefined) {
+            g.symbol = sketchViewModelRef.current[`${type}Symbol`].clone();
+          }
+
+          if (onCreate) onCreate(g);
+        } else {
+          if (onCancel) onCancel();
         }
-
-        if (onCreate) onCreate(g);
       }
 
       if (e.state === "cancel") {
