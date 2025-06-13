@@ -1,6 +1,7 @@
+import React from "react";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, act } from "@testing-library/react";
-import React from "react";
 
 import { Indicator } from "@/app/local-api/indicators/route";
 import { TopicView, IndicatorView, DefaultTopicConfig } from "@/app/parsers";
