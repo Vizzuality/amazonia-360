@@ -2,6 +2,7 @@
 
 import { useContext, useEffect, useRef, useState } from "react";
 
+import Basemap from "@arcgis/core/Basemap";
 import Color from "@arcgis/core/Color";
 import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
 import Extent from "@arcgis/core/geometry/Extent";
@@ -13,6 +14,7 @@ import { merge } from "ts-deepmerge";
 
 import { DEFAULT_MAP_VIEW_PROPERTIES } from "@/constants/map";
 
+import { BasemapIds } from "@/components/map/controls/basemap";
 import { MapContext, MapProvider } from "@/components/map/provider";
 
 export type MapProps = {
@@ -26,6 +28,7 @@ export type MapProps = {
   onHover?: () => void;
   onMapMove?: (extent: __esri.Extent) => void;
   onPointerLeave?: () => void;
+  initialBasemapId?: BasemapIds;
 };
 
 export default function Map(mapProps: MapProps) {
@@ -46,6 +49,7 @@ export function MapView({
   viewProps,
   onMapMove,
   onPointerLeave,
+  initialBasemapId,
 }: MapProps) {
   const mapRef = useRef<ArcGISMap>();
   const mapViewRef = useRef<ArcGISMapView>();
@@ -62,7 +66,7 @@ export function MapView({
        * Initialize application
        */
       mapRef.current = new ArcGISMap({
-        basemap: "gray-vector",
+        basemap: initialBasemapId ? Basemap.fromId(initialBasemapId) : "gray-vector",
         layers: [baseLayer],
         ...mapProps,
       });

@@ -12,6 +12,7 @@ import {
   locationParser,
   topicsParser,
   aiSummaryParser,
+  defaultTopicsConfigParser,
 } from "@/app/parsers";
 
 import { SketchProps } from "@/components/map/sketch";
@@ -23,6 +24,10 @@ export const useSyncBbox = () => {
 
 export const useSyncTopics = () => {
   return useQueryState("topics", topicsParser);
+};
+
+export const useSyncDefaultTopics = () => {
+  return useQueryState("defaultTopics", defaultTopicsConfigParser);
 };
 
 export const useSyncLocation = () => {
