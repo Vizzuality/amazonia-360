@@ -20,7 +20,6 @@ import { CONTROL_BUTTON_STYLES } from "./constants";
 
 export interface BasemapControlProps {
   className?: string;
-  defaultBasemapIdForWidget?: BasemapIds;
   onBasemapChange?: (selectedBasemapId: BasemapIds) => void;
 }
 

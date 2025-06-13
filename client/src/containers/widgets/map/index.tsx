@@ -26,7 +26,6 @@ import Controls from "@/components/map/controls";
 import BasemapControl, { BasemapIds } from "@/components/map/controls/basemap";
 import FullscreenControl from "@/components/map/controls/fullscreen";
 import ZoomControl from "@/components/map/controls/zoom";
-import { MapProvider } from "@/components/map/provider";
 
 import { useInitialBasemapId } from "./hooks";
 import { handleBasemapChange } from "./utils";
@@ -83,73 +82,72 @@ export default function WidgetMap({
 
   return (
     <div className="relative h-full">
-      <MapProvider>
-        <Map
-          id={`overview-${indicator.id}`}
-          initialBasemapId={initialBasemapIdToUse}
-          {...(GEOMETRY?.extent && {
-            defaultBbox: [
-              GEOMETRY?.extent.xmin,
-              GEOMETRY?.extent.ymin,
-              GEOMETRY?.extent.xmax,
-              GEOMETRY?.extent.ymax,
-            ],
-            bbox: undefined,
-          })}
-          viewProps={{
-            navigation: {
-              mouseWheelZoomEnabled: false,
-              browserTouchPanEnabled: false,
-            },
-            ...viewProps,
-          }}
-        >
-          {layers.map((layer: EsriLayer, index: number, arr: EsriLayer[]) => {
-            const i = arr.length - index;
-            // Assuming layer.id is always present for key. If not, a fallback or check might be needed.
-            // For Esri Layers, 'id' is a property of __esri.Layer, which these should extend.
-            return (
-              <Layer
-                key={layer.id || `widget-layer-${index}`}
-                layer={layer}
-                index={i}
-                GEOMETRY={GEOMETRY}
-              />
-            );
-          })}
-
-          <SelectedLayer index={layers.length + 2} location={location} />
-          <Layer index={1} layer={DATASETS.area_afp.layer} />
-          <Layer layer={LABELS_LAYER} index={layers.length + 3} />
-          {(indicator.resource.type === "feature" ||
-            indicator.resource.type === "imagery" ||
-            indicator.resource.type === "imagery-tile") && (
-              <WidgetLegend
-                {...(indicator as Omit<Indicator, "resource"> & {
-                  resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
-                })}
-              />
-            )}
-
-          <Controls>
-            <FullscreenControl />
-            <ZoomControl />
-            <BasemapControl
-              onBasemapChange={(selectedBasemapId) =>
-                handleBasemapChange(
-                  selectedBasemapId,
-                  defaultBasemapId,
-                  indicator,
-                  topics,
-                  setTopics,
-                  overviewTopicsData,
-                  setSyncDefaultTopics,
-                )
-              }
+      <Map
+        id={`overview-${indicator.id}`}
+        initialBasemapId={initialBasemapIdToUse}
+        {...(GEOMETRY?.extent && {
+          defaultBbox: [
+            GEOMETRY?.extent.xmin,
+            GEOMETRY?.extent.ymin,
+            GEOMETRY?.extent.xmax,
+            GEOMETRY?.extent.ymax,
+          ],
+          bbox: undefined,
+        })}
+        viewProps={{
+          navigation: {
+            mouseWheelZoomEnabled: false,
+            browserTouchPanEnabled: false,
+          },
+          ...viewProps,
+        }}
+      >
+        {layers.map((layer: EsriLayer, index: number, arr: EsriLayer[]) => {
+          const i = arr.length - index;
+          // Assuming layer.id is always present for key. If not, a fallback or check might be needed.
+          // For Esri Layers, 'id' is a property of __esri.Layer, which these should extend.
+          return (
+            <Layer
+              key={layer.id || `widget-layer-${index}`}
+              layer={layer}
+              index={i}
+              GEOMETRY={GEOMETRY}
             />
-          </Controls>
-        </Map>
-      </MapProvider>
-    </div >
+          );
+        })}
+
+        <Layer index={1} layer={DATASETS.area_afp.layer} />
+        <SelectedLayer index={layers.length + 2} location={location} />
+        <Layer layer={LABELS_LAYER} index={layers.length + 3} />
+
+        {(indicator.resource.type === "feature" ||
+          indicator.resource.type === "imagery" ||
+          indicator.resource.type === "imagery-tile") && (
+            <WidgetLegend
+              {...(indicator as Omit<Indicator, "resource"> & {
+                resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
+              })}
+            />
+          )}
+
+        <Controls>
+          <FullscreenControl />
+          <ZoomControl />
+          <BasemapControl
+            onBasemapChange={(selectedBasemapId) =>
+              handleBasemapChange(
+                selectedBasemapId,
+                defaultBasemapId,
+                indicator,
+                topics,
+                setTopics,
+                overviewTopicsData,
+                setSyncDefaultTopics,
+              )
+            }
+          />
+        </Controls>
+      </Map>
+    </div>
   );
 }
