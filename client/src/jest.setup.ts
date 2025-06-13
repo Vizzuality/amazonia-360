@@ -25,7 +25,7 @@ jest.mock("next-intl", () => {
 /****************
  * ArcGIS JS API
  ****************/
-jest.mock("@arcgis/core/Map", () => { });
+jest.mock("@arcgis/core/Map", () => {});
 
 jest.mock("@arcgis/core/Basemap", () => {
   return class MockBasemap {
@@ -39,9 +39,9 @@ jest.mock("@arcgis/core/Basemap", () => {
   };
 });
 
-jest.mock("@arcgis/core/views/MapView", () => { });
+jest.mock("@arcgis/core/views/MapView", () => {});
 
-jest.mock("@arcgis/core/widgets/Search/SearchViewModel", () => { });
+jest.mock("@arcgis/core/widgets/Search/SearchViewModel", () => {});
 
 // Layers
 jest.mock("@arcgis/core/layers/FeatureLayer", () => {
@@ -52,7 +52,7 @@ jest.mock("@arcgis/core/layers/FeatureLayer", () => {
   };
 });
 
-jest.mock("@arcgis/core/layers/WebTileLayer", () => { });
+jest.mock("@arcgis/core/layers/WebTileLayer", () => {});
 
 jest.mock("@arcgis/core/layers/GraphicsLayer", () => {
   // Define a mock Graphic type for better type safety if possible, or use unknown
@@ -82,21 +82,21 @@ jest.mock("@arcgis/core/layers/GraphicsLayer", () => {
   };
 });
 
-jest.mock("@arcgis/core/layers/VectorTileLayer", () => { });
+jest.mock("@arcgis/core/layers/VectorTileLayer", () => {});
 
-jest.mock("@arcgis/core/layers/GeoJSONLayer", () => { });
+jest.mock("@arcgis/core/layers/GeoJSONLayer", () => {});
 
-jest.mock("@arcgis/core/layers/MapImageLayer", () => { });
+jest.mock("@arcgis/core/layers/MapImageLayer", () => {});
 
-jest.mock("@arcgis/core/layers/ImageryTileLayer", () => { });
+jest.mock("@arcgis/core/layers/ImageryTileLayer", () => {});
 
 // Layer support
-jest.mock("@arcgis/core/layers/support/FeatureFilter", () => { });
+jest.mock("@arcgis/core/layers/support/FeatureFilter", () => {});
 
-jest.mock("@arcgis/core/layers/support/FeatureReductionCluster", () => { });
+jest.mock("@arcgis/core/layers/support/FeatureReductionCluster", () => {});
 
 // Popup
-jest.mock("@arcgis/core/PopupTemplate", () => { });
+jest.mock("@arcgis/core/PopupTemplate", () => {});
 
 // Geometry
 jest.mock("@arcgis/core/geometry/Point", () => {
@@ -123,7 +123,7 @@ jest.mock("@arcgis/core/geometry/Polygon", () => {
   };
 });
 
-jest.mock("@arcgis/core/geometry/Polyline", () => { });
+jest.mock("@arcgis/core/geometry/Polyline", () => {});
 
 jest.mock("@arcgis/core/Graphic", () => {
   return class MockGraphic {
@@ -160,28 +160,28 @@ jest.mock("@arcgis/core/geometry/projection", () => ({
 
 // Renderers
 jest.mock("@arcgis/core/renderers/SimpleRenderer", () => {
-  return class MockSimpleRenderer { };
+  return class MockSimpleRenderer {};
 });
 
 jest.mock("@arcgis/core/renderers/UniqueValueRenderer", () => {
-  return class MockUniqueValueRenderer { };
+  return class MockUniqueValueRenderer {};
 });
 
 // Symbols
 jest.mock("@arcgis/core/symbols/SimpleFillSymbol", () => {
-  return class MockSimpleFillSymbol { };
+  return class MockSimpleFillSymbol {};
 });
 
 jest.mock("@arcgis/core/symbols/SimpleLineSymbol", () => {
-  return class MockSimpleLineSymbol { };
+  return class MockSimpleLineSymbol {};
 });
 
 jest.mock("@arcgis/core/symbols/SimpleMarkerSymbol", () => {
-  return class MockSimpleMarkerSymbol { };
+  return class MockSimpleMarkerSymbol {};
 });
 
 jest.mock("@arcgis/core/symbols/TextSymbol", () => {
-  return class MockTextSymbol { };
+  return class MockTextSymbol {};
 });
 
 // Core module (Color, etc.)
