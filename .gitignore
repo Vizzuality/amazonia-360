@@ -1,6 +1,8 @@
 *.py[cod]
 *.venv
 *data/
+.clineignore
+*.DS_Store
 .env
 /env/
 /infrastructure/vars/local.tfvars

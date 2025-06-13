@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useCallback } from "react";
+import { FC, useCallback, useMemo } from "react";
 
 import Image from "next/image";
 
@@ -17,7 +17,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { CONTROL_BUTTON_STYLES } from "./constants";
-const BASEMAPS = [
+
+export interface BasemapControlProps {
+  className?: string;
+  defaultBasemapIdForWidget?: BasemapIds;
+  onBasemapChange?: (selectedBasemapId: BasemapIds) => void;
+}
+
+export const BASEMAPS = [
   {
     id: "gray-vector",
     label: "basemap-gray",
@@ -61,23 +68,24 @@ const BASEMAPS = [
 ] as const;
 export type BasemapIds = (typeof BASEMAPS)[number]["id"];
 
-interface BasemapControlProps {
-  className?: string;
-}
-
-export const BasemapControl: FC<BasemapControlProps> = ({ className }: BasemapControlProps) => {
+export const BasemapControl: FC<BasemapControlProps> = ({
+  className,
+  onBasemapChange,
+}: BasemapControlProps) => {
   const t = useTranslations();
-
-  const map = useMap();
+  const mapContext = useMap();
 
   const handleBasemap = useCallback(
-    (id: BasemapIds) => {
-      if (map) {
-        map.map.basemap = Basemap.fromId(id);
+    (selectedBasemapId: BasemapIds) => {
+      if (mapContext?.map) {
+        mapContext.map.basemap = Basemap.fromId(selectedBasemapId);
+        onBasemapChange && onBasemapChange(selectedBasemapId);
       }
     },
-    [map],
+    [mapContext, onBasemapChange],
   );
+
+  const activeBasemapId = useMemo(() => mapContext?.map?.basemap?.id, [mapContext?.map?.basemap]);
 
   return (
     <Popover>
@@ -108,7 +116,7 @@ export const BasemapControl: FC<BasemapControlProps> = ({ className }: BasemapCo
                     className={cn({
                       "group flex w-full items-center space-x-2 p-2 transition-colors duration-200 hover:bg-muted":
                         true,
-                      "bg-foreground hover:bg-foreground": map?.map.basemap?.id === b.id,
+                      "bg-foreground hover:bg-foreground": activeBasemapId === b.id,
                     })}
                     type="button"
                     onClick={() => handleBasemap(b.id)}
@@ -125,7 +133,7 @@ export const BasemapControl: FC<BasemapControlProps> = ({ className }: BasemapCo
                     <span
                       className={cn({
                         "text-xs text-foreground transition-colors": true,
-                        "text-background": map?.map.basemap?.id === b.id,
+                        "text-background": activeBasemapId === b.id,
                       })}
                     >
                       {t(`${b.label}`)}
