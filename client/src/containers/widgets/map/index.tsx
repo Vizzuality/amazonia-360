@@ -123,12 +123,12 @@ export default function WidgetMap({
         {(indicator.resource.type === "feature" ||
           indicator.resource.type === "imagery" ||
           indicator.resource.type === "imagery-tile") && (
-            <WidgetLegend
-              {...(indicator as Omit<Indicator, "resource"> & {
-                resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
-              })}
-            />
-          )}
+          <WidgetLegend
+            {...(indicator as Omit<Indicator, "resource"> & {
+              resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
+            })}
+          />
+        )}
 
         <Controls>
           <FullscreenControl />
