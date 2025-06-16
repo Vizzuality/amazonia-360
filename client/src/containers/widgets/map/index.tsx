@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import dynamic from "next/dynamic";
 
 import { useLocationGeometry } from "@/lib/location";
+import { DATASETS } from "@/constants/datasets";
 
 import {
   Indicator,
@@ -86,26 +87,27 @@ export default function WidgetMap({ indicator, layers, ...viewProps }: WidgetMap
         }}
       >
         <Layer layer={BASEMAP_LAYER} index={0} />
-
+        {/* Amazonia border layer */}
+        <Layer index={1} layer={DATASETS.area_afp.layer} />
         {layers.map((layer, index, arr) => {
           const i = arr.length - index;
 
           return <Layer key={layer.id} layer={layer} index={i} GEOMETRY={GEOMETRY} />;
         })}
 
-        <SelectedLayer index={layers.length + 1} location={location} />
+        <SelectedLayer index={layers.length + 2} location={location} />
 
-        <Layer layer={LABELS_LAYER} index={layers.length + 2} />
+        <Layer layer={LABELS_LAYER} index={layers.length + 3} />
 
         {(indicator.resource.type === "feature" ||
           indicator.resource.type === "imagery" ||
           indicator.resource.type === "imagery-tile") && (
-          <WidgetLegend
-            {...(indicator as Omit<Indicator, "resource"> & {
-              resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
-            })}
-          />
-        )}
+            <WidgetLegend
+              {...(indicator as Omit<Indicator, "resource"> & {
+                resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
+              })}
+            />
+          )}
 
         <Controls>
           <FullscreenControl />
