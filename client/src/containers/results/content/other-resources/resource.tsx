@@ -66,7 +66,12 @@ export default function Resource({
               {Name}
             </h3>
             <p className="text-xs font-semibold text-muted-foreground">
-              {Month} {Year} - {Country}
+              {Month} {Year}
+            </p>
+            <p className="text-xs font-semibold text-muted-foreground">
+              {Country.split(";")
+                .map((c) => c.trim())
+                .join(", ")}
             </p>
           </div>
         </header>

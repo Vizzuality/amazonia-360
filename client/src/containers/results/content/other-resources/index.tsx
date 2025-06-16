@@ -31,7 +31,8 @@ export default function OtherResources() {
       query: DATASETS.acu_knowledge.getFeatures({
         ...(!!queryGadm.data?.gid0 && {
           orderByFields: ["Year DESC", "Month DESC"],
-          where: `CountryIso in (${queryGadm.data?.gid0.map((g) => `'${g}'`)})`,
+          // where: `CountryIso in (${queryGadm.data?.gid0.map((g) => `'${g}'`)})`,
+          where: queryGadm.data?.gid0.map((g) => `CountryIso LIKE '%${g}%'`).join(" OR "),
         }),
       }),
       feature: DATASETS.acu_knowledge.layer,
