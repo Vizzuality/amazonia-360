@@ -5,7 +5,6 @@ import { useMemo } from "react";
 import dynamic from "next/dynamic";
 
 import { useLocationGeometry } from "@/lib/location";
-import { DATASETS } from "@/constants/datasets";
 
 import {
   Indicator,
@@ -14,6 +13,8 @@ import {
   ResourceImageryTile,
 } from "@/app/local-api/indicators/route";
 import { useSyncLocation } from "@/app/store";
+
+import { DATASETS } from "@/constants/datasets";
 
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
 import { WidgetLegend } from "@/containers/widgets/map/legend";
@@ -102,12 +103,12 @@ export default function WidgetMap({ indicator, layers, ...viewProps }: WidgetMap
         {(indicator.resource.type === "feature" ||
           indicator.resource.type === "imagery" ||
           indicator.resource.type === "imagery-tile") && (
-            <WidgetLegend
-              {...(indicator as Omit<Indicator, "resource"> & {
-                resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
-              })}
-            />
-          )}
+          <WidgetLegend
+            {...(indicator as Omit<Indicator, "resource"> & {
+              resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
+            })}
+          />
+        )}
 
         <Controls>
           <FullscreenControl />
