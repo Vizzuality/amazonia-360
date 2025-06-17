@@ -13,12 +13,15 @@ import { Indicator } from "@/app/local-api/indicators/route";
 import { CardLoader } from "@/containers/card";
 import WidgetMap from "@/containers/widgets/map";
 
+import { BASEMAPS } from "@/components/map/controls/basemap";
+
 export const MapIndicators = (
   indicator: Omit<Indicator, "resource"> & {
     resource: ResourceFeature | ResourceWebTile | ResourceImageryTile | ResourceImagery;
+    basemapId?: (typeof BASEMAPS)[number]["id"];
   },
 ) => {
-  const { id, resource } = indicator;
+  const { id, resource, basemapId } = indicator;
   const query = useResourceId({ resource });
 
   const LAYER = useMemo(() => {
@@ -58,7 +61,7 @@ export const MapIndicators = (
 
   return (
     <CardLoader query={[query]} className="min-h-72 grow">
-      <WidgetMap indicator={indicator} layers={[LAYER]} />
+      <WidgetMap indicator={indicator} basemapId={basemapId} layers={[LAYER]} />
     </CardLoader>
   );
 };

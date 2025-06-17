@@ -88,7 +88,7 @@ jest.mock("@/lib/location", () => ({
 
 // Define props for the mocked BasemapControl
 interface MockBasemapControlProps {
-  defaultBasemapIdForWidget: BasemapIds;
+  basemapIdForWidget: BasemapIds;
   onBasemapChange: (selectedBasemapId: BasemapIds) => void;
   widgetId?: string; // From test usage: data-testid={`basemap-control-mock-${props.widgetId}`}
 }
@@ -191,7 +191,7 @@ describe("WidgetMap - Basemap Change Logic", () => {
     visualization_types: [],
   };
 
-  const defaultBasemapIdForWidget: BasemapIds = "gray-vector";
+  const basemapIdForWidget: BasemapIds = "gray-vector";
 
   beforeEach(() => {
     mockSetTopics.mockClear();
@@ -260,11 +260,7 @@ describe("WidgetMap - Basemap Change Logic", () => {
     };
     render(
       <TestWrapper>
-        <WidgetMap
-          indicator={currentIndicator}
-          layers={[]}
-          defaultBasemapId={defaultBasemapIdForWidget}
-        />
+        <WidgetMap indicator={currentIndicator} layers={[]} basemapId={basemapIdForWidget} />
       </TestWrapper>,
     );
 
@@ -316,18 +312,14 @@ describe("WidgetMap - Basemap Change Logic", () => {
 
     render(
       <TestWrapper>
-        <WidgetMap
-          indicator={currentIndicator}
-          layers={[]}
-          defaultBasemapId={defaultBasemapIdForWidget}
-        />
+        <WidgetMap indicator={currentIndicator} layers={[]} basemapId={basemapIdForWidget} />
       </TestWrapper>,
     );
 
     const onBasemapChange = globalThis.capturedOnBasemapChange;
     expect(onBasemapChange).toBeDefined();
     act(() => {
-      onBasemapChange!(defaultBasemapIdForWidget);
+      onBasemapChange!(basemapIdForWidget);
     });
 
     expect(mockSetTopics).toHaveBeenCalledTimes(1);
@@ -347,11 +339,7 @@ describe("WidgetMap - Basemap Change Logic", () => {
     };
     render(
       <TestWrapper>
-        <WidgetMap
-          indicator={currentIndicator}
-          layers={[]}
-          defaultBasemapId={defaultBasemapIdForWidget}
-        />
+        <WidgetMap indicator={currentIndicator} layers={[]} basemapId={basemapIdForWidget} />
       </TestWrapper>,
     );
 
@@ -384,29 +372,6 @@ describe("WidgetMap - Basemap Change Logic", () => {
     );
   });
 
-  test("should handle indicator not found in topics gracefully", () => {
-    const currentIndicator = { ...baseMockIndicator, id: 99 };
-    render(
-      <TestWrapper>
-        <WidgetMap
-          indicator={currentIndicator}
-          layers={[]}
-          defaultBasemapId={defaultBasemapIdForWidget}
-        />
-      </TestWrapper>,
-    );
-
-    const onBasemapChange = globalThis.capturedOnBasemapChange;
-    expect(onBasemapChange).toBeDefined();
-    const newSelectedBasemap: BasemapIds = "satellite";
-    act(() => {
-      onBasemapChange!(newSelectedBasemap);
-    });
-
-    expect(mockSetTopics).not.toHaveBeenCalled();
-    expect(mockSetSyncDefaultTopics).not.toHaveBeenCalled();
-  });
-
   test("should set basemapId in syncDefaultTopics when a new, non-default basemap is selected for a default topic indicator (not in syncTopics)", () => {
     const currentIndicator = {
       ...baseMockIndicator,
@@ -418,11 +383,7 @@ describe("WidgetMap - Basemap Change Logic", () => {
 
     render(
       <TestWrapper>
-        <WidgetMap
-          indicator={currentIndicator}
-          layers={[]}
-          defaultBasemapId={defaultBasemapIdForWidget}
-        />
+        <WidgetMap indicator={currentIndicator} layers={[]} basemapId={basemapIdForWidget} />
       </TestWrapper>,
     );
 
@@ -461,11 +422,7 @@ describe("WidgetMap - Basemap Change Logic", () => {
 
     render(
       <TestWrapper>
-        <WidgetMap
-          indicator={currentIndicator}
-          layers={[]}
-          defaultBasemapId={defaultBasemapIdForWidget}
-        />
+        <WidgetMap indicator={currentIndicator} layers={[]} basemapId={basemapIdForWidget} />
       </TestWrapper>,
     );
 
@@ -509,11 +466,7 @@ describe("WidgetMap - Basemap Change Logic", () => {
 
     render(
       <TestWrapper>
-        <WidgetMap
-          indicator={currentIndicator}
-          layers={[]}
-          defaultBasemapId={defaultBasemapIdForWidget}
-        />
+        <WidgetMap indicator={currentIndicator} layers={[]} basemapId={basemapIdForWidget} />
       </TestWrapper>,
     );
 
@@ -521,7 +474,7 @@ describe("WidgetMap - Basemap Change Logic", () => {
     expect(onBasemapChange).toBeDefined();
 
     act(() => {
-      onBasemapChange!(defaultBasemapIdForWidget);
+      onBasemapChange!(basemapIdForWidget);
     });
 
     expect(mockSetSyncDefaultTopics).toHaveBeenCalledTimes(1);
@@ -548,11 +501,7 @@ describe("WidgetMap - Basemap Change Logic", () => {
 
     render(
       <TestWrapper>
-        <WidgetMap
-          indicator={currentIndicator}
-          layers={[]}
-          defaultBasemapId={defaultBasemapIdForWidget}
-        />
+        <WidgetMap indicator={currentIndicator} layers={[]} basemapId={basemapIdForWidget} />
       </TestWrapper>,
     );
 
@@ -560,7 +509,7 @@ describe("WidgetMap - Basemap Change Logic", () => {
     expect(onBasemapChange).toBeDefined();
 
     act(() => {
-      onBasemapChange!(defaultBasemapIdForWidget);
+      onBasemapChange!(basemapIdForWidget);
     });
 
     expect(mockSetSyncDefaultTopics).toHaveBeenCalledTimes(1);
@@ -585,11 +534,7 @@ describe("WidgetMap - Basemap Change Logic", () => {
 
     render(
       <TestWrapper>
-        <WidgetMap
-          indicator={currentIndicator}
-          layers={[]}
-          defaultBasemapId={defaultBasemapIdForWidget}
-        />
+        <WidgetMap indicator={currentIndicator} layers={[]} basemapId={basemapIdForWidget} />
       </TestWrapper>,
     );
 
@@ -597,7 +542,7 @@ describe("WidgetMap - Basemap Change Logic", () => {
     expect(onBasemapChange).toBeDefined();
 
     act(() => {
-      onBasemapChange!(defaultBasemapIdForWidget);
+      onBasemapChange!(basemapIdForWidget);
     });
 
     expect(mockSetSyncDefaultTopics).toHaveBeenCalledTimes(1);

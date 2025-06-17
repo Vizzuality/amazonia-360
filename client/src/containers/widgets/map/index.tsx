@@ -15,6 +15,7 @@ import {
   ResourceImagery,
   ResourceImageryTile,
 } from "@/app/local-api/indicators/route";
+import { DefaultTopicConfig } from "@/app/parsers";
 import { useSyncLocation, useSyncTopics, useSyncDefaultTopics } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
@@ -27,13 +28,11 @@ import BasemapControl, { BasemapIds } from "@/components/map/controls/basemap";
 import FullscreenControl from "@/components/map/controls/fullscreen";
 import ZoomControl from "@/components/map/controls/zoom";
 
-import { useInitialBasemapId } from "./hooks";
 import { handleBasemapChange } from "./utils";
+import { FALLBACK_WIDGET_DEFAULT_BASEMAP_ID } from "./utils";
 
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
-
-const FALLBACK_WIDGET_DEFAULT_BASEMAP_ID: BasemapIds = "gray-vector";
 
 type EsriLayer =
   | Partial<__esri.WebTileLayer>
@@ -43,30 +42,29 @@ type EsriLayer =
 
 interface WidgetMapProps extends Omit<__esri.MapViewProperties, "map"> {
   indicator: Indicator;
+  basemapId?: BasemapIds;
   layers: EsriLayer[];
-  defaultBasemapId?: BasemapIds;
 }
 
 export default function WidgetMap({
   indicator,
+  basemapId = FALLBACK_WIDGET_DEFAULT_BASEMAP_ID,
   layers,
-  defaultBasemapId = FALLBACK_WIDGET_DEFAULT_BASEMAP_ID,
   ...viewProps
 }: WidgetMapProps) {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
-  const [topics, setTopics] = useSyncTopics();
+  const [, setTopics] = useSyncTopics();
   const [syncDefaultTopics, setSyncDefaultTopics] = useSyncDefaultTopics();
+  const syncBasemapId = useMemo(() => {
+    const topicWithIndicator = syncDefaultTopics?.find((topic) =>
+      topic.indicators?.find((ind) => ind.id === indicator.id),
+    );
+    return topicWithIndicator?.indicators?.find((ind) => ind.id === indicator.id)?.basemapId;
+  }, [syncDefaultTopics, indicator.id]);
 
   const locale = useLocale();
   const { data: overviewTopicsData } = useGetOverviewTopics({ locale });
-
-  const initialBasemapIdToUse = useInitialBasemapId({
-    indicator,
-    topics,
-    syncDefaultTopics,
-    defaultBasemapId,
-  });
 
   const LABELS_LAYER = useMemo(() => {
     return {
@@ -84,7 +82,7 @@ export default function WidgetMap({
     <div className="relative h-full">
       <Map
         id={`overview-${indicator.id}`}
-        initialBasemapId={initialBasemapIdToUse}
+        initialBasemapId={syncBasemapId || basemapId}
         {...(GEOMETRY?.extent && {
           defaultBbox: [
             GEOMETRY?.extent.xmin,
@@ -137,12 +135,11 @@ export default function WidgetMap({
             onBasemapChange={(selectedBasemapId) =>
               handleBasemapChange(
                 selectedBasemapId,
-                defaultBasemapId,
+                overviewTopicsData ? (overviewTopicsData as unknown as DefaultTopicConfig[]) : null,
                 indicator,
-                topics,
-                setTopics,
-                overviewTopicsData,
                 setSyncDefaultTopics,
+                setTopics,
+                basemapId,
               )
             }
           />

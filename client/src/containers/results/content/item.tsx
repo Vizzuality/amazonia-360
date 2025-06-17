@@ -35,12 +35,10 @@ export const ReportResultsContentItem = ({
 
   const EDITABLE = editable && reportEditionMode;
   const TOPIC = useGetTopicsId(topic.id, locale);
-
   const handleDrop = useCallback(
     (layout: Layout[]) => {
       setTopics((prev) => {
         if (!prev) return prev;
-
         const i = prev?.findIndex((t) => t.id === topic.id);
 
         if (i === -1) return prev;
@@ -67,7 +65,8 @@ export const ReportResultsContentItem = ({
   );
 
   const INDICATORS = useMemo(() => {
-    return topic?.indicators?.map(({ type, id, w, h, x, y }) => {
+    return topic?.indicators?.map((indicator) => {
+      const { type, id, w, h, x, y } = indicator;
       const dataGridConfig = {
         x: x ?? 0,
         y: y ?? 0,
@@ -76,7 +75,6 @@ export const ReportResultsContentItem = ({
         minW: MIN_VISUALIZATION_SIZES[type]?.w ?? 1,
         minH: MIN_VISUALIZATION_SIZES[type]?.h ?? 1,
       };
-
       return (
         <div
           key={`{"topic":${topic.id},"indicator":${id},"type":"${type}"}`}
@@ -86,14 +84,17 @@ export const ReportResultsContentItem = ({
         >
           <ReportResultsContentIndicatorItem
             topic={topic}
-            indicator={{ id, type }}
+            indicatorView={{
+              id,
+              type,
+              basemapId: type === "map" ? indicator.basemapId : undefined,
+            }}
             editable={editable}
           />
         </div>
       );
     });
-  }, [topic, editable, EDITABLE]); // eslint-disable-line
-
+  }, [topic, editable, EDITABLE]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div
       key={topic.id}
