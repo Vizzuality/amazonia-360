@@ -34,6 +34,22 @@ jest.mock("next/dynamic", () => () => {
   return DynamicComponent;
 });
 
+jest.mock("@arcgis/core/PopupTemplate", () => {
+  return jest.fn().mockImplementation((options) => {
+    return {
+      ...options,
+    };
+  });
+});
+
+jest.mock("@arcgis/core/layers/support/FeatureReductionCluster", () => {
+  return jest.fn().mockImplementation((options) => {
+    return {
+      ...options,
+    };
+  });
+});
+
 // Define a type for overview topics data
 interface MockOverviewTopicDefaultVisualization {
   id: number;

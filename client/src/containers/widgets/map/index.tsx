@@ -28,7 +28,7 @@ import BasemapControl, { BasemapIds } from "@/components/map/controls/basemap";
 import FullscreenControl from "@/components/map/controls/fullscreen";
 import ZoomControl from "@/components/map/controls/zoom";
 
-import { handleBasemapChange } from "./utils";
+import { handleMapIndicatorPropertyChange } from "./utils";
 import { FALLBACK_WIDGET_DEFAULT_BASEMAP_ID } from "./utils";
 
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
@@ -56,15 +56,18 @@ export default function WidgetMap({
   const GEOMETRY = useLocationGeometry(location);
   const [, setTopics] = useSyncTopics();
   const [syncDefaultTopics, setSyncDefaultTopics] = useSyncDefaultTopics();
-  const syncBasemapId = useMemo(() => {
+  const { syncBasemapId } = useMemo(() => {
     const topicWithIndicator = syncDefaultTopics?.find((topic) =>
       topic.indicators?.find((ind) => ind.id === indicator.id),
     );
-    return topicWithIndicator?.indicators?.find((ind) => ind.id === indicator.id)?.basemapId;
+    const indicatorConfig = topicWithIndicator?.indicators?.find((ind) => ind.id === indicator.id);
+    return {
+      syncBasemapId: indicatorConfig?.basemapId,
+    };
   }, [syncDefaultTopics, indicator.id]);
-
   const locale = useLocale();
   const { data: overviewTopicsData } = useGetOverviewTopics({ locale });
+  const defaultValues = useMemo(() => ({ basemapId }), [basemapId]);
 
   const LABELS_LAYER = useMemo(() => {
     return {
@@ -133,13 +136,14 @@ export default function WidgetMap({
           <ZoomControl />
           <BasemapControl
             onBasemapChange={(selectedBasemapId) =>
-              handleBasemapChange(
+              handleMapIndicatorPropertyChange(
+                "basemapId",
                 selectedBasemapId,
                 overviewTopicsData ? (overviewTopicsData as unknown as DefaultTopicConfig[]) : null,
                 indicator,
                 setSyncDefaultTopics,
                 setTopics,
-                basemapId,
+                defaultValues,
               )
             }
           />

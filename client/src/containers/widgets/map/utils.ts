@@ -9,19 +9,23 @@ import {
 
 import { BasemapIds } from "@/components/map/controls/basemap";
 
-export const handleBasemapChange = (
-  selectedBasemapId: BasemapIds,
+type MapIndicatorProperties = "basemapId";
+
+export const handleMapIndicatorPropertyChange = (
+  propertyName: MapIndicatorProperties,
+  propertyValue: BasemapIds | number,
   overviewTopicsData: DefaultTopicConfig[] | null,
   indicator: Indicator,
   setSyncDefaultTopics: (
     callback: (prevDefaultTopics: DefaultTopicConfig[] | null) => DefaultTopicConfig[] | null,
   ) => void,
   setTopics: (callback: (prevTopicsState: TopicView[] | null) => TopicView[] | null) => void,
-  defaultWidgetBasemapId: BasemapIds,
+  defaultValues: { basemapId: BasemapIds },
 ) => {
   const currentIndicatorTopicId = indicator.topic.id;
+  const defaultValue = defaultValues[propertyName];
+  const isResettingToDefault = propertyValue === defaultValue;
 
-  // If the current indicator's topic is in overviewTopicsData, manage with setSyncDefaultTopics
   const isManagingViaSyncDefaultTopics = overviewTopicsData?.some(
     (topic) => currentIndicatorTopicId === topic.id,
   );
@@ -29,16 +33,12 @@ export const handleBasemapChange = (
   if (isManagingViaSyncDefaultTopics) {
     setSyncDefaultTopics(
       (prevDefaultTopics: DefaultTopicConfig[] | null): DefaultTopicConfig[] | null => {
-        const isResettingToDefault = selectedBasemapId === defaultWidgetBasemapId;
-
         const newTopicsArray: DefaultTopicConfig[] = prevDefaultTopics
           ? [...prevDefaultTopics]
           : [];
-
         const topicIndex = newTopicsArray.findIndex((t) => t.id === currentIndicatorTopicId);
 
         if (topicIndex !== -1) {
-          // Topic already exists in syncDefaultTopics
           const targetTopic = { ...newTopicsArray[topicIndex] };
           const indicators: DefaultTopicIndicatorConfig[] = targetTopic.indicators
             ? [...targetTopic.indicators]
@@ -47,57 +47,59 @@ export const handleBasemapChange = (
 
           if (isResettingToDefault) {
             if (indicatorConfigIndex !== -1) {
-              // Remove the specific indicator's basemap override
-              indicators.splice(indicatorConfigIndex, 1);
+              const indicatorConfig = { ...indicators[indicatorConfigIndex] };
+              delete indicatorConfig[propertyName];
+
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              const { id, ...overrides } = indicatorConfig;
+              if (Object.keys(overrides).length > 0) {
+                indicators[indicatorConfigIndex] = indicatorConfig;
+              } else {
+                indicators.splice(indicatorConfigIndex, 1);
+              }
             }
           } else {
-            // Add or update the indicator's basemap override
             if (indicatorConfigIndex !== -1) {
               indicators[indicatorConfigIndex] = {
                 ...indicators[indicatorConfigIndex],
-                basemapId: selectedBasemapId,
+                ...(propertyName === "basemapId"
+                  ? { basemapId: propertyValue as BasemapIds }
+                  : { [propertyName]: propertyValue }),
               };
             } else {
               indicators.push({
                 id: indicator.id,
-                basemapId: selectedBasemapId,
-              });
+                [propertyName]: propertyValue,
+              } as DefaultTopicIndicatorConfig);
             }
           }
 
           if (indicators.length === 0) {
-            // If the topic has no more indicator overrides, remove the topic itself
             newTopicsArray.splice(topicIndex, 1);
           } else {
-            // Update the topic with the modified indicators list
             newTopicsArray[topicIndex] = {
               ...targetTopic,
               indicators,
             };
           }
-        } else {
-          // Topic does not exist in syncDefaultTopics yet
-          if (!isResettingToDefault) {
-            // Add new topic configuration only if not resetting to default
-            newTopicsArray.push({
-              id: currentIndicatorTopicId,
-              indicators: [
-                {
-                  id: indicator.id,
-                  basemapId: selectedBasemapId,
-                },
-              ],
-            });
-          }
+        } else if (!isResettingToDefault) {
+          newTopicsArray.push({
+            id: currentIndicatorTopicId,
+            indicators: [
+              {
+                id: indicator.id,
+                [propertyName]: propertyValue,
+              } as DefaultTopicIndicatorConfig,
+            ],
+          });
         }
+
         return newTopicsArray.length > 0 ? newTopicsArray : null;
       },
     );
   } else {
-    // Indicator's topic is not a default topic. Update syncTopics.
     setTopics((prevTopicsState: TopicView[] | null): TopicView[] | null => {
       const currentTopics = prevTopicsState || [];
-
       const topicIndex = currentTopics.findIndex((t) => t.id === indicator.topic.id);
 
       if (topicIndex === -1) {
@@ -113,18 +115,28 @@ export const handleBasemapChange = (
         return prevTopicsState;
       }
 
-      // Topic and specific map indicator found. Proceed with the update.
       const newTopics = currentTopics.map((topic, index) => {
         if (index === topicIndex) {
           return {
             ...topic,
             indicators: (topic.indicators || []).map((ind) => {
               if (ind.id === indicator.id && ind.type === "map") {
-                if (selectedBasemapId === defaultWidgetBasemapId) {
-                  const updatedInd = { ...ind, basemapId: undefined };
-                  return updatedInd;
+                if (isResettingToDefault) {
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  const { [propertyName]: _removed, ...rest } = ind;
+                  return rest;
                 } else {
-                  return { ...ind, basemapId: selectedBasemapId };
+                  if (
+                    propertyName === "basemapId" &&
+                    typeof propertyValue === "string"
+                  ) {
+                    return { ...ind, basemapId: propertyValue };
+                  } else {
+                    // If not a string, do not assign basemapId
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    const { basemapId, ...rest } = ind;
+                    return rest;
+                  }
                 }
               }
               return ind;

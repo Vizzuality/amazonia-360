@@ -32,7 +32,7 @@ export type TopicView = {
 
 export type DefaultTopicIndicatorConfig = {
   id: number;
-  basemapId: BasemapIds;
+  basemapId?: BasemapIds;
 };
 
 export type DefaultTopicConfig = {
