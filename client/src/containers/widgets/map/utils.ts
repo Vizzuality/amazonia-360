@@ -126,10 +126,7 @@ export const handleMapIndicatorPropertyChange = (
                   const { [propertyName]: _removed, ...rest } = ind;
                   return rest;
                 } else {
-                  if (
-                    propertyName === "basemapId" &&
-                    typeof propertyValue === "string"
-                  ) {
+                  if (propertyName === "basemapId" && typeof propertyValue === "string") {
                     return { ...ind, basemapId: propertyValue };
                   } else {
                     // If not a string, do not assign basemapId
