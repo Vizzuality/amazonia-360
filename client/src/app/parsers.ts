@@ -2,20 +2,42 @@ import { parseAsArrayOf, parseAsFloat, parseAsJson, parseAsString } from "nuqs";
 
 import { ContextDescriptionType } from "@/types/generated/api.schemas";
 
+import { BasemapIds } from "@/components/map/controls/basemap";
+
 import { VisualizationTypes } from "./local-api/indicators/route";
 
-export type IndicatorView = {
+type IndicatorViewBase = {
   id: number;
-  type: VisualizationTypes;
   w?: number;
   h?: number;
   x?: number;
   y?: number;
 };
 
+export type IndicatorMapView = IndicatorViewBase & {
+  type: "map";
+  basemapId?: BasemapIds;
+};
+
+type IndicatorOtherView = IndicatorViewBase & {
+  type: Exclude<VisualizationTypes, "map">;
+};
+
+export type IndicatorView = IndicatorMapView | IndicatorOtherView;
+
 export type TopicView = {
   id: number;
   indicators: IndicatorView[] | undefined;
+};
+
+export type DefaultTopicIndicatorConfig = {
+  id: number;
+  basemapId?: BasemapIds;
+};
+
+export type DefaultTopicConfig = {
+  id: number;
+  indicators: DefaultTopicIndicatorConfig[];
 };
 
 export type AiSummary = {
@@ -25,6 +47,9 @@ export type AiSummary = {
 };
 
 export const topicsParser = parseAsArrayOf(parseAsJson<TopicView>());
+
+// Default topics are the ones that are pre-configured in every report
+export const defaultTopicsConfigParser = parseAsArrayOf(parseAsJson<DefaultTopicConfig>());
 
 export const bboxParser = parseAsArrayOf(parseAsFloat);
 

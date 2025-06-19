@@ -34,6 +34,8 @@ import { NumericImageryIndicators } from "@/containers/indicators/numeric/imager
 import { NumericImageryTileIndicators } from "@/containers/indicators/numeric/imagery-tile";
 import { TableIndicators } from "@/containers/indicators/table";
 
+import { BASEMAPS } from "@/components/map/controls/basemap";
+
 // custom indicators
 
 const COMPONENT_INDICATORS = {
@@ -46,17 +48,18 @@ type COMPONENT_INDICATORS_KEYS = keyof typeof COMPONENT_INDICATORS;
 export default function ReportResultsIndicator({
   id,
   type,
+  basemapId,
   editable,
   onEdit,
 }: {
   id: Indicator["id"];
   type: VisualizationTypes;
+  basemapId?: (typeof BASEMAPS)[number]["id"];
   editable: boolean;
   onEdit?: (e: MouseEvent<HTMLElement>) => void;
 }) {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
-
   if (!indicator) return null;
 
   return (
@@ -76,6 +79,7 @@ export default function ReportResultsIndicator({
               {...(indicator as Omit<Indicator, "resource"> & {
                 resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
               })}
+              basemapId={basemapId}
             />
           )}
 

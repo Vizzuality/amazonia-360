@@ -4,7 +4,10 @@ import { useMemo } from "react";
 
 import dynamic from "next/dynamic";
 
+import { useLocale } from "next-intl";
+
 import { useLocationGeometry } from "@/lib/location";
+import { useGetOverviewTopics } from "@/lib/topics";
 
 import {
   Indicator,
@@ -12,7 +15,8 @@ import {
   ResourceImagery,
   ResourceImageryTile,
 } from "@/app/local-api/indicators/route";
-import { useSyncLocation } from "@/app/store";
+import { DefaultTopicConfig } from "@/app/parsers";
+import { useSyncLocation, useSyncTopics, useSyncDefaultTopics } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
@@ -20,36 +24,50 @@ import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer"
 import { WidgetLegend } from "@/containers/widgets/map/legend";
 
 import Controls from "@/components/map/controls";
+import BasemapControl, { BasemapIds } from "@/components/map/controls/basemap";
 import FullscreenControl from "@/components/map/controls/fullscreen";
 import ZoomControl from "@/components/map/controls/zoom";
+
+import { handleMapIndicatorPropertyChange } from "./utils";
+import { FALLBACK_WIDGET_DEFAULT_BASEMAP_ID } from "./utils";
 
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
-interface WidgetMapProps extends __esri.MapViewProperties {
+type EsriLayer =
+  | Partial<__esri.WebTileLayer>
+  | Partial<__esri.ImageryTileLayer>
+  | Partial<__esri.ImageryLayer>
+  | Partial<__esri.FeatureLayer>;
+
+interface WidgetMapProps extends Omit<__esri.MapViewProperties, "map"> {
   indicator: Indicator;
-  layers: (
-    | Partial<__esri.WebTileLayer>
-    | Partial<__esri.ImageryTileLayer>
-    | Partial<__esri.ImageryLayer>
-    | Partial<__esri.FeatureLayer>
-  )[];
+  basemapId?: BasemapIds;
+  layers: EsriLayer[];
 }
 
-export default function WidgetMap({ indicator, layers, ...viewProps }: WidgetMapProps) {
+export default function WidgetMap({
+  indicator,
+  basemapId = FALLBACK_WIDGET_DEFAULT_BASEMAP_ID,
+  layers,
+  ...viewProps
+}: WidgetMapProps) {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
-
-  // We need to create our custom basemap and labels layers because if we use the default ones the labels will be on top of all layers, even markers
-  const BASEMAP_LAYER = useMemo(() => {
+  const [, setTopics] = useSyncTopics();
+  const [syncDefaultTopics, setSyncDefaultTopics] = useSyncDefaultTopics();
+  const { syncBasemapId } = useMemo(() => {
+    const topicWithIndicator = syncDefaultTopics?.find((topic) =>
+      topic.indicators?.find((ind) => ind.id === indicator.id),
+    );
+    const indicatorConfig = topicWithIndicator?.indicators?.find((ind) => ind.id === indicator.id);
     return {
-      id: "basemap",
-      type: "vector-tile" as const,
-      url: "https://basemaps.arcgis.com/arcgis/rest/services/World_Basemap_v2/VectorTileServer",
-      style:
-        "https://www.arcgis.com/sharing/rest/content/items/291da5eab3a0412593b66d384379f89f/resources/styles/root.json",
+      syncBasemapId: indicatorConfig?.basemapId,
     };
-  }, []);
+  }, [syncDefaultTopics, indicator.id]);
+  const locale = useLocale();
+  const { data: overviewTopicsData } = useGetOverviewTopics({ locale });
+  const defaultValues = useMemo(() => ({ basemapId }), [basemapId]);
 
   const LABELS_LAYER = useMemo(() => {
     return {
@@ -66,7 +84,8 @@ export default function WidgetMap({ indicator, layers, ...viewProps }: WidgetMap
   return (
     <div className="relative h-full">
       <Map
-        id="overview"
+        id={`overview-${indicator.id}`}
+        initialBasemapId={syncBasemapId || basemapId}
         {...(GEOMETRY?.extent && {
           defaultBbox: [
             GEOMETRY?.extent.xmin,
@@ -76,9 +95,6 @@ export default function WidgetMap({ indicator, layers, ...viewProps }: WidgetMap
           ],
           bbox: undefined,
         })}
-        mapProps={{
-          basemap: undefined,
-        }}
         viewProps={{
           navigation: {
             mouseWheelZoomEnabled: false,
@@ -87,17 +103,22 @@ export default function WidgetMap({ indicator, layers, ...viewProps }: WidgetMap
           ...viewProps,
         }}
       >
-        <Layer layer={BASEMAP_LAYER} index={0} />
-        {/* Amazonia border layer */}
-        <Layer index={1} layer={DATASETS.area_afp.layer} />
-        {layers.map((layer, index, arr) => {
+        {layers.map((layer: EsriLayer, index: number, arr: EsriLayer[]) => {
           const i = arr.length - index;
-
-          return <Layer key={layer.id} layer={layer} index={i} GEOMETRY={GEOMETRY} />;
+          // Assuming layer.id is always present for key. If not, a fallback or check might be needed.
+          // For Esri Layers, 'id' is a property of __esri.Layer, which these should extend.
+          return (
+            <Layer
+              key={layer.id || `widget-layer-${index}`}
+              layer={layer}
+              index={i}
+              GEOMETRY={GEOMETRY}
+            />
+          );
         })}
 
+        <Layer index={1} layer={DATASETS.area_afp.layer} />
         <SelectedLayer index={layers.length + 2} location={location} />
-
         <Layer layer={LABELS_LAYER} index={layers.length + 3} />
 
         {(indicator.resource.type === "feature" ||
@@ -113,6 +134,19 @@ export default function WidgetMap({ indicator, layers, ...viewProps }: WidgetMap
         <Controls>
           <FullscreenControl />
           <ZoomControl />
+          <BasemapControl
+            onBasemapChange={(selectedBasemapId) =>
+              handleMapIndicatorPropertyChange(
+                "basemapId",
+                selectedBasemapId,
+                overviewTopicsData ? (overviewTopicsData as unknown as DefaultTopicConfig[]) : null,
+                indicator,
+                setSyncDefaultTopics,
+                setTopics,
+                defaultValues,
+              )
+            }
+          />
         </Controls>
       </Map>
     </div>

@@ -4,7 +4,7 @@ import { useCallback, useMemo } from "react";
 import { useAtom } from "jotai";
 
 import { VisualizationTypes } from "@/app/local-api/indicators/route";
-import { IndicatorView, TopicView } from "@/app/parsers";
+import { IndicatorView, IndicatorMapView, TopicView } from "@/app/parsers";
 import { indicatorsEditionModeAtom, reportEditionModeAtom, useSyncTopics } from "@/app/store";
 
 import IndicatorCard from "@/containers/results/content/indicators/card";
@@ -16,21 +16,20 @@ import { useSidebar } from "@/components/ui/sidebar";
 
 export interface ReportResultsContentIndicatorItemProps {
   topic: TopicView;
-  indicator: IndicatorView;
+  indicatorView: IndicatorView;
   editable: boolean;
 }
 
 export const ReportResultsContentIndicatorItem = ({
   topic,
-  indicator,
+  indicatorView,
   editable = true,
 }: ReportResultsContentIndicatorItemProps) => {
   const [, setTopics] = useSyncTopics();
   const { toggleSidebar } = useSidebar();
   const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
   const [editionModeIndicator, setEditionModeIndicator] = useAtom(indicatorsEditionModeAtom);
-
-  const { id, type } = indicator;
+  const { id, type } = indicatorView;
 
   const EDITABLE = editable && reportEditionMode;
 
@@ -63,6 +62,7 @@ export const ReportResultsContentIndicatorItem = ({
     setReportEditionMode(!reportEditionMode);
   }, [toggleSidebar, setReportEditionMode, reportEditionMode]);
 
+  const indicatorBasemap = (indicatorView as IndicatorMapView)?.basemapId;
   const INDICATOR = useMemo(() => {
     return (
       <IndicatorCard
@@ -71,9 +71,10 @@ export const ReportResultsContentIndicatorItem = ({
         type={type}
         editable={editable}
         onEdit={handleEdit}
+        basemapId={type === "map" ? indicatorView.basemapId : undefined}
       />
     );
-  }, [topic.id, id, type, editable, handleEdit]);
+  }, [topic.id, id, type, editable, handleEdit, indicatorBasemap]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div
