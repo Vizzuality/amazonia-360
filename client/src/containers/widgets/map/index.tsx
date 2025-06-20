@@ -54,20 +54,26 @@ export default function WidgetMap({
 }: WidgetMapProps) {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
-  const [, setTopics] = useSyncTopics();
+  const [topics, setTopics] = useSyncTopics();
   const [syncDefaultTopics, setSyncDefaultTopics] = useSyncDefaultTopics();
-  const { syncBasemapId } = useMemo(() => {
-    const topicWithIndicator = syncDefaultTopics?.find((topic) =>
-      topic.indicators?.find((ind) => ind.id === indicator.id),
-    );
+  const { syncBasemapId, opacity } = useMemo(() => {
+    const topicWithIndicator =
+      syncDefaultTopics?.find((topic) =>
+        topic.indicators?.find((ind) => ind.id === indicator.id),
+      ) ||
+      topics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id));
     const indicatorConfig = topicWithIndicator?.indicators?.find((ind) => ind.id === indicator.id);
     return {
-      syncBasemapId: indicatorConfig?.basemapId,
+      syncBasemapId:
+        indicatorConfig && "basemapId" in indicatorConfig
+          ? indicatorConfig.basemapId
+          : basemapId,
+      opacity: indicatorConfig && "opacity" in indicatorConfig ? indicatorConfig.opacity : 100,
     };
-  }, [syncDefaultTopics, indicator.id]);
+  }, [syncDefaultTopics, indicator.id, topics, basemapId]);
   const locale = useLocale();
   const { data: overviewTopicsData } = useGetOverviewTopics({ locale });
-  const defaultValues = useMemo(() => ({ basemapId }), [basemapId]);
+  const defaultValues = useMemo(() => ({ basemapId, opacity: 100 }), [basemapId]);
 
   const LABELS_LAYER = useMemo(() => {
     return {
@@ -110,7 +116,7 @@ export default function WidgetMap({
           return (
             <Layer
               key={layer.id || `widget-layer-${index}`}
-              layer={layer}
+              layer={{ ...layer, opacity: opacity ? opacity / 100 : 1 }}
               index={i}
               GEOMETRY={GEOMETRY}
             />
@@ -124,12 +130,12 @@ export default function WidgetMap({
         {(indicator.resource.type === "feature" ||
           indicator.resource.type === "imagery" ||
           indicator.resource.type === "imagery-tile") && (
-          <WidgetLegend
-            {...(indicator as Omit<Indicator, "resource"> & {
-              resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
-            })}
-          />
-        )}
+            <WidgetLegend
+              {...(indicator as Omit<Indicator, "resource"> & {
+                resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
+              })}
+            />
+          )}
 
         <Controls>
           <FullscreenControl />

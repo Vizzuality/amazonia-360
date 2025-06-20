@@ -1,23 +1,20 @@
 import { useMemo } from "react";
-
 import Color from "@arcgis/core/Color";
-
 import { useResourceFeatureLayerId } from "@/lib/indicators";
-
 import { Indicator, ResourceFeature } from "@/app/local-api/indicators/route";
 
 import { CardLoader } from "@/containers/card";
-
 import Legend from "@/components/map/legend";
 import LegendItem, { LegendItemProps } from "@/components/map/legend/item";
+import OpacityControlButton from "./opacity-control";
 
 export interface FeatureLegendProps {
   indicator: Indicator;
 }
-
 export const FeatureLegend = ({
   name,
   resource,
+  ...indicator
 }: Omit<Indicator, "resource"> & {
   resource: ResourceFeature;
 }) => {
@@ -78,10 +75,13 @@ export const FeatureLegend = ({
   }, [name, layerData]);
 
   return (
-    <Legend defaultOpen>
+    <Legend
+      defaultOpen
+      actionButtons={<OpacityControlButton indicator={indicator} />}
+    >
       <CardLoader query={[query]} className="h-10 grow">
         {!!LEGEND && <LegendItem {...LEGEND} direction="vertical" />}
       </CardLoader>
-    </Legend>
+    </Legend >
   );
 };

@@ -96,6 +96,25 @@ export default function Layer({
     }
   }, [id, index, layer, mapInstance]);
 
+  // Update opacity
+  useEffect(() => {
+    if (!mapInstance) {
+      return;
+    }
+
+    const { map } = mapInstance;
+
+    if (!map || !id) {
+      return;
+    }
+
+    const l = map.findLayerById(id);
+
+    if (l) {
+      l.opacity = layer.opacity ?? 1;
+    }
+  }, [id, layer.opacity, mapInstance]);
+
   useEffect(() => {
     if (!mapInstance) {
       return;

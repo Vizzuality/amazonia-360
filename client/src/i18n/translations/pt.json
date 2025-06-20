@@ -118,6 +118,7 @@
   "grid-report-map-legend-select-layer": "Selecionar camada",
   "grid-report-map-legend-select-layer-to-display": "Selecionar a camada que pretende visualizar",
   "grid-report-map-legend-grid-opacity": "Opacidade da Grid",
+  "grid-report-map-legend-layer-opacity": "Opacidade da camada",
   "grid-map-tooltip": "Clique na célula para redefinir a área de interesse.",
   "mobile-alert-title": "Experiência móvel limitada",
   "mobile-alert-description": "Algumas funções podem ser restringidas nos celulares para melhorar a usabilidade. Para usufruir de todas as funcionalidades, considere a utilização de uma tela maior.",
