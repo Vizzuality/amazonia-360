@@ -1,16 +1,25 @@
-import { Slider } from "@/components/ui/slider";
-import { Tooltip, TooltipTrigger, TooltipArrow, TooltipContent } from "@/components/ui/tooltip";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { TooltipPortal } from "@radix-ui/react-tooltip";
+import { useState } from "react";
+
 import { PopoverArrow } from "@radix-ui/react-popover";
+import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { LucideBlend } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useDebounce } from "rooks";
 
-const OpacityControl = ({ value, onValueChange }: {
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Slider } from "@/components/ui/slider";
+import { Tooltip, TooltipTrigger, TooltipArrow, TooltipContent } from "@/components/ui/tooltip";
+
+const OpacityControl = ({
+  value,
+  onValueChange,
+}: {
   value: number;
   onValueChange: (value: number[]) => void;
 }) => {
   const t = useTranslations();
+  const [opacity, setOpacity] = useState(value);
+  const debouncedOnValueChange = useDebounce(onValueChange, 100);
 
   return (
     <Popover>
@@ -36,9 +45,12 @@ const OpacityControl = ({ value, onValueChange }: {
                 min={0}
                 max={100}
                 step={1}
-                value={[value]}
+                value={[opacity]}
                 minStepsBetweenThumbs={1}
-                onValueChange={onValueChange}
+                onValueChange={(v) => {
+                  setOpacity(v[0]);
+                  debouncedOnValueChange(v);
+                }}
                 className="cursor-pointer"
               />
             </div>

@@ -60,14 +60,11 @@ export default function WidgetMap({
     const topicWithIndicator =
       syncDefaultTopics?.find((topic) =>
         topic.indicators?.find((ind) => ind.id === indicator.id),
-      ) ||
-      topics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id));
+      ) || topics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id));
     const indicatorConfig = topicWithIndicator?.indicators?.find((ind) => ind.id === indicator.id);
     return {
       syncBasemapId:
-        indicatorConfig && "basemapId" in indicatorConfig
-          ? indicatorConfig.basemapId
-          : basemapId,
+        indicatorConfig && "basemapId" in indicatorConfig ? indicatorConfig.basemapId : basemapId,
       opacity: indicatorConfig && "opacity" in indicatorConfig ? indicatorConfig.opacity : 100,
     };
   }, [syncDefaultTopics, indicator.id, topics, basemapId]);
@@ -130,12 +127,12 @@ export default function WidgetMap({
         {(indicator.resource.type === "feature" ||
           indicator.resource.type === "imagery" ||
           indicator.resource.type === "imagery-tile") && (
-            <WidgetLegend
-              {...(indicator as Omit<Indicator, "resource"> & {
-                resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
-              })}
-            />
-          )}
+          <WidgetLegend
+            {...(indicator as Omit<Indicator, "resource"> & {
+              resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
+            })}
+          />
+        )}
 
         <Controls>
           <FullscreenControl />
