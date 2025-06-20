@@ -13,9 +13,11 @@ import { Tooltip, TooltipTrigger, TooltipArrow, TooltipContent } from "@/compone
 const OpacityControl = ({
   value,
   onValueChange,
+  labelSlug = "grid-report-map-legend-layer-opacity",
 }: {
   value: number;
   onValueChange: (value: number[]) => void;
+  labelSlug?: string;
 }) => {
   const t = useTranslations();
   const [opacity, setOpacity] = useState(value);
@@ -39,7 +41,7 @@ const OpacityControl = ({
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex w-72 flex-col space-y-2 rounded-lg bg-white px-4 py-2 shadow-md">
-            <div className="text-sm">{t("grid-report-map-legend-layer-opacity")}</div>
+            <div className="text-sm">{t(labelSlug)}</div>
             <div className="py-2">
               <Slider
                 min={0}
