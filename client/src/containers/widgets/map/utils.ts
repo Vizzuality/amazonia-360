@@ -9,7 +9,7 @@ import {
 
 import { BasemapIds } from "@/components/map/controls/basemap";
 
-type MapIndicatorProperties = "basemapId";
+type MapIndicatorProperties = "basemapId" | "opacity";
 
 export const handleMapIndicatorPropertyChange = (
   propertyName: MapIndicatorProperties,
@@ -20,7 +20,7 @@ export const handleMapIndicatorPropertyChange = (
     callback: (prevDefaultTopics: DefaultTopicConfig[] | null) => DefaultTopicConfig[] | null,
   ) => void,
   setTopics: (callback: (prevTopicsState: TopicView[] | null) => TopicView[] | null) => void,
-  defaultValues: { basemapId: BasemapIds },
+  defaultValues: { basemapId: BasemapIds; opacity: number },
 ) => {
   const currentIndicatorTopicId = indicator.topic.id;
   const defaultValue = defaultValues[propertyName];
@@ -62,9 +62,7 @@ export const handleMapIndicatorPropertyChange = (
             if (indicatorConfigIndex !== -1) {
               indicators[indicatorConfigIndex] = {
                 ...indicators[indicatorConfigIndex],
-                ...(propertyName === "basemapId"
-                  ? { basemapId: propertyValue as BasemapIds }
-                  : { [propertyName]: propertyValue }),
+                [propertyName]: propertyValue,
               };
             } else {
               indicators.push({
@@ -126,14 +124,7 @@ export const handleMapIndicatorPropertyChange = (
                   const { [propertyName]: _removed, ...rest } = ind;
                   return rest;
                 } else {
-                  if (propertyName === "basemapId" && typeof propertyValue === "string") {
-                    return { ...ind, basemapId: propertyValue };
-                  } else {
-                    // If not a string, do not assign basemapId
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    const { basemapId, ...rest } = ind;
-                    return rest;
-                  }
+                  return { ...ind, [propertyName]: propertyValue };
                 }
               }
               return ind;

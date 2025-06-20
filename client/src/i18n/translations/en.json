@@ -118,6 +118,7 @@
   "grid-report-map-legend-select-layer": "Select layer",
   "grid-report-map-legend-select-layer-to-display": "Select layer to display",
   "grid-report-map-legend-grid-opacity": "Grid opacity",
+  "grid-report-map-legend-layer-opacity": "Layer opacity",
   "grid-map-tooltip": "Click on the cell to redefine the area of interest",
   "mobile-alert-title": "Limited mobile experience",
   "mobile-alert-description": "Some features may be restricted on mobile for better usability. For full functionality, please consider using a larger screen",
