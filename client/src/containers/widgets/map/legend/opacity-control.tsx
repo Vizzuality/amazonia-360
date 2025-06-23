@@ -34,6 +34,7 @@ const OpacityControlButton = ({ indicator }: { indicator: Omit<Indicator, "resou
 
   return (
     <OpacityControl
+      triggerClassName="translate-y-[2px]"
       value={opacity ?? DEFAULT_VALUES.opacity}
       onValueChange={(value: number[]) =>
         handleMapIndicatorPropertyChange(

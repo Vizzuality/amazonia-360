@@ -5,7 +5,7 @@ import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { LucideBlend } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useDebounce } from "rooks";
-
+import { cn } from "@/lib/utils";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
 import { Tooltip, TooltipTrigger, TooltipArrow, TooltipContent } from "@/components/ui/tooltip";
@@ -14,10 +14,12 @@ const OpacityControl = ({
   value,
   onValueChange,
   labelSlug = "grid-report-map-legend-layer-opacity",
+  triggerClassName,
 }: {
   value: number;
   onValueChange: (value: number[]) => void;
   labelSlug?: string;
+  triggerClassName?: string;
 }) => {
   const t = useTranslations();
   const [opacity, setOpacity] = useState(value);
@@ -28,7 +30,7 @@ const OpacityControl = ({
       <Tooltip>
         <TooltipTrigger asChild>
           <div onClick={(e) => e.stopPropagation()}>
-            <PopoverTrigger className="h-6 w-6 rounded-sm px-1 hover:bg-blue-100">
+            <PopoverTrigger className={cn("h-6 w-6 rounded-sm px-1 hover:bg-blue-100", triggerClassName)} >
               <LucideBlend className="h-4 w-4 stroke-blue-500" />
             </PopoverTrigger>
           </div>
@@ -72,7 +74,7 @@ const OpacityControl = ({
           </TooltipContent>
         </TooltipPortal>
       </Tooltip>
-    </Popover>
+    </Popover >
   );
 };
 
