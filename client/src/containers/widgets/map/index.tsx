@@ -15,7 +15,7 @@ import {
   ResourceImagery,
   ResourceImageryTile,
 } from "@/app/local-api/indicators/route";
-import { DefaultTopicConfig } from "@/app/parsers";
+import { DefaultTopicConfig, IndicatorMapView } from "@/app/parsers";
 import { useSyncLocation, useSyncTopics, useSyncDefaultTopics } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
@@ -61,7 +61,9 @@ export default function WidgetMap({
       syncDefaultTopics?.find((topic) =>
         topic.indicators?.find((ind) => ind.id === indicator.id),
       ) || topics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id));
-    const indicatorConfig = topicWithIndicator?.indicators?.find((ind) => ind.id === indicator.id);
+    const indicatorConfig = topicWithIndicator?.indicators?.find(
+      (ind) => ind.id === indicator.id && "type" in ind && (ind as IndicatorMapView).type === "map",
+    );
     return {
       syncBasemapId:
         indicatorConfig && "basemapId" in indicatorConfig ? indicatorConfig.basemapId : basemapId,
@@ -113,7 +115,10 @@ export default function WidgetMap({
           return (
             <Layer
               key={layer.id || `widget-layer-${index}`}
-              layer={{ ...layer, opacity: opacity !== undefined && opacity !== null ? opacity / 100 : 1 }}
+              layer={{
+                ...layer,
+                opacity: opacity !== undefined && opacity !== null ? opacity / 100 : 1,
+              }}
               index={i}
               GEOMETRY={GEOMETRY}
             />
@@ -127,12 +132,12 @@ export default function WidgetMap({
         {(indicator.resource.type === "feature" ||
           indicator.resource.type === "imagery" ||
           indicator.resource.type === "imagery-tile") && (
-            <WidgetLegend
-              {...(indicator as Omit<Indicator, "resource"> & {
-                resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
-              })}
-            />
-          )}
+          <WidgetLegend
+            {...(indicator as Omit<Indicator, "resource"> & {
+              resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
+            })}
+          />
+        )}
 
         <Controls>
           <FullscreenControl />

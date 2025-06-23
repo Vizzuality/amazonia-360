@@ -5,7 +5,9 @@ import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { LucideBlend } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useDebounce } from "rooks";
+
 import { cn } from "@/lib/utils";
+
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
 import { Tooltip, TooltipTrigger, TooltipArrow, TooltipContent } from "@/components/ui/tooltip";
@@ -30,7 +32,9 @@ const OpacityControl = ({
       <Tooltip>
         <TooltipTrigger asChild>
           <div onClick={(e) => e.stopPropagation()}>
-            <PopoverTrigger className={cn("h-6 w-6 rounded-sm px-1 hover:bg-blue-100", triggerClassName)} >
+            <PopoverTrigger
+              className={cn("h-6 w-6 rounded-sm px-1 hover:bg-blue-100", triggerClassName)}
+            >
               <LucideBlend className="h-4 w-4 stroke-blue-500" />
             </PopoverTrigger>
           </div>
@@ -74,7 +78,7 @@ const OpacityControl = ({
           </TooltipContent>
         </TooltipPortal>
       </Tooltip>
-    </Popover >
+    </Popover>
   );
 };
 
