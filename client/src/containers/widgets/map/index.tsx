@@ -113,7 +113,7 @@ export default function WidgetMap({
           return (
             <Layer
               key={layer.id || `widget-layer-${index}`}
-              layer={{ ...layer, opacity: opacity ? opacity / 100 : 1 }}
+              layer={{ ...layer, opacity: opacity !== undefined && opacity !== null ? opacity / 100 : 1 }}
               index={i}
               GEOMETRY={GEOMETRY}
             />
@@ -127,12 +127,12 @@ export default function WidgetMap({
         {(indicator.resource.type === "feature" ||
           indicator.resource.type === "imagery" ||
           indicator.resource.type === "imagery-tile") && (
-          <WidgetLegend
-            {...(indicator as Omit<Indicator, "resource"> & {
-              resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
-            })}
-          />
-        )}
+            <WidgetLegend
+              {...(indicator as Omit<Indicator, "resource"> & {
+                resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
+              })}
+            />
+          )}
 
         <Controls>
           <FullscreenControl />
