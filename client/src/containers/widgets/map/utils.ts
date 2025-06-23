@@ -1,4 +1,6 @@
 export const FALLBACK_WIDGET_DEFAULT_BASEMAP_ID: BasemapIds = "gray-vector";
+import { omit } from "@/lib/utils";
+
 import { Indicator } from "@/app/local-api/indicators/route";
 import {
   IndicatorView,
@@ -120,9 +122,7 @@ export const handleMapIndicatorPropertyChange = (
             indicators: (topic.indicators || []).map((ind) => {
               if (ind.id === indicator.id && ind.type === "map") {
                 if (isResettingToDefault) {
-                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                  const { [propertyName]: _removed, ...rest } = ind;
-                  return rest;
+                  return omit(ind, [propertyName]);
                 } else {
                   return { ...ind, [propertyName]: propertyValue };
                 }
