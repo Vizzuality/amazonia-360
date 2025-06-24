@@ -1,5 +1,3 @@
-import { UseQueryResult } from "@tanstack/react-query";
-
 import { CustomLocation, SearchLocation } from "@/app/parsers";
 
 import "@testing-library/jest-dom";
@@ -348,18 +346,4 @@ export const mockUseLocationGeometry = jest
 
 jest.mock("@/lib/location", () => ({
   useLocationGeometry: jest.fn(),
-}));
-
-/****************
- * QUERY
- ******************** */
-export const mockUseGetRasterAnalysis = jest
-  .fn<Partial<UseQueryResult<unknown, Error>>, unknown[]>() // Assuming data is unknown for now
-  .mockReturnValue({
-    data: undefined,
-    isFetching: false,
-    isFetched: true,
-  });
-jest.mock("@/lib/query", () => ({
-  useGetRasterAnalysis: mockUseGetRasterAnalysis,
 }));

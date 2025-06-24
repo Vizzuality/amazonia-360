@@ -1,6 +1,5 @@
 "use client";
 
-// import { useGetFeatures } from "@/lib/query";
 import dynamic from "next/dynamic";
 
 import { useAtomValue } from "jotai";
