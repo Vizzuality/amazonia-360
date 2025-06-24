@@ -117,7 +117,7 @@ export default function WidgetMap({
               key={layer.id || `widget-layer-${index}`}
               layer={{
                 ...layer,
-                opacity: opacity !== undefined && opacity !== null ? opacity / 100 : 1,
+                opacity: opacity !== undefined && opacity !== null ? Number(opacity) / 100 : 1,
               }}
               index={i}
               GEOMETRY={GEOMETRY}

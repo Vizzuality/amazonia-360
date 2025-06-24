@@ -50,7 +50,7 @@ export const handleMapIndicatorPropertyChange = (
           if (isResettingToDefault) {
             if (indicatorConfigIndex !== -1) {
               const indicatorConfig = { ...indicators[indicatorConfigIndex] };
-              delete indicatorConfig[propertyName];
+              delete indicatorConfig[propertyName as keyof DefaultTopicIndicatorConfig];
 
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
               const { id, ...overrides } = indicatorConfig;
@@ -122,7 +122,7 @@ export const handleMapIndicatorPropertyChange = (
             indicators: (topic.indicators || []).map((ind) => {
               if (ind.id === indicator.id && ind.type === "map") {
                 if (isResettingToDefault) {
-                  return omit(ind, [propertyName]);
+                  return omit(ind, [propertyName as keyof typeof ind]);
                 } else {
                   return { ...ind, [propertyName]: propertyValue };
                 }
@@ -134,7 +134,7 @@ export const handleMapIndicatorPropertyChange = (
         return topic;
       });
 
-      return newTopics.length > 0 ? newTopics : null;
+      return newTopics.length > 0 ? (newTopics as TopicView[]) : null;
     });
   }
 };
