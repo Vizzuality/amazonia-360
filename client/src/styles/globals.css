@@ -173,3 +173,18 @@
 .react-grid-placeholder {
   background-color: blueviolet;
 }
+
+@keyframes outline-in {
+  0% {
+    outline: 2px solid theme('colors.primary.DEFAULT');
+  }
+  100% {
+    outline: none;
+  }
+}
+
+@layer utilities {
+  .animate-outline-in {
+    animation: outline-in 1.5s linear forwards;
+  }
+}
