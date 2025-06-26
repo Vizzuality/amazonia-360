@@ -1,4 +1,6 @@
 export const FALLBACK_WIDGET_DEFAULT_BASEMAP_ID: BasemapIds = "gray-vector";
+import { omit } from "@/lib/utils";
+
 import { Indicator } from "@/app/local-api/indicators/route";
 import {
   IndicatorView,
@@ -9,7 +11,7 @@ import {
 
 import { BasemapIds } from "@/components/map/controls/basemap";
 
-type MapIndicatorProperties = "basemapId";
+type MapIndicatorProperties = "basemapId" | "opacity";
 
 export const handleMapIndicatorPropertyChange = (
   propertyName: MapIndicatorProperties,
@@ -20,7 +22,7 @@ export const handleMapIndicatorPropertyChange = (
     callback: (prevDefaultTopics: DefaultTopicConfig[] | null) => DefaultTopicConfig[] | null,
   ) => void,
   setTopics: (callback: (prevTopicsState: TopicView[] | null) => TopicView[] | null) => void,
-  defaultValues: { basemapId: BasemapIds },
+  defaultValues: { basemapId: BasemapIds; opacity: number },
 ) => {
   const currentIndicatorTopicId = indicator.topic.id;
   const defaultValue = defaultValues[propertyName];
@@ -48,7 +50,7 @@ export const handleMapIndicatorPropertyChange = (
           if (isResettingToDefault) {
             if (indicatorConfigIndex !== -1) {
               const indicatorConfig = { ...indicators[indicatorConfigIndex] };
-              delete indicatorConfig[propertyName];
+              delete indicatorConfig[propertyName as keyof DefaultTopicIndicatorConfig];
 
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
               const { id, ...overrides } = indicatorConfig;
@@ -62,9 +64,7 @@ export const handleMapIndicatorPropertyChange = (
             if (indicatorConfigIndex !== -1) {
               indicators[indicatorConfigIndex] = {
                 ...indicators[indicatorConfigIndex],
-                ...(propertyName === "basemapId"
-                  ? { basemapId: propertyValue as BasemapIds }
-                  : { [propertyName]: propertyValue }),
+                [propertyName]: propertyValue,
               };
             } else {
               indicators.push({
@@ -122,18 +122,9 @@ export const handleMapIndicatorPropertyChange = (
             indicators: (topic.indicators || []).map((ind) => {
               if (ind.id === indicator.id && ind.type === "map") {
                 if (isResettingToDefault) {
-                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                  const { [propertyName]: _removed, ...rest } = ind;
-                  return rest;
+                  return omit(ind, [propertyName as keyof typeof ind]);
                 } else {
-                  if (propertyName === "basemapId" && typeof propertyValue === "string") {
-                    return { ...ind, basemapId: propertyValue };
-                  } else {
-                    // If not a string, do not assign basemapId
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    const { basemapId, ...rest } = ind;
-                    return rest;
-                  }
+                  return { ...ind, [propertyName]: propertyValue };
                 }
               }
               return ind;
@@ -143,7 +134,7 @@ export const handleMapIndicatorPropertyChange = (
         return topic;
       });
 
-      return newTopics.length > 0 ? newTopics : null;
+      return newTopics.length > 0 ? (newTopics as TopicView[]) : null;
     });
   }
 };

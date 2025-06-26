@@ -17,6 +17,7 @@ type IndicatorViewBase = {
 export type IndicatorMapView = IndicatorViewBase & {
   type: "map";
   basemapId?: BasemapIds;
+  opacity?: number;
 };
 
 type IndicatorOtherView = IndicatorViewBase & {
@@ -33,6 +34,7 @@ export type TopicView = {
 export type DefaultTopicIndicatorConfig = {
   id: number;
   basemapId?: BasemapIds;
+  opacity?: number;
 };
 
 export type DefaultTopicConfig = {
