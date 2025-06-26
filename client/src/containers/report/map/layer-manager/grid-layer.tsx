@@ -173,6 +173,9 @@ export const getGridLayerProps = ({
       const getFilterValue: Accessor<Record<string, number>, number[]> = (d) => {
         return filters.map((f) => {
           if (gridDatasets[f]) {
+            if (typeof d[`${gridDatasets[f]}`] === "bigint") {
+              return Number(d[`${gridDatasets[f]}`]);
+            }
             return d[`${gridDatasets[f]}`];
           }
 
