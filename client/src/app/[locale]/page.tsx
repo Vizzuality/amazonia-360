@@ -11,6 +11,7 @@ import Hub from "@/containers/home/hub";
 import InformationOn from "@/containers/home/information-on";
 import KeyFeaturesGrid from "@/containers/home/key-features-grid";
 import KeyFeaturesReport from "@/containers/home/key-features-report";
+import Partners from "@/containers/home/partners";
 
 type Params = Promise<{ locale: string }>;
 
@@ -33,6 +34,7 @@ export default function HomePage() {
       <KeyFeaturesGrid />
       <InformationOn />
       <Glance />
+      <Partners />
       <Hub />
       <Help />
       <Footer />
