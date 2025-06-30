@@ -2,9 +2,12 @@
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
+import { useLocale } from "next-intl";
+import { FEEDBACK_URL } from "./constants";
 
 export default function Help() {
   const t = useTranslations();
+  const locale = useLocale();
   return (
     <section className="bg-blue-700 text-white">
       <div className="container py-10">
@@ -15,7 +18,7 @@ export default function Help() {
           </div>
           <div className="flex flex-col items-center md:items-center md:pt-8 lg:pt-16">
             <a
-              href="https://survey123.arcgis.com/share/fadbaa4e81f04f068f5ed0abd99e4789"
+              href={`${FEEDBACK_URL}?lang=${locale}`}
               target="_blank"
               rel="noreferrer"
             >

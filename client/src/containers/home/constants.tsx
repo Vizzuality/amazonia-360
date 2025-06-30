@@ -164,3 +164,5 @@ export const MOSAIC_DATA = [
     population_density_of_the_afp_zones_by_country_inhabitants_per_sqkm: 0.0432,
   },
 ];
+
+export const FEEDBACK_URL = "https://cloud.mail.iadb.org/amazonia-360";
