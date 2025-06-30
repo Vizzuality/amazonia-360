@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
+
 import { FEEDBACK_URL } from "@/containers/home/constants";
 
 export default function FeedbackButton() {
