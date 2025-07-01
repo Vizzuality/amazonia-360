@@ -1,27 +1,33 @@
 import React from "react";
-
 import { render, act } from "@testing-library/react";
-
-import type { TopicView, IndicatorView } from "@/app/parsers";
-
 import { useHighlightNewIndicator } from "./hooks";
 
+// Mock react-scroll's scroller
+jest.mock("react-scroll", () => ({
+  scroller: {
+    scrollTo: jest.fn(),
+  },
+}));
+import { scroller } from "react-scroll";
+
+function makeIndicatorElement(id: string) {
+  return <div id={id} />;
+}
+
 function TestComponent({
-  topic,
-  previousTopic,
+  indicators,
   editable,
 }: {
-  topic: TopicView;
-  previousTopic?: TopicView;
+  indicators: JSX.Element[];
+  previousIndicators?: JSX.Element[];
   editable: boolean;
 }) {
-  useHighlightNewIndicator(topic, previousTopic, editable);
+  useHighlightNewIndicator(editable, indicators);
   return null;
 }
 
 describe("useHighlightNewIndicator", () => {
   let getElementByIdSpy: jest.SpyInstance;
-  let scrollIntoViewMock: jest.Mock;
   let classListAddMock: jest.Mock;
   let classListRemoveMock: jest.Mock;
   let addEventListenerMock: jest.Mock;
@@ -29,7 +35,6 @@ describe("useHighlightNewIndicator", () => {
 
   beforeEach(() => {
     jest.useFakeTimers();
-    scrollIntoViewMock = jest.fn();
     classListAddMock = jest.fn();
     classListRemoveMock = jest.fn();
     animationEndCallback = undefined;
@@ -38,48 +43,42 @@ describe("useHighlightNewIndicator", () => {
         animationEndCallback = cb;
       }
     });
-    getElementByIdSpy = jest.spyOn(document, "getElementById").mockImplementation(() => {
+    getElementByIdSpy = jest.spyOn(document, "getElementById").mockImplementation((id) => {
       return {
-        scrollIntoView: scrollIntoViewMock,
         classList: {
           add: classListAddMock,
           remove: classListRemoveMock,
         },
         addEventListener: addEventListenerMock,
+        id,
       } as unknown as HTMLElement;
     });
+    (scroller.scrollTo as jest.Mock).mockClear();
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  function makeIndicator(id: number, type: string): IndicatorView {
-    return { id, type } as IndicatorView;
-  }
-  function makeTopic(id: number, indicators: IndicatorView[] | undefined): TopicView {
-    return { id, indicators };
-  }
-
   it("should not trigger for non-editable (default indicators)", () => {
-    const topic = makeTopic(1, [makeIndicator(1, "a")]);
-    const prev = makeTopic(2, []);
-    render(<TestComponent topic={topic} previousTopic={prev} editable={false} />);
+    const indicators = [makeIndicatorElement("widget-1-a")];
+    render(<TestComponent indicators={indicators} editable={false} />);
     expect(getElementByIdSpy).not.toHaveBeenCalled();
+    expect(scroller.scrollTo).not.toHaveBeenCalled();
   });
 
   it("should scroll and animate new indicator", () => {
-    const prev = makeTopic(1, [makeIndicator(1, "a")]);
-    const topic = makeTopic(1, [makeIndicator(1, "a"), makeIndicator(2, "b")]);
+    const prevIndicators = [makeIndicatorElement("widget-1-a")];
+    const indicators = [makeIndicatorElement("widget-1-a"), makeIndicatorElement("widget-2-b")];
     const { rerender } = render(
-      <TestComponent topic={prev} previousTopic={undefined} editable={true} />,
+      <TestComponent indicators={prevIndicators} editable={true} />,
     );
-    rerender(<TestComponent topic={topic} previousTopic={prev} editable={true} />);
+    rerender(<TestComponent indicators={indicators} editable={true} />);
     act(() => {
       jest.runAllTimers();
     });
     expect(getElementByIdSpy).toHaveBeenCalledWith("widget-2-b");
-    expect(scrollIntoViewMock).toHaveBeenCalled();
+    expect(scroller.scrollTo).toHaveBeenCalledWith("widget-2-b", expect.any(Object));
     expect(classListAddMock).toHaveBeenCalledWith("animate-outline-in");
 
     // Simulate animationend event after class is added
@@ -90,12 +89,13 @@ describe("useHighlightNewIndicator", () => {
   });
 
   it("should not animate if indicators length is the same", () => {
-    const prev = makeTopic(1, [makeIndicator(1, "a")]);
-    const topic = makeTopic(1, [makeIndicator(1, "a")]);
+    const prevIndicators = [makeIndicatorElement("widget-1-a")];
+    const indicators = [makeIndicatorElement("widget-1-a")];
     const { rerender } = render(
-      <TestComponent topic={prev} previousTopic={undefined} editable={true} />,
+      <TestComponent indicators={prevIndicators} editable={true} />,
     );
-    rerender(<TestComponent topic={topic} previousTopic={prev} editable={true} />);
+    rerender(<TestComponent indicators={indicators} editable={true} />);
     expect(getElementByIdSpy).not.toHaveBeenCalled();
+    expect(scroller.scrollTo).not.toHaveBeenCalled();
   });
 });

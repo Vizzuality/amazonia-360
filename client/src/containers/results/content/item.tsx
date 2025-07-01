@@ -3,7 +3,6 @@ import { useCallback, useMemo } from "react";
 import { Layout } from "react-grid-layout";
 import { Responsive, WidthProvider } from "react-grid-layout";
 
-import { usePrevious } from "@dnd-kit/utilities";
 import { useAtom } from "jotai";
 import { useLocale } from "next-intl";
 
@@ -68,10 +67,6 @@ export const ReportResultsContentItem = ({
     [topic.id, setTopics],
   );
 
-  const previousTopic = usePrevious(topic);
-
-  useHighlightNewIndicator(topic, previousTopic, editable);
-
   const INDICATORS = useMemo(() => {
     return topic?.indicators?.map((indicator) => {
       const { type, id, w, h, x, y } = indicator;
@@ -83,11 +78,10 @@ export const ReportResultsContentItem = ({
         minW: MIN_VISUALIZATION_SIZES[type]?.w ?? 1,
         minH: MIN_VISUALIZATION_SIZES[type]?.h ?? 1,
       };
-      // Unique key for ref
       const refKey = `widget-${id}-${type}`;
       return (
         <div
-          key={`{"topic":${topic.id},"indicator":${id},"type":"${type}"}`}
+          key={refKey}
           id={refKey}
           className={cn("flex h-full flex-col")}
           data-grid={dataGridConfig}
@@ -104,7 +98,9 @@ export const ReportResultsContentItem = ({
         </div>
       );
     });
-  }, [topic, editable, EDITABLE, previousTopic]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [topic, editable, EDITABLE]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useHighlightNewIndicator(editable, INDICATORS);
 
   return (
     <div

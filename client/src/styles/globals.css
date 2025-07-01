@@ -175,16 +175,14 @@
 }
 
 @keyframes outline-in {
-  0% {
-    outline: 2px solid theme('colors.primary.DEFAULT');
-  }
   100% {
-    outline: none;
+    @apply border-transparent;
   }
 }
 
 @layer utilities {
   .animate-outline-in {
-    animation: outline-in 1.5s linear forwards;
+    @apply border-2 rounded-2xl border-primary;
+    animation: outline-in 1s ease-in forwards;
   }
 }

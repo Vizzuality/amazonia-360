@@ -1,57 +1,55 @@
 import { useLayoutEffect, useRef } from "react";
+import { scroller } from "react-scroll";
+import { usePrevious } from "@dnd-kit/utilities";
 
-import { TopicView, IndicatorView } from "@/app/parsers";
 
 /**
- * Triggers scroll and animation for updated indicators when topic.indicators changes.
- * @param topic The current topic object
- * @param previousTopic The previous topic object
+ * Triggers scroll and animation for updated indicators when INDICATORS changes.
  * @param editable Whether the indicators are editable. They are not default indicators then.
+ * @param INDICATORS The current array of indicator DOM elements
  */
 export function useHighlightNewIndicator(
-  topic: TopicView,
-  previousTopic: TopicView | undefined,
   editable: boolean,
+  INDICATORS: JSX.Element[] | undefined,
 ) {
+  const PREVIOUS_INDICATORS = usePrevious(INDICATORS);
   const hasMounted = useRef(false);
-
   useLayoutEffect(() => {
-    // The default indicators are not editable
+    // If default indicator, do nothing
     if (!editable) return;
-
     if (!hasMounted.current) {
       hasMounted.current = true;
       return;
     }
+    if (!INDICATORS || !INDICATORS.length) return;
 
-    if (!topic.indicators || previousTopic?.indicators?.length === topic.indicators.length) return;
-    const isUpdated = (indicator: IndicatorView) => {
-      const previousIndicators = previousTopic?.indicators;
-      if (!previousIndicators || !previousIndicators.length) return true;
-      const prevIndicator = previousIndicators.find(
-        (prev) => prev.id === indicator.id && prev.type === indicator.type,
-      );
-      return !prevIndicator;
-    };
+    // Find new indicators by comparing with previous
+    const prevIds = new Set(
+      PREVIOUS_INDICATORS?.map((el) => el?.props.id) || []
+    );
 
-    topic?.indicators.forEach((indicator) => {
-      if (isUpdated(indicator)) {
-        const el = document.getElementById(`widget-${indicator.id}-${indicator.type}`);
+    INDICATORS.forEach((element) => {
+      const id = element?.props.id || "";
+      if (!prevIds.has(id)) {
+        const el = document.getElementById(id);
+        if (!el) return;
         let timeoutId: NodeJS.Timeout | null = null;
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "center" });
-          timeoutId = setTimeout(() => {
-            el.classList.add("animate-outline-in");
-          }, 100);
-
-          el.addEventListener("animationend", () => {
-            el.classList.remove("animate-outline-in");
-            if (timeoutId) {
-              clearTimeout(timeoutId);
-            }
-          });
-        }
+        scroller.scrollTo(id, {
+          duration: 500,
+          delay: 0,
+          smooth: "easeInOutQuart",
+          offset: -200,
+        });
+        timeoutId = setTimeout(() => {
+          el.classList.add("animate-outline-in");
+        }, 100);
+        el.addEventListener("animationend", () => {
+          el.classList.remove("animate-outline-in");
+          if (timeoutId) {
+            clearTimeout(timeoutId);
+          }
+        });
       }
     });
-  }, [previousTopic, topic, editable]);
+  }, [editable, INDICATORS, PREVIOUS_INDICATORS]);
 }
