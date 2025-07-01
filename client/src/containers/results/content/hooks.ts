@@ -1,17 +1,15 @@
 import { useLayoutEffect, useRef } from "react";
-import { scroller } from "react-scroll";
-import { usePrevious } from "@dnd-kit/utilities";
 
+import { scroller } from "react-scroll";
+
+import { usePrevious } from "@dnd-kit/utilities";
 
 /**
  * Triggers scroll and animation for updated indicators when INDICATORS changes.
  * @param editable Whether the indicators are editable. They are not default indicators then.
  * @param INDICATORS The current array of indicator DOM elements
  */
-export function useHighlightNewIndicator(
-  editable: boolean,
-  INDICATORS: JSX.Element[] | undefined,
-) {
+export function useHighlightNewIndicator(editable: boolean, INDICATORS: JSX.Element[] | undefined) {
   const PREVIOUS_INDICATORS = usePrevious(INDICATORS);
   const hasMounted = useRef(false);
   useLayoutEffect(() => {
@@ -24,9 +22,7 @@ export function useHighlightNewIndicator(
     if (!INDICATORS || !INDICATORS.length) return;
 
     // Find new indicators by comparing with previous
-    const prevIds = new Set(
-      PREVIOUS_INDICATORS?.map((el) => el?.props.id) || []
-    );
+    const prevIds = new Set(PREVIOUS_INDICATORS?.map((el) => el?.props.id) || []);
 
     INDICATORS.forEach((element) => {
       const id = element?.props.id || "";

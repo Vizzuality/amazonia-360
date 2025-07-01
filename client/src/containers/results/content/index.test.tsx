@@ -1,5 +1,7 @@
 import React from "react";
+
 import { render, act } from "@testing-library/react";
+
 import { useHighlightNewIndicator } from "./hooks";
 
 // Mock react-scroll's scroller
@@ -70,9 +72,7 @@ describe("useHighlightNewIndicator", () => {
   it("should scroll and animate new indicator", () => {
     const prevIndicators = [makeIndicatorElement("widget-1-a")];
     const indicators = [makeIndicatorElement("widget-1-a"), makeIndicatorElement("widget-2-b")];
-    const { rerender } = render(
-      <TestComponent indicators={prevIndicators} editable={true} />,
-    );
+    const { rerender } = render(<TestComponent indicators={prevIndicators} editable={true} />);
     rerender(<TestComponent indicators={indicators} editable={true} />);
     act(() => {
       jest.runAllTimers();
@@ -91,9 +91,7 @@ describe("useHighlightNewIndicator", () => {
   it("should not animate if indicators length is the same", () => {
     const prevIndicators = [makeIndicatorElement("widget-1-a")];
     const indicators = [makeIndicatorElement("widget-1-a")];
-    const { rerender } = render(
-      <TestComponent indicators={prevIndicators} editable={true} />,
-    );
+    const { rerender } = render(<TestComponent indicators={prevIndicators} editable={true} />);
     rerender(<TestComponent indicators={indicators} editable={true} />);
     expect(getElementByIdSpy).not.toHaveBeenCalled();
     expect(scroller.scrollTo).not.toHaveBeenCalled();
