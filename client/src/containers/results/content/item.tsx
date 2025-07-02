@@ -78,7 +78,7 @@ export const ReportResultsContentItem = ({
         minW: MIN_VISUALIZATION_SIZES[type]?.w ?? 1,
         minH: MIN_VISUALIZATION_SIZES[type]?.h ?? 1,
       };
-      const refKey = `widget-${id}-${type}`;
+      const refKey = `widget-${topic.id}-${id}-${type}`;
       return (
         <div
           key={refKey}

@@ -182,7 +182,7 @@
 
 @layer utilities {
   .animate-outline-in {
-    @apply border-2 rounded-2xl border-primary;
+    @apply border-2 rounded-2xl border-primary box-content;
     animation: outline-in 1s ease-in forwards;
   }
 }
