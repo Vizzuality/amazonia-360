@@ -17,6 +17,8 @@ import { MIN_VISUALIZATION_SIZES } from "@/constants/topics";
 import { ReportResultsContentIndicatorItem } from "@/containers/results/content/indicators/item";
 import { ReportResultsSummary } from "@/containers/results/content/summary";
 
+import { useHighlightNewIndicator } from "./hooks";
+
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 export interface ReportResultsContentItemProps {
@@ -35,6 +37,7 @@ export const ReportResultsContentItem = ({
 
   const EDITABLE = editable && reportEditionMode;
   const TOPIC = useGetTopicsId(topic.id, locale);
+
   const handleDrop = useCallback(
     (layout: Layout[]) => {
       setTopics((prev) => {
@@ -75,11 +78,12 @@ export const ReportResultsContentItem = ({
         minW: MIN_VISUALIZATION_SIZES[type]?.w ?? 1,
         minH: MIN_VISUALIZATION_SIZES[type]?.h ?? 1,
       };
+      const refKey = `widget-${topic.id}-${id}-${type}`;
       return (
         <div
-          key={`{"topic":${topic.id},"indicator":${id},"type":"${type}"}`}
-          id={`${id}-${type}`}
-          className="flex h-full flex-col"
+          key={refKey}
+          id={refKey}
+          className={cn("flex h-full flex-col")}
           data-grid={dataGridConfig}
         >
           <ReportResultsContentIndicatorItem
@@ -95,6 +99,9 @@ export const ReportResultsContentItem = ({
       );
     });
   }, [topic, editable, EDITABLE]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useHighlightNewIndicator(editable, INDICATORS);
+
   return (
     <div
       key={topic.id}
