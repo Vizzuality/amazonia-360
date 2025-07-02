@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { scroller } from "react-scroll";
 
@@ -12,7 +12,8 @@ import { usePrevious } from "@dnd-kit/utilities";
 export function useHighlightNewIndicator(editable: boolean, INDICATORS: JSX.Element[] | undefined) {
   const PREVIOUS_INDICATORS = usePrevious(INDICATORS);
   const hasMounted = useRef(false);
-  useLayoutEffect(() => {
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof document === "undefined") return;
     // If default indicator, do nothing
     if (!editable) return;
     if (!hasMounted.current) {
