@@ -7,6 +7,79 @@ import Image from "next/image";
 
 import { useTranslations } from "next-intl";
 
+const Partner = ({
+  href,
+  src,
+  alt,
+  w = 64,
+  h = 25,
+}: {
+  href: string;
+  src: string;
+  alt: string;
+  w?: number;
+  h?: number;
+}) => (
+  <li className="flex h-20 items-center justify-center">
+    <a target="_blank" rel="noopener noreferrer" href={href}>
+      <Image src={src} alt={alt} width={w} height={h} />
+    </a>
+  </li>
+);
+
+const PARTNERS = [
+  {
+    href: "https://www.google.com",
+    src: "/partners/google.svg",
+    alt: "Google",
+  },
+  {
+    href: "https://www.meta.com",
+    src: "/partners/meta.svg",
+    alt: "Meta",
+  },
+  {
+    href: "https://vizzuality.com",
+    src: "/partners/vizzuality.svg",
+    alt: "Vizzuality",
+  },
+  {
+    href: "https://oraotca.org/",
+    src: "/partners/acto.svg",
+    alt: "ACTO ARO",
+  },
+  {
+    href: "https://www.ookla.com/",
+    src: "/partners/ookla.svg",
+    alt: "Ookla",
+  },
+  {
+    href: "https://esa.int/",
+    src: "/partners/esa.png",
+    alt: "European Space Agency (ESA)",
+  },
+  {
+    href: "https://www.esri.com/",
+    src: "/partners/esri.png",
+    alt: "Esri",
+  },
+  {
+    href: "https://raisd-h2020.eu/",
+    src: "/partners/raisg.svg",
+    alt: "RAiSG",
+  },
+  {
+    href: "https://leica-geosystems.com/",
+    src: "/partners/leica.svg",
+    alt: "Leica Geosystems AG",
+  },
+  {
+    href: "https://r-evolution.com/",
+    src: "/partners/hexagon.svg",
+    alt: "Hexagon R-evolution",
+    w: 300,
+  },
+];
 export default function Partners() {
   const t = useTranslations();
 
@@ -37,66 +110,9 @@ export default function Partners() {
           className={`mt-10 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-right-20" : "opacity-0"}`}
         >
           <ul className="grid grid-cols-2 gap-x-2 gap-y-6 md:grid-cols-3 lg:grid-cols-4">
-            <li className="flex h-20 items-center justify-center">
-              <a target="_blank" rel="noopener noreferrer" href="https://www.iadb.org/en">
-                <Image src="/IDB-logo.svg" alt="Partner 1" width={64} height={25} />
-              </a>
-            </li>
-            <li className="flex h-20 items-center justify-center">
-              <a target="_blank" rel="noopener noreferrer" href="https://www.iadb.org/en">
-                <Image src="/IDB-logo.svg" alt="Partner 2" width={64} height={25} />
-              </a>
-            </li>
-            <li className="flex h-20 items-center justify-center">
-              <a target="_blank" rel="noopener noreferrer" href="https://www.iadb.org/en">
-                <Image src="/IDB-logo.svg" alt="Partner 3" width={64} height={25} />
-              </a>
-            </li>
-            <li className="flex h-20 items-center justify-center">
-              <a target="_blank" rel="noopener noreferrer" href="https://www.iadb.org/en">
-                <Image src="/IDB-logo.svg" alt="Partner 4" width={64} height={25} />
-              </a>
-            </li>
-            <li className="flex h-20 items-center justify-center">
-              <a target="_blank" rel="noopener noreferrer" href="https://www.iadb.org/en">
-                <Image src="/IDB-logo.svg" alt="Partner 1" width={64} height={25} />
-              </a>
-            </li>
-            <li className="flex h-20 items-center justify-center">
-              <a target="_blank" rel="noopener noreferrer" href="https://www.iadb.org/en">
-                <Image src="/IDB-logo.svg" alt="Partner 2" width={64} height={25} />
-              </a>
-            </li>
-            <li className="flex h-20 items-center justify-center">
-              <a target="_blank" rel="noopener noreferrer" href="https://www.iadb.org/en">
-                <Image src="/IDB-logo.svg" alt="Partner 3" width={64} height={25} />
-              </a>
-            </li>
-            <li className="flex h-20 items-center justify-center">
-              <a target="_blank" rel="noopener noreferrer" href="https://www.iadb.org/en">
-                <Image src="/IDB-logo.svg" alt="Partner 4" width={64} height={25} />
-              </a>
-            </li>
-            <li className="flex h-20 items-center justify-center">
-              <a target="_blank" rel="noopener noreferrer" href="https://www.iadb.org/en">
-                <Image src="/IDB-logo.svg" alt="Partner 1" width={64} height={25} />
-              </a>
-            </li>
-            <li className="flex h-20 items-center justify-center">
-              <a target="_blank" rel="noopener noreferrer" href="https://www.iadb.org/en">
-                <Image src="/IDB-logo.svg" alt="Partner 2" width={64} height={25} />
-              </a>
-            </li>
-            <li className="flex h-20 items-center justify-center">
-              <a target="_blank" rel="noopener noreferrer" href="https://www.iadb.org/en">
-                <Image src="/IDB-logo.svg" alt="Partner 3" width={64} height={25} />
-              </a>
-            </li>
-            <li className="flex h-20 items-center justify-center">
-              <a target="_blank" rel="noopener noreferrer" href="https://www.iadb.org/en">
-                <Image src="/IDB-logo.svg" alt="Partner 4" width={64} height={25} />
-              </a>
-            </li>
+            {PARTNERS.map((partner, index) => (
+              <Partner {...partner} key={`partner-${index}`} />
+            ))}
           </ul>
         </div>
       </div>
