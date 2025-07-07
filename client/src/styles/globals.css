@@ -173,3 +173,16 @@
 .react-grid-placeholder {
   background-color: blueviolet;
 }
+
+@keyframes outline-in {
+  100% {
+    @apply border-transparent;
+  }
+}
+
+@layer utilities {
+  .animate-outline-in {
+    @apply border-2 rounded-2xl border-primary box-content;
+    animation: outline-in 1s ease-in forwards;
+  }
+}

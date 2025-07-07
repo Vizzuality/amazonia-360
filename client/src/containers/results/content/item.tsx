@@ -14,6 +14,7 @@ import { reportEditionModeAtom, useSyncAiSummary, useSyncTopics } from "@/app/st
 
 import { MIN_VISUALIZATION_SIZES } from "@/constants/topics";
 
+import { useHighlightNewIndicator } from "@/containers/results/content/hooks";
 import { ReportResultsContentIndicatorItem } from "@/containers/results/content/indicators/item";
 import { ReportResultsSummary } from "@/containers/results/content/summary";
 
@@ -75,11 +76,12 @@ export const ReportResultsContentItem = ({
         minW: MIN_VISUALIZATION_SIZES[type]?.w ?? 1,
         minH: MIN_VISUALIZATION_SIZES[type]?.h ?? 1,
       };
+      const refKey = `widget-${topic.id}-${id}-${type}`;
       return (
         <div
-          key={`{"topic":${topic.id},"indicator":${id},"type":"${type}"}`}
-          id={`${id}-${type}`}
-          className="flex h-full flex-col"
+          key={refKey}
+          id={refKey}
+          className={cn("flex h-full flex-col")}
           data-grid={dataGridConfig}
         >
           <ReportResultsContentIndicatorItem
@@ -95,6 +97,9 @@ export const ReportResultsContentItem = ({
       );
     });
   }, [topic, editable, EDITABLE]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useHighlightNewIndicator(INDICATORS, !EDITABLE);
+
   return (
     <div
       key={topic.id}
