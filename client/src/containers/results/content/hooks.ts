@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 import { scroller } from "react-scroll";
 
@@ -6,20 +6,21 @@ import { usePrevious } from "@dnd-kit/utilities";
 
 /**
  * Triggers scroll and animation for updated indicators when INDICATORS changes.
- * @param editable Whether the indicators are editable. They are not default indicators then.
  * @param INDICATORS The current array of indicator DOM elements
+ * @param disabled If true, disables the highlighting functionality
+ * @returns void
  */
-export function useHighlightNewIndicator(editable: boolean, INDICATORS: JSX.Element[] | undefined) {
+export function useHighlightNewIndicator(
+  INDICATORS: JSX.Element[] | undefined,
+  disabled?: boolean,
+) {
   const PREVIOUS_INDICATORS = usePrevious(INDICATORS);
-  const hasMounted = useRef(false);
+
   useEffect(() => {
+    if (disabled) return;
+    // Don't run on server
     if (typeof window === "undefined" || typeof document === "undefined") return;
-    // If default indicator, do nothing
-    if (!editable) return;
-    if (!hasMounted.current) {
-      hasMounted.current = true;
-      return;
-    }
+
     if (!INDICATORS || !INDICATORS.length) return;
 
     // Find new indicators by comparing with previous
@@ -30,23 +31,30 @@ export function useHighlightNewIndicator(editable: boolean, INDICATORS: JSX.Elem
       if (!prevIds.has(id)) {
         const el = document.getElementById(id);
         if (!el) return;
-        let timeoutId: NodeJS.Timeout | null = null;
+
+        let animationTimeoutId: NodeJS.Timeout | null = null;
+
         scroller.scrollTo(id, {
           duration: 500,
           delay: 0,
           smooth: "easeInOutQuart",
           offset: -200,
         });
-        timeoutId = setTimeout(() => {
+
+        animationTimeoutId = setTimeout(() => {
           el.classList.add("animate-outline-in");
         }, 100);
-        el.addEventListener("animationend", () => {
+
+        const onAnimationEnd = () => {
           el.classList.remove("animate-outline-in");
-          if (timeoutId) {
-            clearTimeout(timeoutId);
+          if (animationTimeoutId) {
+            clearTimeout(animationTimeoutId);
           }
-        });
+          el.removeEventListener("animationend", onAnimationEnd);
+        };
+
+        el.addEventListener("animationend", onAnimationEnd);
       }
     });
-  }, [editable, INDICATORS, PREVIOUS_INDICATORS]);
+  }, [INDICATORS, PREVIOUS_INDICATORS, disabled]);
 }

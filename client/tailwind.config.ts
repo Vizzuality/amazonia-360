@@ -233,6 +233,7 @@ const config = {
       },
     },
   },
+  safelist: ["animate-outline-in"],
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;
 

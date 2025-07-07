@@ -14,10 +14,9 @@ import { reportEditionModeAtom, useSyncAiSummary, useSyncTopics } from "@/app/st
 
 import { MIN_VISUALIZATION_SIZES } from "@/constants/topics";
 
+import { useHighlightNewIndicator } from "@/containers/results/content/hooks";
 import { ReportResultsContentIndicatorItem } from "@/containers/results/content/indicators/item";
 import { ReportResultsSummary } from "@/containers/results/content/summary";
-
-import { useHighlightNewIndicator } from "./hooks";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -37,7 +36,6 @@ export const ReportResultsContentItem = ({
 
   const EDITABLE = editable && reportEditionMode;
   const TOPIC = useGetTopicsId(topic.id, locale);
-
   const handleDrop = useCallback(
     (layout: Layout[]) => {
       setTopics((prev) => {
@@ -100,7 +98,7 @@ export const ReportResultsContentItem = ({
     });
   }, [topic, editable, EDITABLE]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useHighlightNewIndicator(editable, INDICATORS);
+  useHighlightNewIndicator(INDICATORS, !EDITABLE);
 
   return (
     <div
