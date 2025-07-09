@@ -134,7 +134,7 @@ module "dev" {
     TF_CLIENT_BASIC_AUTH_USER = var.dev.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD = var.dev.client.basic_auth_password
 
-    TF_NEXT_PUBLIC_FEATURE_PARTNERS = var.dev.client.next_public_feature_partners
+    TF_CLIENT_NEXT_PUBLIC_FEATURE_PARTNERS = var.dev.client.next_public_feature_partners
   }
 }
 
