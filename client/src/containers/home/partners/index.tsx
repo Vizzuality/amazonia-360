@@ -11,8 +11,8 @@ const Partner = ({
   href,
   src,
   alt,
-  w = 64,
-  h = 25,
+  w = 100,
+  h = 120,
 }: {
   href: string;
   src: string;
@@ -20,9 +20,9 @@ const Partner = ({
   w?: number;
   h?: number;
 }) => (
-  <li className="flex h-20 items-center justify-center">
+  <li className="flex h-20 items-center">
     <a target="_blank" rel="noopener noreferrer" href={href}>
-      <Image src={src} alt={alt} width={w} height={h} />
+      <Image src={src} alt={alt} width={w} height={h} className={`min-w-[${w}]px`} />
     </a>
   </li>
 );
@@ -55,7 +55,7 @@ const PARTNERS = [
   },
   {
     href: "https://esa.int/",
-    src: "/partners/esa.png",
+    src: "/partners/esa.svg",
     alt: "European Space Agency (ESA)",
   },
   {
@@ -72,12 +72,13 @@ const PARTNERS = [
     href: "https://leica-geosystems.com/",
     src: "/partners/leica.svg",
     alt: "Leica Geosystems AG",
+    w: 80,
   },
   {
     href: "https://r-evolution.com/",
     src: "/partners/hexagon.svg",
     alt: "Hexagon R-evolution",
-    w: 300,
+    w: 150,
   },
 ];
 export default function Partners() {
@@ -98,7 +99,7 @@ export default function Partners() {
             <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
               {t("landing-partners-note")}
             </h3>
-            <h2 className="max-w-44 pb-6 text-2xl text-blue-400 md:max-w-[290px] lg:text-3xl xl:text-4xl">
+            <h2 className="max-w-44 pb-6 text-2xl text-blue-400 md:max-w-[390px] lg:text-3xl xl:text-4xl">
               {t("landing-partners-title")}
             </h2>
             <div className="text-base font-normal text-blue-900 lg:text-lg">
@@ -109,7 +110,7 @@ export default function Partners() {
         <div
           className={`mt-10 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-right-20" : "opacity-0"}`}
         >
-          <ul className="grid grid-cols-2 gap-x-2 gap-y-6 md:grid-cols-3 lg:grid-cols-4">
+          <ul className="grid grid-cols-2 gap-x-2 gap-y-6 md:grid-cols-3">
             {PARTNERS.map((partner, index) => (
               <Partner {...partner} key={`partner-${index}`} />
             ))}

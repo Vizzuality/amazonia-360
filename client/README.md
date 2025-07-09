@@ -23,6 +23,7 @@ Then, create a `.env.local` file from the template `.env.default` at the root of
 | `NEXT_PUBLIC_API_URL`       | API URL for the application                     | `https://dev.amazoniaforever360.org/api`        |
 | `NEXT_PUBLIC_API_KEY`       | API key for authentication                      | `""` (empty by default)                         |
 | `NEXT_PUBLIC_ARCGIS_API_KEY` | ArcGIS API key                     | `""` (empty by default)                         |
+| `NEXT_PUBLIC_FEATURE_PARTNERS` | Feature flag for the partners section on the homepage                     | `""`/`false`/`true` (empty by default)                         |
 | `BASIC_AUTH_ENABLED`        | Enables Basic Authentication (`true`/`false`)  | `true`                                          |
 | `BASIC_AUTH_USER`           | Username for Basic Authentication (only used in development and staging environment)              | `user`                                          |
 | `BASIC_AUTH_PASSWORD`       | Password for Basic Authentication (only used in development and staging environment)             | `password`                                      |

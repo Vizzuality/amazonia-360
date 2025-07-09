@@ -133,6 +133,8 @@ module "dev" {
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.dev.client.next_public_arcgis_api_key
     TF_CLIENT_BASIC_AUTH_USER = var.dev.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD = var.dev.client.basic_auth_password
+
+    TF_CLIENT_NEXT_PUBLIC_FEATURE_PARTNERS = var.dev.client.next_public_feature_partners
   }
 }
 
@@ -172,6 +174,8 @@ module "staging" {
     # Client
     TF_CLIENT_NEXT_PUBLIC_API_KEY = var.staging.client.next_public_api_key
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.staging.client.next_public_arcgis_api_key
+
+    TF_NEXT_PUBLIC_FEATURE_PARTNERS = var.staging.client.next_public_feature_partners
 
     TF_CLIENT_BASIC_AUTH_USER = var.staging.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD = var.staging.client.basic_auth_password
@@ -214,6 +218,7 @@ module "prod" {
     # Client
     TF_CLIENT_NEXT_PUBLIC_API_KEY = var.prod.client.next_public_api_key
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.prod.client.next_public_arcgis_api_key
+    TF_NEXT_PUBLIC_FEATURE_PARTNERS = var.prod.client.next_public_feature_partners
     TF_CLIENT_BASIC_AUTH_USER = var.prod.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD = var.prod.client.basic_auth_password
   }
