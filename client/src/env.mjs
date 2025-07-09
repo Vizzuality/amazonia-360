@@ -12,7 +12,7 @@ export const env = createEnv({
     NEXT_PUBLIC_API_URL: z.string().url(),
     NEXT_PUBLIC_API_KEY: z.string(),
     NEXT_PUBLIC_ARCGIS_API_KEY: z.string(),
-    NEXT_PUBLIC_FEATURE_PARTNERS: z.string().transform((value) => value === "true"),
+    NEXT_PUBLIC_FEATURE_PARTNERS: z.preprocess((value) => value === "true", z.boolean()),
   },
   runtimeEnv: {
     BASIC_AUTH_ENABLED: process.env.BASIC_AUTH_ENABLED,
