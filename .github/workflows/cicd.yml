@@ -119,7 +119,7 @@ jobs:
             NEXT_PUBLIC_URL=http://0.0.0.0:3000
             NEXT_PUBLIC_API_URL=${{ vars.TF_CLIENT_NEXT_PUBLIC_API_URL }}
             NEXT_PUBLIC_ARCGIS_API_KEY=${{ secrets.TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY }}
-            NEXT_PUBLIC_FEATURE_PARTNERS=${{ vars.TF_CLIENT_NEXT_PUBLIC_FEATURE_PARTNERS }}
+            NEXT_PUBLIC_FEATURE_PARTNERS=${{ needs.set_environment.outputs.env_name == 'develop' && 'true' || vars.TF_CLIENT_NEXT_PUBLIC_FEATURE_PARTNERS }}
             NEXT_PUBLIC_API_KEY=${{ secrets.TF_CLIENT_NEXT_PUBLIC_API_KEY }}
             BASIC_AUTH_ENABLED=${{ vars.TF_CLIENT_BASIC_AUTH_ENABLED }}
             BASIC_AUTH_USER=${{ secrets.TF_CLIENT_BASIC_AUTH_USER }}
