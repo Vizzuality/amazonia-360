@@ -7,6 +7,8 @@ import Image from "next/image";
 
 import { useTranslations } from "next-intl";
 
+import { Button } from "@/components/ui/button";
+
 const Partner = ({
   href,
   src,
@@ -93,7 +95,7 @@ export default function Partners() {
     <section ref={sectionRef} className="bg-blue-50 py-20 md:py-28">
       <div className="container flex flex-col items-end md:flex-row md:items-start md:space-x-28">
         <div
-          className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-10 lg:space-y-44 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-20" : "md:opacity-0"}`}
+          className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-6 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-20" : "md:opacity-0"}`}
         >
           <div>
             <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
@@ -106,6 +108,9 @@ export default function Partners() {
               <ReactMarkdown>{t("landing-partners-description")}</ReactMarkdown>
             </div>
           </div>
+          <Button size="lg" className="flex max-w-[200px] px-8">
+            Become a partner!
+          </Button>
         </div>
         <div
           className={`mt-10 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-right-20" : "opacity-0"}`}
