@@ -89,13 +89,10 @@ export default function ReportResultsHeaderDesktop() {
                     topics: JSON.stringify(topics).replace(/'/g, '"'),
                   },
                 }}
-                aria-disabled={!topics || topics.length === 0}
-                className={!topics || topics.length === 0 ? "pointer-events-none" : ""}
               >
                 <Button
                   variant="outline"
                   className="space-x-2"
-                  disabled={!topics || topics.length === 0}
                 >
                   <span>PDF test</span>
                 </Button>
