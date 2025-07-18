@@ -149,7 +149,7 @@
   }
 
   @page {
-    size: A4 portrait !important;
+    size: 11in 8.5in landscape !important;
     margin: 5mm;
   }
 }
