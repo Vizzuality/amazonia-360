@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 
+import { useSearchParams } from "next/navigation";
+
 import { useTranslations } from "next-intl";
 import { LuPlus } from "react-icons/lu";
 
 import { useLocationTitle } from "@/lib/location";
 
-import { useSyncLocation } from "@/app/store";
+import { useSyncLocation, useSyncTopics } from "@/app/store";
 
 import Topics from "@/containers/report/topics";
 import DownloadReport from "@/containers/results/header/download";
@@ -32,6 +34,7 @@ import { Link } from "@/i18n/navigation";
 
 export default function ReportResultsHeaderDesktop() {
   const t = useTranslations();
+  const [topics] = useSyncTopics();
   const [location] = useSyncLocation();
 
   const title = useLocationTitle(location);
@@ -39,7 +42,7 @@ export default function ReportResultsHeaderDesktop() {
   const [open] = useState(false);
 
   const { open: isSidebarOpen } = useSidebar();
-
+  const searchParams = useSearchParams();
   return (
     <header className="sticky right-0 top-0 z-10 space-y-4 bg-blue-50 py-6 print:hidden">
       <div className="container">
@@ -78,6 +81,25 @@ export default function ReportResultsHeaderDesktop() {
           {!isSidebarOpen && (
             <div className="flex items-center space-x-2 print:hidden">
               <DownloadReport />
+              <Link
+                href={{
+                  pathname: "/report-pdf",
+                  query: {
+                    ...Object.fromEntries(searchParams.entries()),
+                    topics: JSON.stringify(topics).replace(/'/g, '"'),
+                  },
+                }}
+                aria-disabled={!topics || topics.length === 0}
+                className={!topics || topics.length === 0 ? "pointer-events-none" : ""}
+              >
+                <Button
+                  variant="outline"
+                  className="space-x-2"
+                  disabled={!topics || topics.length === 0}
+                >
+                  <span>PDF test</span>
+                </Button>
+              </Link>
               <ShareReport />
               <IndicatorsReport />
             </div>
