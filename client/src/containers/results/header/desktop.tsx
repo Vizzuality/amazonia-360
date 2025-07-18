@@ -90,10 +90,7 @@ export default function ReportResultsHeaderDesktop() {
                   },
                 }}
               >
-                <Button
-                  variant="outline"
-                  className="space-x-2"
-                >
+                <Button variant="outline" className="space-x-2">
                   <span>PDF test</span>
                 </Button>
               </Link>
