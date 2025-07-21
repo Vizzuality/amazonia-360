@@ -10,7 +10,7 @@
     "check-types": "tsc",
     "types": "orval --config ./orval.config.ts",
     "prepare": "cd .. && husky client/.husky",
-    "test": "jest",
+    "test": "jest --runInBand",
     "test:watch": "jest --watch"
   },
   "dependencies": {

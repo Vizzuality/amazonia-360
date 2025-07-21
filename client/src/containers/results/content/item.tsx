@@ -40,26 +40,26 @@ export const ReportResultsContentItem = ({
     (layout: Layout[]) => {
       setTopics((prev) => {
         if (!prev) return prev;
-        const i = prev?.findIndex((t) => t.id === topic.id);
 
-        if (i === -1) return prev;
-
-        prev[i] = {
-          id: topic.id,
-          indicators: layout.map((l) => {
-            const { indicator, type } = JSON.parse(l.i);
+        return prev.map((t) => {
+          if (t.id === topic.id) {
             return {
-              id: indicator,
-              type: type,
-              w: l.w,
-              h: l.h,
-              x: l.x,
-              y: l.y,
+              id: topic.id,
+              indicators: layout.map((l) => {
+                const { indicator, type } = JSON.parse(l.i);
+                return {
+                  id: indicator,
+                  type,
+                  w: l.w,
+                  h: l.h,
+                  x: l.x,
+                  y: l.y,
+                };
+              }),
             };
-          }),
-        };
-
-        return prev;
+          }
+          return t;
+        });
       });
     },
     [topic.id, setTopics],
@@ -77,9 +77,11 @@ export const ReportResultsContentItem = ({
         minH: MIN_VISUALIZATION_SIZES[type]?.h ?? 1,
       };
       const refKey = `widget-${topic.id}-${id}-${type}`;
+      const gridKey = JSON.stringify({ indicator: id, type });
+
       return (
         <div
-          key={refKey}
+          key={gridKey}
           id={refKey}
           className={cn("flex h-full flex-col")}
           data-grid={dataGridConfig}
@@ -96,7 +98,7 @@ export const ReportResultsContentItem = ({
         </div>
       );
     });
-  }, [topic, editable, EDITABLE]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [topic, editable]);
 
   useHighlightNewIndicator(INDICATORS, !EDITABLE);
 
