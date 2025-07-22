@@ -13,11 +13,12 @@ services:
     networks:
       - amazonia360-network
     restart: always
+
   client:
     build:
       context: ./client
       dockerfile: Dockerfile
-      target: production
+      #target: production
       args:
         NEXT_PUBLIC_URL: "http://localhost:3000"
         NEXT_PUBLIC_API_URL: "http://api:8000"
@@ -31,6 +32,33 @@ services:
       - "3000:3000"
     networks:
       - amazonia360-network
+
+  webshot:
+    container_name: amazonia360-webshot
+    build:
+      context: .
+      dockerfile: ./webshot/Dockerfile
+      target: production
+    volumes:
+      - ./webshot:/app/webshot
+      - /app/webshot/node_modules
+      - /app/node_modules
+    ports:
+      - "${WEBSHOT__PORT:-3003}:3003"
+    networks:
+      - amazonia360-network
+    environment:
+      - NODE_ENV=development
+      - PORT=3003
+    env_file:
+      - path: .env
+        required: true
+      - path: .env.prod
+        required: false
+      - path: .env.test
+        required: false
+    restart: unless-stopped
+
   test:
     build:
       context: ./api
