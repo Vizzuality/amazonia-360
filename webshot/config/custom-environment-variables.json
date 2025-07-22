@@ -1,0 +1,11 @@
+{
+  "server": {
+    "port": "PORT"
+  },
+  "app": {
+    "baseUrl": "WEBSHOT__APP_BASE_URL"
+  },
+  "browser": {
+    "waitMsBeforeTakingSnapshot": "WEBSHOT__WAIT_MS_BEFORE_TAKING_SNAPSHOT"
+  }
+}
