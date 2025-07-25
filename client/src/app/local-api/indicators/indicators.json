@@ -37,7 +37,8 @@
                 "outFields": [
                     "*"
                 ]
-            }
+            },
+            "popupTemplate": ""
         }
     },
     {
@@ -78,7 +79,8 @@
                 "outFields": [
                     "*"
                 ]
-            }
+            },
+            "popupTemplate": ""
         }
     },
     {
@@ -128,7 +130,8 @@
                 "outFields": [
                     "*"
                 ]
-            }
+            },
+            "popupTemplate": ""
         }
     },
     {
@@ -178,7 +181,8 @@
                 "outFields": [
                     "*"
                 ]
-            }
+            },
+            "popupTemplate": ""
         }
     },
     {
@@ -238,7 +242,8 @@
                 "outFields": [
                     "*"
                 ]
-            }
+            },
+            "popupTemplate": ""
         }
     },
     {
@@ -305,6 +310,24 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{NOMBCAP}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "NAME_1",
+                                "label": "State"
+                            },
+                            {
+                                "fieldName": "NAME_0",
+                                "label": "Country"
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -356,6 +379,9 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{ALTIT}"
             }
         }
     },
@@ -417,6 +443,9 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{BIOMADES}"
             }
         }
     },
@@ -476,6 +505,9 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{ECOSYNAM }"
             }
         }
     },
@@ -535,6 +567,20 @@
                 "returnIntersections": true,
                 "outFields": [
                     "*"
+                ]
+            },
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
                 ]
             }
         }
@@ -596,6 +642,20 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -655,6 +715,20 @@
                 "returnIntersections": true,
                 "outFields": [
                     "*"
+                ]
+            },
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
                 ]
             }
         }
@@ -716,6 +790,20 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -775,6 +863,20 @@
                 "returnIntersections": true,
                 "outFields": [
                     "*"
+                ]
+            },
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
                 ]
             }
         }
@@ -836,6 +938,20 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -895,6 +1011,20 @@
                 "returnIntersections": true,
                 "outFields": [
                     "*"
+                ]
+            },
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
                 ]
             }
         }
@@ -956,6 +1086,20 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -1016,6 +1160,20 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -1075,6 +1233,20 @@
                 "returnIntersections": true,
                 "outFields": [
                     "*"
+                ]
+            },
+            "popupTemplate": {
+                "title": "{BIOME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRIP",
+                                "label": "Description"
+                            }
+                        ]
+                    }
                 ]
             }
         }
@@ -1145,6 +1317,20 @@
                 "returnIntersections": true,
                 "outFields": [
                     "*"
+                ]
+            },
+            "popupTemplate": {
+                "title": "{PRIOCONENG}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "ENG",
+                                "label": "Description"
+                            }
+                        ]
+                    }
                 ]
             }
         }
@@ -1219,6 +1405,24 @@
                     "NAME",
                     "IUCN_CAT"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{NAME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "IUCN_CAT",
+                                "label": "IUCN Category"
+                            },
+                            {
+                                "fieldName": "DESIG_ENG",
+                                "label": "Designation"
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -1290,6 +1494,24 @@
                     "nombre",
                     "categoria",
                     "etnias"
+                ]
+            },
+            "popupTemplate": {
+                "title": "{nombre}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "categoria",
+                                "label": "Category"
+                            },
+                            {
+                                "fieldName": "etnias",
+                                "label": "Ethnicities"
+                            }
+                        ]
+                    }
                 ]
             }
         }
@@ -1447,7 +1669,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -1507,6 +1730,9 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{SPRange}"
             }
         }
     },
@@ -1566,6 +1792,20 @@
                 "returnIntersections": true,
                 "outFields": [
                     "*"
+                ]
+            },
+            "popupTemplate": {
+                "title": "{carbonfix}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "cfixclass",
+                                "label": "Class"
+                            }
+                        ]
+                    }
                 ]
             }
         }
@@ -1628,6 +1868,24 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{NAME}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DESCRP",
+                                "label": "Description"
+                            },
+                            {
+                                "fieldName": "CODE",
+                                "label": "Code"
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -1689,6 +1947,24 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{YEARLPP}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "YPPDESCP",
+                                "label": "Description"
+                            },
+                            {
+                                "fieldName": "top_",
+                                "label": "Max mm"
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -1749,6 +2025,20 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{RISKLEV}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "RISKDES",
+                                "label": "Description"
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -1808,6 +2098,20 @@
                 "returnIntersections": true,
                 "outFields": [
                     "*"
+                ]
+            },
+            "popupTemplate": {
+                "title": "{firepfreq}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "FIREPclass",
+                                "label": "Class"
+                            }
+                        ]
+                    }
                 ]
             }
         }
@@ -1875,7 +2179,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -1996,7 +2301,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -2129,7 +2435,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -2191,6 +2498,9 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{SDG711pct}"
             }
         }
     },
@@ -2265,6 +2575,20 @@
                 "where": "1=1",
                 "outFields": [
                     "*"
+                ]
+            },
+            "popupTemplate": {
+                "title": "{DESIGN}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "FIREPclass",
+                                "label": "Type"
+                            }
+                        ]
+                    }
                 ]
             }
         }
@@ -2341,6 +2665,20 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{DSIGN}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "HEALSERV",
+                                "label": "Type"
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -2415,6 +2753,20 @@
                 "where": "1=1",
                 "outFields": [
                     "*"
+                ]
+            },
+            "popupTemplate": {
+                "title": "{DESIGN}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "GOBSERV",
+                                "label": "Type"
+                            }
+                        ]
+                    }
                 ]
             }
         }
@@ -2492,6 +2844,24 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{event_type}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "disorder_t",
+                                "label": "Type"
+                            },
+                            {
+                                "fieldName": "sub_event_",
+                                "label": "SubEvent"
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -2544,6 +2914,24 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{NAME_1}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "Homicide_n",
+                                "label": "Homicide nb"
+                            },
+                            {
+                                "fieldName": "Homicide_r",
+                                "label": "Homicide rate"
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -2557,9 +2945,9 @@
         "unit_en": "",
         "unit_es": "",
         "unit_pt": "",
-        "description_en": "This layer displays the spatial distribution of Indigenous languages in Amazonia, based on RAISG-defined territorial boundaries. It uses a simplified set of 265 Indigenous language polygons—originally sourced and refined from Native Land Digital (Native-Land.ca) and applies geometric simplification and conversion to multigeometries, removing bridge connections for clarity.\n\nThe result is a visualization that captures linguistic diversity across the region, offering a complementary perspective to the full, unsimplified language polygon dataset.\n\nBy showing the presence of each language at the local level without aggregation or language counts, this layer enables researchers, policymakers, and territorial managers to observe patterns of linguistic distribution across Amazonia. It supports regional analysis and facilitates efforts related to cultural preservation, governance, and social planning within this complex sociolinguistic landscape. It is particularly useful for identifying multilingual zones, areas of potential cultural vulnerability, and regions where governance intersects with diverse language communities.\n\nIt is important to note that due to the complexity and limited study of the Amazon Region, some languages—especially those of uncontacted peoples—may be missing or underrepresented, and others may be sparsely used today.",
-        "description_es": "Esta capa muestra la distribución espacial de las lenguas indígenas en la Amazonía, con base en los límites territoriales definidos por RAISG. Utiliza un conjunto simplificado de 265 polígonos de lenguas indígenas, originalmente obtenidos y refinados a partir de Native Land Digital (Native-Land.ca), y aplica una simplificación geométrica y conversión a multigeometrías, eliminando conexiones tipo 'puente' para mayor claridad.\n\nEl resultado es una visualización que refleja la diversidad lingüística en toda la región, ofreciendo una perspectiva complementaria al conjunto completo de polígonos sin simplificar.\n\nAl mostrar la presencia de cada lengua a nivel local sin agregación ni conteo, esta capa permite a investigadores, responsables de políticas públicas y gestores territoriales observar patrones de distribución lingüística en la Amazonía. Apoya el análisis regional y facilita esfuerzos relacionados con la preservación cultural, la gobernanza y la planificación social en este complejo paisaje sociolingüístico. Es especialmente útil para identificar zonas multilingües, áreas de posible vulnerabilidad cultural y territorios donde la gobernanza se cruza con comunidades lingüísticas diversas.\n\nCabe señalar que, debido a la complejidad y al limitado estudio de la región amazónica, algunas lenguas —especialmente las de pueblos no contactados— pueden estar ausentes o subrepresentadas, y otras pueden tener un uso muy reducido en la actualidad.",
-        "description_pt": "Esta camada apresenta a distribuição espacial das línguas indígenas na Amazônia, com base nos limites territoriais definidos pela RAISG. Utiliza um conjunto simplificado de 265 polígonos de línguas indígenas, originalmente obtidos e refinados a partir do Native Land Digital (Native-Land.ca), aplicando simplificação geométrica e conversão para multigeometrias, removendo conexões tipo 'ponte' para maior clareza.\n\nO resultado é uma visualização que representa a diversidade linguística na região, oferecendo uma perspectiva complementar ao conjunto completo de polígonos sem simplificação.\n\nAo mostrar a presença de cada língua em nível local, sem agregação ou contagem, essa camada permite que pesquisadores, formuladores de políticas públicas e gestores territoriais observem os padrões de distribuição linguística na Amazônia. Apoia análises regionais e facilita iniciativas voltadas à preservação cultural, governança e planejamento social nesse complexo panorama sociolinguístico. É especialmente útil para identificar zonas multilíngues, áreas de possível vulnerabilidade cultural e territórios onde a governança interage com comunidades linguísticas diversas.\n\nÉ importante observar que, devido à complexidade e ao limitado conhecimento sobre a região amazônica, algumas línguas —especialmente aquelas de povos não contactados— podem estar ausentes ou sub-representadas, e outras podem estar em uso reduzido atualmente.",
+        "description_en": "This layer displays the spatial distribution of Indigenous languages in Amazonia, based on RAISG-defined territorial boundaries. It uses a simplified set of 265 Indigenous language polygons—originally sourced and refined from Native Land Digital (Native-Land.ca) and applies geometric simplification and conversion to multigeometries, removing bridge connections for clarity.  \n\nThe result is a visualization that captures linguistic diversity across the region, offering a complementary perspective to the full, unsimplified language polygon dataset.  \n\nBy showing the presence of each language at the local level without aggregation or language counts, this layer enables researchers, policymakers, and territorial managers to observe patterns of linguistic distribution across Amazonia. It supports regional analysis and facilitates efforts related to cultural preservation, governance, and social planning within this complex sociolinguistic landscape. It is particularly useful for identifying multilingual zones, areas of potential cultural vulnerability, and regions where governance intersects with diverse language communities.  \n\nIt is important to note that due to the complexity and limited study of the Amazon Region, some languages—especially those of uncontacted peoples—may be missing or underrepresented, and others may be sparsely used today.",
+        "description_es": "Esta capa muestra la distribución espacial de las lenguas indígenas en la Amazonía, con base en los límites territoriales definidos por RAISG. Utiliza un conjunto simplificado de 265 polígonos de lenguas indígenas, originalmente obtenidos y refinados a partir de Native Land Digital (Native-Land.ca), y aplica una simplificación geométrica y conversión a multigeometrías, eliminando conexiones tipo 'puente' para mayor claridad.  \n\nEl resultado es una visualización que refleja la diversidad lingüística en toda la región, ofreciendo una perspectiva complementaria al conjunto completo de polígonos sin simplificar.  \n\nAl mostrar la presencia de cada lengua a nivel local sin agregación ni conteo, esta capa permite a investigadores, responsables de políticas públicas y gestores territoriales observar patrones de distribución lingüística en la Amazonía. Apoya el análisis regional y facilita esfuerzos relacionados con la preservación cultural, la gobernanza y la planificación social en este complejo paisaje sociolingüístico. Es especialmente útil para identificar zonas multilingües, áreas de posible vulnerabilidad cultural y territorios donde la gobernanza se cruza con comunidades lingüísticas diversas.  \n\nCabe señalar que, debido a la complejidad y al limitado estudio de la región amazónica, algunas lenguas —especialmente las de pueblos no contactados— pueden estar ausentes o subrepresentadas, y otras pueden tener un uso muy reducido en la actualidad.",
+        "description_pt": "Esta camada apresenta a distribuição espacial das línguas indígenas na Amazônia, com base nos limites territoriais definidos pela RAISG. Utiliza um conjunto simplificado de 265 polígonos de línguas indígenas, originalmente obtidos e refinados a partir do Native Land Digital (Native-Land.ca), aplicando simplificação geométrica e conversão para multigeometrias, removendo conexões tipo 'ponte' para maior clareza.  \n\nO resultado é uma visualização que representa a diversidade linguística na região, oferecendo uma perspectiva complementar ao conjunto completo de polígonos sem simplificação.  \n\nAo mostrar a presença de cada língua em nível local, sem agregação ou contagem, essa camada permite que pesquisadores, formuladores de políticas públicas e gestores territoriais observem os padrões de distribuição linguística na Amazônia. Apoia análises regionais e facilita iniciativas voltadas à preservação cultural, governança e planejamento social nesse complexo panorama sociolinguístico. É especialmente útil para identificar zonas multilíngues, áreas de possível vulnerabilidade cultural e territórios onde a governança interage com comunidades linguísticas diversas.  \n\nÉ importante observar que, devido à complexidade e ao limitado conhecimento sobre a região amazônica, algumas línguas —especialmente aquelas de povos não contactados— podem estar ausentes ou sub-representadas, e outras podem estar em uso reduzido atualmente.",
         "description_short_en": "Displays Indigenous languages spoken within the Amazonian region.",
         "description_short_es": "Muestra las lenguas indígenas habladas en la región amazónica.",
         "description_short_pt": "Exibe as línguas indígenas faladas na região amazônica.",
@@ -2581,7 +2969,7 @@
                 "where": "1=1",
                 "outStatistics": [
                     {
-                        "onStatisticField": "FID",
+                        "onStatisticField": "OBJECTID",
                         "outStatisticFieldName": "value",
                         "statisticType": "count"
                     }
@@ -2601,6 +2989,24 @@
                 "where": "1=1",
                 "outFields": [
                     "*"
+                ]
+            },
+            "popupTemplate": {
+                "title": "{Name}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "Name",
+                                "label": "Native language"
+                            },
+                            {
+                                "fieldName": "description",
+                                "label": "Link"
+                            }
+                        ]
+                    }
                 ]
             }
         }
@@ -2748,7 +3154,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -2818,6 +3225,9 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{nombre}"
             }
         }
     },
@@ -2952,7 +3362,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -3073,7 +3484,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -3194,7 +3606,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -3328,7 +3741,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -3449,7 +3863,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -3570,7 +3985,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -3704,7 +4120,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -3825,7 +4242,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -3959,7 +4377,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4106,7 +4525,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4164,6 +4584,9 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{orgname}"
             }
         }
     },
@@ -4241,6 +4664,20 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{FolderPath}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "type",
+                                "label": "Type"
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -4302,6 +4739,20 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{POPGHS2025}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "DENSHABKM",
+                                "label": "Density"
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -4362,6 +4813,28 @@
                 "outFields": [
                     "*"
                 ]
+            },
+            "popupTemplate": {
+                "title": "{opernum}",
+                "content": [
+                    {
+                        "type": "fields",
+                        "fieldInfos": [
+                            {
+                                "fieldName": "opername",
+                                "label": "Name"
+                            },
+                            {
+                                "fieldName": "phase",
+                                "label": "Phase"
+                            },
+                            {
+                                "fieldName": "pipeyr",
+                                "label": "Pipe year"
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -4394,7 +4867,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4426,7 +4900,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4458,7 +4933,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4490,7 +4966,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4522,7 +4999,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4554,7 +5032,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4586,7 +5065,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4618,7 +5098,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4650,7 +5131,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4682,7 +5164,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4714,7 +5197,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4746,7 +5230,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4778,7 +5263,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4810,7 +5296,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4842,7 +5329,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4874,7 +5362,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4906,7 +5395,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4938,7 +5428,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -4970,7 +5461,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -5002,7 +5494,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -5034,7 +5527,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -5066,7 +5560,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -5098,7 +5593,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -5130,7 +5626,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -5162,7 +5659,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -5194,7 +5692,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -5226,7 +5725,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -5258,7 +5758,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -5290,7 +5791,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -5322,7 +5824,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -5354,7 +5857,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -5386,7 +5890,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -5418,7 +5923,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -5450,7 +5956,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -5482,7 +5989,8 @@
             "query_numeric": "",
             "query_table": "",
             "query_chart": "",
-            "query_ai": ""
+            "query_ai": "",
+            "popupTemplate": ""
         }
     }
 ]
