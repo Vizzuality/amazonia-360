@@ -2,9 +2,9 @@ import { Metadata } from "next";
 
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import PageProviders from "@/app/[locale]/report/page-providers";
+import PageProviders from "@/app/[locale]/(app)/report/page-providers";
 
-import ReportLocation from "@/containers/report/location";
+import Indicators from "@/containers/indicators";
 
 type Params = Promise<{ locale: string }>;
 
@@ -13,12 +13,12 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const t = await getTranslations({ locale });
 
   return {
-    title: t("metadata-report-page-title"),
-    description: t("metadata-report-page-description"),
+    title: t("metadata-indicators-page-title"),
+    description: t("metadata-indicators-page-description"),
   };
 }
 
-export default async function ReportPage({ params }: { params: Params }) {
+export default async function IndicatorsPage({ params }: { params: Params }) {
   const { locale } = await params;
 
   // Enable static rendering
@@ -26,9 +26,7 @@ export default async function ReportPage({ params }: { params: Params }) {
 
   return (
     <PageProviders>
-      <main className="relative flex min-h-[calc(100svh_-_theme(space.16))] flex-col">
-        <ReportLocation />
-      </main>
+      <Indicators />
     </PageProviders>
   );
 }
