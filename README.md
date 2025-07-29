@@ -29,6 +29,10 @@ AmazoniaForever360+ is designed to serve spatial and statistical data through a 
 The platform uses ArcGIS Online to host and serve most raster and vector data, including zonal statistics, administrative boundaries,
 and thematic layers. The h3 data server and AI summary reports are build in an independent python application.
 
+A detailed overview of the platform's architecture can be found in the
+[project's
+documentation](https://docs.google.com/document/d/1zMUy7LCuAu1jx8edtgkjLHTlraGle7hrVwHDmIuzzXc/edit?tab=t.0#heading=h.cyq84yp1w21t).
+
 # Architecture <a name="arch"></a>
 
 AmazoniaForever360+ uses a hybrid architecture that combines ArcGIS Online services with a custom backend for performance-sensitive data processing.
