@@ -47,7 +47,6 @@ def main(files: list[Path], grid: Path, out: Path | None, h3_cell_col: str) -> N
     if out is None:
         out = grid
     out.mkdir(exist_ok=True, parents=True)
-
     in_dfs = [pl.read_csv(f).rename({h3_cell_col: "cell"}) for f in files]
     df = pl.concat(in_dfs, how="align")
     df = df.with_columns(
@@ -66,14 +65,16 @@ def main(files: list[Path], grid: Path, out: Path | None, h3_cell_col: str) -> N
 
     tiles_out = out / "1"
     tiles_out.mkdir(exist_ok=True)
-    level_dir = grid / "1"  # Debt: All this fixed to work with a single tile level
+    level_dir = grid / "1"  # debt: All this fixed to work with a single tile level
     for parent_id, tile in df.group_by("tile_id"):
         src_tile_file = level_dir / f"{parent_id[0]}.arrow"
         if not src_tile_file.exists():
             print(f"Skipping {src_tile_file}: no matching Arrow file found.")
             continue
         src_tile = pl.read_ipc(src_tile_file)
-        merged = src_tile.join(tile, on="cell", how="full")
+        # debt: will only inlcude values for cells that already exists in the previous grid revision.
+        #   change `how` parameter for a different behaviour
+        merged = src_tile.join(tile, on="cell", how="left")
 
         merged.drop("tile_id").write_ipc(tiles_out / src_tile_file.name)
 
