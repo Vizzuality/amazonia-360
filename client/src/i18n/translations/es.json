@@ -217,6 +217,8 @@
   "basemap-terrain": "Terreno",
   "reset-topics-info-tooltip": "Borrar todos los widgets y establecer el tema a su vista por defecto",
   "edit-indicator": "Editar indicador",
+  "download-indicator": "Descargar indicador",
+  "indicator-menu": "Menú de indicador",
   "knowledge-resources": "Recursos de conocimiento",
   "go-back-home-button": "Volver a inicio",
   "not-found-page-title": "404 - PÁGINA NO ENCONTRADA",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 
 import { useQueries } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
@@ -19,6 +19,7 @@ import { Topic } from "@/app/local-api/topics/route";
 import { AiSummary } from "@/app/parsers";
 import {
   isGeneratingAIReportAtom,
+  setGeneratedAITextAtom,
   useSyncAiSummary,
   useSyncLocation,
   useSyncTopics,
@@ -155,13 +156,28 @@ export const useGetSummaryTopic = (
 
 export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
   const [topics] = useSyncTopics();
+
+  const setGeneratedText = useSetAtom(setGeneratedAITextAtom);
   const activeIndicators = useMemo(() => {
     return topics?.find((t) => t.id === topic?.id)?.indicators?.map(({ id }) => id);
   }, [topic, topics]);
   const previousActiveIndicators = usePreviousDifferent(activeIndicators ?? undefined);
 
   const [aiSummary, setAiSummary] = useSyncAiSummary();
-  const { data, isFetching, isPending } = useGetSummaryTopic(topic, aiSummary, activeIndicators);
+  const { data, isFetching, isPending, isFetched, isError } = useGetSummaryTopic(
+    topic,
+    aiSummary,
+    activeIndicators,
+  );
+
+  useEffect(() => {
+    if (topic?.id && data?.description && isFetched && !isError) {
+      setGeneratedText({
+        id: topic.id,
+        description: data.description,
+      });
+    }
+  }, [topic?.id, data?.description, setGeneratedText, isError, isFetched]);
 
   const setIsGeneratingReport = useSetAtom(isGeneratingAIReportAtom);
 

@@ -10,7 +10,7 @@ import { useLocationTitle } from "@/lib/location";
 import { useSyncLocation } from "@/app/store";
 
 import Topics from "@/containers/report/topics";
-import DownloadReport from "@/containers/results/header/download";
+import DownloadReportButton from "@/containers/results/header/download";
 import IndicatorsReport from "@/containers/results/header/indicators";
 import ShareReport from "@/containers/results/header/share";
 
@@ -77,7 +77,7 @@ export default function ReportResultsHeaderDesktop() {
 
           {!isSidebarOpen && (
             <div className="flex items-center space-x-2 print:hidden">
-              <DownloadReport />
+              <DownloadReportButton />
               <ShareReport />
               <IndicatorsReport />
             </div>

@@ -17,6 +17,19 @@ import {
 
 import { SketchProps } from "@/components/map/sketch";
 
+export type GridHoverType = {
+  id: number | null;
+  cell: string | undefined;
+  index: string | undefined;
+  x: number | null;
+  y: number | null;
+  coordinates: number[] | undefined;
+  values: {
+    column: string;
+    value: string | number;
+  }[];
+};
+
 // URL PARAMS
 export const useSyncBbox = () => {
   return useQueryState("bbox", bboxParser);
@@ -98,19 +111,6 @@ export const gridCellHighlightAtom = atom<{ id: number | null; index: string | u
   index: undefined,
 });
 
-export type GridHoverType = {
-  id: number | null;
-  cell: string | undefined;
-  index: string | undefined;
-  x: number | null;
-  y: number | null;
-  coordinates: number[] | undefined;
-  values: {
-    column: string;
-    value: string | number;
-  }[];
-};
-
 export const gridHoverAtom = atom<GridHoverType>({
   id: null,
   cell: undefined,
@@ -124,3 +124,26 @@ export const gridHoverAtom = atom<GridHoverType>({
 export const selectedFiltersViewAtom = atom<boolean>(false);
 
 export const isGeneratingAIReportAtom = atom<Record<string, boolean>>();
+
+export const generatedAITextAtom = atom<{ content: { id: number; description: string }[] }>({
+  content: [],
+});
+
+export const setGeneratedAITextAtom = atom(
+  null,
+  (get, set, update: { id: number; description: string }) => {
+    const prev = get(generatedAITextAtom);
+    const idx = prev.content.findIndex((item) => item.id === update.id);
+
+    const next =
+      idx >= 0
+        ? {
+            content: prev.content.map((item, i) => (i === idx ? { ...item, ...update } : item)),
+          }
+        : {
+            content: [...prev.content, update],
+          };
+
+    set(generatedAITextAtom, next);
+  },
+);

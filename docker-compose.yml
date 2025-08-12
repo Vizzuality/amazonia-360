@@ -21,6 +21,7 @@ services:
       #target: production
       args:
         NEXT_PUBLIC_URL: "http://localhost:3000"
+        NEXT_PUBLIC_WEBSHOT_URL: "http://webshot:3003"
         NEXT_PUBLIC_API_URL: "http://api:8000"
         NEXT_PUBLIC_ARCGIS_API_KEY: ""
         NEXT_PUBLIC_API_KEY: ""

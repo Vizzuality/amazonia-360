@@ -3,7 +3,7 @@
 A NestJS-based microservice for generating PDF reports or PNG snapshots from web
 pages using headless Chromium, via Playwright.
 
-*Important note*: the webshot service is designed to be accessed via private PVC
+_Important note_: the webshot service is designed to be accessed via private PVC
 from the NextJS server, so an endpoint on the NextJS server must be created for
 each webshot-related request that the web app needs to send. These endpoints
 will then forward the relevant requests to the webshot service, and finally
@@ -60,7 +60,7 @@ POST http://localhost:3003/webshot/api/v1/report/pdf
 Content-Type: application/json
 
 {
-  "pagePath": "/en/report/results?%3Fbbox=-9179719.906994147,-723616.366654413,-7381921.00172728,109241.49354064604&topics={\"id\":1,\"indicators\":[{\"id\":26,\"type\":\"numeric\",\"x\":3,\"y\":0,\"w\":1,\"h\":1},{\"id\":26,\"type\":\"map\",\"x\":2,\"y\":3,\"w\":2,\"h\":4},{\"id\":10,\"type\":\"chart\",\"x\":2,\"y\":1,\"w\":2,\"h\":2},{\"id\":13,\"type\":\"numeric\",\"x\":0,\"y\":0,\"w\":1,\"h\":1},{\"id\":25,\"type\":\"numeric\",\"x\":2,\"y\":0,\"w\":1,\"h\":1},{\"id\":12,\"type\":\"numeric\",\"x\":1,\"y\":0,\"w\":1,\"h\":1},{\"id\":29,\"type\":\"map\",\"x\":0,\"y\":5,\"w\":2,\"h\":4},{\"id\":24,\"type\":\"chart\",\"x\":0,\"y\":1,\"w\":2,\"h\":2}]},{\"id\":4,\"indicators\":[{\"id\":72,\"type\":\"map\",\"x\":0,\"y\":0,\"w\":2,\"h\":4},{\"id\":58,\"type\":\"map\",\"x\":2,\"y\":0,\"w\":2,\"h\":4}]}&location={\"type\":\"polygon\",\"geometry\":{\"spatialReference\":{\"wkid\":102100},\"rings\":[[[-8280820.454360714,-260331.5382180824],[-7778132.337843387,19848.38896115661],[-7925655.802433738,-634223.2620749235],[-8280820.454360714,-260331.5382180824]]]},\"buffer\":0}&gridFiltersSetUp={\"limit\":10,\"opacity\":100,\"direction\":\"desc\"}",
+  "pagePath": "/en/report/results?bbox=-9179719.906994147,-723616.366654413,-7381921.00172728,109241.49354064604&topics={\"id\":1,\"indicators\":[{\"id\":26,\"type\":\"numeric\",\"x\":3,\"y\":0,\"w\":1,\"h\":1},{\"id\":26,\"type\":\"map\",\"x\":2,\"y\":3,\"w\":2,\"h\":4},{\"id\":10,\"type\":\"chart\",\"x\":2,\"y\":1,\"w\":2,\"h\":2},{\"id\":13,\"type\":\"numeric\",\"x\":0,\"y\":0,\"w\":1,\"h\":1},{\"id\":25,\"type\":\"numeric\",\"x\":2,\"y\":0,\"w\":1,\"h\":1},{\"id\":12,\"type\":\"numeric\",\"x\":1,\"y\":0,\"w\":1,\"h\":1},{\"id\":29,\"type\":\"map\",\"x\":0,\"y\":5,\"w\":2,\"h\":4},{\"id\":24,\"type\":\"chart\",\"x\":0,\"y\":1,\"w\":2,\"h\":2}]},{\"id\":4,\"indicators\":[{\"id\":72,\"type\":\"map\",\"x\":0,\"y\":0,\"w\":2,\"h\":4},{\"id\":58,\"type\":\"map\",\"x\":2,\"y\":0,\"w\":2,\"h\":4}]}&location={\"type\":\"polygon\",\"geometry\":{\"spatialReference\":{\"wkid\":102100},\"rings\":[[[-8280820.454360714,-260331.5382180824],[-7778132.337843387,19848.38896115661],[-7925655.802433738,-634223.2620749235],[-8280820.454360714,-260331.5382180824]]]},\"buffer\":0}&gridFiltersSetUp={\"limit\":10,\"opacity\":100,\"direction\":\"desc\"}",
   "geometry": {
     "type": "Polygon",
     "coordinates": [

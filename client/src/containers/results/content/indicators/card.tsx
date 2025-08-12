@@ -19,9 +19,9 @@ import {
   CardContent,
   CardHeader,
   CardControls,
-  CardSettings,
   CardInfo,
   CardTitle,
+  CardPopover,
 } from "@/containers/card";
 import { ChartIndicators } from "@/containers/indicators/chart";
 import { ChartImageryIndicators } from "@/containers/indicators/chart/imagery";
@@ -70,7 +70,7 @@ export default function ReportResultsIndicator({
           <CardControls>
             <CardInfo ids={[indicator.id]} />
 
-            {editable && <CardSettings id={indicator?.id} onClick={onEdit} />}
+            {editable && <CardPopover id={indicator?.id} onClick={onEdit} />}
           </CardControls>
         </CardHeader>
         <CardContent>
