@@ -41,11 +41,9 @@ def check_grid_structure(path: Path) -> int:
         raise ValueError("Grid does not have meta.json")
 
 
-def main(files: list[Path], grid: Path, out: Path | None, h3_cell_col: str) -> None:
+def main(files: list[Path], grid: Path, out: Path, h3_cell_col: str) -> None:
     print(f"Updating {grid} with files:\n{'\n'.join('\t' + str(f) for f in files)}")
     check_grid_structure(grid)
-    if out is None:
-        out = grid
     out.mkdir(exist_ok=True, parents=True)
     in_dfs = [pl.read_csv(f).rename({h3_cell_col: "cell"}) for f in files]
     df = pl.concat(in_dfs, how="align")
@@ -80,10 +78,10 @@ def main(files: list[Path], grid: Path, out: Path | None, h3_cell_col: str) -> N
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Append new columns to an h3 dataset")
+    parser = argparse.ArgumentParser(description="Append new columns to an h3 grid dataset")
     parser.add_argument("--grid", type=Path, required=True)
     parser.add_argument("--infile", type=Path, nargs="+", required=True)
-    parser.add_argument("--out", type=Path)
-    parser.add_argument("--h3-column-name")
+    parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--h3-column-name", help="The name of h3 cell index column in the input files")
     args = parser.parse_args()
     main(args.infile, args.grid, args.out, args.h3_column_name)
