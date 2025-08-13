@@ -12,7 +12,7 @@ export class ReportService {
   async generatePdfFromUrls(
     webshotConfig: PdfReportWebshotConfig,
   ): Promise<Buffer> {
-    const { pagePath, geometry } = webshotConfig;
+    const { pagePath, geometry, generatedTextContent } = webshotConfig;
     const appBaseUrl = Config.getString("app.baseUrl").replace(/\/+$/, "");
     const targetUrl = `${appBaseUrl}${pagePath}`;
     this.logger.log(`Starting PDF generation for ${targetUrl}`);
@@ -56,19 +56,32 @@ export class ReportService {
         timeout: 30_000,
       });
 
+      // This delay tries to make sure the Javascript has loaded in order to
+      // pass geometry and/or generatedTextContent to the front-end
+      await page.waitForTimeout(2_000);
+
       // Set geometry if provided
       if (geometry) {
-        // This delay makes sure the Javascript has loaded in order to pass the geometry to the
-        // front-end
-        await page.waitForTimeout(2_000);
+        await page.evaluate((geom) => {
+          (
+            window as unknown as {
+              setGeometry: (geom: GeoJSON.GeoJSON) => void;
+            }
+          ).setGeometry(geom);
+        }, geometry);
+      }
 
-        // await page.evaluate((geom) => {
-        //   (
-        //     window as unknown as {
-        //       setGeometry: (geom: GeoJSON.GeoJSON) => void;
-        //     }
-        //   ).setGeometry(geom);
-        // }, geometry);
+      // Set generatedTextContent if provided
+      if (generatedTextContent) {
+        await page.evaluate((content) => {
+          (
+            window as unknown as {
+              setGeneratedTextContent: (
+                content: Record<string, unknown>,
+              ) => void;
+            }
+          ).setGeneratedTextContent(content);
+        }, generatedTextContent);
       }
 
       // Wait until the network is idle
