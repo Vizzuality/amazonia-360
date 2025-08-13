@@ -36,28 +36,20 @@ services:
   webshot:
     container_name: amazonia360-webshot
     build:
-      context: .
-      dockerfile: ./webshot/Dockerfile
+      context: webshot
+      dockerfile: Dockerfile
       target: production
-    volumes:
-      - ./webshot:/app/webshot
-      - /app/webshot/node_modules
-      - /app/node_modules
     ports:
       - "${WEBSHOT__PORT:-3003}:3003"
-    networks:
-      - amazonia360-network
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - PORT=3003
     env_file:
-      - path: .env
+      - path: .env.webshot
         required: true
-      - path: .env.prod
-        required: false
-      - path: .env.test
-        required: false
     restart: unless-stopped
+    networks:
+      - amazonia360-network
 
   test:
     build:
