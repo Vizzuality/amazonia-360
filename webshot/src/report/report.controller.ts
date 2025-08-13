@@ -12,6 +12,7 @@ import {
   ApiTags,
   ApiBody,
   ApiProperty,
+  ApiPropertyOptional,
 } from "@nestjs/swagger";
 import { Response } from "express";
 import { GeoJSON } from "geojson";
@@ -22,10 +23,14 @@ export class PdfReportWebshotConfig {
   @ApiProperty()
   @IsString()
   pagePath!: string;
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsObject()
   @IsOptional()
   geometry?: GeoJSON;
+  @ApiPropertyOptional()
+  @IsObject()
+  @IsOptional()
+  generatedTextContent?: Record<string, unknown>;
 }
 
 @ApiTags("Report")
