@@ -3,9 +3,13 @@
     "port": "PORT"
   },
   "app": {
-    "baseUrl": "WEBSHOT__APP_BASE_URL"
+    "baseUrl": "APP_BASE_URL",
+    "basicAuth": {
+      "user": "APP_BASIC_AUTH_USER",
+      "password": "APP_BASIC_AUTH_PASSWORD"
+    }
   },
   "browser": {
-    "waitMsBeforeTakingSnapshot": "WEBSHOT__WAIT_MS_BEFORE_TAKING_SNAPSHOT"
+    "waitMsBeforeTakingSnapshot": "WAIT_MS_BEFORE_TAKING_SNAPSHOT"
   }
 }

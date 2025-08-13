@@ -1,5 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { chromium, Browser, Page, BrowserContext } from "playwright";
+import { chromium, Browser, Page } from "playwright";
 import { PdfReportWebshotConfig } from "./report.controller";
 import { Config } from "../utils/config";
 import { consolePassthrough } from "../utils/console-passthrough.utils";
@@ -27,10 +27,18 @@ export class ReportService {
       });
 
       page = await browser.newPage({
-        httpCredentials: {
-          username: "amazonia360",
-          password: "Amazonia360$MVP/2024",
-        },
+        ...(() => {
+          const username = Config.get<string>("app.basicAuth.user");
+          const password = Config.get<string>("app.basicAuth.password");
+          return username && password
+            ? {
+                httpCredentials: {
+                  username,
+                  password,
+                },
+              }
+            : {};
+        })(),
         // Render images with twice the resolution to avoid pixelization
         deviceScaleFactor: 2,
       });
