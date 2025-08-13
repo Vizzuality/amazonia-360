@@ -27,7 +27,7 @@ jobs:
   # BUILD AND DEPLOY
   set_environment:
     name: Set Deployment Environment
-    needs: [ build-and-test ]
+    needs: [build-and-test]
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'develop' || github.ref_name == 'staging' || github.ref_name == 'main' }}
     outputs:
@@ -38,7 +38,7 @@ jobs:
 
   build_api:
     name: build-api
-    needs: [ set_environment ]
+    needs: [set_environment]
     runs-on: ubuntu-latest
     environment:
       name: ${{ needs.set_environment.outputs.env_name }}
@@ -61,7 +61,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
         with:
-          mask-password: 'true'
+          mask-password: "true"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -80,7 +80,7 @@ jobs:
 
   build_client:
     name: build-client
-    needs: [ set_environment ]
+    needs: [set_environment]
     environment:
       name: ${{ needs.set_environment.outputs.env_name }}
     runs-on: ubuntu-latest
@@ -99,7 +99,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
         with:
-          mask-password: 'true'
+          mask-password: "true"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -133,9 +133,55 @@ jobs:
             ${{ steps.login-ecr.outputs.registry }}/${{ secrets.TF_CLIENT_REPOSITORY_NAME }}:${{ github.sha }}
             ${{ steps.login-ecr.outputs.registry }}/${{ secrets.TF_CLIENT_REPOSITORY_NAME }}:${{ needs.set_environment.outputs.env_name }}
 
+  build_webshot:
+    name: build-webshot
+    needs: [set_environment]
+    environment:
+      name: ${{ needs.set_environment.outputs.env_name }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.TF_PIPELINE_USER_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.TF_PIPELINE_USER_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.TF_AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          mask-password: "true"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Use Latest Corepack
+        run: |
+          echo "Before: corepack version => $(corepack --version || echo 'not installed')"
+          npm install -g corepack@latest
+          echo "After : corepack version => $(corepack --version)"
+          corepack enable
+          pnpm --version
+
+      - name: Build, tag, and push Webshot image to Amazon ECR
+        uses: docker/build-push-action@v5
+        with:
+          context: webshot
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          file: ./webshot/Dockerfile
+          push: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.TF_WEBSHOT_REPOSITORY_NAME }}:${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.TF_WEBSHOT_REPOSITORY_NAME }}:${{ needs.set_environment.outputs.env_name }}
+
   deploy:
     name: deploy
-    needs: [ set_environment, build_api, build_client ]
+    needs: [set_environment, build_api, build_client, build_webshot]
     runs-on: ubuntu-latest
     environment:
       name: ${{ needs.set_environment.outputs.env_name }}
@@ -160,6 +206,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY_API: ${{ secrets.TF_API_REPOSITORY_NAME }}
           ECR_REPOSITORY_CLIENT: ${{ secrets.TF_CLIENT_REPOSITORY_NAME }}
+          ECR_REPOSITORY_WEBSHOT: ${{ secrets.TF_WEBSHOT_REPOSITORY_NAME }}
           IMAGE_TAG: ${{ needs.set_environment.outputs.env_name }}
 
           API_AUTH_TOKEN: ${{ secrets.TF_API_AUTH_TOKEN }}
@@ -190,6 +237,17 @@ jobs:
                 - amazonia360-network
               ports:
                 - 3000:3000
+              restart: always
+            webshot:
+              image: $ECR_REGISTRY/$ECR_REPOSITORY_WEBSHOT:$IMAGE_TAG
+              networks:
+                - amazonia360-network
+              ports:
+                - 3003:3003
+              environment:
+                - APP_BASE_URL=http://client:3000
+                - APP_BASIC_AUTH_USER=${{ secrets.TF_CLIENT_BASIC_AUTH_USER }}
+                - APP_BASIC_AUTH_PASSWORD=${{ secrets.TF_CLIENT_BASIC_AUTH_PASSWORD }}
               restart: always
             nginx:
               image: nginx
