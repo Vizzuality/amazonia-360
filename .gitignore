@@ -3,7 +3,14 @@
 *data/
 .clineignore
 *.DS_Store
+
+# ignore all .env files
 .env
+.env.*
+
+# except those with defaults/example values
+!.env.*.default
+
 /env/
 /infrastructure/vars/local.tfvars
 __pycache__/
