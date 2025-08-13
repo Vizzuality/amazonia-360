@@ -200,6 +200,15 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Escape variables
+        shell: bash
+        run: |
+          app_basic_auth_password='${{ secrets.TF_CLIENT_BASIC_AUTH_PASSWORD }}'
+          app_basic_auth_password_escaped="${app_basic_auth_password//$/\$\$}"    # $ -> $$
+          echo "::add-mask::$app_basic_auth_password_escaped" # mask the escaped value in runner output
+          printf 'APP_BASIC_AUTH_PASSWORD_ESCAPED=%s\n' "$app_basic_auth_password_escaped" >> $GITHUB_ENV
+        id: escape_variables
+
       - name: Generate docker compose file
         working-directory: infrastructure/source_bundle
         env:
@@ -245,9 +254,10 @@ jobs:
               ports:
                 - 3003:3003
               environment:
-                - APP_BASE_URL=http://client:3000
-                - APP_BASIC_AUTH_USER=${{ secrets.TF_CLIENT_BASIC_AUTH_USER }}
-                - APP_BASIC_AUTH_PASSWORD=${{ secrets.TF_CLIENT_BASIC_AUTH_PASSWORD }}
+                PORT: 3003
+                APP_BASE_URL: http://client:3000
+                APP_BASIC_AUTH_USER: ${{ secrets.TF_CLIENT_BASIC_AUTH_USER }}
+                APP_BASIC_AUTH_PASSWORD: ${APP_BASIC_AUTH_PASSWORD_ESCAPED}
               restart: always
             nginx:
               image: nginx
