@@ -34,7 +34,7 @@ export class PdfReportWebshotConfig {
 }
 
 @ApiTags("Report")
-@Controller("api/v1/report")
+@Controller("webshot/api/v1/report")
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}
 
