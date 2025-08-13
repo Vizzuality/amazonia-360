@@ -34,6 +34,7 @@ services:
       - amazonia360-network
 
   webshot:
+    platform: linux/amd64
     container_name: amazonia360-webshot
     build:
       context: webshot
