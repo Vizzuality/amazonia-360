@@ -46,7 +46,7 @@ services:
       - PORT=3003
     env_file:
       - path: .env.webshot
-        required: true
+        required: false
     restart: unless-stopped
     networks:
       - amazonia360-network
