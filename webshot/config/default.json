@@ -4,7 +4,7 @@
   },
   "pdf": {
     "pageFormat": "Letter",
-    "pageOrientation": "portrait",
+    "pageOrientation": "landscape",
     "pageMargins": {
       "top": "0.5in",
       "bottom": "0.5in",
