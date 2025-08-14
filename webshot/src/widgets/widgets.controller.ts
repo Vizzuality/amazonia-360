@@ -23,9 +23,9 @@ export class WidgetAsImageWebshotConfig {
   @ApiProperty()
   @IsString()
   pagePath!: string;
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsString()
-  outputFileName!: string;
+  outputFileName?: string;
   @ApiPropertyOptional()
   @IsObject()
   @IsOptional()
@@ -72,7 +72,9 @@ export class WidgetsController {
     @Res() res: Response,
   ): Promise<void> {
     try {
-      const filename = sanitizeFilename(webshotConfig.outputFileName);
+      const filename = sanitizeFilename(
+        webshotConfig.outputFileName ?? "widget.png",
+      );
       const pngBuffer =
         await this.widgetsService.generatePngSnapshot(webshotConfig);
 

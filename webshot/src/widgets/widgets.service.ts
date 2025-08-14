@@ -90,7 +90,7 @@ export class WidgetsService {
       // https://playwright.dev/docs/api/class-page#page-emulate-media
       await page.emulateMedia({ media: "screen" });
 
-      // Generate PDF from screenshots
+      // Generate PNG snapshot
       const pngBuffer = await page.screenshot({
         type: "png",
       });
