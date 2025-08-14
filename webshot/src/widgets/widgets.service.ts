@@ -65,9 +65,9 @@ export class WidgetsService {
         await page.evaluate((p) => {
           (
             window as unknown as {
-              setWidgetSettings: (content: Record<string, unknown>) => void;
+              setWidgetParams: (content: Record<string, unknown>) => void;
             }
-          ).setWidgetSettings(p);
+          ).setWidgetParams(p);
         }, params);
       }
 
