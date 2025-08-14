@@ -8,11 +8,11 @@ terraform {
 
   // TF does not allow vars here. Use main vars or module outputs for other variables
   backend "s3" {
-    profile = "amazonia360"
-    bucket = "amazonia360-terraform-state"
-    key = "terraform.tfstate"
-    region = "eu-west-3"
-    encrypt = true
+    profile        = "amazonia360"
+    bucket         = "amazonia360-terraform-state"
+    key            = "terraform.tfstate"
+    region         = "eu-west-3"
+    encrypt        = true
     dynamodb_table = "amazonia360-terraform-state-lock"
   }
 
@@ -20,47 +20,62 @@ terraform {
 }
 
 # Terraform state persistence infra
-module state {
-  source = "./modules/state"
+module "state" {
+  source       = "./modules/state"
   project_name = var.project_name
-  aws_region = var.dev.aws_region
-  aws_profile = var.aws_profile
+  aws_region   = var.dev.aws_region
+  aws_profile  = var.aws_profile
 }
 
 module "iam" {
   source = "./modules/iam"
 }
 
-module api_ecr {
-  source = "./modules/ecr"
+module "api_ecr" {
+  source       = "./modules/ecr"
   project_name = var.project_name
-  repo_name = "api"
+  repo_name    = "api"
 }
 
-module client_ecr {
-  source = "./modules/ecr"
+module "client_ecr" {
+  source       = "./modules/ecr"
   project_name = var.project_name
-  repo_name = "client"
+  repo_name    = "client"
+}
+
+module "webshot_ecr" {
+  source       = "./modules/ecr"
+  project_name = var.project_name
+  repo_name    = "webshot"
 }
 
 ## Specifically for production, as the deployment points to the production region to push the images to the ECR
 ## so we need to have a ECR in said region
-module client_prod_ecr {
+module "client_prod_ecr" {
   providers = {
     aws = aws.prod
   }
-  source = "./modules/ecr"
+  source       = "./modules/ecr"
   project_name = var.project_name
-  repo_name = "client"
+  repo_name    = "client"
 }
 
-module api_prod_ecr {
+module "api_prod_ecr" {
   providers = {
     aws = aws.prod
   }
-  source = "./modules/ecr"
+  source       = "./modules/ecr"
   project_name = var.project_name
-  repo_name = "api"
+  repo_name    = "api"
+}
+
+module "webshot_prod_ecr" {
+  providers = {
+    aws = aws.prod
+  }
+  source       = "./modules/ecr"
+  project_name = var.project_name
+  repo_name    = "webshot"
 }
 
 
@@ -74,16 +89,18 @@ module "github" {
     TF_PIPELINE_USER_SECRET_ACCESS_KEY = module.iam.pipeline_user_access_key_secret
 
     # API
-    TF_API_REPOSITORY_NAME             = module.api_ecr.repository_name
-    OPENAI_TOKEN                       = var.openai_token
+    TF_API_REPOSITORY_NAME = module.api_ecr.repository_name
+    OPENAI_TOKEN           = var.openai_token
 
     # Client
-    TF_CLIENT_REPOSITORY_NAME          = module.client_ecr.repository_name
+    TF_CLIENT_REPOSITORY_NAME = module.client_ecr.repository_name
 
+    # Webshot
+    TF_WEBSHOT_REPOSITORY_NAME = module.webshot_ecr.repository_name
 
   }
   global_variable_map = {
-    TF_PROJECT_NAME                    = var.project_name
+    TF_PROJECT_NAME = var.project_name
 
     # API
     # Client
@@ -95,7 +112,7 @@ resource "aws_iam_service_linked_role" "elasticbeanstalk" {
 }
 
 module "dev" {
-  source                                        = "./modules/env"
+  source = "./modules/env"
   providers = {
     aws = aws.dev
   }
@@ -110,36 +127,36 @@ module "dev" {
   elasticbeanstalk_iam_service_linked_role_name = aws_iam_service_linked_role.elasticbeanstalk.name
   repo_name                                     = var.repo_name
   cname_prefix                                  = "amazonia360-dev-environment"
-  github_owner = var.github_owner
-  github_token = var.github_token
+  github_owner                                  = var.github_owner
+  github_token                                  = var.github_token
   github_additional_environment_variables = {
-    TF_AWS_REGION   = var.dev.aws_region
+    TF_AWS_REGION = var.dev.aws_region
 
 
     # API
-    TF_API_TIFF_PATH                       = var.dev.api.tiff_path
-    TF_API_GRID_TILES_PATH                 = var.dev.api.grid_tiles_path
+    TF_API_TIFF_PATH       = var.dev.api.tiff_path
+    TF_API_GRID_TILES_PATH = var.dev.api.grid_tiles_path
 
     # Client
     TF_CLIENT_NEXT_PUBLIC_API_URL = var.dev.client.next_public_api_url
-    TF_CLIENT_BASIC_AUTH_ENABLED = var.dev.client.basic_auth_enabled
+    TF_CLIENT_BASIC_AUTH_ENABLED  = var.dev.client.basic_auth_enabled
   }
   github_additional_environment_secrets = {
     # API
     TF_API_AUTH_TOKEN = var.dev.api.auth_token
 
     # Client
-    TF_CLIENT_NEXT_PUBLIC_API_KEY = var.dev.client.next_public_api_key
+    TF_CLIENT_NEXT_PUBLIC_API_KEY        = var.dev.client.next_public_api_key
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.dev.client.next_public_arcgis_api_key
-    TF_CLIENT_BASIC_AUTH_USER = var.dev.client.basic_auth_user
-    TF_CLIENT_BASIC_AUTH_PASSWORD = var.dev.client.basic_auth_password
+    TF_CLIENT_BASIC_AUTH_USER            = var.dev.client.basic_auth_user
+    TF_CLIENT_BASIC_AUTH_PASSWORD        = var.dev.client.basic_auth_password
 
     TF_CLIENT_NEXT_PUBLIC_FEATURE_PARTNERS = var.dev.client.next_public_feature_partners
   }
 }
 
 module "staging" {
-  source                                        = "./modules/env"
+  source = "./modules/env"
   providers = {
     aws = aws.dev
   }
@@ -154,18 +171,18 @@ module "staging" {
   elasticbeanstalk_iam_service_linked_role_name = aws_iam_service_linked_role.elasticbeanstalk.name
   repo_name                                     = var.repo_name
   cname_prefix                                  = "amazonia360-staging-environment"
-  github_owner = var.github_owner
-  github_token = var.github_token
+  github_owner                                  = var.github_owner
+  github_token                                  = var.github_token
   github_additional_environment_variables = {
-    TF_AWS_REGION   = var.staging.aws_region
+    TF_AWS_REGION = var.staging.aws_region
 
     # API
-    TF_API_TIFF_PATH                       = var.staging.api.tiff_path
-    TF_API_GRID_TILES_PATH                 = var.staging.api.grid_tiles_path
+    TF_API_TIFF_PATH       = var.staging.api.tiff_path
+    TF_API_GRID_TILES_PATH = var.staging.api.grid_tiles_path
 
     # Client
-    TF_CLIENT_NEXT_PUBLIC_API_URL = var.staging.client.next_public_api_url
-    TF_CLIENT_BASIC_AUTH_ENABLED = var.staging.client.basic_auth_enabled
+    TF_CLIENT_NEXT_PUBLIC_API_URL   = var.staging.client.next_public_api_url
+    TF_CLIENT_BASIC_AUTH_ENABLED    = var.staging.client.basic_auth_enabled
     TF_NEXT_PUBLIC_FEATURE_PARTNERS = var.staging.client.next_public_feature_partners
   }
   github_additional_environment_secrets = {
@@ -173,17 +190,17 @@ module "staging" {
     TF_API_AUTH_TOKEN = var.staging.api.auth_token
 
     # Client
-    TF_CLIENT_NEXT_PUBLIC_API_KEY = var.staging.client.next_public_api_key
+    TF_CLIENT_NEXT_PUBLIC_API_KEY        = var.staging.client.next_public_api_key
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.staging.client.next_public_arcgis_api_key
 
 
-    TF_CLIENT_BASIC_AUTH_USER = var.staging.client.basic_auth_user
+    TF_CLIENT_BASIC_AUTH_USER     = var.staging.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD = var.staging.client.basic_auth_password
   }
 }
 
 module "prod" {
-  source                                        = "./modules/env"
+  source = "./modules/env"
   providers = {
     aws = aws.prod
   }
@@ -198,18 +215,18 @@ module "prod" {
   elasticbeanstalk_iam_service_linked_role_name = aws_iam_service_linked_role.elasticbeanstalk.name
   repo_name                                     = var.repo_name
   cname_prefix                                  = "amazonia360-prod-environment"
-  github_owner = var.github_owner
-  github_token = var.github_token
+  github_owner                                  = var.github_owner
+  github_token                                  = var.github_token
   github_additional_environment_variables = {
-    TF_AWS_REGION   = var.prod.aws_region
+    TF_AWS_REGION = var.prod.aws_region
 
     # API
-    TF_API_TIFF_PATH                       = var.prod.api.tiff_path
-    TF_API_GRID_TILES_PATH                 = var.prod.api.grid_tiles_path
+    TF_API_TIFF_PATH       = var.prod.api.tiff_path
+    TF_API_GRID_TILES_PATH = var.prod.api.grid_tiles_path
 
     # Client
-    TF_CLIENT_NEXT_PUBLIC_API_URL = var.prod.client.next_public_api_url
-    TF_CLIENT_BASIC_AUTH_ENABLED = var.prod.client.basic_auth_enabled
+    TF_CLIENT_NEXT_PUBLIC_API_URL   = var.prod.client.next_public_api_url
+    TF_CLIENT_BASIC_AUTH_ENABLED    = var.prod.client.basic_auth_enabled
     TF_NEXT_PUBLIC_FEATURE_PARTNERS = var.prod.client.next_public_feature_partners
   }
   github_additional_environment_secrets = {
@@ -217,9 +234,9 @@ module "prod" {
     TF_API_AUTH_TOKEN = var.prod.api.auth_token
 
     # Client
-    TF_CLIENT_NEXT_PUBLIC_API_KEY = var.prod.client.next_public_api_key
+    TF_CLIENT_NEXT_PUBLIC_API_KEY        = var.prod.client.next_public_api_key
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.prod.client.next_public_arcgis_api_key
-    TF_CLIENT_BASIC_AUTH_USER = var.prod.client.basic_auth_user
-    TF_CLIENT_BASIC_AUTH_PASSWORD = var.prod.client.basic_auth_password
+    TF_CLIENT_BASIC_AUTH_USER            = var.prod.client.basic_auth_user
+    TF_CLIENT_BASIC_AUTH_PASSWORD        = var.prod.client.basic_auth_password
   }
 }
