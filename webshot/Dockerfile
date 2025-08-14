@@ -33,7 +33,7 @@ RUN groupadd -g ${LINUX_GID} webshotuser \
     && useradd -u ${LINUX_UID} -g webshotuser -m -s /bin/bash webshotuser
 
 # Prune the store after everything potentially needing dev deps is done
-# RUN pnpm store prune
+RUN pnpm store prune
 
 # Assuming entrypoint.sh is copied within ./webshot
 ENTRYPOINT ["/bin/sh", "./entrypoint.sh"]
