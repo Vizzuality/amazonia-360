@@ -15,8 +15,9 @@ import { LuInfo, LuPen, LuDownload } from "react-icons/lu";
 import { formatNumber } from "@/lib/formats";
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
+import { usePostWebshotWidgetsMutation } from "@/lib/webshot";
 
-import { Indicator } from "@/app/local-api/indicators/route";
+import { Indicator, VisualizationTypes } from "@/app/local-api/indicators/route";
 
 import Info from "@/containers/info";
 
@@ -45,8 +46,8 @@ interface CardProps {
 
 const DOWNLOAD_FORMATS = [
   { label: "PNG", value: "image/png" },
-  { label: "JPEG", value: "image/jpeg" },
-  { label: "SVG", value: "image/svg+xml" },
+  // { label: "JPEG", value: "image/jpeg" },
+  // { label: "SVG", value: "image/svg+xml" },
 ];
 
 export function CardHeader({
@@ -100,8 +101,15 @@ export function CardSettings({
   );
 }
 
-export function CardDownload({ id }: PropsWithChildren<{ id: Indicator["id"] }>) {
+export function CardDownload({
+  id,
+  visualizationType,
+}: PropsWithChildren<{ id: Indicator["id"]; visualizationType: VisualizationTypes }>) {
+  const locale = useLocale();
   const t = useTranslations();
+
+  const postWebshotWidgetsMutation = usePostWebshotWidgetsMutation();
+
   return (
     <div className="flex flex-col space-y-1">
       <span className="text-muted-foreground first-letter:capitalize">
@@ -113,7 +121,13 @@ export function CardDownload({ id }: PropsWithChildren<{ id: Indicator["id"] }>)
             <button
               type="button"
               className="flex items-center space-x-3"
-              onClick={() => console.info(`Download ${id} as ${format.label}`)}
+              onClick={() => {
+                postWebshotWidgetsMutation.mutate({
+                  pagePath: `/${locale}/webshot/widgets/${id}/${visualizationType}`,
+                  outputFileName: `indicator-${id}.${format.value.toLowerCase()}`,
+                  params: { format: format.value },
+                });
+              }}
             >
               <LuDownload className="mr-2 inline-block h-4 w-4" />
               {format.label}
@@ -127,9 +141,11 @@ export function CardDownload({ id }: PropsWithChildren<{ id: Indicator["id"] }>)
 
 export function CardPopover({
   id,
+  visualizationType,
   onClick,
 }: PropsWithChildren<{
   id: Indicator["id"];
+  visualizationType: VisualizationTypes;
   onClick?: (e: MouseEvent<HTMLElement>) => void;
 }>) {
   const t = useTranslations();
@@ -156,7 +172,7 @@ export function CardPopover({
 
             <DropdownMenuSeparator className="-mx-1 my-1 h-px bg-border" />
             <DropdownMenuGroup className="px-2 py-1.5 text-sm text-popover-foreground">
-              <CardDownload id={id} />
+              <CardDownload id={id} visualizationType={visualizationType} />
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenuPortal>

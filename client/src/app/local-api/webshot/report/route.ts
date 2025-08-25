@@ -2,25 +2,12 @@ import { NextResponse, NextRequest } from "next/server";
 
 import { env } from "@/env.mjs";
 
-const webshotUrl = env.NEXT_PUBLIC_WEBSHOT_URL;
-const authUser = env.BASIC_AUTH_USER ?? "";
-const authPass = env.BASIC_AUTH_PASSWORD ?? "";
-
-const WEBSHOT_AUTH =
-  authUser || authPass ? "Basic " + Buffer.from(`${authUser}:${authPass}`).toString("base64") : "";
-
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
   try {
-    const upstream = await fetch(webshotUrl, {
+    const upstream = await fetch(`${env.NEXT_PUBLIC_WEBSHOT_URL}/webshot/api/v1/report/pdf`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(!!WEBSHOT_AUTH && {
-          Authorization: WEBSHOT_AUTH,
-        }),
-      },
       body: JSON.stringify(body),
     });
 

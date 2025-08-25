@@ -70,7 +70,9 @@ export default function ReportResultsIndicator({
           <CardControls>
             <CardInfo ids={[indicator.id]} />
 
-            {editable && <CardPopover id={indicator?.id} onClick={onEdit} />}
+            {editable && (
+              <CardPopover id={indicator?.id} visualizationType={type} onClick={onEdit} />
+            )}
           </CardControls>
         </CardHeader>
         <CardContent>
