@@ -65,7 +65,7 @@ export default function ReportResultsIndicator({
   return (
     <div className="flex h-full flex-col">
       <Card className={cn(type === "map" && "p-0")}>
-        <CardHeader className={cn(type === "map" && "px-6 pt-6")}>
+        <CardHeader className={cn(type === "map" && "h-auto px-6 pt-6")}>
           <CardTitle>{indicator?.name}</CardTitle>
           <CardControls>
             <CardInfo ids={[indicator.id]} />
