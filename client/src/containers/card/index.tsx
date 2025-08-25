@@ -45,9 +45,9 @@ interface CardProps {
 }
 
 const DOWNLOAD_FORMATS = [
-  { label: "PNG", value: "image/png" },
-  // { label: "JPEG", value: "image/jpeg" },
-  // { label: "SVG", value: "image/svg+xml" },
+  { label: "PNG", value: "png" },
+  // { label: "JPEG", value: "jpeg" },
+  // { label: "SVG", value: "svg+xml" },
 ];
 
 export function CardHeader({
@@ -56,7 +56,9 @@ export function CardHeader({
 }: PropsWithChildren<{
   className?: string;
 }>) {
-  return <header className={cn("flex items-start justify-between", className)}>{children}</header>;
+  return (
+    <header className={cn("flex h-6 items-start justify-between", className)}>{children}</header>
+  );
 }
 
 export function CardTitle({ children }: PropsWithChildren) {
@@ -86,8 +88,8 @@ export function CardSettings({
           onClick={onClick}
           className="space-x-2"
         >
-          <LuPen className="inline-block" />
-          {t("edit-indicator")}
+          <LuPen className="inline-block h-4 w-4" />
+          <span>{t("edit-indicator")}</span>
         </button>
       </TooltipTrigger>
 
@@ -120,12 +122,12 @@ export function CardDownload({
           <li className="py-1.5" key={format.value}>
             <button
               type="button"
-              className="flex items-center space-x-3"
+              className="flex items-center"
               onClick={() => {
                 postWebshotWidgetsMutation.mutate({
                   pagePath: `/${locale}/webshot/widgets/${id}/${visualizationType}`,
                   outputFileName: `indicator-${id}.${format.value.toLowerCase()}`,
-                  params: { format: format.value },
+                  params: {},
                 });
               }}
             >
@@ -189,7 +191,7 @@ export function CardPopover({
 
 export function CardControls({ children }: PropsWithChildren) {
   return (
-    <div className="flex items-center space-x-2">
+    <div className="relative -top-1 flex items-center space-x-0">
       <TooltipProvider delayDuration={500}>{children}</TooltipProvider>
     </div>
   );
@@ -209,7 +211,12 @@ export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className
     <Tooltip>
       <Dialog>
         <TooltipTrigger asChild>
-          <DialogTrigger className={cn("flex h-6 w-6 items-center justify-center", className)}>
+          <DialogTrigger
+            className={cn(
+              "flex h-8 w-8 items-center justify-center rounded-sm hover:bg-blue-100",
+              className,
+            )}
+          >
             <LuInfo className="text-blue-600" />
           </DialogTrigger>
         </TooltipTrigger>
