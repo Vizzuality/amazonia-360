@@ -3,34 +3,29 @@
 import { Download } from "lucide-react";
 import { useLocale } from "next-intl";
 
-import { useGetMutationPDF } from "@/lib/pdf";
-import { useGetOverviewTopics } from "@/lib/topics";
+import { downloadBlobResponse, usePostWebshotReportMutation } from "@/lib/webshot";
 
 import { Button } from "@/components/ui/button";
 
-export default function DownloadReport() {
+export default function ReportButton() {
   const locale = useLocale();
-  const { data, isLoading } = useGetOverviewTopics({ locale });
-  const mutation = useGetMutationPDF();
 
-  const handleClick = async () => {
-    window.print();
+  const postWebshotReportMutation = usePostWebshotReportMutation();
 
-    // mutation.mutate(
-    //   { url: window.location.href },
-    //   {
-    //     onSuccess: (response) => {
-    //       if (!response?.data) return;
-    //       const url = window.URL.createObjectURL(response.data);
-    //       const link = document.createElement("a");
-    //       link.href = url;
-    //       link.download = `report.pdf`;
-    //       document.body.appendChild(link);
-    //       link.click();
-    //       link.remove();
-    //     },
-    //   },
-    // );
+  const handleClick = () => {
+    postWebshotReportMutation.mutate(
+      {
+        pagePath: `/${locale}/webshot/report`,
+      },
+      {
+        onError: (error) => {
+          console.error("Error generating Report:", error);
+        },
+        onSuccess: async (data) => {
+          await downloadBlobResponse(data.data, "report.pdf");
+        },
+      },
+    );
   };
 
   return (
@@ -38,10 +33,13 @@ export default function DownloadReport() {
       variant="outline"
       className="space-x-2"
       onClick={handleClick}
-      disabled={isLoading || !data || mutation.status === "pending"}
+      disabled={postWebshotReportMutation.isPending}
     >
-      <Download className="h-5 w-5" />
-      {mutation.status === "pending" && <span>Generating PDF...</span>}
+      {postWebshotReportMutation.isPending ? (
+        <span>Generating Report...</span>
+      ) : (
+        <Download className="h-5 w-5" />
+      )}
     </Button>
   );
 }

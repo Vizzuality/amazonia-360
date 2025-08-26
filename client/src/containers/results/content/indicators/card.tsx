@@ -19,9 +19,9 @@ import {
   CardContent,
   CardHeader,
   CardControls,
-  CardSettings,
   CardInfo,
   CardTitle,
+  CardPopover,
 } from "@/containers/card";
 import { ChartIndicators } from "@/containers/indicators/chart";
 import { ChartImageryIndicators } from "@/containers/indicators/chart/imagery";
@@ -65,12 +65,14 @@ export default function ReportResultsIndicator({
   return (
     <div className="flex h-full flex-col">
       <Card className={cn(type === "map" && "p-0")}>
-        <CardHeader className={cn(type === "map" && "px-6 pt-6")}>
+        <CardHeader className={cn(type === "map" && "h-auto px-6 pt-6")}>
           <CardTitle>{indicator?.name}</CardTitle>
           <CardControls>
             <CardInfo ids={[indicator.id]} />
 
-            {editable && <CardSettings id={indicator?.id} onClick={onEdit} />}
+            {editable && (
+              <CardPopover id={indicator?.id} visualizationType={type} onClick={onEdit} />
+            )}
           </CardControls>
         </CardHeader>
         <CardContent>

@@ -10,17 +10,26 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { UseQueryResult } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
-import { LuInfo, LuPen } from "react-icons/lu";
+import { LuInfo, LuPen, LuDownload } from "react-icons/lu";
 
 import { formatNumber } from "@/lib/formats";
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
+import { downloadBlobResponse, usePostWebshotWidgetsMutation } from "@/lib/webshot";
 
-import { Indicator } from "@/app/local-api/indicators/route";
+import { Indicator, VisualizationTypes } from "@/app/local-api/indicators/route";
 
 import Info from "@/containers/info";
 
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuGroup,
+} from "@/components/ui/dropdown";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
@@ -35,13 +44,21 @@ interface CardProps {
   className?: string;
 }
 
+const DOWNLOAD_FORMATS = [
+  { label: "PNG", value: "png" },
+  // { label: "JPEG", value: "jpeg" },
+  // { label: "SVG", value: "svg+xml" },
+];
+
 export function CardHeader({
   className,
   children,
 }: PropsWithChildren<{
   className?: string;
 }>) {
-  return <header className={cn("flex items-start justify-between", className)}>{children}</header>;
+  return (
+    <header className={cn("flex h-6 items-start justify-between", className)}>{children}</header>
+  );
 }
 
 export function CardTitle({ children }: PropsWithChildren) {
@@ -67,10 +84,12 @@ export function CardSettings({
         <button
           id={`${id}`}
           type="button"
-          className="text-base font-semibold text-blue-600"
+          aria-label={t("edit-indicator")}
           onClick={onClick}
+          className="space-x-2"
         >
-          <LuPen className="text-blue-600" />
+          <LuPen className="inline-block h-4 w-4" />
+          <span>{t("edit-indicator")}</span>
         </button>
       </TooltipTrigger>
 
@@ -84,9 +103,115 @@ export function CardSettings({
   );
 }
 
+export function CardDownload({
+  id,
+  visualizationType,
+}: PropsWithChildren<{ id: Indicator["id"]; visualizationType: VisualizationTypes }>) {
+  const locale = useLocale();
+  const t = useTranslations();
+
+  const postWebshotWidgetsMutation = usePostWebshotWidgetsMutation();
+
+  return (
+    <div className="flex flex-col space-y-1">
+      <span className="text-muted-foreground first-letter:capitalize">
+        {t("download-indicator")}
+      </span>
+      <ul>
+        {DOWNLOAD_FORMATS.map((format) => (
+          <li className="py-1.5" key={format.value}>
+            <button
+              type="button"
+              className="flex items-center"
+              onClick={() => {
+                postWebshotWidgetsMutation.mutate(
+                  {
+                    pagePath: `/${locale}/webshot/widgets/${id}/${visualizationType}`,
+                    outputFileName: `indicator-${id}.${format.value.toLowerCase()}`,
+                    params: undefined,
+                  },
+                  {
+                    onSuccess: async (res) => {
+                      await downloadBlobResponse(
+                        res.data,
+                        `indicator-${id}-${visualizationType}.${format.value.toLowerCase()}`,
+                      );
+                    },
+                    onError: (error) => {
+                      console.error("Error downloading widget:", error);
+                    },
+                  },
+                );
+              }}
+            >
+              {postWebshotWidgetsMutation.isPending && (
+                <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+              )}
+
+              {!postWebshotWidgetsMutation.isPending && (
+                <LuDownload className="mr-2 inline-block h-4 w-4" />
+              )}
+
+              {format.label}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export function CardPopover({
+  id,
+  visualizationType,
+  onClick,
+}: PropsWithChildren<{
+  id: Indicator["id"];
+  visualizationType: VisualizationTypes;
+  onClick?: (e: MouseEvent<HTMLElement>) => void;
+}>) {
+  const t = useTranslations();
+  return (
+    <DropdownMenu modal={false}>
+      <Tooltip>
+        <DropdownMenuTrigger asChild>
+          <TooltipTrigger asChild>
+            <button
+              aria-label={t("indicator-menu")}
+              type="button"
+              className="h-8 w-8 rounded-sm hover:bg-blue-100"
+            >
+              <span className="h-4 w-4">⋮</span>
+            </button>
+          </TooltipTrigger>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuPortal>
+          <DropdownMenuContent side="left" align="start" sideOffset={6}>
+            <DropdownMenuGroup className="px-2 py-1.5 text-sm text-popover-foreground">
+              <CardSettings id={id} onClick={onClick} />
+            </DropdownMenuGroup>
+
+            <DropdownMenuSeparator className="-mx-1 my-1 h-px bg-border" />
+            <DropdownMenuGroup className="px-2 py-1.5 text-sm text-popover-foreground">
+              <CardDownload id={id} visualizationType={visualizationType} />
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenuPortal>
+        <TooltipPortal>
+          <TooltipContent sideOffset={0}>
+            {t("indicator-menu")}
+            <TooltipArrow />
+          </TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
+    </DropdownMenu>
+  );
+}
+
 export function CardControls({ children }: PropsWithChildren) {
   return (
-    <div className="flex space-x-2">
+    <div className="relative -top-1 flex items-center space-x-0">
       <TooltipProvider delayDuration={500}>{children}</TooltipProvider>
     </div>
   );
@@ -106,7 +231,12 @@ export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className
     <Tooltip>
       <Dialog>
         <TooltipTrigger asChild>
-          <DialogTrigger className={cn("flex h-6 w-6 items-center justify-center", className)}>
+          <DialogTrigger
+            className={cn(
+              "flex h-8 w-8 items-center justify-center rounded-sm hover:bg-blue-100",
+              className,
+            )}
+          >
             <LuInfo className="text-blue-600" />
           </DialogTrigger>
         </TooltipTrigger>
