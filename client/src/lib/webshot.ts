@@ -56,14 +56,8 @@ export const usePostWebshotReportMutation = <TError = unknown, TContext = unknow
   return useMutation(postWebshotReportMutationOptions(options));
 };
 
-export async function downloadBlobResponse(res: Response, fallbackName = "report.pdf") {
-  if (!res) return;
-
-  const cd = res.headers.get("Content-Disposition") ?? undefined;
-  const match = cd?.match(/filename\*?=.*?''?([^;]+)|filename="?([^"]+)"?/i);
-  const filename = match?.[1] || match?.[2] || fallbackName;
-
-  const blob = await res.blob();
+export async function downloadBlobResponse(blob: Blob, filename: string) {
+  if (!blob || !filename) return;
 
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -95,7 +89,7 @@ export function filenameFromCD(cd?: string | null, fallback = `report_${date}.pd
 export type PostWebshotWidgetsParams = {
   pagePath: string;
   outputFileName: string;
-  params: Record<string, unknown>;
+  params?: Record<string, unknown>;
 };
 
 export const postWebshotWidgets = async (payload: PostWebshotWidgetsParams) => {

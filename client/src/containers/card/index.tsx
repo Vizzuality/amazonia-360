@@ -15,7 +15,7 @@ import { LuInfo, LuPen, LuDownload } from "react-icons/lu";
 import { formatNumber } from "@/lib/formats";
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
-import { usePostWebshotWidgetsMutation } from "@/lib/webshot";
+import { downloadBlobResponse, usePostWebshotWidgetsMutation } from "@/lib/webshot";
 
 import { Indicator, VisualizationTypes } from "@/app/local-api/indicators/route";
 
@@ -124,14 +124,34 @@ export function CardDownload({
               type="button"
               className="flex items-center"
               onClick={() => {
-                postWebshotWidgetsMutation.mutate({
-                  pagePath: `/${locale}/webshot/widgets/${id}/${visualizationType}`,
-                  outputFileName: `indicator-${id}.${format.value.toLowerCase()}`,
-                  params: {},
-                });
+                postWebshotWidgetsMutation.mutate(
+                  {
+                    pagePath: `/${locale}/webshot/widgets/${id}/${visualizationType}`,
+                    outputFileName: `indicator-${id}.${format.value.toLowerCase()}`,
+                    params: undefined,
+                  },
+                  {
+                    onSuccess: async (res) => {
+                      await downloadBlobResponse(
+                        res.data,
+                        `indicator-${id}-${visualizationType}.${format.value.toLowerCase()}`,
+                      );
+                    },
+                    onError: (error) => {
+                      console.error("Error downloading widget:", error);
+                    },
+                  },
+                );
               }}
             >
-              <LuDownload className="mr-2 inline-block h-4 w-4" />
+              {postWebshotWidgetsMutation.isPending && (
+                <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+              )}
+
+              {!postWebshotWidgetsMutation.isPending && (
+                <LuDownload className="mr-2 inline-block h-4 w-4" />
+              )}
+
               {format.label}
             </button>
           </li>
@@ -152,7 +172,7 @@ export function CardPopover({
 }>) {
   const t = useTranslations();
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <Tooltip>
         <DropdownMenuTrigger asChild>
           <TooltipTrigger asChild>
