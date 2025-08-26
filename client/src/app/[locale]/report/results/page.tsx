@@ -9,6 +9,7 @@ import { locationParser } from "@/app/parsers";
 import { PageProps } from "@/app/types";
 
 import DataDisclaimer from "@/containers/disclaimers/data";
+import Header from "@/containers/header";
 import ReportSidebar from "@/containers/report/sidebar";
 import ReportResultsContent from "@/containers/results/content";
 import ReportResultsHeader from "@/containers/results/header";
@@ -51,8 +52,9 @@ export default async function ReportResultsPage({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className="relative bg-blue-50 pb-5 print:w-full print:bg-white print:p-0">
-        <SidebarProvider>
+      <SidebarProvider>
+        <Header />
+        <main className="relative flex bg-blue-50 pb-5 print:w-full print:bg-white print:p-0">
           <div className="w-full flex-col print:w-full">
             <ReportResultsHeader />
             <ReportResultsContent />
@@ -60,8 +62,8 @@ export default async function ReportResultsPage({
           <div className="relative print:hidden">
             <ReportSidebar />
           </div>
-        </SidebarProvider>
-      </main>
+        </main>
+      </SidebarProvider>
       <DataDisclaimer />
     </HydrationBoundary>
   );

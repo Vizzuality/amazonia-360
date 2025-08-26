@@ -6,8 +6,8 @@ import { reportPanelAtom, useSyncLocation } from "@/app/store";
 
 import ReportMobileWarning from "@/containers/report/location/mobile-warning";
 import SketchMobile from "@/containers/report/location/sketch/mobile";
-import TabsLocation from "@/containers/report/location/tabs/location";
-import TabsTopics from "@/containers/report/location/tabs/topics";
+import SidebarLocationContent from "@/containers/report/location/tabs/location";
+import SidebarIndicatorsContent from "@/containers/report/location/tabs/topics";
 import MapContainer from "@/containers/report/map";
 
 export default function ReportLocationMobile() {
@@ -20,9 +20,9 @@ export default function ReportLocationMobile() {
         <div className="col-span-12">
           <aside className="pointer-events-auto flex w-full shrink-0 flex-col overflow-hidden">
             <div className="h-full w-full grow">
-              {reportPanel === "location" && <TabsLocation />}
+              {reportPanel === "location" && <SidebarLocationContent />}
 
-              {reportPanel === "topics" && <TabsTopics />}
+              {reportPanel === "topics" && <SidebarIndicatorsContent />}
             </div>
           </aside>
         </div>

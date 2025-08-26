@@ -1,6 +1,7 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Provider as JotaiProvider } from "jotai";
 
 import { MediaContextProvider } from "@/containers/media";
 import { ArcGISProvider } from "@/containers/providers/arcgis";
@@ -49,7 +50,9 @@ export default function LayoutProviders({ children }: { children: React.ReactNod
     <MediaContextProvider>
       <TooltipProvider>
         <QueryClientProvider client={queryClient}>
-          <ArcGISProvider>{children}</ArcGISProvider>
+          <ArcGISProvider>
+            <JotaiProvider>{children}</JotaiProvider>
+          </ArcGISProvider>
         </QueryClientProvider>
       </TooltipProvider>
     </MediaContextProvider>

@@ -47,7 +47,6 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
   const sketchActionTimeoutRef = useRef<NodeJS.Timeout>();
 
   const setGridHover = useSetAtom(gridHoverAtom);
-
   const [location, setLocation] = useSyncLocation();
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
 
