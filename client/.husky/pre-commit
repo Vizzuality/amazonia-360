@@ -1,3 +1,6 @@
 # Client linting and type checking
 # cd ./client && pnpm types && pnpm lint --fix && pnpm check-types && git add src/types/generated/
-cd ./client && pnpm lint --fix && pnpm check-types && pnpm test
+
+if git diff --cached --name-only | grep -q '^client/'; then
+  (cd client && pnpm lint --fix && pnpm check-types && pnpm test)
+fi

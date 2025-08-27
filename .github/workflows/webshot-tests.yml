@@ -34,6 +34,8 @@ jobs:
           node-version-file: './webshot/.nvmrc'
 
       - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: ./webshot/package.json
 
       - name: Cache dependencies
         uses: actions/cache@v4.2.3
