@@ -1,0 +1,53 @@
+name: Webshot Tests
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'webshot/**'
+      - '.github/workflows/webshot-tests.yml'
+      - '!client/**' # exclude client folder
+      - '!infrastructure/**' # exclude infra folder
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'webshot/**'
+      - '.github/workflows/webshot-tests.yml'
+      - '!client/**' # exclude client folder
+      - '!infrastructure/**' # exclude infra folder
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Webshot Tests
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: ./webshot
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5.0.0
+      - name: Node setup
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version-file: '.nvmrc'
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Cache dependencies
+        uses: actions/cache@v4.2.3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Unit tests
+        run: pnpm test:unit
+
+      - name: Run E2E tests
+        run: pnpm test:e2e
+
