@@ -31,7 +31,7 @@ jobs:
       - name: Node setup
         uses: actions/setup-node@v4.4.0
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: './webshot/.nvmrc'
 
       - uses: pnpm/action-setup@v4
 
