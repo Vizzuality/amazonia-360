@@ -8,7 +8,8 @@ import { formatPercentage } from "@/lib/formats";
 import { useQueryFeatureId, useResourceFeatureLayerId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
-import { Indicator, ResourceFeature } from "@/app/local-api/indicators/route";
+import { Indicator, ResourceFeature } from "@/types/indicator";
+
 import { useSyncLocation } from "@/app/store";
 
 import { CardLoader } from "@/containers/card";

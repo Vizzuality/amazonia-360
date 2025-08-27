@@ -11,7 +11,8 @@ import { LuInfo } from "react-icons/lu";
 import { formatNumber } from "@/lib/formats";
 import { cn } from "@/lib/utils";
 
-import { H3Indicator } from "@/app/local-api/indicators/route";
+import { H3Indicator } from "@/types/indicator";
+
 import { useSyncGridDatasets, useSyncGridFilters, useSyncGridSelectedDataset } from "@/app/store";
 
 import { Checkbox } from "@/components/ui/checkbox";

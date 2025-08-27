@@ -4,7 +4,7 @@ import { useLocale } from "next-intl";
 
 import { useGetDefaultIndicators } from "@/lib/indicators";
 
-import { Topic } from "@/app/local-api/topics/route";
+import { Topic } from "@/types/topic";
 
 import { IndicatorsItem } from "./item";
 

@@ -16,7 +16,8 @@ import {
   ResourceImageryTile,
   ResourceWebTile,
   VisualizationTypes,
-} from "@/app/local-api/indicators/route";
+} from "@/types/indicator";
+
 import { useSyncLocation } from "@/app/store";
 
 import { ChartIndicators } from "@/containers/indicators/chart";

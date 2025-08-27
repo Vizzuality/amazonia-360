@@ -7,8 +7,8 @@ import {
   ResourceImagery,
   ResourceImageryTile,
   ResourceWebTile,
-} from "@/app/local-api/indicators/route";
-import { Indicator } from "@/app/local-api/indicators/route";
+} from "@/types/indicator";
+import { Indicator } from "@/types/indicator";
 
 import { CardLoader } from "@/containers/card";
 import WidgetMap from "@/containers/widgets/map";

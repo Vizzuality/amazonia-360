@@ -2,7 +2,8 @@
 
 import { useCallback } from "react";
 
-import { VisualizationTypes } from "@/app/local-api/indicators/route";
+import { VisualizationTypes } from "@/types/indicator";
+
 import { useSyncTopics } from "@/app/store";
 
 import { Badge } from "@/components/ui/badge";

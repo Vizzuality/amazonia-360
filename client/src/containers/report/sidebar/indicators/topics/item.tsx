@@ -10,7 +10,8 @@ import { LuChevronRight, LuGripVertical } from "react-icons/lu";
 import { useGetTopicsId } from "@/lib/topics";
 import { cn, areArraysEqual } from "@/lib/utils";
 
-import { Topic } from "@/app/local-api/topics/route";
+import { Topic } from "@/types/topic";
+
 import { useSyncTopics } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";

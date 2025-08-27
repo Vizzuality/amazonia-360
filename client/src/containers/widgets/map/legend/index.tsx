@@ -5,7 +5,7 @@ import {
   ResourceFeature,
   ResourceImagery,
   ResourceImageryTile,
-} from "@/app/local-api/indicators/route";
+} from "@/types/indicator";
 
 import { FeatureLegend } from "@/containers/widgets/map/legend/feature";
 import { ImageryLegend } from "@/containers/widgets/map/legend/imagery";

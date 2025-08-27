@@ -10,7 +10,8 @@ import { LuChevronRight } from "react-icons/lu";
 import { useGetTopicsId } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
-import { H3Indicator } from "@/app/local-api/indicators/route";
+import { H3Indicator } from "@/types/indicator";
+
 import { selectedFiltersViewAtom } from "@/app/store";
 
 import { GridCounterIndicators } from "./counter-filters";

@@ -10,7 +10,8 @@ import { useMeta } from "@/lib/grid";
 import { useGetH3Indicators } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
-import { H3Indicator } from "@/app/local-api/indicators/route";
+import { H3Indicator } from "@/types/indicator";
+
 import { selectedFiltersViewAtom, useSyncGridDatasets } from "@/app/store";
 import { useSyncLocation } from "@/app/store";
 

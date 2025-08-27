@@ -4,7 +4,7 @@ import Color from "@arcgis/core/Color";
 
 import { useResourceFeatureLayerId } from "@/lib/indicators";
 
-import { Indicator, ResourceFeature } from "@/app/local-api/indicators/route";
+import { Indicator, ResourceFeature } from "@/types/indicator";
 
 import { CardLoader } from "@/containers/card";
 

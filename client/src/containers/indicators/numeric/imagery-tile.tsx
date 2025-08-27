@@ -5,7 +5,8 @@ import { useLocale } from "next-intl";
 import { useGetIndicatorsId, useQueryImageryTileId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
-import { Indicator, ResourceImageryTile } from "@/app/local-api/indicators/route";
+import { Indicator, ResourceImageryTile } from "@/types/indicator";
+
 import { useSyncLocation } from "@/app/store";
 
 import { CardLoader, CardWidgetNumber } from "@/containers/card";
