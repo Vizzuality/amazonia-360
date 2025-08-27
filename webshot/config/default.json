@@ -2,6 +2,9 @@
   "app": {
     "baseUrl": "http://client:3000"
   },
+  "server": {
+    "port": "3003"
+  },
   "pdf": {
     "pageFormat": "Letter",
     "pageOrientation": "landscape",
