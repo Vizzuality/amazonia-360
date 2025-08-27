@@ -45,6 +45,7 @@ variable "dev" {
       next_public_api_url      = string
       next_public_api_key      = string
       next_public_arcgis_api_key = string
+      next_public_webshot_url = string
       next_public_feature_partners = string
       basic_auth_enabled       = string
       basic_auth_user          = string
@@ -65,6 +66,7 @@ variable "staging" {
       next_public_api_url      = string
       next_public_api_key      = string
       next_public_arcgis_api_key = string
+      next_public_webshot_url = string
       next_public_feature_partners = string
       basic_auth_enabled       = string
       basic_auth_user          = string
@@ -85,6 +87,7 @@ variable "prod" {
       next_public_api_url      = string
       next_public_api_key      = string
       next_public_arcgis_api_key = string
+      next_public_webshot_url = string
       next_public_feature_partners = string
       basic_auth_enabled       = string
       basic_auth_user          = string
