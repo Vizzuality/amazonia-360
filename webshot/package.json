@@ -49,6 +49,7 @@
     "@types/geojson": "7946.0.16",
     "@types/lodash": "4.17.18",
     "@types/supertest": "6.0.3",
+    "env-cmd": "^11.0.0",
     "supertest": "7.1.0",
     "testcontainers": "11.0.3",
     "vitest": "^3.2.4"
