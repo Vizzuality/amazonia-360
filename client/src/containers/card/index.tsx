@@ -17,7 +17,7 @@ import { useGetIndicatorsId } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 import { downloadBlobResponse, usePostWebshotWidgetsMutation } from "@/lib/webshot";
 
-import { Indicator, VisualizationTypes } from "@/app/local-api/indicators/route";
+import { Indicator, VisualizationTypes } from "@/types/indicator";
 
 import Info from "@/containers/info";
 

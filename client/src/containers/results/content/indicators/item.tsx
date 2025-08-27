@@ -3,7 +3,8 @@ import { useCallback, useMemo } from "react";
 
 import { useAtom } from "jotai";
 
-import { VisualizationTypes } from "@/app/local-api/indicators/route";
+import { VisualizationTypes } from "@/types/indicator";
+
 import { IndicatorView, IndicatorMapView, TopicView } from "@/app/parsers";
 import { indicatorsEditionModeAtom, reportEditionModeAtom, useSyncTopics } from "@/app/store";
 

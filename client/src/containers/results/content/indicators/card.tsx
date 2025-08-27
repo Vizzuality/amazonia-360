@@ -7,12 +7,8 @@ import { useLocale } from "next-intl";
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
-import { Indicator, VisualizationTypes } from "@/app/local-api/indicators/route";
-import {
-  ResourceFeature,
-  ResourceImageryTile,
-  ResourceWebTile,
-} from "@/app/local-api/indicators/route";
+import { Indicator, VisualizationTypes } from "@/types/indicator";
+import { ResourceFeature, ResourceImageryTile, ResourceWebTile } from "@/types/indicator";
 
 import {
   Card,

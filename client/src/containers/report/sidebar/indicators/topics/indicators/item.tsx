@@ -9,8 +9,9 @@ import { LuChevronRight, LuPlus, LuInfo } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { Indicator, VisualizationTypes } from "@/app/local-api/indicators/route";
-import { Topic } from "@/app/local-api/topics/route";
+import { Indicator, VisualizationTypes } from "@/types/indicator";
+import { Topic } from "@/types/topic";
+
 import { useSyncTopics } from "@/app/store";
 
 import Info from "@/containers/info";

@@ -4,7 +4,7 @@ import { useLocale } from "next-intl";
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { useGetMetadata } from "@/lib/query";
 
-import { Indicator } from "@/app/local-api/indicators/route";
+import { Indicator } from "@/types/indicator";
 
 import { CardLoader } from "@/containers/card";
 

@@ -1,10 +1,9 @@
 import { parseAsArrayOf, parseAsFloat, parseAsJson, parseAsString } from "nuqs";
 
 import { ContextDescriptionType } from "@/types/generated/api.schemas";
+import { VisualizationTypes } from "@/types/indicator";
 
 import { BasemapIds } from "@/components/map/controls/basemap";
-
-import { VisualizationTypes } from "./local-api/indicators/route";
 
 type IndicatorViewBase = {
   id: number;

@@ -4,7 +4,8 @@ import { useLocale } from "next-intl";
 
 import { useGetOverviewTopics } from "@/lib/topics";
 
-import { Indicator } from "@/app/local-api/indicators/route";
+import { Indicator } from "@/types/indicator";
+
 import { DefaultTopicConfig } from "@/app/parsers";
 import { useSyncTopics, useSyncDefaultTopics } from "@/app/store";
 

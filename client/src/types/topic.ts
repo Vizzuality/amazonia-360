@@ -1,7 +1,5 @@
 import { IndicatorView } from "@/app/parsers";
 
-import TOPICS from "./topics.json";
-
 export type Topic = {
   id: number;
   name?: string;
@@ -15,7 +13,3 @@ export type Topic = {
   description_pt: string;
   default_visualization: IndicatorView[];
 };
-
-export async function GET() {
-  return Response.json(TOPICS as Topic[]);
-}

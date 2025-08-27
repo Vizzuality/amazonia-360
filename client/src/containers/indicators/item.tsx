@@ -4,12 +4,8 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
 
-import { Indicator } from "@/app/local-api/indicators/route";
-import {
-  ResourceFeature,
-  ResourceImageryTile,
-  ResourceWebTile,
-} from "@/app/local-api/indicators/route";
+import { Indicator } from "@/types/indicator";
+import { ResourceFeature, ResourceImageryTile, ResourceWebTile } from "@/types/indicator";
 
 import {
   ResourceMap,

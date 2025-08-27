@@ -13,9 +13,9 @@ import { useLocationGeometry } from "@/lib/location";
 import { omit } from "@/lib/utils";
 
 import { ContextLanguage } from "@/types/generated/api.schemas";
+import { Indicator } from "@/types/indicator";
+import { Topic } from "@/types/topic";
 
-import { Indicator } from "@/app/local-api/indicators/route";
-import { Topic } from "@/app/local-api/topics/route";
 import { AiSummary } from "@/app/parsers";
 import {
   isGeneratingAIReportAtom,

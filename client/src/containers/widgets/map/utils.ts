@@ -1,7 +1,8 @@
 export const FALLBACK_WIDGET_DEFAULT_BASEMAP_ID: BasemapIds = "gray-vector";
 import { omit } from "@/lib/utils";
 
-import { Indicator } from "@/app/local-api/indicators/route";
+import { Indicator } from "@/types/indicator";
+
 import {
   IndicatorView,
   DefaultTopicConfig,

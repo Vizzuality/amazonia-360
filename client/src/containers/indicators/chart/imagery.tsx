@@ -7,7 +7,8 @@
 import { useQueryImageryId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
-import { Indicator, ResourceImagery } from "@/app/local-api/indicators/route";
+import { Indicator, ResourceImagery } from "@/types/indicator";
+
 import { useSyncLocation } from "@/app/store";
 
 // import { CardLoader } from "@/containers/card";

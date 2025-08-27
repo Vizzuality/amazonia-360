@@ -7,7 +7,8 @@ import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import { formatNumber } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
 
-import { Indicator } from "@/app/local-api/indicators/route";
+import { Indicator } from "@/types/indicator";
+
 import { useSyncLocation } from "@/app/store";
 
 import { CardWidgetNumber } from "@/containers/card";

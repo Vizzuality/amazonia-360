@@ -3,7 +3,8 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, act } from "@testing-library/react";
 
-import { Indicator } from "@/app/local-api/indicators/route";
+import { Indicator } from "@/types/indicator";
+
 import { TopicView, IndicatorView, DefaultTopicConfig } from "@/app/parsers";
 
 import { BasemapIds } from "@/components/map/controls/basemap";

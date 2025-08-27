@@ -1,11 +1,9 @@
 import { DatasetMeta } from "@/types/generated/api.schemas";
+import { Topic } from "@/types/topic";
 
-import { Topic } from "@/app/local-api/topics/route";
 import { IndicatorView } from "@/app/parsers";
 
 import { LegendItemProps } from "@/components/map/legend/item";
-
-import INDICATORS from "./indicators.json";
 
 export type VisualizationTypes = "map" | "table" | "chart" | "numeric" | "ai";
 
@@ -113,7 +111,3 @@ export type IndicatorOverview = {
   visualization_types: VisualizationTypes[];
   resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
 };
-
-export async function GET() {
-  return Response.json(INDICATORS);
-}

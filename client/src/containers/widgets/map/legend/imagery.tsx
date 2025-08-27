@@ -1,4 +1,4 @@
-import { Indicator, ResourceImagery, ResourceImageryTile } from "@/app/local-api/indicators/route";
+import { Indicator, ResourceImagery, ResourceImageryTile } from "@/types/indicator";
 
 import Legend from "@/components/map/legend";
 import LegendItem from "@/components/map/legend/item";

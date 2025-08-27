@@ -14,7 +14,8 @@ import {
   ResourceFeature,
   ResourceImagery,
   ResourceImageryTile,
-} from "@/app/local-api/indicators/route";
+} from "@/types/indicator";
+
 import { DefaultTopicConfig, IndicatorMapView } from "@/app/parsers";
 import { useSyncLocation, useSyncTopics, useSyncDefaultTopics } from "@/app/store";
 
