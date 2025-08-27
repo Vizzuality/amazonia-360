@@ -20,7 +20,7 @@ const port = Config.getNumber("server.port");
 const createOpenApiDocumentation = (app: INestApplication) => {
   if (require.main === module) {
     const config = new DocumentBuilder()
-      .setTitle("SKI Webshot API")
+      .setTitle("Amazonia360 Webshot API")
       // .setDescription(description)
       // .setVersion(version)
       .addTag("Report")
