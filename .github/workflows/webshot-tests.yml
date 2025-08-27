@@ -47,6 +47,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Install Chromium browser
+        working-directory: e2e
+        run: pnpm exec playwright install chromium --with-deps
+
       - name: Run Unit tests
         run: pnpm test:unit
 
