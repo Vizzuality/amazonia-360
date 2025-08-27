@@ -139,6 +139,7 @@ module "dev" {
 
     # Client
     TF_CLIENT_NEXT_PUBLIC_API_URL = var.dev.client.next_public_api_url
+    TF_NEXT_PUBLIC_WEBSHOT_URL = var.dev.client.next_public_webshot_url
     TF_CLIENT_BASIC_AUTH_ENABLED  = var.dev.client.basic_auth_enabled
   }
   github_additional_environment_secrets = {
@@ -182,6 +183,7 @@ module "staging" {
 
     # Client
     TF_CLIENT_NEXT_PUBLIC_API_URL   = var.staging.client.next_public_api_url
+    TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL   = var.staging.client.next_public_webshot_url
     TF_CLIENT_BASIC_AUTH_ENABLED    = var.staging.client.basic_auth_enabled
     TF_NEXT_PUBLIC_FEATURE_PARTNERS = var.staging.client.next_public_feature_partners
   }
@@ -226,6 +228,7 @@ module "prod" {
 
     # Client
     TF_CLIENT_NEXT_PUBLIC_API_URL   = var.prod.client.next_public_api_url
+    TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL   = var.prod.client.next_public_webshot_url
     TF_CLIENT_BASIC_AUTH_ENABLED    = var.prod.client.basic_auth_enabled
     TF_NEXT_PUBLIC_FEATURE_PARTNERS = var.prod.client.next_public_feature_partners
   }
