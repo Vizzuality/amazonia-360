@@ -1,6 +1,10 @@
 {
   "app": {
-    "baseUrl": "http://client:3000"
+    "baseUrl": "http://localhost:3000",
+    "basicAuth": {
+      "user": "amazonia360",
+      "password": "amazonia360"
+    }
   },
   "server": {
     "port": "3003"
@@ -26,7 +30,8 @@
       "--disable-features=BlockInsecurePrivateNetworkRequests",
       "--use-gl=angle",
       "--use-angle=swiftshader",
-      "--in-process-gpu"
+      "--in-process-gpu",
+      "--lang=en-US"
     ]
   }
 }
