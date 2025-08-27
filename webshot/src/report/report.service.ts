@@ -118,6 +118,9 @@ export class ReportService {
 
       return pdfBuffer;
     } catch (error: unknown) {
+      this.logger.error("Original error:");
+      this.logger.error(error);
+      this.logger.error("Modified error message:");
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       const errorStack = error instanceof Error ? error.stack : undefined;
