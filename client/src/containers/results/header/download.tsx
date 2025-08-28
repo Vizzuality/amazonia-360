@@ -1,5 +1,7 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
+
 import { Download } from "lucide-react";
 import { useLocale } from "next-intl";
 
@@ -9,13 +11,14 @@ import { Button } from "@/components/ui/button";
 
 export default function ReportButton() {
   const locale = useLocale();
+  const searchParams = useSearchParams();
 
   const postWebshotReportMutation = usePostWebshotReportMutation();
 
   const handleClick = () => {
     postWebshotReportMutation.mutate(
       {
-        pagePath: `/${locale}/webshot/report`,
+        pagePath: `/${locale}/report/results/?${searchParams.toString()}`,
       },
       {
         onError: (error) => {
