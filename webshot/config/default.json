@@ -30,8 +30,7 @@
       "--disable-features=BlockInsecurePrivateNetworkRequests",
       "--use-gl=angle",
       "--use-angle=swiftshader",
-      "--in-process-gpu",
-      "--lang=en-US"
+      "--in-process-gpu"
     ]
   }
 }
