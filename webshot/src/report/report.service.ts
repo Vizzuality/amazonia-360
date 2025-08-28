@@ -43,6 +43,33 @@ export class ReportService {
         deviceScaleFactor: 2,
       });
 
+      page.on("request", (request) => {
+        if (request.frame() === page!.mainFrame()) {
+          this.logger.log('Sent request for main frame:')
+          this.logger.log(
+              `>> ${request.method()} ${request.url()} | headers=${JSON.stringify(request.headers())}`,
+          );
+        }
+      });
+
+      page.on("response", async (response) => {
+        if (response.request().frame() === page!.mainFrame()) {
+          this.logger.log('Sent response for main frame:')
+          this.logger.log(
+              `<< ${response.status()} ${response.url()} | headers=${JSON.stringify(response.headers())}`,
+          );
+        }
+      });
+
+      page.on("requestfinished", (request) => {
+        if (request.url() === targetUrl) {
+          this.logger.log('Sent response for target:')
+          this.logger.log(
+              `Main navigation request headers: ${JSON.stringify(request.headers())}`,
+          );
+        }
+      });
+
       // Pass through browser console to our own service's console
       page.on("console", consolePassthrough);
 
@@ -118,8 +145,7 @@ export class ReportService {
 
       return pdfBuffer;
     } catch (error: unknown) {
-      this.logger.error("Original error:");
-      this.logger.error(error);
+      this.logger.error("Original error:", error);
       this.logger.error("Modified error message:");
       const errorMessage =
         error instanceof Error ? error.message : String(error);
