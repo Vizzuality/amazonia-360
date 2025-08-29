@@ -1,7 +1,11 @@
 "use client";
 
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+
 import { useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
+import { LuArrowLeft } from "react-icons/lu";
 
 import { gridPanelAtom, useSyncGridDatasets } from "@/app/store";
 
@@ -12,9 +16,10 @@ import GridClearFilters from "@/containers/report/location/grid/filters-controls
 
 import { Button } from "@/components/ui/button";
 
-export default function TabsFilters() {
+export default function SidebarGridContent() {
   const t = useTranslations();
   const setGridPanel = useSetAtom(gridPanelAtom);
+  const searchParams = useSearchParams();
 
   const [gridDatasets] = useSyncGridDatasets();
 
@@ -23,8 +28,16 @@ export default function TabsFilters() {
       <div className="space-y-1">
         <div className="flex items-center justify-between">
           <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
+            <Link
+              href={`/report${searchParams ? `?${searchParams.toString()}` : ""}`}
+              className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
+            >
+              <LuArrowLeft className="h-4 w-4" />
+            </Link>
             {t("grid-sidebar-grid-filters-title")}
           </h1>
+
+          <h1 className="flex items-center gap-2 text-lg font-bold text-primary"></h1>
           <GridClearFilters />
         </div>
 

@@ -61,7 +61,6 @@ export const SketchTooltips = () => {
       sketchAction.geometryType !== "point")
   )
     return null;
-
   return (
     <div className="pointer-events-none absolute left-0 top-4 z-10 w-full duration-300 animate-in fade-in-0 lg:top-10">
       <div className="container">

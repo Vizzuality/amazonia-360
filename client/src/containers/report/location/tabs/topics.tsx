@@ -4,22 +4,24 @@ import { useCallback } from "react";
 
 import ReactMarkdown from "react-markdown";
 
-import { useSetAtom } from "jotai";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+
 import { useLocale, useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
 
 import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
-import { reportPanelAtom, useSyncTopics } from "@/app/store";
+import { useSyncTopics } from "@/app/store";
 
 import { GenerateReport } from "@/containers/report/location/generate";
 import Topics from "@/containers/report/location/topics";
 
-export default function TabsTopics() {
+export default function SidebarIndicatorsContent() {
   const t = useTranslations();
   const locale = useLocale();
-  const setReportPanel = useSetAtom(reportPanelAtom);
+  const searchParams = useSearchParams();
   const [activeTopics, setTopics] = useSyncTopics();
 
   const { data: topics } = useGetDefaultTopics({ locale });
@@ -49,14 +51,13 @@ export default function TabsTopics() {
       <div className="space-y-1">
         <div className="flex items-baseline justify-between">
           <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
-            <button
-              type="button"
-              onClick={() => setReportPanel("location")}
+            <Link
+              href={`/report${searchParams ? `?${searchParams.toString()}` : ""}`}
               className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
             >
               <LuArrowLeft className="h-4 w-4" />
-            </button>
-            {t("grid-sidebar-report-location-topics-title")}
+            </Link>
+            {t("indicators")}
           </h1>
           <button
             type="button"

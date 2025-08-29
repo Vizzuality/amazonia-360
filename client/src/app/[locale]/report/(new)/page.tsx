@@ -2,8 +2,6 @@ import { Metadata } from "next";
 
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import PageProviders from "@/app/[locale]/report/page-providers";
-
 import ReportLocation from "@/containers/report/location";
 
 type Params = Promise<{ locale: string }>;
@@ -24,11 +22,5 @@ export default async function ReportPage({ params }: { params: Params }) {
   // Enable static rendering
   setRequestLocale(locale);
 
-  return (
-    <PageProviders>
-      <main className="relative flex min-h-[calc(100svh_-_theme(space.16))] flex-col">
-        <ReportLocation />
-      </main>
-    </PageProviders>
-  );
+  return <ReportLocation />;
 }

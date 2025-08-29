@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { tabAtom } from "@/app/store";
 
 import { WandIcon } from "@/components/ui/icons/wand";
-
+// TO - DO - remove before merge (remove keys from translations)
 export default function AmazoniaGridIntro() {
   const t = useTranslations();
   const setTab = useSetAtom(tabAtom);

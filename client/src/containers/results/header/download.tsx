@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 
-import { Download } from "lucide-react";
+import { FileDown } from "lucide-react";
 import { useLocale } from "next-intl";
 
 import { downloadBlobResponse, usePostWebshotReportMutation } from "@/lib/webshot";
@@ -34,14 +34,14 @@ export default function ReportButton() {
   return (
     <Button
       variant="outline"
-      className="space-x-2"
+      className="space-x-2 border-none px-2.5 py-2 shadow-none"
       onClick={handleClick}
       disabled={postWebshotReportMutation.isPending}
     >
       {postWebshotReportMutation.isPending ? (
         <span>Generating Report...</span>
       ) : (
-        <Download className="h-5 w-5" />
+        <FileDown className="h-4 w-4" />
       )}
     </Button>
   );

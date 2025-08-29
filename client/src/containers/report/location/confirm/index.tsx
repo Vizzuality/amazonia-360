@@ -67,7 +67,7 @@ export default function Confirm() {
   if (!location || !LOCATION) return null;
 
   return (
-    <div className="flex w-full flex-col justify-between gap-4 overflow-hidden text-sm">
+    <div className="flex w-full flex-col justify-between gap-4 overflow-hidden bg-white text-sm">
       <section className="space-y-2">
         <div className="flex items-end justify-between">
           <div className="text-sm font-semibold leading-none text-blue-500">{TITLE}</div>

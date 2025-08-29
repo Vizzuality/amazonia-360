@@ -13,8 +13,6 @@ import ReportSidebar from "@/containers/report/sidebar";
 import ReportResultsContent from "@/containers/results/content";
 import ReportResultsHeader from "@/containers/results/header";
 
-import { SidebarProvider } from "@/components/ui/sidebar";
-
 import { redirect } from "@/i18n/navigation";
 
 type Params = Promise<{ locale: string }>;
@@ -51,16 +49,14 @@ export default async function ReportResultsPage({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className="relative bg-blue-50 pb-5 print:w-full print:bg-white print:p-0">
-        <SidebarProvider>
-          <div className="w-full flex-col print:w-full">
-            <ReportResultsHeader />
-            <ReportResultsContent />
-          </div>
-          <div className="relative print:hidden">
-            <ReportSidebar />
-          </div>
-        </SidebarProvider>
+      <main className="relative flex bg-blue-50 pb-5 print:w-full print:bg-white print:p-0">
+        <div className="w-full flex-col print:w-full">
+          <ReportResultsHeader />
+          <ReportResultsContent />
+        </div>
+        <div className="relative print:hidden">
+          <ReportSidebar />
+        </div>
       </main>
       <DataDisclaimer />
     </HydrationBoundary>
