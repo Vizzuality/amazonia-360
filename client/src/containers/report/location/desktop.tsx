@@ -9,7 +9,6 @@ import { LuDatabase } from "react-icons/lu";
 import { cn } from "@/lib/utils";
 
 import SidebarLocationContent from "@/containers/report/location/tabs/location";
-import MapContainer from "@/containers/report/map";
 
 import { HexagonIcon } from "@/components/ui/icons/hexagon";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -90,8 +89,6 @@ export default function ReportLocationDesktop() {
           </div>
         </div>
       </div>
-
-      <MapContainer desktop />
     </>
   );
 }

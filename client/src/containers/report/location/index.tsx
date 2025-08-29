@@ -9,11 +9,11 @@ import ReportLocationMobile from "@/containers/report/location/mobile";
 export default function ReportLocation() {
   return (
     <Suspense fallback={null}>
-      <Media greaterThanOrEqual="lg" className="relative flex w-full grow flex-col">
+      <Media greaterThanOrEqual="lg" className="absolute flex h-full w-full grow flex-col">
         <ReportLocationDesktop />
       </Media>
 
-      <Media lessThan="lg" className="relative flex w-full grow flex-col">
+      <Media lessThan="lg" className="absolute flex h-full w-full grow flex-col">
         <ReportLocationMobile />
       </Media>
     </Suspense>

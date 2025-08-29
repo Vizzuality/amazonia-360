@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { Separator } from "@radix-ui/react-select";
 
 import { cn } from "@/lib/utils";
@@ -29,27 +31,35 @@ function getRoutes(pathname: string) {
 
 export default function Header() {
   const pathname = usePathname();
-  const { isReportSub } = getRoutes(pathname);
-  const isReport = pathname.includes("/report");
-  const isReportResults = pathname.includes("/report/results");
 
   const [location] = useSyncLocation();
+
+  const DYNAMIC_HEADER = useMemo(() => {
+    const { isReportSub } = getRoutes(pathname);
+    const isReportResults = pathname.includes("/report/results");
+
+    return (
+      <>
+        {!location && isReportSub && <DesktopDrawingTools />}
+        {location && isReportSub && <ConfirmLocation />}
+        {isReportResults && <ReportResultsHeaderDesktop />}
+        {(isReportSub || isReportResults) && <Separator className="h-4 w-px bg-border" />}
+      </>
+    );
+  }, [pathname, location]);
 
   return (
     <header
       className={cn({
         "box-border flex h-16 flex-col justify-center border-b border-blue-50 bg-white backdrop-blur print:hidden":
           true,
-        "border-blue-100": isReport,
+        // "border-blue-100": isReport,
       })}
     >
       <div className="container flex items-center justify-between md:mx-auto">
         <LogoBetaInfo />
         <Media greaterThanOrEqual="md" className="flex items-center space-x-4">
-          {!location && isReportSub && <DesktopDrawingTools />}
-          {location && isReportSub && <ConfirmLocation />}
-          {isReportResults && <ReportResultsHeaderDesktop />}
-          {(isReportSub || isReportResults) && <Separator className="h-4 w-px bg-border" />}
+          {DYNAMIC_HEADER}
           <LanguageSelector />
         </Media>
 

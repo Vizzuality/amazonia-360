@@ -75,8 +75,8 @@ export default function SketchButtons({ iconOnly = false }: { iconOnly: boolean 
         <TooltipTrigger
           className={cn(
             buttonVariants({ variant: "outline" }),
+            sketch.enabled && sketch.type === button.id && buttonVariants({ variant: "default" }),
             "group flex items-center justify-center rounded-md border border-border p-0",
-            sketch.enabled && sketch.type === button.id && "border-primary bg-primary text-border",
             iconOnly ? "h-10 w-10" : "space-x-2.5 px-4 py-2",
           )}
           aria-label={t("grid-sketch-start-drawing")}
@@ -85,8 +85,7 @@ export default function SketchButtons({ iconOnly = false }: { iconOnly: boolean 
         >
           <Icon
             className={cn({
-              "h-5 w-5 text-primary": true,
-              "text-border hover:text-primary": sketch.enabled && sketch.type === button.id,
+              "h-5 w-5": true,
             })}
           />
           {!iconOnly && <span>{button.label}</span>}

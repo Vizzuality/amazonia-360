@@ -8,7 +8,6 @@ import ReportMobileWarning from "@/containers/report/location/mobile-warning";
 import SketchMobile from "@/containers/report/location/sketch/mobile";
 import SidebarLocationContent from "@/containers/report/location/tabs/location";
 import SidebarIndicatorsContent from "@/containers/report/location/tabs/topics";
-import MapContainer from "@/containers/report/map";
 
 export default function ReportLocationMobile() {
   const [location] = useSyncLocation();
@@ -27,8 +26,6 @@ export default function ReportLocationMobile() {
           </aside>
         </div>
       </div>
-
-      {reportPanel === "location" && <MapContainer desktop={false} />}
 
       {reportPanel === "location" && !location && <SketchMobile />}
 

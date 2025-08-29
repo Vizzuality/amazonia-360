@@ -9,7 +9,6 @@ import SidebarGridContent from "@/containers/report/location/tabs/filters";
 import SidebarLocationContent from "@/containers/report/location/tabs/location";
 import TabsTable from "@/containers/report/location/tabs/table";
 import SidebarIndicatorsContent from "@/containers/report/location/tabs/topics";
-import MapContainer from "@/containers/report/map";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -63,8 +62,6 @@ export default function ReportSidebarGRid() {
           </div>
         </div>
       </div>
-
-      <MapContainer desktop />
     </>
   );
 }
