@@ -2,7 +2,7 @@ import { Metadata } from "next";
 
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import ReportTopics from "@/containers/report/topics";
+import ReportIndicators from "@/containers/report/indicators";
 
 type Params = Promise<{ locale: string }>;
 
@@ -22,5 +22,5 @@ export default async function ReportPage({ params }: { params: Params }) {
   // Enable static rendering
   setRequestLocale(locale);
 
-  return <ReportTopics />;
+  return <ReportIndicators />;
 }

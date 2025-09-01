@@ -15,7 +15,7 @@ import { useLocation, useLocationGeometry, useLocationTitle } from "@/lib/locati
 
 import { sketchActionAtom, useSyncLocation } from "@/app/store";
 
-import SidebarIndicatorsContent from "@/containers/report/location/tabs/topics";
+import ReportGenerate from "@/containers/report/location/generate";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -108,11 +108,11 @@ export default function ConfirmLocation() {
             </Button>
           </DialogTrigger>
 
-          <DialogContent className="max-w-2xl p-0">
+          <DialogContent className="max-w-lg p-0">
             <DialogTitle className="sr-only">
               {t("landing-key-features-grid-buttons-create-report")}
             </DialogTitle>
-            <SidebarIndicatorsContent />
+            <ReportGenerate />
             <DialogClose />
           </DialogContent>
         </Dialog>

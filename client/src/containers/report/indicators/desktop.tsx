@@ -2,9 +2,9 @@
 
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 
-import SidebarTopicsContent from "@/containers/report/topics/content";
+import ReportIndicatorsContent from "@/containers/report/indicators/content";
 
-export default function ReportTopicsDesktop() {
+export default function ReportIndicatorsDesktop() {
   return (
     <>
       <div className="pointer-events-none z-10 w-full lg:absolute lg:bottom-8 lg:left-0 lg:top-10">
@@ -14,7 +14,7 @@ export default function ReportTopicsDesktop() {
               <div className="test-class flex max-h-[calc(100vh_-_(64px_+_40px_+_28px))] grow flex-col">
                 <div className="flex max-h-full grow flex-col overflow-hidden">
                   <ScrollArea className="h-full w-full grow">
-                    <SidebarTopicsContent />
+                    <ReportIndicatorsContent />
                   </ScrollArea>
                 </div>
               </div>

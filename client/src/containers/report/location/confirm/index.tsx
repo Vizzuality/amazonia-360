@@ -22,7 +22,7 @@ import { sketchActionAtom, tmpBboxAtom, useSyncLocation } from "@/app/store";
 
 import { BUFFERS } from "@/constants/map";
 
-import SidebarIndicatorsContent from "@/containers/report/location/tabs/topics";
+import ReportGenerate from "@/containers/report/location/generate";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -106,11 +106,11 @@ export default function Confirm() {
               </Button>
             </DialogTrigger>
 
-            <DialogContent className="max-w-2xl p-0">
+            <DialogContent className="max-w-lg p-0">
               <DialogTitle className="sr-only">
                 {t("landing-key-features-grid-buttons-create-report")}
               </DialogTitle>
-              <SidebarIndicatorsContent />
+              <ReportGenerate />
               <DialogClose />
             </DialogContent>
           </Dialog>

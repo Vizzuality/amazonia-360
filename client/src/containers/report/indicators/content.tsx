@@ -7,7 +7,7 @@ import { LuArrowLeft } from "react-icons/lu";
 
 import { Link } from "@/i18n/navigation";
 
-export default function SidebarTopicsContent() {
+export default function ReportIndicatorsContent() {
   const t = useTranslations();
   const searchParams = useSearchParams();
 
