@@ -8,7 +8,7 @@ import polars as pl
 IGNORE_COLS = ("cell", "tile_id")
 
 
-def column_to_json(col: pl.Series) -> dict:
+def column_to_metadata_json(col: pl.Series) -> dict:
     return {
         "var_name": col.name,
         "var_dtype": str(col.dtype),
@@ -29,7 +29,7 @@ def column_to_json(col: pl.Series) -> dict:
     }
 
 
-def check_grid_structure(path: Path) -> int:
+def check_grid_structure(path: Path) -> None:
     if not path.is_dir():
         raise NotADirectoryError("Grid path must be a directory")
     if not path.exists():
@@ -51,12 +51,13 @@ def main(files: list[Path], grid: Path, out: Path, h3_cell_col: str) -> None:
         pl.col("cell").h3.cells_parse().h3.change_resolution(1).h3.cells_to_string().alias("tile_id"),  # type: ignore[attr-defined]
     )
 
-    print("\n")
-    print(f"Adding columns {' '.join(c for c in df.columns if c not in IGNORE_COLS)}")
+    print(f"\nAdding columns {' '.join(c for c in df.columns if c not in IGNORE_COLS)}")
     #  Copy and update grid metadata
     with (grid / "meta.json").open() as f:
         meta = json.load(f)
-    new_dataset_entries = [column_to_json(df[col_name]) for col_name in df.columns if col_name not in IGNORE_COLS]
+    new_dataset_entries = [
+        column_to_metadata_json(df[col_name]) for col_name in df.columns if col_name not in IGNORE_COLS
+    ]
     meta["datasets"].extend(new_dataset_entries)
     with (out / "meta.json").open("w") as f:
         json.dump(meta, f, indent=2)
@@ -71,7 +72,6 @@ def main(files: list[Path], grid: Path, out: Path, h3_cell_col: str) -> None:
             continue
         src_tile = pl.read_ipc(src_tile_file)
         # debt: will only inlcude values for cells that already exists in the previous grid revision.
-        #   change `how` parameter for a different behaviour
         merged = src_tile.join(tile, on="cell", how="left")
 
         merged.drop("tile_id").write_ipc(tiles_out / src_tile_file.name)
