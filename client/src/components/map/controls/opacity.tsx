@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import { PopoverArrow } from "@radix-ui/react-popover";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { LucideBlend } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -30,20 +29,21 @@ const OpacityControl = ({
   return (
     <Popover>
       <Tooltip>
-        <TooltipTrigger asChild>
-          <div onClick={(e) => e.stopPropagation()}>
-            <PopoverTrigger
-              className={cn("h-6 w-6 rounded-sm px-1 hover:bg-blue-100", triggerClassName)}
-            >
-              <LucideBlend className="h-4 w-4 stroke-blue-500" />
-            </PopoverTrigger>
-          </div>
-        </TooltipTrigger>
+        <PopoverTrigger
+          className={cn(
+            "flex h-6 w-6 items-center justify-center rounded-sm p-0 hover:bg-blue-100",
+            triggerClassName,
+          )}
+        >
+          <TooltipTrigger asChild>
+            <LucideBlend className="h-4 w-4 stroke-blue-500" />
+          </TooltipTrigger>
+        </PopoverTrigger>
         <PopoverContent
           side="top"
-          align="center"
-          className="w-auto translate-x-[-15px] p-0"
-          sideOffset={10}
+          align="end"
+          className="w-auto p-0"
+          sideOffset={5}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex w-72 flex-col space-y-2 rounded-lg bg-white px-4 py-2 shadow-md">
@@ -68,11 +68,11 @@ const OpacityControl = ({
             </div>
           </div>
 
-          <PopoverArrow className="fill-background" width={10} height={5} />
+          {/* <PopoverArrow className="fill-background" width={10} height={5} /> */}
         </PopoverContent>
 
         <TooltipPortal>
-          <TooltipContent side="top" align="center">
+          <TooltipContent align="center">
             {t("opacity")}: {value}%
             <TooltipArrow className="fill-foreground" width={10} height={5} />
           </TooltipContent>
