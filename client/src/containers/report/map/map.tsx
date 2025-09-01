@@ -4,7 +4,7 @@ import { useCallback, useMemo, useRef } from "react";
 
 import dynamic from "next/dynamic";
 
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useDebounce } from "rooks";
 
 import { getGeometryWithBuffer } from "@/lib/location";
@@ -13,7 +13,6 @@ import {
   gridHoverAtom,
   sketchActionAtom,
   sketchAtom,
-  tabAtom,
   tmpBboxAtom,
   useSyncBbox,
   useSyncGridSelectedDataset,
@@ -33,13 +32,16 @@ import MapPopup from "@/components/map/popup";
 import Sketch from "@/components/map/sketch";
 import Tooltip from "@/components/map/tooltip";
 
+import { usePathname } from "@/i18n/navigation";
+
 const Map = dynamic(() => import("@/components/map"), {
   ssr: false,
 });
 
 export default function MapContainer({ desktop }: { desktop?: boolean }) {
+  const pathname = usePathname();
+
   const [bbox, setBbox] = useSyncBbox();
-  const tab = useAtomValue(tabAtom);
   const [tmpBbox, setTmpBbox] = useAtom(tmpBboxAtom);
 
   const [sketch, setSketch] = useAtom(sketchAtom);
@@ -164,7 +166,7 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
         <Sketch
           type={sketch.type}
           enabled={sketch.enabled}
-          updatable={location?.type !== "search" && tab === "contextual-viewer"}
+          updatable={location?.type !== "search"}
           completed={sketchAction.type === "create" && sketchAction.state === "complete"}
           location={location}
           onCreate={handleCreate}
@@ -181,7 +183,7 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
 
         <MapPopup />
       </Map>
-      {gridSelectedDataset && tab === "grid" && <GridLegend />}
+      {gridSelectedDataset && pathname.includes("/grid") && <GridLegend />}
 
       <SketchTooltips />
     </div>
