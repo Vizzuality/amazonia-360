@@ -8,10 +8,10 @@ import { useGetGridMeta } from "@/lib/grid";
 
 import { gridPanelAtom, useSyncGridDatasets } from "@/app/store";
 
-import GridTable from "@/containers/report/location/grid/table";
-import GridTableSetup from "@/containers/report/location/grid/table/setup";
+import GridTable from "@/containers/report/grid/table";
+import GridTableSetup from "@/containers/report/grid/table/setup";
 
-export default function TabsTable() {
+export default function SidebarGridTableContent() {
   const t = useTranslations();
   const setGridPanel = useSetAtom(gridPanelAtom);
 
@@ -22,7 +22,7 @@ export default function TabsTable() {
   });
 
   return (
-    <div className="relative h-full space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
+    <div className="relative h-full space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-6 backdrop-blur-xl xl:space-y-4">
       <div className="space-y-1">
         <div className="font-bold text-primary">
           <div className="flex items-start justify-between gap-2">

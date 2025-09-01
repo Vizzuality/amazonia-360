@@ -19,7 +19,7 @@ export default function SidebarLocationContent() {
     <div
       className={cn({
         "relative space-y-6 overflow-hidden rounded-lg bg-white py-6": true,
-        "lg:border lg:border-blue-100 lg:p-4": true,
+        "lg:border lg:border-blue-100 lg:p-6": true,
       })}
     >
       <div className="space-y-4">

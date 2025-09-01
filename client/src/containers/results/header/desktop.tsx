@@ -1,12 +1,9 @@
 "use client";
 
-import { useState } from "react";
-
 import { Separator } from "@radix-ui/react-select";
 import { useTranslations } from "next-intl";
 import { LuPlus } from "react-icons/lu";
 
-import Topics from "@/containers/report/topics";
 import DownloadReportButton from "@/containers/results/header/download";
 import IndicatorsReport from "@/containers/results/header/indicators";
 import ShareReport from "@/containers/results/header/share";
@@ -28,7 +25,6 @@ import { Link } from "@/i18n/navigation";
 
 export default function ReportResultsHeaderDesktop() {
   const t = useTranslations();
-  const [open] = useState(false);
 
   return (
     <header className="sticky right-0 top-0 z-10 space-y-4 py-6 print:hidden">
@@ -66,12 +62,6 @@ export default function ReportResultsHeaderDesktop() {
           <IndicatorsReport />
         </div>
       </div>
-
-      {open && (
-        <div className="duration-300 animate-in fade-in zoom-in-95">
-          <Topics size="sm" interactive />
-        </div>
-      )}
     </header>
   );
 }

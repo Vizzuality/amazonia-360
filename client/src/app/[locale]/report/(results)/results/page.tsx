@@ -9,9 +9,9 @@ import { locationParser } from "@/app/parsers";
 import { PageProps } from "@/app/types";
 
 import DataDisclaimer from "@/containers/disclaimers/data";
-import ReportSidebar from "@/containers/report/sidebar";
 import ReportResultsContent from "@/containers/results/content";
 import ReportResultsHeader from "@/containers/results/header";
+import ReportResultsSidebar from "@/containers/results/sidebar";
 
 import { redirect } from "@/i18n/navigation";
 
@@ -55,7 +55,7 @@ export default async function ReportResultsPage({
           <ReportResultsContent />
         </div>
         <div className="relative print:hidden">
-          <ReportSidebar />
+          <ReportResultsSidebar />
         </div>
       </main>
       <DataDisclaimer />

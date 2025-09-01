@@ -16,7 +16,7 @@ import { useSyncTopics } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
 
-import { Indicators } from "@/containers/report/sidebar/indicators/topics/indicators";
+import { Indicators } from "@/containers/results/sidebar/indicators/topics/indicators";
 
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";

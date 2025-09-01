@@ -18,16 +18,24 @@ import {
   useLocationTitle,
 } from "@/lib/location";
 
-import { reportPanelAtom, sketchActionAtom, tmpBboxAtom, useSyncLocation } from "@/app/store";
+import { sketchActionAtom, tmpBboxAtom, useSyncLocation } from "@/app/store";
 
 import { BUFFERS } from "@/constants/map";
 
+import SidebarIndicatorsContent from "@/containers/report/location/tabs/topics";
+
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
 
 export default function Confirm() {
   const t = useTranslations();
-  const setReportPanel = useSetAtom(reportPanelAtom);
   const setSketchAction = useSetAtom(sketchActionAtom);
   const setTmpBbox = useSetAtom(tmpBboxAtom);
 
@@ -91,9 +99,21 @@ export default function Confirm() {
             {t("grid-sidebar-report-location-button-clear")}
           </Button>
 
-          <Button size="lg" className="grow" onClick={() => setReportPanel("topics")}>
-            {t("grid-sidebar-report-location-button-confirm")}
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button size="lg" className="grow">
+                {t("landing-key-features-grid-buttons-create-report")}
+              </Button>
+            </DialogTrigger>
+
+            <DialogContent className="max-w-2xl p-0">
+              <DialogTitle className="sr-only">
+                {t("landing-key-features-grid-buttons-create-report")}
+              </DialogTitle>
+              <SidebarIndicatorsContent />
+              <DialogClose />
+            </DialogContent>
+          </Dialog>
         </div>
       </section>
 

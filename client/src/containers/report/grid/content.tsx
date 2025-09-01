@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import { useSetAtom } from "jotai";
@@ -9,12 +8,14 @@ import { LuArrowLeft } from "react-icons/lu";
 
 import { gridPanelAtom, useSyncGridDatasets } from "@/app/store";
 
-import GridFilters from "@/containers/report/location/grid/filters";
-import SearchIndicators from "@/containers/report/location/grid/filters/search";
-import GridFiltersControls from "@/containers/report/location/grid/filters-controls";
-import GridClearFilters from "@/containers/report/location/grid/filters-controls/clear";
+import GridFilters from "@/containers/report/grid/filters";
+import GridFiltersSearch from "@/containers/report/grid/filters/search";
+import GridFiltersControls from "@/containers/report/grid/filters-controls";
+import GridFiltersControlsClear from "@/containers/report/grid/filters-controls/clear";
 
 import { Button } from "@/components/ui/button";
+
+import { Link } from "@/i18n/navigation";
 
 export default function SidebarGridContent() {
   const t = useTranslations();
@@ -24,8 +25,8 @@ export default function SidebarGridContent() {
   const [gridDatasets] = useSyncGridDatasets();
 
   return (
-    <div className="relative h-full space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-4 backdrop-blur-xl xl:space-y-4">
-      <div className="space-y-1">
+    <div className="relative h-full space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-6 backdrop-blur-xl xl:space-y-4">
+      <div className="space-y-2">
         <div className="flex items-center justify-between">
           <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
             <Link
@@ -37,15 +38,14 @@ export default function SidebarGridContent() {
             {t("grid-sidebar-grid-filters-title")}
           </h1>
 
-          <h1 className="flex items-center gap-2 text-lg font-bold text-primary"></h1>
-          <GridClearFilters />
+          <GridFiltersControlsClear />
         </div>
 
         <p className="text-sm font-medium text-muted-foreground">
           {t("grid-sidebar-grid-filters-description")}
         </p>
       </div>
-      <SearchIndicators className="py-0" />
+      <GridFiltersSearch className="py-0" />
 
       <GridFiltersControls />
 

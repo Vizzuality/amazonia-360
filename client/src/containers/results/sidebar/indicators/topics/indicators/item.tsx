@@ -15,7 +15,7 @@ import { Topic } from "@/types/topic";
 import { useSyncTopics } from "@/app/store";
 
 import Info from "@/containers/info";
-import { VisualizationType } from "@/containers/report/sidebar/indicators/topics/indicators/visualization-types";
+import { VisualizationType } from "@/containers/results/sidebar/indicators/topics/indicators/visualization-types";
 
 import { Button } from "@/components/ui/button";
 import {

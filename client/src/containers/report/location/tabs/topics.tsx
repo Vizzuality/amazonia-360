@@ -4,7 +4,6 @@ import { useCallback } from "react";
 
 import ReactMarkdown from "react-markdown";
 
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import { useLocale, useTranslations } from "next-intl";
@@ -17,6 +16,8 @@ import { useSyncTopics } from "@/app/store";
 
 import { GenerateReport } from "@/containers/report/location/generate";
 import Topics from "@/containers/report/location/topics";
+
+import { Link } from "@/i18n/navigation";
 
 export default function SidebarIndicatorsContent() {
   const t = useTranslations();
