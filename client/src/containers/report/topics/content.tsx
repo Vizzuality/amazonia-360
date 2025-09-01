@@ -7,20 +7,7 @@ import { LuArrowLeft } from "react-icons/lu";
 
 import { Link } from "@/i18n/navigation";
 
-<<<<<<<< HEAD:client/src/containers/report/indicators/content.tsx
-export default function ReportIndicatorsContent() {
-========
-import GridFilters from "@/containers/report/grid/filters";
-import GridFiltersSearch from "@/containers/report/grid/filters/search";
-import GridFiltersControls from "@/containers/report/grid/filters-controls";
-import GridFiltersControlsClear from "@/containers/report/grid/filters-controls/clear";
-
-import { Button } from "@/components/ui/button";
-
-import { Link } from "@/i18n/navigation";
-
-export default function SidebarGridContent() {
->>>>>>>> 7c7c9d0 (Redesign: the layout content):client/src/containers/report/grid/content.tsx
+export default function SidebarTopicsContent() {
   const t = useTranslations();
   const searchParams = useSearchParams();
 
@@ -38,22 +25,14 @@ export default function SidebarGridContent() {
             {t("indicators")}
           </h1>
 
-<<<<<<<< HEAD:client/src/containers/report/indicators/content.tsx
           {/* <GridFiltersControlsClear /> */}
-========
-          <GridFiltersControlsClear />
->>>>>>>> 7c7c9d0 (Redesign: the layout content):client/src/containers/report/grid/content.tsx
         </div>
 
         <p className="text-sm font-medium text-muted-foreground">
           {t("grid-sidebar-grid-filters-description")}
         </p>
       </div>
-<<<<<<<< HEAD:client/src/containers/report/indicators/content.tsx
       {/* <GridFiltersSearch className="py-0" /> */}
-========
-      <GridFiltersSearch className="py-0" />
->>>>>>>> 7c7c9d0 (Redesign: the layout content):client/src/containers/report/grid/content.tsx
 
       {/* <GridFiltersControls /> */}
 
