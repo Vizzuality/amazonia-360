@@ -6,7 +6,7 @@ import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { UseQueryResult } from "@tanstack/react-query";
 import { Command as CommandPrimitive } from "cmdk";
 import { useTranslations } from "next-intl";
-import { LuLoader2, LuSearch, LuX } from "react-icons/lu";
+import { LuLoader, LuSearch, LuX } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
@@ -65,7 +65,7 @@ export function Search<T extends Option>({
         <div className="absolute right-6 top-1/2 -translate-y-1/2">
           {isFetching && (
             <span className="h-4 w-4 animate-spin text-blue-500">
-              <LuLoader2 className="text-current" />
+              <LuLoader className="text-current" />
             </span>
           )}
           {value && (
@@ -110,7 +110,7 @@ export function Search<T extends Option>({
               <div className="absolute right-6 top-1/2 flex -translate-y-1/2 items-center space-x-2">
                 {isFetching && (
                   <span className="h-4 w-4 animate-spin text-blue-500">
-                    <LuLoader2 className="text-current" />
+                    <LuLoader className="text-current" />
                   </span>
                 )}
                 {value && (

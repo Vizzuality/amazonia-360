@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo } from "react";
 
 import Point from "@arcgis/core/geometry/Point";

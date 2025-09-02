@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo } from "react";
 
 import Color from "@arcgis/core/Color";

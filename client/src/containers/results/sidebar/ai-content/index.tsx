@@ -6,7 +6,7 @@ import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useAtomValue } from "jotai";
 import { CircleAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { LuInfo, LuLoader2, LuSparkles } from "react-icons/lu";
+import { LuInfo, LuLoader, LuSparkles } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
@@ -148,7 +148,7 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
               <div className="flex h-full w-full items-center justify-center py-20">
                 <div className="flex w-full flex-col items-center justify-center space-y-2">
                   <span className="h-6 w-6 animate-spin text-blue-500">
-                    <LuLoader2 className="h-6 w-6 text-foreground" />
+                    <LuLoader className="h-6 w-6 text-foreground" />
                   </span>
                   <span className="text-sm font-medium text-muted-foreground">
                     {t("report-results-sidebar-ai-summaries-generating")}

@@ -1,3 +1,5 @@
+"use client";
+
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import * as geometryEngineAsync from "@arcgis/core/geometry/geometryEngineAsync";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
