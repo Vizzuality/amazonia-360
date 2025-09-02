@@ -53,6 +53,7 @@ export default function ConfirmLocation() {
         km²
       </div>
       <div className="flex items-center space-x-2">
+<<<<<<< HEAD
         {location.type !== "search" && (
           <Tooltip>
             <TooltipTrigger asChild>
@@ -79,6 +80,30 @@ export default function ConfirmLocation() {
             </TooltipPortal>
           </Tooltip>
         )}
+=======
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              className="h-10 w-10 p-0"
+              variant={sketch.enabled === "edit" ? "default" : "outline"}
+              onClick={() => {
+                setSketch({
+                  enabled: sketch.enabled === "edit" ? undefined : "edit",
+                });
+              }}
+            >
+              <LuPen className="h-5 w-5 text-current" />
+            </Button>
+          </TooltipTrigger>
+
+          <TooltipPortal>
+            <TooltipContent side="bottom" align="center">
+              {sketch.enabled === "edit" ? t("drawing-tools-edit-cancel") : t("drawing-tools-edit")}
+              <TooltipArrow className="fill-foreground" width={10} height={5} />
+            </TooltipContent>
+          </TooltipPortal>
+        </Tooltip>
+>>>>>>> f130c72 (Redesign: draw edit mode)
 
         <Tooltip>
           <TooltipTrigger asChild>
