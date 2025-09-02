@@ -23,11 +23,7 @@ const nextConfig = {
   transpilePackages: ["@t3-oss/env-nextjs", "@t3-oss/env-core"],
   // serverExternalPackages: ["@arcgis/core/*"],
   experimental: {
-<<<<<<< HEAD
     optimizePackageImports: ["@arcgis/core/*"],
-=======
-    // optimizePackageImports: ["react-icons/*"], //If you add this your dev server will last forever trying to start
->>>>>>> f130c72 (Redesign: draw edit mode)
   },
 };
 
