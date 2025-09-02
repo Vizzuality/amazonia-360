@@ -13,7 +13,7 @@ import { LuPen } from "react-icons/lu";
 import { formatNumber } from "@/lib/formats";
 import { useLocation, useLocationGeometry, useLocationTitle } from "@/lib/location";
 
-import { sketchActionAtom, useSyncLocation } from "@/app/store";
+import { sketchActionAtom, sketchAtom, useSyncLocation } from "@/app/store";
 
 import ReportGenerate from "@/containers/report/location/generate";
 
@@ -29,7 +29,8 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/compone
 
 export default function ConfirmLocation() {
   const t = useTranslations();
-  const [sketchAction, setSketchAction] = useAtom(sketchActionAtom);
+  const [sketch, setSketch] = useAtom(sketchAtom);
+  const [, setSketchAction] = useAtom(sketchActionAtom);
 
   const [location, setLocation] = useSyncLocation();
   const TITLE = useLocationTitle(location);
@@ -57,23 +58,20 @@ export default function ConfirmLocation() {
           <TooltipTrigger asChild>
             <Button
               className="h-10 w-10 p-0"
-              variant="outline"
+              variant={sketch.enabled === "edit" ? "default" : "outline"}
               onClick={() => {
-                setSketchAction({
-                  ...sketchAction,
-                  type: "update",
-                  state: "start",
-                  geometryType: "polygon",
+                setSketch({
+                  enabled: sketch.enabled === "edit" ? undefined : "edit",
                 });
               }}
             >
-              <LuPen className="h-5 w-5 text-blue-500" />
+              <LuPen className="h-5 w-5 text-current" />
             </Button>
           </TooltipTrigger>
 
           <TooltipPortal>
             <TooltipContent side="bottom" align="center">
-              {t("drawing-tools-edit")}
+              {sketch.enabled === "edit" ? t("drawing-tools-edit-cancel") : t("drawing-tools-edit")}
               <TooltipArrow className="fill-foreground" width={10} height={5} />
             </TooltipContent>
           </TooltipPortal>

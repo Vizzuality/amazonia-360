@@ -67,7 +67,7 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
 
   const handleCreate = useCallback(
     (graphic: __esri.Graphic) => {
-      setSketch({ enabled: false, type: undefined });
+      setSketch({ enabled: undefined, type: undefined });
 
       setLocation({
         type: graphic.geometry.type,
@@ -98,7 +98,7 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
   );
 
   const handleCancel = useCallback(() => {
-    setSketch({ enabled: false, type: undefined });
+    setSketch({ enabled: undefined, type: undefined });
     setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
   }, [setSketch, setSketchAction]);
 
@@ -119,9 +119,10 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
         setTmpBbox(g.extent);
       }
 
+      setSketch({ enabled: undefined, type: undefined });
       setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
     },
-    [location, setLocation, setTmpBbox, setSketchAction],
+    [location, setLocation, setTmpBbox, setSketch, setSketchAction],
   );
 
   const handleUpdateChange = useCallback(

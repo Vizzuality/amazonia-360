@@ -238,6 +238,7 @@
   "metadata-home-page-description": "Coming soon...",
   "drawing-tools-clear": "Clear area selection",
   "drawing-tools-edit": "Edit area",
+  "drawing-tools-edit-cancel": "Cancel area edit",
   "drawing-tools-draw-point": "Click on the map to select a single point and get a buffer radius around it.",
   "drawing-tools-draw-area": "Draw your custom area of interest.",
   "drawing-tools-draw-line": "Draw a line and get a buffer around it.",

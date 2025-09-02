@@ -28,21 +28,21 @@ export default function SketchButtons({ iconOnly = false }: { iconOnly: boolean 
     setLocation(null);
 
     if (sketch.enabled && sketch.type === type) {
-      setSketch({ enabled: false, type: undefined });
+      setSketch({ enabled: undefined, type: undefined });
       setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
     }
 
     if (sketch.enabled && sketch.type !== type) {
-      setSketch({ enabled: false, type: undefined });
+      setSketch({ enabled: undefined, type: undefined });
 
       setTimeout(() => {
-        setSketch({ enabled: true, type });
+        setSketch({ enabled: "create", type });
         setSketchAction({ type: "create", state: "start", geometryType: type });
       }, 0);
     }
 
     if (!sketch.enabled) {
-      setSketch({ enabled: true, type });
+      setSketch({ enabled: "create", type });
       setSketchAction({ type: "create", state: "start", geometryType: type });
     }
   };
@@ -92,7 +92,7 @@ export default function SketchButtons({ iconOnly = false }: { iconOnly: boolean 
         </TooltipTrigger>
 
         <TooltipPortal>
-          <TooltipContent side="left" align="center">
+          <TooltipContent side={iconOnly ? "bottom" : "top"} align="center" className="max-w-60">
             <div className="text-xxs">{iconOnly ? button.label : button.description}</div>
 
             <TooltipArrow className="fill-foreground" width={10} height={5} />

@@ -238,6 +238,7 @@
   "metadata-home-page-description": "Próximamente...",
   "drawing-tools-clear": "Borrar selección de área",
   "drawing-tools-edit": "Editar área",
+  "drawing-tools-edit-cancel": "Cancelar edición de área",
   "drawing-tools-draw-point": "Haga clic en el mapa para seleccionar un solo punto y obtener un radio de 30 km² alrededor de él.",
   "drawing-tools-draw-area": "Dibuja tu área de interés personalizada.",
   "drawing-tools-draw-line": "Dibuja una línea y obtén un buffer alrededor de ella de 10 km².",

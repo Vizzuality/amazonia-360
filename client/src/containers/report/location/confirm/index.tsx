@@ -2,12 +2,12 @@
 
 import { useMemo } from "react";
 
-import ReactMarkdown from "react-markdown";
-
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import Polygon from "@arcgis/core/geometry/Polygon";
-import { useSetAtom } from "jotai";
+import { TooltipPortal } from "@radix-ui/react-tooltip";
+import { useAtom, useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
+import { LuPen, LuTrash2 } from "react-icons/lu";
 import { useDebounce } from "rooks";
 
 import { formatNumber } from "@/lib/formats";
@@ -18,7 +18,7 @@ import {
   useLocationTitle,
 } from "@/lib/location";
 
-import { sketchActionAtom, tmpBboxAtom, useSyncLocation } from "@/app/store";
+import { sketchActionAtom, sketchAtom, tmpBboxAtom, useSyncLocation } from "@/app/store";
 
 import { BUFFERS } from "@/constants/map";
 
@@ -33,9 +33,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
+import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function Confirm() {
   const t = useTranslations();
+  const [sketch, setSketch] = useAtom(sketchAtom);
+
   const setSketchAction = useSetAtom(sketchActionAtom);
   const setTmpBbox = useSetAtom(tmpBboxAtom);
 
@@ -87,21 +90,61 @@ export default function Confirm() {
           </div>
         </div>
         <div className="flex items-center justify-between gap-2">
-          <Button
-            variant="outline"
-            size="lg"
-            className="grow"
-            onClick={() => {
-              setLocation(null);
-              setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
-            }}
-          >
-            {t("grid-sidebar-report-location-button-clear")}
-          </Button>
+          <Tooltip delayDuration={500}>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="lg"
+                className="px-5"
+                onClick={() => {
+                  setLocation(null);
+                  setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
+                }}
+              >
+                <LuTrash2 className="h-5 w-5 text-current" />
+                {/* {t("grid-sidebar-report-location-button-clear")} */}
+              </Button>
+            </TooltipTrigger>
+
+            <TooltipPortal>
+              <TooltipContent side="top" align="center">
+                {t("grid-sidebar-report-location-button-clear")}
+                <TooltipArrow className="fill-foreground" width={10} height={5} />
+              </TooltipContent>
+            </TooltipPortal>
+          </Tooltip>
+
+          {location.type !== "search" && (
+            <Tooltip delayDuration={500}>
+              <TooltipTrigger asChild>
+                <Button
+                  size="lg"
+                  variant={sketch.enabled === "edit" ? "default" : "outline"}
+                  className="px-5"
+                  onClick={() => {
+                    setSketch({
+                      enabled: sketch.enabled === "edit" ? undefined : "edit",
+                    });
+                  }}
+                >
+                  <LuPen className="h-5 w-5 text-current" />
+                </Button>
+              </TooltipTrigger>
+
+              <TooltipPortal>
+                <TooltipContent side="top" align="center">
+                  {sketch.enabled === "edit"
+                    ? t("drawing-tools-edit-cancel")
+                    : t("drawing-tools-edit")}
+                  <TooltipArrow className="fill-foreground" width={10} height={5} />
+                </TooltipContent>
+              </TooltipPortal>
+            </Tooltip>
+          )}
 
           <Dialog>
             <DialogTrigger asChild>
-              <Button size="lg" className="grow">
+              <Button size="lg" className="w-full grow">
                 {t("landing-key-features-grid-buttons-create-report")}
               </Button>
             </DialogTrigger>
@@ -145,11 +188,11 @@ export default function Confirm() {
         </section>
       )}
 
-      {location.type !== "search" && (
+      {/* {location.type !== "search" && (
         <div className="text-sm tracking-[0.14px] text-muted-foreground">
           <ReactMarkdown>{t("grid-sidebar-report-location-note")}</ReactMarkdown>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

@@ -20,7 +20,7 @@ const nextConfig = {
   },
   transpilePackages: ["@t3-oss/env-nextjs", "@t3-oss/env-core"],
   experimental: {
-    // optimizePackageImports: ["react-icons/*"], If you add this your dev server will last forever trying to start
+    // optimizePackageImports: ["react-icons/*"], //If you add this your dev server will last forever trying to start
   },
 };
 

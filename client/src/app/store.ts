@@ -94,7 +94,7 @@ export const reportEditionModeAtom = atom<boolean>(false);
 export const tmpBboxAtom = atom<__esri.Extent | undefined>(undefined);
 
 export const sketchAtom = atom<SketchProps>({
-  enabled: false,
+  enabled: undefined,
   type: undefined,
 });
 export const sketchActionAtom = atom<{
