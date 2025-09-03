@@ -167,7 +167,7 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
         <Sketch
           type={sketch.type}
           enabled={sketch.enabled}
-          updatable={location?.type !== "search"}
+          updatable={location?.type !== "search" && !pathname.includes("/grid")}
           completed={sketchAction.type === "create" && sketchAction.state === "complete"}
           location={location}
           onCreate={handleCreate}
