@@ -8,7 +8,7 @@ from fastapi.responses import ORJSONResponse
 from titiler.core.errors import DEFAULT_STATUS_CODES, add_exception_handlers
 
 from app.auth.auth import verify_token
-from app.config.config import get_settings
+from app.config import get_settings
 from app.routers.grid import grid_router
 from app.routers.text_generation import router as ai_router
 from app.routers.zonal_stats import ZonalTilerFactory

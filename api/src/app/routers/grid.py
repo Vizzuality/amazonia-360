@@ -1,31 +1,28 @@
-import io
 import logging
 import os
 import pathlib
 from functools import lru_cache
 from typing import Annotated
 
-import h3
 import h3ronpy.polars  # noqa: F401
 import polars as pl
-import pyarrow as pa
 import shapely
 from fastapi import APIRouter, Depends, HTTPException, Path, Query
-from fastapi.params import Body
 from fastapi.responses import Response
 from geojson_pydantic import Feature
-from h3 import H3CellInvalidError
 from h3ronpy import cells_to_string
 from h3ronpy.vector import geometry_to_cells
 from pydantic import ValidationError
 
-from app.config.config import get_settings
+from app.config import get_settings
+from app.dependencies import ColumnNamesDep, FeatureDep, GridRepositoryDep
 from app.models.grid import (
     MultiDatasetMeta,
     TableFilters,
     TableResultColumn,
     TableResults,
 )
+from app.repository.grid import ColumnNotFoundError, InvalidH3CellError, TileNotFoundError, polars_to_string_ipc
 
 log = logging.getLogger("uvicorn.error")  # Show the logs in the uvicorn runner logs
 
@@ -41,41 +38,6 @@ class ArrowIPCResponse(Response):  # noqa: D101
     media_type = "application/octet-stream"
 
 
-def colum_filter(  # noqa: D103
-    columns: list[str] = Query(
-        [],
-        description="Column/s to include in the tile. If empty, it returns only cell indexes.",
-    ),
-):
-    return columns
-
-
-def feature_filter(  # noqa: D103
-    geojson: Annotated[Feature, Body(description="GeoJSON feature used to filter the cells.")],
-):
-    return geojson
-
-
-ColumnDep = Annotated[list[str], Depends(colum_filter)]
-FeatureDep = Annotated[Feature, Depends(feature_filter)]
-
-
-def get_tile(
-    tile_index: Annotated[str, Path(description="The `h3` index of the tile")],
-    columns: list[str],
-) -> tuple[pl.LazyFrame, int]:
-    """Get the tile from filesystem filtered by column and the resolution of the tile index"""
-    try:
-        z = h3.get_resolution(tile_index)
-    except (H3CellInvalidError, ValueError):
-        raise HTTPException(status_code=400, detail="Tile index is not a valid H3 cell") from None
-    tile_path = os.path.join(get_settings().grid_tiles_path, f"{z}/{tile_index}.arrow")
-    if not os.path.exists(tile_path):
-        raise HTTPException(status_code=404, detail=f"Tile {tile_path} not found")
-    tile = pl.scan_ipc(tile_path).select(["cell", *columns])
-    return tile, z
-
-
 @lru_cache
 def cells_in_geojson(geometry: str, cell_resolution: int) -> pl.LazyFrame:
     """Return the cells that fill the polygon area in the geojson
@@ -87,20 +49,6 @@ def cells_in_geojson(geometry: str, cell_resolution: int) -> pl.LazyFrame:
     return pl.LazyFrame({"cell": cells})
 
 
-def polars_to_string_ipc(df: pl.DataFrame) -> bytes:
-    """Cast cell column of polars dataframe to arrow type `string` and return the ipc bytes."""
-    # For performance reasons all the strings in polars are treated as `large_string`,
-    # a custom string type. As of today, the frontend library @loadrs.gl/arrow only supports
-    # `string` type so we need to downcast with pyarrow
-    table: pa.Table = df.to_arrow()
-    schema = table.schema.set(table.schema.get_field_index("cell"), pa.field("cell", pa.string()))
-    table = table.cast(schema)
-    sink = io.BytesIO()
-    with pa.ipc.new_file(sink, table.schema) as writer:
-        writer.write_table(table)
-    return sink.getvalue()
-
-
 @grid_router.get(
     "/tile/{tile_index}",
     summary="Get a grid tile",
@@ -110,16 +58,19 @@ def polars_to_string_ipc(df: pl.DataFrame) -> bytes:
 )
 def grid_tile(
     tile_index: Annotated[str, Path(description="The `h3` index of the tile")],
-    columns: ColumnDep,
+    columns: ColumnNamesDep,
+    repo: GridRepositoryDep,
 ) -> ArrowIPCResponse:
     """Get a tile of h3 cells with specified data columns"""
-    tile, _ = get_tile(tile_index, columns)
     try:
-        tile = tile.collect()
-    # we don't know if the column requested are correct until we call .collect()
-    except pl.exceptions.ColumnNotFoundError:
-        raise HTTPException(status_code=400, detail="One or more of the specified columns is not valid") from None
-    return ArrowIPCResponse(polars_to_string_ipc(tile))
+        tile = repo.get_tile_bytes(tile_index, columns)
+    except ColumnNotFoundError:
+        raise HTTPException(400, "One or more of the specified columns is not valid") from None
+    except TileNotFoundError:
+        raise HTTPException(404, "Tile not found") from None
+    except InvalidH3CellError:
+        raise HTTPException(400, "Tile index is not a valid H3 cell") from None
+    return ArrowIPCResponse(tile)
 
 
 @grid_router.post(
@@ -132,10 +83,11 @@ def grid_tile(
 def grid_tile_in_area(
     tile_index: Annotated[str, Path(description="The `h3` index of the tile")],
     geojson: FeatureDep,
-    columns: ColumnDep,
+    columns: ColumnNamesDep,
+    repo: GridRepositoryDep,
 ) -> ArrowIPCResponse:
     """Get a tile of h3 cells that are inside the polygon"""
-    tile, tile_index_res = get_tile(tile_index, columns)
+    tile, tile_index_res = repo.get_tile(tile_index, columns)
     cell_res = tile_index_res + get_settings().tile_to_cell_resolution_diff
     geom = shapely.from_geojson(geojson.model_dump_json())
     cells = cells_in_geojson(geom, cell_res)
@@ -183,7 +135,7 @@ async def grid_dataset_metadata() -> MultiDatasetMeta:
 )
 async def grid_dataset_metadata_in_area(
     geojson: FeatureDep,
-    columns: ColumnDep,
+    columns: ColumnNamesDep,
     level: Annotated[int, Query(..., description="Tile level at which the query will be computed")] = 1,
 ) -> MultiDatasetMeta:
     """Get the grid dataset metadata with updated min and max for the area"""

@@ -8,7 +8,7 @@ import polars as pl
 import pytest
 import rasterio
 
-from app.config.config import get_settings
+from app.config import get_settings
 
 METADATA = {
     "datasets": [

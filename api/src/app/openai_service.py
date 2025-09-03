@@ -2,7 +2,7 @@ import json
 
 from openai import OpenAI, OpenAIError
 
-from app.config.config import get_settings
+from app.config import get_settings
 
 
 def generate_description(context_data: dict, description_type: str, language: str) -> str:

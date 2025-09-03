@@ -4,7 +4,7 @@ from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from starlette.status import HTTP_401_UNAUTHORIZED
 
-from app.config.config import get_settings
+from app.config import get_settings
 
 security = HTTPBearer(auto_error=False)
 
