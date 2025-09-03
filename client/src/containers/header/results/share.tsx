@@ -40,7 +40,7 @@ export default function ShareReport() {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline" className="space-x-2 border-none px-2.5 py-2 shadow-none">
-          <Share2 className="h-4 w-4" />
+          <Share2 className="h-5 w-5" />
         </Button>
       </DialogTrigger>
 

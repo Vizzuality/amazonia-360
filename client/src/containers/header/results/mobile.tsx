@@ -7,8 +7,8 @@ import { useLocationTitle } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/store";
 
-import DownloadReport from "@/containers/results/header/download";
-import ShareReport from "@/containers/results/header/share";
+import DownloadReport from "@/containers/header/results/download";
+import ShareReport from "@/containers/header/results/share";
 
 import {
   AlertDialog,

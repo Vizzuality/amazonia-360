@@ -1,7 +1,7 @@
 "use client";
 
+import ReportResultsHeaderMobile from "@/containers/header/results/mobile";
 import { Media } from "@/containers/media";
-import ReportResultsHeaderMobile from "@/containers/results/header/mobile";
 import ReportResultsTitleDesktop from "@/containers/results/header/title";
 
 export default function ReportResultsHeader() {

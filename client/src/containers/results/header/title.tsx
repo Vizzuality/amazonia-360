@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useCallback, useRef, useState } from "react";
+import { ChangeEvent, useCallback, useMemo, useRef, useState } from "react";
 
 import { useTranslations } from "next-intl";
 import { LuPen, LuCheck, LuX } from "react-icons/lu";
@@ -9,14 +9,15 @@ import { cn } from "@/lib/utils";
 
 import { useSyncLocation } from "@/app/store";
 
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export default function EditableHeader({ value = "Selected area" }: { value?: string }) {
   const t = useTranslations();
-  const [editMode, setEditMode] = useState(false);
-  const [title, setTitle] = useState(value);
-  const [pendingTitle, setPendingTitle] = useState(title);
   const [location, setLocation] = useSyncLocation();
+  const [editMode, setEditMode] = useState(false);
+  const [title, setTitle] = useState(location?.custom_title ?? value);
+  const [pendingTitle, setPendingTitle] = useState(title);
   const shouldSelect = useRef(false);
 
   const setInputRef = (el: HTMLInputElement | null) => {
@@ -31,9 +32,8 @@ export default function EditableHeader({ value = "Selected area" }: { value?: st
     (e: ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
       setPendingTitle(value);
-      setLocation(location ? { ...location, custom_title: value as string } : location);
     },
-    [setPendingTitle, setLocation, location],
+    [setPendingTitle],
   );
 
   const id = "report-title-input";
@@ -44,17 +44,21 @@ export default function EditableHeader({ value = "Selected area" }: { value?: st
     setEditMode(true);
   };
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     setTitle(pendingTitle);
     shouldSelect.current = false;
     setEditMode(false);
-  };
+
+    setLocation(location ? { ...location, custom_title: pendingTitle } : location);
+  }, [location, pendingTitle, setLocation]);
 
   const handleCancel = () => {
     setPendingTitle(title);
     shouldSelect.current = false;
     setEditMode(false);
   };
+
+  const TITLE = useMemo(() => location?.custom_title ?? title, [location, title]);
 
   return (
     <div className="sticky right-0 top-0 z-10 space-y-4 bg-blue-50 py-6 print:hidden">
@@ -64,44 +68,67 @@ export default function EditableHeader({ value = "Selected area" }: { value?: st
             {title}
           </label>
 
-          <Input
-            id={id}
-            ref={setInputRef}
-            autoFocus={editMode}
-            value={editMode ? pendingTitle : title}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleSave();
-              if (e.key === "Escape") handleCancel();
-            }}
-            onChange={onInputChange}
-            readOnly={!editMode}
-            aria-readonly={!editMode}
-            aria-label={editMode ? (location?.custom_title ?? pendingTitle) : title}
-            className={cn(
-              "mx-0 inline h-full w-fit border-none bg-blue-50 px-0 py-2 text-2xl font-bold text-primary shadow-none outline-none focus:ring-0 lg:text-3xl tall:xl:text-4xl",
-              editMode && "rounded-md px-1 ring-2 ring-primary/40",
-            )}
-          />
+          {!editMode && (
+            <header className="flex items-center space-x-4">
+              <h2 className="px-1 py-2 text-2xl font-bold text-primary lg:text-3xl tall:xl:text-4xl">
+                {TITLE}
+              </h2>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={startEdit}
+                aria-controls={id}
+                aria-label={t("edit")}
+                className="rounded-full"
+              >
+                <LuPen className="h-4 w-4 text-secondary-foreground" />
+              </Button>
+            </header>
+          )}
 
-          {!editMode ? (
-            <button
-              type="button"
-              onClick={startEdit}
-              aria-controls={id}
-              aria-label={t("edit")}
-              className="p-1"
-            >
-              <LuPen className="ml-2.5 h-4 w-4 text-secondary-foreground" />
-            </button>
-          ) : (
-            <div className="flex gap-1">
-              <button type="button" onClick={handleSave} aria-label={t("save")} className="p-1">
-                <LuCheck className="h-4 w-4" />
-              </button>
-              <button type="button" onClick={handleCancel} aria-label={t("cancel")} className="p-1">
-                <LuX className="h-4 w-4" />
-              </button>
-            </div>
+          {editMode && (
+            <header className="flex items-center space-x-4">
+              <Input
+                id={id}
+                ref={setInputRef}
+                autoFocus={editMode}
+                value={pendingTitle ?? TITLE}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSave();
+                  if (e.key === "Escape") handleCancel();
+                }}
+                onChange={onInputChange}
+                readOnly={!editMode}
+                aria-readonly={!editMode}
+                aria-label={editMode ? (location?.custom_title ?? pendingTitle) : title}
+                className={cn(
+                  "mx-0 inline h-full w-fit rounded-md border-none bg-blue-50 px-1 py-2 text-2xl font-bold text-primary shadow-none outline-none ring-2 ring-primary/40 focus:ring-0 lg:text-3xl tall:xl:text-4xl",
+                )}
+              />
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="icon-sm"
+                  type="button"
+                  onClick={handleSave}
+                  aria-label={t("save")}
+                  className="rounded-full"
+                >
+                  <LuCheck className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="icon-sm"
+                  type="button"
+                  onClick={handleCancel}
+                  aria-label={t("cancel")}
+                  className="rounded-full"
+                >
+                  <LuX className="h-4 w-4" />
+                </Button>
+              </div>
+            </header>
           )}
         </div>
       </div>

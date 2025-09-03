@@ -13,12 +13,11 @@ import { Media } from "@/containers/media";
 
 import { usePathname } from "@/i18n/navigation";
 
-import ReportResultsHeaderDesktop from "../results/header/desktop";
-
 import ConfirmLocation from "./confirm/desktop";
 import DesktopDrawingTools from "./drawing-tools/desktop";
 import LogoBetaInfo from "./logo-beta-info";
 import MobileNavigation from "./mobile-navigation";
+import ReportResultsHeaderDesktop from "./results/desktop";
 
 function getRoutes(pathname: string) {
   const m = pathname.match(/^(?:\/[a-z]{2})?\/report(?:\/(grid|indicators))?\/?$/);

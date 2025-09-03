@@ -1,12 +1,12 @@
 "use client";
 
 import { Separator } from "@radix-ui/react-select";
+import { LucidePlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { LuPlus } from "react-icons/lu";
 
-import DownloadReportButton from "@/containers/results/header/download";
-import IndicatorsReport from "@/containers/results/header/indicators";
-import ShareReport from "@/containers/results/header/share";
+import DownloadReportButton from "@/containers/header/results/download";
+import IndicatorsReport from "@/containers/header/results/indicators";
+import ShareReport from "@/containers/header/results/share";
 
 import {
   AlertDialog,
@@ -33,7 +33,7 @@ export default function ReportResultsHeaderDesktop() {
           <AlertDialog>
             <AlertDialogTrigger asChild className="print:hidden">
               <Button variant="outline" className="space-x-2 border-none px-2.5 py-2 shadow-none">
-                <LuPlus className="flex h-4 w-4 justify-center rounded-full border border-border" />
+                <LucidePlusCircle className="h-5 w-5" />
                 <span>{t("report-results-buttons-new-report")}</span>
               </Button>
             </AlertDialogTrigger>
@@ -56,7 +56,7 @@ export default function ReportResultsHeaderDesktop() {
         </div>
 
         <div className="flex items-center space-x-2 print:hidden">
-          <Separator className="h-4 w-px bg-border" />
+          <Separator className="mr-2 h-4 w-px bg-border" />
           <ShareReport />
           <DownloadReportButton />
           <IndicatorsReport />
