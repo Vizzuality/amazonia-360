@@ -27,7 +27,7 @@ export default function SketchMobile() {
     }
 
     if (!sketch.enabled) {
-      setSketch({ enabled: true, type });
+      setSketch({ enabled: "create", type });
       setSketchAction({ type: "create", state: "start", geometryType: type });
     }
   };

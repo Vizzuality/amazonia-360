@@ -94,7 +94,7 @@ export const reportEditionModeAtom = atom<boolean>(false);
 export const tmpBboxAtom = atom<__esri.Extent | undefined>(undefined);
 
 export const sketchAtom = atom<SketchProps>({
-  enabled: false,
+  enabled: undefined,
   type: undefined,
 });
 export const sketchActionAtom = atom<{
@@ -103,7 +103,6 @@ export const sketchActionAtom = atom<{
   geometryType?: __esri.Geometry["type"];
 }>({});
 
-export const tabAtom = atom<"contextual-viewer" | "grid">("contextual-viewer");
 export const reportPanelAtom = atom<"location" | "topics">("location");
 export const gridPanelAtom = atom<"filters" | "table">("filters");
 export const gridCellHighlightAtom = atom<{ id: number | null; index: string | undefined }>({

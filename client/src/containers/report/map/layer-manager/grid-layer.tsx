@@ -16,6 +16,9 @@ import { load } from "@loaders.gl/core";
 import CHROMA from "chroma-js";
 import { cellToLatLng, latLngToCell } from "h3-js";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useTranslations } from "next-intl";
+
+import { env } from "@/env.mjs";
 
 import { useMeta } from "@/lib/grid";
 import { getGeometryWithBuffer, useLocationGeometry } from "@/lib/location";
@@ -32,12 +35,23 @@ import {
   useSyncLocation,
   GridHoverType,
   tmpBboxAtom,
+  sketchAtom,
 } from "@/app/store";
 
 import { BUFFERS } from "@/constants/map";
 
 import H3TileLayer from "@/components/map/layers/h3-tile-layer";
 import { useMap } from "@/components/map/provider";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
@@ -54,6 +68,7 @@ export const getGridLayerProps = ({
   setGridHover,
   gridCellHighlight,
   onCellClick,
+  sketchEnabled,
 }: {
   gridDatasets: string[];
   gridFilters: Record<string, number[] | Record<string, string | number>> | null;
@@ -67,6 +82,7 @@ export const getGridLayerProps = ({
   setGridHover: (props: GridHoverType) => void;
   gridCellHighlight?: string;
   onCellClick?: (info: PickingInfo) => void;
+  sketchEnabled: "create" | "edit" | undefined;
 }) => {
   // Create array of 4n values
   const filters = [...Array(4).keys()];
@@ -74,7 +90,7 @@ export const getGridLayerProps = ({
 
   return new H3TileLayer({
     id: `tile-h3s`,
-    data: `/custom-api/grid/tile/{h3index}?${columns}`,
+    data: `${env.NEXT_PUBLIC_API_URL}/grid/tile/{h3index}?${columns}`,
     extent: [-80.3603, -36.5016, -43.8134, 20.8038],
     visible: !!gridDatasets.length && gridSelectedDataset !== "no-layer",
     getTileData: (tile) => {
@@ -96,6 +112,7 @@ export const getGridLayerProps = ({
           }),
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
           },
         },
       }).then((data) => {
@@ -104,11 +121,13 @@ export const getGridLayerProps = ({
         });
       });
     },
-    pickable: true,
+    pickable: !sketchEnabled,
     onClick: (info: PickingInfo) => {
+      if (!!sketchEnabled) return;
       if (onCellClick) onCellClick(info);
     },
     onHover: (info: PickingInfo) => {
+      if (!!sketchEnabled) return;
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const table = info?.tile?.content as ArrowTable["data"];
@@ -218,7 +237,7 @@ export const getGridLayerProps = ({
           data: props.data,
           highPrecision: true,
           opacity,
-          pickable: true,
+          pickable: !sketchEnabled,
           filled: !!gridDatasets.length,
           extruded: false,
           stroked: false,
@@ -245,7 +264,7 @@ export const getGridLayerProps = ({
           highPrecision: true,
           opacity: opacity,
           visible: zoom && zoom < 8 ? false : true,
-          pickable: true,
+          pickable: !sketchEnabled,
           filled: false,
           extruded: false,
           // HEXAGON
@@ -288,15 +307,23 @@ export const getGridLayerProps = ({
 };
 
 export default function GridLayer() {
+  const t = useTranslations();
+
   const GRID_LAYER = useRef<typeof DeckLayer>();
+
+  const [alert, setAlert] = useState<PickingInfo>();
+
   const [location, setLocation] = useSyncLocation();
+
   const [gridFilters] = useSyncGridFilters();
   const [gridSetUpFilters] = useSyncGridFiltersSetUp();
   const [gridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
   const gridCellHighlight = useAtomValue(gridCellHighlightAtom);
+
   const [gridHover, setGridHover] = useAtom(gridHoverAtom);
   const setTmpBbox = useSetAtom(tmpBboxAtom);
+  const sketch = useAtomValue(sketchAtom);
 
   const map = useMap();
   const [zoom, setZoom] = useState(map?.view.zoom);
@@ -339,34 +366,38 @@ export default function GridLayer() {
     [gridSelectedDataset, colorscale],
   );
 
-  const onCellClick = useCallback(
-    (info: PickingInfo) => {
-      if (!info?.coordinate) return;
-      const cell = latLngToCell(info?.coordinate?.[1], info.coordinate[0], 6);
+  const onCellClick = useCallback((info: PickingInfo) => {
+    if (!info?.coordinate) return;
 
-      const latLng = cellToLatLng(cell);
+    setAlert(info);
+  }, []);
 
-      const p = new Point({
-        x: latLng[1],
-        y: latLng[0],
-        spatialReference: { wkid: 4326 },
-      });
-      const projectedGeom = projection.project(p, { wkid: 102100 });
-      const g = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
+  const handleConfirmAlert = useCallback(() => {
+    if (!alert?.coordinate) return;
 
-      setLocation({
-        type: "point",
-        geometry: g.toJSON(),
-        buffer: BUFFERS.point,
-      });
+    const cell = latLngToCell(alert.coordinate[1], alert.coordinate[0], 6);
 
-      const gWithBuffer = getGeometryWithBuffer(g, BUFFERS.point);
-      if (gWithBuffer) {
-        setTmpBbox(gWithBuffer.extent);
-      }
-    },
-    [setLocation, setTmpBbox],
-  );
+    const latLng = cellToLatLng(cell);
+
+    const p = new Point({
+      x: latLng[1],
+      y: latLng[0],
+      spatialReference: { wkid: 4326 },
+    });
+    const projectedGeom = projection.project(p, { wkid: 102100 });
+    const g = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
+
+    setLocation({
+      type: "point",
+      geometry: g.toJSON(),
+      buffer: BUFFERS.point,
+    });
+
+    const gWithBuffer = getGeometryWithBuffer(g, BUFFERS.point);
+    if (gWithBuffer) {
+      setTmpBbox(gWithBuffer.extent);
+    }
+  }, [alert, setLocation, setTmpBbox]);
 
   const opacity = useMemo(() => gridSetUpFilters.opacity * 0.01, [gridSetUpFilters]);
 
@@ -387,6 +418,7 @@ export default function GridLayer() {
             setGridHover,
             gridCellHighlight: gridCellHighlight.index,
             onCellClick,
+            sketchEnabled: sketch.enabled,
           }),
         ],
       });
@@ -408,6 +440,7 @@ export default function GridLayer() {
         setGridHover,
         gridCellHighlight: gridCellHighlight.index,
         onCellClick,
+        sketchEnabled: sketch.enabled,
       }),
     ];
 
@@ -425,11 +458,30 @@ export default function GridLayer() {
     setGridHover,
     gridCellHighlight,
     onCellClick,
+    sketch.enabled,
   ]);
 
   return (
     <>
       <Layer index={0} layer={layer} />
+
+      <AlertDialog open={!!alert} onOpenChange={() => setAlert(undefined)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t("grid-sidebar-report-location-filters-alert-redefine-area-title")}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("grid-sidebar-report-location-filters-alert-redefine-area-description")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex w-full justify-end space-x-2 justify-self-end">
+            <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+
+            <AlertDialogAction onClick={handleConfirmAlert}>{t("continue")}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

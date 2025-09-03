@@ -2,8 +2,6 @@ import { Metadata } from "next";
 
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import PageProviders from "@/app/[locale]/report/page-providers";
-
 import Footer from "@/containers/footer";
 import Hub from "@/containers/hub";
 
@@ -26,9 +24,9 @@ export default async function HubPage({ params }: { params: Params }) {
   setRequestLocale(locale);
 
   return (
-    <PageProviders>
+    <>
       <Hub />
       <Footer />
-    </PageProviders>
+    </>
   );
 }
