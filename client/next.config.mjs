@@ -1,4 +1,6 @@
+import createBundleAnalizer from "@next/bundle-analyzer";
 import createNextIntlPlugin from "next-intl/plugin";
+
 import "./src/env.mjs";
 
 /** @type {import('next').NextConfig} */
@@ -19,11 +21,16 @@ const nextConfig = {
     ],
   },
   transpilePackages: ["@t3-oss/env-nextjs", "@t3-oss/env-core"],
-  experimental: {
-    // optimizePackageImports: ["react-icons/*"], If you add this your dev server will last forever trying to start
-  },
+  // experimental: {
+  //   optimizePackageImports: ["@arcgis/core/*"],
+  //   // optimizePackageImports: ["react-icons/*"], //If you add this your dev server will last forever trying to start
+  // },
 };
+
+const withBundleAnalyzer = createBundleAnalizer({
+  enabled: process.env.ANALYZE === "true",
+});
 
 const withNextIntl = createNextIntlPlugin();
 
-export default withNextIntl(nextConfig);
+export default withBundleAnalyzer(withNextIntl(nextConfig));

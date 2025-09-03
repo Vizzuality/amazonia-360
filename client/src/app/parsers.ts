@@ -56,12 +56,14 @@ export const bboxParser = parseAsArrayOf(parseAsFloat);
 
 export type SearchLocation = {
   type: "search";
+  custom_title?: string;
 } & __esri.SuggestResult;
 
 export type CustomLocation = {
   type: __esri.Geometry["type"];
   geometry: Record<string, unknown>;
   buffer: number;
+  custom_title?: string;
 };
 
 export type Location = SearchLocation | CustomLocation;

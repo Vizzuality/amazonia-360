@@ -110,9 +110,9 @@ export const GridLegend: FC = () => {
 
               <SelectContent
                 side="top"
-                sideOffset={10}
+                sideOffset={0}
                 align="start"
-                className="no-scrollbar max-h-96 w-72 translate-x-[-6px] overflow-y-auto border-none shadow-md"
+                className="no-scrollbar max-h-96 w-72 overflow-y-auto border-none shadow-md"
               >
                 {OPTIONS &&
                   OPTIONS.map((opt) => (
