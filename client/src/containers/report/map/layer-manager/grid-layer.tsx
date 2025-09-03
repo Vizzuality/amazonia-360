@@ -18,6 +18,8 @@ import { cellToLatLng, latLngToCell } from "h3-js";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
 
+import { env } from "@/env.mjs";
+
 import { useMeta } from "@/lib/grid";
 import { getGeometryWithBuffer, useLocationGeometry } from "@/lib/location";
 
@@ -88,7 +90,7 @@ export const getGridLayerProps = ({
 
   return new H3TileLayer({
     id: `tile-h3s`,
-    data: `/custom-api/grid/tile/{h3index}?${columns}`,
+    data: `${env.NEXT_PUBLIC_API_URL}/grid/tile/{h3index}?${columns}`,
     extent: [-80.3603, -36.5016, -43.8134, 20.8038],
     visible: !!gridDatasets.length && gridSelectedDataset !== "no-layer",
     getTileData: (tile) => {
@@ -110,6 +112,7 @@ export const getGridLayerProps = ({
           }),
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${env.NEXT_PUBLIC_API_KEY}`,
           },
         },
       }).then((data) => {
