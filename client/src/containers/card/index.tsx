@@ -5,6 +5,7 @@ import { PropsWithChildren, MouseEvent } from "react";
 import ReactMarkdown from "react-markdown";
 
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
@@ -38,7 +39,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useSearchParams } from "next/navigation";
 
 interface CardProps {
   padding?: boolean;

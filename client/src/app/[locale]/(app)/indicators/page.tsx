@@ -2,8 +2,6 @@ import { Metadata } from "next";
 
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import PageProviders from "@/app/[locale]/(app)/report/page-providers";
-
 import Indicators from "@/containers/indicators";
 
 type Params = Promise<{ locale: string }>;
@@ -24,9 +22,5 @@ export default async function IndicatorsPage({ params }: { params: Params }) {
   // Enable static rendering
   setRequestLocale(locale);
 
-  return (
-    <PageProviders>
-      <Indicators />
-    </PageProviders>
-  );
+  return <Indicators />;
 }

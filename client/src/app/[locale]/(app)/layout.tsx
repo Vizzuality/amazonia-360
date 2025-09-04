@@ -10,9 +10,10 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import RootHead from "@/app/head";
-import LayoutProviders from "@/app/layout-providers";
 
 import Header from "@/containers/header";
+
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 import { routing } from "@/i18n/routing";
 
@@ -80,8 +81,10 @@ export default async function RootLayout({
       <body className={`${montserrat.className} w-full overflow-x-hidden`}>
         <Suspense fallback={null}>
           <NextIntlClientProvider locale={locale}>
-            <Header />
-            {children}
+            <SidebarProvider>
+              <Header />
+              {children}
+            </SidebarProvider>
           </NextIntlClientProvider>
         </Suspense>
       </body>

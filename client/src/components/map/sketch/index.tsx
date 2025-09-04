@@ -28,7 +28,7 @@ const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
 export type SketchProps = {
   type?: "point" | "polygon" | "polyline";
-  enabled?: boolean;
+  enabled?: "create" | "edit";
   updatable?: boolean;
   completed?: boolean;
   location?: Location | null;
@@ -234,6 +234,12 @@ export default function Sketch({
       sketchViewModelRef.current?.complete();
     }
   }, [completed]);
+
+  useEffect(() => {
+    if (enabled === "edit") {
+      sketchViewModelRef.current?.update(layerRef.current.graphics.toArray());
+    }
+  }, [layerRef, enabled]);
 
   return (
     <>

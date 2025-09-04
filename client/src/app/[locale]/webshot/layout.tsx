@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 
+import RootHead from "@/app/head";
+
 import { routing } from "@/i18n/routing";
 
 import "@arcgis/core/assets/esri/themes/light/main.css";
@@ -12,7 +14,6 @@ import "@/styles/globals.css";
 import "@/styles/grid-layout.css";
 import "react-resizable/css/styles.css";
 import { Montserrat } from "next/font/google";
-import RootHead from "@/app/head";
 
 type Params = Promise<{ locale: string }>;
 

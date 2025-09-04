@@ -1,3 +1,5 @@
+"use client";
+
 import FeatureReductionCluster from "@arcgis/core/layers/support/FeatureReductionCluster";
 import PopupTemplate from "@arcgis/core/PopupTemplate";
 import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer";

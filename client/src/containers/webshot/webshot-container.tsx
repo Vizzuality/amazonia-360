@@ -1,10 +1,14 @@
 "use client";
 
 import { ReactNode } from "react";
-import { VisualizationTypes } from "@/types/indicator";
-import { useSyncTopics } from "@/app/store";
+
 import { useLocale } from "next-intl";
+
 import { useGetIndicatorsId } from "@/lib/indicators";
+
+import { VisualizationTypes } from "@/types/indicator";
+
+import { useSyncTopics } from "@/app/store";
 
 export interface WebshotContainerProps {
   type: VisualizationTypes;
