@@ -2,9 +2,10 @@ import { Metadata } from "next";
 
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import PageProviders from "@/app/[locale]/report/page-providers";
+import PageProviders from "@/app/[locale]/(app)/report/page-providers";
 
-import Indicators from "@/containers/indicators";
+import Footer from "@/containers/footer";
+import Hub from "@/containers/hub";
 
 type Params = Promise<{ locale: string }>;
 
@@ -13,12 +14,12 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const t = await getTranslations({ locale });
 
   return {
-    title: t("metadata-indicators-page-title"),
-    description: t("metadata-indicators-page-description"),
+    title: t("metadata-hub-page-title"),
+    description: t("metadata-hub-page-description"),
   };
 }
 
-export default async function IndicatorsPage({ params }: { params: Params }) {
+export default async function HubPage({ params }: { params: Params }) {
   const { locale } = await params;
 
   // Enable static rendering
@@ -26,7 +27,8 @@ export default async function IndicatorsPage({ params }: { params: Params }) {
 
   return (
     <PageProviders>
-      <Indicators />
+      <Hub />
+      <Footer />
     </PageProviders>
   );
 }
