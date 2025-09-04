@@ -14,15 +14,14 @@ def test_grid_tile(grid_dataset):
         params={"columns": ["landcover", "population"]},
         headers=HEADERS,
     )
-
     assert response.status_code == 200
     assert pl.read_ipc(response.read()).to_dict(as_series=False) == {
         "cell": [
-            "895f4261e03ffff",
-            "865f00007ffffff",
-            "865f0000fffffff",
-            "865f00017ffffff",
-            "865f0001fffffff",
+            "89395cd696fffff",
+            "89395c8b69bffff",
+            "89395cd6967ffff",
+            "89395cd6963ffff",
+            "89395c81e93ffff",
         ],
         "landcover": [1, 4, 3, 3, 4],
         "population": [100, 200, 1, 900, 900],
@@ -35,11 +34,11 @@ def test_grid_tile_empty_column_param(grid_dataset):
     assert response.status_code == 200
     assert pl.read_ipc(response.read()).to_dict(as_series=False) == {
         "cell": [
-            "895f4261e03ffff",
-            "865f00007ffffff",
-            "865f0000fffffff",
-            "865f00017ffffff",
-            "865f0001fffffff",
+            "89395cd696fffff",
+            "89395c8b69bffff",
+            "89395cd6967ffff",
+            "89395cd6963ffff",
+            "89395c81e93ffff",
         ],
     }
 
@@ -320,7 +319,7 @@ def test_grid_table(grid_dataset):
             {"column": "landcover", "values": [4, 1]},
             {"column": "population", "values": [200, 100]},
         ],
-        "cells": ["865f00007ffffff", "895f4261e03ffff"],
+        "cells": ["89395c8b69bffff", "89395cd696fffff"],
     }
 
 
@@ -330,14 +329,14 @@ def test_grid_table_geojson(grid_dataset, geojson):
             {
                 "filter_type": "numerical",
                 "column_name": "population",
-                "operation": "lte",
-                "value": 200,
+                "operation": "gte",
+                "value": 900,
             },
             {
                 "filter_type": "numerical",
                 "column_name": "population",
                 "operation": "gt",
-                "value": 1,
+                "value": 3,
             },
         ],
         "geojson": json.loads(geojson),
@@ -350,10 +349,10 @@ def test_grid_table_geojson(grid_dataset, geojson):
     assert response.status_code == 200
     assert json.loads(response.read()) == {
         "table": [
-            {"column": "landcover", "values": [1]},
-            {"column": "population", "values": [100]},
+            {"column": "landcover", "values": [4]},
+            {"column": "population", "values": [900]},
         ],
-        "cells": ["895f4261e03ffff"],
+        "cells": ["89395c81e93ffff"],
     }
 
 
@@ -366,9 +365,9 @@ def test_grid_tile_post_geojson(grid_dataset, geojson):
     )
     assert response.status_code == 200
     assert pl.read_ipc(response.read()).to_dict(as_series=False) == {
-        "cell": ["895f4261e03ffff"],
-        "landcover": [1],
-        "population": [100],
+        "cell": ["89395c81e93ffff"],
+        "landcover": [4],
+        "population": [900],
     }
 
 
@@ -409,5 +408,5 @@ def test_grid_metadata_filter(grid_dataset, geojson):
     assert len(meta["datasets"]) == 2
     population = [ds for ds in meta["datasets"] if ds["var_name"] == "population"][0]
 
-    assert population["legend"]["stats"][0]["max"] == 100
-    assert population["legend"]["stats"][0]["min"] == 100
+    assert population["legend"]["stats"][0]["max"] == 900
+    assert population["legend"]["stats"][0]["min"] == 900

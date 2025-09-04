@@ -1,6 +1,7 @@
 import io
 import logging
 import os
+import pathlib
 from functools import lru_cache
 
 import h3
@@ -9,7 +10,7 @@ import polars as pl
 import pyarrow as pa
 from h3 import H3CellInvalidError
 from h3ronpy import cells_to_string
-from h3ronpy.vector import geometry_to_cells
+from h3ronpy.vector import ContainmentMode, geometry_to_cells
 from pydantic import ValidationError
 from shapely.geometry.base import BaseGeometry
 
@@ -59,7 +60,7 @@ def cells_in_geojson(geometry: str, cell_resolution: int) -> pl.LazyFrame:
     Geometry must be a shapely geometry, a wkt or wkb so the lru cache
     can hash the parameter.
     """
-    cells = cells_to_string(geometry_to_cells(geometry, cell_resolution))
+    cells = cells_to_string(geometry_to_cells(geometry, cell_resolution, ContainmentMode.IntersectsBoundary))
     return pl.LazyFrame({"cell": cells})
 
 
@@ -138,17 +139,16 @@ class H3TilesRepository:
         """Get the metadata and update it with the zonal stats of the geometry"""
         meta = self.get_meta().model_dump()
         tiles_path = os.path.join(self.url, str(tile_level))
+        available_tiles = [tile.stem for tile in pathlib.Path(tiles_path).glob("*.arrow")]
 
-        # get all cells in the geometry
         geom_cells = cells_in_geojson(geom, tile_level + self.tile_to_cell_res_change)
-
-        # get the parents at tile level resolution
+        # get the parents at tile level resolution of the cells in geom
         tiles_in_geom = pl.Series(
             geom_cells.collect()  # early collect because h3ronpy is causing trubles with dtypes
             .select(pl.col("cell").h3.cells_parse().h3.change_resolution(tile_level).h3.cells_to_string())
             .unique()
         ).to_list()
-        tile_files = [os.path.join(tiles_path, tile + ".arrow") for tile in tiles_in_geom]
+        tile_files = [os.path.join(tiles_path, tile + ".arrow") for tile in tiles_in_geom if tile in available_tiles]
         lf = pl.scan_ipc(tile_files)
         if columns:
             lf = lf.select(["cell", *columns])
@@ -159,8 +159,8 @@ class H3TilesRepository:
         try:  # exception will araise in the collect
             maxs = lf.select(pl.selectors.numeric().max()).collect()
             mins = lf.select(pl.selectors.numeric().min()).collect()
-        except FileNotFoundError:
-            raise TileNotFoundError from None
+        except FileNotFoundError as e:
+            raise TileNotFoundError(str(e)) from None
 
         for dataset in meta["datasets"]:
             column = dataset["var_name"]
