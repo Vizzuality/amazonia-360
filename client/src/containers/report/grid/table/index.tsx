@@ -2,7 +2,10 @@
 
 import { useMemo } from "react";
 
+import { useLocale, useTranslations } from "next-intl";
+
 import { useGetGridMeta, useGetGridTable } from "@/lib/grid";
+import { useGetH3Indicators } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
 import { BodyReadTableGridTablePostFiltersItem } from "@/types/generated/api.schemas";
@@ -15,10 +18,13 @@ import {
 } from "@/app/store";
 
 import { CardLoader } from "@/containers/card";
+import GridTableSetup from "@/containers/report/grid/table/setup";
 
 import GridTableItem from "./item";
 
 export default function GridTable() {
+  const t = useTranslations();
+  const locale = useLocale();
   const [location] = useSyncLocation();
   const [gridDatasets] = useSyncGridDatasets();
   const [gridFilters] = useSyncGridFilters();
@@ -27,6 +33,8 @@ export default function GridTable() {
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
   });
+
+  const queryH3Indicators = useGetH3Indicators(locale);
 
   const queryMeta = useGetGridMeta();
 
@@ -93,16 +101,42 @@ export default function GridTable() {
     }).filter((i) => i.cell);
   }, [gridDatasets, queryTable?.data, gridFiltersSetUp?.limit]);
 
+  const SORT_DATASET_NAME = useMemo(() => {
+    if (!gridDatasets.length || !queryH3Indicators.data) return "";
+    const d = queryH3Indicators.data?.find(
+      (dataset) => dataset.resource.column === gridDatasets[0],
+    );
+
+    if (!d) return "";
+
+    return (d[`name_${locale}` as keyof typeof d] as string) ?? "";
+  }, [gridDatasets, queryH3Indicators.data, locale]);
+
   return (
     <div className="space-y-2">
-      <CardLoader query={[queryTable, queryMeta]} className="h-96">
+      <CardLoader query={[queryTable, queryMeta, queryH3Indicators]} className="h-96">
         {!ITEMS.length && (
           <div className="flex h-96 items-center justify-center">
-            <p className="text-base font-medium">No data to display</p>
+            <p className="text-base font-medium">
+              {t("grid-sidebar-grid-filters-ranking-title-no-filter")}
+            </p>
           </div>
         )}
 
-        {!!ITEMS.length && ITEMS.map((t) => <GridTableItem key={`${t.id}`} {...t} />)}
+        {!!ITEMS.length && (
+          <div>
+            <header className="flex justify-between gap-2">
+              <h2 className="mt-1.5 text-sm font-bold">
+                {t("grid-sidebar-grid-filters-ranking-title")} {`"${SORT_DATASET_NAME}"`}
+              </h2>
+              <GridTableSetup />
+            </header>
+
+            {ITEMS.map((t) => (
+              <GridTableItem key={`${t.id}`} {...t} />
+            ))}
+          </div>
+        )}
       </CardLoader>
     </div>
   );

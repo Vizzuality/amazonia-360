@@ -1,15 +1,19 @@
 "use client";
 
-import { ChangeEvent } from "react";
+import { ChangeEvent, useMemo } from "react";
 import { useCallback, useState } from "react";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { LuSettings2 } from "react-icons/lu";
 
-import { useGetGridMeta } from "@/lib/grid";
+import { useGetH3Indicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
-import { useSyncGridDatasets, useSyncGridFilters, useSyncGridFiltersSetUp } from "@/app/store";
+import {
+  useSyncGridDatasets,
+  useSyncGridFiltersSetUp,
+  useSyncGridSelectedDataset,
+} from "@/app/store";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +29,8 @@ import {
 
 export default function GridTableSetup() {
   const t = useTranslations();
+  const locale = useLocale();
+
   const RANKING_DIRECTION = [
     {
       key: "asc",
@@ -38,19 +44,24 @@ export default function GridTableSetup() {
   const [isOpen, setIsOpen] = useState(false);
 
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
-  const [gridFilters] = useSyncGridFilters();
-  const [, setGridFiltersSetUp] = useSyncGridFiltersSetUp();
-  const [selectedDirection, setDirection] = useState<"asc" | "desc">("desc");
+  const [, setGridSelectedDataset] = useSyncGridSelectedDataset();
+  const [gridSetup, setGridFiltersSetUp] = useSyncGridFiltersSetUp();
+  const [selectedDirection, setDirection] = useState<"asc" | "desc">(gridSetup.direction ?? "desc");
   const [selectedDataset, setDataset] = useState<string>(gridDatasets[0]);
-  const [selectedLimit, setSelectedLimit] = useState<number>();
+  const [selectedLimit, setSelectedLimit] = useState<number>(gridSetup.limit ?? 10);
 
-  const { data: rankingOptions } = useGetGridMeta({
-    select: (data) =>
-      gridDatasets.map((d) => ({
-        key: d,
-        label: data?.datasets?.find((dataset) => dataset.var_name === d)?.label,
-      })),
-  });
+  const { data: h3IndicatorsData } = useGetH3Indicators(locale);
+
+  const OPTIONS = useMemo(() => {
+    if (!h3IndicatorsData) return [];
+
+    return h3IndicatorsData
+      .map((indicator) => ({
+        key: indicator.resource.column,
+        label: indicator.name,
+      }))
+      .filter((indicator) => gridDatasets.includes(indicator.key));
+  }, [h3IndicatorsData, gridDatasets]);
 
   const handleRankingChange = useCallback(
     (e: string) => {
@@ -75,6 +86,7 @@ export default function GridTableSetup() {
     if (selectedDataset) {
       const updatedOrder = [selectedDataset, ...gridDatasets.filter((d) => d !== selectedDataset)];
       setGridDatasets(updatedOrder);
+      setGridSelectedDataset(selectedDataset);
     }
 
     if (selectedDirection) {
@@ -98,6 +110,7 @@ export default function GridTableSetup() {
     gridDatasets,
     setGridDatasets,
     setGridFiltersSetUp,
+    setGridSelectedDataset,
   ]);
 
   return (
@@ -110,8 +123,12 @@ export default function GridTableSetup() {
           "hover:bg-blue-100": gridDatasets.length,
           "opacity-50": !gridDatasets.length,
         })}
+        asChild
       >
-        <LuSettings2 className="h-4 w-4" />
+        <Button variant="ghost" size="sm" className="gap-2">
+          <span>Sort</span>
+          <LuSettings2 className="h-4 w-4" />
+        </Button>
       </PopoverTrigger>
       <PopoverContent
         side="right"
@@ -138,14 +155,14 @@ export default function GridTableSetup() {
                 <SelectTrigger className="h-10 w-full max-w-36 rounded-sm">
                   <SelectValue className="text-sm">
                     <p className="flex-grow truncate md:max-w-80 lg:max-w-none">
-                      {rankingOptions?.find((opt) => opt.key === selectedDataset)?.label ||
+                      {OPTIONS?.find((opt) => opt.key === selectedDataset)?.label ||
                         "selectedDataset"}
                     </p>
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent className="no-scrollbar max-h-96 overflow-y-auto border-none shadow-md">
-                  {rankingOptions &&
-                    rankingOptions.map((opt) => (
+                  {OPTIONS &&
+                    OPTIONS.map((opt) => (
                       <SelectItem key={opt.key} value={opt.key} className="cursor-pointer">
                         {opt.label}
                       </SelectItem>
@@ -176,7 +193,7 @@ export default function GridTableSetup() {
               {t("grid-sidebar-grid-filters-ranking-set-up-max-number-cell")}
             </Label>
             <Input
-              placeholder={`${gridFilters?.limit?.[0] ?? 10}`}
+              placeholder={`${gridSetup?.limit ?? 10}`}
               id="cell-number"
               type="number"
               min={0}
