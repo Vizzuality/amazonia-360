@@ -57,9 +57,8 @@ def test_grid_tile_404(grid_dataset):
 
 def test_grid_tile_bad_index(grid_dataset):
     response = test_client.get("/grid/tile/123", headers=HEADERS)
-
     assert response.status_code == 400
-    assert response.json() == {"detail": "Tile index is not a valid H3 cell"}
+    assert response.json() == {"detail": "Integer is not a valid H3 cell: 0x123"}
 
 
 def test_grid_metadata(grid_dataset):

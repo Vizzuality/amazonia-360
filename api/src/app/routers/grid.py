@@ -2,10 +2,9 @@ import logging
 from typing import Annotated
 
 import shapely
-from fastapi import APIRouter, Depends, HTTPException, Path, Query
+from fastapi import APIRouter, Depends, Path, Query
 from fastapi.responses import Response
 from geojson_pydantic import Feature
-from typing_extensions import Any
 
 from app.dependencies import ColumnNamesDep, FeatureDep, GridRepositoryDep
 from app.models.grid import (
@@ -13,16 +12,10 @@ from app.models.grid import (
     TableFilters,
     TableResults,
 )
-from app.repository.grid import ColumnNotFoundError, InvalidH3CellError, MetadataError, TileNotFoundError
 
 log = logging.getLogger("uvicorn.error")  # Show the logs in the uvicorn runner logs
 
 grid_router = APIRouter()
-
-tile_exception_responses: dict[int | str, dict[str, Any]] = {
-    400: {"description": "Column does not exist or tile_index is not valid h3 index."},
-    404: {"description": "Tile does not exist or is empty"},
-}
 
 
 class ArrowIPCResponse(Response):  # noqa: D101
@@ -34,7 +27,6 @@ class ArrowIPCResponse(Response):  # noqa: D101
     summary="Get a grid tile",
     response_class=ArrowIPCResponse,
     response_description="Arrow IPC table",
-    responses=tile_exception_responses,
 )
 def grid_tile(
     tile_index: Annotated[str, Path(description="The `h3` index of the tile")],
@@ -42,14 +34,7 @@ def grid_tile(
     repo: GridRepositoryDep,
 ) -> ArrowIPCResponse:
     """Get a tile of h3 cells with specified data columns"""
-    try:
-        tile = repo.tile_as_ipc_bytes(tile_index, columns)
-    except ColumnNotFoundError:
-        raise HTTPException(400, "One or more of the specified columns is not valid") from None
-    except TileNotFoundError:
-        raise HTTPException(404, "Tile not found") from None
-    except InvalidH3CellError:
-        raise HTTPException(400, "Tile index is not a valid H3 cell") from None
+    tile = repo.tile_as_ipc_bytes(tile_index, columns)
     return ArrowIPCResponse(tile)
 
 
@@ -58,7 +43,6 @@ def grid_tile(
     summary="Get a grid tile with cells contained inside the GeoJSON",
     response_class=ArrowIPCResponse,
     response_description="Arrow IPC table",
-    responses=tile_exception_responses,
 )
 def grid_tile_in_area(
     tile_index: Annotated[str, Path(description="The `h3` index of the tile")],
@@ -68,14 +52,7 @@ def grid_tile_in_area(
 ) -> ArrowIPCResponse:
     """Get a tile of h3 cells that are inside the polygon"""
     geom = shapely.from_geojson(geojson.model_dump_json())
-    try:
-        tile = repo.tile_in_area_as_ipc_bytes(tile_index, columns, geom)
-    except ColumnNotFoundError:
-        raise HTTPException(400, "One or more of the specified columns is not valid") from None
-    except TileNotFoundError:
-        raise HTTPException(404, "Tile not found") from None
-    except InvalidH3CellError:
-        raise HTTPException(400, "Tile index is not a valid H3 cell") from None
+    tile = repo.tile_in_area_as_ipc_bytes(tile_index, columns, geom)
     return ArrowIPCResponse(tile)
 
 
@@ -85,10 +62,7 @@ def grid_tile_in_area(
 )
 async def grid_dataset_metadata(repo: GridRepositoryDep) -> MultiDatasetMeta:
     """Get the grid dataset metadata"""
-    try:
-        meta = repo.get_meta()
-    except MetadataError:
-        raise HTTPException(500, "Something went horribly wrong with the grid metadata.") from None
+    meta = repo.get_meta()
     return meta
 
 

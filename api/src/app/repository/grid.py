@@ -8,35 +8,15 @@ import h3
 import h3ronpy.polars  # noqa: F401
 import polars as pl
 import pyarrow as pa
-from h3 import H3CellInvalidError
 from h3ronpy import cells_to_string
 from h3ronpy.vector import ContainmentMode, geometry_to_cells
 from pydantic import ValidationError
 from shapely.geometry.base import BaseGeometry
 
+from app.errors import ColumnNotFoundError, FilterError, MetadataError, TileNotFoundError
 from app.models.grid import MultiDatasetMeta, TableFilters, TableResultColumn, TableResults
 
 log = logging.getLogger(__name__)
-
-
-class InvalidH3CellError(Exception):
-    """H3 cell index is not valid"""
-
-
-class ColumnNotFoundError(Exception):
-    """Column provided does not exist in the dataset"""
-
-
-class TileNotFoundError(Exception):
-    """Tile does not exist in the dataset"""
-
-
-class MetadataError(Exception):
-    """Metadata file is non existent or malformed"""
-
-
-class FilterError(Exception):
-    """Table filter is not valid"""
 
 
 def polars_to_string_ipc(df: pl.DataFrame) -> bytes:
@@ -81,16 +61,8 @@ class H3TilesRepository:
         self.url = grid_url
         self.tile_to_cell_res_change = tile_to_cell_res_change
 
-    @staticmethod
-    def _parse_tile_index(tile_index: str) -> int:
-        try:
-            z = h3.get_resolution(tile_index)
-        except (H3CellInvalidError, ValueError) as e:
-            raise InvalidH3CellError from e
-        return z
-
     def tile(self, tile_index: str, columns: list[str]) -> tuple[pl.LazyFrame, int]:
-        z = self._parse_tile_index(tile_index)
+        z = h3.get_resolution(tile_index)
         tile_path = os.path.join(self.url, f"{z}/{tile_index}.arrow")
         if not os.path.exists(tile_path):
             raise TileNotFoundError("Tile {tile_path} not found")
@@ -103,7 +75,7 @@ class H3TilesRepository:
             tile = tile.collect()
         # we don't know if the column requested are correct until we call .collect()
         except pl.exceptions.ColumnNotFoundError:
-            raise ColumnNotFoundError from None
+            raise ColumnNotFoundError("One or more of the specified columns is not valid") from None
         return polars_to_string_ipc(tile)
 
     def tile_in_area(self, tile_index: str, columns: list[str], geom: BaseGeometry) -> pl.DataFrame:
@@ -113,7 +85,7 @@ class H3TilesRepository:
             tile = tile.join(cells, on="cell").collect()
         # we don't know if the column requested are correct until we call .collect()
         except pl.exceptions.ColumnNotFoundError:
-            raise ColumnNotFoundError from None
+            raise ColumnNotFoundError("One or more of the specified columns is not valid") from None
         if tile.is_empty():
             raise TileNotFoundError
         return tile
@@ -129,10 +101,10 @@ class H3TilesRepository:
             meta = load_meta(meta_path)
         except FileNotFoundError as e:
             log.exception("Metadata file does not exist", e)
-            raise MetadataError from e
+            raise MetadataError("Metadata file does not exist") from e
         except ValidationError as e:
             log.exception("Metadata file is not valid", e)
-            raise MetadataError from e
+            raise MetadataError("Metadata file is not valid") from e
         return meta
 
     def meta_for_region(self, geom: BaseGeometry, columns: list[str], tile_level: int) -> MultiDatasetMeta:
