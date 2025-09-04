@@ -28,7 +28,7 @@ FeatureDep = Annotated[Feature, Depends(feature_filter)]
 
 
 def get_h3tile_repository():
-    return H3TilesRepository(get_settings().grid_tiles_path)
+    return H3TilesRepository(get_settings().grid_tiles_path, get_settings().tile_to_cell_resolution_diff)
 
 
 GridRepositoryDep = Annotated[H3TilesRepository, Depends(get_h3tile_repository)]
