@@ -11,7 +11,6 @@ import { gridPanelAtom, useSyncGridDatasets } from "@/app/store";
 import GridFilters from "@/containers/report/grid/filters";
 import GridFiltersSearch from "@/containers/report/grid/filters/search";
 import GridFiltersControls from "@/containers/report/grid/filters-controls";
-import GridFiltersControlsClear from "@/containers/report/grid/filters-controls/clear";
 
 import { Button } from "@/components/ui/button";
 
@@ -37,8 +36,6 @@ export default function SidebarGridContent() {
             </Link>
             {t("grid-sidebar-grid-filters-title")}
           </h1>
-
-          <GridFiltersControlsClear />
         </div>
 
         <p className="text-sm font-medium text-muted-foreground">
@@ -46,8 +43,6 @@ export default function SidebarGridContent() {
         </p>
       </div>
       <GridFiltersSearch className="py-0" />
-
-      <GridFiltersControls />
 
       <div className="space-y-5">
         <div className="relative h-full max-h-[calc(100vh_-_(64px_+_40px_+_310px))]">
@@ -57,6 +52,8 @@ export default function SidebarGridContent() {
           </div>
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />
         </div>
+
+        <GridFiltersControls />
 
         <Button
           onClick={() => setGridPanel("table")}

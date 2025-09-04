@@ -57,21 +57,21 @@ export default function SearchC({ className }: { className?: string }) {
       );
 
       return {
-        label: matchingDataset?.label,
-        value: matchingDataset?.var_name,
-        key: matchingDataset?.var_name,
+        label: indicator[`name_${locale}` as keyof typeof indicator] ?? "",
+        value: matchingDataset?.var_name ?? "",
+        key: matchingDataset?.var_name ?? "",
         sourceIndex: index,
         active: matchingDataset?.var_name && gridDatasets?.includes(matchingDataset.var_name),
       } as Option;
     });
-  }, [H3IndicatorsData, META, gridDatasets, selectedFiltersView]);
+  }, [H3IndicatorsData, META, gridDatasets, selectedFiltersView, locale]);
 
   const OPTIONS = useMemo(() => {
     if (search) {
       return (
         INDICATORS?.filter(
           (o) =>
-            o.label.toLowerCase().includes(search.toLowerCase()) ||
+            o.label?.toLowerCase().includes(search.toLowerCase()) ||
             o.key.toLowerCase().includes(search.toLowerCase()),
         ) || []
       );
