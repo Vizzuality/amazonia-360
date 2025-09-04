@@ -1,7 +1,6 @@
 "use client";
 
 import { ReactNode } from "react";
-import { useSearchParams } from "next/navigation";
 import { VisualizationTypes } from "@/types/indicator";
 import { useSyncTopics } from "@/app/store";
 import { useLocale } from "next-intl";
@@ -25,13 +24,9 @@ export const WebshotContainer = ({ children, type, id }: WebshotContainerProps) 
       (ind) => ind.id === id && ind.type === type,
     );
 
-    // Get dimensions from URL search params if available
-
     const rowHeight = 122; // Same as ResponsiveReactGridLayout
     const cols = 4; // Same as ResponsiveReactGridLayout for most breakpoints
 
-    // Use a container width that matches the actual report container
-    // This should match the responsive container width used in the application
     const containerWidth = 1200; // Approximate container width for desktop
     const columnWidth = containerWidth / cols;
 
@@ -55,3 +50,5 @@ export const WebshotContainer = ({ children, type, id }: WebshotContainerProps) 
     </div>
   );
 };
+
+export default WebshotContainer;

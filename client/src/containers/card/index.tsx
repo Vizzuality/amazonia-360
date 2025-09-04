@@ -43,6 +43,7 @@ import { useSearchParams } from "next/navigation";
 interface CardProps {
   padding?: boolean;
   className?: string;
+  withoutBorder?: boolean;
 }
 
 const DOWNLOAD_FORMATS = [
@@ -323,11 +324,14 @@ export function CardWidgetNumber({
   );
 }
 
-export function Card({ className, children }: PropsWithChildren<CardProps>) {
+export function Card({ className, children, withoutBorder = false }: PropsWithChildren<CardProps>) {
+  const borderClasses = "border border-blue-100 rounded-2xl";
+
   return (
     <div
       className={cn(
-        "flex h-full grow break-inside-avoid flex-col overflow-hidden rounded-2xl border border-blue-100 bg-white p-6",
+        "flex h-full grow break-inside-avoid flex-col overflow-hidden bg-white p-6",
+        withoutBorder ? "" : borderClasses,
         className,
       )}
     >

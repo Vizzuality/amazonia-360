@@ -62,7 +62,7 @@ export default function ReportResultsIndicator({
 
   return (
     <div className="flex h-full flex-col">
-      <Card className={cn(type === "map" && "p-0")}>
+      <Card className={cn(type === "map" && "p-0")} withoutBorder={isWebshot}>
         <CardHeader className={cn(type === "map" && "h-auto px-6 pt-6")}>
           <CardTitle>{indicator?.name}</CardTitle>
           <CardControls>
