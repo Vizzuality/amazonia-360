@@ -5,10 +5,12 @@ from fastapi import Depends, FastAPI, Query
 from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
-from titiler.core.errors import DEFAULT_STATUS_CODES, add_exception_handlers
+from titiler.core.errors import DEFAULT_STATUS_CODES
+from titiler.core.errors import add_exception_handlers as titiler_exception_handlers
 
 from app.auth.auth import verify_token
-from app.config.config import get_settings
+from app.config import get_settings
+from app.errors import add_exception_handlers
 from app.routers.grid import grid_router
 from app.routers.text_generation import router as ai_router
 from app.routers.zonal_stats import ZonalTilerFactory
@@ -33,7 +35,8 @@ tiler_routes = ZonalTilerFactory(path_dependency=path_params)
 app.include_router(tiler_routes.router, tags=["Raster"], dependencies=[Depends(verify_token)])
 app.include_router(grid_router, prefix="/grid", tags=["Grid"], dependencies=[Depends(verify_token)])
 app.include_router(ai_router, prefix="/ai", tags=["Text Generation"], dependencies=[Depends(verify_token)])
-add_exception_handlers(app, DEFAULT_STATUS_CODES)
+titiler_exception_handlers(app, DEFAULT_STATUS_CODES)
+add_exception_handlers(app)
 
 _ = get_settings()  # load settings at startup to check for issues
 

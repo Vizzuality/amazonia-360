@@ -8,7 +8,7 @@ import polars as pl
 import pytest
 import rasterio
 
-from app.config.config import get_settings
+from app.config import get_settings
 
 METADATA = {
     "datasets": [
@@ -67,11 +67,11 @@ def geojson() -> str:
             "geometry": {
                 "coordinates": [
                     [
-                        [-61.11, 8.66],
-                        [-61.11, 8.50],
-                        [-60.86, 8.50],
-                        [-60.86, 8.66],
-                        [-61.11, 8.66],
+                        [2.9392210686634144, 39.464491910234415],
+                        [2.9392210686634144, 39.43748382671012],
+                        [2.975584753828997, 39.43748382671012],
+                        [2.975584753828997, 39.464491910234415],
+                        [2.9392210686634144, 39.464491910234415],
                     ]
                 ],
                 "type": "Polygon",
@@ -102,11 +102,11 @@ def grid_dataset(setup_data_folder) -> Generator[str]:
     df = pl.DataFrame(
         {
             "cell": [
-                "895f4261e03ffff",
-                "865f00007ffffff",
-                "865f0000fffffff",
-                "865f00017ffffff",
-                "865f0001fffffff",
+                "89395cd696fffff",
+                "89395c8b69bffff",
+                "89395cd6967ffff",
+                "89395cd6963ffff",
+                "89395c81e93ffff",
             ],
             "landcover": [1, 4, 3, 3, 4],
             "population": [100, 200, 1, 900, 900],

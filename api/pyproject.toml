@@ -28,9 +28,10 @@ build-backend = "hatchling.build"
 [tool.uv]
 dev-dependencies = [
     "app",
- "mypy>=1.15.0",
- "pytest>=8.3.4",
- "ruff>=0.9.6",
+    "mypy>=1.15.0",
+    "pytest>=8.3.4",
+    "pytest-cov>=6.2.1",
+    "ruff>=0.9.6",
 ]
 
 [tool.uv.sources]
@@ -65,4 +66,12 @@ extend-immutable-calls = [
 disable_error_code = ["import-untyped", "attr-defined"]
 
 [tool.pytest.ini_options]
+addopts = """
+--cov-report term-missing \
+--cov src/app -ra"""
 testpaths = ["tests"]
+
+[tool.coverage.report]
+fail_under = 0
+show_missing = true
+exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
