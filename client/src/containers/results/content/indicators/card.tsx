@@ -47,12 +47,14 @@ export default function ReportResultsIndicator({
   basemapId,
   editable,
   onEdit,
+  isWebshot = false,
 }: {
   id: Indicator["id"];
   type: VisualizationTypes;
   basemapId?: (typeof BASEMAPS)[number]["id"];
   editable: boolean;
   onEdit?: (e: MouseEvent<HTMLElement>) => void;
+  isWebshot?: boolean;
 }) {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
@@ -64,7 +66,7 @@ export default function ReportResultsIndicator({
         <CardHeader className={cn(type === "map" && "h-auto px-6 pt-6")}>
           <CardTitle>{indicator?.name}</CardTitle>
           <CardControls>
-            <CardInfo ids={[indicator.id]} />
+            {!isWebshot && <CardInfo ids={[indicator.id]} />}
 
             {editable && (
               <CardPopover id={indicator?.id} visualizationType={type} onClick={onEdit} />

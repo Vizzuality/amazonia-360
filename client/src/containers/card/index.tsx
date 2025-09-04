@@ -38,6 +38,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useSearchParams } from "next/navigation";
 
 interface CardProps {
   padding?: boolean;
@@ -109,6 +110,7 @@ export function CardDownload({
 }: PropsWithChildren<{ id: Indicator["id"]; visualizationType: VisualizationTypes }>) {
   const locale = useLocale();
   const t = useTranslations();
+  const searchParams = useSearchParams();
 
   const postWebshotWidgetsMutation = usePostWebshotWidgetsMutation();
 
@@ -126,7 +128,7 @@ export function CardDownload({
               onClick={() => {
                 postWebshotWidgetsMutation.mutate(
                   {
-                    pagePath: `/${locale}/webshot/widgets/${id}/${visualizationType}`,
+                    pagePath: `/${locale}/webshot/widgets/${id}/${visualizationType}?${searchParams.toString()}`,
                     outputFileName: `indicator-${id}.${format.value.toLowerCase()}`,
                     params: undefined,
                   },
