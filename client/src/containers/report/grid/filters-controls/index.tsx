@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 
 import { useSyncGridDatasets, selectedFiltersViewAtom } from "@/app/store";
 
+import GridClearFilters from "@/containers/report/grid/filters-controls/clear";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
@@ -18,16 +20,20 @@ export default function GridFiltersControls() {
   }, [setSelectedFiltersView]);
 
   return (
-    <div className="flex items-center space-x-1">
-      <Checkbox
-        id="selected-filters"
-        disabled={!gridDatasets.length}
-        checked={selectedFiltersView}
-        onCheckedChange={handleCheckedChange}
-      />
-      <Label htmlFor="selected-filters" className="text-start text-xs text-muted-foreground">
-        {t("grid-sidebar-grid-filters-checkbox-selected-indicators")}
-      </Label>
+    <div className="flex items-center justify-between">
+      <div className="flex items-center space-x-2">
+        <Checkbox
+          id="selected-filters"
+          disabled={!gridDatasets.length}
+          checked={selectedFiltersView}
+          onCheckedChange={handleCheckedChange}
+        />
+        <Label htmlFor="selected-filters" className="text-start text-xs text-muted-foreground">
+          {t("grid-sidebar-grid-filters-checkbox-selected-indicators")}
+        </Label>
+      </div>
+
+      <GridClearFilters />
     </div>
   );
 }

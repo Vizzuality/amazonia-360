@@ -121,8 +121,8 @@ export const GridTableItem = (
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              <button className="flex min-w-16 shrink-0 items-center gap-2 rounded-sm bg-cyan-100 px-2 py-1 hover:text-white group-hover:bg-cyan-500">
-                <HexagonIcon className="h-4 w-4" />
+              <button className="flex min-w-16 shrink-0 items-center gap-2 rounded-sm bg-cyan-100 px-2 py-1 group-hover:bg-cyan-500 group-hover:text-white">
+                <HexagonIcon className="h-4 w-4 text-current" />
                 <span className="text-sm font-semibold">{id + 1}º</span>
               </button>
               <ul className="w-full overflow-hidden pt-1">
