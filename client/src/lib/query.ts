@@ -1,5 +1,3 @@
-import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import Query from "@arcgis/core/rest/support/Query";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -13,7 +11,7 @@ import { omit } from "@/lib/utils";
  ************************************************************
  */
 export type GetFeaturesParams = {
-  query?: Query;
+  query?: __esri.QueryProperties;
   feature?: Partial<__esri.FeatureLayer> | null;
 };
 export const getFeatures = async (params: GetFeaturesParams) => {
@@ -23,15 +21,18 @@ export const getFeatures = async (params: GetFeaturesParams) => {
     throw new Error("Feature and query are required");
   }
 
+  const FeatureLayer = (await import("@arcgis/core/layers/FeatureLayer")).default;
+  const Query = (await import("@arcgis/core/rest/support/Query")).default;
+
   const f = new FeatureLayer(omit(feature, ["type"]));
-  const q = query.clone();
+  const q = new Query(query);
 
   return f!.queryFeatures(q);
 };
 
 export const getFeaturesKey = (params: GetFeaturesParams) => {
   const { feature, query } = params;
-  return ["arcgis", "query", feature?.id, query?.toJSON() ?? {}] as const;
+  return ["arcgis", "query", feature?.id, query ?? {}] as const;
 };
 
 export const getFeaturesOptions = <
@@ -87,8 +88,11 @@ export const getFeaturesId = async (params: GetFeaturesIdParams) => {
     throw new Error("Feature and query are required");
   }
 
+  const FeatureLayer = (await import("@arcgis/core/layers/FeatureLayer")).default;
+  const Query = (await import("@arcgis/core/rest/support/Query")).default;
+
   const f = new FeatureLayer(omit(feature, ["type"]));
-  const q = query.clone();
+  const q = new Query(query);
 
   q!.where = `FID = ${params.id}`;
 
@@ -97,7 +101,7 @@ export const getFeaturesId = async (params: GetFeaturesIdParams) => {
 
 export const getFeaturesIdKey = (params: GetFeaturesIdParams) => {
   const { feature, query } = params;
-  return ["arcgis", "query", params.id, feature?.id, query?.toJSON() ?? {}] as const;
+  return ["arcgis", "query", params.id, feature?.id, query ?? {}] as const;
 };
 
 export const getFeaturesIdOptions = <

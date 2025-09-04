@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
+import { geodesicArea } from "@arcgis/core/geometry/geometryEngine";
 
 import { formatNumber } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
@@ -20,7 +20,7 @@ export const TotalArea = ({ indicator }: { indicator: Indicator }) => {
   const AREA = useMemo(() => {
     if (!GEOMETRY) return null;
 
-    return formatNumber(geometryEngine.geodesicArea(GEOMETRY, "square-kilometers"), {
+    return formatNumber(geodesicArea(GEOMETRY, "square-kilometers"), {
       maximumFractionDigits: 0,
     });
   }, [GEOMETRY]);

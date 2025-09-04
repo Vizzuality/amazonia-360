@@ -1,9 +1,5 @@
 "use client";
 
-import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
-import * as geometryEngineAsync from "@arcgis/core/geometry/geometryEngineAsync";
-import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import Query from "@arcgis/core/rest/support/Query";
 import { QueryFunction, UseQueryOptions, useQuery, useQueries } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -328,6 +324,11 @@ export type QueryFeatureIdParams = {
 };
 
 export const getQueryFeatureId = async ({ type, resource, geometry }: QueryFeatureIdParams) => {
+  const FeatureLayer = (await import("@arcgis/core/layers/FeatureLayer")).default;
+  const Query = (await import("@arcgis/core/rest/support/Query")).default;
+  const geodesicArea = (await import("@arcgis/core/geometry/geometryEngine")).geodesicArea;
+  const intersect = (await import("@arcgis/core/geometry/geometryEngineAsync")).intersect;
+
   const f = new FeatureLayer({
     url: resource.url + resource.layer_id,
   });
@@ -351,23 +352,22 @@ export const getQueryFeatureId = async ({ type, resource, geometry }: QueryFeatu
       if (!geometry) {
         return null;
       }
-      const geometryArea = geometryEngine.geodesicArea(geometry, "square-kilometers");
+      const geometryArea = geodesicArea(geometry, "square-kilometers");
 
       await Promise.all(
         fs.features.map(async (f) => {
           if (!f.geometry) return null;
 
-          const intersections = (await geometryEngineAsync.intersect(
-            [f.geometry],
-            geometry,
-          )) as unknown as __esri.Polygon[] | null[];
+          const intersections = (await intersect([f.geometry], geometry)) as unknown as
+            | __esri.Polygon[]
+            | null[];
 
           f.setAttribute(
             "value",
             intersections.reduce((acc, i) => {
               if (!i) return acc;
 
-              return acc + geometryEngine.geodesicArea(i, "square-kilometers");
+              return acc + geodesicArea(i, "square-kilometers");
             }, 0),
           );
           f.setAttribute("total", geometryArea);

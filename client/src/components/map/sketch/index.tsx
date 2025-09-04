@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 
 import dynamic from "next/dynamic";
 
-import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
+import { geodesicBuffer } from "@arcgis/core/geometry/geometryEngine";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
@@ -76,7 +76,7 @@ export default function Sketch({
           location?.type !== "search"
             ? location?.buffer || BUFFERS[l.geometry.type]
             : BUFFERS[l.geometry.type];
-        const g = geometryEngine.geodesicBuffer(l.geometry, b, "kilometers");
+        const g = geodesicBuffer(l.geometry, b, "kilometers");
 
         buffer.geometry = Array.isArray(g) ? g[0] : g;
       }

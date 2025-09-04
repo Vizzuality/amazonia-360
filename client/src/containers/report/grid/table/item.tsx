@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 
 import Point from "@arcgis/core/geometry/Point";
-import * as projection from "@arcgis/core/geometry/projection";
+import { project } from "@arcgis/core/geometry/projection";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { cellToLatLng } from "h3-js";
 import { useSetAtom } from "jotai";
@@ -89,7 +89,7 @@ export const GridTableItem = (
     const latLng = cellToLatLng(cell);
 
     const p = new Point({ x: latLng[1], y: latLng[0], spatialReference: { wkid: 4326 } });
-    const projectedGeom = projection.project(p, { wkid: 102100 });
+    const projectedGeom = project(p, { wkid: 102100 });
     const g = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
 
     setLocation({ type: "point", geometry: g.toJSON(), buffer: BUFFERS.point });

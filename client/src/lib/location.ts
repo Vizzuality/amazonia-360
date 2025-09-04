@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 
-import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
+import { geodesicBuffer } from "@arcgis/core/geometry/geometryEngine";
 import Point from "@arcgis/core/geometry/Point";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import Polyline from "@arcgis/core/geometry/Polyline";
-import * as projection from "@arcgis/core/geometry/projection";
+import { project } from "@arcgis/core/geometry/projection";
 import Graphic from "@arcgis/core/Graphic";
 
 import { useGetFeatures } from "@/lib/query";
@@ -115,7 +115,7 @@ export const useLocationGeometry = (
 
       if (!g) return null;
 
-      const projectedGeom = projection.project(
+      const projectedGeom = project(
         g,
         outSpatialReference || LOCATION.geometry.spatialReference || { wkid: 102100 },
       );
@@ -186,13 +186,13 @@ export const getGeometryWithBuffer = (
   if (!geometry) return null;
 
   if (geometry.type === "point") {
-    const g = geometryEngine.geodesicBuffer(geometry, buffer, "kilometers");
+    const g = geodesicBuffer(geometry, buffer, "kilometers");
 
     return Array.isArray(g) ? g[0] : g;
   }
 
   if (geometry.type === "polyline") {
-    const g = geometryEngine.geodesicBuffer(geometry, buffer, "kilometers");
+    const g = geodesicBuffer(geometry, buffer, "kilometers");
 
     return Array.isArray(g) ? g[0] : g;
   }

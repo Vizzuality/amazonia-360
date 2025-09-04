@@ -5,7 +5,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 
 import Point from "@arcgis/core/geometry/Point";
-import * as projection from "@arcgis/core/geometry/projection";
+import { project } from "@arcgis/core/geometry/projection";
 import { DeckLayer } from "@deck.gl/arcgis";
 import { Accessor, Color, PickingInfo } from "@deck.gl/core";
 import { DataFilterExtension, DataFilterExtensionProps } from "@deck.gl/extensions";
@@ -384,7 +384,7 @@ export default function GridLayer() {
       y: latLng[0],
       spatialReference: { wkid: 4326 },
     });
-    const projectedGeom = projection.project(p, { wkid: 102100 });
+    const projectedGeom = project(p, { wkid: 102100 });
     const g = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
 
     setLocation({

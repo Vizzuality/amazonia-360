@@ -2,8 +2,7 @@
 
 import { useMemo } from "react";
 
-import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
-import Polygon from "@arcgis/core/geometry/Polygon";
+import { geodesicArea } from "@arcgis/core/geometry/geometryEngine";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useAtom } from "jotai";
 import { Trash2 } from "lucide-react";
@@ -39,7 +38,7 @@ export default function ConfirmLocation() {
 
   const AREA = useMemo(() => {
     if (!GEOMETRY) return 0;
-    return geometryEngine.geodesicArea(GEOMETRY as Polygon, "square-kilometers");
+    return geodesicArea(GEOMETRY as __esri.Polygon, "square-kilometers");
   }, [GEOMETRY]);
 
   if (!location || !LOCATION) return null;

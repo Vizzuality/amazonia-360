@@ -28,6 +28,7 @@ import Controls from "@/components/map/controls";
 import BasemapControl, { BasemapIds } from "@/components/map/controls/basemap";
 import FullscreenControl from "@/components/map/controls/fullscreen";
 import ZoomControl from "@/components/map/controls/zoom";
+import { LayerProps } from "@/components/map/layers/types";
 
 import { handleMapIndicatorPropertyChange } from "./utils";
 import { FALLBACK_WIDGET_DEFAULT_BASEMAP_ID } from "./utils";
@@ -35,16 +36,10 @@ import { FALLBACK_WIDGET_DEFAULT_BASEMAP_ID } from "./utils";
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
-type EsriLayer =
-  | Partial<__esri.WebTileLayer>
-  | Partial<__esri.ImageryTileLayer>
-  | Partial<__esri.ImageryLayer>
-  | Partial<__esri.FeatureLayer>;
-
 interface WidgetMapProps extends Omit<__esri.MapViewProperties, "map"> {
   indicator: Indicator;
   basemapId?: BasemapIds;
-  layers: EsriLayer[];
+  layers: LayerProps[];
 }
 
 export default function WidgetMap({
@@ -109,7 +104,7 @@ export default function WidgetMap({
           ...viewProps,
         }}
       >
-        {layers.map((layer: EsriLayer, index: number, arr: EsriLayer[]) => {
+        {layers.map((layer: LayerProps, index: number, arr: LayerProps[]) => {
           const i = arr.length - index;
           // Assuming layer.id is always present for key. If not, a fallback or check might be needed.
           // For Esri Layers, 'id' is a property of __esri.Layer, which these should extend.
@@ -126,7 +121,7 @@ export default function WidgetMap({
           );
         })}
 
-        <Layer index={1} layer={DATASETS.area_afp.layer} />
+        <Layer index={1} layer={DATASETS.area_afp.layer as LayerProps} />
         <SelectedLayer index={layers.length + 2} location={location} />
         <Layer layer={LABELS_LAYER} index={layers.length + 3} />
 
