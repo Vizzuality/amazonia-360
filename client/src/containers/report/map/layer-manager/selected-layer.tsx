@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 
 import dynamic from "next/dynamic";
 
-import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
+import { geodesicBuffer } from "@arcgis/core/geometry/geometryEngine";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 
@@ -42,7 +42,7 @@ export default function SelectedLayer({
           location?.type !== "search"
             ? location?.buffer || BUFFERS[graphic.geometry.type]
             : BUFFERS[graphic.geometry.type];
-        const g = geometryEngine.geodesicBuffer(graphic.geometry, b, "kilometers");
+        const g = geodesicBuffer(graphic.geometry, b, "kilometers");
 
         buffer.geometry = Array.isArray(g) ? g[0] : g;
       }

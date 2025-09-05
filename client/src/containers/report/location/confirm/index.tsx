@@ -2,8 +2,7 @@
 
 import { useMemo } from "react";
 
-import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
-import Polygon from "@arcgis/core/geometry/Polygon";
+import { geodesicArea } from "@arcgis/core/geometry/geometryEngine";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useAtom, useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
@@ -58,7 +57,7 @@ export default function Confirm() {
 
   const AREA = useMemo(() => {
     if (!GEOMETRY) return 0;
-    return geometryEngine.geodesicArea(GEOMETRY as Polygon, "square-kilometers");
+    return geodesicArea(GEOMETRY, "square-kilometers");
   }, [GEOMETRY]);
 
   const onValueChange = (value: number[]) => {

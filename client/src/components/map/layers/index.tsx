@@ -8,9 +8,11 @@ import ImageryLayer from "@arcgis/core/layers/ImageryLayer";
 import ImageryTileLayer from "@arcgis/core/layers/ImageryTileLayer";
 import VectorTileLayer from "@arcgis/core/layers/VectorTileLayer";
 import WebTileLayer from "@arcgis/core/layers/WebTileLayer";
+import PopupTemplate from "@arcgis/core/PopupTemplate";
 
 import { omit } from "@/lib/utils";
 
+import { LayerProps } from "@/components/map/layers/types";
 import { useMap } from "@/components/map/provider";
 
 export default function Layer({
@@ -18,13 +20,7 @@ export default function Layer({
   index,
   GEOMETRY,
 }: {
-  layer:
-    | Partial<__esri.WebTileLayer>
-    | Partial<__esri.ImageryLayer>
-    | Partial<__esri.ImageryTileLayer>
-    | Partial<__esri.FeatureLayer>
-    | Partial<__esri.GraphicsLayer>
-    | Partial<__esri.VectorTileLayer>;
+  layer: LayerProps;
   index: number;
   GEOMETRY?: __esri.Polygon | null;
 }) {
@@ -47,7 +43,7 @@ export default function Layer({
 
       if (layer.popupTemplate) {
         l.popupEnabled = true;
-        l.popupTemplate = layer.popupTemplate;
+        l.popupTemplate = new PopupTemplate(layer.popupTemplate);
       }
       map.add(l, index);
 

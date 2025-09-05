@@ -21,10 +21,10 @@ const nextConfig = {
     ],
   },
   transpilePackages: ["@t3-oss/env-nextjs", "@t3-oss/env-core"],
-  // experimental: {
-  //   optimizePackageImports: ["@arcgis/core/*"],
-  //   // optimizePackageImports: ["react-icons/*"], //If you add this your dev server will last forever trying to start
-  // },
+  // serverExternalPackages: ["@arcgis/core/*"],
+  experimental: {
+    optimizePackageImports: ["@arcgis/core/*"],
+  },
 };
 
 const withBundleAnalyzer = createBundleAnalizer({

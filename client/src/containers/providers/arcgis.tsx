@@ -1,4 +1,5 @@
 "use client";
+
 import { PropsWithChildren, useMemo } from "react";
 
 import esriConfig from "@arcgis/core/config";
@@ -10,10 +11,6 @@ import { DATASETS } from "@/constants/datasets";
 export const ArcGISProvider = ({ children }: PropsWithChildren) => {
   useMemo(() => {
     esriConfig.apiKey = env.NEXT_PUBLIC_ARCGIS_API_KEY;
-
-    esriConfig.request.interceptors?.push({
-      urls: [`/custom-api`],
-    });
 
     esriConfig.request.interceptors?.push({
       urls: [

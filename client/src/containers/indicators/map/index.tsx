@@ -14,6 +14,7 @@ import { CardLoader } from "@/containers/card";
 import WidgetMap from "@/containers/widgets/map";
 
 import { BASEMAPS } from "@/components/map/controls/basemap";
+import { LayerProps } from "@/components/map/layers/types";
 
 export const MapIndicators = (
   indicator: Omit<Indicator, "resource"> & {
@@ -28,9 +29,9 @@ export const MapIndicators = (
     if (resource.type === "web-tile") {
       return {
         id: `${id}`,
-        url: resource.url,
+        urlTemplate: resource.url,
         type: "web-tile",
-      } as Partial<__esri.WebTileLayer>;
+      } satisfies LayerProps;
     }
 
     if (resource.type === "imagery-tile") {
@@ -39,7 +40,7 @@ export const MapIndicators = (
         url: resource.url,
         type: "imagery-tile",
         rasterFunction: resource.rasterFunction,
-      } as Partial<__esri.ImageryTileLayer>;
+      } satisfies LayerProps;
     }
 
     if (resource.type === "imagery") {
@@ -48,7 +49,7 @@ export const MapIndicators = (
         url: resource.url,
         type: "imagery",
         rasterFunction: resource.rasterFunction,
-      } as Partial<__esri.ImageryLayer>;
+      } satisfies LayerProps;
     }
 
     return {
@@ -56,7 +57,7 @@ export const MapIndicators = (
       url: resource.url + resource.layer_id,
       type: "feature",
       popupTemplate: resource.popupTemplate,
-    } as Partial<__esri.FeatureLayer>;
+    } satisfies LayerProps;
   }, [id, resource]);
 
   return (

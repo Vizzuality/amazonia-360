@@ -1,4 +1,4 @@
-import * as projection from "@arcgis/core/geometry/projection";
+import { project } from "@arcgis/core/geometry/projection";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import SearchVM from "@arcgis/core/widgets/Search/SearchViewModel";
 import {
@@ -164,7 +164,7 @@ export const getSearch = async (params: GetSearchParams) => {
     if (res.numResults === 1) {
       const r = res.results[0].results[0];
 
-      const projectedGeo = projection.project(r.feature.geometry, {
+      const projectedGeo = project(r.feature.geometry, {
         wkid: 102100,
       });
       const g = Array.isArray(projectedGeo) ? projectedGeo[0] : projectedGeo;
