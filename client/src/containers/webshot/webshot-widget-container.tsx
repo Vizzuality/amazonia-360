@@ -3,6 +3,7 @@
 import { ReactNode } from "react";
 
 import { VisualizationTypes } from "@/types/indicator";
+
 import { WebshotWidgetDefaultSizes } from "@/constants/webshot";
 
 export interface WebshotContainerProps {
