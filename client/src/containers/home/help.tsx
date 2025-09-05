@@ -19,7 +19,7 @@ export default function Help() {
           </div>
           <div className="flex flex-col items-center md:items-center md:pt-8 lg:pt-16">
             <a href={`${FEEDBACK_URL}?lang=${locale}`} target="_blank" rel="noreferrer">
-              <Button size="lg" variant="secondary" className="mt-4">
+              <Button size="lg" variant="secondary" className="mt-6">
                 {t("landing-help-give-feedback")}
               </Button>
             </a>

@@ -1,6 +1,9 @@
 "use client";
 
+import ReactMarkdown from "react-markdown";
+
 import { Separator } from "@radix-ui/react-select";
+import { CircleAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LuPlus } from "react-icons/lu";
 
@@ -32,23 +35,38 @@ export default function ReportResultsHeaderDesktop() {
         <div className="mr-4 flex items-center space-x-6">
           <AlertDialog>
             <AlertDialogTrigger asChild className="print:hidden">
-              <Button variant="outline" className="space-x-2 border-none px-2.5 py-2 shadow-none">
-                <LuPlus className="flex h-4 w-4 justify-center rounded-full border border-border" />
+              <Button
+                variant="outline"
+                className="space-x-2 border-none text-blue-700 shadow-none"
+                size="lg"
+              >
+                <LuPlus className="flex h-4 w-4 justify-center rounded-full border-[1.5px] border-blue-700 text-blue-700" />
                 <span>{t("report-results-buttons-new-report")}</span>
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>{t("report-results-buttons-new-report")}</AlertDialogTitle>
-                <AlertDialogDescription>
-                  {t("report-results-buttons-new-report-description")}
+                <AlertDialogDescription className="font-sans">
+                  <ReactMarkdown>
+                    {t("report-results-buttons-new-report-description")}
+                  </ReactMarkdown>
                 </AlertDialogDescription>
               </AlertDialogHeader>
+              <div className="flex items-start space-x-4 rounded-sm border border-border bg-blue-50 p-3">
+                <CircleAlert className="text-alert h-4 w-4 shrink-0" />
+                <p className="text-sm font-medium text-foreground">
+                  <p>{t("new-report-modal-warning")}</p>
+                </p>
+              </div>
+
               <AlertDialogFooter className="flex w-full justify-end space-x-2 justify-self-end">
                 <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
 
                 <Link href="/report">
-                  <AlertDialogAction>{t("continue")}</AlertDialogAction>
+                  <AlertDialogAction>
+                    {t("report-results-buttons-new-report-confirm")}
+                  </AlertDialogAction>
                 </Link>
               </AlertDialogFooter>
             </AlertDialogContent>

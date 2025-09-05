@@ -6,8 +6,7 @@ import { cn } from "@/lib/utils";
 
 import { useSyncLocation } from "@/app/store";
 
-import { Media } from "@/containers/media";
-import Confirm from "@/containers/report/location/confirm";
+import Confirm from "@/containers/report/location/create";
 import SearchLocation from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
 
@@ -22,21 +21,21 @@ export default function SidebarLocationContent() {
         "lg:border lg:border-blue-100 lg:p-6": true,
       })}
     >
-      <div className="space-y-4">
-        <h1 className="text-2xl font-bold text-primary">{t("grid-sidebar-report-title")}</h1>
+      {!location && (
+        <div className="space-y-4">
+          <h1 className="text-2xl font-bold text-primary">{t("grid-sidebar-report-title")}</h1>
 
-        <p className="text-sm font-medium text-muted-foreground">
-          {t("grid-sidebar-report-description")}
-        </p>
-      </div>
+          <p className="text-sm font-medium text-muted-foreground">
+            {t("grid-sidebar-report-description")}
+          </p>
+        </div>
+      )}
 
       {!location && (
         <div className="space-y-4">
           <SearchLocation />
 
-          <Media greaterThanOrEqual="lg">
-            <Sketch />
-          </Media>
+          <Sketch />
         </div>
       )}
 

@@ -18,7 +18,7 @@ export default function ReportLocationDesktop() {
         <div className="container grid grid-cols-12">
           <div className="col-span-12 space-y-1 lg:col-span-5 2xl:col-span-4">
             <aside className="pointer-events-auto flex w-full shrink-0 flex-col overflow-hidden">
-              <div className="test-class flex max-h-[calc(100vh_-_(64px_+_40px_+_28px))] grow flex-col">
+              <div className="flex max-h-[calc(100vh_-_(64px_+_40px_+_28px))] grow flex-col">
                 <div className="flex max-h-full grow flex-col overflow-hidden">
                   <ScrollArea className="h-full w-full grow">
                     {gridPanel === "filters" && <SidebarGridContent />}
