@@ -3,7 +3,7 @@
 import ReactMarkdown from "react-markdown";
 
 import { Separator } from "@radix-ui/react-select";
-import { LucidePlusCircle } from "lucide-react";
+import { LucidePlusCircle, CircleAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import DownloadReportButton from "@/containers/header/results/download";

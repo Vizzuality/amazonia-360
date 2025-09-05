@@ -1,9 +1,7 @@
 "use client";
 import { useMemo } from "react";
-import { geodesicArea } from "@arcgis/core/geometry/geometryEngine";
 
-import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
-import Polygon from "@arcgis/core/geometry/Polygon";
+import { geodesicArea } from "@arcgis/core/geometry/geometryEngine";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useAtom, useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
