@@ -109,7 +109,7 @@ def grid_dataset(setup_data_folder) -> Generator[str]:
                 "89395c81e93ffff",
             ],
             "landcover": [1, 4, 3, 3, 4],
-            "population": [100, 200, 1, 900, 900],
+            "population": [100, 200, 1, None, 900],
         }
     )
     with open(grid_dataset_path / "meta.json", "w") as f:
