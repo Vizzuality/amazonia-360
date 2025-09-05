@@ -10,10 +10,9 @@ from pydantic_settings.main import SettingsConfigDict
 class Settings(BaseSettings):
     """Global configuration for the application."""
 
-    model_config = SettingsConfigDict(env_file=".env")
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     auth_token: str
-    tiff_path: str
     grid_tiles_path: str
     tile_to_cell_resolution_diff: int = 5
     openai_token: SecretStr
