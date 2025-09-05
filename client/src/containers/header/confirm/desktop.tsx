@@ -38,7 +38,7 @@ export default function ConfirmLocation() {
 
   const AREA = useMemo(() => {
     if (!GEOMETRY) return 0;
-    return geodesicArea(GEOMETRY as __esri.Polygon, "square-kilometers");
+    return geodesicArea(GEOMETRY, "square-kilometers");
   }, [GEOMETRY]);
 
   if (!location || !LOCATION) return null;

@@ -57,7 +57,7 @@ export default function Confirm() {
 
   const AREA = useMemo(() => {
     if (!GEOMETRY) return 0;
-    return geodesicArea(GEOMETRY as __esri.Polygon, "square-kilometers");
+    return geodesicArea(GEOMETRY, "square-kilometers");
   }, [GEOMETRY]);
 
   const onValueChange = (value: number[]) => {
