@@ -1,6 +1,6 @@
 "use client";
+
 import { useMemo } from "react";
-import { geodesicArea } from "@arcgis/core/geometry/geometryEngine";
 
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import Polygon from "@arcgis/core/geometry/Polygon";
@@ -35,7 +35,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-export default function Confirm() {
+export default function CreateReport() {
   const t = useTranslations();
   const [sketch, setSketch] = useAtom(sketchAtom);
 
@@ -58,7 +58,7 @@ export default function Confirm() {
 
   const AREA = useMemo(() => {
     if (!GEOMETRY) return 0;
-    return geodesicArea(GEOMETRY, "square-kilometers");
+    return geometryEngine.geodesicArea(GEOMETRY as Polygon, "square-kilometers");
   }, [GEOMETRY]);
 
   const onValueChange = (value: number[]) => {
@@ -149,7 +149,7 @@ export default function Confirm() {
               </Button>
             </DialogTrigger>
 
-            <DialogContent className="max-w-lg p-0">
+            <DialogContent className="min-w-fit p-0">
               <DialogTitle className="sr-only">
                 {t("landing-key-features-grid-buttons-create-report")}
               </DialogTitle>

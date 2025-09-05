@@ -35,9 +35,9 @@ export default function DesktopNavigation() {
       <Link
         className={cn({
           "text-sm hover:text-cyan-500": true,
-          "text-cyan-500": pathname.includes("/hub"),
+          "text-cyan-500": pathname.includes("/report/indicators"),
         })}
-        href="/hub"
+        href="/report/indicators"
       >
         {t("header-hub")}
       </Link>

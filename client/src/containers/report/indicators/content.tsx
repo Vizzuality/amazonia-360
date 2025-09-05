@@ -12,7 +12,7 @@ export default function ReportIndicatorsContent() {
   const searchParams = useSearchParams();
 
   return (
-    <div className="relative h-full space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-6 backdrop-blur-xl xl:space-y-4">
+    <div className="relative h-full space-y-2 overflow-hidden bg-white p-6 backdrop-blur-xl lg:rounded-lg lg:border lg:border-blue-100 xl:space-y-4">
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
