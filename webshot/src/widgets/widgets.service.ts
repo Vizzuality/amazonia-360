@@ -10,7 +10,7 @@ export class WidgetsService {
   private readonly logger = new Logger(WidgetsService.name);
 
   async generatePngSnapshot(
-    webshotConfig: WidgetAsImageWebshotConfig,
+    webshotConfig: WidgetAsImageWebshotConfig
   ): Promise<Buffer> {
     const { pagePath, params } = webshotConfig;
     const appBaseUrl = Config.getString("app.baseUrl").replace(/\/+$/, "");
@@ -53,7 +53,7 @@ export class WidgetsService {
       // Wait for the load event
       await page.goto(targetUrl, {
         waitUntil: "load",
-        timeout: 30_000,
+        timeout: 60_000,
       });
 
       // This delay tries to make sure the Javascript has loaded in order to
@@ -82,7 +82,7 @@ export class WidgetsService {
       // only be possible by switching to using a simple queue system to process
       // requests sequentially or with a given maximum parallelism.
       await page.waitForTimeout(
-        Config.getNumber("browser.waitMsBeforeTakingSnapshot"),
+        Config.getNumber("browser.waitMsBeforeTakingSnapshot")
       );
 
       // Use the regular styles instead of print styles to generate the PNG
@@ -90,8 +90,14 @@ export class WidgetsService {
       // https://playwright.dev/docs/api/class-page#page-emulate-media
       await page.emulateMedia({ media: "screen" });
 
-      // Generate PNG snapshot
-      const pngBuffer = await page.screenshot({
+      // Take screenshot of only the widget container element instead of the whole page
+      const widgetContainer = page.locator("#webshot-widget-container");
+
+      // Wait for the widget container to be visible
+      await widgetContainer.waitFor({ state: "visible", timeout: 10000 });
+
+      // Generate PNG snapshot of only the widget container
+      const pngBuffer = await widgetContainer.screenshot({
         type: "png",
       });
       this.logger.log("PNG snapshot generation completed successfully");
@@ -101,7 +107,9 @@ export class WidgetsService {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       const errorStack = error instanceof Error ? error.stack : undefined;
-      const msg = `Failed to generate PNG snapshot for ${targetUrl}: ${errorMessage}${errorStack ? `\n${errorStack}` : ""}`;
+      const msg = `Failed to generate PNG snapshot for ${targetUrl}: ${errorMessage}${
+        errorStack ? `\n${errorStack}` : ""
+      }`;
       this.logger.error(msg);
       throw new Error(msg);
     } finally {

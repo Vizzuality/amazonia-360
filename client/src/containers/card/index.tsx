@@ -15,9 +15,8 @@ import { LuInfo, LuPen, LuDownload } from "react-icons/lu";
 import { formatNumber } from "@/lib/formats";
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
-import { downloadBlobResponse, usePostWebshotWidgetsMutation } from "@/lib/webshot";
 
-import { Indicator, VisualizationTypes } from "@/types/indicator";
+import { Indicator } from "@/types/indicator";
 
 import Info from "@/containers/info";
 
@@ -42,6 +41,7 @@ import {
 interface CardProps {
   padding?: boolean;
   className?: string;
+  withoutBorder?: boolean;
 }
 
 const DOWNLOAD_FORMATS = [
@@ -104,13 +104,13 @@ export function CardSettings({
 }
 
 export function CardDownload({
-  id,
-  visualizationType,
-}: PropsWithChildren<{ id: Indicator["id"]; visualizationType: VisualizationTypes }>) {
-  const locale = useLocale();
+  onWebshotDownload = () => undefined,
+  isDownloading = false,
+}: PropsWithChildren<{
+  onWebshotDownload?: (format: string) => void;
+  isDownloading?: boolean;
+}>) {
   const t = useTranslations();
-
-  const postWebshotWidgetsMutation = usePostWebshotWidgetsMutation();
 
   return (
     <div className="flex flex-col space-y-1">
@@ -118,44 +118,25 @@ export function CardDownload({
         {t("download-indicator")}
       </span>
       <ul>
-        {DOWNLOAD_FORMATS.map((format) => (
-          <li className="py-1.5" key={format.value}>
-            <button
-              type="button"
-              className="flex items-center"
-              onClick={() => {
-                postWebshotWidgetsMutation.mutate(
-                  {
-                    pagePath: `/${locale}/webshot/widgets/${id}/${visualizationType}`,
-                    outputFileName: `indicator-${id}.${format.value.toLowerCase()}`,
-                    params: undefined,
-                  },
-                  {
-                    onSuccess: async (res) => {
-                      await downloadBlobResponse(
-                        res.data,
-                        `indicator-${id}-${visualizationType}.${format.value.toLowerCase()}`,
-                      );
-                    },
-                    onError: (error) => {
-                      console.error("Error downloading widget:", error);
-                    },
-                  },
-                );
-              }}
-            >
-              {postWebshotWidgetsMutation.isPending && (
-                <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
-              )}
+        {DOWNLOAD_FORMATS.map((format) => {
+          return (
+            <li className="py-1.5" key={format.value}>
+              <button
+                type="button"
+                className="flex items-center"
+                onClick={() => onWebshotDownload(format.value)}
+              >
+                {isDownloading && (
+                  <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+                )}
 
-              {!postWebshotWidgetsMutation.isPending && (
-                <LuDownload className="mr-2 inline-block h-4 w-4" />
-              )}
+                {!isDownloading && <LuDownload className="mr-2 inline-block h-4 w-4" />}
 
-              {format.label}
-            </button>
-          </li>
-        ))}
+                {format.label}
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
@@ -163,14 +144,17 @@ export function CardDownload({
 
 export function CardPopover({
   id,
-  visualizationType,
   onClick,
+  onWebshotDownload = () => undefined,
+  isDownloading = false,
 }: PropsWithChildren<{
   id: Indicator["id"];
-  visualizationType: VisualizationTypes;
   onClick?: (e: MouseEvent<HTMLElement>) => void;
+  onWebshotDownload?: (format: string) => void;
+  isDownloading?: boolean;
 }>) {
   const t = useTranslations();
+
   return (
     <DropdownMenu modal={false}>
       <Tooltip>
@@ -194,7 +178,10 @@ export function CardPopover({
 
             <DropdownMenuSeparator className="-mx-1 my-1 h-px bg-border" />
             <DropdownMenuGroup className="px-2 py-1.5 text-sm text-popover-foreground">
-              <CardDownload id={id} visualizationType={visualizationType} />
+              <CardDownload
+                onWebshotDownload={(format) => onWebshotDownload(format)}
+                isDownloading={isDownloading}
+              />
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenuPortal>
@@ -321,11 +308,14 @@ export function CardWidgetNumber({
   );
 }
 
-export function Card({ className, children }: PropsWithChildren<CardProps>) {
+export function Card({ className, children, withoutBorder = false }: PropsWithChildren<CardProps>) {
+  const borderClasses = "border border-blue-100 rounded-2xl";
+
   return (
     <div
       className={cn(
-        "flex h-full grow break-inside-avoid flex-col overflow-hidden rounded-2xl border border-blue-100 bg-white p-6",
+        "flex h-full grow break-inside-avoid flex-col overflow-hidden bg-white p-6",
+        withoutBorder ? "" : borderClasses,
         className,
       )}
     >

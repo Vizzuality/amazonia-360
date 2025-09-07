@@ -1,11 +1,14 @@
 "use client";
 
-import { createElement, MouseEvent } from "react";
+import { createElement, MouseEvent, useCallback } from "react";
+
+import { useSearchParams } from "next/navigation";
 
 import { useLocale } from "next-intl";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
+import { downloadBlobResponse, usePostWebshotWidgetsMutation } from "@/lib/webshot";
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 import { ResourceFeature, ResourceImageryTile, ResourceWebTile } from "@/types/indicator";
@@ -47,27 +50,59 @@ export default function ReportResultsIndicator({
   basemapId,
   editable,
   onEdit,
+  isWebshot = false,
 }: {
   id: Indicator["id"];
   type: VisualizationTypes;
   basemapId?: (typeof BASEMAPS)[number]["id"];
   editable: boolean;
   onEdit?: (e: MouseEvent<HTMLElement>) => void;
+  isWebshot?: boolean;
 }) {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
+  const searchParams = useSearchParams();
+
+  const postWebshotWidgetsMutation = usePostWebshotWidgetsMutation();
+
+  const onWebshotDownload = useCallback(
+    async (format: string) => {
+      postWebshotWidgetsMutation.mutate(
+        {
+          pagePath: `/${locale}/webshot/widgets/${id}/${type}?${searchParams.toString()}`,
+          outputFileName: `indicator-${id}.${format.toLowerCase()}`,
+          params: undefined,
+        },
+        {
+          onSuccess: async (res) => {
+            await downloadBlobResponse(res.data, `indicator-${id}-${type}.${format.toLowerCase()}`);
+          },
+          onError: (error) => {
+            console.error("Error downloading widget:", error);
+          },
+        },
+      );
+    },
+    [id, indicator?.visualization_types, locale, searchParams, postWebshotWidgetsMutation],
+  );
+
   if (!indicator) return null;
 
   return (
     <div className="flex h-full flex-col">
-      <Card className={cn(type === "map" && "p-0")}>
+      <Card className={cn(type === "map" && "p-0")} withoutBorder={isWebshot}>
         <CardHeader className={cn(type === "map" && "h-auto px-6 pt-6")}>
           <CardTitle>{indicator?.name}</CardTitle>
           <CardControls>
-            <CardInfo ids={[indicator.id]} />
+            {!isWebshot && <CardInfo ids={[indicator.id]} />}
 
             {editable && (
-              <CardPopover id={indicator?.id} visualizationType={type} onClick={onEdit} />
+              <CardPopover
+                id={indicator?.id}
+                onClick={onEdit}
+                onWebshotDownload={onWebshotDownload}
+                isDownloading={postWebshotWidgetsMutation.isPending}
+              />
             )}
           </CardControls>
         </CardHeader>
