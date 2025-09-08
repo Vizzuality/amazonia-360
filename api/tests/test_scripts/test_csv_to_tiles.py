@@ -1,6 +1,4 @@
 import json
-import pathlib
-import tempfile
 
 import h3ronpy.polars  # noqa F401
 import polars as pl
@@ -177,27 +175,25 @@ class TestMain:
         arrow_files = list(level_dir.glob("*.arrow"))
         assert len(arrow_files) > 0
 
-    def test_main_with_invalid_resolution(self):
+    def test_main_with_invalid_resolution(self, tmp_path):
         # Create CSV with invalid H3 resolution
         sample_data = {
             "cell": ["872830820ffffff"],  # Resolution 7 (invalid)
             "temperature": [25.5],
         }
 
-        with tempfile.TemporaryDirectory() as temp_dir:
-            temp_path = pathlib.Path(temp_dir)
-            input_file = temp_path / "input.csv"
-            output_dir = temp_path / "output"
+        input_file = tmp_path / "input.csv"
+        output_dir = tmp_path / "output"
 
-            # Create the input CSV file
-            df = pl.DataFrame(sample_data)
-            df.write_csv(input_file)
+        # Create the input CSV file
+        df = pl.DataFrame(sample_data)
+        df.write_csv(input_file)
 
-            # Should raise ValueError about resolution
-            with pytest.raises(ValueError, match="H3 resolution must be 6"):
-                main(input_file, output_dir)
+        # Should raise ValueError about resolution
+        with pytest.raises(ValueError, match="H3 resolution must be 6"):
+            main(input_file, output_dir)
 
-    def test_main_with_string_numeric_data(self):
+    def test_main_with_string_numeric_data(self, tmp_path):
         # Test that string numeric columns are properly converted
         sample_data = {
             "cell": ["86283082fffffff", "862830807ffffff"],
@@ -205,26 +201,25 @@ class TestMain:
             "count": ["100", "200"],  # String integers
         }
 
-        with tempfile.TemporaryDirectory() as temp_dir:
-            temp_path = pathlib.Path(temp_dir)
-            input_file = temp_path / "input.csv"
-            output_dir = temp_path / "output"
+        input_file = tmp_path / "input.csv"
+        output_dir = tmp_path / "output"
 
-            # Create the input CSV file
-            df = pl.DataFrame(sample_data)
-            df.write_csv(input_file)
+        # Create the input CSV file
+        df = pl.DataFrame(sample_data)
+        df.write_csv(input_file)
 
-            # Run main function
-            main(input_file, output_dir)
+        # Run main function
+        main(input_file, output_dir)
 
-            # Check that processing completed successfully
-            assert output_dir.exists()
-            assert (output_dir / "meta.json").exists()
+        # Check that processing completed successfully
+        assert output_dir.exists()
+        assert (output_dir / "meta.json").exists()
 
-            # Verify that numeric columns were processed
-            with open(output_dir / "meta.json") as f:
-                metadata = json.load(f)
+        with open(output_dir / "meta.json") as f:
+            metadata_dict = json.load(f)
 
-            var_names = [dataset["var_name"] for dataset in metadata["datasets"]]
-            assert "temperature" in var_names
-            assert "count" in var_names
+        metadata = MultiDatasetMeta.model_validate(metadata_dict)
+
+        var_names = [dataset.var_name for dataset in metadata.datasets]
+        assert "temperature" in var_names
+        assert "count" in var_names
