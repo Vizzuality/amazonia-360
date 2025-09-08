@@ -2,14 +2,15 @@ from unittest.mock import MagicMock, patch
 
 from openai.types.chat import ChatCompletion, ChatCompletionMessage
 from openai.types.chat.chat_completion import Choice
-from src.app.openai_service import generate_description
+
+from app.openai_service import generate_description
 
 
 def fake_openai_api_return(*args, **kwargs):
     return "Super smart text"
 
 
-@patch("src.app.openai_service.OpenAI")
+@patch("app.openai_service.OpenAI")
 def test_generate_description(mock_openai):
     mock_client = MagicMock()
     mock_openai.return_value = mock_client

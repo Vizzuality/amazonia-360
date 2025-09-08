@@ -1,11 +1,10 @@
 import json
 
 import polars as pl
+from tests.conftest import HEADERS
+from tests.utils import test_client
 
 from app.models.grid import TableFilters
-
-from .conftest import HEADERS
-from .utils import test_client
 
 
 def test_grid_tile(grid_dataset):

@@ -68,7 +68,7 @@ disable_error_code = ["import-untyped", "attr-defined"]
 [tool.pytest.ini_options]
 addopts = """
 --cov-report term-missing \
---cov src/app -ra"""
+--cov src/app --cov scripts/ -ra"""
 testpaths = ["tests"]
 
 [tool.coverage.report]

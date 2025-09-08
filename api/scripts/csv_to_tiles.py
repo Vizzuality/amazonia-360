@@ -33,7 +33,7 @@ def column_to_metadata_json(col: pl.Series) -> dict:
     }
 
 
-def _check_resolution(df: pl.DataFrame) -> None:
+def check_resolution(df: pl.DataFrame) -> None:
     resolution = df.select(pl.col("cell").h3.cells_parse().h3.cells_resolution()).unique()
     if len(resolution) > 1:
         raise ValueError(f"CSV has more than one H3 resolution. found {resolution}")
@@ -41,7 +41,7 @@ def _check_resolution(df: pl.DataFrame) -> None:
         raise ValueError(f"H3 resolution must be 6, found {resolution}")
 
 
-def _check_types(df: pl.DataFrame) -> pl.DataFrame:
+def check_types(df: pl.DataFrame) -> pl.DataFrame:
     """Convert any string type to float"""
     if pl.String in df.select(pl.exclude(IGNORE_COLS)).dtypes:
         df = df.with_columns(pl.selectors.string().exclude(IGNORE_COLS).cast(pl.Float32))
@@ -50,8 +50,8 @@ def _check_types(df: pl.DataFrame) -> pl.DataFrame:
 
 def main(file: pathlib.Path, outdir: pathlib.Path) -> None:
     df = pl.read_csv(file)
-    _check_resolution(df)
-    df = _check_types(df)
+    check_resolution(df)
+    df = check_types(df)
     df = df.with_columns(
         pl.col("cell").h3.cells_parse().h3.change_resolution(OVERVIEW_LEVEL).h3.cells_to_string().alias("tile_id"),  # type: ignore[attr-defined]
         pl.col("cell").h3.cells_parse().h3.cells_to_string(),

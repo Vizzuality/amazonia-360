@@ -1,5 +1,4 @@
 from fastapi.routing import APIRoute
-
 from tests.conftest import HEADERS
 from tests.utils import test_client
 
