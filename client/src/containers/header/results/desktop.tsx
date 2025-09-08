@@ -39,10 +39,13 @@ export default function ReportResultsHeaderDesktop() {
                 <span>{t("report-results-buttons-new-report")}</span>
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent
+              area-describedby="report-results-buttons-new-report-description"
+              className="max-w-lg"
+            >
               <AlertDialogHeader>
                 <AlertDialogTitle>{t("report-results-buttons-new-report")}</AlertDialogTitle>
-                <AlertDialogDescription asChild>
+                <AlertDialogDescription>
                   <ReactMarkdown>
                     {t("report-results-buttons-new-report-description")}
                   </ReactMarkdown>
@@ -51,7 +54,7 @@ export default function ReportResultsHeaderDesktop() {
               <div className="flex items-start space-x-4 rounded-sm border border-border bg-blue-50 p-3">
                 <CircleAlert className="text-alert h-5 w-5 shrink-0" />
                 <p className="text-sm font-medium text-foreground">
-                  <p>{t("new-report-modal-warning")}</p>
+                  {t("new-report-modal-warning")}
                 </p>
               </div>
 
