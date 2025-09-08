@@ -117,7 +117,7 @@ export function DataTable<TData, TValue>({
         </ScrollArea>
 
         {!!data.length && (
-          <footer className="flex shrink-0 items-center justify-between">
+          <footer className="flex shrink-0 flex-col items-center justify-between gap-2 lg:flex-row">
             <TableTotal
               total={data.length}
               pageIndex={pageIndex}

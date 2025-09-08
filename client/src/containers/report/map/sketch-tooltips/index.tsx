@@ -66,7 +66,7 @@ export const SketchTooltips = () => {
       <div className="container">
         <div className="grid grid-cols-12">
           <div className="col-span-10 lg:col-span-5 lg:col-start-8">
-            <div className="flex justify-center">
+            <div className="-mx-1 flex lg:mx-0 lg:justify-center">
               <div className="rounded bg-white p-2 shadow-md">
                 <div className="prose prose-sm text-2xs font-light text-foreground lg:text-center lg:text-sm">
                   {sketchAction.type === "create" &&
