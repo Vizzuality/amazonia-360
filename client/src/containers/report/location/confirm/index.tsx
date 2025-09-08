@@ -82,11 +82,11 @@ export default function Confirm() {
             <ReactMarkdown>{t("grid-sidebar-report-location-note")}</ReactMarkdown>
           </div>
         )}{" "}
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-col items-center justify-between gap-2">
           <Button
             variant="outline"
             size="lg"
-            className="grow"
+            className="w-full grow"
             onClick={() => {
               setLocation(null);
               setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
@@ -95,7 +95,7 @@ export default function Confirm() {
             {t("grid-sidebar-report-location-button-clear")}
           </Button>
 
-          <Button size="lg" className="grow" onClick={() => setReportPanel("topics")}>
+          <Button size="lg" className="w-full grow" onClick={() => setReportPanel("topics")}>
             {t("grid-sidebar-report-location-button-confirm")}
           </Button>
         </div>

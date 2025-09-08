@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 import { reportPanelAtom } from "@/app/store";
 
-import { GenerateReport } from "@/containers/report/location/generate/buttons";
+import { ReportGenerateButtons } from "@/containers/report/location/generate/buttons";
 import Topics from "@/containers/report/location/generate/topics";
 
 import { Link } from "@/i18n/navigation";
@@ -67,7 +67,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
           </div>
         </div>
       </div>
-      <GenerateReport />
+      <ReportGenerateButtons />
     </div>
   );
 }

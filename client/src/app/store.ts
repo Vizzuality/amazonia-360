@@ -78,13 +78,20 @@ const searchParams = {
 
 const serialize = createSerializer(searchParams);
 
-export const useSyncSearchParams = () => {
+export const useSyncSearchParams = (ignore?: (keyof typeof searchParams)[]) => {
   const [bbox] = useSyncBbox();
   const [topics] = useSyncTopics();
   const [location] = useSyncLocation();
   const [gridFiltersSetUp] = useSyncGridFiltersSetUp();
 
-  return serialize({ bbox, topics, location, gridFiltersSetUp });
+  const params = { bbox, topics, location, gridFiltersSetUp };
+  if (ignore) {
+    for (const key of ignore) {
+      delete params[key];
+    }
+  }
+
+  return serialize(params);
 };
 
 // JOTAI PARAMS

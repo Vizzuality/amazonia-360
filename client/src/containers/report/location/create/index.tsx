@@ -148,7 +148,7 @@ export default function CreateReport() {
               </Button>
             </DialogTrigger>
 
-            <DialogContent className="min-w-fit p-0">
+            <DialogContent className="p-0">
               <DialogTitle className="sr-only">
                 {t("landing-key-features-grid-buttons-create-report")}
               </DialogTitle>
