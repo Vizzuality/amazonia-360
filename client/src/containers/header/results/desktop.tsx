@@ -42,14 +42,14 @@ export default function ReportResultsHeaderDesktop() {
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>{t("report-results-buttons-new-report")}</AlertDialogTitle>
-                <AlertDialogDescription className="font-sans">
+                <AlertDialogDescription asChild>
                   <ReactMarkdown>
                     {t("report-results-buttons-new-report-description")}
                   </ReactMarkdown>
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <div className="flex items-start space-x-4 rounded-sm border border-border bg-blue-50 p-3">
-                <CircleAlert className="text-alert h-4 w-4 shrink-0" />
+                <CircleAlert className="text-alert h-5 w-5 shrink-0" />
                 <p className="text-sm font-medium text-foreground">
                   <p>{t("new-report-modal-warning")}</p>
                 </p>
