@@ -114,15 +114,15 @@ export default function MobileNavigation() {
             >
               {t("header-report-tool")}
             </Link>
-            <Link
+            {/* <Link
               className={cn({
                 "px-6 py-4 text-lg text-blue-900 hover:bg-blue-200 hover:text-blue-500": true,
-                "text-blue-500": pathname.includes("/hub"),
+                "text-blue-500": pathname.includes("/report/indicators"),
               })}
-              href="/hub"
+              href="/report/indicators"
             >
               {t("header-hub")}
-            </Link>
+            </Link> */}
 
             <MobileLanguageSelector />
           </nav>

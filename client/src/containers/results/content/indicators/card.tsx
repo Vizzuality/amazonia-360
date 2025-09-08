@@ -83,7 +83,7 @@ export default function ReportResultsIndicator({
         },
       );
     },
-    [id, indicator?.visualization_types, locale, searchParams, postWebshotWidgetsMutation],
+    [id, type, locale, searchParams, postWebshotWidgetsMutation],
   );
 
   if (!indicator) return null;

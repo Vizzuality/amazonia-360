@@ -7,7 +7,13 @@ import { Share2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 import { usePathname } from "@/i18n/navigation";
 
@@ -46,6 +52,9 @@ export default function ShareReport() {
 
       <DialogContent className="w-full">
         <DialogTitle className="sr-only">{t("report-results-copy-title")}</DialogTitle>
+        <DialogDescription className="sr-only">
+          {t("report-results-copy-description")}
+        </DialogDescription>
         <div className="mb-6 flex max-w-fit flex-col space-y-2">
           <h3 className="text-xl font-bold text-blue-500"> {t("share")}</h3>
 

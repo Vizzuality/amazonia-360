@@ -4,7 +4,7 @@ import { Suspense } from "react";
 
 import { Media } from "@/containers/media";
 import ReportIndicatorsDesktop from "@/containers/report/indicators/desktop";
-// import ReportGridMobile from "@/containers/report/grid/mobile";
+import ReportIndicatorsMobile from "@/containers/report/indicators/mobile";
 
 export default function ReportIndicators() {
   return (
@@ -13,9 +13,9 @@ export default function ReportIndicators() {
         <ReportIndicatorsDesktop />
       </Media>
 
-      {/* <Media lessThan="lg" className="absolute flex h-full w-full grow flex-col">
-        <ReportGridMobile />
-      </Media> */}
+      <Media lessThan="lg" className="flex h-full w-full grow flex-col">
+        <ReportIndicatorsMobile />
+      </Media>
     </Suspense>
   );
 }

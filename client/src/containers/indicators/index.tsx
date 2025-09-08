@@ -7,6 +7,7 @@ export const Indicators = () => {
     <section className="py-10">
       <div className="container">
         <IndicatorsList />
+        indicators list
       </div>
     </section>
   );

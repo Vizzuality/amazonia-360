@@ -53,7 +53,7 @@ export function MapView({
 }: MapProps) {
   const mapRef = useRef<ArcGISMap>();
   const mapViewRef = useRef<ArcGISMapView>();
-  const mapContainerRef = useRef(null);
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
   const [loaded, setLoaded] = useState(false);
 
@@ -114,8 +114,9 @@ export function MapView({
         unit: "dual",
         style: "ruler",
       });
-
-      mapViewRef.current.ui.add(scaleBar, "bottom-right");
+      const mapWidth = mapContainerRef.current.offsetWidth;
+      const scaleBarPosition = mapWidth >= 1024 ? "bottom-right" : "top-left";
+      mapViewRef.current.ui.add(scaleBar, scaleBarPosition);
 
       mapViewRef.current.on("pointer-leave", () => {
         if (onPointerLeave) onPointerLeave();

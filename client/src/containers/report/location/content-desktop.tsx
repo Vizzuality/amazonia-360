@@ -6,8 +6,7 @@ import { cn } from "@/lib/utils";
 
 import { useSyncLocation } from "@/app/store";
 
-import { Media } from "@/containers/media";
-import Confirm from "@/containers/report/location/confirm";
+import Confirm from "@/containers/report/location/create";
 import SearchLocation from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
 
@@ -34,9 +33,7 @@ export default function SidebarLocationContent() {
         <div className="space-y-4">
           <SearchLocation />
 
-          <Media greaterThanOrEqual="lg">
-            <Sketch />
-          </Media>
+          <Sketch />
         </div>
       )}
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { useTranslations } from "next-intl";
 import { LuPen } from "react-icons/lu";
 
@@ -12,13 +12,13 @@ import { useSidebar } from "@/components/ui/sidebar";
 export default function IndicatorsReport() {
   const t = useTranslations();
   const { toggleSidebar } = useSidebar();
-  const setReportEditionMode = useSetAtom(reportEditionModeAtom);
+  const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
 
   return (
     <Button
       className="space-x-2"
       onClick={() => {
-        setReportEditionMode(true);
+        setReportEditionMode(!reportEditionMode);
         toggleSidebar();
       }}
       variant="outline"
