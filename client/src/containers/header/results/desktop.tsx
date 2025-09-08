@@ -45,7 +45,7 @@ export default function ReportResultsHeaderDesktop() {
             >
               <AlertDialogHeader>
                 <AlertDialogTitle>{t("report-results-buttons-new-report")}</AlertDialogTitle>
-                <AlertDialogDescription>
+                <AlertDialogDescription asChild>
                   <ReactMarkdown>
                     {t("report-results-buttons-new-report-description")}
                   </ReactMarkdown>
