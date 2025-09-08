@@ -21,15 +21,13 @@ export default function SidebarLocationContent() {
         "lg:border lg:border-blue-100 lg:p-6": true,
       })}
     >
-      {!location && (
-        <div className="space-y-4">
-          <h1 className="text-2xl font-bold text-primary">{t("grid-sidebar-report-title")}</h1>
+      <div className="space-y-4">
+        <h1 className="text-2xl font-bold text-primary">{t("grid-sidebar-report-title")}</h1>
 
-          <p className="text-sm font-medium text-muted-foreground">
-            {t("grid-sidebar-report-description")}
-          </p>
-        </div>
-      )}
+        <p className="text-sm font-medium text-muted-foreground">
+          {t("grid-sidebar-report-description")}
+        </p>
+      </div>
 
       {!location && (
         <div className="space-y-4">

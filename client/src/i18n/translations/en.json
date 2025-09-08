@@ -128,7 +128,7 @@
   "got-it-alert-button": "Got it",
   "card-no-results": "No results for this location at the moment.  \n  Feel free to adjust your search criteria or check back later!",
   "new-report": "New report",
-  "report-results-buttons-new-report": "Start a New report",
+  "report-results-buttons-new-report": "Start a New Report",
   "report-results-buttons-new-report-description": "Selecting a new area will start a fresh report and reset your current session. \n\n Any progress in your existing report will be lost.",
   "new-report-modal-warning": "To save your current report, you can copy the shareable link before continuing.",
   "report-results-buttons-new-report-confirm": "Start new report",
