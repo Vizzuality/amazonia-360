@@ -19,20 +19,20 @@ export interface ReportResultsContentIndicatorItemProps {
   topic: TopicView;
   indicatorView: IndicatorView;
   editable: boolean;
+  editing: boolean;
 }
 
 export const ReportResultsContentIndicatorItem = ({
   topic,
   indicatorView,
   editable = true,
+  editing = false,
 }: ReportResultsContentIndicatorItemProps) => {
   const [, setTopics] = useSyncTopics();
   const { toggleSidebar } = useSidebar();
   const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
   const [editionModeIndicator, setEditionModeIndicator] = useAtom(indicatorsEditionModeAtom);
   const { id, type } = indicatorView;
-
-  const EDITABLE = editable && reportEditionMode;
 
   const handleDelete = useCallback(
     (indicatorId: number, type: VisualizationTypes) => {
@@ -82,24 +82,24 @@ export const ReportResultsContentIndicatorItem = ({
       id={`${id}-${type}`}
       className="flex h-full flex-col"
       onMouseEnter={() => {
-        if (EDITABLE) {
+        if (editing) {
           setEditionModeIndicator({ [`${id}-${type}`]: true });
         }
       }}
       onMouseLeave={() => {
-        if (EDITABLE) {
+        if (editing) {
           setEditionModeIndicator({ [`${id}-${type}`]: false });
         }
       }}
     >
-      {editionModeIndicator[`${id}-${type}`] && EDITABLE && <MoveHandler />}
-      {editionModeIndicator[`${id}-${type}`] && EDITABLE && (
+      {editionModeIndicator[`${id}-${type}`] && editing && <MoveHandler />}
+      {editionModeIndicator[`${id}-${type}`] && editing && (
         <DeleteHandler indicatorId={id} type={type} onClick={handleDelete} />
       )}
 
       {INDICATOR}
 
-      {editionModeIndicator[`${id}-${type}`] && EDITABLE && <ResizeHandler />}
+      {editionModeIndicator[`${id}-${type}`] && editing && <ResizeHandler />}
     </div>
   );
 };

@@ -1,15 +1,18 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { Separator } from "@radix-ui/react-select";
+import { useSetAtom } from "jotai";
 
 import { cn } from "@/lib/utils";
 
-import { useSyncLocation } from "@/app/store";
+import { reportEditionModeAtom, useSyncLocation } from "@/app/store";
 
 import LanguageSelector from "@/containers/header/language-selector/desktop";
 import { Media } from "@/containers/media";
+
+import { useSidebar } from "@/components/ui/sidebar";
 
 import { usePathname } from "@/i18n/navigation";
 
@@ -32,6 +35,9 @@ export default function Header() {
   const pathname = usePathname();
 
   const [location] = useSyncLocation();
+  const setEditionMode = useSetAtom(reportEditionModeAtom);
+
+  const { setOpen } = useSidebar();
 
   const DYNAMIC_HEADER = useMemo(() => {
     const { isReportSub } = getRoutes(pathname);
@@ -46,6 +52,15 @@ export default function Header() {
       </>
     );
   }, [pathname, location]);
+
+  useEffect(() => {
+    // Hide sidebar when navigating away from report
+    // Remove edit mode
+    if (!pathname.includes("/report/results")) {
+      setOpen(false);
+      setEditionMode(false);
+    }
+  }, [pathname, setOpen, setEditionMode]);
 
   return (
     <header

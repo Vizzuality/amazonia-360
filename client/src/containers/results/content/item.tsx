@@ -94,11 +94,12 @@ export const ReportResultsContentItem = ({
               basemapId: type === "map" ? indicator.basemapId : undefined,
             }}
             editable={editable}
+            editing={EDITABLE}
           />
         </div>
       );
     });
-  }, [topic, editable]);
+  }, [topic, editable, EDITABLE]);
 
   useHighlightNewIndicator(INDICATORS, !EDITABLE);
 
