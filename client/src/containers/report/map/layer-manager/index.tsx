@@ -30,9 +30,10 @@ export default function LayerManager() {
       <Layer index={0} layer={DATASETS.area_afp.layer as LayerProps} />
       {/* <SelectedLayer location={location} /> */}
 
-      {indicators?.map((indicator, index) => (
-        <LayerManagerItem key={indicator} id={indicator} index={index} />
-      ))}
+      {!pathname.includes("/grid") &&
+        indicators?.map((indicator, index) => (
+          <LayerManagerItem key={indicator} id={indicator} index={index} />
+        ))}
 
       {pathname.includes("/grid") && !!gridDatasets.length && <GridLayer />}
       {pathname.includes("/grid") &&

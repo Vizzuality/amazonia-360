@@ -21,8 +21,9 @@ import {
 
 import { BUFFERS } from "@/constants/map";
 
+import GridLegend from "@/containers/report/map/grid-legend/grid";
 import LayerManager from "@/containers/report/map/layer-manager";
-import GridLegend from "@/containers/report/map/legend";
+import { LegendContainer } from "@/containers/report/map/legend";
 import { SketchTooltips } from "@/containers/report/map/sketch-tooltips";
 
 import Controls from "@/components/map/controls";
@@ -184,6 +185,9 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
 
         <MapPopup />
       </Map>
+
+      {!pathname.includes("/grid") && <LegendContainer />}
+
       {gridSelectedDataset && pathname.includes("/grid") && <GridLegend />}
 
       <SketchTooltips />
