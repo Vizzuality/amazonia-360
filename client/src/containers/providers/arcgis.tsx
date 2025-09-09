@@ -35,7 +35,7 @@ export const ArcGISProvider = ({
         collation: JSON.stringify({ accentSensitive: false, caseSensitive: false }),
       },
     });
-  }, []);
+  }, [locale]);
 
   return children;
 };
