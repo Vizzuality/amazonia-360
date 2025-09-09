@@ -8,6 +8,8 @@ import { ArcGISProvider } from "@/containers/providers/arcgis";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 
+import { Locale } from "@/i18n/types";
+
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
@@ -39,7 +41,13 @@ function getQueryClient() {
   }
 }
 
-export default function LayoutProviders({ children }: { children: React.ReactNode }) {
+export default function LayoutProviders({
+  locale,
+  children,
+}: {
+  locale: Locale;
+  children: React.ReactNode;
+}) {
   // NOTE: Avoid useState when initializing the query client if you don't
   //       have a suspense boundary between this and the code that may
   //       suspend because React will throw away the client on the initial
@@ -50,7 +58,7 @@ export default function LayoutProviders({ children }: { children: React.ReactNod
     <MediaContextProvider>
       <TooltipProvider>
         <QueryClientProvider client={queryClient}>
-          <ArcGISProvider>
+          <ArcGISProvider locale={locale}>
             <JotaiProvider>{children}</JotaiProvider>
           </ArcGISProvider>
         </QueryClientProvider>

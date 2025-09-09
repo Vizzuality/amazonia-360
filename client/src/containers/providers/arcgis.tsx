@@ -9,11 +9,18 @@ import { env } from "@/env.mjs";
 
 import { DATASETS } from "@/constants/datasets";
 
-export const ArcGISProvider = ({ children }: PropsWithChildren) => {
+import { Locale } from "@/i18n/types";
+
+export const ArcGISProvider = ({
+  locale,
+  children,
+}: PropsWithChildren<{
+  locale: Locale;
+}>) => {
   useMemo(() => {
     // Set the locale for ArcGIS
     // Available locales: https://developers.arcgis.com/javascript/latest/api-reference/esri-intl.html#setLocale
-    setLocale("en");
+    setLocale(locale);
 
     esriConfig.apiKey = env.NEXT_PUBLIC_ARCGIS_API_KEY;
 

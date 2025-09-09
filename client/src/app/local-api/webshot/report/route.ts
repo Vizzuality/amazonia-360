@@ -14,6 +14,9 @@ export async function POST(req: NextRequest) {
     "Accept-Language": acceptLanguage,
   };
 
+  console.log("Forwarding Accept-Language header:", JSON.stringify(acceptLanguage));
+  console.log("Generating PDF report with body:", JSON.stringify(body));
+
   return await fetch(`${env.NEXT_PUBLIC_WEBSHOT_URL}/report/pdf`, {
     method: "POST",
     headers: outgoingHeaders,

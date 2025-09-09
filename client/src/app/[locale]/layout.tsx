@@ -62,7 +62,7 @@ export default async function RootLayout({
   setRequestLocale(locale);
 
   return (
-    <LayoutProviders>
+    <LayoutProviders locale={locale}>
       <html lang={locale}>{children}</html>
     </LayoutProviders>
   );
