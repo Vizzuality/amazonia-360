@@ -10,10 +10,7 @@ import { Indicator, ResourceFeature } from "@/types/indicator";
 
 import { CardLoader } from "@/containers/card";
 
-import Legend from "@/components/map/legend";
 import LegendItem, { LegendItemProps } from "@/components/map/legend/item";
-
-import OpacityControlButton from "./opacity-control";
 
 export interface FeatureLegendProps {
   indicator: Indicator;
@@ -21,7 +18,6 @@ export interface FeatureLegendProps {
 export const FeatureLegend = ({
   name,
   resource,
-  ...indicator
 }: Omit<Indicator, "resource"> & {
   resource: ResourceFeature;
 }) => {
@@ -82,10 +78,8 @@ export const FeatureLegend = ({
   }, [name, layerData]);
 
   return (
-    <Legend defaultOpen actionButtons={<OpacityControlButton indicator={indicator} />}>
-      <CardLoader query={[query]} className="h-10 grow">
-        {!!LEGEND && <LegendItem {...LEGEND} direction="vertical" />}
-      </CardLoader>
-    </Legend>
+    <CardLoader query={[query]} className="h-10 grow">
+      {!!LEGEND && <LegendItem {...LEGEND} direction="vertical" />}
+    </CardLoader>
   );
 };

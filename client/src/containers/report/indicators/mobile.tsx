@@ -2,7 +2,7 @@
 
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 
-import IndicatorsList from "@/containers/indicators/list";
+import TopicsList from "@/containers/results/sidebar/indicators/topics";
 
 export default function ReportIndicatorsMobile() {
   return (
@@ -13,7 +13,7 @@ export default function ReportIndicatorsMobile() {
             <div className="flex max-h-[calc(100vh_-_(64px_+_40px_+_28px))] grow flex-col">
               <div className="flex max-h-full grow flex-col overflow-hidden">
                 <ScrollArea className="h-full w-full grow">
-                  <IndicatorsList />
+                  <TopicsList />
                 </ScrollArea>
               </div>
             </div>

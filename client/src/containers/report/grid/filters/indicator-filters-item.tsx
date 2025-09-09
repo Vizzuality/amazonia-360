@@ -15,6 +15,8 @@ import { H3Indicator } from "@/types/indicator";
 
 import { useSyncGridDatasets, useSyncGridFilters, useSyncGridSelectedDataset } from "@/app/store";
 
+import Info from "@/containers/info";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
@@ -127,15 +129,13 @@ export default function GridFiltersItem(dataset: H3Indicator) {
                     <LuInfo className="h-4 w-4 text-foreground" />
                   </DialogTrigger>
                 </TooltipTrigger>
-                <DialogContent className="p-0">
+                <DialogContent className="max-w-2xl p-0">
                   <DialogTitle className="sr-only">{dataset.description_short}</DialogTitle>
-                  <div className="p-4">
-                    <p>{!!dataset.description ? dataset.description : t("data-coming-soon")}</p>
-                  </div>
+                  <Info ids={[dataset.id]} />
                   <DialogClose />
                 </DialogContent>
                 <TooltipPortal>
-                  <TooltipContent sideOffset={0}>
+                  <TooltipContent sideOffset={0} className="max-w-72">
                     {dataset.description_short}
                     <TooltipArrow />
                   </TooltipContent>

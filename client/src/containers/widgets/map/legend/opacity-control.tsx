@@ -12,30 +12,28 @@ import { useSyncTopics, useSyncDefaultTopics } from "@/app/store";
 import { handleMapIndicatorPropertyChange } from "@/containers/widgets/map/utils";
 import { FALLBACK_WIDGET_DEFAULT_BASEMAP_ID } from "@/containers/widgets/map/utils";
 
-import OpacityControl from "@/components/map/controls/opacity";
+import OpacityControl from "@/components/map/legend/controls/opacity";
 
 const OpacityControlButton = ({ indicator }: { indicator: Omit<Indicator, "resource"> }) => {
   const [topics, setTopics] = useSyncTopics();
-  const [syncDefaultTopics, setSyncDefaultTopics] = useSyncDefaultTopics();
+  const [defaultTopics, setDefaultTopics] = useSyncDefaultTopics();
 
   const locale = useLocale();
   const { data: overviewTopicsData } = useGetOverviewTopics({ locale });
   const { opacity } = useMemo(() => {
     const topicWithIndicator =
-      syncDefaultTopics?.find((topic) =>
-        topic.indicators?.find((ind) => ind.id === indicator.id),
-      ) || topics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id));
+      defaultTopics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id)) ||
+      topics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id));
     const indicatorConfig = topicWithIndicator?.indicators?.find((ind) => ind.id === indicator.id);
     return {
-      opacity: indicatorConfig && "opacity" in indicatorConfig ? indicatorConfig.opacity : 100,
+      opacity: indicatorConfig && "opacity" in indicatorConfig ? indicatorConfig.opacity : 1,
     };
-  }, [syncDefaultTopics, indicator.id, topics]);
+  }, [defaultTopics, indicator.id, topics]);
 
-  const DEFAULT_VALUES = { basemapId: FALLBACK_WIDGET_DEFAULT_BASEMAP_ID, opacity: 100 };
+  const DEFAULT_VALUES = { basemapId: FALLBACK_WIDGET_DEFAULT_BASEMAP_ID, opacity: 1 };
 
   return (
     <OpacityControl
-      triggerClassName="translate-y-[2px]"
       value={opacity ?? DEFAULT_VALUES.opacity}
       onValueChange={(value: number[]) =>
         handleMapIndicatorPropertyChange(
@@ -43,7 +41,7 @@ const OpacityControlButton = ({ indicator }: { indicator: Omit<Indicator, "resou
           value[0],
           overviewTopicsData ? (overviewTopicsData as unknown as DefaultTopicConfig[]) : null,
           indicator as Indicator,
-          setSyncDefaultTopics,
+          setDefaultTopics,
           setTopics,
           DEFAULT_VALUES,
         )

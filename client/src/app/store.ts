@@ -13,6 +13,8 @@ import {
   topicsParser,
   aiSummaryParser,
   defaultTopicsConfigParser,
+  indicatorsParser,
+  indicatorsSettingsParser,
 } from "@/app/parsers";
 
 import { SketchProps } from "@/components/map/sketch";
@@ -41,6 +43,14 @@ export const useSyncTopics = () => {
 
 export const useSyncDefaultTopics = () => {
   return useQueryState("defaultTopics", defaultTopicsConfigParser);
+};
+
+export const useSyncIndicators = () => {
+  return useQueryState("indicators", indicatorsParser);
+};
+
+export const useSyncIndicatorsSettings = () => {
+  return useQueryState("indicatorsSettings", indicatorsSettingsParser);
 };
 
 export const useSyncLocation = () => {
@@ -73,7 +83,6 @@ const searchParams = {
   bbox: bboxParser,
   topics: topicsParser,
   location: locationParser,
-  gridFiltersSetUp: gridFiltersSetUpParser,
 };
 
 const serialize = createSerializer(searchParams);
@@ -82,9 +91,8 @@ export const useSyncSearchParams = (ignore?: (keyof typeof searchParams)[]) => {
   const [bbox] = useSyncBbox();
   const [topics] = useSyncTopics();
   const [location] = useSyncLocation();
-  const [gridFiltersSetUp] = useSyncGridFiltersSetUp();
 
-  const params = { bbox, topics, location, gridFiltersSetUp };
+  const params = { bbox, topics, location };
   if (ignore) {
     for (const key of ignore) {
       delete params[key];

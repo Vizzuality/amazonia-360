@@ -4,36 +4,49 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/r
 import { useTranslations } from "next-intl";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 export default function Legend({
   children,
   defaultOpen,
-  actionButtons,
 }: PropsWithChildren<{
   defaultOpen?: boolean;
-  actionButtons?: React.ReactNode;
 }>) {
   const [open, setOpen] = useState(defaultOpen ?? false);
   const t = useTranslations();
+
   return (
     <Collapsible
       open={open}
       onOpenChange={setOpen}
-      className="rounded-lg border border-blue-100 bg-white px-4 py-2"
+      className="relative rounded-lg border border-blue-100 bg-white"
     >
-      <div className="flex w-full min-w-32 items-center justify-between text-sm">
-        <CollapsibleTrigger className="flex w-full items-center justify-between text-sm">
-          <span>{t("legend")}</span>
+      {open && (
+        <CollapsibleTrigger asChild>
+          <Button
+            variant="default"
+            size="xs"
+            className="absolute bottom-full right-2 z-0 -translate-y-px rounded-b-none"
+          >
+            <LuChevronDown className="h-5 w-5" />
+          </Button>
         </CollapsibleTrigger>
-        <div className="flex items-center space-x-0">
-          {actionButtons}
+      )}
 
-          <CollapsibleTrigger className="flex h-6 w-6 items-center justify-between rounded-sm px-1 text-sm hover:bg-blue-100">
-            {open && <LuChevronDown className="h-4 w-4" />}
-            {!open && <LuChevronUp className="h-4 w-4" />}
-          </CollapsibleTrigger>
-        </div>
-      </div>
-      <CollapsibleContent className="pt-2">{children}</CollapsibleContent>
+      {!open && (
+        <CollapsibleTrigger className="px-4 py-2" asChild>
+          <Button variant="ghost" size="sm" className="flex w-full items-center justify-between">
+            {t("legend")}
+
+            <LuChevronUp className="h-5 w-5" />
+          </Button>
+        </CollapsibleTrigger>
+      )}
+
+      <CollapsibleContent className="relative z-10">
+        <ScrollArea className="max-h-96 overflow-auto">{children}</ScrollArea>
+      </CollapsibleContent>
     </Collapsible>
   );
 }
