@@ -11,13 +11,7 @@ const InfoItem = ({ id }: { id: Indicator["id"] }) => {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
 
-  return (
-    <Markdown>{indicator?.description}</Markdown>
-    // <>
-    //   {indicator?.resource?.type === "imagery-tile" && <InfoRaster key={id} id={+id} />}
-    //   {indicator?.resource?.type === "feature" && <InfoArcGis key={id} id={id} />}
-    // </>
-  );
+  return <Markdown>{indicator?.description}</Markdown>;
 };
 
 export default function Info({ ids }: { ids: Indicator["id"][] }) {

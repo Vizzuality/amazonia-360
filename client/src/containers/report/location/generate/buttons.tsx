@@ -10,8 +10,8 @@ import { Link } from "@/i18n/navigation";
 
 export const ReportGenerateButtons = () => {
   const t = useTranslations();
-  const searchParams = useSyncSearchParams();
-  const searchSelectLaterParams = useSyncSearchParams(["topics"]);
+  const searchParams = useSyncSearchParams(["bbox"]);
+  const searchSelectLaterParams = useSyncSearchParams(["topics", "bbox"]);
   // const [, setTopics] = useSyncTopics();
 
   return (
@@ -23,14 +23,14 @@ export const ReportGenerateButtons = () => {
       </Media> */}
 
       <div className="flex grow flex-col items-center justify-end gap-2 lg:flex-row">
-        <Link href={`/report/results?${searchSelectLaterParams}`} prefetch className="block w-full">
+        <Link href={`/report/results${searchSelectLaterParams}`} prefetch className="block w-full">
           <Button className="w-full px-4 lg:px-8" variant="outline">
             {t("sidebar-report-location-topics-button-generate-select-later")}
           </Button>
         </Link>
 
         <Link
-          href={`/report/results?${searchParams}`}
+          href={`/report/results${searchParams}`}
           prefetch
           className="block w-full grow lg:grow-0"
         >

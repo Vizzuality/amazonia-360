@@ -1,4 +1,4 @@
-import { parseAsArrayOf, parseAsFloat, parseAsJson, parseAsString } from "nuqs";
+import { parseAsArrayOf, parseAsFloat, parseAsInteger, parseAsJson, parseAsString } from "nuqs";
 
 import { ContextDescriptionType } from "@/types/generated/api.schemas";
 import { VisualizationTypes } from "@/types/indicator";
@@ -48,6 +48,7 @@ export type AiSummary = {
 };
 
 export const topicsParser = parseAsArrayOf(parseAsJson<TopicView>());
+export const indicatorsParser = parseAsArrayOf(parseAsInteger);
 
 // Default topics are the ones that are pre-configured in every report
 export const defaultTopicsConfigParser = parseAsArrayOf(parseAsJson<DefaultTopicConfig>());

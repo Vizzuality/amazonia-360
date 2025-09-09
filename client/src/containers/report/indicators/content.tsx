@@ -5,6 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
 
+import TopicsList from "@/containers/report/indicators/topics";
+
 import { Link } from "@/i18n/navigation";
 
 export default function ReportIndicatorsContent() {
@@ -37,10 +39,10 @@ export default function ReportIndicatorsContent() {
       {/* <GridFiltersControls /> */}
 
       <div className="space-y-5">
-        <div className="relative h-full max-h-[calc(100vh_-_(64px_+_40px_+_310px))]">
+        <div className="relative -mx-6 h-full max-h-[calc(100vh_-_(64px_+_40px_+_310px))]">
           <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2.5 bg-gradient-to-b from-white to-transparent" />
           <div className="h-full max-h-[calc(100vh_-_(64px_+_40px_+_310px_+_46px))] overflow-y-auto px-1 py-1">
-            Topics
+            <TopicsList />
           </div>
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />
         </div>
