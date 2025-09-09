@@ -11,6 +11,8 @@ import {
   ResourceImageryTile,
 } from "@/types/indicator";
 
+import { useSyncIndicatorsSettings } from "@/app/store";
+
 import InfoControl from "@/components/map/legend/controls/info";
 import OpacityControl from "@/components/map/legend/controls/opacity";
 import { FeatureLegend } from "@/components/map/legend/types/feature";
@@ -19,6 +21,7 @@ import { ImageryLegend } from "@/components/map/legend/types/imagery";
 export const LegendItem = ({ id }: { id: Indicator["id"] }) => {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
+  const [indicatorsSettings, setIndicatorsSettings] = useSyncIndicatorsSettings();
 
   const LEGEND = useMemo(() => {
     if (!indicator) return null;
@@ -61,7 +64,15 @@ export const LegendItem = ({ id }: { id: Indicator["id"] }) => {
           </li>
 
           <li>
-            <OpacityControl onValueChange={() => {}} value={100} />
+            <OpacityControl
+              value={indicatorsSettings[id]?.opacity ?? 1}
+              onValueChange={(value) => {
+                setIndicatorsSettings((prev) => ({
+                  ...prev,
+                  [id]: { ...prev[id], opacity: value[0] },
+                }));
+              }}
+            />
           </li>
         </ul>
       </header>

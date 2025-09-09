@@ -133,7 +133,11 @@ export const useGetIndicatorsId = (id: Indicator["id"], locale: string) => {
   return data?.find((indicator) => indicator.id === id);
 };
 
-export const useGetIndicatorsLayerId = (id: Indicator["id"], locale: string) => {
+export const useGetIndicatorsLayerId = (
+  id: Indicator["id"],
+  locale: string,
+  settings: Record<string, unknown>,
+) => {
   const indicatorData = useGetIndicatorsId(id, locale);
   const resource = indicatorData?.resource;
 
@@ -145,6 +149,7 @@ export const useGetIndicatorsLayerId = (id: Indicator["id"], locale: string) => 
         id: `${id}`,
         urlTemplate: resource.url,
         type: "web-tile",
+        ...settings,
       } satisfies LayerProps;
     }
 
@@ -154,6 +159,7 @@ export const useGetIndicatorsLayerId = (id: Indicator["id"], locale: string) => 
         url: resource.url,
         type: "imagery-tile",
         rasterFunction: resource.rasterFunction,
+        ...settings,
       } satisfies LayerProps;
     }
 
@@ -163,6 +169,7 @@ export const useGetIndicatorsLayerId = (id: Indicator["id"], locale: string) => 
         url: resource.url,
         type: "imagery",
         rasterFunction: resource.rasterFunction,
+        ...settings,
       } satisfies LayerProps;
     }
 
@@ -171,8 +178,9 @@ export const useGetIndicatorsLayerId = (id: Indicator["id"], locale: string) => 
       url: resource.url + resource.layer_id,
       type: "feature",
       popupTemplate: resource.popupTemplate,
+      ...settings,
     } satisfies LayerProps;
-  }, [id, resource]);
+  }, [id, resource, settings]);
 };
 
 /**

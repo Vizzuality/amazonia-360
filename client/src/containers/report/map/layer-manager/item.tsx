@@ -6,12 +6,18 @@ import { useGetIndicatorsLayerId } from "@/lib/indicators";
 
 import { Indicator } from "@/types/indicator";
 
+import { useSyncIndicatorsSettings } from "@/app/store";
+
 import Layer from "@/components/map/layers";
 
 export default function LayerManagerItem({ id, index }: { id: Indicator["id"]; index: number }) {
   const locale = useLocale();
 
-  const LAYER = useGetIndicatorsLayerId(id, locale);
+  const [indicatorsSettings] = useSyncIndicatorsSettings();
+
+  const settings = indicatorsSettings?.[id] ?? {};
+
+  const LAYER = useGetIndicatorsLayerId(id, locale, settings);
 
   if (!LAYER) return null;
 

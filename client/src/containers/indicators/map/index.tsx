@@ -24,7 +24,7 @@ export const MapIndicators = (
 
   const locale = useLocale();
 
-  const LAYER = useGetIndicatorsLayerId(id, locale);
+  const LAYER = useGetIndicatorsLayerId(id, locale, {});
 
   if (!LAYER) return null;
 

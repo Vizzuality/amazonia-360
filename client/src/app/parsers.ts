@@ -49,6 +49,9 @@ export type AiSummary = {
 
 export const topicsParser = parseAsArrayOf(parseAsJson<TopicView>());
 export const indicatorsParser = parseAsArrayOf(parseAsInteger);
+export const indicatorsSettingsParser = parseAsJson<
+  Record<number, { opacity?: number }>
+>().withDefault({});
 
 // Default topics are the ones that are pre-configured in every report
 export const defaultTopicsConfigParser = parseAsArrayOf(parseAsJson<DefaultTopicConfig>());

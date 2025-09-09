@@ -14,6 +14,7 @@ import {
   aiSummaryParser,
   defaultTopicsConfigParser,
   indicatorsParser,
+  indicatorsSettingsParser,
 } from "@/app/parsers";
 
 import { SketchProps } from "@/components/map/sketch";
@@ -46,6 +47,10 @@ export const useSyncDefaultTopics = () => {
 
 export const useSyncIndicators = () => {
   return useQueryState("indicators", indicatorsParser);
+};
+
+export const useSyncIndicatorsSettings = () => {
+  return useQueryState("indicatorsSettings", indicatorsSettingsParser);
 };
 
 export const useSyncLocation = () => {
