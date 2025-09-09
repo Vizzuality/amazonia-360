@@ -2,11 +2,12 @@
 
 import dynamic from "next/dynamic";
 
-import { useSyncGridDatasets, useSyncGridSelectedDataset } from "@/app/store";
+import { useSyncGridDatasets, useSyncGridSelectedDataset, useSyncIndicators } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
 import GridLayer from "@/containers/report/map/layer-manager/grid-layer";
+import LayerManagerItem from "@/containers/report/map/layer-manager/item";
 import PlaceholderGridLayer from "@/containers/report/map/layer-manager/placeholder-grid-layer";
 
 import { LayerProps } from "@/components/map/layers/types";
@@ -18,6 +19,7 @@ const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
 export default function LayerManager() {
   // const [location] = useSyncLocation();
+  const [indicators] = useSyncIndicators();
   const [gridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
 
@@ -27,6 +29,10 @@ export default function LayerManager() {
     <>
       <Layer index={0} layer={DATASETS.area_afp.layer as LayerProps} />
       {/* <SelectedLayer location={location} /> */}
+
+      {indicators?.map((indicator, index) => (
+        <LayerManagerItem key={indicator} id={indicator} index={index} />
+      ))}
 
       {pathname.includes("/grid") && !!gridDatasets.length && <GridLayer />}
       {pathname.includes("/grid") &&

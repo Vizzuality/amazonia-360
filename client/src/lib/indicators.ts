@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { QueryFunction, UseQueryOptions, useQuery, useQueries } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -12,6 +14,8 @@ import {
   VisualizationTypes,
 } from "@/types/indicator";
 import { Topic } from "@/types/topic";
+
+import { LayerProps } from "@/components/map/layers/types";
 
 import INDICATORS from "@/../datum/indicators.json";
 import TOPICS from "@/../datum/topics.json";
@@ -127,6 +131,48 @@ export const useGetIndicatorsId = (id: Indicator["id"], locale: string) => {
   const { data } = useGetIndicators(locale);
 
   return data?.find((indicator) => indicator.id === id);
+};
+
+export const useGetIndicatorsLayerId = (id: Indicator["id"], locale: string) => {
+  const indicatorData = useGetIndicatorsId(id, locale);
+  const resource = indicatorData?.resource;
+
+  return useMemo(() => {
+    if (!resource || resource.type === "h3" || resource.type === "component") return null;
+
+    if (resource.type === "web-tile") {
+      return {
+        id: `${id}`,
+        urlTemplate: resource.url,
+        type: "web-tile",
+      } satisfies LayerProps;
+    }
+
+    if (resource.type === "imagery-tile") {
+      return {
+        id: `${id}`,
+        url: resource.url,
+        type: "imagery-tile",
+        rasterFunction: resource.rasterFunction,
+      } satisfies LayerProps;
+    }
+
+    if (resource.type === "imagery") {
+      return {
+        id: `${id}`,
+        url: resource.url,
+        type: "imagery",
+        rasterFunction: resource.rasterFunction,
+      } satisfies LayerProps;
+    }
+
+    return {
+      id: `${id}`,
+      url: resource.url + resource.layer_id,
+      type: "feature",
+      popupTemplate: resource.popupTemplate,
+    } satisfies LayerProps;
+  }, [id, resource]);
 };
 
 /**
