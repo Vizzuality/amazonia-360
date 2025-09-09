@@ -81,7 +81,7 @@ export default function IndicatorsItem({ id, name, description_short }: Indicato
 
         <Switch
           className="h-4 w-8"
-          checked={indicators?.includes(id)}
+          checked={!!indicators && indicators?.includes(id)}
           onCheckedChange={handleChangeIndicator}
         />
       </div>

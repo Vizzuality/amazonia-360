@@ -11,19 +11,15 @@ import {
   ResourceImageryTile,
 } from "@/types/indicator";
 
-import { useSyncIndicators, useSyncIndicatorsSettings } from "@/app/store";
+import OpacityControl from "@/containers/widgets/map/legend/opacity-control";
 
 import InfoControl from "@/components/map/legend/controls/info";
-import OpacityControl from "@/components/map/legend/controls/opacity";
-import RemoveControl from "@/components/map/legend/controls/remove";
 import { FeatureLegend } from "@/components/map/legend/types/feature";
 import { ImageryLegend } from "@/components/map/legend/types/imagery";
 
 export const LegendItem = ({ id }: { id: Indicator["id"] }) => {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
-  const [, setIndicators] = useSyncIndicators();
-  const [indicatorsSettings, setIndicatorsSettings] = useSyncIndicatorsSettings();
 
   const LEGEND = useMemo(() => {
     if (!indicator) return null;
@@ -60,34 +56,13 @@ export const LegendItem = ({ id }: { id: Indicator["id"] }) => {
       <header className="flex justify-between gap-2">
         <h3 className="text-xs font-semibold text-foreground">{name}</h3>
 
-        <ul className="flex items-center gap-1">
+        <ul className="flex -translate-y-1 items-center gap-1">
           <li>
             <InfoControl {...indicator} />
           </li>
 
           <li>
-            <OpacityControl
-              value={indicatorsSettings[id]?.opacity ?? 1}
-              onValueChange={(value) => {
-                setIndicatorsSettings((prev) => ({
-                  ...prev,
-                  [id]: { ...prev[id], opacity: value[0] },
-                }));
-              }}
-            />
-          </li>
-          <li>
-            <RemoveControl
-              onClick={() => {
-                setIndicators((prev) => {
-                  if (!prev) return prev;
-
-                  if (prev.length === 1) return null;
-
-                  return prev.filter((i) => i !== id);
-                });
-              }}
-            />
+            <OpacityControl indicator={indicator} />
           </li>
         </ul>
       </header>
