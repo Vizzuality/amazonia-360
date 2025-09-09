@@ -22,7 +22,6 @@ import {
 import { BUFFERS } from "@/constants/map";
 
 import GridLegend from "@/containers/report/map/grid-legend/grid";
-import LayerManager from "@/containers/report/map/layer-manager";
 import { LegendContainer } from "@/containers/report/map/legend";
 import { SketchTooltips } from "@/containers/report/map/sketch-tooltips";
 
@@ -36,6 +35,10 @@ import Tooltip from "@/components/map/tooltip";
 import { usePathname } from "@/i18n/navigation";
 
 const Map = dynamic(() => import("@/components/map"), {
+  ssr: false,
+});
+
+const LayerManager = dynamic(() => import("./layer-manager"), {
   ssr: false,
 });
 
