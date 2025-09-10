@@ -133,7 +133,7 @@ export function Search<T extends Option>({
 
             <CommandList>
               {open && !!options.length && (
-                <CommandGroup className="px-2 pb-5">
+                <CommandGroup className="px-2">
                   {options.map((o) => (
                     <CommandItem
                       key={o.sourceIndex + o.key + o.value}

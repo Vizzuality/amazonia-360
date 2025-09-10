@@ -47,13 +47,11 @@ export default function IndicatorsItem({ id, name, description_short }: Indicato
     >
       <button
         className={cn(
-          "flex grow items-center space-x-2.5 rounded-sm p-1 pr-2 transition-all duration-300 ease-in-out hover:bg-blue-50",
+          "flex grow space-x-2.5 rounded-sm p-1 pr-2 text-left text-sm font-medium text-gray-400 transition-colors duration-300 ease-in-out hover:bg-blue-50",
         )}
         onClick={() => handleChangeIndicator(!indicators?.includes(id))}
       >
-        <div className="flex flex-col items-start justify-start space-y-1">
-          <span className="text-sm font-medium text-gray-400 transition-none">{name}</span>
-        </div>
+        {name}
       </button>
       <div className="flex items-center gap-1">
         <Tooltip delayDuration={100}>
