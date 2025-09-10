@@ -80,7 +80,13 @@ The datasets that are consumed by this api are `.arrow` files organized in h3 ti
 child cells of resolution 6. Each cell has a number of variables or columns that represent and indicator.
 
 The generation of those h3 tiles is done by transforming and input CSV with all the cells at finest desired resolution.
-The code to do can be found at [h3_csv_to_arrow_tiles.ipynb](../science/notebooks/h3_csv_to_arrow_tiles.ipynb).
+The script to do so is found at [csv_to_tiles.py](./scripts/csv_to_tiles.py).
+
+Run the script against a csv with all the data desired to tile with
+
+```
+python scripts/csv_to_tiles.py <input csv file> <output dir>
+```
 
 The tiles location is configured with the env var `GRID_TILES_PATH`. The folder **must follow** the structure:
 
