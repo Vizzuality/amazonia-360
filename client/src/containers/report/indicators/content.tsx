@@ -7,6 +7,8 @@ import { LuArrowLeft } from "react-icons/lu";
 
 import TopicsList from "@/containers/report/indicators/topics";
 
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { Link } from "@/i18n/navigation";
 
 export default function ReportIndicatorsContent() {
@@ -14,8 +16,8 @@ export default function ReportIndicatorsContent() {
   const searchParams = useSearchParams();
 
   return (
-    <div className="relative h-full space-y-2 overflow-hidden bg-white p-6 backdrop-blur-xl lg:rounded-lg lg:border lg:border-blue-100 xl:space-y-4">
-      <div className="space-y-2">
+    <div className="relative flex h-full grow flex-col space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white py-6 backdrop-blur-xl xl:space-y-4">
+      <div className="space-y-2 px-6">
         <div className="flex items-center justify-between">
           <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
             <Link
@@ -26,26 +28,21 @@ export default function ReportIndicatorsContent() {
             </Link>
             {t("indicators")}
           </h1>
-
-          {/* <GridFiltersControlsClear /> */}
         </div>
 
         <p className="text-sm font-medium text-muted-foreground">
           {t("grid-sidebar-grid-filters-description")}
         </p>
       </div>
-      {/* <GridFiltersSearch className="py-0" /> */}
 
-      {/* <GridFiltersControls /> */}
-
-      <div className="space-y-5">
-        <div className="relative -mx-6 h-full max-h-[calc(100vh_-_(64px_+_40px_+_310px))]">
-          <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2.5 bg-gradient-to-b from-white to-transparent" />
-          <div className="h-full max-h-[calc(100vh_-_(64px_+_40px_+_310px_+_46px))] overflow-y-auto px-1 py-1">
+      <div className="relative flex grow flex-col overflow-hidden">
+        <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2.5 bg-gradient-to-b from-white to-transparent" />
+        <ScrollArea className="flex grow flex-col">
+          <div className="px-6">
             <TopicsList />
           </div>
-          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />
-        </div>
+        </ScrollArea>
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />
       </div>
     </div>
   );

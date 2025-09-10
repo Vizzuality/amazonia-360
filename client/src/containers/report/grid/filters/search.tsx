@@ -108,7 +108,7 @@ export default function SearchC({ className }: { className?: string }) {
   );
 
   return (
-    <div className={cn({ "w-full py-2": true, [`${className}`]: !!className })}>
+    <div className={cn({ "w-full": true, [`${className}`]: !!className })}>
       <Search
         value={search}
         open={open}

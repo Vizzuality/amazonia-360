@@ -9,6 +9,8 @@ import GridFilters from "@/containers/report/grid/filters";
 import GridFiltersSearch from "@/containers/report/grid/filters/search";
 import GridFiltersControls from "@/containers/report/grid/filters-controls";
 
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { Link } from "@/i18n/navigation";
 
 export default function SidebarGridContent() {
@@ -16,8 +18,8 @@ export default function SidebarGridContent() {
   const searchParams = useSearchParams();
 
   return (
-    <div className="relative h-full space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-6 backdrop-blur-xl xl:space-y-4">
-      <div className="space-y-2">
+    <div className="relative flex h-full grow flex-col space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white py-6 backdrop-blur-xl xl:space-y-4">
+      <div className="space-y-2 px-6">
         <div className="flex items-center justify-between">
           <header className="flex items-start gap-2">
             <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
@@ -36,17 +38,22 @@ export default function SidebarGridContent() {
           {t("grid-sidebar-grid-filters-description")}
         </p>
       </div>
-      <GridFiltersSearch className="py-0" />
 
-      <div className="space-y-5">
-        <div className="relative h-full max-h-[calc(100vh_-_(64px_+_40px_+_310px))]">
-          <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2.5 bg-gradient-to-b from-white to-transparent" />
-          <div className="h-full max-h-[calc(100vh_-_(64px_+_40px_+_310px_+_46px))] overflow-y-auto px-1 py-1">
+      <div className="px-6">
+        <GridFiltersSearch className="py-0" />
+      </div>
+
+      <div className="relative flex grow flex-col overflow-hidden">
+        <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2.5 bg-gradient-to-b from-white to-transparent" />
+        <ScrollArea className="flex grow flex-col">
+          <div className="px-6">
             <GridFilters />
           </div>
-          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />
-        </div>
+        </ScrollArea>
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />
+      </div>
 
+      <div className="px-6">
         <GridFiltersControls />
       </div>
     </div>

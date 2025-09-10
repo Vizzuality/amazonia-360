@@ -8,6 +8,8 @@ import { gridPanelAtom, useSyncGridDatasets } from "@/app/store";
 
 import GridTable from "@/containers/report/grid/table";
 
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 export default function SidebarGridTableContent() {
   const t = useTranslations();
   const setGridPanel = useSetAtom(gridPanelAtom);
@@ -15,8 +17,8 @@ export default function SidebarGridTableContent() {
   const [gridDatasets] = useSyncGridDatasets();
 
   return (
-    <div className="relative h-full space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white p-6 backdrop-blur-xl xl:space-y-4">
-      <div className="space-y-2">
+    <div className="relative flex h-full grow flex-col space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white py-6 backdrop-blur-xl xl:space-y-4">
+      <div className="space-y-2 px-6">
         <div className="flex items-start justify-between">
           <header className="flex items-start gap-2">
             <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
@@ -37,12 +39,14 @@ export default function SidebarGridTableContent() {
           </p>
         )}
       </div>
-      <div className="relative overflow-y-auto overflow-x-hidden">
-        <div className="pointer-events-none absolute left-0 right-0 top-0 h-2.5 bg-gradient-to-b from-white to-transparent" />
 
-        <div className="-mx-4 h-full max-h-[calc(100vh-64px-44px-216px)] overflow-y-auto px-4 py-1">
-          <GridTable />
-        </div>
+      <div className="relative flex grow flex-col overflow-hidden">
+        <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2.5 bg-gradient-to-b from-white to-transparent" />
+        <ScrollArea className="flex grow flex-col">
+          <div className="px-6">
+            <GridTable />
+          </div>
+        </ScrollArea>
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />
       </div>
     </div>
