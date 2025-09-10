@@ -77,7 +77,7 @@ def main(file: pathlib.Path, outdir: pathlib.Path) -> None:
             # debt: would this even ever happen?
             print(f"Tile {tile_id} has already been visited. Appending...")
             tile_df = pl.concat([pl.read_ipc(filename), tile_df], how="vertical_relaxed").unique(subset=["cell"])
-            tile_df.write_parquet(filename)
+            tile_df.write_ipc(filename)
         else:
             seen_tiles.add(tile_id)
             tile_df.write_ipc(filename)

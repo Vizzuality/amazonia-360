@@ -62,10 +62,10 @@ class H3TilesRepository:
         self.tile_to_cell_res_change = tile_to_cell_res_change
 
     def tile(self, tile_index: str, columns: list[str]) -> tuple[pl.LazyFrame, int]:
-        z = h3.get_resolution(tile_index)
+        z = h3.get_resolution(tile_index)  # also validates that tile index is valid.
         tile_path = os.path.join(self.url, f"{z}/{tile_index}.arrow")
         if not os.path.exists(tile_path):
-            raise TileNotFoundError("Tile {tile_path} not found")
+            raise TileNotFoundError(f"Tile {tile_path} not found")
         tile = pl.scan_ipc(tile_path).select(["cell", *columns])
         return tile, z
 
@@ -86,8 +86,6 @@ class H3TilesRepository:
         # we don't know if the column requested are correct until we call .collect()
         except pl.exceptions.ColumnNotFoundError:
             raise ColumnNotFoundError("One or more of the specified columns is not valid") from None
-        if tile.is_empty():
-            raise TileNotFoundError
         return tile
 
     def tile_in_area_as_ipc_bytes(self, tile_index: str, columns: list[str], geom: BaseGeometry) -> bytes:
@@ -116,7 +114,7 @@ class H3TilesRepository:
         geom_cells = cells_in_geojson(geom, tile_level + self.tile_to_cell_res_change)
         # get the parents at tile level resolution of the cells in geom
         tiles_in_geom = pl.Series(
-            geom_cells.collect()  # early collect because h3ronpy is causing trubles with dtypes
+            geom_cells.collect()  # early collect because h3ronpy is causing troubles with dtypes
             .select(pl.col("cell").h3.cells_parse().h3.change_resolution(tile_level).h3.cells_to_string())
             .unique()
         ).to_list()
@@ -132,7 +130,7 @@ class H3TilesRepository:
             maxs = lf.select(pl.selectors.numeric().max()).collect()
             mins = lf.select(pl.selectors.numeric().min()).collect()
         except FileNotFoundError as e:
-            raise TileNotFoundError(str(e)) from None
+            raise TileNotFoundError(str(e)) from e
 
         for dataset in meta["datasets"]:
             column = dataset["var_name"]
