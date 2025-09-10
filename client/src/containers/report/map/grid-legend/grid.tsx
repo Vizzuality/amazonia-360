@@ -41,8 +41,8 @@ export const GridLegend: FC = () => {
     return [
       ...(gridDatasets?.map((d) => ({
         key: d,
-        ...H3IndicatorsData?.find((i) => i.resource.column === d),
         ...META?.datasets.find((ds) => ds.var_name === d),
+        ...H3IndicatorsData?.find((i) => i.resource.column === d),
       })) || []),
       {
         key: "no-layer",
