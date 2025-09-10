@@ -72,7 +72,7 @@ export default function CardsContainer() {
           >
             <WandIcon className="text-cyan-600" />
             <h4 className="font-bold text-blue-500">
-              {t("landing-key-features-grid-buttons-identify-hot-spots")}
+              {t("landing-key-features-grid-buttons-redefine-your-area")}
             </h4>
           </div>
         </li>
