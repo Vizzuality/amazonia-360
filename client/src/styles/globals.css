@@ -64,7 +64,7 @@
 
 @layer base {
   body {
-    @apply bg-background font-semibold text-foreground;
+    @apply bg-background font-semibold text-foreground antialiased;
   }
 
   .same-trigger-size {

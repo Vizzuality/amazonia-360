@@ -27,7 +27,7 @@ export default function ReportLocationDesktop() {
                   onValueChange={(value) => setGridPanel(value as "filters" | "table")}
                   className="relative flex grow flex-col overflow-hidden"
                 >
-                  <TabsList className="absolute right-6 top-6 z-10">
+                  <TabsList className="absolute right-6 top-6 z-10 space-x-0.5 rounded-lg border border-border bg-secondary p-0.5">
                     <TabsTrigger value="filters" asChild>
                       <Button size="sm" variant={gridPanel === "filters" ? "default" : "secondary"}>
                         {t("grid-sidebar-grid-tab")}

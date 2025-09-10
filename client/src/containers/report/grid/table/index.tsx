@@ -109,8 +109,8 @@ export default function GridTable() {
 
     if (!d) return "";
 
-    return (d[`name_${locale}` as keyof typeof d] as string) ?? "";
-  }, [gridDatasets, queryH3Indicators.data, locale]);
+    return d.name ?? "";
+  }, [gridDatasets, queryH3Indicators.data]);
 
   return (
     <div className="space-y-2">
