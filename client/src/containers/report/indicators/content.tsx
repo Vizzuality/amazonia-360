@@ -5,7 +5,9 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
 
-import TopicsList from "@/containers/report/indicators/topics";
+import IndicatorsFooter from "@/containers/report/indicators/footer";
+import IndicatorsSearch from "@/containers/report/indicators/search";
+import IndicatorsTopicsList from "@/containers/report/indicators/topics";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -35,14 +37,22 @@ export default function ReportIndicatorsContent() {
         </p>
       </div>
 
+      <div className="px-6">
+        <IndicatorsSearch />
+      </div>
+
       <div className="relative flex grow flex-col overflow-hidden">
         <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2.5 bg-gradient-to-b from-white to-transparent" />
         <ScrollArea className="flex grow flex-col">
           <div className="px-6">
-            <TopicsList />
+            <IndicatorsTopicsList />
           </div>
         </ScrollArea>
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />
+      </div>
+
+      <div className="px-6">
+        <IndicatorsFooter />
       </div>
     </div>
   );
