@@ -161,3 +161,5 @@ export const setGeneratedAITextAtom = atom(
     set(generatedAITextAtom, next);
   },
 );
+
+export const indicatorsExpandAtom = atom<Record<number, number[] | undefined> | undefined>({});
