@@ -57,9 +57,10 @@ export default function Resource({
             {Type === "Technical Notes" && (
               <LucideFilePenLine size={40} strokeWidth={1.5} className="text-blue-400" />
             )}
-            {Type === "Working Papers" && (
-              <LuFileText size={40} strokeWidth={1.5} className="text-blue-400" />
-            )}
+            {Type === "Working Papers" ||
+              (Type === "Publications" && (
+                <LuFileText size={40} strokeWidth={1.5} className="text-blue-400" />
+              ))}
           </div>
           <div className="flex flex-col space-y-2">
             <h3 title={Name} className="line-clamp-3 text-base font-semibold text-blue-500">
