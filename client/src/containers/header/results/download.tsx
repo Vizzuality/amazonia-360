@@ -18,7 +18,7 @@ export default function ReportButton() {
   const handleClick = () => {
     postWebshotReportMutation.mutate(
       {
-        pagePath: `/${locale}/report/results/?${searchParams.toString()}`,
+        pagePath: `/${locale}/webshot/report/?${searchParams.toString()}`,
       },
       {
         onError: (error) => {
