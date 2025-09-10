@@ -18,7 +18,7 @@ log = logging.getLogger("uvicorn.error")  # Show the logs in the uvicorn runner 
 grid_router = APIRouter()
 
 
-class ArrowIPCResponse(Response):  # noqa: D101
+class ArrowIPCResponse(Response):
     media_type = "application/octet-stream"
 
 

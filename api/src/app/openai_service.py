@@ -40,7 +40,7 @@ def generate_description(context_data: dict, description_type: str, language: st
             "- **Long:** A detailed, multi-paragraph analysis exploring deeper environmental "
             "insights, trends, and main implications.\n"
             "The description must be engaging, informative, and contextually relevant, "
-            "leveraging knowledge of Amazonia’s ecosystem, geography, "
+            "leveraging knowledge of Amazonia's ecosystem, geography, "
             "and conservation efforts to enrich the narrative."
             "If no occurrence data is provided for an indicator, just mention that no data is available, "
             "avoiding empty sentences."

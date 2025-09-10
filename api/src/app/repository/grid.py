@@ -2,7 +2,7 @@ import io
 import logging
 import os
 import pathlib
-from functools import lru_cache
+from functools import cached_property, lru_cache
 
 import h3
 import h3ronpy.polars  # noqa: F401
@@ -61,6 +61,16 @@ class H3TilesRepository:
         self.url = grid_url
         self.tile_to_cell_res_change = tile_to_cell_res_change
 
+    @cached_property
+    def available_tiles(self) -> dict[int, set[str]]:
+        result = {}
+        root = pathlib.Path(self.url)
+        for subdir in root.iterdir():
+            if subdir.is_dir():
+                files = {f.stem for f in subdir.iterdir() if f.is_file()}
+                result[int(subdir.name)] = files  # Sort for consistent ordering
+        return result
+
     def tile(self, tile_index: str, columns: list[str]) -> tuple[pl.LazyFrame, int]:
         z = h3.get_resolution(tile_index)  # also validates that tile index is valid.
         tile_path = os.path.join(self.url, f"{z}/{tile_index}.arrow")
@@ -108,8 +118,6 @@ class H3TilesRepository:
     def meta_for_region(self, geom: BaseGeometry, columns: list[str], tile_level: int) -> MultiDatasetMeta:
         """Get the metadata and update it with the zonal stats of the geometry"""
         meta = self.get_meta().model_dump()
-        tiles_path = os.path.join(self.url, str(tile_level))
-        available_tiles = [tile.stem for tile in pathlib.Path(tiles_path).glob("*.arrow")]
 
         geom_cells = cells_in_geojson(geom, tile_level + self.tile_to_cell_res_change)
         # get the parents at tile level resolution of the cells in geom
@@ -118,7 +126,11 @@ class H3TilesRepository:
             .select(pl.col("cell").h3.cells_parse().h3.change_resolution(tile_level).h3.cells_to_string())
             .unique()
         ).to_list()
-        tile_files = [os.path.join(tiles_path, tile + ".arrow") for tile in tiles_in_geom if tile in available_tiles]
+        tile_files = [
+            os.path.join(os.path.join(self.url, str(tile_level)), tile + ".arrow")
+            for tile in tiles_in_geom
+            if tile in self.available_tiles[tile_level]
+        ]
         lf = pl.scan_ipc(tile_files)
         if columns:
             lf = lf.select(["cell", *columns])

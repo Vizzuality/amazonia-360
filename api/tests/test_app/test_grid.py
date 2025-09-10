@@ -404,7 +404,7 @@ def test_grid_metadata_filter(grid_dataset, geojson):
     meta = response.json()
 
     assert len(meta["datasets"]) == 2
-    population = [ds for ds in meta["datasets"] if ds["var_name"] == "population"][0]
+    population = next(ds for ds in meta["datasets"] if ds["var_name"] == "population")
 
     assert population["legend"]["stats"][0]["max"] == 900
     assert population["legend"]["stats"][0]["min"] == 900

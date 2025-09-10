@@ -51,6 +51,8 @@ select = [
     "B", # flake8-bugbear
     "N", # Naming conventions
     "I", # isort
+    "UP",
+    "RUF",
 ]
 
 [tool.ruff.lint.flake8-bugbear]

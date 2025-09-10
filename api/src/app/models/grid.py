@@ -1,6 +1,4 @@
-# ruff: noqa: D101
-
-from enum import Enum
+from enum import StrEnum
 from typing import Annotated, Literal
 
 from fastapi import Query
@@ -9,7 +7,7 @@ from pydantic_extra_types.color import Color
 from sqlalchemy.sql import column, desc, nullslast, select, table
 
 
-class LegendTypes(str, Enum):
+class LegendTypes(StrEnum):
     continuous = "continuous"
     discrete = "discrete"
     categorical = "categorical"
@@ -69,7 +67,7 @@ class MultiDatasetMeta(BaseModel):
 # ===============================================
 
 
-class NumericalOperators(str, Enum):
+class NumericalOperators(StrEnum):
     eq = "eq"
     gt = "gt"
     lt = "lt"
@@ -78,7 +76,7 @@ class NumericalOperators(str, Enum):
     not_eq = "not_eq"
 
 
-class CategoricalOperators(str, Enum):
+class CategoricalOperators(StrEnum):
     in_ = "in"
     not_in = "not_in"
 

@@ -8,7 +8,7 @@ from app.config import get_settings
 from app.repository.grid import H3TilesRepository
 
 
-def colum_filter(  # noqa: D103
+def colum_filter(
     columns: list[str] = Query(
         [],
         description="Column/s to include in the tile. If empty, it returns only cell indexes.",
@@ -17,7 +17,7 @@ def colum_filter(  # noqa: D103
     return columns
 
 
-def feature_filter(  # noqa: D103
+def feature_filter(
     geojson: Annotated[Feature, Body(description="GeoJSON feature used to filter the cells.")],
 ):
     return geojson
