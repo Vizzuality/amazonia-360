@@ -52,13 +52,9 @@ export class WidgetsService {
 
       // Wait for the load event
       await page.goto(targetUrl, {
-        waitUntil: "load",
+        waitUntil: "networkidle",
         timeout: 60_000,
       });
-
-      // This delay tries to make sure the Javascript has loaded in order to
-      // pass geometry and/or generatedTextContent to the front-end
-      await page.waitForTimeout(2_000);
 
       // Set params if provided
       if (params) {
@@ -71,9 +67,6 @@ export class WidgetsService {
         }, params);
       }
 
-      // Wait until the network is idle
-      await requestManager.isIdle();
-
       // The delay awaited here should be enough to allow the application to
       // fully render the page. Everything else being equal, this may depend on
       // the kind of VM the service runs on, and any concurrent load on the VM,
@@ -84,11 +77,6 @@ export class WidgetsService {
       await page.waitForTimeout(
         Config.getNumber("browser.waitMsBeforeTakingSnapshot")
       );
-
-      // Use the regular styles instead of print styles to generate the PNG
-      // snapshot. See:
-      // https://playwright.dev/docs/api/class-page#page-emulate-media
-      await page.emulateMedia({ media: "screen" });
 
       // Take screenshot of only the widget container element instead of the whole page
       const widgetContainer = page.locator("#webshot-widget-container");
