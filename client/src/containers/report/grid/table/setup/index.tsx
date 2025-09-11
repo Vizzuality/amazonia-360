@@ -50,7 +50,7 @@ export default function GridTableSetup() {
   const [selectedDataset, setDataset] = useState<string>(gridDatasets[0]);
   const [selectedLimit, setSelectedLimit] = useState<number>(gridSetup.limit ?? 10);
 
-  const { data: h3IndicatorsData } = useGetH3Indicators(locale);
+  const { data: h3IndicatorsData } = useGetH3Indicators(undefined, locale);
 
   const OPTIONS = useMemo(() => {
     if (!h3IndicatorsData) return [];

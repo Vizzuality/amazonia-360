@@ -47,7 +47,7 @@ export default function IndicatorsItem({ id, name, description_short }: Indicato
     >
       <button
         className={cn(
-          "flex grow space-x-2.5 rounded-sm p-1 pr-2 text-left text-sm font-medium text-gray-400 transition-colors duration-300 ease-in-out hover:bg-blue-50",
+          "flex grow space-x-2.5 rounded-sm p-1 px-2 text-left text-sm font-medium text-gray-400 transition-colors duration-300 ease-in-out hover:bg-blue-50",
         )}
         onClick={() => handleChangeIndicator(!indicators?.includes(id))}
       >

@@ -1,24 +1,40 @@
 "use client";
 
+import { useMemo } from "react";
+
+import { useAtomValue } from "jotai";
 import { useLocale } from "next-intl";
 
-import { useGetDefaultIndicators } from "@/lib/indicators";
+import { useGetH3Indicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
 import { Topic } from "@/types/topic";
+
+import { selectedFiltersViewAtom, useSyncGridDatasets } from "@/app/store";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import IndicatorsItem from "./item";
 
-export default function IndicatorsList({ topicId }: { topicId?: Topic["id"] }) {
+export default function GridIndicatorsList({ topicId }: { topicId?: Topic["id"] }) {
   const locale = useLocale();
 
-  const { data: indicatorsData, isLoading: isLoadingTopicsData } = useGetDefaultIndicators(
+  const selectedFiltersView = useAtomValue(selectedFiltersViewAtom);
+  const [gridDatasets] = useSyncGridDatasets();
+
+  const { data: indicatorsData, isLoading: isLoadingTopicsData } = useGetH3Indicators(
     topicId,
     locale,
   );
+
+  const DATA = useMemo(() => {
+    if (!indicatorsData) return [];
+    if (selectedFiltersView) {
+      return indicatorsData.filter((indicator) => gridDatasets.includes(indicator.resource.column));
+    }
+    return indicatorsData || [];
+  }, [indicatorsData, gridDatasets, selectedFiltersView]);
 
   return (
     <div
@@ -30,8 +46,14 @@ export default function IndicatorsList({ topicId }: { topicId?: Topic["id"] }) {
     >
       <ScrollArea className="relative z-10 flex grow flex-col p-2 px-4">
         <div className="flex flex-col gap-0.5">
-          {isLoadingTopicsData && <Skeleton className="h-10" />}
-          {indicatorsData?.map((indicator) => {
+          {isLoadingTopicsData && (
+            <>
+              <Skeleton className="h-10" />
+              <Skeleton className="h-10" />
+              <Skeleton className="h-10" />
+            </>
+          )}
+          {DATA?.map((indicator) => {
             return <IndicatorsItem key={indicator.id} {...indicator} />;
           })}
         </div>
