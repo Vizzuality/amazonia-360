@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 import {
   useSyncGridDatasets,
-  useSyncGridFiltersSetUp,
+  useSyncGridTableSettings,
   useSyncGridSelectedDataset,
 } from "@/app/store";
 
@@ -45,7 +45,7 @@ export default function GridTableSetup() {
 
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
   const [, setGridSelectedDataset] = useSyncGridSelectedDataset();
-  const [gridSetup, setGridFiltersSetUp] = useSyncGridFiltersSetUp();
+  const [gridSetup, setGridTableSettings] = useSyncGridTableSettings();
   const [selectedDirection, setDirection] = useState<"asc" | "desc">(gridSetup.direction ?? "desc");
   const [selectedDataset, setDataset] = useState<string>(gridDatasets[0]);
   const [selectedLimit, setSelectedLimit] = useState<number>(gridSetup.limit ?? 10);
@@ -90,14 +90,14 @@ export default function GridTableSetup() {
     }
 
     if (selectedDirection) {
-      setGridFiltersSetUp((prev) => ({
+      setGridTableSettings((prev) => ({
         ...prev,
         direction: selectedDirection,
       }));
     }
 
     if (selectedLimit) {
-      setGridFiltersSetUp((prev) => ({
+      setGridTableSettings((prev) => ({
         ...prev,
         limit: selectedLimit,
       }));
@@ -109,7 +109,7 @@ export default function GridTableSetup() {
     selectedLimit,
     gridDatasets,
     setGridDatasets,
-    setGridFiltersSetUp,
+    setGridTableSettings,
     setGridSelectedDataset,
   ]);
 

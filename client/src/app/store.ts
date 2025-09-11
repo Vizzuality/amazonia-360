@@ -7,8 +7,8 @@ import {
   bboxParser,
   gridDatasetSelectedParser,
   gridDatasetsParser,
-  gridFiltersParser,
-  gridFiltersSetUpParser,
+  gridDatasetSettingsParser,
+  gridTableSettingsParser,
   locationParser,
   topicsParser,
   aiSummaryParser,
@@ -58,8 +58,8 @@ export const useSyncLocation = () => {
 };
 
 // GRID PARAMS
-export const useSyncGridFilters = () => {
-  return useQueryState("gridFilters", gridFiltersParser);
+export const useSyncGridDatasetSettings = () => {
+  return useQueryState("gridDatasetSettings", gridDatasetSettingsParser);
 };
 
 export const useSyncGridDatasets = () => {
@@ -70,8 +70,8 @@ export const useSyncGridSelectedDataset = () => {
   return useQueryState("gridDatasetSelected", gridDatasetSelectedParser);
 };
 
-export const useSyncGridFiltersSetUp = () => {
-  return useQueryState("gridFiltersSetUp", gridFiltersSetUpParser);
+export const useSyncGridTableSettings = () => {
+  return useQueryState("gridTableSettings", gridTableSettingsParser);
 };
 
 // AI SUMMARY PARAMS

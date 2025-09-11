@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 import {
   useSyncGridDatasets,
-  useSyncGridFiltersSetUp,
+  useSyncGridTableSettings,
   useSyncGridSelectedDataset,
   useSyncLocation,
 } from "@/app/store";
@@ -33,7 +33,7 @@ export const GridLegend: FC = () => {
 
   const [gridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset, setGridSelectedDataset] = useSyncGridSelectedDataset();
-  const [gridSetUpFilters, setGridSetUpFilters] = useSyncGridFiltersSetUp();
+  const [gridSetUpFilters, setGridSetUpFilters] = useSyncGridTableSettings();
 
   const { META } = useMeta(GEOMETRY);
 

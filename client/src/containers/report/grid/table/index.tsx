@@ -12,9 +12,9 @@ import { BodyReadTableGridTablePostFiltersItem } from "@/types/generated/api.sch
 
 import {
   useSyncGridDatasets,
-  useSyncGridFilters,
+  useSyncGridDatasetSettings,
   useSyncLocation,
-  useSyncGridFiltersSetUp,
+  useSyncGridTableSettings,
 } from "@/app/store";
 
 import { CardLoader } from "@/containers/card";
@@ -27,8 +27,8 @@ export default function GridTable() {
   const locale = useLocale();
   const [location] = useSyncLocation();
   const [gridDatasets] = useSyncGridDatasets();
-  const [gridFilters] = useSyncGridFilters();
-  const [gridFiltersSetUp] = useSyncGridFiltersSetUp();
+  const [gridDatasetSettings] = useSyncGridDatasetSettings();
+  const [gridTableSettings] = useSyncGridTableSettings();
 
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
@@ -57,7 +57,7 @@ export default function GridTable() {
             if (!d) return [];
 
             if (d.var_dtype === "Float64") {
-              return (gridFilters?.[dataset]?.map((f, i) => ({
+              return (gridDatasetSettings?.[dataset]?.map((f, i) => ({
                 filter_type: "numerical",
                 column_name: dataset,
                 operation: i === 0 ? "gte" : "lte",
@@ -72,8 +72,8 @@ export default function GridTable() {
       },
       params: {
         level: 1,
-        order_by: [`${gridFiltersSetUp?.direction === "asc" ? "" : "-"}${gridDatasets[0]}`],
-        limit: gridFiltersSetUp?.limit,
+        order_by: [`${gridTableSettings?.direction === "asc" ? "" : "-"}${gridDatasets[0]}`],
+        limit: gridTableSettings?.limit,
       },
     },
     {
@@ -82,7 +82,7 @@ export default function GridTable() {
   );
 
   const ITEMS = useMemo(() => {
-    return Array.from({ length: gridFiltersSetUp?.limit }, (_, i) => {
+    return Array.from({ length: gridTableSettings?.limit }, (_, i) => {
       return [...gridDatasets, "cell"].reduce(
         (acc, dataset) => {
           const d = queryTable?.data?.table.find((t) => t.column === dataset);
@@ -99,7 +99,7 @@ export default function GridTable() {
         {} as Record<string, unknown> & { id: number; cell: string },
       );
     }).filter((i) => i.cell);
-  }, [gridDatasets, queryTable?.data, gridFiltersSetUp?.limit]);
+  }, [gridDatasets, queryTable?.data, gridTableSettings?.limit]);
 
   const SORT_DATASET_NAME = useMemo(() => {
     if (!gridDatasets.length || !queryH3Indicators.data) return "";

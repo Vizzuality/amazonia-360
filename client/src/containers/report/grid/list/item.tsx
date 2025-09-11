@@ -17,7 +17,7 @@ import { H3Indicator } from "@/types/indicator";
 
 import {
   useSyncGridDatasets,
-  useSyncGridFilters,
+  useSyncGridDatasetSettings,
   useSyncGridSelectedDataset,
   useSyncLocation,
 } from "@/app/store";
@@ -53,7 +53,7 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
 
   const { isFetching: gridMetaFromGeometryIsFetching } = queryMetaFromGeometry;
 
-  const [gridFilters, setGridFilters] = useSyncGridFilters();
+  const [gridDatasetSettings, setGridDatasetSettings] = useSyncGridDatasetSettings();
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset, setGridSelectedDataset] = useSyncGridSelectedDataset();
 
@@ -85,9 +85,9 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
 
   const continuosValue = useMemo(() => {
     if (continuosOptions) {
-      if (gridFilters && H3_INDICATOR?.resource.column) {
+      if (gridDatasetSettings && H3_INDICATOR?.resource.column) {
         return (
-          gridFilters[H3_INDICATOR.resource.column] || [
+          gridDatasetSettings[H3_INDICATOR.resource.column] || [
             continuosOptions.min || 0,
             continuosOptions.max || 100,
           ]
@@ -98,7 +98,7 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
     }
 
     return [-Infinity, Infinity];
-  }, [H3_INDICATOR?.resource.column, continuosOptions, gridFilters]);
+  }, [H3_INDICATOR?.resource.column, continuosOptions, gridDatasetSettings]);
 
   const onOpenChange = (open: boolean) => {
     if (open && gridDatasets.length >= 4) {
@@ -119,7 +119,7 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
       }
 
       // Sync filters
-      setGridFilters((prev) => {
+      setGridDatasetSettings((prev) => {
         if (!H3_INDICATOR?.resource.column) return prev;
 
         const f = { ...prev };
@@ -132,7 +132,7 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
   };
 
   const onValueChange = (v: number[]) => {
-    setGridFilters((prev) => {
+    setGridDatasetSettings((prev) => {
       if (!H3_INDICATOR?.resource.column) return prev;
       return {
         ...prev,
@@ -331,11 +331,11 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
                       onCheckedChange={(checked) => {
                         console.info(H3_INDICATOR.resource.column, option, checked);
 
-                        // setGridFilters({
-                        //   ...gridFilters,
+                        // setGridDatasetSettings({
+                        //   ...gridDatasetSettings,
                         //   [indicator.var_name]: checked
-                        //     ? [...gridFilters[indicator.var_name], key]
-                        //     : gridFilters[indicator.var_name].filter((k) => k !== key),
+                        //     ? [...gridDatasetSettings[indicator.var_name], key]
+                        //     : gridDatasetSettings[indicator.var_name].filter((k) => k !== key),
                         // });
                       }}
                     />
