@@ -17,7 +17,13 @@ export default function TopicsList() {
 
   return (
     <div className="flex flex-col gap-0.5">
-      {isLoadingTopicsData && <Skeleton className="h-20" />}
+      {isLoadingTopicsData && (
+        <>
+          <Skeleton className="h-10" />
+          <Skeleton className="h-10" />
+          <Skeleton className="h-10" />
+        </>
+      )}
       {topicsData?.map((topic) => {
         return <TopicsItem key={topic.id} {...topic} />;
       })}

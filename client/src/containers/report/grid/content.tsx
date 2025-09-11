@@ -6,7 +6,9 @@ import { useAtomValue } from "jotai";
 import { useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
 
-import { selectedFiltersViewAtom } from "@/app/store";
+import { cn } from "@/lib/utils";
+
+import { indicatorsExpandAtom, selectedFiltersViewAtom } from "@/app/store";
 
 import GridFooter from "@/containers/report/grid/footer";
 import GridIndicatorsList from "@/containers/report/grid/list";
@@ -22,6 +24,7 @@ export default function SidebarGridContent() {
   const searchParams = useSearchParams();
 
   const selectedFiltersView = useAtomValue(selectedFiltersViewAtom);
+  const indicatorsExpand = useAtomValue(indicatorsExpandAtom);
 
   return (
     <div className="relative flex h-full grow flex-col space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white py-6 backdrop-blur-xl xl:space-y-4">
@@ -49,18 +52,23 @@ export default function SidebarGridContent() {
         <GridSearch className="py-0" />
       </div>
 
-      <div className="relative flex grow flex-col overflow-hidden">
-        <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2.5 bg-gradient-to-b from-white to-transparent" />
+      <div className="relative !m-0 flex grow flex-col overflow-hidden">
+        <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2 bg-gradient-to-b from-white to-transparent xl:h-4" />
         <ScrollArea className="flex grow flex-col">
-          <div className="px-6">
+          <div className="px-6 py-2 xl:py-4">
             {!selectedFiltersView && <GridTopicsList />}
             {selectedFiltersView && <GridIndicatorsList />}
           </div>
         </ScrollArea>
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-t from-white to-transparent" />
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-50 h-2 bg-gradient-to-t from-white to-transparent xl:h-4" />
       </div>
 
-      <div className="px-6">
+      <div
+        className={cn("px-6", {
+          "pt-2": !!Object.keys(indicatorsExpand || {}).some((k) => indicatorsExpand?.[Number(k)]),
+          "pt-5": !Object.keys(indicatorsExpand || {}).some((k) => indicatorsExpand?.[Number(k)]),
+        })}
+      >
         <GridFooter />
       </div>
     </div>

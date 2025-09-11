@@ -12,10 +12,9 @@ import { Topic } from "@/types/topic";
 
 import { selectedFiltersViewAtom, useSyncGridDatasets } from "@/app/store";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import IndicatorsItem from "./item";
+import GridIndicatorsItem from "./item";
 
 export default function GridIndicatorsList({ topicId }: { topicId?: Topic["id"] }) {
   const locale = useLocale();
@@ -44,20 +43,18 @@ export default function GridIndicatorsList({ topicId }: { topicId?: Topic["id"] 
         "after:pointer-events-none after:absolute after:left-2.5 after:top-0 after:z-0 after:h-[calc(100%_-_theme(space.5))] after:w-2.5 after:bg-white",
       )}
     >
-      <ScrollArea className="relative z-10 flex grow flex-col p-2 px-4">
-        <div className="flex flex-col gap-0.5">
-          {isLoadingTopicsData && (
-            <>
-              <Skeleton className="h-10" />
-              <Skeleton className="h-10" />
-              <Skeleton className="h-10" />
-            </>
-          )}
-          {DATA?.map((indicator) => {
-            return <IndicatorsItem key={indicator.id} {...indicator} />;
-          })}
-        </div>
-      </ScrollArea>
+      <div className="relative z-10 flex flex-col gap-0.5 p-2 px-4">
+        {isLoadingTopicsData && (
+          <>
+            <Skeleton className="h-7" />
+            <Skeleton className="h-7" />
+            <Skeleton className="h-7" />
+          </>
+        )}
+        {DATA?.map((indicator) => {
+          return <GridIndicatorsItem key={indicator.id} {...indicator} />;
+        })}
+      </div>
     </div>
   );
 }
