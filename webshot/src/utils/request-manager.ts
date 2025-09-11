@@ -5,8 +5,8 @@ import { Page } from "playwright";
 export const createRequestManager = (
   page: Page,
   logger: Logger,
-  timeoutMs: number = 60_000,
-  debounceDelayMs: number = 20_000,
+  timeoutMs: number = 30_000,
+  debounceDelayMs: number = 10_000,
 ) => {
   const activeRequests: Set<string> = new Set();
   let timeoutId: NodeJS.Timeout | undefined = undefined;

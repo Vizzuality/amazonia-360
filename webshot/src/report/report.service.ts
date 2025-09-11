@@ -17,6 +17,19 @@ export class ReportService {
     const targetUrl = `${appBaseUrl}${pagePath}`;
     this.logger.log(`Starting PDF generation for ${targetUrl}`);
 
+    /**
+     * As PDF reports become more complex, it will likely be necessary
+     * to fine-tune these wait and debounce intervals, so that they
+     * cover realistic times for each specific configuration of
+     * reports (e.g. how many sections are included, which maps roughly
+     * to number of assets to load, render times, etc.).
+     * For this reason we start to define them as baseline constants,
+     * with specific logic to multiply them or tweak them depending
+     * on intended use cases to come later.
+     */
+    const baselineRequestManagerWaitMs = 60_000;
+    const baselineRequestManagerDebounceIntervalMs = 20_000;
+
     let browser: Browser | null = null;
     let page: Page | null = null;
 
@@ -47,7 +60,12 @@ export class ReportService {
       page.on("console", consolePassthrough);
 
       // Set up the request manager to determine if the network is idle
-      const requestManager = createRequestManager(page, this.logger);
+      const requestManager = createRequestManager(
+        page,
+        this.logger,
+        baselineRequestManagerWaitMs,
+        baselineRequestManagerDebounceIntervalMs,
+      );
       requestManager.setupEvents();
 
       // Wait for the load event
