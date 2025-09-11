@@ -167,6 +167,13 @@ locals {
       name      = "SSLCertificateArns"
       value     = var.acm_certificate.arn
     },
+    // Some reports can take a very long time to render. Thanks Esri
+    // for the endless wait on some of your web components :shrug:
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "IdleTimeout"
+      value     = "240"
+    },
     // Health check path
     {
       namespace = "aws:elasticbeanstalk:environment:process:default"
@@ -184,7 +191,7 @@ resource "aws_elastic_beanstalk_environment" "application_environment" {
   solution_stack_name    = var.solution_stack_name
   tier                   = var.tier
   wait_for_ready_timeout = "20m"
-  cname_prefix = var.cname_prefix != null ? var.cname_prefix : null
+  cname_prefix           = var.cname_prefix != null ? var.cname_prefix : null
 
   dynamic "setting" {
     for_each = local.environment_settings
