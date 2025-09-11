@@ -19,9 +19,26 @@ export default function TopicsList() {
     <div className="flex flex-col gap-0.5">
       {isLoadingTopicsData && (
         <>
-          <Skeleton className="h-10" />
-          <Skeleton className="h-10" />
-          <Skeleton className="h-10" />
+          <div className="flex items-center space-x-2.5 p-1">
+            <Skeleton className="h-10 w-10" />
+            <Skeleton className="h-5 w-40" />
+          </div>
+          <div className="flex items-center space-x-2.5 p-1">
+            <Skeleton className="h-10 w-10" />
+            <Skeleton className="h-5 w-64" />
+          </div>
+          <div className="flex items-center space-x-2.5 p-1">
+            <Skeleton className="h-10 w-10" />
+            <Skeleton className="h-5 w-80" />
+          </div>
+          <div className="flex items-center space-x-2.5 p-1">
+            <Skeleton className="h-10 w-10" />
+            <Skeleton className="h-5 w-64" />
+          </div>
+          <div className="flex items-center space-x-2.5 p-1">
+            <Skeleton className="h-10 w-10" />
+            <Skeleton className="h-5 w-40" />
+          </div>
         </>
       )}
       {topicsData?.map((topic) => {
