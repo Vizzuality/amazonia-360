@@ -9,6 +9,7 @@ dependencies = [
     "fastapi>=0.115.8",
     "h3>=4.2.1",
     "h3ronpy>=0.22.0",
+    "obstore>=0.8.1",
     "openai>=1.63.2",
     "orjson>=3.10.15",
     "polars>=1.22.0",
@@ -28,6 +29,7 @@ build-backend = "hatchling.build"
 [tool.uv]
 dev-dependencies = [
     "app",
+    "ipython>=9.5.0",
     "mypy>=1.15.0",
     "pytest>=8.3.4",
     "pytest-cov>=6.2.1",

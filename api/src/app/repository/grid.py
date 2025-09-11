@@ -2,6 +2,7 @@ import io
 import logging
 import os
 import pathlib
+from collections import defaultdict
 from functools import cached_property, lru_cache
 
 import h3
@@ -10,6 +11,7 @@ import polars as pl
 import pyarrow as pa
 from h3ronpy import cells_to_string
 from h3ronpy.vector import ContainmentMode, geometry_to_cells
+from obstore.store import from_url
 from pydantic import ValidationError
 from shapely.geometry.base import BaseGeometry
 
@@ -53,6 +55,8 @@ def load_meta(path: str) -> MultiDatasetMeta:
 
 
 class H3TilesRepository:
+    meta_path = "meta.json"
+
     def __init__(
         self,
         grid_url: str,
@@ -60,21 +64,30 @@ class H3TilesRepository:
     ):
         self.url = grid_url
         self.tile_to_cell_res_change = tile_to_cell_res_change
+        self.store = from_url(grid_url)
+
+    @cached_property
+    def meta(self) -> MultiDatasetMeta:
+        resp = self.store.get(self.meta_path)
+        return MultiDatasetMeta.model_validate_json(bytes(resp.bytes()))
 
     @cached_property
     def available_tiles(self) -> dict[int, set[str]]:
-        result = {}
-        root = pathlib.Path(self.url)
-        for subdir in root.iterdir():
-            if subdir.is_dir():
-                files = {f.stem for f in subdir.iterdir() if f.is_file()}
-                result[int(subdir.name)] = files  # Sort for consistent ordering
+        result = defaultdict(set)
+        for list_item in self.store.list().collect():
+            list_item = pathlib.Path(list_item["path"])
+            if str(list_item) != self.meta_path:
+                result[int(list_item.parent.name)].add(list_item.stem)
         return result
+
+    @cached_property
+    def available_tiles_flat(self) -> set[str]:
+        return {tile for level in self.available_tiles.values() for tile in level}
 
     def tile(self, tile_index: str, columns: list[str]) -> tuple[pl.LazyFrame, int]:
         z = h3.get_resolution(tile_index)  # also validates that tile index is valid.
         tile_path = os.path.join(self.url, f"{z}/{tile_index}.arrow")
-        if not os.path.exists(tile_path):
+        if tile_index not in self.available_tiles_flat:
             raise TileNotFoundError(f"Tile {tile_path} not found")
         tile = pl.scan_ipc(tile_path).select(["cell", *columns])
         return tile, z
@@ -117,7 +130,7 @@ class H3TilesRepository:
 
     def meta_for_region(self, geom: BaseGeometry, columns: list[str], tile_level: int) -> MultiDatasetMeta:
         """Get the metadata and update it with the zonal stats of the geometry"""
-        meta = self.get_meta().model_dump()
+        meta = self.meta.model_dump()
 
         geom_cells = cells_in_geojson(geom, tile_level + self.tile_to_cell_res_change)
         # get the parents at tile level resolution of the cells in geom
