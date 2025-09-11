@@ -38,7 +38,7 @@ export default function IndicatorsFooter() {
   return (
     <div className="flex items-center justify-between">
       <Button variant="ghost" size="sm" onClick={handleExpandAll}>
-        Expand all
+        {t("expand-all")}
       </Button>
 
       <Button
