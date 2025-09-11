@@ -12,10 +12,10 @@ export const createRequestManager = (
   let timeoutId: NodeJS.Timeout | undefined = undefined;
 
   let resolve: (() => void) | undefined = undefined;
-  let reject: (() => void) | undefined = undefined;
+  let reject: (() => Error) | undefined = undefined;
   const promise = new Promise<void>((_resolve, _reject) => {
     resolve = _resolve;
-    reject = _reject;
+    reject = () => new Error("Timeout while rendering page");
   });
 
   // This function is debounced so that every time a request is started, finished or failed, a
