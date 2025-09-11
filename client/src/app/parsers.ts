@@ -73,8 +73,8 @@ export type CustomLocation = {
 export type Location = SearchLocation | CustomLocation;
 export const locationParser = parseAsJson<Location>();
 
-export const gridFiltersParser = parseAsJson<Record<string, number[]>>();
-export const gridFiltersSetUpParser = parseAsJson<{
+export const gridDatasetSettingsParser = parseAsJson<Record<string, number[]>>();
+export const gridTableSettingsParser = parseAsJson<{
   [key: string]: number[] | number | string;
   limit: number;
   opacity: number;

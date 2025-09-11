@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 import {
   useSyncGridDatasets,
-  useSyncGridFiltersSetUp,
+  useSyncGridTableSettings,
   useSyncGridSelectedDataset,
   useSyncLocation,
 } from "@/app/store";
@@ -29,11 +29,11 @@ export const GridLegend: FC = () => {
     wkid: 4326,
   });
 
-  const { data: H3IndicatorsData } = useGetH3Indicators(locale);
+  const { data: H3IndicatorsData } = useGetH3Indicators(undefined, locale);
 
   const [gridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset, setGridSelectedDataset] = useSyncGridSelectedDataset();
-  const [gridSetUpFilters, setGridSetUpFilters] = useSyncGridFiltersSetUp();
+  const [gridSetUpFilters, setGridSetUpFilters] = useSyncGridTableSettings();
 
   const { META } = useMeta(GEOMETRY);
 

@@ -48,7 +48,7 @@ export const GridTableItem = (
   const setGridCellHighlight = useSetAtom(gridCellHighlightAtom);
   const setTmpBbox = useSetAtom(tmpBboxAtom);
 
-  const { data: H3IndicatorsData } = useGetH3Indicators(locale);
+  const { data: H3IndicatorsData } = useGetH3Indicators(undefined, locale);
 
   const queryMeta = useGetGridMeta({
     select: (data) =>

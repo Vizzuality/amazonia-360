@@ -112,11 +112,15 @@ export const useGetDefaultIndicators = (
   return query;
 };
 
-export const useGetH3Indicators = (locale: string) => {
+export const useGetH3Indicators = (topic_id: Topic["id"] | undefined, locale: string) => {
   const query = useGetIndicators(locale, {
     select(data) {
       return data
-        .filter((indicator) => indicator.resource.type === "h3")
+        .filter((indicator) => {
+          const t = topic_id ? indicator.topic.id === topic_id : true;
+
+          return indicator.topic.id !== 0 && indicator.resource.type === "h3" && t;
+        })
         .map((indicator) => ({
           ...indicator,
           resource: indicator.resource as Indicator["resource"] & { type: "h3" },

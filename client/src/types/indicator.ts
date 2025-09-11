@@ -1,4 +1,3 @@
-import { DatasetMeta } from "@/types/generated/api.schemas";
 import { Topic } from "@/types/topic";
 
 import { IndicatorView } from "@/app/parsers";
@@ -86,11 +85,10 @@ export type Indicator = {
     | ResourceComponent;
 };
 
-export type H3Indicator = Indicator &
-  Pick<DatasetMeta, "var_dtype" | "var_name" | "legend"> & {
-    resource: ResourceH3;
-    topic: Topic;
-  };
+export type H3Indicator = Indicator & {
+  resource: ResourceH3;
+  topic: Topic;
+};
 
 export type IndicatorOverview = {
   id: number;

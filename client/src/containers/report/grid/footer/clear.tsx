@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useEffect } from "react";
 
 import { useSetAtom } from "jotai";
@@ -11,7 +13,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-export default function GridClearFilters() {
+export default function GridClear() {
   const t = useTranslations();
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
   const setSelectedFiltersView = useSetAtom(selectedFiltersViewAtom);

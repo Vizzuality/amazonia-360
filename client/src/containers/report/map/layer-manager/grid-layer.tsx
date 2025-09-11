@@ -29,8 +29,8 @@ import {
   gridHoverAtom,
   gridCellHighlightAtom,
   useSyncGridDatasets,
-  useSyncGridFilters,
-  useSyncGridFiltersSetUp,
+  useSyncGridDatasetSettings,
+  useSyncGridTableSettings,
   useSyncGridSelectedDataset,
   useSyncLocation,
   GridHoverType,
@@ -57,7 +57,7 @@ const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
 export const getGridLayerProps = ({
   gridDatasets,
-  gridFilters,
+  gridDatasetSettings,
   gridSelectedDataset,
   opacity,
   getFillColor,
@@ -71,7 +71,7 @@ export const getGridLayerProps = ({
   sketchEnabled,
 }: {
   gridDatasets: string[];
-  gridFilters: Record<string, number[] | Record<string, string | number>> | null;
+  gridDatasetSettings: Record<string, number[] | Record<string, string | number>> | null;
   gridSelectedDataset: string | null;
   opacity: number;
   getFillColor: Accessor<Record<string, number>, Color>;
@@ -178,7 +178,7 @@ export const getGridLayerProps = ({
     maxCacheSize: 300, // max number of tiles to keep in the cache
     _subLayerProps: {
       gridDatasets,
-      gridFilters: gridFilters ? gridFilters : {},
+      gridDatasetSettings: gridDatasetSettings ? gridDatasetSettings : {},
     },
     updateTriggers: {
       getTileData: [geometry],
@@ -212,7 +212,7 @@ export const getGridLayerProps = ({
             if (legend?.legend_type === "continuous" && "stats" in legend) {
               const stats = legend?.stats?.find((s) => s.level === 1);
 
-              return (gridFilters?.[gridDatasets[f]] || [stats?.min, stats?.max]) as [
+              return (gridDatasetSettings?.[gridDatasets[f]] || [stats?.min, stats?.max]) as [
                 number,
                 number,
               ];
@@ -315,8 +315,8 @@ export default function GridLayer() {
 
   const [location, setLocation] = useSyncLocation();
 
-  const [gridFilters] = useSyncGridFilters();
-  const [gridSetUpFilters] = useSyncGridFiltersSetUp();
+  const [gridDatasetSettings] = useSyncGridDatasetSettings();
+  const [gridSetUpFilters] = useSyncGridTableSettings();
   const [gridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
   const gridCellHighlight = useAtomValue(gridCellHighlightAtom);
@@ -407,7 +407,7 @@ export default function GridLayer() {
         "deck.layers": [
           getGridLayerProps({
             gridDatasets,
-            gridFilters,
+            gridDatasetSettings,
             gridSelectedDataset,
             gridMetaData,
             getFillColor,
@@ -429,7 +429,7 @@ export default function GridLayer() {
     GRID_LAYER.current.deck.layers = [
       getGridLayerProps({
         gridDatasets,
-        gridFilters,
+        gridDatasetSettings,
         gridSelectedDataset,
         gridMetaData,
         getFillColor,
@@ -447,7 +447,7 @@ export default function GridLayer() {
     return GRID_LAYER.current;
   }, [
     gridDatasets,
-    gridFilters,
+    gridDatasetSettings,
     gridSelectedDataset,
     gridMetaData,
     getFillColor,

@@ -43,7 +43,7 @@ export default function SearchC({ className }: { className?: string }) {
   });
   const queryIndicators = useGetDefaultIndicators(undefined, locale);
 
-  const { data: H3IndicatorsData } = useGetH3Indicators(locale);
+  const { data: H3IndicatorsData } = useGetH3Indicators(undefined, locale);
   const { META } = useMeta(GEOMETRY);
 
   const INDICATORS = useMemo(() => {

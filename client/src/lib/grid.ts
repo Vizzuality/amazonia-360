@@ -187,6 +187,7 @@ export const useMeta = (GEOMETRY: __esri.Polygon | null) => {
 
   const queryMeta = useGetGridMeta({
     enabled: !GEOMETRY,
+    placeholderData: (previous) => previous,
   });
 
   const queryMetaFromGeometry = useGetGridMetaFromGeometry(
@@ -194,6 +195,7 @@ export const useMeta = (GEOMETRY: __esri.Polygon | null) => {
     {},
     {
       enabled: !!GEOMETRY,
+      placeholderData: (previous) => previous,
     },
   );
 

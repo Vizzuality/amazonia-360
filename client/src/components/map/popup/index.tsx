@@ -13,7 +13,7 @@ export const MapPopup = () => {
   const locale = useLocale();
   const gridHover = useAtomValue(gridHoverAtom);
 
-  const { data: H3IndicatorsData } = useGetH3Indicators(locale);
+  const { data: H3IndicatorsData } = useGetH3Indicators(undefined, locale);
 
   const VALUES = useMemo(() => {
     return gridHover.values

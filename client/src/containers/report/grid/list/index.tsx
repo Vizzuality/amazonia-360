@@ -1,23 +1,39 @@
 "use client";
 
+import { useMemo } from "react";
+
+import { useAtomValue } from "jotai";
 import { useLocale } from "next-intl";
 
-import { useGetDefaultIndicators } from "@/lib/indicators";
+import { useGetH3Indicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
 import { Topic } from "@/types/topic";
 
+import { selectedFiltersViewAtom, useSyncGridDatasets } from "@/app/store";
+
 import { Skeleton } from "@/components/ui/skeleton";
 
-import IndicatorsItem from "./item";
+import GridIndicatorsItem from "./item";
 
-export default function IndicatorsList({ topicId }: { topicId?: Topic["id"] }) {
+export default function GridIndicatorsList({ topicId }: { topicId?: Topic["id"] }) {
   const locale = useLocale();
 
-  const { data: indicatorsData, isLoading: isLoadingTopicsData } = useGetDefaultIndicators(
+  const selectedFiltersView = useAtomValue(selectedFiltersViewAtom);
+  const [gridDatasets] = useSyncGridDatasets();
+
+  const { data: indicatorsData, isLoading: isLoadingTopicsData } = useGetH3Indicators(
     topicId,
     locale,
   );
+
+  const DATA = useMemo(() => {
+    if (!indicatorsData) return [];
+    if (selectedFiltersView) {
+      return indicatorsData.filter((indicator) => gridDatasets.includes(indicator.resource.column));
+    }
+    return indicatorsData || [];
+  }, [indicatorsData, gridDatasets, selectedFiltersView]);
 
   return (
     <div
@@ -35,8 +51,8 @@ export default function IndicatorsList({ topicId }: { topicId?: Topic["id"] }) {
             <Skeleton className="h-7" />
           </>
         )}
-        {indicatorsData?.map((indicator) => {
-          return <IndicatorsItem key={indicator.id} {...indicator} />;
+        {DATA?.map((indicator) => {
+          return <GridIndicatorsItem key={indicator.id} {...indicator} />;
         })}
       </div>
     </div>
