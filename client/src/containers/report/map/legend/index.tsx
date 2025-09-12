@@ -6,7 +6,7 @@ import { LegendItem } from "@/containers/report/map/legend/item";
 
 import Legend from "@/components/map/legend";
 
-export const LegendContainer = () => {
+const LegendContainer = () => {
   const [indicators] = useSyncIndicators();
 
   const INDICATORS = useMemo(() => {
@@ -27,3 +27,5 @@ export const LegendContainer = () => {
     </div>
   );
 };
+
+export default LegendContainer;

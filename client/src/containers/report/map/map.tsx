@@ -22,7 +22,6 @@ import {
 import { BUFFERS } from "@/constants/map";
 
 import GridLegend from "@/containers/report/map/grid-legend/grid";
-import { LegendContainer } from "@/containers/report/map/legend";
 import { SketchTooltips } from "@/containers/report/map/sketch-tooltips";
 
 import Controls from "@/components/map/controls";
@@ -39,6 +38,10 @@ const Map = dynamic(() => import("@/components/map"), {
 });
 
 const LayerManager = dynamic(() => import("./layer-manager"), {
+  ssr: false,
+});
+
+const Legend = dynamic(() => import("./legend"), {
   ssr: false,
 });
 
@@ -162,6 +165,22 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
         defaultBbox={defaultBbox}
         bbox={tmpBbox}
         padding={desktop}
+        viewProps={{
+          popup: {
+            dockEnabled: false,
+
+            visibleElements: {
+              actionBar: false,
+              collapseButton: false,
+              featureListLayerTitle: false,
+            },
+
+            viewModel: {
+              includeDefaultActions: false,
+            },
+            features: [],
+          },
+        }}
         onMapMove={handleMapMove}
         onPointerLeave={handlePointerLeave}
       >
@@ -189,7 +208,7 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
         <MapPopup />
       </Map>
 
-      {!pathname.includes("/grid") && <LegendContainer />}
+      {!pathname.includes("/grid") && <Legend />}
 
       {gridSelectedDataset && pathname.includes("/grid") && <GridLegend />}
 
