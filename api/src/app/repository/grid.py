@@ -68,8 +68,16 @@ class H3TilesRepository:
 
     @cached_property
     def meta(self) -> MultiDatasetMeta:
-        resp = self.store.get(self.meta_path)
-        return MultiDatasetMeta.model_validate_json(bytes(resp.bytes()))
+        try:
+            resp = self.store.get(self.meta_path)
+            meta = MultiDatasetMeta.model_validate_json(bytes(resp.bytes()))
+        except FileNotFoundError as e:
+            log.exception("Metadata file does not exist", e)
+            raise MetadataError("Metadata file does not exist") from e
+        except ValidationError as e:
+            log.exception("Metadata file is not valid", e)
+            raise MetadataError("Metadata file is not valid") from e
+        return meta
 
     @cached_property
     def available_tiles(self) -> dict[int, set[str]]:
@@ -92,46 +100,32 @@ class H3TilesRepository:
         tile = pl.scan_ipc(tile_path).select(["cell", *columns])
         return tile, z
 
-    def tile_as_ipc_bytes(self, tile_index: str, columns: list[str]) -> bytes:
+    async def tile_as_ipc_bytes(self, tile_index: str, columns: list[str]) -> bytes:
         tile, _ = self.tile(tile_index, columns)
         try:
-            tile = tile.collect()
+            tile = await tile.collect_async()
         # we don't know if the column requested are correct until we call .collect()
         except pl.exceptions.ColumnNotFoundError:
             raise ColumnNotFoundError("One or more of the specified columns is not valid") from None
         return polars_to_string_ipc(tile)
 
-    def tile_in_area(self, tile_index: str, columns: list[str], geom: BaseGeometry) -> pl.DataFrame:
+    async def tile_in_area(self, tile_index: str, columns: list[str], geom: BaseGeometry) -> pl.DataFrame:
         tile, tile_level = self.tile(tile_index, columns)
         cells = cells_in_geojson(geom, tile_level + self.tile_to_cell_res_change)
         try:
-            tile = tile.join(cells, on="cell").collect()
+            tile = await tile.join(cells, on="cell").collect_async()
         # we don't know if the column requested are correct until we call .collect()
         except pl.exceptions.ColumnNotFoundError:
             raise ColumnNotFoundError("One or more of the specified columns is not valid") from None
         return tile
 
-    def tile_in_area_as_ipc_bytes(self, tile_index: str, columns: list[str], geom: BaseGeometry) -> bytes:
-        tile = self.tile_in_area(tile_index, columns, geom)
+    async def tile_in_area_as_ipc_bytes(self, tile_index: str, columns: list[str], geom: BaseGeometry) -> bytes:
+        tile = await self.tile_in_area(tile_index, columns, geom)
         return polars_to_string_ipc(tile)
 
-    def get_meta(self) -> MultiDatasetMeta:
-        """Get the grid dataset metadata file"""
-        meta_path = os.path.join(self.url, "meta.json")
-        try:
-            meta = load_meta(meta_path)
-        except FileNotFoundError as e:
-            log.exception("Metadata file does not exist", e)
-            raise MetadataError("Metadata file does not exist") from e
-        except ValidationError as e:
-            log.exception("Metadata file is not valid", e)
-            raise MetadataError("Metadata file is not valid") from e
-        return meta
-
-    def meta_for_region(self, geom: BaseGeometry, columns: list[str], tile_level: int) -> MultiDatasetMeta:
+    async def meta_for_region(self, geom: BaseGeometry, columns: list[str], tile_level: int) -> MultiDatasetMeta:
         """Get the metadata and update it with the zonal stats of the geometry"""
         meta = self.meta.model_dump()
-
         geom_cells = cells_in_geojson(geom, tile_level + self.tile_to_cell_res_change)
         # get the parents at tile level resolution of the cells in geom
         tiles_in_geom = pl.Series(
@@ -152,8 +146,8 @@ class H3TilesRepository:
         lf = lf.join(geom_cells, on="cell")
 
         try:  # exception will araise in the collect
-            maxs = lf.select(pl.selectors.numeric().max()).collect()
-            mins = lf.select(pl.selectors.numeric().min()).collect()
+            maxs = await lf.select(pl.selectors.numeric().max()).collect_async()
+            mins = await lf.select(pl.selectors.numeric().min()).collect_async()
         except FileNotFoundError as e:
             raise TileNotFoundError(str(e)) from e
 
@@ -166,7 +160,7 @@ class H3TilesRepository:
             stats["max"] = maxs.select(pl.col(column)).item()
         return MultiDatasetMeta.model_validate(meta)
 
-    def get_table(self, tile_level: int, filters: TableFilters, geom: BaseGeometry | None) -> TableResults:
+    async def get_table(self, tile_level: int, filters: TableFilters, geom: BaseGeometry | None) -> TableResults:
         """Query tile dataset and return table data"""
         tiles_path = os.path.join(self.url, str(tile_level))
 
@@ -178,7 +172,7 @@ class H3TilesRepository:
 
         query = filters.to_sql_query("frame")  # "frame" is the name of the table in polars sql engine
         try:
-            res = pl.SQLContext(frame=all_cells).execute(query).collect()
+            res = await pl.SQLContext(frame=all_cells).execute(query).collect_async()
         except pl.exceptions.ColumnNotFoundError as e:  # bad column in order by clause
             raise ColumnNotFoundError from e
         except pl.exceptions.ComputeError as e:  # raised if wrong type in compare.
