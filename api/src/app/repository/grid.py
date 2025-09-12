@@ -2,6 +2,7 @@ import io
 import logging
 import os
 import pathlib
+from collections import defaultdict
 from functools import cached_property, lru_cache
 
 import h3
@@ -10,6 +11,7 @@ import polars as pl
 import pyarrow as pa
 from h3ronpy import cells_to_string
 from h3ronpy.vector import ContainmentMode, geometry_to_cells
+from obstore.store import from_url
 from pydantic import ValidationError
 from shapely.geometry.base import BaseGeometry
 
@@ -53,6 +55,8 @@ def load_meta(path: str) -> MultiDatasetMeta:
 
 
 class H3TilesRepository:
+    meta_path = "meta.json"
+
     def __init__(
         self,
         grid_url: str,
@@ -60,53 +64,13 @@ class H3TilesRepository:
     ):
         self.url = grid_url
         self.tile_to_cell_res_change = tile_to_cell_res_change
+        self.store = from_url(grid_url)
 
     @cached_property
-    def available_tiles(self) -> dict[int, set[str]]:
-        result = {}
-        root = pathlib.Path(self.url)
-        for subdir in root.iterdir():
-            if subdir.is_dir():
-                files = {f.stem for f in subdir.iterdir() if f.is_file()}
-                result[int(subdir.name)] = files  # Sort for consistent ordering
-        return result
-
-    def tile(self, tile_index: str, columns: list[str]) -> tuple[pl.LazyFrame, int]:
-        z = h3.get_resolution(tile_index)  # also validates that tile index is valid.
-        tile_path = os.path.join(self.url, f"{z}/{tile_index}.arrow")
-        if not os.path.exists(tile_path):
-            raise TileNotFoundError(f"Tile {tile_path} not found")
-        tile = pl.scan_ipc(tile_path).select(["cell", *columns])
-        return tile, z
-
-    def tile_as_ipc_bytes(self, tile_index: str, columns: list[str]) -> bytes:
-        tile, _ = self.tile(tile_index, columns)
+    def meta(self) -> MultiDatasetMeta:
         try:
-            tile = tile.collect()
-        # we don't know if the column requested are correct until we call .collect()
-        except pl.exceptions.ColumnNotFoundError:
-            raise ColumnNotFoundError("One or more of the specified columns is not valid") from None
-        return polars_to_string_ipc(tile)
-
-    def tile_in_area(self, tile_index: str, columns: list[str], geom: BaseGeometry) -> pl.DataFrame:
-        tile, tile_level = self.tile(tile_index, columns)
-        cells = cells_in_geojson(geom, tile_level + self.tile_to_cell_res_change)
-        try:
-            tile = tile.join(cells, on="cell").collect()
-        # we don't know if the column requested are correct until we call .collect()
-        except pl.exceptions.ColumnNotFoundError:
-            raise ColumnNotFoundError("One or more of the specified columns is not valid") from None
-        return tile
-
-    def tile_in_area_as_ipc_bytes(self, tile_index: str, columns: list[str], geom: BaseGeometry) -> bytes:
-        tile = self.tile_in_area(tile_index, columns, geom)
-        return polars_to_string_ipc(tile)
-
-    def get_meta(self) -> MultiDatasetMeta:
-        """Get the grid dataset metadata file"""
-        meta_path = os.path.join(self.url, "meta.json")
-        try:
-            meta = load_meta(meta_path)
+            resp = self.store.get(self.meta_path)
+            meta = MultiDatasetMeta.model_validate_json(bytes(resp.bytes()))
         except FileNotFoundError as e:
             log.exception("Metadata file does not exist", e)
             raise MetadataError("Metadata file does not exist") from e
@@ -115,10 +79,53 @@ class H3TilesRepository:
             raise MetadataError("Metadata file is not valid") from e
         return meta
 
-    def meta_for_region(self, geom: BaseGeometry, columns: list[str], tile_level: int) -> MultiDatasetMeta:
-        """Get the metadata and update it with the zonal stats of the geometry"""
-        meta = self.get_meta().model_dump()
+    @cached_property
+    def available_tiles(self) -> dict[int, set[str]]:
+        result = defaultdict(set)
+        for list_item in self.store.list().collect():
+            list_item = pathlib.Path(list_item["path"])
+            if str(list_item) != self.meta_path:
+                result[int(list_item.parent.name)].add(list_item.stem)
+        return result
 
+    @cached_property
+    def available_tiles_flat(self) -> set[str]:
+        return {tile for level in self.available_tiles.values() for tile in level}
+
+    def tile(self, tile_index: str, columns: list[str]) -> tuple[pl.LazyFrame, int]:
+        z = h3.get_resolution(tile_index)  # also validates that tile index is valid.
+        tile_path = os.path.join(self.url, f"{z}/{tile_index}.arrow")
+        if tile_index not in self.available_tiles_flat:
+            raise TileNotFoundError(f"Tile {tile_path} not found")
+        tile = pl.scan_ipc(tile_path).select(["cell", *columns])
+        return tile, z
+
+    async def tile_as_ipc_bytes(self, tile_index: str, columns: list[str]) -> bytes:
+        tile, _ = self.tile(tile_index, columns)
+        try:
+            tile = await tile.collect_async()
+        # we don't know if the column requested are correct until we call .collect()
+        except pl.exceptions.ColumnNotFoundError:
+            raise ColumnNotFoundError("One or more of the specified columns is not valid") from None
+        return polars_to_string_ipc(tile)
+
+    async def tile_in_area(self, tile_index: str, columns: list[str], geom: BaseGeometry) -> pl.DataFrame:
+        tile, tile_level = self.tile(tile_index, columns)
+        cells = cells_in_geojson(geom, tile_level + self.tile_to_cell_res_change)
+        try:
+            tile = await tile.join(cells, on="cell").collect_async()
+        # we don't know if the column requested are correct until we call .collect()
+        except pl.exceptions.ColumnNotFoundError:
+            raise ColumnNotFoundError("One or more of the specified columns is not valid") from None
+        return tile
+
+    async def tile_in_area_as_ipc_bytes(self, tile_index: str, columns: list[str], geom: BaseGeometry) -> bytes:
+        tile = await self.tile_in_area(tile_index, columns, geom)
+        return polars_to_string_ipc(tile)
+
+    async def meta_for_region(self, geom: BaseGeometry, columns: list[str], tile_level: int) -> MultiDatasetMeta:
+        """Get the metadata and update it with the zonal stats of the geometry"""
+        meta = self.meta.model_dump()
         geom_cells = cells_in_geojson(geom, tile_level + self.tile_to_cell_res_change)
         # get the parents at tile level resolution of the cells in geom
         tiles_in_geom = pl.Series(
@@ -139,8 +146,8 @@ class H3TilesRepository:
         lf = lf.join(geom_cells, on="cell")
 
         try:  # exception will araise in the collect
-            maxs = lf.select(pl.selectors.numeric().max()).collect()
-            mins = lf.select(pl.selectors.numeric().min()).collect()
+            maxs = await lf.select(pl.selectors.numeric().max()).collect_async()
+            mins = await lf.select(pl.selectors.numeric().min()).collect_async()
         except FileNotFoundError as e:
             raise TileNotFoundError(str(e)) from e
 
@@ -153,7 +160,7 @@ class H3TilesRepository:
             stats["max"] = maxs.select(pl.col(column)).item()
         return MultiDatasetMeta.model_validate(meta)
 
-    def get_table(self, tile_level: int, filters: TableFilters, geom: BaseGeometry | None) -> TableResults:
+    async def get_table(self, tile_level: int, filters: TableFilters, geom: BaseGeometry | None) -> TableResults:
         """Query tile dataset and return table data"""
         tiles_path = os.path.join(self.url, str(tile_level))
 
@@ -165,7 +172,7 @@ class H3TilesRepository:
 
         query = filters.to_sql_query("frame")  # "frame" is the name of the table in polars sql engine
         try:
-            res = pl.SQLContext(frame=all_cells).execute(query).collect()
+            res = await pl.SQLContext(frame=all_cells).execute(query).collect_async()
         except pl.exceptions.ColumnNotFoundError as e:  # bad column in order by clause
             raise ColumnNotFoundError from e
         except pl.exceptions.ComputeError as e:  # raised if wrong type in compare.
