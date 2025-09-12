@@ -3,7 +3,7 @@ name = "app"
 version = "0.1.0"
 description = "Amazonia 360 API"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
     "exactextract>=0.2.0",
     "fastapi>=0.115.8",
@@ -70,9 +70,9 @@ extend-immutable-calls = [
 disable_error_code = ["import-untyped", "attr-defined"]
 
 [tool.pytest.ini_options]
-addopts = """
---cov-report term-missing \
---cov src/app --cov scripts/ -ra"""
+# addopts = """
+# --cov-report term-missing \
+# --cov src/app --cov scripts/ -ra"""
 testpaths = ["tests"]
 
 [tool.coverage.report]
