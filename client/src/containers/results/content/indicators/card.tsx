@@ -117,6 +117,7 @@ export default function ReportResultsIndicator({
                 resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
               })}
               basemapId={basemapId}
+              isWebshot={isWebshot}
             />
           )}
 

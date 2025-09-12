@@ -40,12 +40,14 @@ interface WidgetMapProps extends Omit<__esri.MapViewProperties, "map"> {
   indicator: Indicator;
   basemapId?: BasemapIds;
   layers: LayerProps[];
+  isWebshot?: boolean;
 }
 
 export default function WidgetMap({
   indicator,
   basemapId = FALLBACK_WIDGET_DEFAULT_BASEMAP_ID,
   layers,
+  isWebshot = false,
   ...viewProps
 }: WidgetMapProps) {
   const [location] = useSyncLocation();
@@ -135,23 +137,27 @@ export default function WidgetMap({
           />
         )}
 
-        <Controls>
-          <FullscreenControl />
-          <ZoomControl />
-          <BasemapControl
-            onBasemapChange={(selectedBasemapId) =>
-              handleMapIndicatorPropertyChange(
-                "basemapId",
-                selectedBasemapId,
-                overviewTopicsData ? (overviewTopicsData as unknown as DefaultTopicConfig[]) : null,
-                indicator,
-                setSyncDefaultTopics,
-                setTopics,
-                defaultValues,
-              )
-            }
-          />
-        </Controls>
+        {!isWebshot && (
+          <Controls>
+            <FullscreenControl />
+            <ZoomControl />
+            <BasemapControl
+              onBasemapChange={(selectedBasemapId) =>
+                handleMapIndicatorPropertyChange(
+                  "basemapId",
+                  selectedBasemapId,
+                  overviewTopicsData
+                    ? (overviewTopicsData as unknown as DefaultTopicConfig[])
+                    : null,
+                  indicator,
+                  setSyncDefaultTopics,
+                  setTopics,
+                  defaultValues,
+                )
+              }
+            />
+          </Controls>
+        )}
       </Map>
     </div>
   );

@@ -18,6 +18,7 @@ export const MapIndicators = (
   indicator: Omit<Indicator, "resource"> & {
     resource: ResourceFeature | ResourceWebTile | ResourceImageryTile | ResourceImagery;
     basemapId?: (typeof BASEMAPS)[number]["id"];
+    isWebshot?: boolean;
   },
 ) => {
   const { id, basemapId } = indicator;

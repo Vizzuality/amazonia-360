@@ -104,13 +104,9 @@ export class ReportService {
 
       // Wait for the load event
       await page.goto(targetUrl, {
-        waitUntil: "load",
-        timeout: 30_000,
+        waitUntil: "networkidle",
+        timeout: 60_000,
       });
-
-      // This delay tries to make sure the Javascript has loaded in order to
-      // pass geometry and/or generatedTextContent to the front-end
-      await page.waitForTimeout(2_000);
 
       // Set geometry if provided
       if (geometry) {
@@ -136,9 +132,6 @@ export class ReportService {
         }, generatedTextContent);
       }
 
-      // Wait until the network is idle
-      await requestManager.isIdle();
-
       // The delay awaited here should be enough to allow the application to
       // fully render the page. Everything else being equal, this may depend on
       // the kind of VM the service runs on, and any concurrent load on the VM,
@@ -149,20 +142,17 @@ export class ReportService {
       await page.waitForTimeout(
         Config.getNumber("browser.waitMsBeforeTakingSnapshot")
       );
-
-      // Use the regular styles instead of print styles to generate the PDF
-      // See: https://playwright.dev/docs/api/class-page#page-pdf
       await page.emulateMedia({ media: "screen" });
 
       // Generate PDF from screenshots
       const pdfBuffer = await page.pdf({
-        format: "A4",
+        format: Config.getString("pdf.pageFormat") || undefined,
         landscape: Config.getString("pdf.pageOrientation") === "landscape",
         margin: {
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
+          top: Config.getString("pdf.pageMargins.top"),
+          bottom: Config.getString("pdf.pageMargins.bottom"),
+          left: Config.getString("pdf.pageMargins.left"),
+          right: Config.getString("pdf.pageMargins.right"),
         },
         printBackground: true,
       });
