@@ -12,7 +12,7 @@ import {
   ResourceImageryTile,
 } from "@/types/indicator";
 
-import { MapIndicators } from "../../indicators/map";
+import { MapIndicators } from "../../../indicators/map";
 
 import { DataRow, SupportedLocales } from "./components";
 

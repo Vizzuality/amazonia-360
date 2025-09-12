@@ -1,6 +1,6 @@
 import Header from "@/containers/header";
-import DocumentCoverPdfSection from "@/containers/webshot/document-cover-pdf-section";
-import GeographicContextPdfSection from "@/containers/webshot/geographic-context/geographic-context-pdf-section";
+import DocumentCoverPdfSection from "@/containers/webshot/pdf-report/document-cover-pdf-section";
+import GeographicContextPdfSection from "@/containers/webshot/pdf-report/geographic-context/geographic-context-pdf-section";
 import { WebshotReportContainer } from "@/containers/webshot/webshot-report-container";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
