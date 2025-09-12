@@ -28,13 +28,13 @@ class ArrowIPCResponse(Response):
     response_class=ArrowIPCResponse,
     response_description="Arrow IPC table",
 )
-def grid_tile(
+async def grid_tile(
     tile_index: Annotated[str, Path(description="The `h3` index of the tile")],
     columns: ColumnNamesDep,
     repo: GridRepositoryDep,
 ) -> ArrowIPCResponse:
     """Get a tile of h3 cells with specified data columns"""
-    tile = repo.tile_as_ipc_bytes(tile_index, columns)
+    tile = await repo.tile_as_ipc_bytes(tile_index, columns)
     return ArrowIPCResponse(tile)
 
 
@@ -44,7 +44,7 @@ def grid_tile(
     response_class=ArrowIPCResponse,
     response_description="Arrow IPC table",
 )
-def grid_tile_in_area(
+async def grid_tile_in_area(
     tile_index: Annotated[str, Path(description="The `h3` index of the tile")],
     geojson: FeatureDep,
     columns: ColumnNamesDep,
@@ -52,7 +52,7 @@ def grid_tile_in_area(
 ) -> ArrowIPCResponse:
     """Get a tile of h3 cells that are inside the polygon"""
     geom = shapely.from_geojson(geojson.model_dump_json())
-    tile = repo.tile_in_area_as_ipc_bytes(tile_index, columns, geom)
+    tile = await repo.tile_in_area_as_ipc_bytes(tile_index, columns, geom)
     return ArrowIPCResponse(tile)
 
 
@@ -62,8 +62,7 @@ def grid_tile_in_area(
 )
 async def grid_dataset_metadata(repo: GridRepositoryDep) -> MultiDatasetMeta:
     """Get the grid dataset metadata"""
-    meta = repo.get_meta()
-    return meta
+    return repo.meta
 
 
 @grid_router.post(
@@ -78,12 +77,12 @@ async def grid_dataset_metadata_in_area(
 ) -> MultiDatasetMeta:
     """Get the grid dataset metadata with updated min and max for the area"""
     geom = shapely.from_geojson(geojson.model_dump_json())
-    meta = repo.meta_for_region(geom, columns, level)
+    meta = await repo.meta_for_region(geom, columns, level)
     return meta
 
 
 @grid_router.post("/table")
-def read_table(
+async def read_table(
     level: Annotated[int, Query(..., description="Tile level at which the query will be computed")],
     repo: GridRepositoryDep,
     filters: TableFilters = Depends(),
@@ -93,4 +92,4 @@ def read_table(
     geom = None
     if geojson is not None:
         geom = shapely.from_geojson(geojson.model_dump_json())
-    return repo.get_table(level, filters, geom)
+    return await repo.get_table(level, filters, geom)
