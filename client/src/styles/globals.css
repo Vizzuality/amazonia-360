@@ -86,8 +86,14 @@
     @apply m-4;
   }
 
+  .map .esri-popup.esri-popup--shadow {
+    @apply rounded-lg shadow-sm;
+  }
+
   .map .esri-popup__main-container {
     @apply rounded-lg border border-blue-100 shadow-sm;
+  }
+  .map .esri-popup--is-docked .esri-popup__main-container {
     max-width: calc(50% - 2rem);
   }
 
