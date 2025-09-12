@@ -220,7 +220,6 @@ jobs:
           IMAGE_TAG: ${{ needs.set_environment.outputs.env_name }}
 
           API_AUTH_TOKEN: ${{ secrets.TF_API_AUTH_TOKEN }}
-          API_TIFF_PATH: ${{ vars.TF_API_TIFF_PATH }}
           API_GRID_TILES_PATH: ${{ vars.TF_API_GRID_TILES_PATH }}
           OPENAI_TOKEN: ${{ secrets.OPENAI_TOKEN }}
         run: |
@@ -237,7 +236,6 @@ jobs:
                 - amazonia360-network
               environment:
                 - AUTH_TOKEN=${API_AUTH_TOKEN}
-                - TIFF_PATH=${API_TIFF_PATH}
                 - GRID_TILES_PATH=${API_GRID_TILES_PATH}
                 - OPENAI_TOKEN=${OPENAI_TOKEN}
               restart: always
