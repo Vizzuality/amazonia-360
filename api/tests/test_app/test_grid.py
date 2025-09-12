@@ -2,12 +2,13 @@ import json
 
 import polars as pl
 from tests.conftest import HEADERS
+from tests.utils import test_client
 
 from app.models.grid import TableFilters
 
 
-def test_grid_tile(grid_dataset, client):
-    response = client.get(
+def test_grid_tile(grid_dataset):
+    response = test_client.get(
         f"/grid/tile/{grid_dataset}",
         params={"columns": ["landcover", "population"]},
         headers=HEADERS,
@@ -26,8 +27,8 @@ def test_grid_tile(grid_dataset, client):
     }
 
 
-def test_grid_tile_empty_column_param(grid_dataset, client):
-    response = client.get(f"/grid/tile/{grid_dataset}", headers=HEADERS)
+def test_grid_tile_empty_column_param(grid_dataset):
+    response = test_client.get(f"/grid/tile/{grid_dataset}", headers=HEADERS)
 
     assert response.status_code == 200
     assert pl.read_ipc(response.read()).to_dict(as_series=False) == {
@@ -41,26 +42,26 @@ def test_grid_tile_empty_column_param(grid_dataset, client):
     }
 
 
-def test_grid_tile_wrong_column(grid_dataset, client):
-    response = client.get(f"/grid/tile/{grid_dataset}", params={"columns": ["NOEXIST"]}, headers=HEADERS)
+def test_grid_tile_wrong_column(grid_dataset):
+    response = test_client.get(f"/grid/tile/{grid_dataset}", params={"columns": ["NOEXIST"]}, headers=HEADERS)
     assert response.status_code == 400
     assert response.json() == {"detail": "One or more of the specified columns is not valid"}
 
 
-def test_grid_tile_404(grid_dataset, client):
-    response = client.get("/grid/tile/8439181ffffffff", headers=HEADERS)
+def test_grid_tile_404(grid_dataset):
+    response = test_client.get("/grid/tile/8439181ffffffff", headers=HEADERS)
 
     assert response.status_code == 404
 
 
-def test_grid_tile_bad_index(grid_dataset, client):
-    response = client.get("/grid/tile/123", headers=HEADERS)
+def test_grid_tile_bad_index(grid_dataset):
+    response = test_client.get("/grid/tile/123", headers=HEADERS)
     assert response.status_code == 400
     assert response.json() == {"detail": "Integer is not a valid H3 cell: 0x123"}
 
 
-def test_grid_metadata(grid_dataset, client):
-    res = client.get("/grid/meta", headers=HEADERS)
+def test_grid_metadata(grid_dataset):
+    res = test_client.get("/grid/meta", headers=HEADERS)
 
     assert res.status_code == 200
     assert len(res.json()["datasets"]) == 2
@@ -287,7 +288,7 @@ def test_table_filters_multiple_filters():
     )
 
 
-def test_grid_table(grid_dataset, client):
+def test_grid_table(grid_dataset):
     body = {
         "filters": [
             {
@@ -305,7 +306,7 @@ def test_grid_table(grid_dataset, client):
         ]
     }
 
-    response = client.post(
+    response = test_client.post(
         "/grid/table?level=4&order_by=-population",
         headers=HEADERS,
         content=json.dumps(body),
@@ -320,7 +321,7 @@ def test_grid_table(grid_dataset, client):
     }
 
 
-def test_grid_table_geojson(grid_dataset, geojson, client):
+def test_grid_table_geojson(grid_dataset, geojson):
     body = {
         "filters": [
             {
@@ -338,7 +339,7 @@ def test_grid_table_geojson(grid_dataset, geojson, client):
         ],
         "geojson": json.loads(geojson),
     }
-    response = client.post(
+    response = test_client.post(
         "/grid/table?level=4&order_by=-population",
         headers=HEADERS,
         content=json.dumps(body),
@@ -353,8 +354,8 @@ def test_grid_table_geojson(grid_dataset, geojson, client):
     }
 
 
-def test_grid_tile_post_geojson(grid_dataset, geojson, client):
-    response = client.post(
+def test_grid_tile_post_geojson(grid_dataset, geojson):
+    response = test_client.post(
         f"/grid/tile/{grid_dataset}",
         params={"columns": ["landcover", "population"]},
         headers=HEADERS,
@@ -368,8 +369,8 @@ def test_grid_tile_post_geojson(grid_dataset, geojson, client):
     }
 
 
-def test_grid_tile_post_geojson_404(grid_dataset, geojson, client):
-    response = client.post(
+def test_grid_tile_post_geojson_404(grid_dataset, geojson):
+    response = test_client.post(
         "/grid/tile/8439181ffffffff",
         params={"columns": ["landcover", "population"]},
         headers=HEADERS,
@@ -379,8 +380,8 @@ def test_grid_tile_post_geojson_404(grid_dataset, geojson, client):
     assert response.status_code == 404
 
 
-def test_grid_tile_post_wrong_column(grid_dataset, geojson, client):
-    response = client.post(
+def test_grid_tile_post_wrong_column(grid_dataset, geojson):
+    response = test_client.post(
         f"/grid/tile/{grid_dataset}",
         params={"columns": ["I DO NOT EXIST"]},
         headers=HEADERS,
@@ -391,8 +392,8 @@ def test_grid_tile_post_wrong_column(grid_dataset, geojson, client):
     assert response.json() == {"detail": "One or more of the specified columns is not valid"}
 
 
-def test_grid_metadata_filter(grid_dataset, geojson, client):
-    response = client.post(
+def test_grid_metadata_filter(grid_dataset, geojson):
+    response = test_client.post(
         "/grid/meta",
         params={"level": 4},
         headers=HEADERS,

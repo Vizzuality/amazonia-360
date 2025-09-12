@@ -3,13 +3,12 @@ name = "app"
 version = "0.1.0"
 description = "Amazonia 360 API"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
     "exactextract>=0.2.0",
     "fastapi>=0.115.8",
     "h3>=4.2.1",
     "h3ronpy>=0.22.0",
-    "obstore>=0.8.1",
     "openai>=1.63.2",
     "orjson>=3.10.15",
     "polars>=1.22.0",
@@ -29,7 +28,6 @@ build-backend = "hatchling.build"
 [tool.uv]
 dev-dependencies = [
     "app",
-    "ipython>=9.5.0",
     "mypy>=1.15.0",
     "pytest>=8.3.4",
     "pytest-cov>=6.2.1",
@@ -70,9 +68,9 @@ extend-immutable-calls = [
 disable_error_code = ["import-untyped", "attr-defined"]
 
 [tool.pytest.ini_options]
-# addopts = """
-# --cov-report term-missing \
-# --cov src/app --cov scripts/ -ra"""
+addopts = """
+--cov-report term-missing \
+--cov src/app --cov scripts/ -ra"""
 testpaths = ["tests"]
 
 [tool.coverage.report]

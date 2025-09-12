@@ -6,7 +6,6 @@ from pathlib import Path
 
 import polars as pl
 import pytest
-from fastapi.testclient import TestClient
 
 from app.config import get_settings
 
@@ -49,7 +48,7 @@ TEST_ROOT = Path(__file__).resolve().parent
 
 # Testing settings env variables
 os.environ["AUTH_TOKEN"] = "secret"
-os.environ["GRID_TILES_PATH"] = (TEST_ROOT / "data" / "grid").as_uri()
+os.environ["GRID_TILES_PATH"] = str(TEST_ROOT / "data" / "grid")
 os.environ["OPENAI_TOKEN"] = "fake-token"
 
 HEADERS = {"Authorization": f"Bearer {get_settings().auth_token}"}
@@ -79,15 +78,16 @@ def geojson() -> str:
     return s
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def setup_data_folder():
-    data_path = Path.from_uri(get_settings().grid_tiles_path.unicode_string())
-    data_path.mkdir(exist_ok=True, parents=True)
+    Path(get_settings().grid_tiles_path).mkdir(exist_ok=True, parents=True)
+
     yield
-    shutil.rmtree(data_path.as_posix())
+
+    shutil.rmtree(get_settings().grid_tiles_path)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def grid_dataset(setup_data_folder) -> Generator[str]:
     """Create an empty binary file to be used as grid dataset stub
     for a level 0 tile. like:
@@ -100,7 +100,7 @@ def grid_dataset(setup_data_folder) -> Generator[str]:
     level = "4"
     h3_index = "84395c9ffffffff"
 
-    grid_dataset_path = Path.from_uri(get_settings().grid_tiles_path.unicode_string())
+    grid_dataset_path = Path(get_settings().grid_tiles_path)
     level_path = grid_dataset_path / level
     level_path.mkdir(parents=True, exist_ok=True)
     tile_path = level_path / f"{h3_index}.arrow"
@@ -125,10 +125,3 @@ def grid_dataset(setup_data_folder) -> Generator[str]:
         df.write_ipc(f)
 
     yield h3_index
-
-
-@pytest.fixture()
-def client() -> Generator:
-    from app.main import app
-
-    yield TestClient(app)

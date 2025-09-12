@@ -3,7 +3,6 @@
 from functools import lru_cache
 
 from pydantic import SecretStr
-from pydantic.networks import AnyUrl
 from pydantic_settings import BaseSettings
 from pydantic_settings.main import SettingsConfigDict
 
@@ -14,7 +13,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     auth_token: str
-    grid_tiles_path: AnyUrl
+    grid_tiles_path: str
     tile_to_cell_resolution_diff: int = 5
     openai_token: SecretStr
 
