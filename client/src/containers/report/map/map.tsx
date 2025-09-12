@@ -173,7 +173,6 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
               actionBar: false,
               collapseButton: false,
               featureListLayerTitle: false,
-              closeButton: false,
             },
 
             viewModel: {

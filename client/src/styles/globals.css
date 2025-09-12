@@ -86,7 +86,7 @@
     @apply m-4;
   }
 
-  .map .esri-popup--shadow {
+  .map .esri-popup.esri-popup--shadow {
     @apply rounded-lg shadow-sm;
   }
 
