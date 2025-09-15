@@ -298,6 +298,61 @@ jobs:
 
             22_sync_s3_bucket:
               command: aws s3 sync s3://${PROJECT_NAME}-${ENV_NAME}-bucket /var/app/data/api
+
+            23_create_sync_script:
+                command: |
+                  cat <<'SCRIPT' > /usr/local/bin/sync_s3_data.sh
+                  #!/bin/bash
+
+                  # Set AWS region
+                  export AWS_DEFAULT_REGION=${AWS_REGION}
+
+                  # Log file for sync operations
+                  LOG_FILE="/var/log/s3_sync.log"
+
+                  # Function to log with timestamp
+                  log_message() {
+                      echo "[\$(date '+%Y-%m-%d %H:%M:%S')] \$1" >> \$LOG_FILE
+                  }
+
+                  log_message "Starting S3 sync..."
+
+                  # Sync S3 bucket to local directory
+                  if aws s3 sync s3://${PROJECT_NAME}-${ENV_NAME}-bucket /var/app/data/api >> \$LOG_FILE 2>&1; then
+                      log_message "S3 sync completed successfully"
+                  else
+                      log_message "S3 sync failed with exit code \$?"
+                  fi
+                  SCRIPT
+
+                  chmod +x /usr/local/bin/sync_s3_data.sh
+
+            24_setup_cron_job:
+              command: |
+                # Create cron job to sync every 10 minutes
+                echo "*/10 * * * * root /usr/local/bin/sync_s3_data.sh" > /etc/cron.d/s3-sync
+                chmod 0644 /etc/cron.d/s3-sync
+
+                # Ensure cron service is running
+                sudo service cron start
+                sudo systemctl enable cron
+
+                # Create log file with proper permissions
+                sudo touch /var/log/s3_sync.log
+                sudo chmod 644 /var/log/s3_sync.log
+
+            25_setup_log_rotation:
+              command: |
+                cat <<'LOGROTATE' > /etc/logrotate.d/s3-sync
+                /var/log/s3_sync.log {
+                    daily
+                    missingok
+                    rotate 7
+                    compress
+                    delaycompress
+                    notifempty
+                }
+                LOGROTATE
           EOF
 
       - name: Generate zip file
