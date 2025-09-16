@@ -12,9 +12,11 @@ import {
   ResourceImageryTile,
 } from "@/types/indicator";
 
+import { SupportedLocales } from "@/app/types";
+
 import { MapIndicators } from "../../../indicators/map";
 
-import { DataRow, SupportedLocales } from "./components";
+import { DataRow } from "./components";
 
 export default function GeographicContextPdfSection() {
   const locale = useLocale();

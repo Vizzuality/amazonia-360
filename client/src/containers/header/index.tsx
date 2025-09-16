@@ -39,11 +39,7 @@ function getRoutes(pathname: string) {
   };
 }
 
-type HeaderProps = {
-  withLanguageSelector?: boolean;
-};
-
-export default function Header({ withLanguageSelector = true }: HeaderProps) {
+export default function Header() {
   const pathname = usePathname();
 
   const t = useTranslations();
@@ -93,7 +89,7 @@ export default function Header({ withLanguageSelector = true }: HeaderProps) {
         <LogoBetaInfo />
         <Media greaterThanOrEqual="md" className="flex items-center space-x-4">
           {DYNAMIC_HEADER}
-          {withLanguageSelector && <LanguageSelector />}
+          <LanguageSelector />
         </Media>
 
         <Media lessThan="md">

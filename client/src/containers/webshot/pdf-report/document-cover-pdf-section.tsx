@@ -4,17 +4,22 @@ import { useMemo } from "react";
 
 import { useLocale, useTranslations } from "next-intl";
 
-import { useGetTopics } from "@/lib/topics";
+import { Topic } from "@/types/topic";
 
-import { useSyncLocation, useSyncTopics } from "@/app/store";
+import { SupportedLocales } from "@/app/types";
 
-import { SupportedLocales } from "./geographic-context/components";
+interface DocumentCoverPdfSectionProps {
+  title?: string;
+  selectedTopics?: Topic[];
+}
 
-export default function DocumentCoverPdfSection() {
+export default function DocumentCoverPdfSection({
+  selectedTopics,
+  title,
+}: DocumentCoverPdfSectionProps) {
   const locale = useLocale();
   const t = useTranslations();
   const localeString = locale as SupportedLocales;
-  const [location] = useSyncLocation();
 
   const dateString = useMemo(() => {
     const now = new Date();
@@ -25,15 +30,7 @@ export default function DocumentCoverPdfSection() {
     });
   }, [localeString]);
 
-  const topics = useSyncTopics();
-  const { data: allTopics } = useGetTopics(locale);
-
-  const selectedTopics = useMemo(
-    () => allTopics?.filter((topic) => topics[0]?.find((t) => t.id === topic.id)),
-    [allTopics, topics],
-  );
-
-  const formattedTopicsName = useMemo(() => {
+  const formattedTopicsNames = useMemo(() => {
     if (!selectedTopics || selectedTopics.length === 0) return "";
     const conjunction = t("conjunction-and");
     const topicNames = selectedTopics.map((topic) => topic[`name_${localeString}`].toLowerCase());
@@ -55,10 +52,10 @@ export default function DocumentCoverPdfSection() {
     <div className="relative">
       <div className="absolute bottom-[60px] z-10 flex w-[551px] flex-col gap-8 bg-blue-700 px-14 py-10">
         <h1 className="text-6xl text-white">
-          {t("pdf-report-cover-title", { location: location?.custom_title || "Selected Area" })}
+          {t("pdf-report-cover-title", { location: title || "Selected Area" })}
         </h1>
         <p className="font-normal text-white">
-          {t("pdf-report-cover-subtitle", { topics: formattedTopicsName })}
+          {t("pdf-report-cover-subtitle", { topics: formattedTopicsNames })}
         </p>
         <p className="font-normal text-white">
           {t("pdf-report-cover-date", { date: dateString, language: "English" })}

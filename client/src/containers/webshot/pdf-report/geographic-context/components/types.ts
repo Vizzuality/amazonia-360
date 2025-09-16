@@ -1,4 +1,4 @@
-export type SupportedLocales = "en" | "es" | "pt";
+import { SupportedLocales } from "@/app/types";
 
 export interface DataRowProps {
   indicatorId: number;
