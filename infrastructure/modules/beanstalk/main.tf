@@ -54,6 +54,8 @@ resource "aws_elastic_beanstalk_application" "application" {
   name = var.application_name
 }
 
+data "aws_region" "current" {}
+
 # Settings for the elastic beanstalk environment
 locals {
   environment_settings = [
@@ -61,6 +63,11 @@ locals {
       namespace = "aws:elasticbeanstalk:application:environment"
       name      = "S3_BUCKET_NAME"
       value     = aws_s3_bucket.application_bucket.bucket
+    },
+    {
+      namespace = "aws:elasticbeanstalk:application:environment"
+      name      = "S3_BUCKET_NAME"
+      value     = data.aws_region.current.name
     },
     {
       namespace = "aws:ec2:vpc"
