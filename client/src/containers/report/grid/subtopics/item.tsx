@@ -9,7 +9,7 @@ import { Subtopic } from "@/types/topic";
 
 import { indicatorsExpandAtom } from "@/app/store";
 
-import IndicatorsList from "@/containers/report/indicators/list";
+import IndicatorsList from "@/containers/report/grid/list";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 

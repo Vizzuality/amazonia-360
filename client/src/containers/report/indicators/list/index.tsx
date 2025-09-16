@@ -32,7 +32,7 @@ export default function IndicatorsList({ subtopicId }: { subtopicId?: Subtopic["
         "after:pointer-events-none after:absolute after:left-2.5 after:top-0 after:z-0 after:h-[calc(100%_-_theme(space.5))] after:w-2.5 after:bg-white",
       )}
     >
-      <div className="relative z-10 flex flex-col gap-0.5 p-2 px-4">
+      <div className="relative z-10 flex flex-col gap-0.5 p-2 pl-3">
         {isFetching && !isFetched && (
           <>
             <Skeleton className="h-7" />

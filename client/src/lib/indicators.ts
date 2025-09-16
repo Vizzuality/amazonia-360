@@ -129,14 +129,28 @@ export const useGetDefaultIndicators = ({
   return query;
 };
 
-export const useGetH3Indicators = (subtopicId: Subtopic["id"] | undefined, locale: string) => {
+export const useGetH3Indicators = ({
+  topicId,
+  subtopicId,
+  locale,
+}: {
+  topicId?: Topic["id"];
+  subtopicId?: Subtopic["id"];
+  locale: string;
+}) => {
   const query = useGetIndicators(locale, {
     select(data) {
       return data
         .filter((indicator) => {
-          const t = subtopicId ? indicator.subtopic.id === subtopicId : true;
+          if (topicId) {
+            return indicator.subtopic.topic_id === topicId && indicator.resource.type === "h3";
+          }
 
-          return indicator.subtopic.id !== 0 && indicator.resource.type === "h3" && t;
+          if (subtopicId) {
+            return indicator.subtopic.id === subtopicId && indicator.resource.type === "h3";
+          }
+
+          return indicator.resource.type === "h3";
         })
         .map((indicator) => ({
           ...indicator,
