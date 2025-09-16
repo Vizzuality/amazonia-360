@@ -264,5 +264,5 @@
   "accept": "Aceptar",
   "reject": "Rechazar",
   "content-title": "Consentimiento de cookies",
-  "consent-message": "AmazoniaForever360+ utiliza cookies que recopilan datos personales con el fin de medir la audiencia y analizar las necesidades de nuestros usuarios, con el objetivo de mejorar la plataforma. \n Si acepta el uso de cookies, los datos se compartirán con Fullstory. Si rechaza, no se establecerán cookies y no se recopilarán datos."
+  "consent-message": "AmazoniaForever360+ utiliza cookies que recopilan datos personales con el fin de medir la audiencia y analizar las necesidades de nuestros usuarios, con el objetivo de mejorar la plataforma. \n\n Si acepta el uso de cookies, los datos se compartirán con [Fullstory](https://www.fullstory.com/). Si rechaza, no se establecerán cookies y no se recopilarán datos."
 }

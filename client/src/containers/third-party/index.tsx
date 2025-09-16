@@ -68,11 +68,11 @@ const ThirdParty: React.FC = () => {
       )}
 
       <Dialog open={consent === undefined}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-lg">
           <DialogTitle className="text-2xl">{t("content-title")}</DialogTitle>
           <DialogDescription className="sr-only">{t("consent-message")}</DialogDescription>
-          <Markdown className="prose-base">{t("consent-message")}</Markdown>
-          <DialogFooter className="justify-end">
+          <Markdown>{t("consent-message")}</Markdown>
+          <DialogFooter className="mt-5 justify-end">
             <Button
               size="lg"
               onClick={() => {
@@ -83,7 +83,7 @@ const ThirdParty: React.FC = () => {
             </Button>
             <Button
               size="lg"
-              variant="secondary"
+              variant="outline"
               onClick={() => {
                 handleCookieClick(false);
               }}
