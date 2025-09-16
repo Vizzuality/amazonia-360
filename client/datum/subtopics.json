@@ -9,7 +9,89 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 0,
+                "type": "numeric",
+                "x": 0,
+                "y": 0,
+                "w": 1,
+                "h": 1
+            },
+            {
+                "id": 35,
+                "type": "numeric",
+                "x": 1,
+                "y": 0,
+                "w": 1,
+                "h": 1
+            },
+            {
+                "id": 11,
+                "type": "numeric",
+                "x": 2,
+                "y": 0,
+                "w": 1,
+                "h": 1
+            },
+            {
+                "id": 12,
+                "type": "numeric",
+                "x": 3,
+                "y": 0,
+                "w": 1,
+                "h": 1
+            },
+            {
+                "id": 5,
+                "type": "map",
+                "x": 0,
+                "y": 2,
+                "w": 2,
+                "h": 4
+            },
+            {
+                "id": 4,
+                "type": "table",
+                "x": 2,
+                "y": 2,
+                "w": 2,
+                "h": 4
+            },
+            {
+                "id": 2,
+                "type": "numeric",
+                "x": 0,
+                "y": 1,
+                "w": 1,
+                "h": 1
+            },
+            {
+                "id": 3,
+                "type": "numeric",
+                "x": 1,
+                "y": 1,
+                "w": 1,
+                "h": 1
+            },
+            {
+                "id": 4,
+                "type": "numeric",
+                "x": 2,
+                "y": 1,
+                "w": 1,
+                "h": 1
+            },
+            {
+                "id": 5,
+                "type": "numeric",
+                "x": 3,
+                "y": 1,
+                "w": 1,
+                "h": 1
+            }
+        ]
     },
     {
         "id": 1,
@@ -21,7 +103,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 6,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 2,
@@ -33,7 +125,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 11,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 3,
@@ -45,7 +147,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 13,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 4,
@@ -57,7 +169,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 14,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 5,
@@ -69,7 +191,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 18,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 6,
@@ -81,7 +213,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 26,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 7,
@@ -93,7 +235,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 30,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 8,
@@ -105,7 +257,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 33,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 9,
@@ -117,7 +279,9 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+        ]
     },
     {
         "id": 10,
@@ -129,7 +293,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 35,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 11,
@@ -141,7 +315,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 37,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 12,
@@ -153,7 +337,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 38,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 13,
@@ -165,7 +359,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 39,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 14,
@@ -177,7 +381,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 40,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 15,
@@ -189,7 +403,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 42,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 16,
@@ -201,7 +425,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 49,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 17,
@@ -213,7 +447,9 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+        ]
     },
     {
         "id": 18,
@@ -225,7 +461,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 51,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 19,
@@ -237,7 +483,9 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+        ]
     },
     {
         "id": 20,
@@ -249,7 +497,9 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+        ]
     },
     {
         "id": 21,
@@ -261,7 +511,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 52,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 22,
@@ -273,7 +533,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 53,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 23,
@@ -285,7 +555,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 54,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 24,
@@ -297,7 +577,9 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+        ]
     },
     {
         "id": 25,
@@ -309,7 +591,9 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+        ]
     },
     {
         "id": 26,
@@ -321,7 +605,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 55,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 27,
@@ -333,7 +627,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 56,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 28,
@@ -345,7 +649,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 61,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 29,
@@ -357,7 +671,17 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 62,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     },
     {
         "id": 30,
@@ -369,7 +693,9 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+        ]
     },
     {
         "id": 31,
@@ -381,7 +707,9 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+        ]
     },
     {
         "id": 32,
@@ -393,7 +721,9 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+        ]
     },
     {
         "id": 33,
@@ -405,6 +735,16 @@
         "image": "",
         "description_en": "",
         "description_es": "",
-        "description_pt": ""
+        "description_pt": "",
+        "default_visualization": [
+            {
+                "id": 64,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+        ]
     }
 ]
