@@ -276,30 +276,6 @@ jobs:
               driver: bridge
           EOF
 
-      - name: Generate .ebextensions/20_sync_data.config
-        working-directory: infrastructure/source_bundle
-        env:
-          PROJECT_NAME: ${{ vars.TF_PROJECT_NAME }}
-          ENV_NAME: ${{ needs.set_environment.outputs.env_name }}
-          AWS_REGION: ${{ vars.TF_AWS_REGION }}
-        run: |
-          mkdir -p .ebextensions
-          cat <<EOF >> .ebextensions/20_sync_data.config
-          commands:
-            20_install_awscli:
-              command: |
-                sudo apt-get update -y
-                sudo apt-get install -y awscli
-                sudo apt-get clean
-                sudo rm -rf /var/lib/apt/lists/*
-
-            21_create_data_folder:
-              command: mkdir -p /var/app/data/api
-
-            22_sync_s3_bucket:
-              command: aws s3 sync s3://${PROJECT_NAME}-${ENV_NAME}-bucket /var/app/data/api
-          EOF
-
       - name: Generate zip file
         working-directory: infrastructure/source_bundle
         run: |
