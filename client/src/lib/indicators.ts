@@ -13,11 +13,12 @@ import {
   ResourceWebTile,
   VisualizationTypes,
 } from "@/types/indicator";
-import { Topic } from "@/types/topic";
+import { Subtopic, Topic } from "@/types/topic";
 
 import { LayerProps } from "@/components/map/layers/types";
 
 import INDICATORS from "@/../datum/indicators.json";
+import SUBTOPICS from "@/../datum/subtopics.json";
 import TOPICS from "@/../datum/topics.json";
 
 /**
@@ -42,19 +43,23 @@ export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
 export const getIndicators = async (locale: string) => {
   const indicators = INDICATORS;
   const topics = TOPICS as Topic[];
+  const subtopics = SUBTOPICS as Subtopic[];
 
   return indicators
-    .map(
-      (indicator) =>
-        ({
-          ...indicator,
-          name: indicator[`name_${locale}` as keyof typeof indicator],
-          description: indicator[`description_${locale}` as keyof typeof indicator],
-          description_short: indicator[`description_short_${locale}` as keyof typeof indicator],
-          unit: indicator[`unit_${locale}` as keyof typeof indicator],
-          topic: topics.find((topic) => topic.id === indicator.topic),
-        }) as Indicator,
-    )
+    .map((indicator) => {
+      const s = subtopics.find((s) => s.id === indicator.subtopic_id);
+      const t = topics.find((t) => t.id === s?.topic_id);
+
+      return {
+        ...indicator,
+        name: indicator[`name_${locale}` as keyof typeof indicator],
+        description: indicator[`description_${locale}` as keyof typeof indicator],
+        description_short: indicator[`description_short_${locale}` as keyof typeof indicator],
+        unit: indicator[`unit_${locale}` as keyof typeof indicator],
+        subtopic: s as Subtopic,
+        topic: t as Topic,
+      } as Indicator;
+    })
     .sort((a, b) => (a.name || "")?.localeCompare(b.name || ""));
 };
 
@@ -91,18 +96,30 @@ export const useGetIndicators = <
   });
 };
 
-export const useGetDefaultIndicators = (
-  topic_id: Topic["id"] | undefined,
-  locale: string,
-  options: Omit<IndicatorsQueryOptions<Indicator[], unknown>, "queryKey"> = {},
-) => {
+export const useGetDefaultIndicators = ({
+  topicId,
+  subtopicId,
+  locale,
+  options = {},
+}: {
+  topicId?: Topic["id"];
+  subtopicId?: Subtopic["id"];
+  locale: string;
+  options?: Omit<IndicatorsQueryOptions<Indicator[], unknown>, "queryKey">;
+}) => {
   const query = useGetIndicators(locale, {
     select(data) {
       return data
         .filter((indicator) => {
-          const t = topic_id ? indicator.topic.id === topic_id : true;
+          if (topicId) {
+            return indicator.subtopic.topic_id === topicId && indicator.resource.type !== "h3";
+          }
 
-          return indicator.topic.id !== 0 && indicator.resource.type !== "h3" && t;
+          if (subtopicId) {
+            return indicator.subtopic.id === subtopicId && indicator.resource.type !== "h3";
+          }
+
+          return indicator.resource.type !== "h3";
         })
         .sort((a, b) => a.order - b.order);
     },
@@ -112,14 +129,14 @@ export const useGetDefaultIndicators = (
   return query;
 };
 
-export const useGetH3Indicators = (topic_id: Topic["id"] | undefined, locale: string) => {
+export const useGetH3Indicators = (subtopicId: Subtopic["id"] | undefined, locale: string) => {
   const query = useGetIndicators(locale, {
     select(data) {
       return data
         .filter((indicator) => {
-          const t = topic_id ? indicator.topic.id === topic_id : true;
+          const t = subtopicId ? indicator.subtopic.id === subtopicId : true;
 
-          return indicator.topic.id !== 0 && indicator.resource.type === "h3" && t;
+          return indicator.subtopic.id !== 0 && indicator.resource.type === "h3" && t;
         })
         .map((indicator) => ({
           ...indicator,

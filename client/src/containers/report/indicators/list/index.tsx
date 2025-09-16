@@ -5,19 +5,19 @@ import { useLocale } from "next-intl";
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
-import { Topic } from "@/types/topic";
+import { Subtopic } from "@/types/topic";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
 import IndicatorsItem from "./item";
 
-export default function IndicatorsList({ topicId }: { topicId?: Topic["id"] }) {
+export default function IndicatorsList({ subtopicId }: { subtopicId?: Subtopic["id"] }) {
   const locale = useLocale();
 
-  const { data: indicatorsData, isLoading: isLoadingTopicsData } = useGetDefaultIndicators(
-    topicId,
+  const { data: indicatorsData, isLoading: isLoadingTopicsData } = useGetDefaultIndicators({
+    subtopicId,
     locale,
-  );
+  });
 
   return (
     <div

@@ -15,7 +15,7 @@ import { indicatorsExpandAtom, useSyncIndicators } from "@/app/store";
 
 import { Topic } from "@/constants/topics";
 
-import IndicatorsList from "@/containers/report/indicators/list";
+import SubtopicList from "@/containers/report/indicators/subtopics";
 
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -24,7 +24,10 @@ type TopicsItemProps = Topic;
 
 export default function TopicsItem({ id, name, image }: TopicsItemProps) {
   const locale = useLocale();
-  const { data: indicatorsData } = useGetDefaultIndicators(id, locale);
+  const { data: indicatorsData } = useGetDefaultIndicators({
+    topicId: id,
+    locale,
+  });
   const [indicators] = useSyncIndicators();
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
 
@@ -85,7 +88,7 @@ export default function TopicsItem({ id, name, image }: TopicsItemProps) {
           </Badge>
         </CollapsibleTrigger>
         <CollapsibleContent className="pl-6">
-          <IndicatorsList topicId={id} />
+          <SubtopicList topicId={id} />
         </CollapsibleContent>
       </Collapsible>
     </div>

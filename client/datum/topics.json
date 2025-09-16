@@ -1,101 +1,101 @@
 [
-    {
-        "id": 0,
-        "Numerotation": "0",
-        "name_en": "ACU",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": ""
-    },
-    {
-        "id": 1,
-        "Numerotation": "1",
-        "name_en": "Territory",
-        "name_es": "Contexto geográfico",
-        "name_pt": "Contexto geográfico",
-        "image": "",
-        "description_en": "Capas Overview sistema para el uso interno de la app",
-        "description_es": "Vista general de capas – sistema para uso interno de la app",
-        "description_pt": "Visão geral das camadas – sistema para uso interno do app"
-    },
-    {
-        "id": 2,
-        "Numerotation": "2",
-        "name_en": "Nature",
-        "name_es": "Naturaleza",
-        "name_pt": "Natureza",
-        "image": "/images/topics/nature.webp",
-        "description_en": "Get data on natural environment, ecosystems, biodiversity and protected areas in your area",
-        "description_es": "Obtén datos sobre el entorno natural, los ecosistemas, la biodiversidad y las áreas protegidas en tu zona",
-        "description_pt": "Obtenha dados sobre o meio ambiente, ecossistemas, biodiversidade e áreas protegidas na sua região"
-    },
-    {
-        "id": 3,
-        "Numerotation": "3",
-        "name_en": "People",
-        "name_es": "Personas",
-        "name_pt": "Pessoas",
-        "image": "/images/topics/people.webp",
-        "description_en": "Access demographic data and social indicators for your area of interest",
-        "description_es": "Accede a datos demográficos e indicadores sociales de tu área de interés",
-        "description_pt": "Acesse dados demográficos e indicadores sociais da sua área de interesse"
-    },
-    {
-        "id": 4,
-        "Numerotation": "4",
-        "name_en": "Productive Activities",
-        "name_es": "Actividades productivas",
-        "name_pt": "Atividades produtivas",
-        "image": "/images/topics/productive.webp",
-        "description_en": "Get information on economic sectors and production systems",
-        "description_es": "Obtén información sobre sectores económicos y sistemas de producción",
-        "description_pt": "Obtenha informações sobre os setores econômicos e sistemas de produção"
-    },
-    {
-        "id": 5,
-        "Numerotation": "5",
-        "name_en": " Infrastructure",
-        "name_es": "Infraestructura",
-        "name_pt": "Infraestrutura",
-        "image": "/images/topics/infrastructure.webp",
-        "description_en": "Explore urban development, connectivity and transportation",
-        "description_es": "Explora el desarrollo urbano, la conectividad y el transporte",
-        "description_pt": "Explore o desenvolvimento urbano, conectividade e transporte"
-    },
-    {
-        "id": 6,
-        "Numerotation": "6",
-        "name_en": "Risks and vulnerabilities",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": ""
-    },
-    {
-        "id": 6,
-        "Numerotation": "7",
-        "name_en": "Knowledge products",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": ""
-    },
-    {
-        "id": 8,
-        "Numerotation": "8",
-        "name_en": "IDB Operations",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": ""
-    }
+  {
+    "id": 0,
+    "Numerotation": "0",
+    "name_en": "ACU",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": ""
+  },
+  {
+    "id": 1,
+    "Numerotation": "1",
+    "name_en": "Territory",
+    "name_es": "Contexto geográfico",
+    "name_pt": "Contexto geográfico",
+    "image": "/images/topics/territory.webp",
+    "description_en": "Capas Overview sistema para el uso interno de la app",
+    "description_es": "Vista general de capas – sistema para uso interno de la app",
+    "description_pt": "Visão geral das camadas – sistema para uso interno do app"
+  },
+  {
+    "id": 2,
+    "Numerotation": "2",
+    "name_en": "Nature",
+    "name_es": "Naturaleza",
+    "name_pt": "Natureza",
+    "image": "/images/topics/nature.webp",
+    "description_en": "Get data on natural environment, ecosystems, biodiversity and protected areas in your area",
+    "description_es": "Obtén datos sobre el entorno natural, los ecosistemas, la biodiversidad y las áreas protegidas en tu zona",
+    "description_pt": "Obtenha dados sobre o meio ambiente, ecossistemas, biodiversidade e áreas protegidas na sua região"
+  },
+  {
+    "id": 3,
+    "Numerotation": "3",
+    "name_en": "People",
+    "name_es": "Personas",
+    "name_pt": "Pessoas",
+    "image": "/images/topics/people.webp",
+    "description_en": "Access demographic data and social indicators for your area of interest",
+    "description_es": "Accede a datos demográficos e indicadores sociales de tu área de interés",
+    "description_pt": "Acesse dados demográficos e indicadores sociais da sua área de interesse"
+  },
+  {
+    "id": 4,
+    "Numerotation": "4",
+    "name_en": "Productive Activities",
+    "name_es": "Actividades productivas",
+    "name_pt": "Atividades produtivas",
+    "image": "/images/topics/productive.webp",
+    "description_en": "Get information on economic sectors and production systems",
+    "description_es": "Obtén información sobre sectores económicos y sistemas de producción",
+    "description_pt": "Obtenha informações sobre os setores econômicos e sistemas de produção"
+  },
+  {
+    "id": 5,
+    "Numerotation": "5",
+    "name_en": " Infrastructure",
+    "name_es": "Infraestructura",
+    "name_pt": "Infraestrutura",
+    "image": "/images/topics/infrastructure.webp",
+    "description_en": "Explore urban development, connectivity and transportation",
+    "description_es": "Explora el desarrollo urbano, la conectividad y el transporte",
+    "description_pt": "Explore o desenvolvimento urbano, conectividade e transporte"
+  },
+  {
+    "id": 6,
+    "Numerotation": "6",
+    "name_en": "Risks and vulnerabilities",
+    "name_es": "Riesgos y vulnerabilidades",
+    "name_pt": "Riscos e vulnerabilidades",
+    "image": "/images/topics/risks-and-vulnerabilities.webp",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": ""
+  },
+  {
+    "id": 7,
+    "Numerotation": "7",
+    "name_en": "Knowledge products",
+    "name_es": "Productos de conocimiento",
+    "name_pt": "Produtos de conhecimento",
+    "image": "/images/topics/knowledge-products.webp",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": ""
+  },
+  {
+    "id": 8,
+    "Numerotation": "8",
+    "name_en": "IDB Operations",
+    "name_es": "Operaciones del BID",
+    "name_pt": "Operações do BID",
+    "image": "/images/topics/idb-operations.webp",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": ""
+  }
 ]

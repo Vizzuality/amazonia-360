@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { useSetAtom } from "jotai";
 import { useLocale, useTranslations } from "next-intl";
 
+import { useGetDefaultSubtopics } from "@/lib/subtopics";
 import { useGetDefaultTopics } from "@/lib/topics";
 
 import { indicatorsExpandAtom, useSyncIndicators } from "@/app/store";
@@ -18,18 +19,21 @@ export default function IndicatorsFooter() {
   const setIndicatorsExpand = useSetAtom(indicatorsExpandAtom);
 
   const { data: topicsData } = useGetDefaultTopics({ locale });
+  const { data: subtopicsData } = useGetDefaultSubtopics({ locale });
 
   const handleExpandAll = useCallback(() => {
     setIndicatorsExpand(() => {
       return topicsData?.reduce(
         (acc, topic) => {
-          acc[topic.id] = [];
+          acc[topic.id] = subtopicsData
+            ?.filter((subtopic) => subtopic.topic_id === topic.id)
+            .map((subtopic) => subtopic.id) as number[];
           return acc;
         },
         {} as Record<number, number[]>,
       );
     });
-  }, [topicsData, setIndicatorsExpand]);
+  }, [topicsData, subtopicsData, setIndicatorsExpand]);
 
   const handleClear = () => {
     setIndicators(null);

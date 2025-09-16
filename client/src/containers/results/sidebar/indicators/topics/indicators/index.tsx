@@ -10,7 +10,7 @@ import { IndicatorsItem } from "./item";
 
 export const Indicators = ({ topic }: { topic: Topic }) => {
   const locale = useLocale();
-  const { data } = useGetDefaultIndicators(topic.id, locale);
+  const { data } = useGetDefaultIndicators({ topicId: topic.id, locale });
 
   return (
     <ul className="space-y-1 p-2 text-sm font-medium">

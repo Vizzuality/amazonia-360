@@ -11,5 +11,18 @@ export type Topic = {
   description_es: string;
   description_en: string;
   description_pt: string;
+};
+
+export type Subtopic = {
+  id: number;
+  topic_id: number;
+  name?: string;
+  name_es: string;
+  name_en: string;
+  name_pt: string;
+  description?: string;
+  description_es: string;
+  description_en: string;
+  description_pt: string;
   default_visualization: IndicatorView[];
 };

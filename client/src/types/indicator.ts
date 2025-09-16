@@ -1,4 +1,4 @@
-import { Topic } from "@/types/topic";
+import { Subtopic, Topic } from "@/types/topic";
 
 import { IndicatorView } from "@/app/parsers";
 
@@ -74,6 +74,7 @@ export type Indicator = {
   unit_en: string;
   unit_pt: string;
   topic: Topic;
+  subtopic: Subtopic;
   order: number;
   visualization_types: VisualizationTypes[];
   resource:

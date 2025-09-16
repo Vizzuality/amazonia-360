@@ -27,7 +27,7 @@ export default function IndicatorsSearch({ className }: { className?: string }) 
 
   const [, setIndicators] = useSyncIndicators();
 
-  const queryIndicators = useGetDefaultIndicators(undefined, locale);
+  const queryIndicators = useGetDefaultIndicators({ locale });
 
   const INDICATORS = useMemo(() => {
     return queryIndicators.data?.map((indicator) => ({

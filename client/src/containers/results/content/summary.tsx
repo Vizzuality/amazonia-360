@@ -36,7 +36,10 @@ export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id
   const locale = useLocale();
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
-  const queryIndicators = useGetDefaultIndicators(topic?.id, locale);
+  const queryIndicators = useGetDefaultIndicators({
+    topicId: topic?.id,
+    locale,
+  });
 
   const {
     data: queryIndicatorsData = [],
