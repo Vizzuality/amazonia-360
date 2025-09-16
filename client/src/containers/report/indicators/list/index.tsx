@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
@@ -12,9 +12,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import IndicatorsItem from "./item";
 
 export default function IndicatorsList({ subtopicId }: { subtopicId?: Subtopic["id"] }) {
+  const t = useTranslations();
   const locale = useLocale();
 
-  const { data: indicatorsData, isLoading: isLoadingTopicsData } = useGetDefaultIndicators({
+  const {
+    data: indicatorsData,
+    isFetching,
+    isFetched,
+  } = useGetDefaultIndicators({
     subtopicId,
     locale,
   });
@@ -28,16 +33,26 @@ export default function IndicatorsList({ subtopicId }: { subtopicId?: Subtopic["
       )}
     >
       <div className="relative z-10 flex flex-col gap-0.5 p-2 px-4">
-        {isLoadingTopicsData && (
+        {isFetching && !isFetched && (
           <>
             <Skeleton className="h-7" />
             <Skeleton className="h-7" />
             <Skeleton className="h-7" />
           </>
         )}
-        {indicatorsData?.map((indicator) => {
-          return <IndicatorsItem key={indicator.id} {...indicator} />;
-        })}
+
+        {!isFetching && isFetched && !indicatorsData?.length && (
+          <p className="p-2 text-sm font-medium text-muted-foreground">
+            {t("grid-sidebar-grid-filters-no-indicators-available")}
+          </p>
+        )}
+
+        {!isFetching &&
+          isFetched &&
+          !!indicatorsData?.length &&
+          indicatorsData?.map((indicator) => {
+            return <IndicatorsItem key={indicator.id} {...indicator} />;
+          })}
       </div>
     </div>
   );
