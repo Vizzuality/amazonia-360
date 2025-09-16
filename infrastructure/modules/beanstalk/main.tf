@@ -66,6 +66,11 @@ locals {
     },
     {
       namespace = "aws:elasticbeanstalk:application:environment"
+      name      = "AWS_REGION"
+      value     = data.aws_region.current.name
+    },
+    {
+      namespace = "aws:elasticbeanstalk:application:environment"
       name      = "S3_BUCKET_NAME"
       value     = data.aws_region.current.name
     },
