@@ -276,19 +276,6 @@ jobs:
               driver: bridge
           EOF
 
-      - name: Generate .ebextensions/host_env.config
-        working-directory: infrastructure/source_bundle
-        env:
-          PROJECT_NAME: ${{ vars.TF_PROJECT_NAME }}
-          ENV_NAME: ${{ needs.set_environment.outputs.env_name }}
-        run: |
-          cat <<'EOF' >> .ebextensions/host_env.config
-          option_settings:
-            aws:elasticbeanstalk:application:environment:
-              AWS_BUCKET_NAME: s3://${PROJECT_NAME}-${ENV_NAME}-bucket
-              AWS_REGION: '`{"Ref" : "AWS::Region"}`'
-          EOF
-
       - name: Generate .ebextensions/20_sync_data.config
         working-directory: infrastructure/source_bundle
         env:
