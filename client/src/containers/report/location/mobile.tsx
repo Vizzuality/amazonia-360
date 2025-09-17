@@ -5,7 +5,7 @@ import { useAtomValue } from "jotai";
 import { reportPanelAtom, sketchAtom, useSyncLocation } from "@/app/store";
 
 import SidebarLocationContent from "@/containers/report/location/content-mobile";
-import SidebarIndicatorsContent from "@/containers/report/location/generate";
+import SidebarIndicatorsContent from "@/containers/report/generate";
 import ReportMobileWarning from "@/containers/report/location/mobile-warning";
 
 export default function ReportLocationMobile() {

@@ -14,7 +14,7 @@ import { useLocation, useLocationGeometry, useLocationTitle } from "@/lib/locati
 
 import { sketchActionAtom, sketchAtom, useSyncLocation } from "@/app/store";
 
-import ReportGenerate from "@/containers/report/location/generate";
+import ReportGenerate from "@/containers/report/generate";
 
 import { Button } from "@/components/ui/button";
 import {

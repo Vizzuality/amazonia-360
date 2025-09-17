@@ -8,7 +8,7 @@ import { useSyncTopics } from "@/app/store";
 
 import { Topic, DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
 
-import TopicsItem from "@/containers/report/location/generate/topics/item";
+import TopicsItem from "@/containers/report/generate/topics/item";
 
 import { Skeleton } from "@/components/ui/skeleton";
 

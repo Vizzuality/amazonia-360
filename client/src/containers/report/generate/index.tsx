@@ -12,8 +12,10 @@ import { cn } from "@/lib/utils";
 
 import { reportPanelAtom } from "@/app/store";
 
-import { ReportGenerateButtons } from "@/containers/report/location/generate/buttons";
-import Topics from "@/containers/report/location/generate/topics";
+import { ReportGenerateButtons } from "@/containers/report/generate/buttons";
+import Topics from "@/containers/report/generate/topics";
+
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Link } from "@/i18n/navigation";
 
@@ -48,26 +50,34 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
   return (
     <div
       className={cn(
-        "relative flex h-full flex-col justify-between space-y-8 overflow-hidden rounded-lg py-4",
-        "lg:border lg:border-blue-100 lg:p-6",
+        "relative flex h-full max-h-[calc(100vh_-_(theme(spacing.16)_+_theme(spacing.20)))] grow flex-col justify-between overflow-hidden rounded-lg py-4",
+        "lg:border lg:border-blue-100",
       )}
     >
-      <div className="space-y-4">
-        {HEADER[heading]}
-        <div className="space-y-1">
-          <div className="text-sm font-medium text-muted-foreground">
-            <ReactMarkdown>{t("sidebar-report-location-indicators-description")}</ReactMarkdown>
+      <div className="flex grow flex-col overflow-hidden">
+        <header className="shrink-0 space-y-4 px-6">
+          {HEADER[heading]}
+          <div className="space-y-1">
+            <div className="text-sm font-medium text-muted-foreground">
+              <ReactMarkdown>{t("sidebar-report-location-indicators-description")}</ReactMarkdown>
+            </div>
           </div>
-        </div>
-        <div className="relative overflow-hidden">
-          <div className="py-1.5 lg:max-h-[calc(100vh_-_(64px_+_40px_+_263px))] lg:overflow-y-auto">
-            <div className="pointer-events-none absolute left-0 right-0 top-0 h-2 bg-gradient-to-b from-white to-transparent" />
-            <Topics />
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent" />
-          </div>
+        </header>
+
+        <div className="relative flex grow flex-col overflow-hidden">
+          <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 h-4 bg-gradient-to-b from-white to-transparent" />
+          <ScrollArea className="flex grow flex-col px-6">
+            <div className="py-4">
+              <Topics />
+            </div>
+          </ScrollArea>
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-4 bg-gradient-to-t from-white to-transparent" />
         </div>
       </div>
-      <ReportGenerateButtons />
+
+      <div className="shrink-0 px-6">
+        <ReportGenerateButtons />
+      </div>
     </div>
   );
 }

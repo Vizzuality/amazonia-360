@@ -7,25 +7,22 @@ import { cn } from "@/lib/utils";
 
 import { Topic } from "@/constants/topics";
 
+import SubtopicList from "@/containers/report/generate/subtopics";
+
 import { Checkbox } from "@/components/ui/checkbox";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 type TopicsItemProps = Topic & {
   checked: boolean;
   onChange: (checked: boolean) => void;
 };
 
-export default function TopicsItem({ id, name, image, checked, onChange }: TopicsItemProps) {
+export default function TopicsItem({ id, name, image, checked }: TopicsItemProps) {
   return (
-    <div
-      key={id}
-      className={cn(
-        "h-full w-full grow cursor-pointer overflow-hidden rounded-sm bg-white p-1 pr-2 text-left transition-all duration-300 ease-in-out hover:bg-blue-50",
-      )}
-      onClick={() => onChange(!checked)}
-    >
-      <div
+    <Collapsible>
+      <CollapsibleTrigger
         className={cn(
-          "flex items-center justify-between space-x-2.5 transition-transform duration-300",
+          "flex w-full items-center justify-between space-x-2.5 p-1 transition-colors duration-300 ease-in-out hover:bg-blue-50",
         )}
       >
         <div className={cn("flex items-center space-x-2.5")}>
@@ -49,7 +46,11 @@ export default function TopicsItem({ id, name, image, checked, onChange }: Topic
         <div>
           <Checkbox className="block" checked={checked} />
         </div>
-      </div>
-    </div>
+      </CollapsibleTrigger>
+
+      <CollapsibleContent className="pl-6">
+        <SubtopicList topicId={id} />
+      </CollapsibleContent>
+    </Collapsible>
   );
 }

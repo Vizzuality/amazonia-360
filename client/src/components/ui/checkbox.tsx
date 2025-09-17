@@ -3,14 +3,14 @@
 import * as React from "react";
 
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import { LuCheck } from "react-icons/lu";
+import { LuCheck, LuMinus } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> & { semichecked?: boolean }
+>(({ className, semichecked, ...props }, ref) => (
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
@@ -20,7 +20,8 @@ const Checkbox = React.forwardRef<
     {...props}
   >
     <CheckboxPrimitive.Indicator className={cn("flex items-center justify-center text-current")}>
-      <LuCheck className="h-4 w-4" />
+      {!semichecked && <LuCheck className="h-4 w-4" />}
+      {semichecked && <LuMinus className="h-4 w-4" />}
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ));
