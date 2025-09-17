@@ -79,6 +79,12 @@ export default function TopicsItem({ id, name, image }: Topic) {
                 <Checkbox
                   className="block"
                   checked={!!field.value.find((topic) => topic.id === id)}
+                  semichecked={
+                    !!field.value.find(
+                      (topic) =>
+                        topic.id === id && topic.subtopics?.length !== subtopicsData?.length,
+                    )
+                  }
                 />
               </div>
             </div>

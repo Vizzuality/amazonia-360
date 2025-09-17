@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 
-import { useSyncSearchParams } from "@/app/store";
+import { useSyncLocation, useSyncSearchParams } from "@/app/store";
 
 // import { Media } from "@/containers/media";
 
@@ -10,8 +10,9 @@ import { Link } from "@/i18n/navigation";
 
 export const ReportGenerateButtons = () => {
   const t = useTranslations();
+  const [location] = useSyncLocation();
   const searchSelectLaterParams = useSyncSearchParams({
-    topics: [],
+    location,
   });
 
   return (

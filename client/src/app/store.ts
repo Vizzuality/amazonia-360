@@ -89,15 +89,7 @@ export const serializeSearchParams = createSerializer(searchParams);
 export const useSyncSearchParams = (
   defaultParams?: Partial<inferParserType<typeof searchParams>>,
 ) => {
-  const [topics] = useSyncTopics();
-  const [location] = useSyncLocation();
-
-  const params = {
-    topics: defaultParams?.topics || topics,
-    location: defaultParams?.location || location,
-  };
-
-  return serializeSearchParams(params);
+  return serializeSearchParams(defaultParams ?? {});
 };
 
 // JOTAI PARAMS
