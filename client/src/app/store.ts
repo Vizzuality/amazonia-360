@@ -1,6 +1,6 @@
 "use client";
 import { atom } from "jotai";
-import { useQueryState } from "nuqs";
+import { inferParserType, useQueryState } from "nuqs";
 import { createSerializer } from "nuqs/server";
 
 import {
@@ -80,26 +80,24 @@ export const useSyncAiSummary = () => {
 };
 
 const searchParams = {
-  bbox: bboxParser,
   topics: topicsParser,
   location: locationParser,
 };
 
-const serialize = createSerializer(searchParams);
+export const serializeSearchParams = createSerializer(searchParams);
 
-export const useSyncSearchParams = (ignore?: (keyof typeof searchParams)[]) => {
-  const [bbox] = useSyncBbox();
+export const useSyncSearchParams = (
+  defaultParams?: Partial<inferParserType<typeof searchParams>>,
+) => {
   const [topics] = useSyncTopics();
   const [location] = useSyncLocation();
 
-  const params = { bbox, topics, location };
-  if (ignore) {
-    for (const key of ignore) {
-      delete params[key];
-    }
-  }
+  const params = {
+    topics: defaultParams?.topics || topics,
+    location: defaultParams?.location || location,
+  };
 
-  return serialize(params);
+  return serializeSearchParams(params);
 };
 
 // JOTAI PARAMS

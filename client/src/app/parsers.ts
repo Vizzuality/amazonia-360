@@ -25,9 +25,14 @@ type IndicatorOtherView = IndicatorViewBase & {
 
 export type IndicatorView = IndicatorMapView | IndicatorOtherView;
 
+export type SubtopicView = {
+  id: number;
+  indicators?: IndicatorView[];
+};
+
 export type TopicView = {
   id: number;
-  indicators: IndicatorView[] | undefined;
+  subtopics?: SubtopicView[];
 };
 
 export type DefaultTopicIndicatorConfig = {
