@@ -18,7 +18,7 @@ export const MOSAIC_OPTIONS = [
   },
   {
     key: "proportion_of_amazonia_area_by_country_percentage",
-    label_en: "Amazonia's Coverage per Country (%)",
+    label_en: "Proportion of Country Covered by Amazonia (%)",
     description_en: "Percentage of a country covered by the Amazonia Forever work area",
     label_pt: "Cobertura amazônica no país (%)",
     description_pt: "Porcentagem de um país coberta pela região de atuação da Amazônia Forever",
