@@ -2,11 +2,14 @@
 
 import { useState, useCallback, useMemo, useEffect, MouseEvent } from "react";
 
+import Image from "next/image";
+
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useLocale, useTranslations } from "next-intl";
 import { LuChevronRight, LuGripVertical } from "react-icons/lu";
 
+import { PLACEHOLDER } from "@/lib/images";
 import { useGetDefaultSubtopics } from "@/lib/subtopics";
 import { cn, areArraysEqual } from "@/lib/utils";
 
@@ -17,7 +20,7 @@ import { useSyncTopics } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
 
-import { Indicators } from "@/containers/results/sidebar/indicators/topics/indicators";
+import SubtopicList from "@/containers/results/sidebar/indicators/subtopics";
 
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -28,6 +31,9 @@ import { CounterIndicatorsPill } from "./counter-indicators-pill";
 export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
   const t = useTranslations();
   const locale = useLocale();
+
+  const { name, image } = topic;
+
   const [topics, setTopics] = useSyncTopics();
   const [counterVisibility, toggleCounterVisibility] = useState<boolean>(true);
   const [open, setOpen] = useState(false);
@@ -113,6 +119,45 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
       setTopics((prev) => prev?.filter((t) => t.id !== topic.id) || []);
     }
   }, [selectedTopicIndicators, topic.id, setTopics]);
+
+  return (
+    <li
+      key={id}
+      className={cn(
+        "h-full w-full grow cursor-pointer overflow-hidden rounded-sm bg-white text-left",
+      )}
+    >
+      <Collapsible>
+        <CollapsibleTrigger
+          className={cn(
+            "flex w-full items-center justify-between space-x-2.5 p-1 transition-colors duration-300 ease-in-out hover:bg-blue-50",
+          )}
+        >
+          <div className={cn("flex items-center space-x-2.5")}>
+            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-sm bg-cyan-100">
+              <Image
+                src={image}
+                alt={`${name}`}
+                priority
+                fill
+                sizes="100%"
+                placeholder={PLACEHOLDER(80, 80)}
+                className={cn({
+                  "object-cover": true,
+                })}
+              />
+            </div>
+            <div className="flex flex-col items-start justify-start space-y-1">
+              <span className="text-sm font-bold transition-none">{name}</span>
+            </div>
+          </div>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="pl-6">
+          <SubtopicList topicId={id} />
+        </CollapsibleContent>
+      </Collapsible>
+    </li>
+  );
 
   return (
     <li
@@ -207,7 +252,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
           />
         </div>
         <CollapsibleContent>
-          <Indicators topic={topic} />
+          <SubtopicList topicId={topic.id} />
         </CollapsibleContent>
       </Collapsible>
     </li>

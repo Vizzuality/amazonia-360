@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 
 import { useLocale } from "next-intl";
 
@@ -9,11 +9,11 @@ import { useGetDefaultTopics } from "@/lib/topics";
 import { useSyncTopics } from "@/app/store";
 
 import { TopicItem } from "./item";
-import SortableList from "./sortable";
+// import SortableList from "./sortable";
 
 export default function TopicsList() {
   const locale = useLocale();
-  const [topics, setTopics] = useSyncTopics();
+  const [topics] = useSyncTopics();
 
   const { data: topicsData } = useGetDefaultTopics({ locale });
 
@@ -40,29 +40,29 @@ export default function TopicsList() {
       ?.map((topic) => <TopicItem key={topic.id} topic={topic} id={topic.id} />);
   }, [topics, topicsData]);
 
-  const handleChangeOrder = useCallback(
-    (order: number[]) => {
-      const newOrder = order
-        .map((id) => topics?.find((l) => l.id === id))
-        .filter((topic) => topic !== undefined);
+  // const handleChangeOrder = useCallback(
+  //   (order: number[]) => {
+  //     const newOrder = order
+  //       .map((id) => topics?.find((l) => l.id === id))
+  //       .filter((topic) => topic !== undefined);
 
-      const newOrderReport = newOrder
-        .map((topic) => ({
-          id: topic.id,
-          indicators: topic?.indicators || [],
-        }))
-        .filter((topic) => !!topic.indicators);
-      setTopics(newOrderReport);
-    },
+  //     const newOrderReport = newOrder
+  //       .map((topic) => ({
+  //         id: topic.id,
+  //         indicators: topic?.indicators || [],
+  //       }))
+  //       .filter((topic) => !!topic.indicators);
+  //     setTopics(newOrderReport);
+  //   },
 
-    [topics, setTopics],
-  );
+  //   [topics, setTopics],
+  // );
 
   return (
-    <ul className="relative flex h-full flex-col gap-2 overflow-y-auto pt-1">
-      <SortableList onChangeOrder={handleChangeOrder} sortable={{ handle: true, enabled: true }}>
-        {ITEMS}
-      </SortableList>
+    <ul className="relative flex flex-col gap-2.5">
+      {/* <SortableList onChangeOrder={handleChangeOrder} sortable={{ handle: true, enabled: true }}> */}
+      {ITEMS}
+      {/* </SortableList> */}
     </ul>
   );
 }

@@ -49,6 +49,7 @@
   position: absolute;
   width: 20px;
   height: 20px;
+  z-index: 50;
 }
 
 .react-grid-item > .react-resizable-handle::after {

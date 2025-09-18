@@ -21,7 +21,7 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/compone
 
 import AiSidebarContentCard from "./card";
 
-export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
+export default function AiSidebarContent() {
   const t = useTranslations();
   const AUDIENCES = [
     {
@@ -77,15 +77,17 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
   }, [setAiOnlyActive]);
 
   return (
-    <div className="relative flex h-full max-h-[calc(100vh-180px)] flex-col justify-between">
-      <div className="relative h-full w-full flex-1 space-y-4">
-        <p className="text-sm font-medium leading-5 text-muted-foreground">
-          {t("report-results-sidebar-ai-summaries-description")}
-        </p>
+    <div className="relative flex grow flex-col justify-between overflow-hidden">
+      <div className="relative flex h-full w-full flex-1 grow flex-col space-y-4 overflow-hidden">
+        <div className="px-6">
+          <p className="text-sm font-medium leading-5 text-muted-foreground">
+            {t("report-results-sidebar-ai-summaries-description")}
+          </p>
+        </div>
+
         <ScrollArea
           className={cn({
-            "h-screen max-h-[calc(100vh-305px)] w-full": true,
-            "max-h-[calc(100vh-375px)]": isSticky,
+            "flex w-full grow flex-col px-6": true,
           })}
         >
           <div className="h-full w-full flex-1 space-y-4">
@@ -158,7 +160,8 @@ export default function AiSidebarContent({ isSticky }: { isSticky: boolean }) {
             )}
           </div>
         </ScrollArea>
-        <div className="relative flex w-full flex-col justify-end">
+
+        <div className="relative flex w-full flex-col justify-end px-6">
           <div className="flex items-start space-x-4 rounded-sm border border-border bg-blue-50 p-3">
             <CircleAlert className="text-alert h-4 w-4 shrink-0" />
             <p className="text-xs font-medium text-foreground">

@@ -414,10 +414,7 @@ const SidebarContent = React.forwardRef<HTMLDivElement, React.ComponentProps<"di
       <div
         ref={ref}
         data-sidebar="content"
-        className={cn(
-          "min-h-0 flex-1 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
-          className,
-        )}
+        className={cn("min-h-0 flex-1 group-data-[collapsible=icon]:overflow-hidden", className)}
         {...props}
       />
     );

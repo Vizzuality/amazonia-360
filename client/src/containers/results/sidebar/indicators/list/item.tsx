@@ -15,7 +15,7 @@ import { Topic } from "@/types/topic";
 import { useSyncTopics } from "@/app/store";
 
 import Info from "@/containers/info";
-import { VisualizationType } from "@/containers/results/sidebar/indicators/topics/indicators/visualization-types";
+import { VisualizationType } from "@/containers/results/sidebar/indicators/list/visualization-types";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,13 +30,19 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/compone
 
 import { Badges } from "./badges";
 
-export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: Indicator }) {
+export function IndicatorsItem({
+  topicId,
+  indicator,
+}: {
+  topicId: Topic["id"];
+  indicator: Indicator;
+}) {
   const t = useTranslations();
   const [open, setOpen] = useState(true);
 
   const [topics] = useSyncTopics();
 
-  const selectedTopicIndicators = topics?.find(({ id }) => id === topic.id)?.indicators;
+  const selectedTopicIndicators = topics?.find(({ id }) => id === topicId)?.indicators;
   const selectedIndicator = selectedTopicIndicators?.find(({ id }) => id === indicator.id);
 
   return (
@@ -46,7 +52,7 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
           <div className="flex items-center space-x-1">
             <button
               type="button"
-              className="flex w-full min-w-28 cursor-pointer items-center space-x-1 pl-8 text-sm"
+              className="flex w-full min-w-28 cursor-pointer items-center space-x-1 text-sm"
               onClick={(e) => {
                 e.stopPropagation();
                 setOpen(!open);
@@ -105,7 +111,7 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
             </PopoverTrigger>
             <PopoverContent side="left" align="start" className="w-auto bg-background p-0">
               <VisualizationType
-                topicId={topic.id}
+                topicId={topicId}
                 types={indicator.visualization_types as Exclude<VisualizationTypes, "ai">[]}
                 indicatorId={indicator.id}
               />
@@ -129,7 +135,7 @@ export function IndicatorsItem({ topic, indicator }: { topic: Topic; indicator: 
           />
         </svg>
 
-        <Badges topicId={topic.id} indicatorId={indicator.id} />
+        <Badges topicId={topicId} indicatorId={indicator.id} />
       </CollapsibleContent>
     </Collapsible>
   );
