@@ -80,7 +80,7 @@ export const ReportResultsContentIndicatorItem = ({
   return (
     <div
       id={`${id}-${type}`}
-      className="flex h-full flex-col"
+      className="relative z-10 flex h-full flex-col"
       onMouseEnter={() => {
         if (editing) {
           setEditionModeIndicator({ [`${id}-${type}`]: true });

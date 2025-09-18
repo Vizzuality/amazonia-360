@@ -30,9 +30,9 @@ export function useHighlightNewIndicator(
       const id = element?.props.id || "";
       if (!prevIds.has(id)) {
         const el = document.getElementById(id);
-        if (!el) return;
+        const outlineEl = document.getElementById(`${id}-outline`);
 
-        let animationTimeoutId: NodeJS.Timeout | null = null;
+        if (!el || !outlineEl) return;
 
         scroller.scrollTo(id, {
           duration: 500,
@@ -41,19 +41,11 @@ export function useHighlightNewIndicator(
           offset: -200,
         });
 
-        animationTimeoutId = setTimeout(() => {
-          el.classList.add("animate-outline-in");
-        }, 100);
+        outlineEl.dataset.status = "active";
 
-        const onAnimationEnd = () => {
-          el.classList.remove("animate-outline-in");
-          if (animationTimeoutId) {
-            clearTimeout(animationTimeoutId);
-          }
-          el.removeEventListener("animationend", onAnimationEnd);
-        };
-
-        el.addEventListener("animationend", onAnimationEnd);
+        setTimeout(() => {
+          outlineEl.dataset.status = "inactive";
+        }, 4000);
       }
     });
   }, [INDICATORS, PREVIOUS_INDICATORS, disabled]);

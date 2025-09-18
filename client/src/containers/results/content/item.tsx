@@ -82,11 +82,20 @@ export const ReportResultsContentItem = ({
 
       return (
         <div
-          key={gridKey}
           id={refKey}
-          className={cn("flex h-full flex-col")}
+          key={gridKey}
+          className={cn("relative flex h-full flex-col")}
           data-grid={dataGridConfig}
         >
+          <div
+            id={`${refKey}-outline`}
+            className={cn(
+              "pointer-events-none absolute -left-0.5 -top-0.5 z-0 h-[calc(100%+4px)] w-[calc(100%+4px)] rounded-2xl bg-primary",
+              "scale-95 opacity-0 transition-all duration-1000",
+              "data-[status=active]:scale-100 data-[status=inactive]:scale-95 data-[status=active]:opacity-100 data-[status=inactive]:opacity-0",
+              // "scale-100 opacity-100 transition-all duration-1000",
+            )}
+          />
           <ReportResultsContentIndicatorItem
             topic={topic}
             indicatorView={{

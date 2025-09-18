@@ -35,7 +35,6 @@ describe("useHighlightNewIndicator", () => {
   let classListRemoveMock: jest.Mock;
   let addEventListenerMock: jest.Mock;
   let removeEventListenerMock: jest.Mock;
-  let animationEndCallback: (() => void) | undefined;
 
   beforeEach(() => {
     jest.useFakeTimers();
@@ -43,16 +42,12 @@ describe("useHighlightNewIndicator", () => {
     classListRemoveMock = jest.fn();
     addEventListenerMock = jest.fn();
     removeEventListenerMock = jest.fn();
-    animationEndCallback = undefined;
-
-    addEventListenerMock.mockImplementation((event, cb) => {
-      if (event === "animationend") {
-        animationEndCallback = cb;
-      }
-    });
 
     getElementByIdSpy = jest.spyOn(document, "getElementById").mockImplementation((id) => {
       return {
+        dataset: {
+          status: "",
+        },
         classList: {
           add: classListAddMock,
           remove: classListRemoveMock,
@@ -96,13 +91,5 @@ describe("useHighlightNewIndicator", () => {
 
     expect(getElementByIdSpy).toHaveBeenCalledWith("widget-2-b");
     expect(scroller.scrollTo).toHaveBeenCalledWith("widget-2-b", expect.any(Object));
-    expect(classListAddMock).toHaveBeenCalledWith("animate-outline-in");
-
-    // Simulate animationend event after class is added
-    act(() => {
-      animationEndCallback && animationEndCallback();
-    });
-    expect(classListRemoveMock).toHaveBeenCalledWith("animate-outline-in");
-    expect(removeEventListenerMock).toHaveBeenCalledWith("animationend", animationEndCallback);
   });
 });
