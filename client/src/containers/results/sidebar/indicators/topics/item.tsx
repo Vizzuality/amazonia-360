@@ -7,11 +7,12 @@ import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useLocale, useTranslations } from "next-intl";
 import { LuChevronRight, LuGripVertical } from "react-icons/lu";
 
-import { useGetTopicsId } from "@/lib/topics";
+import { useGetDefaultSubtopics } from "@/lib/subtopics";
 import { cn, areArraysEqual } from "@/lib/utils";
 
 import { Topic } from "@/types/topic";
 
+import { IndicatorView } from "@/app/parsers";
 import { useSyncTopics } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
@@ -31,22 +32,27 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
   const [counterVisibility, toggleCounterVisibility] = useState<boolean>(true);
   const [open, setOpen] = useState(false);
 
+  const { data: subtopicsData } = useGetDefaultSubtopics({ locale, topicId: topic.id });
+
   const handleTopic = useCallback(
     (topic: Topic, isChecked: boolean) => {
       setTopics((prevTopics) => {
         if (isChecked) {
           const newTopic = {
             id: topic.id,
-            indicators: topic.default_visualization?.map((indicator) => {
-              return {
-                id: indicator?.id,
-                type: indicator?.type,
-                x: indicator?.x || 0,
-                y: indicator?.y || 0,
-                w: indicator?.w || DEFAULT_VISUALIZATION_SIZES[indicator?.type].w,
-                h: indicator?.h || DEFAULT_VISUALIZATION_SIZES[indicator?.type].h,
-              };
-            }),
+            indicators: subtopicsData
+              ?.map((s) => s.default_visualization)
+              .flat()
+              .map((indicator) => {
+                return {
+                  id: indicator?.id,
+                  type: indicator?.type,
+                  x: indicator?.x || 0,
+                  y: indicator?.y || 0,
+                  w: indicator?.w || DEFAULT_VISUALIZATION_SIZES[indicator?.type].w,
+                  h: indicator?.h || DEFAULT_VISUALIZATION_SIZES[indicator?.type].h,
+                };
+              }),
           };
           return [...(prevTopics?.filter((t) => t.id !== topic.id) || []), newTopic];
         } else {
@@ -54,7 +60,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
         }
       });
     },
-    [setTopics],
+    [subtopicsData, setTopics],
   );
 
   const handleResetTopic = useCallback(
@@ -67,21 +73,23 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
           existingTopic.id === topic.id
             ? {
                 ...existingTopic,
-                indicators:
-                  topic.default_visualization?.map((indicator) => ({
+                indicators: subtopicsData
+                  ?.map((s) => s.default_visualization)
+                  .flat()
+                  .map((indicator) => ({
                     id: indicator?.id,
                     type: indicator?.type,
-                    x: indicator?.x ?? 0,
-                    y: indicator?.y ?? 0,
-                    w: indicator?.w ?? DEFAULT_VISUALIZATION_SIZES[indicator?.type]?.w,
-                    h: indicator?.h ?? DEFAULT_VISUALIZATION_SIZES[indicator?.type]?.h,
-                  })) ?? [],
+                    x: indicator?.x || 0,
+                    y: indicator?.y || 0,
+                    w: indicator?.w || DEFAULT_VISUALIZATION_SIZES[indicator?.type].w,
+                    h: indicator?.h || DEFAULT_VISUALIZATION_SIZES[indicator?.type].h,
+                  })),
               }
             : existingTopic,
         );
       });
     },
-    [topic, setTopics],
+    [topic, subtopicsData, setTopics],
   );
 
   const selectedTopicIndicators = useMemo(
@@ -89,9 +97,16 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
     [topics, topic],
   );
 
-  const defaultTopic = useGetTopicsId({ id: topic.id, locale })?.default_visualization;
+  const defaultVisualizations = useMemo(
+    () =>
+      subtopicsData
+        ?.map((s) => s.default_visualization)
+        .flat()
+        .filter((indicator): indicator is IndicatorView => Boolean(indicator)) ?? [],
+    [subtopicsData],
+  );
 
-  const isTopicDefaultView = areArraysEqual(defaultTopic, selectedTopicIndicators);
+  const isTopicDefaultView = areArraysEqual(defaultVisualizations, selectedTopicIndicators);
 
   useEffect(() => {
     if (!selectedTopicIndicators?.length) {
