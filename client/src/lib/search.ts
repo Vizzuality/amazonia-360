@@ -149,8 +149,12 @@ export const useGetSuggestions = <
  ************************************************************
  ************************************************************
  */
-
-export type GetSearchParams = __esri.SuggestResult | null | undefined;
+export type SearchResult = {
+  text: string;
+  key: string | number;
+  sourceIndex: number;
+};
+export type GetSearchParams = SearchResult | null | undefined;
 export const getSearch = async (params: GetSearchParams) => {
   if (!params) return null;
 
@@ -160,7 +164,7 @@ export const getSearch = async (params: GetSearchParams) => {
     console.error("text, key and sourceIndex are required");
   }
 
-  const g = await searchVM.search(params).then((res) => {
+  const g = await searchVM.search(params as unknown as __esri.SuggestResult).then((res) => {
     if (res.numResults === 1) {
       const r = res.results[0].results[0];
 
@@ -230,19 +234,13 @@ export const getSearchMutationOptions = <TError = unknown, TContext = unknown>(
   options?: UseMutationOptions<
     Awaited<ReturnType<typeof getSearch>>,
     TError,
-    __esri.SuggestResult,
+    SearchResult,
     TContext
   >,
-): UseMutationOptions<
-  Awaited<ReturnType<typeof getSearch>>,
-  TError,
-  __esri.SuggestResult,
-  TContext
-> => {
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof getSearch>>,
-    __esri.SuggestResult
-  > = (props) => getSearch(props);
+): UseMutationOptions<Awaited<ReturnType<typeof getSearch>>, TError, SearchResult, TContext> => {
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof getSearch>>, SearchResult> = (
+    props,
+  ) => getSearch(props);
 
   return { mutationFn, ...options };
 };
@@ -251,7 +249,7 @@ export const useGetMutationSearch = <TError = unknown, TContext = unknown>(
   options?: UseMutationOptions<
     Awaited<ReturnType<typeof getSearch>>,
     TError,
-    __esri.SuggestResult,
+    SearchResult,
     TContext
   >,
 ) => {

@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider as JotaiProvider } from "jotai";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { MediaContextProvider } from "@/containers/media";
 import { ArcGISProvider } from "@/containers/providers/arcgis";
@@ -56,13 +57,19 @@ export default function LayoutProviders({
 
   return (
     <MediaContextProvider>
-      <TooltipProvider>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <NuqsAdapter
+          defaultOptions={{
+            clearOnDefault: true,
+          }}
+        >
           <ArcGISProvider locale={locale}>
-            <JotaiProvider>{children}</JotaiProvider>
+            <TooltipProvider>
+              <JotaiProvider>{children}</JotaiProvider>
+            </TooltipProvider>
           </ArcGISProvider>
-        </QueryClientProvider>
-      </TooltipProvider>
+        </NuqsAdapter>
+      </QueryClientProvider>
     </MediaContextProvider>
   );
 }

@@ -1,4 +1,5 @@
 "use client";
+
 import { atom } from "jotai";
 import { inferParserType, useQueryState } from "nuqs";
 import { createSerializer } from "nuqs/server";

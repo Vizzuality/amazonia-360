@@ -45,14 +45,11 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("ReportGenerate onSubmit", { values });
     const params = serializeSearchParams({
       topics: values.topics,
       location,
     });
-    console.log("ReportGenerate onSubmit params", { queryString: decodeURIComponent(params) });
-
-    // router.push(`/report/results${params}`);
+    router.push(`/report/results${params}`);
   }
 
   const HEADER = {
