@@ -9,7 +9,7 @@ export type MosaicIds =
 export const MOSAIC_OPTIONS = [
   {
     key: "amazonia_area_by_country_cartographic_area_sqkm",
-    label_en: "Country Amazonia Area (km²)",
+    label_en: "Amazonia Area per Country (km²)",
     description_en: "Total area of the Amazonia Forever work area within a country",
     label_pt: "Área da Amazônia por país (km²)",
     description_pt: "Área total da região de atuação da Amazônia Forever dentro de um país",
@@ -18,7 +18,7 @@ export const MOSAIC_OPTIONS = [
   },
   {
     key: "proportion_of_amazonia_area_by_country_percentage",
-    label_en: "Country Amazonia Coverage (%)",
+    label_en: "Proportion of Country Covered by Amazonia (%)",
     description_en: "Percentage of a country covered by the Amazonia Forever work area",
     label_pt: "Cobertura amazônica no país (%)",
     description_pt: "Porcentagem de um país coberta pela região de atuação da Amazônia Forever",
@@ -27,7 +27,7 @@ export const MOSAIC_OPTIONS = [
   },
   {
     key: "proportion_of_total_area_of_the_afp_by_country_percentage",
-    label_en: "Country Share of Total Amazonia (%)",
+    label_en: "Distribution of Amazonia's Area by Country (%)",
     description_en: "Percentage of the total Amazonia Forever work area located within a country",
     label_pt: "Participação do país na Amazônia total (%)",
     description_pt: "Porcentagem da região de atuação da Amazônia Forever localizada em um país",
@@ -36,7 +36,7 @@ export const MOSAIC_OPTIONS = [
   },
   {
     key: "population_density_of_the_afp_zones_by_country_inhabitants_per_sqkm",
-    label_en: "Country Amazonia Population Density (inhabitants/km²)",
+    label_en: "Amazonia Population Density per Country (inhabitants/km²)",
     description_en: "Population density within a country's Amazonia Forever work area",
     label_pt: "Densidade populacional da Amazônia no país (habitantes/km²)",
     description_pt: "Densidade populacional na região amazônica de um país",
@@ -45,7 +45,7 @@ export const MOSAIC_OPTIONS = [
   },
   {
     key: "proportion_of_the_population_of_the_amazonia_zone_by_country_percentage",
-    label_en: "Country Amazonia Population (%)",
+    label_en: "Distribution of Amazonia’s Population by Country (%)",
     description_en:
       "Percentage of a country's population residing in its Amazonia Forever work area",
     label_pt: "População amazônica no país (%)",
