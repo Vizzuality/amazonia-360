@@ -81,7 +81,7 @@ export const useGetDefaultSubtopics = ({
     select(data) {
       return data
         .filter((subtopic) => {
-          if (topicId) {
+          if (typeof topicId === "number") {
             return subtopic.topic_id === topicId;
           }
           return true;

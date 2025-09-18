@@ -35,7 +35,8 @@ export const ReportResultsContentItem = ({
   const [reportEditionMode] = useAtom(reportEditionModeAtom);
 
   const EDITABLE = editable && reportEditionMode;
-  const TOPIC = useGetTopicsId(topic.id, locale);
+  const TOPIC = useGetTopicsId({ id: topic.id, locale });
+
   const handleDrop = useCallback(
     (layout: Layout[]) => {
       setTopics((prev) => {

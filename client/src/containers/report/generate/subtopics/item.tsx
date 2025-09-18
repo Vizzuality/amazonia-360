@@ -32,17 +32,17 @@ export default function SubtopicsItem({ id, name }: Subtopic) {
             )}
             onClick={() => {
               const s = field?.value
-                ?.find((topic) => topic?.subtopics?.find((subtopic) => subtopic.id === id))
-                ?.subtopics?.find((subtopic) => subtopic.id === id);
+                ?.find((topic) => topic?.subtopics?.find((subtopic) => subtopic === id))
+                ?.subtopics?.find((subtopic) => subtopic === id);
 
               if (s) {
                 // Remove subtopic
                 field.onChange(
                   field.value.map((topic) => {
-                    if (topic?.subtopics?.find((subtopic) => subtopic.id === id)) {
+                    if (topic?.subtopics?.find((subtopic) => subtopic === id)) {
                       return {
                         ...topic,
-                        subtopics: topic.subtopics.filter((subtopic) => subtopic.id !== id),
+                        subtopics: topic.subtopics.filter((subtopic) => subtopic !== id),
                       };
                     }
                     return topic;
@@ -54,7 +54,7 @@ export default function SubtopicsItem({ id, name }: Subtopic) {
                   field.value.map((topic) => {
                     return {
                       ...topic,
-                      subtopics: [...(topic?.subtopics || []), { id }],
+                      subtopics: [...(topic?.subtopics || []), id],
                     };
                   }),
                 );
@@ -72,7 +72,7 @@ export default function SubtopicsItem({ id, name }: Subtopic) {
               className="block"
               checked={
                 !!field?.value?.find((topic) =>
-                  topic?.subtopics?.find((subtopic) => subtopic.id === id),
+                  topic?.subtopics?.find((subtopic) => subtopic === id),
                 )
               }
             />

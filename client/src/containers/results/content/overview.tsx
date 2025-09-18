@@ -2,6 +2,7 @@
 
 import { useLocale } from "next-intl";
 
+import { useGetDefaultSubtopics } from "@/lib/subtopics";
 import { useGetOverviewTopics } from "@/lib/topics";
 
 import ReportResultsContentItem from "@/containers/results/content/item";
@@ -9,11 +10,12 @@ import ReportResultsContentItem from "@/containers/results/content/item";
 export const ReportResultsContentOverview = () => {
   const locale = useLocale();
   const { data } = useGetOverviewTopics({ locale });
+  const { data: subtopicsData } = useGetDefaultSubtopics({ locale, topicId: 0 });
 
   return data?.map((topic) => {
     const T = {
       ...topic,
-      indicators: topic.default_visualization,
+      indicators: subtopicsData?.map((s) => s.default_visualization).flat() || [],
     };
 
     return <ReportResultsContentItem editable={false} key={topic.id} topic={T} />;

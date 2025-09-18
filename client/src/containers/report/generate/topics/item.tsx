@@ -40,7 +40,7 @@ export default function TopicsItem({ id, name, image }: Topic) {
                   ...field.value,
                   {
                     id,
-                    subtopics: subtopicsData?.map((subtopic) => ({ id: subtopic.id })) || [],
+                    subtopics: subtopicsData?.map((subtopic) => subtopic.id) || [],
                   },
                 ]);
               }

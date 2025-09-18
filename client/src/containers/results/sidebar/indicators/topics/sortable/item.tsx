@@ -1,3 +1,5 @@
+"use client";
+
 import React, { ReactElement, cloneElement } from "react";
 
 import { useSortable } from "@dnd-kit/sortable";

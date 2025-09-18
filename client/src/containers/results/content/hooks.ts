@@ -11,7 +11,7 @@ import { usePrevious } from "@dnd-kit/utilities";
  * @returns void
  */
 export function useHighlightNewIndicator(
-  INDICATORS: JSX.Element[] | undefined,
+  INDICATORS: (JSX.Element | undefined)[] | undefined,
   disabled?: boolean,
 ) {
   const PREVIOUS_INDICATORS = usePrevious(INDICATORS);

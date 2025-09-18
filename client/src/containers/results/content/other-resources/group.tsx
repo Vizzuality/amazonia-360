@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo, useState } from "react";
 
 import Resource from "@/containers/results/content/other-resources/resource";

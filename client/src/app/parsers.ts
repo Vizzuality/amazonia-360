@@ -1,4 +1,11 @@
-import { parseAsArrayOf, parseAsFloat, parseAsInteger, parseAsJson, parseAsString } from "nuqs";
+import {
+  createLoader,
+  parseAsArrayOf,
+  parseAsFloat,
+  parseAsInteger,
+  parseAsJson,
+  parseAsString,
+} from "nuqs";
 import { z } from "zod";
 
 import { ContextDescriptionType } from "@/types/generated/api.schemas";
@@ -26,14 +33,9 @@ type IndicatorOtherView = IndicatorViewBase & {
 
 export type IndicatorView = IndicatorMapView | IndicatorOtherView;
 
-export type SubtopicView = {
-  id: number;
-  indicators?: IndicatorView[];
-};
-
 export type TopicView = {
   id: number;
-  subtopics?: SubtopicView[];
+  indicators?: IndicatorView[];
 };
 
 export type DefaultTopicIndicatorConfig = {
@@ -139,4 +141,9 @@ export const aiSummaryParser = parseAsJson<AiSummary>(
   type: "Normal",
   only_active: true,
   enabled: false,
+});
+
+export const loadResultsSearchParams = createLoader({
+  location: locationParser,
+  topics: topicsParser,
 });

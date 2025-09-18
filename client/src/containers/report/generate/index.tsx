@@ -7,13 +7,14 @@ import { useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSetAtom } from "jotai";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
 import { z } from "zod";
 
+import { useGetDefaultSubtopics } from "@/lib/subtopics";
 import { cn } from "@/lib/utils";
 
-import { TopicView } from "@/app/parsers";
+import { IndicatorView } from "@/app/parsers";
 import { reportPanelAtom, serializeSearchParams, useSyncLocation } from "@/app/store";
 
 import { ReportGenerateButtons } from "@/containers/report/generate/buttons";
@@ -24,16 +25,24 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Link, useRouter } from "@/i18n/navigation";
 
+export type TopicsFormValues = {
+  id: number;
+  subtopics: number[];
+};
+
 export const formSchema = z.object({
-  topics: z.array(z.custom<TopicView>()).min(1, "Please select at least one topic."),
+  topics: z.array(z.custom<TopicsFormValues>()).min(1, "Please select at least one topic."),
 });
 
 export default function ReportGenerate({ heading = "create" }: { heading?: "select" | "create" }) {
   const t = useTranslations();
+  const locale = useLocale();
 
   const [location] = useSyncLocation();
   const searchParams = useSearchParams();
   const setReportPanel = useSetAtom(reportPanelAtom);
+
+  const { data: subtopicsData } = useGetDefaultSubtopics({ locale });
 
   const router = useRouter();
 
@@ -46,9 +55,16 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const params = serializeSearchParams({
-      topics: values.topics,
+      topics: values.topics.map((t) => ({
+        id: t.id,
+        indicators: t.subtopics
+          .map((s) => subtopicsData?.find((sub) => sub.id === s)?.default_visualization)
+          .flat()
+          .filter((i): i is IndicatorView => Boolean(i)),
+      })),
       location,
     });
+
     router.push(`/report/results${params}`);
   }
 

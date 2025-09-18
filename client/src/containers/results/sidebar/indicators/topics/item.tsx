@@ -89,7 +89,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
     [topics, topic],
   );
 
-  const defaultTopic = useGetTopicsId(topic.id, locale)?.default_visualization;
+  const defaultTopic = useGetTopicsId({ id: topic.id, locale })?.default_visualization;
 
   const isTopicDefaultView = areArraysEqual(defaultTopic, selectedTopicIndicators);
 

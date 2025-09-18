@@ -1,7 +1,10 @@
+"use client";
+
 import { useCallback, useMemo } from "react";
 
 import { useLocale, useTranslations } from "next-intl";
 
+import { useGetDefaultSubtopics } from "@/lib/subtopics";
 import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
@@ -12,15 +15,20 @@ export default function SidebarClearIndicators() {
   const locale = useLocale();
   const [topics, setTopics] = useSyncTopics();
 
-  const { data: defaultTopics } = useGetDefaultTopics({ locale });
+  const { data: topicsData } = useGetDefaultTopics({ locale });
+  const { data: subtopicsData } = useGetDefaultSubtopics({ locale });
 
   const defaultIndicators = useMemo(
     () =>
-      defaultTopics?.map((topic) => ({
+      topicsData?.map((topic) => ({
         id: topic.id,
-        indicators: topic?.default_visualization,
+        indicators:
+          subtopicsData
+            ?.filter((s) => s.topic_id === topic.id)
+            .map((s) => s.default_visualization)
+            .flat() || [],
       })),
-    [defaultTopics],
+    [topicsData, subtopicsData],
   );
 
   const indicatorCount =
