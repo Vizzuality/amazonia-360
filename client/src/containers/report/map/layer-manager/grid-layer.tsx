@@ -10,6 +10,7 @@ import { DeckLayer } from "@deck.gl/arcgis";
 import { Accessor, Color, PickingInfo } from "@deck.gl/core";
 import { DataFilterExtension, DataFilterExtensionProps } from "@deck.gl/extensions";
 import { H3HexagonLayer } from "@deck.gl/geo-layers";
+import { ScatterplotLayer } from "@deck.gl/layers";
 import { ArrowTable } from "@loaders.gl/arrow";
 import { ArrowLoader } from "@loaders.gl/arrow";
 import { load } from "@loaders.gl/core";
@@ -233,9 +234,10 @@ export const getGridLayerProps = ({
           DataFilterExtensionProps
         >({
           ...props,
+          visible: !!zoom && zoom >= 10,
           id: `${props.id}-${opacity}`,
           data: props.data,
-          highPrecision: true,
+          highPrecision: false,
           opacity,
           pickable: !sketchEnabled,
           filled: !!gridDatasets.length,
@@ -252,11 +254,12 @@ export const getGridLayerProps = ({
             }),
           ],
           updateTriggers: {
-            getFillColor: [getFillColor],
+            getFillColor: [getFillColor, zoom],
             getFilterValue: [gridDatasets],
             opacity: [opacity],
           },
         }),
+        // Outlines
         new H3HexagonLayer({
           ...props,
           id: `${props.id}-grid-${opacity}`,
@@ -279,6 +282,7 @@ export const getGridLayerProps = ({
             opacity: [opacity],
           },
         }),
+        // Highlight
         new H3HexagonLayer({
           ...props,
           id: `${props.id}-grid-highlight-${opacity}`,
@@ -299,6 +303,33 @@ export const getGridLayerProps = ({
           lineWidthUnits: "pixels",
           updateTriggers: {
             opacity: [opacity],
+          },
+        }),
+        new ScatterplotLayer({
+          id: `${props.id}-dots-${opacity}`,
+          data: props.data,
+          visible: !!zoom && zoom < 10,
+          stroked: false,
+          pickable: true,
+          antialiasing: false,
+          radiusUnits: "meters",
+          getRadius: 4100, // is the radius of a h3 cell at resolution 5 in meters
+          getPosition: (d) => cellToLatLng(d.cell).toReversed() as [number, number, number],
+          getFillColor,
+          getFilterValue,
+          filterRange: filterRange(),
+          extensions: [
+            new DataFilterExtension({
+              filterSize: filters.length as 0 | 1 | 2 | 3 | 4,
+            }),
+          ],
+          getLineWidth: 0,
+          opacity,
+          updateTriggers: {
+            getFillColor: [getFillColor],
+            getFilterValue: [gridDatasets],
+            opacity: [opacity],
+            getRadius: [zoom],
           },
         }),
       ];
