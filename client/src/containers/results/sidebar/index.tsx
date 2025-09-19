@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useRef, useEffect } from "react";
+import { useCallback, useState } from "react";
 
 import { useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
@@ -29,52 +29,30 @@ export default function ReportSidebar() {
     setReportEditionMode(false);
   }, [toggleSidebar, setReportEditionMode]);
 
-  // Sticky state
-  const [isSticky, setIsSticky] = useState(false);
-  const stickyRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!stickyRef.current) return;
-
-    const observer = new IntersectionObserver(
-      ([event]) => {
-        setIsSticky(event.intersectionRatio < 1);
-      },
-      {
-        threshold: [1],
-        rootMargin: "-5px 0px 0px 0px",
-      },
-    );
-
-    observer.observe(stickyRef.current);
-
-    return () => observer.disconnect();
-  }, [isSticky]);
-
   return (
     <Sidebar
       className={cn({
-        "absolute bottom-0 top-0 h-full w-96 border-none bg-white shadow-md": true,
+        "fixed bottom-0 top-0 h-full w-96 border-none bg-white shadow-md": true,
       })}
     >
       <Tabs
         defaultValue="indicators"
-        className="sticky top-0 z-10 flex max-h-[100vh] grow flex-col items-start space-y-4 bg-white p-6"
+        className="sticky top-0 z-10 flex max-h-svh grow flex-col items-start space-y-4 overflow-hidden bg-white pt-14"
         onValueChange={(value) => setTab(value as ReportResultsTab)}
       >
-        <div ref={stickyRef} className="h-full w-full grow">
-          <SidebarHeader className="flex w-full flex-row items-baseline justify-between p-0">
+        <div className="flex grow flex-col overflow-hidden py-6">
+          <SidebarHeader className="flex w-full flex-row items-baseline justify-between px-6 py-0">
             <TabsList className="justify-start gap-x-4 gap-y-1 bg-transparent">
               <TabsTrigger
                 value="indicators"
-                className="px-0 text-lg font-bold text-muted-foreground"
+                className="px-0 py-0 text-lg font-bold text-muted-foreground"
               >
                 {t("report-results-sidebar-indicators-title")}
               </TabsTrigger>
 
               <TabsTrigger
                 value="ai_summaries"
-                className="m-0 px-0 text-lg font-bold text-muted-foreground"
+                className="m-0 px-0 py-0 text-lg font-bold text-muted-foreground"
               >
                 {t("report-results-sidebar-ai-summaries-title")}
               </TabsTrigger>
@@ -86,15 +64,21 @@ export default function ReportSidebar() {
 
           <SidebarContent
             className={cn({
-              "min-h-screen w-full flex-1 pt-6": true,
+              "flex w-full grow flex-col pt-4": true,
             })}
           >
-            <TabsContent value="indicators" className="h-full pr-2">
+            <TabsContent
+              value="indicators"
+              className="grow flex-col overflow-hidden data-[state=active]:flex"
+            >
               <IndicatorsSidebarContent />
             </TabsContent>
 
-            <TabsContent value="ai_summaries" className="h-full pr-2">
-              <AiSidebarContent isSticky={isSticky} />
+            <TabsContent
+              value="ai_summaries"
+              className="grow flex-col overflow-hidden data-[state=active]:flex"
+            >
+              <AiSidebarContent />
             </TabsContent>
           </SidebarContent>
         </div>

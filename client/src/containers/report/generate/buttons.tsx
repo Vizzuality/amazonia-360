@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 
-import { useSyncSearchParams } from "@/app/store";
+import { useSyncLocation, useSyncSearchParams } from "@/app/store";
 
 // import { Media } from "@/containers/media";
 
@@ -10,9 +10,10 @@ import { Link } from "@/i18n/navigation";
 
 export const ReportGenerateButtons = () => {
   const t = useTranslations();
-  const searchParams = useSyncSearchParams(["bbox"]);
-  const searchSelectLaterParams = useSyncSearchParams(["topics", "bbox"]);
-  // const [, setTopics] = useSyncTopics();
+  const [location] = useSyncLocation();
+  const searchSelectLaterParams = useSyncSearchParams({
+    location,
+  });
 
   return (
     <div className="flex w-full items-center justify-between">
@@ -29,15 +30,9 @@ export const ReportGenerateButtons = () => {
           </Button>
         </Link>
 
-        <Link
-          href={`/report/results${searchParams}`}
-          prefetch
-          className="block w-full grow lg:grow-0"
-        >
-          <Button className="lg:px-8px-4 w-full grow">
-            {t("sidebar-report-location-topics-button-generate-report")}
-          </Button>
-        </Link>
+        <Button className="lg:px-8px-4 w-full grow" type="submit">
+          {t("sidebar-report-location-topics-button-generate-report")}
+        </Button>
       </div>
     </div>
   );

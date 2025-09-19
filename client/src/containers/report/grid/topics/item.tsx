@@ -15,7 +15,7 @@ import { indicatorsExpandAtom, useSyncGridDatasets } from "@/app/store";
 
 import { Topic } from "@/constants/topics";
 
-import IndicatorsList from "@/containers/report/grid/list";
+import SubtopicList from "@/containers/report/grid/subtopics";
 
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -27,7 +27,7 @@ export default function TopicsItem({ id, name, image }: TopicsItemProps) {
   const [gridDatasets] = useSyncGridDatasets();
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
 
-  const { data: indicatorsData } = useGetH3Indicators(id, locale);
+  const { data: indicatorsData } = useGetH3Indicators({ topicId: id, locale });
 
   const SELECTED = useMemo(() => {
     if (!indicatorsData || !gridDatasets) return 0;
@@ -89,7 +89,7 @@ export default function TopicsItem({ id, name, image }: TopicsItemProps) {
           </Badge>
         </CollapsibleTrigger>
         <CollapsibleContent className="pl-6">
-          <IndicatorsList topicId={id} />
+          <SubtopicList topicId={id} />
         </CollapsibleContent>
       </Collapsible>
     </div>

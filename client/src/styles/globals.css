@@ -182,13 +182,13 @@
 
 @keyframes outline-in {
   100% {
-    @apply border-transparent;
+    @apply outline-transparent;
   }
 }
 
 @layer utilities {
   .animate-outline-in {
-    @apply box-content rounded-2xl border-2 border-primary;
+    @apply rounded-2xl outline-2 outline-primary;
     animation: outline-in 1s ease-in forwards;
   }
 }

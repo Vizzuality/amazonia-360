@@ -1,3 +1,5 @@
+"use client";
+
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { LucideBookOpenText, LucideFilePenLine } from "lucide-react";
 import { useTranslations } from "next-intl";

@@ -21,7 +21,7 @@ import { sketchActionAtom, sketchAtom, tmpBboxAtom, useSyncLocation } from "@/ap
 
 import { BUFFERS } from "@/constants/map";
 
-import ReportGenerate from "@/containers/report/location/generate";
+import ReportGenerate from "@/containers/report/generate";
 
 import { Button } from "@/components/ui/button";
 import {

@@ -34,7 +34,7 @@ export default function GridTable() {
     wkid: 4326,
   });
 
-  const queryH3Indicators = useGetH3Indicators(undefined, locale);
+  const queryH3Indicators = useGetH3Indicators({ locale });
 
   const queryMeta = useGetGridMeta();
 

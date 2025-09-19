@@ -1,3 +1,5 @@
+"use client";
+
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useTranslations } from "next-intl";
 import { LuMove } from "react-icons/lu";

@@ -1,23 +1,28 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
-import { Topic } from "@/types/topic";
+import { Subtopic } from "@/types/topic";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
 import IndicatorsItem from "./item";
 
-export default function IndicatorsList({ topicId }: { topicId?: Topic["id"] }) {
+export default function IndicatorsList({ subtopicId }: { subtopicId?: Subtopic["id"] }) {
+  const t = useTranslations();
   const locale = useLocale();
 
-  const { data: indicatorsData, isLoading: isLoadingTopicsData } = useGetDefaultIndicators(
-    topicId,
+  const {
+    data: indicatorsData,
+    isFetching,
+    isFetched,
+  } = useGetDefaultIndicators({
+    subtopicId,
     locale,
-  );
+  });
 
   return (
     <div
@@ -27,17 +32,27 @@ export default function IndicatorsList({ topicId }: { topicId?: Topic["id"] }) {
         "after:pointer-events-none after:absolute after:left-2.5 after:top-0 after:z-0 after:h-[calc(100%_-_theme(space.5))] after:w-2.5 after:bg-white",
       )}
     >
-      <div className="relative z-10 flex flex-col gap-0.5 p-2 px-4">
-        {isLoadingTopicsData && (
+      <div className="relative z-10 flex flex-col gap-0.5 p-2 pl-3">
+        {isFetching && !isFetched && (
           <>
             <Skeleton className="h-7" />
             <Skeleton className="h-7" />
             <Skeleton className="h-7" />
           </>
         )}
-        {indicatorsData?.map((indicator) => {
-          return <IndicatorsItem key={indicator.id} {...indicator} />;
-        })}
+
+        {!isFetching && isFetched && !indicatorsData?.length && (
+          <p className="p-2 text-sm font-medium text-muted-foreground">
+            {t("grid-sidebar-grid-filters-no-indicators-available")}
+          </p>
+        )}
+
+        {!isFetching &&
+          isFetched &&
+          !!indicatorsData?.length &&
+          indicatorsData?.map((indicator) => {
+            return <IndicatorsItem key={indicator.id} {...indicator} />;
+          })}
       </div>
     </div>
   );

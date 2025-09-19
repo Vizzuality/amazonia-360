@@ -1,3 +1,5 @@
+"use client";
+
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";

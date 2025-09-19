@@ -41,9 +41,9 @@ export default function SearchC({ className }: { className?: string }) {
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
   });
-  const queryIndicators = useGetDefaultIndicators(undefined, locale);
+  const queryIndicators = useGetDefaultIndicators({ locale });
 
-  const { data: H3IndicatorsData } = useGetH3Indicators(undefined, locale);
+  const { data: H3IndicatorsData } = useGetH3Indicators({ locale });
   const { META } = useMeta(GEOMETRY);
 
   const INDICATORS = useMemo(() => {

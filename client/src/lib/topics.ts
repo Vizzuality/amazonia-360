@@ -86,7 +86,7 @@ export const useGetOverviewTopics = ({ locale }: { locale: string }) => {
   return query;
 };
 
-export const useGetTopicsId = (id: Topic["id"], locale: string) => {
+export const useGetTopicsId = ({ locale, id }: { locale: string; id: Topic["id"] }) => {
   const { data } = useGetTopics(locale);
 
   return data?.find((topic) => topic.id === id);

@@ -5,15 +5,10 @@ import { getTranslations } from "next-intl/server";
 
 // import { getSearchQueryOptions } from "@/lib/search";
 
-import { locationParser } from "@/app/parsers";
-import { PageProps } from "@/app/types";
-
 import DataDisclaimer from "@/containers/disclaimers/data";
 import ReportResultsHeader from "@/containers/header/results";
 import ReportResultsContent from "@/containers/results/content";
 import ReportResultsSidebar from "@/containers/results/sidebar";
-
-import { redirect } from "@/i18n/navigation";
 
 type Params = Promise<{ locale: string }>;
 
@@ -27,25 +22,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   };
 }
 
-export interface SearchParams {
-  location: string;
-  topics: string;
-}
-
-export default async function ReportResultsPage({
-  params,
-  searchParams,
-}: PageProps<Params, SearchParams>) {
-  const { locale } = await params;
+export default async function ReportResultsPage() {
   const queryClient = new QueryClient();
-  const l = locationParser.parseServerSide((await searchParams).location);
-
-  if (!l) {
-    redirect({
-      href: "/report",
-      locale,
-    });
-  }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

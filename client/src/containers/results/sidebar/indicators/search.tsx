@@ -31,7 +31,7 @@ export default function SearchC() {
   const [search, setSearch] = useState("");
   const [topics, setTopics] = useSyncTopics();
 
-  const queryIndicators = useGetDefaultIndicators(undefined, locale);
+  const queryIndicators = useGetDefaultIndicators({ locale });
 
   const DATA = useMemo(() => {
     return (
@@ -52,6 +52,7 @@ export default function SearchC() {
                 value: `${indicator.name}-${v}`,
                 indicatorId: indicator.id,
                 topicId: indicator.topic?.id,
+                subtopicId: indicator.subtopic?.id,
                 sourceIndex: indicator.id,
                 active: isActive,
               };
