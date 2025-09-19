@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useCallback, useMemo, useEffect, MouseEvent } from "react";
+import { useState, useCallback, useMemo, MouseEvent } from "react";
 
 import Image from "next/image";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
+import { useAtom } from "jotai";
 import { useLocale, useTranslations } from "next-intl";
 import { LuChevronRight, LuGripVertical } from "react-icons/lu";
 
@@ -16,7 +17,7 @@ import { cn, areArraysEqual } from "@/lib/utils";
 import { Topic } from "@/types/topic";
 
 import { IndicatorView } from "@/app/parsers";
-import { useSyncTopics } from "@/app/store";
+import { indicatorsExpandAtom, useSyncTopics } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
 
@@ -114,11 +115,23 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
 
   const isTopicDefaultView = areArraysEqual(defaultVisualizations, selectedTopicIndicators);
 
-  useEffect(() => {
-    if (!selectedTopicIndicators?.length) {
-      setTopics((prev) => prev?.filter((t) => t.id !== topic.id) || []);
-    }
-  }, [selectedTopicIndicators, topic.id, setTopics]);
+  const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
+
+  const handleClick = (open: boolean) => {
+    setIndicatorsExpand((prev) => {
+      if (open) {
+        return {
+          ...prev,
+          [id]: [],
+        };
+      } else {
+        return {
+          ...prev,
+          [id]: undefined,
+        };
+      }
+    });
+  };
 
   return (
     <li
@@ -127,7 +140,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
         "h-full w-full grow cursor-pointer overflow-hidden rounded-sm bg-white text-left",
       )}
     >
-      <Collapsible>
+      <Collapsible open={!!indicatorsExpand?.[id]} onOpenChange={handleClick}>
         <CollapsibleTrigger
           className={cn(
             "flex w-full items-center justify-between space-x-2.5 p-1 transition-colors duration-300 ease-in-out hover:bg-blue-50",

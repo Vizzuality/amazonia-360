@@ -27,7 +27,7 @@ export default async function ReportResultsPage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className="relative flex bg-blue-50 pb-5 pt-14 print:w-full print:bg-white print:p-0">
+      <main className="relative flex bg-blue-50 pb-5 print:w-full print:bg-white print:p-0">
         <div className="w-full flex-col print:w-full">
           <ReportResultsHeader />
           <ReportResultsContent />

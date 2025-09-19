@@ -6,11 +6,12 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { useGetDefaultSubtopics } from "@/lib/subtopics";
 import { useGetDefaultTopics } from "@/lib/topics";
-import { cn } from "@/lib/utils";
 
 import { useSyncTopics } from "@/app/store";
 
-export default function SidebarClearIndicators() {
+import { Button } from "@/components/ui/button";
+
+export default function Clear() {
   const t = useTranslations();
   const locale = useLocale();
   const [topics, setTopics] = useSyncTopics();
@@ -43,16 +44,9 @@ export default function SidebarClearIndicators() {
   }, [setTopics, topics, defaultIndicators]);
 
   return (
-    <button
-      type="button"
-      className={cn({
-        "cursor-pointer space-x-1 whitespace-nowrap text-end text-xs font-semibold text-primary transition-colors duration-500 ease-linear hover:underline":
-          true,
-      })}
-      onClick={handleClick}
-    >
+    <Button variant="secondary" size="sm" onClick={handleClick}>
       <span>{!!topics?.length && topics?.length > 0 ? t("clear-all") : t("select-all")}</span>
       {!!topics?.length && <span>({indicatorCount})</span>}
-    </button>
+    </Button>
   );
 }
