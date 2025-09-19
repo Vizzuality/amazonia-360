@@ -32,7 +32,7 @@ export default function IndicatorsSidebarContent() {
         <ScrollArea className="flex grow flex-col px-6">
           <TopicsList />
         </ScrollArea>
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-50 h-6 bg-gradient-to-t from-white to-transparent" />
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-50 h-4 bg-gradient-to-t from-white to-transparent" />
       </div>
     </div>
   );

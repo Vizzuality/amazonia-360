@@ -48,28 +48,23 @@ export function IndicatorsItem({
   return (
     <Collapsible open={open && !!selectedIndicator} className="flex w-full flex-col">
       <div className="flex justify-between">
-        <CollapsibleTrigger asChild>
-          <div className="flex items-center space-x-1">
-            <button
-              type="button"
-              className="flex w-full min-w-28 cursor-pointer items-center space-x-1 text-sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                setOpen(!open);
-              }}
-              disabled={!selectedIndicator}
-            >
-              <LuChevronRight
-                className={cn({
-                  "h-4 w-4 shrink-0 transition-transform duration-200": true,
-                  "rotate-90": open,
-                  "rotate-0 opacity-50": !selectedIndicator,
-                })}
-              />
+        <CollapsibleTrigger
+          className="flex w-full min-w-28 cursor-pointer items-center space-x-1 text-sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpen(!open);
+          }}
+          disabled={!selectedIndicator}
+        >
+          <LuChevronRight
+            className={cn({
+              "h-4 w-4 shrink-0 transition-transform duration-200": true,
+              "rotate-90": open,
+              "rotate-0 opacity-50": !selectedIndicator,
+            })}
+          />
 
-              <span className="text-left">{indicator.name}</span>
-            </button>
-          </div>
+          <span className="text-left">{indicator.name}</span>
         </CollapsibleTrigger>
         <div className="flex shrink-0 items-center space-x-2">
           <Tooltip>
@@ -120,7 +115,7 @@ export function IndicatorsItem({
         </div>
       </div>
 
-      <CollapsibleContent className="flex items-center space-x-2 pl-9">
+      <CollapsibleContent className="flex items-center space-x-2 pl-1.5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="7"
