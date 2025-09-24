@@ -1,64 +1,94 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, Fragment } from "react";
 
 import { useLocale } from "next-intl";
 
+import { useDocumentPages } from "@/lib/hooks/use-document-pages";
 import { useGetTopics } from "@/lib/topics";
 
 import { useSyncLocation, useSyncTopics } from "@/app/store";
+import { SupportedLocales } from "@/app/types";
 
 import PdfHeader from "@/containers/header/pdf-header";
 import DocumentCoverPdfSection from "@/containers/webshot/pdf-report/document-cover-pdf-section";
 import GeographicContextPdfSection from "@/containers/webshot/pdf-report/geographic-context/geographic-context-pdf-section";
 import TopicCover from "@/containers/webshot/pdf-report/topic-cover";
+import WidgetTopicSection from "@/containers/webshot/pdf-report/widget-topic-section";
 import { WebshotReportContainer } from "@/containers/webshot/webshot-report-container";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function WebshotReport() {
   const locale = useLocale();
+  const localeString = locale as SupportedLocales;
   const [location] = useSyncLocation();
 
-  const topics = useSyncTopics();
+  const [topics] = useSyncTopics();
   const { data: allTopics } = useGetTopics(locale);
 
   const selectedTopics = useMemo(
-    () => allTopics?.filter((topic) => topics[0]?.find((t) => t.id === topic.id)),
+    () => allTopics?.filter((topic) => topics?.find((t) => t.id === topic.id)),
     [allTopics, topics],
   );
 
-  const documentHeight = document.body.scrollHeight;
-
-  // A4 size in pixels at 96 DPI
-  const totalPages = useMemo(() => Math.floor(documentHeight / 793.92), [documentHeight]);
+  const { documentRef, totalPages, getCurrentPage, documentHeight } = useDocumentPages();
 
   return (
-    <main className="relative flex w-full flex-col">
+    <main className="relative flex w-full flex-col border border-blue-500" ref={documentRef}>
       <SidebarProvider>
         <WebshotReportContainer>
-          <PdfHeader title={location?.custom_title} totalPages={totalPages} pageNumber={1} />
+          <PdfHeader
+            title={location?.custom_title}
+            totalPages={totalPages}
+            getCurrentPage={getCurrentPage}
+            documentHeight={documentHeight}
+          />
           <DocumentCoverPdfSection title={location?.custom_title} selectedTopics={selectedTopics} />
         </WebshotReportContainer>
         <WebshotReportContainer>
-          <PdfHeader title={location?.custom_title} totalPages={totalPages} pageNumber={2} />
+          <PdfHeader
+            title={location?.custom_title}
+            totalPages={totalPages}
+            getCurrentPage={getCurrentPage}
+            documentHeight={documentHeight}
+          />
           <GeographicContextPdfSection />
         </WebshotReportContainer>
-        <WebshotReportContainer>
-          <TopicCover
-            title="Nature"
-            description="Population in Amazonia, Conflicts location."
-            header={
-              <PdfHeader
-                title={location?.custom_title}
-                transparent
+
+        {selectedTopics?.map((topic) => {
+          const topicView = topics?.find((t) => t.id === topic.id);
+          if (!topic) return null;
+
+          return (
+            <>
+              <WebshotReportContainer>
+                <TopicCover
+                  title={topic[`name_${localeString}`]}
+                  description={topic.description}
+                  header={
+                    <PdfHeader
+                      title={location?.custom_title}
+                      transparent
+                      topic={topic[`name_${localeString}`]}
+                      totalPages={totalPages}
+                      getCurrentPage={getCurrentPage}
+                      documentHeight={documentHeight}
+                    />
+                  }
+                />
+              </WebshotReportContainer>
+
+              <WidgetTopicSection
                 totalPages={totalPages}
-                pageNumber={3}
-                topic="Nature"
+                getCurrentPage={getCurrentPage}
+                documentHeight={documentHeight}
+                topic={topic}
+                topicView={topicView}
               />
-            }
-          />
-        </WebshotReportContainer>
+            </>
+          );
+        })}
       </SidebarProvider>
     </main>
   );

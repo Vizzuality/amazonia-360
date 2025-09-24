@@ -34,8 +34,8 @@ export default function GeographicContextPdfSection() {
   if (!data) return null;
 
   return (
-    <div className="flex h-full">
-      <div className="flex h-full w-[50%] flex-col justify-center gap-8 bg-blue-50 px-14">
+    <div className="relative flex h-[calc(9.335in-64px)]">
+      <div className="flex w-[50%] flex-col justify-center gap-8 bg-blue-50 px-14">
         <h1 className="text-2xl text-primary">{data[0][`name_${localeString}`]}</h1>
         {/* TODO: Find a way to get this without doing the same requests all over again} */}
         {/* <p className="font-medium">

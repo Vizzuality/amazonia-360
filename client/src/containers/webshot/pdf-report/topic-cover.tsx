@@ -14,12 +14,12 @@ export default function TopicCover({
   header,
 }: TopicCoverProps) {
   return (
-    <>
+    <div className="h-[9.335in] w-full">
       <div
         className="h-[60%] bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
-        <div className="flex h-full w-full flex-col justify-between bg-gradient-to-t from-black to-transparent">
+        <div className="flex h-full flex-col justify-between bg-gradient-to-t from-black to-transparent">
           {header}
           <div className="gap-2 px-14 pb-20 text-white">
             <h1 className="text-6xl">{title}</h1>
@@ -27,7 +27,7 @@ export default function TopicCover({
           </div>
         </div>
       </div>
-      <div className="flex h-[40%] w-full flex-col justify-between gap-8 bg-blue-50 px-14 py-8 pb-3 text-xs font-thin leading-loose">
+      <div className="flex h-[40%] flex-col justify-between gap-8 bg-blue-50 px-14 py-8 pb-3 text-xs font-thin leading-loose">
         <div className="flex flex-row justify-between gap-6">
           <p>
             The selected area in the Amazonia region, specifically within the state of Amapá,
@@ -50,6 +50,6 @@ export default function TopicCover({
         </div>
         <p className="">*This summary was generated with AI.</p>
       </div>
-    </>
+    </div>
   );
 }

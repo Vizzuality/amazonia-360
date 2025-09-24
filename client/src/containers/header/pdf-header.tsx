@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+
 import Image from "next/image";
 
 import { useTranslations } from "next-intl";
@@ -10,31 +12,53 @@ import { Badge } from "@/components/ui/badge";
 
 interface PdfHeaderProps {
   transparent?: boolean;
-  pageNumber?: number;
-  totalPages?: number;
   title?: string;
   topic?: string;
+  totalPages?: number;
+  getCurrentPage?: (element?: HTMLElement) => number;
+  documentHeight?: number;
 }
 
 export default function PdfHeader({
   transparent,
-  pageNumber,
-  totalPages,
   title,
   topic,
+  totalPages = 0,
+  getCurrentPage,
+  documentHeight = 0,
 }: PdfHeaderProps) {
   const t = useTranslations();
+  const headerRef = useRef<HTMLElement>(null);
+  const [actualPageNumber, setActualPageNumber] = useState(1);
+
+  // Update page number whenever document height changes or component mounts
+  useEffect(() => {
+    const updatePageNumber = () => {
+      if (headerRef.current && getCurrentPage) {
+        const pageNumber = getCurrentPage(headerRef.current);
+        setActualPageNumber(pageNumber);
+      }
+    };
+
+    // Update immediately
+    updatePageNumber();
+
+    // Also update after a small delay to ensure DOM is fully updated
+    const timeoutId = setTimeout(updatePageNumber, 200);
+
+    return () => clearTimeout(timeoutId);
+  }, [documentHeight, totalPages, getCurrentPage]);
 
   return (
     <header
+      ref={headerRef}
       className={cn({
-        "box-border flex h-16 flex-col justify-center": true,
+        "box-border flex h-16 w-full shrink-0 flex-col justify-center": true,
         "border-transparent bg-transparent": transparent,
         "border-b border-blue-50 bg-white": !transparent,
       })}
     >
       <div className="container flex items-center justify-between md:mx-auto">
-        {/* Logo section - simplified without link functionality */}
         <div className="z-[120] flex items-center space-x-2">
           <div className="flex items-center space-x-2 lg:space-x-4">
             <Image
@@ -66,7 +90,6 @@ export default function PdfHeader({
             {!!topic ? <span className="font-thin"> | {topic}</span> : ""}
           </p>
         </div>
-        {/* Right side - empty for PDF version, no language selector or other functionality */}
 
         <div
           className={cn({
@@ -76,7 +99,7 @@ export default function PdfHeader({
           })}
         >
           <p>
-            {pageNumber} / {totalPages}
+            {actualPageNumber} / {totalPages}
           </p>
         </div>
       </div>

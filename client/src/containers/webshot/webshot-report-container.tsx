@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
 
 export const WebshotReportContainer = ({ children }: { children: ReactNode }) => {
-  return <div className="flex h-[8.27in] w-[11.7in] flex-col pt-[7px]">{children}</div>;
+  return <div className="flex h-[9.335in] w-full flex-col overflow-hidden">{children}</div>;
 };

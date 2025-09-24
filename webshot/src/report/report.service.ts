@@ -108,6 +108,8 @@ export class ReportService {
         timeout: 60_000,
       });
 
+      await page.waitForTimeout(2_000);
+
       // Set geometry if provided
       if (geometry) {
         await page.evaluate((geom) => {

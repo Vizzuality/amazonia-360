@@ -49,7 +49,7 @@ export default function DocumentCoverPdfSection({
   }, [selectedTopics, localeString, t]);
 
   return (
-    <div className="relative">
+    <div className="relative h-[calc(9.325in_-_64px)] w-full">
       <div className="absolute bottom-[60px] z-10 flex w-[551px] flex-col gap-8 bg-blue-700 px-14 py-10">
         <h1 className="text-6xl text-white">
           {t("pdf-report-cover-title", { location: title || "Selected Area" })}
@@ -61,7 +61,12 @@ export default function DocumentCoverPdfSection({
           {t("pdf-report-cover-date", { date: dateString, language: "English" })}
         </p>
       </div>
-      <img src="/images/report/world-globe.webp" alt="" role="presentation" />
+      <img
+        className="h-[calc(9.335in_-_64px)] w-full"
+        src="/images/report/world-globe.webp"
+        alt=""
+        role="presentation"
+      />
     </div>
   );
 }
