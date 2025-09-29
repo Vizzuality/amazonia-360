@@ -3,6 +3,7 @@ import { QueryFunction, useQuery, UseQueryOptions } from "@tanstack/react-query"
 import { Subtopic } from "@/types/topic";
 
 import SUBTOPICS from "@/../datum/subtopics.json";
+import { routing } from "@/i18n/routing";
 
 /**
  ************************************************************
@@ -27,8 +28,10 @@ export const getSubtopics = async ({ locale }: { locale: string }): Promise<Subt
   const topicsTranslated: Subtopic[] = subtopics.map((subtopic) => {
     return {
       ...subtopic,
-      name: subtopic[`name_${locale}` as keyof Subtopic] as string,
-      description: subtopic[`description_${locale}` as keyof Subtopic] as string,
+      name: (subtopic[`name_${locale}` as keyof Subtopic] ||
+        subtopic[`name_${routing.defaultLocale}` as keyof Subtopic]) as string,
+      description: (subtopic[`description_${locale}` as keyof Subtopic] ||
+        subtopic[`description_${routing.defaultLocale}` as keyof Subtopic]) as string,
     };
   });
 

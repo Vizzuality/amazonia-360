@@ -20,6 +20,11 @@ jest.mock("next-intl", () => {
   };
 });
 
+jest.mock("@/i18n/routing", () => ({
+  locales: ["en", "es", "pt"],
+  defaultLocale: "en",
+}));
+
 /****************
  * ArcGIS JS API
  ****************/

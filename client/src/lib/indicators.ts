@@ -20,6 +20,7 @@ import { LayerProps } from "@/components/map/layers/types";
 import INDICATORS from "@/../datum/indicators.json";
 import SUBTOPICS from "@/../datum/subtopics.json";
 import TOPICS from "@/../datum/topics.json";
+import { routing } from "@/i18n/routing";
 
 /**
  ************************************************************
@@ -52,10 +53,18 @@ export const getIndicators = async (locale: string) => {
 
       return {
         ...indicator,
-        name: indicator[`name_${locale}` as keyof typeof indicator],
-        description: indicator[`description_${locale}` as keyof typeof indicator],
-        description_short: indicator[`description_short_${locale}` as keyof typeof indicator],
-        unit: indicator[`unit_${locale}` as keyof typeof indicator],
+        name:
+          indicator[`name_${locale}` as keyof typeof indicator] ||
+          indicator[`name_${routing.defaultLocale}` as keyof typeof indicator],
+        description:
+          indicator[`description_${locale}` as keyof typeof indicator] ||
+          indicator[`description_${routing.defaultLocale}` as keyof typeof indicator],
+        description_short:
+          indicator[`description_short_${locale}` as keyof typeof indicator] ||
+          indicator[`description_short_${routing.defaultLocale}` as keyof typeof indicator],
+        unit:
+          indicator[`unit_${locale}` as keyof typeof indicator] ||
+          indicator[`unit_${routing.defaultLocale}` as keyof typeof indicator],
         subtopic: s as Subtopic,
         topic: t as Topic,
       } as Indicator;

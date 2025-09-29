@@ -3,6 +3,7 @@ import { QueryFunction, useQuery, UseQueryOptions } from "@tanstack/react-query"
 import { Topic } from "@/types/topic";
 
 import TOPICS from "@/../datum/topics.json";
+import { routing } from "@/i18n/routing";
 
 /**
  ************************************************************
@@ -27,8 +28,10 @@ export const getTopics = async ({ locale }: { locale: string }): Promise<Topic[]
   const topicsTranslated: Topic[] = topics.map((topic) => {
     return {
       ...topic,
-      name: topic[`name_${locale}` as keyof Topic] as string,
-      description: topic[`description_${locale}` as keyof Topic] as string,
+      name: (topic[`name_${locale}` as keyof Topic] ||
+        topic[`name_${routing.defaultLocale}` as keyof Topic]) as string,
+      description: (topic[`description_${locale}` as keyof Topic] ||
+        topic[`description_${routing.defaultLocale}` as keyof Topic]) as string,
     };
   });
 
