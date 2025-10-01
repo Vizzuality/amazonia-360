@@ -234,15 +234,55 @@
         "description_es": "",
         "description_pt": "",
         "default_visualization": [
-            {
-                "id": 18,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
+              {
+                  "id": 18,
+                  "type": "numeric",
+                  "w": 1,
+                  "h": 1,
+                  "x": 0,
+                  "y": 0
+              },
+              {
+                  "id": 18,
+                  "type": "map",
+                  "w": 2,
+                  "h": 4,
+                  "x": 2,
+                  "y": 0
+              },
+              {
+                  "id": 17,
+                  "type": "numeric",
+                  "w": 1,
+                  "h": 1,
+                  "x": 1,
+                  "y": 0
+              },
+              {
+                  "id": 17,
+                  "type": "chart",
+                  "w": 2,
+                  "h": 2,
+                  "x": 0,
+                  "y": 2
+              },
+              {
+                  "id": 20,
+                  "type": "numeric",
+                  "w": 1,
+                  "h": 1,
+                  "x": 0,
+                  "y": 1
+              },
+              {
+                  "id": 21,
+                  "type": "numeric",
+                  "w": 1,
+                  "h": 1,
+                  "x": 1,
+                  "y": 1
+              }
+          ]
     },
     {
         "id": 6,
@@ -790,6 +830,7 @@
     }
 
 ]
+
 
 
 
