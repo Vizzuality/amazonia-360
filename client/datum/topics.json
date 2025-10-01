@@ -135,8 +135,23 @@
     "description_es": "Accede a datos demográficos e indicadores sociales de tu área de interés",
     "description_pt": "Acesse dados demográficos e indicadores sociais da sua área de interesse",
     "default_visualization": [
-      
-    ]
+            {
+                "id": 35,
+                "type": "map",
+                "w": 2,
+                "h": 4,
+                "x": 0,
+                "y": 0
+            },
+            {
+                "id": 37,
+                "type": "map",
+                "w": 2,
+                "h": 4,
+                "x": 2,
+                "y": 1
+            }
+        ]
   },
   {
     "id": 4,
@@ -209,5 +224,6 @@
     ]
   }
 ]
+
 
 
