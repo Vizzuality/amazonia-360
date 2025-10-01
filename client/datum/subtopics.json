@@ -503,28 +503,6 @@
         "description_es": "",
         "description_pt": "",
         "default_visualization": [
-            {
-                "id": 42,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 16,
-        "Numerotation": "16",
-        "topic_id": 4,
-        "name_en": "Agriculture - Export Crops",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
           {
               "type": "numeric",
               "id": 41,
@@ -558,6 +536,52 @@
               "h": 1
           }
       ]
+    },
+    {
+        "id": 16,
+        "Numerotation": "16",
+        "topic_id": 4,
+        "name_en": "Agriculture - Export Crops",
+        "name_es": "",
+        "name_pt": "",
+        "image": "",
+        "description_en": "",
+        "description_es": "",
+        "description_pt": "",
+        "default_visualization": [
+          {
+              "id": 45,
+              "type": "numeric",
+              "w": 1,
+              "h": 1,
+              "x": 0,
+              "y": 0
+          },
+          {
+            "id": 46,
+            "type": "numeric",
+            "w": 1,
+            "h": 1,
+            "x": 1,
+            "y": 0
+          },
+          {
+            "id": 47,
+            "type": "numeric",
+            "w": 1,
+            "h": 1,
+            "x": 2,
+            "y": 0
+          },
+          {
+            "id": 50,
+            "type": "numeric",
+            "w": 1,
+            "h": 1,
+            "x": 3,
+            "y": 0
+          }
+        ]
     },
     {
         "id": 17,
@@ -871,6 +895,7 @@
     }
 
 ]
+
 
 
 
