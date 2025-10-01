@@ -101,7 +101,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <div className="flex grow flex-col overflow-hidden">
-          <header className="shrink-0 space-y-4 px-6">
+          <header className="shrink-0 space-y-2 px-6">
             {HEADER[heading]}
             <div className="space-y-1">
               <div className="text-sm font-medium text-muted-foreground">
