@@ -20,9 +20,9 @@ export default function InformationOn() {
             {t("landing-information-on-description")}
           </p>
         </div>
-        <div className="w-full">
-          <Topics />
-        </div>
+      </div>
+      <div className="mx-auto w-full max-w-[1900px]">
+        <Topics />
       </div>
     </section>
   );
