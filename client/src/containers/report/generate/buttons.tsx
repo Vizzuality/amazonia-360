@@ -20,7 +20,7 @@ export const ReportGenerateButtons = () => {
 
   return (
     <div className="flex w-full items-center justify-between">
-      <div className="flex grow flex-col items-center justify-between gap-2 lg:flex-row">
+      <div className="flex grow flex-row items-center justify-between gap-2">
         <Button
           type="button"
           className="px-4 lg:px-8"

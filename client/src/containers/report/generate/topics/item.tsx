@@ -69,8 +69,8 @@ export default function TopicsItem({ id, name, image }: Topic) {
                       })}
                     />
                   </div>
-                  <div className="flex flex-col items-start justify-start space-y-1">
-                    <span className="text-base font-bold transition-none">{name}</span>
+                  <div className="flex flex-col items-start justify-start space-y-1 pr-8">
+                    <span className="text-left text-base font-bold transition-none">{name}</span>
                   </div>
                 </div>
               </CollapsibleTrigger>

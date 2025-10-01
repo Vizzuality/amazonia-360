@@ -15,7 +15,7 @@ export default function Help() {
       <div className="container py-10">
         <div className="flex flex-col items-start justify-between lg:flex-row lg:items-center lg:py-16">
           <div className="flex flex-col justify-start space-y-2">
-            <h3 className="text-lg font-bold">{t("landing-help-title")}</h3>
+            <h3 className="text-2xl font-bold">{t("landing-help-title")}</h3>
             <p className="max-w-2xl font-normal">{t("landing-help-description")}</p>
           </div>
           <div className="flex flex-col items-center md:items-center">
