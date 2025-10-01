@@ -348,15 +348,23 @@
         "description_es": "",
         "description_pt": "",
         "default_visualization": [
-            {
-                "id": 33,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
+              {
+                  "type": "chart",
+                  "id": 33,
+                  "x": 0,
+                  "y": 0,
+                  "w": 2,
+                  "h": 2
+              },
+              {
+                  "type": "chart",
+                  "id": 34,
+                  "x": 2,
+                  "y": 0,
+                  "w": 2,
+                  "h": 2
+              }
+          ]
     },
     {
         "id": 9,
@@ -838,6 +846,7 @@
     }
 
 ]
+
 
 
 
