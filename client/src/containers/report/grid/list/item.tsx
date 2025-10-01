@@ -151,7 +151,7 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
         open={open}
         onOpenChange={onOpenChange}
         className={cn({
-          relative: true,
+          "relative rounded-lg": true,
           "bg-blue-50": open,
         })}
       >
@@ -163,7 +163,7 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
           >
             <TooltipTrigger asChild>
               <CollapsibleTrigger
-                className="flex grow space-x-2.5 rounded-sm p-1 px-2 text-left text-sm font-medium text-gray-400 transition-colors duration-300 ease-in-out hover:bg-blue-50"
+                className="flex grow space-x-2.5 rounded-sm p-1.5 px-2 text-left text-sm font-medium text-gray-400 transition-colors duration-300 ease-in-out hover:bg-blue-50"
                 onClick={() => setMax4Open(false)}
               >
                 <h3 className="text-left text-sm font-medium text-gray-400">

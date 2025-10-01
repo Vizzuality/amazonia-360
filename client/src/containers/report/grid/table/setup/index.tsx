@@ -137,9 +137,9 @@ export default function GridTableSetup() {
         align="start"
         className="w-auto max-w-80 bg-background p-2"
       >
-        <div className="space-y-4 p-4">
+        <div className="space-y-4 p-2">
           <div className="space-y-1">
-            <h2 className="text-sm font-semibold text-popover-foreground">
+            <h2 className="text-base font-medium text-foreground">
               {t("grid-sidebar-grid-filters-ranking-set-up-title")}
             </h2>
             <span className="text-sm text-muted-foreground">
@@ -197,14 +197,17 @@ export default function GridTableSetup() {
               id="cell-number"
               type="number"
               min={0}
-              className="h-10"
+              className="h-10 w-full"
               onChange={onInputChange}
             />
-            <span className="text-sm text-muted-foreground">
+            <span className="text-xs text-muted-foreground">
               {t("grid-sidebar-grid-filters-ranking-set-up-max-number-cell-note")}.
             </span>
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-2">
+            <Button onClick={() => setIsOpen(false)} variant="outline">
+              {t("cancel")}
+            </Button>
             <Button onClick={handleFilters}>
               {t("grid-sidebar-grid-filters-ranking-set-up-button-apply")}
             </Button>
