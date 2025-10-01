@@ -63,14 +63,14 @@ export default function EditableHeader({ value = "Selected area" }: { value?: st
   return (
     <div className="sticky right-0 top-0 z-10 space-y-4 bg-blue-50 py-6 print:hidden">
       <div className="container">
-        <div className="relative flex h-full w-fit">
+        <div className="relative -ml-1.5 flex h-full w-fit">
           <label htmlFor={id} className="sr-only">
             {title}
           </label>
 
           {!editMode && (
             <header className="flex items-center space-x-4">
-              <h2 className="px-1 py-2 text-2xl font-bold text-primary lg:text-3xl tall:xl:text-4xl">
+              <h2 className="border border-transparent px-1 py-2 text-2xl font-bold text-primary lg:text-3xl tall:xl:text-4xl">
                 {TITLE}
               </h2>
               <Button
@@ -103,7 +103,7 @@ export default function EditableHeader({ value = "Selected area" }: { value?: st
                 aria-readonly={!editMode}
                 aria-label={editMode ? (location?.custom_title ?? pendingTitle) : title}
                 className={cn(
-                  "mx-0 inline h-full w-fit rounded-md border-none bg-blue-50 px-1 py-2 text-2xl font-bold text-primary shadow-none outline-none ring-2 ring-primary/40 focus:ring-0 lg:text-3xl tall:xl:text-4xl",
+                  "mx-0 inline h-full w-fit rounded-md bg-blue-50 px-1 py-2 text-2xl font-bold text-primary shadow-none outline-none ring-2 ring-primary/40 focus:ring-0 lg:text-3xl tall:xl:text-4xl",
                 )}
               />
               <div className="flex gap-2">
