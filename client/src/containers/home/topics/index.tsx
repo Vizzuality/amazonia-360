@@ -18,7 +18,7 @@ export default function Topics() {
   });
 
   return (
-    <section className="mt-10 md:mt-16 md:space-y-6" ref={imagesRef}>
+    <section className="mt-10 md:mt-28 md:space-y-6" ref={imagesRef}>
       <div
         className={`grid grid-cols-12 gap-0 ${isImagesInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-40" : "md:opacity-0"}`}
       >

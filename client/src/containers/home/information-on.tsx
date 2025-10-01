@@ -16,7 +16,7 @@ export default function InformationOn() {
           <h2 className="text-2xl text-white lg:text-4xl">
             <ReactMarkdown>{t("landing-information-on-title")}</ReactMarkdown>
           </h2>
-          <p className="text-base font-normal text-white lg:text-lg">
+          <p className="max-w-xl text-base font-normal text-white lg:text-lg">
             {t("landing-information-on-description")}
           </p>
         </div>
