@@ -296,15 +296,15 @@
         "description_es": "",
         "description_pt": "",
         "default_visualization": [
-            {
-                "id": 26,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
+                {
+                    "id": 26,
+                    "type": "map",
+                    "w": 4,
+                    "h": 4,
+                    "x": 0,
+                    "y": 0
+                }
+            ]
     },
     {
         "id": 7,
@@ -830,6 +830,7 @@
     }
 
 ]
+
 
 
 
