@@ -22,7 +22,7 @@ export default function SubtopicList({ topicId }: { topicId?: Topic["id"] }) {
         "after:pointer-events-none after:absolute after:left-2.5 after:top-0 after:z-0 after:h-[calc(100%_-_theme(space.5))] after:w-2.5 after:bg-white",
       )}
     >
-      <div className="relative z-10 flex flex-col gap-0.5 p-2 px-4">
+      <div className="relative z-10 flex flex-col gap-0.5 p-2 pl-3 pr-0">
         {subtopicData?.map((subtopic) => {
           return <SubtopicItem key={subtopic.id} {...subtopic} />;
         })}

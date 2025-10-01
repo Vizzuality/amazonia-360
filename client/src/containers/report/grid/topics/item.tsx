@@ -84,9 +84,11 @@ export default function TopicsItem({ id, name, image }: TopicsItemProps) {
               <span className="text-sm font-bold transition-none">{name}</span>
             </div>
           </div>
-          <Badge variant="secondary" className="rounded-full">
-            {SELECTED}
-          </Badge>
+          {!!SELECTED && (
+            <Badge variant="secondary" className="rounded-full">
+              {SELECTED}
+            </Badge>
+          )}
         </CollapsibleTrigger>
         <CollapsibleContent className="pl-6">
           <SubtopicList topicId={id} />
