@@ -19,7 +19,41 @@
     "image": "/images/topics/territory.webp",
     "description_en": "Capas Overview sistema para el uso interno de la app",
     "description_es": "Vista general de capas – sistema para uso interno de la app",
-    "description_pt": "Visão geral das camadas – sistema para uso interno do app"
+    "description_pt": "Visão geral das camadas – sistema para uso interno do app",
+    "default_visualization": [
+          {
+              "id": 9,
+              "type": "map",
+              "w": 2,
+              "h": 4,
+              "x": 0,
+              "y": 2
+          },
+          {
+              "id": 13,
+              "type": "map",
+              "w": 2,
+              "h": 4,
+              "x": 2,
+              "y": 2
+          },
+          {
+              "id": 11,
+              "type": "chart",
+              "w": 2,
+              "h": 2,
+              "x": 0,
+              "y": 0
+          },
+          {
+              "id": 6,
+              "type": "chart",
+              "w": 2,
+              "h": 2,
+              "x": 2,
+              "y": 0
+          }
+      ]
   },
   {
     "id": 2,
@@ -30,7 +64,10 @@
     "image": "/images/topics/nature.webp",
     "description_en": "Get data on natural environment, ecosystems, biodiversity and protected areas in your area",
     "description_es": "Obtén datos sobre el entorno natural, los ecosistemas, la biodiversidad y las áreas protegidas en tu zona",
-    "description_pt": "Obtenha dados sobre o meio ambiente, ecossistemas, biodiversidade e áreas protegidas na sua região"
+    "description_pt": "Obtenha dados sobre o meio ambiente, ecossistemas, biodiversidade e áreas protegidas na sua região",
+    "default_visualization": [
+      
+    ]
   },
   {
     "id": 3,
@@ -41,7 +78,10 @@
     "image": "/images/topics/people.webp",
     "description_en": "Access demographic data and social indicators for your area of interest",
     "description_es": "Accede a datos demográficos e indicadores sociales de tu área de interés",
-    "description_pt": "Acesse dados demográficos e indicadores sociais da sua área de interesse"
+    "description_pt": "Acesse dados demográficos e indicadores sociais da sua área de interesse",
+    "default_visualization": [
+      
+    ]
   },
   {
     "id": 4,
@@ -52,7 +92,10 @@
     "image": "/images/topics/productive.webp",
     "description_en": "Get information on economic sectors and production systems",
     "description_es": "Obtén información sobre sectores económicos y sistemas de producción",
-    "description_pt": "Obtenha informações sobre os setores econômicos e sistemas de produção"
+    "description_pt": "Obtenha informações sobre os setores econômicos e sistemas de produção",
+    "default_visualization": [
+      
+    ]
   },
   {
     "id": 5,
@@ -63,7 +106,10 @@
     "image": "/images/topics/infrastructure.webp",
     "description_en": "Explore urban development, connectivity and transportation",
     "description_es": "Explora el desarrollo urbano, la conectividad y el transporte",
-    "description_pt": "Explore o desenvolvimento urbano, conectividade e transporte"
+    "description_pt": "Explore o desenvolvimento urbano, conectividade e transporte",
+    "default_visualization": [
+      
+    ]
   },
   {
     "id": 6,
@@ -74,7 +120,10 @@
     "image": "/images/topics/risks-and-vulnerabilities.webp",
     "description_en": "",
     "description_es": "",
-    "description_pt": ""
+    "description_pt": "",
+    "default_visualization": [
+      
+    ]
   },
   {
     "id": 7,
@@ -85,7 +134,10 @@
     "image": "/images/topics/knowledge-products.webp",
     "description_en": "",
     "description_es": "",
-    "description_pt": ""
+    "description_pt": "",
+    "default_visualization": [
+      
+    ]
   },
   {
     "id": 8,
@@ -96,6 +148,10 @@
     "image": "/images/topics/idb-operations.webp",
     "description_en": "",
     "description_es": "",
-    "description_pt": ""
+    "description_pt": "",
+    "default_visualization": [
+      
+    ]
   }
 ]
+
