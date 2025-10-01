@@ -105,15 +105,32 @@
         "description_es": "",
         "description_pt": "",
         "default_visualization": [
-            {
-                "id": 6,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
+      {
+        "id": 6,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      },
+      {
+        "type": "chart",
+        "id": 6,
+        "x": 2,
+        "y": 0,
+        "w": 2,
+        "h": 2
+      },
+      {
+        "type": "chart",
+        "id": 10,
+        "x": 2,
+        "y": 2,
+        "w": 2,
+        "h": 2
+      }
+    ]
+
     },
     {
         "id": 2,
@@ -747,4 +764,5 @@
             }
         ]
     }
+
 ]
