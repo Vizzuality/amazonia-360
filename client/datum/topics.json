@@ -336,11 +336,27 @@
     "description_en": "",
     "description_es": "",
     "description_pt": "",
-    "default_visualization": [
-      
-    ]
+    "default_visualization":[
+            {
+                "type": "map",
+                "id": 64,
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            },
+            {
+                "type": "table",
+                "id": 64,
+                "x": 2,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
+      ]
   }
 ]
+
 
 
 
