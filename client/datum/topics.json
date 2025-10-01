@@ -164,8 +164,55 @@
     "description_es": "Obtén información sobre sectores económicos y sistemas de producción",
     "description_pt": "Obtenha informações sobre os setores econômicos e sistemas de produção",
     "default_visualization": [
-      
-    ]
+            {
+                "id": 41,
+                "type": "numeric",
+                "w": 1,
+                "h": 1,
+                "x": 1,
+                "y": 0
+            },
+            {
+                "id": 40,
+                "type": "numeric",
+                "w": 1,
+                "h": 1,
+                "x": 0,
+                "y": 0
+            },
+            {
+                "id": 46,
+                "type": "numeric",
+                "w": 1,
+                "h": 1,
+                "x": 2,
+                "y": 0
+            },
+            {
+                "id": 39,
+                "type": "map",
+                "w": 2,
+                "h": 4,
+                "x": 0,
+                "y": 1
+            },
+            {
+                "id": 51,
+                "type": "numeric",
+                "w": 1,
+                "h": 1,
+                "x": 3,
+                "y": 0
+            },
+            {
+                "id": 51,
+                "type": "map",
+                "w": 2,
+                "h": 4,
+                "x": 2,
+                "y": 1
+            }
+        ]
   },
   {
     "id": 5,
@@ -224,6 +271,7 @@
     ]
   }
 ]
+
 
 
 
