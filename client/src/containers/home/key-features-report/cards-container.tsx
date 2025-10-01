@@ -46,28 +46,28 @@ export default function CardsContainer() {
       >
         <li className="flex w-full">
           <div
-            className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 ${
+            className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-lg bg-blue-50 p-4 ${
               isCardInView
                 ? "md:delay-0 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
                 : "opacity-0"
             }`}
           >
             <MapPinned size={32} strokeWidth={1} className="text-cyan-600" />
-            <h4 className="font-bold text-blue-500">
+            <h4 className="font-semibold text-foreground">
               {t("landing-key-features-report-buttons-select-area-of-interest")}
             </h4>
           </div>
         </li>
         <li className="flex w-full">
           <div
-            className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 ${
+            className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-lg bg-blue-50 p-4 ${
               isCardInView
                 ? "md:delay-150 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
                 : "opacity-0"
             }`}
           >
             <LayoutDashboard size={32} strokeWidth={1} className="text-cyan-600" />
-            <h4 className="font-bold text-blue-500">
+            <h4 className="font-semibold text-foreground">
               {t("landing-key-features-report-buttons-define-topics-of-interest")}
             </h4>
           </div>
@@ -75,14 +75,14 @@ export default function CardsContainer() {
 
         <li className="flex w-full">
           <div
-            className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 ${
+            className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-lg bg-blue-50 p-4 ${
               isCardInView
                 ? "md:delay-300 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
                 : "opacity-0"
             }`}
           >
             <Share2 size={32} strokeWidth={1} className="h-8 w-8 text-cyan-600" />
-            <h4 className="font-bold text-blue-500">
+            <h4 className="font-semibold text-foreground">
               {t("landing-key-features-report-buttons-share-and-download")}
             </h4>
           </div>
