@@ -1,37 +1,46 @@
-import { useTranslations } from "next-intl";
+import { useFormContext } from "react-hook-form";
 
-import { useSyncLocation, useSyncSearchParams } from "@/app/store";
+import { useLocale, useTranslations } from "next-intl";
+import { z } from "zod";
 
-// import { Media } from "@/containers/media";
+import { useGetDefaultSubtopics } from "@/lib/subtopics";
+import { useGetDefaultTopics } from "@/lib/topics";
+
+import { formSchema } from "@/containers/report/generate";
 
 import { Button } from "@/components/ui/button";
 
-import { Link } from "@/i18n/navigation";
-
 export const ReportGenerateButtons = () => {
+  const locale = useLocale();
   const t = useTranslations();
-  const [location] = useSyncLocation();
-  const searchSelectLaterParams = useSyncSearchParams({
-    location,
-  });
+  const form = useFormContext<z.infer<typeof formSchema>>();
+
+  const { data: topicsData } = useGetDefaultTopics({ locale });
+  const { data: subtopicsData } = useGetDefaultSubtopics({ locale });
 
   return (
     <div className="flex w-full items-center justify-between">
-      {/* <Media greaterThanOrEqual="lg">
-        <Button className="w-full border-none" variant="outline" onClick={() => setTopics([])}>
-          {t("grid-sidebar-grid-filters-button-clear-selection")}
+      <div className="flex grow flex-row items-center justify-between gap-2">
+        <Button
+          type="button"
+          className="px-4 lg:px-8"
+          variant="outline"
+          onClick={() => {
+            form.setValue(
+              "topics",
+              topicsData?.map((topic) => ({
+                id: topic.id,
+                subtopics:
+                  subtopicsData?.filter((s) => s.topic_id === topic.id).map((s) => s.id) || [],
+              })) || [],
+            );
+          }}
+        >
+          {t("select-all")}
         </Button>
-      </Media> */}
 
-      <div className="flex grow flex-col items-center justify-end gap-2 lg:flex-row">
-        <Link href={`/report/results${searchSelectLaterParams}`} prefetch className="block w-full">
-          <Button className="w-full px-4 lg:px-8" variant="outline">
-            {t("sidebar-report-location-topics-button-generate-select-later")}
-          </Button>
-        </Link>
-
-        <Button className="lg:px-8px-4 w-full grow" type="submit">
-          {t("sidebar-report-location-topics-button-generate-report")}
+        <Button className="px-4 lg:px-8" type="submit">
+          {t("create")}
         </Button>
       </div>
     </div>

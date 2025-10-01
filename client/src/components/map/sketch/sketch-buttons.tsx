@@ -76,7 +76,7 @@ export default function SketchButtons({ iconOnly = false }: { iconOnly: boolean 
           className={cn(
             buttonVariants({ variant: "outline" }),
             sketch.enabled && sketch.type === button.id && buttonVariants({ variant: "default" }),
-            "group flex items-center justify-center rounded-md border border-border p-0",
+            "group flex w-full items-center justify-center rounded-md border border-border p-0",
             iconOnly ? "h-10 w-10" : "space-x-2.5 px-4 py-2",
           )}
           aria-label={t("grid-sketch-start-drawing")}

@@ -1,20 +1,38 @@
 "use client";
 
-import { useAtom } from "jotai";
-import { LuChevronDown } from "react-icons/lu";
+import { useMemo } from "react";
 
+import { useAtom } from "jotai";
+import { useLocale } from "next-intl";
+import { LuChevronRight } from "react-icons/lu";
+
+import { useGetH3Indicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
 import { Subtopic } from "@/types/topic";
 
-import { indicatorsExpandAtom } from "@/app/store";
+import { indicatorsExpandAtom, useSyncGridDatasets } from "@/app/store";
 
 import IndicatorsList from "@/containers/report/grid/list";
 
+import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 export default function SubtopicsItem({ id, topic_id, name }: Subtopic) {
+  const locale = useLocale();
+
+  const { data: indicatorsData } = useGetH3Indicators({
+    subtopicId: id,
+    locale,
+  });
+  const [gridDatasets] = useSyncGridDatasets();
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
+
+  const SELECTED = useMemo(() => {
+    if (!indicatorsData || !gridDatasets) return 0;
+    return indicatorsData.filter((indicator) => gridDatasets.includes(indicator.resource.column))
+      .length;
+  }, [indicatorsData, gridDatasets]);
 
   const handleClick = (open: boolean) => {
     setIndicatorsExpand((prev) => {
@@ -46,15 +64,20 @@ export default function SubtopicsItem({ id, topic_id, name }: Subtopic) {
           )}
         >
           <div className={cn("flex items-center space-x-2.5")}>
-            <LuChevronDown
-              className={cn("h-4 w-4", {
-                "rotate-180": !!indicatorsExpand?.[topic_id]?.includes(id),
+            <LuChevronRight
+              className={cn("h-4 w-4 transition-transform duration-300", {
+                "rotate-90": !!indicatorsExpand?.[topic_id]?.includes(id),
               })}
             />
             <div className="flex flex-col items-start justify-start space-y-1">
               <span className="text-sm font-medium transition-none">{name}</span>
             </div>
           </div>
+          {!!SELECTED && (
+            <Badge variant="secondary" className="rounded-full">
+              {SELECTED}
+            </Badge>
+          )}
         </CollapsibleTrigger>
         <CollapsibleContent className="pl-2.5">
           <IndicatorsList subtopicId={id} />

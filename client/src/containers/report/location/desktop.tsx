@@ -63,7 +63,7 @@ export default function ReportLocationDesktop() {
                       <Icon className="h-5 w-5 text-foreground transition-colors duration-300 group-hover:text-cyan-500" />
                     </div>
                     <div className="flex flex-col items-start justify-start space-y-1">
-                      <span className="text-base font-semibold text-muted-foreground transition-colors duration-300 group-hover:text-primary">
+                      <span className="text-base font-semibold text-primary transition-colors duration-300 group-hover:text-primary">
                         {card.title}
                       </span>
                       <span className="text-sm font-medium text-muted-foreground">

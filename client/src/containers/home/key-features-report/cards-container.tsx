@@ -2,8 +2,8 @@
 
 import { useInView } from "react-intersection-observer";
 
-import { LayoutDashboard, MapPinned, Share2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { LuLayoutDashboard, LuMapPinned, LuShare2 } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
@@ -40,34 +40,31 @@ export default function CardsContainer() {
           {t("landing-key-features-report-description")}
         </p>
       </div>
-      <ul
-        ref={cardRef}
-        className="mt-6 flex flex-col gap-2 sm:grid-cols-3 md:mt-20 md:grid lg:mt-6"
-      >
+      <ul ref={cardRef} className="mt-6 flex flex-col gap-2 sm:grid-cols-3 md:grid lg:mt-6">
         <li className="flex w-full">
           <div
-            className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 ${
+            className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-lg bg-blue-50 p-4 ${
               isCardInView
                 ? "md:delay-0 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
                 : "opacity-0"
             }`}
           >
-            <MapPinned size={32} strokeWidth={1} className="text-cyan-600" />
-            <h4 className="font-bold text-blue-500">
+            <LuMapPinned size={32} strokeWidth={1} className="text-cyan-600" />
+            <h4 className="font-semibold text-foreground">
               {t("landing-key-features-report-buttons-select-area-of-interest")}
             </h4>
           </div>
         </li>
         <li className="flex w-full">
           <div
-            className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 ${
+            className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-lg bg-blue-50 p-4 ${
               isCardInView
                 ? "md:delay-150 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
                 : "opacity-0"
             }`}
           >
-            <LayoutDashboard size={32} strokeWidth={1} className="text-cyan-600" />
-            <h4 className="font-bold text-blue-500">
+            <LuLayoutDashboard size={32} strokeWidth={1} className="text-cyan-600" />
+            <h4 className="font-semibold text-foreground">
               {t("landing-key-features-report-buttons-define-topics-of-interest")}
             </h4>
           </div>
@@ -75,14 +72,14 @@ export default function CardsContainer() {
 
         <li className="flex w-full">
           <div
-            className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-sm bg-blue-50 p-4 ${
+            className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-lg bg-blue-50 p-4 ${
               isCardInView
                 ? "md:delay-300 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
                 : "opacity-0"
             }`}
           >
-            <Share2 size={32} strokeWidth={1} className="h-8 w-8 text-cyan-600" />
-            <h4 className="font-bold text-blue-500">
+            <LuShare2 size={32} strokeWidth={1} className="h-8 w-8 text-cyan-600" />
+            <h4 className="font-semibold text-foreground">
               {t("landing-key-features-report-buttons-share-and-download")}
             </h4>
           </div>

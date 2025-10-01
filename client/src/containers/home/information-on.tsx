@@ -16,13 +16,13 @@ export default function InformationOn() {
           <h2 className="text-2xl text-white lg:text-4xl">
             <ReactMarkdown>{t("landing-information-on-title")}</ReactMarkdown>
           </h2>
-          <p className="text-base font-normal text-white lg:text-lg">
+          <p className="max-w-xl text-base font-normal text-white lg:text-lg">
             {t("landing-information-on-description")}
           </p>
         </div>
-        <div className="w-full">
-          <Topics />
-        </div>
+      </div>
+      <div className="mx-auto w-full max-w-[1900px]">
+        <Topics />
       </div>
     </section>
   );

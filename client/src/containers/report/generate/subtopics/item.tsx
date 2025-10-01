@@ -62,8 +62,8 @@ export default function SubtopicsItem({ id, name }: Subtopic) {
             }}
           >
             <div className={cn("flex items-center space-x-2.5")}>
-              <div className="flex flex-col items-start justify-start space-y-1">
-                <span className="text-sm font-medium transition-none">{name}</span>
+              <div className="flex flex-col items-start justify-start space-y-1 pr-6">
+                <span className="text-left text-sm font-medium transition-none">{name}</span>
               </div>
             </div>
           </button>

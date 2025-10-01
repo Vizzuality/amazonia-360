@@ -95,13 +95,13 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
     <Form {...form}>
       <form
         className={cn(
-          "relative flex h-full max-h-[calc(100vh_-_(theme(spacing.16)_+_theme(spacing.20)))] grow flex-col justify-between overflow-hidden rounded-lg py-4",
+          "relative flex h-full max-h-[calc(100svh_-_theme(spacing.16))] grow flex-col justify-between overflow-hidden rounded-lg py-4 lg:max-h-[calc(100vh_-_(theme(spacing.16)_+_theme(spacing.20)))]",
           "lg:border lg:border-blue-100",
         )}
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <div className="flex grow flex-col overflow-hidden">
-          <header className="shrink-0 space-y-4 px-6">
+          <header className="shrink-0 space-y-2 lg:px-6">
             {HEADER[heading]}
             <div className="space-y-1">
               <div className="text-sm font-medium text-muted-foreground">
@@ -112,7 +112,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
 
           <div className="relative flex grow flex-col overflow-hidden">
             <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 h-4 bg-gradient-to-b from-white to-transparent" />
-            <ScrollArea className="flex grow flex-col px-6">
+            <ScrollArea className="flex grow flex-col lg:px-6">
               <div className="py-4">
                 <Topics />
               </div>
@@ -121,7 +121,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
           </div>
         </div>
 
-        <div className="shrink-0 px-6">
+        <div className="shrink-0 lg:px-6">
           <ReportGenerateButtons />
         </div>
       </form>
