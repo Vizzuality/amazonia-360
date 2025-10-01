@@ -98,15 +98,17 @@ export default function Hero() {
         </div>
       </Media>
       <Media lessThan="md">
-        <Image
-          src="/images/home/hero-mobile.webp"
-          alt="Amazonia"
-          width={1143}
-          height={647}
-          className="lg-top-[30%] w-full max-w-fit object-cover px-4 duration-700 animate-in slide-in-from-bottom-40 slide-in-from-right-72 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]"
-          draggable={false}
-          priority
-        />
+        <div className="mx-4 aspect-[1143/647] overflow-hidden rounded-t-3xl border-8 border-b-0 border-primary shadow-2xl duration-700 animate-in slide-in-from-bottom-40">
+          <Image
+            src="/images/home/hero-mobile.webp"
+            alt="Amazonia"
+            width={1143}
+            height={647}
+            className="w-full max-w-fit object-cover"
+            draggable={false}
+            priority
+          />
+        </div>
       </Media>
     </section>
   );
