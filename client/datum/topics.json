@@ -225,8 +225,47 @@
     "description_es": "Explora el desarrollo urbano, la conectividad y el transporte",
     "description_pt": "Explore o desenvolvimento urbano, conectividade e transporte",
     "default_visualization": [
-      
-    ]
+              {
+                  "id": 52,
+                  "type": "numeric",
+                  "w": 1,
+                  "h": 1,
+                  "x": 0,
+                  "y": 0
+              },
+              {
+                  "id": 53,
+                  "type": "numeric",
+                  "w": 1,
+                  "h": 1,
+                  "x": 1,
+                  "y": 0
+              },
+              {
+                  "id": 56,
+                  "type": "numeric",
+                  "w": 1,
+                  "h": 1,
+                  "x": 2,
+                  "y": 0
+              },
+              {
+                  "id": 55,
+                  "type": "numeric",
+                  "w": 1,
+                  "h": 1,
+                  "x": 3,
+                  "y": 0
+              },
+              {
+                  "id": 54,
+                  "type": "map",
+                  "w": 4,
+                  "h": 4,
+                  "x": 0,
+                  "y": 1
+              }
+          ]
   },
   {
     "id": 6,
@@ -271,6 +310,7 @@
     ]
   }
 ]
+
 
 
 
