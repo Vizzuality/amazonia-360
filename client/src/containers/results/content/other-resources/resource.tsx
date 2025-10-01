@@ -35,7 +35,7 @@ export default function Resource({
   const t = useTranslations();
   return (
     <Card>
-      <div className="flex grow flex-col items-center justify-between space-y-4 text-center">
+      <div className="flex grow flex-col items-center justify-between space-y-4 p-4 text-center">
         <header className="space-y-2">
           <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
             {Type === "Blogs" && (

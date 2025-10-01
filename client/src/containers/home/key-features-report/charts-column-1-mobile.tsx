@@ -8,7 +8,7 @@ export default function KeyFeaturesChartsColumn1Mobile({ inView }: { inView: boo
   return (
     <div
       className={cn({
-        "relative -left-1/3 mt-20 flex max-h-[132px] space-x-4 md:max-h-none md:flex-col md:space-x-0 md:space-y-4":
+        "relative -left-1/3 flex max-h-[132px] space-x-4 lg:max-h-none lg:flex-col lg:space-x-0 lg:space-y-4":
           true,
         "animate-left-to-right": inView,
       })}

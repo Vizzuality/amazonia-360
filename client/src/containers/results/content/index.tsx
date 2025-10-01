@@ -9,11 +9,11 @@ export default function ReportResultsContent() {
       {/* OVERVIEW */}
       <ReportResultsContentOverview />
 
-      {/* BUTTOIN */}
-      <ReportResultsContentSidebarButton />
-
       {/* LIST */}
       <ReportResultsContentList />
+
+      {/* BUTTOIN */}
+      <ReportResultsContentSidebarButton />
 
       {/* OTHER RESOURCES */}
       <ReportResultsContentOtherResources />

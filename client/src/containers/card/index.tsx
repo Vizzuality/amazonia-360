@@ -57,7 +57,7 @@ export function CardHeader({
   className?: string;
 }>) {
   return (
-    <header className={cn("flex h-6 items-start justify-between", className)}>{children}</header>
+    <header className={cn("flex h-6 items-center justify-between", className)}>{children}</header>
   );
 }
 
@@ -67,9 +67,7 @@ export function CardTitle({ children }: PropsWithChildren) {
 
 export function CardContent({ className, children }: PropsWithChildren<{ className?: string }>) {
   return (
-    <div className={cn("mt-2 flex h-full grow flex-col overflow-hidden", className)}>
-      {children}
-    </div>
+    <div className={cn("flex h-full grow flex-col overflow-hidden", className)}>{children}</div>
   );
 }
 
@@ -198,7 +196,7 @@ export function CardPopover({
 
 export function CardControls({ children }: PropsWithChildren) {
   return (
-    <div className="relative -top-1 flex items-center space-x-0">
+    <div className="relative flex items-center space-x-0">
       <TooltipProvider delayDuration={500}>{children}</TooltipProvider>
     </div>
   );
@@ -292,14 +290,16 @@ export function CardWidgetNumber({
   unit?: string;
 }) {
   return (
-    <div>
+    <div className="flex grow flex-col justify-center">
       <div className="flex items-end space-x-2">
-        <span className="text-4xl font-bold text-blue-500">
+        <span className="text-5xl font-bold text-blue-500">
           {typeof value === "number" ? formatNumber(value) : value}
         </span>
 
         {!!unit && (
-          <span className="relative bottom-1.5 text-xs font-medium text-gray-300">{unit}</span>
+          <span className="relative bottom-1.5 text-xs font-medium text-muted-foreground">
+            {unit}
+          </span>
         )}
       </div>
 
@@ -314,7 +314,7 @@ export function Card({ className, children, withoutBorder = false }: PropsWithCh
   return (
     <div
       className={cn(
-        "flex h-full grow break-inside-avoid flex-col overflow-hidden bg-white p-6",
+        "flex h-full grow break-inside-avoid flex-col overflow-hidden bg-white p-0",
         withoutBorder ? "" : borderClasses,
         className,
       )}
