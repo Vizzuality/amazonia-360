@@ -807,14 +807,30 @@
         "description_es": "",
         "description_pt": "",
         "default_visualization": [
-            {
-                "id": 56,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
+              {
+                  "type": "numeric",
+                  "id": 56,
+                  "x": 0,
+                  "y": 4,
+                  "w": 1,
+                  "h": 1
+              },
+              {
+                  "type": "numeric",
+                  "id": 57,
+                  "x": 1,
+                  "y": 4,
+                  "w": 1,
+                  "h": 1
+              },
+              {
+                  "type": "numeric",
+                  "id": 58,
+                  "x": 2,
+                  "y": 4,
+                  "w": 1,
+                  "h": 1
+              }
         ]
     },
     {
@@ -927,6 +943,7 @@
     }
 
 ]
+
 
 
 
