@@ -2,8 +2,8 @@
 
 import { useInView } from "react-intersection-observer";
 
-import { LayoutDashboard, MapPinned, Share2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { LuLayoutDashboard, LuMapPinned, LuShare2 } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
@@ -52,7 +52,7 @@ export default function CardsContainer() {
                 : "opacity-0"
             }`}
           >
-            <MapPinned size={32} strokeWidth={1} className="text-cyan-600" />
+            <LuMapPinned size={32} strokeWidth={1} className="text-cyan-600" />
             <h4 className="font-semibold text-foreground">
               {t("landing-key-features-report-buttons-select-area-of-interest")}
             </h4>
@@ -66,7 +66,7 @@ export default function CardsContainer() {
                 : "opacity-0"
             }`}
           >
-            <LayoutDashboard size={32} strokeWidth={1} className="text-cyan-600" />
+            <LuLayoutDashboard size={32} strokeWidth={1} className="text-cyan-600" />
             <h4 className="font-semibold text-foreground">
               {t("landing-key-features-report-buttons-define-topics-of-interest")}
             </h4>
@@ -81,7 +81,7 @@ export default function CardsContainer() {
                 : "opacity-0"
             }`}
           >
-            <Share2 size={32} strokeWidth={1} className="h-8 w-8 text-cyan-600" />
+            <LuShare2 size={32} strokeWidth={1} className="h-8 w-8 text-cyan-600" />
             <h4 className="font-semibold text-foreground">
               {t("landing-key-features-report-buttons-share-and-download")}
             </h4>
