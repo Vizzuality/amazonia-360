@@ -196,15 +196,31 @@
         "description_es": "",
         "description_pt": "",
         "default_visualization": [
-            {
-                "id": 14,
+              {
                 "type": "map",
+                "id": 14,
                 "x": 0,
                 "y": 0,
                 "w": 2,
                 "h": 4
-            }
-        ]
+              },
+              {
+                "type": "chart",
+                "id": 15,
+                "x": 2,
+                "y": 0,
+                "w": 2,
+                "h": 2
+              },
+              {
+                "type": "chart",
+                "id": 16,
+                "x": 2,
+                "y": 2,
+                "w": 2,
+                "h": 2
+              }
+            ]
     },
     {
         "id": 5,
@@ -774,6 +790,7 @@
     }
 
 ]
+
 
 
 
