@@ -40,10 +40,7 @@ export default function CardsContainer() {
           {t("landing-key-features-report-description")}
         </p>
       </div>
-      <ul
-        ref={cardRef}
-        className="mt-6 flex flex-col gap-2 sm:grid-cols-3 md:mt-20 md:grid lg:mt-6"
-      >
+      <ul ref={cardRef} className="mt-6 flex flex-col gap-2 sm:grid-cols-3 md:grid lg:mt-6">
         <li className="flex w-full">
           <div
             className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-lg bg-blue-50 p-4 ${

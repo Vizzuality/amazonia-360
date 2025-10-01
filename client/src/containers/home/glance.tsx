@@ -115,7 +115,7 @@ export default function Glance() {
           <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
             {t("landing-glance-note")}
           </h3>
-          <h2 className="max-w-44 pb-6 text-2xl text-blue-400 md:max-w-[520px] lg:text-3xl xl:text-4xl">
+          <h2 className="pb-6 text-2xl text-blue-400 md:max-w-[520px] lg:text-3xl xl:text-4xl">
             {t("landing-glance-title")}
           </h2>
           <div className="text-base font-normal text-blue-900 lg:text-lg">
