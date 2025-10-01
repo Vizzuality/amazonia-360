@@ -609,15 +609,23 @@
         "description_es": "",
         "description_pt": "",
         "default_visualization": [
-            {
-                "id": 51,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
+              {
+                  "type": "map",
+                  "id": 51,
+                  "x": 0,
+                  "y": 0,
+                  "w": 2,
+                  "h": 4
+              },
+              {
+                  "type": "table",
+                  "id": 51,
+                  "x": 2,
+                  "y": 0,
+                  "w": 2,
+                  "h": 4
+              }
+          ]
     },
     {
         "id": 19,
@@ -895,6 +903,7 @@
     }
 
 ]
+
 
 
 
