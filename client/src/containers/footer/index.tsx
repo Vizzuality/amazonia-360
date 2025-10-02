@@ -2,12 +2,14 @@
 
 import Image from "next/image";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 
 export default function Footer() {
+  const locale = useLocale();
   const t = useTranslations();
+
   return (
     <section className="bg-blue-900 text-white print:hidden">
       <div className="container m-auto flex w-full max-w-[100%] flex-col items-center justify-between py-4 md:flex-row md:items-center">
@@ -25,10 +27,10 @@ export default function Footer() {
 
             <div className="flex items-center justify-center">
               <Image
-                src={"/images/home/amazonia_forever_logo.png"}
-                alt="KF Logo"
-                width={65}
-                height={48}
+                src={`/images/home/logo-amazonia-forever-${locale}.png`}
+                alt="Amazonia Forever Logo"
+                width={40}
+                height={46}
                 className="text-white"
               />
             </div>
