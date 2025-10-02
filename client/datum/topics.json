@@ -21,39 +21,39 @@
     "description_es": "Vista general de capas – sistema para uso interno de la app",
     "description_pt": "Visão geral das camadas – sistema para uso interno do app",
     "default_visualization": [
-          {
-              "id": 9,
-              "type": "map",
-              "w": 2,
-              "h": 4,
-              "x": 0,
-              "y": 2
-          },
-          {
-              "id": 13,
-              "type": "map",
-              "w": 2,
-              "h": 4,
-              "x": 2,
-              "y": 2
-          },
-          {
-              "id": 11,
-              "type": "chart",
-              "w": 2,
-              "h": 2,
-              "x": 0,
-              "y": 0
-          },
-          {
-              "id": 6,
-              "type": "chart",
-              "w": 2,
-              "h": 2,
-              "x": 2,
-              "y": 0
-          }
-      ]
+      {
+        "id": 9,
+        "type": "map",
+        "w": 2,
+        "h": 4,
+        "x": 0,
+        "y": 2
+      },
+      {
+        "id": 13,
+        "type": "map",
+        "w": 2,
+        "h": 4,
+        "x": 2,
+        "y": 2
+      },
+      {
+        "id": 11,
+        "type": "chart",
+        "w": 2,
+        "h": 2,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "id": 6,
+        "type": "chart",
+        "w": 2,
+        "h": 2,
+        "x": 2,
+        "y": 0
+      }
+    ]
   },
   {
     "id": 2,
@@ -66,63 +66,63 @@
     "description_es": "Obtén datos sobre el entorno natural, los ecosistemas, la biodiversidad y las áreas protegidas en tu zona",
     "description_pt": "Obtenha dados sobre o meio ambiente, ecossistemas, biodiversidade e áreas protegidas na sua região",
     "default_visualization": [
-            {
-                  "id": 17,
-                  "type": "numeric",
-                  "w": 1,
-                  "h": 1,
-                  "x": 0,
-                  "y": 0
-              },
-              {
-                  "id": 18,
-                  "type": "numeric",
-                  "w": 1,
-                  "h": 1,
-                  "x": 1,
-                  "y": 0
-              },
-              {
-                  "id": 31,
-                  "type": "chart",
-                  "w": 2,
-                  "h": 2,
-                  "x": 2,
-                  "y": 1
-              },
-              {
-                  "id": 26,
-                  "type": "numeric",
-                  "w": 1,
-                  "h": 1,
-                  "x": 2,
-                  "y": 0
-              },
-              {
-                  "id": 34,
-                  "type": "chart",
-                  "w": 2,
-                  "h": 2,
-                  "x": 2,
-                  "y": 3
-              },
-              {
-                  "id": 14,
-                  "type": "map",
-                  "w": 2,
-                  "h": 4,
-                  "x": 0,
-                  "y": 1
-              },
-              {
-                  "type": "numeric",
-                  "id": 28,
-                  "x": 3,
-                  "y": 0,
-                  "w": 1,
-                  "h": 1
-              }
-          ]
+      {
+        "id": 17,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "id": 18,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 1,
+        "y": 0
+      },
+      {
+        "id": 31,
+        "type": "chart",
+        "w": 2,
+        "h": 2,
+        "x": 2,
+        "y": 1
+      },
+      {
+        "id": 26,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 2,
+        "y": 0
+      },
+      {
+        "id": 34,
+        "type": "chart",
+        "w": 2,
+        "h": 2,
+        "x": 2,
+        "y": 3
+      },
+      {
+        "id": 14,
+        "type": "map",
+        "w": 2,
+        "h": 4,
+        "x": 0,
+        "y": 1
+      },
+      {
+        "type": "numeric",
+        "id": 28,
+        "x": 3,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      }
+    ]
   },
   {
     "id": 3,
@@ -135,23 +135,23 @@
     "description_es": "Accede a datos demográficos e indicadores sociales de tu área de interés",
     "description_pt": "Acesse dados demográficos e indicadores sociais da sua área de interesse",
     "default_visualization": [
-            {
-                "id": 35,
-                "type": "map",
-                "w": 2,
-                "h": 4,
-                "x": 0,
-                "y": 0
-            },
-            {
-                "id": 37,
-                "type": "map",
-                "w": 2,
-                "h": 4,
-                "x": 2,
-                "y": 1
-            }
-        ]
+      {
+        "id": 35,
+        "type": "map",
+        "w": 2,
+        "h": 4,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "id": 37,
+        "type": "map",
+        "w": 2,
+        "h": 4,
+        "x": 2,
+        "y": 1
+      }
+    ]
   },
   {
     "id": 4,
@@ -164,55 +164,55 @@
     "description_es": "Obtén información sobre sectores económicos y sistemas de producción",
     "description_pt": "Obtenha informações sobre os setores econômicos e sistemas de produção",
     "default_visualization": [
-            {
-                "id": 41,
-                "type": "numeric",
-                "w": 1,
-                "h": 1,
-                "x": 1,
-                "y": 0
-            },
-            {
-                "id": 40,
-                "type": "numeric",
-                "w": 1,
-                "h": 1,
-                "x": 0,
-                "y": 0
-            },
-            {
-                "id": 46,
-                "type": "numeric",
-                "w": 1,
-                "h": 1,
-                "x": 2,
-                "y": 0
-            },
-            {
-                "id": 39,
-                "type": "map",
-                "w": 2,
-                "h": 4,
-                "x": 0,
-                "y": 1
-            },
-            {
-                "id": 51,
-                "type": "numeric",
-                "w": 1,
-                "h": 1,
-                "x": 3,
-                "y": 0
-            },
-            {
-                "id": 51,
-                "type": "map",
-                "w": 2,
-                "h": 4,
-                "x": 2,
-                "y": 1
-            }
-        ]
+      {
+        "id": 41,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 1,
+        "y": 0
+      },
+      {
+        "id": 40,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "id": 46,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 2,
+        "y": 0
+      },
+      {
+        "id": 39,
+        "type": "map",
+        "w": 2,
+        "h": 4,
+        "x": 0,
+        "y": 1
+      },
+      {
+        "id": 51,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 3,
+        "y": 0
+      },
+      {
+        "id": 51,
+        "type": "map",
+        "w": 2,
+        "h": 4,
+        "x": 2,
+        "y": 1
+      }
+    ]
   },
   {
     "id": 5,
@@ -225,47 +225,47 @@
     "description_es": "Explora el desarrollo urbano, la conectividad y el transporte",
     "description_pt": "Explore o desenvolvimento urbano, conectividade e transporte",
     "default_visualization": [
-              {
-                  "id": 52,
-                  "type": "numeric",
-                  "w": 1,
-                  "h": 1,
-                  "x": 0,
-                  "y": 0
-              },
-              {
-                  "id": 53,
-                  "type": "numeric",
-                  "w": 1,
-                  "h": 1,
-                  "x": 1,
-                  "y": 0
-              },
-              {
-                  "id": 56,
-                  "type": "numeric",
-                  "w": 1,
-                  "h": 1,
-                  "x": 2,
-                  "y": 0
-              },
-              {
-                  "id": 55,
-                  "type": "numeric",
-                  "w": 1,
-                  "h": 1,
-                  "x": 3,
-                  "y": 0
-              },
-              {
-                  "id": 54,
-                  "type": "map",
-                  "w": 4,
-                  "h": 4,
-                  "x": 0,
-                  "y": 1
-              }
-          ]
+      {
+        "id": 52,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "id": 53,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 1,
+        "y": 0
+      },
+      {
+        "id": 56,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 2,
+        "y": 0
+      },
+      {
+        "id": 55,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 3,
+        "y": 0
+      },
+      {
+        "id": 54,
+        "type": "map",
+        "w": 4,
+        "h": 4,
+        "x": 0,
+        "y": 1
+      }
+    ]
   },
   {
     "id": 6,
@@ -278,39 +278,39 @@
     "description_es": "",
     "description_pt": "",
     "default_visualization": [
-              {
-                  "id": 63,
-                  "type": "map",
-                  "w": 2,
-                  "h": 4,
-                  "x": 2,
-                  "y": 0
-              },
-              {
-                  "id": 59,
-                  "type": "chart",
-                  "w": 2,
-                  "h": 3,
-                  "x": 0,
-                  "y": 1
-              },
-              {
-                  "id": 62,
-                  "type": "numeric",
-                  "w": 1,
-                  "h": 1,
-                  "x": 0,
-                  "y": 0
-              },
-              {
-                  "id": 60,
-                  "type": "numeric",
-                  "w": 1,
-                  "h": 1,
-                  "x": 1,
-                  "y": 0
-              }
-          ]
+      {
+        "id": 63,
+        "type": "map",
+        "w": 2,
+        "h": 4,
+        "x": 2,
+        "y": 0
+      },
+      {
+        "id": 59,
+        "type": "chart",
+        "w": 2,
+        "h": 3,
+        "x": 0,
+        "y": 1
+      },
+      {
+        "id": 62,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "id": 60,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 1,
+        "y": 0
+      }
+    ]
   },
   {
     "id": 7,
@@ -322,9 +322,7 @@
     "description_en": "",
     "description_es": "",
     "description_pt": "",
-    "default_visualization": [
-      
-    ]
+    "default_visualization": []
   },
   {
     "id": 8,
@@ -336,30 +334,23 @@
     "description_en": "",
     "description_es": "",
     "description_pt": "",
-    "default_visualization":[
-            {
-                "type": "map",
-                "id": 64,
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            },
-            {
-                "type": "table",
-                "id": 64,
-                "x": 2,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-      ]
+    "default_visualization": [
+      {
+        "type": "map",
+        "id": 64,
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      },
+      {
+        "type": "table",
+        "id": 64,
+        "x": 2,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
   }
 ]
-
-
-
-
-
-
-
