@@ -14,10 +14,10 @@ import { cn } from "@/lib/utils";
 import { Topic } from "@/types/topic";
 
 import { formSchema } from "@/containers/report/generate";
-import SubtopicList from "@/containers/report/generate/subtopics";
+// import SubtopicList from "@/containers/report/generate/subtopics";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { FormField } from "@/components/ui/form";
 
 export default function TopicsItem({ id, name, image }: Topic) {
@@ -88,9 +88,9 @@ export default function TopicsItem({ id, name, image }: Topic) {
                 />
               </div>
             </div>
-            <CollapsibleContent className="pl-6">
+            {/* <CollapsibleContent className="pl-6">
               <SubtopicList topicId={id} />
-            </CollapsibleContent>
+            </CollapsibleContent> */}
           </Collapsible>
         );
       }}

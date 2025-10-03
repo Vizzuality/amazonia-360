@@ -11,10 +11,9 @@ import { useLocale, useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
 import { z } from "zod";
 
-import { useGetDefaultSubtopics } from "@/lib/subtopics";
+import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
-import { IndicatorView } from "@/app/parsers";
 import { reportPanelAtom, serializeSearchParams, useSyncLocation } from "@/app/store";
 
 import { ReportGenerateButtons } from "@/containers/report/generate/buttons";
@@ -42,7 +41,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
   const searchParams = useSearchParams();
   const setReportPanel = useSetAtom(reportPanelAtom);
 
-  const { data: subtopicsData } = useGetDefaultSubtopics({ locale });
+  const { data: topicsData } = useGetDefaultTopics({ locale });
 
   const router = useRouter();
 
@@ -54,14 +53,15 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const params = serializeSearchParams({
-      topics: values.topics.map((t) => ({
+    const topics = values.topics
+      .map((t) => ({
         id: t.id,
-        indicators: t.subtopics
-          .map((s) => subtopicsData?.find((sub) => sub.id === s)?.default_visualization)
-          .flat()
-          .filter((i): i is IndicatorView => Boolean(i)),
-      })),
+        indicators: topicsData?.find((topic) => topic.id === t.id)?.default_visualization,
+      }))
+      .filter((t) => t.indicators && t.indicators.length > 0);
+
+    const params = serializeSearchParams({
+      topics,
       location,
     });
 
