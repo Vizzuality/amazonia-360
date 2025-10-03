@@ -202,6 +202,7 @@ describe("WidgetMap - Basemap Change Logic", () => {
       description_es: "",
       description_en: "",
       description_pt: "",
+      default_visualization: [],
     },
     subtopic: {
       id: 0,
