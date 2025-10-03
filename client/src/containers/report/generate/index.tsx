@@ -54,14 +54,26 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    const topics = values.topics.map((t) => ({
+      id: t.id,
+      indicators: t.subtopics
+        .map((s, i) => {
+          const dv = subtopicsData?.find((sub) => sub.id === s)?.default_visualization;
+
+          if (!dv) return undefined;
+
+          return dv.map((d) => ({
+            ...d,
+            x: i % 2 === 0 ? 0 : 2,
+            y: (d.y ?? 0) + Math.floor(i / 2) * 4,
+          })) as IndicatorView[];
+        })
+        .flat()
+        .filter((i): i is IndicatorView => Boolean(i)),
+    }));
+
     const params = serializeSearchParams({
-      topics: values.topics.map((t) => ({
-        id: t.id,
-        indicators: t.subtopics
-          .map((s) => subtopicsData?.find((sub) => sub.id === s)?.default_visualization)
-          .flat()
-          .filter((i): i is IndicatorView => Boolean(i)),
-      })),
+      topics,
       location,
     });
 
