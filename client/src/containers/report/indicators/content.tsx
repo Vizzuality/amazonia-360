@@ -35,12 +35,12 @@ export default function ReportIndicatorsContent() {
             >
               <LuArrowLeft className="h-4 w-4" />
             </Link>
-            {t("indicators")}
+            {t("grid-sidebar-indicators-title")}
           </h1>
         </div>
 
         <p className="text-sm font-medium text-muted-foreground">
-          {t("grid-sidebar-grid-filters-description")}
+          {t("grid-sidebar-indicators-description")}
         </p>
       </div>
 

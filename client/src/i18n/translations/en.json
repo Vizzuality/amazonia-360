@@ -101,6 +101,8 @@
   "grid-sidebar-grid-filters-ranking-set-up-max-number-cell": "Max number of cells",
   "grid-sidebar-grid-filters-ranking-set-up-max-number-cell-note": "Higher numbers will take more time",
   "grid-sidebar-grid-filters-ranking-set-up-button-apply": "Apply",
+  "grid-sidebar-indicators-title": "Indicators",
+  "grid-sidebar-indicators-description": "Pick the indicators you want to show on the map for a deeper understanding of the area. You can create a report with these selected indicators.",
   "grid-sketch-start-drawing": "Start drawing",
   "grid-sketch-finish-drawing": "Finish drawing",
   "grid-sketch-tooltip-create-start-polygon": "To get started, **click** on the map to add point. Press **ESC** to cancel.",
