@@ -57,6 +57,10 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
     const topics = values.topics.map((t) => ({
       id: t.id,
       indicators: t.subtopics
+        .filter((s) => {
+          const dv = subtopicsData?.find((sub) => sub.id === s)?.default_visualization;
+          return Boolean(dv && dv.length);
+        })
         .map((s, i) => {
           const dv = subtopicsData?.find((sub) => sub.id === s)?.default_visualization;
 
@@ -64,7 +68,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
 
           return dv.map((d) => ({
             ...d,
-            x: i % 2 === 0 ? 0 : 2,
+            x: (d.x ?? 0) + (i % 2 === 0 ? 0 : 2),
             y: (d.y ?? 0) + Math.floor(i / 2) * 4,
           })) as IndicatorView[];
         })
