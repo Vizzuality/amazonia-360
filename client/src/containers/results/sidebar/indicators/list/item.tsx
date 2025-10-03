@@ -109,7 +109,7 @@ export function IndicatorsItem({
         </div>
 
         {!!selectedIndicator && (
-          <div className="flex items-center space-x-2 pl-1.5">
+          <div className="flex items-center space-x-2 pl-2.5">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="7"

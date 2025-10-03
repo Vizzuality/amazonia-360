@@ -40,7 +40,7 @@ export default function ReportSidebar() {
         className="sticky top-0 z-10 flex max-h-svh grow flex-col items-start space-y-4 overflow-hidden bg-white pt-14"
         onValueChange={(value) => setTab(value as ReportResultsTab)}
       >
-        <div className="flex grow flex-col overflow-hidden py-6">
+        <div className="flex grow flex-col overflow-hidden pb-4 pt-6">
           <SidebarHeader className="flex w-full flex-row items-baseline justify-between px-6 py-0">
             <TabsList className="justify-start gap-x-4 gap-y-1 bg-transparent">
               <TabsTrigger
