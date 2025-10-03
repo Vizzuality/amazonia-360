@@ -13,6 +13,8 @@ import IndicatorsList from "@/containers/results/sidebar/indicators/list";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
+import { CounterIndicatorsPill } from "./counter-indicators-pill";
+
 export default function SubtopicsItem({ id, topic_id, name }: Subtopic) {
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
 
@@ -42,7 +44,7 @@ export default function SubtopicsItem({ id, topic_id, name }: Subtopic) {
       <Collapsible open={!!indicatorsExpand?.[topic_id]?.includes(id)} onOpenChange={handleClick}>
         <CollapsibleTrigger
           className={cn(
-            "flex w-full items-center justify-between space-x-2.5 p-1 transition-colors duration-300 ease-in-out hover:bg-blue-50",
+            "flex w-full items-center justify-between gap-2 p-1 transition-colors duration-300 ease-in-out hover:bg-blue-50",
           )}
         >
           <div className={cn("flex items-center space-x-2.5")}>
@@ -55,6 +57,7 @@ export default function SubtopicsItem({ id, topic_id, name }: Subtopic) {
               <span className="text-left text-sm font-medium transition-none">{name}</span>
             </div>
           </div>
+          <CounterIndicatorsPill id={id} topic_id={topic_id} />
         </CollapsibleTrigger>
         <CollapsibleContent className="pl-2.5">
           <IndicatorsList topicId={topic_id} subtopicId={id} />

@@ -1,68 +1,19 @@
 "use client";
 
-import { useMemo } from "react";
-
 import { useLocale } from "next-intl";
 
 import { useGetDefaultTopics } from "@/lib/topics";
 
-import { useSyncTopics } from "@/app/store";
-
 import { TopicItem } from "./item";
-// import SortableList from "./sortable";
 
 export default function TopicsList() {
   const locale = useLocale();
-  const [topics] = useSyncTopics();
 
   const { data: topicsData } = useGetDefaultTopics({ locale });
 
-  const ITEMS = useMemo(() => {
-    return topicsData
-      ?.toSorted((a, b) => {
-        const aIndex = topics?.findIndex((t) => t.id === a.id) || 0;
-        const bIndex = topics?.findIndex((t) => t.id === b.id) || 0;
-
-        if (aIndex === bIndex) {
-          return 0;
-        }
-
-        if (aIndex === -1) {
-          return 1;
-        }
-
-        if (bIndex === -1) {
-          return -1;
-        }
-
-        return aIndex - bIndex;
-      })
-      ?.map((topic) => <TopicItem key={topic.id} topic={topic} id={topic.id} />);
-  }, [topics, topicsData]);
-
-  // const handleChangeOrder = useCallback(
-  //   (order: number[]) => {
-  //     const newOrder = order
-  //       .map((id) => topics?.find((l) => l.id === id))
-  //       .filter((topic) => topic !== undefined);
-
-  //     const newOrderReport = newOrder
-  //       .map((topic) => ({
-  //         id: topic.id,
-  //         indicators: topic?.indicators || [],
-  //       }))
-  //       .filter((topic) => !!topic.indicators);
-  //     setTopics(newOrderReport);
-  //   },
-
-  //   [topics, setTopics],
-  // );
-
   return (
-    <ul className="relative flex flex-col gap-2.5">
-      {/* <SortableList onChangeOrder={handleChangeOrder} sortable={{ handle: true, enabled: true }}> */}
-      {ITEMS}
-      {/* </SortableList> */}
+    <ul className="relative flex flex-col gap-1 py-2">
+      {topicsData?.map((topic) => <TopicItem key={topic.id} topic={topic} id={topic.id} />)}
     </ul>
   );
 }
