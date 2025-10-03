@@ -17,9 +17,10 @@ import { Topic } from "@/types/topic";
 import { indicatorsExpandAtom, useSyncTopics } from "@/app/store";
 
 import SubtopicList from "@/containers/results/sidebar/indicators/subtopics";
-import { CounterIndicatorsPill } from "@/containers/results/sidebar/indicators/topics/counter-indicators-pill";
 
 import { Switch } from "@/components/ui/switch";
+
+import { CounterIndicatorsPill } from "./counter-indicators-pill";
 
 export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
   const { name, image } = topic;

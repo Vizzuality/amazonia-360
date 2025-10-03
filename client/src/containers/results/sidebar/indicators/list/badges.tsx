@@ -37,7 +37,7 @@ export function Badges({ topicId, indicatorId }: { topicId: number; indicatorId:
   );
 
   return (
-    <div className="flex flex-wrap gap-1">
+    <div className="mt-0.5 flex flex-wrap gap-1">
       {indicatorsDisplay?.map(({ id, type }) => (
         <Badge
           onClick={() => handleDelete(id, type)}
