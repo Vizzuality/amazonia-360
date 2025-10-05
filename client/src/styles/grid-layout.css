@@ -3,6 +3,7 @@
   /* transition: height 200ms ease; */
 }
 .react-grid-item {
+  z-index: 2;
   /* transition: all 200ms ease;
   transition-property: left, top, width, height; */
 }
@@ -15,7 +16,7 @@
 }
 .react-grid-item.resizing {
   transition: none;
-  z-index: 1;
+  z-index: 3;
   will-change: width, height;
 }
 
@@ -33,7 +34,7 @@
   background: red;
   opacity: 0.2;
   transition-duration: 100ms;
-  z-index: 2;
+  z-index: 1;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
