@@ -16,7 +16,7 @@ terraform {
     dynamodb_table = "amazonia360-terraform-state-lock"
   }
 
-  required_version = "~> 1.9.0"
+  required_version = "~> 1.10.0"
 }
 
 # Terraform state persistence infra
