@@ -118,7 +118,7 @@
   "grid-sketch-tooltip-update-active-polygon": "Para confirmar la nueva forma, **haga clic fuera** de la forma o pulse **ESC**.",
   "grid-sketch-tooltip-update-start-polyline": "Mueva los **puntos** para editar el polígono - mueve (arrastra un punto), añade (haz clic con el botón izquierdo en un punto blanco), o elimina (haz clic con el botón derecho en un punto) puntos según sea necesario. Puedes pulsar **ESC** para confirmar.",
   "grid-sketch-tooltip-update-active-polyline": "Para confirmar la nueva forma, **haga clic fuera** de la forma o pulse **ESC**.",
-  "grid-sketch-tooltip-update-start-point": "Mueva el punto. Puedes usar el deslizador para cambiar el tamaño del buffer. Puedes pulsar **ESC** para confirmar.",
+  "grid-sketch-tooltip-update-start-point": "Mueva el punto. Puedes pulsar **ESC** para confirmar.",
   "grid-sketch-tooltip-update-active-point": "**Haz clic** fuera del punto o pulsa **ESC** para confirmar la nueva posición.",
   "grid-report-map-legend-select-layer": "Seleccionar capa",
   "grid-report-map-legend-select-layer-to-display": "Seleccione la capa que desea visualizar",

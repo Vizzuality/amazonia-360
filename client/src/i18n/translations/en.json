@@ -118,7 +118,7 @@
   "grid-sketch-tooltip-update-active-polygon": "To confirm the new shape, please **click out** of the shape or press **ESC**.",
   "grid-sketch-tooltip-update-start-polyline": "Move the **handles** to edit the polygon - move (drag a handle), add (left-click on a white handle), or remove (right-click on a handle) points as needed. You can press **ESC** to confirm.",
   "grid-sketch-tooltip-update-active-polyline": "To confirm the new shape, please **click out** of the shape or press **ESC**.",
-  "grid-sketch-tooltip-update-start-point": "Move the point. You can use the slider to change the buffer size. You can press **ESC** to confirm.",
+  "grid-sketch-tooltip-update-start-point": "Move the point. You can press **ESC** to confirm.",
   "grid-sketch-tooltip-update-active-point": "**Click** outside the point or press **ESC** to confirm the new position.",
   "grid-report-map-legend-select-layer": "Select layer",
   "grid-report-map-legend-select-layer-to-display": "Select layer to display",

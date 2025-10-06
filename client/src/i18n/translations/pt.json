@@ -118,7 +118,7 @@
   "grid-sketch-tooltip-update-active-polygon": "Para confirmar o novo formulário, **clique fora** do formulário ou aperte **ESC**.",
   "grid-sketch-tooltip-update-start-polyline": "Mova os **pontos** para editar o polígono - mova (arraste um ponto), adicione (clique com o botão esquerdo do mouse em um ponto branco) ou elimine (clique com o botão direito do mouse em um ponto) pontos conforme necessário. Pode apertar **ESC** para confirmar.",
   "grid-sketch-tooltip-update-active-polyline": "Para confirmar o novo formulário, **clique fora** do formulário ou apertar **ESC**.",
-  "grid-sketch-tooltip-update-start-point": "Mova o ponto. Pode utilizar o cursor para alterar o tamanho do buffer. Pode apertar **ESC** para confirmar.",
+  "grid-sketch-tooltip-update-start-point": "Mova o ponto. Pode apertar **ESC** para confirmar.",
   "grid-sketch-tooltip-update-active-point": "**Clique** fora do ponto ou aperte **ESC** para confirmar a nova posição.",
   "grid-report-map-legend-select-layer": "Selecionar camada",
   "grid-report-map-legend-select-layer-to-display": "Selecionar a camada que pretende visualizar",
