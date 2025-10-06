@@ -37,7 +37,7 @@ export default function ReportResultsHeaderMobile() {
         <div className="relative flex h-full justify-between">
           {/* Name */}
           <div className="flex w-full flex-col">
-            <h1 className="text-2xl font-bold text-primary lg:text-3xl tall:xl:text-4xl">
+            <h1 className="text-2xl font-medium text-foreground lg:text-3xl tall:xl:text-4xl">
               {title}
             </h1>
 
