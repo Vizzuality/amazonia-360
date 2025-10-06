@@ -218,6 +218,7 @@ jobs:
           ECR_REPOSITORY_CLIENT: ${{ secrets.TF_CLIENT_REPOSITORY_NAME }}
           ECR_REPOSITORY_WEBSHOT: ${{ secrets.TF_WEBSHOT_REPOSITORY_NAME }}
           IMAGE_TAG: ${{ needs.set_environment.outputs.env_name }}
+          AWS_DEFAULT_REGION: ${{ vars.TF_AWS_REGION }}
 
           API_AUTH_TOKEN: ${{ secrets.TF_API_AUTH_TOKEN }}
           API_GRID_TILES_PATH: ${{ vars.TF_API_GRID_TILES_PATH }}
@@ -238,6 +239,7 @@ jobs:
                 - AUTH_TOKEN=${API_AUTH_TOKEN}
                 - GRID_TILES_PATH=${API_GRID_TILES_PATH}
                 - OPENAI_TOKEN=${OPENAI_TOKEN}
+                - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
               restart: always
             client:
               image: $ECR_REGISTRY/$ECR_REPOSITORY_CLIENT:$IMAGE_TAG
