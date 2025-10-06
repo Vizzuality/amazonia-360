@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 
+import { LucideHelpCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LuDatabase } from "react-icons/lu";
 
@@ -9,6 +10,7 @@ import { cn } from "@/lib/utils";
 
 import SidebarLocationContent from "@/containers/report/location/content-desktop";
 
+import { Button } from "@/components/ui/button";
 import { HexagonIcon } from "@/components/ui/icons/hexagon";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -41,7 +43,19 @@ export default function ReportLocationDesktop() {
           <div className="col-span-12 space-y-1 lg:col-span-5 2xl:col-span-4">
             <aside className="pointer-events-auto flex w-full shrink-0 flex-col overflow-hidden">
               <div className="flex max-h-[calc(100vh_-_(64px_+_40px_+_28px))] grow flex-col">
-                <div className="flex max-h-full grow flex-col overflow-hidden">
+                <div className="relative flex max-h-full grow flex-col overflow-hidden">
+                  <a
+                    href="https://rise.articulate.com/share/GWlgAGqnPZihWgXVpLCGge4Pjjk9k2Wo#/"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="absolute right-6 top-6 z-10"
+                  >
+                    <Button size="sm" variant="outline" type="button" className="gap-2">
+                      <LucideHelpCircle className="h-4 w-4 text-secondary-foreground" />
+
+                      <span>{t("help")}</span>
+                    </Button>
+                  </a>
                   <ScrollArea className="h-full w-full grow">
                     <SidebarLocationContent />
                   </ScrollArea>
