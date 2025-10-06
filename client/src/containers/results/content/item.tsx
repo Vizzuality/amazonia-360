@@ -120,9 +120,13 @@ export const ReportResultsContentItem = ({
         "container relative space-y-4 print:break-before-auto print:px-0": true,
       })}
     >
-      <h2 className="text-xl font-semibold">{TOPIC?.name}</h2>
+      {TOPIC?.id !== 0 && (
+        <>
+          <h2 className="text-2xl font-semibold text-primary">{TOPIC?.name}</h2>
 
-      {TOPIC?.id !== 0 && ai_summary.enabled && <ReportResultsSummary topic={TOPIC} />}
+          {ai_summary.enabled && <ReportResultsSummary topic={TOPIC} />}
+        </>
+      )}
 
       <ResponsiveReactGridLayout
         className="layout animated print:break-after-page print:px-0"

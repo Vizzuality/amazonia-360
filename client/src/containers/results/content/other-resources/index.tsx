@@ -55,7 +55,7 @@ export default function OtherResources() {
 
   return (
     <div className="container print:break-before-page">
-      <h2 className="mb-4 text-xl font-semibold">{t("knowledge-resources")}</h2>
+      <h2 className="mb-4 text-2xl font-semibold text-primary">{t("knowledge-resources")}</h2>
 
       <CardLoader query={[query]} className="h-80">
         <CardNoData query={[query]}>
