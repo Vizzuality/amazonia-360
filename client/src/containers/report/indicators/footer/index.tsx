@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
-import { useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { useLocale, useTranslations } from "next-intl";
 
 import { useGetDefaultSubtopics } from "@/lib/subtopics";
@@ -16,24 +16,35 @@ export default function IndicatorsFooter() {
   const t = useTranslations();
   const locale = useLocale();
   const [indicators, setIndicators] = useSyncIndicators();
-  const setIndicatorsExpand = useSetAtom(indicatorsExpandAtom);
+  const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
 
   const { data: topicsData } = useGetDefaultTopics({ locale });
   const { data: subtopicsData } = useGetDefaultSubtopics({ locale });
 
+  const isAllExpanded = useMemo(() => {
+    if (!topicsData) return false;
+    return topicsData.every((topic) => !!indicatorsExpand?.[topic.id]);
+  }, [indicatorsExpand, topicsData]);
+
   const handleExpandAll = useCallback(() => {
-    setIndicatorsExpand(() => {
-      return topicsData?.reduce(
-        (acc, topic) => {
-          acc[topic.id] = subtopicsData
-            ?.filter((subtopic) => subtopic.topic_id === topic.id)
-            .map((subtopic) => subtopic.id) as number[];
-          return acc;
-        },
-        {} as Record<number, number[]>,
-      );
-    });
-  }, [topicsData, subtopicsData, setIndicatorsExpand]);
+    if (!isAllExpanded) {
+      setIndicatorsExpand(() => {
+        return topicsData?.reduce(
+          (acc, topic) => {
+            acc[topic.id] = subtopicsData
+              ?.filter((subtopic) => subtopic.topic_id === topic.id)
+              .map((subtopic) => subtopic.id) as number[];
+            return acc;
+          },
+          {} as Record<number, number[]>,
+        );
+      });
+    }
+
+    if (isAllExpanded) {
+      setIndicatorsExpand({});
+    }
+  }, [isAllExpanded, topicsData, subtopicsData, setIndicatorsExpand]);
 
   const handleClear = () => {
     setIndicators(null);
@@ -42,7 +53,7 @@ export default function IndicatorsFooter() {
   return (
     <div className="flex items-center justify-between">
       <Button variant="ghost" size="sm" onClick={handleExpandAll}>
-        {t("expand-all")}
+        {isAllExpanded ? t("collapse-all") : t("expand-all")}
       </Button>
 
       <Button

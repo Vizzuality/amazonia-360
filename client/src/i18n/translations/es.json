@@ -189,6 +189,7 @@
   "clear-all": "Borrar todo",
   "clear": "Borrar",
   "expand-all": "Expandir todo",
+  "collapse-all": "Colapsar todo",
   "generate": "Crear",
   "redefine": "Redefina",
   "no-results": "Sin resultados",

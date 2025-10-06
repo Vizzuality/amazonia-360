@@ -189,6 +189,7 @@
   "clear-all": "Clear all",
   "clear": "Clear",
   "expand-all": "Expand all",
+  "collapse-all": "Collapse all",
   "generate": "Generate",
   "redefine": "Redefine",
   "no-results": "No results",
