@@ -48,6 +48,7 @@ export default function IndicatorsFooter() {
 
   const handleClear = () => {
     setIndicators(null);
+    setIndicatorsExpand({});
   };
 
   return (
