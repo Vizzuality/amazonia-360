@@ -138,9 +138,9 @@ module "dev" {
     TF_API_GRID_TILES_PATH = var.dev.api.grid_tiles_path
 
     # Client
-    TF_CLIENT_NEXT_PUBLIC_API_URL = var.dev.client.next_public_api_url
+    TF_CLIENT_NEXT_PUBLIC_API_URL     = var.dev.client.next_public_api_url
     TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL = var.dev.client.next_public_webshot_url
-    TF_CLIENT_BASIC_AUTH_ENABLED  = var.dev.client.basic_auth_enabled
+    TF_CLIENT_BASIC_AUTH_ENABLED      = var.dev.client.basic_auth_enabled
   }
   github_additional_environment_secrets = {
     # API
@@ -182,10 +182,10 @@ module "staging" {
     TF_API_GRID_TILES_PATH = var.staging.api.grid_tiles_path
 
     # Client
-    TF_CLIENT_NEXT_PUBLIC_API_URL   = var.staging.client.next_public_api_url
-    TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL   = var.staging.client.next_public_webshot_url
-    TF_CLIENT_BASIC_AUTH_ENABLED    = var.staging.client.basic_auth_enabled
-    TF_NEXT_PUBLIC_FEATURE_PARTNERS = var.staging.client.next_public_feature_partners
+    TF_CLIENT_NEXT_PUBLIC_API_URL     = var.staging.client.next_public_api_url
+    TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL = var.staging.client.next_public_webshot_url
+    TF_CLIENT_BASIC_AUTH_ENABLED      = var.staging.client.basic_auth_enabled
+    TF_NEXT_PUBLIC_FEATURE_PARTNERS   = var.staging.client.next_public_feature_partners
   }
   github_additional_environment_secrets = {
     # API
@@ -207,7 +207,7 @@ module "prod" {
     aws = aws.prod
   }
 
-  domain                                        = "beta.amazoniaforever360.org"
+  domain                                        = "amazoniaforever360.org"
   project                                       = var.project_name
   environment                                   = "production"
   aws_region                                    = var.prod.aws_region
@@ -227,10 +227,10 @@ module "prod" {
     TF_API_GRID_TILES_PATH = var.prod.api.grid_tiles_path
 
     # Client
-    TF_CLIENT_NEXT_PUBLIC_API_URL   = var.prod.client.next_public_api_url
-    TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL   = var.prod.client.next_public_webshot_url
-    TF_CLIENT_BASIC_AUTH_ENABLED    = var.prod.client.basic_auth_enabled
-    TF_NEXT_PUBLIC_FEATURE_PARTNERS = var.prod.client.next_public_feature_partners
+    TF_CLIENT_NEXT_PUBLIC_API_URL     = var.prod.client.next_public_api_url
+    TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL = var.prod.client.next_public_webshot_url
+    TF_CLIENT_BASIC_AUTH_ENABLED      = var.prod.client.basic_auth_enabled
+    TF_NEXT_PUBLIC_FEATURE_PARTNERS   = var.prod.client.next_public_feature_partners
   }
   github_additional_environment_secrets = {
     # API
