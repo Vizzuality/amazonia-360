@@ -176,7 +176,7 @@ export function MapView({
   }, [bbox, padding]);
 
   return (
-    <div ref={mapContainerRef} className="map h-full w-full grow">
+    <div id={`map-${id}`} ref={mapContainerRef} className="map h-full w-full grow">
       {loaded && children}
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 import dynamic from "next/dynamic";
 
@@ -157,6 +157,17 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
       coordinates: undefined,
     });
   }, [setGridHover]);
+
+  useEffect(() => {
+    if (sketch.enabled === "edit") {
+      // focus map
+      const mapElement = document.querySelector("#map-default .esri-view-surface") as HTMLElement;
+
+      if (mapElement) {
+        mapElement.focus();
+      }
+    }
+  }, [sketch.enabled]);
 
   return (
     <div className="relative flex w-full grow flex-col">

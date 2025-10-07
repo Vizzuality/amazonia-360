@@ -169,7 +169,7 @@ export default function Sketch({
         enableRotation: false,
         toggleToolOnClick: false,
       },
-      updateOnGraphicClick: true,
+      updateOnGraphicClick: false,
       // tooltipOptions: {
       //   enabled: true,
       //   visibleElements: {
@@ -223,10 +223,6 @@ export default function Sketch({
     }
 
     handleListeners();
-
-    if (sketchViewModelRef.current) {
-      sketchViewModelRef.current.updateOnGraphicClick = updatable;
-    }
   }, [location, updatable, LOCATION, drawBuffer, handleListeners]);
 
   useEffect(() => {
