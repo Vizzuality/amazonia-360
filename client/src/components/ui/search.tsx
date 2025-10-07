@@ -4,6 +4,7 @@ import * as React from "react";
 
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { UseQueryResult } from "@tanstack/react-query";
+import { group } from "@visx/vendor/d3-array";
 import { Command as CommandPrimitive } from "cmdk";
 import { useTranslations } from "next-intl";
 import { LuLoader, LuSearch, LuX } from "react-icons/lu";
@@ -19,6 +20,10 @@ export type Option = {
   value: string;
   key: string;
   sourceIndex: number;
+  group?: {
+    id: number;
+    label: string;
+  };
 };
 
 export type SearchProps<T> = {
@@ -47,6 +52,10 @@ export function Search<T extends Option>({
   const t = useTranslations();
   const [opened, setOpened] = React.useState(false);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
+
+  const OPTIONS = React.useMemo(() => {
+    return Array.from(group(options, (d) => d.group?.label));
+  }, [options]);
 
   return (
     <Popover onOpenChange={setOpened} open={opened}>
@@ -127,36 +136,38 @@ export function Search<T extends Option>({
               </div>
             </div>
 
-            {open && !options.length && !!value && !isFetching && isFetched && (
+            {open && !OPTIONS.length && !!value && !isFetching && isFetched && (
               <p className="py-6 text-center text-sm">{t("no-results-found")}.</p>
             )}
 
             <CommandList>
-              {open && !!options.length && (
-                <CommandGroup className="px-2">
-                  {options.map((o) => (
-                    <CommandItem
-                      key={o.sourceIndex + o.key + o.value}
-                      value={o.value}
-                      className="px-4"
-                      onSelect={() => onSelect(o)}
-                    >
-                      {!children ? (
-                        <>
-                          {o.label}
-                          <span className="hidden">({o.value})</span>
-                        </>
-                      ) : (
-                        React.cloneElement(children(o) as React.ReactElement, {
-                          key: o.sourceIndex + o.key + o.value,
-                          value: o.value,
-                          onSelect: () => onSelect(o),
-                        })
-                      )}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              )}
+              {open &&
+                !!OPTIONS.length &&
+                OPTIONS.map((g) => (
+                  <CommandGroup key={g[0]} heading={g[0]} className="px-2">
+                    {g[1].map((o) => (
+                      <CommandItem
+                        key={o.sourceIndex + o.key + o.value}
+                        value={o.value}
+                        className="px-4"
+                        onSelect={() => onSelect(o)}
+                      >
+                        {!children ? (
+                          <>
+                            {o.label}
+                            <span className="hidden">({o.value})</span>
+                          </>
+                        ) : (
+                          React.cloneElement(children(o) as React.ReactElement, {
+                            key: o.sourceIndex + o.key + o.value,
+                            value: o.value,
+                            onSelect: () => onSelect(o),
+                          })
+                        )}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                ))}
             </CommandList>
           </Command>
         </PopoverPrimitive.Content>

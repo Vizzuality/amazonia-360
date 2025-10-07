@@ -1,14 +1,18 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
 import { useSearchParams } from "next/navigation";
 
-import { useAtomValue } from "jotai";
-import { useTranslations } from "next-intl";
+import { useAtom } from "jotai";
+import { useLocale, useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
+import { usePreviousDifferent } from "rooks";
 
+import { useGetDefaultIndicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
-import { indicatorsExpandAtom } from "@/app/store";
+import { indicatorsExpandAtom, useSyncIndicators } from "@/app/store";
 
 import IndicatorsFooter from "@/containers/report/indicators/footer";
 import IndicatorsSearch from "@/containers/report/indicators/search";
@@ -19,10 +23,83 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "@/i18n/navigation";
 
 export default function ReportIndicatorsContent() {
+  const locale = useLocale();
   const t = useTranslations();
+
+  const [indicators] = useSyncIndicators();
+  const previousIndicators = usePreviousDifferent(indicators);
+
+  const { data: indicatorsData } = useGetDefaultIndicators({ locale });
+
   const searchParams = useSearchParams();
 
-  const indicatorsExpand = useAtomValue(indicatorsExpandAtom);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      const i = indicators ?? [];
+      const p = previousIndicators ?? [];
+      if (i && p && i.length > p.length) {
+        // Get the difference between the two arrays
+        const addedIndicatorsIds = i.filter((x) => !p.includes(x));
+        const addedIndicators = indicatorsData?.filter((indicator) =>
+          addedIndicatorsIds.includes(indicator.id),
+        );
+
+        if (addedIndicators && !!addedIndicators.length) {
+          // Expand the topics and subtopics of the added indicators
+          setIndicatorsExpand((prev) => {
+            const newExpand = { ...prev };
+
+            addedIndicators.forEach((indicator) => {
+              if (!newExpand[indicator.topic.id] || !newExpand[indicator.topic.id]?.length) {
+                newExpand[indicator.topic.id] = [
+                  ...(indicator.subtopic.id ? [indicator.subtopic.id] : []),
+                ];
+              }
+              if (!newExpand[indicator.topic.id]?.includes(indicator.subtopic.id)) {
+                newExpand[indicator.topic.id]?.push(indicator.subtopic.id);
+              }
+            });
+            return newExpand;
+          });
+
+          // // Scroll to the last added indicator
+
+          // const element = document.getElementById(`indicator-${addedIndicators[0]}`);
+
+          // console.log({ element, scrollRef: scrollRef.current });
+
+          // if (element && scrollRef.current) {
+          //   const elementTop = element.offsetTop;
+          //   const elementHeight = element.offsetHeight;
+          //   const containerHeight = scrollRef.current.offsetHeight;
+          //   const scrollTop = scrollRef.current.scrollTop;
+
+          //   console.log({
+          //     elementTop,
+          //     elementHeight,
+          //     containerHeight,
+          //     scrollTop,
+          //   });
+
+          //   if (
+          //     elementTop < scrollTop ||
+          //     elementTop + elementHeight > scrollTop + containerHeight
+          //   ) {
+          //     // Scroll to the element
+          //     scrollRef.current.scrollTo({
+          //       top: elementTop - containerHeight / 2 + elementHeight / 2,
+          //       behavior: "smooth",
+          //     });
+          //   }
+          // }
+        }
+      }
+    }
+  }, [indicators, previousIndicators, indicatorsData, setIndicatorsExpand]);
 
   return (
     <div className="relative flex h-full grow flex-col space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white py-6 backdrop-blur-xl xl:space-y-4">
@@ -50,7 +127,7 @@ export default function ReportIndicatorsContent() {
 
       <div className="relative !m-0 flex grow flex-col overflow-hidden">
         <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2 bg-gradient-to-b from-white to-transparent xl:h-4" />
-        <ScrollArea className="flex grow flex-col">
+        <ScrollArea className="flex grow flex-col" viewportRef={scrollRef}>
           <div className="px-6 py-2 xl:py-4">
             <IndicatorsTopicsList />
           </div>
