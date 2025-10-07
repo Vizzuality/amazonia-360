@@ -1,3 +1,5 @@
+"use client";
+
 import ReactMarkdown from "react-markdown";
 
 import { useTranslations } from "next-intl";
@@ -6,6 +8,7 @@ import Topics from "@/containers/home/topics";
 
 export default function InformationOn() {
   const t = useTranslations();
+
   return (
     <section className="bg-blue-700">
       <div className="container flex flex-col space-y-2 pt-20 md:space-y-0 md:pt-28">
