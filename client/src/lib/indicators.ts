@@ -5,6 +5,9 @@ import { useMemo } from "react";
 import { QueryFunction, UseQueryOptions, useQuery, useQueries } from "@tanstack/react-query";
 import axios from "axios";
 
+import { getSubtopics } from "@/lib/subtopics";
+import { getTopics } from "@/lib/topics";
+
 import {
   Indicator,
   ResourceFeature,
@@ -18,8 +21,6 @@ import { Subtopic, Topic } from "@/types/topic";
 import { LayerProps } from "@/components/map/layers/types";
 
 import INDICATORS from "@/../datum/indicators.json";
-import SUBTOPICS from "@/../datum/subtopics.json";
-import TOPICS from "@/../datum/topics.json";
 import { routing } from "@/i18n/routing";
 
 /**
@@ -43,8 +44,8 @@ export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
 
 export const getIndicators = async (locale: string) => {
   const indicators = INDICATORS;
-  const topics = TOPICS as Topic[];
-  const subtopics = SUBTOPICS as Subtopic[];
+  const topics = await getTopics({ locale });
+  const subtopics = await getSubtopics({ locale });
 
   return indicators
     .map((indicator) => {

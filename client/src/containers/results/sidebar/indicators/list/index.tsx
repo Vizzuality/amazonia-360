@@ -1,11 +1,13 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
 import { Subtopic, Topic } from "@/types/topic";
+
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { IndicatorsItem } from "./item";
 
@@ -17,7 +19,16 @@ export const IndicatorsList = ({
   subtopicId: Subtopic["id"];
 }) => {
   const locale = useLocale();
-  const { data } = useGetDefaultIndicators({ subtopicId: subtopicId, locale });
+  const t = useTranslations();
+
+  const {
+    data: indicatorsData,
+    isFetching,
+    isFetched,
+  } = useGetDefaultIndicators({
+    subtopicId: subtopicId,
+    locale,
+  });
 
   return (
     <ul
@@ -27,14 +38,30 @@ export const IndicatorsList = ({
         "after:pointer-events-none after:absolute after:left-2.5 after:top-0 after:z-0 after:h-[calc(100%_-_theme(space.4))] after:w-2.5 after:bg-white",
       )}
     >
-      {data?.map((indicator) => {
-        if (!indicator || !indicator.visualization_types.length) return null;
-        return (
-          <li key={`${indicator.id}-${subtopicId}`}>
-            <IndicatorsItem topicId={topicId} indicator={indicator} />
-          </li>
-        );
-      })}
+      {isFetching && !isFetched && (
+        <>
+          <Skeleton className="h-7" />
+          <Skeleton className="h-7" />
+          <Skeleton className="h-7" />
+        </>
+      )}
+
+      {!isFetching && isFetched && !indicatorsData?.length && (
+        <p className="p-2 text-sm font-medium text-muted-foreground">
+          {t("grid-sidebar-grid-filters-no-indicators-available")}
+        </p>
+      )}
+
+      {!isFetching &&
+        isFetched &&
+        !!indicatorsData?.length &&
+        indicatorsData?.map((indicator) => {
+          return (
+            <li key={`${indicator.id}-${subtopicId}`}>
+              <IndicatorsItem topicId={topicId} indicator={indicator} />
+            </li>
+          );
+        })}
     </ul>
   );
 };

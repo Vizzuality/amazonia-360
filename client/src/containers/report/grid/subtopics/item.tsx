@@ -74,7 +74,7 @@ export default function SubtopicsItem({ id, topic_id, name }: Subtopic) {
             </div>
           </div>
           {!!SELECTED && (
-            <Badge variant="secondary" className="rounded-full">
+            <Badge variant="secondary" className="rounded-full text-2xs">
               {SELECTED}
             </Badge>
           )}

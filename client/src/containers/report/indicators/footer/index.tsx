@@ -23,7 +23,7 @@ export default function IndicatorsFooter() {
 
   const isAllExpanded = useMemo(() => {
     if (!topicsData) return false;
-    return topicsData.every((topic) => !!indicatorsExpand?.[topic.id]);
+    return topicsData.some((topic) => !!indicatorsExpand?.[topic.id]);
   }, [indicatorsExpand, topicsData]);
 
   const handleExpandAll = useCallback(() => {

@@ -30,7 +30,7 @@ export type TopicsFormValues = {
 };
 
 export const formSchema = z.object({
-  topics: z.array(z.custom<TopicsFormValues>()).min(1, "Please select at least one topic."),
+  topics: z.array(z.custom<TopicsFormValues>()),
 });
 
 export default function ReportGenerate({ heading = "create" }: { heading?: "select" | "create" }) {
@@ -54,7 +54,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const topics = values.topics
-      .map((t) => ({
+      ?.map((t) => ({
         id: t.id,
         indicators: topicsData?.find((topic) => topic.id === t.id)?.default_visualization,
       }))
