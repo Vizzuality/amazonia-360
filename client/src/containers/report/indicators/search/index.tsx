@@ -92,26 +92,6 @@ export default function IndicatorsSearch({ className }: { className?: string }) 
         }
         return [...(prev || []), v];
       });
-
-      // setIndicatorsExpand((prev) => {
-      //   if (!!prev) {
-      //     if (!prev[value.topic.id]) {
-      //       prev[value.topic.id] = [value.subtopic.id];
-      //       return prev;
-      //     }
-
-      //     if (prev[value.topic.id]) {
-      //       if (!prev[value.topic.id]?.includes(value.subtopic.id)) {
-      //         prev[value.topic.id]?.push(value.subtopic.id);
-      //       }
-      //       return prev;
-      //     }
-
-      //     return prev;
-      //   }
-
-      //   return prev;
-      // });
     },
     [setSearch, setOpen, setIndicators],
   );
