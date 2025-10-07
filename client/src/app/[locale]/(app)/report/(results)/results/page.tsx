@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import { Locale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 
 // import { getSearchQueryOptions } from "@/lib/search";
@@ -10,7 +11,7 @@ import ReportResultsHeader from "@/containers/header/results";
 import ReportResultsContent from "@/containers/results/content";
 import ReportResultsSidebar from "@/containers/results/sidebar";
 
-type Params = Promise<{ locale: string }>;
+type Params = Promise<{ locale: Locale }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale } = await params;

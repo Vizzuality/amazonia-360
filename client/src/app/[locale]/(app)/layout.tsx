@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { notFound } from "next/navigation";
 
-import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { hasLocale, Locale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import RootHead from "@/app/head";
@@ -22,7 +22,7 @@ import "@/styles/globals.css";
 import "@/styles/grid-layout.css";
 import "react-resizable/css/styles.css";
 
-type Params = Promise<{ locale: string }>;
+type Params = Promise<{ locale: Locale }>;
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({

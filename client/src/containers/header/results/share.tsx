@@ -24,7 +24,7 @@ export default function ShareReport() {
 
   const [currentUrl, setCurrentUrl] = useState<string>("");
 
-  const [shareLinkBtnText, setShareLinkBtnText] = useState("copy");
+  const [shareLinkBtnText, setShareLinkBtnText] = useState<"copy" | "copied">("copy");
   useEffect(() => {
     setCurrentUrl(window.location.href);
   }, [pathname]);

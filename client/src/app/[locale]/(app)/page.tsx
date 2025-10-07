@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 
+import { Locale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 
 import Footer from "@/containers/footer";
@@ -13,7 +14,7 @@ import KeyFeaturesGrid from "@/containers/home/key-features-grid";
 import KeyFeaturesReport from "@/containers/home/key-features-report";
 import Partners from "@/containers/home/partners";
 
-type Params = Promise<{ locale: string }>;
+type Params = Promise<{ locale: Locale }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale } = await params;

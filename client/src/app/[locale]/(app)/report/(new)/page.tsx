@@ -1,10 +1,11 @@
 import { Metadata } from "next";
 
+import { Locale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import ReportLocation from "@/containers/report/location";
 
-type Params = Promise<{ locale: string }>;
+type Params = Promise<{ locale: Locale }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale } = await params;

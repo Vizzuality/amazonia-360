@@ -2,7 +2,7 @@ import { Metadata } from "next";
 
 import { notFound } from "next/navigation";
 
-import { hasLocale } from "next-intl";
+import { hasLocale, Locale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import LayoutProviders from "@/app/layout-providers";
@@ -14,7 +14,7 @@ import "@/styles/globals.css";
 import "@/styles/grid-layout.css";
 import "react-resizable/css/styles.css";
 
-type Params = Promise<{ locale: string }>;
+type Params = Promise<{ locale: Locale }>;
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({

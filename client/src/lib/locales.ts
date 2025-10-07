@@ -1,4 +1,6 @@
-export const LOCALES = ["en", "es", "pt"] as const;
+import { routing } from "@/i18n/routing";
+
+export const LOCALES = routing.locales;
 export const localeLabelsShort: Record<(typeof LOCALES)[number], string> = {
   en: "EN",
   es: "ES",
