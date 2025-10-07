@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 
 import { LucideHelpCircle } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { LuDatabase } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
@@ -16,9 +16,16 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Link } from "@/i18n/navigation";
 
+const HELP_LINKS = {
+  en: "https://rise.articulate.com/share/GWlgAGqnPZihWgXVpLCGge4Pjjk9k2Wo#/?locale=en-us",
+  es: "https://rise.articulate.com/share/GWlgAGqnPZihWgXVpLCGge4Pjjk9k2Wo#/",
+  pt: "https://rise.articulate.com/share/GWlgAGqnPZihWgXVpLCGge4Pjjk9k2Wo#/?locale=pt-br",
+};
+
 export default function ReportLocationDesktop() {
   const searchParams = useSearchParams();
 
+  const locale = useLocale();
   const t = useTranslations();
 
   const SIDEBAR_CARDS = [
@@ -45,7 +52,7 @@ export default function ReportLocationDesktop() {
               <div className="flex max-h-[calc(100vh_-_(64px_+_40px_+_28px))] grow flex-col">
                 <div className="relative flex max-h-full grow flex-col overflow-hidden">
                   <a
-                    href="https://rise.articulate.com/share/GWlgAGqnPZihWgXVpLCGge4Pjjk9k2Wo#/"
+                    href={HELP_LINKS[locale]}
                     target="_blank"
                     rel="noreferrer noopener"
                     className="absolute right-6 top-6 z-10"

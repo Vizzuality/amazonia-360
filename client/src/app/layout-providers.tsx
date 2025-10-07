@@ -2,14 +2,13 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider as JotaiProvider } from "jotai";
+import { Locale } from "next-intl";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { MediaContextProvider } from "@/containers/media";
 import { ArcGISProvider } from "@/containers/providers/arcgis";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
-
-import { Locale } from "@/i18n/types";
 
 function makeQueryClient() {
   return new QueryClient({

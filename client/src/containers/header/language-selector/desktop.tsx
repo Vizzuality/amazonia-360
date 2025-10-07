@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 
-import { useLocale } from "next-intl";
+import { Locale, useLocale } from "next-intl";
 
 import { LOCALES, localeLabelsShort, localeLabelsLong } from "@/lib/locales";
 import { cn } from "@/lib/utils";
@@ -16,16 +16,15 @@ import {
 } from "@/components/ui/select";
 
 import { useRouter, usePathname } from "@/i18n/navigation";
-import { Locale } from "@/i18n/types";
 
 const LanguageSelector = () => {
-  const locale = useLocale() as Locale;
+  const locale = useLocale();
 
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams()?.toString();
 
-  const onSelectLocale = (nextLocale: string) => {
+  const onSelectLocale = (nextLocale: Locale) => {
     const path = `${pathname}${searchParams ? `?${searchParams}` : ""}`;
     router.push(path, { locale: nextLocale });
   };

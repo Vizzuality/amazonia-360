@@ -3,7 +3,7 @@
 import { ChangeEvent, useCallback, useMemo, useRef, useState } from "react";
 
 import { LucideHelpCircle } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { LuPen, LuCheck, LuX } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
@@ -13,8 +13,16 @@ import { useSyncLocation } from "@/app/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+const HELP_LINKS = {
+  en: "https://rise.articulate.com/share/DzHpFspTQWmMCeeoMXA2_6v5Zljl-b7i#/?locale=en-us",
+  es: "https://rise.articulate.com/share/DzHpFspTQWmMCeeoMXA2_6v5Zljl-b7i#/",
+  pt: "https://rise.articulate.com/share/DzHpFspTQWmMCeeoMXA2_6v5Zljl-b7i#/?locale=pt-br",
+};
+
 export default function EditableHeader({ value = "Selected area" }: { value?: string }) {
+  const locale = useLocale();
   const t = useTranslations();
+
   const [location, setLocation] = useSyncLocation();
   const [editMode, setEditMode] = useState(false);
   const [title, setTitle] = useState(location?.custom_title ?? value);
@@ -128,11 +136,7 @@ export default function EditableHeader({ value = "Selected area" }: { value?: st
             </header>
           )}
 
-          <a
-            href="https://rise.articulate.com/share/DzHpFspTQWmMCeeoMXA2_6v5Zljl-b7i#/"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
+          <a href={HELP_LINKS[locale]} target="_blank" rel="noreferrer noopener">
             <Button size="sm" variant="outline" type="button" className="gap-2">
               <LucideHelpCircle className="h-4 w-4 text-secondary-foreground" />
 

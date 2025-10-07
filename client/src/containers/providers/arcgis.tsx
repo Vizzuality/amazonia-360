@@ -4,12 +4,11 @@ import { PropsWithChildren, useMemo } from "react";
 
 import esriConfig from "@arcgis/core/config";
 import { setLocale } from "@arcgis/core/intl";
+import { Locale } from "next-intl";
 
 import { env } from "@/env.mjs";
 
 import { DATASETS } from "@/constants/datasets";
-
-import { Locale } from "@/i18n/types";
 
 export const ArcGISProvider = ({
   locale,

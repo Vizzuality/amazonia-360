@@ -8,10 +8,9 @@ import { LOCALES, localeLabelsLong } from "@/lib/locales";
 import { cn } from "@/lib/utils";
 
 import { Link, usePathname } from "@/i18n/navigation";
-import { Locale } from "@/i18n/types";
 
 const MobileLanguageSelector = () => {
-  const locale = useLocale() as Locale;
+  const locale = useLocale();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
