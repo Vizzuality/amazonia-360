@@ -8,20 +8,26 @@ import { useGetDefaultIndicators } from "@/lib/indicators";
 import { findFirstAvailablePosition } from "@/lib/report";
 import { cn } from "@/lib/utils";
 
+import { Indicator } from "@/types/indicator";
+
 import { IndicatorView } from "@/app/parsers";
 import { useSyncTopics } from "@/app/store";
 
 import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
 
 import { Search } from "@/components/ui/search";
+import { Switch } from "@/components/ui/switch";
 
-type Option = {
-  topicId?: number;
-  indicatorId: number;
+type Option = Indicator & {
   label?: string;
   value: string;
   key: string;
   active?: boolean;
+  sourceIndex: number;
+  group: {
+    id: number;
+    label: string;
+  };
 };
 
 export default function SearchC() {
@@ -36,6 +42,7 @@ export default function SearchC() {
   const DATA = useMemo(() => {
     return (
       queryIndicators.data
+        ?.filter((indicator) => indicator.topic.id !== 0)
         ?.map((indicator) => {
           if (!!indicator.visualization_types && Array.isArray(indicator.visualization_types)) {
             return indicator.visualization_types.map((v) => {
@@ -47,14 +54,16 @@ export default function SearchC() {
               );
 
               return {
+                ...indicator,
                 key: v,
                 label: indicator.name,
                 value: `${indicator.name}-${v}`,
-                indicatorId: indicator.id,
-                topicId: indicator.topic?.id,
-                subtopicId: indicator.subtopic?.id,
                 sourceIndex: indicator.id,
                 active: isActive,
+                group: {
+                  id: indicator.topic.id,
+                  label: indicator.topic.name ?? "",
+                },
               };
             });
           }
@@ -70,8 +79,10 @@ export default function SearchC() {
       return (
         DATA?.filter(
           (o) =>
+            o.key.toLowerCase().includes(search.toLowerCase()) ||
             o.label?.toLowerCase().includes(search.toLowerCase()) ||
-            o.key.toLowerCase().includes(search.toLowerCase()),
+            o.topic.name?.toLowerCase().includes(search.toLowerCase()) ||
+            o.subtopic.name?.toLowerCase().includes(search.toLowerCase()),
         ) || []
       );
     }
@@ -94,47 +105,69 @@ export default function SearchC() {
         return;
       }
 
-      if (value.active) return;
+      if (value.active) {
+        // Remove indicator
+        setTopics((prev) => {
+          if (!prev) return prev;
 
-      const widgetSize = DEFAULT_VISUALIZATION_SIZES[value.key as IndicatorView["type"]];
-      const newIndicator = {
-        type: value.key as IndicatorView["type"],
-        id: value.indicatorId,
-        x: 0,
-        y: 0,
-        w: DEFAULT_VISUALIZATION_SIZES[value.key as IndicatorView["type"]]?.w || 2,
-        h: DEFAULT_VISUALIZATION_SIZES[value.key as IndicatorView["type"]]?.h || 2,
-      };
+          const newTopics = [...prev];
+          const i = newTopics.findIndex((topic) => topic.id === value.topic.id);
 
-      setTopics((prev) => {
-        if (!prev || !value.topicId) return prev;
+          if (i === -1) return newTopics;
 
-        const newTopics = [...prev];
-        const i = newTopics.findIndex((topic) => topic.id === value.topicId);
+          const indicators = [...(newTopics[i]?.indicators || [])].filter(
+            (indicator) => !(indicator.id === value.id && indicator.type === value.key),
+          );
 
-        if (i === -1) {
-          newTopics.push({
-            id: value.topicId,
-            indicators: [newIndicator],
-          });
+          newTopics[i] = {
+            ...newTopics[i],
+            indicators,
+          };
 
           return newTopics;
-        }
-
-        const indicators = [...(newTopics[i]?.indicators || [])];
-
-        const position = findFirstAvailablePosition(indicators, widgetSize, 4);
-        newIndicator.x = position.x;
-        newIndicator.y = position.y;
-        indicators.push(newIndicator);
-
-        newTopics[i] = {
-          ...newTopics[i],
-          indicators,
+        });
+      } else {
+        // Add indicator
+        const widgetSize = DEFAULT_VISUALIZATION_SIZES[value.key as IndicatorView["type"]];
+        const newIndicator = {
+          type: value.key as IndicatorView["type"],
+          id: value.id,
+          x: 0,
+          y: 0,
+          w: DEFAULT_VISUALIZATION_SIZES[value.key as IndicatorView["type"]]?.w || 2,
+          h: DEFAULT_VISUALIZATION_SIZES[value.key as IndicatorView["type"]]?.h || 2,
         };
 
-        return newTopics;
-      });
+        setTopics((prev) => {
+          if (!prev) return prev;
+
+          const newTopics = [...prev];
+          const i = newTopics.findIndex((topic) => topic.id === value.topic.id);
+
+          if (i === -1) {
+            newTopics.push({
+              id: value.topic.id,
+              indicators: [newIndicator],
+            });
+
+            return newTopics;
+          }
+
+          const indicators = [...(newTopics[i]?.indicators || [])];
+
+          const position = findFirstAvailablePosition(indicators, widgetSize, 4);
+          newIndicator.x = position.x;
+          newIndicator.y = position.y;
+          indicators.push(newIndicator);
+
+          newTopics[i] = {
+            ...newTopics[i],
+            indicators,
+          };
+
+          return newTopics;
+        });
+      }
     },
     [setTopics],
   );
@@ -155,13 +188,16 @@ export default function SearchC() {
           <div
             className={cn({
               "flex w-full cursor-pointer items-start justify-between gap-2 py-1 text-xs": true,
-              "pointer-events-none opacity-50": o.active,
             })}
             role="button"
-            aria-disabled={o.active}
           >
             <span>{o.label}</span>
-            <span className="rounded-full bg-primary/20 px-2.5">{o.key}</span>
+
+            <div className="flex items-start gap-2">
+              <span className="rounded-full bg-primary/20 px-2.5">{o.key}</span>
+
+              <Switch className="h-4 w-8" checked={o.active} />
+            </div>
           </div>
         )}
       </Search>

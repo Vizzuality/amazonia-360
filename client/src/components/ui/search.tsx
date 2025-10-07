@@ -110,8 +110,8 @@ export function Search<T extends Option>({
                 value={value}
                 placeholder={placeholder ?? "Search..."}
                 className={cn(
-                  "flex h-14 w-full items-center rounded-sm border border-input bg-white py-5 pl-10 text-sm placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
-                  size === "sm" && "h-7",
+                  "flex h-14 w-full items-center rounded-sm border border-input bg-white py-0 pl-10 text-sm placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+                  size === "sm" && "h-10",
                 )}
                 onValueChange={(e) => {
                   onChange(e);

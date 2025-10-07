@@ -115,7 +115,6 @@ export default function IndicatorsSearch({ className }: { className?: string }) 
                 true,
             })}
             role="button"
-            aria-disabled={false}
           >
             <span>{o.label}</span>
             <Switch className="h-4 w-8" checked={o.active} />
