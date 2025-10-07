@@ -1,6 +1,7 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 import { useLocale } from "next-intl";
+import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
 
@@ -51,14 +52,57 @@ export const LegendItem = ({ id }: { id: Indicator["id"] }) => {
     }
   }, [indicator]);
 
+  const handleChangeOrder = useCallback(
+    (id: Indicator["id"], direction: -1 | 1) => {
+      setIndicators((prev) => {
+        if (!prev) return prev;
+
+        const index = prev.findIndex((i) => i === id);
+        if (index === -1) return prev;
+
+        const newIndex = index + direction;
+        if (newIndex < 0 || newIndex >= prev.length) return prev;
+
+        const newIndicators = [...prev];
+        const temp = newIndicators[newIndex];
+        // Swap positions
+        newIndicators[newIndex] = newIndicators[index];
+        newIndicators[index] = temp;
+
+        return newIndicators;
+      });
+    },
+    [setIndicators],
+  );
+
   if (!indicator || !LEGEND) return null;
 
   const { name } = indicator;
 
   return (
     <div className="space-y-1 p-4">
-      <header className="flex justify-between gap-2">
-        <h3 className="text-xs font-semibold text-foreground">{name}</h3>
+      <header className="-ml-4 flex justify-between gap-2">
+        <div className="flex items-center gap-1 pl-2">
+          <div>
+            <button
+              type="button"
+              aria-label="Move layer up"
+              className="flex items-center justify-center"
+              onClick={() => handleChangeOrder(id, 1)}
+            >
+              <LuChevronUp className="h-3 w-3 text-foreground" />
+            </button>
+            <button
+              type="button"
+              aria-label="Move layer down"
+              className="flex items-center justify-center"
+              onClick={() => handleChangeOrder(id, -1)}
+            >
+              <LuChevronDown className="h-3 w-3 text-foreground" />
+            </button>
+          </div>
+          <h3 className="text-xs font-semibold text-foreground">{name}</h3>
+        </div>
 
         <ul className="flex items-center gap-1">
           <li>
@@ -92,7 +136,7 @@ export const LegendItem = ({ id }: { id: Indicator["id"] }) => {
         </ul>
       </header>
 
-      {LEGEND}
+      <div className="pl-2">{LEGEND}</div>
     </div>
   );
 };
