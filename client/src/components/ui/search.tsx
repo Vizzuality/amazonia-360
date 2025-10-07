@@ -34,6 +34,7 @@ export type SearchProps<T> = {
   onChange: (e: string) => void;
   onSelect: (o: T | null) => void;
   children?: (option: Option) => React.ReactNode;
+  extra?: React.ReactNode;
   size?: "sm" | "md";
 } & UseQueryResult<unknown, unknown>;
 
@@ -47,6 +48,7 @@ export function Search<T extends Option>({
   onChange,
   onSelect,
   children,
+  extra,
   size,
 }: SearchProps<T>) {
   const t = useTranslations();
@@ -139,6 +141,8 @@ export function Search<T extends Option>({
             {open && !OPTIONS.length && !!value && !isFetching && isFetched && (
               <p className="py-6 text-center text-sm">{t("no-results-found")}.</p>
             )}
+
+            {extra}
 
             <CommandList>
               {open &&

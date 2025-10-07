@@ -38,65 +38,32 @@ export default function ReportIndicatorsContent() {
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
 
   useEffect(() => {
-    if (scrollRef.current) {
-      const i = indicators ?? [];
-      const p = previousIndicators ?? [];
-      if (i && p && i.length > p.length) {
-        // Get the difference between the two arrays
-        const addedIndicatorsIds = i.filter((x) => !p.includes(x));
-        const addedIndicators = indicatorsData?.filter((indicator) =>
-          addedIndicatorsIds.includes(indicator.id),
-        );
+    const i = indicators ?? [];
+    const p = previousIndicators ?? [];
+    if (i && p && i.length > p.length) {
+      // Get the difference between the two arrays
+      const addedIndicatorsIds = i.filter((x) => !p.includes(x));
+      const addedIndicators = indicatorsData?.filter((indicator) =>
+        addedIndicatorsIds.includes(indicator.id),
+      );
 
-        if (addedIndicators && !!addedIndicators.length) {
-          // Expand the topics and subtopics of the added indicators
-          setIndicatorsExpand((prev) => {
-            const newExpand = { ...prev };
+      if (addedIndicators && !!addedIndicators.length) {
+        // Expand the topics and subtopics of the added indicators
+        setIndicatorsExpand((prev) => {
+          const newExpand = { ...prev };
 
-            addedIndicators.forEach((indicator) => {
-              if (!newExpand[indicator.topic.id] || !newExpand[indicator.topic.id]?.length) {
-                newExpand[indicator.topic.id] = [
-                  ...(indicator.subtopic.id ? [indicator.subtopic.id] : []),
-                ];
-              }
-              if (!newExpand[indicator.topic.id]?.includes(indicator.subtopic.id)) {
-                newExpand[indicator.topic.id]?.push(indicator.subtopic.id);
-              }
-            });
-            return newExpand;
+          addedIndicators.forEach((indicator) => {
+            if (!newExpand[indicator.topic.id] || !newExpand[indicator.topic.id]?.length) {
+              newExpand[indicator.topic.id] = [
+                ...(indicator.subtopic.id ? [indicator.subtopic.id] : []),
+              ];
+            }
+            if (!newExpand[indicator.topic.id]?.includes(indicator.subtopic.id)) {
+              newExpand[indicator.topic.id]?.push(indicator.subtopic.id);
+            }
           });
-
-          // // Scroll to the last added indicator
-
-          // const element = document.getElementById(`indicator-${addedIndicators[0]}`);
-
-          // console.log({ element, scrollRef: scrollRef.current });
-
-          // if (element && scrollRef.current) {
-          //   const elementTop = element.offsetTop;
-          //   const elementHeight = element.offsetHeight;
-          //   const containerHeight = scrollRef.current.offsetHeight;
-          //   const scrollTop = scrollRef.current.scrollTop;
-
-          //   console.log({
-          //     elementTop,
-          //     elementHeight,
-          //     containerHeight,
-          //     scrollTop,
-          //   });
-
-          //   if (
-          //     elementTop < scrollTop ||
-          //     elementTop + elementHeight > scrollTop + containerHeight
-          //   ) {
-          //     // Scroll to the element
-          //     scrollRef.current.scrollTo({
-          //       top: elementTop - containerHeight / 2 + elementHeight / 2,
-          //       behavior: "smooth",
-          //     });
-          //   }
-          // }
-        }
+          return newExpand;
+        });
       }
     }
   }, [indicators, previousIndicators, indicatorsData, setIndicatorsExpand]);

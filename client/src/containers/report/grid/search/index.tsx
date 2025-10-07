@@ -2,7 +2,6 @@
 
 import { useCallback, useMemo, useState } from "react";
 
-import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useAtom } from "jotai";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -10,6 +9,8 @@ import { useMeta } from "@/lib/grid";
 import { useGetDefaultIndicators, useGetH3Indicators } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 import { cn } from "@/lib/utils";
+
+import { Indicator } from "@/types/indicator";
 
 import {
   selectedFiltersViewAtom,
@@ -19,9 +20,9 @@ import {
 } from "@/app/store";
 
 import { Search } from "@/components/ui/search";
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipArrow } from "@/components/ui/tooltip";
+import { Switch } from "@/components/ui/switch";
 
-type Option = {
+type Option = Indicator & {
   label: string;
   value: string;
   key: string;
@@ -57,11 +58,16 @@ export default function SearchC({ className }: { className?: string }) {
       );
 
       return {
+        ...indicator,
         label: indicator.name ?? "",
         value: matchingDataset?.var_name ?? "",
         key: matchingDataset?.var_name ?? "",
         sourceIndex: index,
         active: matchingDataset?.var_name && gridDatasets?.includes(matchingDataset.var_name),
+        group: {
+          id: indicator.topic.id,
+          label: indicator.topic.name,
+        },
       } as Option;
     });
   }, [H3IndicatorsData, META, gridDatasets, selectedFiltersView]);
@@ -71,8 +77,10 @@ export default function SearchC({ className }: { className?: string }) {
       return (
         INDICATORS?.filter(
           (o) =>
+            o.key.toLowerCase().includes(search.toLowerCase()) ||
             o.label?.toLowerCase().includes(search.toLowerCase()) ||
-            o.key.toLowerCase().includes(search.toLowerCase()),
+            o.topic.name?.toLowerCase().includes(search.toLowerCase()) ||
+            o.subtopic.name?.toLowerCase().includes(search.toLowerCase()),
         ) || []
       );
     }
@@ -89,20 +97,27 @@ export default function SearchC({ className }: { className?: string }) {
 
   const handleSelect = useCallback(
     (value: Option | null) => {
-      if (!value) {
+      const v = value?.value;
+
+      if (!v) {
         setOpen(false);
         setSearch("");
         return;
       }
 
-      if (!gridSelectedDataset) setGridSelectedDataset(value.value);
+      if (!gridSelectedDataset) setGridSelectedDataset(v);
 
-      if (gridDatasets.length < 4) {
-        setSelectedDatasets((prev) => {
-          if (!value.value) return prev;
-          return [...prev, value.value];
-        });
-      }
+      setSelectedDatasets((prev) => {
+        if (prev?.includes(v)) {
+          return prev.filter((i) => i !== v);
+        }
+
+        if (gridDatasets.length < 4) {
+          return [...(prev || []), v];
+        }
+
+        return prev;
+      });
     },
     [setSelectedDatasets, setGridSelectedDataset, gridDatasets, gridSelectedDataset],
   );
@@ -118,31 +133,27 @@ export default function SearchC({ className }: { className?: string }) {
         onChange={handleSearch}
         onSelect={handleSelect}
         size="sm"
+        extra={
+          gridDatasets.length >= 4 && (
+            <div className="bg-amber-100 px-4 py-2 text-xs text-foreground">
+              {t("grid-sidebar-report-location-filters-alert-maximum-selected")}
+            </div>
+          )
+        }
       >
         {(o) => (
-          <Tooltip delayDuration={0}>
-            <TooltipTrigger className="w-full">
-              <div
-                className={cn({
-                  "flex w-full cursor-pointer items-start justify-between gap-2 py-1 text-start text-xs":
-                    true,
-                  "pointer-events-none opacity-50": o.active,
-                })}
-                role="button"
-                aria-disabled={false}
-              >
-                <span>{o.label}</span>
-              </div>
-            </TooltipTrigger>
-            {gridDatasets.length >= 4 && (
-              <TooltipPortal>
-                <TooltipContent sideOffset={0}>
-                  {t("grid-sidebar-report-location-filters-alert-maximum-selected")}
-                  <TooltipArrow />
-                </TooltipContent>
-              </TooltipPortal>
-            )}
-          </Tooltip>
+          <div
+            className={cn({
+              "flex w-full cursor-pointer items-start justify-between gap-2 py-1 text-start text-xs":
+                true,
+            })}
+            role="button"
+            aria-disabled={false}
+          >
+            <span>{o.label}</span>
+
+            <Switch className="h-4 w-8" checked={o.active} />
+          </div>
         )}
       </Search>
     </div>

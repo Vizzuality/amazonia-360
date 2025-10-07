@@ -1,14 +1,18 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { useSearchParams } from "next/navigation";
 
-import { useAtomValue } from "jotai";
-import { useTranslations } from "next-intl";
+import { useAtom, useAtomValue } from "jotai";
+import { useLocale, useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
+import { usePreviousDifferent } from "rooks";
 
+import { useGetH3Indicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
-import { indicatorsExpandAtom, selectedFiltersViewAtom } from "@/app/store";
+import { indicatorsExpandAtom, selectedFiltersViewAtom, useSyncGridDatasets } from "@/app/store";
 
 import GridFooter from "@/containers/report/grid/footer";
 import GridIndicatorsList from "@/containers/report/grid/list";
@@ -20,11 +24,48 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "@/i18n/navigation";
 
 export default function SidebarGridContent() {
+  const locale = useLocale();
   const t = useTranslations();
   const searchParams = useSearchParams();
 
+  const [indicators] = useSyncGridDatasets();
+  const previousIndicators = usePreviousDifferent(indicators);
+
+  const { data: indicatorsData } = useGetH3Indicators({ locale });
+
   const selectedFiltersView = useAtomValue(selectedFiltersViewAtom);
-  const indicatorsExpand = useAtomValue(indicatorsExpandAtom);
+  const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
+
+  useEffect(() => {
+    const i = indicators ?? [];
+    const p = previousIndicators ?? [];
+    if (i && p && i.length > p.length) {
+      // Get the difference between the two arrays
+      const addedIndicatorsIds = i.filter((x) => !p.includes(x));
+      const addedIndicators = indicatorsData?.filter((indicator) =>
+        addedIndicatorsIds.includes(indicator.resource.column),
+      );
+
+      if (addedIndicators && !!addedIndicators.length) {
+        // Expand the topics and subtopics of the added indicators
+        setIndicatorsExpand((prev) => {
+          const newExpand = { ...prev };
+
+          addedIndicators.forEach((indicator) => {
+            if (!newExpand[indicator.topic.id] || !newExpand[indicator.topic.id]?.length) {
+              newExpand[indicator.topic.id] = [
+                ...(indicator.subtopic.id ? [indicator.subtopic.id] : []),
+              ];
+            }
+            if (!newExpand[indicator.topic.id]?.includes(indicator.subtopic.id)) {
+              newExpand[indicator.topic.id]?.push(indicator.subtopic.id);
+            }
+          });
+          return newExpand;
+        });
+      }
+    }
+  }, [indicators, previousIndicators, indicatorsData, setIndicatorsExpand]);
 
   return (
     <div className="relative flex h-full grow flex-col space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white py-6 backdrop-blur-xl xl:space-y-4">
