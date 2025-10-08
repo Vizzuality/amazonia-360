@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 
+import { formatNumber } from "@/lib/formats";
 import { useGetIndicatorsId, useQueryFeatureId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
@@ -34,8 +35,8 @@ export default function FeatureDataRow({ indicatorId, locale }: DataRowProps) {
 
   return (
     <div className="flex flex-row items-center justify-between border-b border-gray-300 py-4">
-      <p className="font-medium text-blue-600">{indicator[`name_${locale}`]}</p>
-      <p className="font-bold text-blue-600">{VALUE}</p>
+      <p className="font-medium text-blue-600">{indicator.name}</p>
+      <p className="font-bold text-blue-600">{formatNumber(VALUE)}</p>
     </div>
   );
 }

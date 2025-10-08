@@ -24,7 +24,7 @@ export default function ComponentDataRow({ indicatorId, locale }: DataRowProps) 
       maximumFractionDigits: 0,
     });
 
-    if (indicator[`unit_${locale}`]) return `${area} ${indicator[`unit_${locale}`]}`;
+    if (indicator[`unit_${locale}`]) return `${area} ${indicator.unit}`;
 
     return area;
   }, [GEOMETRY, indicator, locale]);
@@ -33,7 +33,7 @@ export default function ComponentDataRow({ indicatorId, locale }: DataRowProps) 
 
   return (
     <div className="flex flex-row items-center justify-between border-b border-gray-300 py-4">
-      <p className="font-medium text-blue-600">{indicator[`name_${locale}`]}</p>
+      <p className="font-medium text-blue-600">{indicator.name}</p>
       <p className="font-bold text-blue-600">{VALUE}</p>
     </div>
   );

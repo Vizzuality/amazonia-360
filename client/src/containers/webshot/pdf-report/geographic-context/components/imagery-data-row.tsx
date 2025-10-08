@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 
+import { formatNumber } from "@/lib/formats";
 import { useGetIndicatorsId, useQueryImageryId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
@@ -24,7 +25,14 @@ export default function ImageryDataRow({ indicatorId, locale }: DataRowProps) {
   });
 
   const VALUE = useMemo(() => {
-    if (!query.data) return 0;
+    if (!query.data || !("statistics" in query.data)) return null;
+
+    const [s] = query.data.statistics;
+
+    if (!s) return 0;
+
+    if ("sum" in s) return s.sum;
+
     return query.data?.histograms?.reduce((acc, curr) => {
       return (
         acc +
@@ -39,8 +47,10 @@ export default function ImageryDataRow({ indicatorId, locale }: DataRowProps) {
 
   return (
     <div className="flex flex-row items-center justify-between border-b border-gray-300 py-4">
-      <p className="font-medium text-blue-600">{indicator[`name_${locale}`]}</p>
-      <p className="font-bold text-blue-600">{VALUE || "n.d."}</p>
+      <p className="font-medium text-blue-600">{indicator.name}</p>
+      <p className="font-bold text-blue-600">
+        {typeof VALUE === "number" ? formatNumber(VALUE) : "n.d."}
+      </p>
     </div>
   );
 }

@@ -146,9 +146,11 @@ export class ReportService {
       );
       await page.emulateMedia({ media: "screen" });
 
+      const bleed = 3;
+
       // Generate PDF from screenshots
       const pdfBuffer = await page.pdf({
-        format: Config.getString("pdf.pageFormat") || undefined,
+        format: "A4",
         landscape: Config.getString("pdf.pageOrientation") === "landscape",
         margin: {
           top: Config.getString("pdf.pageMargins.top"),
