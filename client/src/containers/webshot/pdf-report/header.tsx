@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
 import Image from "next/image";
 
-import { useTranslations } from "next-intl";
-
 import { cn } from "@/lib/utils";
+
+import { useSyncLocation } from "@/app/store";
 
 import { Badge } from "@/components/ui/badge";
 
@@ -19,46 +17,39 @@ interface PdfHeaderProps {
   documentHeight?: number;
 }
 
-export default function PdfHeader({
-  transparent,
-  title,
-  topic,
-  totalPages = 0,
-  getCurrentPage,
-  documentHeight = 0,
-}: PdfHeaderProps) {
-  const t = useTranslations();
-  const headerRef = useRef<HTMLElement>(null);
-  const [actualPageNumber, setActualPageNumber] = useState(1);
+export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
+  // const [actualPageNumber, setActualPageNumber] = useState(1);
 
-  // Update page number whenever document height changes or component mounts
-  useEffect(() => {
-    const updatePageNumber = () => {
-      if (headerRef.current && getCurrentPage) {
-        const pageNumber = getCurrentPage(headerRef.current);
-        setActualPageNumber(pageNumber);
-      }
-    };
+  // // Update page number whenever document height changes or component mounts
+  // useEffect(() => {
+  //   const updatePageNumber = () => {
+  //     if (headerRef.current && getCurrentPage) {
+  //       const pageNumber = getCurrentPage(headerRef.current);
+  //       setActualPageNumber(pageNumber);
+  //     }
+  //   };
 
-    // Update immediately
-    updatePageNumber();
+  //   // Update immediately
+  //   updatePageNumber();
 
-    // Also update after a small delay to ensure DOM is fully updated
-    const timeoutId = setTimeout(updatePageNumber, 200);
+  //   // Also update after a small delay to ensure DOM is fully updated
+  //   const timeoutId = setTimeout(updatePageNumber, 200);
 
-    return () => clearTimeout(timeoutId);
-  }, [documentHeight, totalPages, getCurrentPage]);
+  //   return () => clearTimeout(timeoutId);
+  // }, [documentHeight, totalPages, getCurrentPage]);
+
+  const [location] = useSyncLocation();
 
   return (
     <header
-      ref={headerRef}
       className={cn({
-        "absolute left-0 top-0 box-border flex h-16 w-full shrink-0 flex-col justify-center": true,
+        "absolute left-0 top-0 box-border flex h-16 w-full shrink-0 flex-col justify-center px-14":
+          true,
         "border-transparent bg-transparent": transparent,
         "border-b border-blue-50 bg-blue-50": !transparent,
       })}
     >
-      <div className="container flex items-center justify-between md:mx-auto">
+      <div className="flex items-center justify-between">
         <div className="z-[120] flex items-center space-x-2">
           <div className="flex items-center space-x-2 lg:space-x-4">
             <Image
@@ -85,8 +76,15 @@ export default function PdfHeader({
         </div>
 
         <div>
-          <p className={cn({ "text-white": transparent, "text-black": !transparent })}>
-            {t("pdf-report-cover-title", { location: title || "Selected Area" })}
+          <p
+            className={cn({
+              "text-white": transparent,
+              "text-black": !transparent,
+              "text-xs": true,
+            })}
+          >
+            {location?.custom_title || "Selected Area"}
+
             {!!topic ? <span className="font-thin"> | {topic}</span> : ""}
           </p>
         </div>
@@ -99,7 +97,7 @@ export default function PdfHeader({
           })}
         >
           <p>
-            {actualPageNumber} / {totalPages}
+            {1} / {1}
           </p>
         </div>
       </div>

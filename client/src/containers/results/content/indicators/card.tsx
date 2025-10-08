@@ -111,6 +111,7 @@ export default function ReportResultsIndicator({
         <CardContent
           className={cn({
             "px-4 pb-4": type !== "map",
+            "justify-between": type === "numeric" && isPdf,
           })}
         >
           {type === "map" && indicator.resource.type !== "h3" && (

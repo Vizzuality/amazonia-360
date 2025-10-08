@@ -2,7 +2,9 @@ import { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-export const WebshotReportContainer = ({
+import PdfHeader from "@/containers/webshot/pdf-report/header";
+
+export const PdfContainer = ({
   children,
   cover,
   index,
@@ -19,7 +21,11 @@ export const WebshotReportContainer = ({
         "break-before-page": index !== 0,
       })}
     >
+      <PdfHeader transparent={cover} />
+
       {children}
     </div>
   );
 };
+
+export default PdfContainer;

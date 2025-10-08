@@ -1,28 +1,15 @@
 import { VisualizationTypes } from "@/types/indicator";
-import { Topic } from "@/types/topic";
 
 import { TopicView } from "@/app/parsers";
 
 import ReportResultsIndicator from "@/containers/results/content/indicators/card";
-import PdfHeader from "@/containers/webshot/pdf-report/header";
-
-import { WebshotReportContainer } from "../../webshot-report-container";
+import PdfContainer from "@/containers/webshot/pdf-report/container";
 
 interface PdfTopicSectionProps {
-  totalPages: number;
-  getCurrentPage: (element?: HTMLElement) => number;
-  documentHeight: number;
-  topic?: Topic;
   topicView?: TopicView;
 }
 
-export default function PdfTopicSection({
-  totalPages,
-  getCurrentPage,
-  documentHeight,
-  topic,
-  topicView,
-}: PdfTopicSectionProps) {
+export default function PdfTopicSection({ topicView }: PdfTopicSectionProps) {
   const indicators = topicView?.indicators;
 
   if (!indicators) return null;
@@ -33,7 +20,7 @@ export default function PdfTopicSection({
   > = {
     map: { x: 2, y: 4, className: "col-span-2 row-span-4" },
     table: { x: 2, y: 4, className: "col-span-2 row-span-4" },
-    chart: { x: 4, y: 2, className: "col-span-4 row-span-2" },
+    chart: { x: 4, y: 2, className: "col-span-4 row-span-1" },
     numeric: { x: 1, y: 2, className: "col-span-1 row-span-1" },
     ai: { x: 2, y: 4, className: "col-span-2 row-span-4" },
   };
@@ -52,18 +39,12 @@ export default function PdfTopicSection({
   return (
     <>
       {!!indicatorsByType["numeric"]?.length && (
-        <WebshotReportContainer>
-          <PdfHeader
-            totalPages={totalPages}
-            getCurrentPage={getCurrentPage}
-            documentHeight={documentHeight}
-            topic={topic?.name}
-          />
-          <div className="grid grow grid-cols-4 grid-rows-4 gap-4 p-4">
+        <PdfContainer>
+          <div className="grid grow grid-cols-4 grid-rows-3 gap-4 p-4 px-14">
             {indicatorsByType["numeric"]?.map((indicator) => (
               <div
                 key={indicator.id}
-                className={`${WidgetTypeGridSize["numeric"].className} h-full`}
+                className={`${WidgetTypeGridSize["numeric"].className} h-full shrink-0`}
               >
                 <ReportResultsIndicator
                   key={indicator.id}
@@ -75,18 +56,12 @@ export default function PdfTopicSection({
               </div>
             ))}
           </div>
-        </WebshotReportContainer>
+        </PdfContainer>
       )}
 
       {!!indicatorsByType["chart"]?.length && (
-        <WebshotReportContainer>
-          <PdfHeader
-            totalPages={totalPages}
-            getCurrentPage={getCurrentPage}
-            documentHeight={documentHeight}
-            topic={topic?.name}
-          />
-          <div className="grid grow grid-cols-4 grid-rows-4 gap-4 p-4">
+        <PdfContainer>
+          <div className="grid grow grid-cols-4 grid-rows-3 gap-4 p-4 px-14">
             {indicatorsByType["chart"]?.map((indicator) => (
               <div key={indicator.id} className={`${WidgetTypeGridSize["chart"].className} h-full`}>
                 <ReportResultsIndicator
@@ -99,18 +74,12 @@ export default function PdfTopicSection({
               </div>
             ))}
           </div>
-        </WebshotReportContainer>
+        </PdfContainer>
       )}
 
       {!!indicatorsByType["map"]?.length && (
-        <WebshotReportContainer>
-          <PdfHeader
-            totalPages={totalPages}
-            getCurrentPage={getCurrentPage}
-            documentHeight={documentHeight}
-            topic={topic?.name}
-          />
-          <div className="grid grow grid-cols-4 grid-rows-4 gap-4 p-4">
+        <PdfContainer>
+          <div className="grid grow grid-cols-4 grid-rows-4 gap-4 p-4 px-14">
             {indicatorsByType["map"]?.map((indicator) => (
               <div key={indicator.id} className={`${WidgetTypeGridSize["map"].className} h-full`}>
                 <ReportResultsIndicator
@@ -123,18 +92,12 @@ export default function PdfTopicSection({
               </div>
             ))}
           </div>
-        </WebshotReportContainer>
+        </PdfContainer>
       )}
 
       {!!indicatorsByType["table"]?.length && (
-        <WebshotReportContainer>
-          <PdfHeader
-            totalPages={totalPages}
-            getCurrentPage={getCurrentPage}
-            documentHeight={documentHeight}
-            topic={topic?.name}
-          />
-          <div className="grid grow grid-cols-4 grid-rows-4 gap-4 p-4">
+        <PdfContainer>
+          <div className="grid grow grid-cols-4 grid-rows-4 gap-4 p-4 px-14">
             {indicatorsByType["table"]?.map((indicator) => (
               <div key={indicator.id} className={`${WidgetTypeGridSize["table"].className} h-full`}>
                 <ReportResultsIndicator
@@ -147,7 +110,7 @@ export default function PdfTopicSection({
               </div>
             ))}
           </div>
-        </WebshotReportContainer>
+        </PdfContainer>
       )}
     </>
   );
