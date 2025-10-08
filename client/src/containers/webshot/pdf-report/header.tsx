@@ -47,9 +47,11 @@ export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
           true,
         "border-transparent bg-transparent": transparent,
         "border-b border-blue-50 bg-blue-50": !transparent,
+        "after:absolute after:left-0 after:top-0 after:z-0 after:h-40 after:w-full after:bg-gradient-to-b after:from-black/50 after:to-transparent":
+          transparent,
       })}
     >
-      <div className="flex items-center justify-between">
+      <div className="relative z-10 flex items-center justify-between">
         <div className="z-[120] flex items-center space-x-2">
           <div className="flex items-center space-x-2 lg:space-x-4">
             <Image
@@ -57,6 +59,7 @@ export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
               alt="IDB"
               width={65}
               height={24}
+              priority
             />
             <div className="space-x-2">
               <span

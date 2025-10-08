@@ -5,13 +5,15 @@ import { Config } from "../utils/config";
 import { consolePassthrough } from "../utils/console-passthrough.utils";
 import { createRequestManager } from "../utils/request-manager";
 
+import { PDFDocument } from "pdf-lib";
+
 @Injectable()
 export class ReportService {
   private readonly logger = new Logger(ReportService.name);
 
   async generatePdfFromUrls(
     webshotConfig: PdfReportWebshotConfig
-  ): Promise<Buffer> {
+  ): Promise<Uint8Array> {
     const { pagePath, geometry, generatedTextContent } = webshotConfig;
     const appBaseUrl = Config.getString("app.baseUrl").replace(/\/+$/, "");
     const targetUrl = `${appBaseUrl}${pagePath}`;
@@ -144,13 +146,14 @@ export class ReportService {
       await page.waitForTimeout(
         Config.getNumber("browser.waitMsBeforeTakingSnapshot")
       );
-      await page.emulateMedia({ media: "screen" });
-
-      const bleed = 3;
+      await page.emulateMedia({ media: "print" });
 
       // Generate PDF from screenshots
       const pdfBuffer = await page.pdf({
-        format: "A4",
+        width: `210mm`,
+        height: `297mm`,
+        scale: 1,
+        // Use same scale factor as device to avoid pixelization
         landscape: Config.getString("pdf.pageOrientation") === "landscape",
         margin: {
           top: Config.getString("pdf.pageMargins.top"),
@@ -160,6 +163,7 @@ export class ReportService {
         },
         printBackground: true,
       });
+
       this.logger.log("PDF generation completed successfully");
 
       return pdfBuffer;

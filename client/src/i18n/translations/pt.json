@@ -271,7 +271,7 @@
   "content-title": "Consentimento de cookies",
   "consent-message": "AmazoniaForever360+ usa cookies que coletam dados pessoais para medir a audiência e analisar as necessidades de nossos usuários, com o objetivo de melhorar a plataforma. \n\n Se você aceitar o uso de cookies, os dados serão compartilhados com a [Fullstory](https://www.fullstory.com/). Se você rejeitar, nenhum cookie será definido e nenhuma coleta de dados ocorrerá. \n\n Saiba mais em nossa [Política de Privacidade](https://www.iadb.org/pt-br/home/termos-e-condicoes/aviso-de-privacidade).",
   "help": "Ajuda",
-  "pdf-report-cover-title": "Relatório sobre {location}",
+  "pdf-report-cover-title": "Relatório",
   "pdf-report-cover-subtitle": "Este relatório inclui um contexto geográfico{topics}",
   "pdf-report-cover-date": "{date} | Versão em português"
 }

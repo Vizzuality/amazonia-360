@@ -8,17 +8,17 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { Topic } from "@/types/topic";
 
+import { useSyncLocation } from "@/app/store";
+
 interface DocumentCoverPdfSectionProps {
-  title?: string;
   selectedTopics?: Topic[];
 }
 
-export default function DocumentCoverPdfSection({
-  selectedTopics,
-  title,
-}: DocumentCoverPdfSectionProps) {
+export default function DocumentCoverPdfSection({ selectedTopics }: DocumentCoverPdfSectionProps) {
   const locale = useLocale();
   const t = useTranslations();
+
+  const [location] = useSyncLocation();
 
   const dateString = useMemo(() => {
     const now = new Date();
@@ -51,11 +51,13 @@ export default function DocumentCoverPdfSection({
     <div className="relative w-full grow">
       <div className="absolute bottom-[60px] z-10 flex w-2/3 flex-col gap-8 bg-blue-700 px-14 py-10">
         <h1 className="text-6xl text-white">
-          {t("pdf-report-cover-title", { location: title || "Selected Area" })}
+          {location?.custom_title || t("pdf-report-cover-title")}
         </h1>
+
         <p className="font-normal text-white">
           {t("pdf-report-cover-subtitle", { topics: formattedTopicsNames })}
         </p>
+
         <p className="font-normal text-white">
           {t("pdf-report-cover-date", { date: dateString, language: "English" })}
         </p>

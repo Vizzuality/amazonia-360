@@ -6,7 +6,7 @@ import { useLocale } from "next-intl";
 
 import { useGetTopics } from "@/lib/topics";
 
-import { useSyncLocation, useSyncTopics } from "@/app/store";
+import { useSyncTopics } from "@/app/store";
 
 import PdfContainer from "@/containers/webshot/pdf-report/container";
 import PdfCover from "@/containers/webshot/pdf-report/cover";
@@ -16,7 +16,6 @@ import PdfTopicSection from "@/containers/webshot/pdf-report/topics/section";
 
 export default function WebshotReport() {
   const locale = useLocale();
-  const [location] = useSyncLocation();
 
   const [topics] = useSyncTopics();
   const { data: allTopics } = useGetTopics(locale);
@@ -29,7 +28,7 @@ export default function WebshotReport() {
   return (
     <main className="relative flex w-full flex-col border border-blue-500">
       <PdfContainer index={0}>
-        <PdfCover title={location?.custom_title} selectedTopics={selectedTopics} />
+        <PdfCover selectedTopics={selectedTopics} />
       </PdfContainer>
 
       <PdfContainer>
