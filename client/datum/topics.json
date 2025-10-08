@@ -17,9 +17,9 @@
     "name_es": "Contexto geográfico",
     "name_pt": "Contexto geográfico",
     "image": "/images/topics/territory.webp",
-    "description_en": "Capas Overview sistema para el uso interno de la app",
-    "description_es": "Vista general de capas – sistema para uso interno de la app",
-    "description_pt": "Visão geral das camadas – sistema para uso interno do app",
+    "description_en": "Explore physical geography, land cover dynamics and territorial characteristics in your region",
+    "description_es": "Explore la geografía física, la dinámica de la cobertura del suelo y las características territoriales de su región",
+    "description_pt": "Explore a geografia física, a dinâmica da cobertura do solo e as características territoriais da sua região",
     "default_visualization": [
       {
         "id": 9,
@@ -62,9 +62,9 @@
     "name_es": "Naturaleza",
     "name_pt": "Natureza",
     "image": "/images/topics/nature.webp",
-    "description_en": "Get data on natural environment, ecosystems, biodiversity and protected areas in your area",
-    "description_es": "Obtén datos sobre el entorno natural, los ecosistemas, la biodiversidad y las áreas protegidas en tu zona",
-    "description_pt": "Obtenha dados sobre o meio ambiente, ecossistemas, biodiversidade e áreas protegidas na sua região",
+    "description_en": "Get data on natural environment, climate patterns, forest dynamics, ecosystems and biodiversity in your area",
+    "description_es": "Obtenga datos sobre el medio ambiente natural, los patrones climáticos, la dinámica forestal, los ecosistemas y la biodiversidad de su zona",
+    "description_pt": "Obtenha dados sobre o ambiente natural, os padrões climáticos, a dinâmica florestal, os ecossistemas e a biodiversidade da sua área",
     "default_visualization": [
       {
         "id": 17,
@@ -131,9 +131,9 @@
     "name_es": "Personas",
     "name_pt": "Pessoas",
     "image": "/images/topics/people.webp",
-    "description_en": "Access demographic data and social indicators for your area of interest",
-    "description_es": "Accede a datos demográficos e indicadores sociales de tu área de interés",
-    "description_pt": "Acesse dados demográficos e indicadores sociais da sua área de interesse",
+    "description_en": "Access demographic data, social development indicators, traditional communities and cultural heritage for your area of interest",
+    "description_es": "Acceda a datos demográficos, indicadores de desarrollo social, comunidades tradicionales y patrimonio cultural de su zona de interés",
+    "description_pt": "Acesse dados demográficos, indicadores de desenvolvimento social, comunidades tradicionais e patrimônio cultural da sua área de interesse",
     "default_visualization": [
       {
         "id": 35,
@@ -156,13 +156,13 @@
   {
     "id": 4,
     "Numerotation": "4",
-    "name_en": "Productive Activities",
-    "name_es": "Actividades productivas",
-    "name_pt": "Atividades produtivas",
+    "name_en": "Economic activities",
+    "name_es": "Actividades económicas",
+    "name_pt": "Atividades econômicas",
     "image": "/images/topics/productive.webp",
-    "description_en": "Get information on economic sectors and production systems",
-    "description_es": "Obtén información sobre sectores económicos y sistemas de producción",
-    "description_pt": "Obtenha informações sobre os setores econômicos e sistemas de produção",
+    "description_en": "Understand economic sectors, extractive industries, agriculture and bioeconomy production systems in your region",
+    "description_es": "Comprenda los sectores económicos, las industrias extractivas, la agricultura y los sistemas de producción bioeconómica de su región",
+    "description_pt": "Entenda os setores econômicos, as indústrias extrativas, a agricultura e os sistemas de produção da bioeconomia da sua região",
     "default_visualization": [
       {
         "id": 41,
@@ -217,13 +217,13 @@
   {
     "id": 5,
     "Numerotation": "5",
-    "name_en": " Infrastructure",
+    "name_en": "Infrastructure",
     "name_es": "Infraestructura",
     "name_pt": "Infraestrutura",
     "image": "/images/topics/infrastructure.webp",
-    "description_en": "Explore urban development, connectivity and transportation",
-    "description_es": "Explora el desarrollo urbano, la conectividad y el transporte",
-    "description_pt": "Explore o desenvolvimento urbano, conectividade e transporte",
+    "description_en": "Explore transportation networks, utilities, digital connectivity and urban development in your area",
+    "description_es": "Explore las redes de transporte, los servicios públicos, la conectividad digital y el desarrollo urbano de su zona",
+    "description_pt": "Explore redes de transporte, serviços públicos, conectividade digital e desenvolvimento urbano em sua área",
     "default_visualization": [
       {
         "id": 52,
@@ -274,9 +274,9 @@
     "name_es": "Riesgos y vulnerabilidades",
     "name_pt": "Riscos e vulnerabilidades",
     "image": "/images/topics/risks-and-vulnerabilities.webp",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
+    "description_en": "Understand environmental risks, citizen security threats and governance challenges in your region",
+    "description_es": "Comprenda los riesgos ambientales, las amenazas a la seguridad ciudadana y los desafios de gobernabilidad de su región",
+    "description_pt": "Entenda os riscos ambientais, as ameaças à segurança dos cidadãos e os desafios de governança em sua região",
     "default_visualization": [
       {
         "id": 63,
@@ -319,9 +319,9 @@
     "name_es": "Productos de conocimiento",
     "name_pt": "Produtos de conhecimento",
     "image": "/images/topics/knowledge-products.webp",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
+    "description_en": "Access research outputs, technical studies and institutional knowledge for your area of interest",
+    "description_es": "Acceda a los resultados de investigaciones, estudios técnicos y conocimientos institucionales de su área de interés",
+    "description_pt": "Acesse resultados de pesquisas, estudos técnicos e conhecimento institucional para sua área de interesse",
     "default_visualization": []
   },
   {
@@ -331,9 +331,9 @@
     "name_es": "Operaciones del BID",
     "name_pt": "Operações do BID",
     "image": "/images/topics/idb-operations.webp",
-    "description_en": "",
-    "description_es": "",
-    "description_pt": "",
+    "description_en": "Explore IDB projects, development investments and sectoral interventions in your area of interest",
+    "description_es": "Explore los proyectos, las inversiones en desarrollo y las intervenciones sectoriales del BID en su área de interés",
+    "description_pt": "Explore projetos do BID, investimentos em desenvolvimento e intervenções setoriais em sua área de interesse",
     "default_visualization": [
       {
         "type": "map",
