@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { useLocale } from "next-intl";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
@@ -12,19 +14,21 @@ import {
   ResourceImageryTile,
 } from "@/types/indicator";
 
-import { SupportedLocales } from "@/app/types";
-
 import { MapIndicators } from "../../../indicators/map";
 
 import { DataRow } from "./components";
 
-export default function GeographicContextPdfSection() {
+export default function PfdGeographicContext() {
   const locale = useLocale();
-  const localeString = locale as SupportedLocales;
 
   const { data } = useGetOverviewTopics({ locale });
 
-  const indicators = data?.[0].default_visualization.filter(
+  const DATA = useMemo(() => {
+    if (!data) return null;
+    return data.find((topic) => topic.id === 0);
+  }, [data]);
+
+  const indicators = DATA?.default_visualization.filter(
     (indicator) => indicator.type === "numeric",
   );
 
@@ -34,9 +38,9 @@ export default function GeographicContextPdfSection() {
   if (!data) return null;
 
   return (
-    <div className="relative flex h-[calc(9.335in-64px)]">
+    <div className="relative flex h-full">
       <div className="flex w-[50%] flex-col justify-center gap-8 bg-blue-50 px-14">
-        <h1 className="text-2xl text-primary">{data[0][`name_${localeString}`]}</h1>
+        <h1 className="text-2xl text-primary">{DATA?.name}</h1>
         {/* TODO: Find a way to get this without doing the same requests all over again} */}
         {/* <p className="font-medium">
           The selected area intersects 1 state, 4 municipalities and 5 capital cities
@@ -46,7 +50,7 @@ export default function GeographicContextPdfSection() {
             indicators?.map((indicator, index) => (
               <DataRow
                 key={`${indicator.id}-${index}`}
-                locale={localeString}
+                locale={locale}
                 indicatorId={indicator.id}
               />
             ))}

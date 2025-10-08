@@ -1,26 +1,21 @@
-import { ReactNode } from "react";
-
-interface TopicCoverProps {
+interface PdfTopicCoverProps {
   backgroundImage?: string;
   title: string;
   description?: string;
-  header?: ReactNode;
 }
 
-export default function TopicCover({
+export default function PdfTopicCover({
   backgroundImage = "/images/topics/nature.webp",
   title,
   description,
-  header,
-}: TopicCoverProps) {
+}: PdfTopicCoverProps) {
   return (
-    <div className="h-[9.335in] w-full">
+    <div className="w-full grow overflow-hidden">
       <div
         className="h-[60%] bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
-        <div className="flex h-full flex-col justify-between bg-gradient-to-t from-black to-transparent">
-          {header}
+        <div className="flex h-full flex-col justify-between bg-gradient-to-t from-black to-transparent pt-24">
           <div className="gap-2 px-14 pb-20 text-white">
             <h1 className="text-6xl">{title}</h1>
             {description && <p className="ml-2">{description}</p>}

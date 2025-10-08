@@ -1,5 +1,22 @@
 import { ReactNode } from "react";
 
-export const WebshotReportContainer = ({ children }: { children: ReactNode }) => {
-  return <div className="flex h-[9.335in] w-full flex-col overflow-hidden">{children}</div>;
+import { cn } from "@/lib/utils";
+
+export const WebshotReportContainer = ({
+  children,
+  cover,
+}: {
+  children: ReactNode;
+  cover?: boolean;
+}) => {
+  return (
+    <div
+      className={cn({
+        "relative flex h-[210mm] w-full break-after-page flex-col overflow-hidden pt-16": true,
+        "pt-0": cover,
+      })}
+    >
+      {children}
+    </div>
+  );
 };

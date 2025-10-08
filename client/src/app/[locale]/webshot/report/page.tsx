@@ -8,20 +8,18 @@ import { useDocumentPages } from "@/lib/hooks/use-document-pages";
 import { useGetTopics } from "@/lib/topics";
 
 import { useSyncLocation, useSyncTopics } from "@/app/store";
-import { SupportedLocales } from "@/app/types";
 
-import PdfHeader from "@/containers/header/pdf-header";
-import DocumentCoverPdfSection from "@/containers/webshot/pdf-report/document-cover-pdf-section";
-import GeographicContextPdfSection from "@/containers/webshot/pdf-report/geographic-context/geographic-context-pdf-section";
-import TopicCover from "@/containers/webshot/pdf-report/topic-cover";
-import WidgetTopicSection from "@/containers/webshot/pdf-report/widget-topic-section";
+import PdfCover from "@/containers/webshot/pdf-report/cover";
+import PfdGeographicContext from "@/containers/webshot/pdf-report/geographic-context";
+import PdfHeader from "@/containers/webshot/pdf-report/header";
+import PdfTopicCover from "@/containers/webshot/pdf-report/topics/cover";
+import PdfTopicSection from "@/containers/webshot/pdf-report/topics/section";
 import { WebshotReportContainer } from "@/containers/webshot/webshot-report-container";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function WebshotReport() {
   const locale = useLocale();
-  const localeString = locale as SupportedLocales;
   const [location] = useSyncLocation();
 
   const [topics] = useSyncTopics();
@@ -44,8 +42,9 @@ export default function WebshotReport() {
             getCurrentPage={getCurrentPage}
             documentHeight={documentHeight}
           />
-          <DocumentCoverPdfSection title={location?.custom_title} selectedTopics={selectedTopics} />
+          <PdfCover title={location?.custom_title} selectedTopics={selectedTopics} />
         </WebshotReportContainer>
+
         <WebshotReportContainer>
           <PdfHeader
             title={location?.custom_title}
@@ -53,7 +52,7 @@ export default function WebshotReport() {
             getCurrentPage={getCurrentPage}
             documentHeight={documentHeight}
           />
-          <GeographicContextPdfSection />
+          <PfdGeographicContext />
         </WebshotReportContainer>
 
         {selectedTopics?.map((topic) => {
@@ -61,32 +60,27 @@ export default function WebshotReport() {
           if (!topic) return null;
 
           return (
-            <>
-              <WebshotReportContainer>
-                <TopicCover
-                  title={topic[`name_${localeString}`]}
-                  description={topic.description}
-                  header={
-                    <PdfHeader
-                      title={location?.custom_title}
-                      transparent
-                      topic={topic[`name_${localeString}`]}
-                      totalPages={totalPages}
-                      getCurrentPage={getCurrentPage}
-                      documentHeight={documentHeight}
-                    />
-                  }
+            <Fragment key={topic.id}>
+              <WebshotReportContainer cover>
+                <PdfHeader
+                  title={location?.custom_title}
+                  transparent
+                  topic={topic.name}
+                  totalPages={totalPages}
+                  getCurrentPage={getCurrentPage}
+                  documentHeight={documentHeight}
                 />
+                <PdfTopicCover title={topic.name ?? ""} description={topic.description} />
               </WebshotReportContainer>
 
-              <WidgetTopicSection
+              <PdfTopicSection
                 totalPages={totalPages}
                 getCurrentPage={getCurrentPage}
                 documentHeight={documentHeight}
                 topic={topic}
                 topicView={topicView}
               />
-            </>
+            </Fragment>
           );
         })}
       </SidebarProvider>

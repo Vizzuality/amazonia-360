@@ -53,7 +53,7 @@ export default function PdfHeader({
     <header
       ref={headerRef}
       className={cn({
-        "box-border flex h-16 w-full shrink-0 flex-col justify-center": true,
+        "absolute left-0 top-0 box-border flex h-16 w-full shrink-0 flex-col justify-center": true,
         "border-transparent bg-transparent": transparent,
         "border-b border-blue-50 bg-white": !transparent,
       })}

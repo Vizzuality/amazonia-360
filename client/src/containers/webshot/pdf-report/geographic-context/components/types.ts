@@ -1,6 +1,6 @@
-import { SupportedLocales } from "@/app/types";
+import { Locale } from "next-intl";
 
 export interface DataRowProps {
   indicatorId: number;
-  locale: SupportedLocales;
+  locale: Locale;
 }

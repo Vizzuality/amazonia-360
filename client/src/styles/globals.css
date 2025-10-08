@@ -138,28 +138,6 @@
   }
 }
 
-@media print {
-  :root {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  .container {
-    @apply mx-0 w-screen p-0;
-    max-width: 2480px !important;
-    padding: 0 !important;
-  }
-
-  main {
-    @apply p-0;
-  }
-
-  @page {
-    size: A4 portrait !important;
-    margin: 5mm;
-  }
-}
-
 .react-grid-placeholder {
   border-radius: 16px;
   border: 1px dashed #000;
