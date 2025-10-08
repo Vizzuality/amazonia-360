@@ -34,7 +34,7 @@ export default function PdfTopicSection({
     map: { x: 2, y: 4, className: "col-span-2 row-span-4" },
     table: { x: 2, y: 4, className: "col-span-2 row-span-4" },
     chart: { x: 4, y: 2, className: "col-span-4 row-span-2" },
-    numeric: { x: 1, y: 2, className: "col-span-1 row-span-2" },
+    numeric: { x: 1, y: 2, className: "col-span-1 row-span-1" },
     ai: { x: 2, y: 4, className: "col-span-2 row-span-4" },
   };
 

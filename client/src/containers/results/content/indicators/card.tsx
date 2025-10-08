@@ -120,6 +120,7 @@ export default function ReportResultsIndicator({
               })}
               basemapId={basemapId}
               isWebshot={isWebshot}
+              isPdf={isPdf}
             />
           )}
 
@@ -144,13 +145,17 @@ export default function ReportResultsIndicator({
             )}
 
           {type === "numeric" && indicator.resource.type === "feature" && (
-            <NumericIndicators {...indicator} resource={indicator.resource} />
+            <NumericIndicators {...indicator} resource={indicator.resource} isPdf={isPdf} />
           )}
           {type === "numeric" && indicator.resource.type === "imagery" && (
-            <NumericImageryIndicators {...indicator} resource={indicator.resource} />
+            <NumericImageryIndicators {...indicator} resource={indicator.resource} isPdf={isPdf} />
           )}
           {type === "numeric" && indicator.resource.type === "imagery-tile" && (
-            <NumericImageryTileIndicators {...indicator} resource={indicator.resource} />
+            <NumericImageryTileIndicators
+              {...indicator}
+              resource={indicator.resource}
+              isPdf={isPdf}
+            />
           )}
 
           {/*

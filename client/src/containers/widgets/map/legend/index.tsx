@@ -18,11 +18,12 @@ export interface WidgetLegendProps {
 export const WidgetLegend = (
   indicator: Omit<Indicator, "resource"> & {
     resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
+    interactive?: boolean;
   },
 ) => {
   return (
     <div className="absolute bottom-4 left-4 z-10 w-full max-w-60 shadow-sm duration-700 animate-in fade-in-0">
-      <Legend defaultOpen>
+      <Legend defaultOpen interactive={indicator.interactive}>
         <div className="divide-y divide-muted">
           <LegendItem id={indicator.id} />
         </div>

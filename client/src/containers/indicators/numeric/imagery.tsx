@@ -4,6 +4,7 @@ import { useLocale } from "next-intl";
 
 import { useGetIndicatorsId, useQueryImageryId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
+import { cn } from "@/lib/utils";
 
 import { Indicator, ResourceImagery } from "@/types/indicator";
 
@@ -13,9 +14,15 @@ import { CardLoader, CardWidgetNumber } from "@/containers/card";
 
 export interface NumericImageryIndicatorsProps extends Indicator {
   resource: ResourceImagery;
+  isPdf?: boolean;
 }
 
-export const NumericImageryIndicators = ({ id, resource }: NumericImageryIndicatorsProps) => {
+export const NumericImageryIndicators = ({
+  id,
+  resource,
+  description_short,
+  isPdf,
+}: NumericImageryIndicatorsProps) => {
   const locale = useLocale();
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
@@ -58,7 +65,15 @@ export const NumericImageryIndicators = ({ id, resource }: NumericImageryIndicat
 
   return (
     <CardLoader query={[query]} className="h-12 grow">
-      <CardWidgetNumber value={VALUE ?? "n.d."} unit={!!VALUE ? indicator?.unit : undefined} />
+      <CardWidgetNumber
+        value={VALUE ?? "n.d."}
+        unit={!!VALUE ? indicator?.unit : undefined}
+        className={cn({ "grow-0": isPdf })}
+      />
+
+      {isPdf && !!description_short && (
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{description_short}</p>
+      )}
     </CardLoader>
   );
 };

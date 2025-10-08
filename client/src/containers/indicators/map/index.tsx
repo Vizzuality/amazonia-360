@@ -15,13 +15,14 @@ import WidgetMap from "@/containers/widgets/map";
 import { BASEMAPS } from "@/components/map/controls/basemap";
 
 export const MapIndicators = (
-  indicator: Omit<Indicator, "resource"> & {
+  props: Omit<Indicator, "resource"> & {
     resource: ResourceFeature | ResourceWebTile | ResourceImageryTile | ResourceImagery;
     basemapId?: (typeof BASEMAPS)[number]["id"];
     isWebshot?: boolean;
+    isPdf?: boolean;
   },
 ) => {
-  const { id, basemapId } = indicator;
+  const { id, basemapId } = props;
 
   const locale = useLocale();
 
@@ -29,5 +30,13 @@ export const MapIndicators = (
 
   if (!LAYER) return null;
 
-  return <WidgetMap indicator={indicator} basemapId={basemapId} layers={[LAYER]} />;
+  return (
+    <WidgetMap
+      indicator={props}
+      basemapId={basemapId}
+      layers={[LAYER]}
+      isWebshot={props.isWebshot}
+      isPdf={props.isPdf}
+    />
+  );
 };

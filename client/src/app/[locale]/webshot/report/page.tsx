@@ -35,7 +35,7 @@ export default function WebshotReport() {
   return (
     <main className="relative flex w-full flex-col border border-blue-500" ref={documentRef}>
       <SidebarProvider>
-        <WebshotReportContainer>
+        <WebshotReportContainer index={0}>
           <PdfHeader
             title={location?.custom_title}
             totalPages={totalPages}

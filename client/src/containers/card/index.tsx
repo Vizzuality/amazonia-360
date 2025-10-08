@@ -284,13 +284,15 @@ export function CardWidgetNumber({
   value,
   subvalue,
   unit,
+  className,
 }: {
   value: string | number | null;
   subvalue?: string | number | null;
   unit?: string;
+  className?: string;
 }) {
   return (
-    <div className="flex grow flex-col justify-center">
+    <div className={cn("flex grow flex-col justify-center", className)}>
       <div className="flex items-end space-x-2">
         <span className="text-5xl font-bold text-blue-500">
           {typeof value === "number" ? formatNumber(value) : value}

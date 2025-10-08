@@ -41,6 +41,7 @@ interface WidgetMapProps extends Omit<__esri.MapViewProperties, "map"> {
   basemapId?: BasemapIds;
   layers: LayerProps[];
   isWebshot?: boolean;
+  isPdf?: boolean;
 }
 
 export default function WidgetMap({
@@ -48,6 +49,7 @@ export default function WidgetMap({
   basemapId = FALLBACK_WIDGET_DEFAULT_BASEMAP_ID,
   layers,
   isWebshot = false,
+  isPdf = false,
   ...viewProps
 }: WidgetMapProps) {
   const [location] = useSyncLocation();
@@ -134,10 +136,11 @@ export default function WidgetMap({
             {...(indicator as Omit<Indicator, "resource"> & {
               resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
             })}
+            interactive={!isWebshot && !isPdf}
           />
         )}
 
-        {!isWebshot && (
+        {!isWebshot && !isPdf && (
           <Controls>
             <FullscreenControl />
             <ZoomControl />

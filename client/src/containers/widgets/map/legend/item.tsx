@@ -17,7 +17,7 @@ import InfoControl from "@/components/map/legend/controls/info";
 import { FeatureLegend } from "@/components/map/legend/types/feature";
 import { ImageryLegend } from "@/components/map/legend/types/imagery";
 
-export const LegendItem = ({ id }: { id: Indicator["id"] }) => {
+export const LegendItem = ({ id, interactive }: { id: Indicator["id"]; interactive?: boolean }) => {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
 
@@ -56,15 +56,17 @@ export const LegendItem = ({ id }: { id: Indicator["id"] }) => {
       <header className="flex justify-between gap-2">
         <h3 className="text-xs font-semibold text-foreground">{name}</h3>
 
-        <ul className="flex -translate-y-1 items-center gap-1">
-          <li>
-            <InfoControl {...indicator} />
-          </li>
+        {interactive && (
+          <ul className="flex -translate-y-1 items-center gap-1">
+            <li>
+              <InfoControl {...indicator} />
+            </li>
 
-          <li>
-            <OpacityControl indicator={indicator} />
-          </li>
-        </ul>
+            <li>
+              <OpacityControl indicator={indicator} />
+            </li>
+          </ul>
+        )}
       </header>
 
       {LEGEND}
