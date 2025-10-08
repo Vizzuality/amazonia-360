@@ -1,18 +1,21 @@
 "use client";
 
-import { useSetAtom } from "jotai";
+import { useSearchParams } from "next/navigation";
+
 import { useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
 
-import { gridPanelAtom, useSyncGridDatasets } from "@/app/store";
+import { useSyncGridDatasets } from "@/app/store";
 
 import GridTable from "@/containers/report/grid/table";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+import { Link } from "@/i18n/navigation";
+
 export default function SidebarGridTableContent() {
   const t = useTranslations();
-  const setGridPanel = useSetAtom(gridPanelAtom);
+  const searchParams = useSearchParams();
 
   const [gridDatasets] = useSyncGridDatasets();
 
@@ -22,13 +25,13 @@ export default function SidebarGridTableContent() {
         <div className="flex items-start justify-between">
           <header className="flex items-start gap-2">
             <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
-              <button
-                onClick={() => setGridPanel("filters")}
+              <Link
+                href={`/report${searchParams ? `?${searchParams.toString()}` : ""}`}
                 className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
               >
                 <LuArrowLeft className="h-4 w-4" />
-              </button>
-              {t("grid-sidebar-ranking-tab")}
+              </Link>
+              {t("grid-sidebar-grid-filters-title")}
             </h1>
           </header>
         </div>
