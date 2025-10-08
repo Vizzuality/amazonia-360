@@ -150,8 +150,8 @@ export class ReportService {
 
       // Generate PDF from screenshots
       const pdfBuffer = await page.pdf({
-        width: `210mm`,
-        height: `297mm`,
+        width: `792px`,
+        height: `1120px`,
         scale: 1,
         // Use same scale factor as device to avoid pixelization
         landscape: Config.getString("pdf.pageOrientation") === "landscape",
