@@ -81,7 +81,7 @@
   "grid-sidebar-report-location-topics": "temas",
   "grid-sidebar-grid-tab": "Filtros",
   "grid-sidebar-ranking-tab": "Clasificación",
-  "grid-sidebar-grid-filters-title": "Filtros de cuadrícula",
+  "grid-sidebar-grid-filters-title": "Grid",
   "grid-sidebar-grid-filters-description": "Añade indicadores para filtrar las celdas de la cuadrícula y resaltar las áreas que cumplen criterios específicos. Puede seleccionar un máximo de 4 indicadores.",
   "grid-sidebar-grid-filters-checkbox-selected-indicators": "Ver sólo los indicadores seleccionados",
   "grid-sidebar-grid-filters-button-view-cells-ranking": "Ver clasificación de celdas",

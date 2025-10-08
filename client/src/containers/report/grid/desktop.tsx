@@ -2,7 +2,8 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { useAtom } from "jotai";
-import { useTranslations } from "next-intl";
+import { LucideHelpCircle } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 
 import { gridPanelAtom } from "@/app/store";
 
@@ -11,7 +12,14 @@ import SidebarGridTable from "@/containers/report/grid/table-content";
 
 import { Button } from "@/components/ui/button";
 
+const HELP_LINKS = {
+  en: "https://rise.articulate.com/share/Nhx1DUq5l0gCFdZJcjdjrXTOkWeaHitu#/?locale=en-us",
+  es: "https://rise.articulate.com/share/Nhx1DUq5l0gCFdZJcjdjrXTOkWeaHitu#/",
+  pt: "https://rise.articulate.com/share/Nhx1DUq5l0gCFdZJcjdjrXTOkWeaHitu#/?locale=pt-br",
+};
+
 export default function ReportLocationDesktop() {
+  const locale = useLocale();
   const t = useTranslations();
   const [gridPanel, setGridPanel] = useAtom(gridPanelAtom);
 
@@ -27,18 +35,29 @@ export default function ReportLocationDesktop() {
                   onValueChange={(value) => setGridPanel(value as "filters" | "table")}
                   className="relative flex grow flex-col overflow-hidden"
                 >
-                  <TabsList className="absolute right-6 top-6 z-10 space-x-0.5 rounded-lg border border-border bg-secondary p-0.5">
-                    <TabsTrigger value="filters" asChild>
-                      <Button size="sm" variant={gridPanel === "filters" ? "default" : "secondary"}>
-                        {t("grid-sidebar-grid-tab")}
+                  <div className="absolute right-6 top-6 z-10 flex items-center space-x-1">
+                    <TabsList className="z-10 space-x-0.5 rounded-lg border border-border bg-secondary p-0.5">
+                      <TabsTrigger value="filters" asChild>
+                        <Button
+                          size="sm"
+                          variant={gridPanel === "filters" ? "default" : "secondary"}
+                        >
+                          {t("grid-sidebar-grid-tab")}
+                        </Button>
+                      </TabsTrigger>
+                      <TabsTrigger value="table" asChild>
+                        <Button size="sm" variant={gridPanel === "table" ? "default" : "secondary"}>
+                          {t("grid-sidebar-ranking-tab")}
+                        </Button>
+                      </TabsTrigger>
+                    </TabsList>
+
+                    <a href={HELP_LINKS[locale]} target="_blank" rel="noreferrer noopener">
+                      <Button size="icon" variant="ghost" type="button" className="gap-2">
+                        <LucideHelpCircle className="h-4 w-4 text-secondary-foreground" />
                       </Button>
-                    </TabsTrigger>
-                    <TabsTrigger value="table" asChild>
-                      <Button size="sm" variant={gridPanel === "table" ? "default" : "secondary"}>
-                        {t("grid-sidebar-ranking-tab")}
-                      </Button>
-                    </TabsTrigger>
-                  </TabsList>
+                    </a>
+                  </div>
 
                   <TabsContent
                     value="filters"

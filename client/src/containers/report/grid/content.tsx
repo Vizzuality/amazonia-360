@@ -71,8 +71,8 @@ export default function SidebarGridContent() {
     <div className="relative flex h-full grow flex-col space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white py-6 backdrop-blur-xl xl:space-y-4">
       <div className="space-y-2 px-6">
         <div className="flex items-center justify-between">
-          <header className="flex items-start gap-2">
-            <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
+          <header className="flex w-full items-start gap-2">
+            <h1 className="flex w-full items-center gap-2 pr-56 text-lg font-bold leading-tight text-primary">
               <Link
                 href={`/report${searchParams ? `?${searchParams.toString()}` : ""}`}
                 className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"

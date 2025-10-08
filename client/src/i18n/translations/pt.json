@@ -81,7 +81,7 @@
   "grid-sidebar-report-location-topics": "temas",
   "grid-sidebar-grid-tab": "Filtros",
   "grid-sidebar-ranking-tab": "Classificação",
-  "grid-sidebar-grid-filters-title": "Filtros de grade",
+  "grid-sidebar-grid-filters-title": "Grid",
   "grid-sidebar-grid-filters-description": "Adicione indicadores para filtrar células do Grid e realçar áreas que satisfaçam critérios específicos. É possível selecionar um máximo de 4 indicadores.",
   "grid-sidebar-grid-filters-checkbox-selected-indicators": "Ver apenas os indicadores selecionados",
   "grid-sidebar-grid-filters-button-view-cells-ranking": "Ver classificação das células",
