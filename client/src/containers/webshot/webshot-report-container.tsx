@@ -12,7 +12,8 @@ export const WebshotReportContainer = ({
   return (
     <div
       className={cn({
-        "relative flex h-[237mm] w-full break-after-page flex-col overflow-hidden pt-16": true,
+        "relative flex h-[237mm] w-full break-after-page flex-col overflow-hidden bg-blue-50 pt-16":
+          true,
         "pt-0": cover,
       })}
     >

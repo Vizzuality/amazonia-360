@@ -1,28 +1,20 @@
-interface PdfTopicCoverProps {
-  backgroundImage?: string;
-  title: string;
-  description?: string;
-}
+import { Topic } from "@/types/topic";
 
-export default function PdfTopicCover({
-  backgroundImage = "/images/topics/nature.webp",
-  title,
-  description,
-}: PdfTopicCoverProps) {
+export default function PdfTopicCover({ name, description, image }: Topic) {
   return (
     <div className="w-full grow overflow-hidden">
       <div
-        className="h-[60%] bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
+        className="h-full bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${image})` }}
       >
-        <div className="flex h-full flex-col justify-between bg-gradient-to-t from-black to-transparent pt-24">
-          <div className="gap-2 px-14 pb-20 text-white">
-            <h1 className="text-6xl">{title}</h1>
+        <div className="flex h-full flex-col justify-end bg-gradient-to-t from-black to-transparent">
+          <div className="flex flex-col gap-2 px-14 pb-20 text-white">
+            <h1 className="text-5xl">{name}</h1>
             {description && <p className="ml-2">{description}</p>}
           </div>
         </div>
       </div>
-      <div className="flex h-[40%] flex-col justify-between gap-8 bg-blue-50 px-14 py-8 pb-3 text-xs font-thin leading-loose">
+      {/* <div className="flex h-[40%] flex-col justify-between gap-8 bg-blue-50 px-14 py-8 pb-3 text-xs font-thin leading-loose">
         <div className="flex flex-row justify-between gap-6">
           <p>
             The selected area in the Amazonia region, specifically within the state of Amapá,
@@ -44,7 +36,7 @@ export default function PdfTopicCover({
           </p>
         </div>
         <p className="">*This summary was generated with AI.</p>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -70,6 +70,7 @@ export default function PdfTopicSection({
                   type={indicator.type}
                   id={indicator.id}
                   editable={false}
+                  isPdf
                 />
               </div>
             ))}
@@ -93,6 +94,7 @@ export default function PdfTopicSection({
                   type={indicator.type}
                   id={indicator.id}
                   editable={false}
+                  isPdf
                 />
               </div>
             ))}
@@ -116,6 +118,7 @@ export default function PdfTopicSection({
                   type={indicator.type}
                   id={indicator.id}
                   editable={false}
+                  isPdf
                 />
               </div>
             ))}
@@ -139,6 +142,7 @@ export default function PdfTopicSection({
                   type={indicator.type}
                   id={indicator.id}
                   editable={false}
+                  isPdf
                 />
               </div>
             ))}

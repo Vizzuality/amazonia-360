@@ -51,6 +51,7 @@ export default function ReportResultsIndicator({
   editable,
   onEdit,
   isWebshot = false,
+  isPdf = false,
 }: {
   id: Indicator["id"];
   type: VisualizationTypes;
@@ -58,6 +59,7 @@ export default function ReportResultsIndicator({
   editable: boolean;
   onEdit?: (e: MouseEvent<HTMLElement>) => void;
   isWebshot?: boolean;
+  isPdf?: boolean;
 }) {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
@@ -94,7 +96,7 @@ export default function ReportResultsIndicator({
         <CardHeader className="h-auto px-4 pb-1.5 pt-2">
           <CardTitle>{indicator?.name}</CardTitle>
           <CardControls>
-            {!isWebshot && <CardInfo ids={[indicator.id]} />}
+            {!isWebshot && !isPdf && <CardInfo ids={[indicator.id]} />}
 
             {editable && (
               <CardPopover

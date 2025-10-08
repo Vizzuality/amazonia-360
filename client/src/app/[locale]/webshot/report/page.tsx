@@ -70,7 +70,7 @@ export default function WebshotReport() {
                   getCurrentPage={getCurrentPage}
                   documentHeight={documentHeight}
                 />
-                <PdfTopicCover title={topic.name ?? ""} description={topic.description} />
+                <PdfTopicCover {...topic} />
               </WebshotReportContainer>
 
               <PdfTopicSection
