@@ -10,7 +10,7 @@ export class ReportService {
   private readonly logger = new Logger(ReportService.name);
 
   async generatePdfFromUrls(
-    webshotConfig: PdfReportWebshotConfig,
+    webshotConfig: PdfReportWebshotConfig
   ): Promise<Uint8Array> {
     const { pagePath, geometry, generatedTextContent } = webshotConfig;
     const appBaseUrl = Config.getString("app.baseUrl").replace(/\/+$/, "");
@@ -29,13 +29,13 @@ export class ReportService {
      * on intended use cases to come later.
      */
     const waitMsBeforeTakingSnapshot: number = Config.getNumber(
-      "browser.waitMsBeforeTakingSnapshot",
+      "browser.waitMsBeforeTakingSnapshot"
     );
     const baselineRequestManagerWaitMs = Config.getNumber(
-      "browser.baselineRequestManagerWaitMs",
+      "browser.baselineRequestManagerWaitMs"
     );
     const baselineRequestManagerDebounceIntervalMs = Config.getNumber(
-      "browser.baselineRequestManagerDebounceIntervalMs",
+      "browser.baselineRequestManagerDebounceIntervalMs"
     );
 
     let browser: Browser | null = null;
@@ -72,7 +72,7 @@ export class ReportService {
         page,
         this.logger,
         baselineRequestManagerWaitMs,
-        baselineRequestManagerDebounceIntervalMs,
+        baselineRequestManagerDebounceIntervalMs
       );
       requestManager.setupEvents();
 
@@ -91,7 +91,7 @@ export class ReportService {
       // Set geometry if provided
       if (geometry) {
         this.logger.log(
-          "A GeoJSON geometry was provided: passing it through to the page",
+          "A GeoJSON geometry was provided: passing it through to the page"
         );
         await page.evaluate((geom) => {
           (
@@ -106,13 +106,13 @@ export class ReportService {
       // Set generatedTextContent if provided
       if (generatedTextContent) {
         this.logger.log(
-          "Text content was provided: passing it through to the page",
+          "Text content was provided: passing it through to the page"
         );
         await page.evaluate((content) => {
           (
             window as unknown as {
               setGeneratedTextContent: (
-                content: Record<string, unknown>,
+                content: Record<string, unknown>
               ) => void;
             }
           ).setGeneratedTextContent(content);

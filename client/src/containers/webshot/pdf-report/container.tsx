@@ -16,14 +16,14 @@ export const PdfContainer = ({
   return (
     <div
       className={cn({
-        "relative flex h-[237mm] w-full flex-col overflow-hidden bg-blue-50 pt-16": true,
+        "relative flex h-[210mm] w-full flex-col overflow-hidden bg-blue-50": true,
         "pt-0": cover,
         "break-before-page": index !== 0,
       })}
     >
       <PdfHeader transparent={cover} />
 
-      {children}
+      <div className="flex h-full flex-col pt-16">{children}</div>
     </div>
   );
 };
