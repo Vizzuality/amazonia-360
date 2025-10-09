@@ -11,6 +11,8 @@
   },
   "pdf": {
     "pageFormat": "A4",
+    "pageWidth": "792px",
+    "pageHeight": "1120px",
     "pageOrientation": "landscape",
     "pageMargins": {
       "top": "0",
@@ -20,7 +22,9 @@
     }
   },
   "browser": {
-    "waitMsBeforeTakingSnapshot": 1500,
+    "waitMsBeforeTakingSnapshot": 10000,
+    "baselineRequestManagerWaitMs": 36000,
+    "baselineRequestManagerDebounceIntervalMs": 10000,
     "args": [
       "--no-sandbox",
       "--disable-setuid-sandbox",
