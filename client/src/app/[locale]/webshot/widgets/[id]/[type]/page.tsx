@@ -3,7 +3,7 @@ import { VisualizationTypes } from "@/types/indicator";
 import { PageProps } from "@/app/types";
 
 import ReportResultsIndicator from "@/containers/results/content/indicators/card";
-import { WebshotWidgetContainer } from "@/containers/webshot/webshot-widget-container";
+import WidgetContainer from "@/containers/webshot/widgets/container";
 
 export default async function WebshotWidgets(
   props: PageProps<{ type: VisualizationTypes; id: string }>,
@@ -13,9 +13,9 @@ export default async function WebshotWidgets(
   return (
     <main className="">
       <div className="p-8">
-        <WebshotWidgetContainer type={type}>
+        <WidgetContainer type={type}>
           <ReportResultsIndicator type={type} id={parseInt(id)} editable={false} isWebshot />
-        </WebshotWidgetContainer>
+        </WidgetContainer>
       </div>
     </main>
   );

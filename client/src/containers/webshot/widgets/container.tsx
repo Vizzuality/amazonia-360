@@ -11,7 +11,7 @@ export interface WebshotContainerProps {
   children: ReactNode;
 }
 
-export const WebshotWidgetContainer = ({ children, type }: WebshotContainerProps) => {
+export const WidgetContainer = ({ children, type }: WebshotContainerProps) => {
   const rowHeight = 122;
   const cols = 4;
 
@@ -32,4 +32,4 @@ export const WebshotWidgetContainer = ({ children, type }: WebshotContainerProps
   );
 };
 
-export default WebshotWidgetContainer;
+export default WidgetContainer;
