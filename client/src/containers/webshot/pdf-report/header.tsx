@@ -1,10 +1,14 @@
 "use client";
 
+import { useMemo } from "react";
+
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
 import { useSyncLocation } from "@/app/store";
+
+import { useRegisterPage } from "@/containers/webshot/pdf-report/hooks";
 
 import { Badge } from "@/components/ui/badge";
 
@@ -18,27 +22,12 @@ interface PdfHeaderProps {
 }
 
 export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
-  // const [actualPageNumber, setActualPageNumber] = useState(1);
-
-  // // Update page number whenever document height changes or component mounts
-  // useEffect(() => {
-  //   const updatePageNumber = () => {
-  //     if (headerRef.current && getCurrentPage) {
-  //       const pageNumber = getCurrentPage(headerRef.current);
-  //       setActualPageNumber(pageNumber);
-  //     }
-  //   };
-
-  //   // Update immediately
-  //   updatePageNumber();
-
-  //   // Also update after a small delay to ensure DOM is fully updated
-  //   const timeoutId = setTimeout(updatePageNumber, 200);
-
-  //   return () => clearTimeout(timeoutId);
-  // }, [documentHeight, totalPages, getCurrentPage]);
-
   const [location] = useSyncLocation();
+
+  // Generate a stable ID for this instance
+  const id = useMemo(() => crypto.randomUUID(), []);
+
+  const { currentPage, totalPages } = useRegisterPage(id);
 
   return (
     <header
@@ -100,7 +89,7 @@ export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
           })}
         >
           <p>
-            {1} / {1}
+            {currentPage} / {totalPages}
           </p>
         </div>
       </div>
