@@ -10,7 +10,7 @@ export class ReportService {
   private readonly logger = new Logger(ReportService.name);
 
   async generatePdfFromUrls(
-    webshotConfig: PdfReportWebshotConfig
+    webshotConfig: PdfReportWebshotConfig,
   ): Promise<Uint8Array> {
     const { pagePath, geometry, generatedTextContent } = webshotConfig;
     const appBaseUrl = Config.getString("app.baseUrl").replace(/\/+$/, "");
@@ -28,8 +28,15 @@ export class ReportService {
      * with specific logic to multiply them or tweak them depending
      * on intended use cases to come later.
      */
-    const baselineRequestManagerWaitMs = 60_000;
-    const baselineRequestManagerDebounceIntervalMs = 20_000;
+    const waitMsBeforeTakingSnapshot: number = Config.getNumber(
+      "browser.waitMsBeforeTakingSnapshot",
+    );
+    const baselineRequestManagerWaitMs = Config.getNumber(
+      "browser.baselineRequestManagerWaitMs",
+    );
+    const baselineRequestManagerDebounceIntervalMs = Config.getNumber(
+      "browser.baselineRequestManagerDebounceIntervalMs",
+    );
 
     let browser: Browser | null = null;
     let page: Page | null = null;
@@ -98,20 +105,27 @@ export class ReportService {
         page,
         this.logger,
         baselineRequestManagerWaitMs,
-        baselineRequestManagerDebounceIntervalMs
+        baselineRequestManagerDebounceIntervalMs,
       );
       requestManager.setupEvents();
 
       // Wait for the load event
+      this.logger.log("Waiting for page to load");
       await page.goto(targetUrl, {
-        waitUntil: "networkidle",
-        timeout: 60_000,
+        waitUntil: "load",
+        timeout: 30_000,
       });
+      this.logger.log("Page was fully loaded");
 
+      // This delay tries to make sure the Javascript has loaded in order to
+      // pass geometry and/or generatedTextContent to the front-end
       await page.waitForTimeout(2_000);
 
       // Set geometry if provided
       if (geometry) {
+        this.logger.log(
+          "A GeoJSON geometry was provided: passing it through to the page",
+        );
         await page.evaluate((geom) => {
           (
             window as unknown as {
@@ -119,20 +133,30 @@ export class ReportService {
             }
           ).setGeometry(geom);
         }, geometry);
+        this.logger.log("Done passing geometry through to the page");
       }
 
       // Set generatedTextContent if provided
       if (generatedTextContent) {
+        this.logger.log(
+          "Text content was provided: passing it through to the page",
+        );
         await page.evaluate((content) => {
           (
             window as unknown as {
               setGeneratedTextContent: (
-                content: Record<string, unknown>
+                content: Record<string, unknown>,
               ) => void;
             }
           ).setGeneratedTextContent(content);
         }, generatedTextContent);
+        this.logger.log("Done passing text content through to the page");
       }
+
+      // Wait until the network is idle
+      this.logger.log("Waiting until network is idle");
+      await requestManager.isIdle();
+      this.logger.log("Network is idle: waiting for page to render");
 
       // The delay awaited here should be enough to allow the application to
       // fully render the page. Everything else being equal, this may depend on
@@ -141,15 +165,16 @@ export class ReportService {
       // default is necessary. However, proper handling of concurrent load may
       // only be possible by switching to using a simple queue system to process
       // requests sequentially or with a given maximum parallelism.
-      await page.waitForTimeout(
-        Config.getNumber("browser.waitMsBeforeTakingSnapshot")
-      );
+      this.logger.log(`Allowing time for the page to render...`);
+      await page.waitForTimeout(waitMsBeforeTakingSnapshot);
+      this.logger.log(`Waited ${waitMsBeforeTakingSnapshot}ms`);
+
       await page.emulateMedia({ media: "print" });
 
       // Generate PDF from screenshots
       const pdfBuffer = await page.pdf({
-        width: `792px`,
-        height: `1120px`,
+        width: Config.getString("pdf.pageWidth"),
+        height: Config.getString("pdf.pageHeight"),
         scale: 1,
         // Use same scale factor as device to avoid pixelization
         landscape: Config.getString("pdf.pageOrientation") === "landscape",
@@ -166,8 +191,6 @@ export class ReportService {
 
       return pdfBuffer;
     } catch (error: unknown) {
-      this.logger.error("Original error:", error);
-      this.logger.error("Modified error message:");
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       const errorStack = error instanceof Error ? error.stack : undefined;
