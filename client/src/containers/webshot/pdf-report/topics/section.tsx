@@ -1,3 +1,5 @@
+"use client";
+
 import { VisualizationTypes } from "@/types/indicator";
 
 import { TopicView } from "@/app/parsers";

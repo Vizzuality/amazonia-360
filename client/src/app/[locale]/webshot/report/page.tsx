@@ -1,6 +1,6 @@
 import PdfContainer from "@/containers/webshot/pdf-report/container";
 import PdfCover from "@/containers/webshot/pdf-report/cover";
-// import PfdGeographicContext from "@/containers/webshot/pdf-report/geographic-context";
+import PfdGeographicContext from "@/containers/webshot/pdf-report/geographic-context";
 import PdfTopics from "@/containers/webshot/pdf-report/topics";
 
 export default function WebshotReport() {
@@ -10,9 +10,9 @@ export default function WebshotReport() {
         <PdfCover />
       </PdfContainer>
 
-      {/* <PdfContainer>
+      <PdfContainer>
         <PfdGeographicContext />
-      </PdfContainer> */}
+      </PdfContainer>
 
       <PdfTopics />
     </main>
