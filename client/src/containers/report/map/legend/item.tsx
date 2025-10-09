@@ -19,6 +19,7 @@ import OpacityControl from "@/components/map/legend/controls/opacity";
 import RemoveControl from "@/components/map/legend/controls/remove";
 import { FeatureLegend } from "@/components/map/legend/types/feature";
 import { ImageryLegend } from "@/components/map/legend/types/imagery";
+import { Button } from "@/components/ui/button";
 
 export const LegendItem = ({ id }: { id: Indicator["id"] }) => {
   const locale = useLocale();
@@ -81,27 +82,29 @@ export const LegendItem = ({ id }: { id: Indicator["id"] }) => {
 
   return (
     <div className="space-y-1 p-4">
-      <header className="-ml-4 flex justify-between gap-2">
-        <div className="flex items-center gap-1 pl-2">
-          <div>
-            <button
+      <header className="flex justify-between gap-2 pl-1">
+        <div className="relative flex pl-2">
+          <div className="absolute right-full top-0 -mr-1.5">
+            <Button
+              variant="ghost"
               type="button"
               aria-label="Move layer up"
-              className="flex items-center justify-center"
+              className="flex h-6 w-6 items-center justify-center p-0"
               onClick={() => handleChangeOrder(id, 1)}
             >
-              <LuChevronUp className="h-3 w-3 text-foreground" />
-            </button>
-            <button
+              <LuChevronUp className="h-3 w-3" />
+            </Button>
+            <Button
+              variant="ghost"
               type="button"
               aria-label="Move layer down"
-              className="flex items-center justify-center"
+              className="flex h-6 w-6 items-center justify-center p-0"
               onClick={() => handleChangeOrder(id, -1)}
             >
-              <LuChevronDown className="h-3 w-3 text-foreground" />
-            </button>
+              <LuChevronDown className="h-3 w-3" />
+            </Button>
           </div>
-          <h3 className="text-xs font-semibold text-foreground">{name}</h3>
+          <h3 className="mt-1 text-xs font-semibold text-foreground">{name}</h3>
         </div>
 
         <ul className="flex items-center gap-1">
@@ -136,7 +139,7 @@ export const LegendItem = ({ id }: { id: Indicator["id"] }) => {
         </ul>
       </header>
 
-      <div className="pl-2">{LEGEND}</div>
+      <div className="pl-3">{LEGEND}</div>
     </div>
   );
 };
