@@ -5,8 +5,6 @@ import { Config } from "../utils/config";
 import { consolePassthrough } from "../utils/console-passthrough.utils";
 import { createRequestManager } from "../utils/request-manager";
 
-import { PDFDocument } from "pdf-lib";
-
 @Injectable()
 export class ReportService {
   private readonly logger = new Logger(ReportService.name);

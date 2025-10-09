@@ -6,17 +6,21 @@ import Image from "next/image";
 
 import { useLocale, useTranslations } from "next-intl";
 
-import { Topic } from "@/types/topic";
+import { useGetTopics } from "@/lib/topics";
 
-import { useSyncLocation } from "@/app/store";
+import { useSyncLocation, useSyncTopics } from "@/app/store";
 
-interface DocumentCoverPdfSectionProps {
-  selectedTopics?: Topic[];
-}
-
-export default function DocumentCoverPdfSection({ selectedTopics }: DocumentCoverPdfSectionProps) {
+export default function DocumentCoverPdfSection() {
   const locale = useLocale();
   const t = useTranslations();
+
+  const [topics] = useSyncTopics();
+  const { data: allTopics } = useGetTopics(locale);
+
+  const selectedTopics = useMemo(
+    () => allTopics?.filter((topic) => topics?.find((t) => t.id === topic.id)),
+    [allTopics, topics],
+  );
 
   const [location] = useSyncLocation();
 
