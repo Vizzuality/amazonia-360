@@ -5,16 +5,19 @@ import { Config } from "../utils/config";
 import { consolePassthrough } from "../utils/console-passthrough.utils";
 import { createRequestManager } from "../utils/request-manager";
 
+import { PDFDocument } from "pdf-lib";
+
 @Injectable()
 export class ReportService {
   private readonly logger = new Logger(ReportService.name);
 
   async generatePdfFromUrls(
-    webshotConfig: PdfReportWebshotConfig,
-  ): Promise<Buffer> {
+    webshotConfig: PdfReportWebshotConfig
+  ): Promise<Uint8Array> {
     const { pagePath, geometry, generatedTextContent } = webshotConfig;
     const appBaseUrl = Config.getString("app.baseUrl").replace(/\/+$/, "");
     const targetUrl = `${appBaseUrl}${pagePath}`;
+
     this.logger.log(`Starting PDF generation for ${targetUrl}`);
 
     /**
@@ -56,6 +59,39 @@ export class ReportService {
         deviceScaleFactor: 2,
       });
 
+      page.on("request", (request) => {
+        if (request.frame() === page!.mainFrame()) {
+          this.logger.log("Sent request for main frame:");
+          this.logger.log(
+            `>> ${request.method()} ${request.url()} | headers=${JSON.stringify(
+              request.headers()
+            )}`
+          );
+        }
+      });
+
+      page.on("response", async (response) => {
+        if (response.request().frame() === page!.mainFrame()) {
+          this.logger.log("Sent response for main frame:");
+          this.logger.log(
+            `<< ${response.status()} ${response.url()} | headers=${JSON.stringify(
+              response.headers()
+            )}`
+          );
+        }
+      });
+
+      page.on("requestfinished", (request) => {
+        if (request.url() === targetUrl) {
+          this.logger.log("Sent response for target:");
+          this.logger.log(
+            `Main navigation request headers: ${JSON.stringify(
+              request.headers()
+            )}`
+          );
+        }
+      });
+
       // Pass through browser console to our own service's console
       page.on("console", consolePassthrough);
 
@@ -64,18 +100,16 @@ export class ReportService {
         page,
         this.logger,
         baselineRequestManagerWaitMs,
-        baselineRequestManagerDebounceIntervalMs,
+        baselineRequestManagerDebounceIntervalMs
       );
       requestManager.setupEvents();
 
       // Wait for the load event
       await page.goto(targetUrl, {
-        waitUntil: "load",
-        timeout: 30_000,
+        waitUntil: "networkidle",
+        timeout: 60_000,
       });
 
-      // This delay tries to make sure the Javascript has loaded in order to
-      // pass geometry and/or generatedTextContent to the front-end
       await page.waitForTimeout(2_000);
 
       // Set geometry if provided
@@ -95,15 +129,12 @@ export class ReportService {
           (
             window as unknown as {
               setGeneratedTextContent: (
-                content: Record<string, unknown>,
+                content: Record<string, unknown>
               ) => void;
             }
           ).setGeneratedTextContent(content);
         }, generatedTextContent);
       }
-
-      // Wait until the network is idle
-      await requestManager.isIdle();
 
       // The delay awaited here should be enough to allow the application to
       // fully render the page. Everything else being equal, this may depend on
@@ -113,16 +144,16 @@ export class ReportService {
       // only be possible by switching to using a simple queue system to process
       // requests sequentially or with a given maximum parallelism.
       await page.waitForTimeout(
-        Config.getNumber("browser.waitMsBeforeTakingSnapshot"),
+        Config.getNumber("browser.waitMsBeforeTakingSnapshot")
       );
-
-      // Use the regular styles instead of print styles to generate the PDF
-      // See: https://playwright.dev/docs/api/class-page#page-pdf
-      await page.emulateMedia({ media: "screen" });
+      await page.emulateMedia({ media: "print" });
 
       // Generate PDF from screenshots
       const pdfBuffer = await page.pdf({
-        format: Config.getString("pdf.pageFormat"),
+        width: `792px`,
+        height: `1120px`,
+        scale: 1,
+        // Use same scale factor as device to avoid pixelization
         landscape: Config.getString("pdf.pageOrientation") === "landscape",
         margin: {
           top: Config.getString("pdf.pageMargins.top"),
@@ -132,6 +163,7 @@ export class ReportService {
         },
         printBackground: true,
       });
+
       this.logger.log("PDF generation completed successfully");
 
       return pdfBuffer;
@@ -141,7 +173,9 @@ export class ReportService {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       const errorStack = error instanceof Error ? error.stack : undefined;
-      const msg = `Failed to generate PDF for ${targetUrl}: ${errorMessage}${errorStack ? `\n${errorStack}` : ""}`;
+      const msg = `Failed to generate PDF for ${targetUrl}: ${errorMessage}${
+        errorStack ? `\n${errorStack}` : ""
+      }`;
       this.logger.error(msg);
       throw new Error(msg);
     } finally {

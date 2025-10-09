@@ -51,6 +51,7 @@ export default function ReportResultsIndicator({
   editable,
   onEdit,
   isWebshot = false,
+  isPdf = false,
 }: {
   id: Indicator["id"];
   type: VisualizationTypes;
@@ -58,6 +59,7 @@ export default function ReportResultsIndicator({
   editable: boolean;
   onEdit?: (e: MouseEvent<HTMLElement>) => void;
   isWebshot?: boolean;
+  isPdf?: boolean;
 }) {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
@@ -94,7 +96,7 @@ export default function ReportResultsIndicator({
         <CardHeader className="h-auto px-4 pb-1.5 pt-2">
           <CardTitle>{indicator?.name}</CardTitle>
           <CardControls>
-            {!isWebshot && <CardInfo ids={[indicator.id]} />}
+            {!isWebshot && !isPdf && <CardInfo ids={[indicator.id]} />}
 
             {editable && (
               <CardPopover
@@ -109,6 +111,7 @@ export default function ReportResultsIndicator({
         <CardContent
           className={cn({
             "px-4 pb-4": type !== "map",
+            "justify-between": type === "numeric" && isPdf,
           })}
         >
           {type === "map" && indicator.resource.type !== "h3" && (
@@ -117,6 +120,8 @@ export default function ReportResultsIndicator({
                 resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
               })}
               basemapId={basemapId}
+              isWebshot={isWebshot}
+              isPdf={isPdf}
             />
           )}
 
@@ -141,13 +146,17 @@ export default function ReportResultsIndicator({
             )}
 
           {type === "numeric" && indicator.resource.type === "feature" && (
-            <NumericIndicators {...indicator} resource={indicator.resource} />
+            <NumericIndicators {...indicator} resource={indicator.resource} isPdf={isPdf} />
           )}
           {type === "numeric" && indicator.resource.type === "imagery" && (
-            <NumericImageryIndicators {...indicator} resource={indicator.resource} />
+            <NumericImageryIndicators {...indicator} resource={indicator.resource} isPdf={isPdf} />
           )}
           {type === "numeric" && indicator.resource.type === "imagery-tile" && (
-            <NumericImageryTileIndicators {...indicator} resource={indicator.resource} />
+            <NumericImageryTileIndicators
+              {...indicator}
+              resource={indicator.resource}
+              isPdf={isPdf}
+            />
           )}
 
           {/*

@@ -10,8 +10,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 export default function Legend({
   children,
   defaultOpen,
+  interactive = true,
 }: PropsWithChildren<{
   defaultOpen?: boolean;
+  interactive?: boolean;
 }>) {
   const [open, setOpen] = useState(defaultOpen ?? false);
   const t = useTranslations();
@@ -22,7 +24,7 @@ export default function Legend({
       onOpenChange={setOpen}
       className="relative rounded-lg border border-blue-100 bg-white"
     >
-      {open && (
+      {open && interactive && (
         <CollapsibleTrigger asChild>
           <Button
             variant="default"
@@ -34,7 +36,7 @@ export default function Legend({
         </CollapsibleTrigger>
       )}
 
-      {!open && (
+      {!open && interactive && (
         <CollapsibleTrigger className="px-4 py-2" asChild>
           <Button variant="ghost" size="sm" className="flex w-full items-center justify-between">
             {t("legend")}

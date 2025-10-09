@@ -40,12 +40,16 @@ interface WidgetMapProps extends Omit<__esri.MapViewProperties, "map"> {
   indicator: Indicator;
   basemapId?: BasemapIds;
   layers: LayerProps[];
+  isWebshot?: boolean;
+  isPdf?: boolean;
 }
 
 export default function WidgetMap({
   indicator,
   basemapId = FALLBACK_WIDGET_DEFAULT_BASEMAP_ID,
   layers,
+  isWebshot = false,
+  isPdf = false,
   ...viewProps
 }: WidgetMapProps) {
   const [location] = useSyncLocation();
@@ -132,26 +136,31 @@ export default function WidgetMap({
             {...(indicator as Omit<Indicator, "resource"> & {
               resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
             })}
+            interactive={!isWebshot && !isPdf}
           />
         )}
 
-        <Controls>
-          <FullscreenControl />
-          <ZoomControl />
-          <BasemapControl
-            onBasemapChange={(selectedBasemapId) =>
-              handleMapIndicatorPropertyChange(
-                "basemapId",
-                selectedBasemapId,
-                overviewTopicsData ? (overviewTopicsData as unknown as DefaultTopicConfig[]) : null,
-                indicator,
-                setSyncDefaultTopics,
-                setTopics,
-                defaultValues,
-              )
-            }
-          />
-        </Controls>
+        {!isWebshot && !isPdf && (
+          <Controls>
+            <FullscreenControl />
+            <ZoomControl />
+            <BasemapControl
+              onBasemapChange={(selectedBasemapId) =>
+                handleMapIndicatorPropertyChange(
+                  "basemapId",
+                  selectedBasemapId,
+                  overviewTopicsData
+                    ? (overviewTopicsData as unknown as DefaultTopicConfig[])
+                    : null,
+                  indicator,
+                  setSyncDefaultTopics,
+                  setTopics,
+                  defaultValues,
+                )
+              }
+            />
+          </Controls>
+        )}
       </Map>
     </div>
   );

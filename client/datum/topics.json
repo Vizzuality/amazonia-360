@@ -8,7 +8,89 @@
     "image": "",
     "description_en": "",
     "description_es": "",
-    "description_pt": ""
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 0,
+        "type": "numeric",
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 35,
+        "type": "numeric",
+        "x": 1,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 11,
+        "type": "numeric",
+        "x": 2,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 12,
+        "type": "numeric",
+        "x": 3,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 5,
+        "type": "map",
+        "x": 0,
+        "y": 2,
+        "w": 2,
+        "h": 4
+      },
+      {
+        "id": 4,
+        "type": "table",
+        "x": 2,
+        "y": 2,
+        "w": 2,
+        "h": 4
+      },
+      {
+        "id": 2,
+        "type": "numeric",
+        "x": 0,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 3,
+        "type": "numeric",
+        "x": 1,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 4,
+        "type": "numeric",
+        "x": 2,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 5,
+        "type": "numeric",
+        "x": 3,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      }
+    ]
   },
   {
     "id": 1,

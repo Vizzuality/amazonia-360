@@ -1,0 +1,77 @@
+"use client";
+
+import { useMemo } from "react";
+
+import Image from "next/image";
+
+import { useLocale, useTranslations } from "next-intl";
+
+import { Topic } from "@/types/topic";
+
+import { useSyncLocation } from "@/app/store";
+
+interface DocumentCoverPdfSectionProps {
+  selectedTopics?: Topic[];
+}
+
+export default function DocumentCoverPdfSection({ selectedTopics }: DocumentCoverPdfSectionProps) {
+  const locale = useLocale();
+  const t = useTranslations();
+
+  const [location] = useSyncLocation();
+
+  const dateString = useMemo(() => {
+    const now = new Date();
+    return now.toLocaleDateString(locale, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }, [locale]);
+
+  const formattedTopicsNames = useMemo(() => {
+    if (!selectedTopics || selectedTopics.length === 0) return "";
+    const conjunction = t("conjunction-and");
+    const topicNames = selectedTopics.map((topic) => topic.name?.toLowerCase());
+
+    if (selectedTopics.length === 1) {
+      return ` ${conjunction} ${selectedTopics[0]?.name?.toLowerCase()}`;
+    }
+
+    if (selectedTopics.length === 2) {
+      return ` ${topicNames[0]} ${conjunction} ${topicNames[1]}`;
+    }
+
+    // For 3 or more topics: "topic1, topic2, and topic3"
+    const lastTopic = topicNames.pop();
+    return `, ${topicNames.join(", ")}, ${conjunction} ${lastTopic}`;
+  }, [selectedTopics, t]);
+
+  return (
+    <div className="relative w-full grow">
+      <div className="absolute bottom-[60px] z-10 flex w-2/3 flex-col gap-8 bg-blue-700 px-14 py-10">
+        <h1 className="text-6xl text-white">
+          {location?.custom_title || t("pdf-report-cover-title")}
+        </h1>
+
+        <p className="font-normal text-white">
+          {t("pdf-report-cover-subtitle", { topics: formattedTopicsNames })}
+        </p>
+
+        <p className="font-normal text-white">
+          {t("pdf-report-cover-date", { date: dateString, language: "English" })}
+        </p>
+      </div>
+
+      <Image
+        className="absolute left-0 top-0 z-0 h-full w-full object-cover"
+        src="/images/report/world-globe.webp"
+        alt=""
+        role="presentation"
+        width={1684}
+        height={1084}
+        priority
+      />
+    </div>
+  );
+}
