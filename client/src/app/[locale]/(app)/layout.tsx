@@ -14,6 +14,7 @@ import Header from "@/containers/header";
 import ThirdParty from "@/containers/third-party";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 import { routing } from "@/i18n/routing";
 
@@ -78,6 +79,8 @@ export default async function RootLayout({
   return (
     <>
       <RootHead />
+      <Toaster position="top-right" richColors />
+
       <body className={`${montserrat.className} w-full overflow-x-hidden`}>
         <Suspense fallback={null}>
           <NextIntlClientProvider locale={locale}>
