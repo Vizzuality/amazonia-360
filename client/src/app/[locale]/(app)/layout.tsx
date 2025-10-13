@@ -79,9 +79,9 @@ export default async function RootLayout({
   return (
     <>
       <RootHead />
-      <Toaster position="top-right" richColors />
-
       <body className={`${montserrat.className} w-full overflow-x-hidden`}>
+        <Toaster position="top-right" richColors />
+
         <Suspense fallback={null}>
           <NextIntlClientProvider locale={locale}>
             <SidebarProvider>
