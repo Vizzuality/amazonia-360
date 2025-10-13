@@ -10,7 +10,7 @@ export class WidgetsService {
   private readonly logger = new Logger(WidgetsService.name);
 
   async generatePngSnapshot(
-    webshotConfig: WidgetAsImageWebshotConfig
+    webshotConfig: WidgetAsImageWebshotConfig,
   ): Promise<Buffer> {
     const { pagePath, params } = webshotConfig;
     const appBaseUrl = Config.getString("app.baseUrl").replace(/\/+$/, "");
@@ -74,6 +74,8 @@ export class WidgetsService {
       // default is necessary. However, proper handling of concurrent load may
       // only be possible by switching to using a simple queue system to process
       // requests sequentially or with a given maximum parallelism.
+
+      // Commenting this out for the time being
       // await page.waitForTimeout(
       //   Config.getNumber("browser.waitMsBeforeTakingSnapshot")
       // );
@@ -88,7 +90,7 @@ export class WidgetsService {
       await page.waitForFunction(
         () => (window as unknown as { READY: boolean }).READY === true,
         {},
-        { timeout: Config.getNumber("browser.waitForReadyTimeout") }
+        { timeout: Config.getNumber("browser.waitForReadyTimeout") },
       );
 
       // Generate PNG snapshot of only the widget container
