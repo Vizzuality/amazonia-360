@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 
 import { FileDown } from "lucide-react";
 import { useLocale } from "next-intl";
+import { toast } from "sonner";
 
 import { downloadBlobResponse, usePostWebshotReportMutation } from "@/lib/webshot";
 
@@ -16,6 +17,12 @@ export default function ReportButton() {
   const postWebshotReportMutation = usePostWebshotReportMutation();
 
   const handleClick = () => {
+    toast.info("Generating Report...", {
+      id: "generating-report",
+      duration: Infinity,
+      closeButton: true,
+    });
+
     postWebshotReportMutation.mutate(
       {
         pagePath: `/${locale}/webshot/report/?${searchParams.toString()}`,
@@ -23,9 +30,14 @@ export default function ReportButton() {
       {
         onError: (error) => {
           console.error("Error generating Report:", error);
+          toast.error("Error generating Report", { id: "generating-report-error" });
         },
         onSuccess: async (data) => {
           await downloadBlobResponse(data.data, "report.pdf");
+          toast.success("Report generated", { id: "generating-report-success" });
+        },
+        onSettled: () => {
+          toast.dismiss("generating-report");
         },
       },
     );

@@ -47,6 +47,8 @@ export class ReportService {
         args: Config.get<Array<string>>("browser.args"),
       });
 
+      this.logger.log("CHROMIUM version", browser.version()); // To avoid unused variable linting error
+
       page = await browser.newPage({
         ...(() => {
           const username = Config.get<string>("app.basicAuth.user");
@@ -62,6 +64,11 @@ export class ReportService {
         })(),
         // Render images with twice the resolution to avoid pixelization
         deviceScaleFactor: 2,
+      });
+
+      page.setViewportSize({
+        width: 1268,
+        height: 816,
       });
 
       // Pass through browser console to our own service's console
@@ -136,15 +143,13 @@ export class ReportService {
       await page.waitForTimeout(waitMsBeforeTakingSnapshot);
       this.logger.log(`Waited ${waitMsBeforeTakingSnapshot}ms`);
 
-      await page.emulateMedia({ media: "print" });
+      // await page.emulateMedia({ media: "print" });
 
       // Generate PDF from screenshots
       const pdfBuffer = await page.pdf({
-        width: Config.getString("pdf.pageWidth"),
-        height: Config.getString("pdf.pageHeight"),
-        scale: 1,
-        // Use same scale factor as device to avoid pixelization
         landscape: Config.getString("pdf.pageOrientation") === "landscape",
+        preferCSSPageSize: true,
+        scale: 1,
         margin: {
           top: Config.getString("pdf.pageMargins.top"),
           bottom: Config.getString("pdf.pageMargins.bottom"),
