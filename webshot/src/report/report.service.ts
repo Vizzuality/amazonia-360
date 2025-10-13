@@ -67,8 +67,8 @@ export class ReportService {
       });
 
       page.setViewportSize({
-        width: 1920,
-        height: 1080,
+        width: 1268,
+        height: 816,
       });
 
       // Pass through browser console to our own service's console
@@ -147,12 +147,9 @@ export class ReportService {
 
       // Generate PDF from screenshots
       const pdfBuffer = await page.pdf({
-        width: Config.getString("pdf.pageWidth"),
-        height: Config.getString("pdf.pageHeight"),
+        landscape: Config.getString("pdf.pageOrientation") === "landscape",
         preferCSSPageSize: true,
         scale: 1,
-        // Use same scale factor as device to avoid pixelization
-        landscape: Config.getString("pdf.pageOrientation") === "landscape",
         margin: {
           top: Config.getString("pdf.pageMargins.top"),
           bottom: Config.getString("pdf.pageMargins.bottom"),

@@ -11,8 +11,8 @@
   },
   "pdf": {
     "pageFormat": "A4",
-    "pageWidth": "792px",
-    "pageHeight": "1120px",
+    "pageWidth": 1268,
+    "pageHeight": 816,
     "pageOrientation": "landscape",
     "pageMargins": {
       "top": "0",
