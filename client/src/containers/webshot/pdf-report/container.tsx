@@ -16,7 +16,7 @@ export const PdfContainer = ({
   return (
     <div
       className={cn({
-        "relative flex h-[212.5mm] w-full flex-col overflow-hidden bg-blue-50": true,
+        "relative flex h-[210mm] w-full flex-col overflow-hidden bg-blue-50": true,
         "pt-0": cover,
         "break-before-page": index !== 0,
       })}
