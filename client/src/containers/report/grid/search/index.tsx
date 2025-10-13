@@ -2,7 +2,6 @@
 
 import { useCallback, useMemo, useState } from "react";
 
-import { useAtom } from "jotai";
 import { useLocale, useTranslations } from "next-intl";
 
 import { useMeta } from "@/lib/grid";
@@ -12,12 +11,7 @@ import { cn } from "@/lib/utils";
 
 import { Indicator } from "@/types/indicator";
 
-import {
-  selectedFiltersViewAtom,
-  useSyncGridDatasets,
-  useSyncGridSelectedDataset,
-  useSyncLocation,
-} from "@/app/store";
+import { useSyncGridDatasets, useSyncGridSelectedDataset, useSyncLocation } from "@/app/store";
 
 import { Search } from "@/components/ui/search";
 import { Switch } from "@/components/ui/switch";
@@ -35,7 +29,6 @@ export default function SearchC({ className }: { className?: string }) {
   const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [selectedFiltersView] = useAtom(selectedFiltersViewAtom);
   const [gridDatasets, setSelectedDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset, setGridSelectedDataset] = useSyncGridSelectedDataset();
   const [location] = useSyncLocation();
@@ -50,9 +43,7 @@ export default function SearchC({ className }: { className?: string }) {
   const INDICATORS = useMemo(() => {
     if (!H3IndicatorsData || !META) return [];
 
-    return H3IndicatorsData.filter(
-      (indicator) => !selectedFiltersView || gridDatasets.includes(indicator.resource.column), // Additional filtering
-    ).map((indicator, index) => {
+    return H3IndicatorsData.map((indicator, index) => {
       const matchingDataset = META.datasets.find(
         (dataset) => dataset.var_name === indicator.resource.column,
       );
@@ -70,7 +61,7 @@ export default function SearchC({ className }: { className?: string }) {
         },
       } as Option;
     });
-  }, [H3IndicatorsData, META, gridDatasets, selectedFiltersView]);
+  }, [H3IndicatorsData, META, gridDatasets]);
 
   const OPTIONS = useMemo(() => {
     if (search) {
