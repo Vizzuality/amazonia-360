@@ -2,6 +2,8 @@
 
 import { useContext, useEffect, useRef, useState } from "react";
 
+import Image from "next/image";
+
 import Basemap from "@arcgis/core/Basemap";
 import Color from "@arcgis/core/Color";
 import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
@@ -199,7 +201,7 @@ export function MapView({
 
       {screenshot && isPdf && (
         <div className="h-full w-full grow">
-          <img src={screenshot} alt="Map screenshot" />
+          <Image src={screenshot} alt="Map screenshot" layout="fill" objectFit="cover" />
         </div>
       )}
     </>
