@@ -64,6 +64,7 @@ export default function PfdGeographicContext() {
             })}
             basemapId={map.basemapId}
             isWebshot={true}
+            isPdf={true}
           />
         )}
       </div>
