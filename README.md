@@ -6,16 +6,58 @@ AmazoniaForever360+ is a platform developed to provide critical geospatial and t
 
 # Table of contents
 
-1. [Platform Overview](#overview)
-2. [Architecture](#arch)
+1. [Quick start](#run)
+2. [Platform Overview](#overview)
+3. [Architecture](#arch)
    1. [Components](#components)
       1. [Front-end](client/README.md)
       2. [Backend API](api/README.md)
       3. [Infrastructure](infrastructure/README.md)
       4. [Science and prototypes](science/README.md)
    2. [Tech Stack](#stack)
-3. [Running the Platform Locally](#run)
 4. [License](#licence)
+
+
+# Quick start: running the platform (via Docker Compose) <a name="run"></a>
+
+To set up AmazoniaForever360+ on your local machine first create a `.env` file
+from the template `.env.default` at the root of the project and fill in the
+needed environment variables.
+
+This `.env` file at the root of the project repository is _the source of truth_
+for all the environment variables used by the platform when running it locally
+via Docker Compose.
+
+A script is provided (`splitenv.mjs`) to create the relevant `.env` files in
+each service's directory. This script can be run from the root directory as
+follows:
+
+```
+pnpm splitenv
+```
+
+Therefore, any changes to the root `.env` file need to be followed by running
+the `splitenv` script to update the `.env` files in each service's directory.
+
+The env vars for each service (client, api, webshot) _must_ be prefixed with the
+service name in uppercase, followed by two underscores (`__`); for example,
+`CLIENT__NEXT_PUBLIC_URL`. `splitenv` will then pick only the env vars that
+match each service, strip the prefix and write them to the relevant `.env` file.
+
+Once the `.env` files are up to date, to start the platform, run
+
+```
+docker compose up --build
+```
+
+from the root directory to spin all the services (client, api, webshot).
+
+Now visiting http://localhost:3000 in any browser should show the landing page.
+
+Note that some environment variables are secret tokens needed to authorize the
+use of some parts of the API like ArcGIS services which may be crucial for some
+of the application features; these values should be stored in a secure vault for
+team collaboration, and never committed to the repository.
 
 # Platform Overview <a name="overview"></a>
 AmazoniaForever360+ is designed to serve spatial and statistical data through a user-friendly interface that supports:
@@ -49,23 +91,6 @@ AmazoniaForever360+ uses a hybrid architecture that combines ArcGIS Online servi
 - Frontend: React, Next.js, ArcGIS SDK
 - Backend: python FastAPI
 - Infrastructure: Terraform
-
-# Running it locally <a name="run"></a>
-
-To set up AmazoniaForever360+ on your local machine first create a `.env` file from the template `.env.default`
-at the root of the project and fill in the needed environment variables.
-
-Then run
-
-```
-docker compose up –build
-```
-
-from the root directory to spin all the services (client and api).
-Now visiting localhost:3000 in any browser should show the landing page.
-
-Note that some environment variables are secret tokens needed to authorize the use of some parts of the API like
-ArcGIS services which may be crucial for some of the application features.
 
 # License <a name="licence"></a>
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
