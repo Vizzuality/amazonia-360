@@ -153,7 +153,7 @@ export function Search<T extends Option>({
                       <CommandItem
                         key={o.sourceIndex + o.key + o.value}
                         value={o.value}
-                        className="px-4"
+                        className="px-2"
                         onSelect={() => onSelect(o)}
                       >
                         {!children ? (
