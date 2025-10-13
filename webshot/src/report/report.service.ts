@@ -66,7 +66,7 @@ export class ReportService {
         deviceScaleFactor: 2,
       });
 
-      page.setViewportSize({
+      await page.setViewportSize({
         width: 1268,
         height: 816,
       });
