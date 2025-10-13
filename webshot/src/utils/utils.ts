@@ -18,5 +18,6 @@ export class Value {
    * }
    * ```
    */
-  static isValid = <T>(a: T | null | undefined): a is T => a !== undefined && a !== null;
+  static isValid = <T>(a: T | null | undefined): a is T =>
+    a !== undefined && a !== null;
 }
