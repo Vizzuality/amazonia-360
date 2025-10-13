@@ -2,8 +2,8 @@
 
 import { useMemo } from "react";
 
-import { MapIcon, TableIcon, PieChartIcon, HashIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { LuChartPie, LuHash, LuMap, LuTable } from "react-icons/lu";
 
 import { findFirstAvailablePosition } from "@/lib/report";
 import { useGetDefaultSubtopics } from "@/lib/subtopics";
@@ -91,12 +91,13 @@ export function VisualizationType({
     [topics, topicId],
   );
 
-  const iconComponents = {
-    map: MapIcon,
-    table: TableIcon,
-    chart: PieChartIcon,
-    numeric: HashIcon,
+  const ICON_COMPONENTS = {
+    map: LuMap,
+    table: LuTable,
+    chart: LuChartPie,
+    numeric: LuHash,
   };
+
   return (
     <div className="p-1">
       <span className="px-2 py-1.5 text-xs font-semibold text-muted-foreground/90">
@@ -108,7 +109,7 @@ export function VisualizationType({
             ({ id, type: activeType }) => id === indicatorId && activeType === type,
           );
 
-          const Icon = iconComponents[type];
+          const Icon = ICON_COMPONENTS[type];
 
           return (
             <li key={type}>
@@ -122,7 +123,7 @@ export function VisualizationType({
                 disabled={isDisabled}
                 onClick={() => handleVisualizationType(type)}
               >
-                {Icon && <Icon className="h-4 w-4" />}
+                {!!Icon && <Icon className="h-4 w-4" />}
 
                 <span
                   className={cn({

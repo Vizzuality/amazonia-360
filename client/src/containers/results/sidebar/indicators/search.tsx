@@ -3,12 +3,13 @@
 import { useCallback, useMemo, useState } from "react";
 
 import { useLocale, useTranslations } from "next-intl";
+import { LuChartPie, LuHash, LuMap, LuTable } from "react-icons/lu";
 
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import { findFirstAvailablePosition } from "@/lib/report";
 import { cn } from "@/lib/utils";
 
-import { Indicator } from "@/types/indicator";
+import { Indicator, VisualizationTypes } from "@/types/indicator";
 
 import { IndicatorView } from "@/app/parsers";
 import { useSyncTopics } from "@/app/store";
@@ -38,6 +39,13 @@ export default function SearchC() {
   const [topics, setTopics] = useSyncTopics();
 
   const queryIndicators = useGetDefaultIndicators({ locale });
+
+  const ICON_COMPONENTS = {
+    map: LuMap,
+    table: LuTable,
+    chart: LuChartPie,
+    numeric: LuHash,
+  } as Record<VisualizationTypes, React.ElementType>;
 
   const DATA = useMemo(() => {
     return (
@@ -184,22 +192,25 @@ export default function SearchC() {
         onSelect={(e) => handleSelect(e)}
         size="sm"
       >
-        {(o) => (
-          <div
-            className={cn({
-              "flex w-full cursor-pointer items-start justify-between gap-2 py-1 text-xs": true,
-            })}
-            role="button"
-          >
-            <span>{o.label}</span>
+        {(o) => {
+          const Icon = ICON_COMPONENTS[o.key as VisualizationTypes];
 
-            <div className="flex items-start gap-2">
-              <span className="rounded-full bg-primary/20 px-2.5">{o.key}</span>
+          return (
+            <div
+              className={cn({
+                "flex w-full cursor-pointer items-start justify-between gap-2 py-1 text-xs": true,
+              })}
+              role="button"
+            >
+              <div className="flex items-start gap-2">
+                {!!Icon && <Icon className="h-4 w-4" />}
+                <span>{o.label}</span>
+              </div>
 
               <Switch className="h-4 w-8" checked={o.active} />
             </div>
-          </div>
-        )}
+          );
+        }}
       </Search>
     </div>
   );
