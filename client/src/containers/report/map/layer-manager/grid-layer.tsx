@@ -87,6 +87,7 @@ export const getGridLayerProps = ({
 }) => {
   // Create array of 4n values
   const filters = [...Array(4).keys()];
+  const categories = [...Array(3).keys()];
   const columns = !!gridDatasets.length ? gridDatasets.map((d) => `columns=${d}`).join("&") : "";
 
   return new H3TileLayer({
@@ -193,10 +194,16 @@ export const getGridLayerProps = ({
       const getFilterValue: Accessor<Record<string, number>, number[]> = (d) => {
         return filters.map((f) => {
           if (gridDatasets[f]) {
-            if (typeof d[`${gridDatasets[f]}`] === "bigint") {
-              return Number(d[`${gridDatasets[f]}`]);
+            const legend = gridMetaData?.datasets.find(
+              (dataset) => dataset.var_name === gridDatasets[f],
+            )?.legend;
+
+            if (legend?.legend_type === "continuous" && "stats" in legend) {
+              if (typeof d[`${gridDatasets[f]}`] === "bigint") {
+                return Number(d[`${gridDatasets[f]}`]);
+              }
+              return d[`${gridDatasets[f]}`];
             }
-            return d[`${gridDatasets[f]}`];
           }
 
           return 0;
@@ -225,6 +232,62 @@ export const getGridLayerProps = ({
           return [-1, 1] as [number, number];
         });
       };
+
+      const getFilterCategory: Accessor<
+        Record<string, number>,
+        number | string | (number | string)[]
+      > = (d) => {
+        const c = categories.map((f) => {
+          if (gridDatasets[f]) {
+            const legend = gridMetaData?.datasets.find(
+              (dataset) => dataset.var_name === gridDatasets[f],
+            )?.legend;
+
+            if (legend?.legend_type === "categorical" && "entries" in legend) {
+              if (typeof d[`${gridDatasets[f]}`] === "bigint") {
+                return Number(d[`${gridDatasets[f]}`]);
+              }
+              return d[`${gridDatasets[f]}`];
+            }
+
+            return -1;
+          }
+
+          return -1;
+        });
+
+        console.log("category", c);
+
+        return c;
+      };
+
+      const filterCategories = () => {
+        const c = categories.map((f) => {
+          if (gridDatasets[f]) {
+            const legend = gridMetaData?.datasets.find(
+              (dataset) => dataset.var_name === gridDatasets[f],
+            )?.legend;
+
+            if (legend?.legend_type === "categorical" && "entries" in legend) {
+              const entries = legend.entries;
+
+              const values = gridDatasetSettings?.[gridDatasets[f]];
+              if (values && Array.isArray(values) && values.length) {
+                return values;
+              }
+
+              return entries.map((e) => e.value);
+            }
+          }
+
+          return [-1];
+        });
+
+        console.log("filters", c);
+
+        return c;
+      };
+
       return [
         new H3HexagonLayer<
           {
@@ -247,10 +310,13 @@ export const getGridLayerProps = ({
           getFillColor,
           getFilterValue,
           filterRange: filterRange(),
+          getFilterCategory,
+          filterCategories: filterCategories(),
 
           extensions: [
             new DataFilterExtension({
-              filterSize: filters.length as 0 | 1 | 2 | 3 | 4,
+              filterSize: 0,
+              categorySize: categories.length as 0 | 1 | 2 | 3,
             }),
           ],
           updateTriggers: {
@@ -317,9 +383,12 @@ export const getGridLayerProps = ({
           getFillColor,
           getFilterValue,
           filterRange: filterRange(),
+          getFilterCategory,
+          filterCategories: filterCategories(),
           extensions: [
             new DataFilterExtension({
-              filterSize: filters.length as 0 | 1 | 2 | 3 | 4,
+              filterSize: 0,
+              categorySize: categories.length as 0 | 1 | 2 | 3,
             }),
           ],
           getLineWidth: 0,
@@ -378,6 +447,11 @@ export default function GridLayer() {
         const s = dataset.legend.stats.find((stat) => stat.level === 1);
 
         return CHROMA.scale("viridis").domain([s?.min || 0, s?.max || 100]);
+      }
+
+      if (dataset?.legend.legend_type === "categorical" && "entries" in dataset.legend) {
+        const entries = dataset.legend.entries;
+        return CHROMA.scale(entries.map((e) => e.color)).domain(entries.map((e) => e.value));
       }
     }
 
