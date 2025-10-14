@@ -1,5 +1,9 @@
 "use client";
 
+// https://github.com/visgl/deck.gl/issues/9497
+// https://github.com/visgl/deck.gl/issues/9496
+// https://github.com/visgl/deck.gl/issues/9737
+
 import { useCallback, useMemo, useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
