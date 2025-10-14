@@ -7,8 +7,14 @@ export const metadata = {
 
 export default function WebshotReport() {
   return (
-    <main className="relative">
-      <Pdf />
-    </main>
+    <>
+      <head>
+        <meta name="viewport" content="width=1920px, initial-scale=1" />
+      </head>
+
+      <main className="relative">
+        <Pdf />
+      </main>
+    </>
   );
 }
