@@ -122,14 +122,22 @@ export const useGetDefaultIndicators = ({
       return data
         .filter((indicator) => {
           if (topicId) {
-            return indicator.subtopic.topic_id === topicId && indicator.resource.type !== "h3";
+            return (
+              indicator.subtopic.topic_id === topicId &&
+              indicator.resource.type &&
+              indicator.resource.type !== "h3"
+            );
           }
 
           if (subtopicId) {
-            return indicator.subtopic.id === subtopicId && indicator.resource.type !== "h3";
+            return (
+              indicator.subtopic.id === subtopicId &&
+              indicator.resource.type &&
+              indicator.resource.type !== "h3"
+            );
           }
 
-          return indicator.resource.type !== "h3";
+          return !!indicator.resource.type && indicator.resource.type !== "h3";
         })
         .sort((a, b) => a.order - b.order);
     },
