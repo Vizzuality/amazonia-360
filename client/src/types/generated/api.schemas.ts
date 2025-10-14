@@ -2438,7 +2438,7 @@ export const CategoricalOperators = {
   not_in: "not_in",
 } as const;
 
-export type CategoricalLegendEntryValue = number | string;
+export type CategoricalLegendEntryValue = number;
 
 export interface CategoricalLegendEntry {
   color: string;
