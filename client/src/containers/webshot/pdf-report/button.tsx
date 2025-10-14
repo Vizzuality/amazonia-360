@@ -1,13 +1,12 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+
 export const PrintButton = ({ onClick }: { onClick: () => void }) => {
   return (
-    <button
-      onClick={onClick}
-      className="fixed bottom-4 right-4 z-50 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 print:hidden"
-    >
+    <Button className="fixed bottom-4 right-4 z-50 print:hidden" size="lg" onClick={onClick}>
       Print
-    </button>
+    </Button>
   );
 };
 

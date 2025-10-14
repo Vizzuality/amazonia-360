@@ -149,7 +149,7 @@ export function MapView({
         },
       );
 
-      ArcGISReactiveUtils.whenOnce(() => !mapViewRef.current?.updating).then(() => {
+      ArcGISReactiveUtils.whenOnce(() => !mapViewRef.current?.updating && isPdf).then(() => {
         // Take a screenshot at the same resolution of the current view
         mapViewRef.current?.takeScreenshot().then(function (s) {
           if (s && s.dataUrl) {
@@ -200,8 +200,8 @@ export function MapView({
       )}
 
       {screenshot && isPdf && (
-        <div className="h-full w-full grow">
-          <Image src={screenshot} alt="Map screenshot" layout="fill" objectFit="cover" />
+        <div className="relative h-full w-full grow">
+          <Image src={screenshot} alt="Map screenshot" fill className="object-cover" />
         </div>
       )}
     </>
