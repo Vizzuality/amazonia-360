@@ -15,9 +15,10 @@ import { H3Indicator } from "@/types/indicator";
 
 import {
   useSyncGridDatasets,
-  useSyncGridDatasetSettings,
+  useSyncGridDatasetContinousSettings,
   useSyncGridSelectedDataset,
   useSyncLocation,
+  useSyncGridDatasetCategoricalSettings,
 } from "@/app/store";
 
 import Info from "@/containers/info";
@@ -50,7 +51,8 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
 
   const { isFetching: gridMetaFromGeometryIsFetching } = queryMetaFromGeometry;
 
-  const [, setGridDatasetSettings] = useSyncGridDatasetSettings();
+  const [, setGridDatasetContinousSettings] = useSyncGridDatasetContinousSettings();
+  const [, setGridDatasetCategoricalSettings] = useSyncGridDatasetCategoricalSettings();
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset, setGridSelectedDataset] = useSyncGridSelectedDataset();
 
@@ -86,7 +88,15 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
       }
 
       // Sync filters
-      setGridDatasetSettings((prev) => {
+      setGridDatasetContinousSettings((prev) => {
+        if (!H3_INDICATOR?.resource.column) return prev;
+
+        const f = { ...prev };
+        delete f[H3_INDICATOR.resource.column];
+        return f;
+      });
+
+      setGridDatasetCategoricalSettings((prev) => {
         if (!H3_INDICATOR?.resource.column) return prev;
 
         const f = { ...prev };

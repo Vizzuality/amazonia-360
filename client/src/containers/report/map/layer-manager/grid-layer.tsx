@@ -30,13 +30,14 @@ import {
   gridHoverAtom,
   gridCellHighlightAtom,
   useSyncGridDatasets,
-  useSyncGridDatasetSettings,
+  useSyncGridDatasetContinousSettings,
   useSyncGridTableSettings,
   useSyncGridSelectedDataset,
   useSyncLocation,
   GridHoverType,
   tmpBboxAtom,
   sketchAtom,
+  useSyncGridDatasetCategoricalSettings,
 } from "@/app/store";
 
 import { BUFFERS } from "@/constants/map";
@@ -58,7 +59,7 @@ const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
 export const getGridLayerProps = ({
   gridDatasets,
-  gridDatasetSettings,
+  gridDatasetContinousSettings,
   gridSelectedDataset,
   opacity,
   getFillColor,
@@ -72,7 +73,7 @@ export const getGridLayerProps = ({
   sketchEnabled,
 }: {
   gridDatasets: string[];
-  gridDatasetSettings: Record<string, number[] | Record<string, string | number>> | null;
+  gridDatasetContinousSettings: Record<string, number[] | Record<string, string | number>> | null;
   gridSelectedDataset: string | null;
   opacity: number;
   getFillColor: Accessor<Record<string, number>, Color>;
@@ -180,7 +181,9 @@ export const getGridLayerProps = ({
     maxCacheSize: 300, // max number of tiles to keep in the cache
     _subLayerProps: {
       gridDatasets,
-      gridDatasetSettings: gridDatasetSettings ? gridDatasetSettings : {},
+      gridDatasetContinousSettings: gridDatasetContinousSettings
+        ? gridDatasetContinousSettings
+        : {},
     },
     updateTriggers: {
       getTileData: [geometry],
@@ -220,10 +223,10 @@ export const getGridLayerProps = ({
             if (legend?.legend_type === "continuous" && "stats" in legend) {
               const stats = legend?.stats?.find((s) => s.level === 1);
 
-              return (gridDatasetSettings?.[gridDatasets[f]] || [stats?.min, stats?.max]) as [
-                number,
-                number,
-              ];
+              return (gridDatasetContinousSettings?.[gridDatasets[f]] || [
+                stats?.min,
+                stats?.max,
+              ]) as [number, number];
             }
 
             return [-1, 1] as [number, number];
@@ -280,7 +283,7 @@ export const getGridLayerProps = ({
       //       if (legend?.legend_type === "categorical" && "entries" in legend) {
       //         const entries = legend.entries;
 
-      //         const values = gridDatasetSettings?.[gridDatasets[f]];
+      //         const values = gridDatasetContinousSettings?.[gridDatasets[f]];
       //         if (values && Array.isArray(values) && values.length) {
       //           return values;
       //         }
@@ -418,7 +421,8 @@ export default function GridLayer() {
 
   const [location, setLocation] = useSyncLocation();
 
-  const [gridDatasetSettings] = useSyncGridDatasetSettings();
+  const [gridDatasetContinousSettings] = useSyncGridDatasetContinousSettings();
+  const [gridDatasetCategoricalSettings] = useSyncGridDatasetCategoricalSettings();
   const [gridSetUpFilters] = useSyncGridTableSettings();
   const [gridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
@@ -452,12 +456,13 @@ export default function GridLayer() {
         if (d.legend.legend_type === "categorical" && "entries" in d.legend) {
           return {
             ...d,
-            settings: gridDatasetSettings?.[d.var_name] || d.legend.entries.map((e) => e.value),
+            settings:
+              gridDatasetCategoricalSettings?.[d.var_name] || d.legend.entries.map((e) => e.value),
           };
         }
         return d;
       });
-  }, [gridDatasets, gridDatasetSettings, gridMetaData]);
+  }, [gridDatasets, gridDatasetCategoricalSettings, gridMetaData]);
 
   const colorscale = useMemo(() => {
     if (!gridMetaData) return CHROMA.scale([]);
@@ -561,7 +566,7 @@ export default function GridLayer() {
         "deck.layers": [
           getGridLayerProps({
             gridDatasets,
-            gridDatasetSettings,
+            gridDatasetContinousSettings,
             gridSelectedDataset,
             gridMetaData,
             getFillColor,
@@ -583,7 +588,7 @@ export default function GridLayer() {
     GRID_LAYER.current.deck.layers = [
       getGridLayerProps({
         gridDatasets,
-        gridDatasetSettings,
+        gridDatasetContinousSettings,
         gridSelectedDataset,
         gridMetaData,
         getFillColor,
@@ -601,7 +606,7 @@ export default function GridLayer() {
     return GRID_LAYER.current;
   }, [
     gridDatasets,
-    gridDatasetSettings,
+    gridDatasetContinousSettings,
     gridSelectedDataset,
     gridMetaData,
     getFillColor,

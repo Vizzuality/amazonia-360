@@ -10,7 +10,7 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { H3Indicator } from "@/types/indicator";
 
-import { useSyncGridDatasetSettings, useSyncLocation } from "@/app/store";
+import { useSyncGridDatasetContinousSettings, useSyncLocation } from "@/app/store";
 
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -27,7 +27,8 @@ export default function GridIndicatorsItemContinous(indicator: H3Indicator) {
 
   const { isFetching: gridMetaFromGeometryIsFetching } = queryMetaFromGeometry;
 
-  const [gridDatasetSettings, setGridDatasetSettings] = useSyncGridDatasetSettings();
+  const [gridDatasetContinousSettings, setGridDatasetContinousSettings] =
+    useSyncGridDatasetContinousSettings();
 
   const H3_INDICATOR = useMemo(() => {
     const m = META?.datasets.find((d) => d.var_name === indicator.resource.column);
@@ -49,9 +50,9 @@ export default function GridIndicatorsItemContinous(indicator: H3Indicator) {
 
   const continuosValue = useMemo(() => {
     if (continuosOptions) {
-      if (gridDatasetSettings && H3_INDICATOR?.resource.column) {
+      if (gridDatasetContinousSettings && H3_INDICATOR?.resource.column) {
         return (
-          gridDatasetSettings[H3_INDICATOR.resource.column] || [
+          gridDatasetContinousSettings[H3_INDICATOR.resource.column] || [
             continuosOptions.min || 0,
             continuosOptions.max || 100,
           ]
@@ -62,10 +63,10 @@ export default function GridIndicatorsItemContinous(indicator: H3Indicator) {
     }
 
     return [-Infinity, Infinity];
-  }, [H3_INDICATOR?.resource.column, continuosOptions, gridDatasetSettings]);
+  }, [H3_INDICATOR?.resource.column, continuosOptions, gridDatasetContinousSettings]);
 
   const onValueChange = (v: number[]) => {
-    setGridDatasetSettings((prev) => {
+    setGridDatasetContinousSettings((prev) => {
       if (!H3_INDICATOR?.resource.column) return prev;
       return {
         ...prev,

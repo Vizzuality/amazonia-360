@@ -12,9 +12,10 @@ import { BodyReadTableGridTablePostFiltersItem } from "@/types/generated/api.sch
 
 import {
   useSyncGridDatasets,
-  useSyncGridDatasetSettings,
+  useSyncGridDatasetContinousSettings,
   useSyncLocation,
   useSyncGridTableSettings,
+  useSyncGridDatasetCategoricalSettings,
 } from "@/app/store";
 
 import { CardLoader } from "@/containers/card";
@@ -27,7 +28,8 @@ export default function GridTable() {
   const locale = useLocale();
   const [location] = useSyncLocation();
   const [gridDatasets] = useSyncGridDatasets();
-  const [gridDatasetSettings] = useSyncGridDatasetSettings();
+  const [gridDatasetContinousSettings] = useSyncGridDatasetContinousSettings();
+  const [gridDatasetCategoricalSettings] = useSyncGridDatasetCategoricalSettings();
   const [gridTableSettings] = useSyncGridTableSettings();
 
   const GEOMETRY = useLocationGeometry(location, {
@@ -57,7 +59,9 @@ export default function GridTable() {
             if (!d) return [];
 
             if (d.var_dtype === "Float64") {
-              return (gridDatasetSettings?.[dataset]?.map((f, i) => ({
+              return ((
+                gridDatasetContinousSettings?.[dataset] || gridDatasetCategoricalSettings?.[dataset]
+              )?.map((f, i) => ({
                 filter_type: "numerical",
                 column_name: dataset,
                 operation: i === 0 ? "gte" : "lte",

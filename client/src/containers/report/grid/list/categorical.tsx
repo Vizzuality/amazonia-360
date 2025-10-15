@@ -7,7 +7,7 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { H3Indicator } from "@/types/indicator";
 
-import { useSyncGridDatasetSettings, useSyncLocation } from "@/app/store";
+import { useSyncGridDatasetCategoricalSettings, useSyncLocation } from "@/app/store";
 
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -23,7 +23,8 @@ export default function GridIndicatorsItemCategorical(indicator: H3Indicator) {
 
   const { isFetching: gridMetaFromGeometryIsFetching } = queryMetaFromGeometry;
 
-  const [gridDatasetSettings, setGridDatasetSettings] = useSyncGridDatasetSettings();
+  const [gridDatasetCategoricalSettings, setGridDatasetCategoricalSettings] =
+    useSyncGridDatasetCategoricalSettings();
 
   const H3_INDICATOR = useMemo(() => {
     const m = META?.datasets.find((d) => d.var_name === indicator.resource.column);
@@ -45,18 +46,18 @@ export default function GridIndicatorsItemCategorical(indicator: H3Indicator) {
   const categoricalValue = useMemo(() => {
     if (categoricalOptions) {
       if (
-        gridDatasetSettings &&
+        gridDatasetCategoricalSettings &&
         H3_INDICATOR?.resource.column &&
-        gridDatasetSettings[H3_INDICATOR?.resource.column]
+        gridDatasetCategoricalSettings[H3_INDICATOR?.resource.column]
       ) {
-        return gridDatasetSettings[H3_INDICATOR.resource.column] || [];
+        return gridDatasetCategoricalSettings[H3_INDICATOR.resource.column] || [];
       }
 
       return categoricalOptions.map((o) => o.value);
     }
 
     return [];
-  }, [H3_INDICATOR?.resource.column, categoricalOptions, gridDatasetSettings]);
+  }, [H3_INDICATOR?.resource.column, categoricalOptions, gridDatasetCategoricalSettings]);
 
   if (!H3_INDICATOR) {
     return null;
@@ -77,13 +78,13 @@ export default function GridIndicatorsItemCategorical(indicator: H3Indicator) {
 
                     if (checked) {
                       // Add
-                      setGridDatasetSettings((prev) => ({
+                      setGridDatasetCategoricalSettings((prev) => ({
                         ...prev,
                         [H3_INDICATOR.resource.column]: [...categoricalValue, option.value],
                       }));
                     } else {
                       // Remove
-                      setGridDatasetSettings((prev) => {
+                      setGridDatasetCategoricalSettings((prev) => {
                         const v = prev?.[H3_INDICATOR!.resource.column] ?? categoricalValue;
                         if (Array.isArray(v)) {
                           return {
