@@ -144,9 +144,19 @@ export const GridTableItem = (
                       </span>
                     </div>
 
-                    <span className="flex-shrink-0 whitespace-nowrap text-blue-700">
-                      {formatNumberUnit(+(dataset?.value ?? 0), `${dataset?.unit}`)}
-                    </span>
+                    {dataset?.legend.legend_type === "continuous" && (
+                      <span className="flex-shrink-0 whitespace-nowrap text-blue-700">
+                        {formatNumberUnit(+(dataset?.value ?? 0), `${dataset?.unit}`)}
+                      </span>
+                    )}
+
+                    {dataset?.legend.legend_type === "categorical" &&
+                      "entries" in dataset.legend && (
+                        <span className="flex-shrink-0 whitespace-nowrap text-blue-700">
+                          {dataset.legend.entries.find((e) => e.value === dataset?.value)?.label ||
+                            dataset?.value}
+                        </span>
+                      )}
                   </li>
                 ))}
               </ul>
