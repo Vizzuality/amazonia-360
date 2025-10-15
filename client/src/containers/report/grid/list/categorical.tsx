@@ -9,7 +9,7 @@ import { H3Indicator } from "@/types/indicator";
 
 import { useSyncGridDatasetCategoricalSettings, useSyncLocation } from "@/app/store";
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { Toggle } from "@/components/ui/toggle";
 
 export default function GridIndicatorsItemCategorical(indicator: H3Indicator) {
   const [location] = useSyncLocation();
@@ -53,7 +53,7 @@ export default function GridIndicatorsItemCategorical(indicator: H3Indicator) {
         return gridDatasetCategoricalSettings[H3_INDICATOR.resource.column] || [];
       }
 
-      return categoricalOptions.map((o) => o.value);
+      return undefined;
     }
 
     return [];
@@ -68,39 +68,54 @@ export default function GridIndicatorsItemCategorical(indicator: H3Indicator) {
       {!(gridMetaIsFetching || gridMetaFromGeometryIsFetching) &&
         H3_INDICATOR?.legend?.legend_type === "categorical" &&
         categoricalOptions && (
-          <div className="flex flex-col justify-between gap-1">
-            {categoricalOptions.map((option) => (
-              <div key={option.value} className="flex items-center space-x-1">
-                <Checkbox
-                  checked={categoricalValue.includes(option.value)}
-                  onCheckedChange={(checked) => {
-                    if (!H3_INDICATOR?.resource.column) return;
+          <div className="flex flex-wrap gap-1">
+            <Toggle
+              variant="outline"
+              size="xs"
+              pressed={!categoricalValue}
+              onPressedChange={() => {
+                if (!H3_INDICATOR?.resource.column) return;
 
-                    if (checked) {
-                      // Add
-                      setGridDatasetCategoricalSettings((prev) => ({
-                        ...prev,
-                        [H3_INDICATOR.resource.column]: [...categoricalValue, option.value],
-                      }));
-                    } else {
-                      // Remove
-                      setGridDatasetCategoricalSettings((prev) => {
-                        const v = prev?.[H3_INDICATOR!.resource.column] ?? categoricalValue;
-                        if (Array.isArray(v)) {
-                          return {
-                            ...prev,
-                            [H3_INDICATOR!.resource.column]: v.filter(
-                              (val) => val !== option.value,
-                            ),
-                          };
-                        }
-                        return prev;
-                      });
-                    }
-                  }}
-                />
-                <span className="text-xs text-gray-500">{option.label}</span>
-              </div>
+                setGridDatasetCategoricalSettings((prev) => ({
+                  ...prev,
+                  [H3_INDICATOR.resource.column]: undefined,
+                }));
+              }}
+            >
+              All
+            </Toggle>
+            {categoricalOptions.map((option) => (
+              <Toggle
+                key={option.value}
+                variant="outline"
+                size="xs"
+                pressed={categoricalValue?.includes(option.value) ?? false}
+                onPressedChange={(pressed) => {
+                  if (!H3_INDICATOR?.resource.column) return;
+
+                  if (pressed) {
+                    // Add
+                    setGridDatasetCategoricalSettings((prev) => ({
+                      ...prev,
+                      [H3_INDICATOR.resource.column]: [...(categoricalValue ?? []), option.value],
+                    }));
+                  } else {
+                    // Remove
+                    setGridDatasetCategoricalSettings((prev) => {
+                      const v = prev?.[H3_INDICATOR!.resource.column] ?? categoricalValue;
+                      if (Array.isArray(v)) {
+                        return {
+                          ...prev,
+                          [H3_INDICATOR!.resource.column]: v.filter((val) => val !== option.value),
+                        };
+                      }
+                      return prev;
+                    });
+                  }
+                }}
+              >
+                {option.label}
+              </Toggle>
             ))}
           </div>
         )}

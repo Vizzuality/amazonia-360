@@ -73,7 +73,7 @@ export const getGridLayerProps = ({
   sketchEnabled,
 }: {
   gridDatasets: string[];
-  gridDatasetContinousSettings: Record<string, number[] | Record<string, string | number>> | null;
+  gridDatasetContinousSettings: Record<string, number[] | undefined> | null;
   gridSelectedDataset: string | null;
   opacity: number;
   getFillColor: Accessor<Record<string, number>, Color>;

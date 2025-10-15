@@ -113,7 +113,7 @@ export const locationParser = parseAsJson<Location>(
   ]),
 );
 
-export const gridDatasetSettingsParser = parseAsJson<Record<string, number[]>>(
+export const gridDatasetSettingsParser = parseAsJson<Record<string, number[] | undefined>>(
   z.record(z.string(), z.array(z.number())),
 );
 export const gridTableSettingsParser = parseAsJson<{
