@@ -59,8 +59,12 @@ export const useSyncLocation = () => {
 };
 
 // GRID PARAMS
-export const useSyncGridDatasetSettings = () => {
-  return useQueryState("gridDatasetSettings", gridDatasetSettingsParser);
+export const useSyncGridDatasetContinousSettings = () => {
+  return useQueryState("gridDatasetContinousSettings", gridDatasetSettingsParser);
+};
+
+export const useSyncGridDatasetCategoricalSettings = () => {
+  return useQueryState("gridDatasetCategoricalSettings", gridDatasetSettingsParser);
 };
 
 export const useSyncGridDatasets = () => {

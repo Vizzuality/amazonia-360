@@ -12,9 +12,10 @@ import { BodyReadTableGridTablePostFiltersItem } from "@/types/generated/api.sch
 
 import {
   useSyncGridDatasets,
-  useSyncGridDatasetSettings,
+  useSyncGridDatasetContinousSettings,
   useSyncLocation,
   useSyncGridTableSettings,
+  useSyncGridDatasetCategoricalSettings,
 } from "@/app/store";
 
 import { CardLoader } from "@/containers/card";
@@ -27,7 +28,8 @@ export default function GridTable() {
   const locale = useLocale();
   const [location] = useSyncLocation();
   const [gridDatasets] = useSyncGridDatasets();
-  const [gridDatasetSettings] = useSyncGridDatasetSettings();
+  const [gridDatasetContinousSettings] = useSyncGridDatasetContinousSettings();
+  const [gridDatasetCategoricalSettings] = useSyncGridDatasetCategoricalSettings();
   const [gridTableSettings] = useSyncGridTableSettings();
 
   const GEOMETRY = useLocationGeometry(location, {
@@ -53,19 +55,36 @@ export default function GridTable() {
         }),
         filters: gridDatasets
           .map((dataset) => {
+            const f = [] as BodyReadTableGridTablePostFiltersItem[];
             const d = queryMeta.data?.datasets.find((d) => d.var_name === dataset);
-            if (!d) return [];
+            if (!d) return f;
 
-            if (d.var_dtype === "Float64") {
-              return (gridDatasetSettings?.[dataset]?.map((f, i) => ({
-                filter_type: "numerical",
-                column_name: dataset,
-                operation: i === 0 ? "gte" : "lte",
-                value: f,
-              })) ?? []) satisfies BodyReadTableGridTablePostFiltersItem[];
+            if (d.legend.legend_type === "continuous") {
+              gridDatasetContinousSettings?.[dataset]?.forEach((v, i) => {
+                f.push({
+                  filter_type: "numerical",
+                  column_name: dataset,
+                  operation: i === 0 ? "gte" : "lte",
+                  value: v,
+                });
+              });
             }
 
-            return [];
+            if (d.legend.legend_type === "categorical" && "entries" in d.legend) {
+              gridDatasetCategoricalSettings?.[dataset] &&
+                f.push({
+                  filter_type: "categorical",
+                  column_name: dataset,
+                  operation: "in",
+                  value: gridDatasetCategoricalSettings?.[dataset],
+                });
+
+              //   gridDatasetCategoricalSettings?.[dataset]?.filter((c) => c.selected).map(
+              //     (c) => c.value,
+              //   ) || [];
+            }
+
+            return f;
           })
           .flat()
           .filter((f) => f),

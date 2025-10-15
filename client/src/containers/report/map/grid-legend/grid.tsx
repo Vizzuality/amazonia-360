@@ -18,6 +18,7 @@ import {
 } from "@/app/store";
 
 import OpacityControl from "@/components/map/controls/opacity";
+import LegendBasic from "@/components/map/legend/basic";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -76,7 +77,7 @@ export const GridLegend: FC = () => {
 
   return (
     <div className="border-muted-background absolute bottom-16 right-4 flex w-72 flex-col space-y-1 rounded-lg border bg-white shadow-md">
-      <div className="flex items-center justify-between gap-1 px-4 py-2">
+      <div className="flex items-center justify-between gap-1 px-4 pt-4">
         <div
           className={cn({
             "text-xs text-foreground": true,
@@ -134,7 +135,7 @@ export const GridLegend: FC = () => {
       </div>
 
       {!!GRID_SELECTED_DATASET && GRID_SELECTED_DATASET.key !== "no-layer" && (
-        <div className="flex flex-col space-y-1 px-4 pb-2">
+        <div className="flex flex-col space-y-1 px-4 pb-4">
           {GRID_SELECTED_DATASET?.legend?.legend_type === "continuous" && (
             <>
               <div className="h-2 w-full rounded-full bg-viridis" />
@@ -144,6 +145,22 @@ export const GridLegend: FC = () => {
                   <span>{formatNumber(GRID_SELECTED_DATASET.legend.stats[0].min ?? 0)}</span>
                   <span>{formatNumber(GRID_SELECTED_DATASET.legend.stats[0].max ?? 1)}</span>
                 </div>
+              )}
+            </>
+          )}
+
+          {GRID_SELECTED_DATASET?.legend?.legend_type === "categorical" && (
+            <>
+              {"entries" in GRID_SELECTED_DATASET.legend && (
+                <LegendBasic
+                  type="basic"
+                  direction="vertical"
+                  items={GRID_SELECTED_DATASET.legend.entries.map((entry, i) => ({
+                    id: i,
+                    label: entry.label,
+                    color: entry.color,
+                  }))}
+                />
               )}
             </>
           )}
