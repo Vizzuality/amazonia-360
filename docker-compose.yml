@@ -7,11 +7,12 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - AUTH_TOKEN=${AUTH_TOKEN}
-      - TIFF_PATH=${TIFF_PATH}
-      - GRID_TILES_PATH=${GRID_TILES_PATH}
+      - AUTH_TOKEN=${API__AUTH_TOKEN}
+      - TIFF_PATH=${API__TIFF_PATH}
+      - GRID_TILES_PATH=${API__GRID_TILES_PATH}
     env_file:
-      - api/.env
+      - path: api/.env
+        required: false
     networks:
       - amazonia360-network
     restart: always
@@ -22,17 +23,18 @@ services:
       dockerfile: Dockerfile
       #target: production
       args:
-        NEXT_PUBLIC_URL: ${NEXT_PUBLIC_URL:-"http://localhost:3000"}
-        NEXT_PUBLIC_WEBSHOT_URL: ${NEXT_PUBLIC_WEBSHOT_URL:-"http://webshot:3003/webshot/api/v1"}
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-"http://api:8000"}
-        NEXT_PUBLIC_ARCGIS_API_KEY: ${NEXT_PUBLIC_ARCGIS_API_KEY:-""}
-        NEXT_PUBLIC_API_KEY: ${NEXT_PUBLIC_API_KEY:-""}
-        NEXT_PUBLIC_FEATURE_PARTNERS: ${NEXT_PUBLIC_FEATURE_PARTNERS:-""}
-        BASIC_AUTH_ENABLED: ${BASIC_AUTH_ENABLED:-"false"}
-        BASIC_AUTH_USER: ${BASIC_AUTH_USER:-""}
-        BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD:-""}
+        NEXT_PUBLIC_URL: ${CLIENT__NEXT_PUBLIC_URL:-http://localhost:3000}
+        NEXT_PUBLIC_WEBSHOT_URL: ${CLIENT__NEXT_PUBLIC_WEBSHOT_URL:-http://webshot:3003/webshot/api/v1}
+        NEXT_PUBLIC_API_URL: ${CLIENT__NEXT_PUBLIC_API_URL:-http://api:8000}
+        NEXT_PUBLIC_ARCGIS_API_KEY: ${CLIENT__NEXT_PUBLIC_ARCGIS_API_KEY}
+        NEXT_PUBLIC_API_KEY: ${CLIENT__NEXT_PUBLIC_API_KEY}
+        NEXT_PUBLIC_FEATURE_PARTNERS: ${CLIENT__NEXT_PUBLIC_FEATURE_PARTNERS}
+        BASIC_AUTH_ENABLED: ${CLIENT__BASIC_AUTH_ENABLED:-false}
+        BASIC_AUTH_USER: ${CLIENT__BASIC_AUTH_USER}
+        BASIC_AUTH_PASSWORD: ${CLIENT__BASIC_AUTH_PASSWORD}
     env_file:
-      - client/.env
+      - path: client/.env
+        required: false
     ports:
       - "3000:3000"
     networks:
