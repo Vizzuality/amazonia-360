@@ -1,9 +1,5 @@
 "use client";
 
-// https://github.com/visgl/deck.gl/issues/9497
-// https://github.com/visgl/deck.gl/issues/9496
-// https://github.com/visgl/deck.gl/issues/9737
-
 import { useCallback, useMemo, useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
@@ -91,7 +87,7 @@ export const getGridLayerProps = ({
 }) => {
   // Create array of 4n values
   const filters = [...Array(4).keys()];
-  const categories = [...Array(3).keys()];
+  // const categories = [...Array(3).keys()];
   const columns = !!gridDatasets.length ? gridDatasets.map((d) => `columns=${d}`).join("&") : "";
 
   return new H3TileLayer({
@@ -237,60 +233,67 @@ export const getGridLayerProps = ({
         });
       };
 
-      const getFilterCategory: Accessor<
-        Record<string, number>,
-        number | string | (number | string)[]
-      > = (d) => {
-        const c = categories.map((f) => {
-          if (gridDatasets[f]) {
-            const legend = gridMetaData?.datasets.find(
-              (dataset) => dataset.var_name === gridDatasets[f],
-            )?.legend;
+      // https://github.com/visgl/deck.gl/issues/9497
+      // https://github.com/visgl/deck.gl/issues/9496
+      // https://github.com/visgl/deck.gl/issues/9737
+      /* We’re currently unable to upgrade deck.gl because the ArcGIS plugin we depend on is outdated and unmaintained.
+        •	As shown in deck.gl issue #9496 and #9497, the ArcGIS integration hasn’t been updated to support newer deck.gl versions. This means that upgrading would break our map rendering and integration pipeline. Since the plugin has no active maintainers, there’s no clear path forward for compatibility fixes.
+        •	Because of that, we’re effectively stuck on deck.gl v9.0.40, which is the last version compatible with the ArcGIS plugin. However, this version has a known problem described in #9737 — hover and click events behave inconsistently across different computers and browsers.
+        •	The same version also prevents us from using or fixing newer features such as filterCategories in the DataFilterExtension, since those improvements exist only in later deck.gl releases that the ArcGIS plugin can’t support.
+      For this reason, categorical filtering will be handled directly inside getFillColor as a workaround.
+      This approach is less performant, since filtering happens on the CPU rather than efficiently on the GPU through the DataFilterExtension, but it’s currently the only viable option given our dependency on the ArcGIS plugin.
+      */
 
-            if (legend?.legend_type === "categorical" && "entries" in legend) {
-              if (typeof d[`${gridDatasets[f]}`] === "bigint") {
-                return Number(d[`${gridDatasets[f]}`]);
-              }
-              return d[`${gridDatasets[f]}`];
-            }
+      // const getFilterCategory: Accessor<
+      //   Record<string, number>,
+      //   number | string | (number | string)[]
+      // > = (d) => {
+      //   const c = categories.map((f) => {
+      //     if (gridDatasets[f]) {
+      //       const legend = gridMetaData?.datasets.find(
+      //         (dataset) => dataset.var_name === gridDatasets[f],
+      //       )?.legend;
 
-            return -1;
-          }
+      //       if (legend?.legend_type === "categorical" && "entries" in legend) {
+      //         if (typeof d[`${gridDatasets[f]}`] === "bigint") {
+      //           return Number(d[`${gridDatasets[f]}`]);
+      //         }
+      //         return d[`${gridDatasets[f]}`];
+      //       }
 
-          return -1;
-        });
+      //       return -1;
+      //     }
 
-        console.log("category", c);
+      //     return -1;
+      //   });
 
-        return c;
-      };
+      //   return c;
+      // };
 
-      const filterCategories = () => {
-        const c = categories.map((f) => {
-          if (gridDatasets[f]) {
-            const legend = gridMetaData?.datasets.find(
-              (dataset) => dataset.var_name === gridDatasets[f],
-            )?.legend;
+      // const filterCategories = () => {
+      //   const c = categories.map((f) => {
+      //     if (gridDatasets[f]) {
+      //       const legend = gridMetaData?.datasets.find(
+      //         (dataset) => dataset.var_name === gridDatasets[f],
+      //       )?.legend;
 
-            if (legend?.legend_type === "categorical" && "entries" in legend) {
-              const entries = legend.entries;
+      //       if (legend?.legend_type === "categorical" && "entries" in legend) {
+      //         const entries = legend.entries;
 
-              const values = gridDatasetSettings?.[gridDatasets[f]];
-              if (values && Array.isArray(values) && values.length) {
-                return values;
-              }
+      //         const values = gridDatasetSettings?.[gridDatasets[f]];
+      //         if (values && Array.isArray(values) && values.length) {
+      //           return values;
+      //         }
 
-              return entries.map((e) => e.value);
-            }
-          }
+      //         return entries.map((e) => e.value);
+      //       }
+      //     }
 
-          return [-1];
-        });
+      //     return [-1];
+      //   });
 
-        console.log("filters", c);
-
-        return c;
-      };
+      //   return c;
+      // };
 
       return [
         new H3HexagonLayer<
@@ -314,13 +317,12 @@ export const getGridLayerProps = ({
           getFillColor,
           getFilterValue,
           filterRange: filterRange(),
-          getFilterCategory,
-          filterCategories: filterCategories(),
+          // getFilterCategory,
+          // filterCategories: filterCategories(),
 
           extensions: [
             new DataFilterExtension({
-              filterSize: 0,
-              categorySize: categories.length as 0 | 1 | 2 | 3,
+              filterSize: filters.length as 0 | 1 | 2 | 3 | 4,
             }),
           ],
           updateTriggers: {
@@ -387,12 +389,11 @@ export const getGridLayerProps = ({
           getFillColor,
           getFilterValue,
           filterRange: filterRange(),
-          getFilterCategory,
-          filterCategories: filterCategories(),
+          // getFilterCategory,
+          // filterCategories: filterCategories(),
           extensions: [
             new DataFilterExtension({
-              filterSize: 0,
-              categorySize: categories.length as 0 | 1 | 2 | 3,
+              filterSize: filters.length as 0 | 1 | 2 | 3 | 4,
             }),
           ],
           getLineWidth: 0,
@@ -437,6 +438,27 @@ export default function GridLayer() {
 
   const { META: gridMetaData } = useMeta(GEOMETRY);
 
+  const CATEGORICAL_DATASETS = useMemo(() => {
+    if (!gridMetaData || !gridDatasets.length) return [];
+    return gridMetaData.datasets
+      .filter((d) => {
+        return (
+          gridDatasets.includes(d.var_name) &&
+          d.legend.legend_type === "categorical" &&
+          "entries" in d.legend
+        );
+      })
+      .map((d) => {
+        if (d.legend.legend_type === "categorical" && "entries" in d.legend) {
+          return {
+            ...d,
+            settings: gridDatasetSettings?.[d.var_name] || d.legend.entries.map((e) => e.value),
+          };
+        }
+        return d;
+      });
+  }, [gridDatasets, gridDatasetSettings, gridMetaData]);
+
   const colorscale = useMemo(() => {
     if (!gridMetaData) return CHROMA.scale([]);
 
@@ -464,13 +486,38 @@ export default function GridLayer() {
 
   const getFillColor = useCallback(
     (d: Record<string, number>): Color => {
-      if (typeof d[`${gridSelectedDataset}`] === "bigint") {
-        const value = Number(d[`${gridSelectedDataset}`]);
-        return colorscale(value).rgb();
+      const v =
+        typeof d[`${gridSelectedDataset}`] === "bigint"
+          ? Number(d[`${gridSelectedDataset}`])
+          : d[`${gridSelectedDataset}`];
+
+      // If there are active categorical datasets, check if the value is in all of them
+      if (!!CATEGORICAL_DATASETS.length) {
+        for (const dataset of CATEGORICAL_DATASETS) {
+          if (
+            dataset.legend.legend_type === "categorical" &&
+            "entries" in dataset.legend &&
+            "settings" in dataset
+          ) {
+            const v1 =
+              typeof d[`${dataset.var_name}`] === "bigint"
+                ? Number(d[`${dataset.var_name}`])
+                : d[`${dataset.var_name}`];
+
+            const c1 = dataset.settings || dataset.legend.entries.map((e) => e.value);
+
+            if (c1 && Array.isArray(c1)) {
+              if (!c1.includes(v1)) {
+                return [0, 0, 0, 0]; // transparent
+              }
+            }
+          }
+        }
       }
-      return colorscale(d[`${gridSelectedDataset}`]).rgb();
+
+      return colorscale(v).rgb();
     },
-    [gridSelectedDataset, colorscale],
+    [gridSelectedDataset, colorscale, CATEGORICAL_DATASETS],
   );
 
   const onCellClick = useCallback((info: PickingInfo) => {
