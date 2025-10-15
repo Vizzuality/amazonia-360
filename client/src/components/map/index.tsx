@@ -2,6 +2,8 @@
 
 import { useContext, useEffect, useRef, useState } from "react";
 
+import Image from "next/image";
+
 import Basemap from "@arcgis/core/Basemap";
 import Color from "@arcgis/core/Color";
 import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
@@ -29,6 +31,7 @@ export type MapProps = {
   onMapMove?: (extent: __esri.Extent) => void;
   onPointerLeave?: () => void;
   initialBasemapId?: BasemapIds;
+  isPdf?: boolean;
 };
 
 export default function Map(mapProps: MapProps) {
@@ -50,10 +53,13 @@ export function MapView({
   onMapMove,
   onPointerLeave,
   initialBasemapId,
+  isPdf = false,
 }: MapProps) {
   const mapRef = useRef<ArcGISMap>();
   const mapViewRef = useRef<ArcGISMapView>();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const [screenshot, setScreenshot] = useState<string | null>(null);
 
   const [loaded, setLoaded] = useState(false);
 
@@ -116,7 +122,8 @@ export function MapView({
       });
       const mapWidth = mapContainerRef.current.offsetWidth;
       const scaleBarPosition = mapWidth >= 1024 ? "bottom-right" : "top-left";
-      mapViewRef.current.ui.add(scaleBar, scaleBarPosition);
+
+      !isPdf && mapViewRef.current.ui.add(scaleBar, scaleBarPosition);
 
       mapViewRef.current.on("pointer-leave", () => {
         if (onPointerLeave) onPointerLeave();
@@ -141,6 +148,15 @@ export function MapView({
           onMapMove && onMapMove(extent);
         },
       );
+
+      ArcGISReactiveUtils.whenOnce(() => !mapViewRef.current?.updating && isPdf).then(() => {
+        // Take a screenshot at the same resolution of the current view
+        mapViewRef.current?.takeScreenshot().then(function (s) {
+          if (s && s.dataUrl) {
+            setScreenshot(s.dataUrl);
+          }
+        });
+      });
 
       return () => {
         onMapUnmount();
@@ -176,8 +192,18 @@ export function MapView({
   }, [bbox, padding]);
 
   return (
-    <div id={`map-${id}`} ref={mapContainerRef} className="map h-full w-full grow">
-      {loaded && children}
-    </div>
+    <>
+      {!screenshot && (
+        <div id={`map-${id}`} ref={mapContainerRef} className="map h-full w-full grow">
+          {loaded && children}
+        </div>
+      )}
+
+      {screenshot && isPdf && (
+        <div className="relative h-full w-full grow">
+          <Image src={screenshot} alt="Map screenshot" fill className="object-cover" />
+        </div>
+      )}
+    </>
   );
 }

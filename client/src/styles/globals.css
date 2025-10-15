@@ -62,12 +62,6 @@
   } */
 }
 
-@page {
-  margin: 0;
-  padding: 0;
-  size: A4 landscape;
-}
-
 @layer base {
   body {
     @apply bg-background font-semibold leading-relaxed text-foreground antialiased;
@@ -141,6 +135,20 @@
 
   .map .esri-widget__table tr td {
     @apply pl-2;
+  }
+}
+
+@layer base {
+  @media print {
+    body {
+      print-color-adjust: exact;
+    }
+
+    @page {
+      size: landscape a4;
+      margin: 0;
+      padding: 0;
+    }
   }
 }
 

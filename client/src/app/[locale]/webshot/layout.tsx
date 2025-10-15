@@ -47,7 +47,7 @@ export default async function RootLayout({
   return (
     <>
       <RootHead />
-      <body className={`${montserrat.className}`}>
+      <body className={`${montserrat.className} bg-gray-500`}>
         <Suspense fallback={null}>
           <NextIntlClientProvider locale={locale}>{children}</NextIntlClientProvider>
         </Suspense>

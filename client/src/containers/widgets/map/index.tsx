@@ -107,6 +107,7 @@ export default function WidgetMap({
           },
           ...viewProps,
         }}
+        isPdf={isPdf}
       >
         {layers.map((layer: LayerProps, index: number, arr: LayerProps[]) => {
           const i = arr.length - index;
@@ -128,17 +129,6 @@ export default function WidgetMap({
         <Layer index={1} layer={DATASETS.area_afp.layer as LayerProps} />
         <SelectedLayer index={layers.length + 2} location={location} />
         <Layer layer={LABELS_LAYER} index={layers.length + 3} />
-
-        {(indicator.resource.type === "feature" ||
-          indicator.resource.type === "imagery" ||
-          indicator.resource.type === "imagery-tile") && (
-          <WidgetLegend
-            {...(indicator as Omit<Indicator, "resource"> & {
-              resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
-            })}
-            interactive={!isWebshot && !isPdf}
-          />
-        )}
 
         {!isWebshot && !isPdf && (
           <Controls>
@@ -162,6 +152,17 @@ export default function WidgetMap({
           </Controls>
         )}
       </Map>
+
+      {(indicator.resource.type === "feature" ||
+        indicator.resource.type === "imagery" ||
+        indicator.resource.type === "imagery-tile") && (
+        <WidgetLegend
+          {...(indicator as Omit<Indicator, "resource"> & {
+            resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
+          })}
+          interactive={!isWebshot && !isPdf}
+        />
+      )}
     </div>
   );
 }
