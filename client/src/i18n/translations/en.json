@@ -273,5 +273,8 @@
   "help": "Help",
   "pdf-report-cover-title": "Report",
   "pdf-report-cover-subtitle": "This report includes a geographic context{topics}",
-  "pdf-report-cover-date": "{date} | English Version"
+  "pdf-report-cover-date": "{date} | English Version",
+  "indicator-webshot-loading": "Exporting PNG for {name}",
+  "indicator-webshot-error": "There was an error exporting the PNG for {name}. Please try again.",
+  "indicator-webshot-success": "Successfully exported PNG for {name}"
 }

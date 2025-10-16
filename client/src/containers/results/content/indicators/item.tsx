@@ -6,14 +6,12 @@ import { useAtom } from "jotai";
 import { VisualizationTypes } from "@/types/indicator";
 
 import { IndicatorView, IndicatorMapView, TopicView } from "@/app/parsers";
-import { indicatorsEditionModeAtom, reportEditionModeAtom, useSyncTopics } from "@/app/store";
+import { indicatorsEditionModeAtom, useSyncTopics } from "@/app/store";
 
 import IndicatorCard from "@/containers/results/content/indicators/card";
 import DeleteHandler from "@/containers/results/content/indicators/controls/delete";
 import MoveHandler from "@/containers/results/content/indicators/controls/drag";
 import ResizeHandler from "@/containers/results/content/indicators/controls/resize";
-
-import { useSidebar } from "@/components/ui/sidebar";
 
 export interface ReportResultsContentIndicatorItemProps {
   topic: TopicView;
@@ -29,8 +27,6 @@ export const ReportResultsContentIndicatorItem = ({
   editing = false,
 }: ReportResultsContentIndicatorItemProps) => {
   const [, setTopics] = useSyncTopics();
-  const { toggleSidebar } = useSidebar();
-  const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
   const [editionModeIndicator, setEditionModeIndicator] = useAtom(indicatorsEditionModeAtom);
   const { id, type } = indicatorView;
 
@@ -58,11 +54,6 @@ export const ReportResultsContentIndicatorItem = ({
     [topic.id, setTopics, setEditionModeIndicator],
   );
 
-  const handleEdit = useCallback(() => {
-    toggleSidebar();
-    setReportEditionMode(!reportEditionMode);
-  }, [toggleSidebar, setReportEditionMode, reportEditionMode]);
-
   const indicatorBasemap = (indicatorView as IndicatorMapView)?.basemapId;
   const INDICATOR = useMemo(() => {
     return (
@@ -71,11 +62,10 @@ export const ReportResultsContentIndicatorItem = ({
         id={id}
         type={type}
         editable={editable}
-        onEdit={handleEdit}
         basemapId={type === "map" ? indicatorView.basemapId : undefined}
       />
     );
-  }, [topic.id, id, type, editable, handleEdit, indicatorBasemap]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [topic.id, id, type, editable, indicatorBasemap]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div

@@ -1,10 +1,12 @@
 "use client";
 
-import { createElement, MouseEvent, useCallback } from "react";
+import { createElement, useCallback } from "react";
 
 import { useSearchParams } from "next/navigation";
 
-import { useLocale } from "next-intl";
+import { useAtom } from "jotai";
+import { useLocale, useTranslations } from "next-intl";
+import { toast, useSonner } from "sonner";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
@@ -12,6 +14,8 @@ import { downloadBlobResponse, usePostWebshotWidgetsMutation } from "@/lib/websh
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 import { ResourceFeature, ResourceImageryTile, ResourceWebTile } from "@/types/indicator";
+
+import { reportEditionModeAtom } from "@/app/store";
 
 import {
   Card,
@@ -34,6 +38,7 @@ import { NumericImageryTileIndicators } from "@/containers/indicators/numeric/im
 import { TableIndicators } from "@/containers/indicators/table";
 
 import { BASEMAPS } from "@/components/map/controls/basemap";
+import { useSidebar } from "@/components/ui/sidebar";
 
 // custom indicators
 
@@ -49,7 +54,6 @@ export default function ReportResultsIndicator({
   type,
   basemapId,
   editable,
-  onEdit,
   isWebshot = false,
   isPdf = false,
 }: {
@@ -57,35 +61,57 @@ export default function ReportResultsIndicator({
   type: VisualizationTypes;
   basemapId?: (typeof BASEMAPS)[number]["id"];
   editable: boolean;
-  onEdit?: (e: MouseEvent<HTMLElement>) => void;
   isWebshot?: boolean;
   isPdf?: boolean;
 }) {
+  const { toasts } = useSonner();
   const locale = useLocale();
+  const t = useTranslations();
   const indicator = useGetIndicatorsId(id, locale);
   const searchParams = useSearchParams();
 
+  const { toggleSidebar } = useSidebar();
+  const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
+
   const postWebshotWidgetsMutation = usePostWebshotWidgetsMutation();
 
-  const onWebshotDownload = useCallback(
+  const handleEdit = useCallback(() => {
+    toggleSidebar();
+    setReportEditionMode(!reportEditionMode);
+  }, [toggleSidebar, setReportEditionMode, reportEditionMode]);
+
+  const handleWebshotDownload = useCallback(
     async (format: string) => {
-      postWebshotWidgetsMutation.mutate(
-        {
-          pagePath: `/${locale}/webshot/widgets/${id}/${type}?${searchParams.toString()}`,
-          outputFileName: `indicator-${id}.${format.toLowerCase()}`,
-          params: undefined,
-        },
-        {
-          onSuccess: async (res) => {
-            await downloadBlobResponse(res.data, `indicator-${id}-${type}.${format.toLowerCase()}`);
+      if (toasts.find((t) => t.id === `indicator-${id}-${type}`)) return;
+
+      toast.promise(
+        postWebshotWidgetsMutation.mutateAsync(
+          {
+            pagePath: `/${locale}/webshot/widgets/${id}/${type}?${searchParams.toString()}`,
+            outputFileName: `indicator-${id}.${format.toLowerCase()}`,
+            params: undefined,
           },
-          onError: (error) => {
-            console.error("Error downloading widget:", error);
+          {
+            onSuccess: async (res) => {
+              await downloadBlobResponse(
+                res.data,
+                `indicator-${id}-${type}.${format.toLowerCase()}`,
+              );
+            },
+            onError: (error) => {
+              console.error("Error downloading widget:", error);
+            },
           },
+        ),
+        {
+          id: `indicator-${id}-${type}`,
+          loading: t("indicator-webshot-loading", { name: indicator?.name ?? "" }),
+          success: t("indicator-webshot-success", { name: indicator?.name ?? "" }),
+          error: t("indicator-webshot-error", { name: indicator?.name ?? "" }),
         },
       );
     },
-    [id, type, locale, searchParams, postWebshotWidgetsMutation],
+    [id, t, indicator, type, toasts, locale, searchParams, postWebshotWidgetsMutation],
   );
 
   if (!indicator) return null;
@@ -101,8 +127,8 @@ export default function ReportResultsIndicator({
             {editable && (
               <CardPopover
                 id={indicator?.id}
-                onClick={onEdit}
-                onWebshotDownload={onWebshotDownload}
+                onClick={handleEdit}
+                onWebshotDownload={handleWebshotDownload}
                 isDownloading={postWebshotWidgetsMutation.isPending}
               />
             )}

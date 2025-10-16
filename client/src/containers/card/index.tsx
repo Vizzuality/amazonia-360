@@ -28,6 +28,7 @@ import {
   DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuGroup,
+  DropdownMenuItem,
 } from "@/components/ui/dropdown";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -118,21 +119,15 @@ export function CardDownload({
       <ul>
         {DOWNLOAD_FORMATS.map((format) => {
           return (
-            <li className="py-1.5" key={format.value}>
-              <button
-                type="button"
-                className="flex items-center"
-                onClick={() => onWebshotDownload(format.value)}
-              >
-                {isDownloading && (
-                  <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
-                )}
+            <DropdownMenuItem key={format.value} onSelect={() => onWebshotDownload(format.value)}>
+              {isDownloading && (
+                <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+              )}
 
-                {!isDownloading && <LuDownload className="mr-2 inline-block h-4 w-4" />}
+              {!isDownloading && <LuDownload className="mr-2 inline-block h-4 w-4" />}
 
-                {format.label}
-              </button>
-            </li>
+              {format.label}
+            </DropdownMenuItem>
           );
         })}
       </ul>
@@ -141,13 +136,12 @@ export function CardDownload({
 }
 
 export function CardPopover({
-  id,
   onClick,
   onWebshotDownload = () => undefined,
   isDownloading = false,
 }: PropsWithChildren<{
   id: Indicator["id"];
-  onClick?: (e: MouseEvent<HTMLElement>) => void;
+  onClick?: (e: Event) => void;
   onWebshotDownload?: (format: string) => void;
   isDownloading?: boolean;
 }>) {
@@ -171,7 +165,10 @@ export function CardPopover({
         <DropdownMenuPortal>
           <DropdownMenuContent side="left" align="start" sideOffset={6}>
             <DropdownMenuGroup className="px-2 py-1.5 text-sm text-popover-foreground">
-              <CardSettings id={id} onClick={onClick} />
+              <DropdownMenuItem onSelect={onClick} className="space-x-2">
+                <LuPen className="inline-block h-4 w-4" />
+                <span>{t("edit-indicator")}</span>
+              </DropdownMenuItem>
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator className="-mx-1 my-1 h-px bg-border" />
