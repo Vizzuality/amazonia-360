@@ -2,14 +2,14 @@
 
 import { useSearchParams } from "next/navigation";
 
+import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { FileDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { Link } from "@/i18n/navigation";
-import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useTranslations } from "next-intl";
-import { TooltipPortal } from "@radix-ui/react-tooltip";
 
 export default function ReportButton() {
   const t = useTranslations();

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { Share2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LuCopy } from "react-icons/lu";
@@ -15,10 +16,9 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { usePathname } from "@/i18n/navigation";
-import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { TooltipPortal } from "@radix-ui/react-tooltip";
 
 export default function ShareReport() {
   const t = useTranslations();
