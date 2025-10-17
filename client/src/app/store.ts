@@ -138,23 +138,4 @@ export const generatedAITextAtom = atom<{ content: { id: number; description: st
   content: [],
 });
 
-export const setGeneratedAITextAtom = atom(
-  null,
-  (get, set, update: { id: number; description: string }) => {
-    const prev = get(generatedAITextAtom);
-    const idx = prev.content.findIndex((item) => item.id === update.id);
-
-    const next =
-      idx >= 0
-        ? {
-            content: prev.content.map((item, i) => (i === idx ? { ...item, ...update } : item)),
-          }
-        : {
-            content: [...prev.content, update],
-          };
-
-    set(generatedAITextAtom, next);
-  },
-);
-
 export const indicatorsExpandAtom = atom<Record<number, number[] | undefined> | undefined>({});
