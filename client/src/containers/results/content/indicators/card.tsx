@@ -27,8 +27,6 @@ import {
   CardPopover,
 } from "@/containers/card";
 import { ChartIndicators } from "@/containers/indicators/chart";
-import { ChartImageryIndicators } from "@/containers/indicators/chart/imagery";
-import { ChartImageryTileIndicators } from "@/containers/indicators/chart/imagery-tile";
 import { Municipalities } from "@/containers/indicators/custom/municipalities";
 import { TotalArea } from "@/containers/indicators/custom/total-area";
 import { MapIndicators } from "@/containers/indicators/map";
@@ -154,15 +152,7 @@ export default function ReportResultsIndicator({
           {/*
             Charts
           */}
-          {type === "chart" && indicator.resource.type === "feature" && (
-            <ChartIndicators {...indicator} resource={indicator.resource} />
-          )}
-          {type === "chart" && indicator.resource.type === "imagery" && (
-            <ChartImageryIndicators {...indicator} resource={indicator.resource} />
-          )}
-          {type === "chart" && indicator.resource.type === "imagery-tile" && (
-            <ChartImageryTileIndicators {...indicator} resource={indicator.resource} />
-          )}
+          {type === "chart" && <ChartIndicators id={id} />}
 
           {indicator.resource.type === "component" &&
             !!COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS] &&
