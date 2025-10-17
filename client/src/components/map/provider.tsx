@@ -1,6 +1,14 @@
 "use client";
 
-import { ReactNode, createContext, useCallback, useContext, useState, useRef } from "react";
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+  useRef,
+  useMemo,
+} from "react";
 
 export type MapProps = {
   map?: __esri.Map;
@@ -41,7 +49,10 @@ export const MapProvider: React.FC<{
 }> = ({ children, onLoad }) => {
   const [mapInstance, setMapInstance] = useState<MapProps>();
   const layerViews = useRef<LayerView[]>([]);
-  // const [layerViews, setLayerViews] = useState<string[]>([]);
+  const onLoadRef = useRef(onLoad);
+
+  // Keep onLoad ref up to date without causing rerenders
+  onLoadRef.current = onLoad;
 
   const onMapMount = useCallback((m: MapProps) => setMapInstance(m), []);
 
@@ -55,7 +66,24 @@ export const MapProvider: React.FC<{
     }
     layerViews.current.push({ id, status: "loading" });
   }, []);
-  // setLayerViews((prev) => {
+
+  const checkLoadingComplete = useCallback((mapInstanceParam: MapProps | undefined) => {
+    const { map } = mapInstanceParam || {};
+
+    if (map) {
+      const MAP_LAYERS = map.allLayers.filter(
+        (l) => !!layerViews.current.find((lv) => lv.id === l.id),
+      );
+
+      if (
+        !!layerViews.current.length &&
+        layerViews.current.length === MAP_LAYERS.length &&
+        layerViews.current.every((lv) => lv.status !== "loading")
+      ) {
+        if (onLoadRef.current) onLoadRef.current(layerViews.current);
+      }
+    }
+  }, []);
 
   const onLayerViewLoaded = useCallback(
     (id: string) => {
@@ -63,24 +91,9 @@ export const MapProvider: React.FC<{
       if (l) {
         l.status = "success";
       }
-
-      const { map } = mapInstance || {};
-
-      if (map) {
-        const MAP_LAYERS = map.allLayers.filter(
-          (l) => !!layerViews.current.find((lv) => lv.id === l.id),
-        );
-
-        if (
-          !!layerViews.current.length &&
-          layerViews.current.length === MAP_LAYERS.length &&
-          layerViews.current.every((lv) => lv.status !== "loading")
-        ) {
-          if (onLoad) onLoad(layerViews.current);
-        }
-      }
+      checkLoadingComplete(mapInstance);
     },
-    [mapInstance, onLoad],
+    [mapInstance, checkLoadingComplete],
   );
 
   const onLayerViewError = useCallback(
@@ -89,50 +102,46 @@ export const MapProvider: React.FC<{
       if (l) {
         l.status = "error";
       }
-
-      const { map } = mapInstance || {};
-
-      if (map) {
-        const MAP_LAYERS = map.allLayers.filter(
-          (l) => !!layerViews.current.find((lv) => lv.id === l.id),
-        );
-
-        if (
-          !!layerViews.current.length &&
-          layerViews.current.length === MAP_LAYERS.length &&
-          layerViews.current.every((lv) => lv.status !== "loading")
-        ) {
-          if (onLoad) onLoad(layerViews.current);
-        }
-      }
+      checkLoadingComplete(mapInstance);
     },
-    [mapInstance, onLoad],
+    [mapInstance, checkLoadingComplete],
   );
 
-  return (
-    <MapContext.Provider
-      value={{
-        mapInstance,
-        onMapMount,
-        onMapUnmount,
-        onLayerViewLoading,
-        onLayerViewLoaded,
-        onLayerViewError,
-      }}
-    >
-      {children}
-    </MapContext.Provider>
+  // Memoize the context value to prevent unnecessary rerenders
+  const contextValue = useMemo(
+    () => ({
+      mapInstance,
+      onMapMount,
+      onMapUnmount,
+      onLayerViewLoading,
+      onLayerViewLoaded,
+      onLayerViewError,
+    }),
+    [
+      mapInstance,
+      onMapMount,
+      onMapUnmount,
+      onLayerViewLoading,
+      onLayerViewLoaded,
+      onLayerViewError,
+    ],
   );
+
+  return <MapContext.Provider value={contextValue}>{children}</MapContext.Provider>;
 };
 
 export function useMap(): MapProps | undefined {
   const { mapInstance, onLayerViewLoading, onLayerViewLoaded, onLayerViewError } =
     useContext(MapContext);
 
-  return {
-    ...mapInstance,
-    onLayerViewLoading,
-    onLayerViewLoaded,
-    onLayerViewError,
-  };
+  // Memoize the returned object to prevent rerenders
+  return useMemo(
+    () => ({
+      ...mapInstance,
+      onLayerViewLoading,
+      onLayerViewLoaded,
+      onLayerViewError,
+    }),
+    [mapInstance, onLayerViewLoading, onLayerViewLoaded, onLayerViewError],
+  );
 }

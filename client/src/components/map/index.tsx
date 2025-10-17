@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
 
@@ -38,8 +38,17 @@ export type MapProps = {
 };
 
 export default function Map(mapProps: MapProps) {
+  const handleLoad = useCallback(
+    (layerViews: LayerView[]) => {
+      if (mapProps.onLoad) {
+        mapProps.onLoad(layerViews);
+      }
+    },
+    [mapProps],
+  );
+
   return (
-    <MapProvider onLoad={mapProps.onLoad}>
+    <MapProvider onLoad={handleLoad}>
       <MapView {...omit(mapProps, ["onLoad"])} />
     </MapProvider>
   );
