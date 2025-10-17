@@ -21,6 +21,7 @@ import { useSyncLocation, useSyncTopics, useSyncDefaultTopics } from "@/app/stor
 
 import { DATASETS } from "@/constants/datasets";
 
+import { useIndicator } from "@/containers/indicators/provider";
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
 import { WidgetLegend } from "@/containers/widgets/map/legend";
 
@@ -42,6 +43,7 @@ interface WidgetMapProps extends Omit<__esri.MapViewProperties, "map"> {
   layers: LayerProps[];
   isWebshot?: boolean;
   isPdf?: boolean;
+  onLoad?: () => void;
 }
 
 export default function WidgetMap({
@@ -59,7 +61,13 @@ export default function WidgetMap({
   const [topics, setTopics] = useSyncTopics();
   const [syncDefaultTopics, setSyncDefaultTopics] = useSyncDefaultTopics();
 
+  const { onIndicatorViewLoaded, onIndicatorViewLoading } = useIndicator();
+
   const { data: overviewTopicsData } = useGetOverviewTopics({ locale });
+
+  useMemo(() => {
+    onIndicatorViewLoading(indicator.id);
+  }, [indicator.id, onIndicatorViewLoading]);
 
   const { syncBasemapId, opacity } = useMemo(() => {
     const topicWithIndicator =
@@ -89,8 +97,8 @@ export default function WidgetMap({
   }, []);
 
   const handleLoad = useCallback(() => {
-    console.info(`Map loaded: ${indicator.name} `);
-  }, [indicator.name]);
+    onIndicatorViewLoaded(indicator.id);
+  }, [indicator.id, onIndicatorViewLoaded]);
 
   if (!GEOMETRY) return null;
 

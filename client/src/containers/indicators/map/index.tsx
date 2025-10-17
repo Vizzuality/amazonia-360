@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 import { useLocale } from "next-intl";
 
 import { useGetIndicatorsLayerId } from "@/lib/indicators";
@@ -10,6 +12,7 @@ import {
 } from "@/types/indicator";
 import { Indicator } from "@/types/indicator";
 
+import { IndicatorProvider } from "@/containers/indicators/provider";
 import WidgetMap from "@/containers/widgets/map";
 
 import { BASEMAPS } from "@/components/map/controls/basemap";
@@ -28,15 +31,21 @@ export const MapIndicators = (
 
   const LAYER = useGetIndicatorsLayerId(id, locale, {});
 
+  const handleLoad = useCallback(() => {
+    console.info(`Indicator loaded: ${props?.name}`);
+  }, [props]);
+
   if (!LAYER) return null;
 
   return (
-    <WidgetMap
-      indicator={props}
-      basemapId={basemapId}
-      layers={[LAYER]}
-      isWebshot={props.isWebshot}
-      isPdf={props.isPdf}
-    />
+    <IndicatorProvider onLoad={handleLoad}>
+      <WidgetMap
+        indicator={props}
+        basemapId={basemapId}
+        layers={[LAYER]}
+        isWebshot={props.isWebshot}
+        isPdf={props.isPdf}
+      />
+    </IndicatorProvider>
   );
 };
