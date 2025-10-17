@@ -11,6 +11,7 @@ import { Indicator, ResourceFeature } from "@/types/indicator";
 import { useSyncLocation } from "@/app/store";
 
 import { CardLoader } from "@/containers/card";
+import { useIndicator } from "@/containers/indicators/provider";
 import { DataTable } from "@/containers/widgets/table";
 
 export interface TableIndicatorsFeatureProps extends Indicator {
@@ -20,6 +21,8 @@ export interface TableIndicatorsFeatureProps extends Indicator {
 export const TableIndicatorsFeature = ({ id, resource }: TableIndicatorsFeatureProps) => {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
+
+  const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();
 
   const query = useQueryFeatureId({ id, resource, type: "table", geometry: GEOMETRY });
 
@@ -49,6 +52,20 @@ export const TableIndicatorsFeature = ({ id, resource }: TableIndicatorsFeatureP
       };
     });
   }, [query.data]);
+
+  useMemo(() => {
+    if (query.isLoading) {
+      onIndicatorViewLoading(id);
+    }
+
+    if (query.isError) {
+      onIndicatorViewError(id);
+    }
+
+    if (query.isSuccess) {
+      onIndicatorViewLoaded(id);
+    }
+  }, [query, id, onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError]);
 
   return (
     <CardLoader query={[query]} className="h-72">
