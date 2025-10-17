@@ -4,10 +4,7 @@ import { useCallback, useMemo } from "react";
 
 import dynamic from "next/dynamic";
 
-import { useLocale } from "next-intl";
-
 import { useLocationGeometry } from "@/lib/location";
-import { useGetOverviewTopics } from "@/lib/topics";
 
 import {
   Indicator,
@@ -16,7 +13,7 @@ import {
   ResourceImageryTile,
 } from "@/types/indicator";
 
-import { DefaultTopicConfig, IndicatorMapView } from "@/app/parsers";
+import { IndicatorMapView } from "@/app/parsers";
 import { useSyncLocation, useSyncTopics, useSyncDefaultTopics } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
@@ -54,16 +51,12 @@ export default function WidgetMap({
   isPdf = false,
   ...viewProps
 }: WidgetMapProps) {
-  const locale = useLocale();
-
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
   const [topics, setTopics] = useSyncTopics();
-  const [syncDefaultTopics, setSyncDefaultTopics] = useSyncDefaultTopics();
+  const [defaultTopics, setDefaultTopics] = useSyncDefaultTopics();
 
   const { onIndicatorViewLoaded, onIndicatorViewLoading } = useIndicator();
-
-  const { data: overviewTopicsData } = useGetOverviewTopics({ locale });
 
   useMemo(() => {
     onIndicatorViewLoading(indicator.id);
@@ -71,9 +64,8 @@ export default function WidgetMap({
 
   const { syncBasemapId, opacity } = useMemo(() => {
     const topicWithIndicator =
-      syncDefaultTopics?.find((topic) =>
-        topic.indicators?.find((ind) => ind.id === indicator.id),
-      ) || topics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id));
+      defaultTopics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id)) ||
+      topics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id));
     const indicatorConfig = topicWithIndicator?.indicators?.find(
       (ind) => ind.id === indicator.id && "type" in ind && (ind as IndicatorMapView).type === "map",
     );
@@ -82,7 +74,7 @@ export default function WidgetMap({
         indicatorConfig && "basemapId" in indicatorConfig ? indicatorConfig.basemapId : basemapId,
       opacity: indicatorConfig && "opacity" in indicatorConfig ? indicatorConfig.opacity : 100,
     };
-  }, [syncDefaultTopics, indicator.id, topics, basemapId]);
+  }, [defaultTopics, indicator.id, topics, basemapId]);
 
   const defaultValues = useMemo(() => ({ basemapId, opacity: 100 }), [basemapId]);
 
@@ -156,11 +148,9 @@ export default function WidgetMap({
                 handleMapIndicatorPropertyChange(
                   "basemapId",
                   selectedBasemapId,
-                  overviewTopicsData
-                    ? (overviewTopicsData as unknown as DefaultTopicConfig[])
-                    : null,
+                  defaultTopics,
                   indicator,
-                  setSyncDefaultTopics,
+                  setDefaultTopics,
                   setTopics,
                   defaultValues,
                 )

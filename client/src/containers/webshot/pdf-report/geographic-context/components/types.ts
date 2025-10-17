@@ -1,6 +1,6 @@
 import { Locale } from "next-intl";
 
 export interface DataRowProps {
-  indicatorId: number;
+  id: number;
   locale: Locale;
 }

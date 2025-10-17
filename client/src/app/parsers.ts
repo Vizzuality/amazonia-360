@@ -38,17 +38,6 @@ export type TopicView = {
   indicators?: IndicatorView[];
 };
 
-export type DefaultTopicIndicatorConfig = {
-  id: number;
-  basemapId?: BasemapIds;
-  opacity?: number;
-};
-
-export type DefaultTopicConfig = {
-  id: number;
-  indicators: DefaultTopicIndicatorConfig[];
-};
-
 export type AiSummary = {
   type?: ContextDescriptionType;
   only_active?: boolean;
@@ -63,19 +52,94 @@ export const indicatorsSettingsParser = parseAsJson<Record<number, { opacity?: n
 
 // Default topics are the ones that are pre-configured in every report
 export const defaultTopicsConfigParser = parseAsArrayOf(
-  parseAsJson<DefaultTopicConfig>(
-    z.object({
-      id: z.number(),
-      indicators: z.array(
-        z.object({
-          id: z.number(),
-          basemapId: z.custom<BasemapIds>().optional(),
-          opacity: z.number().min(0).max(1).optional(),
-        }),
-      ),
-    }),
-  ),
-);
+  parseAsJson<TopicView>(z.custom<TopicView>()),
+).withDefault([
+  {
+    id: 0,
+    indicators: [
+      {
+        id: 0,
+        type: "numeric",
+        x: 0,
+        y: 0,
+        w: 1,
+        h: 1,
+      },
+      {
+        id: 35,
+        type: "numeric",
+        x: 1,
+        y: 0,
+        w: 1,
+        h: 1,
+      },
+      {
+        id: 11,
+        type: "numeric",
+        x: 2,
+        y: 0,
+        w: 1,
+        h: 1,
+      },
+      {
+        id: 12,
+        type: "numeric",
+        x: 3,
+        y: 0,
+        w: 1,
+        h: 1,
+      },
+      {
+        id: 5,
+        type: "map",
+        x: 0,
+        y: 2,
+        w: 2,
+        h: 4,
+      },
+      {
+        id: 4,
+        type: "table",
+        x: 2,
+        y: 2,
+        w: 2,
+        h: 4,
+      },
+      {
+        id: 2,
+        type: "numeric",
+        x: 0,
+        y: 1,
+        w: 1,
+        h: 1,
+      },
+      {
+        id: 3,
+        type: "numeric",
+        x: 1,
+        y: 1,
+        w: 1,
+        h: 1,
+      },
+      {
+        id: 4,
+        type: "numeric",
+        x: 2,
+        y: 1,
+        w: 1,
+        h: 1,
+      },
+      {
+        id: 5,
+        type: "numeric",
+        x: 3,
+        y: 1,
+        w: 1,
+        h: 1,
+      },
+    ],
+  },
+]);
 
 export const bboxParser = parseAsArrayOf(parseAsFloat);
 

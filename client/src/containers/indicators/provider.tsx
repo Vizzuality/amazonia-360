@@ -29,29 +29,29 @@ export const IndicatorContext = createContext<IndicatorContextProps>({
 
 export const IndicatorProvider: React.FC<{
   children?: ReactNode;
-  onLoad?: (chartViews: IndicatorView[]) => void;
+  onLoad?: (indicatorViews: IndicatorView[]) => void;
 }> = ({ children, onLoad }) => {
-  const chartViews = useRef<IndicatorView[]>([]);
+  const indicatorViews = useRef<IndicatorView[]>([]);
 
   const onIndicatorViewLoading = useCallback((id: string | number) => {
-    if (chartViews.current.find((lv) => lv.id === id)) {
+    if (indicatorViews.current.find((lv) => lv.id === id)) {
       return;
     }
-    chartViews.current.push({ id, status: "loading" });
+    indicatorViews.current.push({ id, status: "loading" });
   }, []);
 
   const onIndicatorViewLoaded = useCallback(
     (id: string | number) => {
-      const l = chartViews.current.find((lv) => lv.id === id);
+      const l = indicatorViews.current.find((lv) => lv.id === id);
       if (l) {
         l.status = "success";
       }
 
       if (
-        !!chartViews.current.length &&
-        chartViews.current.every((lv) => lv.status !== "loading")
+        !!indicatorViews.current.length &&
+        indicatorViews.current.every((lv) => lv.status !== "loading")
       ) {
-        if (onLoad) onLoad(chartViews.current);
+        if (onLoad) onLoad(indicatorViews.current);
       }
     },
     [onLoad],
@@ -59,16 +59,16 @@ export const IndicatorProvider: React.FC<{
 
   const onIndicatorViewError = useCallback(
     (id: string | number) => {
-      const l = chartViews.current.find((lv) => lv.id === id);
+      const l = indicatorViews.current.find((lv) => lv.id === id);
       if (l) {
         l.status = "error";
       }
 
       if (
-        !!chartViews.current.length &&
-        chartViews.current.every((lv) => lv.status !== "loading")
+        !!indicatorViews.current.length &&
+        indicatorViews.current.every((lv) => lv.status !== "loading")
       ) {
-        if (onLoad) onLoad(chartViews.current);
+        if (onLoad) onLoad(indicatorViews.current);
       }
     },
     [onLoad],

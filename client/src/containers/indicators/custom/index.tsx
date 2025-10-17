@@ -8,6 +8,7 @@ import { Indicator } from "@/types/indicator";
 
 import { Municipalities } from "@/containers/indicators/custom/municipalities";
 import { TotalArea } from "@/containers/indicators/custom/total-area";
+import { useLoad } from "@/containers/indicators/load-provider";
 import { IndicatorProvider } from "@/containers/indicators/provider";
 
 const COMPONENT_INDICATORS = {
@@ -21,9 +22,11 @@ export const CustomIndicators = ({ id }: { id: Indicator["id"] }) => {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
 
+  const { onReady } = useLoad();
+
   const handleLoad = useCallback(() => {
-    console.info(`Indicator loaded: ${indicator?.name}`);
-  }, [indicator]);
+    onReady(`${indicator!.id}-custom`);
+  }, [indicator, onReady]);
 
   if (!indicator) return null;
 

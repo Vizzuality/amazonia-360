@@ -6,6 +6,7 @@ import { useGetIndicatorsId } from "@/lib/indicators";
 
 import { Indicator } from "@/types/indicator";
 
+import { useLoad } from "@/containers/indicators/load-provider";
 import { NumericIndicatorsFeature } from "@/containers/indicators/numeric/feature";
 import { NumericImageryIndicators } from "@/containers/indicators/numeric/imagery";
 import { NumericImageryTileIndicators } from "@/containers/indicators/numeric/imagery-tile";
@@ -15,9 +16,11 @@ export const NumericIndicators = ({ id }: { id: Indicator["id"] }) => {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
 
+  const { onReady } = useLoad();
+
   const handleLoad = useCallback(() => {
-    console.info(`Indicator loaded: ${indicator?.name}`);
-  }, [indicator]);
+    onReady(`${indicator!.id}-numeric`);
+  }, [indicator, onReady]);
 
   if (!indicator) return null;
 

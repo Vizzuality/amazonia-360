@@ -12,6 +12,7 @@ import {
 } from "@/types/indicator";
 import { Indicator } from "@/types/indicator";
 
+import { useLoad } from "@/containers/indicators/load-provider";
 import { IndicatorProvider } from "@/containers/indicators/provider";
 import WidgetMap from "@/containers/widgets/map";
 
@@ -31,9 +32,11 @@ export const MapIndicators = (
 
   const LAYER = useGetIndicatorsLayerId(id, locale, {});
 
+  const { onReady } = useLoad();
+
   const handleLoad = useCallback(() => {
-    console.info(`Indicator loaded: ${props?.name}`);
-  }, [props]);
+    onReady(`${id}-map`);
+  }, [id, onReady]);
 
   if (!LAYER) return null;
 
