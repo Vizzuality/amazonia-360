@@ -12,10 +12,17 @@ import { Indicator } from "@/types/indicator";
 import { useSyncLocation } from "@/app/store";
 
 import { CardWidgetNumber } from "@/containers/card";
+import { useIndicator } from "@/containers/indicators/provider";
 
 export const TotalArea = ({ indicator }: { indicator: Indicator }) => {
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
+
+  const { onIndicatorViewLoading, onIndicatorViewLoaded } = useIndicator();
+
+  useMemo(() => {
+    onIndicatorViewLoading(indicator.id);
+  }, [indicator.id, onIndicatorViewLoading]);
 
   const AREA = useMemo(() => {
     if (!GEOMETRY) return null;
@@ -24,6 +31,10 @@ export const TotalArea = ({ indicator }: { indicator: Indicator }) => {
       maximumFractionDigits: 0,
     });
   }, [GEOMETRY]);
+
+  useMemo(() => {
+    onIndicatorViewLoaded(indicator.id);
+  }, [indicator.id, onIndicatorViewLoaded]);
 
   return <CardWidgetNumber value={AREA} unit={indicator?.unit} />;
 };

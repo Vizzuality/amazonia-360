@@ -1,6 +1,6 @@
 "use client";
 
-import { createElement, useCallback } from "react";
+import { useCallback } from "react";
 
 import { useSearchParams } from "next/navigation";
 
@@ -27,8 +27,7 @@ import {
   CardPopover,
 } from "@/containers/card";
 import { ChartIndicators } from "@/containers/indicators/chart";
-import { Municipalities } from "@/containers/indicators/custom/municipalities";
-import { TotalArea } from "@/containers/indicators/custom/total-area";
+import { CustomIndicators } from "@/containers/indicators/custom";
 import { MapIndicators } from "@/containers/indicators/map";
 import { NumericIndicators } from "@/containers/indicators/numeric";
 import { TableIndicators } from "@/containers/indicators/table";
@@ -37,13 +36,6 @@ import { BASEMAPS } from "@/components/map/controls/basemap";
 import { useSidebar } from "@/components/ui/sidebar";
 
 // custom indicators
-
-const COMPONENT_INDICATORS = {
-  "total-area": TotalArea,
-  AMZ_LOCADM2: Municipalities,
-} as const;
-
-type COMPONENT_INDICATORS_KEYS = keyof typeof COMPONENT_INDICATORS;
 
 export default function ReportResultsIndicator({
   id,
@@ -150,21 +142,28 @@ export default function ReportResultsIndicator({
           {/*
             Charts
           */}
-          {type === "chart" && <ChartIndicators id={id} />}
+          {type === "chart" && indicator.resource.type !== "component" && (
+            <ChartIndicators id={id} />
+          )}
 
-          {indicator.resource.type === "component" &&
-            !!COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS] &&
-            createElement(
-              COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS],
-              { indicator },
-            )}
+          {/*
+            Custom
+          */}
+          {indicator.resource.type === "component" && <CustomIndicators id={id} />}
 
-          {type === "numeric" && <NumericIndicators id={id} />}
+          {/*
+            Numeric
+          */}
+          {type === "numeric" && indicator.resource.type !== "component" && (
+            <NumericIndicators id={id} />
+          )}
 
           {/*
             Table
           */}
-          {type === "table" && indicator.resource.type === "feature" && <TableIndicators id={id} />}
+          {type === "table" &&
+            indicator.resource.type !== "component" &&
+            indicator.resource.type === "feature" && <TableIndicators id={id} />}
         </CardContent>
       </Card>
     </div>

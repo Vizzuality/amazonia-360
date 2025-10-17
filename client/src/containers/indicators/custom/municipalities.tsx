@@ -12,6 +12,7 @@ import { Indicator, ResourceFeature } from "@/types/indicator";
 import { useSyncLocation } from "@/app/store";
 
 import { CardLoader } from "@/containers/card";
+import { useIndicator } from "@/containers/indicators/provider";
 import { DataTable } from "@/containers/widgets/table";
 
 const INDICATORS = [
@@ -24,8 +25,11 @@ const INDICATORS = [
 export const Municipalities = ({ indicator }: { indicator: Indicator }) => {
   const locale = useLocale();
   const t = useTranslations();
+
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
+
+  const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();
 
   const { data: indicatorsData } = useGetIndicators(locale, {
     select: (data) => data.filter((i) => INDICATORS.some((indicator) => indicator.id === i.id)),
@@ -68,6 +72,20 @@ export const Municipalities = ({ indicator }: { indicator: Indicator }) => {
       };
     });
   }, [query.data]);
+
+  useMemo(() => {
+    if (query.isLoading) {
+      onIndicatorViewLoading(id);
+    }
+
+    if (query.isError) {
+      onIndicatorViewError(id);
+    }
+
+    if (query.isSuccess) {
+      onIndicatorViewLoaded(id);
+    }
+  }, [query, id, onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError]);
 
   return (
     <CardLoader query={[query]} className="h-72">
