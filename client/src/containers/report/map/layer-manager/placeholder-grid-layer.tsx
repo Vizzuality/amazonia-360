@@ -103,13 +103,13 @@ export default function PlaceholderGridLayer() {
   const GRID_LAYER = useRef<typeof DeckLayer>();
   const [location] = useSyncLocation();
   const map = useMap();
-  const [zoom, setZoom] = useState(map?.view.zoom);
+  const [zoom, setZoom] = useState(map?.view?.zoom);
 
   const setZoomDebounced = useDebounce((z: number) => {
     setZoom(z);
   }, 100);
 
-  map?.view.watch("zoom", setZoomDebounced);
+  map?.view?.watch("zoom", setZoomDebounced);
 
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,

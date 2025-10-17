@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 import dynamic from "next/dynamic";
 
@@ -52,10 +52,15 @@ export default function WidgetMap({
   isPdf = false,
   ...viewProps
 }: WidgetMapProps) {
+  const locale = useLocale();
+
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
   const [topics, setTopics] = useSyncTopics();
   const [syncDefaultTopics, setSyncDefaultTopics] = useSyncDefaultTopics();
+
+  const { data: overviewTopicsData } = useGetOverviewTopics({ locale });
+
   const { syncBasemapId, opacity } = useMemo(() => {
     const topicWithIndicator =
       syncDefaultTopics?.find((topic) =>
@@ -70,8 +75,7 @@ export default function WidgetMap({
       opacity: indicatorConfig && "opacity" in indicatorConfig ? indicatorConfig.opacity : 100,
     };
   }, [syncDefaultTopics, indicator.id, topics, basemapId]);
-  const locale = useLocale();
-  const { data: overviewTopicsData } = useGetOverviewTopics({ locale });
+
   const defaultValues = useMemo(() => ({ basemapId, opacity: 100 }), [basemapId]);
 
   const LABELS_LAYER = useMemo(() => {
@@ -83,6 +87,10 @@ export default function WidgetMap({
         "https://www.arcgis.com/sharing/rest/content/items/1768e8369a214dfab4e2167d5c5f2454/resources/styles/root.json",
     };
   }, []);
+
+  const handleLoad = useCallback(() => {
+    console.info(`Map loaded: ${indicator.name} `);
+  }, [indicator.name]);
 
   if (!GEOMETRY) return null;
 
@@ -108,6 +116,7 @@ export default function WidgetMap({
           ...viewProps,
         }}
         isPdf={isPdf}
+        onLoad={handleLoad}
       >
         {layers.map((layer: LayerProps, index: number, arr: LayerProps[]) => {
           const i = arr.length - index;
@@ -151,18 +160,18 @@ export default function WidgetMap({
             />
           </Controls>
         )}
-      </Map>
 
-      {(indicator.resource.type === "feature" ||
-        indicator.resource.type === "imagery" ||
-        indicator.resource.type === "imagery-tile") && (
-        <WidgetLegend
-          {...(indicator as Omit<Indicator, "resource"> & {
-            resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
-          })}
-          interactive={!isWebshot && !isPdf}
-        />
-      )}
+        {(indicator.resource.type === "feature" ||
+          indicator.resource.type === "imagery" ||
+          indicator.resource.type === "imagery-tile") && (
+          <WidgetLegend
+            {...(indicator as Omit<Indicator, "resource"> & {
+              resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
+            })}
+            interactive={!isWebshot && !isPdf}
+          />
+        )}
+      </Map>
     </div>
   );
 }

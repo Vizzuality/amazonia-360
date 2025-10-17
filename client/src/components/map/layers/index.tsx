@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect } from "react";
 
+import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import ImageryLayer from "@arcgis/core/layers/ImageryLayer";
 import ImageryTileLayer from "@arcgis/core/layers/ImageryTileLayer";
 import VectorTileLayer from "@arcgis/core/layers/VectorTileLayer";
@@ -27,6 +27,35 @@ export default function Layer({
   const mapInstance = useMap();
   const { id } = layer;
 
+  const handleLoad = useCallback(
+    (l: __esri.Layer) => {
+      if (!mapInstance) {
+        return;
+      }
+
+      const { view, onLayerViewLoading, onLayerViewLoaded, onLayerViewError } = mapInstance;
+      if (!view) {
+        return;
+      }
+
+      if (onLayerViewLoading) onLayerViewLoading(l.id);
+
+      view
+        .whenLayerView(l)
+        .then((lv) => {
+          ArcGISReactiveUtils.whenOnce(() => !lv.updating && lv.visible).then(() => {
+            if (onLayerViewLoaded) onLayerViewLoaded(l.id);
+          });
+        })
+        .catch((e) => {
+          if (e.name === "layerview:create-error") {
+            if (onLayerViewError) onLayerViewError(l.id);
+          }
+        });
+    },
+    [mapInstance],
+  );
+
   const addLayer = useCallback(async () => {
     if (!mapInstance) {
       return;
@@ -48,12 +77,17 @@ export default function Layer({
       map.add(l, index);
 
       map.reorder(l, index);
+
+      handleLoad(l);
     }
 
     if (layer.type === "graphics") {
-      map.add(layer as GraphicsLayer, index);
+      const l = layer as unknown as __esri.GraphicsLayer;
+      map.add(l, index);
 
-      map.reorder(layer as GraphicsLayer, index);
+      map.reorder(l, index);
+
+      handleLoad(l);
     }
 
     if (layer.type === "vector-tile") {
@@ -61,6 +95,8 @@ export default function Layer({
       map.add(l, index);
 
       map.reorder(l, index);
+
+      handleLoad(l);
     }
 
     if (layer.type === "web-tile") {
@@ -68,6 +104,8 @@ export default function Layer({
       map.add(l, index);
 
       map.reorder(l, index);
+
+      handleLoad(l);
     }
 
     if (layer.type === "imagery-tile") {
@@ -75,13 +113,21 @@ export default function Layer({
       map.add(l, index);
 
       map.reorder(l, index);
+
+      handleLoad(l);
     }
 
     if (layer.type === "imagery") {
       const l = new ImageryLayer(omit(layer, ["type"]));
+      // const l = new ImageryLayer({
+      //   url: "https://landsat2.arcgis.com/arcgis/rest/services/Landsat8_Views/ImageServer",
+      //   format: "jpgpng", // server exports in either jpg or png format
+      // });
       map.add(l, index);
 
       map.reorder(l, index);
+
+      handleLoad(l);
     }
 
     if ("deck" in layer) {
@@ -90,7 +136,7 @@ export default function Layer({
 
       map.reorder(l, index);
     }
-  }, [id, index, layer, mapInstance]);
+  }, [id, index, layer, mapInstance, handleLoad]);
 
   // Update opacity
   useEffect(() => {

@@ -433,9 +433,9 @@ export default function GridLayer() {
   const sketch = useAtomValue(sketchAtom);
 
   const map = useMap();
-  const [zoom, setZoom] = useState(map?.view.zoom);
+  const [zoom, setZoom] = useState(map?.view?.zoom);
 
-  map?.view.watch("zoom", setZoom);
+  map?.view?.watch("zoom", setZoom);
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
   });

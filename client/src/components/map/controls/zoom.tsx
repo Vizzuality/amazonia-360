@@ -25,7 +25,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({ className }: ZoomControlProp
 
   const map = useMap();
 
-  const [zoom, setZoom] = useState<number | undefined>(map?.view.zoom);
+  const [zoom, setZoom] = useState<number | undefined>(map?.view?.zoom);
   const setZoomDebounced = useDebounce((z: number) => {
     setZoom(z);
   }, 100);
@@ -40,11 +40,11 @@ export const ZoomControl: FC<ZoomControlProps> = ({ className }: ZoomControlProp
     }
   }, [map?.view]);
 
-  const minZoom = map?.view.constraints?.minZoom;
-  const maxZoom = map?.view.constraints?.maxZoom;
+  const minZoom = map?.view?.constraints?.minZoom;
+  const maxZoom = map?.view?.constraints?.maxZoom;
 
   useEffect(() => {
-    map?.view.watch("zoom", (z) => {
+    map?.view?.watch("zoom", (z) => {
       setZoomDebounced(z);
     });
   }, [map?.view, setZoomDebounced]);

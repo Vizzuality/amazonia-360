@@ -14,10 +14,12 @@ import ArcGISMapView from "@arcgis/core/views/MapView";
 import ArcGISScaleBar from "@arcgis/core/widgets/ScaleBar";
 import { merge } from "ts-deepmerge";
 
+import { omit } from "@/lib/utils";
+
 import { DEFAULT_MAP_VIEW_PROPERTIES } from "@/constants/map";
 
 import { BasemapIds } from "@/components/map/controls/basemap";
-import { MapContext, MapProvider } from "@/components/map/provider";
+import { LayerView, MapContext, MapProvider } from "@/components/map/provider";
 
 export type MapProps = {
   id: string;
@@ -32,12 +34,13 @@ export type MapProps = {
   onPointerLeave?: () => void;
   initialBasemapId?: BasemapIds;
   isPdf?: boolean;
+  onLoad?: (layerViews: LayerView[]) => void;
 };
 
 export default function Map(mapProps: MapProps) {
   return (
-    <MapProvider>
-      <MapView {...mapProps} />
+    <MapProvider onLoad={mapProps.onLoad}>
+      <MapView {...omit(mapProps, ["onLoad"])} />
     </MapProvider>
   );
 }
