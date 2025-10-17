@@ -164,9 +164,7 @@ export default function ReportResultsIndicator({
           {/*
             Table
           */}
-          {type === "table" && indicator.resource.type === "feature" && (
-            <TableIndicators {...indicator} resource={indicator.resource} />
-          )}
+          {type === "table" && indicator.resource.type === "feature" && <TableIndicators id={id} />}
         </CardContent>
       </Card>
     </div>
