@@ -6,7 +6,6 @@ import { useGetOverviewTopics } from "@/lib/topics";
 
 import { Indicator } from "@/types/indicator";
 
-import { DefaultTopicConfig } from "@/app/parsers";
 import { useSyncTopics, useSyncDefaultTopics } from "@/app/store";
 
 import { handleMapIndicatorPropertyChange } from "@/containers/widgets/map/utils";
@@ -39,7 +38,7 @@ const OpacityControlButton = ({ indicator }: { indicator: Omit<Indicator, "resou
         handleMapIndicatorPropertyChange(
           "opacity",
           value[0],
-          overviewTopicsData ? (overviewTopicsData as unknown as DefaultTopicConfig[]) : null,
+          overviewTopicsData ?? null,
           indicator as Indicator,
           setDefaultTopics,
           setTopics,

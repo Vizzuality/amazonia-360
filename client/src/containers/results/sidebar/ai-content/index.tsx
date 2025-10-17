@@ -23,6 +23,7 @@ import AiSidebarContentCard from "./card";
 
 export default function AiSidebarContent() {
   const t = useTranslations();
+
   const AUDIENCES = [
     {
       value: "Normal",

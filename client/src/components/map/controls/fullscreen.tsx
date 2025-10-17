@@ -28,10 +28,10 @@ export const FullscreenControl: FC<FullscreenControlProps> = ({
   const map = useMap();
 
   useMemo(() => {
-    if (!fullscreenModelViewRef.current) {
+    if (!fullscreenModelViewRef.current && map?.view) {
       fullscreenModelViewRef.current = new FullscreenVM({
         view: map?.view,
-        element: map?.view.container,
+        element: map?.view?.container,
       });
     }
   }, [map?.view]);

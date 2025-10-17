@@ -3,12 +3,7 @@ import { omit } from "@/lib/utils";
 
 import { Indicator } from "@/types/indicator";
 
-import {
-  IndicatorView,
-  DefaultTopicConfig,
-  DefaultTopicIndicatorConfig,
-  TopicView,
-} from "@/app/parsers";
+import { IndicatorMapView, IndicatorView, TopicView } from "@/app/parsers";
 
 import { BasemapIds } from "@/components/map/controls/basemap";
 
@@ -17,10 +12,10 @@ type MapIndicatorProperties = "basemapId" | "opacity";
 export const handleMapIndicatorPropertyChange = (
   propertyName: MapIndicatorProperties,
   propertyValue: BasemapIds | number,
-  overviewTopicsData: DefaultTopicConfig[] | null,
+  overviewTopicsData: TopicView[] | null,
   indicator: Indicator,
-  setSyncDefaultTopics: (
-    callback: (prevDefaultTopics: DefaultTopicConfig[] | null) => DefaultTopicConfig[] | null,
+  setDefaultTopics: (
+    callback: (prevDefaultTopics: TopicView[] | null) => TopicView[] | null,
   ) => void,
   setTopics: (callback: (prevTopicsState: TopicView[] | null) => TopicView[] | null) => void,
   defaultValues: { basemapId: BasemapIds; opacity: number },
@@ -34,70 +29,66 @@ export const handleMapIndicatorPropertyChange = (
   );
 
   if (isManagingViaSyncDefaultTopics) {
-    setSyncDefaultTopics(
-      (prevDefaultTopics: DefaultTopicConfig[] | null): DefaultTopicConfig[] | null => {
-        const newTopicsArray: DefaultTopicConfig[] = prevDefaultTopics
-          ? [...prevDefaultTopics]
-          : [];
-        const topicIndex = newTopicsArray.findIndex((t) => t.id === currentIndicatorTopicId);
+    setDefaultTopics((prevDefaultTopics) => {
+      const newTopicsArray = prevDefaultTopics ? [...prevDefaultTopics] : [];
+      const topicIndex = newTopicsArray.findIndex((t) => t.id === currentIndicatorTopicId);
 
-        if (topicIndex !== -1) {
-          const targetTopic = { ...newTopicsArray[topicIndex] };
-          const indicators: DefaultTopicIndicatorConfig[] = targetTopic.indicators
-            ? [...targetTopic.indicators]
-            : [];
-          const indicatorConfigIndex = indicators.findIndex((i) => i.id === indicator.id);
+      if (topicIndex !== -1) {
+        const targetTopic = { ...newTopicsArray[topicIndex] };
+        const indicators = targetTopic.indicators ? [...targetTopic.indicators] : [];
+        const indicatorConfigIndex = indicators.findIndex((i) => i.id === indicator.id);
 
-          if (isResettingToDefault) {
-            if (indicatorConfigIndex !== -1) {
-              const indicatorConfig = { ...indicators[indicatorConfigIndex] };
-              delete indicatorConfig[propertyName as keyof DefaultTopicIndicatorConfig];
+        if (isResettingToDefault) {
+          if (indicatorConfigIndex !== -1) {
+            const indicatorConfig = { ...indicators[indicatorConfigIndex] } as IndicatorMapView;
+            delete indicatorConfig[propertyName];
 
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              const { id, ...overrides } = indicatorConfig;
-              if (Object.keys(overrides).length > 0) {
-                indicators[indicatorConfigIndex] = indicatorConfig;
-              } else {
-                indicators.splice(indicatorConfigIndex, 1);
-              }
-            }
-          } else {
-            if (indicatorConfigIndex !== -1) {
-              indicators[indicatorConfigIndex] = {
-                ...indicators[indicatorConfigIndex],
-                [propertyName]: propertyValue,
-              };
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { id, ...overrides } = indicatorConfig;
+            if (Object.keys(overrides).length > 0) {
+              indicators[indicatorConfigIndex] = indicatorConfig;
             } else {
-              indicators.push({
-                id: indicator.id,
-                [propertyName]: propertyValue,
-              } as DefaultTopicIndicatorConfig);
+              indicators.splice(indicatorConfigIndex, 1);
             }
           }
-
-          if (indicators.length === 0) {
-            newTopicsArray.splice(topicIndex, 1);
-          } else {
-            newTopicsArray[topicIndex] = {
-              ...targetTopic,
-              indicators,
+        } else {
+          if (indicatorConfigIndex !== -1) {
+            indicators[indicatorConfigIndex] = {
+              ...indicators[indicatorConfigIndex],
+              [propertyName]: propertyValue,
             };
+          } else {
+            indicators.push({
+              id: indicator.id,
+              type: "map",
+              [propertyName]: propertyValue,
+            });
           }
-        } else if (!isResettingToDefault) {
-          newTopicsArray.push({
-            id: currentIndicatorTopicId,
-            indicators: [
-              {
-                id: indicator.id,
-                [propertyName]: propertyValue,
-              } as DefaultTopicIndicatorConfig,
-            ],
-          });
         }
 
-        return newTopicsArray.length > 0 ? newTopicsArray : null;
-      },
-    );
+        if (indicators.length === 0) {
+          newTopicsArray.splice(topicIndex, 1);
+        } else {
+          newTopicsArray[topicIndex] = {
+            ...targetTopic,
+            indicators,
+          };
+        }
+      } else if (!isResettingToDefault) {
+        newTopicsArray.push({
+          id: currentIndicatorTopicId,
+          indicators: [
+            {
+              id: indicator.id,
+              type: "map",
+              [propertyName]: propertyValue,
+            },
+          ],
+        });
+      }
+
+      return newTopicsArray.length > 0 ? newTopicsArray : null;
+    });
   } else {
     setTopics((prevTopicsState: TopicView[] | null): TopicView[] | null => {
       const currentTopics = prevTopicsState || [];

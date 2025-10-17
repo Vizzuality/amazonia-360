@@ -8,6 +8,8 @@ import { setRequestLocale } from "next-intl/server";
 
 import RootHead from "@/app/head";
 
+import { SidebarProvider } from "@/components/ui/sidebar";
+
 import { routing } from "@/i18n/routing";
 
 import "@arcgis/core/assets/esri/themes/light/main.css";
@@ -49,7 +51,9 @@ export default async function RootLayout({
       <RootHead />
       <body className={`${montserrat.className} bg-gray-500`}>
         <Suspense fallback={null}>
-          <NextIntlClientProvider locale={locale}>{children}</NextIntlClientProvider>
+          <SidebarProvider>
+            <NextIntlClientProvider locale={locale}>{children}</NextIntlClientProvider>
+          </SidebarProvider>
         </Suspense>
       </body>
     </>

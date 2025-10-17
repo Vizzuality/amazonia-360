@@ -1,10 +1,26 @@
+"use client";
+
+import { useLocale } from "next-intl";
+import { useLocalstorageState } from "rooks";
+
 import { Topic } from "@/types/topic";
 
-export default function PdfTopicCover({ name, description, image }: Topic) {
+import { useSyncAiSummary } from "@/app/store";
+
+import { Markdown } from "@/components/ui/markdown";
+
+export default function PdfTopicCover(topic: Topic) {
+  const locale = useLocale();
+  const { name, description, image } = topic;
+
+  const [ai_summary] = useSyncAiSummary();
+
+  const [summary] = useLocalstorageState<string | null>(`ai-summary-${topic?.id}-${locale}`, null);
+
   return (
-    <div className="w-full grow overflow-hidden">
+    <div className="flex w-full grow flex-col overflow-hidden">
       <div
-        className="h-full bg-cover bg-center bg-no-repeat"
+        className="grow bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${image})` }}
       >
         <div className="flex h-full flex-col justify-end bg-gradient-to-t from-black to-transparent">
@@ -14,29 +30,12 @@ export default function PdfTopicCover({ name, description, image }: Topic) {
           </div>
         </div>
       </div>
-      {/* <div className="flex h-[40%] flex-col justify-between gap-8 bg-blue-50 px-14 py-8 pb-3 text-xs font-thin leading-loose">
-        <div className="flex flex-row justify-between gap-6">
-          <p>
-            The selected area in the Amazonia region, specifically within the state of Amapá,
-            presents a varied landscape of social and infrastructural dynamics. Electricity access
-            varies significantly across municipalities, with Serra do Navio boasting the highest
-            access rate at 88.34%, while Mazagão falls behind at 60.88%. This disparity highlights
-            the uneven distribution of essential services in the region. Despite these challenges,
-            the presence of hospitals, such as the Unidade Mista de Saúde, indicates some level of
-            health infrastructure, albeit limited.
-          </p>
-          <p>
-            In contrast, the region is marked by significant social challenges, with a notable
-            occurrence of political violence. The data reveals frequent battles and armed clashes,
-            along with incidents of violent demonstrations and peaceful protests. Furthermore, the
-            homicide rate in Amapá stands alarmingly high at 70.63 per 100,000 inhabitants,
-            underscoring the urgent need for improved security measures. The lack of data on higher
-            education centers and state presence further suggests areas for development and
-            intervention to foster a more equitable and stable environment. *
-          </p>
-        </div>
-        <p className="">*This summary was generated with AI.</p>
-      </div> */}
+
+      {ai_summary.enabled && summary && (
+        <section className="px-14 py-10">
+          <Markdown className="prose-sm max-w-none columns-2 gap-x-8">{summary}</Markdown>
+        </section>
+      )}
     </div>
   );
 }

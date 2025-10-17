@@ -1,13 +1,10 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 import dynamic from "next/dynamic";
 
-import { useLocale } from "next-intl";
-
 import { useLocationGeometry } from "@/lib/location";
-import { useGetOverviewTopics } from "@/lib/topics";
 
 import {
   Indicator,
@@ -16,11 +13,12 @@ import {
   ResourceImageryTile,
 } from "@/types/indicator";
 
-import { DefaultTopicConfig, IndicatorMapView } from "@/app/parsers";
+import { IndicatorMapView } from "@/app/parsers";
 import { useSyncLocation, useSyncTopics, useSyncDefaultTopics } from "@/app/store";
 
 import { DATASETS } from "@/constants/datasets";
 
+import { useIndicator } from "@/containers/indicators/provider";
 import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
 import { WidgetLegend } from "@/containers/widgets/map/legend";
 
@@ -42,6 +40,7 @@ interface WidgetMapProps extends Omit<__esri.MapViewProperties, "map"> {
   layers: LayerProps[];
   isWebshot?: boolean;
   isPdf?: boolean;
+  onLoad?: () => void;
 }
 
 export default function WidgetMap({
@@ -55,12 +54,18 @@ export default function WidgetMap({
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
   const [topics, setTopics] = useSyncTopics();
-  const [syncDefaultTopics, setSyncDefaultTopics] = useSyncDefaultTopics();
+  const [defaultTopics, setDefaultTopics] = useSyncDefaultTopics();
+
+  const { onIndicatorViewLoaded, onIndicatorViewLoading } = useIndicator();
+
+  useMemo(() => {
+    onIndicatorViewLoading(indicator.id);
+  }, [indicator.id, onIndicatorViewLoading]);
+
   const { syncBasemapId, opacity } = useMemo(() => {
     const topicWithIndicator =
-      syncDefaultTopics?.find((topic) =>
-        topic.indicators?.find((ind) => ind.id === indicator.id),
-      ) || topics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id));
+      defaultTopics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id)) ||
+      topics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id));
     const indicatorConfig = topicWithIndicator?.indicators?.find(
       (ind) => ind.id === indicator.id && "type" in ind && (ind as IndicatorMapView).type === "map",
     );
@@ -69,9 +74,8 @@ export default function WidgetMap({
         indicatorConfig && "basemapId" in indicatorConfig ? indicatorConfig.basemapId : basemapId,
       opacity: indicatorConfig && "opacity" in indicatorConfig ? indicatorConfig.opacity : 100,
     };
-  }, [syncDefaultTopics, indicator.id, topics, basemapId]);
-  const locale = useLocale();
-  const { data: overviewTopicsData } = useGetOverviewTopics({ locale });
+  }, [defaultTopics, indicator.id, topics, basemapId]);
+
   const defaultValues = useMemo(() => ({ basemapId, opacity: 100 }), [basemapId]);
 
   const LABELS_LAYER = useMemo(() => {
@@ -83,6 +87,10 @@ export default function WidgetMap({
         "https://www.arcgis.com/sharing/rest/content/items/1768e8369a214dfab4e2167d5c5f2454/resources/styles/root.json",
     };
   }, []);
+
+  const handleLoad = useCallback(() => {
+    onIndicatorViewLoaded(indicator.id);
+  }, [indicator.id, onIndicatorViewLoaded]);
 
   if (!GEOMETRY) return null;
 
@@ -108,6 +116,7 @@ export default function WidgetMap({
           ...viewProps,
         }}
         isPdf={isPdf}
+        onLoad={handleLoad}
       >
         {layers.map((layer: LayerProps, index: number, arr: LayerProps[]) => {
           const i = arr.length - index;
@@ -139,11 +148,9 @@ export default function WidgetMap({
                 handleMapIndicatorPropertyChange(
                   "basemapId",
                   selectedBasemapId,
-                  overviewTopicsData
-                    ? (overviewTopicsData as unknown as DefaultTopicConfig[])
-                    : null,
+                  defaultTopics,
                   indicator,
-                  setSyncDefaultTopics,
+                  setDefaultTopics,
                   setTopics,
                   defaultValues,
                 )
@@ -151,18 +158,18 @@ export default function WidgetMap({
             />
           </Controls>
         )}
-      </Map>
 
-      {(indicator.resource.type === "feature" ||
-        indicator.resource.type === "imagery" ||
-        indicator.resource.type === "imagery-tile") && (
-        <WidgetLegend
-          {...(indicator as Omit<Indicator, "resource"> & {
-            resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
-          })}
-          interactive={!isWebshot && !isPdf}
-        />
-      )}
+        {(indicator.resource.type === "feature" ||
+          indicator.resource.type === "imagery" ||
+          indicator.resource.type === "imagery-tile") && (
+          <WidgetLegend
+            {...(indicator as Omit<Indicator, "resource"> & {
+              resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
+            })}
+            interactive={!isWebshot && !isPdf}
+          />
+        )}
+      </Map>
     </div>
   );
 }

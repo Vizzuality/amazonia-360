@@ -1,10 +1,12 @@
 "use client";
 
-import { createElement, MouseEvent, useCallback } from "react";
+import { useCallback } from "react";
 
 import { useSearchParams } from "next/navigation";
 
-import { useLocale } from "next-intl";
+import { useAtom } from "jotai";
+import { useLocale, useTranslations } from "next-intl";
+import { toast, useSonner } from "sonner";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
@@ -12,6 +14,8 @@ import { downloadBlobResponse, usePostWebshotWidgetsMutation } from "@/lib/websh
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 import { ResourceFeature, ResourceImageryTile, ResourceWebTile } from "@/types/indicator";
+
+import { reportEditionModeAtom } from "@/app/store";
 
 import {
   Card,
@@ -23,33 +27,21 @@ import {
   CardPopover,
 } from "@/containers/card";
 import { ChartIndicators } from "@/containers/indicators/chart";
-import { ChartImageryIndicators } from "@/containers/indicators/chart/imagery";
-import { ChartImageryTileIndicators } from "@/containers/indicators/chart/imagery-tile";
-import { Municipalities } from "@/containers/indicators/custom/municipalities";
-import { TotalArea } from "@/containers/indicators/custom/total-area";
+import { CustomIndicators } from "@/containers/indicators/custom";
 import { MapIndicators } from "@/containers/indicators/map";
 import { NumericIndicators } from "@/containers/indicators/numeric";
-import { NumericImageryIndicators } from "@/containers/indicators/numeric/imagery";
-import { NumericImageryTileIndicators } from "@/containers/indicators/numeric/imagery-tile";
 import { TableIndicators } from "@/containers/indicators/table";
 
 import { BASEMAPS } from "@/components/map/controls/basemap";
+import { useSidebar } from "@/components/ui/sidebar";
 
 // custom indicators
-
-const COMPONENT_INDICATORS = {
-  "total-area": TotalArea,
-  AMZ_LOCADM2: Municipalities,
-} as const;
-
-type COMPONENT_INDICATORS_KEYS = keyof typeof COMPONENT_INDICATORS;
 
 export default function ReportResultsIndicator({
   id,
   type,
   basemapId,
   editable,
-  onEdit,
   isWebshot = false,
   isPdf = false,
 }: {
@@ -57,35 +49,57 @@ export default function ReportResultsIndicator({
   type: VisualizationTypes;
   basemapId?: (typeof BASEMAPS)[number]["id"];
   editable: boolean;
-  onEdit?: (e: MouseEvent<HTMLElement>) => void;
   isWebshot?: boolean;
   isPdf?: boolean;
 }) {
+  const { toasts } = useSonner();
   const locale = useLocale();
+  const t = useTranslations();
   const indicator = useGetIndicatorsId(id, locale);
   const searchParams = useSearchParams();
 
+  const { toggleSidebar } = useSidebar();
+  const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
+
   const postWebshotWidgetsMutation = usePostWebshotWidgetsMutation();
 
-  const onWebshotDownload = useCallback(
+  const handleEdit = useCallback(() => {
+    toggleSidebar();
+    setReportEditionMode(!reportEditionMode);
+  }, [toggleSidebar, setReportEditionMode, reportEditionMode]);
+
+  const handleWebshotDownload = useCallback(
     async (format: string) => {
-      postWebshotWidgetsMutation.mutate(
-        {
-          pagePath: `/${locale}/webshot/widgets/${id}/${type}?${searchParams.toString()}`,
-          outputFileName: `indicator-${id}.${format.toLowerCase()}`,
-          params: undefined,
-        },
-        {
-          onSuccess: async (res) => {
-            await downloadBlobResponse(res.data, `indicator-${id}-${type}.${format.toLowerCase()}`);
+      if (toasts.find((t) => t.id === `indicator-${id}-${type}`)) return;
+
+      toast.promise(
+        postWebshotWidgetsMutation.mutateAsync(
+          {
+            pagePath: `/${locale}/webshot/widgets/${id}/${type}?${searchParams.toString()}`,
+            outputFileName: `indicator-${id}.${format.toLowerCase()}`,
+            params: undefined,
           },
-          onError: (error) => {
-            console.error("Error downloading widget:", error);
+          {
+            onSuccess: async (res) => {
+              await downloadBlobResponse(
+                res.data,
+                `indicator-${id}-${type}.${format.toLowerCase()}`,
+              );
+            },
+            onError: (error) => {
+              console.error("Error downloading widget:", error);
+            },
           },
+        ),
+        {
+          id: `indicator-${id}-${type}`,
+          loading: t("indicator-webshot-loading", { name: indicator?.name ?? "" }),
+          success: t("indicator-webshot-success", { name: indicator?.name ?? "" }),
+          error: t("indicator-webshot-error", { name: indicator?.name ?? "" }),
         },
       );
     },
-    [id, type, locale, searchParams, postWebshotWidgetsMutation],
+    [id, t, indicator, type, toasts, locale, searchParams, postWebshotWidgetsMutation],
   );
 
   if (!indicator) return null;
@@ -101,8 +115,8 @@ export default function ReportResultsIndicator({
             {editable && (
               <CardPopover
                 id={indicator?.id}
-                onClick={onEdit}
-                onWebshotDownload={onWebshotDownload}
+                onClick={handleEdit}
+                onWebshotDownload={handleWebshotDownload}
                 isDownloading={postWebshotWidgetsMutation.isPending}
               />
             )}
@@ -128,43 +142,28 @@ export default function ReportResultsIndicator({
           {/*
             Charts
           */}
-          {type === "chart" && indicator.resource.type === "feature" && (
-            <ChartIndicators {...indicator} resource={indicator.resource} />
-          )}
-          {type === "chart" && indicator.resource.type === "imagery" && (
-            <ChartImageryIndicators {...indicator} resource={indicator.resource} />
-          )}
-          {type === "chart" && indicator.resource.type === "imagery-tile" && (
-            <ChartImageryTileIndicators {...indicator} resource={indicator.resource} />
+          {type === "chart" && indicator.resource.type !== "component" && (
+            <ChartIndicators id={id} />
           )}
 
-          {indicator.resource.type === "component" &&
-            !!COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS] &&
-            createElement(
-              COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS],
-              { indicator },
-            )}
+          {/*
+            Custom
+          */}
+          {indicator.resource.type === "component" && <CustomIndicators id={id} />}
 
-          {type === "numeric" && indicator.resource.type === "feature" && (
-            <NumericIndicators {...indicator} resource={indicator.resource} isPdf={isPdf} />
-          )}
-          {type === "numeric" && indicator.resource.type === "imagery" && (
-            <NumericImageryIndicators {...indicator} resource={indicator.resource} isPdf={isPdf} />
-          )}
-          {type === "numeric" && indicator.resource.type === "imagery-tile" && (
-            <NumericImageryTileIndicators
-              {...indicator}
-              resource={indicator.resource}
-              isPdf={isPdf}
-            />
+          {/*
+            Numeric
+          */}
+          {type === "numeric" && indicator.resource.type !== "component" && (
+            <NumericIndicators id={id} />
           )}
 
           {/*
             Table
           */}
-          {type === "table" && indicator.resource.type === "feature" && (
-            <TableIndicators {...indicator} resource={indicator.resource} />
-          )}
+          {type === "table" &&
+            indicator.resource.type !== "component" &&
+            indicator.resource.type === "feature" && <TableIndicators id={id} />}
         </CardContent>
       </Card>
     </div>

@@ -8,6 +8,7 @@ import { getTranslations } from "next-intl/server";
 
 import DataDisclaimer from "@/containers/disclaimers/data";
 import ReportResultsHeader from "@/containers/header/results";
+import { LoadProvider } from "@/containers/indicators/load-provider";
 import ReportResultsContent from "@/containers/results/content";
 import ReportResultsSidebar from "@/containers/results/sidebar";
 
@@ -28,16 +29,18 @@ export default async function ReportResultsPage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className="relative flex bg-blue-50 pb-5 print:w-full print:bg-white print:p-0">
-        <div className="w-full flex-col print:w-full">
-          <ReportResultsHeader />
-          <ReportResultsContent />
-        </div>
-        <div className="relative print:hidden">
-          <ReportResultsSidebar />
-        </div>
-      </main>
-      <DataDisclaimer />
+      <LoadProvider>
+        <main className="relative flex bg-blue-50 pb-5 print:w-full print:bg-white print:p-0">
+          <div className="w-full flex-col print:w-full">
+            <ReportResultsHeader />
+            <ReportResultsContent />
+          </div>
+          <div className="relative print:hidden">
+            <ReportResultsSidebar />
+          </div>
+        </main>
+        <DataDisclaimer />
+      </LoadProvider>
     </HydrationBoundary>
   );
 }

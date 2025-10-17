@@ -21,7 +21,7 @@ export const Tooltip = () => {
   const map = useMap();
 
   const view = map?.view;
-  const zoom = map?.view.zoom;
+  const zoom = map?.view?.zoom;
 
   useEffect(() => {
     if (!cell.index || !view) {

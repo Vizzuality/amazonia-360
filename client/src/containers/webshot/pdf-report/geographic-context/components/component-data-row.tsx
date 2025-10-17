@@ -10,12 +10,20 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/store";
 
+import { useIndicator } from "@/containers/indicators/provider";
+
 import { DataRowProps } from "./types";
 
-export default function ComponentDataRow({ indicatorId, locale }: DataRowProps) {
-  const indicator = useGetIndicatorsId(indicatorId, locale);
+export default function ComponentDataRow({ id, locale }: DataRowProps) {
+  const indicator = useGetIndicatorsId(id, locale);
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
+
+  const { onIndicatorViewLoading, onIndicatorViewLoaded } = useIndicator();
+
+  useMemo(() => {
+    onIndicatorViewLoading(id);
+  }, [id, onIndicatorViewLoading]);
 
   const VALUE = useMemo(() => {
     if (!GEOMETRY || !indicator) return null;
@@ -28,6 +36,10 @@ export default function ComponentDataRow({ indicatorId, locale }: DataRowProps) 
 
     return area;
   }, [GEOMETRY, indicator, locale]);
+
+  useMemo(() => {
+    onIndicatorViewLoaded(id);
+  }, [id, onIndicatorViewLoaded]);
 
   if (!indicator) return null;
 

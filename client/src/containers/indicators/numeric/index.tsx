@@ -1,49 +1,42 @@
-import { useMemo } from "react";
+import React, { useCallback } from "react";
 
 import { useLocale } from "next-intl";
 
-import { useGetIndicatorsId, useQueryFeatureId } from "@/lib/indicators";
-import { useLocationGeometry } from "@/lib/location";
-import { cn } from "@/lib/utils";
+import { useGetIndicatorsId } from "@/lib/indicators";
 
-import { Indicator, ResourceFeature } from "@/types/indicator";
+import { Indicator } from "@/types/indicator";
 
-import { useSyncLocation } from "@/app/store";
+import { useLoad } from "@/containers/indicators/load-provider";
+import { NumericIndicatorsFeature } from "@/containers/indicators/numeric/feature";
+import { NumericImageryIndicators } from "@/containers/indicators/numeric/imagery";
+import { NumericImageryTileIndicators } from "@/containers/indicators/numeric/imagery-tile";
+import { IndicatorProvider } from "@/containers/indicators/provider";
 
-import { CardLoader, CardWidgetNumber } from "@/containers/card";
-
-export interface NumericIndicatorsProps extends Indicator {
-  resource: ResourceFeature;
-  isPdf?: boolean;
-}
-
-export const NumericIndicators = ({
-  id,
-  resource,
-  description_short,
-  isPdf,
-}: NumericIndicatorsProps) => {
+export const NumericIndicators = ({ id }: { id: Indicator["id"] }) => {
   const locale = useLocale();
-  const [location] = useSyncLocation();
-  const GEOMETRY = useLocationGeometry(location);
   const indicator = useGetIndicatorsId(id, locale);
 
-  const query = useQueryFeatureId({ id, resource, type: "numeric", geometry: GEOMETRY });
+  const { onReady } = useLoad();
 
-  const VALUE = useMemo(() => {
-    if (!query.data) return 0;
+  const handleLoad = useCallback(() => {
+    onReady(`${indicator!.id}-numeric`);
+  }, [indicator, onReady]);
 
-    return query.data.features.reduce((acc, curr) => {
-      return acc + curr.attributes.value;
-    }, 0);
-  }, [query.data]);
+  if (!indicator) return null;
 
   return (
-    <CardLoader query={[query]} className="h-12">
-      <CardWidgetNumber value={VALUE} unit={indicator?.unit} className={cn({ "grow-0": isPdf })} />
-      {isPdf && !!description_short && (
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{description_short}</p>
+    <IndicatorProvider onLoad={handleLoad}>
+      {indicator.resource.type === "feature" && (
+        <NumericIndicatorsFeature {...indicator} resource={indicator.resource} />
       )}
-    </CardLoader>
+      {indicator.resource.type === "imagery" && (
+        <NumericImageryIndicators {...indicator} resource={indicator.resource} />
+      )}
+      {indicator.resource.type === "imagery-tile" && (
+        <NumericImageryTileIndicators {...indicator} resource={indicator.resource} />
+      )}
+    </IndicatorProvider>
   );
 };
+
+export default NumericIndicators;

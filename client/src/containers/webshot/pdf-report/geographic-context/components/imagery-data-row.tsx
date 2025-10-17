@@ -10,15 +10,19 @@ import { ResourceImagery } from "@/types/indicator";
 
 import { useSyncLocation } from "@/app/store";
 
+import { useIndicator } from "@/containers/indicators/provider";
+
 import { DataRowProps } from "./types";
 
-export default function ImageryDataRow({ indicatorId, locale }: DataRowProps) {
-  const indicator = useGetIndicatorsId(indicatorId, locale);
+export default function ImageryDataRow({ id, locale }: DataRowProps) {
+  const indicator = useGetIndicatorsId(id, locale);
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
 
+  const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();
+
   const query = useQueryImageryId({
-    id: indicatorId,
+    id: id,
     resource: indicator?.resource as ResourceImagery,
     type: "numeric",
     geometry: GEOMETRY,
@@ -42,6 +46,20 @@ export default function ImageryDataRow({ indicatorId, locale }: DataRowProps) {
       );
     }, 0);
   }, [query.data]);
+
+  useMemo(() => {
+    if (query.isLoading) {
+      onIndicatorViewLoading(id);
+    }
+
+    if (query.isError) {
+      onIndicatorViewError(id);
+    }
+
+    if (query.isSuccess) {
+      onIndicatorViewLoaded(id);
+    }
+  }, [query, id, onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError]);
 
   if (!indicator) return null;
 

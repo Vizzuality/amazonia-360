@@ -5,12 +5,12 @@ import { useMemo, useEffect } from "react";
 import { useQueries } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
 import { useLocale } from "next-intl";
-import { usePreviousDifferent } from "rooks";
+import { useLocalstorageState, usePreviousDifferent } from "rooks";
 
 import { useGetAISummary } from "@/lib/ai";
 import { getQueryFeatureIdOptions, useGetDefaultIndicators } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
-import { omit } from "@/lib/utils";
+import { cn, omit } from "@/lib/utils";
 
 import { ContextLanguage } from "@/types/generated/api.schemas";
 import { Indicator } from "@/types/indicator";
@@ -19,7 +19,6 @@ import { Topic } from "@/types/topic";
 import { AiSummary } from "@/app/parsers";
 import {
   isGeneratingAIReportAtom,
-  setGeneratedAITextAtom,
   useSyncAiSummary,
   useSyncLocation,
   useSyncTopics,
@@ -30,12 +29,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export interface ReportResultsSummaryProps {
   topic?: Topic;
+  isPdf?: boolean;
 }
 
 export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id"][]) => {
   const locale = useLocale();
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
+
   const queryIndicators = useGetDefaultIndicators({
     topicId: topic?.id,
     locale,
@@ -157,10 +158,14 @@ export const useGetSummaryTopic = (
   return q;
 };
 
-export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
+export const ReportResultsSummary = ({ topic, isPdf }: ReportResultsSummaryProps) => {
+  const locale = useLocale();
   const [topics] = useSyncTopics();
+  const [, setSummary] = useLocalstorageState<string | null>(
+    `ai-summary-${topic?.id}-${locale}`,
+    null,
+  );
 
-  const setGeneratedText = useSetAtom(setGeneratedAITextAtom);
   const activeIndicators = useMemo(() => {
     return topics?.find((t) => t.id === topic?.id)?.indicators?.map(({ id }) => id);
   }, [topic, topics]);
@@ -175,12 +180,11 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
 
   useEffect(() => {
     if (topic?.id && data?.description && isFetched && !isError) {
-      setGeneratedText({
-        id: topic.id,
-        description: data.description,
-      });
+      setSummary(data.description);
+    } else {
+      setSummary(null);
     }
-  }, [topic?.id, data?.description, setGeneratedText, isError, isFetched]);
+  }, [topic?.id, data?.description, isError, isFetched, setSummary]);
 
   const setIsGeneratingReport = useSetAtom(isGeneratingAIReportAtom);
 
@@ -201,8 +205,9 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
       activeIndicators.join("") !== previousActiveIndicators.join("")
     ) {
       setAiSummary((prev) => ({ ...prev, enabled: false }));
+      setSummary(null);
     }
-  }, [activeIndicators, previousActiveIndicators, setAiSummary]);
+  }, [activeIndicators, previousActiveIndicators, setAiSummary, setSummary]);
 
   return (
     <div className="relative">
@@ -216,7 +221,12 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
       )}
 
       {!isFetching && data && !!data.description && (
-        <Markdown className="max-w-none xl:prose-base 3xl:prose-lg prose-strong:font-bold">
+        <Markdown
+          className={cn("max-w-none", {
+            "xl:prose-base 3xl:prose-lg prose-strong:font-bold": !isPdf,
+            "prose-sm columns-2 gap-x-8": isPdf,
+          })}
+        >
           {data.description}
         </Markdown>
       )}

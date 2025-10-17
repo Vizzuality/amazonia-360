@@ -48,11 +48,7 @@ export default function PfdGeographicContext() {
         <div className="flex flex-col">
           {indicators &&
             indicators?.map((indicator, index) => (
-              <DataRow
-                key={`${indicator.id}-${index}`}
-                locale={locale}
-                indicatorId={indicator.id}
-              />
+              <DataRow key={`${indicator.id}-${index}`} locale={locale} id={indicator.id} />
             ))}
         </div>
       </div>
