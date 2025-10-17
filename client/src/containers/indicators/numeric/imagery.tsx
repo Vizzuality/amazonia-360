@@ -11,6 +11,7 @@ import { Indicator, ResourceImagery } from "@/types/indicator";
 import { useSyncLocation } from "@/app/store";
 
 import { CardLoader, CardWidgetNumber } from "@/containers/card";
+import { useIndicator } from "@/containers/indicators/provider";
 
 export interface NumericImageryIndicatorsProps extends Indicator {
   resource: ResourceImagery;
@@ -26,6 +27,9 @@ export const NumericImageryIndicators = ({
   const locale = useLocale();
   const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
+
+  const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();
+
   const indicator = useGetIndicatorsId(id, locale);
 
   const query = useQueryImageryId({ id, resource, type: "numeric", geometry: GEOMETRY });
@@ -62,6 +66,20 @@ export const NumericImageryIndicators = ({
       );
     }, 0);
   }, [query.data]);
+
+  useMemo(() => {
+    if (query.isLoading) {
+      onIndicatorViewLoading(id);
+    }
+
+    if (query.isError) {
+      onIndicatorViewError(id);
+    }
+
+    if (query.isSuccess) {
+      onIndicatorViewLoaded(id);
+    }
+  }, [query, id, onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError]);
 
   return (
     <CardLoader query={[query]} className="h-12 grow">

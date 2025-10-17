@@ -31,8 +31,6 @@ import { Municipalities } from "@/containers/indicators/custom/municipalities";
 import { TotalArea } from "@/containers/indicators/custom/total-area";
 import { MapIndicators } from "@/containers/indicators/map";
 import { NumericIndicators } from "@/containers/indicators/numeric";
-import { NumericImageryIndicators } from "@/containers/indicators/numeric/imagery";
-import { NumericImageryTileIndicators } from "@/containers/indicators/numeric/imagery-tile";
 import { TableIndicators } from "@/containers/indicators/table";
 
 import { BASEMAPS } from "@/components/map/controls/basemap";
@@ -161,19 +159,7 @@ export default function ReportResultsIndicator({
               { indicator },
             )}
 
-          {type === "numeric" && indicator.resource.type === "feature" && (
-            <NumericIndicators {...indicator} resource={indicator.resource} isPdf={isPdf} />
-          )}
-          {type === "numeric" && indicator.resource.type === "imagery" && (
-            <NumericImageryIndicators {...indicator} resource={indicator.resource} isPdf={isPdf} />
-          )}
-          {type === "numeric" && indicator.resource.type === "imagery-tile" && (
-            <NumericImageryTileIndicators
-              {...indicator}
-              resource={indicator.resource}
-              isPdf={isPdf}
-            />
-          )}
+          {type === "numeric" && <NumericIndicators id={id} />}
 
           {/*
             Table
