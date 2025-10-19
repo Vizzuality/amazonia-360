@@ -34,14 +34,18 @@ export type MapProps = {
   onPointerLeave?: () => void;
   initialBasemapId?: BasemapIds;
   isPdf?: boolean;
+  loaded?: boolean;
   onLoad?: (layerViews: LayerView[]) => void;
 };
 
 export default function Map(mapProps: MapProps) {
+  const [loaded, setLoaded] = useState(false);
+
   const handleLoad = useCallback(
     (layerViews: LayerView[]) => {
       if (mapProps.onLoad) {
         mapProps.onLoad(layerViews);
+        setLoaded(true);
       }
     },
     [mapProps],
@@ -49,7 +53,7 @@ export default function Map(mapProps: MapProps) {
 
   return (
     <MapProvider onLoad={handleLoad}>
-      <MapView {...omit(mapProps, ["onLoad"])} />
+      <MapView {...omit(mapProps, ["onLoad"])} loaded={loaded} />
     </MapProvider>
   );
 }
@@ -66,6 +70,7 @@ export function MapView({
   onPointerLeave,
   initialBasemapId,
   isPdf = false,
+  loaded = false,
 }: MapProps) {
   const mapRef = useRef<ArcGISMap>();
   const mapViewRef = useRef<ArcGISMapView>();
@@ -73,7 +78,7 @@ export function MapView({
 
   const [screenshot, setScreenshot] = useState<string | null>(null);
 
-  const [loaded, setLoaded] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const { onMapMount, onMapUnmount } = useContext(MapContext);
 
@@ -141,7 +146,7 @@ export function MapView({
         if (onPointerLeave) onPointerLeave();
       });
 
-      // check if the map is loaded
+      // check if the map is mounted
       mapViewRef.current.when(() => {
         if (!mapViewRef.current || !mapRef.current) {
           return;
@@ -150,7 +155,7 @@ export function MapView({
           map: mapRef.current,
           view: mapViewRef.current,
         });
-        setLoaded(true);
+        setMounted(true);
       });
 
       // Listen to extent changes
@@ -161,14 +166,16 @@ export function MapView({
         },
       );
 
-      ArcGISReactiveUtils.whenOnce(() => !mapViewRef.current?.updating && isPdf).then(() => {
-        // Take a screenshot at the same resolution of the current view
-        mapViewRef.current?.takeScreenshot().then(function (s) {
-          if (s && s.dataUrl) {
-            setScreenshot(s.dataUrl);
-          }
-        });
-      });
+      ArcGISReactiveUtils.whenOnce(() => !mapViewRef.current?.updating && isPdf && loaded).then(
+        () => {
+          // Take a screenshot at the same resolution of the current view
+          mapViewRef.current?.takeScreenshot().then(function (s) {
+            if (s && s.dataUrl) {
+              setScreenshot(s.dataUrl);
+            }
+          });
+        },
+      );
 
       return () => {
         onMapUnmount();
@@ -207,7 +214,7 @@ export function MapView({
     <>
       {!screenshot && (
         <div id={`map-${id}`} ref={mapContainerRef} className="map h-full w-full grow">
-          {loaded && children}
+          {mounted && children}
         </div>
       )}
 
