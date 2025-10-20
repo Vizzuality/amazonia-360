@@ -4,7 +4,7 @@ import { Layout } from "react-grid-layout";
 import { Responsive, WidthProvider } from "react-grid-layout";
 
 import { useAtom, useSetAtom } from "jotai";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { LuSparkles } from "react-icons/lu";
 
 import { useGetTopicsId } from "@/lib/topics";
@@ -39,9 +39,11 @@ export const ReportResultsContentItem = ({
   editable = true,
 }: ReportResultsContentItemProps) => {
   const locale = useLocale();
+  const t = useTranslations();
+
   const [, setTopics] = useSyncTopics();
   const [ai_summary] = useSyncAiSummary();
-  const [reportEditionMode] = useAtom(reportEditionModeAtom);
+  const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
   const setResultsSidebarTab = useSetAtom(resultsSidebarTabAtom);
 
   const { setOpen } = useSidebar();
@@ -143,10 +145,11 @@ export const ReportResultsContentItem = ({
               onClick={() => {
                 setResultsSidebarTab("ai_summaries");
                 setOpen(true);
+                setReportEditionMode(true);
               }}
             >
               <LuSparkles />
-              <span>AI assistant</span>
+              <span>{t("report-results-sidebar-ai-summaries-title")}</span>
             </Button>
           </header>
 

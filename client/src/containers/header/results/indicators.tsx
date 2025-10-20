@@ -1,17 +1,19 @@
 "use client";
 
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
-import { LuPen } from "react-icons/lu";
+import { LuPen, LuX } from "react-icons/lu";
 
-import { reportEditionModeAtom } from "@/app/store";
+import { reportEditionModeAtom, resultsSidebarTabAtom } from "@/app/store";
 
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 
 export default function IndicatorsReport() {
   const t = useTranslations();
-  const { toggleSidebar } = useSidebar();
+  const { open, setOpen } = useSidebar();
+  const setResultsSidebarTab = useSetAtom(resultsSidebarTabAtom);
+
   const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
 
   return (
@@ -19,12 +21,24 @@ export default function IndicatorsReport() {
       className="space-x-2"
       onClick={() => {
         setReportEditionMode(!reportEditionMode);
-        toggleSidebar();
+        setOpen(!open);
+        setResultsSidebarTab("indicators");
       }}
       variant="outline"
     >
-      <LuPen className="h-5 w-5" />
-      <span>{t("report-results-buttons-edit-report")}</span>
+      {!open && (
+        <>
+          <LuPen className="h-5 w-5" />
+          <span>{t("report-results-buttons-edit-report")}</span>
+        </>
+      )}
+
+      {open && (
+        <>
+          <LuX className="h-5 w-5" />
+          <span>{t("report-results-buttons-edit-close-report")}</span>
+        </>
+      )}
     </Button>
   );
 }
