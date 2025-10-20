@@ -86,15 +86,14 @@ export const NumericImageryTileIndicators = ({
 
   return (
     <CardLoader query={[query]} className="h-12 grow">
+      {isPdf && !!description_short && (
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{description_short}</p>
+      )}
       <CardWidgetNumber
         value={VALUE ?? "n.d."}
         unit={!!VALUE ? indicator?.unit : undefined}
         className={cn({ "grow-0": isPdf })}
       />
-
-      {isPdf && !!description_short && (
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{description_short}</p>
-      )}
     </CardLoader>
   );
 };

@@ -49,7 +49,7 @@ export default function PdfTopicSection({ topicView }: PdfTopicSectionProps) {
   return (
     <>
       {!!indicatorsByType["numeric"]?.length &&
-        chunkArray(indicatorsByType["numeric"], 4 * 3).map((chunk, index) => (
+        chunkArray(indicatorsByType["numeric"], 2 * 3).map((chunk, index) => (
           <PdfContainer key={index}>
             <div className="grid grow grid-cols-4 grid-rows-3 gap-4 p-4 px-14">
               {chunk.map((indicator) => (
