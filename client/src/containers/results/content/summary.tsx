@@ -4,7 +4,7 @@ import { useMemo, useEffect } from "react";
 
 import { useQueries } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useLocalstorageState, usePreviousDifferent } from "rooks";
 
 import { useGetAISummary } from "@/lib/ai";
@@ -12,7 +12,7 @@ import { getQueryFeatureIdOptions, useGetDefaultIndicators } from "@/lib/indicat
 import { useLocationGeometry } from "@/lib/location";
 import { cn, omit } from "@/lib/utils";
 
-import { ContextLanguage } from "@/types/generated/api.schemas";
+import { ContextDescriptionType, ContextLanguage } from "@/types/generated/api.schemas";
 import { Indicator } from "@/types/indicator";
 import { Topic } from "@/types/topic";
 
@@ -160,6 +160,8 @@ export const useGetSummaryTopic = (
 
 export const ReportResultsSummary = ({ topic, isPdf }: ReportResultsSummaryProps) => {
   const locale = useLocale();
+  const t = useTranslations();
+
   const [topics] = useSyncTopics();
   const [, setSummary] = useLocalstorageState<string | null>(
     `ai-summary-${topic?.id}-${locale}`,
@@ -210,9 +212,9 @@ export const ReportResultsSummary = ({ topic, isPdf }: ReportResultsSummaryProps
   }, [activeIndicators, previousActiveIndicators, setAiSummary, setSummary]);
 
   return (
-    <div className="relative">
+    <div className="relative grid grid-cols-12 gap-6">
       {(isPending || isFetching) && (
-        <div className="space-y-1.5">
+        <div className="col-span-12 space-y-1.5">
           <p>Generating summary...</p>
           <Skeleton className="h-4" />
           <Skeleton className="h-4" />
@@ -220,15 +222,28 @@ export const ReportResultsSummary = ({ topic, isPdf }: ReportResultsSummaryProps
         </div>
       )}
 
-      {!isFetching && data && !!data.description && (
-        <Markdown
-          className={cn("max-w-none", {
-            "xl:prose-base 3xl:prose-lg prose-strong:font-bold": !isPdf,
-            "prose-sm columns-2 gap-x-8": isPdf,
-          })}
-        >
-          {data.description}
-        </Markdown>
+      {!isFetching && data && !!data.description && aiSummary.type && (
+        <>
+          <div className="relative col-span-12 text-sm font-medium text-muted-foreground lg:col-span-4">
+            <Markdown className="prose-sm prose-p:text-muted-foreground lg:sticky lg:top-20">
+              {t("report-results-sidebar-ai-summaries-disclaimer", {
+                audience: t(
+                  `report-results-sidebar-ai-summaries-audience-${aiSummary.type.toLowerCase() as Lowercase<ContextDescriptionType>}-title`,
+                ),
+              })}
+            </Markdown>
+          </div>
+          <div className="col-span-12 lg:col-span-8">
+            <Markdown
+              className={cn("max-w-none", {
+                "xl:prose-base prose-strong:font-bold": !isPdf,
+                "prose-sm columns-2 gap-x-8": isPdf,
+              })}
+            >
+              {data.description}
+            </Markdown>
+          </div>
+        </>
       )}
     </div>
   );

@@ -155,6 +155,7 @@
   "report-results-sidebar-ai-summaries-checkbox-active-indicators-info": "Incluir sólo los indicadores activos en los resúmenes generados. Los cambios en los indicadores requerirán la generación de nuevos resúmenes.",
   "report-results-sidebar-ai-summaries-generating": "Generación de resúmenes de IA",
   "report-results-sidebar-ai-summaries-generating-info": "Los resúmenes generados por IA pueden ser inexactos. Le recomendamos que compruebe detenidamente el contenido",
+  "report-results-sidebar-ai-summaries-disclaimer": "Este texto es un resumen **{audience}** de los indicadores que se enumeran a continuación. Fue generado con IA, por lo que le recomendamos que verifique cuidadosamente el contenido.",
   "report-results-copy-title": "Compartir y salvar reporte",
   "report-results-copy-description": "Este enlace te permite compartir el reporte y guardar su estado actual. Cópialo para volver a visitarlo o compartirlo con otros.",
   "indicators-custom-municipalities-selected-area-intersects": "El área seleccionada interseca",
