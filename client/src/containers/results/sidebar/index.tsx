@@ -1,14 +1,14 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
 import { LuX } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { reportEditionModeAtom } from "@/app/store";
+import { reportEditionModeAtom, ReportResultsTab, resultsSidebarTabAtom } from "@/app/store";
 
 import { Sidebar, SidebarContent, SidebarHeader, useSidebar } from "@/components/ui/sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,12 +16,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AiSidebarContent from "./ai-content";
 import IndicatorsSidebarContent from "./indicators";
 
-type ReportResultsTab = "indicators" | "ai_summaries";
-
 export default function ReportSidebar() {
   const t = useTranslations();
   const { toggleSidebar } = useSidebar();
-  const [, setTab] = useState<ReportResultsTab>("indicators");
+  const [tab, setTab] = useAtom(resultsSidebarTabAtom);
   const setReportEditionMode = useSetAtom(reportEditionModeAtom);
 
   const handleReportEditionMode = useCallback(() => {
@@ -36,7 +34,7 @@ export default function ReportSidebar() {
       })}
     >
       <Tabs
-        defaultValue="indicators"
+        value={tab}
         className="sticky top-0 z-10 flex max-h-svh grow flex-col items-start space-y-4 overflow-hidden bg-white pt-14"
         onValueChange={(value) => setTab(value as ReportResultsTab)}
       >
