@@ -1,5 +1,6 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
+import { useAtomValue } from "jotai";
 import { useLocale } from "next-intl";
 
 import { useGetIndicatorsLayerId } from "@/lib/indicators";
@@ -11,6 +12,8 @@ import {
   ResourceWebTile,
 } from "@/types/indicator";
 import { Indicator } from "@/types/indicator";
+
+import { pdfIndicatorsMapStateAtom } from "@/app/store";
 
 import { useLoad } from "@/containers/indicators/load-provider";
 import { IndicatorProvider } from "@/containers/indicators/provider";
@@ -26,15 +29,34 @@ export const MapIndicators = (
     isPdf?: boolean;
   },
 ) => {
-  const { id, basemapId } = props;
+  const { id, basemapId, isPdf } = props;
 
   const locale = useLocale();
 
   const LAYER = useGetIndicatorsLayerId(id, locale, {});
 
-  const { loadingIndicators, onLoading, onReady } = useLoad();
+  const { onLoading, onReady } = useLoad();
 
-  const enabled = loadingIndicators.find((li) => li.id === `${id}-map`)?.enabled;
+  const pdfIndicatorsMapState = useAtomValue(pdfIndicatorsMapStateAtom);
+
+  const enabled = useMemo(() => {
+    if (!isPdf) return true;
+
+    const i = pdfIndicatorsMapState.find((i) => i.id === `${id}-map`);
+
+    if (i?.status === "ready") return true;
+
+    // limit enabled only for the 6 first indicators that are loading
+    const activeLoadingIndicators = pdfIndicatorsMapState
+      .filter((i) => i.status === "loading")
+      .slice(0, 6);
+
+    const i1 = activeLoadingIndicators.find((il) => il.id === `${id}-map`);
+
+    if (i1) return true;
+
+    return false;
+  }, [id, isPdf, pdfIndicatorsMapState]);
 
   const handleLoading = useCallback(() => {
     onLoading(`${id}-map`);

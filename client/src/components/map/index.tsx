@@ -83,6 +83,19 @@ export function MapView({
   const { onMapMount, onMapUnmount } = useContext(MapContext);
 
   useEffect(() => {
+    return () => {
+      if (mapViewRef.current && isPdf) {
+        mapViewRef.current.destroy();
+        mapViewRef.current = undefined;
+      }
+      if (mapRef.current && isPdf) {
+        mapRef.current.destroy();
+        mapRef.current = undefined;
+      }
+    };
+  }, [isPdf]);
+
+  useEffect(() => {
     if (mapContainerRef.current) {
       const baseLayer = new GraphicsLayer();
       /**
