@@ -140,6 +140,9 @@ export const generatedAITextAtom = atom<{ content: { id: number; description: st
   content: [],
 });
 
+export type ReportResultsTab = "indicators" | "ai_summaries";
+export const resultsSidebarTabAtom = atom<ReportResultsTab>("indicators");
+
 export const indicatorsExpandAtom = atom<Record<number, number[] | undefined> | undefined>({});
 
 export const pdfIndicatorsMapStateAtom = atom<

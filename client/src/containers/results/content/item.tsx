@@ -3,20 +3,29 @@ import { useCallback, useMemo } from "react";
 import { Layout } from "react-grid-layout";
 import { Responsive, WidthProvider } from "react-grid-layout";
 
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useLocale } from "next-intl";
+import { LuSparkles } from "react-icons/lu";
 
 import { useGetTopicsId } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { TopicView } from "@/app/parsers";
-import { reportEditionModeAtom, useSyncAiSummary, useSyncTopics } from "@/app/store";
+import {
+  reportEditionModeAtom,
+  resultsSidebarTabAtom,
+  useSyncAiSummary,
+  useSyncTopics,
+} from "@/app/store";
 
 import { MIN_VISUALIZATION_SIZES } from "@/constants/topics";
 
 import { useHighlightNewIndicator } from "@/containers/results/content/hooks";
 import { ReportResultsContentIndicatorItem } from "@/containers/results/content/indicators/item";
 import { ReportResultsSummary } from "@/containers/results/content/summary";
+
+import { Button } from "@/components/ui/button";
+import { useSidebar } from "@/components/ui/sidebar";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -33,6 +42,9 @@ export const ReportResultsContentItem = ({
   const [, setTopics] = useSyncTopics();
   const [ai_summary] = useSyncAiSummary();
   const [reportEditionMode] = useAtom(reportEditionModeAtom);
+  const setResultsSidebarTab = useSetAtom(resultsSidebarTabAtom);
+
+  const { setOpen } = useSidebar();
 
   const EDITABLE = editable && reportEditionMode;
   const TOPIC = useGetTopicsId({ id: topic.id, locale });
@@ -122,7 +134,21 @@ export const ReportResultsContentItem = ({
     >
       {TOPIC?.id !== 0 && (
         <>
-          <h2 className="text-2xl font-semibold text-primary">{TOPIC?.name}</h2>
+          <header className="flex items-center justify-between gap-2">
+            <h2 className="text-2xl font-semibold text-primary">{TOPIC?.name}</h2>
+
+            <Button
+              variant="outline"
+              className="hidden gap-2 lg:inline-flex"
+              onClick={() => {
+                setResultsSidebarTab("ai_summaries");
+                setOpen(true);
+              }}
+            >
+              <LuSparkles />
+              <span>AI assistant</span>
+            </Button>
+          </header>
 
           {ai_summary.enabled && <ReportResultsSummary topic={TOPIC} />}
         </>
