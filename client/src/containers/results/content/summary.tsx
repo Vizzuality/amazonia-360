@@ -29,7 +29,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export interface ReportResultsSummaryProps {
   topic?: Topic;
-  isPdf?: boolean;
 }
 
 export const useGetSummaryTopicData = (topic?: Topic, indicators?: Indicator["id"][]) => {
@@ -158,7 +157,7 @@ export const useGetSummaryTopic = (
   return q;
 };
 
-export const ReportResultsSummary = ({ topic, isPdf }: ReportResultsSummaryProps) => {
+export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
   const locale = useLocale();
   const t = useTranslations();
 
@@ -236,8 +235,7 @@ export const ReportResultsSummary = ({ topic, isPdf }: ReportResultsSummaryProps
           <div className="col-span-12 lg:col-span-8">
             <Markdown
               className={cn("max-w-none", {
-                "xl:prose-base prose-strong:font-bold": !isPdf,
-                "prose-sm columns-2 gap-x-8": isPdf,
+                "xl:prose-base prose-strong:font-bold": true,
               })}
             >
               {data.description}
