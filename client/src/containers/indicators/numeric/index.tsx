@@ -12,7 +12,7 @@ import { NumericImageryIndicators } from "@/containers/indicators/numeric/imager
 import { NumericImageryTileIndicators } from "@/containers/indicators/numeric/imagery-tile";
 import { IndicatorProvider } from "@/containers/indicators/provider";
 
-export const NumericIndicators = ({ id }: { id: Indicator["id"] }) => {
+export const NumericIndicators = ({ id, isPdf }: { id: Indicator["id"]; isPdf?: boolean }) => {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
 
@@ -27,13 +27,13 @@ export const NumericIndicators = ({ id }: { id: Indicator["id"] }) => {
   return (
     <IndicatorProvider onLoad={handleLoad}>
       {indicator.resource.type === "feature" && (
-        <NumericIndicatorsFeature {...indicator} resource={indicator.resource} />
+        <NumericIndicatorsFeature {...indicator} resource={indicator.resource} isPdf={isPdf} />
       )}
       {indicator.resource.type === "imagery" && (
-        <NumericImageryIndicators {...indicator} resource={indicator.resource} />
+        <NumericImageryIndicators {...indicator} resource={indicator.resource} isPdf={isPdf} />
       )}
       {indicator.resource.type === "imagery-tile" && (
-        <NumericImageryTileIndicators {...indicator} resource={indicator.resource} />
+        <NumericImageryTileIndicators {...indicator} resource={indicator.resource} isPdf={isPdf} />
       )}
     </IndicatorProvider>
   );

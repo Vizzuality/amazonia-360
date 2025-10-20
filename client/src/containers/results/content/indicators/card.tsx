@@ -155,7 +155,7 @@ export default function ReportResultsIndicator({
             Numeric
           */}
           {type === "numeric" && indicator.resource.type !== "component" && (
-            <NumericIndicators id={id} />
+            <NumericIndicators id={id} isPdf={isPdf} />
           )}
 
           {/*
