@@ -274,6 +274,8 @@
   "pdf-report-cover-title": "Informe",
   "pdf-report-cover-subtitle": "Este informe incluye un contexto geográfico{topics}",
   "pdf-report-cover-date": "{date} | Version en español",
+  "pdf-report-generating": "Generando informe PDF...",
+  "pdf-report-generating-subtitle": "Su informe se está generando. Esto puede tardar unos minutos dependiendo del tamaño del área seleccionada y del número de indicadores incluidos.",
   "indicator-webshot-loading": "Exportando PNG de {name}",
   "indicator-webshot-error": "Hubo un error al exportar el PNG de {name}. Por favor, inténtelo de nuevo.",
   "indicator-webshot-success": "¡PNG exportado con éxito para {name}!"

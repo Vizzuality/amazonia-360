@@ -4,6 +4,8 @@ import { atom } from "jotai";
 import { inferParserType, useQueryState } from "nuqs";
 import { createSerializer } from "nuqs/server";
 
+import { Indicator, VisualizationTypes } from "@/types/indicator";
+
 import {
   bboxParser,
   gridDatasetSelectedParser,
@@ -139,3 +141,11 @@ export const generatedAITextAtom = atom<{ content: { id: number; description: st
 });
 
 export const indicatorsExpandAtom = atom<Record<number, number[] | undefined> | undefined>({});
+
+export const pdfIndicatorsMapStateAtom = atom<
+  {
+    id: `${Indicator["id"]}-${VisualizationTypes | "custom"}`;
+    enabled?: boolean;
+    status: "loading" | "ready";
+  }[]
+>([]);

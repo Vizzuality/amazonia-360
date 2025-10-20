@@ -34,14 +34,18 @@ export type MapProps = {
   onPointerLeave?: () => void;
   initialBasemapId?: BasemapIds;
   isPdf?: boolean;
+  loaded?: boolean;
   onLoad?: (layerViews: LayerView[]) => void;
 };
 
 export default function Map(mapProps: MapProps) {
+  const [loaded, setLoaded] = useState(false);
+
   const handleLoad = useCallback(
     (layerViews: LayerView[]) => {
       if (mapProps.onLoad) {
         mapProps.onLoad(layerViews);
+        setLoaded(true);
       }
     },
     [mapProps],
@@ -49,7 +53,7 @@ export default function Map(mapProps: MapProps) {
 
   return (
     <MapProvider onLoad={handleLoad}>
-      <MapView {...omit(mapProps, ["onLoad"])} />
+      <MapView {...omit(mapProps, ["onLoad"])} loaded={loaded} />
     </MapProvider>
   );
 }
@@ -66,6 +70,7 @@ export function MapView({
   onPointerLeave,
   initialBasemapId,
   isPdf = false,
+  loaded = false,
 }: MapProps) {
   const mapRef = useRef<ArcGISMap>();
   const mapViewRef = useRef<ArcGISMapView>();
@@ -73,9 +78,22 @@ export function MapView({
 
   const [screenshot, setScreenshot] = useState<string | null>(null);
 
-  const [loaded, setLoaded] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const { onMapMount, onMapUnmount } = useContext(MapContext);
+
+  useEffect(() => {
+    return () => {
+      if (mapViewRef.current && isPdf) {
+        mapViewRef.current.destroy();
+        mapViewRef.current = undefined;
+      }
+      if (mapRef.current && isPdf) {
+        mapRef.current.destroy();
+        mapRef.current = undefined;
+      }
+    };
+  }, [isPdf]);
 
   useEffect(() => {
     if (mapContainerRef.current) {
@@ -141,7 +159,7 @@ export function MapView({
         if (onPointerLeave) onPointerLeave();
       });
 
-      // check if the map is loaded
+      // check if the map is mounted
       mapViewRef.current.when(() => {
         if (!mapViewRef.current || !mapRef.current) {
           return;
@@ -150,7 +168,7 @@ export function MapView({
           map: mapRef.current,
           view: mapViewRef.current,
         });
-        setLoaded(true);
+        setMounted(true);
       });
 
       // Listen to extent changes
@@ -161,21 +179,25 @@ export function MapView({
         },
       );
 
-      ArcGISReactiveUtils.whenOnce(() => !mapViewRef.current?.updating && isPdf).then(() => {
-        // Take a screenshot at the same resolution of the current view
-        mapViewRef.current?.takeScreenshot().then(function (s) {
-          if (s && s.dataUrl) {
-            setScreenshot(s.dataUrl);
-          }
-        });
-      });
-
       return () => {
         onMapUnmount();
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, onMapMount, onMapUnmount, onMapMove]);
+
+  useEffect(() => {
+    ArcGISReactiveUtils.whenOnce(() => !mapViewRef.current?.updating && loaded && isPdf).then(
+      () => {
+        // Take a screenshot at the same resolution of the current view
+        mapViewRef.current?.takeScreenshot().then(function (s) {
+          if (s && s.dataUrl) {
+            setScreenshot(s.dataUrl);
+          }
+        });
+      },
+    );
+  }, [loaded, isPdf]);
 
   useEffect(() => {
     if (bbox && mapViewRef.current) {
@@ -205,15 +227,25 @@ export function MapView({
 
   return (
     <>
-      {!screenshot && (
+      {!isPdf && (
+        <div id={`map-${id}`} ref={mapContainerRef} className="map relative h-full w-full grow">
+          {/* {screenshot && (
+            <Image src={screenshot} alt="Map screenshot" fill className="object-cover" />
+          )} */}
+          {mounted && children}
+        </div>
+      )}
+
+      {!screenshot && isPdf && (
         <div id={`map-${id}`} ref={mapContainerRef} className="map h-full w-full grow">
-          {loaded && children}
+          {mounted && children}
         </div>
       )}
 
       {screenshot && isPdf && (
         <div className="relative h-full w-full grow">
           <Image src={screenshot} alt="Map screenshot" fill className="object-cover" />
+          {mounted && children}
         </div>
       )}
     </>

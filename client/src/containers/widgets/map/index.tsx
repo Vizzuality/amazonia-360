@@ -2,6 +2,8 @@
 
 import { useCallback, useMemo } from "react";
 
+import { useInView } from "react-intersection-observer";
+
 import dynamic from "next/dynamic";
 
 import { useLocationGeometry } from "@/lib/location";
@@ -40,6 +42,8 @@ interface WidgetMapProps extends Omit<__esri.MapViewProperties, "map"> {
   layers: LayerProps[];
   isWebshot?: boolean;
   isPdf?: boolean;
+  inView?: boolean;
+  enabled?: boolean;
   onLoad?: () => void;
 }
 
@@ -49,6 +53,7 @@ export default function WidgetMap({
   layers,
   isWebshot = false,
   isPdf = false,
+  enabled = true,
   ...viewProps
 }: WidgetMapProps) {
   const [location] = useSyncLocation();
@@ -57,6 +62,10 @@ export default function WidgetMap({
   const [defaultTopics, setDefaultTopics] = useSyncDefaultTopics();
 
   const { onIndicatorViewLoaded, onIndicatorViewLoading } = useIndicator();
+
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
 
   useMemo(() => {
     onIndicatorViewLoading(indicator.id);
@@ -92,84 +101,91 @@ export default function WidgetMap({
     onIndicatorViewLoaded(indicator.id);
   }, [indicator.id, onIndicatorViewLoaded]);
 
-  if (!GEOMETRY) return null;
+  const IN_VIEW = useMemo(() => {
+    if (isPdf) return true;
+    return inView;
+  }, [inView, isPdf]);
+
+  if (!GEOMETRY || !enabled) return null;
 
   return (
-    <div className="relative h-full">
-      <Map
-        id={`overview-${indicator.id}`}
-        initialBasemapId={syncBasemapId || basemapId}
-        {...(GEOMETRY?.extent && {
-          defaultBbox: [
-            GEOMETRY?.extent.xmin,
-            GEOMETRY?.extent.ymin,
-            GEOMETRY?.extent.xmax,
-            GEOMETRY?.extent.ymax,
-          ],
-          bbox: undefined,
-        })}
-        viewProps={{
-          navigation: {
-            mouseWheelZoomEnabled: false,
-            browserTouchPanEnabled: false,
-          },
-          ...viewProps,
-        }}
-        isPdf={isPdf}
-        onLoad={handleLoad}
-      >
-        {layers.map((layer: LayerProps, index: number, arr: LayerProps[]) => {
-          const i = arr.length - index;
-          // Assuming layer.id is always present for key. If not, a fallback or check might be needed.
-          // For Esri Layers, 'id' is a property of __esri.Layer, which these should extend.
-          return (
-            <Layer
-              key={layer.id || `widget-layer-${index}`}
-              layer={{
-                ...layer,
-                opacity: opacity ?? 1,
-              }}
-              index={i}
-              GEOMETRY={GEOMETRY}
+    <div ref={ref} className="relative h-full">
+      {IN_VIEW && (
+        <Map
+          id={`overview-${indicator.id}`}
+          initialBasemapId={syncBasemapId || basemapId}
+          {...(GEOMETRY?.extent && {
+            defaultBbox: [
+              GEOMETRY?.extent.xmin,
+              GEOMETRY?.extent.ymin,
+              GEOMETRY?.extent.xmax,
+              GEOMETRY?.extent.ymax,
+            ],
+            bbox: undefined,
+          })}
+          viewProps={{
+            navigation: {
+              mouseWheelZoomEnabled: false,
+              browserTouchPanEnabled: false,
+            },
+            ...viewProps,
+          }}
+          isPdf={isPdf}
+          onLoad={handleLoad}
+        >
+          {layers.map((layer: LayerProps, index: number, arr: LayerProps[]) => {
+            const i = arr.length - index;
+            // Assuming layer.id is always present for key. If not, a fallback or check might be needed.
+            // For Esri Layers, 'id' is a property of __esri.Layer, which these should extend.
+            return (
+              <Layer
+                key={layer.id || `widget-layer-${index}`}
+                layer={{
+                  ...layer,
+                  opacity: opacity ?? 1,
+                }}
+                index={i}
+                GEOMETRY={GEOMETRY}
+              />
+            );
+          })}
+
+          <Layer index={1} layer={DATASETS.area_afp.layer as LayerProps} />
+          <SelectedLayer index={layers.length + 2} location={location} />
+          <Layer layer={LABELS_LAYER} index={layers.length + 3} />
+
+          {!isWebshot && !isPdf && (
+            <Controls>
+              <FullscreenControl />
+              <ZoomControl />
+              <BasemapControl
+                onBasemapChange={(selectedBasemapId) =>
+                  handleMapIndicatorPropertyChange(
+                    "basemapId",
+                    selectedBasemapId,
+                    defaultTopics,
+                    indicator,
+                    setDefaultTopics,
+                    setTopics,
+                    defaultValues,
+                  )
+                }
+              />
+            </Controls>
+          )}
+
+          {(indicator.resource.type === "feature" ||
+            indicator.resource.type === "imagery" ||
+            indicator.resource.type === "imagery-tile") && (
+            <WidgetLegend
+              {...(indicator as Omit<Indicator, "resource"> & {
+                resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
+              })}
+              interactive={!isWebshot && !isPdf}
             />
-          );
-        })}
-
-        <Layer index={1} layer={DATASETS.area_afp.layer as LayerProps} />
-        <SelectedLayer index={layers.length + 2} location={location} />
-        <Layer layer={LABELS_LAYER} index={layers.length + 3} />
-
-        {!isWebshot && !isPdf && (
-          <Controls>
-            <FullscreenControl />
-            <ZoomControl />
-            <BasemapControl
-              onBasemapChange={(selectedBasemapId) =>
-                handleMapIndicatorPropertyChange(
-                  "basemapId",
-                  selectedBasemapId,
-                  defaultTopics,
-                  indicator,
-                  setDefaultTopics,
-                  setTopics,
-                  defaultValues,
-                )
-              }
-            />
-          </Controls>
-        )}
-
-        {(indicator.resource.type === "feature" ||
-          indicator.resource.type === "imagery" ||
-          indicator.resource.type === "imagery-tile") && (
-          <WidgetLegend
-            {...(indicator as Omit<Indicator, "resource"> & {
-              resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
-            })}
-            interactive={!isWebshot && !isPdf}
-          />
-        )}
-      </Map>
+          )}
+        </Map>
+      )}
     </div>
   );
 }
