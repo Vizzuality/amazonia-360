@@ -24,7 +24,7 @@ export const Pdf = () => {
   };
 
   return (
-    <LoadProvider onLoad={handleLoad}>
+    <LoadProvider isPdf onLoad={handleLoad}>
       {!loaded && (
         <div className="fixed left-0 top-0 z-50 flex h-full w-full flex-col items-center justify-center bg-foreground/90 text-background">
           <div className="flex max-w-sm flex-col items-center justify-center gap-2 text-center">

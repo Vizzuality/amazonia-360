@@ -32,7 +32,13 @@ export const MapIndicators = (
 
   const LAYER = useGetIndicatorsLayerId(id, locale, {});
 
-  const { onReady } = useLoad();
+  const { loadingIndicators, onLoading, onReady } = useLoad();
+
+  const enabled = loadingIndicators.find((li) => li.id === `${id}-map`)?.enabled;
+
+  const handleLoading = useCallback(() => {
+    onLoading(`${id}-map`);
+  }, [id, onLoading]);
 
   const handleLoad = useCallback(() => {
     onReady(`${id}-map`);
@@ -41,13 +47,14 @@ export const MapIndicators = (
   if (!LAYER) return null;
 
   return (
-    <IndicatorProvider onLoad={handleLoad}>
+    <IndicatorProvider onLoading={handleLoading} onLoad={handleLoad}>
       <WidgetMap
         indicator={props}
         basemapId={basemapId}
         layers={[LAYER]}
         isWebshot={props.isWebshot}
         isPdf={props.isPdf}
+        enabled={enabled}
       />
     </IndicatorProvider>
   );

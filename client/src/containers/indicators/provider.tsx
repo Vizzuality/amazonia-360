@@ -29,16 +29,22 @@ export const IndicatorContext = createContext<IndicatorContextProps>({
 
 export const IndicatorProvider: React.FC<{
   children?: ReactNode;
+  onLoading?: (indicatorViews: IndicatorView[]) => void;
   onLoad?: (indicatorViews: IndicatorView[]) => void;
-}> = ({ children, onLoad }) => {
+}> = ({ children, onLoading, onLoad }) => {
   const indicatorViews = useRef<IndicatorView[]>([]);
 
-  const onIndicatorViewLoading = useCallback((id: string | number) => {
-    if (indicatorViews.current.find((lv) => lv.id === id)) {
-      return;
-    }
-    indicatorViews.current.push({ id, status: "loading" });
-  }, []);
+  const onIndicatorViewLoading = useCallback(
+    (id: string | number) => {
+      if (indicatorViews.current.find((lv) => lv.id === id)) {
+        return;
+      }
+      indicatorViews.current.push({ id, status: "loading" });
+
+      if (onLoading) onLoading(indicatorViews.current);
+    },
+    [onLoading],
+  );
 
   const onIndicatorViewLoaded = useCallback(
     (id: string | number) => {
