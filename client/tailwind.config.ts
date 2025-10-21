@@ -16,9 +16,9 @@ const config = {
         sm: "1rem", // Small screens
         md: "1rem", // Medium screens
         lg: "2rem", // Large screens
-        xl: "4rem", // Extra large screens
-        "2xl": "6rem", // Extra-extra large screens
-        "3xl": "10rem", // Extra-extra-extra large screens
+        xl: "2rem", // Extra large screens
+        "2xl": "4rem", // Extra-extra large screens
+        "3xl": "6rem", // Extra-extra-extra large screens
       },
     },
     extend: {

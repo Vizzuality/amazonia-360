@@ -42,13 +42,13 @@ export default function Hero() {
     <section className="relative w-full overflow-hidden md:h-[calc(100svh_-_64px)] md:bg-blue-50">
       <div className="container relative grid h-full w-full grid-cols-12 items-center">
         <div className="relative z-10 col-span-12 flex flex-col space-y-6 py-8 md:col-span-5 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-40">
-          <h2 className="text-4xl text-blue-600 lg:text-5xl">
+          <h2 className="text-4xl text-blue-600 lg:text-4xl xl:text-5xl">
             <ReactMarkdown>{t("landing-hero-title")}</ReactMarkdown>
           </h2>
           <div className="text-base font-normal text-blue-900 lg:text-lg">
             <ReactMarkdown>{t("landing-hero-description")}</ReactMarkdown>
           </div>
-          <div className="flex flex-col gap-2 py-4 font-semibold md:py-6 2xl:flex-row">
+          <div className="flex flex-col gap-2 py-4 font-semibold md:py-6 xl:flex-row">
             <Link href="/report" prefetch>
               <Button size="lg" className="flex w-full space-x-2.5 px-8">
                 {t("landing-hero-buttons-access-the-tool")}
