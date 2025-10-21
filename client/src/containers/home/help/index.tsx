@@ -17,7 +17,7 @@ export default function Help() {
   const locale = useLocale();
 
   return (
-    <section className="bg-blue-700 text-white">
+    <section className="relative overflow-hidden bg-blue-700 text-white after:absolute after:left-1/2 after:top-0 after:h-full after:w-px after:-translate-x-1/2 after:bg-blue-900">
       <div className="container py-10">
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 flex flex-col items-start justify-between lg:col-span-5 lg:py-16">
