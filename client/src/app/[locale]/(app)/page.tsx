@@ -35,7 +35,7 @@ export default function HomePage() {
       <KeyFeaturesGrid />
       <InformationOn />
       <Glance />
-      {process.env.NEXT_PUBLIC_FEATURE_PARTNERS === "true" && <Partners />}
+      <Partners />
       <Hub />
       <Help />
       <Footer />

@@ -7,80 +7,61 @@ import Image from "next/image";
 
 import { useTranslations } from "next-intl";
 
-import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+// import { Button } from "@/components/ui/button";
 
 const Partner = ({
   href,
   src,
   alt,
-  w = 100,
-  h = 120,
+  className,
 }: {
   href: string;
   src: string;
   alt: string;
-  w?: number;
-  h?: number;
+  className?: string;
 }) => (
-  <li className="flex h-20 items-center">
-    <a target="_blank" rel="noopener noreferrer" href={href}>
-      <Image src={src} alt={alt} width={w} height={h} className={`min-w-[${w}]px`} />
+  <li className={cn(`flex h-16 items-center ${className}`)}>
+    <a target="_blank" rel="noopener noreferrer" className="relative h-full w-full" href={href}>
+      <Image src={src} alt={alt} fill className="object-contain" />
     </a>
   </li>
 );
 
 const PARTNERS = [
   {
-    href: "https://www.google.com",
-    src: "/partners/google.svg",
-    alt: "Google",
-  },
-  {
-    href: "https://www.meta.com",
-    src: "/partners/meta.svg",
-    alt: "Meta",
-  },
-  {
-    href: "https://vizzuality.com",
-    src: "/partners/vizzuality.svg",
-    alt: "Vizzuality",
+    href: "https://datapartnership.org/",
+    src: "/partners/ddp.avif",
+    alt: "Data Digital Partnership",
   },
   {
     href: "https://oraotca.org/",
-    src: "/partners/acto.svg",
+    src: "/partners/atco-en.avif",
     alt: "ACTO ARO",
   },
   {
-    href: "https://www.ookla.com/",
-    src: "/partners/ookla.svg",
-    alt: "Ookla",
-  },
-  {
-    href: "https://esa.int/",
-    src: "/partners/esa.svg",
-    alt: "European Space Agency (ESA)",
-  },
-  {
     href: "https://www.esri.com/",
-    src: "/partners/esri.png",
+    src: "/partners/esri.avif",
     alt: "Esri",
+    className: "p-1",
   },
   {
-    href: "https://raisd-h2020.eu/",
-    src: "/partners/raisg.svg",
-    alt: "RAiSG",
+    href: "https://www.greenclimate.fund/",
+    src: "/partners/green-climate-fund.avif",
+    alt: "Green Climate Fund",
   },
   {
-    href: "https://leica-geosystems.com/",
-    src: "/partners/leica.svg",
-    alt: "Leica Geosystems AG",
-    w: 80,
+    href: "https://www.iadb.org",
+    src: "/partners/idb-atlas.avif",
+    alt: "IDB Atlas",
+    className: "p-1",
   },
   {
-    href: "https://r-evolution.com/",
-    src: "/partners/hexagon.svg",
-    alt: "Hexagon R-evolution",
-    w: 150,
+    href: "https://vizzuality.com",
+    src: "/partners/vizzuality.avif",
+    alt: "Vizzuality",
+    className: "p-1",
   },
 ];
 export default function Partners() {
@@ -93,7 +74,7 @@ export default function Partners() {
 
   return (
     <section ref={sectionRef} className="bg-blue-50 py-20 md:py-28">
-      <div className="container flex flex-col items-end md:flex-row md:items-start md:space-x-28">
+      <div className="container flex flex-col items-end md:flex-row md:items-center md:space-x-28">
         <div
           className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-6 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-20" : "md:opacity-0"}`}
         >
@@ -108,9 +89,9 @@ export default function Partners() {
               <ReactMarkdown>{t("landing-partners-description")}</ReactMarkdown>
             </div>
           </div>
-          <Button size="lg" className="flex max-w-[200px] px-8">
+          {/* <Button size="lg" className="flex max-w-[200px] px-8">
             Become a partner!
-          </Button>
+          </Button> */}
         </div>
         <div
           className={`mt-10 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-right-20" : "opacity-0"}`}
