@@ -280,7 +280,7 @@
   "pdf-report-cover-subtitle": "Este relatório inclui um contexto geográfico{topics}",
   "pdf-report-cover-date": "{date} | Versão em português",
   "pdf-report-generating": "Gerando relatório PDF...",
-  "pdf-report-generating-subtitle": "Seu relatório está sendo gerado. Isso pode levar alguns minutos, dependendo do tamanho da área selecionada e do número de indicadores incluídos.",
+  "pdf-report-generating-subtitle": "Seu relatório está sendo gerado. Isso pode levar um tempo dependendo do tamanho da área selecionada e do número de indicadores incluídos.",
   "indicator-webshot-loading": "Exportando PNG de {name}",
   "indicator-webshot-error": "Houve um erro ao exportar o PNG de {name}. Por favor, tente novamente.",
   "indicator-webshot-success": "PNG exportado com sucesso para {name}!"
