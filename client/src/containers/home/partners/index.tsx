@@ -7,80 +7,62 @@ import Image from "next/image";
 
 import { useTranslations } from "next-intl";
 
+import { cn } from "@/lib/utils";
+
 import { Button } from "@/components/ui/button";
 
 const Partner = ({
   href,
   src,
   alt,
-  w = 100,
-  h = 120,
+  className,
 }: {
   href: string;
   src: string;
   alt: string;
-  w?: number;
-  h?: number;
+  className?: string;
 }) => (
-  <li className="flex h-20 items-center">
-    <a target="_blank" rel="noopener noreferrer" href={href}>
-      <Image src={src} alt={alt} width={w} height={h} className={`min-w-[${w}]px`} />
+  <li className={cn(`flex h-20 items-center ${className}`)}>
+    <a target="_blank" rel="noopener noreferrer" className="relative h-full w-full" href={href}>
+      <Image src={src} alt={alt} fill className="object-contain" />
     </a>
   </li>
 );
 
 const PARTNERS = [
   {
-    href: "https://www.google.com",
-    src: "/partners/google.svg",
-    alt: "Google",
-  },
-  {
-    href: "https://www.meta.com",
-    src: "/partners/meta.svg",
-    alt: "Meta",
-  },
-  {
-    href: "https://vizzuality.com",
-    src: "/partners/vizzuality.svg",
-    alt: "Vizzuality",
-  },
-  {
     href: "https://oraotca.org/",
-    src: "/partners/acto.svg",
+    src: "/partners/atco-en.png",
     alt: "ACTO ARO",
-  },
-  {
-    href: "https://www.ookla.com/",
-    src: "/partners/ookla.svg",
-    alt: "Ookla",
-  },
-  {
-    href: "https://esa.int/",
-    src: "/partners/esa.svg",
-    alt: "European Space Agency (ESA)",
+    className: "col-span-2",
   },
   {
     href: "https://www.esri.com/",
     src: "/partners/esri.png",
     alt: "Esri",
+    className: "p-5",
   },
   {
-    href: "https://raisd-h2020.eu/",
-    src: "/partners/raisg.svg",
-    alt: "RAiSG",
+    href: "https://vizzuality.com",
+    src: "/partners/vizzuality.svg",
+    alt: "Vizzuality",
+    className: "p-5",
   },
   {
-    href: "https://leica-geosystems.com/",
-    src: "/partners/leica.svg",
-    alt: "Leica Geosystems AG",
-    w: 80,
+    href: "https://www.greenclimate.fund/",
+    src: "/partners/green-climate-fund.png",
+    alt: "Green Climate Fund",
   },
   {
-    href: "https://r-evolution.com/",
-    src: "/partners/hexagon.svg",
-    alt: "Hexagon R-evolution",
-    w: 150,
+    href: "https://datapartnership.org/",
+    src: "/partners/ddp.png",
+    alt: "Data Digital Partnership",
+  },
+  {
+    href: "https://www.iadb.org",
+    src: "/partners/idb-atlas.png",
+    alt: "IDB Atlas",
+    className: "p-5",
   },
 ];
 export default function Partners() {
