@@ -32,14 +32,14 @@ export default function Help() {
               </div>
 
               <a href={`${FEEDBACK_URL}?lang=${locale}`} target="_blank" rel="noreferrer">
-                <Button size="lg" variant="outline">
+                <Button size="lg" variant="outline" className="hover:text-accent">
                   {t("landing-help-give-feedback")}
                 </Button>
               </a>
             </div>
           </div>
 
-          <div className="col-span-12 hidden items-start justify-between lg:col-span-5 lg:col-start-8 lg:flex lg:gap-2 lg:py-16">
+          <div className="col-span-12 hidden items-start justify-between lg:col-span-5 lg:col-start-8 lg:flex lg:gap-6 lg:py-16">
             <div className="flex flex-col justify-start space-y-6">
               <div className="flex size-16 items-center justify-center rounded-full bg-blue-500 p-4 text-cyan-500">
                 <LuTabletSmartphone className="size-8" />
