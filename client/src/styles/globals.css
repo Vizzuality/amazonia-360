@@ -145,7 +145,7 @@
     }
 
     @page {
-      size: landscape a4;
+      size: landscape letter;
       margin: 0;
       padding: 0;
     }

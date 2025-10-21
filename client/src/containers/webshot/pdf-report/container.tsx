@@ -16,7 +16,7 @@ export const PdfContainer = ({
   return (
     <div
       className={cn({
-        "relative mx-auto h-[209.8mm] w-[297mm] bg-blue-50 shadow-lg": true,
+        "relative mx-auto h-[8.5in] w-[11in] bg-blue-50 shadow-lg": true,
         "break-before-page": index !== 0,
         "print:mx-0 print:origin-top-left print:scale-[1.1499] print:shadow-none": true,
       })}
