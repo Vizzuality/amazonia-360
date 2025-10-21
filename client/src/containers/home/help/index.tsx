@@ -51,7 +51,7 @@ export default function Help() {
               </div>
             </div>
 
-            <div className="mt-24">
+            <div className="mt-20">
               <QRCodeHelp />
             </div>
           </div>
