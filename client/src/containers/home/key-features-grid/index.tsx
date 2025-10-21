@@ -32,7 +32,7 @@ export default function KeyFeaturesGrid() {
             <Image
               src="/images/home/grid_1.avif"
               alt="Grid Animation"
-              layout="fill"
+              fill
               className={cn({
                 "h-full w-full object-contain p-4 opacity-0 transition-opacity duration-1000": true,
                 "z-20 opacity-100": img === 0,
@@ -42,7 +42,7 @@ export default function KeyFeaturesGrid() {
             <Image
               src="/images/home/grid_2.avif"
               alt="Grid Animation"
-              layout="fill"
+              fill
               className={cn({
                 "h-full w-full object-contain p-4 opacity-0 transition-opacity duration-1000": true,
                 "z-20 opacity-100": img === 1,
