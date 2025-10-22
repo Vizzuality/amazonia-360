@@ -64,7 +64,7 @@
     "@visx/shape": "^3.5.0",
     "@visx/tooltip": "3.3.0",
     "@visx/vendor": "^3.5.0",
-    "axios": "^1.7.7",
+    "axios": "^1.12.2",
     "chroma-js": "^2.6.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
