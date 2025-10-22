@@ -22,8 +22,12 @@ export const LoadContext = createContext<LoadContextProps>({
 
 export const LoadProvider: React.FC<{
   children?: ReactNode;
+  indicator?: {
+    id: Indicator["id"];
+    type: VisualizationTypes | "custom";
+  };
   onLoad?: () => void;
-}> = ({ children, onLoad }) => {
+}> = ({ children, indicator, onLoad }) => {
   const indicators = useRef<ID[]>([]);
   const indicatorsLoading = useRef<
     {
@@ -42,6 +46,17 @@ export const LoadProvider: React.FC<{
       return;
     }
 
+    if (indicator) {
+      const tis = [`${indicator.id}-${indicator.type}`];
+
+      if (indicators.current.length === tis.length) {
+        if (onLoad) {
+          onLoad();
+        }
+      }
+      return;
+    }
+
     const tis = [
       ...(overviewTopics
         ?.map(
@@ -57,7 +72,7 @@ export const LoadProvider: React.FC<{
         onLoad();
       }
     }
-  }, [topics, overviewTopics, onLoad]);
+  }, [topics, overviewTopics, indicator, onLoad]);
 
   const onLoading = useCallback(
     (id: ID) => {

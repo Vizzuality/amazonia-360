@@ -23,6 +23,7 @@
   },
   "browser": {
     "waitMsBeforeTakingSnapshot": 10000,
+    "waitForReadyTimeout": 60000,
     "baselineRequestManagerWaitMs": 36000,
     "baselineRequestManagerDebounceIntervalMs": 10000,
     "args": [

@@ -74,15 +74,22 @@ export class WidgetsService {
       // default is necessary. However, proper handling of concurrent load may
       // only be possible by switching to using a simple queue system to process
       // requests sequentially or with a given maximum parallelism.
-      await page.waitForTimeout(
-        Config.getNumber("browser.waitMsBeforeTakingSnapshot")
-      );
+      // await page.waitForTimeout(
+      //   Config.getNumber("browser.waitMsBeforeTakingSnapshot")
+      // );
 
       // Take screenshot of only the widget container element instead of the whole page
       const widgetContainer = page.locator("#webshot-widget-container");
 
       // Wait for the widget container to be visible
       await widgetContainer.waitFor({ state: "visible", timeout: 10000 });
+
+      // Wait until the a global variable called "READY" is true
+      await page.waitForFunction(
+        () => (window as unknown as { READY: boolean }).READY === true,
+        {},
+        { timeout: Config.getNumber("browser.waitForReadyTimeout") }
+      );
 
       // Generate PNG snapshot of only the widget container
       const pngBuffer = await widgetContainer.screenshot({
