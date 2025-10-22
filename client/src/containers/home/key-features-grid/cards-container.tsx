@@ -34,10 +34,10 @@ export default function CardsContainer() {
             isTextInView,
         })}
       >
-        <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
+        <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-blue-400">
           {t("landing-key-features-note")}
         </h3>
-        <h2 className="pb-6 text-2xl text-blue-400 lg:text-4xl">
+        <h2 className="pb-6 text-2xl text-blue-600 lg:text-4xl">
           {t("landing-key-features-grid-title")}
         </h2>
         <div className="text-base font-normal text-blue-900 lg:text-lg">
@@ -53,7 +53,7 @@ export default function CardsContainer() {
                 : "md:opacity-0"
             }`}
           >
-            <HexagonIcon className="h-8 w-8 text-cyan-600" />
+            <HexagonIcon className="h-8 w-8 text-blue-400" />
             <h4 className="font-semibold text-foreground">
               {t("landing-key-features-grid-buttons-identify-hot-spots")}
             </h4>
@@ -67,7 +67,7 @@ export default function CardsContainer() {
                 : "md:opacity-0"
             }`}
           >
-            <WandIcon className="text-cyan-600" />
+            <WandIcon className="text-blue-400" />
             <h4 className="font-semibold text-foreground">
               {t("landing-key-features-grid-buttons-redefine-your-area")}
             </h4>
@@ -81,7 +81,7 @@ export default function CardsContainer() {
                 : "md:opacity-0"
             }`}
           >
-            <ReportIcon className="text-cyan-600" />
+            <ReportIcon className="text-blue-400" />
             <h4 className="font-semibold text-foreground">
               {t("landing-key-features-grid-buttons-create-report")}
             </h4>

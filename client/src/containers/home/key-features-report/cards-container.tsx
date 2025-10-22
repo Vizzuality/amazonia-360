@@ -30,10 +30,10 @@ export default function CardsContainer() {
             isTextInView,
         })}
       >
-        <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
+        <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-blue-400">
           {t("landing-key-features-note")}
         </h3>
-        <h2 className="m-auto pb-6 text-2xl text-blue-400 lg:text-4xl">
+        <h2 className="m-auto pb-6 text-2xl text-blue-600 lg:text-4xl">
           {t("landing-key-features-report-title")}
         </h2>
         <p className="text-base font-normal text-blue-900 lg:text-lg">
@@ -49,7 +49,7 @@ export default function CardsContainer() {
                 : "opacity-0"
             }`}
           >
-            <LuMapPinned size={32} strokeWidth={1} className="text-cyan-600" />
+            <LuMapPinned size={32} strokeWidth={1} className="text-blue-400" />
             <h4 className="font-semibold text-foreground">
               {t("landing-key-features-report-buttons-select-area-of-interest")}
             </h4>
@@ -63,7 +63,7 @@ export default function CardsContainer() {
                 : "opacity-0"
             }`}
           >
-            <LuLayoutDashboard size={32} strokeWidth={1} className="text-cyan-600" />
+            <LuLayoutDashboard size={32} strokeWidth={1} className="text-blue-400" />
             <h4 className="font-semibold text-foreground">
               {t("landing-key-features-report-buttons-define-topics-of-interest")}
             </h4>
@@ -78,7 +78,7 @@ export default function CardsContainer() {
                 : "opacity-0"
             }`}
           >
-            <LuShare2 size={32} strokeWidth={1} className="h-8 w-8 text-cyan-600" />
+            <LuShare2 size={32} strokeWidth={1} className="h-8 w-8 text-blue-400" />
             <h4 className="font-semibold text-foreground">
               {t("landing-key-features-report-buttons-share-and-download")}
             </h4>
