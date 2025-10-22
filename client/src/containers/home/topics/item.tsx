@@ -13,9 +13,9 @@ export default function TopicsItem({ id, name, image, description }: Topic) {
   const descriptionRef = useRef<HTMLParagraphElement>(null);
 
   return (
-    <div key={id} className="col-span-6 aspect-video xl:col-span-3 xl:aspect-square">
+    <div key={id} className="col-span-6 aspect-[4/3] xl:col-span-3 xl:aspect-square">
       <div className="group relative overflow-hidden shadow after:absolute after:bottom-0 after:left-0 after:h-16 after:w-full after:bg-gradient-to-b after:from-transparent after:to-[#09090B]/85 after:content-['']">
-        <div className="relative aspect-video xl:aspect-square">
+        <div className="relative aspect-[4/3] xl:aspect-square">
           <Image
             src={image}
             alt={`${name}`}

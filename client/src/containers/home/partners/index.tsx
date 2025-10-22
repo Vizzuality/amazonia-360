@@ -79,10 +79,10 @@ export default function Partners() {
           className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-6 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-20" : "md:opacity-0"}`}
         >
           <div>
-            <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
+            <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-blue-400">
               {t("landing-partners-note")}
             </h3>
-            <h2 className="max-w-44 pb-6 text-2xl text-blue-400 md:max-w-[390px] lg:text-3xl xl:text-4xl">
+            <h2 className="max-w-44 pb-6 text-2xl text-blue-600 md:max-w-[390px] lg:text-3xl xl:text-4xl">
               {t("landing-partners-title")}
             </h2>
             <div className="text-base font-normal text-blue-900 lg:text-lg">

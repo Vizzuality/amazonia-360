@@ -112,10 +112,10 @@ export default function Glance() {
         className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-10 lg:space-y-44 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-20" : "md:opacity-0"}`}
       >
         <div>
-          <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-cyan-500">
+          <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-blue-400">
             {t("landing-glance-note")}
           </h3>
-          <h2 className="pb-6 text-2xl text-blue-400 md:max-w-[520px] lg:text-3xl xl:text-4xl">
+          <h2 className="pb-6 text-2xl text-blue-600 md:max-w-[520px] lg:text-3xl xl:text-4xl">
             {t("landing-glance-title")}
           </h2>
           <div className="text-base font-normal text-blue-900 lg:text-lg">
@@ -165,8 +165,8 @@ export default function Glance() {
           </div>
         </div>
 
-        <div className="space-y-1 text-sm text-blue-300">
-          <p className="text-base"> {t("landing-glance-chart-source-note")}</p>
+        <div className="hidden space-y-1 text-xs text-muted-foreground md:block">
+          <p className="text-xs lg:text-sm"> {t("landing-glance-chart-source-note")}</p>
           <ul className="space-y-2">
             <li>
               <span>{t("landing-glance-chart-source-title")}</span>
@@ -177,9 +177,9 @@ export default function Glance() {
         </div>
       </div>
       <div
-        className={`my-10 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-right-20" : "opacity-0"}`}
+        className={`mb-10 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-right-20" : "opacity-0"}`}
       >
-        <header className="space-y-1">
+        <header className="hidden space-y-1 md:block">
           <h3 className="text-xl font-semibold text-foreground">
             {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.[
               `label_${locale}` as keyof (typeof MOSAIC_OPTIONS)[number]
@@ -193,6 +193,16 @@ export default function Glance() {
         </header>
         <div className="w-full">
           <MarimekkoChart format={FORMAT[chartKey]} data={parsedData} className="h-[510px]" />
+        </div>
+        <div className="space-y-1 text-xs text-muted-foreground md:hidden">
+          <p className="text-xs lg:text-sm"> {t("landing-glance-chart-source-note")}</p>
+          <ul className="space-y-2">
+            <li>
+              <span>{t("landing-glance-chart-source-title")}</span>
+              <CardInfo ids={[+"population"]} className="relative top-0.5 inline-flex" />
+            </li>
+            <li>{t("landing-glance-chart-source")}</li>
+          </ul>
         </div>
       </div>
     </section>
