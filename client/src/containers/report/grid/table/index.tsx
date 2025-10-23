@@ -16,7 +16,7 @@ import {
   useSyncLocation,
   useSyncGridTableSettings,
   useSyncGridDatasetCategoricalSettings,
-} from "@/app/store";
+} from "@/app/(frontend)/store";
 
 import { CardLoader } from "@/containers/card";
 import GridTableSetup from "@/containers/report/grid/table/setup";

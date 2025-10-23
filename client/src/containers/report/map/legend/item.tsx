@@ -12,7 +12,7 @@ import {
   ResourceImageryTile,
 } from "@/types/indicator";
 
-import { useSyncIndicators, useSyncIndicatorsSettings } from "@/app/store";
+import { useSyncIndicators, useSyncIndicatorsSettings } from "@/app/(frontend)/store";
 
 import InfoControl from "@/components/map/legend/controls/info";
 import OpacityControl from "@/components/map/legend/controls/opacity";

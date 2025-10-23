@@ -14,7 +14,7 @@ import { z } from "zod";
 import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
-import { reportPanelAtom, serializeSearchParams, useSyncLocation } from "@/app/store";
+import { reportPanelAtom, serializeSearchParams, useSyncLocation } from "@/app/(frontend)/store";
 
 import { ReportGenerateButtons } from "@/containers/report/generate/buttons";
 import Topics from "@/containers/report/generate/topics";

@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 import { Subtopic } from "@/types/topic";
 
-import { indicatorsExpandAtom, useSyncIndicators } from "@/app/store";
+import { indicatorsExpandAtom, useSyncIndicators } from "@/app/(frontend)/store";
 
 import IndicatorsList from "@/containers/report/indicators/list";
 

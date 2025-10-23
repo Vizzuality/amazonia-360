@@ -2,7 +2,7 @@
 
 import { useAtomValue } from "jotai";
 
-import { reportPanelAtom, sketchAtom, useSyncLocation } from "@/app/store";
+import { reportPanelAtom, sketchAtom, useSyncLocation } from "@/app/(frontend)/store";
 
 import SidebarIndicatorsContent from "@/containers/report/generate";
 import SidebarLocationContent from "@/containers/report/location/content-mobile";

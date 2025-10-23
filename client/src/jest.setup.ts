@@ -1,4 +1,4 @@
-import { CustomLocation, SearchLocation } from "@/app/parsers";
+import { CustomLocation, SearchLocation } from "@/app/(frontend)/parsers";
 
 import "@testing-library/jest-dom";
 

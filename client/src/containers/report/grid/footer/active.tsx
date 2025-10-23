@@ -5,7 +5,7 @@ import { useCallback } from "react";
 import { useAtom } from "jotai";
 import { useTranslations } from "next-intl";
 
-import { useSyncGridDatasets, selectedFiltersViewAtom } from "@/app/store";
+import { useSyncGridDatasets, selectedFiltersViewAtom } from "@/app/(frontend)/store";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";

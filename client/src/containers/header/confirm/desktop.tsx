@@ -12,7 +12,7 @@ import { LuPen } from "react-icons/lu";
 import { formatNumber } from "@/lib/formats";
 import { useLocation, useLocationGeometry, useLocationTitle } from "@/lib/location";
 
-import { sketchActionAtom, sketchAtom, useSyncLocation } from "@/app/store";
+import { sketchActionAtom, sketchAtom, useSyncLocation } from "@/app/(frontend)/store";
 
 import ReportGenerate from "@/containers/report/generate";
 
