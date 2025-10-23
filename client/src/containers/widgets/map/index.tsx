@@ -18,6 +18,7 @@ import {
 import { IndicatorMapView } from "@/app/(frontend)/parsers";
 import { useSyncLocation, useSyncTopics, useSyncDefaultTopics } from "@/app/(frontend)/store";
 
+import { BasemapIds } from "@/constants/basemaps";
 import { DATASETS } from "@/constants/datasets";
 
 import { useIndicator } from "@/containers/indicators/provider";
@@ -25,7 +26,7 @@ import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer"
 import { WidgetLegend } from "@/containers/widgets/map/legend";
 
 import Controls from "@/components/map/controls";
-import BasemapControl, { BasemapIds } from "@/components/map/controls/basemap";
+import BasemapControl from "@/components/map/controls/basemap";
 import FullscreenControl from "@/components/map/controls/fullscreen";
 import ZoomControl from "@/components/map/controls/zoom";
 import { LayerProps } from "@/components/map/layers/types";

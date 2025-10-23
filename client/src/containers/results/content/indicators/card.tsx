@@ -17,6 +17,8 @@ import { ResourceFeature, ResourceImageryTile, ResourceWebTile } from "@/types/i
 
 import { reportEditionModeAtom } from "@/app/(frontend)/store";
 
+import { BasemapIds } from "@/constants/basemaps";
+
 import {
   Card,
   CardContent,
@@ -32,7 +34,6 @@ import { MapIndicators } from "@/containers/indicators/map";
 import { NumericIndicators } from "@/containers/indicators/numeric";
 import { TableIndicators } from "@/containers/indicators/table";
 
-import { BASEMAPS } from "@/components/map/controls/basemap";
 import { useSidebar } from "@/components/ui/sidebar";
 
 // custom indicators
@@ -47,7 +48,7 @@ export default function ReportResultsIndicator({
 }: {
   id: Indicator["id"];
   type: VisualizationTypes;
-  basemapId?: (typeof BASEMAPS)[number]["id"];
+  basemapId?: BasemapIds;
   editable: boolean;
   isWebshot?: boolean;
   isPdf?: boolean;
