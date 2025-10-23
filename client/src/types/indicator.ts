@@ -1,6 +1,6 @@
 import { Subtopic, Topic } from "@/types/topic";
 
-import { IndicatorView } from "@/app/parsers";
+import { IndicatorView } from "@/app/(frontend)/parsers";
 
 import { LegendItemProps } from "@/components/map/legend/item";
 

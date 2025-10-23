@@ -16,13 +16,13 @@ import { ContextDescriptionType, ContextLanguage } from "@/types/generated/api.s
 import { Indicator } from "@/types/indicator";
 import { Topic } from "@/types/topic";
 
-import { AiSummary } from "@/app/parsers";
+import { AiSummary } from "@/app/(frontend)/parsers";
 import {
   isGeneratingAIReportAtom,
   useSyncAiSummary,
   useSyncLocation,
   useSyncTopics,
-} from "@/app/store";
+} from "@/app/(frontend)/store";
 
 import { Markdown } from "@/components/ui/markdown";
 import { Skeleton } from "@/components/ui/skeleton";

@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import { useAtomValue } from "jotai";
 import { useTranslations } from "next-intl";
 
-import { sketchActionAtom } from "@/app/store";
+import { sketchActionAtom } from "@/app/(frontend)/store";
 
 export const SketchTooltips = () => {
   const t = useTranslations();

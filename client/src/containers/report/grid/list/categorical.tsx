@@ -7,7 +7,7 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { H3Indicator } from "@/types/indicator";
 
-import { useSyncGridDatasetCategoricalSettings, useSyncLocation } from "@/app/store";
+import { useSyncGridDatasetCategoricalSettings, useSyncLocation } from "@/app/(frontend)/store";
 
 import { Toggle } from "@/components/ui/toggle";
 

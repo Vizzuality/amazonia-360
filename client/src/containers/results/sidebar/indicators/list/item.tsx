@@ -7,7 +7,7 @@ import { LuPlus, LuInfo } from "react-icons/lu";
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 import { Topic } from "@/types/topic";
 
-import { useSyncTopics } from "@/app/store";
+import { useSyncTopics } from "@/app/(frontend)/store";
 
 import Info from "@/containers/info";
 import { VisualizationType } from "@/containers/results/sidebar/indicators/list/visualization-types";

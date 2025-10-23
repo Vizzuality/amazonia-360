@@ -6,7 +6,7 @@ import { useGetDefaultIndicators } from "@/lib/indicators";
 
 import { Subtopic } from "@/types/topic";
 
-import { useSyncTopics } from "@/app/store";
+import { useSyncTopics } from "@/app/(frontend)/store";
 
 export function CounterIndicatorsPill({
   id,

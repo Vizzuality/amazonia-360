@@ -7,7 +7,7 @@ import { formatNumber } from "@/lib/formats";
 import { useGetGridMeta } from "@/lib/grid";
 import { useGetH3Indicators } from "@/lib/indicators";
 
-import { gridHoverAtom } from "@/app/store";
+import { gridHoverAtom } from "@/app/(frontend)/store";
 
 export const MapPopup = () => {
   const t = useTranslations();

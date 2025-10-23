@@ -1,4 +1,4 @@
-import { IndicatorView } from "@/app/parsers";
+import { IndicatorView } from "@/app/(frontend)/parsers";
 
 export type Topic = {
   id: number;

@@ -15,7 +15,7 @@ import { downloadBlobResponse, usePostWebshotWidgetsMutation } from "@/lib/websh
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 import { ResourceFeature, ResourceImageryTile, ResourceWebTile } from "@/types/indicator";
 
-import { reportEditionModeAtom } from "@/app/store";
+import { reportEditionModeAtom } from "@/app/(frontend)/store";
 
 import {
   Card,

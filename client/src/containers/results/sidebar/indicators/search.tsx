@@ -11,8 +11,8 @@ import { cn } from "@/lib/utils";
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 
-import { IndicatorView } from "@/app/parsers";
-import { useSyncTopics } from "@/app/store";
+import { IndicatorView } from "@/app/(frontend)/parsers";
+import { useSyncTopics } from "@/app/(frontend)/store";
 
 import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
 

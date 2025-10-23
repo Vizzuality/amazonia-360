@@ -3,7 +3,7 @@ import { omit } from "@/lib/utils";
 
 import { Indicator } from "@/types/indicator";
 
-import { IndicatorMapView, IndicatorView, TopicView } from "@/app/parsers";
+import { IndicatorMapView, IndicatorView, TopicView } from "@/app/(frontend)/parsers";
 
 import { BasemapIds } from "@/components/map/controls/basemap";
 

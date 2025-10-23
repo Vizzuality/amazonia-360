@@ -1,6 +1,6 @@
 import { VisualizationTypes } from "@/types/indicator";
 
-import { PageProps } from "@/app/types";
+import { PageProps } from "@/app/(frontend)/types";
 
 import ReportResultsIndicator from "@/containers/results/content/indicators/card";
 import Screenshot from "@/containers/webshot/widgets";

@@ -9,7 +9,7 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { Indicator } from "@/types/indicator";
 
-import { useSyncLocation } from "@/app/store";
+import { useSyncLocation } from "@/app/(frontend)/store";
 
 import { CardWidgetNumber } from "@/containers/card";
 import { useIndicator } from "@/containers/indicators/provider";
