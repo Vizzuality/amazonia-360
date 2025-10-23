@@ -10,6 +10,7 @@ const nextConfig = {
     // your project has ESLint errors.
     //   ignoreDuringBuilds: true,
   },
+  turbopack: {},
   output: "standalone",
   images: {
     unoptimized: true,

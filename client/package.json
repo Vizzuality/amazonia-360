@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build && cp -r public .next/standalone/public && cp -r .next/static .next/standalone/.next",
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack && cp -r public .next/standalone/public && cp -r .next/static .next/standalone/.next",
     "start": "cd .next/standalone && node server.js",
     "lint": "next lint",
     "check-types": "tsc",
@@ -14,13 +14,14 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@arcgis/core": "^4.30.9",
+    "@arcgis/core": "^4.34.1",
     "@artsy/fresnel": "^8.1.0",
-    "@deck.gl/arcgis": "^9.0.34",
-    "@deck.gl/core": "^9.0.34",
-    "@deck.gl/extensions": "^9.0.34",
-    "@deck.gl/geo-layers": "^9.0.34",
-    "@deck.gl/layers": "^9.0.34",
+    "@deck.gl/arcgis": "^9.2.2",
+    "@deck.gl/core": "^9.2.2",
+    "@deck.gl/extensions": "^9.2.2",
+    "@deck.gl/geo-layers": "^9.2.2",
+    "@deck.gl/layers": "^9.2.2",
+    "@deck.gl/mesh-layers": "^9.2.2",
     "@dnd-kit/core": "^6.1.0",
     "@dnd-kit/modifiers": "^7.0.0",
     "@dnd-kit/sortable": "^8.0.0",
@@ -28,6 +29,10 @@
     "@hookform/resolvers": "^5.2.2",
     "@loaders.gl/arrow": "4.3.3",
     "@loaders.gl/core": "^4.3.3",
+    "@luma.gl/constants": "^9.2.2",
+    "@luma.gl/core": "^9.2.2",
+    "@luma.gl/engine": "^9.2.2",
+    "@luma.gl/webgl": "9.2.2",
     "@next/bundle-analyzer": "^15.5.2",
     "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-checkbox": "^1.1.2",
@@ -69,11 +74,12 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
+    "esri-loader": "3.7.0",
     "h3-js": "^4.1.0",
     "html-react-parser": "^5.1.18",
     "jotai": "^2.10.1",
     "lucide-react": "0.395.0",
-    "next": "15.2.4",
+    "next": "15.5.6",
     "next-intl": "^4.0.2",
     "numeral": "^2.0.6",
     "nuqs": "^2.6.0",
@@ -133,5 +139,15 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   },
-  "packageManager": "pnpm@10.5.0+sha512.11106a5916c7406fe4b8cb8e3067974b8728f47308a4f5ac5e850304afa6f57e2847d7950dfe78877d8d36bfb401d381c4215db3a4c3547ffa63c14333a6fa51"
+  "packageManager": "pnpm@10.5.0+sha512.11106a5916c7406fe4b8cb8e3067974b8728f47308a4f5ac5e850304afa6f57e2847d7950dfe78877d8d36bfb401d381c4215db3a4c3547ffa63c14333a6fa51",
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "sharp"
+    ],
+    "onlyBuiltDependencies": [
+      "@vaadin/vaadin-usage-statistics",
+      "esbuild",
+      "sharp"
+    ]
+  }
 }
