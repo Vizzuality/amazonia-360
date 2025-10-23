@@ -317,7 +317,7 @@ export const mockUseSyncLocation = jest
     },
   ]);
 
-jest.mock("@/app/store", () => ({
+jest.mock("@/app/(frontend)/store", () => ({
   useSyncLocation() {
     return mockUseSyncLocation();
   },
