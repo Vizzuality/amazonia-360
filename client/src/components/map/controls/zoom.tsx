@@ -21,7 +21,7 @@ interface ZoomControlProps {
 
 export const ZoomControl: FC<ZoomControlProps> = ({ className }: ZoomControlProps) => {
   const t = useTranslations();
-  const zoomViewModelRef = useRef<ZoomVM>();
+  const zoomViewModelRef = useRef<ZoomVM | null>(null);
 
   const map = useMap();
 

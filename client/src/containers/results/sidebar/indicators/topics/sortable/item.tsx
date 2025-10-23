@@ -23,11 +23,18 @@ export const SortableItem: React.FC<SortableItemProps> = ({
     transition,
   };
 
-  const CHILD = cloneElement(children as ReactElement, {
-    sortable,
-    listeners,
-    attributes,
-  });
+  const CHILD = cloneElement(
+    children as ReactElement<{
+      sortable?: typeof sortable;
+      listeners?: typeof listeners;
+      attributes?: typeof attributes;
+    }>,
+    {
+      sortable,
+      listeners,
+      attributes,
+    },
+  );
 
   return (
     <div
