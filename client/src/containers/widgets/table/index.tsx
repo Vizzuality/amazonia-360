@@ -38,8 +38,10 @@ export function DataTable<TData, TValue>({
   data,
   tableOptions,
 }: DataTableProps<TData, TValue>) {
+  "use no memo";
   const t = useTranslations();
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,
