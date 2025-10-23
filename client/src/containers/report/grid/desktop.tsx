@@ -5,7 +5,7 @@ import { useAtom } from "jotai";
 import { LucideHelpCircle } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
-import { gridPanelAtom } from "@/app/store";
+import { gridPanelAtom } from "@/app/(frontend)/store";
 
 import SidebarGridContent from "@/containers/report/grid/content";
 import SidebarGridTable from "@/containers/report/grid/table-content";

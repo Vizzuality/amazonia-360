@@ -17,7 +17,7 @@ import {
   useSyncBbox,
   useSyncGridSelectedDataset,
   useSyncLocation,
-} from "@/app/store";
+} from "@/app/(frontend)/store";
 
 import { BUFFERS } from "@/constants/map";
 

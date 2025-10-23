@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
 
-import { useSyncGridDatasets } from "@/app/store";
+import { useSyncGridDatasets } from "@/app/(frontend)/store";
 
 import GridTable from "@/containers/report/grid/table";
 

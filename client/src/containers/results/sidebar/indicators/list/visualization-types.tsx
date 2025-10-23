@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { Indicator } from "@/types/indicator";
 import { VisualizationTypes } from "@/types/indicator";
 
-import { useSyncTopics } from "@/app/store";
+import { useSyncTopics } from "@/app/(frontend)/store";
 
 import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
 
@@ -116,8 +116,7 @@ export function VisualizationType({
               <button
                 type="button"
                 className={cn({
-                  "flex w-full items-center space-x-2 rounded-[2px] px-2 py-1.5 hover:bg-blue-100":
-                    true,
+                  "flex w-full items-center space-x-2 rounded-[2px] px-2 py-1.5 hover:bg-blue-100": true,
                   "pointer-events-none cursor-none opacity-50": isDisabled,
                 })}
                 disabled={isDisabled}
@@ -127,8 +126,7 @@ export function VisualizationType({
 
                 <span
                   className={cn({
-                    "text-xs font-semibold capitalize text-foreground transition-colors hover:text-accent-foreground":
-                      true,
+                    "text-xs font-semibold capitalize text-foreground transition-colors hover:text-accent-foreground": true,
                   })}
                 >
                   {t(`${type}`)}

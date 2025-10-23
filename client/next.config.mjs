@@ -1,3 +1,4 @@
+import { withPayload } from "@payloadcms/next/withPayload";
 import createBundleAnalizer from "@next/bundle-analyzer";
 import createNextIntlPlugin from "next-intl/plugin";
 
@@ -33,4 +34,4 @@ const withBundleAnalyzer = createBundleAnalizer({
 
 const withNextIntl = createNextIntlPlugin();
 
-export default withBundleAnalyzer(withNextIntl(nextConfig));
+export default withPayload(withBundleAnalyzer(withNextIntl(nextConfig)));

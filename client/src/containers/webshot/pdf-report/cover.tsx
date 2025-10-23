@@ -8,7 +8,7 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { useGetTopics } from "@/lib/topics";
 
-import { useSyncLocation, useSyncTopics } from "@/app/store";
+import { useSyncLocation, useSyncTopics } from "@/app/(frontend)/store";
 
 export default function DocumentCoverPdfSection() {
   const locale = useLocale();

@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
-import { useSyncLocation } from "@/app/store";
+import { useSyncLocation } from "@/app/(frontend)/store";
 
 import Confirm from "@/containers/report/location/create";
 import SearchLocation from "@/containers/report/location/search";
