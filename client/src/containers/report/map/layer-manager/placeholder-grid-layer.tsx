@@ -100,7 +100,7 @@ export const getPlaceholderGridLayerProps = ({
 };
 
 export default function PlaceholderGridLayer() {
-  const GRID_LAYER = useRef<typeof DeckLayer>();
+  const GRID_LAYER = useRef<typeof DeckLayer | null>(null);
   const [location] = useSyncLocation();
   const map = useMap();
   const [zoom, setZoom] = useState(map?.view?.zoom);

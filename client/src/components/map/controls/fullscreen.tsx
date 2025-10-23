@@ -22,7 +22,7 @@ export const FullscreenControl: FC<FullscreenControlProps> = ({
   className,
 }: FullscreenControlProps) => {
   const t = useTranslations();
-  const fullscreenModelViewRef = useRef<FullscreenVM>();
+  const fullscreenModelViewRef = useRef<FullscreenVM | null>(null);
   const [active, setActive] = useState(false);
 
   const map = useMap();

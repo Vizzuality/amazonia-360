@@ -57,9 +57,9 @@ export default function Sketch({
 
   const layerRef = useRef<__esri.GraphicsLayer>(new GraphicsLayer());
   const bufferRef = useRef<__esri.GraphicsLayer>(new GraphicsLayer());
-  const sketchViewModelRef = useRef<SketchViewModel>();
-  const sketchViewModelOnCreateRef = useRef<IHandle>();
-  const sketchViewModelOnUpdateRef = useRef<IHandle>();
+  const sketchViewModelRef = useRef<SketchViewModel | null>(null);
+  const sketchViewModelOnCreateRef = useRef<IHandle | null>(null);
+  const sketchViewModelOnUpdateRef = useRef<IHandle | null>(null);
 
   const drawBuffer = useCallback(
     (l: __esri.Graphic) => {

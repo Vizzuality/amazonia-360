@@ -341,7 +341,6 @@ function QRCodeCanvas(props: QRCodeCanvasProps) {
 
   const context = useQRCodeContext(CANVAS_NAME);
 
-  // @ts-expect-error TS2322: Type 'Ref<HTMLCanvasElement>' is not assignable to type 'RefCallback<HTMLCanvasElement> | RefObject<HTMLCanvasElement>'.
   const composedRef = useComposedRefs(ref, context.canvasRef);
 
   const CanvasPrimitive = asChild ? Slot : "canvas";
