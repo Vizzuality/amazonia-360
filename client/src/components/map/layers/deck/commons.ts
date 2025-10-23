@@ -5,7 +5,6 @@
 /* eslint-disable no-invalid-this */
 
 import { Deck } from "@deck.gl/core";
-import { GL } from "@luma.gl/constants";
 import type { Device, Texture, Framebuffer } from "@luma.gl/core";
 import { Model, Geometry } from "@luma.gl/engine";
 import { WebGLDevice } from "@luma.gl/webgl";
@@ -127,8 +126,10 @@ void main(void) {
 
     _customRender: (redrawReason) => {
       if (redrawReason === "arcgis") {
+        // Only redraw layers when triggered by ArcGIS
         deckInstance._drawLayers(redrawReason);
       } else {
+        // Avoid unnecessary redraws
         this.redraw();
       }
     },
@@ -153,7 +154,26 @@ export function render(
   const { model, deck, fbo } = resources;
   const device = model.device;
   if (device instanceof WebGLDevice) {
-    const screenFbo: Framebuffer = device.getParametersWebGL(GL.FRAMEBUFFER_BINDING);
+    // Create a texture to attach to the framebuffer
+    const screenTexture = device.createTexture({
+      format: "rgba8unorm",
+      width: viewport.width,
+      height: viewport.height,
+      sampler: {
+        minFilter: "linear",
+        magFilter: "linear",
+        addressModeU: "clamp-to-edge",
+        addressModeV: "clamp-to-edge",
+      },
+    });
+
+    // Updated to use createFramebuffer with a color attachment
+    const screenFbo: Framebuffer = device.createFramebuffer({
+      width: viewport.width,
+      height: viewport.height,
+      colorAttachments: [screenTexture],
+    });
+
     const { width, height, ...viewState } = viewport;
 
     /* global window */
@@ -161,7 +181,9 @@ export function render(
     const pixelWidth = Math.round(width * dpr);
     const pixelHeight = Math.round(height * dpr);
 
-    fbo.resize({ width: pixelWidth, height: pixelHeight });
+    // Recreate the framebuffer with updated dimensions
+    fbo.width = pixelWidth;
+    fbo.height = pixelHeight;
 
     deck.setProps({ viewState });
     // redraw deck immediately into deckFbo
