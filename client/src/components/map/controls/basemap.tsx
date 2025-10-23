@@ -36,7 +36,7 @@ export const BasemapControl: FC<BasemapControlProps> = ({
     (selectedBasemapId: BasemapIds) => {
       if (mapContext?.map) {
         mapContext.map.basemap = Basemap.fromId(selectedBasemapId);
-        onBasemapChange && onBasemapChange(selectedBasemapId);
+        if (onBasemapChange) onBasemapChange(selectedBasemapId);
       }
     },
     [mapContext, onBasemapChange],

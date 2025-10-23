@@ -47,7 +47,6 @@ export type GridTileGridTileTileIndexGetParams = {
 export type TilejsonTileMatrixSetIdTilejsonJsonGetColormapName =
   (typeof TilejsonTileMatrixSetIdTilejsonJsonGetColormapName)[keyof typeof TilejsonTileMatrixSetIdTilejsonJsonGetColormapName];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TilejsonTileMatrixSetIdTilejsonJsonGetColormapName = {
   accent: "accent",
   accent_r: "accent_r",
@@ -265,7 +264,6 @@ export const TilejsonTileMatrixSetIdTilejsonJsonGetColormapName = {
 export type TilejsonTileMatrixSetIdTilejsonJsonGetAlgorithm =
   (typeof TilejsonTileMatrixSetIdTilejsonJsonGetAlgorithm)[keyof typeof TilejsonTileMatrixSetIdTilejsonJsonGetAlgorithm];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TilejsonTileMatrixSetIdTilejsonJsonGetAlgorithm = {
   hillshade: "hillshade",
   slope: "slope",
@@ -384,7 +382,6 @@ export type TilejsonTileMatrixSetIdTilejsonJsonGetParams = {
 export type TileTilesTileMatrixSetIdZXYGetColormapName =
   (typeof TileTilesTileMatrixSetIdZXYGetColormapName)[keyof typeof TileTilesTileMatrixSetIdZXYGetColormapName];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TileTilesTileMatrixSetIdZXYGetColormapName = {
   accent: "accent",
   accent_r: "accent_r",
@@ -602,7 +599,6 @@ export const TileTilesTileMatrixSetIdZXYGetColormapName = {
 export type TileTilesTileMatrixSetIdZXYGetAlgorithm =
   (typeof TileTilesTileMatrixSetIdZXYGetAlgorithm)[keyof typeof TileTilesTileMatrixSetIdZXYGetAlgorithm];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TileTilesTileMatrixSetIdZXYGetAlgorithm = {
   hillshade: "hillshade",
   slope: "slope",
@@ -707,7 +703,6 @@ export type TileTilesTileMatrixSetIdZXYGetParams = {
 export type TileTilesTileMatrixSetIdZXYFormatGetColormapName =
   (typeof TileTilesTileMatrixSetIdZXYFormatGetColormapName)[keyof typeof TileTilesTileMatrixSetIdZXYFormatGetColormapName];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TileTilesTileMatrixSetIdZXYFormatGetColormapName = {
   accent: "accent",
   accent_r: "accent_r",
@@ -925,7 +920,6 @@ export const TileTilesTileMatrixSetIdZXYFormatGetColormapName = {
 export type TileTilesTileMatrixSetIdZXYFormatGetAlgorithm =
   (typeof TileTilesTileMatrixSetIdZXYFormatGetAlgorithm)[keyof typeof TileTilesTileMatrixSetIdZXYFormatGetAlgorithm];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TileTilesTileMatrixSetIdZXYFormatGetAlgorithm = {
   hillshade: "hillshade",
   slope: "slope",
@@ -1029,7 +1023,6 @@ export type TileTilesTileMatrixSetIdZXYFormatGetParams = {
 export type TileTilesTileMatrixSetIdZXYScaleXGetColormapName =
   (typeof TileTilesTileMatrixSetIdZXYScaleXGetColormapName)[keyof typeof TileTilesTileMatrixSetIdZXYScaleXGetColormapName];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TileTilesTileMatrixSetIdZXYScaleXGetColormapName = {
   accent: "accent",
   accent_r: "accent_r",
@@ -1247,7 +1240,6 @@ export const TileTilesTileMatrixSetIdZXYScaleXGetColormapName = {
 export type TileTilesTileMatrixSetIdZXYScaleXGetAlgorithm =
   (typeof TileTilesTileMatrixSetIdZXYScaleXGetAlgorithm)[keyof typeof TileTilesTileMatrixSetIdZXYScaleXGetAlgorithm];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TileTilesTileMatrixSetIdZXYScaleXGetAlgorithm = {
   hillshade: "hillshade",
   slope: "slope",
@@ -1351,7 +1343,6 @@ export type TileTilesTileMatrixSetIdZXYScaleXGetParams = {
 export type TileTilesTileMatrixSetIdZXYScaleXFormatGetColormapName =
   (typeof TileTilesTileMatrixSetIdZXYScaleXFormatGetColormapName)[keyof typeof TileTilesTileMatrixSetIdZXYScaleXFormatGetColormapName];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TileTilesTileMatrixSetIdZXYScaleXFormatGetColormapName = {
   accent: "accent",
   accent_r: "accent_r",
@@ -1569,7 +1560,6 @@ export const TileTilesTileMatrixSetIdZXYScaleXFormatGetColormapName = {
 export type TileTilesTileMatrixSetIdZXYScaleXFormatGetAlgorithm =
   (typeof TileTilesTileMatrixSetIdZXYScaleXFormatGetAlgorithm)[keyof typeof TileTilesTileMatrixSetIdZXYScaleXFormatGetAlgorithm];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TileTilesTileMatrixSetIdZXYScaleXFormatGetAlgorithm = {
   hillshade: "hillshade",
   slope: "slope",
@@ -1752,7 +1742,6 @@ export type TileJSONTemplate = string | null;
 
 export type TileJSONScheme = (typeof TileJSONScheme)[keyof typeof TileJSONScheme];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TileJSONScheme = {
   xyz: "xyz",
   tms: "tms",
@@ -2031,7 +2020,6 @@ export interface StatsProperties {
  */
 export type StatsOps = (typeof StatsOps)[keyof typeof StatsOps];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const StatsOps = {
   cell_id: "cell_id",
   center_x: "center_x",
@@ -2137,7 +2125,6 @@ export interface PointInput {
 
 export type NumericalOperators = (typeof NumericalOperators)[keyof typeof NumericalOperators];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const NumericalOperators = {
   eq: "eq",
   gt: "gt",
@@ -2271,7 +2258,6 @@ export interface LevelStats {
  */
 export type ImageType = (typeof ImageType)[keyof typeof ImageType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ImageType = {
   png: "png",
   npy: "npy",
@@ -2405,7 +2391,6 @@ export interface DatasetMeta {
 
 export type ContextLanguage = (typeof ContextLanguage)[keyof typeof ContextLanguage];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ContextLanguage = {
   en: "en",
   es: "es",
@@ -2415,7 +2400,6 @@ export const ContextLanguage = {
 export type ContextDescriptionType =
   (typeof ContextDescriptionType)[keyof typeof ContextDescriptionType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ContextDescriptionType = {
   Short: "Short",
   Normal: "Normal",
@@ -2432,7 +2416,6 @@ export interface Context {
 
 export type CategoricalOperators = (typeof CategoricalOperators)[keyof typeof CategoricalOperators];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CategoricalOperators = {
   in: "in",
   not_in: "not_in",
