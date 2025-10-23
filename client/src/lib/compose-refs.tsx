@@ -12,7 +12,6 @@ function setRef<T>(ref: PossibleRef<T>, value: T) {
   }
 
   if (ref !== null && ref !== undefined) {
-    // @ts-expect-error TS2322: Type 'T | null' is not assignable to type 'T'.
     ref.current = value;
   }
 }
