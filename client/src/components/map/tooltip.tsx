@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useMemo } from "react";
 
 import Point from "@arcgis/core/geometry/Point";
 import { cellToLatLng } from "h3-js";
@@ -16,18 +16,14 @@ import { useMap } from "./provider";
 
 export const Tooltip = () => {
   const cell = useAtomValue(gridCellHighlightAtom);
-  const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
 
   const map = useMap();
 
   const view = map?.view;
   const zoom = map?.view?.zoom;
 
-  useEffect(() => {
-    if (!cell.index || !view) {
-      setPosition(null);
-      return;
-    }
+  const position = useMemo(() => {
+    if (!cell.index || !view) return null;
 
     const latLng = cellToLatLng(cell.index);
     const point = new Point({
@@ -37,7 +33,7 @@ export const Tooltip = () => {
 
     const screenPoint = view.toScreen(point);
 
-    setPosition({ x: screenPoint?.x, y: screenPoint?.y });
+    return { x: screenPoint?.x, y: screenPoint?.y };
   }, [cell, view]);
 
   if (!position || typeof cell.id !== "number") return null;

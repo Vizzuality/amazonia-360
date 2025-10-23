@@ -42,17 +42,19 @@ export default function GridIndicatorsItemContinous(indicator: H3Indicator) {
   }, [META, indicator]);
 
   const continuosOptions = useMemo(() => {
-    if (H3_INDICATOR?.legend?.legend_type === "continuous" && "stats" in H3_INDICATOR.legend) {
-      const s = H3_INDICATOR.legend.stats.find((stat) => stat.level === 1);
+    const legend = H3_INDICATOR?.legend;
+    if (legend?.legend_type === "continuous" && "stats" in legend) {
+      const s = legend.stats.find((stat) => stat.level === 1);
       return s;
     }
   }, [H3_INDICATOR?.legend]);
 
   const continuosValue = useMemo(() => {
+    const column = H3_INDICATOR?.resource.column;
     if (continuosOptions) {
-      if (gridDatasetContinousSettings && H3_INDICATOR?.resource.column) {
+      if (gridDatasetContinousSettings && column) {
         return (
-          gridDatasetContinousSettings[H3_INDICATOR.resource.column] || [
+          gridDatasetContinousSettings[column] || [
             continuosOptions.min || 0,
             continuosOptions.max || 100,
           ]

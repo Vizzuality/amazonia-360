@@ -2,7 +2,6 @@
 
 // Extend the globalThis type to include the READY property
 declare global {
-  // eslint-disable-next-line no-var
   var READY: boolean;
 }
 
