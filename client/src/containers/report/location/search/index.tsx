@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 import { getGeometryByType, getGeometryWithBuffer } from "@/lib/location";
 import { useGetMutationSearch, useGetSuggestions } from "@/lib/search";
 
-import { tmpBboxAtom, useSyncLocation } from "@/app/store";
+import { tmpBboxAtom, useSyncLocation } from "@/app/(frontend)/store";
 
 import { BUFFERS } from "@/constants/map";
 

@@ -8,7 +8,7 @@ import { LuPen, LuCheck, LuX } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { useSyncLocation } from "@/app/store";
+import { useSyncLocation } from "@/app/(frontend)/store";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

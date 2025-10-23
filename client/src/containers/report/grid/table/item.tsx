@@ -20,7 +20,7 @@ import {
   tmpBboxAtom,
   useSyncGridDatasets,
   useSyncLocation,
-} from "@/app/store";
+} from "@/app/(frontend)/store";
 
 import { BUFFERS } from "@/constants/map";
 

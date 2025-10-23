@@ -9,7 +9,7 @@ import {
   useSyncGridSelectedDataset,
   useSyncIndicators,
   useSyncIndicatorsSettings,
-} from "@/app/store";
+} from "@/app/(frontend)/store";
 
 import { DATASETS } from "@/constants/datasets";
 

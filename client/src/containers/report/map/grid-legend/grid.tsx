@@ -15,7 +15,7 @@ import {
   useSyncGridTableSettings,
   useSyncGridSelectedDataset,
   useSyncLocation,
-} from "@/app/store";
+} from "@/app/(frontend)/store";
 
 import OpacityControl from "@/components/map/controls/opacity";
 import LegendBasic from "@/components/map/legend/basic";

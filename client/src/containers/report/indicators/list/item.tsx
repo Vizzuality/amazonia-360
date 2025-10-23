@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 import { Indicator } from "@/types/indicator";
 
-import { useSyncIndicators } from "@/app/store";
+import { useSyncIndicators } from "@/app/(frontend)/store";
 
 import Info from "@/containers/info";
 

@@ -4,7 +4,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
 import { LuPen, LuX } from "react-icons/lu";
 
-import { reportEditionModeAtom, resultsSidebarTabAtom } from "@/app/store";
+import { reportEditionModeAtom, resultsSidebarTabAtom } from "@/app/(frontend)/store";
 
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";

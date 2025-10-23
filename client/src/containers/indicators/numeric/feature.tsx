@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 import { Indicator, ResourceFeature } from "@/types/indicator";
 
-import { useSyncLocation } from "@/app/store";
+import { useSyncLocation } from "@/app/(frontend)/store";
 
 import { CardLoader, CardWidgetNumber } from "@/containers/card";
 import { useIndicator } from "@/containers/indicators/provider";

@@ -8,7 +8,7 @@ import { formatNumber } from "@/lib/formats";
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
-import { useSyncLocation } from "@/app/store";
+import { useSyncLocation } from "@/app/(frontend)/store";
 
 import { useIndicator } from "@/containers/indicators/provider";
 
