@@ -20,6 +20,7 @@ export async function GET() {
     return new Response("KO", {
       status: 503,
       headers: { "Cache-Control": "max-age=5, must-revalidate" },
+      statusText: (error as Error).message,
     });
   }
 }
