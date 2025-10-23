@@ -1,11 +1,7 @@
 import { cn, getKeys, joinWithAnd, convertHexToRgbaArray, getTextSize } from "./utils";
 
-const mockWindow = jest.spyOn(global, "window", "get") as jest.SpyInstance<
-  (Window & typeof globalThis) | undefined,
-  [],
-  unknown
->;
-const mockWindowDocument = jest.spyOn(global.document, "createElement");
+// Mock document.createElement for canvas testing
+const mockDocumentCreateElement = jest.spyOn(document, "createElement");
 
 describe("utils", () => {
   test("cn merges class names correctly", () => {
@@ -30,23 +26,31 @@ describe("utils", () => {
   });
 
   test("getTextSize gets text size", () => {
-    mockWindowDocument.mockReturnValue({
+    mockDocumentCreateElement.mockReturnValue({
       getContext: () => ({
         font: "",
         measureText: () => ({ width: 100 }),
       }),
       remove: jest.fn(),
-    } as unknown as HTMLElement);
+    } as unknown as HTMLCanvasElement);
 
     const textSize = getTextSize({ text: "hello", maxWidth: 100 });
     expect(textSize.width).toBeGreaterThan(0);
     expect(textSize.height).toBeGreaterThan(0);
   });
 
-  test("getTextSize returns 0 if window is undefined", () => {
-    mockWindow.mockReturnValue(undefined);
+  test("getTextSize handles server-side rendering", () => {
+    // Test the SSR path by mocking document.createElement to return null
+    // This simulates when canvas context is not available
+    mockDocumentCreateElement.mockReturnValue({
+      getContext: () => null,
+      remove: jest.fn(),
+    } as unknown as HTMLCanvasElement);
+
     const textSize = getTextSize({ text: "hello", maxWidth: 100 });
     expect(textSize.width).toBe(0);
     expect(textSize.height).toBe(0);
+
+    mockDocumentCreateElement.mockRestore();
   });
 });
