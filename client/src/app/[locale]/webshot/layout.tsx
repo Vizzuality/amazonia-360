@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { Montserrat } from "next/font/google";
 import { notFound } from "next/navigation";
 
-import { hasLocale, Locale, NextIntlClientProvider } from "next-intl";
+import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 
 import RootHead from "@/app/head";
@@ -17,8 +17,6 @@ import "@/styles/globals.css";
 import "@/styles/grid-layout.css";
 import "react-resizable/css/styles.css";
 
-type Params = Promise<{ locale: Locale }>;
-
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({
     locale,
@@ -31,13 +29,7 @@ const montserrat = Montserrat({
   variable: "--montserrat",
 });
 
-export default async function RootLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: Params;
-}) {
+export default async function RootLayout({ children, params }: LayoutProps<"/[locale]/webshot">) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     notFound();
