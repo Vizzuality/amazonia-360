@@ -153,7 +153,7 @@ export function MapView({
       const mapWidth = mapContainerRef.current.offsetWidth;
       const scaleBarPosition = mapWidth >= 1024 ? "bottom-right" : "top-left";
 
-      !isPdf && mapViewRef.current.ui.add(scaleBar, scaleBarPosition);
+      if (!isPdf) mapViewRef.current.ui.add(scaleBar, scaleBarPosition);
 
       mapViewRef.current.on("pointer-leave", () => {
         if (onPointerLeave) onPointerLeave();
@@ -175,7 +175,7 @@ export function MapView({
       ArcGISReactiveUtils.when(
         () => mapViewRef.current!.extent,
         (extent) => {
-          onMapMove && onMapMove(extent);
+          if (onMapMove) onMapMove(extent);
         },
       );
 

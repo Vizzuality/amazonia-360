@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
@@ -18,20 +18,19 @@ import {
 } from "@/components/ui/dialog";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-import { usePathname } from "@/i18n/navigation";
-
 export default function ShareReport() {
   const t = useTranslations();
-  const pathname = usePathname();
 
-  const [currentUrl, setCurrentUrl] = useState<string>("");
+  const currentUrl = useMemo(() => {
+    if (typeof window !== "undefined") {
+      return window.location.href;
+    }
+  }, []);
 
   const [shareLinkBtnText, setShareLinkBtnText] = useState<"copy" | "copied">("copy");
-  useEffect(() => {
-    setCurrentUrl(window.location.href);
-  }, [pathname]);
 
   const copyShareLink = useCallback(() => {
+    if (!currentUrl) return;
     navigator.clipboard
       .writeText(currentUrl)
       .then(() => {

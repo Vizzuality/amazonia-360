@@ -17,14 +17,17 @@ export function Badges({ topicId, indicatorId }: { topicId: number; indicatorId:
   const handleDelete = useCallback(
     (indicatorId: number, type: VisualizationTypes) => {
       setTopics((prev) => {
-        if (!prev || !topic) return prev;
+        if (!prev) return prev;
 
-        const i = prev?.findIndex((t) => t.id === topic.id);
+        const currentTopic = prev.find((t) => t.id === topicId);
+        if (!currentTopic) return prev;
+
+        const i = prev.findIndex((t) => t.id === topicId);
 
         if (i === -1) return prev;
 
         prev[i] = {
-          id: topic?.id,
+          id: topicId,
           indicators: prev[i]?.indicators?.filter(
             (i) => !(i.id === indicatorId && i.type === type),
           ),
@@ -33,7 +36,7 @@ export function Badges({ topicId, indicatorId }: { topicId: number; indicatorId:
         return prev;
       });
     },
-    [topic, setTopics],
+    [topicId, setTopics],
   );
 
   return (

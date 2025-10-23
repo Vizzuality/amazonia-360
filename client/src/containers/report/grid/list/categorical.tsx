@@ -38,19 +38,17 @@ export default function GridIndicatorsItemCategorical(indicator: H3Indicator) {
   }, [META, indicator]);
 
   const categoricalOptions = useMemo(() => {
-    if (H3_INDICATOR?.legend?.legend_type === "categorical" && "entries" in H3_INDICATOR.legend) {
-      return H3_INDICATOR.legend.entries;
+    const legend = H3_INDICATOR?.legend;
+    if (legend?.legend_type === "categorical" && "entries" in legend) {
+      return legend.entries;
     }
   }, [H3_INDICATOR?.legend]);
 
   const categoricalValue = useMemo(() => {
+    const column = H3_INDICATOR?.resource.column;
     if (categoricalOptions) {
-      if (
-        gridDatasetCategoricalSettings &&
-        H3_INDICATOR?.resource.column &&
-        gridDatasetCategoricalSettings[H3_INDICATOR?.resource.column]
-      ) {
-        return gridDatasetCategoricalSettings[H3_INDICATOR.resource.column] || [];
+      if (gridDatasetCategoricalSettings && column && gridDatasetCategoricalSettings[column]) {
+        return gridDatasetCategoricalSettings[column] || [];
       }
 
       return undefined;

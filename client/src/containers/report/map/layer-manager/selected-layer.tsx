@@ -29,10 +29,11 @@ export default function SelectedLayer({
     }),
   );
 
-  const graphic = useLocation(location);
+  const GRAPHIC = useLocation(location);
 
   useEffect(() => {
-    if (graphic) {
+    if (GRAPHIC) {
+      const graphic = GRAPHIC.clone();
       const buffer = new Graphic({
         symbol: BUFFER_SYMBOL,
       });
@@ -57,10 +58,10 @@ export default function SelectedLayer({
       }
     }
 
-    if (!graphic) {
+    if (!GRAPHIC) {
       graphicsLayerRef.current.removeAll();
     }
-  }, [location, graphic]);
+  }, [location, GRAPHIC]);
 
   return <Layer index={index} layer={graphicsLayerRef.current} />;
 }

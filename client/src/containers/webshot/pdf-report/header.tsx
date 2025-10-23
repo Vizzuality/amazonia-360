@@ -25,9 +25,8 @@ export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
   const [location] = useSyncLocation();
 
   // Generate a stable ID for this instance
-  // Don't use crypto.randomUUID as headless chrome is going to break
   const id = useMemo(() => {
-    return `pdf-header-${Math.random().toString(36).substring(2, 15)}`;
+    return `pdf-header-${crypto.randomUUID()}`;
   }, []);
 
   const { currentPage, totalPages } = useRegisterPage(id);

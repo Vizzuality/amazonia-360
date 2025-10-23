@@ -2,9 +2,11 @@
 import path from "path";
 import { fileURLToPath } from "url";
 
+import { buildConfig } from "payload";
+
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
-import { buildConfig } from "payload";
+
 import sharp from "sharp";
 
 import { Media } from "@/cms/collections/Media";

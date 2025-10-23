@@ -216,10 +216,11 @@ export default function Sketch({
     bufferRef.current.removeAll();
 
     if (LOCATION) {
-      LOCATION.symbol = SYMBOLS[LOCATION.geometry.type];
-      layerRef.current.add(LOCATION);
+      const L = LOCATION.clone();
+      L.symbol = SYMBOLS[L.geometry.type];
+      layerRef.current.add(L);
 
-      drawBuffer(LOCATION);
+      drawBuffer(L);
     }
 
     handleListeners();

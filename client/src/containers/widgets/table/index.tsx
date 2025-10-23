@@ -39,6 +39,7 @@ export function DataTable<TData, TValue>({
   tableOptions,
 }: DataTableProps<TData, TValue>) {
   const t = useTranslations();
+
   const table = useReactTable({
     data,
     columns,
