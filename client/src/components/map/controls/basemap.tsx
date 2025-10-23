@@ -12,6 +12,8 @@ import { LuLayers } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
+import { BasemapIds, BASEMAPS } from "@/constants/basemaps";
+
 import { useMap } from "@/components/map/provider";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -22,50 +24,6 @@ export interface BasemapControlProps {
   className?: string;
   onBasemapChange?: (selectedBasemapId: BasemapIds) => void;
 }
-
-export const BASEMAPS = [
-  {
-    id: "gray-vector",
-    label: "basemap-gray",
-    basemap: Basemap.fromId("gray-vector"),
-  },
-  {
-    id: "dark-gray-vector",
-    label: "basemap-dark-gray",
-    basemap: Basemap.fromId("dark-gray-vector"),
-  },
-  {
-    id: "satellite",
-    label: "basemap-satellite",
-    basemap: Basemap.fromId("satellite"),
-  },
-  {
-    id: "streets",
-    label: "basemap-streets",
-    basemap: Basemap.fromId("streets"),
-  },
-  {
-    id: "hybrid",
-    label: "basemap-hybrid",
-    basemap: Basemap.fromId("hybrid"),
-  },
-  {
-    id: "osm",
-    label: "basemap-osm",
-    basemap: Basemap.fromId("osm"),
-  },
-  {
-    id: "topo-vector",
-    label: "basemap-topographic",
-    basemap: Basemap.fromId("topo-vector"),
-  },
-  {
-    id: "terrain",
-    label: "basemap-terrain",
-    basemap: Basemap.fromId("terrain"),
-  },
-] as const;
-export type BasemapIds = (typeof BASEMAPS)[number]["id"];
 
 export const BasemapControl: FC<BasemapControlProps> = ({
   className,
@@ -83,6 +41,13 @@ export const BasemapControl: FC<BasemapControlProps> = ({
     },
     [mapContext, onBasemapChange],
   );
+
+  const BS = useMemo(() => {
+    return BASEMAPS.map((b) => ({
+      ...b,
+      basemap: Basemap.fromId(b.id),
+    }));
+  }, []);
 
   const activeBasemapId = useMemo(() => mapContext?.map?.basemap?.id, [mapContext?.map?.basemap]);
 
@@ -108,12 +73,14 @@ export const BasemapControl: FC<BasemapControlProps> = ({
 
         <PopoverContent side="left" align="start" className="w-auto bg-background p-0">
           <ul className="flex flex-col">
-            {BASEMAPS.map((b) => {
+            {BS.map((b) => {
               return (
                 <li key={b.id} className="flex">
                   <button
                     className={cn({
-                      "group flex w-full items-center space-x-2 p-2 transition-colors duration-200 hover:bg-muted": true,
+                      "group flex w-full items-center space-x-2 p-2 transition-colors duration-200 hover:bg-muted":
+                        //
+                        true,
                       "bg-foreground hover:bg-foreground": activeBasemapId === b.id,
                     })}
                     type="button"
