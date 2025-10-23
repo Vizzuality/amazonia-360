@@ -11,7 +11,7 @@ import { z } from "zod";
 import { ContextDescriptionType } from "@/types/generated/api.schemas";
 import { VisualizationTypes } from "@/types/indicator";
 
-import { BasemapIds } from "@/components/map/controls/basemap";
+import { BasemapIds } from "@/constants/basemaps";
 
 type IndicatorViewBase = {
   id: number;

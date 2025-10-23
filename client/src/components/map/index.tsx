@@ -16,9 +16,9 @@ import { merge } from "ts-deepmerge";
 
 import { omit } from "@/lib/utils";
 
+import { BasemapIds } from "@/constants/basemaps";
 import { DEFAULT_MAP_VIEW_PROPERTIES } from "@/constants/map";
 
-import { BasemapIds } from "@/components/map/controls/basemap";
 import { LayerView, MapContext, MapProvider } from "@/components/map/provider";
 
 export type MapProps = {
