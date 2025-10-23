@@ -174,7 +174,12 @@ const eslintConfig = [
   eslintPluginPrettierRecommended,
   ...pluginQuery.configs["flat/recommended"],
   // Ignores
-  globalIgnores(["src/app/(payload)/", "src/cms/migrations/", "src/types/generated/"]),
+  globalIgnores([
+    "src/app/(payload)/",
+    "src/cms/migrations/",
+    "src/types/generated/",
+    "next-env.d.ts",
+  ]),
   {
     ignores: [".next/"],
   },
