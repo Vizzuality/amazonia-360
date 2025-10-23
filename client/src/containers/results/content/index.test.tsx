@@ -21,7 +21,7 @@ function TestComponent({
   indicators,
   disabled,
 }: {
-  indicators: JSX.Element[];
+  indicators: React.JSX.Element[];
   disabled?: boolean;
 }) {
   const gridRef = React.useRef<HTMLDivElement>(null);

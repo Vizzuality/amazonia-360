@@ -121,9 +121,14 @@ export const SortableList: React.FC<SortableListProps> = ({
 
           return (
             <SortableItem id={id} sortable={sortable}>
-              {cloneElement(Child as ReactElement, {
-                sortable,
-              })}
+              {cloneElement(
+                Child as ReactElement<{
+                  sortable?: typeof sortable;
+                }>,
+                {
+                  sortable,
+                },
+              )}
             </SortableItem>
           );
         }
@@ -133,9 +138,14 @@ export const SortableList: React.FC<SortableListProps> = ({
       <DragOverlay>
         {isValidElement(ActiveItem) && (
           <div className="flex max-h-[calc(100vh_-_theme(space.16)_-_theme(space.6)_-_theme(space.48)_-_theme(space.40))] flex-col overflow-hidden">
-            {cloneElement(ActiveItem as ReactElement, {
-              sortable,
-            })}
+            {cloneElement(
+              ActiveItem as ReactElement<{
+                sortable?: typeof sortable;
+              }>,
+              {
+                sortable,
+              },
+            )}
           </div>
         )}
       </DragOverlay>
