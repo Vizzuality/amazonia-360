@@ -2,7 +2,7 @@ import { Metadata } from "next";
 
 import { notFound } from "next/navigation";
 
-import { hasLocale, Locale } from "next-intl";
+import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import LayoutProviders from "@/app/layout-providers";
@@ -14,16 +14,17 @@ import "@/styles/globals.css";
 import "@/styles/grid-layout.css";
 import "react-resizable/css/styles.css";
 
-type Params = Promise<{ locale: Locale }>;
-
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({
     locale,
   }));
 }
 
-export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Promise<Metadata> {
   const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) {
+    return {};
+  }
   const t = await getTranslations({ locale });
 
   return {
@@ -46,13 +47,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   };
 }
 
-export default async function RootLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: Params;
-}) {
+export default async function RootLayout({ children, params }: LayoutProps<"/[locale]">) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     notFound();

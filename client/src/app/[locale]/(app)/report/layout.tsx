@@ -1,6 +1,6 @@
 import FeedbackButton from "@/containers/report/feedback";
 
-export default await function ReportLayout({ children }: { children: React.ReactNode }) {
+export default await function ReportLayout({ children }: LayoutProps<"/[locale]/report">) {
   return (
     <>
       <FeedbackButton />
