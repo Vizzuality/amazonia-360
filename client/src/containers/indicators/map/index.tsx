@@ -13,7 +13,7 @@ import {
 } from "@/types/indicator";
 import { Indicator } from "@/types/indicator";
 
-import { pdfIndicatorsMapStateAtom } from "@/app/store";
+import { pdfIndicatorsMapStateAtom } from "@/app/(frontend)/store";
 
 import { useLoad } from "@/containers/indicators/load-provider";
 import { IndicatorProvider } from "@/containers/indicators/provider";

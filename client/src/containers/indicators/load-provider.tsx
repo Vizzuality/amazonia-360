@@ -6,7 +6,11 @@ import { useSetAtom } from "jotai";
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 
-import { pdfIndicatorsMapStateAtom, useSyncDefaultTopics, useSyncTopics } from "@/app/store";
+import {
+  pdfIndicatorsMapStateAtom,
+  useSyncDefaultTopics,
+  useSyncTopics,
+} from "@/app/(frontend)/store";
 
 type ID = `${Indicator["id"]}-${VisualizationTypes | "custom"}`;
 

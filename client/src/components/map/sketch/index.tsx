@@ -11,7 +11,7 @@ import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 
 import { useLocation } from "@/lib/location";
 
-import { Location } from "@/app/parsers";
+import { Location } from "@/app/(frontend)/parsers";
 
 import {
   BUFFER_SYMBOL,

@@ -8,7 +8,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useGetDefaultSubtopics } from "@/lib/subtopics";
 import { useGetDefaultTopics } from "@/lib/topics";
 
-import { indicatorsExpandAtom, useSyncIndicators } from "@/app/store";
+import { indicatorsExpandAtom, useSyncIndicators } from "@/app/(frontend)/store";
 
 import { Button } from "@/components/ui/button";
 

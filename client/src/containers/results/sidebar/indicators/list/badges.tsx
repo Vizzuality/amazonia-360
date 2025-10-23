@@ -4,7 +4,7 @@ import { useCallback } from "react";
 
 import { VisualizationTypes } from "@/types/indicator";
 
-import { useSyncTopics } from "@/app/store";
+import { useSyncTopics } from "@/app/(frontend)/store";
 
 import { Badge } from "@/components/ui/badge";
 

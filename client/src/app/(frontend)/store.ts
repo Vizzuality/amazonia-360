@@ -18,7 +18,7 @@ import {
   defaultTopicsConfigParser,
   indicatorsParser,
   indicatorsSettingsParser,
-} from "@/app/parsers";
+} from "@/app/(frontend)/parsers";
 
 import { SketchProps } from "@/components/map/sketch";
 

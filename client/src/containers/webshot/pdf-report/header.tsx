@@ -6,7 +6,7 @@ import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
-import { useSyncLocation } from "@/app/store";
+import { useSyncLocation } from "@/app/(frontend)/store";
 
 import { useRegisterPage } from "@/containers/webshot/pdf-report/hooks";
 
@@ -35,8 +35,7 @@ export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
   return (
     <header
       className={cn({
-        "absolute left-0 top-0 box-border flex h-16 w-full shrink-0 flex-col justify-center px-14":
-          true,
+        "absolute left-0 top-0 box-border flex h-16 w-full shrink-0 flex-col justify-center px-14": true,
         "border-transparent bg-transparent": transparent,
         "border-b border-blue-50 bg-blue-50": !transparent,
         "after:absolute after:left-0 after:top-0 after:z-0 after:h-40 after:w-full after:bg-gradient-to-b after:from-black/50 after:to-transparent":

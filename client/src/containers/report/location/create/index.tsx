@@ -17,7 +17,7 @@ import {
   useLocationTitle,
 } from "@/lib/location";
 
-import { sketchActionAtom, sketchAtom, tmpBboxAtom, useSyncLocation } from "@/app/store";
+import { sketchActionAtom, sketchAtom, tmpBboxAtom, useSyncLocation } from "@/app/(frontend)/store";
 
 import { BUFFERS } from "@/constants/map";
 

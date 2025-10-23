@@ -113,8 +113,7 @@ export const BasemapControl: FC<BasemapControlProps> = ({
                 <li key={b.id} className="flex">
                   <button
                     className={cn({
-                      "group flex w-full items-center space-x-2 p-2 transition-colors duration-200 hover:bg-muted":
-                        true,
+                      "group flex w-full items-center space-x-2 p-2 transition-colors duration-200 hover:bg-muted": true,
                       "bg-foreground hover:bg-foreground": activeBasemapId === b.id,
                     })}
                     type="button"

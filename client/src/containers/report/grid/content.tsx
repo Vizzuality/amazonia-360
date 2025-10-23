@@ -12,7 +12,11 @@ import { usePreviousDifferent } from "rooks";
 import { useGetH3Indicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
-import { indicatorsExpandAtom, selectedFiltersViewAtom, useSyncGridDatasets } from "@/app/store";
+import {
+  indicatorsExpandAtom,
+  selectedFiltersViewAtom,
+  useSyncGridDatasets,
+} from "@/app/(frontend)/store";
 
 import GridFooter from "@/containers/report/grid/footer";
 import GridIndicatorsList from "@/containers/report/grid/list";

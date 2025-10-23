@@ -5,7 +5,7 @@ import { LuPlus } from "react-icons/lu";
 
 import { useLocationTitle } from "@/lib/location";
 
-import { useSyncLocation } from "@/app/store";
+import { useSyncLocation } from "@/app/(frontend)/store";
 
 import DownloadReport from "@/containers/header/results/download";
 import ShareReport from "@/containers/header/results/share";

@@ -6,7 +6,7 @@ import { useGetOverviewTopics } from "@/lib/topics";
 
 import { Indicator } from "@/types/indicator";
 
-import { useSyncTopics, useSyncDefaultTopics } from "@/app/store";
+import { useSyncTopics, useSyncDefaultTopics } from "@/app/(frontend)/store";
 
 import { handleMapIndicatorPropertyChange } from "@/containers/widgets/map/utils";
 import { FALLBACK_WIDGET_DEFAULT_BASEMAP_ID } from "@/containers/widgets/map/utils";

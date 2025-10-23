@@ -11,7 +11,7 @@ import { useDebounce } from "rooks";
 
 import { useLocationGeometry } from "@/lib/location";
 
-import { useSyncLocation } from "@/app/store";
+import { useSyncLocation } from "@/app/(frontend)/store";
 
 import { useMap } from "@/components/map/provider";
 

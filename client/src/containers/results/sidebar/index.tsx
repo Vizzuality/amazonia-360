@@ -8,7 +8,11 @@ import { LuX } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { reportEditionModeAtom, ReportResultsTab, resultsSidebarTabAtom } from "@/app/store";
+import {
+  reportEditionModeAtom,
+  ReportResultsTab,
+  resultsSidebarTabAtom,
+} from "@/app/(frontend)/store";
 
 import { Sidebar, SidebarContent, SidebarHeader, useSidebar } from "@/components/ui/sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

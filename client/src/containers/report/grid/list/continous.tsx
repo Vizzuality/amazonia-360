@@ -10,7 +10,7 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { H3Indicator } from "@/types/indicator";
 
-import { useSyncGridDatasetContinousSettings, useSyncLocation } from "@/app/store";
+import { useSyncGridDatasetContinousSettings, useSyncLocation } from "@/app/(frontend)/store";
 
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";

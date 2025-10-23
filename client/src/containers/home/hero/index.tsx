@@ -73,8 +73,7 @@ export default function Hero() {
             width={2286}
             height={1294}
             className={cn({
-              "absolute left-0 top-0 w-full object-cover opacity-0 transition-opacity duration-1000":
-                true,
+              "absolute left-0 top-0 w-full object-cover opacity-0 transition-opacity duration-1000": true,
               "z-20 opacity-100": img === 0,
               "opacity-0 delay-500": img === 1,
             })}
@@ -87,8 +86,7 @@ export default function Hero() {
             width={2286}
             height={1294}
             className={cn({
-              "absolute left-0 top-0 w-full object-cover opacity-0 transition-opacity duration-1000":
-                true,
+              "absolute left-0 top-0 w-full object-cover opacity-0 transition-opacity duration-1000": true,
               "z-20 opacity-100": img === 1,
               "opacity-0 delay-500": img === 0,
             })}

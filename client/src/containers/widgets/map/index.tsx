@@ -15,8 +15,8 @@ import {
   ResourceImageryTile,
 } from "@/types/indicator";
 
-import { IndicatorMapView } from "@/app/parsers";
-import { useSyncLocation, useSyncTopics, useSyncDefaultTopics } from "@/app/store";
+import { IndicatorMapView } from "@/app/(frontend)/parsers";
+import { useSyncLocation, useSyncTopics, useSyncDefaultTopics } from "@/app/(frontend)/store";
 
 import { DATASETS } from "@/constants/datasets";
 

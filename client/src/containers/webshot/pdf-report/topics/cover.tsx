@@ -5,7 +5,7 @@ import { useLocalstorageState } from "rooks";
 
 import { Topic } from "@/types/topic";
 
-import { useSyncAiSummary } from "@/app/store";
+import { useSyncAiSummary } from "@/app/(frontend)/store";
 
 import { Markdown } from "@/components/ui/markdown";
 

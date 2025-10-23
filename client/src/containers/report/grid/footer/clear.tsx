@@ -10,7 +10,7 @@ import {
   selectedFiltersViewAtom,
   useSyncGridSelectedDataset,
   indicatorsExpandAtom,
-} from "@/app/store";
+} from "@/app/(frontend)/store";
 
 import { Button } from "@/components/ui/button";
 

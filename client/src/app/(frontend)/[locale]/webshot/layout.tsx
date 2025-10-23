@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 
-import RootHead from "@/app/head";
+import RootHead from "@/app/(frontend)/head";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
 

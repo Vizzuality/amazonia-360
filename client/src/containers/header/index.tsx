@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
-import { reportEditionModeAtom, useSyncLocation } from "@/app/store";
+import { reportEditionModeAtom, useSyncLocation } from "@/app/(frontend)/store";
 
 import LanguageSelector from "@/containers/header/language-selector/desktop";
 import { Media } from "@/containers/media";
@@ -80,8 +80,7 @@ export default function Header() {
     <header
       className={cn({
         "fixed left-0 top-0 z-40 w-full": true,
-        "box-border flex h-16 flex-col justify-center border-b border-blue-50 bg-white backdrop-blur print:hidden":
-          true,
+        "box-border flex h-16 flex-col justify-center border-b border-blue-50 bg-white backdrop-blur print:hidden": true,
         // "border-blue-100": isReport,
       })}
     >

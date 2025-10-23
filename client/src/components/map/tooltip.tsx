@@ -8,7 +8,7 @@ import { useAtomValue } from "jotai";
 
 import { cn } from "@/lib/utils";
 
-import { gridCellHighlightAtom } from "@/app/store";
+import { gridCellHighlightAtom } from "@/app/(frontend)/store";
 
 import { HexagonIcon } from "../ui/icons/hexagon";
 

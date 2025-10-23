@@ -13,7 +13,9 @@ export default function TopicsList() {
 
   return (
     <ul className="relative flex flex-col gap-1 py-2">
-      {topicsData?.map((topic) => <TopicItem key={topic.id} topic={topic} id={topic.id} />)}
+      {topicsData?.map((topic) => (
+        <TopicItem key={topic.id} topic={topic} id={topic.id} />
+      ))}
     </ul>
   );
 }

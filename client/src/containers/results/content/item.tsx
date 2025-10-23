@@ -10,13 +10,13 @@ import { LuSparkles } from "react-icons/lu";
 import { useGetTopicsId } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
-import { TopicView } from "@/app/parsers";
+import { TopicView } from "@/app/(frontend)/parsers";
 import {
   reportEditionModeAtom,
   resultsSidebarTabAtom,
   useSyncAiSummary,
   useSyncTopics,
-} from "@/app/store";
+} from "@/app/(frontend)/store";
 
 import { MIN_VISUALIZATION_SIZES } from "@/constants/topics";
 

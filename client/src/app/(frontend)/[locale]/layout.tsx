@@ -1,20 +1,11 @@
-import { Suspense } from "react";
-
 import { Metadata } from "next";
 
-import { Montserrat } from "next/font/google";
 import { notFound } from "next/navigation";
 
-import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import RootHead from "@/app/head";
-
-import Header from "@/containers/header";
-import ThirdParty from "@/containers/third-party";
-
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { Toaster } from "@/components/ui/sonner";
+import LayoutProviders from "@/app/(frontend)/layout-providers";
 
 import { routing } from "@/i18n/routing";
 
@@ -34,7 +25,6 @@ export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Pr
   if (!hasLocale(routing.locales, locale)) {
     return {};
   }
-
   const t = await getTranslations({ locale });
 
   return {
@@ -57,12 +47,6 @@ export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Pr
   };
 }
 
-const montserrat = Montserrat({
-  weight: ["500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--montserrat",
-});
-
 export default async function RootLayout({ children, params }: LayoutProps<"/[locale]">) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
@@ -73,21 +57,8 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[lo
   setRequestLocale(locale);
 
   return (
-    <>
-      <RootHead />
-      <body className={`${montserrat.className} w-full overflow-x-hidden`}>
-        <Toaster position="top-center" richColors />
-
-        <Suspense fallback={null}>
-          <NextIntlClientProvider locale={locale}>
-            <SidebarProvider>
-              <Header />
-              {children}
-              <ThirdParty />
-            </SidebarProvider>
-          </NextIntlClientProvider>
-        </Suspense>
-      </body>
-    </>
+    <LayoutProviders locale={locale}>
+      <html lang={locale}>{children}</html>
+    </LayoutProviders>
   );
 }

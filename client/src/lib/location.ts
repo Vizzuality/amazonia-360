@@ -10,7 +10,7 @@ import Graphic from "@arcgis/core/Graphic";
 import { useGetFeatures } from "@/lib/query";
 import { useGetSearch } from "@/lib/search";
 
-import { Location, SearchLocation } from "@/app/parsers";
+import { Location, SearchLocation } from "@/app/(frontend)/parsers";
 
 import { DATASETS } from "@/constants/datasets";
 import { BUFFERS } from "@/constants/map";

@@ -10,7 +10,7 @@ import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 
 import { useLocation } from "@/lib/location";
 
-import { Location } from "@/app/parsers";
+import { Location } from "@/app/(frontend)/parsers";
 
 import { BUFFER_SYMBOL, BUFFERS, SYMBOLS } from "@/constants/map";
 
