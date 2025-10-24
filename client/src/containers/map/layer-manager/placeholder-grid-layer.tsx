@@ -4,7 +4,6 @@ import { useMemo, useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
 
-import { DeckLayer } from "@deck.gl/arcgis";
 import { H3HexagonLayer } from "@deck.gl/geo-layers";
 import { polygonToCells } from "h3-js";
 
@@ -13,6 +12,7 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/(frontend)/store";
 
+import { DeckLayer } from "@/components/map/layers/deck";
 import { useMap } from "@/components/map/provider";
 
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
