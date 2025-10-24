@@ -105,11 +105,11 @@ export async function initializeResources(
     geometry: new Geometry({
       topology: "triangle-strip",
       attributes: {
-        pos: { size: 2, value: new Int8Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, 1, 1, -1]) },
+        pos: { size: 2, value: new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]) },
       },
     }),
-    vertexCount: 6,
-    disableWarnings: false,
+    vertexCount: 4,
+    disableWarnings: true,
   });
 
   const fbo = device.createFramebuffer({
@@ -117,8 +117,7 @@ export async function initializeResources(
     width: 1,
     height: 1,
     colorAttachments: [texture],
-    // Keep depth/stencil optional for now. If needed, enable a depth attachment here.
-    // depthStencilAttachment: "depth16unorm",
+    depthStencilAttachment: "depth16unorm",
   });
 
   deckInstance.setProps({
@@ -127,8 +126,10 @@ export async function initializeResources(
 
     _customRender: (redrawReason) => {
       if (redrawReason === "arcgis") {
+        // Only redraw layers when triggered by ArcGIS
         deckInstance._drawLayers(redrawReason);
       } else {
+        // Trigger a redraw of the ArcGIS layer view
         this.redraw();
       }
     },
@@ -138,6 +139,7 @@ export async function initializeResources(
 }
 
 export function render(
+  this: Renderer,
   resources: RenderResources,
   viewport: {
     width: number;
@@ -149,11 +151,14 @@ export function render(
     pitch: number;
     bearing: number;
   },
+  renderTarget?: Framebuffer | null,
 ) {
-  const { model, deck, fbo } = resources;
+  const { model, deck } = resources;
   const device = model.device;
+
   if (device instanceof WebGLDevice) {
-    const screenFbo: Framebuffer = device.getDefaultCanvasContext().getCurrentFramebuffer();
+    // Use the provided render target or get the default canvas context
+    const screenFbo = renderTarget || device.getDefaultCanvasContext().getCurrentFramebuffer();
     const { width, height, ...viewState } = viewport;
 
     /* global window */
@@ -161,33 +166,67 @@ export function render(
     const pixelWidth = Math.round(width * dpr);
     const pixelHeight = Math.round(height * dpr);
 
-    const clonedFbo = fbo.clone({
+    // Create a new texture with correct dimensions
+    const newTexture = device.createTexture({
+      format: "rgba8unorm",
       width: pixelWidth,
       height: pixelHeight,
+      sampler: {
+        minFilter: "linear",
+        magFilter: "linear",
+        addressModeU: "clamp-to-edge",
+        addressModeV: "clamp-to-edge",
+      },
     });
 
-    deck.setProps({ viewState, _framebuffer: clonedFbo });
+    // Create a new framebuffer with the correctly sized texture
+    const resizedFbo = device.createFramebuffer({
+      id: "deckfbo-resized",
+      width: pixelWidth,
+      height: pixelHeight,
+      colorAttachments: [newTexture],
+      depthStencilAttachment: "depth16unorm",
+    });
+
+    // Clear the deck framebuffer before rendering
+    const clearPass = device.beginRenderPass({
+      framebuffer: resizedFbo,
+      clearColor: [0, 0, 0, 0], // Clear to transparent
+      clearDepth: 1.0,
+    });
+    clearPass.end();
+
+    deck.setProps({ viewState, _framebuffer: resizedFbo });
     // redraw deck immediately into deckFbo
     deck.redraw("arcgis");
 
+    // Update the model's texture binding to use the new texture
+    model.setBindings({
+      deckglTexture: newTexture,
+    });
+
     // We overlay the texture on top of the map using the full-screen quad.
+    // Handle different types of render targets from ArcGIS
+    let finalRenderTarget: Framebuffer | null = screenFbo;
+
+    // If the ArcGIS render target has a framebuffer property, use that
+    if (renderTarget && typeof renderTarget === "object" && "framebuffer" in renderTarget) {
+      finalRenderTarget = (renderTarget as { framebuffer: Framebuffer }).framebuffer;
+    } else if (renderTarget === null) {
+      // If null, render to default framebuffer
+      finalRenderTarget = null;
+    }
 
     const textureToScreenPass = device.beginRenderPass({
-      framebuffer: screenFbo,
-      parameters: { viewport: [0, 0, pixelWidth, pixelHeight] },
+      framebuffer: finalRenderTarget,
+      parameters: {
+        viewport: [0, 0, pixelWidth, pixelHeight],
+      },
       clearColor: false,
       clearDepth: false,
+      clearStencil: false,
     });
     try {
-      // Make sure the fullscreen-blit model samples from the color attachment of the
-      // cloned FBO (that's where deck rendered). The original `texture` created at
-      // initialization is only a placeholder and will not contain the resized contents.
-      // The Framebuffer stores TextureView objects in `colorAttachments`.
-      // Use Model.setBindings so the model picks up the correct texture for this draw.
-      if (clonedFbo.colorAttachments && clonedFbo.colorAttachments[0]) {
-        model.setBindings({ deckglTexture: clonedFbo.colorAttachments[0] });
-      }
-
       model.draw(textureToScreenPass);
     } finally {
       textureToScreenPass.end();
