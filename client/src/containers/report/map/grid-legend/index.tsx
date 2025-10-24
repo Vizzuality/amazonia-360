@@ -1,3 +1,5 @@
+"use client";
+
 import { FC, useCallback, useMemo } from "react";
 
 import { TooltipPortal } from "@radix-ui/react-tooltip";

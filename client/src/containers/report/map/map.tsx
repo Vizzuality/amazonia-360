@@ -21,7 +21,6 @@ import {
 
 import { BUFFERS } from "@/constants/map";
 
-import GridLegend from "@/containers/report/map/grid-legend/grid";
 import { SketchTooltips } from "@/containers/report/map/sketch-tooltips";
 
 import Controls from "@/components/map/controls";
@@ -42,6 +41,10 @@ const LayerManager = dynamic(() => import("./layer-manager"), {
 });
 
 const Legend = dynamic(() => import("./legend"), {
+  ssr: false,
+});
+
+const GridLegend = dynamic(() => import("./grid-legend"), {
   ssr: false,
 });
 
