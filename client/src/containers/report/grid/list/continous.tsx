@@ -65,6 +65,17 @@ export default function GridIndicatorsItemContinous(indicator: H3Indicator) {
     return [-Infinity, Infinity];
   }, [H3_INDICATOR?.resource.column, continuosOptions, gridDatasetContinousSettings]);
 
+  const step = useMemo(() => {
+    if (continuosOptions) {
+      const range = (continuosOptions.max || 100) - (continuosOptions.min || 0);
+      if (range <= 0.1) return 0.001;
+      if (range <= 1) return 0.01;
+      if (range <= 10) return 0.1;
+      if (range <= 100) return 1;
+    }
+    return 1;
+  }, [continuosOptions]);
+
   const onValueChange = (v: number[]) => {
     setGridDatasetContinousSettings((prev) => {
       if (!H3_INDICATOR?.resource.column) return prev;
@@ -88,7 +99,7 @@ export default function GridIndicatorsItemContinous(indicator: H3Indicator) {
             <Slider
               min={continuosOptions.min || 0}
               max={continuosOptions.max || 100}
-              step={1}
+              step={step}
               value={continuosValue}
               minStepsBetweenThumbs={1}
               onValueChange={onValueChange}
