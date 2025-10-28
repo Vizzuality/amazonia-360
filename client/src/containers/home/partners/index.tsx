@@ -16,52 +16,84 @@ const Partner = ({
   src,
   alt,
   className,
+  width,
+  height,
 }: {
   href: string;
   src: string;
   alt: string;
   className?: string;
+  width: number;
+  height: number;
 }) => (
-  <li className={cn(`flex h-16 items-center ${className}`)}>
-    <a target="_blank" rel="noopener noreferrer" className="relative h-full w-full" href={href}>
-      <Image src={src} alt={alt} fill className="object-contain" />
+  <li className={cn(`flex items-center ${className}`)}>
+    <a
+      target="_blank"
+      rel="noopener noreferrer"
+      className="relative flex h-full w-full items-center justify-center"
+      href={href}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        className={cn("h-full max-h-20 w-auto object-contain", {
+          "max-h-32": alt === "ACTO ARO",
+        })}
+      />
     </a>
   </li>
 );
 
 const PARTNERS = [
   {
-    href: "https://datapartnership.org/",
-    src: "/partners/ddp.avif",
-    alt: "Data Digital Partnership",
-  },
-  {
     href: "https://oraotca.org/",
     src: "/partners/atco-en.avif",
     alt: "ACTO ARO",
-  },
-  {
-    href: "https://www.esri.com/",
-    src: "/partners/esri.avif",
-    alt: "Esri",
-    className: "p-1",
-  },
-  {
-    href: "https://www.greenclimate.fund/",
-    src: "/partners/green-climate-fund.avif",
-    alt: "Green Climate Fund",
+    className: "p-1 w-full",
+    width: 621,
+    height: 192,
   },
   {
     href: "https://www.iadb.org",
     src: "/partners/idb-atlas.avif",
     alt: "IDB Atlas",
     className: "p-1",
+    width: 701,
+    height: 192,
+  },
+  {
+    href: "https://datapartnership.org/",
+    src: "/partners/ddp.avif",
+    alt: "Data Digital Partnership",
+    className: "p-1",
+    width: 420,
+    height: 192,
+  },
+  {
+    href: "https://www.greenclimate.fund/",
+    src: "/partners/green-climate-fund.avif",
+    alt: "Green Climate Fund",
+    className: "p-1",
+    width: 331,
+    height: 192,
+  },
+  {
+    href: "https://www.esri.com/",
+    src: "/partners/esri.avif",
+    alt: "Esri",
+    className: "p-1",
+    width: 239,
+    height: 192,
   },
   {
     href: "https://vizzuality.com",
     src: "/partners/vizzuality.avif",
     alt: "Vizzuality",
     className: "p-1",
+    width: 500,
+    height: 192,
   },
 ];
 export default function Partners() {
@@ -96,7 +128,7 @@ export default function Partners() {
         <div
           className={`mt-10 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-right-20" : "opacity-0"}`}
         >
-          <ul className="grid grid-cols-2 gap-x-2 gap-y-6 md:grid-cols-3">
+          <ul className="mx-auto flex max-w-xl flex-wrap items-center justify-center gap-x-2 gap-y-4 xl:gap-x-4">
             {PARTNERS.map((partner, index) => (
               <Partner {...partner} key={`partner-${index}`} />
             ))}
