@@ -4,7 +4,7 @@
 
 import { initializeResources, render, finalizeResources } from "./commons";
 
-export default function createDeckLayerView2D(BaseLayerViewGL2D) {
+export default function createDeckLayerView2D(BaseLayerViewGL2D: any) {
   return BaseLayerViewGL2D.createSubclass({
     properties: {
       cancelInitialization: null,
@@ -28,7 +28,7 @@ export default function createDeckLayerView2D(BaseLayerViewGL2D) {
       this.resources = resources;
 
       // Update deck props
-      this.layer.deck.on("change", (props) => resources.deck.setProps(props));
+      this.layer.deck.on("change", (props: any) => resources.deck.setProps(props));
 
       // We need to start drawing the deck.gl layer immediately.
       resources.deck.setProps(this.layer.deck.toJSON());
@@ -48,35 +48,24 @@ export default function createDeckLayerView2D(BaseLayerViewGL2D) {
     },
 
     // Called every time that the layer view must be rendered.
-    render(renderParameters) {
+    render(renderParameters: __esri.BaseLayerView2DRenderRenderParameters) {
       if (!this.resources) {
         return;
       }
-
-      // Bind the render target as per ArcGIS documentation
-      this.bindRenderTarget();
-
-      // Get the render target using the proper ArcGIS API method
-      const renderTarget = this.getRenderTarget();
 
       const [width, height] = this.view.state.size;
       // The view state must be kept in-sync with the MapView of the ArcGIS API.
       const state = renderParameters.state;
 
-      render.call(
-        this,
-        this.resources,
-        {
-          width,
-          height,
-          latitude: this.view.center.latitude,
-          longitude: this.view.center.longitude,
-          zoom: this.view.featuresTilingScheme.scaleToLevel(state.scale),
-          bearing: -state.rotation,
-          pitch: 0,
-        },
-        renderTarget,
-      );
+      render(this.resources, {
+        width,
+        height,
+        latitude: this.view.center.latitude,
+        longitude: this.view.center.longitude,
+        zoom: this.view.featuresTilingScheme.scaleToLevel(state.scale),
+        bearing: -state.rotation,
+        pitch: 0,
+      });
     },
   });
 }
