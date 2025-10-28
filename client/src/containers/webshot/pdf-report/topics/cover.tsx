@@ -3,6 +3,8 @@
 import { useLocale } from "next-intl";
 import { useLocalstorageState } from "rooks";
 
+import { cn } from "@/lib/utils";
+
 import { Topic } from "@/types/topic";
 
 import { useSyncAiSummary } from "@/app/store";
@@ -33,7 +35,13 @@ export default function PdfTopicCover(topic: Topic) {
 
       {ai_summary.enabled && summary && (
         <section className="px-14 py-10">
-          <Markdown className="prose-sm max-w-none columns-2 gap-x-8">{summary}</Markdown>
+          <Markdown
+            className={cn("prose-sm max-w-none columns-2 gap-x-8", {
+              "prose-p:text-xs prose-p:leading-normal": ai_summary.type === "Long",
+            })}
+          >
+            {summary}
+          </Markdown>
         </section>
       )}
     </div>
