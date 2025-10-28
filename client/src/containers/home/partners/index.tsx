@@ -26,7 +26,7 @@ const Partner = ({
   width: number;
   height: number;
 }) => (
-  <li className={cn(`flex items-center ${className}`)}>
+  <li className={cn(`relative flex items-center ${className}`)}>
     <a
       target="_blank"
       rel="noopener noreferrer"
@@ -59,7 +59,7 @@ const PARTNERS = [
     href: "https://www.iadb.org",
     src: "/partners/idb-atlas.avif",
     alt: "IDB Atlas",
-    className: "p-1",
+    className: "p-1 -top-4",
     width: 701,
     height: 192,
   },
@@ -67,7 +67,7 @@ const PARTNERS = [
     href: "https://datapartnership.org/",
     src: "/partners/ddp.avif",
     alt: "Data Digital Partnership",
-    className: "p-1",
+    className: "p-1 -top-4",
     width: 420,
     height: 192,
   },
@@ -75,7 +75,7 @@ const PARTNERS = [
     href: "https://www.greenclimate.fund/",
     src: "/partners/green-climate-fund.avif",
     alt: "Green Climate Fund",
-    className: "p-1",
+    className: "p-1 -top-4",
     width: 331,
     height: 192,
   },
@@ -83,7 +83,7 @@ const PARTNERS = [
     href: "https://www.esri.com/",
     src: "/partners/esri.avif",
     alt: "Esri",
-    className: "p-1",
+    className: "p-1 -top-4",
     width: 239,
     height: 192,
   },
@@ -91,7 +91,7 @@ const PARTNERS = [
     href: "https://vizzuality.com",
     src: "/partners/vizzuality.avif",
     alt: "Vizzuality",
-    className: "p-1",
+    className: "p-1 -top-4",
     width: 500,
     height: 192,
   },
