@@ -94,7 +94,8 @@ export async function initializeResources(
       // For the fullscreen blit we must not reject the quad due to the map's depth buffer.
       // Make the blit always pass and don't write depth.
       depthWriteEnabled: false,
-      depthCompare: "always",
+      blend: true,
+      depthCompare: "less-equal",
       blendColorSrcFactor: "one",
       blendColorDstFactor: "one-minus-src-alpha",
       blendAlphaSrcFactor: "one",
@@ -117,7 +118,6 @@ export async function initializeResources(
     width: 1,
     height: 1,
     colorAttachments: [texture],
-    depthStencilAttachment: "depth16unorm",
   });
 
   deckInstance.setProps({
@@ -150,12 +150,16 @@ export function render(
     pitch: number;
     bearing: number;
   },
+  target: {
+    framebuffer: WebGLFramebuffer | null;
+  },
 ) {
   const { model, deck } = resources;
   const device = model.device;
 
   if (device instanceof WebGLDevice) {
     const screenFbo = device.getDefaultCanvasContext().getCurrentFramebuffer();
+
     const { width, height, ...viewState } = viewport;
 
     /* global window */
@@ -163,7 +167,7 @@ export function render(
     const pixelWidth = Math.round(width * dpr);
     const pixelHeight = Math.round(height * dpr);
 
-    // Create a new texture with correct dimensions
+    // // Create a new texture with correct dimensions
     const newTexture = device.createTexture({
       format: "rgba8unorm",
       width: pixelWidth,
@@ -182,8 +186,9 @@ export function render(
       width: pixelWidth,
       height: pixelHeight,
       colorAttachments: [newTexture],
-      depthStencilAttachment: "depth16unorm",
     });
+
+    // fbo.resize({ width: pixelWidth, height: pixelHeight });
 
     deck.setProps({ viewState, _framebuffer: resizedFbo });
     // redraw deck immediately into deckFbo
@@ -194,14 +199,23 @@ export function render(
       deckglTexture: newTexture,
     });
 
+    const targetFramebuffer = device.createFramebuffer({
+      id: "target-framebuffer",
+      width: screenFbo.width,
+      height: screenFbo.height,
+      colorAttachments: [null] as unknown as Texture[],
+      depthStencilAttachment: screenFbo.depthStencilAttachment,
+      handle: target.framebuffer,
+    });
+
     const textureToScreenPass = device.beginRenderPass({
-      framebuffer: screenFbo,
+      framebuffer: targetFramebuffer,
       parameters: {
         viewport: [0, 0, pixelWidth, pixelHeight],
       },
       clearColor: false,
       clearDepth: false,
-      clearStencil: 1,
+      clearStencil: false,
     });
     try {
       model.draw(textureToScreenPass);
