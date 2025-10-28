@@ -139,7 +139,6 @@ export async function initializeResources(
 }
 
 export function render(
-  this: Renderer,
   resources: RenderResources,
   viewport: {
     width: number;
@@ -151,14 +150,12 @@ export function render(
     pitch: number;
     bearing: number;
   },
-  renderTarget?: Framebuffer | null,
 ) {
   const { model, deck } = resources;
   const device = model.device;
 
   if (device instanceof WebGLDevice) {
-    // Use the provided render target or get the default canvas context
-    const screenFbo = renderTarget || device.getDefaultCanvasContext().getCurrentFramebuffer();
+    const screenFbo = device.getDefaultCanvasContext().getCurrentFramebuffer();
     const { width, height, ...viewState } = viewport;
 
     /* global window */
@@ -188,14 +185,6 @@ export function render(
       depthStencilAttachment: "depth16unorm",
     });
 
-    // Clear the deck framebuffer before rendering
-    const clearPass = device.beginRenderPass({
-      framebuffer: resizedFbo,
-      clearColor: [0, 0, 0, 0], // Clear to transparent
-      clearDepth: 1.0,
-    });
-    clearPass.end();
-
     deck.setProps({ viewState, _framebuffer: resizedFbo });
     // redraw deck immediately into deckFbo
     deck.redraw("arcgis");
@@ -205,26 +194,14 @@ export function render(
       deckglTexture: newTexture,
     });
 
-    // We overlay the texture on top of the map using the full-screen quad.
-    // Handle different types of render targets from ArcGIS
-    let finalRenderTarget: Framebuffer | null = screenFbo;
-
-    // If the ArcGIS render target has a framebuffer property, use that
-    if (renderTarget && typeof renderTarget === "object" && "framebuffer" in renderTarget) {
-      finalRenderTarget = (renderTarget as { framebuffer: Framebuffer }).framebuffer;
-    } else if (renderTarget === null) {
-      // If null, render to default framebuffer
-      finalRenderTarget = null;
-    }
-
     const textureToScreenPass = device.beginRenderPass({
-      framebuffer: finalRenderTarget,
+      framebuffer: screenFbo,
       parameters: {
         viewport: [0, 0, pixelWidth, pixelHeight],
       },
       clearColor: false,
       clearDepth: false,
-      clearStencil: false,
+      clearStencil: 1,
     });
     try {
       model.draw(textureToScreenPass);
