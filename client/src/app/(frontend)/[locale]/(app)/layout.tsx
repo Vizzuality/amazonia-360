@@ -53,7 +53,6 @@ export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Pr
         { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
       ],
     },
-    manifest: "/manifest.json",
   };
 }
 
