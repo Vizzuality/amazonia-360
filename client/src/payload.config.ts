@@ -9,6 +9,8 @@ import { lexicalEditor } from "@payloadcms/richtext-lexical";
 
 import sharp from "sharp";
 
+import { env } from "@/env.mjs";
+
 import { Media } from "@/cms/collections/Media";
 import { Reports } from "@/cms/collections/Reports";
 import { Users } from "@/cms/collections/Users";
@@ -29,6 +31,7 @@ export default buildConfig({
   collections: [Users, Media, Reports],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
+  serverURL: env.NEXT_PUBLIC_URL,
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
