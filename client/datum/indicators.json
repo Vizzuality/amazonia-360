@@ -6121,7 +6121,7 @@
     },
     {
         "id": 143,
-        "subtopic_id": 23,
+        "subtopic_id": 24,
         "order": 56,
         "Active": 1,
         "name_en": "Hydroelectric Power Plants",
@@ -6208,7 +6208,7 @@
     },
     {
         "id": 144,
-        "subtopic_id": 23,
+        "subtopic_id": 24,
         "order": 57,
         "Active": 1,
         "name_en": "Reservoirs and Artificial Water Bodies",
@@ -6293,7 +6293,7 @@
     },
     {
         "id": 145,
-        "subtopic_id": 23,
+        "subtopic_id": 24,
         "order": 58,
         "Active": 1,
         "name_en": "Barriers and Dams",
@@ -6475,6 +6475,295 @@
                     }
                 ]
             }
+        }
+    },
+    {
+        "id": 164,
+        "subtopic_id": 25,
+        "order": 54,
+        "Active": 1,
+        "name_en": "Mobile Network Tower Presence",
+        "name_es": "Presencia de Torres Móviles",
+        "name_pt": "Presença de Torres Móveis",
+        "unit_en": "",
+        "unit_es": "",
+        "unit_pt": "",
+        "description_en": "Point layer representing an estimate of the presence and spatial distribution of mobile telecommunications towers in the Amazon, derived from OpenCelliD open data published for 2023, 2024, and up to October 2025. Each point indicates the approximate location of active or registered infrastructure in recent years, reflecting mobile signal availability in a territory characterized by vast distances, extensive areas of difficult access, and dispersed populations.\n\nThe presence of mobile telecommunications infrastructure is a tangible indicator of access to digital connectivity, an element that today determines much of social, economic, and development opportunities. Its spatial distribution helps guide public policies, investments, and sustainable development programs that seek to reduce the digital divide and strengthen the integration of Amazonian communities with the rest of the country and the world.\n\nThis layer is a proprietary compilation by AmazoniaForever360+, 2025, prepared from available data from OpenCelliD, a collaborative project created in 2008 and currently administered by Unwired Labs, which maintains the world's largest open database of mobile phone towers. Its information is compiled through a crowdsourcing process, from user observations and contributions from organizations that register cell identifiers along with their geographic coordinates. Public files reflect towers observed in the last eighteen months. OpenCelliD is a widely used source in research and technological development for estimating mobile coverage, analyzing digital infrastructure, and supporting studies on connectivity access in remote territories.\n\nThe data has been simplified for publication and offers an estimate of infrastructure location without technical details of its operation. This layer combines three datasets: a historical record of tower locations from 2023 (cell_towers_20230125T000000.csv), an infrastructure update query through 2024 (cell_towers_20250407T000000.csv), and a final update in October 2025 (globcell_towers_2025-10-27-T000000.csv). The CSV data contains coordinates for each tower, from which the location has been mapped as points and combined with a standard 'Merge' operation.\n\n**Source:**  \nOpenCelliD / Unwired Labs. (2025). Global OpenCellID Dataset – Cell Towers (Snapshot 2025-10-27).  \nAvailable at: https://www.opencellid.org/downloads.php  \nData format: Compressed CSV (.gz); Projection: WGS 84 (EPSG:4326)\n\n**Additional Information:**  \nFida, M. R., & Marina, M. K. (2019). Uncovering mobile infrastructure in developing countries with crowdsourced measurements. School of Informatics, University of Edinburgh. Available at: https://www.research.ed.ac.uk/files/77047523/Uncovering_mobile_infrastructure_in_developing_countries_with_crowdsourced_measurements.pdf\n\nBaig, A., et al. (2021). A Tale of Three Datasets: Characterizing Mobile Broadband Access in the US. Communications of the ACM. Available at: https://cacm.acm.org/research/a-tale-of-three-datasets/\n\nZandbergen, P. A., & Barbeau, S. J. (2016). Characterization of mobile phone localization errors with OpenCellID data. GeoInformatica, 20(4), 677–694. Available at: https://www.researchgate.net/publication/308735645_Characterization_of_mobile_phone_localization_errors_with_OpenCellID_data",
+        "description_es": "Capa de puntos que representa una estimación de la presencia y distribución espacial de torres de telecomunicaciones móviles en la Amazonia, derivada de datos abiertos de OpenCelliD publicados para 2023, 2024 y hasta octubre de 2025. Cada punto indica la ubicación aproximada de una infraestructura activa o registrada en los últimos años, reflejando la disponibilidad de señal móvil en un territorio caracterizado por grandes distancias, extensas áreas de difícil acceso y poblaciones dispersas.\n\nLa presencia de infraestructura de telecomunicaciones móviles es un indicador tangible del acceso a la conectividad digital, un elemento que hoy determina buena parte de las oportunidades sociales, económicas y de desarrollo. Su distribución espacial ayuda a orientar políticas públicas, inversiones y programas de desarrollo sostenible que busquen reducir la brecha digital y fortalecer la integración de las comunidades amazónicas al resto del país y del mundo.\n\nEsta capa es una compilación propia de AmazoniaForever360+, 2025, elaborada a partir de los datos disponibles de OpenCelliD, un proyecto colaborativo creado en 2008 y administrado actualmente por Unwired Labs, que mantiene la mayor base de datos abierta de torres de telefonía móvil del mundo. Su información se compila mediante un proceso de crowdsourcing, a partir de observaciones de usuarios y contribuciones de organizaciones que registran identificadores de celdas junto con sus coordenadas geográficas. Los archivos públicos reflejan las torres observadas en los últimos dieciocho meses. OpenCelliD es una fuente de uso extendido en investigación y desarrollo tecnológico para estimar la cobertura móvil, analizar la infraestructura digital y apoyar estudios sobre acceso a la conectividad en territorios remotos.\n\nLos datos se han simplificado para su publicación y ofrecen una estimación de la ubicación de la infraestructura sin detalles técnicos de su funcionamiento. En esta capa se han unido tres dataset: un histórico de ubicación de torres de 2023 (cell_towers_20230125T000000.csv), una consulta de actualización de la infraestructura hasta 2024 (cell_towers_20250407T000000.csv), y una última actualización en octubre de 2025 (globcell_towers_2025-10-27-T000000.csv). Los datos CSV contienen coordenadas para cada torre, a partir de estas se ha cartografiado la ubicación como puntos y se han combinado con una operación 'Merge' estándar.\n\n**Fuente:**  \nOpenCelliD / Unwired Labs. (2025). Global OpenCellID Dataset – Cell Towers (Snapshot 2025-10-27).  \nDisponible en: https://www.opencellid.org/downloads.php  \nFormato del dato: CSV comprimido (.gz); Proyección: WGS 84 (EPSG:4326)\n\n**Información adicional:**  \nFida, M. R., & Marina, M. K. (2019). Uncovering mobile infrastructure in developing countries with crowdsourced measurements. School of Informatics, University of Edinburgh. Disponible en: https://www.research.ed.ac.uk/files/77047523/Uncovering_mobile_infrastructure_in_developing_countries_with_crowdsourced_measurements.pdf\n\nBaig, A., et al. (2021). A Tale of Three Datasets: Characterizing Mobile Broadband Access in the US. Communications of the ACM. Disponible en: https://cacm.acm.org/research/a-tale-of-three-datasets/\n\nZandbergen, P. A., & Barbeau, S. J. (2016). Characterization of mobile phone localization errors with OpenCellID data. GeoInformatica, 20(4), 677–694. Disponible en: https://www.researchgate.net/publication/308735645_Characterization_of_mobile_phone_localization_errors_with_OpenCellID_data",
+        "description_pt": "Camada de pontos que representa uma estimativa da presença e distribuição espacial de torres de telecomunicações móveis na Amazônia, derivada de dados abertos do OpenCelliD publicados para 2023, 2024 e até outubro de 2025. Cada ponto indica a localização aproximada de uma infraestrutura ativa ou registrada nos últimos anos, refletindo a disponibilidade de sinal móvel em um território caracterizado por grandes distâncias, extensas áreas de difícil acesso e populações dispersas.\n\nA presença de infraestrutura de telecomunicações móveis é um indicador tangível do acesso à conectividade digital, um elemento que hoje determina boa parte das oportunidades sociais, econômicas e de desenvolvimento. Sua distribuição espacial ajuda a orientar políticas públicas, investimentos e programas de desenvolvimento sustentável que buscam reduzir a lacuna digital e fortalecer a integração das comunidades amazônicas com o resto do país e do mundo.\n\nEsta camada é uma compilação própria da AmazoniaForever360+, 2025, elaborada a partir dos dados disponíveis do OpenCelliD, um projeto colaborativo criado em 2008 e administrado atualmente pela Unwired Labs, que mantém a maior base de dados aberta de torres de telefonia móvel do mundo. Suas informações são compiladas mediante um processo de crowdsourcing, a partir de observações de usuários e contribuições de organizações que registram identificadores de células junto com suas coordenadas geográficas. Os arquivos públicos refletem as torres observadas nos últimos dezoito meses. O OpenCelliD é uma fonte de uso extenso em pesquisa e desenvolvimento tecnológico para estimar a cobertura móvel, analisar a infraestrutura digital e apoiar estudos sobre acesso à conectividade em territórios remotos.\n\nOs dados foram simplificados para sua publicação e oferecem uma estimativa da localização da infraestrutura sem detalhes técnicos de seu funcionamento. Nesta camada foram unidos três conjuntos de dados: um histórico de localização de torres de 2023 (cell_towers_20230125T000000.csv), uma consulta de atualização da infraestrutura até 2024 (cell_towers_20250407T000000.csv), e uma última atualização em outubro de 2025 (globcell_towers_2025-10-27-T000000.csv). Os dados CSV contêm coordenadas para cada torre, a partir das quais se cartografou a localização como pontos e se combinaram com uma operação 'Merge' padrão.\n\n**Fonte:**  \nOpenCelliD / Unwired Labs. (2025). Global OpenCellID Dataset – Cell Towers (Snapshot 2025-10-27).  \nDisponível em: https://www.opencellid.org/downloads.php  \nFormato do dado: CSV comprimido (.gz); Projeção: WGS 84 (EPSG:4326)\n\n**Informação adicional:**  \nFida, M. R., & Marina, M. K. (2019). Uncovering mobile infrastructure in developing countries with crowdsourced measurements. School of Informatics, University of Edinburgh. Disponível em: https://www.research.ed.ac.uk/files/77047523/Uncovering_mobile_infrastructure_in_developing_countries_with_crowdsourced_measurements.pdf\n\nBaig, A., et al. (2021). A Tale of Three Datasets: Characterizing Mobile Broadband Access in the US. Communications of the ACM. Disponível em: https://cacm.acm.org/research/a-tale-of-three-datasets/\n\nBaig, A., et al. (2021). A Tale of Three Datasets: Characterizing Mobile Broadband Access in the US. Communications of the ACM. Disponível em: https://cacm.acm.org/research/a-tale-of-three-datasets/\n\nZandbergen, P. A., & Barbeau, S. J. (2016). Characterization of mobile phone localization errors with OpenCellID data. GeoInformatica, 20(4), 677–694. Disponível em: https://www.researchgate.net/publication/308735645_Characterization_of_mobile_phone_localization_errors_with_OpenCellID_data",
+        "description_short_en": "Point layer showing estimated locations of mobile telecommunications towers across the region, derived from OpenCelliD open data (2023-2025). Each point represents active or registered infrastructure, reflecting mobile signal availability in a territory characterized by vast distances and dispersed populations.",
+        "description_short_es": "Capa de puntos que representa una estimación de la presencia y distribución espacial de torres de telecomunicaciones móviles, derivada de datos abiertos de OpenCelliD (2023-2025). Cada punto indica la ubicación aproximada de infraestructura activa o registrada, reflejando la disponibilidad de señal móvil en un territorio de grandes distancias y poblaciones dispersas.",
+        "description_short_pt": "Camada de pontos que representa uma estimativa da presença e distribuição espacial de torres de telecomunicações móveis, derivada de dados abertos do OpenCelliD (2023-2025). Cada ponto indica a localização aproximada de infraestrutura ativa ou registrada, refletindo a disponibilidade de sinal móvel em um território de grandes distâncias e populações dispersas.",
+        "visualization_types": [
+            "map"
+        ],
+        "resource": {
+            "name": "",
+            "type": "feature",
+            "column": [
+            ],
+            "layer_id": "61",
+            "rasterFunction": "",
+            "legend": "",
+            "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Mobile_Network_Tower_Presence/FeatureServer",
+            "query_numeric": "",
+            "query_table": "",
+            "query_chart": "",
+            "query_ai": {
+                "where": "1=1",
+                "returnGeometry": false,
+                "returnIntersections": false,
+                "outFields": [
+                    "*"
+                ]
+            },
+            "popupTemplate": {
+                "title": "{radio}"
+            }
+        }
+    },
+    {
+        "id": 163,
+        "subtopic_id": 25,
+        "order": 55,
+        "Active": 1,
+        "name_en": "Mobile Network Speed Test Results",
+        "name_es": "Resultados de Velocidad de Internet Móvil",
+        "name_pt": "Resultados de Velocidade de Internet Móvel",
+        "unit_en": "",
+        "unit_es": "",
+        "unit_pt": "",
+        "description_en": "Polygonal tile layer representing average internet speed test results in the Amazon during 2025, based on voluntary measurements conducted by users of the Ookla Speedtest Intelligence platform. This information shows, with homogeneous geographic resolution, the spatial distribution of actual connectivity measurements in a territory marked by vast distances and dispersed human settlements. Its visualization helps identify areas where users experience lower speeds or poorer connection quality, relevant for evaluating the digital divide and planning connectivity strategies that improve the social and economic integration of Amazonian communities.\n\nThese layers are a proprietary compilation by AmazoniaForever360+, 2025, prepared from Ookla Speedtest Intelligence open datasets, available in the Amazon Web Services (AWS S3) public repository. Ookla data is organized in a global grid of regular tiles approximately 0.005° per side (equivalent to about 610 meters at the equator). Each tile represents an area in which multiple individual speed test measurements are averaged, including download and upload speeds, latency, and connection consistency. This system ensures homogeneous resolution and allows comparison of actual user-experienced connectivity across different locations.\n\nThe data was downloaded, filtered, and consolidated by integrating quarterly records from 2025 corresponding to fixed internet services (fixed tiles) and mobile services (mobile tiles). Each tile represents averages derived from millions of voluntary speed tests conducted by users at different points in the region, providing an empirical and comparable measurement of the actual connectivity experience.\n\n**Important limitation:** Data is only available in locations where users actively performed speed tests. Not all areas have test coverage, and the reasons why users conduct speed tests are unknown. It is possible that tests occur more frequently when users experience connectivity problems, which means the measured speeds may not represent typical or optimal performance in those areas. The absence of data does not necessarily indicate lack of connectivity, but rather the absence of voluntary measurements. The information was simplified for publication.\n\n\n * Very Low (0-20,000 kbps / 0-20 Mbps): Insufficient for most modern activities. May support basic browsing and messaging, but struggles with video streaming or video calls.  \n * Low (20,000-50,000 kbps / 20-50 Mbps): Suitable for basic activities like standard definition video streaming, web browsing, and email. May experience issues with multiple simultaneous users or high-definition content.\n * Average (50,000-150,000 kbps / 50-150 Mbps): Adequate for most household needs including HD video streaming, video conferencing, and moderate file downloads. Supports multiple devices simultaneously.  \n * Good (150,000-500,000 kbps / 150-500 Mbps): High-quality connection supporting 4K streaming, large file transfers, online gaming, and multiple concurrent users without performance degradation.  \n * Very Good (500,000-2,000,000 kbps / 500-2,000 Mbps): Excellent connectivity for demanding applications, professional work, multiple 4K streams, rapid large file transfers, and extensive simultaneous device usage.  \n\n**Source:**  \nOokla. (2025). Speedtest Intelligence® – Global Fixed and Mobile Broadband Performance Data (Q1–Q3 2025). Available at: https://registry.opendata.aws/speedtest-global-performance/  \nData format: Parquet; Projection: WGS 84 (EPSG:4326)\n\n**Additional Information:**  \nOokla Speedtest Intelligence Methodology — Ookla (2020). Official methodological description of how they collect and process their data. https://www.gsma.com/get-involved/gsma_resources/how-ookla-ensures-accurate-reliable-data-a-guide-to-our-metrics-and-methodology-updated-for-2020/\n\nThe Importance of Contextualization of Crowdsourced Active Speed Test Measurements — Paul U., Liu J., Gu M., Gupta A. & Belding E. (2022). ACM Internet Measurement Conference (IMC '22). https://arxiv.org/abs/2310.16136\n\nA Comparative Analysis of Ookla Speedtest and Measurement Labs Network Diagnostic Test (NDT7) — MacMillan K., Mangla T., Saxon J., Marwell N.P., Feamster N. (2022). https://arxiv.org/abs/2205.12376\n\nNetwork Performance Measurements – Speed Test Datasets — Broadband Mapping Coalition (2022). Evaluation of network performance databases, including Ookla. https://broadbandmappingcoalition.org/assessing-available-databases-network-performance-measurements-speed-test-datasets/",
+        "description_es": "Capa de teselas poligonales que representan resultados promedio de tests de velocidad de internet en la Amazonia durante el año 2025, basada en mediciones voluntarias realizadas por usuarios de la plataforma Ookla Speedtest Intelligence. Esta información muestra, con resolución geográfica homogénea, la distribución espacial de las mediciones reales de conectividad en un territorio marcado por grandes distancias y dispersión de los asentamientos humanos. Su visualización ayuda a identificar áreas donde los usuarios experimentan velocidades más bajas o peor calidad de conexión, relevantes para evaluar la brecha digital y planificar estrategias de conectividad que mejoren la integración social y económica de las comunidades amazónicas.\n\nEstas capas son una compilación propia de AmazoniaForever360+, 2025, elaboradas a partir de los conjuntos de datos abiertos de Ookla Speedtest Intelligence, disponibles en el repositorio público de Amazon Web Services (AWS S3). Los datos de Ookla se organizan en una cuadrícula global de teselas regulares de aproximadamente 0,005° por lado (equivalentes a unos 610 metros en el ecuador). Cada tesela representa un área en la que se promedian múltiples mediciones individuales de tests de velocidad, incluyendo velocidades de descarga y carga, latencia y consistencia de conexión. Este sistema garantiza una resolución homogénea y permite comparar la conectividad experimentada realmente por los usuarios en distintos lugares.\n\nLos datos fueron descargados, filtrados y consolidados integrando los registros trimestrales de 2025 correspondientes a los servicios de internet fijo (fixed tiles) y móvil (mobile tiles). Cada tesela representa promedios derivados de millones de tests de velocidad voluntarios realizados por usuarios en distintos puntos de la región, lo que proporciona una medición empírica y comparable de la experiencia real de conectividad.\n\n**Limitación importante:** Solo hay datos disponibles en ubicaciones donde los usuarios realizaron activamente tests de velocidad. No todas las áreas tienen cobertura de tests, y se desconocen las razones por las que los usuarios realizan estos tests. Es posible que los tests ocurran con mayor frecuencia cuando los usuarios experimentan problemas de conectividad, lo que significa que las velocidades medidas pueden no representar el rendimiento típico u óptimo en esas áreas. La ausencia de datos no indica necesariamente falta de conectividad, sino ausencia de mediciones voluntarias. La información fue simplificada para su publicación.\n\n * Muy Baja (0-20.000 kbps / 0-20 Mbps): Insuficiente para la mayoría de actividades modernas. Puede soportar navegación básica y mensajería, pero tiene dificultades con streaming de video o videollamadas.\n * Baja (20.000-50.000 kbps / 20-50 Mbps): Adecuada para actividades básicas como streaming de video en definición estándar, navegación web y correo electrónico. Puede presentar problemas con múltiples usuarios simultáneos o contenido en alta definición.\n * Media (50.000-150.000 kbps / 50-150 Mbps): Apropiada para la mayoría de necesidades domésticas incluyendo streaming de video HD, videoconferencias y descargas moderadas de archivos. Soporta múltiples dispositivos simultáneamente.\n * Buena (150.000-500.000 kbps / 150-500 Mbps): Conexión de alta calidad que soporta streaming 4K, transferencias de archivos grandes, juegos en línea y múltiples usuarios concurrentes sin degradación del rendimiento.\n * Muy Buena (500.000-2.000.000 kbps / 500-2.000 Mbps): Conectividad excelente para aplicaciones exigentes, trabajo profesional, múltiples streams 4K, transferencias rápidas de archivos grandes y uso extensivo de dispositivos simultáneos.\n\n**Fuente:**  \nOokla. (2025). Speedtest Intelligence® – Global Fixed and Mobile Broadband Performance Data (Q1–Q3 2025). Disponible en: https://registry.opendata.aws/speedtest-global-performance/  \nFormato del dato: Parquet; Proyección: WGS 84 (EPSG:4326)\n\n**Información adicional:**  \nOokla Speedtest Intelligence Methodology — Ookla (2020). Descripción metodológica oficial de cómo recogen y procesan sus datos. https://www.gsma.com/get-involved/gsma_resources/how-ookla-ensures-accurate-reliable-data-a-guide-to-our-metrics-and-methodology-updated-for-2020/\n\nThe Importance of Contextualization of Crowdsourced Active Speed Test Measurements — Paul U., Liu J., Gu M., Gupta A. & Belding E. (2022). ACM Internet Measurement Conference (IMC '22). https://arxiv.org/abs/2310.16136\n\nA Comparative Analysis of Ookla Speedtest and Measurement Labs Network Diagnostic Test (NDT7) — MacMillan K., Mangla T., Saxon J., Marwell N.P., Feamster N. (2022). https://arxiv.org/abs/2205.12376\n\nNetwork Performance Measurements – Speed Test Datasets — Broadband Mapping Coalition (2022). Evaluación de bases de datos de performance de red, incluyendo Ookla. https://broadbandmappingcoalition.org/assessing-available-databases-network-performance-measurements-speed-test-datasets/",
+        "description_pt": "Camada de mosaicos poligonais que representam resultados médios de testes de velocidade de internet na Amazônia durante o ano de 2025, baseada em medições voluntárias realizadas por usuários da plataforma Ookla Speedtest Intelligence. Esta informação mostra, com resolução geográfica homogênea, a distribuição espacial das medições reais de conectividade em um território marcado por grandes distâncias e dispersão dos assentamentos humanos. Sua visualização ajuda a identificar áreas onde os usuários experimentam velocidades mais baixas ou pior qualidade de conexão, relevantes para avaliar a lacuna digital e planejar estratégias de conectividade que melhorem a integração social e econômica das comunidades amazônicas.\n\nEstas camadas são uma compilação própria da AmazoniaForever360+, 2025, elaboradas a partir dos conjuntos de dados abertos do Ookla Speedtest Intelligence, disponíveis no repositório público da Amazon Web Services (AWS S3). Os dados da Ookla são organizados em uma grade global de mosaicos regulares de aproximadamente 0,005° por lado (equivalentes a cerca de 610 metros no equador). Cada mosaico representa uma área na qual se calcula a média de múltiplas medições individuais de testes de velocidade, incluindo velocidades de download e upload, latência e consistência de conexão. Este sistema garante uma resolução homogênea e permite comparar a conectividade realmente experimentada pelos usuários em diferentes lugares.\n\nOs dados foram baixados, filtrados e consolidados integrando os registros trimestrais de 2025 correspondentes aos serviços de internet fixa (fixed tiles) e móvel (mobile tiles). Cada mosaico representa médias derivadas de milhões de testes de velocidade voluntários realizados por usuários em diferentes pontos da região, o que proporciona uma medição empírica e comparável da experiência real de conectividade.\n\n**Limitação importante:** Só há dados disponíveis em localizações onde os usuários realizaram ativamente testes de velocidade. Nem todas as áreas têm cobertura de testes, e desconhecem-se as razões pelas quais os usuários realizam estes testes. É possível que os testes ocorram com maior frequência quando os usuários experimentam problemas de conectividade, o que significa que as velocidades medidas podem não representar o desempenho típico ou ótimo nessas áreas. A ausência de dados não indica necessariamente falta de conectividade, mas sim ausência de medições voluntárias. A informação foi simplificada para sua publicação.\n\n * Muito Baixa (0-20.000 kbps / 0-20 Mbps): Insuficiente para a maioria das atividades modernas. Pode suportar navegação básica e mensagens, mas tem dificuldades com streaming de vídeo ou videochamadas.\n * Baixa (20.000-50.000 kbps / 20-50 Mbps): Adequada para atividades básicas como streaming de vídeo em definição padrão, navegação web e e-mail. Pode apresentar problemas com múltiplos usuários simultâneos ou conteúdo em alta definição.\n * Média (50.000-150.000 kbps / 50-150 Mbps): Apropriada para a maioria das necessidades domésticas incluindo streaming de vídeo HD, videoconferências e downloads moderados de arquivos. Suporta múltiplos dispositivos simultaneamente.\n * Boa (150.000-500.000 kbps / 150-500 Mbps): Conexão de alta qualidade que suporta streaming 4K, transferências de arquivos grandes, jogos online e múltiplos usuários concorrentes sem degradação do desempenho.\n * Muito Boa (500.000-2.000.000 kbps / 500-2.000 Mbps): Conectividade excelente para aplicações exigentes, trabalho profissional, múltiplos streams 4K, transferências rápidas de arquivos grandes e uso extensivo de dispositivos simultâneos.\n\n**Fonte:**  \nOokla. (2025). Speedtest Intelligence® – Global Fixed and Mobile Broadband Performance Data (Q1–Q3 2025). Disponível em: https://registry.opendata.aws/speedtest-global-performance/  \nFormato do dado: Parquet; Projeção: WGS 84 (EPSG:4326)\n\n**Informação adicional:**  \nOokla Speedtest Intelligence Methodology — Ookla (2020). Descrição metodológica oficial de como coletam e processam seus dados. https://www.gsma.com/get-involved/gsma_resources/how-ookla-ensures-accurate-reliable-data-a-guide-to-our-metrics-and-methodology-updated-for-2020/\n\nThe Importance of Contextualization of Crowdsourced Active Speed Test Measurements — Paul U., Liu J., Gu M., Gupta A. & Belding E. (2022). ACM Internet Measurement Conference (IMC '22). https://arxiv.org/abs/2310.16136\n\nA Comparative Analysis of Ookla Speedtest and Measurement Labs Network Diagnostic Test (NDT7) — MacMillan K., Mangla T., Saxon J., Marwell N.P., Feamster N. (2022). https://arxiv.org/abs/2205.12376\n\nNetwork Performance Measurements – Speed Test Datasets — Broadband Mapping Coalition (2022). Avaliação de bases de dados de desempenho de rede, incluindo Ookla. https://broadbandmappingcoalition.org/assessing-available-databases-network-performance-measurements-speed-test-datasets/",
+        "description_short_en": "Polygonal tile layer showing average internet speed test results during 2025, based on voluntary measurements from Ookla Speedtest users. Each tile displays averaged download/upload speeds, latency, and connection consistency from real user tests. Data exists only where users performed tests, which may occur more frequently in areas with connectivity issues, potentially not representing typical speeds.",
+        "description_short_es": "Capa de teselas poligonales que muestran resultados promedio de tests de velocidad de internet durante 2025, basada en mediciones voluntarias de usuarios de Ookla Speedtest. Cada tesela muestra velocidades promedio de descarga/carga, latencia y consistencia de conexión de tests reales de usuarios. Solo hay datos donde los usuarios realizaron tests, que pueden ocurrir más frecuentemente en áreas con problemas de conectividad, potencialmente no representando velocidades habituales.",
+        "description_short_pt": "Camada de mosaicos poligonais que mostram resultados médios de testes de velocidade de internet durante 2025, baseada em medições voluntárias de usuários do Ookla Speedtest. Cada mosaico exibe velocidades médias de download/upload, latência e consistência de conexão de testes reais de usuários. Só há dados onde os usuários realizaram testes, que podem ocorrer com maior frequência em áreas com problemas de conectividade, potencialmente não representando velocidades habituais.",
+        "visualization_types": [
+            "map"
+        ],
+        "resource": {
+            "name": "",
+            "type": "imagery",
+            "column": [
+            ],
+            "layer_id": "0",
+            "rasterFunction": {
+                "functionName": "Colormap",
+                "functionArguments": {
+                    "colormap": [
+                        [
+                            1,
+                            229,
+                            240,
+                            249
+                        ],
+                        [
+                            2,
+                            166,
+                            206,
+                            227
+                        ],
+                        [
+                            3,
+                            75,
+                            151,
+                            201
+                        ],
+                        [
+                            4,
+                            38,
+                            83,
+                            111
+                        ],
+                        [
+                            5,
+                            8,
+                            48,
+                            107
+                        ]
+                    ],
+                    "raster": {
+                        "functionName": "Remap",
+                        "functionArguments": {
+                            "inputRanges": [
+                                0,
+                                20000,
+                                20000,
+                                50000,
+                                50000,
+                                150000,
+                                150000,
+                                500000,
+                                500000,
+                                2000000
+                            ],
+                            "outputValues": [
+                                1,
+                                2,
+                                3,
+                                4,
+                                5
+                            ],
+                            "raster": "$$"
+                        }
+                    }
+                },
+                "outputPixelType": "U8"
+            },
+            "legend": {
+                "type": "basic",
+                "items": [
+                    {
+                        "label": "Very Low",
+                        "color": "#E5F0F9"
+                    },
+                    {
+                        "label": "Low",
+                        "color": "#A6CEE3"
+                    },
+                    {
+                        "label": "Average",
+                        "color": "#4B97C9"
+                    },
+                    {
+                        "label": "Good",
+                        "color": "#26536F"
+                    },
+                    {
+                        "label": "Very good",
+                        "color": "#08306B"
+                    }
+                ]
+            },
+            "url": "https://atlas.iadb.org/image/rest/services/Imagery/Mobile_Network_Speed_Test_Results/ImageServer",
+            "query_numeric": "",
+            "query_table": "",
+            "query_chart": "",
+            "query_ai": "",
+            "popupTemplate": ""
+        }
+    },
+    {
+        "id": 165,
+        "subtopic_id": 25,
+        "order": 56,
+        "Active": 1,
+        "name_en": "Home Internet Speed Test Results",
+        "name_es": "Resultados de Velocidad de Internet Fijo",
+        "name_pt": "Resultados de Velocidade de Internet Fixa",
+        "unit_en": "",
+        "unit_es": "",
+        "unit_pt": "",
+        "description_en": "Polygonal tile layer representing average internet speed test results in the Amazon during 2025, based on voluntary measurements conducted by users of the Ookla Speedtest Intelligence platform. This information shows, with homogeneous geographic resolution, the spatial distribution of actual connectivity measurements in a territory marked by vast distances and dispersed human settlements. Its visualization helps identify areas where users experience lower speeds or poorer connection quality, relevant for evaluating the digital divide and planning connectivity strategies that improve the social and economic integration of Amazonian communities.\n\nThese layers are a proprietary compilation by AmazoniaForever360+, 2025, prepared from Ookla Speedtest Intelligence open datasets, available in the Amazon Web Services (AWS S3) public repository. Ookla data is organized in a global grid of regular tiles approximately 0.005° per side (equivalent to about 610 meters at the equator). Each tile represents an area in which multiple individual speed test measurements are averaged, including download and upload speeds, latency, and connection consistency. This system ensures homogeneous resolution and allows comparison of actual user-experienced connectivity across different locations.\n\nThe data was downloaded, filtered, and consolidated by integrating quarterly records from 2025 corresponding to fixed internet services (fixed tiles) and mobile services (mobile tiles). Each tile represents averages derived from millions of voluntary speed tests conducted by users at different points in the region, providing an empirical and comparable measurement of the actual connectivity experience.\n\n**Important limitation:** Data is only available in locations where users actively performed speed tests. Not all areas have test coverage, and the reasons why users conduct speed tests are unknown. It is possible that tests occur more frequently when users experience connectivity problems, which means the measured speeds may not represent typical or optimal performance in those areas. The absence of data does not necessarily indicate lack of connectivity, but rather the absence of voluntary measurements. The information was simplified for publication.\n\n\n * Very Low (0-20,000 kbps / 0-20 Mbps): Insufficient for most modern activities. May support basic browsing and messaging, but struggles with video streaming or video calls.  \n * Low (20,000-50,000 kbps / 20-50 Mbps): Suitable for basic activities like standard definition video streaming, web browsing, and email. May experience issues with multiple simultaneous users or high-definition content.\n * Average (50,000-150,000 kbps / 50-150 Mbps): Adequate for most household needs including HD video streaming, video conferencing, and moderate file downloads. Supports multiple devices simultaneously.  \n * Good (150,000-500,000 kbps / 150-500 Mbps): High-quality connection supporting 4K streaming, large file transfers, online gaming, and multiple concurrent users without performance degradation.  \n * Very Good (500,000-2,000,000 kbps / 500-2,000 Mbps): Excellent connectivity for demanding applications, professional work, multiple 4K streams, rapid large file transfers, and extensive simultaneous device usage.  \n\n**Source:**  \nOokla. (2025). Speedtest Intelligence® – Global Fixed and Mobile Broadband Performance Data (Q1–Q3 2025). Available at: https://registry.opendata.aws/speedtest-global-performance/  \nData format: Parquet; Projection: WGS 84 (EPSG:4326)\n\n**Additional Information:**  \nOokla Speedtest Intelligence Methodology — Ookla (2020). Official methodological description of how they collect and process their data. https://www.gsma.com/get-involved/gsma_resources/how-ookla-ensures-accurate-reliable-data-a-guide-to-our-metrics-and-methodology-updated-for-2020/\n\nThe Importance of Contextualization of Crowdsourced Active Speed Test Measurements — Paul U., Liu J., Gu M., Gupta A. & Belding E. (2022). ACM Internet Measurement Conference (IMC '22). https://arxiv.org/abs/2310.16136\n\nA Comparative Analysis of Ookla Speedtest and Measurement Labs Network Diagnostic Test (NDT7) — MacMillan K., Mangla T., Saxon J., Marwell N.P., Feamster N. (2022). https://arxiv.org/abs/2205.12376\n\nNetwork Performance Measurements – Speed Test Datasets — Broadband Mapping Coalition (2022). Evaluation of network performance databases, including Ookla. https://broadbandmappingcoalition.org/assessing-available-databases-network-performance-measurements-speed-test-datasets/",
+        "description_es": "Capa de teselas poligonales que representan resultados promedio de tests de velocidad de internet en la Amazonia durante el año 2025, basada en mediciones voluntarias realizadas por usuarios de la plataforma Ookla Speedtest Intelligence. Esta información muestra, con resolución geográfica homogénea, la distribución espacial de las mediciones reales de conectividad en un territorio marcado por grandes distancias y dispersión de los asentamientos humanos. Su visualización ayuda a identificar áreas donde los usuarios experimentan velocidades más bajas o peor calidad de conexión, relevantes para evaluar la brecha digital y planificar estrategias de conectividad que mejoren la integración social y económica de las comunidades amazónicas.\n\nEstas capas son una compilación propia de AmazoniaForever360+, 2025, elaboradas a partir de los conjuntos de datos abiertos de Ookla Speedtest Intelligence, disponibles en el repositorio público de Amazon Web Services (AWS S3). Los datos de Ookla se organizan en una cuadrícula global de teselas regulares de aproximadamente 0,005° por lado (equivalentes a unos 610 metros en el ecuador). Cada tesela representa un área en la que se promedian múltiples mediciones individuales de tests de velocidad, incluyendo velocidades de descarga y carga, latencia y consistencia de conexión. Este sistema garantiza una resolución homogénea y permite comparar la conectividad experimentada realmente por los usuarios en distintos lugares.\n\nLos datos fueron descargados, filtrados y consolidados integrando los registros trimestrales de 2025 correspondientes a los servicios de internet fijo (fixed tiles) y móvil (mobile tiles). Cada tesela representa promedios derivados de millones de tests de velocidad voluntarios realizados por usuarios en distintos puntos de la región, lo que proporciona una medición empírica y comparable de la experiencia real de conectividad.\n\n**Limitación importante:** Solo hay datos disponibles en ubicaciones donde los usuarios realizaron activamente tests de velocidad. No todas las áreas tienen cobertura de tests, y se desconocen las razones por las que los usuarios realizan estos tests. Es posible que los tests ocurran con mayor frecuencia cuando los usuarios experimentan problemas de conectividad, lo que significa que las velocidades medidas pueden no representar el rendimiento típico u óptimo en esas áreas. La ausencia de datos no indica necesariamente falta de conectividad, sino ausencia de mediciones voluntarias. La información fue simplificada para su publicación.\n\n * Muy Baja (0-20.000 kbps / 0-20 Mbps): Insuficiente para la mayoría de actividades modernas. Puede soportar navegación básica y mensajería, pero tiene dificultades con streaming de video o videollamadas.\n * Baja (20.000-50.000 kbps / 20-50 Mbps): Adecuada para actividades básicas como streaming de video en definición estándar, navegación web y correo electrónico. Puede presentar problemas con múltiples usuarios simultáneos o contenido en alta definición.\n * Media (50.000-150.000 kbps / 50-150 Mbps): Apropiada para la mayoría de necesidades domésticas incluyendo streaming de video HD, videoconferencias y descargas moderadas de archivos. Soporta múltiples dispositivos simultáneamente.\n * Buena (150.000-500.000 kbps / 150-500 Mbps): Conexión de alta calidad que soporta streaming 4K, transferencias de archivos grandes, juegos en línea y múltiples usuarios concurrentes sin degradación del rendimiento.\n * Muy Buena (500.000-2.000.000 kbps / 500-2.000 Mbps): Conectividad excelente para aplicaciones exigentes, trabajo profesional, múltiples streams 4K, transferencias rápidas de archivos grandes y uso extensivo de dispositivos simultáneos.\n\n**Fuente:**  \nOokla. (2025). Speedtest Intelligence® – Global Fixed and Mobile Broadband Performance Data (Q1–Q3 2025). Disponible en: https://registry.opendata.aws/speedtest-global-performance/  \nFormato del dato: Parquet; Proyección: WGS 84 (EPSG:4326)\n\n**Información adicional:**  \nOokla Speedtest Intelligence Methodology — Ookla (2020). Descripción metodológica oficial de cómo recogen y procesan sus datos. https://www.gsma.com/get-involved/gsma_resources/how-ookla-ensures-accurate-reliable-data-a-guide-to-our-metrics-and-methodology-updated-for-2020/\n\nThe Importance of Contextualization of Crowdsourced Active Speed Test Measurements — Paul U., Liu J., Gu M., Gupta A. & Belding E. (2022). ACM Internet Measurement Conference (IMC '22). https://arxiv.org/abs/2310.16136\n\nA Comparative Analysis of Ookla Speedtest and Measurement Labs Network Diagnostic Test (NDT7) — MacMillan K., Mangla T., Saxon J., Marwell N.P., Feamster N. (2022). https://arxiv.org/abs/2205.12376\n\nNetwork Performance Measurements – Speed Test Datasets — Broadband Mapping Coalition (2022). Evaluación de bases de datos de performance de red, incluyendo Ookla. https://broadbandmappingcoalition.org/assessing-available-databases-network-performance-measurements-speed-test-datasets/",
+        "description_pt": "Camada de mosaicos poligonais que representam resultados médios de testes de velocidade de internet na Amazônia durante o ano de 2025, baseada em medições voluntárias realizadas por usuários da plataforma Ookla Speedtest Intelligence. Esta informação mostra, com resolução geográfica homogênea, a distribuição espacial das medições reais de conectividade em um território marcado por grandes distâncias e dispersão dos assentamentos humanos. Sua visualização ajuda a identificar áreas onde os usuários experimentam velocidades mais baixas ou pior qualidade de conexão, relevantes para avaliar a lacuna digital e planejar estratégias de conectividade que melhorem a integração social e econômica das comunidades amazônicas.\n\nEstas camadas são uma compilação própria da AmazoniaForever360+, 2025, elaboradas a partir dos conjuntos de dados abertos do Ookla Speedtest Intelligence, disponíveis no repositório público da Amazon Web Services (AWS S3). Os dados da Ookla são organizados em uma grade global de mosaicos regulares de aproximadamente 0,005° por lado (equivalentes a cerca de 610 metros no equador). Cada mosaico representa uma área na qual se calcula a média de múltiplas medições individuais de testes de velocidade, incluindo velocidades de download e upload, latência e consistência de conexão. Este sistema garante uma resolução homogênea e permite comparar a conectividade realmente experimentada pelos usuários em diferentes lugares.\n\nOs dados foram baixados, filtrados e consolidados integrando os registros trimestrais de 2025 correspondentes aos serviços de internet fixa (fixed tiles) e móvel (mobile tiles). Cada mosaico representa médias derivadas de milhões de testes de velocidade voluntários realizados por usuários em diferentes pontos da região, o que proporciona uma medição empírica e comparável da experiência real de conectividade.\n\n**Limitação importante:** Só há dados disponíveis em localizações onde os usuários realizaram ativamente testes de velocidade. Nem todas as áreas têm cobertura de testes, e desconhecem-se as razões pelas quais os usuários realizam estes testes. É possível que os testes ocorram com maior frequência quando os usuários experimentam problemas de conectividade, o que significa que as velocidades medidas podem não representar o desempenho típico ou ótimo nessas áreas. A ausência de dados não indica necessariamente falta de conectividade, mas sim ausência de medições voluntárias. A informação foi simplificada para sua publicação.\n\n * Muito Baixa (0-20.000 kbps / 0-20 Mbps): Insuficiente para a maioria das atividades modernas. Pode suportar navegação básica e mensagens, mas tem dificuldades com streaming de vídeo ou videochamadas.\n * Baixa (20.000-50.000 kbps / 20-50 Mbps): Adequada para atividades básicas como streaming de vídeo em definição padrão, navegação web e e-mail. Pode apresentar problemas com múltiplos usuários simultâneos ou conteúdo em alta definição.\n * Média (50.000-150.000 kbps / 50-150 Mbps): Apropriada para a maioria das necessidades domésticas incluindo streaming de vídeo HD, videoconferências e downloads moderados de arquivos. Suporta múltiplos dispositivos simultaneamente.\n * Boa (150.000-500.000 kbps / 150-500 Mbps): Conexão de alta qualidade que suporta streaming 4K, transferências de arquivos grandes, jogos online e múltiplos usuários concorrentes sem degradação do desempenho.\n * Muito Boa (500.000-2.000.000 kbps / 500-2.000 Mbps): Conectividade excelente para aplicações exigentes, trabalho profissional, múltiplos streams 4K, transferências rápidas de arquivos grandes e uso extensivo de dispositivos simultâneos.\n\n**Fonte:**  \nOokla. (2025). Speedtest Intelligence® – Global Fixed and Mobile Broadband Performance Data (Q1–Q3 2025). Disponível em: https://registry.opendata.aws/speedtest-global-performance/  \nFormato do dado: Parquet; Projeção: WGS 84 (EPSG:4326)\n\n**Informação adicional:**  \nOokla Speedtest Intelligence Methodology — Ookla (2020). Descrição metodológica oficial de como coletam e processam seus dados. https://www.gsma.com/get-involved/gsma_resources/how-ookla-ensures-accurate-reliable-data-a-guide-to-our-metrics-and-methodology-updated-for-2020/\n\nThe Importance of Contextualization of Crowdsourced Active Speed Test Measurements — Paul U., Liu J., Gu M., Gupta A. & Belding E. (2022). ACM Internet Measurement Conference (IMC '22). https://arxiv.org/abs/2310.16136\n\nA Comparative Analysis of Ookla Speedtest and Measurement Labs Network Diagnostic Test (NDT7) — MacMillan K., Mangla T., Saxon J., Marwell N.P., Feamster N. (2022). https://arxiv.org/abs/2205.12376\n\nNetwork Performance Measurements – Speed Test Datasets — Broadband Mapping Coalition (2022). Avaliação de bases de dados de desempenho de rede, incluindo Ookla. https://broadbandmappingcoalition.org/assessing-available-databases-network-performance-measurements-speed-test-datasets/",
+        "description_short_en": "Polygonal tile layer showing average internet speed test results during 2025, based on voluntary measurements from Ookla Speedtest users. Each tile displays averaged download/upload speeds, latency, and connection consistency from real user tests. Data exists only where users performed tests, which may occur more frequently in areas with connectivity issues, potentially not representing typical speeds.",
+        "description_short_es": "Capa de teselas poligonales que muestran resultados promedio de tests de velocidad de internet durante 2025, basada en mediciones voluntarias de usuarios de Ookla Speedtest. Cada tesela muestra velocidades promedio de descarga/carga, latencia y consistencia de conexión de tests reales de usuarios. Solo hay datos donde los usuarios realizaron tests, que pueden ocurrir más frecuentemente en áreas con problemas de conectividad, potencialmente no representando velocidades habituales.",
+        "description_short_pt": "Camada de mosaicos poligonais que mostram resultados médios de testes de velocidade de internet durante 2025, baseada em medições voluntárias de usuários do Ookla Speedtest. Cada mosaico exibe velocidades médias de download/upload, latência e consistência de conexão de testes reais de usuários. Só há dados onde os usuários realizaram testes, que podem ocorrer com maior frequência em áreas com problemas de conectividade, potencialmente não representando velocidades habituais.",
+        "visualization_types": [
+            "map"
+        ],
+        "resource": {
+            "name": "",
+            "type": "imagery",
+            "column": [
+            ],
+            "layer_id": "0",
+            "rasterFunction": {
+                "functionName": "Colormap",
+                "functionArguments": {
+                    "colormap": [
+                        [
+                            1,
+                            229,
+                            240,
+                            249
+                        ],
+                        [
+                            2,
+                            166,
+                            206,
+                            227
+                        ],
+                        [
+                            3,
+                            75,
+                            151,
+                            201
+                        ],
+                        [
+                            4,
+                            38,
+                            83,
+                            111
+                        ],
+                        [
+                            5,
+                            8,
+                            48,
+                            107
+                        ]
+                    ],
+                    "raster": {
+                        "functionName": "Remap",
+                        "functionArguments": {
+                            "inputRanges": [
+                                0,
+                                20000,
+                                20000,
+                                50000,
+                                50000,
+                                150000,
+                                150000,
+                                500000,
+                                500000,
+                                2000000
+                            ],
+                            "outputValues": [
+                                1,
+                                2,
+                                3,
+                                4,
+                                5
+                            ],
+                            "raster": "$$"
+                        }
+                    }
+                },
+                "outputPixelType": "U8"
+            },
+            "legend": {
+                "type": "basic",
+                "items": [
+                    {
+                        "label": "Very Low",
+                        "color": "#E5F0F9"
+                    },
+                    {
+                        "label": "Low",
+                        "color": "#A6CEE3"
+                    },
+                    {
+                        "label": "Average",
+                        "color": "#4B97C9"
+                    },
+                    {
+                        "label": "Good",
+                        "color": "#26536F"
+                    },
+                    {
+                        "label": "Very good",
+                        "color": "#08306B"
+                    }
+                ]
+            },
+            "url": "https://atlas.iadb.org/image/rest/services/Imagery/Home_Internet_Speed_Test_Results/ImageServer",
+            "query_numeric": "",
+            "query_table": "",
+            "query_chart": "",
+            "query_ai": "",
+            "popupTemplate": ""
         }
     },
     {
@@ -9577,7 +9866,7 @@
     },
     {
         "id": 154,
-        "subtopic_id": 23,
+        "subtopic_id": 24,
         "order": 115,
         "Active": 1,
         "name_en": "Hydroelectric Power Plants",
@@ -9611,7 +9900,7 @@
     },
     {
         "id": 155,
-        "subtopic_id": 23,
+        "subtopic_id": 24,
         "order": 116,
         "Active": 1,
         "name_en": "Reservoirs and Artificial Water Bodies",
@@ -9645,7 +9934,7 @@
     },
     {
         "id": 156,
-        "subtopic_id": 23,
+        "subtopic_id": 24,
         "order": 117,
         "Active": 1,
         "name_en": "Barriers and Dams",
@@ -9700,74 +9989,6 @@
             "name": "GLOBENERGY",
             "type": "h3",
             "column": "GLOBENERGY",
-            "layer_id": "0",
-            "rasterFunction": "",
-            "legend": "",
-            "url": "",
-            "query_numeric": "",
-            "query_table": "",
-            "query_chart": "",
-            "query_ai": "",
-            "popupTemplate": ""
-        }
-    },
-    {
-        "id": 114,
-        "subtopic_id": 25,
-        "order": 114,
-        "Active": 1,
-        "name_en": "Fixed devices download speed",
-        "name_es": "Velocidad de descarga en dispositivos fijos",
-        "name_pt": "Velocidade de download em dispositivos fixos",
-        "unit_en": "kbps",
-        "unit_es": "kbps",
-        "unit_pt": "kbps",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "description_short_en": "Fixed devices. Average download speed in kilobits per second recorded in the grid.",
-        "description_short_es": "Dispositivos fijos. Velocidad media de descarga en kilobits por segundo registrada en la cuadrícula.",
-        "description_short_pt": "Dispositivos fixos. Velocidade média de download em kilobits por segundo registrada na grade.",
-        "visualization_types": [
-        ],
-        "resource": {
-            "name": "AMZ_CONNECTSTATUSFX_H3L6",
-            "type": "h3",
-            "column": "FXavd_kbps",
-            "layer_id": "0",
-            "rasterFunction": "",
-            "legend": "",
-            "url": "",
-            "query_numeric": "",
-            "query_table": "",
-            "query_chart": "",
-            "query_ai": "",
-            "popupTemplate": ""
-        }
-    },
-    {
-        "id": 115,
-        "subtopic_id": 25,
-        "order": 115,
-        "Active": 1,
-        "name_en": "Mobile download speed",
-        "name_es": "Velocidad de descarga móvil",
-        "name_pt": "Velocidade de download móvel",
-        "unit_en": "kbps",
-        "unit_es": "kbps",
-        "unit_pt": "kbps",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "description_short_en": "Mobile devices. Average download speed in kilobits per second recorded in the grid.",
-        "description_short_es": "Dispositivos móviles. Velocidad media de descarga en kilobits por segundo registrada en la cuadrícula.",
-        "description_short_pt": "Dispositivos móveis. Velocidade média de download em kilobits por segundo registrada na grade.",
-        "visualization_types": [
-        ],
-        "resource": {
-            "name": "AMZ_CONNECTSTATUSMO_H3L6",
-            "type": "h3",
-            "column": "MOavd_kbps",
             "layer_id": "0",
             "rasterFunction": "",
             "legend": "",
