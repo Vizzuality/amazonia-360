@@ -11,7 +11,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
+
+import { sdk } from "@/services/sdk";
 
 const formSchema = z.object({
   email: z.email("Please enter a valid email address"),
@@ -19,23 +21,35 @@ const formSchema = z.object({
 });
 
 export function SignInForm({ className, ...props }: React.ComponentProps<"div">) {
+  const router = useRouter();
   const form = useForm({
     defaultValues: {
       email: "",
       password: "",
     },
     validators: {
-      onSubmit: formSchema,
+      onChange: formSchema,
     },
     onSubmit: async ({ value }) => {
-      // Simulate an API call
-      toast("You submitted the following values:", {
-        description: (
-          <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
-            <code>{JSON.stringify(value, null, 2)}</code>
-          </pre>
-        ),
-      });
+      toast.promise(
+        sdk
+          .login({
+            collection: "users",
+            data: {
+              email: value.email,
+              password: value.password,
+            },
+          })
+          .then(() => {
+            router.push("/my-area");
+          }),
+        {
+          loading: "Logging in...",
+          success: "Logged in successfully!",
+          error: "Failed to log in. Please check your credentials and try again.",
+          duration: 2000,
+        },
+      );
     },
   });
 
@@ -77,6 +91,7 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
               <form.Field name="password">
                 {(field) => {
                   const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
                   return (
                     <Field data-invalid={isInvalid}>
                       <FieldLabel htmlFor={field.name}>Password</FieldLabel>

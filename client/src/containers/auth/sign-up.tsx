@@ -9,7 +9,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
+
+import { sdk } from "@/services/sdk";
 
 const formSchema = z
   .object({
@@ -23,6 +25,8 @@ const formSchema = z
   });
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const router = useRouter();
+
   const form = useForm({
     defaultValues: {
       email: "",
@@ -33,14 +37,26 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      // Simulate an API call
-      toast("You submitted the following values:", {
-        description: (
-          <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
-            <code>{JSON.stringify(value, null, 2)}</code>
-          </pre>
-        ),
-      });
+      toast.promise(
+        sdk
+          .create({
+            collection: "users",
+            data: {
+              email: value.email,
+              password: value.password,
+              role: "user",
+            },
+          })
+          .then(() => {
+            router.push("/auth/sign-in");
+          }),
+        {
+          loading: "Creating your account...",
+          success: "Account created successfully!",
+          error: "Failed to create account. Please try again.",
+          duration: 2000,
+        },
+      );
     },
   });
 
