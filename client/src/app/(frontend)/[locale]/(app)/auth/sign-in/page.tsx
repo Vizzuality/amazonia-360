@@ -3,6 +3,8 @@ import { Metadata } from "next";
 import { Locale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
+import { SignInForm } from "@/containers/auth/sign-in";
+
 type Params = Promise<{ locale: Locale }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
@@ -21,5 +23,11 @@ export default async function SignInPage({ params }: { params: Params }) {
   // Enable static rendering
   setRequestLocale(locale);
 
-  return <>Sign In Page - locale: {locale}</>;
+  return (
+    <section className="flex grow items-center justify-center">
+      <div className="mx-auto max-w-sm">
+        <SignInForm />
+      </div>
+    </section>
+  );
 }
