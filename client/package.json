@@ -2,6 +2,7 @@
   "name": "amazonia-360",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build && cp -r public .next/standalone/public && cp -r .next/static .next/standalone/.next",
@@ -11,7 +12,8 @@
     "types": "orval --config ./orval.config.ts",
     "prepare": "cd .. && husky client/.husky",
     "test": "jest --runInBand --forceExit",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "payload": "payload"
   },
   "dependencies": {
     "@arcgis/core": "4.30.9",
