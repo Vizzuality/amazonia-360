@@ -68,6 +68,9 @@ importers:
       '@payloadcms/richtext-lexical':
         specifier: 3.60.0
         version: 3.60.0(@faceless-ui/modal@3.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@faceless-ui/scroll-info@2.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@payloadcms/next@3.60.0(@types/react@19.2.2)(graphql@16.11.0)(monaco-editor@0.54.0)(next@15.5.6(@babel/core@7.28.5)(babel-plugin-macros@3.1.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.77.4))(payload@3.60.0(graphql@16.11.0)(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(@types/react@19.2.2)(monaco-editor@0.54.0)(next@15.5.6(@babel/core@7.28.5)(babel-plugin-macros@3.1.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.77.4))(payload@3.60.0(graphql@16.11.0)(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)(yjs@13.6.27)
+      '@payloadcms/sdk':
+        specifier: 3.60.0
+        version: 3.60.0(graphql@16.11.0)(typescript@5.9.3)
       '@radix-ui/react-alert-dialog':
         specifier: 1.1.15
         version: 1.1.15(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -2033,6 +2036,9 @@ packages:
       payload: 3.60.0
       react: ^19.0.0 || ^19.0.0-rc-65a56d0e-20241020
       react-dom: ^19.0.0 || ^19.0.0-rc-65a56d0e-20241020
+
+  '@payloadcms/sdk@3.60.0':
+    resolution: {integrity: sha512-B5uvWQQ0lMFErnC7n6xPOAKP+FMxGYDmI+f1RThuntIwvAHDbeBdJyWeLiNpqfrNcLIjr4pxqe1jeTOIVZEo5Q==}
 
   '@payloadcms/translations@3.60.0':
     resolution: {integrity: sha512-fuc/FwLOoPNWGcDuOWQ+blCDRDMCDb9/ZMoa447VVUhqmTIL0CXh0SIKdbMuhpyvq5nevQ6fxUOlV/pUj0A32A==}
@@ -9790,6 +9796,17 @@ snapshots:
       - supports-color
       - typescript
       - yjs
+
+  '@payloadcms/sdk@3.60.0(graphql@16.11.0)(typescript@5.9.3)':
+    dependencies:
+      payload: 3.60.0(graphql@16.11.0)(typescript@5.9.3)
+      qs-esm: 7.0.2
+      ts-essentials: 10.0.3(typescript@5.9.3)
+    transitivePeerDependencies:
+      - bufferutil
+      - graphql
+      - typescript
+      - utf-8-validate
 
   '@payloadcms/translations@3.60.0':
     dependencies:
