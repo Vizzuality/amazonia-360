@@ -19,9 +19,6 @@ const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
 export default buildConfig({
-  graphQL: {
-    disable: true,
-  },
   admin: {
     user: Users.slug,
     importMap: {
@@ -29,17 +26,20 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Reports],
-  editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || "",
-  serverURL: env.NEXT_PUBLIC_URL,
-  typescript: {
-    outputFile: path.resolve(dirname, "payload-types.ts"),
-  },
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URI || "",
     },
   }),
+  editor: lexicalEditor(),
+  graphQL: {
+    disable: true,
+  },
+  secret: process.env.PAYLOAD_SECRET || "",
+  serverURL: env.NEXT_PUBLIC_URL,
+  typescript: {
+    outputFile: path.resolve(dirname, "payload-types.ts"),
+  },
   sharp,
   plugins: [
     // storage-adapter-placeholder
