@@ -289,5 +289,7 @@
   "pdf-report-generating-subtitle": "Your report is being generated. This may take some time depending on the size of your selected area and the number of indicators included.",
   "indicator-webshot-loading": "Exporting PNG for {name}",
   "indicator-webshot-error": "There was an error exporting the PNG for {name}. Please try again.",
-  "indicator-webshot-success": "Successfully exported PNG for {name}"
+  "indicator-webshot-success": "Successfully exported PNG for {name}",
+  "auth-sign-in": "Sign In",
+  "auth-sign-up": "Sign Up"
 }

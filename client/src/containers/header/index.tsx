@@ -55,9 +55,14 @@ export default function Header() {
     return (
       <>
         {isHome && (
-          <Link href="/report" className="text-sm text-foreground hover:text-cyan-500">
-            {t("header-report-tool")}
-          </Link>
+          <>
+            <Link href="/report" className="text-sm text-foreground hover:text-cyan-500">
+              {t("header-report-tool")}
+            </Link>
+            <Link href="/auth/sign-in" className="text-sm text-foreground hover:text-cyan-500">
+              {t("auth-sign-in")}
+            </Link>
+          </>
         )}
         {!location && isReportSub && <DesktopDrawingTools />}
         {location && isReportSub && <ConfirmLocation />}
