@@ -10,7 +10,8 @@
     "check": "pnpm -r check",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
-    "splitenv": "node splitenv.mjs .env API__ CLIENT__ WEBSHOT__"
+    "splitenv": "node scripts/splitenv.mts .env API CLIENT WEBSHOT",
+    "test:splitenv": "vitest run scripts/splitenv.test.mts"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.0",

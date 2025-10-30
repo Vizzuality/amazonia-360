@@ -28,9 +28,9 @@ This `.env` file at the root of the project repository is _the source of truth_
 for all the environment variables used by the platform when running it locally
 via Docker Compose.
 
-A script is provided (`splitenv.mjs`) to create the relevant `.env` files in
-each service's directory. This script can be run from the root directory as
-follows:
+A script is provided (`scripts/splitenv.mts`) to create the relevant `.env`
+files in each service's directory. This script can be run from the root
+directory as follows:
 
 ```
 pnpm splitenv
