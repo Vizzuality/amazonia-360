@@ -3,8 +3,6 @@ import Github from "next-auth/providers/github";
 
 import { PayloadAuthAdapter } from "@/lib/auth/adapter";
 
-import config from "@/payload.config";
-
 export const { handlers, signIn, signOut, auth } = NextAuth({
   basePath: "/local-api/auth",
   pages: {
@@ -12,7 +10,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signOut: "/auth/sign-out",
     error: "/auth/error",
   },
-  adapter: await PayloadAuthAdapter({ config: await config }),
+  adapter: PayloadAuthAdapter(),
   providers: [
     Github({
       clientId: process.env.GITHUB_CLIENT_ID!,
@@ -20,4 +18,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   session: { strategy: "jwt" },
+  callbacks: {
+    async session({ session, token }) {
+      return { ...session, user: { ...session.user, id: token.sub } };
+    },
+  },
 });

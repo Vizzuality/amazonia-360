@@ -1,4 +1,6 @@
-import { getPayload, SanitizedConfig } from "payload";
+import { BasePayload, getPayload, SanitizedConfig } from "payload";
+
+import config from "@payload-config";
 
 import type { Adapter, AdapterAccount, AdapterUser, AdapterAccountType } from "@auth/core/adapters";
 
@@ -19,24 +21,18 @@ const convertPayloadAccountToAdapterAccount = (account: Account): AdapterAccount
   return { type, userId, provider, providerAccountId };
 };
 
-export interface PayloadAdapterOptions {
-  /**
-   * The Payload instance
-   */
-  config?: SanitizedConfig;
-}
+export function PayloadAuthAdapter(): Adapter {
+  let p: BasePayload | null = null;
 
-export async function PayloadAuthAdapter({ config }: PayloadAdapterOptions): Promise<Adapter> {
-  if (!config) {
-    throw new Error(
-      "PayloadAdapter requires either a `payload` instance or a `payloadConfig` to be provided",
-    );
-  }
-
-  const payload = await getPayload({ config });
+  const getPayloadInstance = async (config: Promise<SanitizedConfig>) => {
+    if (p) return p;
+    p = await getPayload({ config });
+    return p;
+  };
 
   return {
     createUser: async ({ id: _id, ...data }) => {
+      const payload = await getPayloadInstance(config);
       const user = await payload.create({
         collection: "users",
         data: {
@@ -51,6 +47,7 @@ export async function PayloadAuthAdapter({ config }: PayloadAdapterOptions): Pro
     },
 
     getUserByAccount: async (providerAccount) => {
+      const payload = await getPayloadInstance(config);
       const { provider, providerAccountId } = providerAccount;
       const accountResponse = await payload.find({
         collection: "accounts",
@@ -67,6 +64,7 @@ export async function PayloadAuthAdapter({ config }: PayloadAdapterOptions): Pro
     },
 
     updateUser: async ({ id, ...data }) => {
+      const payload = await getPayloadInstance(config);
       const updatedUser = await payload.update({
         collection: "users",
         id: Number(id),
@@ -81,6 +79,7 @@ export async function PayloadAuthAdapter({ config }: PayloadAdapterOptions): Pro
     },
 
     linkAccount: async (account) => {
+      const payload = await getPayloadInstance(config);
       const createdAccount = await payload.create({
         collection: "accounts",
         data: {
@@ -96,6 +95,7 @@ export async function PayloadAuthAdapter({ config }: PayloadAdapterOptions): Pro
     },
 
     getUser: async (id) => {
+      const payload = await getPayloadInstance(config);
       try {
         const user = await payload.findByID({
           collection: "users",
@@ -108,6 +108,7 @@ export async function PayloadAuthAdapter({ config }: PayloadAdapterOptions): Pro
     },
 
     getUserByEmail: async (email) => {
+      const payload = await getPayloadInstance(config);
       const userResponse = await payload.find({
         collection: "users",
         where: {
@@ -121,6 +122,7 @@ export async function PayloadAuthAdapter({ config }: PayloadAdapterOptions): Pro
     },
 
     getAccount: async (providerAccountId, provider) => {
+      const payload = await getPayloadInstance(config);
       const accountResponse = await payload.find({
         collection: "accounts",
         where: {

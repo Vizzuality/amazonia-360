@@ -7,4 +7,7 @@ import { Config } from "@/payload-types";
 // Pass your config from generated types as generic
 export const sdk = new PayloadSDK<Config>({
   baseURL: getAbsoluteURL("/api"),
+  baseInit: {
+    credentials: "include",
+  },
 });
