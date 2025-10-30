@@ -165,7 +165,9 @@ const generatePerPrefixDotenvFile = (
             .map(([key, value]) => {
               // If value contains newlines or quotes, wrap in quotes and escape internal quotes
               if (value.includes("\n") || value.includes('"')) {
-                const escapedValue = value.replace(/"/g, '\\"');
+                const escapedValue = value
+                  .replace(/\\/g, "\\\\")
+                  .replace(/"/g, '\\"');
                 return `${key}="${escapedValue}"`;
               }
               return `${key}=${value}`;
