@@ -1,6 +1,8 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
+import { signIn } from "next-auth/react";
+import { LuGithub } from "react-icons/lu";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -122,6 +124,19 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <Link href="/auth/sign-up">Sign up</Link>
                 </FieldDescription>
+              </Field>
+
+              <Field>
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => {
+                    signIn("github", { callbackUrl: "/my-area" });
+                  }}
+                >
+                  <LuGithub className="mr-2 h-4 w-4" />
+                  Continue with GitHub
+                </Button>
               </Field>
             </FieldGroup>
           </form>
