@@ -7,7 +7,7 @@ import {
   existsSync,
 } from "node:fs";
 import { join, dirname } from "node:path";
-import { execSync } from "node:child_process";
+import { execFileSync, execSync, spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -38,8 +38,9 @@ describe("splitenv.mts", () => {
   const runScript = (args: string[], cwd?: string) => {
     const workDir = cwd || testDir;
     try {
-      return execSync(
-        `node --experimental-strip-types --no-warnings ${SCRIPT_PATH} ${args.join(" ")}`,
+      return execFileSync(
+        "node",
+        ["--experimental-strip-types", "--no-warnings", SCRIPT_PATH, ...args],
         {
           cwd: workDir,
           encoding: "utf-8",
@@ -53,8 +54,9 @@ describe("splitenv.mts", () => {
 
   describe("argument parsing and validation", () => {
     it("should show help with --help flag", () => {
-      const output = execSync(
-        `node --experimental-strip-types --no-warnings ${SCRIPT_PATH} --help`,
+      const output = execFileSync(
+        "node",
+        ["--experimental-strip-types", "--no-warnings", SCRIPT_PATH, "--help"],
         {
           encoding: "utf-8",
         },
@@ -399,8 +401,15 @@ describe("splitenv.mts", () => {
       mkdirSync(apiDir);
 
       writeFileSync(envFile, "API__KEY=value\n");
-      const output = execSync(
-        `node --experimental-strip-types --no-warnings ${SCRIPT_PATH} ${envFile} API`,
+      const output = execFileSync(
+        "node",
+        [
+          "--experimental-strip-types",
+          "--no-warnings",
+          SCRIPT_PATH,
+          envFile,
+          "API",
+        ],
         {
           cwd: testDir,
           encoding: "utf-8",
@@ -416,19 +425,24 @@ describe("splitenv.mts", () => {
 
       writeFileSync(envFile, "API__KEY=value\n");
 
-      // Capture both stdout and stderr
-      let output = "";
-      try {
-        output = execSync(
-          `node --experimental-strip-types --no-warnings ${SCRIPT_PATH} ${envFile} API --verbose 2>&1`,
-          {
-            cwd: testDir,
-            encoding: "utf-8",
-          },
-        );
-      } catch (error: any) {
-        output = error.stdout || error.stderr || "";
-      }
+      // Use spawnSync to capture both stdout and stderr
+      const result = spawnSync(
+        "node",
+        [
+          "--experimental-strip-types",
+          "--no-warnings",
+          SCRIPT_PATH,
+          envFile,
+          "API",
+          "--verbose",
+        ],
+        {
+          cwd: testDir,
+          encoding: "utf-8",
+        },
+      );
+
+      const output = result.stdout + result.stderr;
 
       // Verbose mode shows the Map structure and parsed variable counts
       expect(output).toMatch(/Map\(\d+\)/);
