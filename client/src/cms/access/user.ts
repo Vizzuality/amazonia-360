@@ -5,7 +5,7 @@ export const userAccess: Access = ({ req: { user } }) => {
     return false;
   }
 
-  if (user.role === "admin") {
+  if (user.collection === "admins") {
     return true;
   }
 
