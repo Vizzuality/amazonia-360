@@ -36,7 +36,7 @@ export async function PayloadAuthAdapter({ config }: PayloadAdapterOptions): Pro
   const payload = await getPayload({ config });
 
   return {
-    createUser: async ({ id, ...data }) => {
+    createUser: async ({ id: _id, ...data }) => {
       const user = await payload.create({
         collection: "users",
         data: {
@@ -102,7 +102,7 @@ export async function PayloadAuthAdapter({ config }: PayloadAdapterOptions): Pro
           id: Number(id),
         });
         return covertPayloadUserToAdapterUser(user);
-      } catch (error) {
+      } catch (_error) {
         return null;
       }
     },
