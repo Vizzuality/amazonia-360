@@ -11,6 +11,7 @@ import sharp from "sharp";
 
 import { env } from "@/env.mjs";
 
+import { Admins } from "@/cms/collections/Admins";
 import { Media } from "@/cms/collections/Media";
 import { Reports } from "@/cms/collections/Reports";
 import { Users } from "@/cms/collections/Users";
@@ -20,12 +21,12 @@ const dirname = path.dirname(filename);
 
 export default buildConfig({
   admin: {
-    user: Users.slug,
+    user: Admins.slug,
     importMap: {
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Reports],
+  collections: [Admins, Users, Media, Reports],
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || "",
@@ -40,6 +41,7 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
+
   sharp,
   plugins: [
     // storage-adapter-placeholder
