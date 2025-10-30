@@ -9,7 +9,7 @@ import { lexicalEditor } from "@payloadcms/richtext-lexical";
 
 import sharp from "sharp";
 
-import { env } from "@/env.mjs";
+import { getAbsoluteURL } from "@/lib/url";
 
 import { Admins } from "@/cms/collections/Admins";
 import { Media } from "@/cms/collections/Media";
@@ -37,7 +37,7 @@ export default buildConfig({
     disable: true,
   },
   secret: process.env.PAYLOAD_SECRET || "",
-  serverURL: env.NEXT_PUBLIC_URL,
+  serverURL: getAbsoluteURL(""),
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
