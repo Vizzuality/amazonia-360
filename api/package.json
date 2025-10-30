@@ -1,0 +1,15 @@
+{
+  "name": "amazonia-360-api",
+  "version": "0.2.0",
+  "description": "API for the Amazonia 360 platform",
+  "scripts": {
+    "clean": "rimraf .mypy_cache dist .coverage .pytest_cache .env && uv run ruff clean",
+    "lint": "uv run ruff check --fix",
+    "format": "uv run ruff format",
+    "check": "uv run ruff check",
+    "test": "uv run pytest -vv --cov --color=yes",
+    "build": "uv build",
+    "dev": "uv run python -m uvicorn --host 0.0.0.0 --port 8000 app.main:app",
+    "preinstall": "uv sync"
+  }
+}
