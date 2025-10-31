@@ -20,6 +20,9 @@ import { Users } from "@/cms/collections/Users";
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
+const payloadBaseURL = getAbsoluteURL("");
+console.log("Payload Base URL:", payloadBaseURL);
+
 export default buildConfig({
   admin: {
     user: Admins.slug,
@@ -38,7 +41,7 @@ export default buildConfig({
     disable: true,
   },
   secret: process.env.PAYLOAD_SECRET || "",
-  serverURL: getAbsoluteURL(""),
+  serverURL: payloadBaseURL,
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
