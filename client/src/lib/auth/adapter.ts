@@ -6,6 +6,12 @@ import type { Adapter, AdapterAccount, AdapterUser, AdapterAccountType } from "@
 
 import { Account, User } from "@/payload-types";
 
+declare module "@auth/core/adapters" {
+  interface AdapterUser {
+    password?: string | null;
+  }
+}
+
 const covertPayloadUserToAdapterUser = (user: User): AdapterUser => {
   return {
     ...user,
@@ -33,14 +39,15 @@ export function PayloadAuthAdapter(): Adapter {
   return {
     createUser: async ({ id: _id, ...data }) => {
       const payload = await getPayloadInstance(config);
+
       const user = await payload.create({
         collection: "users",
         data: {
-          email: data.email,
           name: data.name,
           emailVerified: data.emailVerified ? data.emailVerified.toISOString() : null,
           image: data.image,
-          password: "password",
+          email: data.email,
+          password: data.password || undefined,
         },
       });
       return covertPayloadUserToAdapterUser(user);
@@ -65,6 +72,9 @@ export function PayloadAuthAdapter(): Adapter {
 
     updateUser: async ({ id, ...data }) => {
       const payload = await getPayloadInstance(config);
+
+      console.log(data);
+
       const updatedUser = await payload.update({
         collection: "users",
         id: Number(id),
@@ -73,6 +83,7 @@ export function PayloadAuthAdapter(): Adapter {
           name: data.name,
           emailVerified: data.emailVerified ? data.emailVerified.toISOString() : null,
           image: data.image,
+          password: data.password || undefined,
         },
       });
       return covertPayloadUserToAdapterUser(updatedUser);

@@ -15,8 +15,6 @@ import { Input } from "@/components/ui/input";
 
 import { Link, useRouter } from "@/i18n/navigation";
 
-import { sdk } from "@/services/sdk";
-
 const formSchema = z.object({
   email: z.email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
@@ -34,17 +32,13 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
     },
     onSubmit: async ({ value }) => {
       toast.promise(
-        sdk
-          .login({
-            collection: "users",
-            data: {
-              email: value.email,
-              password: value.password,
-            },
-          })
-          .then(() => {
-            router.push("/my-area");
-          }),
+        signIn("credentials", {
+          redirect: false,
+          email: value.email,
+          password: value.password,
+        }).then(() => {
+          router.push("/my-area");
+        }),
         {
           loading: "Logging in...",
           success: "Logged in successfully!",

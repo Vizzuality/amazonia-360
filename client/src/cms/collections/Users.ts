@@ -17,7 +17,6 @@ export const Users: CollectionConfig = {
         name: "authjs",
         authenticate: async ({ payload }) => {
           const session = await auth();
-          console.log({ session });
 
           if (!session || !session?.user?.id) {
             return { user: null };

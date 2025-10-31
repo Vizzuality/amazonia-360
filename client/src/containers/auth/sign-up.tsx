@@ -1,6 +1,7 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
+import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -47,7 +48,13 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             },
           })
           .then(() => {
-            router.push("/auth/sign-in");
+            signIn("credentials", {
+              redirect: false,
+              email: value.email,
+              password: value.password,
+            }).then(() => {
+              router.push("/my-area");
+            });
           }),
         {
           loading: "Creating your account...",
