@@ -10,7 +10,7 @@
     "check": "pnpm -r check",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
-    "splitenv": "node scripts/splitenv.mts .env API CLIENT WEBSHOT",
+    "splitenv": "node scripts/splitenv.mts .env API CLIENT DATABASE WEBSHOT",
     "test:splitenv": "vitest run scripts/splitenv.test.mts"
   },
   "devDependencies": {

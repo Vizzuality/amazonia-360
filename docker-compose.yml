@@ -59,6 +59,25 @@ services:
     networks:
       - amazonia360-network
 
+  database:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: ./database/Dockerfile
+    profiles:
+      - development
+      - local
+      - science
+    volumes:
+      - amazonia360-db-data:/var/lib/postgresql/data
+    ports:
+      - "${DATABASE__POSTGRES_SERVICE_PORT:-5432}:5432"
+    env_file:
+      - path: ./database/.env
+        required: true
+    networks:
+      - amazonia360-network
+
   test:
     build:
       context: ./api
