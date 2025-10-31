@@ -10,8 +10,6 @@ import { useSyncLocation } from "@/app/store";
 
 import { useRegisterPage } from "@/containers/webshot/pdf-report/hooks";
 
-import { Badge } from "@/components/ui/badge";
-
 interface PdfHeaderProps {
   transparent?: boolean;
   title?: string;
@@ -65,9 +63,6 @@ export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
               </span>
             </div>
           </div>
-          <Badge className="text-xs lg:text-sm" variant="secondary">
-            Beta
-          </Badge>
         </div>
 
         <div>
