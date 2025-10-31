@@ -107,10 +107,10 @@ class H3TilesRepository:
         try:
             meta = load_meta(meta_path)
         except FileNotFoundError as e:
-            log.exception("Metadata file does not exist", e)
+            log.exception("Metadata file does not exist", exc_info=e)
             raise MetadataError("Metadata file does not exist") from e
         except ValidationError as e:
-            log.exception("Metadata file is not valid", e)
+            log.exception("Metadata file is not valid", exc_info=e)
             raise MetadataError("Metadata file is not valid") from e
         return meta
 
