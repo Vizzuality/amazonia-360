@@ -1,80 +1,124 @@
+"""
+Locust load testing file.
+
+This module dynamically generates load test tasks from request definitions.
+"""
+
 from locust import HttpUser, constant, task
 
 from config import settings
+from request_specs import AuthType, HttpMethod, RequestDefinition, get_all_requests
 
 
 class APIUser(HttpUser):
+    """API load test user.
+
+    Tasks are dynamically generated from request definitions.
+    """
+
     weight: int = 1
     host: str = settings.TARGET_INSTANCE_BASE_URL
-    token_auth_header: dict[str, str] | None = (
-        {"Authorization": f"Bearer {settings.ACCESS_TOKEN}"}
-        if settings.ACCESS_TOKEN
-        else None
-    )
-    basic_auth_header: dict[str, str] | None = (
-        {"Authorization": f"Basic {settings.BASE_AUTH_TOKEN}"}
-        if settings.BASE_AUTH_TOKEN
-        else None
-    )
     wait_time: int = constant(2)
     timeout: int = 5
 
-    @task
-    def get_meta(self):
-        headers = self.token_auth_header
-        with self.client.get(
-            "/api/grid/meta",
-            name="GET /api/grid/meta",
-            timeout=self.timeout,
-            catch_response=True,
-            headers=headers,
-        ) as res:
+    def _get_auth_headers(self, auth_type: AuthType) -> dict[str, str] | None:
+        """Get authentication headers based on auth type.
+
+        Args:
+            auth_type: Type of authentication to use
+
+        Returns:
+            Dictionary of headers or None if no auth needed
+        """
+        if auth_type == AuthType.TOKEN and settings.ACCESS_TOKEN:
+            return {"Authorization": f"Bearer {settings.ACCESS_TOKEN}"}
+        elif auth_type == AuthType.BASIC and settings.BASE_AUTH_TOKEN:
+            return {"Authorization": f"Basic {settings.BASE_AUTH_TOKEN}"}
+        return None
+
+    def _make_request(self, request_def: RequestDefinition) -> None:
+        """Execute an HTTP request based on the request definition.
+
+        Args:
+            request_def: RequestDefinition object containing request details
+        """
+        # Prepare headers
+        headers = self._get_auth_headers(request_def.auth_type)
+        if request_def.headers:
+            headers = {**(headers or {}), **request_def.headers}
+
+        # Select the appropriate HTTP method
+        method_map = {
+            HttpMethod.GET: self.client.get,
+            HttpMethod.POST: self.client.post,
+            HttpMethod.PUT: self.client.put,
+            HttpMethod.DELETE: self.client.delete,
+            HttpMethod.PATCH: self.client.patch,
+        }
+
+        http_method = method_map.get(request_def.method)
+        if not http_method:
+            raise ValueError(f"Unsupported HTTP method: {request_def.method}")
+
+        # Prepare request kwargs
+        request_kwargs = {
+            "name": request_def.name,
+            "timeout": self.timeout,
+            "catch_response": True,
+            "headers": headers,
+        }
+
+        # Add payload for methods that support it
+        if request_def.payload and request_def.method in [
+            HttpMethod.POST,
+            HttpMethod.PUT,
+            HttpMethod.PATCH,
+        ]:
+            if isinstance(request_def.payload, dict):
+                request_kwargs["json"] = request_def.payload
+            else:
+                request_kwargs["data"] = request_def.payload
+
+        # Execute request
+        with http_method(request_def.path, **request_kwargs) as res:
             if res.status_code == 200:
                 res.success()
             else:
                 res.failure(f"Unexpected status {res.status_code}")
 
-    @task
-    def get_report(self):
-        headers = self.basic_auth_header
-        with self.client.get(
-            "/es/report/grid",
-            name="GET /es/report/grid",
-            timeout=self.timeout,
-            catch_response=True,
-            headers=headers,
-        ) as res:
-            if res.status_code == 200:
-                res.success()
-            else:
-                res.failure(f"Unexpected status {res.status_code}")
+
+# Dynamically create task methods from request definitions
+def _create_task_method(request_def: RequestDefinition):
+    """Factory function to create a task method for a request definition.
+
+    Args:
+        request_def: RequestDefinition object
+
+    Returns:
+        A task method that executes the request
+    """
 
     @task
-    def get_indicators(self):
-        headers = self.basic_auth_header
-        with self.client.get(
-            "/es/report/indicators?bbox=-18088914.17579878%2C-4006854.261100858%2C696249.8955611419%2C2959310.748695113&_rsc=1uviz",
-            name="GET /es/report/indicators",
-            timeout=self.timeout,
-            catch_response=True,
-            headers=headers,
-        ) as res:
-            if res.status_code == 200:
-                res.success()
-            else:
-                res.failure(f"Unexpected status {res.status_code}")
+    def task_method(self):
+        self._make_request(request_def)
 
-    @task
-    def get_results(self):
-        headers = self.basic_auth_header
-        with self.client.get(
-            "/es/report/results?topics={%22id%22:1%252C%22indicators%22:[{%22id%22:9%252C%22type%22:%22map%22%252C%22w%22:2%252C%22h%22:4%252C%22x%22:0%252C%22y%22:2}%252C{%22id%22:13%252C%22type%22:%22map%22%252C%22w%22:2%252C%22h%22:4%252C%22x%22:2%252C%22y%22:2}%252C{%22id%22:11%252C%22type%22:%22chart%22%252C%22w%22:2%252C%22h%22:2%252C%22x%22:0%252C%22y%22:0}%252C{%22id%22:6%252C%22type%22:%22chart%22%252C%22w%22:2%252C%22h%22:2%252C%22x%22:2%252C%22y%22:0}]},{%22id%22:2%252C%22indicators%22:[{%22id%22:17%252C%22type%22:%22numeric%22%252C%22w%22:1%252C%22h%22:1%252C%22x%22:0%252C%22y%22:0}%252C{%22id%22:18%252C%22type%22:%22numeric%22%252C%22w%22:1%252C%22h%22:1%252C%22x%22:1%252C%22y%22:0}%252C{%22id%22:31%252C%22type%22:%22chart%22%252C%22w%22:2%252C%22h%22:2%252C%22x%22:2%252C%22y%22:1}%252C{%22id%22:26%252C%22type%22:%22numeric%22%252C%22w%22:1%252C%22h%22:1%252C%22x%22:2%252C%22y%22:0}%252C{%22id%22:34%252C%22type%22:%22chart%22%252C%22w%22:2%252C%22h%22:2%252C%22x%22:2%252C%22y%22:3}%252C{%22id%22:14%252C%22type%22:%22map%22%252C%22w%22:2%252C%22h%22:4%252C%22x%22:0%252C%22y%22:1}%252C{%22type%22:%22numeric%22%252C%22id%22:28%252C%22x%22:3%252C%22y%22:0%252C%22w%22:1%252C%22h%22:1}]},{%22id%22:3%252C%22indicators%22:[{%22id%22:35%252C%22type%22:%22map%22%252C%22w%22:2%252C%22h%22:4%252C%22x%22:0%252C%22y%22:0}%252C{%22id%22:37%252C%22type%22:%22map%22%252C%22w%22:2%252C%22h%22:4%252C%22x%22:2%252C%22y%22:1}]},{%22id%22:4%252C%22indicators%22:[{%22id%22:41%252C%22type%22:%22numeric%22%252C%22w%22:1%252C%22h%22:1%252C%22x%22:1%252C%22y%22:0}%252C{%22id%22:40%252C%22type%22:%22numeric%22%252C%22w%22:1%252C%22h%22:1%252C%22x%22:0%252C%22y%22:0}%252C{%22id%22:46%252C%22type%22:%22numeric%22%252C%22w%22:1%252C%22h%22:1%252C%22x%22:2%252C%22y%22:0}%252C{%22id%22:39%252C%22type%22:%22map%22%252C%22w%22:2%252C%22h%22:4%252C%22x%22:0%252C%22y%22:1}%252C{%22id%22:51%252C%22type%22:%22numeric%22%252C%22w%22:1%252C%22h%22:1%252C%22x%22:3%252C%22y%22:0}%252C{%22id%22:51%252C%22type%22:%22map%22%252C%22w%22:2%252C%22h%22:4%252C%22x%22:2%252C%22y%22:1}]},{%22id%22:5%252C%22indicators%22:[{%22id%22:52%252C%22type%22:%22numeric%22%252C%22w%22:1%252C%22h%22:1%252C%22x%22:0%252C%22y%22:0}%252C{%22id%22:53%252C%22type%22:%22numeric%22%252C%22w%22:1%252C%22h%22:1%252C%22x%22:1%252C%22y%22:0}%252C{%22id%22:56%252C%22type%22:%22numeric%22%252C%22w%22:1%252C%22h%22:1%252C%22x%22:2%252C%22y%22:0}%252C{%22id%22:55%252C%22type%22:%22numeric%22%252C%22w%22:1%252C%22h%22:1%252C%22x%22:3%252C%22y%22:0}%252C{%22id%22:54%252C%22type%22:%22map%22%252C%22w%22:4%252C%22h%22:4%252C%22x%22:0%252C%22y%22:1}]},{%22id%22:6%252C%22indicators%22:[{%22id%22:63%252C%22type%22:%22map%22%252C%22w%22:2%252C%22h%22:4%252C%22x%22:2%252C%22y%22:0}%252C{%22id%22:59%252C%22type%22:%22chart%22%252C%22w%22:2%252C%22h%22:3%252C%22x%22:0%252C%22y%22:1}%252C{%22id%22:62%252C%22type%22:%22numeric%22%252C%22w%22:1%252C%22h%22:1%252C%22x%22:0%252C%22y%22:0}%252C{%22id%22:60%252C%22type%22:%22numeric%22%252C%22w%22:1%252C%22h%22:1%252C%22x%22:1%252C%22y%22:0}]},{%22id%22:8%252C%22indicators%22:[{%22type%22:%22map%22%252C%22id%22:64%252C%22x%22:0%252C%22y%22:0%252C%22w%22:2%252C%22h%22:4}%252C{%22type%22:%22table%22%252C%22id%22:64%252C%22x%22:2%252C%22y%22:0%252C%22w%22:2%252C%22h%22:4}]},{%22id%22:7%252C%22indicators%22:[]}&location={%22type%22:%22point%22,%22geometry%22:{%22spatialReference%22:{%22wkid%22:102100},%22x%22:-7483123.627176825,%22y%22:-308525.0845518727},%22buffer%22:60}&aiSummary={%22type%22:%22Short%22,%22only_active%22:true,%22enabled%22:true}",
-            name="GET /es/report/results",
-            timeout=self.timeout,
-            catch_response=True,
-            headers=headers,
-        ) as res:
-            if res.status_code == 200:
-                res.success()
-            else:
-                res.failure(f"Unexpected status {res.status_code}")
+    # Set a readable name for the task method
+    task_method.__name__ = (
+        f"task_{request_def.name.replace('/', '_').replace(' ', '_').lower()}"
+    )
+    return task_method
+
+
+# Attach all request definitions as tasks to the APIUser class
+for req_def in get_all_requests():
+    task_method = _create_task_method(req_def)
+    setattr(APIUser, task_method.__name__, task_method)
+
+# Explicitly populate the tasks list for Locust to recognize them
+# This is necessary because we're adding tasks dynamically after class definition
+if not hasattr(APIUser, "tasks") or not APIUser.tasks:
+    APIUser.tasks = [
+        getattr(APIUser, attr)
+        for attr in dir(APIUser)
+        if hasattr(getattr(APIUser, attr, None), "locust_task_weight")
+    ]
