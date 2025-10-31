@@ -1,0 +1,54 @@
+[project]
+name = "load-testing"
+version = "0.1.0"
+description = "Load Testing framework using Locust"
+readme = "README.md"
+requires-python = "==3.14.0"
+dependencies = [
+    "locust==2.42.1",
+    "pydantic-settings>=2.11.0",
+]
+
+[project.scripts]
+load-testing = "load_testing:main"
+
+[build-system]
+requires = ["uv_build>=0.8.17,<0.9.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ruff==0.14.3",
+]
+
+[tool.ruff]
+# Set the maximum line length to 88.
+line-length = 120
+indent-width = 4
+
+# Assume Python 3.14
+target-version = "py314"
+
+[tool.ruff.lint]
+# Enable pycodestyle (E, W), Pyflakes (F), and isort (I) rules
+select = ["E", "F", "W", "I"]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
