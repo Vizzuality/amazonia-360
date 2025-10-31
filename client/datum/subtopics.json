@@ -270,20 +270,6 @@
         ]
     },
     {
-        "id": 9,
-        "Numerotation": "9",
-        "topic_id": 2,
-        "name_en": "Ecosystem Services",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-        ]
-    },
-    {
         "id": 10,
         "Numerotation": "10",
         "topic_id": 3,
@@ -438,20 +424,6 @@
         ]
     },
     {
-        "id": 17,
-        "Numerotation": "17",
-        "topic_id": 4,
-        "name_en": "Livestock Systems",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-        ]
-    },
-    {
         "id": 18,
         "Numerotation": "18",
         "topic_id": 4,
@@ -485,20 +457,14 @@
         "description_es": "",
         "description_pt": "",
         "default_visualization": [
-        ]
-    },
-    {
-        "id": 20,
-        "Numerotation": "20",
-        "topic_id": 4,
-        "name_en": "Creative Economy",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
+            {
+                "id": 138,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
         ]
     },
     {
@@ -579,6 +545,14 @@
         "description_es": "",
         "description_pt": "",
         "default_visualization": [
+            {
+                "id": 163,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
         ]
     },
     {
@@ -593,6 +567,14 @@
         "description_es": "",
         "description_pt": "",
         "default_visualization": [
+            {
+                "id": 164,
+                "type": "map",
+                "x": 0,
+                "y": 0,
+                "w": 2,
+                "h": 4
+            }
         ]
     },
     {
@@ -681,48 +663,6 @@
                 "w": 2,
                 "h": 4
             }
-        ]
-    },
-    {
-        "id": 30,
-        "Numerotation": "30",
-        "topic_id": 6,
-        "name_en": "Integrity and Reputation Risks",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-        ]
-    },
-    {
-        "id": 31,
-        "Numerotation": "31",
-        "topic_id": 7,
-        "name_en": "IDB",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-        ]
-    },
-    {
-        "id": 32,
-        "Numerotation": "32",
-        "topic_id": 7,
-        "name_en": "External",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
         ]
     },
     {
