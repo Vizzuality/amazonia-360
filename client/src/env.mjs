@@ -8,9 +8,9 @@ export const env = createEnv({
     BASIC_AUTH_PASSWORD: z.string(),
   },
   client: {
-    NEXT_PUBLIC_WEBSHOT_URL: z.string().url(),
-    NEXT_PUBLIC_URL: z.string().url(),
-    NEXT_PUBLIC_API_URL: z.string().url(),
+    NEXT_PUBLIC_WEBSHOT_URL: z.url(),
+    NEXT_PUBLIC_URL: z.url().optional(),
+    NEXT_PUBLIC_API_URL: z.url(),
     NEXT_PUBLIC_API_KEY: z.string(),
     NEXT_PUBLIC_ARCGIS_API_KEY: z.string(),
   },
