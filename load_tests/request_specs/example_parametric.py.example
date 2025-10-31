@@ -1,0 +1,160 @@
+"""
+Example parametric request definition.
+
+This file demonstrates how to create parametric request definitions
+in the modular structure. Rename this file (remove .example extension)
+and import it in __init__.py to activate it.
+
+To use this example:
+1. Rename this file to `example_parametric.py`
+2. Import it in `request_specs/__init__.py`:
+   ```
+   from .example_parametric import get_custom_bbox_request
+   ```
+3. Add to __all__ in `request_specs/__init__.py`:
+   ```
+   __all__ = [
+       # ... existing items ...
+       "get_custom_bbox_request",
+   ]
+   ```
+4. Call it in `get_all_requests()`:
+   ```
+   return [
+       # ... existing requests ...
+       get_custom_bbox_request(bbox="your_bbox_here"),
+   ]
+   ```
+"""
+
+from .base import AuthType, HttpMethod, RequestDefinition
+
+
+def get_custom_bbox_request(
+    bbox: str = "-18088914.17579878,-4006854.261100858,696249.8955611419,2959310.748695113",
+    rsc: str = "1uviz",
+) -> RequestDefinition:
+    """Get indicators with custom bounding box parameters.
+
+    This is an example of a parametric request that accepts arguments
+    to generate different request variations. Useful for testing with
+    different coordinates, filters, or other parameters.
+
+    Args:
+        bbox: Bounding box coordinates (comma-separated)
+        rsc: Resource identifier
+
+    Returns:
+        RequestDefinition with the specified parameters
+    """
+    return RequestDefinition(
+        name=f"GET /es/report/indicators (bbox={bbox[:20]}...)",
+        method=HttpMethod.GET,
+        path=f"/es/report/indicators?bbox={bbox}&_rsc={rsc}",
+        auth_type=AuthType.BASIC,
+    )
+
+
+def create_report_with_geojson(
+    name: str,
+    coordinates: list[list[float]],
+    buffer_km: float = 0,
+) -> RequestDefinition:
+    """Create a report with GeoJSON geometry.
+
+    Example of a POST request with a complex JSON payload.
+
+    Args:
+        name: Name of the report area
+        coordinates: List of [longitude, latitude] coordinates
+        buffer_km: Buffer distance in kilometers
+
+    Returns:
+        RequestDefinition for creating a report
+    """
+    # Construct GeoJSON payload
+    payload = {
+        "type": "Feature",
+        "properties": {
+            "name": name,
+            "buffer": buffer_km * 1000,  # Convert to meters
+        },
+        "geometry": {
+            "type": "Polygon" if len(coordinates) > 2 else "Point",
+            "coordinates": coordinates,
+        },
+    }
+
+    return RequestDefinition(
+        name=f"POST /api/reports (name={name})",
+        method=HttpMethod.POST,
+        path="/api/reports",
+        auth_type=AuthType.TOKEN,
+        payload=payload,
+        headers={"Content-Type": "application/json"},
+    )
+
+
+def generate_indicator_batch(
+    indicator_ids: list[int],
+    bbox: str,
+) -> list[RequestDefinition]:
+    """Generate multiple request definitions for a list of indicators.
+
+    Example of batch request generation - useful for testing multiple
+    similar endpoints with different IDs.
+
+    Args:
+        indicator_ids: List of indicator IDs to fetch
+        bbox: Bounding box coordinates
+
+    Returns:
+        List of RequestDefinitions, one for each indicator
+    """
+    requests = []
+
+    for indicator_id in indicator_ids:
+        req = RequestDefinition(
+            name=f"GET /api/indicators/{indicator_id}",
+            method=HttpMethod.GET,
+            path=f"/api/indicators/{indicator_id}?bbox={bbox}",
+            auth_type=AuthType.BASIC,
+        )
+        requests.append(req)
+
+    return requests
+
+
+# Example usage in request_specs/__init__.py:
+#
+# from .example_parametric import (
+#     get_custom_bbox_request,
+#     create_report_with_geojson,
+#     generate_indicator_batch,
+# )
+#
+# def get_all_requests() -> list[RequestDefinition]:
+#     return [
+#         # Static requests
+#         get_meta_request(),
+#         get_report_request(),
+#
+#         # Parametric request with custom bbox
+#         get_custom_bbox_request(
+#             bbox="-60.0,-3.0,-59.0,-2.0",
+#             rsc="custom_rsc"
+#         ),
+#
+#         # POST request with GeoJSON
+#         create_report_with_geojson(
+#             name="Amazon Test Area",
+#             coordinates=[[-60.0, -3.0], [-59.0, -3.0], [-59.0, -2.0], [-60.0, -3.0]],
+#             buffer_km=5.0
+#         ),
+#
+#         # Batch generation - unpack the list with *
+#         *generate_indicator_batch(
+#             indicator_ids=[1, 2, 3, 4, 5],
+#             bbox="-60,-3,-59,-2"
+#         ),
+#     ]
