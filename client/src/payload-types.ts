@@ -70,16 +70,22 @@ export interface Config {
   collections: {
     admins: Admin;
     users: User;
+    accounts: Account;
     media: Media;
     reports: Report;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    users: {
+      accounts: 'accounts';
+    };
+  };
   collectionsSelect: {
     admins: AdminsSelect<false> | AdminsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    accounts: AccountsSelect<false> | AccountsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     reports: ReportsSelect<false> | ReportsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -170,6 +176,14 @@ export interface Admin {
  */
 export interface User {
   id: number;
+  name?: string | null;
+  image?: string | null;
+  emailVerified?: string | null;
+  accounts?: {
+    docs?: (number | Account)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -187,6 +201,21 @@ export interface User {
       }[]
     | null;
   password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "accounts".
+ */
+export interface Account {
+  id: number;
+  type: string;
+  provider: string;
+  providerAccountId: string;
+  refreshToken?: string | null;
+  accessToken?: string | null;
+  user: number | User;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -307,6 +336,10 @@ export interface PayloadLockedDocument {
         value: number | User;
       } | null)
     | ({
+        relationTo: 'accounts';
+        value: number | Account;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -393,6 +426,10 @@ export interface AdminsSelect<T extends boolean = true> {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  image?: T;
+  emailVerified?: T;
+  accounts?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -409,6 +446,20 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "accounts_select".
+ */
+export interface AccountsSelect<T extends boolean = true> {
+  type?: T;
+  provider?: T;
+  providerAccountId?: T;
+  refreshToken?: T;
+  accessToken?: T;
+  user?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

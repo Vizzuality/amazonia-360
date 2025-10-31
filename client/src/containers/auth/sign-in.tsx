@@ -1,6 +1,8 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
+import { signIn } from "next-auth/react";
+import { LuGithub } from "react-icons/lu";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -12,8 +14,6 @@ import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/c
 import { Input } from "@/components/ui/input";
 
 import { Link, useRouter } from "@/i18n/navigation";
-
-import { sdk } from "@/services/sdk";
 
 const formSchema = z.object({
   email: z.email("Please enter a valid email address"),
@@ -32,17 +32,17 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
     },
     onSubmit: async ({ value }) => {
       toast.promise(
-        sdk
-          .login({
-            collection: "users",
-            data: {
-              email: value.email,
-              password: value.password,
-            },
-          })
-          .then(() => {
-            router.push("/my-area");
-          }),
+        signIn("credentials", {
+          redirect: false,
+          email: value.email,
+          password: value.password,
+        }).then((r) => {
+          if (r.error) {
+            throw new Error(r.error);
+          }
+
+          router.push("/my-area");
+        }),
         {
           loading: "Logging in...",
           success: "Logged in successfully!",
@@ -122,6 +122,19 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <Link href="/auth/sign-up">Sign up</Link>
                 </FieldDescription>
+              </Field>
+
+              <Field>
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => {
+                    signIn("github", { callbackUrl: "/my-area" });
+                  }}
+                >
+                  <LuGithub className="mr-2 h-4 w-4" />
+                  Continue with GitHub
+                </Button>
               </Field>
             </FieldGroup>
           </form>

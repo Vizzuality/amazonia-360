@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider as JotaiProvider } from "jotai";
+import { SessionProvider } from "next-auth/react";
 import { Locale } from "next-intl";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
@@ -55,20 +56,22 @@ export default function LayoutProviders({
   const queryClient = getQueryClient();
 
   return (
-    <MediaContextProvider>
-      <QueryClientProvider client={queryClient}>
-        <NuqsAdapter
-          defaultOptions={{
-            clearOnDefault: true,
-          }}
-        >
-          <ArcGISProvider locale={locale}>
-            <TooltipProvider>
-              <JotaiProvider>{children}</JotaiProvider>
-            </TooltipProvider>
-          </ArcGISProvider>
-        </NuqsAdapter>
-      </QueryClientProvider>
-    </MediaContextProvider>
+    <SessionProvider basePath="/local-api/auth">
+      <MediaContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <NuqsAdapter
+            defaultOptions={{
+              clearOnDefault: true,
+            }}
+          >
+            <ArcGISProvider locale={locale}>
+              <TooltipProvider>
+                <JotaiProvider>{children}</JotaiProvider>
+              </TooltipProvider>
+            </ArcGISProvider>
+          </NuqsAdapter>
+        </QueryClientProvider>
+      </MediaContextProvider>
+    </SessionProvider>
   );
 }
