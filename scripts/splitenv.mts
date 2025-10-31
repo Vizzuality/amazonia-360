@@ -42,7 +42,7 @@ import { readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 
 const PREFIX_SEPARATOR = "__";
-const PREFIX_RE = /^[A-Z]*$/;
+const PREFIX_RE = /^[A-Z]([A-Z]|[_-][A-Z])*$/;
 
 const USAGE = `Usage:
   ${basename(process.argv[1])} <path-to-.env> <PREFIX> [PREFIX2 ...]

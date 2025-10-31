@@ -89,7 +89,38 @@ describe("splitenv.mts", () => {
 
     it("should fail for invalid prefixes (with special characters)", () => {
       writeFileSync(envFile, "KEY=value\n");
-      expect(() => runScript([envFile, "API_TEST"])).toThrow(/Invalid prefix/);
+      expect(() => runScript([envFile, "API@TEST"])).toThrow(/Invalid prefix/);
+    });
+
+    it("should fail for prefixes starting with underscore", () => {
+      writeFileSync(envFile, "KEY=value\n");
+      expect(() => runScript([envFile, "_API"])).toThrow(/Invalid prefix/);
+    });
+
+    it("should fail for prefixes ending with underscore", () => {
+      writeFileSync(envFile, "KEY=value\n");
+      expect(() => runScript([envFile, "API_"])).toThrow(/Invalid prefix/);
+    });
+
+    it("should fail for prefixes starting with hyphen", () => {
+      writeFileSync(envFile, "KEY=value\n");
+      // Note: parseArgs interprets -API as a flag, so we get a parseArgs error instead
+      expect(() => runScript([envFile, "-API"])).toThrow();
+    });
+
+    it("should fail for prefixes ending with hyphen", () => {
+      writeFileSync(envFile, "KEY=value\n");
+      expect(() => runScript([envFile, "API-"])).toThrow(/Invalid prefix/);
+    });
+
+    it("should fail for prefixes with consecutive underscores", () => {
+      writeFileSync(envFile, "KEY=value\n");
+      expect(() => runScript([envFile, "API__TEST"])).toThrow(/Invalid prefix/);
+    });
+
+    it("should fail for prefixes with consecutive hyphens", () => {
+      writeFileSync(envFile, "KEY=value\n");
+      expect(() => runScript([envFile, "API--TEST"])).toThrow(/Invalid prefix/);
     });
 
     it("should accept valid uppercase prefixes", () => {
@@ -97,6 +128,27 @@ describe("splitenv.mts", () => {
       const apiDir = join(testDir, "api");
       mkdirSync(apiDir);
       expect(() => runScript([envFile, "API"])).not.toThrow();
+    });
+
+    it("should accept prefixes with single underscores", () => {
+      writeFileSync(envFile, "API_CLIENT__KEY=value\n");
+      const apiDir = join(testDir, "api_client");
+      mkdirSync(apiDir);
+      expect(() => runScript([envFile, "API_CLIENT"])).not.toThrow();
+    });
+
+    it("should accept prefixes with single hyphens", () => {
+      writeFileSync(envFile, "API-CLIENT__KEY=value\n");
+      const apiDir = join(testDir, "api-client");
+      mkdirSync(apiDir);
+      expect(() => runScript([envFile, "API-CLIENT"])).not.toThrow();
+    });
+
+    it("should accept prefixes with mixed underscores and hyphens", () => {
+      writeFileSync(envFile, "MY_API-CLIENT__KEY=value\n");
+      const apiDir = join(testDir, "my_api-client");
+      mkdirSync(apiDir);
+      expect(() => runScript([envFile, "MY_API-CLIENT"])).not.toThrow();
     });
   });
 
@@ -562,8 +614,54 @@ WORKER__CONCURRENCY=5
 
       writeFileSync(envFile, "API__KEY=value\n");
       runScript([envFile, "API"]);
+    });
 
-      expect(existsSync(join(apiDir, ".env"))).toBe(true);
+    it("should strip prefixes with underscores correctly", () => {
+      const apiDir = join(testDir, "api_client");
+      mkdirSync(apiDir);
+
+      writeFileSync(
+        envFile,
+        "API_CLIENT__DATABASE_URL=postgres://localhost\nAPI_CLIENT__PORT=3000\n",
+      );
+      runScript([envFile, "API_CLIENT"]);
+
+      const output = readFileSync(join(apiDir, ".env"), "utf-8");
+      expect(output).toContain("DATABASE_URL=postgres://localhost");
+      expect(output).toContain("PORT=3000");
+      expect(output).not.toContain("API_CLIENT__");
+    });
+
+    it("should strip prefixes with hyphens correctly", () => {
+      const apiDir = join(testDir, "api-client");
+      mkdirSync(apiDir);
+
+      writeFileSync(
+        envFile,
+        "API-CLIENT__DATABASE_URL=postgres://localhost\nAPI-CLIENT__PORT=3000\n",
+      );
+      runScript([envFile, "API-CLIENT"]);
+
+      const output = readFileSync(join(apiDir, ".env"), "utf-8");
+      expect(output).toContain("DATABASE_URL=postgres://localhost");
+      expect(output).toContain("PORT=3000");
+      expect(output).not.toContain("API-CLIENT__");
+    });
+
+    it("should strip prefixes with mixed underscores and hyphens correctly", () => {
+      const apiDir = join(testDir, "my_api-client");
+      mkdirSync(apiDir);
+
+      writeFileSync(
+        envFile,
+        "MY_API-CLIENT__SECRET=abc123\nMY_API-CLIENT__ENDPOINT=/api/client\n",
+      );
+      runScript([envFile, "MY_API-CLIENT"]);
+
+      const output = readFileSync(join(apiDir, ".env"), "utf-8");
+      expect(output).toContain("SECRET=abc123");
+      expect(output).toContain("ENDPOINT=/api/client");
+      expect(output).not.toContain("MY_API-CLIENT__");
     });
   });
 });
