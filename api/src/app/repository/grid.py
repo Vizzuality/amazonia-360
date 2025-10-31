@@ -44,7 +44,6 @@ def cells_in_geojson(geometry: str, cell_resolution: int) -> pl.LazyFrame:
     return pl.LazyFrame({"cell": cells})
 
 
-@lru_cache
 def load_meta(path: str) -> MultiDatasetMeta:
     with open(path) as f:
         raw = f.read()

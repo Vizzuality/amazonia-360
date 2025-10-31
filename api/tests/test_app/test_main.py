@@ -29,7 +29,7 @@ def test_options_request_is_allowed_with_correct_headers():
     assert "*" in response.headers["Access-Control-Allow-Origin"]
 
 
-def test_request_with_token(setup_data_folder):
+def test_request_meta_with_token(grid_dataset):
     response = test_client.get("/grid/meta", headers=HEADERS)
     assert response.status_code == 200
 
