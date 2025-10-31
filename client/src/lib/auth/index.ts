@@ -12,6 +12,7 @@ class InvalidLoginError extends CredentialsSignin {
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   basePath: "/local-api/auth",
+  trustHost: !(process.env.NODE_ENV === "development"),
   pages: {
     signIn: "/auth/sign-in",
     signOut: "/auth/sign-out",
