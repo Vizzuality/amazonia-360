@@ -9,8 +9,7 @@ import { lexicalEditor } from "@payloadcms/richtext-lexical";
 
 import sharp from "sharp";
 
-import { getAbsoluteURL } from "@/lib/url";
-
+import { Accounts } from "@/cms/collections/Accounts";
 import { Admins } from "@/cms/collections/Admins";
 import { Media } from "@/cms/collections/Media";
 import { Reports } from "@/cms/collections/Reports";
@@ -26,7 +25,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Admins, Users, Media, Reports],
+  collections: [Admins, Users, Accounts, Media, Reports],
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || "",
@@ -37,7 +36,6 @@ export default buildConfig({
     disable: true,
   },
   secret: process.env.PAYLOAD_SECRET || "",
-  serverURL: getAbsoluteURL(""),
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
