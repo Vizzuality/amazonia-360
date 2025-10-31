@@ -20,7 +20,7 @@ import {
 
 import { usePathname, Link } from "@/i18n/navigation";
 
-import LogoBetaInfo from "./logo-beta-info";
+import Logo from "./logo";
 
 export default function MobileNavigation() {
   const t = useTranslations();
@@ -68,8 +68,8 @@ export default function MobileNavigation() {
           <DialogHeader className="flex h-16 w-full flex-col items-center bg-white text-center backdrop-blur sm:text-left">
             <div className="flex h-full w-full flex-col justify-center bg-white backdrop-blur">
               <div className="mx-4 flex items-center justify-between md:container md:mx-auto">
-                <DialogTitle className="sr-only">AmazoniaForever360+ beta version</DialogTitle>
-                <LogoBetaInfo />
+                <DialogTitle className="sr-only">AmazoniaForever360+ menu</DialogTitle>
+                <Logo />
 
                 <button
                   type="button"

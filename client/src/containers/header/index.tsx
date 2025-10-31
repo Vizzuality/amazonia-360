@@ -19,7 +19,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 
 import ConfirmLocation from "./confirm/desktop";
 import DesktopDrawingTools from "./drawing-tools/desktop";
-import LogoBetaInfo from "./logo-beta-info";
+import Logo from "./logo";
 import MobileNavigation from "./mobile-navigation";
 import ReportResultsHeaderDesktop from "./results/desktop";
 
@@ -86,7 +86,7 @@ export default function Header() {
       })}
     >
       <div className="container flex items-center justify-between md:mx-auto">
-        <LogoBetaInfo />
+        <Logo />
         <Media greaterThanOrEqual="md" className="flex items-center space-x-4">
           {DYNAMIC_HEADER}
           <LanguageSelector />
