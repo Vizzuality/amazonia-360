@@ -9,8 +9,6 @@ import { lexicalEditor } from "@payloadcms/richtext-lexical";
 
 import sharp from "sharp";
 
-import { getAbsoluteURL } from "@/lib/url";
-
 import { Accounts } from "@/cms/collections/Accounts";
 import { Admins } from "@/cms/collections/Admins";
 import { Media } from "@/cms/collections/Media";
@@ -19,9 +17,6 @@ import { Users } from "@/cms/collections/Users";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
-
-const payloadBaseURL = getAbsoluteURL("");
-console.log("Payload Base URL:", payloadBaseURL);
 
 export default buildConfig({
   admin: {
@@ -41,7 +36,6 @@ export default buildConfig({
     disable: true,
   },
   secret: process.env.PAYLOAD_SECRET || "",
-  serverURL: payloadBaseURL,
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
