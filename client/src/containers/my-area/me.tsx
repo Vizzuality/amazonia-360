@@ -18,7 +18,16 @@ export default function MyAreaMe() {
 
   return (
     <div className="space-y-2">
-      <Button onClick={() => signOut()}>Sign Out</Button>
+      <Button
+        onClick={async () =>
+          signOut({
+            redirect: true,
+            redirectTo: "/auth/sign-in",
+          })
+        }
+      >
+        Sign Out
+      </Button>
 
       <div>
         <pre>{JSON.stringify({ data }, null, 2)}</pre>

@@ -36,7 +36,11 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
           redirect: false,
           email: value.email,
           password: value.password,
-        }).then(() => {
+        }).then((r) => {
+          if (r.error) {
+            throw new Error(r.error);
+          }
+
           router.push("/my-area");
         }),
         {

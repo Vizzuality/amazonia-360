@@ -15,7 +15,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
     signIn: "/auth/sign-in",
     signOut: "/auth/sign-out",
-    error: "/auth/error",
+    error: "/auth/sign-in",
   },
   adapter: PayloadAuthAdapter(),
   providers: [

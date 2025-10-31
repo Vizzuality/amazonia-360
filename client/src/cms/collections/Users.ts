@@ -55,7 +55,9 @@ export const Users: CollectionConfig = {
       path: "/logout",
       method: "post",
       handler: async () => {
-        await signOut();
+        await signOut({
+          redirect: false,
+        });
         return Response.json({
           message: "You have been logged out successfully.",
         });

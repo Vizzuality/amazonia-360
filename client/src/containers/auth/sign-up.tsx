@@ -47,12 +47,18 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               password: value.password,
             },
           })
-          .then(() => {
-            signIn("credentials", {
+          .then(async (r) => {
+            if (!r) throw new Error("User creation failed");
+
+            return signIn("credentials", {
               redirect: false,
               email: value.email,
               password: value.password,
-            }).then(() => {
+            }).then((r) => {
+              if (r.error) {
+                throw new Error(r.error);
+              }
+
               router.push("/my-area");
             });
           }),
