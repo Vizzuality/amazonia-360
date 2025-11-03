@@ -229,8 +229,6 @@ jobs:
           fi
 
           aws s3 sync s3://$SRC_BUCKET s3://$DEST_BUCKET \
-            --exclude "*" \
-            --include "grid/*" \
             --delete \
             --exact-timestamps
 
