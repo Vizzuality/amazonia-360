@@ -15,8 +15,8 @@ export const env = createEnv({
       .url()
       .optional()
       .transform((val) => {
-        if (process.env.VERCEL_BRANCH_URL) {
-          return `https://${process.env.VERCEL_BRANCH_URL}`;
+        if (process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL) {
+          return `https://${process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL}`;
         }
         return val;
       })
