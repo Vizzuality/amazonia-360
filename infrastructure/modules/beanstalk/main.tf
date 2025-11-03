@@ -70,11 +70,6 @@ locals {
       value     = data.aws_region.current.name
     },
     {
-      namespace = "aws:elasticbeanstalk:application:environment"
-      name      = "S3_BUCKET_NAME"
-      value     = data.aws_region.current.name
-    },
-    {
       namespace = "aws:ec2:vpc"
       name      = "VPCId"
       value     = var.vpc.id
