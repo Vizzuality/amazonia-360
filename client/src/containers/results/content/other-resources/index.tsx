@@ -18,6 +18,8 @@ import { ResourceProps } from "@/containers/results/content/other-resources/type
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+type OtherResourcesKeys = "publications" | "blogs";
+
 export default function OtherResources() {
   const t = useTranslations();
   const [tab, setTab] = useState("all");
@@ -67,7 +69,10 @@ export default function OtherResources() {
 
               {GROUPS.map((group) => (
                 <TabsTrigger key={group[0]} value={group[0]} onClick={() => setTab(group[0])}>
-                  {group[0]} ({group[1].length})
+                  {t(
+                    `other-resources-${group[0].toLowerCase()}` as `other-resources-${OtherResourcesKeys}`,
+                  )}{" "}
+                  ({group[1].length})
                 </TabsTrigger>
               ))}
             </TabsList>
