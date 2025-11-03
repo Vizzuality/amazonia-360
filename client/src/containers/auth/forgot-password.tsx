@@ -1,6 +1,7 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -11,11 +12,13 @@ import { Input } from "@/components/ui/input";
 
 import { sdk } from "@/services/sdk";
 
-const formSchema = z.object({
-  email: z.email("Please enter a valid email address"),
-});
-
 export function ForgotPasswordForm(props: React.ComponentProps<"div">) {
+  const t = useTranslations();
+
+  const formSchema = z.object({
+    email: z.email(t("auth-validation-email-invalid")),
+  });
+
   const form = useForm({
     defaultValues: {
       email: "",
@@ -37,9 +40,9 @@ export function ForgotPasswordForm(props: React.ComponentProps<"div">) {
             console.log("Password reset email sent");
           }),
         {
-          loading: "Sending password reset email...",
-          success: "Password reset email sent successfully!",
-          error: "Failed to send password reset email. Please try again.",
+          loading: t("auth-toast-sending-reset-email"),
+          success: t("auth-toast-reset-email-sent"),
+          error: t("auth-toast-reset-email-failed"),
           duration: 2000,
         },
       );
@@ -49,10 +52,8 @@ export function ForgotPasswordForm(props: React.ComponentProps<"div">) {
   return (
     <Card {...props}>
       <CardHeader>
-        <CardTitle>Forgot password</CardTitle>
-        <CardDescription>
-          Enter your email address to receive a password reset link.
-        </CardDescription>
+        <CardTitle>{t("auth-forgot-password-title")}</CardTitle>
+        <CardDescription>{t("auth-forgot-password-description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -67,7 +68,7 @@ export function ForgotPasswordForm(props: React.ComponentProps<"div">) {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>{t("auth-field-email")}</FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -83,7 +84,7 @@ export function ForgotPasswordForm(props: React.ComponentProps<"div">) {
             </form.Field>
 
             <Field>
-              <Button type="submit">Send reset link</Button>
+              <Button type="submit">{t("auth-button-send-reset-link")}</Button>
             </Field>
           </FieldGroup>
         </form>
