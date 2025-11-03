@@ -106,12 +106,12 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
                       />
                       {isInvalid && <FieldError errors={field.state.meta.errors} />}
 
-                      <a
-                        href="#"
+                      <Link
+                        href="/auth/forgot-password"
                         className="ml-auto inline-block text-sm text-muted-foreground underline-offset-4 hover:underline"
                       >
                         Forgot your password?
-                      </a>
+                      </Link>
                     </Field>
                   );
                 }}
