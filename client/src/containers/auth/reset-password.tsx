@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 
 import { useForm } from "@tanstack/react-form";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -15,20 +16,21 @@ import { useRouter } from "@/i18n/navigation";
 
 import { sdk } from "@/services/sdk";
 
-const formSchema = z
-  .object({
-    password: z.string().min(6, "Password must be at least 6 characters long"),
-    "confirm-password": z.string(),
-  })
-  .refine((data) => data.password === data["confirm-password"], {
-    message: "Passwords don't match",
-    path: ["confirm-password"],
-  });
-
 export function ResetPasswordForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
+  const t = useTranslations();
 
   const searchParams = useSearchParams();
+
+  const formSchema = z
+    .object({
+      password: z.string().min(6, t("auth-validation-password-min-length")),
+      "confirm-password": z.string(),
+    })
+    .refine((data) => data.password === data["confirm-password"], {
+      message: t("auth-validation-passwords-no-match"),
+      path: ["confirm-password"],
+    });
 
   const form = useForm({
     defaultValues: {
@@ -63,10 +65,9 @@ export function ResetPasswordForm({ ...props }: React.ComponentProps<typeof Card
             throw new Error(err.message || "Password reset failed");
           }),
         {
-          loading: "Resetting your password...",
-          success: "Password reset successfully!",
-          error:
-            "Failed to reset password. Please try again. Token is either invalid or has expired.",
+          loading: t("auth-toast-resetting-password"),
+          success: t("auth-toast-password-reset-success"),
+          error: t("auth-toast-password-reset-failed"),
           duration: 2000,
         },
       );
@@ -76,8 +77,8 @@ export function ResetPasswordForm({ ...props }: React.ComponentProps<typeof Card
   return (
     <Card {...props}>
       <CardHeader>
-        <CardTitle>Reset Password</CardTitle>
-        <CardDescription>Enter your new password below</CardDescription>
+        <CardTitle>{t("auth-reset-password-title")}</CardTitle>
+        <CardDescription>{t("auth-reset-password-description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -92,7 +93,7 @@ export function ResetPasswordForm({ ...props }: React.ComponentProps<typeof Card
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>New Password</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>{t("auth-field-new-password")}</FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -102,7 +103,7 @@ export function ResetPasswordForm({ ...props }: React.ComponentProps<typeof Card
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                     />
-                    <FieldDescription>Must be at least 6 characters long.</FieldDescription>
+                    <FieldDescription>{t("auth-field-password-description")}</FieldDescription>
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
                 );
@@ -113,7 +114,9 @@ export function ResetPasswordForm({ ...props }: React.ComponentProps<typeof Card
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Confirm New Password</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      {t("auth-field-confirm-new-password")}
+                    </FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -123,7 +126,9 @@ export function ResetPasswordForm({ ...props }: React.ComponentProps<typeof Card
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                     />
-                    <FieldDescription>Please confirm your new password.</FieldDescription>
+                    <FieldDescription>
+                      {t("auth-field-confirm-password-description")}
+                    </FieldDescription>
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
                 );
@@ -132,7 +137,7 @@ export function ResetPasswordForm({ ...props }: React.ComponentProps<typeof Card
 
             <FieldGroup>
               <Field>
-                <Button type="submit">Reset Password</Button>
+                <Button type="submit">{t("auth-button-reset-password")}</Button>
               </Field>
             </FieldGroup>
           </FieldGroup>
