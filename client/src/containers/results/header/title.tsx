@@ -19,13 +19,13 @@ const HELP_LINKS = {
   pt: "https://rise.articulate.com/share/DzHpFspTQWmMCeeoMXA2_6v5Zljl-b7i#/?locale=pt-br",
 };
 
-export default function EditableHeader({ value = "Selected area" }: { value?: string }) {
+export default function EditableHeader({ value = "selected-area" }: { value?: "selected-area" }) {
   const locale = useLocale();
   const t = useTranslations();
 
   const [location, setLocation] = useSyncLocation();
   const [editMode, setEditMode] = useState(false);
-  const [title, setTitle] = useState(location?.custom_title ?? value);
+  const [title, setTitle] = useState(location?.custom_title ?? t(value));
   const [pendingTitle, setPendingTitle] = useState(title);
   const shouldSelect = useRef(false);
 
