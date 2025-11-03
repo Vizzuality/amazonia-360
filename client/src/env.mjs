@@ -11,7 +11,16 @@ export const env = createEnv({
   },
   client: {
     NEXT_PUBLIC_WEBSHOT_URL: z.url(),
-    NEXT_PUBLIC_URL: z.url(),
+    NEXT_PUBLIC_URL: z
+      .url()
+      .optional()
+      .transform((val) => {
+        if (process.env.VERCEL_BRANCH_URL) {
+          return `https://${process.env.VERCEL_BRANCH_URL}`;
+        }
+        return val;
+      })
+      .pipe(z.url()),
     NEXT_PUBLIC_API_URL: z.url(),
     NEXT_PUBLIC_API_KEY: z.string(),
     NEXT_PUBLIC_ARCGIS_API_KEY: z.string(),
@@ -21,9 +30,7 @@ export const env = createEnv({
     BASIC_AUTH_USER: process.env.BASIC_AUTH_USER,
     BASIC_AUTH_PASSWORD: process.env.BASIC_AUTH_PASSWORD,
     NEXT_PUBLIC_WEBSHOT_URL: process.env.NEXT_PUBLIC_WEBSHOT_URL,
-    NEXT_PUBLIC_URL: process.env.VERCEL_BRANCH_URL
-      ? `https://${process.env.VERCEL_BRANCH_URL}`
-      : process.env.NEXT_PUBLIC_URL,
+    NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     NEXT_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_API_KEY,
     NEXT_PUBLIC_ARCGIS_API_KEY: process.env.NEXT_PUBLIC_ARCGIS_API_KEY,
