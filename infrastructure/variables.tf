@@ -3,11 +3,6 @@ variable "aws_profile" {
   description = "AWS profile to use to perform TF operations"
 }
 
-variable openai_token {
-    type = string
-    description = "OpenAI API token"
-}
-
 variable "allowed_account_id" {
   type        = string
   description = "AWS account id"
@@ -38,18 +33,19 @@ variable "dev" {
     aws_region = string
     api = object({
       auth_token      = string
+      openai_token    = string
       tiff_path       = string
       grid_tiles_path = string
     })
     client = object({
-      next_public_api_url      = string
-      next_public_api_key      = string
-      next_public_arcgis_api_key = string
-      next_public_webshot_url = string
+      next_public_api_url          = string
+      next_public_api_key          = string
+      next_public_arcgis_api_key   = string
+      next_public_webshot_url      = string
       next_public_feature_partners = string
-      basic_auth_enabled       = string
-      basic_auth_user          = string
-      basic_auth_password      = string
+      basic_auth_enabled           = string
+      basic_auth_user              = string
+      basic_auth_password          = string
     })
   })
 }
@@ -59,18 +55,19 @@ variable "staging" {
     aws_region = string
     api = object({
       auth_token      = string
+      openai_token    = string
       tiff_path       = string
       grid_tiles_path = string
     })
     client = object({
-      next_public_api_url      = string
-      next_public_api_key      = string
-      next_public_arcgis_api_key = string
-      next_public_webshot_url = string
+      next_public_api_url          = string
+      next_public_api_key          = string
+      next_public_arcgis_api_key   = string
+      next_public_webshot_url      = string
       next_public_feature_partners = string
-      basic_auth_enabled       = string
-      basic_auth_user          = string
-      basic_auth_password      = string
+      basic_auth_enabled           = string
+      basic_auth_user              = string
+      basic_auth_password          = string
     })
   })
 }
@@ -80,18 +77,19 @@ variable "prod" {
     aws_region = string
     api = object({
       auth_token      = string
+      openai_token    = string
       tiff_path       = string
       grid_tiles_path = string
     })
     client = object({
-      next_public_api_url      = string
-      next_public_api_key      = string
-      next_public_arcgis_api_key = string
-      next_public_webshot_url = string
+      next_public_api_url          = string
+      next_public_api_key          = string
+      next_public_arcgis_api_key   = string
+      next_public_webshot_url      = string
       next_public_feature_partners = string
-      basic_auth_enabled       = string
-      basic_auth_user          = string
-      basic_auth_password      = string
+      basic_auth_enabled           = string
+      basic_auth_user              = string
+      basic_auth_password          = string
     })
   })
 }

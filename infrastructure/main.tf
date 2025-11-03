@@ -90,7 +90,6 @@ module "github" {
 
     # API
     TF_API_REPOSITORY_NAME = module.api_ecr.repository_name
-    OPENAI_TOKEN           = var.openai_token
 
     # Client
     TF_CLIENT_REPOSITORY_NAME = module.client_ecr.repository_name
@@ -144,8 +143,8 @@ module "dev" {
   }
   github_additional_environment_secrets = {
     # API
-    TF_API_AUTH_TOKEN = var.dev.api.auth_token
-
+    TF_API_AUTH_TOKEN   = var.dev.api.auth_token
+    TF_API_OPENAI_TOKEN = var.dev.api.openai_token
     # Client
     TF_CLIENT_NEXT_PUBLIC_API_KEY        = var.dev.client.next_public_api_key
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.dev.client.next_public_arcgis_api_key
@@ -189,7 +188,8 @@ module "staging" {
   }
   github_additional_environment_secrets = {
     # API
-    TF_API_AUTH_TOKEN = var.staging.api.auth_token
+    TF_API_AUTH_TOKEN   = var.staging.api.auth_token
+    TF_API_OPENAI_TOKEN = var.staging.api.openai_token
 
     # Client
     TF_CLIENT_NEXT_PUBLIC_API_KEY        = var.staging.client.next_public_api_key
@@ -234,7 +234,8 @@ module "prod" {
   }
   github_additional_environment_secrets = {
     # API
-    TF_API_AUTH_TOKEN = var.prod.api.auth_token
+    TF_API_AUTH_TOKEN   = var.prod.api.auth_token
+    TF_API_OPENAI_TOKEN = var.prod.api.openai_token
 
     # Client
     TF_CLIENT_NEXT_PUBLIC_API_KEY        = var.prod.client.next_public_api_key
