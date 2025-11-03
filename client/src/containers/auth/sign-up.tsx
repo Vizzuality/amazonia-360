@@ -2,6 +2,7 @@
 
 import { useForm } from "@tanstack/react-form";
 import { signIn } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -14,19 +15,20 @@ import { Link, useRouter } from "@/i18n/navigation";
 
 import { sdk } from "@/services/sdk";
 
-const formSchema = z
-  .object({
-    email: z.email("Please enter a valid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters long"),
-    "confirm-password": z.string(),
-  })
-  .refine((data) => data.password === data["confirm-password"], {
-    message: "Passwords don't match",
-    path: ["confirm-password"],
-  });
-
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
+  const t = useTranslations();
+
+  const formSchema = z
+    .object({
+      email: z.email(t("auth-validation-email-invalid")),
+      password: z.string().min(6, t("auth-validation-password-min-length")),
+      "confirm-password": z.string(),
+    })
+    .refine((data) => data.password === data["confirm-password"], {
+      message: t("auth-validation-passwords-no-match"),
+      path: ["confirm-password"],
+    });
 
   const form = useForm({
     defaultValues: {
@@ -63,9 +65,9 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             });
           }),
         {
-          loading: "Creating your account...",
-          success: "Account created successfully!",
-          error: "Failed to create account. Please try again.",
+          loading: t("auth-toast-creating-account"),
+          success: t("auth-toast-account-created"),
+          error: t("auth-toast-account-creation-failed"),
           duration: 2000,
         },
       );
@@ -75,8 +77,8 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   return (
     <Card {...props}>
       <CardHeader>
-        <CardTitle>Create an account</CardTitle>
-        <CardDescription>Enter your information below to create your account</CardDescription>
+        <CardTitle>{t("auth-signup-title")}</CardTitle>
+        <CardDescription>{t("auth-signup-description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -91,7 +93,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>{t("auth-field-email")}</FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -110,7 +112,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>{t("auth-field-password")}</FieldLabel>
                     <Input
                       id={field.name}
                       type="password"
@@ -129,7 +131,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Confirm Password</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>{t("auth-field-confirm-password")}</FieldLabel>
                     <Input
                       id={field.name}
                       type="password"
@@ -146,9 +148,10 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 
             <FieldGroup>
               <Field>
-                <Button type="submit">Create Account</Button>
+                <Button type="submit">{t("auth-button-create-account")}</Button>
                 <FieldDescription className="px-6 text-center">
-                  Already have an account? <Link href="/auth/sign-in">Sign in</Link>
+                  {t("auth-link-already-have-account")}{" "}
+                  <Link href="/auth/sign-in">{t("auth-link-sign-in")}</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>
