@@ -254,6 +254,8 @@
   "metadata-signin-page-description": "Sign in to your account",
   "metadata-signup-page-title": "Sign Up",
   "metadata-signup-page-description": "Create a new account",
+  "metadata-forgot-password-page-title": "Forgot Password",
+  "metadata-forgot-password-page-description": "Reset your password",
   "drawing-tools-clear": "Clear area selection",
   "drawing-tools-edit": "Edit area",
   "drawing-tools-edit-cancel": "Cancel area edit",
