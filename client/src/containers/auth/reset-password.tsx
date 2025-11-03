@@ -1,8 +1,8 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
+
 import { useForm } from "@tanstack/react-form";
-import { signIn } from "next-auth/react";
-import { LuGithub } from "react-icons/lu";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -11,40 +11,62 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-import { Link, useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 
-const formSchema = z.object({
-  email: z.email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters long"),
-});
+import { sdk } from "@/services/sdk";
 
-export function SignInForm(props: React.ComponentProps<"div">) {
+const formSchema = z
+  .object({
+    password: z.string().min(6, "Password must be at least 6 characters long"),
+    "confirm-password": z.string(),
+  })
+  .refine((data) => data.password === data["confirm-password"], {
+    message: "Passwords don't match",
+    path: ["confirm-password"],
+  });
+
+export function ResetPasswordForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+
   const form = useForm({
     defaultValues: {
-      email: "",
       password: "",
+      "confirm-password": "",
     },
     validators: {
-      onChange: formSchema,
+      onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
       toast.promise(
-        signIn("credentials", {
-          redirect: false,
-          email: value.email,
-          password: value.password,
-        }).then((r) => {
-          if (r.error) {
-            throw new Error(r.error);
-          }
+        // Replace this with your actual reset password API call
+        sdk
+          .resetPassword({
+            collection: "users",
+            data: {
+              password: value.password,
+              token: searchParams.get("token") ?? "",
+            },
+          })
+          .then((r) => {
+            if ("errors" in r) {
+              const errs = r.errors as {
+                message: string;
+              }[];
+              throw new Error(errs.map((e) => e.message).join(", "));
+            }
 
-          router.push("/my-area");
-        }),
+            router.push("/auth/sign-in");
+          })
+          .catch((err) => {
+            throw new Error(err.message || "Password reset failed");
+          }),
         {
-          loading: "Logging in...",
-          success: "Logged in successfully!",
-          error: "Failed to log in. Please check your credentials and try again.",
+          loading: "Resetting your password...",
+          success: "Password reset successfully!",
+          error:
+            "Failed to reset password. Please try again. Token is either invalid or has expired.",
           duration: 2000,
         },
       );
@@ -54,8 +76,8 @@ export function SignInForm(props: React.ComponentProps<"div">) {
   return (
     <Card {...props}>
       <CardHeader>
-        <CardTitle>Login to your account</CardTitle>
-        <CardDescription>Enter your email below to login to your account</CardDescription>
+        <CardTitle>Reset Password</CardTitle>
+        <CardDescription>Enter your new password below</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -65,74 +87,54 @@ export function SignInForm(props: React.ComponentProps<"div">) {
           }}
         >
           <FieldGroup>
-            <form.Field name="email">
-              {(field) => {
-                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      aria-invalid={isInvalid}
-                    />
-                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                  </Field>
-                );
-              }}
-            </form.Field>
-
             <form.Field name="password">
               {(field) => {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>New Password</FieldLabel>
                     <Input
                       id={field.name}
-                      type="password"
                       name={field.name}
+                      type="password"
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                     />
+                    <FieldDescription>Must be at least 6 characters long.</FieldDescription>
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
-
-                    <Link
-                      href="/auth/forgot-password"
-                      className="ml-auto inline-block text-sm text-muted-foreground underline-offset-4 hover:underline"
-                    >
-                      Forgot your password?
-                    </Link>
+                  </Field>
+                );
+              }}
+            </form.Field>
+            <form.Field name="confirm-password">
+              {(field) => {
+                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>Confirm New Password</FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      type="password"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                    />
+                    <FieldDescription>Please confirm your new password.</FieldDescription>
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
                 );
               }}
             </form.Field>
 
-            <Field>
-              <Button type="submit">Login</Button>
-              <FieldDescription className="text-center">
-                Don&apos;t have an account? <Link href="/auth/sign-up">Sign up</Link>
-              </FieldDescription>
-            </Field>
-
-            <Field>
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => {
-                  signIn("github", { callbackUrl: "/my-area" });
-                }}
-              >
-                <LuGithub className="mr-2 h-4 w-4" />
-                Continue with GitHub
-              </Button>
-            </Field>
+            <FieldGroup>
+              <Field>
+                <Button type="submit">Reset Password</Button>
+              </Field>
+            </FieldGroup>
           </FieldGroup>
         </form>
       </CardContent>

@@ -256,6 +256,8 @@
   "metadata-signup-page-description": "Crie uma nova conta",
   "metadata-forgot-password-page-title": "Esqueci minha senha",
   "metadata-forgot-password-page-description": "Redefina sua senha",
+  "metadata-reset-password-page-title": "Redefinir senha",
+  "metadata-reset-password-page-description": "Defina uma nova senha",
   "drawing-tools-clear": "Limpar seleção de área",
   "drawing-tools-edit": "Editar área",
   "drawing-tools-edit-cancel": "Cancelar edição de área",

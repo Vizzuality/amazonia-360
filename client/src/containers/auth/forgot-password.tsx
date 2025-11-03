@@ -4,8 +4,6 @@ import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
-import { cn } from "@/lib/utils";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -17,7 +15,7 @@ const formSchema = z.object({
   email: z.email("Please enter a valid email address"),
 });
 
-export function ForgotPasswordForm({ className, ...props }: React.ComponentProps<"div">) {
+export function ForgotPasswordForm(props: React.ComponentProps<"div">) {
   const form = useForm({
     defaultValues: {
       email: "",
@@ -34,7 +32,8 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
               email: value.email,
             },
           })
-          .then(() => {
+          .then((r) => {
+            console.log(r);
             console.log("Password reset email sent");
           }),
         {
@@ -48,49 +47,47 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
   });
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Forgot password</CardTitle>
-          <CardDescription>
-            Enter your email address to receive a password reset link.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              form.handleSubmit();
-            }}
-          >
-            <FieldGroup>
-              <form.Field name="email">
-                {(field) => {
-                  const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        aria-invalid={isInvalid}
-                      />
-                      {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                    </Field>
-                  );
-                }}
-              </form.Field>
+    <Card {...props}>
+      <CardHeader>
+        <CardTitle>Forgot password</CardTitle>
+        <CardDescription>
+          Enter your email address to receive a password reset link.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit();
+          }}
+        >
+          <FieldGroup>
+            <form.Field name="email">
+              {(field) => {
+                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                    />
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                  </Field>
+                );
+              }}
+            </form.Field>
 
-              <Field>
-                <Button type="submit">Send reset link</Button>
-              </Field>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+            <Field>
+              <Button type="submit">Send reset link</Button>
+            </Field>
+          </FieldGroup>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
