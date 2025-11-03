@@ -210,6 +210,30 @@ jobs:
           printf 'APP_BASIC_AUTH_PASSWORD_ESCAPED=%s\n' "$app_basic_auth_password_escaped" >> $GITHUB_ENV
         id: escape_variables
 
+      - name: Promote grid data to s3 of next environment
+        shell: bash
+        run: |
+          set -e
+
+          if [ "${{ github.ref_name }}" = "staging" ]; then
+            SRC_BUCKET="amazonia360-develop-bucket"
+            DEST_BUCKET="amazonia360-staging-bucket"
+            echo "Promoting data from DEV → STAGING"
+          elif [ "${{ github.ref_name }}" = "main" ]; then
+            SRC_BUCKET="amazonia360-staging-bucket"
+            DEST_BUCKET="amazonia360-production-bucket"
+            echo "Promoting data from STAGING → PRODUCTION"
+          else
+            echo "No S3 promotion for branch ${{ github.ref_name }}"
+            exit 0
+          fi
+
+          aws s3 sync s3://$SRC_BUCKET s3://$DEST_BUCKET \
+            --exclude "*" \
+            --include "grid/*" \
+            --delete \
+            --exact-timestamps
+
       - name: Generate docker compose file
         working-directory: infrastructure/source_bundle
         env:
