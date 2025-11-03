@@ -212,9 +212,9 @@ jobs:
 
       - name: Promote grid data to s3 of next environment
         shell: bash
+        # DEBT: Bucket names are hardcoded
         run: |
           set -e
-
           if [ "${{ github.ref_name }}" = "staging" ]; then
             SRC_BUCKET="amazonia360-develop-bucket"
             DEST_BUCKET="amazonia360-staging-bucket"
