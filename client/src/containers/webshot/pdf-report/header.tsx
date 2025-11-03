@@ -4,6 +4,8 @@ import { useMemo } from "react";
 
 import Image from "next/image";
 
+import { useTranslations } from "next-intl";
+
 import { cn } from "@/lib/utils";
 
 import { useSyncLocation } from "@/app/store";
@@ -20,6 +22,7 @@ interface PdfHeaderProps {
 }
 
 export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
+  const t = useTranslations();
   const [location] = useSyncLocation();
 
   // Generate a stable ID for this instance
@@ -73,7 +76,7 @@ export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
               "text-xs": true,
             })}
           >
-            {location?.custom_title || "Selected Area"}
+            {location?.custom_title || t("selected-area")}
 
             {!!topic ? <span className="font-thin"> | {topic}</span> : ""}
           </p>

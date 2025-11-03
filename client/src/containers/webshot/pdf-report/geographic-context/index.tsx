@@ -41,10 +41,6 @@ export default function PfdGeographicContext() {
     <div className="relative flex h-full">
       <div className="flex w-[50%] flex-col justify-center gap-8 bg-blue-50 px-14">
         <h1 className="text-2xl text-primary">{DATA?.name}</h1>
-        {/* TODO: Find a way to get this without doing the same requests all over again} */}
-        {/* <p className="font-medium">
-          The selected area intersects 1 state, 4 municipalities and 5 capital cities
-        </p> */}
         <div className="flex flex-col">
           {indicators &&
             indicators?.map((indicator, index) => (

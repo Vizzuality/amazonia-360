@@ -6,6 +6,7 @@ import Polygon from "@arcgis/core/geometry/Polygon";
 import Polyline from "@arcgis/core/geometry/Polyline";
 import { project } from "@arcgis/core/geometry/projection";
 import Graphic from "@arcgis/core/Graphic";
+import { useTranslations } from "next-intl";
 
 import { useGetFeatures } from "@/lib/query";
 import { useGetSearch } from "@/lib/search";
@@ -82,6 +83,8 @@ export const useLocation = (location?: Location | null) => {
 };
 
 export const useLocationTitle = (location?: Location | null) => {
+  const t = useTranslations();
+
   const { data: searchData } = useGetSearch(
     location?.type === "search" ? (location as SearchLocation) : null,
     {
@@ -95,11 +98,11 @@ export const useLocationTitle = (location?: Location | null) => {
     }
 
     if (location?.type && location?.type !== "search") {
-      return "Selected area";
+      return t("selected-area");
     }
 
     return null;
-  }, [location, searchData]);
+  }, [location, searchData, t]);
 };
 
 export const useLocationGeometry = (
