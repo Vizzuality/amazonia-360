@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 
 import { reportEditionModeAtom, useSyncLocation } from "@/app/(frontend)/store";
 
+import AuthHeader from "@/containers/header/auth/desktop";
 import LanguageSelector from "@/containers/header/language-selector/desktop";
 import { Media } from "@/containers/media";
 
@@ -59,9 +60,6 @@ export default function Header() {
             <Link href="/report" className="text-sm text-foreground hover:text-cyan-500">
               {t("header-report-tool")}
             </Link>
-            <Link href="/auth/sign-in" className="text-sm text-foreground hover:text-cyan-500">
-              {t("auth-sign-in")}
-            </Link>
           </>
         )}
         {!location && isReportSub && <DesktopDrawingTools />}
@@ -93,7 +91,11 @@ export default function Header() {
         <Logo />
         <Media greaterThanOrEqual="md" className="flex items-center space-x-4">
           {DYNAMIC_HEADER}
-          <LanguageSelector />
+
+          <div className="flex items-center space-x-1">
+            <LanguageSelector />
+            <AuthHeader />
+          </div>
         </Media>
 
         <Media lessThan="md">

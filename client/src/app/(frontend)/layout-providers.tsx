@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider as JotaiProvider } from "jotai";
+import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { Locale } from "next-intl";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
@@ -44,9 +45,11 @@ function getQueryClient() {
 
 export default function LayoutProviders({
   locale,
+  session,
   children,
 }: {
   locale: Locale;
+  session: Session | null;
   children: React.ReactNode;
 }) {
   // NOTE: Avoid useState when initializing the query client if you don't
@@ -56,7 +59,7 @@ export default function LayoutProviders({
   const queryClient = getQueryClient();
 
   return (
-    <SessionProvider basePath="/local-api/auth">
+    <SessionProvider session={session} basePath="/local-api/auth">
       <MediaContextProvider>
         <QueryClientProvider client={queryClient}>
           <NuqsAdapter

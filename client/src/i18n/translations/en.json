@@ -333,5 +333,7 @@
   "indicator-webshot-error": "There was an error exporting the PNG for {name}. Please try again.",
   "indicator-webshot-success": "Successfully exported PNG for {name}",
   "auth-sign-in": "Sign In",
-  "auth-sign-up": "Sign Up"
+  "auth-sign-up": "Sign Up",
+  "auth-my-area": "My Area",
+  "auth-logout": "Logout"
 }
