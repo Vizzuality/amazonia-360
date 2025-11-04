@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
+import { auth } from "@/lib/auth";
+
 import LayoutProviders from "@/app/(frontend)/layout-providers";
 
 import { routing } from "@/i18n/routing";
@@ -55,8 +57,10 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[lo
   // Enable static rendering
   setRequestLocale(locale);
 
+  const session = await auth();
+
   return (
-    <LayoutProviders locale={locale}>
+    <LayoutProviders locale={locale} session={session}>
       <html lang={locale}>{children}</html>
     </LayoutProviders>
   );

@@ -8,6 +8,8 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 
+import { auth } from "@/lib/auth";
+
 import RootHead from "@/app/(frontend)/head";
 
 import Header from "@/containers/header";
@@ -15,6 +17,7 @@ import Header from "@/containers/header";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 
+import { redirect } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 
 import "@arcgis/core/assets/esri/themes/light/main.css";
@@ -55,10 +58,19 @@ const montserrat = Montserrat({
   variable: "--montserrat",
 });
 
-export default async function RootLayout({ children, params }: LayoutProps<"/[locale]">) {
+export default async function PrivateLayout({ children, params }: LayoutProps<"/[locale]">) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     notFound();
+  }
+
+  const session = await auth();
+
+  if (!session) {
+    redirect({
+      locale,
+      href: "/auth/sign-in",
+    });
   }
 
   return (
