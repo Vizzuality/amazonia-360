@@ -42,7 +42,7 @@ export function SignInForm(props: React.ComponentProps<"div">) {
             throw new Error(r.error);
           }
 
-          router.push("/my-area");
+          router.push("/my-amazonia");
         }),
         {
           loading: t("auth-toast-logging-in"),
@@ -130,7 +130,7 @@ export function SignInForm(props: React.ComponentProps<"div">) {
                 variant="outline"
                 type="button"
                 onClick={() => {
-                  signIn("github", { callbackUrl: "/my-area" });
+                  signIn("github", { callbackUrl: "/my-amazonia" });
                 }}
               >
                 <LuGithub className="mr-2 h-4 w-4" />
