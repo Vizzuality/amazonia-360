@@ -51,8 +51,8 @@ const AuthHeader = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
           <DropdownMenuItem asChild>
-            <Link href="/my-area" className="flex cursor-pointer items-center">
-              {t("auth-my-area")}
+            <Link href="/my-amazonia" className="flex cursor-pointer items-center">
+              {t("auth-my-amazonia")}
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
