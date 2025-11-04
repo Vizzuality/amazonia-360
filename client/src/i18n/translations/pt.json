@@ -331,7 +331,9 @@
   "pdf-report-generating-subtitle": "Seu relatório está sendo gerado. Isso pode levar um tempo dependendo do tamanho da área selecionada e do número de indicadores incluídos.",
   "indicator-webshot-loading": "Exportando PNG de {name}",
   "indicator-webshot-error": "Houve um erro ao exportar o PNG de {name}. Por favor, tente novamente.",
-  "indicator-webshot-success": "PNG exportado com sucesso para {name}!",
-  "auth-sign-in": "Iniciar sessão",
-  "auth-sign-up": "Registar-se"
+  "indicator-webshot-success": "PNG exportado com sucesso para {name}",
+  "auth-sign-in": "Entrar",
+  "auth-sign-up": "Registrar-se",
+  "auth-my-area": "Minha Área",
+  "auth-logout": "Sair"
 }
