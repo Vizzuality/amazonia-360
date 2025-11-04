@@ -28,7 +28,12 @@ export default async function middleware(req: NextRequest) {
   }
 
   // Step 3: Apply locale-based routing using next-intl
-  return intlMiddleware(req);
+  const response = intlMiddleware(req);
+
+  // Step 4: Pass along the modified headers
+  response.headers.set("x-current-path", req.nextUrl.pathname);
+
+  return response;
 }
 
 // HTTP Basic Auth logic
