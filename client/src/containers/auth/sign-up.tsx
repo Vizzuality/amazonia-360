@@ -61,7 +61,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 throw new Error(r.error);
               }
 
-              router.push("/my-area");
+              router.push("/my-amazonia");
             });
           }),
         {
