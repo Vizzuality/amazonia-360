@@ -41,8 +41,6 @@ ENV BASIC_AUTH_PASSWORD "$BASIC_AUTH_PASSWORD"
 
 ENV COREPACK_INTEGRITY_KEYS 0
 
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-
 ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=deps /app/node_modules ./node_modules
@@ -87,39 +85,11 @@ ENV BASIC_AUTH_PASSWORD "$BASIC_AUTH_PASSWORD"
 
 ENV COREPACK_INTEGRITY_KEYS 0
 
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-
 ENV NEXT_TELEMETRY_DISABLED=1
 
 ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED=1
-
-ENV XDG_CONFIG_HOME=/tmp/.chromium
-ENV XDG_CACHE_HOME=/tmp/.chromium
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-  fonts-liberation \
-  libasound2 \
-  libatk-bridge2.0-0 \
-  libatk1.0-0 \
-  libcups2 \
-  libdrm2 \
-  libgbm1 \
-  libgtk-3-0 \
-  libnspr4 \
-  libnss3 \
-  libx11-xcb1 \
-  libxcomposite1 \
-  libxdamage1 \
-  libxrandr2 \
-  xdg-utils \
-  libu2f-udev \
-  libxshmfence1 \
-  libglu1-mesa \
-  chromium \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
