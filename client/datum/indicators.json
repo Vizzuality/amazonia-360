@@ -9375,9 +9375,9 @@
         ],
         "resource": {
             "name": "GDPMEAN",
-            "type": "",
-            "column": "",
-            "layer_id": "",
+            "type": "h3",
+            "column": "GDPMEAN",
+            "layer_id": "0",
             "rasterFunction": "",
             "legend": "",
             "url": "",
