@@ -3,6 +3,7 @@
 import { atom } from "jotai";
 import { inferParserType, useQueryState } from "nuqs";
 import { createSerializer } from "nuqs/server";
+import { useLocalStorage } from "usehooks-ts";
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 
@@ -18,7 +19,10 @@ import {
   defaultTopicsConfigParser,
   indicatorsParser,
   indicatorsSettingsParser,
+  Location,
 } from "@/app/(frontend)/parsers";
+
+import { useReport } from "@/containers/providers/localstorage";
 
 import { SketchProps } from "@/components/map/sketch";
 
@@ -56,8 +60,13 @@ export const useSyncIndicatorsSettings = () => {
   return useQueryState("indicatorsSettings", indicatorsSettingsParser);
 };
 
-export const useSyncLocation = () => {
+export const useSyncLocationOld = () => {
   return useQueryState("location", locationParser);
+};
+
+export const useSyncLocation = () => {
+  const { id } = useReport();
+  return useLocalStorage<Location | null>(`${id}:location`, null);
 };
 
 // GRID PARAMS
