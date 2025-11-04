@@ -1,13 +1,17 @@
 import { Metadata } from "next";
 
+import { Montserrat } from "next/font/google";
 import { notFound } from "next/navigation";
 
-import { hasLocale } from "next-intl";
+import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { auth } from "@/lib/auth";
 
+import RootHead from "@/app/(frontend)/head";
 import LayoutProviders from "@/app/(frontend)/layout-providers";
+
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 import { routing } from "@/i18n/routing";
 
@@ -48,6 +52,12 @@ export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Pr
   };
 }
 
+const montserrat = Montserrat({
+  weight: ["500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--montserrat",
+});
+
 export default async function RootLayout({ children, params }: LayoutProps<"/[locale]">) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
@@ -61,7 +71,14 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[lo
 
   return (
     <LayoutProviders locale={locale} session={session}>
-      <html lang={locale}>{children}</html>
+      <html lang={locale}>
+        <RootHead />
+        <body className={`${montserrat.className} w-full overflow-x-hidden`}>
+          <SidebarProvider>
+            <NextIntlClientProvider locale={locale}>{children}</NextIntlClientProvider>
+          </SidebarProvider>
+        </body>
+      </html>
     </LayoutProviders>
   );
 }
