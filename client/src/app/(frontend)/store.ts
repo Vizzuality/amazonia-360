@@ -1,5 +1,7 @@
 "use client";
 
+import { useParams } from "next/navigation";
+
 import { atom } from "jotai";
 import { useQueryState } from "nuqs";
 import { useLocalStorage } from "usehooks-ts";
@@ -12,8 +14,6 @@ import {
   gridDatasetsParser,
   gridDatasetSettingsParser,
   gridTableSettingsParser,
-  locationParser,
-  topicsParser,
   aiSummaryParser,
   defaultTopicsConfigParser,
   indicatorsParser,
@@ -21,8 +21,6 @@ import {
   Location,
   TopicView,
 } from "@/app/(frontend)/parsers";
-
-import { useReport } from "@/containers/providers/localstorage";
 
 import { SketchProps } from "@/components/map/sketch";
 
@@ -44,34 +42,27 @@ export const useSyncBbox = () => {
   return useQueryState("bbox", bboxParser);
 };
 
-export const useSyncTopicsOld = () => {
-  return useQueryState("topics", topicsParser);
-};
-
-export const useSyncTopics = () => {
-  const { id } = useReport();
-  return useLocalStorage<TopicView[]>(`${id}:topics`, []);
-};
-
 export const useSyncDefaultTopics = () => {
   return useQueryState("defaultTopics", defaultTopicsConfigParser);
 };
 
+export const useSyncTopics = () => {
+  const { id } = useParams();
+  return useLocalStorage<TopicView[] | null>(`${id ?? "new"}:topics`, null);
+};
+
+export const useSyncLocation = () => {
+  const { id } = useParams();
+  return useLocalStorage<Location | null>(`${id ?? "new"}:location`, null);
+};
+
+// INDICATORS PARAMS
 export const useSyncIndicators = () => {
   return useQueryState("indicators", indicatorsParser);
 };
 
 export const useSyncIndicatorsSettings = () => {
   return useQueryState("indicatorsSettings", indicatorsSettingsParser);
-};
-
-export const useSyncLocationOld = () => {
-  return useQueryState("location", locationParser);
-};
-
-export const useSyncLocation = () => {
-  const { id } = useReport();
-  return useLocalStorage<Location | null>(`${id}:location`, null);
 };
 
 // GRID PARAMS

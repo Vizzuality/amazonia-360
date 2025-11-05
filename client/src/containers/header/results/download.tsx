@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { FileDown } from "lucide-react";
@@ -13,16 +13,12 @@ import { Link } from "@/i18n/navigation";
 
 export default function ReportButton() {
   const t = useTranslations();
-  const searchParams = useSearchParams();
+  const { id } = useParams();
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Link
-          href={`/webshot/report/?${searchParams.toString()}`}
-          target="_blank"
-          className="block"
-        >
+        <Link href={`/webshot/report/${id}`} target="_blank" className="block">
           <Button variant="outline" className="space-x-2 border-none px-2.5 py-2 shadow-none">
             <FileDown className="h-5 w-5" />
           </Button>

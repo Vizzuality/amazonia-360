@@ -23,6 +23,10 @@ import { Link } from "@/i18n/navigation";
 export default function NewReport() {
   const t = useTranslations();
 
+  const handleNewReport = () => {
+    localStorage.removeItem("new:location");
+  };
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild className="print:hidden">
@@ -49,7 +53,7 @@ export default function NewReport() {
         <AlertDialogFooter className="flex w-full justify-end space-x-2 justify-self-end">
           <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
 
-          <Link href="/report">
+          <Link href="/report" onClick={handleNewReport}>
             <AlertDialogAction>{t("report-results-buttons-new-report-confirm")}</AlertDialogAction>
           </Link>
         </AlertDialogFooter>
