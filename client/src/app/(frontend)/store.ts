@@ -1,8 +1,7 @@
 "use client";
 
 import { atom } from "jotai";
-import { inferParserType, useQueryState } from "nuqs";
-import { createSerializer } from "nuqs/server";
+import { useQueryState } from "nuqs";
 import { useLocalStorage } from "usehooks-ts";
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
@@ -20,6 +19,7 @@ import {
   indicatorsParser,
   indicatorsSettingsParser,
   Location,
+  TopicView,
 } from "@/app/(frontend)/parsers";
 
 import { useReport } from "@/containers/providers/localstorage";
@@ -44,8 +44,13 @@ export const useSyncBbox = () => {
   return useQueryState("bbox", bboxParser);
 };
 
-export const useSyncTopics = () => {
+export const useSyncTopicsOld = () => {
   return useQueryState("topics", topicsParser);
+};
+
+export const useSyncTopics = () => {
+  const { id } = useReport();
+  return useLocalStorage<TopicView[]>(`${id}:topics`, []);
 };
 
 export const useSyncDefaultTopics = () => {
@@ -93,19 +98,6 @@ export const useSyncGridTableSettings = () => {
 // AI SUMMARY PARAMS
 export const useSyncAiSummary = () => {
   return useQueryState("aiSummary", aiSummaryParser);
-};
-
-const searchParams = {
-  topics: topicsParser,
-  location: locationParser,
-};
-
-export const serializeSearchParams = createSerializer(searchParams);
-
-export const useSyncSearchParams = (
-  defaultParams?: Partial<inferParserType<typeof searchParams>>,
-) => {
-  return serializeSearchParams(defaultParams ?? {});
 };
 
 // JOTAI PARAMS

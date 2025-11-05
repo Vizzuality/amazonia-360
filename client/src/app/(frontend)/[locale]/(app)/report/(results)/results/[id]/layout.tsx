@@ -1,11 +1,15 @@
 import { ReportProvider } from "@/containers/providers/localstorage";
 import ReportMap from "@/containers/report/map";
 
-export default await function ReportNewLayout({ children }: LayoutProps<"/[locale]/report">) {
+export default async function ReportNewLayout({
+  children,
+  params,
+}: LayoutProps<"/[locale]/report/results/[id]">) {
+  const { id } = await params;
   return (
-    <ReportProvider id="new">
+    <ReportProvider id={id}>
       {children}
       <ReportMap />
     </ReportProvider>
   );
-};
+}
