@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useCallback, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useCallback, useRef, useState } from "react";
 
 import { LucideHelpCircle } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -8,7 +8,7 @@ import { LuPen, LuCheck, LuX } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { useSyncLocation } from "@/app/(frontend)/store";
+import { useSyncTitle } from "@/app/(frontend)/store";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,14 +19,13 @@ const HELP_LINKS = {
   pt: "https://rise.articulate.com/share/DzHpFspTQWmMCeeoMXA2_6v5Zljl-b7i#/?locale=pt-br",
 };
 
-export default function EditableHeader({ value = "selected-area" }: { value?: "selected-area" }) {
+export default function EditableHeader() {
   const locale = useLocale();
   const t = useTranslations();
 
-  const [location, setLocation] = useSyncLocation();
-  const [editMode, setEditMode] = useState(false);
-  const [title, setTitle] = useState(location?.custom_title ?? t(value));
+  const [title, setTitle] = useSyncTitle();
   const [pendingTitle, setPendingTitle] = useState(title);
+  const [editMode, setEditMode] = useState(false);
   const shouldSelect = useRef(false);
 
   const setInputRef = (el: HTMLInputElement | null) => {
@@ -57,17 +56,13 @@ export default function EditableHeader({ value = "selected-area" }: { value?: "s
     setTitle(pendingTitle);
     shouldSelect.current = false;
     setEditMode(false);
-
-    setLocation(location ? { ...location, custom_title: pendingTitle } : location);
-  }, [location, pendingTitle, setLocation]);
+  }, [pendingTitle, setTitle]);
 
   const handleCancel = () => {
     setPendingTitle(title);
     shouldSelect.current = false;
     setEditMode(false);
   };
-
-  const TITLE = useMemo(() => location?.custom_title ?? title, [location, title]);
 
   return (
     <div className="sticky right-0 top-0 z-10 space-y-4 bg-blue-50 py-6 print:hidden">
@@ -76,7 +71,7 @@ export default function EditableHeader({ value = "selected-area" }: { value?: "s
           {!editMode && (
             <header className="flex items-center space-x-4">
               <h2 className="border border-transparent px-1 py-2 text-2xl font-medium text-foreground lg:text-3xl tall:xl:text-4xl">
-                {TITLE}
+                {title}
               </h2>
               <Button
                 type="button"
@@ -98,7 +93,7 @@ export default function EditableHeader({ value = "selected-area" }: { value?: "s
                 id={id}
                 ref={setInputRef}
                 autoFocus={editMode}
-                value={pendingTitle ?? TITLE}
+                value={pendingTitle ?? title ?? t("selected-area")}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleSave();
                   if (e.key === "Escape") handleCancel();
@@ -106,7 +101,6 @@ export default function EditableHeader({ value = "selected-area" }: { value?: "s
                 onChange={onInputChange}
                 readOnly={!editMode}
                 aria-readonly={!editMode}
-                aria-label={editMode ? (location?.custom_title ?? pendingTitle) : title}
                 className={cn(
                   "mx-0 inline h-full w-fit rounded-md bg-blue-50 px-1 py-2 text-2xl font-medium text-foreground shadow-none outline-none ring-2 ring-primary/40 focus:ring-0 lg:text-3xl tall:xl:text-4xl",
                 )}

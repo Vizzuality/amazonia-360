@@ -46,14 +46,20 @@ export const useSyncDefaultTopics = () => {
   return useQueryState("defaultTopics", defaultTopicsConfigParser);
 };
 
-export const useSyncTopics = () => {
+// REPORT PARAMS
+export const useSyncTitle = () => {
   const { id } = useParams();
-  return useLocalStorage<TopicView[] | null>(`${id ?? "new"}:topics`, null);
+  return useLocalStorage<string | null>(`${id ?? "new"}:title`, null);
 };
 
 export const useSyncLocation = () => {
   const { id } = useParams();
   return useLocalStorage<Location | null>(`${id ?? "new"}:location`, null);
+};
+
+export const useSyncTopics = () => {
+  const { id } = useParams();
+  return useLocalStorage<TopicView[] | null>(`${id ?? "new"}:topics`, null);
 };
 
 // INDICATORS PARAMS
