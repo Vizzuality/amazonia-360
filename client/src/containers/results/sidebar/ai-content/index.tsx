@@ -5,13 +5,21 @@ import { useCallback, useState } from "react";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useAtomValue } from "jotai";
 import { CircleAlert } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { LuInfo, LuLoader, LuSparkles } from "react-icons/lu";
 
+import { usePostSummaryTopicMutation } from "@/lib/ai";
+import { useLocationGeometry } from "@/lib/location";
+import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { AiSummary } from "@/app/(frontend)/parsers";
-import { isGeneratingAIReportAtom, useSyncAiSummary } from "@/app/(frontend)/store";
+import {
+  isGeneratingAIReportAtom,
+  useSyncAiSummary,
+  useSyncLocation,
+  useSyncTopics,
+} from "@/app/(frontend)/store";
 
 import { Button } from "@/components/ui/button";
 import { RadioGroup } from "@/components/ui/radio-group";
@@ -23,6 +31,7 @@ import AiSidebarContentCard from "./card";
 
 export default function AiSidebarContent() {
   const t = useTranslations();
+  const locale = useLocale();
 
   const AUDIENCES = [
     {
@@ -43,24 +52,84 @@ export default function AiSidebarContent() {
   ];
 
   const [aiSummary, setAiSummary] = useSyncAiSummary();
+  const { data: topicsData } = useGetDefaultTopics({ locale });
+  const [topics, setTopics] = useSyncTopics();
+  const [location] = useSyncLocation();
   const [ai_audience, setAiAudience] = useState<AiSummary["type"]>(aiSummary.type);
   const [ai_only_active, setAiOnlyActive] = useState<AiSummary["only_active"]>(
     aiSummary.only_active,
   );
 
+  const LOCATION = useLocationGeometry(location);
+
   const isGeneratingAIReport = useAtomValue(isGeneratingAIReportAtom);
+
+  // Set up the mutation for generating AI summaries
+  const summaryMutation = usePostSummaryTopicMutation({
+    onSuccess: (data, variables) => {
+      // Update the specific topic's description with the AI-generated result
+      if (variables.topic?.id && data?.description) {
+        setTopics(
+          (currentTopics) =>
+            currentTopics?.map((t) =>
+              t.id === variables.topic?.id ? { ...t, description: data.description } : t,
+            ) || [],
+        );
+      }
+    },
+    onError: (error) => {
+      console.error("Error generating AI summary:", error);
+    },
+  });
+
   const isGenerating =
-    aiSummary.enabled &&
-    !!isGeneratingAIReport &&
-    Object.values(isGeneratingAIReport).some((v) => v);
+    (aiSummary.enabled &&
+      !!isGeneratingAIReport &&
+      Object.values(isGeneratingAIReport).some((v) => v)) ||
+    summaryMutation.isPending;
 
   const handleClickAiGenerateSummary = useCallback(() => {
+    // Update the AI summary state first
     setAiSummary({
       type: ai_audience,
       only_active: ai_only_active,
       enabled: true,
     });
-  }, [ai_audience, ai_only_active, setAiSummary]);
+
+    // Get active topics (you may need to filter based on your business logic)
+    const activeTopics = topics || [];
+
+    // Loop through all active topics and generate summaries
+    activeTopics.forEach((topicView) => {
+      // Get active indicators for this topic
+      const activeIndicators = topicView.indicators?.map(({ id }) => id) || [];
+
+      // Filter indicators if only_active is true
+      const indicatorsToUse = ai_only_active ? activeIndicators : undefined;
+
+      // Trigger the mutation for this topic
+      summaryMutation.mutate({
+        topic: topicsData?.find((t) => t.id === topicView.id),
+        options: {
+          type: ai_audience,
+          only_active: ai_only_active,
+          enabled: true,
+        },
+        locale,
+        activeIndicators: indicatorsToUse,
+        location: LOCATION, // You may need to provide the actual location here
+      });
+    });
+  }, [
+    ai_audience,
+    ai_only_active,
+    setAiSummary,
+    topics,
+    summaryMutation,
+    locale,
+    topicsData,
+    LOCATION,
+  ]);
 
   const handleClickClearAiSummary = useCallback(() => {
     setAiSummary({ ...aiSummary, enabled: false });

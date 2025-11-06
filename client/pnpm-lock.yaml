@@ -47,6 +47,9 @@ importers:
       '@hookform/resolvers':
         specifier: 5.2.2
         version: 5.2.2(react-hook-form@7.65.0(react@19.2.0))
+      '@lexical/markdown':
+        specifier: 0.35.0
+        version: 0.35.0
       '@loaders.gl/arrow':
         specifier: 4.3.4
         version: 4.3.4(@loaders.gl/core@4.3.4)

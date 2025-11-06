@@ -41,11 +41,6 @@ export type GridHoverType = {
 export const useSyncBbox = () => {
   return useQueryState("bbox", bboxParser);
 };
-
-export const useSyncDefaultTopics = () => {
-  return useQueryState("defaultTopics", defaultTopicsConfigParser);
-};
-
 // REPORT PARAMS
 export const useSyncTitle = () => {
   const { id } = useParams();
@@ -60,6 +55,10 @@ export const useSyncLocation = () => {
 export const useSyncTopics = () => {
   const { id } = useParams();
   return useLocalStorage<TopicView[] | null>(`${id ?? "new"}:topics`, null);
+};
+
+export const useSyncDefaultTopics = () => {
+  return useQueryState("defaultTopics", defaultTopicsConfigParser);
 };
 
 // INDICATORS PARAMS

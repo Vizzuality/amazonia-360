@@ -35,6 +35,7 @@ export type IndicatorView = IndicatorMapView | IndicatorOtherView;
 
 export type TopicView = {
   id: number;
+  description?: string;
   indicators?: IndicatorView[];
 };
 
@@ -56,6 +57,7 @@ export const defaultTopicsConfigParser = parseAsArrayOf(
 ).withDefault([
   {
     id: 0,
+    description: undefined,
     indicators: [
       {
         id: 0,

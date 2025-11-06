@@ -29,6 +29,7 @@
     "@dnd-kit/sortable": "8.0.0",
     "@dnd-kit/utilities": "3.2.2",
     "@hookform/resolvers": "5.2.2",
+    "@lexical/markdown": "0.35.0",
     "@loaders.gl/arrow": "4.3.4",
     "@loaders.gl/core": "4.3.4",
     "@next/bundle-analyzer": "15.5.6",

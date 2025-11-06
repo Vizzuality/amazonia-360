@@ -1,9 +1,5 @@
 import { useMemo } from "react";
 
-import { useLocale } from "next-intl";
-
-import { useGetOverviewTopics } from "@/lib/topics";
-
 import { Indicator } from "@/types/indicator";
 
 import { useSyncTopics, useSyncDefaultTopics } from "@/app/(frontend)/store";
@@ -17,8 +13,6 @@ const OpacityControlButton = ({ indicator }: { indicator: Omit<Indicator, "resou
   const [topics, setTopics] = useSyncTopics();
   const [defaultTopics, setDefaultTopics] = useSyncDefaultTopics();
 
-  const locale = useLocale();
-  const { data: overviewTopicsData } = useGetOverviewTopics({ locale });
   const { opacity } = useMemo(() => {
     const topicWithIndicator =
       defaultTopics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id)) ||
@@ -38,7 +32,7 @@ const OpacityControlButton = ({ indicator }: { indicator: Omit<Indicator, "resou
         handleMapIndicatorPropertyChange(
           "opacity",
           value[0],
-          overviewTopicsData ?? null,
+          defaultTopics ?? null,
           indicator as Indicator,
           setDefaultTopics,
           setTopics,
