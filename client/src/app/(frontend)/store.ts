@@ -14,12 +14,12 @@ import {
   gridDatasetsParser,
   gridDatasetSettingsParser,
   gridTableSettingsParser,
-  aiSummaryParser,
   defaultTopicsConfigParser,
   indicatorsParser,
   indicatorsSettingsParser,
   Location,
   TopicView,
+  AiSummary,
 } from "@/app/(frontend)/parsers";
 
 import { SketchProps } from "@/components/map/sketch";
@@ -93,7 +93,13 @@ export const useSyncGridTableSettings = () => {
 
 // AI SUMMARY PARAMS
 export const useSyncAiSummary = () => {
-  return useQueryState("aiSummary", aiSummaryParser);
+  const { id } = useParams();
+  return useLocalStorage<AiSummary>(`${id ?? "new"}:ai-summary`, {
+    type: "Normal",
+    only_active: true,
+    enabled: false,
+    generating: {},
+  });
 };
 
 // JOTAI PARAMS
@@ -113,12 +119,13 @@ export const sketchActionAtom = atom<{
 }>({});
 
 export const reportPanelAtom = atom<"location" | "topics">("location");
+
+// GRID PARAMS
 export const gridPanelAtom = atom<"filters" | "table">("filters");
 export const gridCellHighlightAtom = atom<{ id: number | null; index: string | undefined }>({
   id: null,
   index: undefined,
 });
-
 export const gridHoverAtom = atom<GridHoverType>({
   id: null,
   cell: undefined,
@@ -131,17 +138,12 @@ export const gridHoverAtom = atom<GridHoverType>({
 
 export const selectedFiltersViewAtom = atom<boolean>(false);
 
-export const isGeneratingAIReportAtom = atom<Record<string, boolean>>();
-
-export const generatedAITextAtom = atom<{ content: { id: number; description: string }[] }>({
-  content: [],
-});
-
 export type ReportResultsTab = "indicators" | "ai_summaries";
 export const resultsSidebarTabAtom = atom<ReportResultsTab>("indicators");
 
 export const indicatorsExpandAtom = atom<Record<number, number[] | undefined> | undefined>({});
 
+// PDF ATOMS
 export const pdfIndicatorsMapStateAtom = atom<
   {
     id: `${Indicator["id"]}-${VisualizationTypes | "custom"}`;

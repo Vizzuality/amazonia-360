@@ -27,13 +27,13 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
     return topics?.find((t) => t.id === topic?.id);
   }, [topic, topics]);
 
-  // Check if AI is enabled and generating
-  const isGenerating = aiSummary.enabled;
-  const hasData = TOPIC?.description && aiSummary.type;
+  if (!aiSummary.generating?.[topic?.id as number] && !TOPIC?.description) {
+    return null;
+  }
 
   return (
     <div className="relative grid grid-cols-12 gap-6">
-      {isGenerating && !hasData && (
+      {aiSummary.generating?.[topic?.id as number] && (
         <div className="col-span-12 space-y-1.5">
           <p>Generating summary...</p>
           <Skeleton className="h-4" />
@@ -42,7 +42,7 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
         </div>
       )}
 
-      {hasData && (
+      {!aiSummary.generating?.[topic?.id as number] && TOPIC?.description && (
         <>
           <div className="relative col-span-12 text-sm font-medium text-muted-foreground lg:col-span-4">
             <Markdown className="prose-sm prose-p:text-muted-foreground lg:sticky lg:top-20">

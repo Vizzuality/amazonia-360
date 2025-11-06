@@ -14,7 +14,6 @@ import { TopicView } from "@/app/(frontend)/parsers";
 import {
   reportEditionModeAtom,
   resultsSidebarTabAtom,
-  useSyncAiSummary,
   useSyncTopics,
 } from "@/app/(frontend)/store";
 
@@ -42,7 +41,6 @@ export const ReportResultsContentItem = ({
   const t = useTranslations();
 
   const [, setTopics] = useSyncTopics();
-  const [ai_summary] = useSyncAiSummary();
   const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
   const setResultsSidebarTab = useSetAtom(resultsSidebarTabAtom);
 
@@ -153,7 +151,7 @@ export const ReportResultsContentItem = ({
             </Button>
           </header>
 
-          {ai_summary.enabled && <ReportResultsSummary topic={TOPIC} />}
+          <ReportResultsSummary topic={TOPIC} />
         </>
       )}
 

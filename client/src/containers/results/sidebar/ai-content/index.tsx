@@ -1,9 +1,8 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { TooltipPortal } from "@radix-ui/react-tooltip";
-import { useAtomValue } from "jotai";
 import { CircleAlert } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { LuInfo, LuLoader, LuSparkles } from "react-icons/lu";
@@ -14,12 +13,7 @@ import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { AiSummary } from "@/app/(frontend)/parsers";
-import {
-  isGeneratingAIReportAtom,
-  useSyncAiSummary,
-  useSyncLocation,
-  useSyncTopics,
-} from "@/app/(frontend)/store";
+import { useSyncAiSummary, useSyncLocation, useSyncTopics } from "@/app/(frontend)/store";
 
 import { Button } from "@/components/ui/button";
 import { RadioGroup } from "@/components/ui/radio-group";
@@ -51,18 +45,19 @@ export default function AiSidebarContent() {
     },
   ];
 
-  const [aiSummary, setAiSummary] = useSyncAiSummary();
   const { data: topicsData } = useGetDefaultTopics({ locale });
+
   const [topics, setTopics] = useSyncTopics();
   const [location] = useSyncLocation();
+
+  const [aiSummary, setAiSummary] = useSyncAiSummary();
+
   const [ai_audience, setAiAudience] = useState<AiSummary["type"]>(aiSummary.type);
   const [ai_only_active, setAiOnlyActive] = useState<AiSummary["only_active"]>(
     aiSummary.only_active,
   );
 
   const LOCATION = useLocationGeometry(location);
-
-  const isGeneratingAIReport = useAtomValue(isGeneratingAIReportAtom);
 
   // Set up the mutation for generating AI summaries
   const summaryMutation = usePostSummaryTopicMutation({
@@ -75,6 +70,14 @@ export default function AiSidebarContent() {
               t.id === variables.topic?.id ? { ...t, description: data.description } : t,
             ) || [],
         );
+
+        setAiSummary((current) => ({
+          ...current,
+          generating: {
+            ...current.generating,
+            [variables.topic?.id as number]: false,
+          },
+        }));
       }
     },
     onError: (error) => {
@@ -82,11 +85,18 @@ export default function AiSidebarContent() {
     },
   });
 
-  const isGenerating =
-    (aiSummary.enabled &&
-      !!isGeneratingAIReport &&
-      Object.values(isGeneratingAIReport).some((v) => v)) ||
-    summaryMutation.isPending;
+  const summaryMutationArray = useMemo(() => {
+    return topics?.map((topicView) => {
+      return {
+        topicView: topicView,
+        mutation: summaryMutation,
+      };
+    });
+  }, [topics, summaryMutation]);
+
+  const isGenerating = aiSummary.generating
+    ? Object.values(aiSummary.generating).some((generating) => generating)
+    : false;
 
   const handleClickAiGenerateSummary = useCallback(() => {
     // Update the AI summary state first
@@ -94,21 +104,23 @@ export default function AiSidebarContent() {
       type: ai_audience,
       only_active: ai_only_active,
       enabled: true,
+      generating: topics?.reduce(
+        (acc, topic) => {
+          acc[topic.id] = true;
+          return acc;
+        },
+        {} as Record<number, boolean>,
+      ),
     });
 
-    // Get active topics (you may need to filter based on your business logic)
-    const activeTopics = topics || [];
-
-    // Loop through all active topics and generate summaries
-    activeTopics.forEach((topicView) => {
-      // Get active indicators for this topic
+    // Loop through all mutations for each topic
+    summaryMutationArray?.forEach(({ topicView, mutation }) => {
       const activeIndicators = topicView.indicators?.map(({ id }) => id) || [];
 
-      // Filter indicators if only_active is true
+      //   // Filter indicators if only_active is true
       const indicatorsToUse = ai_only_active ? activeIndicators : undefined;
 
-      // Trigger the mutation for this topic
-      summaryMutation.mutate({
+      mutation.mutate({
         topic: topicsData?.find((t) => t.id === topicView.id),
         options: {
           type: ai_audience,
@@ -124,11 +136,11 @@ export default function AiSidebarContent() {
     ai_audience,
     ai_only_active,
     setAiSummary,
-    topics,
-    summaryMutation,
     locale,
+    topics,
     topicsData,
     LOCATION,
+    summaryMutationArray,
   ]);
 
   const handleClickClearAiSummary = useCallback(() => {

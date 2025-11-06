@@ -15,31 +15,16 @@ export const getAISummary = (params: GetAISummaryParams) => {
   return generateDescriptionTextAiPost(params);
 };
 
-// Mutation types and hooks for summary topic data
-export type GetSummaryTopicDataParams = {
-  topic?: Topic;
-  indicators?: Indicator["id"][];
-  locale: string;
-  location: unknown;
-};
-
-export type GetSummaryTopicDataResult = {
-  isFetched: boolean;
-  isFetching: boolean;
-  isPending: boolean;
-  data: {
-    name: string | undefined;
-    data: Record<string, unknown>[];
-  }[];
-};
-
-// Helper function to fetch summary topic data (replaces the hook logic)
-const fetchSummaryTopicData = async (params: {
+export type FetchSummaryTopicDataParams = {
   topic?: Topic;
   indicators?: Indicator["id"][];
   locale: string;
   location: __esri.Polygon | null;
-}): Promise<Record<string, unknown>[]> => {
+};
+
+const fetchSummaryTopicData = async (
+  params: FetchSummaryTopicDataParams,
+): Promise<Record<string, unknown>[]> => {
   const { topic, indicators: indicatorIds, locale, location } = params;
 
   try {
