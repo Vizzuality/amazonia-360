@@ -1,16 +1,16 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 import { useTranslations } from "next-intl";
-
-import { cn } from "@/lib/utils";
+import { useDebounceCallback } from "usehooks-ts";
 
 import { ContextDescriptionType } from "@/types/generated/api.schemas";
 import { Topic } from "@/types/topic";
 
 import { useSyncAiSummary, useSyncTopics } from "@/app/(frontend)/store";
 
+import { ForwardRefEditor } from "@/components/ui/editor";
 import { Markdown } from "@/components/ui/markdown";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -20,12 +20,35 @@ export interface ReportResultsSummaryProps {
 
 export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
   const t = useTranslations();
-  const [topics] = useSyncTopics();
+  const [topics, setTopics] = useSyncTopics();
   const [aiSummary] = useSyncAiSummary();
 
   const TOPIC = useMemo(() => {
     return topics?.find((t) => t.id === topic?.id);
   }, [topic, topics]);
+
+  const handleEditorChange = useCallback(
+    (markdown: string) => {
+      if (!topic) return;
+
+      setTopics((prevTopics) => {
+        if (!prevTopics) return prevTopics;
+
+        return prevTopics.map((t) => {
+          if (t.id === topic.id) {
+            return {
+              ...t,
+              description: markdown,
+            };
+          }
+          return t;
+        });
+      });
+    },
+    [topic, setTopics],
+  );
+
+  const debouncedHandleEditorChange = useDebounceCallback(handleEditorChange, 500);
 
   if (!aiSummary.generating?.[topic?.id as number] && !TOPIC?.description) {
     return null;
@@ -54,13 +77,7 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
             </Markdown>
           </div>
           <div className="col-span-12 lg:col-span-8">
-            <Markdown
-              className={cn("max-w-none", {
-                "xl:prose-base prose-strong:font-bold": true,
-              })}
-            >
-              {TOPIC.description}
-            </Markdown>
+            <ForwardRefEditor markdown={TOPIC.description} onChange={debouncedHandleEditorChange} />
           </div>
         </>
       )}

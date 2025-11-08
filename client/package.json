@@ -32,6 +32,7 @@
     "@lexical/markdown": "0.35.0",
     "@loaders.gl/arrow": "4.3.4",
     "@loaders.gl/core": "4.3.4",
+    "@mdxeditor/editor": "3.48.0",
     "@next/bundle-analyzer": "15.5.6",
     "@next/eslint-plugin-next": "15.5.6",
     "@payloadcms/db-postgres": "3.60.0",
@@ -157,7 +158,8 @@
       "@vaadin/vaadin-usage-statistics",
       "esbuild",
       "sharp",
-      "unrs-resolver"
+      "unrs-resolver",
+      "es5-ext"
     ]
   }
 }

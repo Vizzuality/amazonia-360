@@ -31,6 +31,22 @@
     --radius: 0.5rem;
   }
 
+  .mdx-editor {
+    font-family: var(--montserrat);
+    font-weight: 500;
+    @apply prose;
+    max-width: none;
+
+    --baseBg: var(--muted-foreground);
+  }
+  .mdxeditor-toolbar {
+    padding: 4px;
+  }
+  .mdx-editor-content {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
   /* .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
