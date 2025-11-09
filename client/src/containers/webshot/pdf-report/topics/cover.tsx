@@ -34,7 +34,7 @@ export default function PdfTopicCover(topic: Topic) {
       {TOPIC?.description && (
         <section className="px-14 py-10">
           <Markdown
-            className={cn("prose-sm max-w-none columns-2 gap-x-8", {
+            className={cn("prose prose-sm max-w-none columns-2 gap-x-8", {
               "prose-p:text-xs prose-p:leading-normal": true,
             })}
           >
