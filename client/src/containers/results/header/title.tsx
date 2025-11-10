@@ -71,7 +71,7 @@ export default function EditableHeader() {
           {!editMode && (
             <header className="flex items-center space-x-4">
               <h2 className="border border-transparent px-1 py-2 text-2xl font-medium text-foreground lg:text-3xl tall:xl:text-4xl">
-                {title}
+                {title ?? t("selected-area")}
               </h2>
               <Button
                 type="button"
