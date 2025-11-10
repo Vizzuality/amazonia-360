@@ -14,7 +14,7 @@ import { z } from "zod";
 import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
-import { reportPanelAtom, serializeSearchParams, useSyncLocation } from "@/app/(frontend)/store";
+import { reportPanelAtom, useSyncLocation } from "@/app/(frontend)/store";
 
 import { ReportGenerateButtons } from "@/containers/report/generate/buttons";
 import Topics from "@/containers/report/generate/topics";
@@ -60,12 +60,12 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
       }))
       .filter((t) => t.indicators && t.indicators.length > 0);
 
-    const params = serializeSearchParams({
-      topics,
-      location,
-    });
+    const reportId = crypto.randomUUID();
 
-    router.push(`/report/results${params}`);
+    localStorage.setItem(`${reportId}:location`, JSON.stringify(location));
+    localStorage.setItem(`${reportId}:topics`, JSON.stringify(topics));
+
+    router.push(`/report/results/${reportId}`);
   }
 
   const HEADER = {

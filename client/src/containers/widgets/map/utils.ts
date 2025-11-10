@@ -1,4 +1,6 @@
 export const FALLBACK_WIDGET_DEFAULT_BASEMAP_ID: BasemapIds = "gray-vector";
+import { Dispatch, SetStateAction } from "react";
+
 import { omit } from "@/lib/utils";
 
 import { Indicator } from "@/types/indicator";
@@ -17,7 +19,7 @@ export const handleMapIndicatorPropertyChange = (
   setDefaultTopics: (
     callback: (prevDefaultTopics: TopicView[] | null) => TopicView[] | null,
   ) => void,
-  setTopics: (callback: (prevTopicsState: TopicView[] | null) => TopicView[] | null) => void,
+  setTopics: Dispatch<SetStateAction<TopicView[] | null>>,
   defaultValues: { basemapId: BasemapIds; opacity: number },
 ) => {
   const currentIndicatorTopicId = indicator.topic.id;

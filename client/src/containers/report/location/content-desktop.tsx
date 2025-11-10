@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
+import useIsMounted from "@/lib/mounted";
 import { cn } from "@/lib/utils";
 
 import { useSyncLocation } from "@/app/(frontend)/store";
@@ -10,9 +11,13 @@ import Confirm from "@/containers/report/location/create";
 import SearchLocation from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 export default function SidebarLocationContent() {
   const [location] = useSyncLocation();
   const t = useTranslations();
+
+  const isMounted = useIsMounted();
 
   return (
     <div
@@ -29,7 +34,9 @@ export default function SidebarLocationContent() {
         </p>
       </div>
 
-      {!location && (
+      {!isMounted() && <Skeleton className="h-16 w-full" />}
+
+      {!location && isMounted() && (
         <div className="space-y-4">
           <SearchLocation />
 
@@ -37,7 +44,7 @@ export default function SidebarLocationContent() {
         </div>
       )}
 
-      {location && <Confirm />}
+      {location && isMounted() && <Confirm />}
     </div>
   );
 }

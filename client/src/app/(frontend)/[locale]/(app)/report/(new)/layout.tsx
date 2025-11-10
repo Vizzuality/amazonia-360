@@ -1,6 +1,6 @@
 import ReportMap from "@/containers/report/map";
 
-export default await function ReportNewLayout({ children }: { children: React.ReactNode }) {
+export default await function ReportNewLayout({ children }: LayoutProps<"/[locale]/report">) {
   return (
     <>
       {children}
