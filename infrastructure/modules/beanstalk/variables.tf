@@ -56,13 +56,36 @@ variable "acm_certificate" {
   description = "The ACM certificate to use for the environment"
 }
 
+variable "acm_certificate_validation" {
+  type        = any
+  description = "The ACM certificate validation resource for the main domain"
+}
+
+variable "acm_certificate_aliases" {
+  type        = map(any)
+  description = "Map of ACM certificates for domain aliases"
+  default     = {}
+}
+
+variable "acm_certificate_alias_validations" {
+  type        = map(any)
+  description = "Map of ACM certificate validation resources for domain aliases"
+  default     = {}
+}
+
+variable "domain_aliases" {
+  type        = list(string)
+  description = "List of domain aliases that will redirect to the main domain"
+  default     = []
+}
+
 variable "elasticbeanstalk_iam_service_linked_role_name" {
   type        = string
   description = "The IAM service linked role to use for the environment"
 }
 
 variable "cname_prefix" {
-    type        = string
-    description = "The CNAME prefix to use for the environment"
-    default = null
+  type        = string
+  description = "The CNAME prefix to use for the environment"
+  default     = null
 }

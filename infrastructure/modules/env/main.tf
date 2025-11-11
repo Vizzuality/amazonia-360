@@ -66,7 +66,7 @@ locals {
 
 
 module "beanstalk" {
-  source = "../beanstalk"
+  source                                        = "../beanstalk"
   project                                       = var.project
   environment                                   = var.environment
   region                                        = var.aws_region
@@ -80,7 +80,11 @@ module "beanstalk" {
   elb_public_subnets                            = local.subnet_ids
   ec2_instance_type                             = var.ec2_instance_type
   domain                                        = var.domain
+  domain_aliases                                = var.domain_aliases
   acm_certificate                               = aws_acm_certificate.acm_certificate
+  acm_certificate_validation                    = aws_acm_certificate_validation.domain_certificate_validation
+  acm_certificate_aliases                       = aws_acm_certificate.acm_certificate_aliases
+  acm_certificate_alias_validations             = aws_acm_certificate_validation.alias_certificate_validation
   elasticbeanstalk_iam_service_linked_role_name = var.elasticbeanstalk_iam_service_linked_role_name
   cname_prefix                                  = var.cname_prefix
 }
@@ -94,6 +98,3 @@ module "github" {
   environment_secret_map = merge(local.api_secret_env_vars, var.github_additional_environment_secrets)
   environment_variable_map = merge(local.api_env_vars, var.github_additional_environment_variables)
 }
-
-
-

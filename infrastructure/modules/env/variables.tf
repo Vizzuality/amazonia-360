@@ -7,6 +7,12 @@ variable "domain" {
   type = string
 }
 
+variable "domain_aliases" {
+  type        = list(string)
+  description = "List of domain aliases that will redirect to the main domain"
+  default     = []
+}
+
 variable "project" {
   type        = string
   description = "Short name of the project, will be used to prefix created resources"
