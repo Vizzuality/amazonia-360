@@ -190,6 +190,11 @@ locals {
   ]
 }
 
+# Create a map of domain aliases with their indices for priority calculation
+locals {
+  domain_alias_map = { for idx, domain in var.domain_aliases : domain => idx }
+}
+
 # Create elastic beanstalk environment
 
 resource "aws_elastic_beanstalk_environment" "application_environment" {
@@ -232,6 +237,48 @@ resource "aws_lb_listener_rule" "redirect_http_to_https" {
   condition {
     path_pattern {
       values = ["/*"]
+    }
+  }
+}
+
+# Get HTTPS listener to add alias certificates and redirect rules
+data "aws_lb_listener" "https_listener" {
+  count             = length(var.domain_aliases) > 0 ? 1 : 0
+  load_balancer_arn = aws_elastic_beanstalk_environment.application_environment.load_balancers[0]
+  port              = 443
+}
+
+# Attach additional certificates for domain aliases to the HTTPS listener
+resource "aws_lb_listener_certificate" "alias_certificates" {
+  for_each = length(var.domain_aliases) > 0 ? var.acm_certificate_aliases : {}
+
+  listener_arn    = data.aws_lb_listener.https_listener[0].arn
+  certificate_arn = each.value.arn
+
+  depends_on = [var.acm_certificate_alias_validations]
+}
+
+# Create redirect rules for each domain alias
+resource "aws_lb_listener_rule" "redirect_alias_to_main_domain" {
+  for_each = length(var.domain_aliases) > 0 ? local.domain_alias_map : {}
+
+  listener_arn = data.aws_lb_listener.https_listener[0].arn
+  priority     = 100 + each.value
+
+  action {
+    type = "redirect"
+
+    redirect {
+      host        = var.domain
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+
+  condition {
+    host_header {
+      values = [each.key]
     }
   }
 }
