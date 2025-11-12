@@ -1,7 +1,7 @@
 import Basemap from "@arcgis/core/Basemap";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 
-import { BasemapIds } from "@/components/map/controls/basemap";
+import { BasemapIds } from "@/constants/basemaps";
 
 /**
  ************************************************************

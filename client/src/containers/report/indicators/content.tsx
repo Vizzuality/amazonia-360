@@ -12,7 +12,7 @@ import { usePreviousDifferent } from "rooks";
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
-import { indicatorsExpandAtom, useSyncIndicators } from "@/app/store";
+import { indicatorsExpandAtom, useSyncIndicators } from "@/app/(frontend)/store";
 
 import IndicatorsFooter from "@/containers/report/indicators/footer";
 import IndicatorsSearch from "@/containers/report/indicators/search";

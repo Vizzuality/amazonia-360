@@ -16,8 +16,7 @@ export default function AiSidebarContentCard({
     <Label
       htmlFor={option.value}
       className={cn({
-        "flex cursor-pointer flex-col rounded-sm border p-4 text-sm transition-all duration-200 hover:border-[1.5px] hover:border-foreground":
-          true,
+        "flex cursor-pointer flex-col rounded-sm border p-4 text-sm transition-all duration-200 hover:border-[1.5px] hover:border-foreground": true,
         "border-foreground": active,
       })}
     >

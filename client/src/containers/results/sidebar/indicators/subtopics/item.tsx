@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 import { Subtopic } from "@/types/topic";
 
-import { indicatorsExpandAtom } from "@/app/store";
+import { indicatorsExpandAtom } from "@/app/(frontend)/store";
 
 import IndicatorsList from "@/containers/results/sidebar/indicators/list";
 

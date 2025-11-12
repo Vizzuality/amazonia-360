@@ -1,4 +1,4 @@
-import { CustomLocation, SearchLocation } from "@/app/parsers";
+import { CustomLocation, SearchLocation } from "@/app/(frontend)/parsers";
 
 import "@testing-library/jest-dom";
 
@@ -317,7 +317,7 @@ export const mockUseSyncLocation = jest
     },
   ]);
 
-jest.mock("@/app/store", () => ({
+jest.mock("@/app/(frontend)/store", () => ({
   useSyncLocation() {
     return mockUseSyncLocation();
   },

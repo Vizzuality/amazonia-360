@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-import { IndicatorView } from "@/app/parsers";
+import { IndicatorView } from "@/app/(frontend)/parsers";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

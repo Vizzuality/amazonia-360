@@ -150,8 +150,7 @@ export default function Glance() {
                     <div
                       key={opt.key}
                       className={cn({
-                        "flex cursor-pointer items-center justify-between rounded-sm px-3 py-2 hover:bg-blue-50":
-                          true,
+                        "flex cursor-pointer items-center justify-between rounded-sm px-3 py-2 hover:bg-blue-50": true,
                         "bg-blue-50 group-hover:bg-transparent": opt.key === chartKey,
                       })}
                       onClick={() => handleSingleValueChange(opt.key)}

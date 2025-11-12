@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
-import { sketchActionAtom, sketchAtom, useSyncLocation } from "@/app/store";
+import { sketchActionAtom, sketchAtom, useSyncLocation } from "@/app/(frontend)/store";
 
 import { SketchProps } from "@/components/map/sketch";
 import { Button } from "@/components/ui/button";

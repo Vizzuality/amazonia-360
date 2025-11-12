@@ -10,8 +10,8 @@ import { LuInfo, LuLoader, LuSparkles } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { AiSummary } from "@/app/parsers";
-import { isGeneratingAIReportAtom, useSyncAiSummary } from "@/app/store";
+import { AiSummary } from "@/app/(frontend)/parsers";
+import { isGeneratingAIReportAtom, useSyncAiSummary } from "@/app/(frontend)/store";
 
 import { Button } from "@/components/ui/button";
 import { RadioGroup } from "@/components/ui/radio-group";

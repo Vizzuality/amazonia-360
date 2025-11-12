@@ -11,7 +11,7 @@ import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 
 import { useLocation } from "@/lib/location";
 
-import { Location } from "@/app/parsers";
+import { Location } from "@/app/(frontend)/parsers";
 
 import {
   BUFFER_SYMBOL,
@@ -57,9 +57,9 @@ export default function Sketch({
 
   const layerRef = useRef<__esri.GraphicsLayer>(new GraphicsLayer());
   const bufferRef = useRef<__esri.GraphicsLayer>(new GraphicsLayer());
-  const sketchViewModelRef = useRef<SketchViewModel>();
-  const sketchViewModelOnCreateRef = useRef<IHandle>();
-  const sketchViewModelOnUpdateRef = useRef<IHandle>();
+  const sketchViewModelRef = useRef<SketchViewModel | null>(null);
+  const sketchViewModelOnCreateRef = useRef<IHandle | null>(null);
+  const sketchViewModelOnUpdateRef = useRef<IHandle | null>(null);
 
   const drawBuffer = useCallback(
     (l: __esri.Graphic) => {
@@ -216,10 +216,11 @@ export default function Sketch({
     bufferRef.current.removeAll();
 
     if (LOCATION) {
-      LOCATION.symbol = SYMBOLS[LOCATION.geometry.type];
-      layerRef.current.add(LOCATION);
+      const L = LOCATION.clone();
+      L.symbol = SYMBOLS[L.geometry.type];
+      layerRef.current.add(L);
 
-      drawBuffer(LOCATION);
+      drawBuffer(L);
     }
 
     handleListeners();

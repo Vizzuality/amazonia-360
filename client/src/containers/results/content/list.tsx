@@ -4,7 +4,7 @@ import { useLocale } from "next-intl";
 
 import { useGetDefaultTopics } from "@/lib/topics";
 
-import { useSyncTopics } from "@/app/store";
+import { useSyncTopics } from "@/app/(frontend)/store";
 
 import ReportResultsContentItem from "@/containers/results/content/item";
 

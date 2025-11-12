@@ -6,7 +6,7 @@ import { useLocale } from "next-intl";
 
 import { useGetTopics } from "@/lib/topics";
 
-import { useSyncTopics } from "@/app/store";
+import { useSyncTopics } from "@/app/(frontend)/store";
 
 import PdfContainer from "@/containers/webshot/pdf-report/container";
 import PdfTopicCover from "@/containers/webshot/pdf-report/topics/cover";

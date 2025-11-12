@@ -6,7 +6,7 @@ import { useAtomValue } from "jotai";
 
 import { cn } from "@/lib/utils";
 
-import { reportPanelAtom, useSyncLocation } from "@/app/store";
+import { reportPanelAtom, useSyncLocation } from "@/app/(frontend)/store";
 
 import { Media } from "@/containers/media";
 import ReportLocationDesktop from "@/containers/report/location/desktop";

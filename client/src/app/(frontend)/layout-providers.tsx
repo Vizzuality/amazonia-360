@@ -1,0 +1,80 @@
+"use client";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Provider as JotaiProvider } from "jotai";
+import { Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
+import { Locale } from "next-intl";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+
+import { MediaContextProvider } from "@/containers/media";
+import { ArcGISProvider } from "@/containers/providers/arcgis";
+
+import { TooltipProvider } from "@/components/ui/tooltip";
+
+function makeQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        // With SSR, we usually want to set some default staleTime
+        // above 0 to avoid refetching immediately on the client
+        staleTime: 60 * 1000,
+        refetchOnReconnect: false,
+        refetchOnWindowFocus: false,
+        retry: false,
+      },
+    },
+  });
+}
+
+let browserQueryClient: QueryClient | undefined = undefined;
+
+function getQueryClient() {
+  if (typeof window === "undefined") {
+    // Server: always make a new query client
+    return makeQueryClient();
+  } else {
+    // Browser: make a new query client if we don't already have one
+    // This is very important so we don't re-make a new client if React
+    // suspends during the initial render. This may not be needed if we
+    // have a suspense boundary BELOW the creation of the query client
+    if (!browserQueryClient) browserQueryClient = makeQueryClient();
+    return browserQueryClient;
+  }
+}
+
+export default function LayoutProviders({
+  locale,
+  session,
+  children,
+}: {
+  locale: Locale;
+  session: Session | null;
+  children: React.ReactNode;
+}) {
+  // NOTE: Avoid useState when initializing the query client if you don't
+  //       have a suspense boundary between this and the code that may
+  //       suspend because React will throw away the client on the initial
+  //       render if it suspends and there is no boundary
+  const queryClient = getQueryClient();
+
+  return (
+    <SessionProvider session={session} basePath="/local-api/auth">
+      <MediaContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <NuqsAdapter
+            defaultOptions={{
+              clearOnDefault: true,
+            }}
+          >
+            <ArcGISProvider locale={locale}>
+              <TooltipProvider>
+                <JotaiProvider>{children}</JotaiProvider>
+              </TooltipProvider>
+            </ArcGISProvider>
+          </NuqsAdapter>
+        </QueryClientProvider>
+      </MediaContextProvider>
+    </SessionProvider>
+  );
+}

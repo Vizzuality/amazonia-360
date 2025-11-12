@@ -16,9 +16,9 @@ import { merge } from "ts-deepmerge";
 
 import { omit } from "@/lib/utils";
 
+import { BasemapIds } from "@/constants/basemaps";
 import { DEFAULT_MAP_VIEW_PROPERTIES } from "@/constants/map";
 
-import { BasemapIds } from "@/components/map/controls/basemap";
 import { LayerView, MapContext, MapProvider } from "@/components/map/provider";
 
 export type MapProps = {
@@ -72,8 +72,8 @@ export function MapView({
   isPdf = false,
   loaded = false,
 }: MapProps) {
-  const mapRef = useRef<ArcGISMap>();
-  const mapViewRef = useRef<ArcGISMapView>();
+  const mapRef = useRef<ArcGISMap | null>(null);
+  const mapViewRef = useRef<ArcGISMapView | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
   const [screenshot, setScreenshot] = useState<string | null>(null);
@@ -86,11 +86,11 @@ export function MapView({
     return () => {
       if (mapViewRef.current && isPdf) {
         mapViewRef.current.destroy();
-        mapViewRef.current = undefined;
+        mapViewRef.current = null;
       }
       if (mapRef.current && isPdf) {
         mapRef.current.destroy();
-        mapRef.current = undefined;
+        mapRef.current = null;
       }
     };
   }, [isPdf]);
@@ -153,7 +153,7 @@ export function MapView({
       const mapWidth = mapContainerRef.current.offsetWidth;
       const scaleBarPosition = mapWidth >= 1024 ? "bottom-right" : "top-left";
 
-      !isPdf && mapViewRef.current.ui.add(scaleBar, scaleBarPosition);
+      if (!isPdf) mapViewRef.current.ui.add(scaleBar, scaleBarPosition);
 
       mapViewRef.current.on("pointer-leave", () => {
         if (onPointerLeave) onPointerLeave();
@@ -175,7 +175,7 @@ export function MapView({
       ArcGISReactiveUtils.when(
         () => mapViewRef.current!.extent,
         (extent) => {
-          onMapMove && onMapMove(extent);
+          if (onMapMove) onMapMove(extent);
         },
       );
 

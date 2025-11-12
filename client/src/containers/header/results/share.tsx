@@ -1,6 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+
+import { useSearchParams } from "next/navigation";
 
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
@@ -23,17 +25,22 @@ import { usePathname } from "@/i18n/navigation";
 export default function ShareReport() {
   const t = useTranslations();
   const pathname = usePathname();
-
-  const [currentUrl, setCurrentUrl] = useState<string>("");
+  const searchParams = useSearchParams();
 
   const [shareLinkBtnText, setShareLinkBtnText] = useState<"copy" | "copied">("copy");
-  useEffect(() => {
-    setCurrentUrl(window.location.href);
-  }, [pathname]);
+
+  const URL = useMemo(() => {
+    if (typeof window !== "undefined") {
+      return window.location.href;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, searchParams]);
 
   const copyShareLink = useCallback(() => {
+    if (!URL) return;
+
     navigator.clipboard
-      .writeText(currentUrl)
+      .writeText(URL)
       .then(() => {
         setShareLinkBtnText("copied");
         setTimeout(function () {
@@ -43,7 +50,7 @@ export default function ShareReport() {
       .catch((err: ErrorEvent) => {
         console.info(err.message);
       });
-  }, [currentUrl]);
+  }, [URL]);
 
   return (
     <Dialog>
@@ -70,7 +77,7 @@ export default function ShareReport() {
           </div>
           <div className="mb-6 flex w-full space-x-2 overflow-hidden">
             <div className="flex h-10 w-[calc(100%_-_theme(space.32))] rounded-sm border bg-background px-3 py-2 text-sm text-gray-900">
-              <p className="truncate text-base font-normal text-foreground">{currentUrl}</p>
+              <p className="truncate text-base font-normal text-foreground">{URL}</p>
             </div>
             <Button className="h-10 w-40 gap-2" onClick={copyShareLink}>
               <LuCopy className="h-4 w-4" />

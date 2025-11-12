@@ -6,7 +6,7 @@ import { useGetIndicatorsLayerId } from "@/lib/indicators";
 
 import { Indicator } from "@/types/indicator";
 
-import { useSyncIndicatorsSettings } from "@/app/store";
+import { useSyncIndicatorsSettings } from "@/app/(frontend)/store";
 
 import Layer from "@/components/map/layers";
 

@@ -11,7 +11,7 @@ import { useDebounce } from "rooks";
 
 import { useLocationGeometry } from "@/lib/location";
 
-import { useSyncLocation } from "@/app/store";
+import { useSyncLocation } from "@/app/(frontend)/store";
 
 import { useMap } from "@/components/map/provider";
 
@@ -100,7 +100,7 @@ export const getPlaceholderGridLayerProps = ({
 };
 
 export default function PlaceholderGridLayer() {
-  const GRID_LAYER = useRef<typeof DeckLayer>();
+  const GRID_LAYER = useRef<typeof DeckLayer | null>(null);
   const [location] = useSyncLocation();
   const map = useMap();
   const [zoom, setZoom] = useState(map?.view?.zoom);

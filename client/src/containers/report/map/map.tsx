@@ -17,7 +17,7 @@ import {
   useSyncBbox,
   useSyncGridSelectedDataset,
   useSyncLocation,
-} from "@/app/store";
+} from "@/app/(frontend)/store";
 
 import { BUFFERS } from "@/constants/map";
 
@@ -53,7 +53,7 @@ export default function MapContainer({ desktop }: { desktop?: boolean }) {
 
   const [sketch, setSketch] = useAtom(sketchAtom);
   const [sketchAction, setSketchAction] = useAtom(sketchActionAtom);
-  const sketchActionTimeoutRef = useRef<NodeJS.Timeout>();
+  const sketchActionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const setGridHover = useSetAtom(gridHoverAtom);
   const [location, setLocation] = useSyncLocation();

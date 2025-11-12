@@ -5,8 +5,8 @@ import { useAtom } from "jotai";
 
 import { VisualizationTypes } from "@/types/indicator";
 
-import { IndicatorView, IndicatorMapView, TopicView } from "@/app/parsers";
-import { indicatorsEditionModeAtom, useSyncTopics } from "@/app/store";
+import { IndicatorView, IndicatorMapView, TopicView } from "@/app/(frontend)/parsers";
+import { indicatorsEditionModeAtom, useSyncTopics } from "@/app/(frontend)/store";
 
 import IndicatorCard from "@/containers/results/content/indicators/card";
 import DeleteHandler from "@/containers/results/content/indicators/controls/delete";

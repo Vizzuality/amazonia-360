@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { usePrevious } from "@dnd-kit/utilities";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { useTranslations } from "next-intl";
 
@@ -25,18 +24,11 @@ import Logo from "./logo";
 export default function MobileNavigation() {
   const t = useTranslations();
   const pathname = usePathname();
-  const previousPathname = usePrevious(pathname);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (previousPathname !== pathname) {
-      setIsOpen(false);
-    }
-  }, [pathname, previousPathname]);
-
   return (
-    <Dialog open={isOpen}>
+    <Dialog key={pathname} open={isOpen}>
       <DialogTrigger asChild>
         <button
           type="button"

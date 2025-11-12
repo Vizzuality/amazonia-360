@@ -16,7 +16,7 @@ import {
   useSyncLocation,
   useSyncGridTableSettings,
   useSyncGridDatasetCategoricalSettings,
-} from "@/app/store";
+} from "@/app/(frontend)/store";
 
 import { CardLoader } from "@/containers/card";
 import GridTableSetup from "@/containers/report/grid/table/setup";
@@ -71,17 +71,14 @@ export default function GridTable() {
             }
 
             if (d.legend.legend_type === "categorical" && "entries" in d.legend) {
-              gridDatasetCategoricalSettings?.[dataset] &&
+              if (gridDatasetCategoricalSettings?.[dataset]) {
                 f.push({
                   filter_type: "categorical",
                   column_name: dataset,
                   operation: "in",
                   value: gridDatasetCategoricalSettings?.[dataset],
                 });
-
-              //   gridDatasetCategoricalSettings?.[dataset]?.filter((c) => c.selected).map(
-              //     (c) => c.value,
-              //   ) || [];
+              }
             }
 
             return f;

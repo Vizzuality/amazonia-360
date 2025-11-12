@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 import { Indicator } from "@/types/indicator";
 
-import { useSyncIndicators } from "@/app/store";
+import { useSyncIndicators } from "@/app/(frontend)/store";
 
 import { Search } from "@/components/ui/search";
 import { Switch } from "@/components/ui/switch";
@@ -111,8 +111,7 @@ export default function IndicatorsSearch({ className }: { className?: string }) 
         {(o) => (
           <div
             className={cn({
-              "flex w-full cursor-pointer items-start justify-between gap-2 py-0.5 text-start text-xs":
-                true,
+              "flex w-full cursor-pointer items-start justify-between gap-2 py-0.5 text-start text-xs": true,
             })}
             role="button"
           >

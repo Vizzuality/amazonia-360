@@ -13,18 +13,18 @@ import {
 } from "@/types/indicator";
 import { Indicator } from "@/types/indicator";
 
-import { pdfIndicatorsMapStateAtom } from "@/app/store";
+import { pdfIndicatorsMapStateAtom } from "@/app/(frontend)/store";
+
+import { BasemapIds } from "@/constants/basemaps";
 
 import { useLoad } from "@/containers/indicators/load-provider";
 import { IndicatorProvider } from "@/containers/indicators/provider";
 import WidgetMap from "@/containers/widgets/map";
 
-import { BASEMAPS } from "@/components/map/controls/basemap";
-
 export const MapIndicators = (
   props: Omit<Indicator, "resource"> & {
     resource: ResourceFeature | ResourceWebTile | ResourceImageryTile | ResourceImagery;
-    basemapId?: (typeof BASEMAPS)[number]["id"];
+    basemapId?: BasemapIds;
     isWebshot?: boolean;
     isPdf?: boolean;
   },

@@ -38,7 +38,7 @@ import {
   tmpBboxAtom,
   sketchAtom,
   useSyncGridDatasetCategoricalSettings,
-} from "@/app/store";
+} from "@/app/(frontend)/store";
 
 import { BUFFERS } from "@/constants/map";
 
@@ -415,7 +415,7 @@ export const getGridLayerProps = ({
 export default function GridLayer() {
   const t = useTranslations();
 
-  const GRID_LAYER = useRef<typeof DeckLayer>();
+  const GRID_LAYER = useRef<typeof DeckLayer | null>(null);
 
   const [alert, setAlert] = useState<PickingInfo>();
 

@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 import { useLocationGadm } from "@/lib/location";
 import { useGetFeatures } from "@/lib/query";
 
-import { useSyncLocation } from "@/app/store";
+import { useSyncLocation } from "@/app/(frontend)/store";
 
 import { DATASETS } from "@/constants/datasets";
 

@@ -13,7 +13,7 @@ import {
   useSyncGridDatasets,
   useSyncGridTableSettings,
   useSyncGridSelectedDataset,
-} from "@/app/store";
+} from "@/app/(frontend)/store";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -118,8 +118,7 @@ export default function GridTableSetup() {
       <PopoverTrigger
         disabled={!gridDatasets.length}
         className={cn({
-          "duration-400 flex shrink-0 items-center justify-center rounded-lg px-2.5 py-2.5 transition-colors ease-in-out":
-            true,
+          "duration-400 flex shrink-0 items-center justify-center rounded-lg px-2.5 py-2.5 transition-colors ease-in-out": true,
           "hover:bg-blue-100": gridDatasets.length,
           "opacity-50": !gridDatasets.length,
         })}

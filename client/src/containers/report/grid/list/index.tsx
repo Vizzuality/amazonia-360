@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 import { Subtopic } from "@/types/topic";
 
-import { selectedFiltersViewAtom, useSyncGridDatasets } from "@/app/store";
+import { selectedFiltersViewAtom, useSyncGridDatasets } from "@/app/(frontend)/store";
 
 import { Skeleton } from "@/components/ui/skeleton";
 

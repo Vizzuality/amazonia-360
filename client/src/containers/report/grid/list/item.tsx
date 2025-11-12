@@ -19,7 +19,7 @@ import {
   useSyncGridSelectedDataset,
   useSyncLocation,
   useSyncGridDatasetCategoricalSettings,
-} from "@/app/store";
+} from "@/app/(frontend)/store";
 
 import Info from "@/containers/info";
 import GridIndicatorsItemCategorical from "@/containers/report/grid/list/categorical";
@@ -177,8 +177,7 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
               <TooltipTrigger asChild>
                 <CollapsibleTrigger
                   className={cn({
-                    "flex items-center justify-center rounded bg-blue-50 p-0.5 transition-colors hover:bg-blue-100":
-                      true,
+                    "flex items-center justify-center rounded bg-blue-50 p-0.5 transition-colors hover:bg-blue-100": true,
                   })}
                   onClick={() => setMax4Open(false)}
                 >

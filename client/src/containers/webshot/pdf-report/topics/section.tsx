@@ -2,7 +2,7 @@
 
 import { VisualizationTypes } from "@/types/indicator";
 
-import { TopicView } from "@/app/parsers";
+import { TopicView } from "@/app/(frontend)/parsers";
 
 import ReportResultsIndicator from "@/containers/results/content/indicators/card";
 import PdfContainer from "@/containers/webshot/pdf-report/container";
