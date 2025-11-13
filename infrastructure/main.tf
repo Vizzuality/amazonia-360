@@ -78,6 +78,24 @@ module "webshot_prod_ecr" {
   repo_name    = "webshot"
 }
 
+# SES Domain Identity
+resource "aws_ses_domain_identity" "main" {
+  domain = var.ses_domain_name
+  region = var.ses_aws_region
+}
+
+# SES Domain DKIM
+resource "aws_ses_domain_dkim" "main" {
+  domain = aws_ses_domain_identity.main.domain
+  region = var.ses_aws_region
+}
+
+# Verified email addresses
+resource "aws_ses_email_identity" "verified_emails" {
+  for_each = toset(var.ses_verified_emails)
+  email    = each.value
+  region   = var.ses_aws_region
+}
 
 module "github" {
   source       = "./modules/github"
@@ -132,6 +150,9 @@ module "dev" {
   github_additional_environment_variables = {
     TF_AWS_REGION = var.dev.aws_region
 
+    # SES
+    TF_AWS_SES_REGION                 = var.ses_aws_region
+    TF_AWS_SES_IAM_USER_ACCESS_KEY_ID = module.dev.ses_iam_user_access_key_id
 
     # API
     TF_API_TIFF_PATH       = var.dev.api.tiff_path
@@ -143,6 +164,9 @@ module "dev" {
     TF_CLIENT_BASIC_AUTH_ENABLED      = var.dev.client.basic_auth_enabled
   }
   github_additional_environment_secrets = {
+    # SES
+    TF_AWS_SES_IAM_USER_SECRET_ACCESS_KEY = module.dev.ses_iam_user_secret_access_key
+
     # API
     TF_API_AUTH_TOKEN   = var.dev.api.auth_token
     TF_API_OPENAI_TOKEN = var.dev.api.openai_token
@@ -177,6 +201,10 @@ module "staging" {
   github_additional_environment_variables = {
     TF_AWS_REGION = var.staging.aws_region
 
+    # SES
+    TF_AWS_SES_REGION                 = var.ses_aws_region
+    TF_AWS_SES_IAM_USER_ACCESS_KEY_ID = module.staging.ses_iam_user_access_key_id
+
     # API
     TF_API_TIFF_PATH       = var.staging.api.tiff_path
     TF_API_GRID_TILES_PATH = var.staging.api.grid_tiles_path
@@ -188,6 +216,9 @@ module "staging" {
     TF_NEXT_PUBLIC_FEATURE_PARTNERS   = var.staging.client.next_public_feature_partners
   }
   github_additional_environment_secrets = {
+    # SES
+    TF_AWS_SES_IAM_USER_SECRET_ACCESS_KEY = module.staging.ses_iam_user_secret_access_key
+
     # API
     TF_API_AUTH_TOKEN   = var.staging.api.auth_token
     TF_API_OPENAI_TOKEN = var.staging.api.openai_token
@@ -224,6 +255,10 @@ module "prod" {
   github_additional_environment_variables = {
     TF_AWS_REGION = var.prod.aws_region
 
+    # SES
+    TF_AWS_SES_REGION                 = var.ses_aws_region
+    TF_AWS_SES_IAM_USER_ACCESS_KEY_ID = module.prod.ses_iam_user_access_key_id
+
     # API
     TF_API_TIFF_PATH       = var.prod.api.tiff_path
     TF_API_GRID_TILES_PATH = var.prod.api.grid_tiles_path
@@ -235,6 +270,9 @@ module "prod" {
     TF_NEXT_PUBLIC_FEATURE_PARTNERS   = var.prod.client.next_public_feature_partners
   }
   github_additional_environment_secrets = {
+    # SES
+    TF_AWS_SES_IAM_USER_SECRET_ACCESS_KEY = module.prod.ses_iam_user_secret_access_key
+
     # API
     TF_API_AUTH_TOKEN   = var.prod.api.auth_token
     TF_API_OPENAI_TOKEN = var.prod.api.openai_token

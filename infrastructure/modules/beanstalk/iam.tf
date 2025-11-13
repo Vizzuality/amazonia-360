@@ -46,21 +46,21 @@ resource "aws_iam_role_policy_attachment" "beanstalk_ec2_ecr" {
 }
 
 resource "aws_iam_role_policy" "s3_access" {
-  name   = "s3-access"
-  role   = aws_iam_role.beanstalk_ec2.id
+  name = "s3-access"
+  role = aws_iam_role.beanstalk_ec2.id
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow",
-        Action   = [
+        Effect = "Allow",
+        Action = [
           "s3:ListBucket"
         ],
         Resource = "arn:aws:s3:::${var.project}-${var.environment}-bucket"
       },
       {
-        Effect   = "Allow",
-        Action   = [
+        Effect = "Allow",
+        Action = [
           "s3:GetObject",
         ],
         Resource = "arn:aws:s3:::${var.project}-${var.environment}-bucket/*"
