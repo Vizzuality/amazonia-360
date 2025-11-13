@@ -21,7 +21,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PayloadAuthAdapter(),
   providers: [
     Credentials({
-      name: "Credentials",
+      id: "users",
+      name: "Users",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
@@ -40,6 +41,40 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return {
             ...res.user,
             id: String(res.user.id),
+            collection: "users",
+          };
+        } else {
+          throw new InvalidLoginError();
+        }
+      },
+    }),
+    Credentials({
+      id: "anonymous-users",
+      name: "Anonymous Users",
+      credentials: {},
+      async authorize() {
+        // For anonymous users, we just create a new anonymous user on each sign-in
+        const res = await sdk.create(
+          {
+            collection: "anonymous-users",
+            data: {
+              apiKey: crypto.randomUUID(),
+              enableAPIKey: true,
+            },
+          },
+          {
+            headers: {
+              "x-app-key": process.env.APP_KEY || "",
+            },
+          },
+        );
+
+        if (res) {
+          return {
+            ...res,
+            id: String(res.id),
+            apiKey: res.apiKey,
+            collection: "anonymous-users",
           };
         } else {
           throw new InvalidLoginError();
@@ -53,8 +88,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   session: { strategy: "jwt" },
   callbacks: {
-    async session({ session, token }) {
-      return { ...session, user: { ...session.user, id: token.sub } };
+    async session({ session, token, user }) {
+      console.log("Session callback:", { session, token, user });
+      return { ...session, user: { ...session.user, id: token.sub, collection: token.collection } };
     },
   },
 });

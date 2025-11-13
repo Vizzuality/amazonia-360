@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSetAtom } from "jotai";
+import { signIn, useSession } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
 import { z } from "zod";
@@ -16,6 +17,7 @@ import { cn } from "@/lib/utils";
 
 import { reportPanelAtom, useSyncLocation } from "@/app/(frontend)/store";
 
+import { createAnonymousUser } from "@/containers/report/generate/action";
 import { ReportGenerateButtons } from "@/containers/report/generate/buttons";
 import Topics from "@/containers/report/generate/topics";
 
@@ -23,6 +25,8 @@ import { Form } from "@/components/ui/form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Link, useRouter } from "@/i18n/navigation";
+
+import { sdk } from "@/services/sdk";
 
 export type TopicsFormValues = {
   id: number;
@@ -36,6 +40,8 @@ export const formSchema = z.object({
 export default function ReportGenerate({ heading = "create" }: { heading?: "select" | "create" }) {
   const t = useTranslations();
   const locale = useLocale();
+
+  const { data: session } = useSession();
 
   const [location] = useSyncLocation();
   const searchParams = useSearchParams();
@@ -52,20 +58,51 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    const topics = values.topics
-      ?.map((t) => ({
-        id: t.id,
-        indicators: topicsData?.find((topic) => topic.id === t.id)?.default_visualization,
-      }))
-      .filter((t) => t.indicators && t.indicators.length > 0);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!session) {
+      const res = await signIn("anonymous-users", { redirect: false });
 
-    const reportId = crypto.randomUUID();
+      if (res.ok) {
+        const topics = values.topics
+          ?.map((t) => ({
+            id: `${t.id}-${crypto.randomUUID()}`,
+            topic_id: t.id,
+            indicators: topicsData
+              ?.find((topic) => topic.id === t.id)
+              ?.default_visualization.map((indicator) => {
+                return {
+                  ...indicator,
+                  id: `${indicator.id}-${indicator.type}-${crypto.randomUUID()}`,
+                  indicator_id: indicator.id,
+                };
+              }),
+          }))
+          .filter((t) => t.indicators && t.indicators.length > 0);
 
-    localStorage.setItem(`${reportId}:location`, JSON.stringify(location));
-    localStorage.setItem(`${reportId}:topics`, JSON.stringify(topics));
+        if (location) {
+          await sdk.create({
+            collection: "reports",
+            data: {
+              location,
+              topics: topics ?? [],
+            },
+          });
+        }
+      }
+    }
+    // const topics = values.topics
+    //   ?.map((t) => ({
+    //     id: t.id,
+    //     indicators: topicsData?.find((topic) => topic.id === t.id)?.default_visualization,
+    //   }))
+    //   .filter((t) => t.indicators && t.indicators.length > 0);
 
-    router.push(`/report/results/${reportId}`);
+    // const reportId = crypto.randomUUID();
+
+    // localStorage.setItem(`${reportId}:location`, JSON.stringify(location));
+    // localStorage.setItem(`${reportId}:topics`, JSON.stringify(topics));
+
+    // router.push(`/report/results/${reportId}`);
   }
 
   const HEADER = {

@@ -18,6 +18,8 @@ const AuthHeader = () => {
   const t = useTranslations();
   const { data: session } = useSession();
 
+  console.log("AuthHeader session:", session);
+
   if (session) {
     // Get user initials for fallback
     const getInitials = (name?: string | null, email?: string | null) => {

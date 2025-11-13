@@ -22,7 +22,6 @@ export const TopicsField: Field = {
         {
           name: "indicator_id",
           type: "number",
-          unique: true,
         },
         {
           name: "type",
@@ -47,6 +46,10 @@ export const TopicsField: Field = {
             {
               label: "Custom",
               value: "custom",
+            },
+            {
+              label: "Ai",
+              value: "ai",
             },
           ],
         },

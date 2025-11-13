@@ -65,11 +65,13 @@ export interface Config {
   auth: {
     admins: AdminAuthOperations;
     users: UserAuthOperations;
+    'anonymous-users': AnonymousUserAuthOperations;
   };
   blocks: {};
   collections: {
     admins: Admin;
     users: User;
+    'anonymous-users': AnonymousUser;
     accounts: Account;
     media: Media;
     reports: Report;
@@ -85,6 +87,7 @@ export interface Config {
   collectionsSelect: {
     admins: AdminsSelect<false> | AdminsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'anonymous-users': AnonymousUsersSelect<false> | AnonymousUsersSelect<true>;
     accounts: AccountsSelect<false> | AccountsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     reports: ReportsSelect<false> | ReportsSelect<true>;
@@ -104,6 +107,9 @@ export interface Config {
       })
     | (User & {
         collection: 'users';
+      })
+    | (AnonymousUser & {
+        collection: 'anonymous-users';
       });
   jobs: {
     tasks: unknown;
@@ -129,6 +135,24 @@ export interface AdminAuthOperations {
   };
 }
 export interface UserAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
+  };
+}
+export interface AnonymousUserAuthOperations {
   forgotPassword: {
     email: string;
     password: string;
@@ -219,6 +243,18 @@ export interface Account {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "anonymous-users".
+ */
+export interface AnonymousUser {
+  id: number;
+  updatedAt: string;
+  createdAt: string;
+  enableAPIKey?: boolean | null;
+  apiKey?: string | null;
+  apiKeyIndex?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
@@ -258,6 +294,15 @@ export interface Report {
     };
     [k: string]: unknown;
   } | null;
+  user?:
+    | ({
+        relationTo: 'users';
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'anonymous-users';
+        value: number | AnonymousUser;
+      } | null);
   location:
     | {
         type: 'search';
@@ -266,7 +311,7 @@ export interface Report {
         sourceIndex: number;
       }
     | {
-        type: 'point' | 'multipoint' | 'polyline' | 'polygon' | 'multipatch' | 'extent';
+        type: 'point' | 'multipoint' | 'polyline' | 'polygon' | 'extent' | 'mesh';
         geometry: {
           [k: string]: unknown;
         };
@@ -293,7 +338,7 @@ export interface Report {
         indicators?:
           | {
               indicator_id?: number | null;
-              type?: ('map' | 'chart' | 'table' | 'numeric' | 'custom') | null;
+              type?: ('map' | 'chart' | 'table' | 'numeric' | 'custom' | 'ai') | null;
               x?: number | null;
               y?: number | null;
               w?: number | null;
@@ -336,6 +381,10 @@ export interface PayloadLockedDocument {
         value: number | User;
       } | null)
     | ({
+        relationTo: 'anonymous-users';
+        value: number | AnonymousUser;
+      } | null)
+    | ({
         relationTo: 'accounts';
         value: number | Account;
       } | null)
@@ -356,6 +405,10 @@ export interface PayloadLockedDocument {
     | {
         relationTo: 'users';
         value: number | User;
+      }
+    | {
+        relationTo: 'anonymous-users';
+        value: number | AnonymousUser;
       };
   updatedAt: string;
   createdAt: string;
@@ -374,6 +427,10 @@ export interface PayloadPreference {
     | {
         relationTo: 'users';
         value: number | User;
+      }
+    | {
+        relationTo: 'anonymous-users';
+        value: number | AnonymousUser;
       };
   key?: string | null;
   value?:
@@ -449,6 +506,17 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "anonymous-users_select".
+ */
+export interface AnonymousUsersSelect<T extends boolean = true> {
+  updatedAt?: T;
+  createdAt?: T;
+  enableAPIKey?: T;
+  apiKey?: T;
+  apiKeyIndex?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "accounts_select".
  */
 export interface AccountsSelect<T extends boolean = true> {
@@ -486,6 +554,7 @@ export interface MediaSelect<T extends boolean = true> {
 export interface ReportsSelect<T extends boolean = true> {
   title?: T;
   description?: T;
+  user?: T;
   location?: T;
   topics?:
     | T
