@@ -58,10 +58,12 @@ export const ReportResultsContentItem = ({
           if (t.id === topic.id) {
             return {
               id: topic.id,
+              topic_id: topic.topic_id,
               indicators: layout.map((l) => {
                 const { indicator, type } = JSON.parse(l.i);
                 return {
                   id: indicator,
+                  indicator_id: indicator,
                   type,
                   w: l.w,
                   h: l.h,
@@ -75,7 +77,7 @@ export const ReportResultsContentItem = ({
         });
       });
     },
-    [topic.id, setTopics],
+    [topic.id, topic.topic_id, setTopics],
   );
 
   const INDICATORS = useMemo(() => {
@@ -111,9 +113,8 @@ export const ReportResultsContentItem = ({
           <ReportResultsContentIndicatorItem
             topic={topic}
             indicatorView={{
-              id,
-              type,
-              basemapId: type === "map" ? indicator.basemapId : undefined,
+              ...indicator,
+              ...(type === "map" && { basemapId: indicator.basemapId }),
             }}
             editable={editable}
             editing={EDITABLE}

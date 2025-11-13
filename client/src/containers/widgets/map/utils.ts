@@ -62,7 +62,12 @@ export const handleMapIndicatorPropertyChange = (
           } else {
             indicators.push({
               id: indicator.id,
+              indicator_id: indicator.id,
               type: "map",
+              x: 0,
+              y: 0,
+              w: 2,
+              h: 2,
               [propertyName]: propertyValue,
             });
           }
@@ -79,9 +84,15 @@ export const handleMapIndicatorPropertyChange = (
       } else if (!isResettingToDefault) {
         newTopicsArray.push({
           id: currentIndicatorTopicId,
+          topic_id: currentIndicatorTopicId,
           indicators: [
             {
               id: indicator.id,
+              indicator_id: indicator.id,
+              x: 0,
+              y: 0,
+              w: 2,
+              h: 2,
               type: "map",
               [propertyName]: propertyValue,
             },

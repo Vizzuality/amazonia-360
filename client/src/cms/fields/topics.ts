@@ -9,6 +9,7 @@ export const TopicsField: Field = {
     {
       name: "topic_id",
       type: "number",
+      required: true,
     },
     {
       name: "description",
@@ -21,10 +22,12 @@ export const TopicsField: Field = {
         {
           name: "indicator_id",
           type: "number",
+          required: true,
         },
         {
           name: "type",
           type: "radio",
+          required: true,
           options: [
             {
               label: "Map",
@@ -56,21 +59,25 @@ export const TopicsField: Field = {
           name: "x",
           label: "X Coordinate",
           type: "number",
+          required: true,
         },
         {
           name: "y",
           label: "Y Coordinate",
           type: "number",
+          required: true,
         },
         {
           name: "w",
           label: "Width",
           type: "number",
+          required: true,
         },
         {
           name: "h",
           label: "Height",
           type: "number",
+          required: true,
         },
         {
           name: "basemapId",

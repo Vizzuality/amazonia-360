@@ -28,6 +28,7 @@ export function Badges({ topicId, indicatorId }: { topicId: number; indicatorId:
 
         prev[i] = {
           id: topicId,
+          topic_id: topicId,
           indicators: prev[i]?.indicators?.filter(
             (i) => !(i.id === indicatorId && i.type === type),
           ),

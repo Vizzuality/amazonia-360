@@ -36,6 +36,7 @@ export function VisualizationType({
     const newIndicator = {
       type: visualizationType,
       id: indicatorId,
+      indicator_id: indicatorId,
       x: 0,
       y: 0,
       w: widgetSize.w,
@@ -50,6 +51,7 @@ export function VisualizationType({
       if (i === -1) {
         prev.push({
           id: topicId,
+          topic_id: topicId,
           indicators: [newIndicator],
         });
 

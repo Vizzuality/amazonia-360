@@ -140,6 +140,7 @@ export default function SearchC() {
         const newIndicator = {
           type: value.key as IndicatorView["type"],
           id: value.id,
+          indicator_id: value.id,
           x: 0,
           y: 0,
           w: DEFAULT_VISUALIZATION_SIZES[value.key as IndicatorView["type"]]?.w || 2,
@@ -155,6 +156,7 @@ export default function SearchC() {
           if (i === -1) {
             newTopics.push({
               id: value.topic.id,
+              topic_id: value.topic.id,
               indicators: [newIndicator],
             });
 

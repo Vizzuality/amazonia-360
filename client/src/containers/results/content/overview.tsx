@@ -15,6 +15,7 @@ export const ReportResultsContentOverview = () => {
   return data?.map((topic) => {
     const T = {
       ...topic,
+      topic_id: topic.id,
       indicators: subtopicsData?.map((s) => s.default_visualization).flat() || [],
     };
 

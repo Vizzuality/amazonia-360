@@ -319,7 +319,7 @@ export interface Report {
       };
   topics?:
     | {
-        topic_id?: number | null;
+        topic_id: number;
         description?: {
           root: {
             type: string;
@@ -337,12 +337,12 @@ export interface Report {
         } | null;
         indicators?:
           | {
-              indicator_id?: number | null;
-              type?: ('map' | 'chart' | 'table' | 'numeric' | 'custom' | 'ai') | null;
-              x?: number | null;
-              y?: number | null;
-              w?: number | null;
-              h?: number | null;
+              indicator_id: number;
+              type: 'map' | 'chart' | 'table' | 'numeric' | 'custom' | 'ai';
+              x: number;
+              y: number;
+              w: number;
+              h: number;
               basemapId?:
                 | (
                     | 'gray-vector'

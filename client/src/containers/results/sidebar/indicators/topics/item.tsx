@@ -60,6 +60,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
               ...p,
               {
                 id,
+                topic_id: id,
                 indicators: TOPIC?.default_visualization,
               },
             ];
@@ -69,6 +70,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
             if (topic.id === id) {
               return {
                 ...topic,
+                topic_id: id,
                 indicators: TOPIC?.default_visualization,
               };
             }

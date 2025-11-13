@@ -41,6 +41,7 @@ export const ReportResultsContentIndicatorItem = ({
 
         prev[i] = {
           id: topic.id,
+          topic_id: topic.topic_id,
           indicators: prev[i]?.indicators?.filter(
             (i) => !(i.id === indicatorId && i.type === type),
           ),
@@ -51,7 +52,7 @@ export const ReportResultsContentIndicatorItem = ({
 
       setEditionModeIndicator({});
     },
-    [topic.id, setTopics, setEditionModeIndicator],
+    [topic.id, topic.topic_id, setTopics, setEditionModeIndicator],
   );
 
   const indicatorBasemap = (indicatorView as IndicatorMapView)?.basemapId;
