@@ -57,39 +57,51 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
     },
   });
 
+  async function generateReport(values: z.infer<typeof formSchema>) {
+    const topics = values.topics
+      ?.map((t) => ({
+        id: `${t.id}-${crypto.randomUUID()}`,
+        topic_id: t.id,
+        indicators: topicsData
+          ?.find((topic) => topic.id === t.id)
+          ?.default_visualization.map((indicator) => {
+            return {
+              ...indicator,
+              id: `${indicator.id}-${indicator.type}-${crypto.randomUUID()}`,
+              indicator_id: indicator.id,
+            };
+          }),
+      }))
+      .filter((t) => t.indicators && t.indicators.length > 0);
+
+    if (location) {
+      return sdk.create({
+        collection: "reports",
+        data: {
+          location,
+          topics: topics ?? [],
+        },
+      });
+    }
+  }
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!session) {
       const res = await signIn("anonymous-users", { redirect: false });
 
       if (res.ok) {
-        const topics = values.topics
-          ?.map((t) => ({
-            id: `${t.id}-${crypto.randomUUID()}`,
-            topic_id: t.id,
-            indicators: topicsData
-              ?.find((topic) => topic.id === t.id)
-              ?.default_visualization.map((indicator) => {
-                return {
-                  ...indicator,
-                  id: `${indicator.id}-${indicator.type}-${crypto.randomUUID()}`,
-                  indicator_id: indicator.id,
-                };
-              }),
-          }))
-          .filter((t) => t.indicators && t.indicators.length > 0);
+        const report = await generateReport(values);
 
-        if (location) {
-          const report = await sdk.create({
-            collection: "reports",
-            data: {
-              location,
-              topics: topics ?? [],
-            },
-          });
-
-          router.push(`/report/results/${report.id}`);
+        if (report) {
+          return router.push(`/report/results/${report.id}`);
         }
       }
+    }
+
+    const report = await generateReport(values);
+
+    if (report) {
+      return router.push(`/report/results/${report.id}`);
     }
   }
 

@@ -9,7 +9,6 @@ export const TopicsField: Field = {
     {
       name: "topic_id",
       type: "number",
-      unique: true,
     },
     {
       name: "description",

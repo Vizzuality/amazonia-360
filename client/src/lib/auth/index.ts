@@ -6,6 +6,31 @@ import { PayloadAuthAdapter } from "@/lib/auth/adapter";
 
 import { sdk } from "@/services/sdk";
 
+// Extend Authjs User to add collection
+declare module "next-auth" {
+  interface User {
+    collection?: string;
+    apiKey?: string | null;
+  }
+
+  interface Session {
+    user: {
+      id: string;
+      collection?: string;
+      apiKey?: string | null;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+    };
+  }
+}
+
+declare module "@auth/core/jwt" {
+  interface JWT {
+    collection?: string;
+  }
+}
+
 class InvalidLoginError extends CredentialsSignin {
   code = "Invalid identifier or password";
 }
@@ -88,9 +113,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   session: { strategy: "jwt" },
   callbacks: {
-    async session({ session, token, user }) {
-      console.log("Session callback:", { session, token, user });
-      return { ...session, user: { ...session.user, id: token.sub, collection: token.collection } };
+    async jwt({ token, user }) {
+      if (user) {
+        token.collection = user.collection;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.sub || "",
+          collection: token.collection as string | undefined,
+        },
+      };
     },
   },
 });
