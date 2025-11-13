@@ -78,23 +78,11 @@ module "webshot_prod_ecr" {
   repo_name    = "webshot"
 }
 
-# SES Domain Identity
-resource "aws_ses_domain_identity" "main" {
-  domain = var.ses_domain_name
-  region = var.ses_aws_region
-}
-
-# SES Domain DKIM
-resource "aws_ses_domain_dkim" "main" {
-  domain = aws_ses_domain_identity.main.domain
-  region = var.ses_aws_region
-}
-
-# Verified email addresses
-resource "aws_ses_email_identity" "verified_emails" {
-  for_each = toset(var.ses_verified_emails)
-  email    = each.value
-  region   = var.ses_aws_region
+module "ses" {
+  source              = "./modules/ses"
+  ses_aws_region      = var.ses_aws_region
+  ses_domain_name     = var.ses_domain_name
+  ses_verified_emails = var.ses_verified_emails
 }
 
 module "github" {

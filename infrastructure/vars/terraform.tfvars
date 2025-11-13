@@ -5,8 +5,9 @@ repo_name          = "amazonia-360"
 github_owner       = "Vizzuality"
 github_token       = ""
 
-# SES Configuration - Single region for all environments
-ses_aws_region = "sa-east-1"
+# SES configuration, using a single setup for all environments
+ses_domain_name = "amazoniaforever360.org"
+ses_aws_region  = "sa-east-1"
 
 dev = {
   aws_region = "eu-west-3"
