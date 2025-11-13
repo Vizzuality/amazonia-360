@@ -9,7 +9,7 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { Indicator, ResourceImagery } from "@/types/indicator";
 
-import { useSyncLocation } from "@/app/(frontend)/store";
+import { Report } from "@/payload-types";
 
 // import { CardLoader } from "@/containers/card";
 
@@ -17,10 +17,10 @@ import { useSyncLocation } from "@/app/(frontend)/store";
 
 export interface ChartImageryIndicatorsProps extends Indicator {
   resource: ResourceImagery;
+  location: Report["location"];
 }
 
-export const ChartImageryIndicators = ({ id, resource }: ChartImageryIndicatorsProps) => {
-  const [location] = useSyncLocation();
+export const ChartImageryIndicators = ({ id, resource, location }: ChartImageryIndicatorsProps) => {
   const GEOMETRY = useLocationGeometry(location);
 
   const query = useQueryImageryId({ id, resource, type: "chart", geometry: GEOMETRY });

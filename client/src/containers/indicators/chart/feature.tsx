@@ -12,8 +12,6 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { Indicator, ResourceFeature } from "@/types/indicator";
 
-import { useSyncLocation } from "@/app/(frontend)/store";
-
 import { CardLoader } from "@/containers/card";
 import { useIndicator } from "@/containers/indicators/provider";
 
@@ -21,14 +19,17 @@ import MarimekkoChart, { Data } from "@/components/charts/marimekko";
 import LegendBasic from "@/components/map/legend/basic";
 import { LegendItemProps } from "@/components/map/legend/item";
 
+import { Report } from "@/payload-types";
+
 export interface ChartIndicatorsProps extends Indicator {
   resource: ResourceFeature;
+  location: Report["location"];
 }
 
 export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
-  const { id, resource } = indicator;
+  const { id, resource, location } = indicator;
   const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();
-  const [location] = useSyncLocation();
+
   const GEOMETRY = useLocationGeometry(location);
 
   const query = useQueryFeatureId({ id, resource, type: "chart", geometry: GEOMETRY });

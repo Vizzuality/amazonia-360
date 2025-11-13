@@ -2,6 +2,8 @@
 
 import { useCallback, useMemo, useState } from "react";
 
+import { useParams } from "next/navigation";
+
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { CircleAlert } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -9,11 +11,12 @@ import { LuInfo, LuLoader, LuSparkles } from "react-icons/lu";
 
 import { usePostSummaryTopicMutation } from "@/lib/ai";
 import { useLocationGeometry } from "@/lib/location";
+import { useReport } from "@/lib/report";
 import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { AiSummary } from "@/app/(frontend)/parsers";
-import { useSyncAiSummary, useSyncLocation, useSyncTopics } from "@/app/(frontend)/store";
+import { useSyncAiSummary, useSyncTopics } from "@/app/(frontend)/store";
 
 import { Button } from "@/components/ui/button";
 import { RadioGroup } from "@/components/ui/radio-group";
@@ -48,7 +51,8 @@ export default function AiSidebarContent() {
   const { data: topicsData } = useGetDefaultTopics({ locale });
 
   const [topics, setTopics] = useSyncTopics();
-  const [location] = useSyncLocation();
+  const { id } = useParams();
+  const { data: reportData } = useReport({ id: Number(id) });
 
   const [aiSummary, setAiSummary] = useSyncAiSummary();
 
@@ -57,7 +61,7 @@ export default function AiSidebarContent() {
     aiSummary.only_active,
   );
 
-  const LOCATION = useLocationGeometry(location);
+  const LOCATION = useLocationGeometry(reportData?.location);
 
   // Set up the mutation for generating AI summaries
   const summaryMutation = usePostSummaryTopicMutation({

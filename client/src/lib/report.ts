@@ -1,4 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { IndicatorView } from "@/app/(frontend)/parsers";
+
+import { sdk } from "@/services/sdk";
 
 export const findFirstAvailablePosition = (
   parsedTopics: IndicatorView[],
@@ -34,4 +38,17 @@ export const findFirstAvailablePosition = (
     }
   }
   return { x, y };
+};
+
+export const reportQueryOptions = (params: { id: number }) => ({
+  queryFn: () =>
+    sdk.findByID({
+      collection: "reports",
+      id: params.id,
+    }),
+  queryKey: ["report", params.id] as const,
+});
+
+export const useReport = (params: { id: number }) => {
+  return useQuery(reportQueryOptions(params));
 };
