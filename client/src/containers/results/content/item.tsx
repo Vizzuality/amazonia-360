@@ -47,7 +47,7 @@ export const ReportResultsContentItem = ({
   const { setOpen } = useSidebar();
 
   const EDITABLE = editable && reportEditionMode;
-  const TOPIC = useGetTopicsId({ id: topic.id, locale });
+  const TOPIC = useGetTopicsId({ id: topic.topic_id, locale });
 
   const handleDrop = useCallback(
     (layout: Layout[]) => {
@@ -82,7 +82,7 @@ export const ReportResultsContentItem = ({
 
   const INDICATORS = useMemo(() => {
     return topic?.indicators?.map((indicator) => {
-      const { type, id, w, h, x, y } = indicator;
+      const { type, indicator_id, w, h, x, y } = indicator;
       const dataGridConfig = {
         x: x ?? 0,
         y: y ?? 0,
@@ -91,8 +91,8 @@ export const ReportResultsContentItem = ({
         minW: MIN_VISUALIZATION_SIZES[type]?.w ?? 1,
         minH: MIN_VISUALIZATION_SIZES[type]?.h ?? 1,
       };
-      const refKey = `widget-${topic.id}-${id}-${type}`;
-      const gridKey = JSON.stringify({ indicator: id, type });
+      const refKey = `widget-${topic.topic_id}-${indicator_id}-${type}`;
+      const gridKey = JSON.stringify({ indicator: indicator_id, type });
 
       return (
         <div

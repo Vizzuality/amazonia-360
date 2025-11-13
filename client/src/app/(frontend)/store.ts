@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 
-import { atom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { useQueryState } from "nuqs";
 import { useLocalStorage } from "usehooks-ts";
 
@@ -52,9 +52,15 @@ export const useSyncLocation = () => {
   return useLocalStorage<Location | null>(`${id ?? "new"}:location`, null);
 };
 
+// export const useSyncTopics = () => {
+//   const { id } = useParams();
+//   return useLocalStorage<TopicView[] | null>(`${id ?? "new"}:topics`, null);
+// };
+
+export const topicsViewAtom = atom<TopicView[] | null | undefined>(null);
+
 export const useSyncTopics = () => {
-  const { id } = useParams();
-  return useLocalStorage<TopicView[] | null>(`${id ?? "new"}:topics`, null);
+  return useAtom(topicsViewAtom);
 };
 
 export const useSyncDefaultTopics = () => {

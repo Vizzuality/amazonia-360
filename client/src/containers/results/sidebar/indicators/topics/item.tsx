@@ -52,14 +52,14 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
       setTopics((prev) => {
         const p = prev ?? [];
 
-        const i = p.findIndex((topic) => topic.id === id);
+        const i = p.findIndex((topic) => topic.topic_id === id);
 
         if (checked) {
           if (i < 0) {
             return [
               ...p,
               {
-                id,
+                id: `${id}`,
                 topic_id: id,
                 indicators: TOPIC?.default_visualization,
               },
@@ -67,7 +67,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
           }
 
           return p.map((topic) => {
-            if (topic.id === id) {
+            if (topic.topic_id === id) {
               return {
                 ...topic,
                 topic_id: id,
@@ -78,7 +78,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
           });
         }
 
-        return p.filter((topic) => topic.id !== id);
+        return p.filter((topic) => topic.topic_id !== id);
       });
     },
     [id, setTopics, TOPIC?.default_visualization],
@@ -123,7 +123,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
 
             <Switch
               className="h-4 w-8"
-              checked={!!topics && topics.some((t) => t.id === id)}
+              checked={!!topics && topics.some((t) => t.topic_id === id)}
               onCheckedChange={handleChangeDefaultTopic}
             />
           </div>

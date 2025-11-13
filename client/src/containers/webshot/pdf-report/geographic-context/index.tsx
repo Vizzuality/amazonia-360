@@ -39,7 +39,7 @@ export default function PfdGeographicContext() {
   );
 
   const map = data?.[0].default_visualization.find((topic) => topic.type === "map");
-  const mapIndicator = useGetIndicatorsId(map?.id || -1, locale);
+  const mapIndicator = useGetIndicatorsId(map?.indicator_id || -1, locale);
 
   if (!data) return null;
 
@@ -52,9 +52,9 @@ export default function PfdGeographicContext() {
             reportData?.location &&
             indicators?.map((indicator, index) => (
               <DataRow
-                key={`${indicator.id}-${index}`}
+                key={`${indicator.indicator_id}-${index}`}
                 locale={locale}
-                id={indicator.id}
+                id={indicator.indicator_id}
                 location={reportData.location}
               />
             ))}

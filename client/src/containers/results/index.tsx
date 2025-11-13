@@ -1,19 +1,22 @@
 "use client";
 
-import useIsMounted from "@/lib/mounted";
+import { useParams } from "next/navigation";
 
-import ReportResultsLoading from "@/app/(frontend)/[locale]/(app)/report/(results)/results/[id]/loading";
+import { useHydrateAtoms } from "jotai/utils";
+
+import { useReport } from "@/lib/report";
+
+import { topicsViewAtom } from "@/app/(frontend)/store";
 
 import ReportResultsHeader from "@/containers/header/results";
 import ReportResultsContent from "@/containers/results/content";
 import ReportResultsSidebar from "@/containers/results/sidebar";
 
 export const ReportResults = () => {
-  const isMounted = useIsMounted();
+  const { id: reportId } = useParams();
+  const { data: reportData } = useReport({ id: Number(reportId) });
 
-  if (!isMounted()) {
-    return <ReportResultsLoading />;
-  }
+  useHydrateAtoms(new Map([[topicsViewAtom, reportData?.topics || null]]));
 
   return (
     <main className="relative flex bg-blue-50 pb-5 print:w-full print:bg-white print:p-0">

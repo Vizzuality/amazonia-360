@@ -7,7 +7,7 @@ import { VisualizationTypes } from "@/types/indicator";
 import { BasemapIds } from "@/constants/basemaps";
 
 type IndicatorViewBase = {
-  id: number;
+  id: number | string;
   indicator_id: number;
   w: number;
   h: number;
@@ -28,7 +28,7 @@ type IndicatorOtherView = IndicatorViewBase & {
 export type IndicatorView = IndicatorMapView | IndicatorOtherView;
 
 export type TopicView = {
-  id: number;
+  id: number | string;
   topic_id: number;
   description?: string;
   indicators?: IndicatorView[];
@@ -71,12 +71,12 @@ export const defaultTopicsConfigParser = parseAsArrayOf(
   parseAsJson<TopicView>(z.custom<TopicView>()),
 ).withDefault([
   {
-    id: 0,
+    id: "0",
     topic_id: 0,
     description: undefined,
     indicators: [
       {
-        id: 0,
+        id: "0",
         indicator_id: 0,
         type: "numeric",
         x: 0,
@@ -85,7 +85,7 @@ export const defaultTopicsConfigParser = parseAsArrayOf(
         h: 1,
       },
       {
-        id: 35,
+        id: "35",
         indicator_id: 35,
         type: "numeric",
         x: 1,
@@ -94,7 +94,7 @@ export const defaultTopicsConfigParser = parseAsArrayOf(
         h: 1,
       },
       {
-        id: 11,
+        id: "11",
         indicator_id: 11,
         type: "numeric",
         x: 2,
@@ -103,7 +103,7 @@ export const defaultTopicsConfigParser = parseAsArrayOf(
         h: 1,
       },
       {
-        id: 12,
+        id: "12",
         indicator_id: 12,
         type: "numeric",
         x: 3,
@@ -112,7 +112,7 @@ export const defaultTopicsConfigParser = parseAsArrayOf(
         h: 1,
       },
       {
-        id: 5,
+        id: "5",
         indicator_id: 5,
         type: "map",
         x: 0,
@@ -121,7 +121,7 @@ export const defaultTopicsConfigParser = parseAsArrayOf(
         h: 4,
       },
       {
-        id: 4,
+        id: "4",
         indicator_id: 4,
         type: "table",
         x: 2,
@@ -130,7 +130,7 @@ export const defaultTopicsConfigParser = parseAsArrayOf(
         h: 4,
       },
       {
-        id: 2,
+        id: "2",
         indicator_id: 2,
         type: "numeric",
         x: 0,
@@ -139,7 +139,7 @@ export const defaultTopicsConfigParser = parseAsArrayOf(
         h: 1,
       },
       {
-        id: 3,
+        id: "3",
         indicator_id: 3,
         type: "numeric",
         x: 1,
@@ -148,7 +148,7 @@ export const defaultTopicsConfigParser = parseAsArrayOf(
         h: 1,
       },
       {
-        id: 4,
+        id: "4",
         indicator_id: 4,
         type: "numeric",
         x: 2,
@@ -157,7 +157,7 @@ export const defaultTopicsConfigParser = parseAsArrayOf(
         h: 1,
       },
       {
-        id: 5,
+        id: "5",
         indicator_id: 5,
         type: "numeric",
         x: 3,

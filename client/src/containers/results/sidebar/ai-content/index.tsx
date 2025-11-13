@@ -71,7 +71,7 @@ export default function AiSidebarContent() {
         setTopics(
           (currentTopics) =>
             currentTopics?.map((t) =>
-              t.id === variables.topic?.id ? { ...t, description: data.description } : t,
+              t.topic_id === variables.topic?.id ? { ...t, description: data.description } : t,
             ) || [],
         );
 
@@ -110,7 +110,7 @@ export default function AiSidebarContent() {
       enabled: true,
       generating: topics?.reduce(
         (acc, topic) => {
-          acc[topic.id] = true;
+          acc[topic.topic_id] = true;
           return acc;
         },
         {} as Record<number, boolean>,
@@ -119,13 +119,13 @@ export default function AiSidebarContent() {
 
     // Loop through all mutations for each topic
     summaryMutationArray?.forEach(({ topicView, mutation }) => {
-      const activeIndicators = topicView.indicators?.map(({ id }) => id) || [];
+      const activeIndicators = topicView.indicators?.map(({ indicator_id }) => indicator_id) || [];
 
       //   // Filter indicators if only_active is true
       const indicatorsToUse = ai_only_active ? activeIndicators : undefined;
 
       mutation.mutate({
-        topic: topicsData?.find((t) => t.id === topicView.id),
+        topic: topicsData?.find((t) => t.id === topicView.topic_id),
         options: {
           type: ai_audience,
           only_active: ai_only_active,

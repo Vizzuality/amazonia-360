@@ -15,9 +15,13 @@ const OpacityControlButton = ({ indicator }: { indicator: Omit<Indicator, "resou
 
   const { opacity } = useMemo(() => {
     const topicWithIndicator =
-      defaultTopics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id)) ||
-      topics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id));
-    const indicatorConfig = topicWithIndicator?.indicators?.find((ind) => ind.id === indicator.id);
+      defaultTopics?.find((topic) =>
+        topic.indicators?.find((ind) => ind.indicator_id === indicator.id),
+      ) ||
+      topics?.find((topic) => topic.indicators?.find((ind) => ind.indicator_id === indicator.id));
+    const indicatorConfig = topicWithIndicator?.indicators?.find(
+      (ind) => ind.indicator_id === indicator.id,
+    );
     return {
       opacity: indicatorConfig && "opacity" in indicatorConfig ? indicatorConfig.opacity : 1,
     };

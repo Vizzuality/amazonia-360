@@ -18,7 +18,7 @@ export default function DocumentCoverPdfSection() {
   const { data: allTopics } = useGetTopics(locale);
 
   const selectedTopics = useMemo(
-    () => allTopics?.filter((topic) => topics?.find((t) => t.id === topic.id)),
+    () => allTopics?.filter((topic) => topics?.find((t) => t.topic_id === topic.id)),
     [allTopics, topics],
   );
 

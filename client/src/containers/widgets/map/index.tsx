@@ -77,10 +77,15 @@ export default function WidgetMap({
 
   const { syncBasemapId, opacity } = useMemo(() => {
     const topicWithIndicator =
-      defaultTopics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id)) ||
-      topics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id));
+      defaultTopics?.find((topic) =>
+        topic.indicators?.find((ind) => ind.indicator_id === indicator.id),
+      ) ||
+      topics?.find((topic) => topic.indicators?.find((ind) => ind.indicator_id === indicator.id));
     const indicatorConfig = topicWithIndicator?.indicators?.find(
-      (ind) => ind.id === indicator.id && "type" in ind && (ind as IndicatorMapView).type === "map",
+      (ind) =>
+        ind.indicator_id === indicator.id &&
+        "type" in ind &&
+        (ind as IndicatorMapView).type === "map",
     );
     return {
       syncBasemapId:

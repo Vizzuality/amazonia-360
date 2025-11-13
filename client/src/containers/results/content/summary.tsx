@@ -24,7 +24,7 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
   const [aiSummary] = useSyncAiSummary();
 
   const TOPIC = useMemo(() => {
-    return topics?.find((t) => t.id === topic?.id);
+    return topics?.find((t) => t.topic_id === topic?.id);
   }, [topic, topics]);
 
   const handleEditorChange = useCallback(
@@ -35,7 +35,7 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
         if (!prevTopics) return prevTopics;
 
         return prevTopics.map((t) => {
-          if (t.id === topic.id) {
+          if (t.topic_id === topic.id) {
             return {
               ...t,
               description: markdown,

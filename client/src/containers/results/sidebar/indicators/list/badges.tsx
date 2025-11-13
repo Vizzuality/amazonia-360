@@ -11,26 +11,28 @@ import { Badge } from "@/components/ui/badge";
 export function Badges({ topicId, indicatorId }: { topicId: number; indicatorId: number }) {
   const [topics, setTopics] = useSyncTopics();
 
-  const topic = topics?.find(({ id }) => id === topicId);
-  const indicatorsDisplay = topic?.indicators?.filter(({ id }) => indicatorId === id);
+  const topic = topics?.find(({ topic_id }) => topic_id === topicId);
+  const indicatorsDisplay = topic?.indicators?.filter(
+    ({ indicator_id }) => indicatorId === indicator_id,
+  );
 
   const handleDelete = useCallback(
     (indicatorId: number, type: VisualizationTypes) => {
       setTopics((prev) => {
         if (!prev) return prev;
 
-        const currentTopic = prev.find((t) => t.id === topicId);
+        const currentTopic = prev.find((t) => t.topic_id === topicId);
         if (!currentTopic) return prev;
 
-        const i = prev.findIndex((t) => t.id === topicId);
+        const i = prev.findIndex((t) => t.topic_id === topicId);
 
         if (i === -1) return prev;
 
         prev[i] = {
-          id: topicId,
+          id: prev[i].id,
           topic_id: topicId,
           indicators: prev[i]?.indicators?.filter(
-            (i) => !(i.id === indicatorId && i.type === type),
+            (i) => !(i.indicator_id === indicatorId && i.type === type),
           ),
         };
 
@@ -42,9 +44,9 @@ export function Badges({ topicId, indicatorId }: { topicId: number; indicatorId:
 
   return (
     <div className="mt-0.5 flex flex-wrap gap-1">
-      {indicatorsDisplay?.map(({ id, type }) => (
+      {indicatorsDisplay?.map(({ indicator_id, type }) => (
         <Badge
-          onClick={() => handleDelete(id, type)}
+          onClick={() => handleDelete(indicator_id, type)}
           variant="secondary"
           className="capitalize"
           key={type}
