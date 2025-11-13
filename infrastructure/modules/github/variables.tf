@@ -18,8 +18,8 @@ variable "environment_variable_map" {
 }
 
 variable "environment_secret_map" {
-    type    = map(string)
-    default = {}
+  type    = map(string)
+  default = {}
 }
 
 variable "github_owner" {
@@ -35,5 +35,5 @@ variable "github_token" {
 variable "github_environment" {
   type        = string
   description = "Environment to create in the Github repository"
-  default    = null
+  default     = null
 }
