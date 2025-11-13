@@ -17,7 +17,6 @@ import { cn } from "@/lib/utils";
 
 import { reportPanelAtom, useSyncLocation } from "@/app/(frontend)/store";
 
-import { createAnonymousUser } from "@/containers/report/generate/action";
 import { ReportGenerateButtons } from "@/containers/report/generate/buttons";
 import Topics from "@/containers/report/generate/topics";
 
@@ -80,29 +79,18 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
           .filter((t) => t.indicators && t.indicators.length > 0);
 
         if (location) {
-          await sdk.create({
+          const report = await sdk.create({
             collection: "reports",
             data: {
               location,
               topics: topics ?? [],
             },
           });
+
+          router.push(`/report/results/${report.id}`);
         }
       }
     }
-    // const topics = values.topics
-    //   ?.map((t) => ({
-    //     id: t.id,
-    //     indicators: topicsData?.find((topic) => topic.id === t.id)?.default_visualization,
-    //   }))
-    //   .filter((t) => t.indicators && t.indicators.length > 0);
-
-    // const reportId = crypto.randomUUID();
-
-    // localStorage.setItem(`${reportId}:location`, JSON.stringify(location));
-    // localStorage.setItem(`${reportId}:topics`, JSON.stringify(topics));
-
-    // router.push(`/report/results/${reportId}`);
   }
 
   const HEADER = {
