@@ -223,6 +223,10 @@ jobs:
           API_AUTH_TOKEN: ${{ secrets.TF_API_AUTH_TOKEN }}
           API_GRID_TILES_PATH: ${{ vars.TF_API_GRID_TILES_PATH }}
           OPENAI_TOKEN: ${{ secrets.TF_API_OPENAI_TOKEN }}
+
+          AWS_SES_REGION: ${{ vars.TF_AWS_SES_REGION }}
+          AWS_SES_IAM_USER_ACCESS_KEY_ID: ${{ secrets.TF_AWS_SES_IAM_USER_ACCESS_KEY_ID }}
+          AWS_SES_IAM_USER_SECRET_ACCESS_KEY: ${{ secrets.TF_AWS_SES_IAM_USER_SECRET_ACCESS_KEY }}
         run: |
           cat <<EOF >> docker-compose.yml
           version: '3.9'
@@ -247,6 +251,10 @@ jobs:
                 - amazonia360-network
               ports:
                 - 3000:3000
+              environment:
+                - AWS_SES_REGION=${AWS_SES_REGION}
+                - AWS_SES_IAM_USER_ACCESS_KEY_ID=${AWS_SES_IAM_USER_ACCESS_KEY_ID}
+                - AWS_SES_IAM_USER_SECRET_ACCESS_KEY=${AWS_SES_IAM_USER_SECRET_ACCESS_KEY}
               restart: always
             webshot:
               image: $ECR_REGISTRY/$ECR_REPOSITORY_WEBSHOT:$IMAGE_TAG
