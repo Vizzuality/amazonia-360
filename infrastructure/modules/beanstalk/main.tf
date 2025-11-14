@@ -8,12 +8,16 @@ resource "aws_s3_bucket" "application_bucket" {
   )
 }
 
-#
 # Site Server Security Groups
-# SSH access to and from the world
+#
+# SSH access to and from the world (disabled by default via count = 0: ideally
+# this should not be enabled, past initial pre-release stages where it may be
+# useful to inspect things quickly in live EC2 instances via SSH)
+#
 # HTTP(S) access from the world
 #
 resource "aws_security_group" "site_server_ssh_security_group" {
+  count       = 0
   vpc_id      = var.vpc.id
   name        = "${var.project}-${var.environment}-public-ssh-sg"
   description = "Security group for SSH access to and from the world - ${var.project} ${var.environment}"
@@ -31,22 +35,24 @@ resource "aws_security_group" "site_server_ssh_security_group" {
 }
 
 resource "aws_security_group_rule" "ssh_ingress" {
+  count             = length(aws_security_group.site_server_ssh_security_group) > 0 ? 1 : 0
   type              = "ingress"
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.site_server_ssh_security_group.id
+  security_group_id = aws_security_group.site_server_ssh_security_group[0].id
 }
 
 resource "aws_security_group_rule" "ssh_egress" {
+  count       = length(aws_security_group.site_server_ssh_security_group) > 0 ? 1 : 0
   type        = "egress"
   from_port   = 22
   to_port     = 22
   protocol    = "tcp"
   cidr_blocks = [var.vpc.cidr_block]
 
-  security_group_id = aws_security_group.site_server_ssh_security_group.id
+  security_group_id = aws_security_group.site_server_ssh_security_group[0].id
 }
 
 # Create elastic beanstalk application
@@ -127,7 +133,7 @@ locals {
     {
       namespace = "aws:autoscaling:launchconfiguration"
       name      = "SecurityGroups"
-      value     = join(",", [aws_security_group.site_server_ssh_security_group.id])
+      value     = try(aws_security_group.site_server_ssh_security_group[0].id, "")
     },
     {
       namespace = "aws:autoscaling:asg"
