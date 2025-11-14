@@ -5,14 +5,14 @@ export const metadata = {
   description: "Generate a PDF report of your current map view.",
 };
 
-export default function WebshotReport() {
+export default async function WebshotReport() {
   return (
     <>
       <head>
         <meta name="viewport" content="width=1920px, initial-scale=1" />
       </head>
 
-      <main className="relative">
+      <main className="relative bg-gray-500">
         <Pdf />
       </main>
     </>

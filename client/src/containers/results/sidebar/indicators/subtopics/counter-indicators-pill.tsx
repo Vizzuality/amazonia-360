@@ -19,10 +19,11 @@ export function CounterIndicatorsPill({
   const [topics] = useSyncTopics();
   const { data: indicatorsData } = useGetDefaultIndicators({ subtopicId: id, locale });
 
-  const indicators = topics?.find((t) => t.id === topic_id)?.indicators;
+  const indicators = topics?.find((t) => t.topic_id === topic_id)?.indicators;
 
   const NUMBER =
-    indicators?.filter((i) => !!indicatorsData?.some((ind) => ind.id === i.id)).length || 0;
+    indicators?.filter((i) => !!indicatorsData?.some((ind) => ind.id === i.indicator_id)).length ||
+    0;
 
   if (NUMBER === 0) return null;
 

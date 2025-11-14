@@ -33,7 +33,7 @@ export function SignInForm(props: React.ComponentProps<"div">) {
     },
     onSubmit: async ({ value }) => {
       toast.promise(
-        signIn("credentials", {
+        signIn("users", {
           redirect: false,
           email: value.email,
           password: value.password,

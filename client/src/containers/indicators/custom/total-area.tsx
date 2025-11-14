@@ -9,13 +9,18 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { Indicator } from "@/types/indicator";
 
-import { useSyncLocation } from "@/app/(frontend)/store";
-
 import { CardWidgetNumber } from "@/containers/card";
 import { useIndicator } from "@/containers/indicators/provider";
 
-export const TotalArea = ({ indicator }: { indicator: Indicator }) => {
-  const [location] = useSyncLocation();
+import { Report } from "@/payload-types";
+
+export const TotalArea = ({
+  indicator,
+  location,
+}: {
+  indicator: Indicator;
+  location: Report["location"];
+}) => {
   const GEOMETRY = useLocationGeometry(location);
 
   const { onIndicatorViewLoading, onIndicatorViewLoaded } = useIndicator();

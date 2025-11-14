@@ -8,15 +8,12 @@ import { formatNumber } from "@/lib/formats";
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
-import { useSyncLocation } from "@/app/(frontend)/store";
-
 import { useIndicator } from "@/containers/indicators/provider";
 
 import { DataRowProps } from "./types";
 
-export default function ComponentDataRow({ id, locale }: DataRowProps) {
+export default function ComponentDataRow({ id, locale, location }: DataRowProps) {
   const indicator = useGetIndicatorsId(id, locale);
-  const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
 
   const { onIndicatorViewLoading, onIndicatorViewLoaded } = useIndicator();

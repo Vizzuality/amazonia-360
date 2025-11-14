@@ -1,4 +1,11 @@
-import { IndicatorView } from "@/app/(frontend)/parsers";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Locale } from "next-intl";
+
+import { IndicatorView, Location, TopicView } from "@/app/(frontend)/parsers";
+
+import { Report } from "@/payload-types";
+
+import { sdk } from "@/services/sdk";
 
 export const findFirstAvailablePosition = (
   parsedTopics: IndicatorView[],
@@ -34,4 +41,81 @@ export const findFirstAvailablePosition = (
     }
   }
   return { x, y };
+};
+
+export const parseTopicViews = (topics: TopicView[]): Report["topics"] => {
+  return topics.map((topic) => ({
+    ...topic,
+    id: `${topic.id}`,
+    indicators:
+      topic.indicators?.map((indicator) => ({
+        ...indicator,
+        id: `${indicator.id}`,
+      })) ?? [],
+  }));
+};
+
+export const reportQueryOptions = (params: { id: number }) => ({
+  queryFn: () =>
+    sdk.findByID({
+      collection: "reports",
+      id: params.id,
+    }),
+  queryKey: ["report", params.id] as const,
+});
+
+export const useReport = (params: { id: number }) => {
+  return useQuery(reportQueryOptions(params));
+};
+
+export type ReportDataBase = {
+  title: string | null;
+  topics: TopicView[];
+  location: Location | null;
+  locale: Locale;
+};
+
+export type SaveReport = ReportDataBase & {
+  id: number;
+};
+
+export const useSaveReport = () => {
+  return useMutation({
+    mutationFn: (data: SaveReport) => {
+      if (!data.id || !data.location) {
+        return Promise.reject(new Error("Report ID and location are required to save the report."));
+      }
+
+      return sdk.update({
+        collection: "reports",
+        id: data.id,
+        data: {
+          title: data.title,
+          location: data.location,
+          topics: parseTopicViews(data.topics),
+        },
+        locale: data.locale,
+      });
+    },
+  });
+};
+
+export const useDuplicateReport = () => {
+  return useMutation({
+    mutationFn: (data: ReportDataBase) => {
+      if (!data.location) {
+        return Promise.reject(new Error("Location is required to duplicate the report."));
+      }
+
+      return sdk.create({
+        collection: "reports",
+        data: {
+          title: data.title,
+          location: data.location,
+          topics: parseTopicViews(data.topics),
+        },
+        locale: data.locale,
+      });
+    },
+  });
 };

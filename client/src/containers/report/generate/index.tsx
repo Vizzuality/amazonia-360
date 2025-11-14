@@ -7,14 +7,16 @@ import { useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSetAtom } from "jotai";
+import { signIn, useSession } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
 import { z } from "zod";
 
+import { parseTopicViews } from "@/lib/report";
 import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
-import { reportPanelAtom, serializeSearchParams, useSyncLocation } from "@/app/(frontend)/store";
+import { reportPanelAtom, useSyncLocation } from "@/app/(frontend)/store";
 
 import { ReportGenerateButtons } from "@/containers/report/generate/buttons";
 import Topics from "@/containers/report/generate/topics";
@@ -23,6 +25,8 @@ import { Form } from "@/components/ui/form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Link, useRouter } from "@/i18n/navigation";
+
+import { sdk } from "@/services/sdk";
 
 export type TopicsFormValues = {
   id: number;
@@ -36,6 +40,8 @@ export const formSchema = z.object({
 export default function ReportGenerate({ heading = "create" }: { heading?: "select" | "create" }) {
   const t = useTranslations();
   const locale = useLocale();
+
+  const { data: session } = useSession();
 
   const [location] = useSyncLocation();
   const searchParams = useSearchParams();
@@ -52,20 +58,52 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function generateReport(values: z.infer<typeof formSchema>) {
     const topics = values.topics
       ?.map((t) => ({
-        id: t.id,
-        indicators: topicsData?.find((topic) => topic.id === t.id)?.default_visualization,
+        id: `${t.id}-${crypto.randomUUID()}`,
+        topic_id: t.id,
+        indicators: topicsData
+          ?.find((topic) => topic.id === t.id)
+          ?.default_visualization.map((indicator) => {
+            return {
+              ...indicator,
+              id: `${indicator.id}-${indicator.type}-${crypto.randomUUID()}`,
+              indicator_id: Number(indicator.id),
+            };
+          }),
       }))
       .filter((t) => t.indicators && t.indicators.length > 0);
 
-    const params = serializeSearchParams({
-      topics,
-      location,
-    });
+    if (location) {
+      return sdk.create({
+        collection: "reports",
+        data: {
+          location,
+          topics: parseTopicViews(topics) ?? [],
+        },
+      });
+    }
+  }
 
-    router.push(`/report/results${params}`);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!session) {
+      const res = await signIn("anonymous-users", { redirect: false });
+
+      if (res.ok) {
+        const report = await generateReport(values);
+
+        if (report) {
+          return router.push(`/report/results/${report.id}`);
+        }
+      }
+    }
+
+    const report = await generateReport(values);
+
+    if (report) {
+      return router.push(`/report/results/${report.id}`);
+    }
   }
 
   const HEADER = {

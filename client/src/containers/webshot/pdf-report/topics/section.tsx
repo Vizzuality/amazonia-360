@@ -60,7 +60,7 @@ export default function PdfTopicSection({ topicView }: PdfTopicSectionProps) {
                   <ReportResultsIndicator
                     key={indicator.id}
                     type={indicator.type}
-                    id={indicator.id}
+                    id={indicator.indicator_id}
                     editable={false}
                     isPdf
                   />
@@ -82,7 +82,7 @@ export default function PdfTopicSection({ topicView }: PdfTopicSectionProps) {
                   <ReportResultsIndicator
                     key={indicator.id}
                     type={indicator.type}
-                    id={indicator.id}
+                    id={indicator.indicator_id}
                     editable={false}
                     isPdf
                   />
@@ -101,7 +101,7 @@ export default function PdfTopicSection({ topicView }: PdfTopicSectionProps) {
                   <ReportResultsIndicator
                     key={indicator.id}
                     type={indicator.type}
-                    id={indicator.id}
+                    id={indicator.indicator_id}
                     editable={false}
                     isPdf
                   />
@@ -123,7 +123,7 @@ export default function PdfTopicSection({ topicView }: PdfTopicSectionProps) {
                   <ReportResultsIndicator
                     key={indicator.id}
                     type={indicator.type}
-                    id={indicator.id}
+                    id={indicator.indicator_id}
                     editable={false}
                     isPdf
                   />

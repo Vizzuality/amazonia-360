@@ -1,690 +1,727 @@
 [
-    {
+  {
+    "id": 0,
+    "Numerotation": "0",
+    "topic_id": 0,
+    "name_en": "ACU",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
         "id": 0,
-        "Numerotation": "0",
-        "topic_id": 0,
-        "name_en": "ACU",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 0,
-                "type": "numeric",
-                "x": 0,
-                "y": 0,
-                "w": 1,
-                "h": 1
-            },
-            {
-                "id": 35,
-                "type": "numeric",
-                "x": 1,
-                "y": 0,
-                "w": 1,
-                "h": 1
-            },
-            {
-                "id": 11,
-                "type": "numeric",
-                "x": 2,
-                "y": 0,
-                "w": 1,
-                "h": 1
-            },
-            {
-                "id": 12,
-                "type": "numeric",
-                "x": 3,
-                "y": 0,
-                "w": 1,
-                "h": 1
-            },
-            {
-                "id": 5,
-                "type": "map",
-                "x": 0,
-                "y": 2,
-                "w": 2,
-                "h": 4
-            },
-            {
-                "id": 4,
-                "type": "table",
-                "x": 2,
-                "y": 2,
-                "w": 2,
-                "h": 4
-            },
-            {
-                "id": 2,
-                "type": "numeric",
-                "x": 0,
-                "y": 1,
-                "w": 1,
-                "h": 1
-            },
-            {
-                "id": 3,
-                "type": "numeric",
-                "x": 1,
-                "y": 1,
-                "w": 1,
-                "h": 1
-            },
-            {
-                "id": 4,
-                "type": "numeric",
-                "x": 2,
-                "y": 1,
-                "w": 1,
-                "h": 1
-            },
-            {
-                "id": 5,
-                "type": "numeric",
-                "x": 3,
-                "y": 1,
-                "w": 1,
-                "h": 1
-            }
-        ]
-    },
-    {
-        "id": 1,
-        "Numerotation": "1",
-        "topic_id": 1,
-        "name_en": "Physical Geography",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 6,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 2,
-        "Numerotation": "2",
-        "topic_id": 1,
-        "name_en": "Protected and Conservation Areas",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 11,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 3,
-        "Numerotation": "3",
-        "topic_id": 1,
-        "name_en": "Land Cover\n\n",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 13,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 4,
-        "Numerotation": "4",
-        "topic_id": 2,
-        "name_en": "Forest Dynamics and Carbon",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 14,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 5,
-        "Numerotation": "5",
-        "topic_id": 2,
-        "name_en": "Natural Ecosystems",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 18,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 6,
-        "Numerotation": "6",
-        "topic_id": 2,
-        "name_en": "Modified Ecosystems",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 26,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 7,
-        "Numerotation": "7",
-        "topic_id": 2,
-        "name_en": "Biodiversity and Conservation",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 30,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 8,
-        "Numerotation": "8",
-        "topic_id": 2,
-        "name_en": "Climate Patterns",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 33,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 10,
-        "Numerotation": "10",
-        "topic_id": 3,
-        "name_en": "Demographics",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 35,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
+        "indicator_id": 0,
+        "type": "numeric",
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 35,
+        "indicator_id": 35,
+        "type": "numeric",
+        "x": 1,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      {
         "id": 11,
-        "Numerotation": "11",
-        "topic_id": 3,
-        "name_en": "Social Development",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 37,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
+        "indicator_id": 11,
+        "type": "numeric",
+        "x": 2,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      {
         "id": 12,
-        "Numerotation": "12",
-        "topic_id": 3,
-        "name_en": "Indigenous and Cultural",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 38,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
+        "indicator_id": 12,
+        "type": "numeric",
+        "x": 3,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 5,
+        "indicator_id": 5,
+        "type": "map",
+        "x": 0,
+        "y": 2,
+        "w": 2,
+        "h": 4
+      },
+      {
+        "id": 4,
+        "indicator_id": 4,
+        "type": "table",
+        "x": 2,
+        "y": 2,
+        "w": 2,
+        "h": 4
+      },
+      {
+        "id": 2,
+        "indicator_id": 2,
+        "type": "numeric",
+        "x": 0,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 3,
+        "indicator_id": 3,
+        "type": "numeric",
+        "x": 1,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 4,
+        "indicator_id": 4,
+        "type": "numeric",
+        "x": 2,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 5,
+        "indicator_id": 5,
+        "type": "numeric",
+        "x": 3,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "Numerotation": "1",
+    "topic_id": 1,
+    "name_en": "Physical Geography",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 6,
+        "indicator_id": 6,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "Numerotation": "2",
+    "topic_id": 1,
+    "name_en": "Protected and Conservation Areas",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 11,
+        "indicator_id": 11,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "Numerotation": "3",
+    "topic_id": 1,
+    "name_en": "Land Cover\n\n",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
         "id": 13,
-        "Numerotation": "13",
-        "topic_id": 4,
-        "name_en": "Economic Overview",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 39,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
+        "indicator_id": 13,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "Numerotation": "4",
+    "topic_id": 2,
+    "name_en": "Forest Dynamics and Carbon",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
         "id": 14,
-        "Numerotation": "14",
-        "topic_id": 4,
-        "name_en": "Extractive Industries",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 40,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 15,
-        "Numerotation": "15",
-        "topic_id": 4,
-        "name_en": "Agriculture - Food Security Crops",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 42,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 16,
-        "Numerotation": "16",
-        "topic_id": 4,
-        "name_en": "Agriculture - Export Crops",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 49,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
+        "indicator_id": 14,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "Numerotation": "5",
+    "topic_id": 2,
+    "name_en": "Natural Ecosystems",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
         "id": 18,
-        "Numerotation": "18",
-        "topic_id": 4,
-        "name_en": "Bioeconomy",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 51,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 19,
-        "Numerotation": "19",
-        "topic_id": 4,
-        "name_en": "Tourism and Hospitality",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 138,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 21,
-        "Numerotation": "21",
-        "topic_id": 5,
-        "name_en": "Health",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 52,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 22,
-        "Numerotation": "22",
-        "topic_id": 5,
-        "name_en": "Education",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 53,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 23,
-        "Numerotation": "23",
-        "topic_id": 5,
-        "name_en": "Transportation",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 54,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 24,
-        "Numerotation": "24",
-        "topic_id": 5,
-        "name_en": "Utilities",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 163,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 25,
-        "Numerotation": "25",
-        "topic_id": 5,
-        "name_en": "Communication",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 164,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
+        "indicator_id": 18,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "Numerotation": "6",
+    "topic_id": 2,
+    "name_en": "Modified Ecosystems",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
         "id": 26,
-        "Numerotation": "26",
-        "topic_id": 5,
-        "name_en": "Security Infrastructure",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 55,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 27,
-        "Numerotation": "27",
-        "topic_id": 5,
-        "name_en": "Urban Development",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 56,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 28,
-        "Numerotation": "28",
-        "topic_id": 6,
-        "name_en": "Environmental Risks",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 61,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
-        "id": 29,
-        "Numerotation": "29",
-        "topic_id": 6,
-        "name_en": "Social and Security Risks",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 62,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    },
-    {
+        "indicator_id": 26,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "Numerotation": "7",
+    "topic_id": 2,
+    "name_en": "Biodiversity and Conservation",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 30,
+        "indicator_id": 30,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "Numerotation": "8",
+    "topic_id": 2,
+    "name_en": "Climate Patterns",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
         "id": 33,
-        "Numerotation": "33",
-        "topic_id": 8,
-        "name_en": "IDB",
-        "name_es": "",
-        "name_pt": "",
-        "image": "",
-        "description_en": "",
-        "description_es": "",
-        "description_pt": "",
-        "default_visualization": [
-            {
-                "id": 64,
-                "type": "map",
-                "x": 0,
-                "y": 0,
-                "w": 2,
-                "h": 4
-            }
-        ]
-    }
+        "indicator_id": 33,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "Numerotation": "10",
+    "topic_id": 3,
+    "name_en": "Demographics",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 35,
+        "indicator_id": 35,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "Numerotation": "11",
+    "topic_id": 3,
+    "name_en": "Social Development",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 37,
+        "indicator_id": 37,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "Numerotation": "12",
+    "topic_id": 3,
+    "name_en": "Indigenous and Cultural",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 38,
+        "indicator_id": 38,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "Numerotation": "13",
+    "topic_id": 4,
+    "name_en": "Economic Overview",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 39,
+        "indicator_id": 39,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "Numerotation": "14",
+    "topic_id": 4,
+    "name_en": "Extractive Industries",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 40,
+        "indicator_id": 40,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "Numerotation": "15",
+    "topic_id": 4,
+    "name_en": "Agriculture - Food Security Crops",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 42,
+        "indicator_id": 42,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "Numerotation": "16",
+    "topic_id": 4,
+    "name_en": "Agriculture - Export Crops",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 49,
+        "indicator_id": 49,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "Numerotation": "18",
+    "topic_id": 4,
+    "name_en": "Bioeconomy",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 51,
+        "indicator_id": 51,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "Numerotation": "19",
+    "topic_id": 4,
+    "name_en": "Tourism and Hospitality",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 138,
+        "indicator_id": 138,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "Numerotation": "21",
+    "topic_id": 5,
+    "name_en": "Health",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 52,
+        "indicator_id": 52,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "Numerotation": "22",
+    "topic_id": 5,
+    "name_en": "Education",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 53,
+        "indicator_id": 53,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "Numerotation": "23",
+    "topic_id": 5,
+    "name_en": "Transportation",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 54,
+        "indicator_id": 54,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "Numerotation": "24",
+    "topic_id": 5,
+    "name_en": "Utilities",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 163,
+        "indicator_id": 163,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "Numerotation": "25",
+    "topic_id": 5,
+    "name_en": "Communication",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 164,
+        "indicator_id": 164,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "Numerotation": "26",
+    "topic_id": 5,
+    "name_en": "Security Infrastructure",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 55,
+        "indicator_id": 55,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "Numerotation": "27",
+    "topic_id": 5,
+    "name_en": "Urban Development",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 56,
+        "indicator_id": 56,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "Numerotation": "28",
+    "topic_id": 6,
+    "name_en": "Environmental Risks",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 61,
+        "indicator_id": 61,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "Numerotation": "29",
+    "topic_id": 6,
+    "name_en": "Social and Security Risks",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 62,
+        "indicator_id": 62,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "Numerotation": "33",
+    "topic_id": 8,
+    "name_en": "IDB",
+    "name_es": "",
+    "name_pt": "",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 64,
+        "indicator_id": 64,
+        "type": "map",
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  }
 ]

@@ -57,7 +57,7 @@ export default function SearchC() {
               const isActive = topics?.some((topic) =>
                 topic?.indicators?.some(
                   (topicIndicator) =>
-                    topicIndicator.id === indicator.id && topicIndicator.type === v,
+                    topicIndicator.indicator_id === indicator.id && topicIndicator.type === v,
                 ),
               );
 
@@ -119,12 +119,12 @@ export default function SearchC() {
           if (!prev) return prev;
 
           const newTopics = [...prev];
-          const i = newTopics.findIndex((topic) => topic.id === value.topic.id);
+          const i = newTopics.findIndex((topic) => topic.topic_id === value.topic.id);
 
           if (i === -1) return newTopics;
 
           const indicators = [...(newTopics[i]?.indicators || [])].filter(
-            (indicator) => !(indicator.id === value.id && indicator.type === value.key),
+            (indicator) => !(indicator.indicator_id === value.id && indicator.type === value.key),
           );
 
           newTopics[i] = {
@@ -139,7 +139,8 @@ export default function SearchC() {
         const widgetSize = DEFAULT_VISUALIZATION_SIZES[value.key as IndicatorView["type"]];
         const newIndicator = {
           type: value.key as IndicatorView["type"],
-          id: value.id,
+          id: `${value.id}-${value.key}`,
+          indicator_id: value.id,
           x: 0,
           y: 0,
           w: DEFAULT_VISUALIZATION_SIZES[value.key as IndicatorView["type"]]?.w || 2,
@@ -150,11 +151,12 @@ export default function SearchC() {
           if (!prev) return prev;
 
           const newTopics = [...prev];
-          const i = newTopics.findIndex((topic) => topic.id === value.topic.id);
+          const i = newTopics.findIndex((topic) => topic.topic_id === value.topic.id);
 
           if (i === -1) {
             newTopics.push({
-              id: value.topic.id,
+              id: `${value.topic.id}`,
+              topic_id: value.topic.id,
               indicators: [newIndicator],
             });
 

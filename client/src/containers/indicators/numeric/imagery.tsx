@@ -8,24 +8,25 @@ import { cn } from "@/lib/utils";
 
 import { Indicator, ResourceImagery } from "@/types/indicator";
 
-import { useSyncLocation } from "@/app/(frontend)/store";
-
 import { CardLoader, CardWidgetNumber } from "@/containers/card";
 import { useIndicator } from "@/containers/indicators/provider";
 
+import { Report } from "@/payload-types";
+
 export interface NumericImageryIndicatorsProps extends Indicator {
+  location?: Report["location"];
   resource: ResourceImagery;
   isPdf?: boolean;
 }
 
 export const NumericImageryIndicators = ({
   id,
+  location,
   resource,
   description_short,
   isPdf,
 }: NumericImageryIndicatorsProps) => {
   const locale = useLocale();
-  const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
 
   const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();

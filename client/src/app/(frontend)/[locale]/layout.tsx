@@ -16,6 +16,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { routing } from "@/i18n/routing";
 
 import "@arcgis/core/assets/esri/themes/light/main.css";
+import "@mdxeditor/editor/style.css";
 import "@/styles/globals.css";
 import "@/styles/grid-layout.css";
 import "react-resizable/css/styles.css";

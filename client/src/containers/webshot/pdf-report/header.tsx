@@ -3,12 +3,12 @@
 import { useMemo } from "react";
 
 import Image from "next/image";
+import { useParams } from "next/navigation";
 
 import { useTranslations } from "next-intl";
 
+import { useReport } from "@/lib/report";
 import { cn } from "@/lib/utils";
-
-import { useSyncLocation } from "@/app/(frontend)/store";
 
 import { useRegisterPage } from "@/containers/webshot/pdf-report/hooks";
 
@@ -23,7 +23,9 @@ interface PdfHeaderProps {
 
 export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
   const t = useTranslations();
-  const [location] = useSyncLocation();
+
+  const { id: reportId } = useParams();
+  const { data: reportData } = useReport({ id: Number(reportId) });
 
   // Generate a stable ID for this instance
   const id = useMemo(() => {
@@ -74,7 +76,7 @@ export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
               "text-xs": true,
             })}
           >
-            {location?.custom_title || t("selected-area")}
+            {reportData?.title ?? t("selected-area")}
 
             {!!topic ? <span className="font-thin"> | {topic}</span> : ""}
           </p>

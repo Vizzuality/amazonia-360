@@ -40,7 +40,7 @@ export const LocationField: Field = {
           properties: {
             type: {
               type: "string",
-              enum: ["point", "multipoint", "polyline", "polygon", "multipatch", "extent"],
+              enum: ["point", "multipoint", "polyline", "polygon", "extent", "mesh"],
             },
             geometry: {
               type: "object",

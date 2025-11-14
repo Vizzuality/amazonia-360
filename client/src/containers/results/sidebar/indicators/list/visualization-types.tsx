@@ -35,7 +35,8 @@ export function VisualizationType({
 
     const newIndicator = {
       type: visualizationType,
-      id: indicatorId,
+      id: `${indicatorId}`,
+      indicator_id: indicatorId,
       x: 0,
       y: 0,
       w: widgetSize.w,
@@ -45,30 +46,39 @@ export function VisualizationType({
     setTopics((prev) => {
       if (!prev) return prev;
 
-      const i = prev.findIndex((topic) => topic.id === topicId);
+      const newTopics = [...prev];
+
+      console.log("Adding visualization", { newTopics, visualizationType, indicatorId, topicId });
+
+      const i = newTopics.findIndex((topic) => topic.topic_id === topicId);
+
+      console.log("Found topic index:", i);
 
       if (i === -1) {
-        prev.push({
-          id: topicId,
+        newTopics.push({
+          id: `${topicId}`,
+          topic_id: topicId,
           indicators: [newIndicator],
         });
 
-        return prev;
+        return newTopics;
       }
 
-      const indicators = prev[i].indicators || [];
+      const indicators = newTopics[i].indicators || [];
 
       const position = findFirstAvailablePosition(indicators, widgetSize, 4);
       newIndicator.x = position.x;
       newIndicator.y = position.y;
       indicators.push(newIndicator);
 
-      prev[i] = {
-        ...prev[i],
+      console.log("Updated indicators:", indicators);
+
+      newTopics[i] = {
+        ...newTopics[i],
         indicators,
       };
 
-      return prev;
+      return newTopics;
     });
   };
 
@@ -82,12 +92,12 @@ export function VisualizationType({
   );
 
   const defaultVisualizationsPerIndicator = useMemo(
-    () => defaultVisualizations?.find(({ id }) => id === indicatorId)?.type,
+    () => defaultVisualizations?.find(({ indicator_id }) => indicator_id === indicatorId)?.type,
     [defaultVisualizations, indicatorId],
   );
 
   const activeVisualizationsPerIndicatorAndTopic = useMemo(
-    () => topics?.find(({ id }) => id === topicId)?.indicators,
+    () => topics?.find(({ topic_id }) => topic_id === topicId)?.indicators,
     [topics, topicId],
   );
 
@@ -106,7 +116,8 @@ export function VisualizationType({
       <ul className="flex flex-col">
         {types.map((type) => {
           const isDisabled = !!activeVisualizationsPerIndicatorAndTopic?.find(
-            ({ id, type: activeType }) => id === indicatorId && activeType === type,
+            ({ indicator_id, type: activeType }) =>
+              indicator_id === indicatorId && activeType === type,
           );
 
           const Icon = ICON_COMPONENTS[type];

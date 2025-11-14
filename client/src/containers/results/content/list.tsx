@@ -16,13 +16,13 @@ export default function ReportResultsContentList() {
   return (
     <div className="space-y-20">
       {topicsData
-        ?.filter((topic) => topics?.some((t) => t.id === topic.id))
+        ?.filter((topic) => topics?.some((t) => t.topic_id === topic.id))
         ?.map((topic) => {
-          const t = topics?.find((t) => t.id === topic.id);
+          const t = topics?.find((t) => t.topic_id === topic.id);
 
           if (!t) return null;
 
-          return <ReportResultsContentItem editable key={t.id} topic={t} />;
+          return <ReportResultsContentItem editable key={t.topic_id} topic={t} />;
         })}
     </div>
   );

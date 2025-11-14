@@ -8,15 +8,12 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { ResourceImagery } from "@/types/indicator";
 
-import { useSyncLocation } from "@/app/(frontend)/store";
-
 import { useIndicator } from "@/containers/indicators/provider";
 
 import { DataRowProps } from "./types";
 
-export default function ImageryDataRow({ id, locale }: DataRowProps) {
+export default function ImageryDataRow({ id, locale, location }: DataRowProps) {
   const indicator = useGetIndicatorsId(id, locale);
-  const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
 
   const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();

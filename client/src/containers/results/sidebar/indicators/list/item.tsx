@@ -36,8 +36,10 @@ export function IndicatorsItem({
 
   const [topics] = useSyncTopics();
 
-  const selectedTopicIndicators = topics?.find(({ id }) => id === topicId)?.indicators;
-  const selectedIndicator = selectedTopicIndicators?.find(({ id }) => id === indicator.id);
+  const selectedTopicIndicators = topics?.find(({ topic_id }) => topic_id === topicId)?.indicators;
+  const selectedIndicator = selectedTopicIndicators?.find(
+    ({ indicator_id }) => indicator_id === indicator.id,
+  );
 
   return (
     <Popover>

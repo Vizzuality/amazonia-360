@@ -1,8 +1,11 @@
 import React, { useCallback } from "react";
 
+import { useParams } from "next/navigation";
+
 import { useLocale } from "next-intl";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
+import { useReport } from "@/lib/report";
 
 import { Indicator } from "@/types/indicator";
 
@@ -16,6 +19,9 @@ export const NumericIndicators = ({ id, isPdf }: { id: Indicator["id"]; isPdf?: 
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
 
+  const { id: reportId } = useParams();
+  const { data: reportData } = useReport({ id: Number(reportId) });
+
   const { onReady } = useLoad();
 
   const handleLoad = useCallback(() => {
@@ -26,14 +32,29 @@ export const NumericIndicators = ({ id, isPdf }: { id: Indicator["id"]; isPdf?: 
 
   return (
     <IndicatorProvider onLoad={handleLoad}>
-      {indicator.resource.type === "feature" && (
-        <NumericIndicatorsFeature {...indicator} resource={indicator.resource} isPdf={isPdf} />
+      {indicator.resource.type === "feature" && reportData?.location && (
+        <NumericIndicatorsFeature
+          {...indicator}
+          location={reportData?.location}
+          resource={indicator.resource}
+          isPdf={isPdf}
+        />
       )}
-      {indicator.resource.type === "imagery" && (
-        <NumericImageryIndicators {...indicator} resource={indicator.resource} isPdf={isPdf} />
+      {indicator.resource.type === "imagery" && reportData?.location && (
+        <NumericImageryIndicators
+          {...indicator}
+          location={reportData?.location}
+          resource={indicator.resource}
+          isPdf={isPdf}
+        />
       )}
-      {indicator.resource.type === "imagery-tile" && (
-        <NumericImageryTileIndicators {...indicator} resource={indicator.resource} isPdf={isPdf} />
+      {indicator.resource.type === "imagery-tile" && reportData?.location && (
+        <NumericImageryTileIndicators
+          {...indicator}
+          location={reportData?.location}
+          resource={indicator.resource}
+          isPdf={isPdf}
+        />
       )}
     </IndicatorProvider>
   );

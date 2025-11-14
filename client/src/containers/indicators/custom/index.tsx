@@ -1,8 +1,11 @@
 import React, { createElement, useCallback } from "react";
 
+import { useParams } from "next/navigation";
+
 import { useLocale } from "next-intl";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
+import { useReport } from "@/lib/report";
 
 import { Indicator } from "@/types/indicator";
 
@@ -22,6 +25,9 @@ export const CustomIndicators = ({ id }: { id: Indicator["id"] }) => {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
 
+  const { id: reportId } = useParams();
+  const { data: reportData } = useReport({ id: Number(reportId) });
+
   const { onReady } = useLoad();
 
   const handleLoad = useCallback(() => {
@@ -33,10 +39,11 @@ export const CustomIndicators = ({ id }: { id: Indicator["id"] }) => {
   return (
     <IndicatorProvider onLoad={handleLoad}>
       {indicator.resource.type === "component" &&
+        reportData?.location &&
         !!COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS] &&
         createElement(
           COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS],
-          { indicator },
+          { indicator, location: reportData?.location },
         )}
     </IndicatorProvider>
   );

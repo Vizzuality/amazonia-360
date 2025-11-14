@@ -1,4 +1,6 @@
 export const FALLBACK_WIDGET_DEFAULT_BASEMAP_ID: BasemapIds = "gray-vector";
+import { Dispatch, SetStateAction } from "react";
+
 import { omit } from "@/lib/utils";
 
 import { Indicator } from "@/types/indicator";
@@ -17,7 +19,7 @@ export const handleMapIndicatorPropertyChange = (
   setDefaultTopics: (
     callback: (prevDefaultTopics: TopicView[] | null) => TopicView[] | null,
   ) => void,
-  setTopics: (callback: (prevTopicsState: TopicView[] | null) => TopicView[] | null) => void,
+  setTopics: Dispatch<SetStateAction<TopicView[] | null | undefined>>,
   defaultValues: { basemapId: BasemapIds; opacity: number },
 ) => {
   const currentIndicatorTopicId = indicator.topic.id;
@@ -25,18 +27,18 @@ export const handleMapIndicatorPropertyChange = (
   const isResettingToDefault = propertyValue === defaultValue;
 
   const isManagingViaSyncDefaultTopics = overviewTopicsData?.some(
-    (topic) => currentIndicatorTopicId === topic.id,
+    (topic) => currentIndicatorTopicId === topic.topic_id,
   );
 
   if (isManagingViaSyncDefaultTopics) {
     setDefaultTopics((prevDefaultTopics) => {
       const newTopicsArray = prevDefaultTopics ? [...prevDefaultTopics] : [];
-      const topicIndex = newTopicsArray.findIndex((t) => t.id === currentIndicatorTopicId);
+      const topicIndex = newTopicsArray.findIndex((t) => t.topic_id === currentIndicatorTopicId);
 
       if (topicIndex !== -1) {
         const targetTopic = { ...newTopicsArray[topicIndex] };
         const indicators = targetTopic.indicators ? [...targetTopic.indicators] : [];
-        const indicatorConfigIndex = indicators.findIndex((i) => i.id === indicator.id);
+        const indicatorConfigIndex = indicators.findIndex((i) => i.indicator_id === indicator.id);
 
         if (isResettingToDefault) {
           if (indicatorConfigIndex !== -1) {
@@ -59,8 +61,13 @@ export const handleMapIndicatorPropertyChange = (
             };
           } else {
             indicators.push({
-              id: indicator.id,
+              id: `${indicator.id}`,
+              indicator_id: indicator.id,
               type: "map",
+              x: 0,
+              y: 0,
+              w: 2,
+              h: 2,
               [propertyName]: propertyValue,
             });
           }
@@ -76,10 +83,16 @@ export const handleMapIndicatorPropertyChange = (
         }
       } else if (!isResettingToDefault) {
         newTopicsArray.push({
-          id: currentIndicatorTopicId,
+          id: `${currentIndicatorTopicId}`,
+          topic_id: currentIndicatorTopicId,
           indicators: [
             {
-              id: indicator.id,
+              id: `${indicator.id}`,
+              indicator_id: indicator.id,
+              x: 0,
+              y: 0,
+              w: 2,
+              h: 2,
               type: "map",
               [propertyName]: propertyValue,
             },
@@ -90,9 +103,9 @@ export const handleMapIndicatorPropertyChange = (
       return newTopicsArray.length > 0 ? newTopicsArray : null;
     });
   } else {
-    setTopics((prevTopicsState: TopicView[] | null): TopicView[] | null => {
+    setTopics((prevTopicsState) => {
       const currentTopics = prevTopicsState || [];
-      const topicIndex = currentTopics.findIndex((t) => t.id === indicator.topic.id);
+      const topicIndex = currentTopics.findIndex((t) => t.topic_id === indicator.topic.id);
 
       if (topicIndex === -1) {
         return prevTopicsState;
@@ -100,7 +113,7 @@ export const handleMapIndicatorPropertyChange = (
 
       const topicToUpdate = currentTopics[topicIndex];
       const indicatorExists = (topicToUpdate.indicators || []).some(
-        (ind: IndicatorView) => ind.id === indicator.id && ind.type === "map",
+        (ind: IndicatorView) => ind.indicator_id === indicator.id && ind.type === "map",
       );
 
       if (!indicatorExists) {
@@ -112,7 +125,7 @@ export const handleMapIndicatorPropertyChange = (
           return {
             ...topic,
             indicators: (topic.indicators || []).map((ind) => {
-              if (ind.id === indicator.id && ind.type === "map") {
+              if (ind.indicator_id === indicator.id && ind.type === "map") {
                 if (isResettingToDefault) {
                   return omit(ind, [propertyName as keyof typeof ind]);
                 } else {

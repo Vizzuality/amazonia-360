@@ -5,6 +5,7 @@ import { Separator } from "@radix-ui/react-select";
 import DownloadReportButton from "@/containers/header/results/download";
 import IndicatorsReport from "@/containers/header/results/indicators";
 import NewReport from "@/containers/header/results/new";
+import SaveReport from "@/containers/header/results/save";
 import ShareReport from "@/containers/header/results/share";
 
 export default function ReportResultsHeaderDesktop() {
@@ -20,6 +21,7 @@ export default function ReportResultsHeaderDesktop() {
           <ShareReport />
           <DownloadReportButton />
           <IndicatorsReport />
+          <SaveReport />
         </div>
       </div>
     </header>
