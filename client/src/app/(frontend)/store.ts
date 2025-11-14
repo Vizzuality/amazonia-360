@@ -42,9 +42,9 @@ export const useSyncBbox = () => {
   return useQueryState("bbox", bboxParser);
 };
 // REPORT PARAMS
+export const titleAtom = atom<string | undefined | null>(null);
 export const useSyncTitle = () => {
-  const { id } = useParams();
-  return useLocalStorage<string | null>(`${id ?? "new"}:title`, null);
+  return useAtom(titleAtom);
 };
 
 export const useSyncLocation = () => {
@@ -52,13 +52,7 @@ export const useSyncLocation = () => {
   return useLocalStorage<Location | null>(`${id ?? "new"}:location`, null);
 };
 
-// export const useSyncTopics = () => {
-//   const { id } = useParams();
-//   return useLocalStorage<TopicView[] | null>(`${id ?? "new"}:topics`, null);
-// };
-
 export const topicsViewAtom = atom<TopicView[] | null | undefined>(null);
-
 export const useSyncTopics = () => {
   return useAtom(topicsViewAtom);
 };

@@ -25,8 +25,8 @@ export default function OtherResources() {
   const t = useTranslations();
   const [tab, setTab] = useState("all");
 
-  const { id } = useParams();
-  const { data: reportData } = useReport({ id: Number(id) });
+  const { id: reportId } = useParams();
+  const { data: reportData } = useReport({ id: Number(reportId) });
 
   const queryGadm = useLocationGadm(reportData?.location);
 

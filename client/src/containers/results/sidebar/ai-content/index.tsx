@@ -51,8 +51,8 @@ export default function AiSidebarContent() {
   const { data: topicsData } = useGetDefaultTopics({ locale });
 
   const [topics, setTopics] = useSyncTopics();
-  const { id } = useParams();
-  const { data: reportData } = useReport({ id: Number(id) });
+  const { id: reportId } = useParams();
+  const { data: reportData } = useReport({ id: Number(reportId) });
 
   const [aiSummary, setAiSummary] = useSyncAiSummary();
 

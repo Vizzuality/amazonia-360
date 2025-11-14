@@ -28,8 +28,8 @@ import { Link } from "@/i18n/navigation";
 export default function ReportResultsHeaderMobile() {
   const t = useTranslations();
 
-  const { id } = useParams();
-  const { data: reportData } = useReport({ id: Number(id) });
+  const { id: reportId } = useParams();
+  const { data: reportData } = useReport({ id: Number(reportId) });
 
   return (
     <header className="space-y-4 bg-blue-50 py-6 print:hidden">
