@@ -171,7 +171,7 @@ module "dev" {
 module "staging" {
   source = "./modules/env"
   providers = {
-    aws = aws.dev
+    aws = aws.staging
   }
 
   domain                                        = "staging2.amazoniaforever360.org"
