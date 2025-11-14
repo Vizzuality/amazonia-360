@@ -33,7 +33,7 @@ aws ses send-email \
   --from "notifications@amazoniaforever360.org" \
   --to "a-verified-email-sender@example.com" \
   --subject "SES Test" \
-  --text "This is a test email sent sent via AWS SES"
+  --text "This is a test email sent via AWS SES"
 ```
 
 If the operation is successful, a response similar to the following one should
