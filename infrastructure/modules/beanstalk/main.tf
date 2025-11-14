@@ -67,7 +67,7 @@ locals {
     {
       namespace = "aws:elasticbeanstalk:application:environment"
       name      = "AWS_REGION"
-      value     = data.aws_region.current.name
+      value     = data.aws_region.current.region
     },
     {
       namespace = "aws:ec2:vpc"
