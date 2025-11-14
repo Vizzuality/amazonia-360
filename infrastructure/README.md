@@ -88,3 +88,32 @@ The module provides the following outputs for domain aliases:
 
 - `acm_certificate_aliases_arns`: Map of domain aliases to their ACM certificate
   ARNs
+
+## Amazon SES
+
+Transactional emails for user management-related workflows (email verification,
+password reset/recovery...) in Payload are sent via Amazon SES.
+
+The SES setup is managed via OpenTofu, with a simple architecture:
+
+- SES identities are created in a single AWS region and shared across all the
+  live environments (production, staging, dev); the setup can also be used from
+  local development environments.
+
+- Each live environment gets its own IAM user for SES, for better isolation and
+  easier credential rotation
+
+- Credentials are made available to the containers that run the client service
+  via environment variables injected through the Docker Compose configuration
+  deployed to the relevant Elastic Beanstalk environments (AWS access key ID and
+  secret access key, alongside the AWS region where the SES identities are
+  defined)
+
+### Initial setup
+
+Once configured (sending domain and AWS zone), the SES setup needs some manual actions:
+
+- domain and identity verification via DNS records (all the relevant records are
+  shown in the OpenTofu outputs when applying the Tofu configuration)
+
+- requesting production access (e.g. via the AWS web console)
