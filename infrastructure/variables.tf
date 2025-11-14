@@ -31,7 +31,6 @@ variable "github_token" {
 variable "ses_aws_region" {
   type        = string
   description = "AWS region for SES service (used across all environments)"
-  default     = "eu-west-3"
 }
 
 variable "ses_domain_name" {
