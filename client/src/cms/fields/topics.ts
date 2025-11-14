@@ -13,11 +13,13 @@ export const TopicsField: Field = {
     },
     {
       name: "description",
-      type: "richText",
+      type: "textarea",
+      localized: true,
     },
     {
       name: "indicators",
       type: "array",
+      required: true,
       fields: [
         {
           name: "indicator_id",

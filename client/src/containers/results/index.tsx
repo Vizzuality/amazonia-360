@@ -6,7 +6,7 @@ import { useHydrateAtoms } from "jotai/utils";
 
 import { useReport } from "@/lib/report";
 
-import { titleAtom, topicsViewAtom } from "@/app/(frontend)/store";
+import { locationAtom, titleAtom, topicsViewAtom } from "@/app/(frontend)/store";
 
 import ReportResultsHeader from "@/containers/header/results";
 import ReportResultsContent from "@/containers/results/content";
@@ -19,6 +19,7 @@ export const ReportResults = () => {
   // Use separate calls to avoid type conflicts between different atom types
   useHydrateAtoms(new Map([[topicsViewAtom, reportData?.topics]]));
   useHydrateAtoms(new Map([[titleAtom, reportData?.title]]));
+  useHydrateAtoms(new Map([[locationAtom, reportData?.location]]));
 
   return (
     <main className="relative flex bg-blue-50 pb-5 print:w-full print:bg-white print:p-0">

@@ -15,6 +15,7 @@ import { AnonymousUsers } from "@/cms/collections/AnonymousUsers";
 import { Media } from "@/cms/collections/Media";
 import { Reports } from "@/cms/collections/Reports";
 import { Users } from "@/cms/collections/Users";
+import { routing } from "@/i18n/routing";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -35,6 +36,10 @@ export default buildConfig({
   editor: lexicalEditor(),
   graphQL: {
     disable: true,
+  },
+  localization: {
+    locales: [...routing.locales], // required
+    defaultLocale: routing.defaultLocale, // required
   },
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {

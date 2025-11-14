@@ -7,7 +7,7 @@ import { VisualizationTypes } from "@/types/indicator";
 import { BasemapIds } from "@/constants/basemaps";
 
 type IndicatorViewBase = {
-  id: number | string;
+  id: number | string | null;
   indicator_id: number;
   w: number;
   h: number;

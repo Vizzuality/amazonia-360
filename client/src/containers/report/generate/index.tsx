@@ -12,6 +12,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
 import { z } from "zod";
 
+import { parseTopicViews } from "@/lib/report";
 import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
@@ -79,7 +80,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
         collection: "reports",
         data: {
           location,
-          topics: topics ?? [],
+          topics: parseTopicViews(topics) ?? [],
         },
       });
     }

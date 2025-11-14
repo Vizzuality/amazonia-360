@@ -47,9 +47,9 @@ export const useSyncTitle = () => {
   return useAtom(titleAtom);
 };
 
+export const locationAtom = atom<Location | null>(null);
 export const useSyncLocation = () => {
-  const { id } = useParams();
-  return useLocalStorage<Location | null>(`${id ?? "new"}:location`, null);
+  return useAtom(locationAtom);
 };
 
 export const topicsViewAtom = atom<TopicView[] | null | undefined>(null);

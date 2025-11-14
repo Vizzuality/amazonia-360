@@ -100,7 +100,7 @@ export interface Config {
   };
   globals: {};
   globalsSelect: {};
-  locale: null;
+  locale: 'en' | 'es' | 'pt';
   user:
     | (Admin & {
         collection: 'admins';
@@ -279,21 +279,7 @@ export interface Media {
 export interface Report {
   id: number;
   title?: string | null;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  description?: string | null;
   user?:
     | ({
         relationTo: 'users';
@@ -320,45 +306,29 @@ export interface Report {
   topics?:
     | {
         topic_id: number;
-        description?: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        indicators?:
-          | {
-              indicator_id: number;
-              type: 'map' | 'chart' | 'table' | 'numeric' | 'custom' | 'ai';
-              x: number;
-              y: number;
-              w: number;
-              h: number;
-              basemapId?:
-                | (
-                    | 'gray-vector'
-                    | 'dark-gray-vector'
-                    | 'satellite'
-                    | 'streets'
-                    | 'hybrid'
-                    | 'osm'
-                    | 'topo-vector'
-                    | 'terrain'
-                  )
-                | null;
-              opacity?: number | null;
-              id?: string | null;
-            }[]
-          | null;
+        description?: string | null;
+        indicators: {
+          indicator_id: number;
+          type: 'map' | 'chart' | 'table' | 'numeric' | 'custom' | 'ai';
+          x: number;
+          y: number;
+          w: number;
+          h: number;
+          basemapId?:
+            | (
+                | 'gray-vector'
+                | 'dark-gray-vector'
+                | 'satellite'
+                | 'streets'
+                | 'hybrid'
+                | 'osm'
+                | 'topo-vector'
+                | 'terrain'
+              )
+            | null;
+          opacity?: number | null;
+          id?: string | null;
+        }[];
         id?: string | null;
       }[]
     | null;

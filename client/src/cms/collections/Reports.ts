@@ -20,10 +20,12 @@ export const Reports: CollectionConfig = {
     {
       name: "title",
       type: "text",
+      localized: true,
     },
     {
       name: "description",
-      type: "richText",
+      type: "textarea",
+      localized: true,
     },
     {
       name: "user",
