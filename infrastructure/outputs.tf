@@ -40,6 +40,13 @@ output "ses_dns_records" {
 # Per-Environment IAM User Credentials
 
 ## Dev Environment
+#
+# These are added to outputs for convenience, as the credentials for the dev
+# environment may also be used in local development environments. Be mindful of
+# the use of these credentials, in any case, as these credentials are not scoped
+# in any restricted way, so they are as sensitive as the staging and production
+# ones: different IAM users for these environments are set up only to provide
+# easier rotation, not to partition security scopes.
 output "ses_dev_iam_user_name" {
   description = "IAM username for SES access in dev environment"
   value       = module.dev.ses_iam_user_name
@@ -54,41 +61,5 @@ output "ses_dev_iam_user_access_key_id" {
 output "ses_dev_iam_user_secret_access_key" {
   description = "Secret access key for SES IAM user in dev environment"
   value       = module.dev.ses_iam_user_secret_access_key
-  sensitive   = true
-}
-
-## Staging Environment
-output "ses_staging_iam_user_name" {
-  description = "IAM username for SES access in staging environment"
-  value       = module.staging.ses_iam_user_name
-}
-
-output "ses_staging_iam_user_access_key_id" {
-  description = "Access key ID for SES IAM user in staging environment"
-  value       = module.staging.ses_iam_user_access_key_id
-  sensitive   = true
-}
-
-output "ses_staging_iam_user_secret_access_key" {
-  description = "Secret access key for SES IAM user in staging environment"
-  value       = module.staging.ses_iam_user_secret_access_key
-  sensitive   = true
-}
-
-## Production Environment
-output "ses_prod_iam_user_name" {
-  description = "IAM username for SES access in production environment"
-  value       = module.prod.ses_iam_user_name
-}
-
-output "ses_prod_iam_user_access_key_id" {
-  description = "Access key ID for SES IAM user in production environment"
-  value       = module.prod.ses_iam_user_access_key_id
-  sensitive   = true
-}
-
-output "ses_prod_iam_user_secret_access_key" {
-  description = "Secret access key for SES IAM user in production environment"
-  value       = module.prod.ses_iam_user_secret_access_key
   sensitive   = true
 }
