@@ -5,7 +5,7 @@ locals {
 resource "aws_ecr_repository" "ecr_repository" {
   name                 = local.repository_name
   image_tag_mutability = var.image_mutability
-  tags                 = {
+  tags = {
     project = local.repository_name,
   }
 

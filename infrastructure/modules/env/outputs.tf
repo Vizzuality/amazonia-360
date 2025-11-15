@@ -36,3 +36,32 @@ output "acm_certificate_alias_validations" {
   description = "Map of domain aliases to their certificate validation resource IDs"
   value       = { for domain, validation in aws_acm_certificate_validation.alias_certificate_validation : domain => validation.id }
 }
+
+# SES IAM User Outputs
+output "ses_iam_user_name" {
+  description = "IAM username for SES access"
+  value       = aws_iam_user.ses_user.name
+}
+
+output "ses_iam_user_arn" {
+  description = "ARN of the IAM user for SES access"
+  value       = aws_iam_user.ses_user.arn
+}
+
+output "ses_iam_user_access_key_id" {
+  description = "Access key ID for SES IAM user"
+  value       = aws_iam_access_key.ses_user.id
+  sensitive   = true
+}
+
+output "ses_iam_user_secret_access_key" {
+  description = "Secret access key for SES IAM user"
+  value       = aws_iam_access_key.ses_user.secret
+  sensitive   = true
+}
+
+output "ses_smtp_password" {
+  description = "SMTP password for SES (derived from secret access key)"
+  value       = aws_iam_access_key.ses_user.ses_smtp_password_v4
+  sensitive   = true
+}
