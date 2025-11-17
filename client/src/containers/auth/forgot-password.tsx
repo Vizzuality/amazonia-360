@@ -6,9 +6,18 @@ import { toast } from "sonner";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+
+import { Link } from "@/i18n/navigation";
 
 import { sdk } from "@/services/sdk";
 
@@ -86,11 +95,19 @@ export function ForgotPasswordForm(props: React.ComponentProps<"div">) {
             </form.Field>
 
             <Field>
-              <Button type="submit">{t("auth-button-send-reset-link")}</Button>
+              <Button type="submit" size="lg">
+                {t("auth-button-send-reset-link")}
+              </Button>
             </Field>
           </FieldGroup>
         </form>
       </CardContent>
+
+      <CardFooter className="justify-center">
+        <Link href="/auth/sign-in">
+          <Button variant="ghost">{t("auth-link-back-to-sign-in")}</Button>
+        </Link>
+      </CardFooter>
     </Card>
   );
 }
