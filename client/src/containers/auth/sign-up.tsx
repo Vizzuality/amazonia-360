@@ -1,7 +1,6 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
-import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -62,17 +61,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
           .then(async (r) => {
             if (!r) throw new Error("User creation failed");
 
-            return signIn("users", {
-              redirect: false,
-              email: value.email,
-              password: value.password,
-            }).then((r) => {
-              if (r.error) {
-                throw new Error(r.error);
-              }
-
-              router.push("/my-amazonia");
-            });
+            router.push("/auth/check-your-email");
           }),
         {
           loading: t("auth-toast-creating-account"),
