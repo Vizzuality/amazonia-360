@@ -2,9 +2,12 @@
 
 import { useMemo } from "react";
 
+import { useParams } from "next/navigation";
+
 import { useLocale } from "next-intl";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
+import { useReport } from "@/lib/report";
 import { useGetOverviewTopics } from "@/lib/topics";
 
 import {
@@ -23,6 +26,9 @@ export default function PfdGeographicContext() {
 
   const { data } = useGetOverviewTopics({ locale });
 
+  const { id: reportId } = useParams();
+  const { data: reportData } = useReport({ id: Number(reportId) });
+
   const DATA = useMemo(() => {
     if (!data) return null;
     return data.find((topic) => topic.id === 0);
@@ -33,7 +39,7 @@ export default function PfdGeographicContext() {
   );
 
   const map = data?.[0].default_visualization.find((topic) => topic.type === "map");
-  const mapIndicator = useGetIndicatorsId(map?.id || -1, locale);
+  const mapIndicator = useGetIndicatorsId(map?.indicator_id || -1, locale);
 
   if (!data) return null;
 
@@ -43,8 +49,14 @@ export default function PfdGeographicContext() {
         <h1 className="text-2xl text-primary">{DATA?.name}</h1>
         <div className="flex flex-col">
           {indicators &&
+            reportData?.location &&
             indicators?.map((indicator, index) => (
-              <DataRow key={`${indicator.id}-${index}`} locale={locale} id={indicator.id} />
+              <DataRow
+                key={`${indicator.indicator_id}-${index}`}
+                locale={locale}
+                id={indicator.indicator_id}
+                location={reportData.location}
+              />
             ))}
         </div>
       </div>

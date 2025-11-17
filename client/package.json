@@ -1,11 +1,11 @@
 {
   "name": "amazonia-360",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && cp -r public .next/standalone/public && cp -r .next/static .next/standalone/.next",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "check-types": "tsc",
@@ -13,7 +13,8 @@
     "prepare": "cd .. && husky client/.husky",
     "test": "jest --runInBand --forceExit",
     "test:watch": "jest --watch",
-    "payload": "payload"
+    "payload": "payload",
+    "ci": "payload migrate && pnpm build"
   },
   "dependencies": {
     "@arcgis/core": "4.30.9",
@@ -29,8 +30,10 @@
     "@dnd-kit/sortable": "8.0.0",
     "@dnd-kit/utilities": "3.2.2",
     "@hookform/resolvers": "5.2.2",
+    "@lexical/markdown": "0.35.0",
     "@loaders.gl/arrow": "4.3.4",
     "@loaders.gl/core": "4.3.4",
+    "@mdxeditor/editor": "3.48.0",
     "@next/bundle-analyzer": "15.5.6",
     "@next/eslint-plugin-next": "15.5.6",
     "@payloadcms/db-postgres": "3.60.0",
@@ -113,6 +116,7 @@
     "tailwind-merge": "2.6.0",
     "tailwindcss-animate": "1.0.7",
     "ts-deepmerge": "7.0.3",
+    "usehooks-ts": "3.1.1",
     "zod": "4.1.12"
   },
   "devDependencies": {
@@ -155,7 +159,8 @@
       "@vaadin/vaadin-usage-statistics",
       "esbuild",
       "sharp",
-      "unrs-resolver"
+      "unrs-resolver",
+      "es5-ext"
     ]
   }
 }

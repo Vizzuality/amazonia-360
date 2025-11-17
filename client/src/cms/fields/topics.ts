@@ -9,24 +9,27 @@ export const TopicsField: Field = {
     {
       name: "topic_id",
       type: "number",
-      unique: true,
+      required: true,
     },
     {
       name: "description",
-      type: "richText",
+      type: "textarea",
+      localized: true,
     },
     {
       name: "indicators",
       type: "array",
+      required: true,
       fields: [
         {
           name: "indicator_id",
           type: "number",
-          unique: true,
+          required: true,
         },
         {
           name: "type",
           type: "radio",
+          required: true,
           options: [
             {
               label: "Map",
@@ -48,27 +51,35 @@ export const TopicsField: Field = {
               label: "Custom",
               value: "custom",
             },
+            {
+              label: "Ai",
+              value: "ai",
+            },
           ],
         },
         {
           name: "x",
           label: "X Coordinate",
           type: "number",
+          required: true,
         },
         {
           name: "y",
           label: "Y Coordinate",
           type: "number",
+          required: true,
         },
         {
           name: "w",
           label: "Width",
           type: "number",
+          required: true,
         },
         {
           name: "h",
           label: "Height",
           type: "number",
+          required: true,
         },
         {
           name: "basemapId",

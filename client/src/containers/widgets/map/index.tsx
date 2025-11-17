@@ -16,7 +16,7 @@ import {
 } from "@/types/indicator";
 
 import { IndicatorMapView } from "@/app/(frontend)/parsers";
-import { useSyncLocation, useSyncTopics, useSyncDefaultTopics } from "@/app/(frontend)/store";
+import { useSyncTopics, useSyncDefaultTopics } from "@/app/(frontend)/store";
 
 import { BasemapIds } from "@/constants/basemaps";
 import { DATASETS } from "@/constants/datasets";
@@ -31,6 +31,8 @@ import FullscreenControl from "@/components/map/controls/fullscreen";
 import ZoomControl from "@/components/map/controls/zoom";
 import { LayerProps } from "@/components/map/layers/types";
 
+import { Report } from "@/payload-types";
+
 import { handleMapIndicatorPropertyChange } from "./utils";
 import { FALLBACK_WIDGET_DEFAULT_BASEMAP_ID } from "./utils";
 
@@ -39,6 +41,7 @@ const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
 interface WidgetMapProps extends Omit<__esri.MapViewProperties, "map"> {
   indicator: Indicator;
+  location: Report["location"];
   basemapId?: BasemapIds;
   layers: LayerProps[];
   isWebshot?: boolean;
@@ -50,6 +53,7 @@ interface WidgetMapProps extends Omit<__esri.MapViewProperties, "map"> {
 
 export default function WidgetMap({
   indicator,
+  location,
   basemapId = FALLBACK_WIDGET_DEFAULT_BASEMAP_ID,
   layers,
   isWebshot = false,
@@ -57,7 +61,6 @@ export default function WidgetMap({
   enabled = true,
   ...viewProps
 }: WidgetMapProps) {
-  const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
   const [topics, setTopics] = useSyncTopics();
   const [defaultTopics, setDefaultTopics] = useSyncDefaultTopics();
@@ -74,10 +77,15 @@ export default function WidgetMap({
 
   const { syncBasemapId, opacity } = useMemo(() => {
     const topicWithIndicator =
-      defaultTopics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id)) ||
-      topics?.find((topic) => topic.indicators?.find((ind) => ind.id === indicator.id));
+      defaultTopics?.find((topic) =>
+        topic.indicators?.find((ind) => ind.indicator_id === indicator.id),
+      ) ||
+      topics?.find((topic) => topic.indicators?.find((ind) => ind.indicator_id === indicator.id));
     const indicatorConfig = topicWithIndicator?.indicators?.find(
-      (ind) => ind.id === indicator.id && "type" in ind && (ind as IndicatorMapView).type === "map",
+      (ind) =>
+        ind.indicator_id === indicator.id &&
+        "type" in ind &&
+        (ind as IndicatorMapView).type === "map",
     );
     return {
       syncBasemapId:

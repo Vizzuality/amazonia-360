@@ -52,7 +52,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
           .then(async (r) => {
             if (!r) throw new Error("User creation failed");
 
-            return signIn("credentials", {
+            return signIn("users", {
               redirect: false,
               email: value.email,
               password: value.password,
