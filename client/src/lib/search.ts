@@ -165,8 +165,8 @@ export const getSearch = async (params: GetSearchParams) => {
   }
 
   const g = await searchVM.search(params as unknown as __esri.SuggestResult).then((res) => {
-    if (res.numResults === 1) {
-      const r = res.results[0].results[0];
+    if (res?.numResults === 1) {
+      const r = res?.results[0].results[0];
 
       const projectedGeo = project(r.feature.geometry, {
         wkid: 102100,

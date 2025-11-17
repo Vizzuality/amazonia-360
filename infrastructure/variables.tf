@@ -73,14 +73,17 @@ variable "dev" {
       grid_tiles_path = string
     })
     client = object({
-      next_public_url            = string
-      next_public_api_url        = string
-      next_public_api_key        = string
-      next_public_arcgis_api_key = string
-      next_public_webshot_url    = string
-      basic_auth_enabled         = string
-      basic_auth_user            = string
-      basic_auth_password        = string
+      next_public_api_url          = string
+      next_public_api_key          = string
+      next_public_arcgis_api_key   = string
+      next_public_webshot_url      = string
+      basic_auth_enabled           = string
+      basic_auth_user              = string
+      basic_auth_password          = string
+      payload_secret               = string
+      database_url                 = string
+      app_key                      = string
+      auth_secret                  = string
     })
   })
 }
@@ -95,14 +98,17 @@ variable "staging" {
       grid_tiles_path = string
     })
     client = object({
-      next_public_url            = string
-      next_public_api_url        = string
-      next_public_api_key        = string
-      next_public_arcgis_api_key = string
-      next_public_webshot_url    = string
-      basic_auth_enabled         = string
-      basic_auth_user            = string
-      basic_auth_password        = string
+      next_public_api_url          = string
+      next_public_api_key          = string
+      next_public_arcgis_api_key   = string
+      next_public_webshot_url      = string
+      basic_auth_enabled           = string
+      basic_auth_user              = string
+      basic_auth_password          = string
+      payload_secret               = string
+      database_url                 = string
+      app_key                      = string
+      auth_secret                  = string
     })
   })
 }
@@ -117,14 +123,17 @@ variable "prod" {
       grid_tiles_path = string
     })
     client = object({
-      next_public_url            = string
-      next_public_api_url        = string
-      next_public_api_key        = string
-      next_public_arcgis_api_key = string
-      next_public_webshot_url    = string
-      basic_auth_enabled         = string
-      basic_auth_user            = string
-      basic_auth_password        = string
+      next_public_api_url          = string
+      next_public_api_key          = string
+      next_public_arcgis_api_key   = string
+      next_public_webshot_url      = string
+      basic_auth_enabled           = string
+      basic_auth_user              = string
+      basic_auth_password          = string
+      payload_secret               = string
+      database_url                 = string
+      app_key                      = string
+      auth_secret                  = string
     })
   })
 }
