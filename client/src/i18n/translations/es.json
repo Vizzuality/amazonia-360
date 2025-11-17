@@ -184,6 +184,7 @@
   "auth-link-already-have-account": "¿Ya tienes una cuenta?",
   "auth-link-sign-up": "Registrarse",
   "auth-link-sign-in": "Iniciar sesión",
+  "auth-link-back-to-sign-in": "Volver a iniciar sesión",
   "report-results-sidebar-ai-summaries-audience-title": "Estilo del texto resumido",
   "report-results-sidebar-ai-summaries-audience-normal-title": "Estándar",
   "report-results-sidebar-ai-summaries-audience-normal-description": "Para una información clara y equilibrada adaptada a cualquier público.",
