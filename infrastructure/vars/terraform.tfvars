@@ -10,7 +10,7 @@ ses_domain_name = "amazoniaforever360.org"
 ses_aws_region  = "sa-east-1"
 
 dev = {
-  aws_region = "eu-west-3"
+  aws_region = "sa-east-1"
 
   api = {
     auth_token      = ""
@@ -32,7 +32,7 @@ dev = {
 }
 
 staging = {
-  aws_region = "eu-west-3"
+  aws_region = "sa-east-1"
 
   api = {
     auth_token      = ""
