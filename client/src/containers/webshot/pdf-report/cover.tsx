@@ -3,26 +3,29 @@
 import { useMemo } from "react";
 
 import Image from "next/image";
+import { useParams } from "next/navigation";
 
 import { useLocale, useTranslations } from "next-intl";
 
+import { useReport } from "@/lib/report";
 import { useGetTopics } from "@/lib/topics";
 
-import { useSyncLocation, useSyncTopics } from "@/app/(frontend)/store";
+import { useSyncTopics } from "@/app/(frontend)/store";
 
 export default function DocumentCoverPdfSection() {
   const locale = useLocale();
   const t = useTranslations();
 
+  const { id: reportId } = useParams();
+  const { data: reportData } = useReport({ id: Number(reportId) });
+
   const [topics] = useSyncTopics();
   const { data: allTopics } = useGetTopics(locale);
 
   const selectedTopics = useMemo(
-    () => allTopics?.filter((topic) => topics?.find((t) => t.id === topic.id)),
+    () => allTopics?.filter((topic) => topics?.find((t) => t.topic_id === topic.id)),
     [allTopics, topics],
   );
-
-  const [location] = useSyncLocation();
 
   const dateString = useMemo(() => {
     const now = new Date();
@@ -54,9 +57,7 @@ export default function DocumentCoverPdfSection() {
   return (
     <div className="relative w-full grow">
       <div className="absolute bottom-[60px] z-10 flex w-2/3 flex-col gap-8 bg-blue-700 px-14 py-10">
-        <h1 className="text-6xl text-white">
-          {location?.custom_title || t("pdf-report-cover-title")}
-        </h1>
+        <h1 className="text-6xl text-white">{reportData?.title || t("pdf-report-cover-title")}</h1>
 
         <p className="font-normal text-white">
           {t("pdf-report-cover-subtitle", { topics: formattedTopicsNames })}

@@ -11,9 +11,11 @@ import sharp from "sharp";
 
 import { Accounts } from "@/cms/collections/Accounts";
 import { Admins } from "@/cms/collections/Admins";
+import { AnonymousUsers } from "@/cms/collections/AnonymousUsers";
 import { Media } from "@/cms/collections/Media";
 import { Reports } from "@/cms/collections/Reports";
 import { Users } from "@/cms/collections/Users";
+import { routing } from "@/i18n/routing";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -25,15 +27,20 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Admins, Users, Accounts, Media, Reports],
+  collections: [Admins, Users, AnonymousUsers, Accounts, Media, Reports],
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || "",
     },
+    migrationDir: path.resolve(dirname, "cms", "migrations"),
   }),
   editor: lexicalEditor(),
   graphQL: {
     disable: true,
+  },
+  localization: {
+    locales: [...routing.locales], // required
+    defaultLocale: routing.defaultLocale, // required
   },
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {

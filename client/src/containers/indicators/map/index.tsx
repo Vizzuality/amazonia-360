@@ -1,9 +1,12 @@
 import { useCallback, useMemo } from "react";
 
+import { useParams } from "next/navigation";
+
 import { useAtomValue } from "jotai";
 import { useLocale } from "next-intl";
 
 import { useGetIndicatorsLayerId } from "@/lib/indicators";
+import { useReport } from "@/lib/report";
 
 import {
   ResourceFeature,
@@ -32,6 +35,9 @@ export const MapIndicators = (
   const { id, basemapId, isPdf } = props;
 
   const locale = useLocale();
+
+  const { id: reportId } = useParams();
+  const { data: reportData } = useReport({ id: Number(reportId) });
 
   const LAYER = useGetIndicatorsLayerId(id, locale, {});
 
@@ -66,12 +72,13 @@ export const MapIndicators = (
     onReady(`${id}-map`);
   }, [id, onReady]);
 
-  if (!LAYER) return null;
+  if (!LAYER || !reportData?.location) return null;
 
   return (
     <IndicatorProvider onLoading={handleLoading} onLoad={handleLoad}>
       <WidgetMap
         indicator={props}
+        location={reportData?.location}
         basemapId={basemapId}
         layers={[LAYER]}
         isWebshot={props.isWebshot}

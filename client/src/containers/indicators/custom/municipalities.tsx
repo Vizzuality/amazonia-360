@@ -9,11 +9,11 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { Indicator, ResourceFeature } from "@/types/indicator";
 
-import { useSyncLocation } from "@/app/(frontend)/store";
-
 import { CardLoader } from "@/containers/card";
 import { useIndicator } from "@/containers/indicators/provider";
 import { DataTable } from "@/containers/widgets/table";
+
+import { Report } from "@/payload-types";
 
 const INDICATORS = [
   { id: 8, name_en: "Administrative Capitals" },
@@ -22,11 +22,16 @@ const INDICATORS = [
   { id: 4, name_en: "States" },
 ];
 
-export const Municipalities = ({ indicator }: { indicator: Indicator }) => {
+export const Municipalities = ({
+  indicator,
+  location,
+}: {
+  indicator: Indicator;
+  location: Report["location"];
+}) => {
   const locale = useLocale();
   const t = useTranslations();
 
-  const [location] = useSyncLocation();
   const GEOMETRY = useLocationGeometry(location);
 
   const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();

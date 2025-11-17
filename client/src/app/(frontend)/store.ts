@@ -1,8 +1,10 @@
 "use client";
 
-import { atom } from "jotai";
-import { inferParserType, useQueryState } from "nuqs";
-import { createSerializer } from "nuqs/server";
+import { useParams } from "next/navigation";
+
+import { atom, useAtom } from "jotai";
+import { useQueryState } from "nuqs";
+import { useLocalStorage } from "usehooks-ts";
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 
@@ -12,12 +14,12 @@ import {
   gridDatasetsParser,
   gridDatasetSettingsParser,
   gridTableSettingsParser,
-  locationParser,
-  topicsParser,
-  aiSummaryParser,
   defaultTopicsConfigParser,
   indicatorsParser,
   indicatorsSettingsParser,
+  Location,
+  TopicView,
+  AiSummary,
 } from "@/app/(frontend)/parsers";
 
 import { SketchProps } from "@/components/map/sketch";
@@ -39,25 +41,33 @@ export type GridHoverType = {
 export const useSyncBbox = () => {
   return useQueryState("bbox", bboxParser);
 };
+// REPORT PARAMS
+export const titleAtom = atom<string | undefined | null>(null);
+export const useSyncTitle = () => {
+  return useAtom(titleAtom);
+};
 
+export const locationAtom = atom<Location | null>(null);
+export const useSyncLocation = () => {
+  return useAtom(locationAtom);
+};
+
+export const topicsViewAtom = atom<TopicView[] | null | undefined>(null);
 export const useSyncTopics = () => {
-  return useQueryState("topics", topicsParser);
+  return useAtom(topicsViewAtom);
 };
 
 export const useSyncDefaultTopics = () => {
   return useQueryState("defaultTopics", defaultTopicsConfigParser);
 };
 
+// INDICATORS PARAMS
 export const useSyncIndicators = () => {
   return useQueryState("indicators", indicatorsParser);
 };
 
 export const useSyncIndicatorsSettings = () => {
   return useQueryState("indicatorsSettings", indicatorsSettingsParser);
-};
-
-export const useSyncLocation = () => {
-  return useQueryState("location", locationParser);
 };
 
 // GRID PARAMS
@@ -83,20 +93,13 @@ export const useSyncGridTableSettings = () => {
 
 // AI SUMMARY PARAMS
 export const useSyncAiSummary = () => {
-  return useQueryState("aiSummary", aiSummaryParser);
-};
-
-const searchParams = {
-  topics: topicsParser,
-  location: locationParser,
-};
-
-export const serializeSearchParams = createSerializer(searchParams);
-
-export const useSyncSearchParams = (
-  defaultParams?: Partial<inferParserType<typeof searchParams>>,
-) => {
-  return serializeSearchParams(defaultParams ?? {});
+  const { id } = useParams();
+  return useLocalStorage<AiSummary>(`${id ?? "new"}:ai-summary`, {
+    type: "Normal",
+    only_active: true,
+    enabled: false,
+    generating: {},
+  });
 };
 
 // JOTAI PARAMS
@@ -116,12 +119,13 @@ export const sketchActionAtom = atom<{
 }>({});
 
 export const reportPanelAtom = atom<"location" | "topics">("location");
+
+// GRID PARAMS
 export const gridPanelAtom = atom<"filters" | "table">("filters");
 export const gridCellHighlightAtom = atom<{ id: number | null; index: string | undefined }>({
   id: null,
   index: undefined,
 });
-
 export const gridHoverAtom = atom<GridHoverType>({
   id: null,
   cell: undefined,
@@ -134,17 +138,12 @@ export const gridHoverAtom = atom<GridHoverType>({
 
 export const selectedFiltersViewAtom = atom<boolean>(false);
 
-export const isGeneratingAIReportAtom = atom<Record<string, boolean>>();
-
-export const generatedAITextAtom = atom<{ content: { id: number; description: string }[] }>({
-  content: [],
-});
-
 export type ReportResultsTab = "indicators" | "ai_summaries";
 export const resultsSidebarTabAtom = atom<ReportResultsTab>("indicators");
 
 export const indicatorsExpandAtom = atom<Record<number, number[] | undefined> | undefined>({});
 
+// PDF ATOMS
 export const pdfIndicatorsMapStateAtom = atom<
   {
     id: `${Indicator["id"]}-${VisualizationTypes | "custom"}`;

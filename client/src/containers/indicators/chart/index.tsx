@@ -1,8 +1,11 @@
 import React, { useCallback } from "react";
 
+import { useParams } from "next/navigation";
+
 import { useLocale } from "next-intl";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
+import { useReport } from "@/lib/report";
 
 import { Indicator } from "@/types/indicator";
 
@@ -16,6 +19,9 @@ export const ChartIndicators = ({ id }: { id: Indicator["id"] }) => {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
 
+  const { id: reportId } = useParams();
+  const { data: reportData } = useReport({ id: Number(reportId) });
+
   const { onReady } = useLoad();
 
   const handleLoad = useCallback(() => {
@@ -26,14 +32,26 @@ export const ChartIndicators = ({ id }: { id: Indicator["id"] }) => {
 
   return (
     <IndicatorProvider onLoad={handleLoad}>
-      {indicator.resource.type === "feature" && (
-        <ChartIndicatorsFeature {...indicator} resource={indicator.resource} />
+      {indicator.resource.type === "feature" && reportData?.location && (
+        <ChartIndicatorsFeature
+          {...indicator}
+          resource={indicator.resource}
+          location={reportData?.location}
+        />
       )}
-      {indicator.resource.type === "imagery" && (
-        <ChartImageryIndicators {...indicator} resource={indicator.resource} />
+      {indicator.resource.type === "imagery" && reportData?.location && (
+        <ChartImageryIndicators
+          {...indicator}
+          resource={indicator.resource}
+          location={reportData?.location}
+        />
       )}
-      {indicator.resource.type === "imagery-tile" && (
-        <ChartImageryTileIndicators {...indicator} resource={indicator.resource} />
+      {indicator.resource.type === "imagery-tile" && reportData?.location && (
+        <ChartImageryTileIndicators
+          {...indicator}
+          resource={indicator.resource}
+          location={reportData?.location}
+        />
       )}
     </IndicatorProvider>
   );

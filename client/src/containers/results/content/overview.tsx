@@ -15,10 +15,12 @@ export const ReportResultsContentOverview = () => {
   return data?.map((topic) => {
     const T = {
       ...topic,
+      id: `${topic.id}`,
+      topic_id: topic.id,
       indicators: subtopicsData?.map((s) => s.default_visualization).flat() || [],
     };
 
-    return <ReportResultsContentItem editable={false} key={topic.id} topic={T} />;
+    return <ReportResultsContentItem editable={false} key={T.id} topic={T} />;
   });
 };
 

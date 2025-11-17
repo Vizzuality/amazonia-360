@@ -2,13 +2,14 @@
 
 import { useMemo, useState } from "react";
 
+import { useParams } from "next/navigation";
+
 import { flatGroup } from "@visx/vendor/d3-array";
 import { useTranslations } from "next-intl";
 
 import { useLocationGadm } from "@/lib/location";
 import { useGetFeatures } from "@/lib/query";
-
-import { useSyncLocation } from "@/app/(frontend)/store";
+import { useReport } from "@/lib/report";
 
 import { DATASETS } from "@/constants/datasets";
 
@@ -24,9 +25,10 @@ export default function OtherResources() {
   const t = useTranslations();
   const [tab, setTab] = useState("all");
 
-  const [location] = useSyncLocation();
+  const { id: reportId } = useParams();
+  const { data: reportData } = useReport({ id: Number(reportId) });
 
-  const queryGadm = useLocationGadm(location);
+  const queryGadm = useLocationGadm(reportData?.location);
 
   const query = useGetFeatures(
     {
