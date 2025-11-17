@@ -139,7 +139,9 @@ export function ResetPasswordForm({ ...props }: React.ComponentProps<typeof Card
 
             <FieldGroup>
               <Field>
-                <Button type="submit">{t("auth-button-reset-password")}</Button>
+                <Button type="submit" size="lg">
+                  {t("auth-button-reset-password")}
+                </Button>
               </Field>
             </FieldGroup>
           </FieldGroup>

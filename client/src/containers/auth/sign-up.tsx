@@ -7,8 +7,15 @@ import { toast } from "sonner";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
 import { Link, useRouter } from "@/i18n/navigation";
@@ -170,16 +177,21 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 
             <FieldGroup>
               <Field>
-                <Button type="submit">{t("auth-button-create-account")}</Button>
-                <FieldDescription className="px-6 text-center">
-                  {t("auth-link-already-have-account")}{" "}
-                  <Link href="/auth/sign-in">{t("auth-link-sign-in")}</Link>
-                </FieldDescription>
+                <Button type="submit" size="lg">
+                  {t("auth-button-create-account")}
+                </Button>
               </Field>
             </FieldGroup>
           </FieldGroup>
         </form>
       </CardContent>
+
+      <CardFooter className="justify-center gap-1 text-sm font-medium text-muted-foreground">
+        <span>{t("auth-link-already-have-account")}</span>
+        <Link href="/auth/sign-in" className="hover:underline">
+          {t("auth-link-sign-in")}
+        </Link>
+      </CardFooter>
     </Card>
   );
 }

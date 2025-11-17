@@ -7,8 +7,15 @@ import { toast } from "sonner";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
 import { Link, useRouter } from "@/i18n/navigation";
@@ -117,13 +124,9 @@ export function SignInForm(props: React.ComponentProps<"div">) {
             </form.Field>
 
             <Field>
-              <Button type="submit">{t("auth-button-login")}</Button>
-              <FieldDescription className="text-center">
-                {t("auth-link-dont-have-account")}{" "}
-                <Link href="/auth/sign-up" className="font-medium">
-                  {t("auth-link-sign-up")}
-                </Link>
-              </FieldDescription>
+              <Button type="submit" size="lg">
+                {t("auth-button-login")}
+              </Button>
             </Field>
 
             {/* <Field>
@@ -141,6 +144,13 @@ export function SignInForm(props: React.ComponentProps<"div">) {
           </FieldGroup>
         </form>
       </CardContent>
+
+      <CardFooter className="justify-center gap-1 text-sm font-medium text-muted-foreground">
+        <span>{t("auth-link-dont-have-account")}</span>
+        <Link href="/auth/sign-up" className="font-medium hover:underline">
+          {t("auth-link-sign-up")}
+        </Link>
+      </CardFooter>
     </Card>
   );
 }
