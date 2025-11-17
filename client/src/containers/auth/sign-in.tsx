@@ -3,7 +3,6 @@
 import { useForm } from "@tanstack/react-form";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { LuGithub } from "react-icons/lu";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -55,10 +54,10 @@ export function SignInForm(props: React.ComponentProps<"div">) {
   });
 
   return (
-    <Card {...props}>
+    <Card className="border-none shadow-none" {...props}>
       <CardHeader>
-        <CardTitle>{t("auth-signin-title")}</CardTitle>
-        <CardDescription>{t("auth-signin-description")}</CardDescription>
+        <CardTitle className="text-3xl text-primary">{t("auth-signin-title")}</CardTitle>
+        <CardDescription className="font-medium">{t("auth-signin-description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -108,7 +107,7 @@ export function SignInForm(props: React.ComponentProps<"div">) {
 
                     <Link
                       href="/auth/forgot-password"
-                      className="ml-auto inline-block text-sm text-muted-foreground underline-offset-4 hover:underline"
+                      className="ml-auto inline-block text-right text-sm font-medium text-muted-foreground underline underline-offset-4"
                     >
                       {t("auth-link-forgot-password")}
                     </Link>
@@ -121,11 +120,13 @@ export function SignInForm(props: React.ComponentProps<"div">) {
               <Button type="submit">{t("auth-button-login")}</Button>
               <FieldDescription className="text-center">
                 {t("auth-link-dont-have-account")}{" "}
-                <Link href="/auth/sign-up">{t("auth-link-sign-up")}</Link>
+                <Link href="/auth/sign-up" className="font-medium">
+                  {t("auth-link-sign-up")}
+                </Link>
               </FieldDescription>
             </Field>
 
-            <Field>
+            {/* <Field>
               <Button
                 variant="outline"
                 type="button"
@@ -136,7 +137,7 @@ export function SignInForm(props: React.ComponentProps<"div">) {
                 <LuGithub className="mr-2 h-4 w-4" />
                 {t("auth-button-continue-github")}
               </Button>
-            </Field>
+            </Field> */}
           </FieldGroup>
         </form>
       </CardContent>

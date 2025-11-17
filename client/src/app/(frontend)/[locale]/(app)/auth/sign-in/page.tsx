@@ -25,7 +25,7 @@ export default async function SignInPage({ params }: { params: Params }) {
 
   return (
     <section className="flex grow items-center justify-center">
-      <div className="mx-auto w-full max-w-sm">
+      <div className="mx-auto w-full max-w-md">
         <SignInForm />
       </div>
     </section>
