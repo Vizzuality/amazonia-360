@@ -150,8 +150,11 @@ module "dev" {
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.dev.client.next_public_arcgis_api_key
     TF_CLIENT_BASIC_AUTH_USER            = var.dev.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD        = var.dev.client.basic_auth_password
-
-    TF_CLIENT_NEXT_PUBLIC_FEATURE_PARTNERS = var.dev.client.next_public_feature_partners
+    
+    TF_CLIENT_PAYLOAD_SECRET = var.dev.client.payload_secret
+    TF_CLIENT_DATABASE_URL   = var.dev.client.database_url
+    TF_CLIENT_APP_KEY        = var.dev.client.app_key
+    TF_CLIENT_AUTH_SECRET    = var.dev.client.auth_secret
   }
 }
 
@@ -184,7 +187,6 @@ module "staging" {
     TF_CLIENT_NEXT_PUBLIC_API_URL     = var.staging.client.next_public_api_url
     TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL = var.staging.client.next_public_webshot_url
     TF_CLIENT_BASIC_AUTH_ENABLED      = var.staging.client.basic_auth_enabled
-    TF_NEXT_PUBLIC_FEATURE_PARTNERS   = var.staging.client.next_public_feature_partners
   }
   github_additional_environment_secrets = {
     # API
@@ -198,6 +200,11 @@ module "staging" {
 
     TF_CLIENT_BASIC_AUTH_USER     = var.staging.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD = var.staging.client.basic_auth_password
+    
+    TF_CLIENT_PAYLOAD_SECRET = var.staging.client.payload_secret
+    TF_CLIENT_DATABASE_URL   = var.staging.client.database_url
+    TF_CLIENT_APP_KEY        = var.staging.client.app_key
+    TF_CLIENT_AUTH_SECRET    = var.staging.client.auth_secret
   }
 }
 
@@ -230,7 +237,6 @@ module "prod" {
     TF_CLIENT_NEXT_PUBLIC_API_URL     = var.prod.client.next_public_api_url
     TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL = var.prod.client.next_public_webshot_url
     TF_CLIENT_BASIC_AUTH_ENABLED      = var.prod.client.basic_auth_enabled
-    TF_NEXT_PUBLIC_FEATURE_PARTNERS   = var.prod.client.next_public_feature_partners
   }
   github_additional_environment_secrets = {
     # API
@@ -242,5 +248,10 @@ module "prod" {
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.prod.client.next_public_arcgis_api_key
     TF_CLIENT_BASIC_AUTH_USER            = var.prod.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD        = var.prod.client.basic_auth_password
+    
+    TF_CLIENT_PAYLOAD_SECRET = var.prod.client.payload_secret
+    TF_CLIENT_DATABASE_URL   = var.prod.client.database_url
+    TF_CLIENT_APP_KEY        = var.prod.client.app_key
+    TF_CLIENT_AUTH_SECRET    = var.prod.client.auth_secret
   }
 }

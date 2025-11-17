@@ -20,10 +20,13 @@ dev = {
     next_public_api_key          = ""
     next_public_webshot_url      = ""
     next_public_arcgis_api_key   = ""
-    next_public_feature_partners = ""
     basic_auth_enabled           = ""
     basic_auth_user              = ""
     basic_auth_password          = ""
+    payload_secret               = ""
+    database_url                 = ""
+    app_key                      = ""
+    auth_secret                  = ""
   }
 }
 
@@ -42,10 +45,13 @@ staging = {
     next_public_api_key          = ""
     next_public_webshot_url      = ""
     next_public_arcgis_api_key   = ""
-    next_public_feature_partners = ""
     basic_auth_enabled           = ""
     basic_auth_user              = ""
     basic_auth_password          = ""
+    payload_secret               = ""
+    database_url                 = ""
+    app_key                      = ""
+    auth_secret                  = ""
   }
 }
 
@@ -64,9 +70,12 @@ prod = {
     next_public_api_key          = ""
     next_public_webshot_url      = ""
     next_public_arcgis_api_key   = ""
-    next_public_feature_partners = ""
     basic_auth_enabled           = ""
     basic_auth_user              = ""
     basic_auth_password          = ""
+    payload_secret               = ""
+    database_url                 = ""
+    app_key                      = ""
+    auth_secret                  = ""
   }
 }
