@@ -10,6 +10,9 @@ export const env = createEnv({
     DATABASE_URL: z.url(),
     APP_KEY: z.string(),
     AUTH_SECRET: z.string(),
+    AWS_SES_IAM_USER_ACCESS_KEY_ID: z.string(),
+    AWS_SES_IAM_USER_SECRET_ACCESS_KEY: z.string(),
+    AWS_SES_REGION: z.string(),
   },
   client: {
     NEXT_PUBLIC_WEBSHOT_URL: z.url(),
@@ -40,5 +43,8 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     APP_KEY: process.env.APP_KEY,
     AUTH_SECRET: process.env.AUTH_SECRET,
+    AWS_SES_IAM_USER_ACCESS_KEY_ID: process.env.AWS_SES_IAM_USER_ACCESS_KEY_ID,
+    AWS_SES_IAM_USER_SECRET_ACCESS_KEY: process.env.AWS_SES_IAM_USER_SECRET_ACCESS_KEY,
+    AWS_SES_REGION: process.env.AWS_SES_REGION,
   },
 });
