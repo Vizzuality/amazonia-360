@@ -8,6 +8,8 @@ export const env = createEnv({
     BASIC_AUTH_PASSWORD: z.string(),
     PAYLOAD_SECRET: z.string(),
     DATABASE_URL: z.url(),
+    APP_KEY: z.string(),
+    AUTH_SECRET: z.string(),
   },
   client: {
     NEXT_PUBLIC_WEBSHOT_URL: z.url(),
@@ -36,5 +38,7 @@ export const env = createEnv({
     NEXT_PUBLIC_ARCGIS_API_KEY: process.env.NEXT_PUBLIC_ARCGIS_API_KEY,
     PAYLOAD_SECRET: process.env.PAYLOAD_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
+    APP_KEY: process.env.APP_KEY,
+    AUTH_SECRET: process.env.AUTH_SECRET,
   },
 });

@@ -2,6 +2,8 @@ import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Github from "next-auth/providers/github";
 
+import { env } from "@/env.mjs";
+
 import { PayloadAuthAdapter } from "@/lib/auth/adapter";
 
 import { sdk } from "@/services/sdk";
@@ -89,7 +91,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           },
           {
             headers: {
-              "x-app-key": process.env.APP_KEY || "",
+              "x-app-key": env.APP_KEY || "",
             },
           },
         );
