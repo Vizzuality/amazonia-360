@@ -50,10 +50,12 @@ export function ForgotPasswordForm(props: React.ComponentProps<"div">) {
   });
 
   return (
-    <Card {...props}>
+    <Card className="border-none shadow-none" {...props}>
       <CardHeader>
-        <CardTitle>{t("auth-forgot-password-title")}</CardTitle>
-        <CardDescription>{t("auth-forgot-password-description")}</CardDescription>
+        <CardTitle className="text-3xl text-primary">{t("auth-forgot-password-title")}</CardTitle>
+        <CardDescription className="font-medium">
+          {t("auth-forgot-password-description")}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form
