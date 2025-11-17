@@ -12,8 +12,40 @@ export const Users: CollectionConfig = {
   slug: "users",
   admin: {
     useAsTitle: "email",
+    defaultColumns: ["email", "name", "createdAt", "verified"],
   },
   auth: {
+    verify: {
+      generateEmailSubject: async () => {
+        return "Verify your email address";
+      },
+      generateEmailHTML: async (params) => {
+        // Use the token provided to verify your user's email address
+        const verifyEmailURL = `${env.NEXT_PUBLIC_URL}/auth/verify-email?token=${params.token}`;
+
+        console.log("Verify email URL:", verifyEmailURL);
+
+        return `
+          <!doctype html>
+        <html lang="en">
+          <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+          </head>
+          <body>
+            <h1>Email verification</h1>
+            <p>
+              Hello ${params.user.email},<br /><br />
+              Thank you for registering an account with Amazonia 360 Forever+! Please verify your email address by clicking the link below:<br />
+              <a href="${verifyEmailURL}">Verify your email address</a><br /><br />
+              If you did not create this account, please ignore this email.<br /><br />
+              Thank you!<br />
+              Amazonia 360 Forever+ Team
+            </p>
+          </body>
+        </html>
+        `;
+      },
+    },
     forgotPassword: {
       expiration: 24 * 60 * 60 * 1000, // 1 day
       generateEmailSubject: async () => {
