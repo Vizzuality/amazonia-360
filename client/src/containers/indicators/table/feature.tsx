@@ -8,18 +8,18 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { Indicator, ResourceFeature } from "@/types/indicator";
 
-import { useSyncLocation } from "@/app/(frontend)/store";
-
 import { CardLoader } from "@/containers/card";
 import { useIndicator } from "@/containers/indicators/provider";
 import { DataTable } from "@/containers/widgets/table";
 
+import { Report } from "@/payload-types";
+
 export interface TableIndicatorsFeatureProps extends Indicator {
+  location: Report["location"];
   resource: ResourceFeature;
 }
 
-export const TableIndicatorsFeature = ({ id, resource }: TableIndicatorsFeatureProps) => {
-  const [location] = useSyncLocation();
+export const TableIndicatorsFeature = ({ id, resource, location }: TableIndicatorsFeatureProps) => {
   const GEOMETRY = useLocationGeometry(location);
 
   const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();

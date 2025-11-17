@@ -9,18 +9,22 @@ import { useLocationGeometry } from "@/lib/location";
 
 import { Indicator, ResourceImageryTile } from "@/types/indicator";
 
-import { useSyncLocation } from "@/app/(frontend)/store";
-
 import { CardLoader } from "@/containers/card";
 
 import MarimekkoChart from "@/components/charts/marimekko";
 
+import { Report } from "@/payload-types";
+
 export interface ChartImageryTileIndicatorsProps extends Indicator {
   resource: ResourceImageryTile;
+  location: Report["location"];
 }
 
-export const ChartImageryTileIndicators = ({ id, resource }: ChartImageryTileIndicatorsProps) => {
-  const [location] = useSyncLocation();
+export const ChartImageryTileIndicators = ({
+  id,
+  resource,
+  location,
+}: ChartImageryTileIndicatorsProps) => {
   const GEOMETRY = useLocationGeometry(location);
 
   const query = useQueryImageryTileId({ id, resource, type: "chart", geometry: GEOMETRY });

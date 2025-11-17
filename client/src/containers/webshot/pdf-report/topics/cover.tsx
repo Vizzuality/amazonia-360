@@ -1,23 +1,21 @@
 "use client";
 
-import { useLocale } from "next-intl";
-import { useLocalstorageState } from "rooks";
+import { useMemo } from "react";
 
 import { cn } from "@/lib/utils";
 
 import { Topic } from "@/types/topic";
 
-import { useSyncAiSummary } from "@/app/(frontend)/store";
+import { useSyncTopics } from "@/app/(frontend)/store";
 
 import { Markdown } from "@/components/ui/markdown";
 
 export default function PdfTopicCover(topic: Topic) {
-  const locale = useLocale();
   const { name, description, image } = topic;
 
-  const [ai_summary] = useSyncAiSummary();
+  const [topics] = useSyncTopics();
 
-  const [summary] = useLocalstorageState<string | null>(`ai-summary-${topic?.id}-${locale}`, null);
+  const TOPIC = useMemo(() => topics?.find((t) => t.id === topic.id), [topic.id, topics]);
 
   return (
     <div className="flex w-full grow flex-col overflow-hidden">
@@ -33,14 +31,14 @@ export default function PdfTopicCover(topic: Topic) {
         </div>
       </div>
 
-      {ai_summary.enabled && summary && (
+      {TOPIC?.description && (
         <section className="px-14 py-10">
           <Markdown
-            className={cn("prose-sm max-w-none columns-2 gap-x-8", {
-              "prose-p:text-xs prose-p:leading-normal": ai_summary.type === "Long",
+            className={cn("prose prose-sm max-w-none columns-2 gap-x-8", {
+              "prose-p:text-xs prose-p:leading-normal": true,
             })}
           >
-            {summary}
+            {TOPIC?.description}
           </Markdown>
         </section>
       )}

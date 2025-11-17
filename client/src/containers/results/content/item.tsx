@@ -14,7 +14,6 @@ import { TopicView } from "@/app/(frontend)/parsers";
 import {
   reportEditionModeAtom,
   resultsSidebarTabAtom,
-  useSyncAiSummary,
   useSyncTopics,
 } from "@/app/(frontend)/store";
 
@@ -42,14 +41,13 @@ export const ReportResultsContentItem = ({
   const t = useTranslations();
 
   const [, setTopics] = useSyncTopics();
-  const [ai_summary] = useSyncAiSummary();
   const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
   const setResultsSidebarTab = useSetAtom(resultsSidebarTabAtom);
 
   const { setOpen } = useSidebar();
 
   const EDITABLE = editable && reportEditionMode;
-  const TOPIC = useGetTopicsId({ id: topic.id, locale });
+  const TOPIC = useGetTopicsId({ id: topic.topic_id, locale });
 
   const handleDrop = useCallback(
     (layout: Layout[]) => {
@@ -60,10 +58,12 @@ export const ReportResultsContentItem = ({
           if (t.id === topic.id) {
             return {
               id: topic.id,
+              topic_id: topic.topic_id,
               indicators: layout.map((l) => {
                 const { indicator, type } = JSON.parse(l.i);
                 return {
                   id: indicator,
+                  indicator_id: indicator,
                   type,
                   w: l.w,
                   h: l.h,
@@ -77,12 +77,12 @@ export const ReportResultsContentItem = ({
         });
       });
     },
-    [topic.id, setTopics],
+    [topic.id, topic.topic_id, setTopics],
   );
 
   const INDICATORS = useMemo(() => {
     return topic?.indicators?.map((indicator) => {
-      const { type, id, w, h, x, y } = indicator;
+      const { type, indicator_id, w, h, x, y } = indicator;
       const dataGridConfig = {
         x: x ?? 0,
         y: y ?? 0,
@@ -91,8 +91,8 @@ export const ReportResultsContentItem = ({
         minW: MIN_VISUALIZATION_SIZES[type]?.w ?? 1,
         minH: MIN_VISUALIZATION_SIZES[type]?.h ?? 1,
       };
-      const refKey = `widget-${topic.id}-${id}-${type}`;
-      const gridKey = JSON.stringify({ indicator: id, type });
+      const refKey = `widget-${topic.topic_id}-${indicator_id}-${type}`;
+      const gridKey = JSON.stringify({ indicator: indicator_id, type });
 
       return (
         <div
@@ -113,9 +113,8 @@ export const ReportResultsContentItem = ({
           <ReportResultsContentIndicatorItem
             topic={topic}
             indicatorView={{
-              id,
-              type,
-              basemapId: type === "map" ? indicator.basemapId : undefined,
+              ...indicator,
+              ...(type === "map" && { basemapId: indicator.basemapId }),
             }}
             editable={editable}
             editing={EDITABLE}
@@ -153,7 +152,7 @@ export const ReportResultsContentItem = ({
             </Button>
           </header>
 
-          {ai_summary.enabled && <ReportResultsSummary topic={TOPIC} />}
+          <ReportResultsSummary topic={TOPIC} />
         </>
       )}
 

@@ -6,6 +6,31 @@ import { PayloadAuthAdapter } from "@/lib/auth/adapter";
 
 import { sdk } from "@/services/sdk";
 
+// Extend Authjs User to add collection
+declare module "next-auth" {
+  interface User {
+    collection?: string;
+    apiKey?: string | null;
+  }
+
+  interface Session {
+    user: {
+      id: string;
+      collection?: string;
+      apiKey?: string | null;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+    };
+  }
+}
+
+declare module "@auth/core/jwt" {
+  interface JWT {
+    collection?: string;
+  }
+}
+
 class InvalidLoginError extends CredentialsSignin {
   code = "Invalid identifier or password";
 }
@@ -21,7 +46,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PayloadAuthAdapter(),
   providers: [
     Credentials({
-      name: "Credentials",
+      id: "users",
+      name: "Users",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
@@ -40,6 +66,40 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return {
             ...res.user,
             id: String(res.user.id),
+            collection: "users",
+          };
+        } else {
+          throw new InvalidLoginError();
+        }
+      },
+    }),
+    Credentials({
+      id: "anonymous-users",
+      name: "Anonymous Users",
+      credentials: {},
+      async authorize() {
+        // For anonymous users, we just create a new anonymous user on each sign-in
+        const res = await sdk.create(
+          {
+            collection: "anonymous-users",
+            data: {
+              apiKey: crypto.randomUUID(),
+              enableAPIKey: true,
+            },
+          },
+          {
+            headers: {
+              "x-app-key": process.env.APP_KEY || "",
+            },
+          },
+        );
+
+        if (res) {
+          return {
+            ...res,
+            id: String(res.id),
+            apiKey: res.apiKey,
+            collection: "anonymous-users",
           };
         } else {
           throw new InvalidLoginError();
@@ -53,8 +113,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   session: { strategy: "jwt" },
   callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.collection = user.collection;
+      }
+      return token;
+    },
     async session({ session, token }) {
-      return { ...session, user: { ...session.user, id: token.sub } };
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.sub || "",
+          collection: token.collection as string | undefined,
+        },
+      };
     },
   },
 });

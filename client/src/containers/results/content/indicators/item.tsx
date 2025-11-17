@@ -28,7 +28,7 @@ export const ReportResultsContentIndicatorItem = ({
 }: ReportResultsContentIndicatorItemProps) => {
   const [, setTopics] = useSyncTopics();
   const [editionModeIndicator, setEditionModeIndicator] = useAtom(indicatorsEditionModeAtom);
-  const { id, type } = indicatorView;
+  const { indicator_id, type } = indicatorView;
 
   const handleDelete = useCallback(
     (indicatorId: number, type: VisualizationTypes) => {
@@ -41,8 +41,9 @@ export const ReportResultsContentIndicatorItem = ({
 
         prev[i] = {
           id: topic.id,
+          topic_id: topic.topic_id,
           indicators: prev[i]?.indicators?.filter(
-            (i) => !(i.id === indicatorId && i.type === type),
+            (i) => !(i.indicator_id === indicatorId && i.type === type),
           ),
         };
 
@@ -51,45 +52,45 @@ export const ReportResultsContentIndicatorItem = ({
 
       setEditionModeIndicator({});
     },
-    [topic.id, setTopics, setEditionModeIndicator],
+    [topic.id, topic.topic_id, setTopics, setEditionModeIndicator],
   );
 
   const indicatorBasemap = (indicatorView as IndicatorMapView)?.basemapId;
   const INDICATOR = useMemo(() => {
     return (
       <IndicatorCard
-        key={`${topic.id}-${id}`}
-        id={id}
+        key={`${topic.id}-${indicator_id}-${type}`}
+        id={indicator_id}
         type={type}
         editable={editable}
         basemapId={type === "map" ? indicatorView.basemapId : undefined}
       />
     );
-  }, [topic.id, id, type, editable, indicatorBasemap]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [topic.id, indicator_id, type, editable, indicatorBasemap]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div
-      id={`${id}-${type}`}
+      id={`${indicator_id}-${type}`}
       className="relative z-10 flex h-full flex-col"
       onMouseEnter={() => {
         if (editing) {
-          setEditionModeIndicator({ [`${id}-${type}`]: true });
+          setEditionModeIndicator({ [`${indicator_id}-${type}`]: true });
         }
       }}
       onMouseLeave={() => {
         if (editing) {
-          setEditionModeIndicator({ [`${id}-${type}`]: false });
+          setEditionModeIndicator({ [`${indicator_id}-${type}`]: false });
         }
       }}
     >
-      {editionModeIndicator[`${id}-${type}`] && editing && <MoveHandler />}
-      {editionModeIndicator[`${id}-${type}`] && editing && (
-        <DeleteHandler indicatorId={id} type={type} onClick={handleDelete} />
+      {editionModeIndicator[`${indicator_id}-${type}`] && editing && <MoveHandler />}
+      {editionModeIndicator[`${indicator_id}-${type}`] && editing && (
+        <DeleteHandler indicatorId={indicator_id} type={type} onClick={handleDelete} />
       )}
 
       {INDICATOR}
 
-      {editionModeIndicator[`${id}-${type}`] && editing && <ResizeHandler />}
+      {editionModeIndicator[`${indicator_id}-${type}`] && editing && <ResizeHandler />}
     </div>
   );
 };
