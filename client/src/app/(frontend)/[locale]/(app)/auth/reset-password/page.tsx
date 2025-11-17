@@ -25,7 +25,7 @@ export default async function ResetPasswordPage({ params }: { params: Params }) 
 
   return (
     <section className="flex grow items-center justify-center">
-      <div className="mx-auto w-full max-w-sm">
+      <div className="mx-auto w-full max-w-md">
         <ResetPasswordForm />
       </div>
     </section>

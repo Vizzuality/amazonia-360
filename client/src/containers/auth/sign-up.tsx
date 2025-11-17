@@ -21,6 +21,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 
   const formSchema = z
     .object({
+      name: z.string().min(2, t("auth-validation-name-min-length")),
       email: z.email(t("auth-validation-email-invalid")),
       password: z.string().min(6, t("auth-validation-password-min-length")),
       "confirm-password": z.string(),
@@ -32,6 +33,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 
   const form = useForm({
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       "confirm-password": "",
@@ -45,6 +47,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
           .create({
             collection: "users",
             data: {
+              name: value.name,
               email: value.email,
               password: value.password,
             },
@@ -75,10 +78,10 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   });
 
   return (
-    <Card {...props}>
+    <Card className="border-none shadow-none" {...props}>
       <CardHeader>
-        <CardTitle>{t("auth-signup-title")}</CardTitle>
-        <CardDescription>{t("auth-signup-description")}</CardDescription>
+        <CardTitle className="text-3xl text-primary">{t("auth-signup-title")}</CardTitle>
+        <CardDescription className="font-medium">{t("auth-signup-description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -88,6 +91,25 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
           }}
         >
           <FieldGroup>
+            <form.Field name="name">
+              {(field) => {
+                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>{t("auth-field-name")}</FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                    />
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                  </Field>
+                );
+              }}
+            </form.Field>
             <form.Field name="email">
               {(field) => {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;

@@ -75,10 +75,12 @@ export function ResetPasswordForm({ ...props }: React.ComponentProps<typeof Card
   });
 
   return (
-    <Card {...props}>
+    <Card className="border-none shadow-none" {...props}>
       <CardHeader>
-        <CardTitle>{t("auth-reset-password-title")}</CardTitle>
-        <CardDescription>{t("auth-reset-password-description")}</CardDescription>
+        <CardTitle className="text-3xl text-primary">{t("auth-reset-password-title")}</CardTitle>
+        <CardDescription className="font-medium">
+          {t("auth-reset-password-description")}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form
