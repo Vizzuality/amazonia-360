@@ -3,9 +3,10 @@ import type { CollectionConfig } from "payload";
 import { adminAccess } from "@/cms/access/admin";
 import { anyoneAccess } from "@/cms/access/anyone";
 import { ownUserAccess } from "@/cms/access/owner";
+import { userAccess } from "@/cms/access/user";
 import { LocationField } from "@/cms/fields/location";
 import { TopicsField } from "@/cms/fields/topics";
-import { linkUserHook } from "@/cms/hooks/link-user";
+import { beforeChangeLinkUser } from "@/cms/hooks/user";
 import { or } from "@/cms/utils/or";
 
 export const Reports: CollectionConfig = {
@@ -14,7 +15,7 @@ export const Reports: CollectionConfig = {
     read: anyoneAccess,
     create: anyoneAccess,
     update: ownUserAccess,
-    delete: or(adminAccess, ownUserAccess),
+    delete: or(userAccess, adminAccess),
   },
   fields: [
     {
@@ -31,6 +32,7 @@ export const Reports: CollectionConfig = {
       name: "user",
       type: "relationship",
       relationTo: ["users", "anonymous-users"],
+
       admin: {
         readOnly: true,
       },
@@ -40,6 +42,6 @@ export const Reports: CollectionConfig = {
     TopicsField,
   ],
   hooks: {
-    beforeChange: [linkUserHook],
+    beforeChange: [beforeChangeLinkUser],
   },
 };

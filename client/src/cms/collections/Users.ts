@@ -7,6 +7,8 @@ import { auth, signOut } from "@/lib/auth";
 import { adminAccess } from "@/cms/access/admin";
 import { anyoneAccess } from "@/cms/access/anyone";
 import { userAccess } from "@/cms/access/user";
+import { beforeDeleteUser } from "@/cms/hooks/user";
+import { or } from "@/cms/utils/or";
 
 export const Users: CollectionConfig = {
   slug: "users",
@@ -101,9 +103,9 @@ export const Users: CollectionConfig = {
   },
   access: {
     create: anyoneAccess,
-    read: userAccess,
-    update: userAccess,
-    delete: adminAccess,
+    read: or(userAccess, adminAccess),
+    update: or(userAccess, adminAccess),
+    delete: or(userAccess, adminAccess),
   },
   fields: [
     { name: "name", type: "text" },
@@ -113,6 +115,12 @@ export const Users: CollectionConfig = {
       name: "accounts",
       type: "join",
       collection: "accounts",
+      on: "user",
+    },
+    {
+      name: "reports",
+      type: "join",
+      collection: "reports",
       on: "user",
     },
   ],
@@ -130,4 +138,7 @@ export const Users: CollectionConfig = {
       },
     },
   ],
+  hooks: {
+    beforeDelete: [beforeDeleteUser],
+  },
 };
