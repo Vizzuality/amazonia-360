@@ -60,7 +60,11 @@ def get_all_requests() -> list[RequestDefinition]:
         get_results_request(),
     ]
 
-    for num_columns in [1, 4, 16, 64]:
+    # Originally including requests for grid tiles with 16 or 64 columns, to
+    # exert maximum stress on the system. In practice these kinds of requests
+    # are not used at all from the frontend application, so we limit the number
+    # of columns to 4 here.
+    for num_columns in [1, 4]:
         requests.append(get_unfiltered_grid_tile_request(num_columns))
         requests.append(get_grid_tile_for_aoi_request(num_columns))
 
