@@ -4,6 +4,7 @@ import { auth, signOut } from "@/lib/auth";
 
 import { adminAccess } from "@/cms/access/admin";
 import { appAccess } from "@/cms/access/app";
+import { beforeDeleteAnonymousUser } from "@/cms/hooks/user";
 
 export const AnonymousUsers: CollectionConfig = {
   slug: "anonymous-users",
@@ -33,8 +34,8 @@ export const AnonymousUsers: CollectionConfig = {
     ],
   },
   access: {
-    read: adminAccess,
     create: appAccess,
+    read: adminAccess,
     update: adminAccess,
     delete: adminAccess,
   },
@@ -53,4 +54,7 @@ export const AnonymousUsers: CollectionConfig = {
       },
     },
   ],
+  hooks: {
+    beforeDelete: [beforeDeleteAnonymousUser],
+  },
 };
