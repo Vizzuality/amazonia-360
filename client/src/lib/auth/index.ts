@@ -115,9 +115,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   session: { strategy: "jwt" },
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.collection = user.collection;
+    async jwt({ token, user, account }) {
+      if (user || account) {
+        token.collection = user.collection || "users";
       }
       return token;
     },

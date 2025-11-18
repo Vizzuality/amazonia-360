@@ -1,25 +1,23 @@
 import { Access } from "payload";
 
-export const ownPolymorphicUser: Access = ({ req }) => {
+export const ownUserAccess: Access = ({ req }) => {
   const { user } = req;
 
-  if (user) {
-    return {
-      [`user.value`]: { equals: user.id },
-      [`user.relationTo`]: { equals: user.collection },
-    };
+  if (user && user.collection === "admins") {
+    return true;
   }
-
-  return false;
-};
-
-export const ownPolymorphicAnonymousUser: Access = ({ req }) => {
-  const { user } = req;
 
   if (user && user.collection === "anonymous-users") {
     return {
       [`user.value`]: { equals: user.apiKey },
       [`user.relationTo`]: { equals: "anonymous-users" },
+    };
+  }
+
+  if (user && user.collection === "users") {
+    return {
+      [`user.value`]: { equals: user.id },
+      [`user.relationTo`]: { equals: "users" },
     };
   }
 

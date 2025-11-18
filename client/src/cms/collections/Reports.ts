@@ -2,7 +2,7 @@ import type { CollectionConfig } from "payload";
 
 import { adminAccess } from "@/cms/access/admin";
 import { anyoneAccess } from "@/cms/access/anyone";
-import { ownPolymorphicAnonymousUser, ownPolymorphicUser } from "@/cms/access/owner";
+import { ownUserAccess } from "@/cms/access/owner";
 import { LocationField } from "@/cms/fields/location";
 import { TopicsField } from "@/cms/fields/topics";
 import { linkUserHook } from "@/cms/hooks/link-user";
@@ -13,8 +13,8 @@ export const Reports: CollectionConfig = {
   access: {
     read: anyoneAccess,
     create: anyoneAccess,
-    update: or(ownPolymorphicAnonymousUser, ownPolymorphicUser),
-    delete: or(adminAccess, ownPolymorphicUser),
+    update: ownUserAccess,
+    delete: or(adminAccess, ownUserAccess),
   },
   fields: [
     {
