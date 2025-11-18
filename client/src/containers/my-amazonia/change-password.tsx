@@ -44,19 +44,9 @@ export function ChangePasswordForm() {
               password: value.newPassword,
             },
           })
-          .then((updateResult) => {
-            if ("errors" in updateResult) {
-              const errs = updateResult.errors as {
-                message: string;
-              }[];
-              throw new Error(errs.map((e) => e.message).join(", "));
-            }
-
+          .then(() => {
             // Reset form after successful update
             form.reset();
-          })
-          .catch((err) => {
-            throw new Error(err.message || "Password change failed");
           }),
         {
           loading: "Changing your password...",

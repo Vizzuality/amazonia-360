@@ -10,4 +10,13 @@ export const sdk = new PayloadSDK<Config>({
   baseInit: {
     credentials: "include",
   },
+  fetch: async (url, init) => {
+    const response = await fetch(url, init);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Fetch error: ${response.status} - ${errorText}`);
+    }
+    return response;
+  },
 });
