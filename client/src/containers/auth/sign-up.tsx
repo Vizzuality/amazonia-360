@@ -58,9 +58,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               password: value.password,
             },
           })
-          .then(async (r) => {
-            if (!r) throw new Error("User creation failed");
-
+          .then(() => {
             router.push("/auth/check-your-email");
           }),
         {

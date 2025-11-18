@@ -45,10 +45,9 @@ export function SignInForm(props: React.ComponentProps<"div">) {
           email: value.email,
           password: value.password,
         }).then((r) => {
-          if (r.error) {
+          if (r?.error) {
             throw new Error(r.error);
           }
-
           router.push("/my-amazonia");
         }),
         {

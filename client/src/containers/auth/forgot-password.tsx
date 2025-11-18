@@ -37,17 +37,12 @@ export function ForgotPasswordForm(props: React.ComponentProps<"div">) {
     },
     onSubmit: async ({ value }) => {
       toast.promise(
-        sdk
-          .forgotPassword({
-            collection: "users",
-            data: {
-              email: value.email,
-            },
-          })
-          .then((r) => {
-            console.log(r);
-            console.log("Password reset email sent");
-          }),
+        sdk.forgotPassword({
+          collection: "users",
+          data: {
+            email: value.email,
+          },
+        }),
         {
           loading: t("auth-toast-sending-reset-email"),
           success: t("auth-toast-reset-email-sent"),
