@@ -42,12 +42,12 @@ export function PayloadAuthAdapter(): Adapter {
 
       const user = await payload.create({
         collection: "users",
+        disableVerificationEmail: !data.password, // Disable verification email if no password is set, that means OAuth signup
         data: {
           name: data.name,
-          emailVerified: data.emailVerified ? data.emailVerified.toISOString() : null,
           image: data.image,
           email: data.email,
-          password: data.password || undefined,
+          password: data.password || crypto.randomUUID(),
         },
       });
       return covertPayloadUserToAdapterUser(user);
@@ -73,15 +73,12 @@ export function PayloadAuthAdapter(): Adapter {
     updateUser: async ({ id, ...data }) => {
       const payload = await getPayloadInstance(config);
 
-      console.log(data);
-
       const updatedUser = await payload.update({
         collection: "users",
         id: Number(id),
         data: {
           email: data.email,
           name: data.name,
-          emailVerified: data.emailVerified ? data.emailVerified.toISOString() : null,
           image: data.image,
           password: data.password || undefined,
         },
@@ -91,6 +88,15 @@ export function PayloadAuthAdapter(): Adapter {
 
     linkAccount: async (account) => {
       const payload = await getPayloadInstance(config);
+
+      await payload.update({
+        collection: "users",
+        id: Number(account.userId),
+        data: {
+          _verified: true,
+        },
+      });
+
       const createdAccount = await payload.create({
         collection: "accounts",
         data: {

@@ -3,6 +3,7 @@
 import { useForm } from "@tanstack/react-form";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import { LuGithub } from "react-icons/lu";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -129,7 +130,7 @@ export function SignInForm(props: React.ComponentProps<"div">) {
               </Button>
             </Field>
 
-            {/* <Field>
+            <Field>
               <Button
                 variant="outline"
                 type="button"
@@ -140,7 +141,7 @@ export function SignInForm(props: React.ComponentProps<"div">) {
                 <LuGithub className="mr-2 h-4 w-4" />
                 {t("auth-button-continue-github")}
               </Button>
-            </Field> */}
+            </Field>
           </FieldGroup>
         </form>
       </CardContent>
