@@ -51,18 +51,8 @@ export function ResetPasswordForm({ ...props }: React.ComponentProps<typeof Card
               token: searchParams.get("token") ?? "",
             },
           })
-          .then((r) => {
-            if ("errors" in r) {
-              const errs = r.errors as {
-                message: string;
-              }[];
-              throw new Error(errs.map((e) => e.message).join(", "));
-            }
-
+          .then(() => {
             router.push("/auth/sign-in");
-          })
-          .catch((err) => {
-            throw new Error(err.message || "Password reset failed");
           }),
         {
           loading: t("auth-toast-resetting-password"),

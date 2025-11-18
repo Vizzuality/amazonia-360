@@ -24,21 +24,13 @@ export default function SaveReport() {
 
   const handleSave = useCallback(() => {
     toast.promise(
-      saveMutation
-        .mutateAsync({
-          id: Number(id),
-          title: title || "Untitled Report",
-          topics: topics || [],
-          location: location,
-          locale,
-        })
-        .then((r) => {
-          if (!r) throw new Error("Failed to save report");
-          return r;
-        })
-        .catch((e) => {
-          throw new Error(e.message);
-        }),
+      saveMutation.mutateAsync({
+        id: Number(id),
+        title: title || "Untitled Report",
+        topics: topics || [],
+        location: location,
+        locale,
+      }),
       {
         loading: "Saving report...",
         success: "Report saved successfully!",

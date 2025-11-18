@@ -56,23 +56,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         // You can add your own logic here to validate the credentials
-        const res = await sdk.login({
-          collection: "users",
-          data: {
-            email: (credentials?.email as string) || "",
-            password: (credentials?.password as string) || "",
-          },
-        });
-
-        if (res.user) {
-          return {
+        return sdk
+          .login({
+            collection: "users",
+            data: {
+              email: (credentials?.email as string) || "",
+              password: (credentials?.password as string) || "",
+            },
+          })
+          .then((res) => ({
             ...res.user,
             id: String(res.user.id),
             collection: "users",
-          };
-        } else {
-          throw new InvalidLoginError();
-        }
+          }))
+          .catch(() => {
+            console.log("Invalid login attempt");
+            throw new InvalidLoginError();
+          });
       },
     }),
     Credentials({
@@ -81,31 +81,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       credentials: {},
       async authorize() {
         // For anonymous users, we just create a new anonymous user on each sign-in
-        const res = await sdk.create(
-          {
-            collection: "anonymous-users",
-            data: {
-              apiKey: crypto.randomUUID(),
-              enableAPIKey: true,
+        return sdk
+          .create(
+            {
+              collection: "anonymous-users",
+              data: {
+                apiKey: crypto.randomUUID(),
+                enableAPIKey: true,
+              },
             },
-          },
-          {
-            headers: {
-              "x-app-key": env.APP_KEY || "",
+            {
+              headers: {
+                "x-app-key": env.APP_KEY || "",
+              },
             },
-          },
-        );
-
-        if (res) {
-          return {
+          )
+          .then((res) => ({
             ...res,
             id: String(res.id),
             apiKey: res.apiKey,
             collection: "anonymous-users",
-          };
-        } else {
-          throw new InvalidLoginError();
-        }
+          }));
       },
     }),
     Github({
