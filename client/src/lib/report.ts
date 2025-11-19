@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { Locale } from "next-intl";
 
 import { IndicatorView, Location, TopicView } from "@/app/(frontend)/parsers";
@@ -65,7 +65,7 @@ export const reportQueryOptions = (params: { id: number }) => ({
 });
 
 export const useReport = (params: { id: number }) => {
-  return useQuery(reportQueryOptions(params));
+  return useSuspenseQuery(reportQueryOptions(params));
 };
 
 export type ReportDataBase = {

@@ -21,4 +21,8 @@ export const WebshotWidgetDefaultSizes: Record<VisualizationTypes, { w: number; 
     w: 4,
     h: 4,
   },
+  custom: {
+    w: 4,
+    h: 4,
+  },
 };

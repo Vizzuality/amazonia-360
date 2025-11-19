@@ -426,7 +426,7 @@ export const useResourceImageryLegendId = <
  */
 export type QueryFeatureIdParams = {
   id: Indicator["id"];
-  type: VisualizationTypes;
+  type: Exclude<VisualizationTypes, "ai" | "custom">;
   resource: ResourceFeature;
   geometry: __esri.Polygon | null;
 };

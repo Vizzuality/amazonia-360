@@ -2,9 +2,15 @@
 
 import { useRef, useState } from "react";
 
+import { useParams } from "next/navigation";
+
+import { useHydrateAtoms } from "jotai/utils";
 import { useTranslations } from "next-intl";
 
+import { useReport } from "@/lib/report";
 import { cn } from "@/lib/utils";
+
+import { locationAtom, titleAtom, topicsViewAtom } from "@/app/(frontend)/store";
 
 import { LoadProvider } from "@/containers/indicators/load-provider";
 import PrintButton from "@/containers/webshot/pdf-report/button";
@@ -15,6 +21,16 @@ import PdfTopics from "@/containers/webshot/pdf-report/topics";
 
 export const Pdf = () => {
   const t = useTranslations();
+
+  const { id: reportId } = useParams();
+  const { data: reportData } = useReport({ id: Number(reportId) });
+
+  console.log("reportData", reportData);
+
+  // Use separate calls to avoid type conflicts between different atom types
+  useHydrateAtoms(new Map([[topicsViewAtom, reportData?.topics]]));
+  useHydrateAtoms(new Map([[titleAtom, reportData?.title]]));
+  useHydrateAtoms(new Map([[locationAtom, reportData?.location]]));
 
   const ref = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);

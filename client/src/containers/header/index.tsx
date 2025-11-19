@@ -2,6 +2,9 @@
 
 import { useEffect, useMemo } from "react";
 
+import { Params } from "next/dist/server/request/params";
+import { useParams } from "next/navigation";
+
 import { Separator } from "@radix-ui/react-select";
 import { useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
@@ -24,12 +27,13 @@ import Logo from "./logo";
 import MobileNavigation from "./mobile-navigation";
 import ReportResultsHeaderDesktop from "./results/desktop";
 
-function getRoutes(pathname: string) {
+function getRoutes(pathname: string, params: Params) {
+  const { id } = params;
   const r = pathname.match(/^(?:\/[a-z]{2})?\/report(?:\/(grid|indicators))?\/?$/);
-  // I want to know if I'm in home page /, /report or /report/results
+  // I want to know if I'm in home page /, /report or /report/[id]]
   const isHome = pathname === "/";
   const isReport = pathname.startsWith("/report");
-  const isReportResults = pathname.includes("/report/results");
+  const isReportResults = !!id;
 
   return {
     isHome,
@@ -41,6 +45,7 @@ function getRoutes(pathname: string) {
 }
 
 export default function Header() {
+  const params = useParams();
   const pathname = usePathname();
 
   const t = useTranslations();
@@ -51,7 +56,7 @@ export default function Header() {
   const { setOpen } = useSidebar();
 
   const DYNAMIC_HEADER = useMemo(() => {
-    const { isHome, isReportSub, isReportResults } = getRoutes(pathname);
+    const { isHome, isReportSub, isReportResults } = getRoutes(pathname, params);
 
     return (
       <>
@@ -68,12 +73,12 @@ export default function Header() {
         {(isReportResults || isReportSub) && <Separator className="h-4 w-px bg-border" />}
       </>
     );
-  }, [pathname, location, t]);
+  }, [pathname, params, location, t]);
 
   useEffect(() => {
     // Hide sidebar when navigating away from report
     // Remove edit mode
-    if (!pathname.includes("/report/results")) {
+    if (!pathname.includes("/report/[id]")) {
       setOpen(false);
       setEditionMode(false);
     }

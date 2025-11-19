@@ -94,7 +94,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
         const report = await generateReport(values);
 
         if (report) {
-          return router.push(`/report/results/${report.id}`);
+          return router.push(`/report/${report.id}`);
         }
       }
     }
@@ -102,7 +102,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
     const report = await generateReport(values);
 
     if (report) {
-      return router.push(`/report/results/${report.id}`);
+      return router.push(`/report/${report.id}`);
     }
   }
 
