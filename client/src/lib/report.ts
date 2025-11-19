@@ -1,5 +1,5 @@
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
-import { Locale } from "next-intl";
+import { Locale, useLocale } from "next-intl";
 
 import { IndicatorView, Location, TopicView } from "@/app/(frontend)/parsers";
 
@@ -55,17 +55,19 @@ export const parseTopicViews = (topics: TopicView[]): Report["topics"] => {
   }));
 };
 
-export const reportQueryOptions = (params: { id: number }) => ({
+export const reportQueryOptions = (params: { id: number; locale: Locale }) => ({
   queryFn: () =>
     sdk.findByID({
       collection: "reports",
       id: params.id,
+      locale: params.locale,
     }),
-  queryKey: ["report", params.id] as const,
+  queryKey: ["report", params.id, params.locale] as const,
 });
 
 export const useReport = (params: { id: number }) => {
-  return useSuspenseQuery(reportQueryOptions(params));
+  const locale = useLocale();
+  return useSuspenseQuery(reportQueryOptions({ ...params, locale }));
 };
 
 export type ReportDataBase = {

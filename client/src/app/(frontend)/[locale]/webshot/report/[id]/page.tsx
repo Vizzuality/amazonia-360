@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getPayload } from "payload";
 
 import { QueryClient } from "@tanstack/react-query";
+import { Locale } from "next-intl";
 
 import { reportQueryOptions } from "@/lib/report";
 
@@ -20,7 +21,7 @@ export default async function WebshotReport({
 }: PageProps<"/[locale]/webshot/report/[id]">) {
   const queryClient = new QueryClient();
 
-  const { id } = await params;
+  const { id, locale } = await params;
 
   const payload = await getPayload({ config });
   try {
@@ -32,7 +33,7 @@ export default async function WebshotReport({
     notFound();
   }
 
-  await queryClient.prefetchQuery(reportQueryOptions({ id: Number(id) }));
+  await queryClient.prefetchQuery(reportQueryOptions({ id: Number(id), locale: locale as Locale }));
 
   return (
     <>
