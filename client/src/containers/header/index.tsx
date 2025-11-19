@@ -78,11 +78,11 @@ export default function Header() {
   useEffect(() => {
     // Hide sidebar when navigating away from report
     // Remove edit mode
-    if (!pathname.includes("/report/[id]")) {
+    if (!pathname.includes(`/report/${params.id}`)) {
       setOpen(false);
       setEditionMode(false);
     }
-  }, [pathname, setOpen, setEditionMode]);
+  }, [params.id, pathname, setOpen, setEditionMode]);
 
   return (
     <header
