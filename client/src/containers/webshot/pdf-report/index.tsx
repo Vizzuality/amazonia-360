@@ -25,8 +25,6 @@ export const Pdf = () => {
   const { id: reportId } = useParams();
   const { data: reportData } = useReport({ id: Number(reportId) });
 
-  console.log("reportData", reportData);
-
   // Use separate calls to avoid type conflicts between different atom types
   useHydrateAtoms(new Map([[topicsViewAtom, reportData?.topics]]));
   useHydrateAtoms(new Map([[titleAtom, reportData?.title]]));
