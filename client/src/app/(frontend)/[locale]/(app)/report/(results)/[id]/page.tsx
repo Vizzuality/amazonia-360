@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function ReportResultsPage({ params }: PageProps<"/[locale]/report/[id]">) {
   const queryClient = new QueryClient();
 
-  const { id } = await params;
+  const { id, locale } = await params;
 
   const payload = await getPayload({ config });
   try {
@@ -43,7 +43,7 @@ export default async function ReportResultsPage({ params }: PageProps<"/[locale]
     notFound();
   }
 
-  await queryClient.prefetchQuery(reportQueryOptions({ id: Number(id) }));
+  await queryClient.prefetchQuery(reportQueryOptions({ id: Number(id), locale: locale as Locale }));
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

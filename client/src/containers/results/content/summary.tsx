@@ -27,6 +27,8 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
     return topics?.find((t) => t.topic_id === topic?.id);
   }, [topic, topics]);
 
+  console.log(TOPIC);
+
   const handleEditorChange = useCallback(
     (markdown: string) => {
       if (!topic) return;
