@@ -4,7 +4,7 @@ import { IndicatorView } from "@/app/(frontend)/parsers";
 
 import { LegendItemProps } from "@/components/map/legend/item";
 
-export type VisualizationTypes = "map" | "table" | "chart" | "numeric" | "ai";
+export type VisualizationTypes = "map" | "table" | "chart" | "numeric" | "ai" | "custom";
 
 export type ResourceFeature = {
   name: string;

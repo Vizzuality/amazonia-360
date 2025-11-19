@@ -33,17 +33,21 @@ export default function PdfTopicSection({ topicView }: PdfTopicSectionProps) {
     chart: { x: 4, y: 2, className: "col-span-4 row-span-1" },
     numeric: { x: 1, y: 2, className: "col-span-2 row-span-1" },
     ai: { x: 2, y: 4, className: "col-span-2 row-span-4" },
+    custom: { x: 2, y: 4, className: "col-span-2 row-span-4" },
   };
 
-  const indicatorsByType: Record<VisualizationTypes, typeof indicators> = indicators.reduce(
-    (acc, indicator) => {
+  const indicatorsByType = indicators.reduce(
+    (
+      acc: Partial<Record<VisualizationTypes, typeof indicators>>,
+      indicator: (typeof indicators)[number],
+    ) => {
       if (!acc[indicator.type]) {
         acc[indicator.type] = [];
       }
-      acc[indicator.type].push(indicator);
+      acc[indicator.type]!.push(indicator);
       return acc;
     },
-    {} as Record<VisualizationTypes, typeof indicators>,
+    {} as Partial<Record<VisualizationTypes, typeof indicators>>,
   );
 
   return (

@@ -21,7 +21,7 @@ export function VisualizationType({
   indicatorId,
   topicId,
 }: {
-  types: Exclude<VisualizationTypes, "ai">[];
+  types: Exclude<VisualizationTypes, "ai" | "custom">[];
   indicatorId: Indicator["id"];
   topicId: Topic["id"];
 }) {
@@ -48,11 +48,7 @@ export function VisualizationType({
 
       const newTopics = [...prev];
 
-      console.log("Adding visualization", { newTopics, visualizationType, indicatorId, topicId });
-
       const i = newTopics.findIndex((topic) => topic.topic_id === topicId);
-
-      console.log("Found topic index:", i);
 
       if (i === -1) {
         newTopics.push({
@@ -70,8 +66,6 @@ export function VisualizationType({
       newIndicator.x = position.x;
       newIndicator.y = position.y;
       indicators.push(newIndicator);
-
-      console.log("Updated indicators:", indicators);
 
       newTopics[i] = {
         ...newTopics[i],

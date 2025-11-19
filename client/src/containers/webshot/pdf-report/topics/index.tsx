@@ -16,17 +16,19 @@ export default function PdfTopics() {
   const locale = useLocale();
 
   const [topics] = useSyncTopics();
+
   const { data: allTopics } = useGetTopics(locale);
 
   const selectedTopics = useMemo(
-    () => allTopics?.filter((topic) => topics?.find((t) => t.id === topic.id)),
+    () => allTopics?.filter((topic) => topics?.find((t) => t.topic_id === topic.id)),
     [allTopics, topics],
   );
 
   return (
     <>
       {selectedTopics?.map((topic) => {
-        const topicView = topics?.find((t) => t.id === topic.id);
+        const topicView = topics?.find((t) => t.topic_id === topic.id);
+
         if (!topic) return null;
 
         return (
