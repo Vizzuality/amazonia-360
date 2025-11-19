@@ -70,7 +70,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             collection: "users",
           }))
           .catch(() => {
-            console.log("Invalid login attempt");
             throw new InvalidLoginError();
           });
       },
