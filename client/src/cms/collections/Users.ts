@@ -25,8 +25,6 @@ export const Users: CollectionConfig = {
         // Use the token provided to verify your user's email address
         const verifyEmailURL = `${env.NEXT_PUBLIC_URL}/auth/verify-email?token=${params.token}`;
 
-        console.log("Verify email URL:", verifyEmailURL);
-
         return `
           <!doctype html>
         <html lang="en">
@@ -56,8 +54,6 @@ export const Users: CollectionConfig = {
       generateEmailHTML: async (params) => {
         // Use the token provided to allow your user to reset their password
         const resetPasswordURL = `${env.NEXT_PUBLIC_URL}/auth/reset-password?token=${params?.token}`;
-
-        console.log("Reset password URL:", resetPasswordURL);
 
         return `
           <!doctype html>
