@@ -11,6 +11,9 @@ import { or } from "@/cms/utils/or";
 
 export const Reports: CollectionConfig = {
   slug: "reports",
+  admin: {
+    defaultColumns: ["id", "title", "user", "_status"],
+  },
   access: {
     read: anyoneAccess,
     create: anyoneAccess,
@@ -37,11 +40,13 @@ export const Reports: CollectionConfig = {
         readOnly: true,
       },
     },
-
     LocationField,
     TopicsField,
   ],
   hooks: {
     beforeChange: [beforeChangeLinkUser],
+  },
+  versions: {
+    drafts: true,
   },
 };
