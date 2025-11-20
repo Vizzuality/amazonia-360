@@ -10,9 +10,10 @@ import { useSetAtom } from "jotai";
 import { signIn, useSession } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
+import { toast } from "sonner";
 import { z } from "zod";
 
-import { parseTopicViews } from "@/lib/report";
+import { useSaveReport } from "@/lib/report";
 import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
@@ -25,8 +26,6 @@ import { Form } from "@/components/ui/form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Link, useRouter } from "@/i18n/navigation";
-
-import { sdk } from "@/services/sdk";
 
 export type TopicsFormValues = {
   id: number;
@@ -58,7 +57,9 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
     },
   });
 
-  async function generateReport(values: z.infer<typeof formSchema>) {
+  const saveMutation = useSaveReport();
+
+  function generateReportData(values: z.infer<typeof formSchema>) {
     const topics = values.topics
       ?.map((t) => ({
         id: `${t.id}-${crypto.randomUUID()}`,
@@ -75,35 +76,40 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
       }))
       .filter((t) => t.indicators && t.indicators.length > 0);
 
-    if (location) {
-      return sdk.create({
-        collection: "reports",
-        data: {
-          location,
-          topics: parseTopicViews(topics) ?? [],
-        },
-      });
-    }
+    return {
+      title: null,
+      description: null,
+      topics: topics || [],
+      location: location,
+      locale,
+    };
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    const data = generateReportData(values);
+
     if (!session) {
       const res = await signIn("anonymous-users", { redirect: false });
 
-      if (res.ok) {
-        const report = await generateReport(values);
-
-        if (report) {
-          return router.push(`/report/${report.id}`);
-        }
+      if (!res.ok) {
+        toast.error("Failed to sign in anonymously");
+        // throw new Error("Failed to sign in anonymously");
+        return;
       }
     }
 
-    const report = await generateReport(values);
-
-    if (report) {
-      return router.push(`/report/${report.id}`);
-    }
+    toast.promise(
+      saveMutation.mutateAsync(data, {
+        onSuccess: (report) => {
+          router.push(`/report/${report.id}`);
+        },
+      }),
+      {
+        loading: "Creating report...",
+        success: "Report created successfully!",
+        error: "Failed to create the report.",
+      },
+    );
   }
 
   const HEADER = {
