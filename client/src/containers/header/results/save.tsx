@@ -2,6 +2,7 @@ import { useCallback } from "react";
 
 import { useParams } from "next/navigation";
 
+import { useSession } from "next-auth/react";
 import { useLocale } from "next-intl";
 import { LuFileText } from "react-icons/lu";
 import { toast } from "sonner";
@@ -15,6 +16,8 @@ import { Button } from "@/components/ui/button";
 export default function SaveReport() {
   const locale = useLocale();
   const { id } = useParams();
+
+  const { data: session } = useSession();
 
   const [title] = useSyncTitle();
   const [topics] = useSyncTopics();
@@ -30,6 +33,7 @@ export default function SaveReport() {
         topics: topics || [],
         location: location,
         locale,
+        status: session?.user.collection === "users" ? "published" : "draft",
       }),
       {
         loading: "Saving report...",
@@ -37,7 +41,7 @@ export default function SaveReport() {
         error: "Failed to save the report.",
       },
     );
-  }, [id, title, topics, location, locale, saveMutation]);
+  }, [id, title, topics, location, locale, session, saveMutation]);
 
   return (
     <Button onClick={handleSave} className="space-x-2">

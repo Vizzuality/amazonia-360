@@ -3,6 +3,7 @@ import { Locale, useLocale } from "next-intl";
 
 import { IndicatorView, Location, TopicView } from "@/app/(frontend)/parsers";
 
+import { routing } from "@/i18n/routing";
 import { Report } from "@/payload-types";
 
 import { sdk } from "@/services/sdk";
@@ -75,17 +76,32 @@ export type ReportDataBase = {
   topics: TopicView[];
   location: Location | null;
   locale: Locale;
+  status?: "published" | "draft";
 };
 
 export type SaveReport = ReportDataBase & {
-  id: number;
+  id?: number;
 };
 
 export const useSaveReport = () => {
   return useMutation({
     mutationFn: (data: SaveReport) => {
-      if (!data.id || !data.location) {
-        return Promise.reject(new Error("Report ID and location are required to save the report."));
+      if (!data.location) {
+        return Promise.reject(new Error("Location is required to save the report."));
+      }
+
+      if (!data.id) {
+        return sdk.create({
+          collection: "reports",
+          data: {
+            title: data.title,
+            location: data.location,
+            topics: parseTopicViews(data.topics),
+            _status: "draft",
+          },
+          locale: routing.defaultLocale, // Save in default locale so every locale can access the same report
+          // TODO: Consider saving in the current locale instead and handle localization of reports properly
+        });
       }
 
       return sdk.update({
@@ -95,8 +111,10 @@ export const useSaveReport = () => {
           title: data.title,
           location: data.location,
           topics: parseTopicViews(data.topics),
+          _status: data.status,
         },
-        locale: data.locale,
+        locale: routing.defaultLocale, // Save in default locale so every locale can access the same report
+        // TODO: Consider saving in the current locale instead and handle localization of reports properly
       });
     },
   });
@@ -116,7 +134,8 @@ export const useDuplicateReport = () => {
           location: data.location,
           topics: parseTopicViews(data.topics),
         },
-        locale: data.locale,
+        locale: routing.defaultLocale, // Save in default locale so every locale can access the same report
+        // TODO: Consider saving in the current locale instead and handle localization of reports properly
       });
     },
   });
