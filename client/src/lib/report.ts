@@ -47,11 +47,11 @@ export const findFirstAvailablePosition = (
 export const parseTopicViews = (topics: TopicView[]): Report["topics"] => {
   return topics.map((topic) => ({
     ...topic,
-    id: `${topic.id}`,
+    id: `${topic.topic_id}-${crypto.randomUUID()}`,
     indicators:
       topic.indicators?.map((indicator) => ({
         ...indicator,
-        id: `${indicator.id}`,
+        id: `${indicator.indicator_id}-${crypto.randomUUID()}`,
       })) ?? [],
   }));
 };

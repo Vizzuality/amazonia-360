@@ -69,7 +69,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
           ?.default_visualization.map((indicator) => {
             return {
               ...indicator,
-              id: `${indicator.id}-${indicator.type}-${crypto.randomUUID()}`,
+              id: `${indicator.id}-${crypto.randomUUID()}`,
               indicator_id: Number(indicator.id),
             };
           }),
