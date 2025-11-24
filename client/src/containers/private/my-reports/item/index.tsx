@@ -39,7 +39,7 @@ export const MyReportsItem = ({ report }: MyReportsItemProps) => {
   };
 
   return (
-    <Card className="group flex flex-col overflow-hidden">
+    <Card className="group flex flex-col overflow-hidden shadow-none">
       {/* Map Preview */}
       <div className="flex grow flex-col space-y-3 p-6">
         {/* Header */}

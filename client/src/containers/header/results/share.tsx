@@ -2,12 +2,12 @@
 
 import { useCallback, useMemo, useState } from "react";
 
-import { useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { Share2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { LuCopy } from "react-icons/lu";
 
 import { Button } from "@/components/ui/button";
@@ -20,21 +20,21 @@ import {
 } from "@/components/ui/dialog";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-import { usePathname } from "@/i18n/navigation";
-
 export default function ShareReport() {
   const t = useTranslations();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const locale = useLocale();
+
+  const { id } = useParams();
 
   const [shareLinkBtnText, setShareLinkBtnText] = useState<"copy" | "copied">("copy");
 
   const URL = useMemo(() => {
     if (typeof window !== "undefined") {
-      return window.location.href;
+      const baseUrl = window.location.origin;
+      return `${baseUrl}/${locale}/report/${id}`;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, searchParams]);
+    return "";
+  }, [id, locale]);
 
   const copyShareLink = useCallback(() => {
     if (!URL) return;
