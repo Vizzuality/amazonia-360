@@ -52,7 +52,9 @@ export const MyReportsItem = ({ report }: MyReportsItemProps) => {
             </div>
 
             {report.description && (
-              <p className="line-clamp-3 text-sm text-muted-foreground">{report.description}</p>
+              <p className="line-clamp-3 text-sm font-medium text-muted-foreground">
+                {report.description}
+              </p>
             )}
           </div>
 
