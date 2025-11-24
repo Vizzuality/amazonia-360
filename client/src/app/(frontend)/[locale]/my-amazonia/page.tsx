@@ -1,12 +1,10 @@
-// import { ChangePasswordForm } from "@/containers/my-amazonia/change-password";
+import { MyReports } from "@/containers/my-amazonia/my-reports";
 
-export default async function MyAmazoniaPage() {
+export default async function MyReportsPage() {
   return (
     <main className="relative top-16 flex min-h-[calc(100svh_-_theme(space.40)_+_1px)] flex-col">
       <div className="container space-y-5">
-        <h1 className="mb-8 mt-4 text-3xl font-semibold">My Amazonia</h1>
-
-        <div className="max-w-md">{/* <ChangePasswordForm /> */}</div>
+        <MyReports />
       </div>
     </main>
   );
