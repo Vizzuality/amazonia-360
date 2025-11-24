@@ -9,12 +9,9 @@ import { Card } from "@/components/ui/card";
 
 import { Report } from "@/payload-types";
 
-const ReportMapPreview = dynamic(
-  () => import("@/containers/my-amazonia/my-reports/item/map-preview"),
-  {
-    ssr: false,
-  },
-);
+const ReportMapPreview = dynamic(() => import("@/containers/private/my-reports/item/map-preview"), {
+  ssr: false,
+});
 
 interface MyReportsItemProps {
   report: Report;

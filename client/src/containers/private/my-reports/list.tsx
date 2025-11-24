@@ -1,5 +1,5 @@
-import { MyReportsItem } from "@/containers/my-amazonia/my-reports/item";
-import { MyReportsItemSkeleton } from "@/containers/my-amazonia/my-reports/item/skeleton";
+import { MyReportsItem } from "@/containers/private/my-reports/item";
+import { MyReportsItemSkeleton } from "@/containers/private/my-reports/item/skeleton";
 
 import { Report } from "@/payload-types";
 

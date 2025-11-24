@@ -1,4 +1,4 @@
-import { MyReports } from "@/containers/my-amazonia/my-reports";
+import { MyReports } from "@/containers/private/my-reports";
 
 export default async function MyReportsPage() {
   return (

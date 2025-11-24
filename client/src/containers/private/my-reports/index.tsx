@@ -1,10 +1,10 @@
 "use client";
 
-import { MyReportsFooter } from "@/containers/my-amazonia/my-reports/footer";
-import { MyReportsHeader } from "@/containers/my-amazonia/my-reports/header";
-import { useMyReports } from "@/containers/my-amazonia/my-reports/hooks";
-import { MyReportsList } from "@/containers/my-amazonia/my-reports/list";
-import { MyReportsSearch } from "@/containers/my-amazonia/my-reports/search";
+import { MyReportsFooter } from "@/containers/private/my-reports/footer";
+import { MyReportsHeader } from "@/containers/private/my-reports/header";
+import { useMyReports } from "@/containers/private/my-reports/hooks";
+import { MyReportsList } from "@/containers/private/my-reports/list";
+import { MyReportsSearch } from "@/containers/private/my-reports/search";
 
 export const MyReports = () => {
   const {

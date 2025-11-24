@@ -1,4 +1,4 @@
-// import { ChangePasswordForm } from "@/containers/my-amazonia/change-password";
+// import { ChangePasswordForm } from "@/containers/my-reports/change-password";
 
 export default async function MyProfilePage() {
   return (

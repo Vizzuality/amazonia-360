@@ -2,6 +2,7 @@
 
 import { signOut, useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import { LuFilePlus2, LuFiles, LuLogOut, LuSettings2 } from "react-icons/lu";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -49,13 +50,49 @@ const AuthHeader = () => {
             </Avatar>
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48">
+        <DropdownMenuContent align="end">
+          {/* Header */}
+          <header className="flex items-center">
+            <Avatar>
+              {session.user?.image && (
+                <AvatarImage src={session.user.image} alt={session.user?.name || "User avatar"} />
+              )}
+              <AvatarFallback>{userInitials}</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="px-2 pt-2 text-sm font-semibold text-foreground">
+                {session.user?.name}
+              </p>
+              <p className="px-2 pb-2 text-2xs text-muted-foreground">{session.user?.email}</p>
+            </div>
+          </header>
+
+          <DropdownMenuSeparator />
+
           <DropdownMenuItem asChild>
-            <Link href="/my-amazonia" className="flex cursor-pointer items-center">
-              {t("auth-my-amazonia")}
+            <Link href="/private/my-reports" className="flex cursor-pointer items-center">
+              <LuFiles className="mr-2 h-4 w-4" />
+              {t("auth-my-reports")}
             </Link>
           </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/report" className="flex cursor-pointer items-center">
+              <LuFilePlus2 className="mr-2 h-4 w-4" />
+              {t("new-report")}
+            </Link>
+          </DropdownMenuItem>
+
           <DropdownMenuSeparator />
+
+          <DropdownMenuItem asChild>
+            <Link href="/private/profile" className="flex cursor-pointer items-center">
+              <LuSettings2 className="mr-2 h-4 w-4" />
+              Profile settings
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuSeparator />
+
           <DropdownMenuItem
             onClick={() => {
               signOut({
@@ -65,6 +102,7 @@ const AuthHeader = () => {
             }}
             className="cursor-pointer"
           >
+            <LuLogOut className="mr-2 h-4 w-4" />
             {t("auth-logout")}
           </DropdownMenuItem>
         </DropdownMenuContent>

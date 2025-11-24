@@ -26,8 +26,8 @@ export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Pr
   const t = await getTranslations({ locale });
 
   return {
-    title: t("metadata-my-amazonia-layout-title"),
-    description: t("metadata-my-amazonia-layout-description"),
+    title: t("metadata-my-reports-layout-title"),
+    description: t("metadata-my-reports-layout-description"),
     icons: {
       icon: [
         { url: "/favicon.ico", type: "image/x-icon" },
@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Pr
 export default async function PrivateLayout({
   children,
   params,
-}: LayoutProps<"/[locale]/my-amazonia">) {
+}: LayoutProps<"/[locale]/private">) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     notFound();
