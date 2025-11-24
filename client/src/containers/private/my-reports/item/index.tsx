@@ -9,6 +9,8 @@ import { Card } from "@/components/ui/card";
 
 import { Report } from "@/payload-types";
 
+import { ReportActions } from "./actions";
+
 const ReportMapPreview = dynamic(() => import("@/containers/private/my-reports/item/map-preview"), {
   ssr: false,
 });
@@ -39,22 +41,26 @@ export const MyReportsItem = ({ report }: MyReportsItemProps) => {
   return (
     <Card className="group flex flex-col overflow-hidden">
       {/* Map Preview */}
-      <div className="flex grow flex-col p-6">
+      <div className="flex grow flex-col space-y-3 p-6">
         {/* Header */}
-        <div className="mb-4 space-y-3">
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="line-clamp-2 text-lg font-semibold text-foreground">
-              {report.title || "Untitled Report"}
-            </h3>
+        <header className="flex justify-between gap-2">
+          <div className="space-y-2">
+            <div className="flex items-start justify-between gap-2">
+              <h3 className="line-clamp-2 text-lg font-medium text-foreground">
+                {report.title || "Untitled Report"}
+              </h3>
+            </div>
+
+            {report.description && (
+              <p className="line-clamp-3 text-sm text-muted-foreground">{report.description}</p>
+            )}
           </div>
 
-          {report.description && (
-            <p className="line-clamp-3 text-sm text-muted-foreground">{report.description}</p>
-          )}
-        </div>
+          <ReportActions report={report} />
+        </header>
 
         {/* Metadata */}
-        <div className="mb-4 space-y-2">
+        <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <LuMapPin className="h-4 w-4 shrink-0" />
             <span className="line-clamp-1">{getLocationLabel(report.location)}</span>
