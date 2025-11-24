@@ -38,7 +38,7 @@ export const useMyReports = () => {
               : []),
           ],
         },
-        sort: "-createdAt",
+        sort: "-updatedAt",
       });
 
       return result;
