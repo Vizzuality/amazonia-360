@@ -67,6 +67,7 @@ export const RenameAction = ({ report }: ReportActionsProps) => {
           e.preventDefault();
           setOpen(true);
         }}
+        className="cursor-pointer"
       >
         <LuTextCursorInput className="mr-2 h-4 w-4" />
         <span>Rename</span>

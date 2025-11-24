@@ -16,7 +16,7 @@ export const MyReportsSearch = ({ search, onSearchChange }: MyReportsSearchProps
         placeholder="Search reports..."
         value={search}
         onChange={(e) => onSearchChange(e.target.value)}
-        className="pl-10"
+        className="w-full bg-white pl-10"
       />
     </div>
   );

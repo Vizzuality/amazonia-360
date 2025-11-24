@@ -55,7 +55,7 @@ export const DuplicateAction = ({ report }: ReportActionsProps) => {
   };
 
   return (
-    <DropdownMenuItem onClick={handleDuplicate}>
+    <DropdownMenuItem onClick={handleDuplicate} className="cursor-pointer">
       <LuCopy className="mr-2 h-4 w-4" />
       <span>Duplicate</span>
     </DropdownMenuItem>
