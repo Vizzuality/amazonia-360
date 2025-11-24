@@ -72,8 +72,10 @@ export const MyReportsItem = ({ report }: MyReportsItemProps) => {
           </div>
         </div>
 
-        <div className="relative h-48 w-full overflow-hidden rounded-sm bg-muted">
-          <ReportMapPreview {...report} />
+        <div className="relative flex min-h-[12rem] w-full grow flex-col overflow-hidden rounded-sm bg-muted">
+          <div className="grow">
+            <ReportMapPreview {...report} />
+          </div>
         </div>
       </div>
     </Card>

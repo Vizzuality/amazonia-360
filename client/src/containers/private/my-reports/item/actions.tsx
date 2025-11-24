@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "next-intl";
 import {
   LuEye,
   LuCopy,
@@ -9,6 +10,11 @@ import {
   LuTrash,
   LuEllipsisVertical,
 } from "react-icons/lu";
+import { toast } from "sonner";
+
+import { useDuplicateReport, useDeleteReport } from "@/lib/report";
+
+import { TopicView } from "@/app/(frontend)/parsers";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +25,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown";
 
-import { Link } from "@/i18n/navigation";
 import { Report } from "@/payload-types";
 
 interface ReportActionsProps {
@@ -27,24 +32,32 @@ interface ReportActionsProps {
 }
 
 export const ReportActions = ({ report }: ReportActionsProps) => {
-  const handleView = () => {
-    // TODO: Implement view report logic
-    console.log("View report:", report.id);
-  };
+  const locale = useLocale();
+  const duplicateMutation = useDuplicateReport();
+  const deleteMutation = useDeleteReport();
 
   const handleDuplicate = () => {
-    // TODO: Implement duplicate logic
-    console.log("Duplicate report:", report.id);
+    if (!report.location) return;
+
+    const data = {
+      title: report.title ? `${report.title} (Copy)` : null,
+      description: report.description || null,
+      topics: report.topics as TopicView[],
+      location: report.location,
+      locale,
+      status: report._status,
+    };
+
+    toast.promise(duplicateMutation.mutateAsync(data), {
+      loading: "Duplicating report...",
+      success: "Report duplicated successfully!",
+      error: "Failed to duplicate the report.",
+    });
   };
 
   const handleShare = () => {
     // TODO: Implement share logic
     console.log("Share report:", report.id);
-  };
-
-  const handleDownload = () => {
-    // TODO: Implement download logic
-    console.log("Download report:", report.id);
   };
 
   const handleRename = () => {
@@ -53,8 +66,11 @@ export const ReportActions = ({ report }: ReportActionsProps) => {
   };
 
   const handleDelete = () => {
-    // TODO: Implement delete logic
-    console.log("Delete report:", report.id);
+    toast.promise(deleteMutation.mutateAsync(report.id), {
+      loading: "Deleting report...",
+      success: "Report deleted successfully!",
+      error: "Failed to delete the report.",
+    });
   };
 
   return (
@@ -66,11 +82,16 @@ export const ReportActions = ({ report }: ReportActionsProps) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuItem onClick={handleView} asChild>
-          <Link href={`/report/${report.id}`} className="flex cursor-pointer items-center">
+        <DropdownMenuItem asChild>
+          <a
+            href={`/report/${report.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex cursor-pointer items-center"
+          >
             <LuEye className="mr-2 h-4 w-4" />
             <span>View report</span>
-          </Link>
+          </a>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleDuplicate}>
           <LuCopy className="mr-2 h-4 w-4" />
@@ -83,9 +104,16 @@ export const ReportActions = ({ report }: ReportActionsProps) => {
           <LuShare2 className="mr-2 h-4 w-4" />
           <span>Share</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDownload}>
-          <LuDownload className="mr-2 h-4 w-4" />
-          <span>Download</span>
+        <DropdownMenuItem asChild>
+          <a
+            href={`/webshot/report/${report.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex cursor-pointer items-center"
+          >
+            <LuDownload className="mr-2 h-4 w-4" />
+            <span>Download</span>
+          </a>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
