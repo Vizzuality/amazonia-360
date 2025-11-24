@@ -1,13 +1,20 @@
 "use client";
 
-import { useLocale } from "next-intl";
-import { LuCalendar, LuMapPin, LuFileText } from "react-icons/lu";
+import dynamic from "next/dynamic";
 
-import { Button } from "@/components/ui/button";
+import { useLocale } from "next-intl";
+import { LuCalendar, LuMapPin } from "react-icons/lu";
+
 import { Card } from "@/components/ui/card";
 
-import { Link } from "@/i18n/navigation";
 import { Report } from "@/payload-types";
+
+const ReportMapPreview = dynamic(
+  () => import("@/containers/my-amazonia/my-reports/item/map-preview"),
+  {
+    ssr: false,
+  },
+);
 
 interface MyReportsItemProps {
   report: Report;
@@ -33,7 +40,8 @@ export const MyReportsItem = ({ report }: MyReportsItemProps) => {
   };
 
   return (
-    <Card className="group flex flex-col overflow-hidden transition-shadow hover:shadow-lg">
+    <Card className="group flex flex-col overflow-hidden">
+      {/* Map Preview */}
       <div className="flex grow flex-col p-6">
         {/* Header */}
         <div className="mb-4 space-y-3">
@@ -41,7 +49,6 @@ export const MyReportsItem = ({ report }: MyReportsItemProps) => {
             <h3 className="line-clamp-2 text-lg font-semibold text-foreground">
               {report.title || "Untitled Report"}
             </h3>
-            <LuFileText className="h-5 w-5 shrink-0 text-muted-foreground" />
           </div>
 
           {report.description && (
@@ -60,21 +67,10 @@ export const MyReportsItem = ({ report }: MyReportsItemProps) => {
             <LuCalendar className="h-4 w-4 shrink-0" />
             <span>{formatDate(report.createdAt)}</span>
           </div>
-
-          {report.topics && report.topics.length > 0 && (
-            <div className="text-sm text-muted-foreground">
-              {report.topics.length} {report.topics.length === 1 ? "topic" : "topics"}
-            </div>
-          )}
         </div>
 
-        {/* Actions */}
-        <div className="mt-auto pt-4">
-          <Link href={`/report/${report.id}`}>
-            <Button className="w-full" variant="default">
-              View Report
-            </Button>
-          </Link>
+        <div className="relative h-48 w-full overflow-hidden rounded-sm bg-muted">
+          <ReportMapPreview {...report} />
         </div>
       </div>
     </Card>

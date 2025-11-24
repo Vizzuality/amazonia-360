@@ -45,8 +45,8 @@ export default function Map(mapProps: MapProps) {
     (layerViews: LayerView[]) => {
       if (mapProps.onLoad) {
         mapProps.onLoad(layerViews);
-        setLoaded(true);
       }
+      setLoaded(true);
     },
     [mapProps],
   );
