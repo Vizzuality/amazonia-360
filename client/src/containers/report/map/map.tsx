@@ -5,8 +5,8 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import dynamic from "next/dynamic";
 
 import { useAtom, useSetAtom } from "jotai";
-import { useDebounce } from "rooks";
 
+import { useDebounce } from "@/lib/hooks";
 import { getGeometryWithBuffer } from "@/lib/location";
 
 import {

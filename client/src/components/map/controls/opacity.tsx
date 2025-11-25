@@ -3,8 +3,8 @@ import { useState } from "react";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { LucideBlend } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useDebounce } from "rooks";
 
+import { useDebounce } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";

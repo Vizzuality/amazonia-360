@@ -7,8 +7,8 @@ import dynamic from "next/dynamic";
 import { DeckLayer } from "@deck.gl/arcgis";
 import { H3HexagonLayer } from "@deck.gl/geo-layers";
 import { polygonToCells } from "h3-js";
-import { useDebounce } from "rooks";
 
+import { useDebounce } from "@/lib/hooks";
 import { useLocationGeometry } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/(frontend)/store";

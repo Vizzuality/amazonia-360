@@ -7,9 +7,9 @@ import ReactMarkdown from "react-markdown";
 import { geodesicArea } from "@arcgis/core/geometry/geometryEngine";
 import { useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
-import { useDebounce } from "rooks";
 
 import { formatNumber } from "@/lib/formats";
+import { useDebounce } from "@/lib/hooks";
 import {
   getGeometryWithBuffer,
   useLocation,
