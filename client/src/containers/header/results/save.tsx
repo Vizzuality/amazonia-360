@@ -31,6 +31,7 @@ export default function SaveReport() {
       saveMutation.mutateAsync({
         id: Number(id),
         title: title || t("selected-area"),
+        description: null,
         topics: topics || [],
         location: location,
         locale,
