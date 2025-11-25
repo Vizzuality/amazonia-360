@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import { useLocale } from "next-intl";
 
 import { sdk } from "@/services/sdk";
@@ -8,13 +9,14 @@ import { sdk } from "@/services/sdk";
 const ITEMS_PER_PAGE = 6;
 
 export const useMyReports = () => {
+  const { data: session } = useSession();
   const locale = useLocale();
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("-createdAt");
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["my-reports", page, search, sort, locale],
+    queryKey: ["my-reports", page, search, sort, locale, session?.user?.id],
     queryFn: async () => {
       const result = await sdk.find({
         collection: "reports",
@@ -22,22 +24,17 @@ export const useMyReports = () => {
         limit: ITEMS_PER_PAGE,
         page,
         where: {
-          and: [
-            {
-              _status: {
-                equals: "published",
-              },
+          "user.value": {
+            equals: session?.user?.id,
+          },
+          _status: {
+            equals: "published",
+          },
+          ...(search && {
+            title: {
+              contains: search,
             },
-            ...(search
-              ? [
-                  {
-                    title: {
-                      contains: search,
-                    },
-                  },
-                ]
-              : []),
-          ],
+          }),
         },
         sort,
       });
