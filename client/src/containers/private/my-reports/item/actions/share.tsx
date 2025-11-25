@@ -2,13 +2,8 @@
 
 import { useCallback, useMemo, useState } from "react";
 
-import { useParams } from "next/navigation";
-
-import { DialogTitle } from "@radix-ui/react-dialog";
-import { TooltipPortal } from "@radix-ui/react-tooltip";
-import { Share2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { LuCopy } from "react-icons/lu";
+import { LuCopy, LuShare2 } from "react-icons/lu";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,25 +11,25 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogTrigger,
+  DialogTitle,
 } from "@/components/ui/dialog";
-import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { DropdownMenuItem } from "@/components/ui/dropdown";
 
-export default function ShareReport() {
+import type { ReportActionsProps } from "./types";
+
+export const ShareAction = ({ report }: ReportActionsProps) => {
   const t = useTranslations();
   const locale = useLocale();
-
-  const { id } = useParams();
-
+  const [open, setOpen] = useState(false);
   const [shareLinkBtnText, setShareLinkBtnText] = useState<"copy" | "copied">("copy");
 
   const URL = useMemo(() => {
     if (typeof window !== "undefined") {
       const baseUrl = window.location.origin;
-      return `${baseUrl}/${locale}/report/${id}`;
+      return `${baseUrl}/${locale}/report/${report.id}`;
     }
     return "";
-  }, [id, locale]);
+  }, [report.id, locale]);
 
   const copyShareLink = useCallback(() => {
     if (!URL) return;
@@ -47,30 +42,32 @@ export default function ShareReport() {
           setShareLinkBtnText("copy");
         }, 1000);
       })
-      .catch((err: ErrorEvent) => {
-        console.info(err.message);
+      .catch((err: Error) => {
+        console.error("Failed to copy:", err.message);
       });
   }, [URL]);
 
   return (
-    <Dialog>
-      <Tooltip>
-        <DialogTrigger asChild>
-          <TooltipTrigger asChild>
-            <Button variant="outline" className="space-x-2 border-none px-2.5 py-2 shadow-none">
-              <Share2 className="h-5 w-5" />
-            </Button>
-          </TooltipTrigger>
-        </DialogTrigger>
+    <>
+      <DropdownMenuItem
+        onClick={(e) => {
+          e.preventDefault();
+          setOpen(true);
+        }}
+        className="cursor-pointer"
+      >
+        <LuShare2 className="mr-2 h-4 w-4" />
+        <span>Share</span>
+      </DropdownMenuItem>
 
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="w-full">
           <DialogTitle className="sr-only">{t("report-results-copy-title")}</DialogTitle>
           <DialogDescription className="sr-only">
             {t("report-results-copy-description")}
           </DialogDescription>
           <div className="mb-6 flex max-w-fit flex-col space-y-2">
-            <h3 className="text-lg font-bold text-foreground"> {t("report-results-copy-title")}</h3>
-
+            <h3 className="text-lg font-bold text-foreground">{t("report-results-copy-title")}</h3>
             <p className="text-base font-medium text-muted-foreground">
               {t("report-results-copy-description")}
             </p>
@@ -81,20 +78,12 @@ export default function ShareReport() {
             </div>
             <Button className="h-10 w-40 gap-2" onClick={copyShareLink}>
               <LuCopy className="h-4 w-4" />
-
               <span>{t(`${shareLinkBtnText}`)}</span>
             </Button>
           </div>
           <DialogClose />
         </DialogContent>
-
-        <TooltipPortal>
-          <TooltipContent side="bottom">
-            <span>{t("share")}</span>
-            <TooltipArrow />
-          </TooltipContent>
-        </TooltipPortal>
-      </Tooltip>
-    </Dialog>
+      </Dialog>
+    </>
   );
-}
+};

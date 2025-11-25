@@ -45,8 +45,8 @@ export default function Map(mapProps: MapProps) {
     (layerViews: LayerView[]) => {
       if (mapProps.onLoad) {
         mapProps.onLoad(layerViews);
-        setLoaded(true);
       }
+      setLoaded(true);
     },
     [mapProps],
   );
@@ -81,19 +81,6 @@ export function MapView({
   const [mounted, setMounted] = useState(false);
 
   const { onMapMount, onMapUnmount } = useContext(MapContext);
-
-  useEffect(() => {
-    return () => {
-      if (mapViewRef.current && isPdf) {
-        mapViewRef.current.destroy();
-        mapViewRef.current = null;
-      }
-      if (mapRef.current && isPdf) {
-        mapRef.current.destroy();
-        mapRef.current = null;
-      }
-    };
-  }, [isPdf]);
 
   useEffect(() => {
     if (mapContainerRef.current) {

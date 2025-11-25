@@ -1,4 +1,4 @@
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { Locale, useLocale } from "next-intl";
 
 import { IndicatorView, Location, TopicView } from "@/app/(frontend)/parsers";
@@ -73,10 +73,11 @@ export const useReport = (params: { id: number }) => {
 
 export type ReportDataBase = {
   title: string | null;
+  description: string | null;
   topics: TopicView[];
   location: Location | null;
   locale: Locale;
-  status?: "published" | "draft";
+  status?: "published" | "draft" | null;
 };
 
 export type SaveReport = ReportDataBase & {
@@ -84,6 +85,8 @@ export type SaveReport = ReportDataBase & {
 };
 
 export const useSaveReport = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (data: SaveReport) => {
       if (!data.location) {
@@ -95,6 +98,7 @@ export const useSaveReport = () => {
           collection: "reports",
           data: {
             title: data.title,
+            description: data.description,
             location: data.location,
             topics: parseTopicViews(data.topics),
             _status: "draft",
@@ -109,6 +113,7 @@ export const useSaveReport = () => {
         id: data.id,
         data: {
           title: data.title,
+          description: data.description,
           location: data.location,
           topics: parseTopicViews(data.topics),
           _status: data.status,
@@ -117,10 +122,15 @@ export const useSaveReport = () => {
         // TODO: Consider saving in the current locale instead and handle localization of reports properly
       });
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-reports"] });
+    },
   });
 };
 
 export const useDuplicateReport = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (data: ReportDataBase) => {
       if (!data.location) {
@@ -131,12 +141,37 @@ export const useDuplicateReport = () => {
         collection: "reports",
         data: {
           title: data.title,
+          description: data.description,
           location: data.location,
           topics: parseTopicViews(data.topics),
+          _status: data.status,
         },
         locale: routing.defaultLocale, // Save in default locale so every locale can access the same report
         // TODO: Consider saving in the current locale instead and handle localization of reports properly
       });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-reports"] });
+    },
+  });
+};
+
+export const useDeleteReport = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: Report["id"]) => {
+      if (!id) {
+        return Promise.reject(new Error("ID is required to delete the report."));
+      }
+
+      return sdk.delete({
+        collection: "reports",
+        id,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-reports"] });
     },
   });
 };
