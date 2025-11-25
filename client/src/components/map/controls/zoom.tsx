@@ -6,8 +6,8 @@ import ZoomVM from "@arcgis/core/widgets/Zoom/ZoomViewModel";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useTranslations } from "next-intl";
 import { LuMinus, LuPlus } from "react-icons/lu";
-import { useDebounce } from "rooks";
 
+import { useDebounce } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 
 import { useMap } from "@/components/map/provider";

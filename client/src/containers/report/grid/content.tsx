@@ -7,8 +7,8 @@ import { useSearchParams } from "next/navigation";
 import { useAtom, useAtomValue } from "jotai";
 import { useLocale, useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
-import { usePreviousDifferent } from "rooks";
 
+import { usePreviousDifferent } from "@/lib/hooks";
 import { useGetH3Indicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 

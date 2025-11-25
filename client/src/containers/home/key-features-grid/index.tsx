@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import Image from "next/image";
 
-import { useIntervalWhen } from "rooks";
+import { useInterval } from "usehooks-ts";
 
 import { cn } from "@/lib/utils";
 
@@ -13,13 +13,9 @@ import CardsContainer from "@/containers/home/key-features-grid/cards-container"
 export default function KeyFeaturesGrid() {
   const [img, setImg] = useState(0);
 
-  useIntervalWhen(
-    () => {
-      setImg((prev) => (prev + 1) % 2);
-    },
-    4000,
-    true,
-  );
+  useInterval(() => {
+    setImg((prev) => (prev + 1) % 2);
+  }, 4000);
 
   return (
     <section className="flex bg-blue-50">
