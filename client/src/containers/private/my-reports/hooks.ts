@@ -10,10 +10,11 @@ const ITEMS_PER_PAGE = 6;
 export const useMyReports = () => {
   const locale = useLocale();
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("-createdAt");
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["my-reports", page, search, locale],
+    queryKey: ["my-reports", page, search, sort, locale],
     queryFn: async () => {
       const result = await sdk.find({
         collection: "reports",
@@ -38,7 +39,7 @@ export const useMyReports = () => {
               : []),
           ],
         },
-        sort: "-updatedAt",
+        sort,
       });
 
       return result;
@@ -57,6 +58,8 @@ export const useMyReports = () => {
     isError,
     search,
     setSearch,
+    sort,
+    setSort,
     page,
     setPage,
     totalPages,

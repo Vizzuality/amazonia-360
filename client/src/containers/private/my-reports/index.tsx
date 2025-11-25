@@ -1,10 +1,10 @@
 "use client";
 
+import { MyReportsFilters } from "@/containers/private/my-reports/filters";
 import { MyReportsFooter } from "@/containers/private/my-reports/footer";
 import { MyReportsHeader } from "@/containers/private/my-reports/header";
 import { useMyReports } from "@/containers/private/my-reports/hooks";
 import { MyReportsList } from "@/containers/private/my-reports/list";
-import { MyReportsSearch } from "@/containers/private/my-reports/search";
 
 export const MyReports = () => {
   const {
@@ -12,6 +12,8 @@ export const MyReports = () => {
     isLoading,
     search,
     setSearch,
+    sort,
+    setSort,
     page,
     setPage,
     totalPages,
@@ -24,7 +26,12 @@ export const MyReports = () => {
     <div className="space-y-6">
       <MyReportsHeader />
 
-      <MyReportsSearch search={search} onSearchChange={setSearch} />
+      <MyReportsFilters
+        search={search}
+        onSearchChange={setSearch}
+        sort={sort}
+        onSortChange={setSort}
+      />
 
       <MyReportsList data={data} isLoading={isLoading} />
 
