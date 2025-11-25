@@ -7,9 +7,9 @@ import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useAtom, useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
 import { LuPen, LuTrash2 } from "react-icons/lu";
-import { useDebounce } from "rooks";
 
 import { formatNumber } from "@/lib/formats";
+import { useDebounce } from "@/lib/hooks";
 import {
   getGeometryWithBuffer,
   useLocation,

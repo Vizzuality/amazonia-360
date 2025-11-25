@@ -24,6 +24,9 @@ export const useMyReports = () => {
         limit: ITEMS_PER_PAGE,
         page,
         where: {
+          "user.relationTo": {
+            equals: "users",
+          },
           "user.value": {
             equals: session?.user?.id,
           },
