@@ -298,8 +298,8 @@
   "metadata-hub-page-description": "Em breve...",
   "metadata-home-page-title": "AmazoniaForever360+",
   "metadata-home-page-description": "Em breve...",
-  "metadata-my-amazonia-layout-title": "Minha área",
-  "metadata-my-amazonia-layout-description": "Descrição da minha área",
+  "metadata-my-reports-layout-title": "Minha área",
+  "metadata-my-reports-layout-description": "Descrição da minha área",
   "metadata-signin-page-title": "Iniciar sessão",
   "metadata-signin-page-description": "Inicie sessão na sua conta",
   "metadata-signup-page-title": "Registar-se",
@@ -348,6 +348,6 @@
   "indicator-webshot-success": "PNG exportado com sucesso para {name}",
   "auth-sign-in": "Entrar",
   "auth-sign-up": "Registrar-se",
-  "auth-my-amazonia": "Minha Área",
+  "auth-my-reports": "Meus Relatórios",
   "auth-logout": "Sair"
 }

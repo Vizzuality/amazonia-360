@@ -1,0 +1,25 @@
+import { LuSearch } from "react-icons/lu";
+import { useDebounceCallback } from "usehooks-ts";
+
+import { Input } from "@/components/ui/input";
+
+interface MyReportsSearchProps {
+  search: string;
+  onSearchChange: (value: string) => void;
+}
+
+export const MyReportsSearch = ({ onSearchChange }: MyReportsSearchProps) => {
+  const debouncedOnSearchChange = useDebounceCallback(onSearchChange, 300);
+
+  return (
+    <div className="relative w-full grow">
+      <LuSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      <Input
+        type="text"
+        placeholder="Search reports..."
+        onChange={(e) => debouncedOnSearchChange(e.target.value)}
+        className="w-full bg-white pl-10"
+      />
+    </div>
+  );
+};
