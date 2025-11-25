@@ -171,7 +171,7 @@ export function MapView({
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, onMapMount, onMapUnmount]);
+  }, [id, onMapMount, onMapUnmount, onMapMove]);
 
   useEffect(() => {
     ArcGISReactiveUtils.whenOnce(() => !mapViewRef.current?.updating && loaded && isPdf).then(
