@@ -16,6 +16,8 @@ import { ReportResults } from "@/containers/results";
 
 import config from "@/payload.config";
 
+export const dynamic = "force-dynamic";
+
 type Params = Promise<{ locale: Locale }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
