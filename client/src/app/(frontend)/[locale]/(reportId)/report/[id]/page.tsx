@@ -18,15 +18,16 @@ import config from "@/payload.config";
 
 export const dynamic = "force-dynamic";
 
-type Params = Promise<{ locale: Locale }>;
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/report/[id]">): Promise<Metadata> {
+  const { id, locale } = await params;
 
-export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const { locale } = await params;
-  const t = await getTranslations({ locale });
+  const t = await getTranslations({ locale: locale as Locale });
 
   return {
-    title: t("metadata-report-results-page-title"),
-    description: t("metadata-report-results-page-description"),
+    title: `${t("metadata-report-page-title")} - ${id}`,
+    description: t("metadata-report-page-description"),
   };
 }
 

@@ -5,11 +5,11 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import ReportIndicators from "@/containers/report/indicators";
 
-type Params = Promise<{ locale: Locale }>;
-
-export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/report/indicators">): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale });
+  const t = await getTranslations({ locale: locale as Locale });
 
   return {
     title: t("metadata-report-page-title"),
@@ -17,11 +17,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   };
 }
 
-export default async function ReportPage({ params }: { params: Params }) {
+export default async function ReportPage({ params }: PageProps<"/[locale]/report/indicators">) {
   const { locale } = await params;
 
   // Enable static rendering
-  setRequestLocale(locale);
-
+  setRequestLocale(locale as Locale);
   return <ReportIndicators />;
 }
