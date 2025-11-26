@@ -43,6 +43,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
   const { data: session } = useSession();
 
   const [location] = useSyncLocation();
+
   const searchParams = useSearchParams();
   const setReportPanel = useSetAtom(reportPanelAtom);
 

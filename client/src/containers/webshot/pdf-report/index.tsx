@@ -1,17 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { useParams } from "next/navigation";
 
-import { useSetAtom } from "jotai";
 import { useHydrateAtoms } from "jotai/utils";
 import { useTranslations } from "next-intl";
 
 import { useReport } from "@/lib/report";
 import { cn } from "@/lib/utils";
 
-import { TopicView } from "@/app/(frontend)/parsers";
 import { locationAtom, titleAtom, topicsViewAtom } from "@/app/(frontend)/store";
 
 import { LoadProvider } from "@/containers/indicators/load-provider";
@@ -28,22 +26,9 @@ export const Pdf = () => {
   const { data: reportData } = useReport({ id: Number(reportId) });
 
   // Hydrate atoms on initial mount
-  useHydrateAtoms(new Map([[topicsViewAtom, reportData?.topics]]));
   useHydrateAtoms(new Map([[titleAtom, reportData?.title]]));
   useHydrateAtoms(new Map([[locationAtom, reportData?.location]]));
-
-  // Update atoms when report data changes (for client-side navigation)
-  const setTopicsView = useSetAtom(topicsViewAtom);
-  const setTitle = useSetAtom(titleAtom);
-  const setLocation = useSetAtom(locationAtom);
-
-  useEffect(() => {
-    if (reportData) {
-      setTopicsView(reportData.topics as TopicView[]);
-      setTitle(reportData.title);
-      setLocation(reportData.location);
-    }
-  }, [reportData, setTopicsView, setTitle, setLocation]);
+  useHydrateAtoms(new Map([[topicsViewAtom, reportData?.topics]]));
 
   const ref = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);

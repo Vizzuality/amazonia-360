@@ -27,8 +27,6 @@ export default function PdfTopics() {
   return (
     <>
       {selectedTopics?.map((topic) => {
-        const topicView = topics?.find((t) => t.topic_id === topic.id);
-
         if (!topic) return null;
 
         return (
@@ -37,7 +35,7 @@ export default function PdfTopics() {
               <PdfTopicCover {...topic} />
             </PdfContainer>
 
-            <PdfTopicSection {...topic} topicView={topicView} />
+            <PdfTopicSection {...topic} />
           </Fragment>
         );
       })}
