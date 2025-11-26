@@ -1,7 +1,6 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Provider as JotaiProvider } from "jotai";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { Locale } from "next-intl";
@@ -68,9 +67,7 @@ export default function LayoutProviders({
             }}
           >
             <ArcGISProvider locale={locale}>
-              <TooltipProvider>
-                <JotaiProvider>{children}</JotaiProvider>
-              </TooltipProvider>
+              <TooltipProvider>{children}</TooltipProvider>
             </ArcGISProvider>
           </NuqsAdapter>
         </QueryClientProvider>

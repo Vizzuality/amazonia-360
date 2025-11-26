@@ -1,15 +1,14 @@
 "use client";
 
-import { VisualizationTypes } from "@/types/indicator";
+import { useMemo } from "react";
 
-import { TopicView } from "@/app/(frontend)/parsers";
+import { VisualizationTypes } from "@/types/indicator";
+import { Topic } from "@/types/topic";
+
+import { useSyncTopics } from "@/app/(frontend)/store";
 
 import ReportResultsIndicator from "@/containers/results/content/indicators/card";
 import PdfContainer from "@/containers/webshot/pdf-report/container";
-
-interface PdfTopicSectionProps {
-  topicView?: TopicView;
-}
 
 function chunkArray<T>(arr: T[], size: number): T[][] {
   const result: T[][] = [];
@@ -19,8 +18,12 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
   return result;
 }
 
-export default function PdfTopicSection({ topicView }: PdfTopicSectionProps) {
-  const indicators = topicView?.indicators;
+export default function PdfTopicSection(topic: Topic) {
+  const [topics] = useSyncTopics();
+
+  const TOPIC = useMemo(() => topics?.find((t) => t.topic_id === topic.id), [topic.id, topics]);
+
+  const indicators = TOPIC?.indicators;
 
   if (!indicators) return null;
 
