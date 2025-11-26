@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Toaster } from "sonner";
 
 import { auth } from "@/lib/auth";
 
@@ -74,6 +75,8 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[lo
     <LayoutProviders locale={locale} session={session}>
       <html lang={locale}>
         <RootHead />
+        <Toaster position="top-center" richColors />
+
         <body className={`${montserrat.className} w-full overflow-x-hidden`}>
           <SidebarProvider>
             <NextIntlClientProvider locale={locale}>{children}</NextIntlClientProvider>

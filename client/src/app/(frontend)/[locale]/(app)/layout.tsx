@@ -4,13 +4,12 @@ import { Metadata } from "next";
 
 import { notFound } from "next/navigation";
 
+import { Provider as JotaiProvider } from "jotai";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import Header from "@/containers/header";
 import ThirdParty from "@/containers/third-party";
-
-import { Toaster } from "@/components/ui/sonner";
 
 import { routing } from "@/i18n/routing";
 
@@ -57,14 +56,12 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
   setRequestLocale(locale);
 
   return (
-    <>
-      <Toaster position="top-center" richColors />
-
+    <JotaiProvider>
       <Suspense fallback={null}>
         <Header />
         {children}
         <ThirdParty />
       </Suspense>
-    </>
+    </JotaiProvider>
   );
 }

@@ -15,7 +15,7 @@ export default function PdfTopicCover(topic: Topic) {
 
   const [topics] = useSyncTopics();
 
-  const TOPIC = useMemo(() => topics?.find((t) => t.id === topic.id), [topic.id, topics]);
+  const TOPIC = useMemo(() => topics?.find((t) => t.topic_id === topic.id), [topic.id, topics]);
 
   return (
     <div className="flex w-full grow flex-col overflow-hidden">
