@@ -75,9 +75,9 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[lo
     <LayoutProviders locale={locale} session={session}>
       <html lang={locale}>
         <RootHead />
-        <Toaster position="top-center" richColors />
 
         <body className={`${montserrat.className} w-full overflow-x-hidden`}>
+          <Toaster position="top-center" richColors />
           <SidebarProvider>
             <NextIntlClientProvider locale={locale}>{children}</NextIntlClientProvider>
           </SidebarProvider>
