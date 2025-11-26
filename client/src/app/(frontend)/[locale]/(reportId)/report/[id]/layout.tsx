@@ -6,15 +6,9 @@ import Header from "@/containers/header";
 import FeedbackButton from "@/containers/report/feedback";
 import ThirdParty from "@/containers/third-party";
 
-import { routing } from "@/i18n/routing";
-
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({
-    locale,
-  }));
-}
-
-export default async function ReportLayout({ children }: LayoutProps<"/[locale]/report/[id]">) {
+export default async function ReportLayoutReportId({
+  children,
+}: LayoutProps<"/[locale]/report/[id]">) {
   return (
     <JotaiProvider>
       <Suspense fallback={null}>
