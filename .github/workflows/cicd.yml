@@ -53,7 +53,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.TF_PIPELINE_USER_ACCESS_KEY_ID }}
+          aws-access-key-id: ${{ vars.TF_PIPELINE_USER_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.TF_PIPELINE_USER_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.TF_AWS_REGION }}
 
@@ -75,8 +75,8 @@ jobs:
           file: ./api/Dockerfile
           push: true
           tags: |
-            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.TF_API_REPOSITORY_NAME }}:${{ github.sha }}
-            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.TF_API_REPOSITORY_NAME }}:${{ needs.set_environment.outputs.env_name }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ vars.TF_API_REPOSITORY_NAME }}:${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ vars.TF_API_REPOSITORY_NAME }}:${{ needs.set_environment.outputs.env_name }}
 
   build_client:
     name: build-client
@@ -91,7 +91,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.TF_PIPELINE_USER_ACCESS_KEY_ID }}
+          aws-access-key-id: ${{ vars.TF_PIPELINE_USER_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.TF_PIPELINE_USER_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.TF_AWS_REGION }}
 
@@ -131,8 +131,8 @@ jobs:
           file: ./client/Dockerfile
           push: true
           tags: |
-            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.TF_CLIENT_REPOSITORY_NAME }}:${{ github.sha }}
-            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.TF_CLIENT_REPOSITORY_NAME }}:${{ needs.set_environment.outputs.env_name }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ vars.TF_CLIENT_REPOSITORY_NAME }}:${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ vars.TF_CLIENT_REPOSITORY_NAME }}:${{ needs.set_environment.outputs.env_name }}
 
   build_webshot:
     name: build-webshot
@@ -147,7 +147,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.TF_PIPELINE_USER_ACCESS_KEY_ID }}
+          aws-access-key-id: ${{ vars.TF_PIPELINE_USER_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.TF_PIPELINE_USER_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.TF_AWS_REGION }}
 
@@ -177,8 +177,8 @@ jobs:
           file: ./webshot/Dockerfile
           push: true
           tags: |
-            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.TF_WEBSHOT_REPOSITORY_NAME }}:${{ github.sha }}
-            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.TF_WEBSHOT_REPOSITORY_NAME }}:${{ needs.set_environment.outputs.env_name }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ vars.TF_WEBSHOT_REPOSITORY_NAME }}:${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ vars.TF_WEBSHOT_REPOSITORY_NAME }}:${{ needs.set_environment.outputs.env_name }}
 
   deploy:
     name: deploy
@@ -193,7 +193,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.TF_PIPELINE_USER_ACCESS_KEY_ID }}
+          aws-access-key-id: ${{ vars.TF_PIPELINE_USER_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.TF_PIPELINE_USER_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.TF_AWS_REGION }}
 
@@ -240,9 +240,9 @@ jobs:
         working-directory: infrastructure/source_bundle
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY_API: ${{ secrets.TF_API_REPOSITORY_NAME }}
-          ECR_REPOSITORY_CLIENT: ${{ secrets.TF_CLIENT_REPOSITORY_NAME }}
-          ECR_REPOSITORY_WEBSHOT: ${{ secrets.TF_WEBSHOT_REPOSITORY_NAME }}
+          ECR_REPOSITORY_API: ${{ vars.TF_API_REPOSITORY_NAME }}
+          ECR_REPOSITORY_CLIENT: ${{ vars.TF_CLIENT_REPOSITORY_NAME }}
+          ECR_REPOSITORY_WEBSHOT: ${{ vars.TF_WEBSHOT_REPOSITORY_NAME }}
           IMAGE_TAG: ${{ needs.set_environment.outputs.env_name }}
           AWS_DEFAULT_REGION: ${{ vars.TF_AWS_REGION }}
 
@@ -251,7 +251,7 @@ jobs:
           OPENAI_TOKEN: ${{ secrets.TF_API_OPENAI_TOKEN }}
 
           AWS_SES_REGION: ${{ vars.TF_AWS_SES_REGION }}
-          AWS_SES_IAM_USER_ACCESS_KEY_ID: ${{ secrets.TF_AWS_SES_IAM_USER_ACCESS_KEY_ID }}
+          AWS_SES_IAM_USER_ACCESS_KEY_ID: ${{ vars.TF_AWS_SES_IAM_USER_ACCESS_KEY_ID }}
           AWS_SES_IAM_USER_SECRET_ACCESS_KEY: ${{ secrets.TF_AWS_SES_IAM_USER_SECRET_ACCESS_KEY }}
         run: |
           cat <<EOF >> docker-compose.yml
@@ -320,7 +320,7 @@ jobs:
       - name: Deploy to Amazon EB
         uses: einaregilsson/beanstalk-deploy@v21
         with:
-          aws_access_key: ${{ secrets.TF_PIPELINE_USER_ACCESS_KEY_ID }}
+          aws_access_key: ${{ vars.TF_PIPELINE_USER_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.TF_PIPELINE_USER_SECRET_ACCESS_KEY }}
           application_name: ${{ vars.TF_PROJECT_NAME }}-${{ needs.set_environment.outputs.env_name }}
           environment_name: ${{ vars.TF_PROJECT_NAME }}-${{ needs.set_environment.outputs.env_name }}-environment
