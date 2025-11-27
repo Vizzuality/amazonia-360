@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { LuFilePlus2, LuFiles, LuLogOut, LuSettings2 } from "react-icons/lu";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -111,8 +112,8 @@ const AuthHeader = () => {
   }
 
   return (
-    <Link href="/auth/sign-in" className="text-sm text-foreground hover:text-cyan-500">
-      {t("auth-sign-in")}
+    <Link href="/auth/sign-in">
+      <Button variant="outline">{t("auth-sign-in")}</Button>
     </Link>
   );
 };

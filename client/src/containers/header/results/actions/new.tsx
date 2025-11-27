@@ -40,7 +40,7 @@ export const NewReportAction = () => {
         }}
         className="cursor-pointer"
       >
-        <PlusCircle className="mr-2 h-4 w-4" />
+        <PlusCircle className="mr-2 h-4 w-4 shrink-0" />
         <span>{t("report-results-buttons-new-report")}</span>
       </DropdownMenuItem>
 
