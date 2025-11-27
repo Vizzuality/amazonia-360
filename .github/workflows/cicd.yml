@@ -213,8 +213,8 @@ jobs:
       - name: Promote grid data to s3 of next environment
         shell: bash
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.TF_PIPELINE_USER_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_PIPELINE_USER_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ vars.TF_S3_SYNCS_USER_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_S3_SYNCS_USER_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ vars.TF_AWS_REGION }}
         # DEBT: Bucket names are hardcoded
         run: |
