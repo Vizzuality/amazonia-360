@@ -56,7 +56,7 @@ export const ShareAction = ({ reportId }: ReportResultsActionsProps) => {
         }}
         className="cursor-pointer"
       >
-        <LuShare2 className="mr-2 h-4 w-4" />
+        <LuShare2 className="mr-2 h-4 w-4 shrink-0" />
         <span>{t("share")}</span>
       </DropdownMenuItem>
 

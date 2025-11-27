@@ -1,4 +1,7 @@
+import { useMemo } from "react";
+
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import { Locale, useLocale } from "next-intl";
 
 import { IndicatorView, Location, TopicView } from "@/app/(frontend)/parsers";
@@ -86,6 +89,7 @@ export type SaveReport = ReportDataBase & {
 
 export const useSaveReport = () => {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: (data: SaveReport) => {
@@ -101,7 +105,7 @@ export const useSaveReport = () => {
             description: data.description,
             location: data.location,
             topics: parseTopicViews(data.topics),
-            _status: "draft",
+            _status: session?.user.collection === "users" ? "published" : "draft",
           },
           locale: routing.defaultLocale, // Save in default locale so every locale can access the same report
           // TODO: Consider saving in the current locale instead and handle localization of reports properly
@@ -130,6 +134,7 @@ export const useSaveReport = () => {
 
 export const useDuplicateReport = () => {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: (data: ReportDataBase) => {
@@ -144,7 +149,7 @@ export const useDuplicateReport = () => {
           description: data.description,
           location: data.location,
           topics: parseTopicViews(data.topics),
-          _status: data.status,
+          _status: session?.user.collection === "users" ? data.status : "draft",
         },
         locale: routing.defaultLocale, // Save in default locale so every locale can access the same report
         // TODO: Consider saving in the current locale instead and handle localization of reports properly
@@ -174,4 +179,21 @@ export const useDeleteReport = () => {
       queryClient.invalidateQueries({ queryKey: ["my-reports"] });
     },
   });
+};
+
+export const useCanEditReport = (reportId?: string | null) => {
+  const { data: session } = useSession();
+  const { data: reportData } = useReport({ id: Number(reportId) });
+
+  const REPORT_USER_ID = useMemo(() => {
+    if (!reportData || !reportData.user?.value) return null;
+
+    const v = reportData.user.value;
+    if (typeof v !== "number") return v.id;
+    return v;
+  }, [reportData]);
+
+  if (!reportId) return false;
+
+  return String(REPORT_USER_ID) === session?.user.id;
 };
