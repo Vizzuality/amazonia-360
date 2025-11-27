@@ -1,8 +1,6 @@
-/ deck.gl
+// deck.gl
 // SPDX-License-Identifier: MIT
 // Copyright (c) vis.gl contributors
-
-/* eslint-disable no-invalid-this */
 
 import { Deck } from "@deck.gl/core";
 import type { Device, Texture, Framebuffer } from "@luma.gl/core";
