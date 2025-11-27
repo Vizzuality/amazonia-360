@@ -26,7 +26,7 @@ export const ShareAction = ({ reportId }: ReportResultsActionsProps) => {
   const URL = useMemo(() => {
     if (typeof window !== "undefined") {
       const baseUrl = window.location.origin;
-      return `${baseUrl}/${locale}/report/${reportId}`;
+      return `${baseUrl}/${locale}/reports/${reportId}`;
     }
     return "";
   }, [reportId, locale]);

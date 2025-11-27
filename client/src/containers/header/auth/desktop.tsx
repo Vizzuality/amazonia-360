@@ -77,7 +77,7 @@ const AuthHeader = () => {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/report" className="flex cursor-pointer items-center">
+            <Link href="/reports" className="flex cursor-pointer items-center">
               <LuFilePlus2 className="mr-2 h-4 w-4" />
               {t("new-report")}
             </Link>

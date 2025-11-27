@@ -3,11 +3,11 @@ import { Metadata } from "next";
 import { Locale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import ReportGrid from "@/containers/report/grid";
+import ReportIndicators from "@/containers/report/indicators";
 
 export async function generateMetadata({
   params,
-}: PageProps<"/[locale]/report/grid">): Promise<Metadata> {
+}: PageProps<"/[locale]/reports/indicators">): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale: locale as Locale });
 
@@ -17,10 +17,10 @@ export async function generateMetadata({
   };
 }
 
-export default async function ReportPage({ params }: PageProps<"/[locale]/report/grid">) {
+export default async function ReportPage({ params }: PageProps<"/[locale]/reports/indicators">) {
   const { locale } = await params;
 
   // Enable static rendering
   setRequestLocale(locale as Locale);
-  return <ReportGrid />;
+  return <ReportIndicators />;
 }

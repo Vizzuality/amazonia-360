@@ -31,7 +31,7 @@ export default function ShareReport() {
   const URL = useMemo(() => {
     if (typeof window !== "undefined") {
       const baseUrl = window.location.origin;
-      return `${baseUrl}/${locale}/report/${id}`;
+      return `${baseUrl}/${locale}/reports/${id}`;
     }
     return "";
   }, [id, locale]);
