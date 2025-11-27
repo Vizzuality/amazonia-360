@@ -67,7 +67,7 @@ export default function SaveReport() {
         {
           onSuccess: (data) => {
             // Redirect to the new duplicated report
-            router.push(`/report/${data.id}`);
+            router.push(`/reports/${data.id}`);
           },
         },
       ),

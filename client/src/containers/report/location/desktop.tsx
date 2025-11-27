@@ -75,7 +75,7 @@ export default function ReportLocationDesktop() {
 
               return (
                 <Link
-                  href={`/report/${card.id}${searchParams ? `?${searchParams.toString()}` : ""}`}
+                  href={`/reports/${card.id}${searchParams ? `?${searchParams.toString()}` : ""}`}
                   key={card.id}
                   className="group pointer-events-auto flex rounded-lg border border-border bg-white p-4 text-left transition-colors duration-300 hover:border-cyan-500"
                 >

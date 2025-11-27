@@ -13,7 +13,7 @@ export const DownloadAction = ({ reportId }: ReportResultsActionsProps) => {
   return (
     <DropdownMenuItem asChild>
       <a
-        href={`/webshot/report/${reportId}`}
+        href={`/webshot/reports/${reportId}`}
         target="_blank"
         rel="noopener noreferrer"
         className="flex cursor-pointer items-center"

@@ -22,7 +22,7 @@ export function generateStaticParams() {
 export default async function ReportNewLayout({
   children,
   params,
-}: LayoutProps<"/[locale]/report">) {
+}: LayoutProps<"/[locale]/reports">) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     notFound();

@@ -15,7 +15,7 @@ export const MyReportsHeader = () => {
       </div>
 
       <div>
-        <Link href="/report">
+        <Link href="/reports">
           <Button size="lg" className="space-x-2">
             <LuFilePlus className="h-4 w-4" />
             <span>New report</span>

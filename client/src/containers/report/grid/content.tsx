@@ -78,7 +78,7 @@ export default function SidebarGridContent() {
           <header className="flex w-full items-start gap-2">
             <h1 className="flex w-full items-center gap-2 pr-56 text-lg font-bold leading-tight text-primary">
               <Link
-                href={`/report${searchParams ? `?${searchParams.toString()}` : ""}`}
+                href={`/reports${searchParams ? `?${searchParams.toString()}` : ""}`}
                 className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
               >
                 <LuArrowLeft className="h-4 w-4" />

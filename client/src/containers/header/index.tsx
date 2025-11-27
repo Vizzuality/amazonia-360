@@ -29,10 +29,10 @@ import ReportResultsHeaderDesktop from "./results/desktop";
 
 function getRoutes(pathname: string, params: Params) {
   const { id } = params;
-  const r = pathname.match(/^(?:\/[a-z]{2})?\/report(?:\/(grid|indicators))?\/?$/);
-  // I want to know if I'm in home page /, /report or /report/[id]]
+  const r = pathname.match(/^(?:\/[a-z]{2})?\/reports(?:\/(grid|indicators))?\/?$/);
+  // I want to know if I'm in home page /, /reports or /reports/[id]]
   const isHome = pathname === "/";
-  const isReport = pathname.startsWith("/report");
+  const isReport = pathname.startsWith("/reports");
   const isReportResults = !!id;
 
   return {
@@ -62,7 +62,7 @@ export default function Header() {
       <>
         {isHome && (
           <>
-            <Link href="/report" className="text-sm text-foreground hover:text-cyan-500">
+            <Link href="/reports" className="text-sm text-foreground hover:text-cyan-500">
               {t("header-report-tool")}
             </Link>
           </>
@@ -78,7 +78,7 @@ export default function Header() {
   useEffect(() => {
     // Hide sidebar when navigating away from report
     // Remove edit mode
-    if (!pathname.includes(`/report/${params.id}`)) {
+    if (!pathname.includes(`/reports/${params.id}`)) {
       setOpen(false);
       setEditionMode(false);
     }

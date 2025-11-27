@@ -45,7 +45,7 @@ export default function Hero() {
             <ReactMarkdown>{t("landing-hero-description")}</ReactMarkdown>
           </div>
           <div className="flex flex-col gap-2 py-4 font-semibold md:py-6 xl:flex-row">
-            <Link href="/report" prefetch>
+            <Link href="/reports" prefetch>
               <Button size="lg" className="flex w-full space-x-2.5 px-8">
                 {t("landing-hero-buttons-access-the-tool")}
               </Button>
