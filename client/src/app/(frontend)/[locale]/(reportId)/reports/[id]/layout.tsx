@@ -8,7 +8,7 @@ import ThirdParty from "@/containers/third-party";
 
 export default async function ReportLayoutReportId({
   children,
-}: LayoutProps<"/[locale]/report/[id]">) {
+}: LayoutProps<"/[locale]/reports/[id]">) {
   return (
     <JotaiProvider>
       <Suspense fallback={null}>

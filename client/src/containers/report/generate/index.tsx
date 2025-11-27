@@ -102,7 +102,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
     toast.promise(
       saveMutation.mutateAsync(data, {
         onSuccess: (report) => {
-          router.push(`/report/${report.id}`);
+          router.push(`/reports/${report.id}`);
         },
       }),
       {
@@ -118,7 +118,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
       <div className="flex items-center justify-between">
         <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
           <Link
-            href={`/report${searchParams.toString() ? `?${searchParams.toString()}` : ""}`}
+            href={`/reports${searchParams.toString() ? `?${searchParams.toString()}` : ""}`}
             className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
           >
             <LuArrowLeft className="h-4 w-4" onClick={() => setReportPanel("location")} />

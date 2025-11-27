@@ -13,7 +13,7 @@ export default function CustomReport404() {
         <h1 className="text-bold text-xl">{t("not-found-report-title")}</h1>
         <p className="text-large">{t("not-found-report-message")}</p>
         <div>
-          <Link href="/report">
+          <Link href="/reports">
             <Button>{t("go-back-report-button")}</Button>
           </Link>
         </div>

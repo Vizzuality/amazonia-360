@@ -53,7 +53,7 @@ export default function NewReport() {
         <AlertDialogFooter className="flex w-full justify-end space-x-2 justify-self-end">
           <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
 
-          <Link href="/report" onClick={handleNewReport}>
+          <Link href="/reports" onClick={handleNewReport}>
             <AlertDialogAction>{t("report-results-buttons-new-report-confirm")}</AlertDialogAction>
           </Link>
         </AlertDialogFooter>

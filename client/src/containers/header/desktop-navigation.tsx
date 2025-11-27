@@ -26,18 +26,18 @@ export default function DesktopNavigation() {
       <Link
         className={cn({
           "whitespace-nowrap text-sm hover:text-cyan-500": true,
-          "text-cyan-500": pathname.includes("/report"),
+          "text-cyan-500": pathname.includes("/reports"),
         })}
-        href="/report"
+        href="/reports"
       >
         {t("header-report-tool")}
       </Link>
       <Link
         className={cn({
           "text-sm hover:text-cyan-500": true,
-          "text-cyan-500": pathname.includes("/report/indicators"),
+          "text-cyan-500": pathname.includes("/reports/indicators"),
         })}
-        href="/report/indicators"
+        href="/reports/indicators"
       >
         {t("header-hub")}
       </Link>

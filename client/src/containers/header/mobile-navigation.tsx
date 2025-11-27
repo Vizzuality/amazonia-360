@@ -100,18 +100,18 @@ export default function MobileNavigation() {
             <Link
               className={cn({
                 "px-6 py-4 text-lg text-blue-900 hover:bg-blue-200 hover:text-blue-500": true,
-                "text-blue-500": pathname.includes("/report"),
+                "text-blue-500": pathname.includes("/reports"),
               })}
-              href="/report"
+              href="/reports"
             >
               {t("header-report-tool")}
             </Link>
             {/* <Link
               className={cn({
                 "px-6 py-4 text-lg text-blue-900 hover:bg-blue-200 hover:text-blue-500": true,
-                "text-blue-500": pathname.includes("/report/indicators"),
+                "text-blue-500": pathname.includes("/reports/indicators"),
               })}
-              href="/report/indicators"
+              href="/reports/indicators"
             >
               {t("header-hub")}
             </Link> */}

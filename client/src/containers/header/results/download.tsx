@@ -18,7 +18,7 @@ export default function ReportButton() {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Link href={`/webshot/report/${reportId}`} target="_blank" className="block">
+        <Link href={`/webshot/reports/${reportId}`} target="_blank" className="block">
           <Button variant="outline" className="space-x-2 border-none px-2.5 py-2 shadow-none">
             <FileDown className="h-5 w-5" />
           </Button>

@@ -59,7 +59,7 @@ export default function ReportResultsHeaderMobile() {
                   <AlertDialogFooter className="flex flex-row items-baseline justify-center space-x-2">
                     <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
 
-                    <Link href="/report">
+                    <Link href="/reports">
                       <AlertDialogAction>{t("continue")}</AlertDialogAction>
                     </Link>
                   </AlertDialogFooter>

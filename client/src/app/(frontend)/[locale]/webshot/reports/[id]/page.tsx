@@ -18,7 +18,7 @@ export const metadata = {
 
 export default async function WebshotReport({
   params,
-}: PageProps<"/[locale]/webshot/report/[id]">) {
+}: PageProps<"/[locale]/webshot/reports/[id]">) {
   const queryClient = new QueryClient();
 
   const { id, locale } = await params;
