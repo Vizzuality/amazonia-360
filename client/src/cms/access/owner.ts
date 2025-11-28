@@ -9,7 +9,7 @@ export const ownUserAccess: Access = ({ req }) => {
 
   if (user && user.collection === "anonymous-users") {
     return {
-      [`user.value`]: { equals: user.apiKey },
+      [`user.value`]: { equals: user.id },
       [`user.relationTo`]: { equals: "anonymous-users" },
     };
   }
