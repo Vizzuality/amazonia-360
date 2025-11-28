@@ -20,6 +20,7 @@ import { AnonymousUsers } from "@/cms/collections/AnonymousUsers";
 import { Media } from "@/cms/collections/Media";
 import { Reports } from "@/cms/collections/Reports";
 import { Users } from "@/cms/collections/Users";
+import { CleanAnonymousUsers } from "@/cms/cron/clean-anonymous-users";
 import { routing } from "@/i18n/routing";
 
 const filename = fileURLToPath(import.meta.url);
@@ -71,4 +72,13 @@ export default buildConfig({
   plugins: [
     // storage-adapter-placeholder
   ],
+  jobs: {
+    autoRun: [
+      {
+        cron: process.env.ANONYMOUS_USERS_CLEANUP_CRON_SCHEDULE ?? "0 0 * * *", // Default: every day at midnight
+        queue: "nightly",
+      },
+    ],
+    tasks: [CleanAnonymousUsers],
+  },
 });
