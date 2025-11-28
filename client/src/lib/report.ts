@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { Locale, useLocale } from "next-intl";
 
 import { IndicatorView, Location, TopicView } from "@/app/(frontend)/parsers";
@@ -92,9 +92,17 @@ export const useSaveReport = () => {
   const { data: session } = useSession();
 
   return useMutation({
-    mutationFn: (data: SaveReport) => {
+    mutationFn: async (data: SaveReport) => {
       if (!data.location) {
         return Promise.reject(new Error("Location is required to save the report."));
+      }
+
+      if (!session) {
+        const res = await signIn("anonymous-users", { redirect: false });
+
+        if (!res.ok) {
+          throw new Error("Failed to sign in anonymously");
+        }
       }
 
       if (!data.id) {
@@ -137,9 +145,17 @@ export const useDuplicateReport = () => {
   const { data: session } = useSession();
 
   return useMutation({
-    mutationFn: (data: ReportDataBase) => {
+    mutationFn: async (data: ReportDataBase) => {
       if (!data.location) {
         return Promise.reject(new Error("Location is required to duplicate the report."));
+      }
+
+      if (!session) {
+        const res = await signIn("anonymous-users", { redirect: false });
+
+        if (!res.ok) {
+          throw new Error("Failed to sign in anonymously");
+        }
       }
 
       return sdk.create({
