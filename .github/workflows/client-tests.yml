@@ -1,0 +1,62 @@
+name: Client Tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "client/**"
+      - ".github/workflows/client-tests.yml"
+      - "client/package.json"
+      - "client/pnpm-lock.yaml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "client/**"
+      - ".github/workflows/client-tests.yml"
+      - "client/package.json"
+      - "client/pnpm-lock.yaml"
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+    working-directory: client
+
+jobs:
+  client-unit-tests:
+    name: Client Unit Tests
+    runs-on: ubuntu-24.04
+    env:
+      COVERAGE_GH_OUTPUT_FILE: /tmp/${{ github.run_id }}__coverage.txt
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5.0.0
+      - name: Node setup
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "client/.nvmrc"
+      - uses: pnpm/action-setup@v4
+      - name: Cache pnpm modules
+        uses: actions/cache@v4.2.3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('client/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Lint Client
+        run: pnpm lint
+      - name: Check Client types
+        run: pnpm check-types
+
+      - name: Run Client tests
+        run: pnpm test | tee "$COVERAGE_GH_OUTPUT_FILE"
+
+      - name: Capture coverage report for PR summary
+        run: |
+          echo "### Test Coverage Report" >> $GITHUB_STEP_SUMMARY
+          cat $COVERAGE_GH_OUTPUT_FILE >> $GITHUB_STEP_SUMMARY
