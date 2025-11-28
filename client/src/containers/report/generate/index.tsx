@@ -7,7 +7,6 @@ import { useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSetAtom } from "jotai";
-import { signIn, useSession } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
 import { toast } from "sonner";
@@ -39,8 +38,6 @@ export const formSchema = z.object({
 export default function ReportGenerate({ heading = "create" }: { heading?: "select" | "create" }) {
   const t = useTranslations();
   const locale = useLocale();
-
-  const { data: session } = useSession();
 
   const [location] = useSyncLocation();
 
@@ -88,16 +85,6 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const data = generateReportData(values);
-
-    if (!session) {
-      const res = await signIn("anonymous-users", { redirect: false });
-
-      if (!res.ok) {
-        toast.error("Failed to sign in anonymously");
-        // throw new Error("Failed to sign in anonymously");
-        return;
-      }
-    }
 
     toast.promise(
       saveMutation.mutateAsync(data, {
