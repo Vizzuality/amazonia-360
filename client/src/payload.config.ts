@@ -22,6 +22,8 @@ import { Reports } from "@/cms/collections/Reports";
 import { Users } from "@/cms/collections/Users";
 import { routing } from "@/i18n/routing";
 
+import { getDatabaseUrlFromUrlAndPassword } from "./utils/database-url";
+
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
@@ -35,7 +37,8 @@ export default buildConfig({
   collections: [Admins, Users, AnonymousUsers, Accounts, Media, Reports],
   db: postgresAdapter({
     pool: {
-      connectionString: env.DATABASE_URL || "",
+      connectionString:
+        getDatabaseUrlFromUrlAndPassword(env.DATABASE_URL, env.DATABASE_PASSWORD) || "",
     },
     migrationDir: path.resolve(dirname, "cms", "migrations"),
   }),
