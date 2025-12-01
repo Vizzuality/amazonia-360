@@ -34,17 +34,23 @@
   .mdx-editor {
     font-family: var(--montserrat);
     font-weight: 500;
-    @apply prose;
+    @apply prose prose-base xl:prose-lg 2xl:prose-xl prose-a:break-words;
     max-width: none;
 
     --baseBg: var(--muted-foreground);
   }
-  .mdxeditor-toolbar {
-    padding: 4px;
+  .mdx-editor-toolbar {
+    padding: 3px 0;
+    margin: 0 -4px;
+    @apply inline-flex rounded-sm border border-border;
   }
+
+  .mdx-editor-toolbar svg {
+    @apply size-9 p-1.5;
+  }
+
   .mdx-editor-content {
-    padding-top: 0;
-    padding-bottom: 0;
+    padding: 0;
   }
 
   /* .dark {
