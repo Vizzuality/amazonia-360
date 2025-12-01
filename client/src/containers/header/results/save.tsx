@@ -83,7 +83,7 @@ export default function SaveReport() {
     return (
       <Button onClick={handleSave} className="space-x-2">
         <LuFileText className="h-5 w-5" />
-        <span>Save</span>
+        <span>{t("save")}</span>
       </Button>
     );
   }
