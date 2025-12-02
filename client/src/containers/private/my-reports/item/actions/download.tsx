@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { LuDownload } from "react-icons/lu";
 
 import { DropdownMenuItem } from "@/components/ui/dropdown";
@@ -7,6 +8,8 @@ import { DropdownMenuItem } from "@/components/ui/dropdown";
 import type { ReportActionsProps } from "./types";
 
 export const DownloadAction = ({ report }: ReportActionsProps) => {
+  const t = useTranslations();
+
   return (
     <DropdownMenuItem asChild>
       <a
@@ -16,7 +19,7 @@ export const DownloadAction = ({ report }: ReportActionsProps) => {
         className="flex cursor-pointer items-center"
       >
         <LuDownload className="mr-2 h-4 w-4" />
-        <span>Download</span>
+        <span>{t("my-reports-action-download")}</span>
       </a>
     </DropdownMenuItem>
   );

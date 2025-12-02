@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { LuCheck, LuChevronDown } from "react-icons/lu";
 
 import { Button } from "@/components/ui/button";
@@ -15,17 +16,20 @@ interface MyReportsSortProps {
   onSortChange: (value: string) => void;
 }
 
-const SORT_OPTIONS = [
-  { value: "-createdAt", label: "Created date (newest)" },
-  { value: "createdAt", label: "Created date (oldest)" },
-  { value: "-updatedAt", label: "Last updated (newest)" },
-  { value: "updatedAt", label: "Last updated (oldest)" },
-  { value: "title", label: "Title (A-Z)" },
-  { value: "-title", label: "Title (Z-A)" },
-];
-
 export const MyReportsSort = ({ sort, onSortChange }: MyReportsSortProps) => {
-  const currentSortLabel = SORT_OPTIONS.find((option) => option.value === sort)?.label || "Sort";
+  const t = useTranslations();
+
+  const SORT_OPTIONS = [
+    { value: "-createdAt", label: t("my-reports-sort-created-newest") },
+    { value: "createdAt", label: t("my-reports-sort-created-oldest") },
+    { value: "-updatedAt", label: t("my-reports-sort-updated-newest") },
+    { value: "updatedAt", label: t("my-reports-sort-updated-oldest") },
+    { value: "title", label: t("my-reports-sort-title-az") },
+    { value: "-title", label: t("my-reports-sort-title-za") },
+  ];
+
+  const currentSortLabel =
+    SORT_OPTIONS.find((option) => option.value === sort)?.label || t("my-reports-sort");
 
   return (
     <DropdownMenu>

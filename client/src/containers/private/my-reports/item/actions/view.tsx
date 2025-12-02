@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { LuEye } from "react-icons/lu";
 
 import { DropdownMenuItem } from "@/components/ui/dropdown";
@@ -7,6 +8,8 @@ import { DropdownMenuItem } from "@/components/ui/dropdown";
 import type { ReportActionsProps } from "./types";
 
 export const ViewAction = ({ report }: ReportActionsProps) => {
+  const t = useTranslations();
+
   return (
     <DropdownMenuItem asChild>
       <a
@@ -16,7 +19,7 @@ export const ViewAction = ({ report }: ReportActionsProps) => {
         className="flex cursor-pointer items-center"
       >
         <LuEye className="mr-2 h-4 w-4" />
-        <span>View report</span>
+        <span>{t("my-reports-action-view")}</span>
       </a>
     </DropdownMenuItem>
   );

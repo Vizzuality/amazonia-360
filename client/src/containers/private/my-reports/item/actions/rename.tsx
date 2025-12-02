@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { useForm } from "@tanstack/react-form";
+import { useTranslations } from "next-intl";
 import { LuTextCursorInput } from "react-icons/lu";
 import { toast } from "sonner";
 
@@ -25,6 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type { ReportActionsProps } from "./types";
 
 export const RenameAction = ({ report }: ReportActionsProps) => {
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
   const saveMutation = useSaveReport();
 
@@ -43,9 +45,9 @@ export const RenameAction = ({ report }: ReportActionsProps) => {
       };
 
       toast.promise(saveMutation.mutateAsync(data), {
-        loading: "Renaming report...",
-        success: "Report renamed successfully!",
-        error: "Failed to rename the report.",
+        loading: t("my-reports-rename-toast-loading"),
+        success: t("my-reports-rename-toast-success"),
+        error: t("my-reports-rename-toast-error"),
       });
 
       setOpen(false);
@@ -62,14 +64,14 @@ export const RenameAction = ({ report }: ReportActionsProps) => {
         className="cursor-pointer"
       >
         <LuTextCursorInput className="mr-2 h-4 w-4" />
-        <span>Rename</span>
+        <span>{t("my-reports-action-rename")}</span>
       </DropdownMenuItem>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Rename report</DialogTitle>
-            <DialogDescription>Update the title and description of your report.</DialogDescription>
+            <DialogTitle>{t("my-reports-rename-dialog-title")}</DialogTitle>
+            <DialogDescription>{t("my-reports-rename-dialog-description")}</DialogDescription>
           </DialogHeader>
           <form
             onSubmit={(e) => {
@@ -83,7 +85,9 @@ export const RenameAction = ({ report }: ReportActionsProps) => {
                   const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
                     <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>Title</FieldLabel>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("my-reports-rename-field-title")}
+                      </FieldLabel>
                       <Input
                         id={field.name}
                         name={field.name}
@@ -103,7 +107,9 @@ export const RenameAction = ({ report }: ReportActionsProps) => {
                   const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
                     <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>Description</FieldLabel>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("my-reports-rename-field-description")}
+                      </FieldLabel>
                       <Textarea
                         id={field.name}
                         name={field.name}
@@ -122,9 +128,9 @@ export const RenameAction = ({ report }: ReportActionsProps) => {
 
             <DialogFooter className="mt-6">
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                Cancel
+                {t("cancel")}
               </Button>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit">{t("my-reports-rename-button-save")}</Button>
             </DialogFooter>
           </form>
         </DialogContent>

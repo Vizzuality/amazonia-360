@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { LuCalendar, LuMapPin } from "react-icons/lu";
 
 import { Card } from "@/components/ui/card";
@@ -20,13 +20,15 @@ interface MyReportsItemProps {
 }
 
 export const MyReportsItem = ({ report }: MyReportsItemProps) => {
+  const t = useTranslations();
+
   const locale = useLocale();
 
   const getLocationLabel = (location: Report["location"]) => {
     if (location.type === "search") {
       return location.text;
     }
-    return "Custom area";
+    return t("my-reports-item-custom-area");
   };
 
   const formatDate = (dateString: string) => {
@@ -47,7 +49,7 @@ export const MyReportsItem = ({ report }: MyReportsItemProps) => {
           <div className="space-y-2">
             <div className="flex items-start justify-between gap-2">
               <h3 className="line-clamp-2 text-lg font-medium text-foreground">
-                {report.title || "Untitled Report"}
+                {report.title || t("my-reports-item-untitled")}
               </h3>
             </div>
 
