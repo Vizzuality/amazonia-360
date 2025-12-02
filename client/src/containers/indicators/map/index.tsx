@@ -37,7 +37,7 @@ export const MapIndicators = (
   const locale = useLocale();
 
   const { id: reportId } = useParams();
-  const { data: reportData } = useReport({ id: Number(reportId) });
+  const { data: reportData } = useReport({ id: `${reportId}` });
 
   const LAYER = useGetIndicatorsLayerId(id, locale, {});
 

@@ -16,6 +16,7 @@ export const getDatabaseUrlFromUrlAndPassword = (url: string, password?: string)
     host: z.string().min(1),
     pathname: z.string().min(1),
     password: z.string().optional(),
+    search: z.string().optional(),
   });
 
   const databaseUrl = databaseUrlSchema.parse({
@@ -24,12 +25,14 @@ export const getDatabaseUrlFromUrlAndPassword = (url: string, password?: string)
     host: parsedUrl.host,
     pathname: parsedUrl.pathname,
     password: parsedUrl.password,
+    search: parsedUrl.search,
   });
 
   const finalPassword = password ?? databaseUrl.password;
   const passwordPart = finalPassword ? `:${encodeURIComponent(finalPassword)}` : "";
+  const searchPart = databaseUrl.search || "";
 
-  const fullPostgresUrl = `${databaseUrl.protocol}//${databaseUrl.username}${passwordPart}@${databaseUrl.host}${databaseUrl.pathname}`;
+  const fullPostgresUrl = `${databaseUrl.protocol}//${databaseUrl.username}${passwordPart}@${databaseUrl.host}${databaseUrl.pathname}${searchPart}`;
 
   return fullPostgresUrl;
 };

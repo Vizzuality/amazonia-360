@@ -52,7 +52,7 @@ export default function AiSidebarContent() {
 
   const [topics, setTopics] = useSyncTopics();
   const { id: reportId } = useParams();
-  const { data: reportData } = useReport({ id: Number(reportId) });
+  const { data: reportData } = useReport({ id: `${reportId}` });
 
   const [aiSummary, setAiSummary] = useSyncAiSummary();
 

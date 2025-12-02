@@ -25,7 +25,7 @@ export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
   const t = useTranslations();
 
   const { id: reportId } = useParams();
-  const { data: reportData } = useReport({ id: Number(reportId) });
+  const { data: reportData } = useReport({ id: `${reportId}` });
 
   // Generate a stable ID for this instance
   const id = useMemo(() => {

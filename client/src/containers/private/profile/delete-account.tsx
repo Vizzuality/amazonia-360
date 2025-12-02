@@ -29,7 +29,7 @@ export function DeleteAccount() {
     if (!session?.user?.id) return;
 
     toast.promise(
-      deleteMutation.mutateAsync(Number(session.user.id)).then(async () => {
+      deleteMutation.mutateAsync(session.user.id).then(async () => {
         // Sign out and redirect to home
         await signOut({ redirect: false });
         router.push("/");

@@ -75,7 +75,7 @@ export function PayloadAuthAdapter(): Adapter {
 
       const updatedUser = await payload.update({
         collection: "users",
-        id: Number(id),
+        id,
         data: {
           email: data.email,
           name: data.name,
@@ -91,7 +91,7 @@ export function PayloadAuthAdapter(): Adapter {
 
       await payload.update({
         collection: "users",
-        id: Number(account.userId),
+        id: account.userId,
         data: {
           _verified: true,
         },
@@ -100,7 +100,7 @@ export function PayloadAuthAdapter(): Adapter {
       const createdAccount = await payload.create({
         collection: "accounts",
         data: {
-          user: Number(account.userId),
+          user: account.userId,
           provider: account.provider,
           providerAccountId: account.providerAccountId,
           accessToken: account.access_token,
@@ -116,7 +116,7 @@ export function PayloadAuthAdapter(): Adapter {
       try {
         const user = await payload.findByID({
           collection: "users",
-          id: Number(id),
+          id,
         });
         return covertPayloadUserToAdapterUser(user);
       } catch (_error) {

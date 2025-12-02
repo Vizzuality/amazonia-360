@@ -23,7 +23,7 @@ export const Pdf = () => {
   const t = useTranslations();
 
   const { id: reportId } = useParams();
-  const { data: reportData } = useReport({ id: Number(reportId) });
+  const { data: reportData } = useReport({ id: `${reportId}` });
 
   // Hydrate atoms on initial mount
   useHydrateAtoms(new Map([[titleAtom, reportData?.title]]));

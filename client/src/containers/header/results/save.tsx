@@ -22,7 +22,7 @@ export default function SaveReport() {
   const { id } = useParams();
   const router = useRouter();
 
-  const { data: reportData } = useReport({ id: Number(id) });
+  const { data: reportData } = useReport({ id: `${id}` });
   const { data: session } = useSession();
 
   const [title] = useSyncTitle();
@@ -37,7 +37,7 @@ export default function SaveReport() {
   const handleSave = useCallback(() => {
     toast.promise(
       saveMutation.mutateAsync({
-        id: Number(id),
+        id: `${id}`,
         title: title || reportData?.title || t("selected-area"),
         description: reportData?.description || null,
         topics: topics || (reportData?.topics as TopicView[]) || [],

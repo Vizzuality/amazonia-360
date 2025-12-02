@@ -37,6 +37,7 @@ export default buildConfig({
   },
   collections: [Admins, Users, AnonymousUsers, Accounts, Media, Reports],
   db: postgresAdapter({
+    idType: "uuid",
     pool: {
       connectionString:
         getDatabaseUrlFromUrlAndPassword(env.DATABASE_URL, env.DATABASE_PASSWORD) || "",

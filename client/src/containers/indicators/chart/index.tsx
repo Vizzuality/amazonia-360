@@ -20,7 +20,7 @@ export const ChartIndicators = ({ id }: { id: Indicator["id"] }) => {
   const indicator = useGetIndicatorsId(id, locale);
 
   const { id: reportId } = useParams();
-  const { data: reportData } = useReport({ id: Number(reportId) });
+  const { data: reportData } = useReport({ id: `${reportId}` });
 
   const { onReady } = useLoad();
 

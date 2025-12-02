@@ -20,7 +20,7 @@ export const NumericIndicators = ({ id, isPdf }: { id: Indicator["id"]; isPdf?: 
   const indicator = useGetIndicatorsId(id, locale);
 
   const { id: reportId } = useParams();
-  const { data: reportData } = useReport({ id: Number(reportId) });
+  const { data: reportData } = useReport({ id: `${reportId}` });
 
   const { onReady } = useLoad();
 

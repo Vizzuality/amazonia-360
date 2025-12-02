@@ -99,7 +99,7 @@ export interface Config {
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: number;
+    defaultIDType: string;
   };
   globals: {
     'payload-jobs-stats': PayloadJobsStat;
@@ -188,7 +188,7 @@ export interface AnonymousUserAuthOperations {
  * via the `definition` "admins".
  */
 export interface Admin {
-  id: number;
+  id: string;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -212,17 +212,17 @@ export interface Admin {
  * via the `definition` "users".
  */
 export interface User {
-  id: number;
+  id: string;
   name?: string | null;
   image?: string | null;
   emailVerified?: string | null;
   accounts?: {
-    docs?: (number | Account)[];
+    docs?: (string | Account)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
   reports?: {
-    docs?: (number | Report)[];
+    docs?: (string | Report)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
@@ -251,13 +251,13 @@ export interface User {
  * via the `definition` "accounts".
  */
 export interface Account {
-  id: number;
+  id: string;
   type: string;
   provider: string;
   providerAccountId: string;
   refreshToken?: string | null;
   accessToken?: string | null;
-  user: number | User;
+  user: string | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -266,17 +266,17 @@ export interface Account {
  * via the `definition` "reports".
  */
 export interface Report {
-  id: number;
+  id: string;
   title?: string | null;
   description?: string | null;
   user?:
     | ({
         relationTo: 'users';
-        value: number | User;
+        value: string | User;
       } | null)
     | ({
         relationTo: 'anonymous-users';
-        value: number | AnonymousUser;
+        value: string | AnonymousUser;
       } | null);
   location:
     | {
@@ -330,7 +330,7 @@ export interface Report {
  * via the `definition` "anonymous-users".
  */
 export interface AnonymousUser {
-  id: number;
+  id: string;
   updatedAt: string;
   createdAt: string;
   enableAPIKey?: boolean | null;
@@ -342,7 +342,7 @@ export interface AnonymousUser {
  * via the `definition` "media".
  */
 export interface Media {
-  id: number;
+  id: string;
   alt: string;
   updatedAt: string;
   createdAt: string;
@@ -361,7 +361,7 @@ export interface Media {
  * via the `definition` "payload-jobs".
  */
 export interface PayloadJob {
-  id: number;
+  id: string;
   /**
    * Input data provided to the job
    */
@@ -462,49 +462,49 @@ export interface PayloadJob {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: number;
+  id: string;
   document?:
     | ({
         relationTo: 'admins';
-        value: number | Admin;
+        value: string | Admin;
       } | null)
     | ({
         relationTo: 'users';
-        value: number | User;
+        value: string | User;
       } | null)
     | ({
         relationTo: 'anonymous-users';
-        value: number | AnonymousUser;
+        value: string | AnonymousUser;
       } | null)
     | ({
         relationTo: 'accounts';
-        value: number | Account;
+        value: string | Account;
       } | null)
     | ({
         relationTo: 'media';
-        value: number | Media;
+        value: string | Media;
       } | null)
     | ({
         relationTo: 'reports';
-        value: number | Report;
+        value: string | Report;
       } | null)
     | ({
         relationTo: 'payload-jobs';
-        value: number | PayloadJob;
+        value: string | PayloadJob;
       } | null);
   globalSlug?: string | null;
   user:
     | {
         relationTo: 'admins';
-        value: number | Admin;
+        value: string | Admin;
       }
     | {
         relationTo: 'users';
-        value: number | User;
+        value: string | User;
       }
     | {
         relationTo: 'anonymous-users';
-        value: number | AnonymousUser;
+        value: string | AnonymousUser;
       };
   updatedAt: string;
   createdAt: string;
@@ -514,19 +514,19 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: number;
+  id: string;
   user:
     | {
         relationTo: 'admins';
-        value: number | Admin;
+        value: string | Admin;
       }
     | {
         relationTo: 'users';
-        value: number | User;
+        value: string | User;
       }
     | {
         relationTo: 'anonymous-users';
-        value: number | AnonymousUser;
+        value: string | AnonymousUser;
       };
   key?: string | null;
   value?:
@@ -546,7 +546,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: number;
+  id: string;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -748,7 +748,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  * via the `definition` "payload-jobs-stats".
  */
 export interface PayloadJobsStat {
-  id: number;
+  id: string;
   stats?:
     | {
         [k: string]: unknown;

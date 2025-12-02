@@ -155,4 +155,62 @@ describe("getDatabaseUrlFromUrlAndPassword", () => {
       expect(result).toBe("postgres://user:newpassword@localhost:5432/mydb");
     });
   });
+
+  describe("search params preservation", () => {
+    it("should preserve single search param", () => {
+      const url = "postgres://user:password@localhost:5432/mydb?sslmode=require";
+
+      const result = getDatabaseUrlFromUrlAndPassword(url);
+
+      expect(result).toBe("postgres://user:password@localhost:5432/mydb?sslmode=require");
+    });
+
+    it("should preserve multiple search params", () => {
+      const url = "postgres://user:password@localhost:5432/mydb?sslmode=require&connect_timeout=10";
+
+      const result = getDatabaseUrlFromUrlAndPassword(url);
+
+      expect(result).toBe(
+        "postgres://user:password@localhost:5432/mydb?sslmode=require&connect_timeout=10",
+      );
+    });
+
+    it("should preserve search params when updating password", () => {
+      const url = "postgres://user:oldpass@localhost:5432/mydb?sslmode=require";
+      const password = "newpass";
+
+      const result = getDatabaseUrlFromUrlAndPassword(url, password);
+
+      expect(result).toBe("postgres://user:newpass@localhost:5432/mydb?sslmode=require");
+    });
+
+    it("should preserve search params when adding password", () => {
+      const url = "postgres://user@localhost:5432/mydb?sslmode=require&application_name=myapp";
+      const password = "newpass";
+
+      const result = getDatabaseUrlFromUrlAndPassword(url, password);
+
+      expect(result).toBe(
+        "postgres://user:newpass@localhost:5432/mydb?sslmode=require&application_name=myapp",
+      );
+    });
+
+    it("should handle URL without search params", () => {
+      const url = "postgres://user:password@localhost:5432/mydb";
+
+      const result = getDatabaseUrlFromUrlAndPassword(url);
+
+      expect(result).toBe("postgres://user:password@localhost:5432/mydb");
+    });
+
+    it("should preserve search params with special characters", () => {
+      const url = "postgres://user:password@localhost:5432/mydb?options=-c%20search_path=myschema";
+
+      const result = getDatabaseUrlFromUrlAndPassword(url);
+
+      expect(result).toBe(
+        "postgres://user:password@localhost:5432/mydb?options=-c%20search_path=myschema",
+      );
+    });
+  });
 });

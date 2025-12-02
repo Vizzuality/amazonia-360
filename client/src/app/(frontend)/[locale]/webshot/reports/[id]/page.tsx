@@ -27,13 +27,13 @@ export default async function WebshotReport({
   try {
     await payload.findByID({
       collection: "reports",
-      id: Number(id),
+      id,
     });
   } catch (_error) {
     notFound();
   }
 
-  await queryClient.prefetchQuery(reportQueryOptions({ id: Number(id), locale: locale as Locale }));
+  await queryClient.prefetchQuery(reportQueryOptions({ id, locale: locale as Locale }));
 
   return (
     <>

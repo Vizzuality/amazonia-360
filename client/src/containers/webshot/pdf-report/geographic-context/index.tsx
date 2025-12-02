@@ -27,7 +27,7 @@ export default function PfdGeographicContext() {
   const { data } = useGetOverviewTopics({ locale });
 
   const { id: reportId } = useParams();
-  const { data: reportData } = useReport({ id: Number(reportId) });
+  const { data: reportData } = useReport({ id: `${reportId}` });
 
   const DATA = useMemo(() => {
     if (!data) return null;

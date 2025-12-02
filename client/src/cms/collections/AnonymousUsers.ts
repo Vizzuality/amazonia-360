@@ -24,7 +24,7 @@ export const AnonymousUsers: CollectionConfig = {
 
           const user = await payload.findByID({
             collection: "anonymous-users",
-            id: Number(session.user.id),
+            id: session.user.id,
             disableErrors: true,
           });
 
