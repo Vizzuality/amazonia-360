@@ -49,8 +49,8 @@ export function ChangePasswordForm() {
             form.reset();
           }),
         {
-          loading: "Changing your password...",
-          success: "Password changed successfully!",
+          loading: t("profile-change-password-toast-loading"),
+          success: t("profile-change-password-toast-success"),
           error: (err) => err.message,
           duration: 2000,
         },
@@ -61,7 +61,9 @@ export function ChangePasswordForm() {
   return (
     <div className="space-y-4">
       <div className="space-y-1">
-        <h3 className="text-xs font-bold uppercase tracking-wide">Change Password</h3>
+        <h3 className="text-xs font-bold uppercase tracking-wide">
+          {t("profile-change-password-title")}
+        </h3>
       </div>
 
       <form
@@ -76,12 +78,12 @@ export function ChangePasswordForm() {
               const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
               return (
                 <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor={field.name}>New password</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t("profile-field-new-password")}</FieldLabel>
                   <Input
                     id={field.name}
                     name={field.name}
                     type="password"
-                    placeholder="enter new password"
+                    placeholder={t("profile-field-new-password-placeholder")}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
@@ -98,12 +100,14 @@ export function ChangePasswordForm() {
               const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
               return (
                 <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor={field.name}>Confirm password</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t("profile-field-confirm-password")}
+                  </FieldLabel>
                   <Input
                     id={field.name}
                     name={field.name}
                     type="password"
-                    placeholder="confirm password"
+                    placeholder={t("profile-field-confirm-password-placeholder")}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
@@ -117,7 +121,9 @@ export function ChangePasswordForm() {
 
           <div className="flex justify-end">
             <Button type="submit" disabled={form.state.isSubmitting} className="w-auto">
-              {form.state.isSubmitting ? "Updating password..." : "Update password"}
+              {form.state.isSubmitting
+                ? t("profile-button-updating-password")
+                : t("profile-button-update-password")}
             </Button>
           </div>
         </FieldGroup>

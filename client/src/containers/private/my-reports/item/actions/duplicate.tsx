@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { LuCopy } from "react-icons/lu";
 import { toast } from "sonner";
 
@@ -13,6 +13,7 @@ import { DropdownMenuItem } from "@/components/ui/dropdown";
 import type { ReportActionsProps } from "./types";
 
 export const DuplicateAction = ({ report }: ReportActionsProps) => {
+  const t = useTranslations();
   const locale = useLocale();
   const duplicateMutation = useDuplicateReport();
 
@@ -48,16 +49,16 @@ export const DuplicateAction = ({ report }: ReportActionsProps) => {
     };
 
     toast.promise(duplicateMutation.mutateAsync(data), {
-      loading: "Duplicating report...",
-      success: "Report duplicated successfully!",
-      error: "Failed to duplicate the report.",
+      loading: t("my-reports-duplicate-toast-loading"),
+      success: t("my-reports-duplicate-toast-success"),
+      error: t("my-reports-duplicate-toast-error"),
     });
   };
 
   return (
     <DropdownMenuItem onClick={handleDuplicate} className="cursor-pointer">
       <LuCopy className="mr-2 h-4 w-4" />
-      <span>Duplicate</span>
+      <span>{t("my-reports-action-duplicate")}</span>
     </DropdownMenuItem>
   );
 };

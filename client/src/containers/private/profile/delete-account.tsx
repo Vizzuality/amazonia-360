@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useSession, signOut } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { useDeleteUser } from "@/lib/user";
@@ -20,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 export function DeleteAccount() {
+  const t = useTranslations();
   const { data: session } = useSession();
   const router = useRouter();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -35,9 +37,9 @@ export function DeleteAccount() {
         router.push("/");
       }),
       {
-        loading: "Deleting your account...",
-        success: "Account deleted successfully!",
-        error: "Failed to delete account.",
+        loading: t("profile-delete-account-toast-loading"),
+        success: t("profile-delete-account-toast-success"),
+        error: t("profile-delete-account-toast-error"),
       },
     );
   };
@@ -47,27 +49,23 @@ export function DeleteAccount() {
       <div className="space-y-4">
         <div className="space-y-1">
           <h3 className="text-xs font-bold uppercase tracking-wide text-destructive">
-            Danger Zone
+            {t("profile-delete-account-title")}
           </h3>
         </div>
 
-        <p className="text-sm text-muted-foreground">
-          Deleting your account is permanent, so please make sure you&apos;re certain before
-          proceeding.
-        </p>
+        <p className="text-sm text-muted-foreground">{t("profile-delete-account-description")}</p>
 
         <Button variant="destructive" onClick={() => setIsDialogOpen(true)}>
-          Delete account
+          {t("profile-delete-account-button")}
         </Button>
       </div>
 
       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>{t("profile-delete-account-dialog-title")}</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your account and remove all
-              your data from our servers, including all your reports.
+              {t("profile-delete-account-dialog-description")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -76,14 +74,16 @@ export function DeleteAccount() {
               onClick={() => setIsDialogOpen(false)}
               disabled={deleteMutation.isPending}
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <Button
               variant="destructive"
               onClick={handleDeleteAccount}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? "Deleting..." : "Yes, delete my account"}
+              {deleteMutation.isPending
+                ? t("profile-delete-account-dialog-deleting")
+                : t("profile-delete-account-dialog-confirm")}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

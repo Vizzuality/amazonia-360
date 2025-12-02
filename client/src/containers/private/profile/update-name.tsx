@@ -50,8 +50,8 @@ export function UpdateNameForm() {
             });
           }),
         {
-          loading: "Updating your name...",
-          success: "Name updated successfully!",
+          loading: t("profile-update-name-toast-loading"),
+          success: t("profile-update-name-toast-success"),
           error: (err) => err.message,
           duration: 2000,
         },
@@ -71,7 +71,7 @@ export function UpdateNameForm() {
           {(field) => {
             return (
               <Field>
-                <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                <FieldLabel htmlFor={field.name}>{t("profile-field-email")}</FieldLabel>
                 <Input
                   id={field.name}
                   name={field.name}
@@ -90,7 +90,7 @@ export function UpdateNameForm() {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
             return (
               <Field data-invalid={isInvalid}>
-                <FieldLabel htmlFor={field.name}>Full name</FieldLabel>
+                <FieldLabel htmlFor={field.name}>{t("profile-field-full-name")}</FieldLabel>
                 <Input
                   id={field.name}
                   name={field.name}
@@ -108,7 +108,9 @@ export function UpdateNameForm() {
 
         <div className="flex justify-end">
           <Button type="submit" disabled={form.state.isSubmitting} className="ml-auto">
-            {form.state.isSubmitting ? "Updating name..." : "Update name"}
+            {form.state.isSubmitting
+              ? t("profile-button-updating-name")
+              : t("profile-button-update-name")}
           </Button>
         </div>
       </FieldGroup>
