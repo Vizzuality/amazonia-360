@@ -13,6 +13,7 @@ import { TopicView } from "@/app/(frontend)/parsers";
 import { useSyncLocation, useSyncTitle, useSyncTopics } from "@/app/(frontend)/store";
 
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 
 import { useRouter } from "@/i18n/navigation";
 
@@ -78,16 +79,18 @@ export default function SaveReport() {
 
   if (CAN_EDIT) {
     return (
-      <Button onClick={handleSave} className="space-x-2">
-        <LuFileText className="h-5 w-5" />
+      <Button onClick={handleSave} className="space-x-2" disabled={saveMutation.isPending}>
+        {!saveMutation.isPending && <LuFileText className="h-5 w-5" />}
+        {saveMutation.isPending && <Spinner className="h-5 w-5" />}
         <span>{t("save")}</span>
       </Button>
     );
   }
 
   return (
-    <Button onClick={handleDuplicate} className="space-x-2">
-      <LuFileText className="h-5 w-5" />
+    <Button onClick={handleDuplicate} className="space-x-2" disabled={duplicateMutation.isPending}>
+      {!duplicateMutation.isPending && <LuFileText className="h-5 w-5" />}
+      {duplicateMutation.isPending && <Spinner className="h-5 w-5" />}
       <span>Make a copy</span>
     </Button>
   );
