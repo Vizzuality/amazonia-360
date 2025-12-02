@@ -29,7 +29,7 @@ export default function ReportResultsHeaderMobile() {
   const t = useTranslations();
 
   const { id: reportId } = useParams();
-  const { data: reportData } = useReport({ id: Number(reportId) });
+  const { data: reportData } = useReport({ id: `${reportId}` });
 
   return (
     <header className="space-y-4 bg-blue-50 py-6 print:hidden">

@@ -17,7 +17,7 @@ export default function DocumentCoverPdfSection() {
   const t = useTranslations();
 
   const { id: reportId } = useParams();
-  const { data: reportData } = useReport({ id: Number(reportId) });
+  const { data: reportData } = useReport({ id: `${reportId}` });
 
   const [topics] = useSyncTopics();
   const { data: allTopics } = useGetTopics(locale);

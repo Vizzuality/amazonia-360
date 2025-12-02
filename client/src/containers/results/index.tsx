@@ -14,7 +14,7 @@ import ReportResultsSidebar from "@/containers/results/sidebar";
 
 export const ReportResults = () => {
   const { id: reportId } = useParams();
-  const { data: reportData } = useReport({ id: Number(reportId) });
+  const { data: reportData } = useReport({ id: `${reportId}` });
 
   // Hydrate atoms on initial mount
   useHydrateAtoms(new Map([[titleAtom, reportData?.title]]));

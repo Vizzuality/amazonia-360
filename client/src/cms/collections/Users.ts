@@ -88,7 +88,7 @@ export const Users: CollectionConfig = {
 
           const user = await payload.findByID({
             collection: "users",
-            id: Number(session.user.id),
+            id: session.user.id,
             disableErrors: true,
           });
 

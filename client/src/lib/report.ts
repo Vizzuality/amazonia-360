@@ -59,7 +59,7 @@ export const parseTopicViews = (topics: TopicView[]): Report["topics"] => {
   }));
 };
 
-export const reportQueryOptions = (params: { id: number; locale: Locale }) => ({
+export const reportQueryOptions = (params: { id: string; locale: Locale }) => ({
   queryFn: () =>
     sdk.findByID({
       collection: "reports",
@@ -69,7 +69,7 @@ export const reportQueryOptions = (params: { id: number; locale: Locale }) => ({
   queryKey: ["report", params.id, params.locale] as const,
 });
 
-export const useReport = (params: { id: number }) => {
+export const useReport = (params: { id: string }) => {
   const locale = useLocale();
   return useSuspenseQuery(reportQueryOptions({ ...params, locale }));
 };
@@ -83,7 +83,7 @@ export type ReportDataBase = {
 };
 
 export type SaveReport = ReportDataBase & {
-  id?: number;
+  id?: string;
 };
 
 export const useSaveReport = () => {
@@ -197,13 +197,13 @@ export const useDeleteReport = () => {
 
 export const useCanEditReport = (reportId?: string | null) => {
   const { data: session } = useSession();
-  const { data: reportData } = useReport({ id: Number(reportId) });
+  const { data: reportData } = useReport({ id: `${reportId}` });
 
   const REPORT_USER_ID = useMemo(() => {
     if (!reportData || !reportData.user?.value) return null;
 
     const v = reportData.user.value;
-    if (typeof v !== "number") return v.id;
+    if (typeof v !== "string") return v.id;
     return v;
   }, [reportData]);
 

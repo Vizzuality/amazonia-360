@@ -39,7 +39,7 @@ export function ChangePasswordForm() {
         sdk
           .update({
             collection: "users",
-            id: Number(session?.user!.id),
+            id: `${session?.user!.id}`,
             data: {
               password: value.newPassword,
             },

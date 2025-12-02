@@ -26,7 +26,7 @@ export default function OtherResources() {
   const [tab, setTab] = useState("all");
 
   const { id: reportId } = useParams();
-  const { data: reportData } = useReport({ id: Number(reportId) });
+  const { data: reportData } = useReport({ id: `${reportId}` });
 
   const queryGadm = useLocationGadm(reportData?.location);
 
