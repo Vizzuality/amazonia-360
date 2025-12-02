@@ -4,11 +4,14 @@ import { useForm } from "@tanstack/react-form";
 import { useTranslations } from "next-intl";
 import { LuInfo, LuSparkles } from "react-icons/lu";
 
+import { usePostSummaryTopicMutation } from "@/lib/ai";
+
 import { ContextDescriptionType } from "@/types/generated/api.schemas";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import {
   Tooltip,
@@ -19,11 +22,12 @@ import {
 } from "@/components/ui/tooltip";
 
 interface AISummaryFormProps {
+  mutation?: ReturnType<typeof usePostSummaryTopicMutation>;
   onSubmit?: (values: { tone: ContextDescriptionType; onlyActiveIndicators: boolean }) => void;
   onClose?: () => void;
 }
 
-export const AISummaryForm = ({ onSubmit, onClose }: AISummaryFormProps) => {
+export const AISummaryForm = ({ mutation, onSubmit, onClose }: AISummaryFormProps) => {
   const t = useTranslations();
 
   const form = useForm({
@@ -165,8 +169,9 @@ export const AISummaryForm = ({ onSubmit, onClose }: AISummaryFormProps) => {
       </p>
 
       {/* Submit Button */}
-      <Button type="submit" className="w-full gap-2">
-        <LuSparkles />
+      <Button type="submit" className="w-full gap-2" disabled={mutation?.isPending}>
+        {mutation?.isPending && <Spinner className="h-5 w-5" />}
+        {!mutation?.isPending && <LuSparkles className="h-5 w-5" />}
         <span>Generate Summary</span>
       </Button>
     </form>

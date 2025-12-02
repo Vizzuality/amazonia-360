@@ -1,16 +1,23 @@
 import { useFormContext } from "react-hook-form";
 
 import { useLocale, useTranslations } from "next-intl";
+import { LuFileText } from "react-icons/lu";
 import { z } from "zod";
 
+import { useSaveReport } from "@/lib/report";
 import { useGetDefaultSubtopics } from "@/lib/subtopics";
 import { useGetDefaultTopics } from "@/lib/topics";
 
 import { formSchema } from "@/containers/report/generate";
 
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 
-export const ReportGenerateButtons = () => {
+export const ReportGenerateButtons = ({
+  mutation,
+}: {
+  mutation?: ReturnType<typeof useSaveReport>;
+}) => {
   const locale = useLocale();
   const t = useTranslations();
   const form = useFormContext<z.infer<typeof formSchema>>();
@@ -35,12 +42,16 @@ export const ReportGenerateButtons = () => {
               })) || [],
             );
           }}
+          disabled={mutation?.isPending}
         >
           {t("select-all")}
         </Button>
 
-        <Button className="px-4 lg:px-8" type="submit">
-          {t("create")}
+        <Button className="space-x-2 px-4 lg:px-8" type="submit" disabled={mutation?.isPending}>
+          {!mutation?.isPending && <LuFileText className="h-5 w-5" />}
+          {mutation?.isPending && <Spinner className="h-5 w-5" />}
+
+          <span>{t("create")}</span>
         </Button>
       </div>
     </div>
