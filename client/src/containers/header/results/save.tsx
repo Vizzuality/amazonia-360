@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { useParams } from "next/navigation";
 
 import { useSession } from "next-auth/react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { LuFileText } from "react-icons/lu";
 import { toast } from "sonner";
 
@@ -17,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "@/i18n/navigation";
 
 export default function SaveReport() {
-  const locale = useLocale();
   const t = useTranslations();
   const { id } = useParams();
   const router = useRouter();
@@ -42,7 +41,6 @@ export default function SaveReport() {
         description: reportData?.description || null,
         topics: topics || (reportData?.topics as TopicView[]) || [],
         location: location || reportData?.location || null,
-        locale,
         status: session?.user.collection === "users" ? "published" : "draft",
       }),
       {
@@ -51,7 +49,7 @@ export default function SaveReport() {
         error: "Failed to save the report.",
       },
     );
-  }, [id, title, topics, location, locale, session, saveMutation, t, reportData]);
+  }, [id, title, topics, location, session, saveMutation, t, reportData]);
 
   const handleDuplicate = useCallback(() => {
     toast.promise(
@@ -61,7 +59,6 @@ export default function SaveReport() {
           description: reportData?.description || null,
           topics: topics || (reportData?.topics as TopicView[]) || [],
           location: location || reportData?.location || null,
-          locale,
           status: session?.user.collection === "users" ? "published" : "draft",
         },
         {
@@ -77,7 +74,7 @@ export default function SaveReport() {
         error: "Failed to duplicate the report.",
       },
     );
-  }, [title, topics, location, locale, session, duplicateMutation, t, reportData, router]);
+  }, [title, topics, location, session, duplicateMutation, t, reportData, router]);
 
   if (CAN_EDIT) {
     return (

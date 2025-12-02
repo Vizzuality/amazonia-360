@@ -75,11 +75,10 @@ export const useReport = (params: { id: number }) => {
 };
 
 export type ReportDataBase = {
-  title: string | null;
-  description: string | null;
-  topics: TopicView[];
-  location: Location | null;
-  locale: Locale;
+  title?: string | null;
+  description?: string | null;
+  topics?: TopicView[];
+  location?: Location | null;
   status?: "published" | "draft" | null;
 };
 
@@ -93,10 +92,6 @@ export const useSaveReport = () => {
 
   return useMutation({
     mutationFn: async (data: SaveReport) => {
-      if (!data.location) {
-        return Promise.reject(new Error("Location is required to save the report."));
-      }
-
       if (!session) {
         const res = await signIn("anonymous-users", { redirect: false });
 
@@ -106,13 +101,16 @@ export const useSaveReport = () => {
       }
 
       if (!data.id) {
+        if (!data.location) {
+          throw new Error("Location is required to create the report.");
+        }
         return sdk.create({
           collection: "reports",
           data: {
             title: data.title,
             description: data.description,
             location: data.location,
-            topics: parseTopicViews(data.topics),
+            topics: parseTopicViews(data.topics ?? []),
             _status: session?.user.collection === "users" ? "published" : "draft",
           },
           locale: routing.defaultLocale, // Save in default locale so every locale can access the same report
@@ -124,11 +122,11 @@ export const useSaveReport = () => {
         collection: "reports",
         id: data.id,
         data: {
-          title: data.title,
-          description: data.description,
-          location: data.location,
-          topics: parseTopicViews(data.topics),
-          _status: data.status,
+          ...(data.title && { title: data.title }),
+          ...(data.description && { description: data.description }),
+          ...(data.location && { location: data.location }),
+          ...(data.topics && { topics: parseTopicViews(data.topics) }),
+          ...(data.status && { _status: data.status }),
         },
         locale: routing.defaultLocale, // Save in default locale so every locale can access the same report
         // TODO: Consider saving in the current locale instead and handle localization of reports properly
@@ -164,7 +162,7 @@ export const useDuplicateReport = () => {
           title: data.title,
           description: data.description,
           location: data.location,
-          topics: parseTopicViews(data.topics),
+          topics: parseTopicViews(data.topics ?? []),
           _status: session?.user.collection === "users" ? data.status : "draft",
         },
         locale: routing.defaultLocale, // Save in default locale so every locale can access the same report
