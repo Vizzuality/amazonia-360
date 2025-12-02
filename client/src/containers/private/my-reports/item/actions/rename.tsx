@@ -3,13 +3,10 @@
 import { useState } from "react";
 
 import { useForm } from "@tanstack/react-form";
-import { useLocale } from "next-intl";
 import { LuTextCursorInput } from "react-icons/lu";
 import { toast } from "sonner";
 
 import { useSaveReport } from "@/lib/report";
-
-import { TopicView } from "@/app/(frontend)/parsers";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,7 +25,6 @@ import { Textarea } from "@/components/ui/textarea";
 import type { ReportActionsProps } from "./types";
 
 export const RenameAction = ({ report }: ReportActionsProps) => {
-  const locale = useLocale();
   const [open, setOpen] = useState(false);
   const saveMutation = useSaveReport();
 
@@ -44,10 +40,6 @@ export const RenameAction = ({ report }: ReportActionsProps) => {
         id: report.id,
         title: value.title,
         description: value.description || null,
-        topics: report.topics as TopicView[],
-        location: report.location,
-        locale,
-        status: report._status,
       };
 
       toast.promise(saveMutation.mutateAsync(data), {

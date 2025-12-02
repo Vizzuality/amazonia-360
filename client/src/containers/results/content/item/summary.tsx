@@ -2,13 +2,14 @@
 
 import { useCallback, useMemo } from "react";
 
-import { useTranslations } from "next-intl";
 import { useDebounceCallback } from "usehooks-ts";
 
-import { ContextDescriptionType } from "@/types/generated/api.schemas";
+import { usePostSummaryTopicMutation } from "@/lib/ai";
+import { cn } from "@/lib/utils";
+
 import { Topic } from "@/types/topic";
 
-import { useSyncAiSummary, useSyncTopics } from "@/app/(frontend)/store";
+import { useSyncTopics } from "@/app/(frontend)/store";
 
 import { ForwardRefEditor } from "@/components/ui/editor";
 import { Markdown } from "@/components/ui/markdown";
@@ -16,12 +17,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export interface ReportResultsSummaryProps {
   topic?: Topic;
+  editing?: boolean;
+  mutation?: ReturnType<typeof usePostSummaryTopicMutation>;
 }
 
-export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
-  const t = useTranslations();
+export const ReportResultsSummary = ({ topic, editing, mutation }: ReportResultsSummaryProps) => {
   const [topics, setTopics] = useSyncTopics();
-  const [aiSummary] = useSyncAiSummary();
 
   const TOPIC = useMemo(() => {
     return topics?.find((t) => t.topic_id === topic?.id);
@@ -50,13 +51,13 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
 
   const debouncedHandleEditorChange = useDebounceCallback(handleEditorChange, 500);
 
-  if (!aiSummary.generating?.[topic?.id as number] && !TOPIC?.description) {
+  if (mutation?.isIdle && !TOPIC?.description) {
     return null;
   }
 
   return (
     <div className="relative grid grid-cols-12 gap-6">
-      {aiSummary.generating?.[topic?.id as number] && (
+      {mutation?.isPending && (
         <div className="col-span-12 space-y-1.5">
           <p>Generating summary...</p>
           <Skeleton className="h-4" />
@@ -65,21 +66,25 @@ export const ReportResultsSummary = ({ topic }: ReportResultsSummaryProps) => {
         </div>
       )}
 
-      {!aiSummary.generating?.[topic?.id as number] && TOPIC?.description && (
-        <>
-          <div className="relative col-span-12 text-sm font-medium text-muted-foreground lg:col-span-4">
-            <Markdown className="prose-sm prose-p:text-muted-foreground lg:sticky lg:top-20">
-              {t("report-results-sidebar-ai-summaries-disclaimer", {
-                audience: t(
-                  `report-results-sidebar-ai-summaries-audience-${(aiSummary.type || "").toLowerCase() as Lowercase<ContextDescriptionType>}-title`,
-                ),
-              })}
-            </Markdown>
-          </div>
-          <div className="col-span-12 lg:col-span-8">
+      {!mutation?.isPending && TOPIC?.description && (
+        <div className="col-span-12 max-w-none xl:max-w-7xl">
+          <Markdown
+            className={cn({
+              hidden: editing,
+              "prose prose-base max-w-none xl:prose-lg 2xl:prose-xl": true,
+            })}
+          >
+            {TOPIC.description}
+          </Markdown>
+
+          <div
+            className={cn({
+              hidden: !editing,
+            })}
+          >
             <ForwardRefEditor markdown={TOPIC.description} onChange={debouncedHandleEditorChange} />
           </div>
-        </>
+        </div>
       )}
     </div>
   );

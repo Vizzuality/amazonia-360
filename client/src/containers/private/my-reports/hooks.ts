@@ -20,7 +20,6 @@ export const useMyReports = () => {
     queryFn: async () => {
       const result = await sdk.find({
         collection: "reports",
-        locale,
         limit: ITEMS_PER_PAGE,
         page,
         where: {
@@ -34,9 +33,18 @@ export const useMyReports = () => {
             equals: "published",
           },
           ...(search && {
-            title: {
-              contains: search,
-            },
+            or: [
+              {
+                title: {
+                  contains: search,
+                },
+              },
+              {
+                description: {
+                  contains: search,
+                },
+              },
+            ],
           }),
         },
         sort,
