@@ -153,7 +153,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
         </div>
 
         <div className="shrink-0 lg:px-6">
-          <ReportGenerateButtons />
+          <ReportGenerateButtons mutation={saveMutation} />
         </div>
       </form>
     </Form>

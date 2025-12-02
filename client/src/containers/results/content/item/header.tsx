@@ -84,6 +84,7 @@ export const ReportTopicHeader = (props: Topic) => {
             </PopoverTrigger>
             <PopoverContent className="w-96 bg-popover" align="end">
               <AISummaryForm
+                mutation={summaryMutation}
                 onSubmit={(values) => {
                   handleSubmit(values);
                 }}
@@ -91,19 +92,22 @@ export const ReportTopicHeader = (props: Topic) => {
             </PopoverContent>
           </Popover>
 
-          {!editing && (
+          {!editing && TOPIC_VIEW?.description && (
             <Button
               onClick={() => setEditing(true)}
               variant="outline"
+              disabled={summaryMutation.isPending}
               className="hidden gap-2 lg:inline-flex"
             >
               {t("edit")}
             </Button>
           )}
-          {editing && (
+
+          {editing && TOPIC_VIEW?.description && (
             <Button
               onClick={() => setEditing(false)}
               variant="default"
+              disabled={summaryMutation.isPending}
               className="hidden gap-2 lg:inline-flex"
             >
               {t("save")}
