@@ -79,7 +79,6 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
       description: null,
       topics: topics || [],
       location: location,
-      locale,
     };
   }
 
