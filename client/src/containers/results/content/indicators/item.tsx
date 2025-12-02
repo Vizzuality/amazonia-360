@@ -35,24 +35,26 @@ export const ReportResultsContentIndicatorItem = ({
       setTopics((prev) => {
         if (!prev) return prev;
 
-        const i = prev?.findIndex((t) => t.id === topic.id);
+        const newTopics = [...prev];
+
+        const i = prev?.findIndex((t) => t.topic_id === topic.topic_id);
 
         if (i === -1) return prev;
 
-        prev[i] = {
-          id: topic.id,
-          topic_id: topic.topic_id,
-          indicators: prev[i]?.indicators?.filter(
-            (i) => !(i.indicator_id === indicatorId && i.type === type),
-          ),
+        newTopics[i] = {
+          ...newTopics[i],
+          indicators: newTopics[i]?.indicators?.filter((ind) => {
+            console.log(!(ind.indicator_id === indicatorId && ind.type === type));
+            return !(ind.indicator_id === indicatorId && ind.type === type);
+          }),
         };
 
-        return prev;
+        return newTopics;
       });
 
       setEditionModeIndicator({});
     },
-    [topic.id, topic.topic_id, setTopics, setEditionModeIndicator],
+    [topic.topic_id, setTopics, setEditionModeIndicator],
   );
 
   const indicatorBasemap = (indicatorView as IndicatorMapView)?.basemapId;

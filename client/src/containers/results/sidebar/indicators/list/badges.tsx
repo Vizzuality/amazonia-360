@@ -21,22 +21,24 @@ export function Badges({ topicId, indicatorId }: { topicId: number; indicatorId:
       setTopics((prev) => {
         if (!prev) return prev;
 
-        const currentTopic = prev.find((t) => t.topic_id === topicId);
+        const newTopics = [...prev];
+
+        const currentTopic = newTopics.find((t) => t.topic_id === topicId);
         if (!currentTopic) return prev;
 
-        const i = prev.findIndex((t) => t.topic_id === topicId);
+        const i = newTopics.findIndex((t) => t.topic_id === topicId);
 
-        if (i === -1) return prev;
+        if (i === -1) return newTopics;
 
-        prev[i] = {
-          id: prev[i].id,
+        newTopics[i] = {
+          id: newTopics[i].id,
           topic_id: topicId,
-          indicators: prev[i]?.indicators?.filter(
+          indicators: newTopics[i]?.indicators?.filter(
             (i) => !(i.indicator_id === indicatorId && i.type === type),
           ),
         };
 
-        return prev;
+        return newTopics;
       });
     },
     [topicId, setTopics],
