@@ -28,7 +28,8 @@ module "state" {
 }
 
 module "iam" {
-  source = "./modules/iam"
+  source  = "./modules/iam"
+  project = var.project_name
 }
 
 module "api_ecr" {
@@ -91,8 +92,13 @@ module "github" {
   github_owner = var.github_owner
   github_token = var.github_token
   global_secret_map = {
-    TF_PIPELINE_USER_ACCESS_KEY_ID     = module.iam.pipeline_user_access_key_id
-    TF_PIPELINE_USER_SECRET_ACCESS_KEY = module.iam.pipeline_user_access_key_secret
+    TF_PIPELINE_USER_SECRET_ACCESS_KEY = module.iam.pipeline_user_secret_access_key
+    TF_S3_SYNCS_USER_SECRET_ACCESS_KEY = module.iam.s3_syncs_user_secret_access_key
+  }
+  global_variable_map = {
+    TF_PIPELINE_USER_ACCESS_KEY_ID = module.iam.pipeline_user_access_key_id
+    TF_S3_SYNCS_USER_ACCESS_KEY_ID = module.iam.s3_syncs_user_access_key_id
+    TF_PROJECT_NAME                = var.project_name
 
     # API
     TF_API_REPOSITORY_NAME = module.api_ecr.repository_name
@@ -102,13 +108,6 @@ module "github" {
 
     # Webshot
     TF_WEBSHOT_REPOSITORY_NAME = module.webshot_ecr.repository_name
-
-  }
-  global_variable_map = {
-    TF_PROJECT_NAME = var.project_name
-
-    # API
-    # Client
   }
 }
 
@@ -158,12 +157,13 @@ module "dev" {
     # API
     TF_API_AUTH_TOKEN   = var.dev.api.auth_token
     TF_API_OPENAI_TOKEN = var.dev.api.openai_token
+
     # Client
     TF_CLIENT_NEXT_PUBLIC_API_KEY        = var.dev.client.next_public_api_key
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.dev.client.next_public_arcgis_api_key
     TF_CLIENT_BASIC_AUTH_USER            = var.dev.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD        = var.dev.client.basic_auth_password
-    
+
     TF_CLIENT_PAYLOAD_SECRET = var.dev.client.payload_secret
     TF_CLIENT_DATABASE_URL   = var.dev.client.database_url
     TF_CLIENT_APP_KEY        = var.dev.client.app_key
@@ -217,10 +217,9 @@ module "staging" {
     TF_CLIENT_NEXT_PUBLIC_API_KEY        = var.staging.client.next_public_api_key
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.staging.client.next_public_arcgis_api_key
 
-
     TF_CLIENT_BASIC_AUTH_USER     = var.staging.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD = var.staging.client.basic_auth_password
-    
+
     TF_CLIENT_PAYLOAD_SECRET = var.staging.client.payload_secret
     TF_CLIENT_DATABASE_URL   = var.staging.client.database_url
     TF_CLIENT_APP_KEY        = var.staging.client.app_key
@@ -276,7 +275,7 @@ module "prod" {
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.prod.client.next_public_arcgis_api_key
     TF_CLIENT_BASIC_AUTH_USER            = var.prod.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD        = var.prod.client.basic_auth_password
-    
+
     TF_CLIENT_PAYLOAD_SECRET = var.prod.client.payload_secret
     TF_CLIENT_DATABASE_URL   = var.prod.client.database_url
     TF_CLIENT_APP_KEY        = var.prod.client.app_key
