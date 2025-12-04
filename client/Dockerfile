@@ -68,7 +68,7 @@ COPY . .
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 RUN corepack enable pnpm && \
-    pnpm run build
+    pnpm run ci
 
 # Production image, copy all the files and run next
 FROM base AS runner

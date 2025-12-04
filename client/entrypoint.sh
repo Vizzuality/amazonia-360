@@ -8,8 +8,6 @@ echo "Starting application in ${NODE_ENV} mode..."
 
 case "$NODE_ENV" in
   production)
-    echo "Running migrations..."
-    pnpm run payload migrate
     echo "Running in production mode..."
     exec env HOSTNAME=0.0.0.0 node server.js
     ;;
