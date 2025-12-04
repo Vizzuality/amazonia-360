@@ -1,26 +1,13 @@
 "use client";
 
-import { useMemo } from "react";
-
 import dynamic from "next/dynamic";
-import { useParams } from "next/navigation";
 
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 const QRCode = dynamic(() => import("./qr-code"), { ssr: false });
 
 export const PdfOutro = () => {
-  const { id } = useParams();
-  const locale = useLocale();
   const t = useTranslations();
-
-  const URL = useMemo(() => {
-    if (typeof window !== "undefined") {
-      const baseUrl = window.location.origin;
-      return `${baseUrl}/${locale}/reports/${id}`;
-    }
-    return "";
-  }, [id, locale]);
 
   return (
     <div className="flex grow flex-col items-center justify-between px-16 py-12">
@@ -35,11 +22,7 @@ export const PdfOutro = () => {
           </div>
         </header>
 
-        <a href={URL} className="text-xs font-semibold text-primary underline">
-          {URL}
-        </a>
-
-        <div className="flex flex-col items-center space-y-2">
+        <div className="flex flex-col items-center space-y-6">
           <QRCode />
         </div>
 

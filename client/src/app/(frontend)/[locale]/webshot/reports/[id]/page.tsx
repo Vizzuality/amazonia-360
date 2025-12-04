@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { notFound } from "next/navigation";
 
 import { getPayload } from "payload";
@@ -37,9 +38,9 @@ export default async function WebshotReport({
 
   return (
     <>
-      <head>
+      <Head>
         <meta name="viewport" content="width=1920px, initial-scale=1" />
-      </head>
+      </Head>
 
       <main className="relative bg-gray-500">
         <Pdf />
