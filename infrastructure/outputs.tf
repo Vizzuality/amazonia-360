@@ -63,3 +63,28 @@ output "ses_dev_iam_user_secret_access_key" {
   value       = module.dev.ses_iam_user_secret_access_key
   sensitive   = true
 }
+
+# Database outputs
+output "database_endpoint" {
+  description = "The connection endpoint for the shared database"
+  value       = module.database.db_instance_endpoint
+}
+
+output "database_address" {
+  description = "The hostname of the shared database"
+  value       = module.database.db_instance_address
+}
+
+output "database_port" {
+  description = "The port of the shared database"
+  value       = module.database.db_instance_port
+}
+
+output "database_name" {
+  description = "The name of the initial database"
+  value       = module.database.db_instance_name
+}
+
+# Note: Sensitive outputs (username/password) are available but marked as sensitive
+# Access them with: terraform output -raw db_master_username
+# Access them with: terraform output -raw db_master_password

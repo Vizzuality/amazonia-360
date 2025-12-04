@@ -28,7 +28,8 @@ Then, create a `.env.local` file from the template `.env.default` at the root of
 | `BASIC_AUTH_PASSWORD`         | Password for Basic Authentication (only used in development and staging environment) | `password`                               |
 | `ENV NEXT_PUBLIC_WEBSHOT_URL` | Webshot URL                                                                          |
 | `PAYLOAD_SECRET`              | Secret key for Payload CMS                                                           | `""` (empty by default)                  |
-| `DATABASE_URL`                | Database connection URL                                                              | `""` (empty by default)                  |
+| `DATABASE_URL`                | Database connection URL (it must not include a password, this is set separately)     | `""` (empty by default)                  |
+| `DATABASE_PASSWORD`           | Database connection password                                                         | `""` (empty by default)                  |
 | `APP_KEY`                     | Application key                                                                      | `""` (empty by default)                  |
 | `AUTH_SECRET`                 | Secret key for authentication                                                        | `""` (empty by default)                  |
 
