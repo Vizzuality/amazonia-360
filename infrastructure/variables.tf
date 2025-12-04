@@ -45,6 +45,24 @@ variable "ses_verified_emails" {
   default     = []
 }
 
+variable "database_instance_class" {
+  type        = string
+  description = "The instance class for the RDS database"
+  default     = "db.t3.micro"
+}
+
+variable "database_allocated_storage" {
+  type        = number
+  description = "The allocated storage in gigabytes for the RDS database"
+  default     = 20
+}
+
+variable "database_backup_retention_period" {
+  type        = number
+  description = "The days to retain database backups"
+  default     = 7
+}
+
 variable "dev" {
   type = object({
     aws_region = string
@@ -55,17 +73,13 @@ variable "dev" {
       grid_tiles_path = string
     })
     client = object({
-      next_public_api_url          = string
-      next_public_api_key          = string
-      next_public_arcgis_api_key   = string
-      next_public_webshot_url      = string
-      basic_auth_enabled           = string
-      basic_auth_user              = string
-      basic_auth_password          = string
-      payload_secret               = string
-      database_url                 = string
-      app_key                      = string
-      auth_secret                  = string
+      next_public_api_url        = string
+      next_public_api_key        = string
+      next_public_arcgis_api_key = string
+      next_public_webshot_url    = string
+      basic_auth_enabled         = string
+      basic_auth_user            = string
+      basic_auth_password        = string
     })
   })
 }
@@ -80,17 +94,13 @@ variable "staging" {
       grid_tiles_path = string
     })
     client = object({
-      next_public_api_url          = string
-      next_public_api_key          = string
-      next_public_arcgis_api_key   = string
-      next_public_webshot_url      = string
-      basic_auth_enabled           = string
-      basic_auth_user              = string
-      basic_auth_password          = string
-      payload_secret               = string
-      database_url                 = string
-      app_key                      = string
-      auth_secret                  = string
+      next_public_api_url        = string
+      next_public_api_key        = string
+      next_public_arcgis_api_key = string
+      next_public_webshot_url    = string
+      basic_auth_enabled         = string
+      basic_auth_user            = string
+      basic_auth_password        = string
     })
   })
 }
@@ -105,17 +115,13 @@ variable "prod" {
       grid_tiles_path = string
     })
     client = object({
-      next_public_api_url          = string
-      next_public_api_key          = string
-      next_public_arcgis_api_key   = string
-      next_public_webshot_url      = string
-      basic_auth_enabled           = string
-      basic_auth_user              = string
-      basic_auth_password          = string
-      payload_secret               = string
-      database_url                 = string
-      app_key                      = string
-      auth_secret                  = string
+      next_public_api_url        = string
+      next_public_api_key        = string
+      next_public_arcgis_api_key = string
+      next_public_webshot_url    = string
+      basic_auth_enabled         = string
+      basic_auth_user            = string
+      basic_auth_password        = string
     })
   })
 }

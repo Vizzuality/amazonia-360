@@ -125,9 +125,13 @@ jobs:
             BASIC_AUTH_USER=${{ secrets.TF_CLIENT_BASIC_AUTH_USER }}
             BASIC_AUTH_PASSWORD=${{ secrets.TF_CLIENT_BASIC_AUTH_PASSWORD }}
             PAYLOAD_SECRET=${{ secrets.TF_CLIENT_PAYLOAD_SECRET }}
-            DATABASE_URL=${{ secrets.TF_CLIENT_DATABASE_URL }}
+            DATABASE_URL=${{ vars.TF_DATABASE_URL }}
+            DATABASE_PASSWORD=${{ secrets.TF_DATABASE_PASSWORD }}
             APP_KEY=${{ secrets.TF_CLIENT_APP_KEY }}
             AUTH_SECRET=${{ secrets.TF_CLIENT_AUTH_SECRET }}
+            AWS_SES_IAM_USER_ACCESS_KEY_ID=${{ vars.TF_AWS_SES_IAM_USER_ACCESS_KEY_ID }}
+            AWS_SES_IAM_USER_SECRET_ACCESS_KEY=${{ secrets.TF_AWS_SES_IAM_USER_SECRET_ACCESS_KEY }}
+            AWS_SES_REGION=${{ vars.TF_AWS_SES_REGION }}
           context: client
           cache-from: type=gha
           cache-to: type=gha,mode=max
