@@ -11,7 +11,7 @@ case "$NODE_ENV" in
     echo "Running migrations..."
     pnpm run payload migrate
     echo "Running in production mode..."
-    exec npx cross-env next start
+    exec env HOSTNAME=0.0.0.0 node server.js
     ;;
   development)
     echo "Running with hot reload and debugging enabled..."
