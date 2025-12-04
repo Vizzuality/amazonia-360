@@ -414,11 +414,16 @@
   "profile-delete-account-title": "Zona de peligro",
   "profile-delete-account-description": "Eliminar tu cuenta es permanente, así que asegúrate de estar seguro antes de continuar.",
   "profile-delete-account-button": "Eliminar cuenta",
-  "profile-delete-account-dialog-title": "¿Estás completamente seguro?",
+  "profile-delete-account-dialog-title": "¿Estás absolutamente seguro?",
   "profile-delete-account-dialog-description": "Esta acción no se puede deshacer. Esto eliminará permanentemente tu cuenta y eliminará todos tus datos de nuestros servidores, incluidos todos tus informes.",
   "profile-delete-account-dialog-confirm": "Sí, eliminar mi cuenta",
   "profile-delete-account-dialog-deleting": "Eliminando...",
   "profile-delete-account-toast-loading": "Eliminando tu cuenta...",
-  "profile-delete-account-toast-success": "¡Cuenta eliminada con éxito!",
-  "profile-delete-account-toast-error": "Error al eliminar la cuenta."
+  "profile-delete-account-toast-success": "¡Cuenta eliminada exitosamente!",
+  "profile-delete-account-toast-error": "Error al eliminar la cuenta.",
+  "pdf-outro-title": "Consulta la versión interactiva",
+  "pdf-outro-description-1": "Haz clic en el enlace a continuación o escanea el código QR para acceder a la versión en línea de este informe.",
+  "pdf-outro-description-2": "Allí, podrás revisar información actualizada, interactuar con los datos y acceder al contenido en idiomas adicionales.",
+  "pdf-outro-scan-me": "¡Escanéame!",
+  "pdf-outro-tagline": "Sigue entendiendo la Amazonia como nunca antes."
 }
