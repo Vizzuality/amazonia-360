@@ -65,9 +65,7 @@ export const Pdf = () => {
 
         <PdfTopics />
 
-        <PdfContainer>
-          <PdfOutro />
-        </PdfContainer>
+        <PdfOutro />
 
         <PrintButton
           onClick={() => {
