@@ -17,6 +17,7 @@ import PrintButton from "@/containers/webshot/pdf-report/button";
 import PdfContainer from "@/containers/webshot/pdf-report/container";
 import PdfCover from "@/containers/webshot/pdf-report/cover";
 import PfdGeographicContext from "@/containers/webshot/pdf-report/geographic-context";
+import { PdfOutro } from "@/containers/webshot/pdf-report/outro";
 import PdfTopics from "@/containers/webshot/pdf-report/topics";
 
 export const Pdf = () => {
@@ -63,6 +64,8 @@ export const Pdf = () => {
         </PdfContainer>
 
         <PdfTopics />
+
+        <PdfOutro />
 
         <PrintButton
           onClick={() => {

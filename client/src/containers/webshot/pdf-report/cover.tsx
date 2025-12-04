@@ -57,7 +57,9 @@ export default function DocumentCoverPdfSection() {
   return (
     <div className="relative w-full grow">
       <div className="absolute bottom-[60px] z-10 flex w-2/3 flex-col gap-8 bg-blue-700 px-14 py-10">
-        <h1 className="text-6xl text-white">{reportData?.title || t("pdf-report-cover-title")}</h1>
+        <h1 className="line-clamp-3 text-4xl text-white">
+          {reportData?.title || t("pdf-report-cover-title")}
+        </h1>
 
         <p className="font-normal text-white">
           {t("pdf-report-cover-subtitle", { topics: formattedTopicsNames })}

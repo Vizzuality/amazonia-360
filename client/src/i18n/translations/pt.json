@@ -412,7 +412,7 @@
   "profile-change-password-toast-loading": "Alterando sua senha...",
   "profile-change-password-toast-success": "Senha alterada com sucesso!",
   "profile-delete-account-title": "Zona de perigo",
-  "profile-delete-account-description": "A exclusão da sua conta é permanente, portanto, certifique-se de ter certeza antes de prosseguir.",
+  "profile-delete-account-description": "Eliminar sua conta é permanente, portanto, certifique-se de ter certeza antes de prosseguir.",
   "profile-delete-account-button": "Excluir conta",
   "profile-delete-account-dialog-title": "Você tem certeza absoluta?",
   "profile-delete-account-dialog-description": "Esta ação não pode ser desfeita. Isso excluirá permanentemente sua conta e removerá todos os seus dados de nossos servidores, incluindo todos os seus relatórios.",
@@ -420,5 +420,10 @@
   "profile-delete-account-dialog-deleting": "Excluindo...",
   "profile-delete-account-toast-loading": "Excluindo sua conta...",
   "profile-delete-account-toast-success": "Conta excluída com sucesso!",
-  "profile-delete-account-toast-error": "Falha ao excluir a conta."
+  "profile-delete-account-toast-error": "Falha ao excluir conta.",
+  "pdf-outro-title": "Confira a versão interativa",
+  "pdf-outro-description-1": "Clique no link abaixo ou escaneie o código QR para acessar a versão online deste relatório.",
+  "pdf-outro-description-2": "Lá, você pode revisar informações atualizadas, interagir com os dados e acessar o conteúdo em idiomas adicionais.",
+  "pdf-outro-scan-me": "Escaneie-me!",
+  "pdf-outro-tagline": "Continue entendendo a Amazônia como nunca antes."
 }

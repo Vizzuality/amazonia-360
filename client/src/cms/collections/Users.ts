@@ -35,11 +35,11 @@ export const Users: CollectionConfig = {
             <h1>Email verification</h1>
             <p>
               Hello ${params.user.email},<br /><br />
-              Thank you for registering an account with Amazonia 360 Forever+! Please verify your email address by clicking the link below:<br />
+              Thank you for registering an account with Amazonia360Forever+!. Please verify your email address by clicking the link below:<br />
               <a href="${verifyEmailURL}">Verify your email address</a><br /><br />
               If you did not create this account, please ignore this email.<br /><br />
               Thank you!<br />
-              Amazonia 360 Forever+ Team
+              Amazonia360Forever+ Team
             </p>
           </body>
         </html>
@@ -65,11 +65,11 @@ export const Users: CollectionConfig = {
             <h1>Password reset instructions</h1>
             <p>
               Hello ${params?.user.email},<br /><br />
-              We received a request to reset your password for your Amazonia 360 Forever+ account. If you did not make this request, please ignore this email.<br /><br />
+              We received a request to reset your password for your Amazonia360Forever+ account. If you did not make this request, please ignore this email.<br /><br />
               If you would like to reset your password, please click the link below:<br />
               <a href="${resetPasswordURL}">Reset your password</a><br /><br />
               Thank you!<br />
-              Amazonia 360 Forever+ Team
+              Amazonia360Forever+ Team
             </p>
           </body>
         </html>
