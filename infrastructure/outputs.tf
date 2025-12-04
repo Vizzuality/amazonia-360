@@ -85,6 +85,13 @@ output "database_name" {
   value       = module.database.db_instance_name
 }
 
-# Note: Sensitive outputs (username/password) are available but marked as sensitive
-# Access them with: terraform output -raw db_master_username
-# Access them with: terraform output -raw db_master_password
+output "db_admin_username" {
+  description = "The admin username for the shared database"
+  value       = module.database.db_admin_username
+}
+
+output "db_admin_password" {
+  description = "The admin user's password for the shared database"
+  value       = module.database.db_admin_password
+  sensitive   = true
+}
