@@ -73,6 +73,7 @@ variable "dev" {
       grid_tiles_path = string
     })
     client = object({
+      next_public_url            = string
       next_public_api_url        = string
       next_public_api_key        = string
       next_public_arcgis_api_key = string
@@ -94,6 +95,7 @@ variable "staging" {
       grid_tiles_path = string
     })
     client = object({
+      next_public_url            = string
       next_public_api_url        = string
       next_public_api_key        = string
       next_public_arcgis_api_key = string
@@ -115,6 +117,7 @@ variable "prod" {
       grid_tiles_path = string
     })
     client = object({
+      next_public_url            = string
       next_public_api_url        = string
       next_public_api_key        = string
       next_public_arcgis_api_key = string

@@ -168,6 +168,7 @@ module "dev" {
     TF_API_GRID_TILES_PATH = var.dev.api.grid_tiles_path
 
     # Client
+    TF_CLIENT_NEXT_PUBLIC_URL         = var.dev.client.next_public_url
     TF_CLIENT_NEXT_PUBLIC_API_URL     = var.dev.client.next_public_api_url
     TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL = var.dev.client.next_public_webshot_url
     TF_CLIENT_BASIC_AUTH_ENABLED      = var.dev.client.basic_auth_enabled
@@ -229,6 +230,7 @@ module "staging" {
     TF_API_GRID_TILES_PATH = var.staging.api.grid_tiles_path
 
     # Client
+    TF_CLIENT_NEXT_PUBLIC_URL         = var.staging.client.next_public_url
     TF_CLIENT_NEXT_PUBLIC_API_URL     = var.staging.client.next_public_api_url
     TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL = var.staging.client.next_public_webshot_url
     TF_CLIENT_BASIC_AUTH_ENABLED      = var.staging.client.basic_auth_enabled
@@ -291,6 +293,7 @@ module "prod" {
     TF_API_GRID_TILES_PATH = var.prod.api.grid_tiles_path
 
     # Client
+    TF_CLIENT_NEXT_PUBLIC_URL         = var.prod.client.next_public_url
     TF_CLIENT_NEXT_PUBLIC_API_URL     = var.prod.client.next_public_api_url
     TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL = var.prod.client.next_public_webshot_url
     TF_CLIENT_BASIC_AUTH_ENABLED      = var.prod.client.basic_auth_enabled
