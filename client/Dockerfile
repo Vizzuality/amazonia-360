@@ -56,11 +56,6 @@ ENV PAYLOAD_SECRET $PAYLOAD_SECRET
 ENV DATABASE_URL $DATABASE_URL
 ENV APP_KEY $APP_KEY
 ENV AUTH_SECRET $AUTH_SECRET
-<<<<<<< HEAD
-=======
-
-ENV COREPACK_INTEGRITY_KEYS 0
->>>>>>> f10a3827 (chore(infra): pass through AWS SES-related vars to Docker build for the Client image)
 
 ENV COREPACK_INTEGRITY_KEYS 0
 
