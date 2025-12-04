@@ -44,8 +44,8 @@ export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
           transparent,
       })}
     >
-      <div className="relative z-10 flex items-center justify-between">
-        <div className="z-[120] flex items-center space-x-2">
+      <div className="relative z-10 flex items-center justify-between gap-10">
+        <div className="z-[120] flex shrink-0 items-center space-x-2">
           <div className="flex items-center space-x-2 lg:space-x-4">
             <Image
               src={transparent ? "/IDB-logo-white.svg" : "/IDB-logo.svg"}
@@ -73,10 +73,10 @@ export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
             className={cn({
               "text-white": transparent,
               "text-black": !transparent,
-              "text-xs": true,
+              "line-clamp-1 text-xs": true,
             })}
           >
-            {reportData?.title ?? t("selected-area")}
+            {reportData?.title ?? t("pdf-report-cover-title")}
 
             {!!topic ? <span className="font-thin"> | {topic}</span> : ""}
           </p>
@@ -89,7 +89,7 @@ export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
             "text-black": !transparent,
           })}
         >
-          <p>
+          <p className="shrink-0 whitespace-nowrap">
             {currentPage} / {totalPages}
           </p>
         </div>
