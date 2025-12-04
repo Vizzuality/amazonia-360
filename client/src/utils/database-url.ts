@@ -34,5 +34,7 @@ export const getDatabaseUrlFromUrlAndPassword = (url: string, password?: string)
 
   const fullPostgresUrl = `${databaseUrl.protocol}//${databaseUrl.username}${passwordPart}@${databaseUrl.host}${databaseUrl.pathname}${searchPart}`;
 
+  console.debug(`connecting to ${fullPostgresUrl}`);
+
   return fullPostgresUrl;
 };
