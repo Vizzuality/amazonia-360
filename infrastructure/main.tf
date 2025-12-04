@@ -160,7 +160,7 @@ module "dev" {
 
     # Database - instance-specific database on a shared db instance; user
     # password is added into URL at runtime by the client app
-    TF_DATABASE_URL = "postgres://${module.dev.db_username}@${module.database.db_instance_address}:${module.database.db_instance_port}/${module.dev.db_name}?sslmode=require"
+    TF_DATABASE_URL = "postgres://${module.dev.db_username}@${module.database.db_instance_address}:${module.database.db_instance_port}/${module.dev.db_name}?sslmode=no-verify"
 
 
     # API
@@ -222,7 +222,7 @@ module "staging" {
 
     # Database - instance-specific database on a shared db instance; user
     # password is added into URL at runtime by the client app
-    TF_DATABASE_URL = "postgres://${module.staging.db_username}@${module.database.db_instance_address}:${module.database.db_instance_port}/${module.staging.db_name}?sslmode=require"
+    TF_DATABASE_URL = "postgres://${module.staging.db_username}@${module.database.db_instance_address}:${module.database.db_instance_port}/${module.staging.db_name}?sslmode=no-verify"
 
     # API
     TF_API_TIFF_PATH       = var.staging.api.tiff_path
@@ -284,7 +284,7 @@ module "prod" {
 
     # Database - instance-specific database on a shared db instance; user
     # password is added into URL at runtime by the client app
-    TF_DATABASE_URL = "postgres://${module.prod.db_username}@${module.database.db_instance_address}:${module.database.db_instance_port}/${module.prod.db_name}?sslmode=require"
+    TF_DATABASE_URL = "postgres://${module.prod.db_username}@${module.database.db_instance_address}:${module.database.db_instance_port}/${module.prod.db_name}?sslmode=no-verify"
 
     # API
     TF_API_TIFF_PATH       = var.prod.api.tiff_path
