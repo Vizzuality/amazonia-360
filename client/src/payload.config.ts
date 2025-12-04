@@ -76,6 +76,9 @@ export default buildConfig({
   plugins: [
     // storage-adapter-placeholder
   ],
+  routes: {
+    api: "/v1/api",
+  },
   jobs: {
     autoRun: [
       {
