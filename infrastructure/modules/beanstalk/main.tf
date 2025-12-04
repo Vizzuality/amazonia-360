@@ -17,7 +17,7 @@ resource "aws_s3_bucket" "application_bucket" {
 # HTTP(S) access from the world
 #
 resource "aws_security_group" "site_server_ssh_security_group" {
-  count       = 0
+  count       = 1
   vpc_id      = var.vpc.id
   name        = "${var.project}-${var.environment}-public-ssh-sg"
   description = "Security group for SSH access to and from the world - ${var.project} ${var.environment}"
