@@ -3,6 +3,9 @@
 
 FROM node:22.14-slim AS base
 
+# Enable pnpm globally in this base
+RUN corepack enable pnpm
+
 # Install dependencies only when needed
 FROM base AS deps
 
@@ -10,7 +13,8 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json pnpm-lock.yaml* .npmrc* ./
-RUN corepack enable pnpm && \
+RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
+    corepack enable pnpm && \
     pnpm install --frozen-lockfile
 
 # Rebuild the source code only when needed
@@ -59,16 +63,16 @@ ENV AUTH_SECRET $AUTH_SECRET
 
 ENV COREPACK_INTEGRITY_KEYS 0
 
+# Next.js collects completely anonymous telemetry data about general usage.
+# Learn more here: https://nextjs.org/telemetry
+# Opt out with NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
 RUN corepack enable pnpm && \
-    pnpm run ci
+    pnpm build
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -113,11 +117,7 @@ ENV AUTH_SECRET $AUTH_SECRET
 
 ENV COREPACK_INTEGRITY_KEYS 0
 
-ENV NEXT_TELEMETRY_DISABLED=1
-
 ENV NODE_ENV=production
-# Uncomment the following line in case you want to disable telemetry during runtime.
-ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -128,6 +128,12 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+
+# Copy node_modules, source files, and tsconfig to enable the use of Payload CLI
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./tsconfig.json
+COPY --from=builder --chown=nextjs:nodejs /app/src ./src
+
 COPY entrypoint.sh ./
 
 USER nextjs

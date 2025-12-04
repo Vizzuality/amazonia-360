@@ -33,9 +33,9 @@ services:
         BASIC_AUTH_PASSWORD: ${CLIENT__BASIC_AUTH_PASSWORD}
         PAYLOAD_SECRET: ${CLIENT__PAYLOAD_SECRET}
         DATABASE_URL: ${CLIENT__DATABASE_URL}
+        DATABASE_PASSWORD: ${CLIENT__DATABASE_PASSWORD}
         APP_KEY: ${CLIENT__APP_KEY}
         AUTH_SECRET: ${CLIENT__AUTH_SECRET}
-
     env_file:
       - path: client/.env
         required: false

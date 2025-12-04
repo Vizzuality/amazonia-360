@@ -9,7 +9,8 @@ echo "Starting application in ${NODE_ENV} mode..."
 case "$NODE_ENV" in
   production)
     echo "Running migrations..."
-    npx payload migrate
+    export COREPACK_HOME=$(mktemp -d)
+    pnpm payload migrate
     echo "Running in production mode..."
     exec env HOSTNAME=0.0.0.0 node server.js
     ;;
