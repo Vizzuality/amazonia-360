@@ -17,7 +17,7 @@ import {
 import { Sidebar, SidebarContent, SidebarHeader, useSidebar } from "@/components/ui/sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import AiSidebarContent from "./ai-content";
+// import AiSidebarContent from "./ai-content";
 import IndicatorsSidebarContent from "./indicators";
 
 export default function ReportSidebar() {
@@ -52,12 +52,12 @@ export default function ReportSidebar() {
                 {t("report-results-sidebar-indicators-title")}
               </TabsTrigger>
 
-              <TabsTrigger
+              {/* <TabsTrigger
                 value="ai_summaries"
                 className="m-0 px-0 py-0 text-lg font-bold text-muted-foreground"
               >
                 {t("report-results-sidebar-ai-summaries-title")}
-              </TabsTrigger>
+              </TabsTrigger> */}
             </TabsList>
             <div className="h-6 justify-start bg-transparent">
               <LuX className="h-4 w-4 cursor-pointer" onClick={handleReportEditionMode} />
@@ -76,12 +76,12 @@ export default function ReportSidebar() {
               <IndicatorsSidebarContent />
             </TabsContent>
 
-            <TabsContent
+            {/* <TabsContent
               value="ai_summaries"
               className="grow flex-col overflow-hidden data-[state=active]:flex"
             >
               <AiSidebarContent />
-            </TabsContent>
+            </TabsContent> */}
           </SidebarContent>
         </div>
       </Tabs>
