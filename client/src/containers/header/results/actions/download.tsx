@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { LuDownload } from "react-icons/lu";
 
 import { DropdownMenuItem } from "@/components/ui/dropdown";
@@ -9,11 +9,12 @@ import type { ReportResultsActionsProps } from "./types";
 
 export const DownloadAction = ({ reportId }: ReportResultsActionsProps) => {
   const t = useTranslations();
+  const locale = useLocale();
 
   return (
     <DropdownMenuItem asChild>
       <a
-        href={`/webshot/reports/${reportId}`}
+        href={`/${locale}/webshot/reports/${reportId}`}
         target="_blank"
         rel="noopener noreferrer"
         className="flex cursor-pointer items-center"
