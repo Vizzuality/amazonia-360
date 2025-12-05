@@ -17,7 +17,11 @@ import { Toaster } from "@/components/ui/sonner";
 import { redirect } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 
-export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Promise<Metadata> {
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: LayoutProps<"/[locale]/private">): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     return {};

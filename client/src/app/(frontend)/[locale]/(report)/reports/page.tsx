@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 import { Locale } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 import ReportLocation from "@/containers/report/location";
 
@@ -17,11 +17,6 @@ export async function generateMetadata({
   };
 }
 
-export default async function ReportPage({ params }: PageProps<"/[locale]/reports">) {
-  const { locale } = await params;
-
-  // Enable static rendering
-  setRequestLocale(locale as Locale);
-
+export default async function ReportPage(_props: PageProps<"/[locale]/reports">) {
   return <ReportLocation />;
 }

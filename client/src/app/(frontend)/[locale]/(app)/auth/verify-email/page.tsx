@@ -1,13 +1,15 @@
 import { Metadata } from "next";
 
 import { Locale } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 import { VerifyEmail } from "@/containers/auth/verify-email";
 
 import { redirect } from "@/i18n/navigation";
 
 import { sdk } from "@/services/sdk";
+
+export const dynamic = "force-dynamic";
 
 type Params = Promise<{ locale: Locale }>;
 
@@ -29,9 +31,6 @@ export default async function VerifyEmailPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { locale } = await params;
-
-  // Enable static rendering
-  setRequestLocale(locale);
 
   const { token } = await searchParams;
 

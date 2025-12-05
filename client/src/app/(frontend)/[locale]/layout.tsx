@@ -4,7 +4,7 @@ import { Montserrat } from "next/font/google";
 import { notFound } from "next/navigation";
 
 import { hasLocale, NextIntlClientProvider } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { Toaster } from "sonner";
 
 import { auth } from "@/lib/auth";
@@ -21,12 +21,6 @@ import "@mdxeditor/editor/style.css";
 import "@/styles/globals.css";
 import "@/styles/grid-layout.css";
 import "react-resizable/css/styles.css";
-
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({
-    locale,
-  }));
-}
 
 export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Promise<Metadata> {
   const { locale } = await params;
@@ -65,9 +59,6 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[lo
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
-
-  // Enable static rendering
-  setRequestLocale(locale);
 
   const session = await auth();
 

@@ -1,15 +1,15 @@
 import { Metadata } from "next";
 
 import { Locale } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 import { ResetPasswordForm } from "@/containers/auth/reset-password";
 
-type Params = Promise<{ locale: Locale }>;
-
-export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/auth/reset-password">): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale });
+  const t = await getTranslations({ locale: locale as Locale });
 
   return {
     title: t("metadata-reset-password-page-title"),
@@ -17,12 +17,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   };
 }
 
-export default async function ResetPasswordPage({ params }: { params: Params }) {
-  const { locale } = await params;
-
-  // Enable static rendering
-  setRequestLocale(locale);
-
+export default async function ResetPasswordPage(
+  _props: PageProps<"/[locale]/auth/reset-password">,
+) {
   return (
     <section className="flex grow items-center justify-center">
       <div className="mx-auto w-full max-w-md">
