@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default await function AuthLayout({ children }: LayoutProps<"/[locale]/auth">) {
+export default async function AuthLayout({ children }: LayoutProps<"/[locale]/auth">) {
   return (
     <>
       <main className="relative flex lg:min-h-svh">
@@ -24,4 +24,4 @@ export default await function AuthLayout({ children }: LayoutProps<"/[locale]/au
       </main>
     </>
   );
-};
+}

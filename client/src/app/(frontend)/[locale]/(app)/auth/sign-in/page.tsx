@@ -1,15 +1,15 @@
 import { Metadata } from "next";
 
 import { Locale } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 import { SignInForm } from "@/containers/auth/sign-in";
 
-type Params = Promise<{ locale: Locale }>;
-
-export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/auth/sign-in">): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale });
+  const t = await getTranslations({ locale: locale as Locale });
 
   return {
     title: t("metadata-signin-page-title"),
@@ -17,12 +17,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   };
 }
 
-export default async function SignInPage({ params }: { params: Params }) {
-  const { locale } = await params;
-
-  // Enable static rendering
-  setRequestLocale(locale);
-
+export default async function SignInPage(_props: PageProps<"/[locale]/auth/sign-in">) {
   return (
     <section className="flex grow items-center justify-center">
       <div className="mx-auto w-full max-w-md">

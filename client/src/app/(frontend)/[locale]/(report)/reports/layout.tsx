@@ -1,10 +1,6 @@
 import { Suspense } from "react";
 
-import { notFound } from "next/navigation";
-
 import { Provider as JotaiProvider } from "jotai";
-import { hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
 
 import Header from "@/containers/header";
 import FeedbackButton from "@/containers/report/feedback";
@@ -19,18 +15,7 @@ export function generateStaticParams() {
   }));
 }
 
-export default async function ReportNewLayout({
-  children,
-  params,
-}: LayoutProps<"/[locale]/reports">) {
-  const { locale } = await params;
-  if (!hasLocale(routing.locales, locale)) {
-    notFound();
-  }
-
-  // Enable static rendering
-  setRequestLocale(locale);
-
+export default async function ReportNewLayout({ children }: LayoutProps<"/[locale]/reports">) {
   return (
     <JotaiProvider>
       <Suspense fallback={null}>
