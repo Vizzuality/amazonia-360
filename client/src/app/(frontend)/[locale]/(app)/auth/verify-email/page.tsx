@@ -50,7 +50,7 @@ export default async function VerifyEmailPage({
 
   return (
     <section className="flex grow items-center justify-center">
-      <div className="mx-auto w-full max-w-md">
+      <div className="mx-auto w-full max-w-lg">
         <VerifyEmail />
       </div>
     </section>

@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
@@ -31,6 +32,9 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       email: z.email(t("auth-validation-email-invalid")),
       password: z.string().min(6, t("auth-validation-password-min-length")),
       "confirm-password": z.string(),
+      termsAccepted: z.boolean().refine((val) => val === true, {
+        message: t("auth-validation-terms-required"),
+      }),
     })
     .refine((data) => data.password === data["confirm-password"], {
       message: t("auth-validation-passwords-no-match"),
@@ -43,6 +47,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       email: "",
       password: "",
       "confirm-password": "",
+      termsAccepted: false,
     },
     validators: {
       onSubmit: formSchema,
@@ -156,6 +161,49 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                     />
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                  </Field>
+                );
+              }}
+            </form.Field>
+
+            <form.Field name="termsAccepted">
+              {(field) => {
+                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <div className="flex items-start gap-2">
+                      <Checkbox
+                        id={field.name}
+                        checked={field.state.value}
+                        onCheckedChange={(checked) => field.handleChange(checked as boolean)}
+                        onBlur={field.handleBlur}
+                        aria-invalid={isInvalid}
+                      />
+                      <label
+                        htmlFor={field.name}
+                        className="text-sm leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        {t("auth-agreement-checkbox")}{" "}
+                        <a
+                          href="https://www.iadb.org/en/terms-conditions-and-notices/terms-and-conditions"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-medium underline underline-offset-4 hover:text-primary"
+                        >
+                          {t("auth-agreement-terms")}
+                        </a>{" "}
+                        {t("conjunction-and")}{" "}
+                        <a
+                          href="https://www.iadb.org/en/home/terms-conditions-and-notices/privacy-notice"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-medium underline underline-offset-4 hover:text-primary"
+                        >
+                          {t("auth-agreement-privacy")}
+                        </a>
+                      </label>
+                    </div>
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
                 );

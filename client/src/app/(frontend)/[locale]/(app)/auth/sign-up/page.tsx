@@ -20,7 +20,7 @@ export async function generateMetadata({
 export default async function SignUpPage(_props: PageProps<"/[locale]/auth/sign-up">) {
   return (
     <section className="flex grow items-center justify-center">
-      <div className="mx-auto w-full max-w-md">
+      <div className="mx-auto w-full max-w-lg">
         <SignupForm />
       </div>
     </section>
