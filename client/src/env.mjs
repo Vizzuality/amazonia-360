@@ -11,6 +11,7 @@ export const env = createEnv({
     DATABASE_PASSWORD: z.string().optional(),
     APP_KEY: z.string(),
     AUTH_SECRET: z.string(),
+    AUTH_URL: z.url(),
     AWS_SES_IAM_USER_ACCESS_KEY_ID: z.string(),
     AWS_SES_IAM_USER_SECRET_ACCESS_KEY: z.string(),
     AWS_SES_REGION: z.string(),
@@ -37,6 +38,11 @@ export const env = createEnv({
     BASIC_AUTH_PASSWORD: process.env.BASIC_AUTH_PASSWORD,
     NEXT_PUBLIC_WEBSHOT_URL: process.env.NEXT_PUBLIC_WEBSHOT_URL,
     NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
+    // Notice that in practice NEXTAUTH_URL will be from the public URL, since
+    // these are expected to always match; but the setup allows to explicitly
+    // define NEXTAUTH_URL as environment variable, in which case it will be
+    // used here.
+    AUTH_URL: process.env.AUTH_URL || process.env.NEXT_PUBLIC_URL,
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     NEXT_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_API_KEY,
     NEXT_PUBLIC_ARCGIS_API_KEY: process.env.NEXT_PUBLIC_ARCGIS_API_KEY,
