@@ -256,6 +256,7 @@ jobs:
           API_AUTH_TOKEN: ${{ secrets.TF_API_AUTH_TOKEN }}
           API_GRID_TILES_PATH: ${{ vars.TF_API_GRID_TILES_PATH }}
           OPENAI_TOKEN: ${{ secrets.TF_API_OPENAI_TOKEN }}
+          AUTH_URL: ${{ vars.TF_CLIENT_NEXT_PUBLIC_URL }}
 
           DATABASE_PASSWORD: ${{ secrets.TF_DATABASE_PASSWORD }}
           AWS_SES_REGION: ${{ vars.TF_AWS_SES_REGION }}
@@ -291,6 +292,7 @@ jobs:
                 - AWS_SES_IAM_USER_ACCESS_KEY_ID=${AWS_SES_IAM_USER_ACCESS_KEY_ID}
                 - AWS_SES_IAM_USER_SECRET_ACCESS_KEY=${AWS_SES_IAM_USER_SECRET_ACCESS_KEY}
                 - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+                - AUTH_URL=${AUTH_URL}
               restart: always
             webshot:
               image: $ECR_REGISTRY/$ECR_REPOSITORY_WEBSHOT:$IMAGE_TAG
