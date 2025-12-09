@@ -10,7 +10,7 @@ import { getTranslations } from "next-intl/server";
 
 import { reportQueryOptions } from "@/lib/report";
 
-import DataDisclaimer from "@/containers/disclaimers/data";
+import Footer from "@/containers/footer";
 import { LoadProvider } from "@/containers/indicators/load-provider";
 import { ReportResults } from "@/containers/results";
 
@@ -52,7 +52,7 @@ export default async function ReportResultsPage({ params }: PageProps<"/[locale]
     <HydrationBoundary state={dehydrate(queryClient)}>
       <LoadProvider>
         <ReportResults />
-        <DataDisclaimer />
+        <Footer />
       </LoadProvider>
     </HydrationBoundary>
   );

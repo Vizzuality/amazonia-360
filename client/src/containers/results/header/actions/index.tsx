@@ -4,6 +4,8 @@ import { useParams } from "next/navigation";
 
 import { LuEllipsisVertical } from "react-icons/lu";
 
+import { HelpAction } from "@/containers/results/header/actions/help";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,7 +18,7 @@ import { DownloadAction } from "./download";
 import { NewReportAction } from "./new";
 import { ShareAction } from "./share";
 
-export const ReportResultsActions = () => {
+export const ActionsReport = () => {
   const { id } = useParams();
 
   return (
@@ -34,6 +36,7 @@ export const ReportResultsActions = () => {
 
         <ShareAction reportId={id} />
         <DownloadAction reportId={id} />
+        <HelpAction reportId={id} />
       </DropdownMenuContent>
     </DropdownMenu>
   );

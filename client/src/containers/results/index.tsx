@@ -8,8 +8,8 @@ import { useReport } from "@/lib/report";
 
 import { locationAtom, titleAtom, topicsViewAtom } from "@/app/(frontend)/store";
 
-import ReportResultsHeader from "@/containers/header/results";
 import ReportResultsContent from "@/containers/results/content";
+import ReportResultsHeader from "@/containers/results/header";
 import ReportResultsSidebar from "@/containers/results/sidebar";
 
 export const ReportResults = () => {

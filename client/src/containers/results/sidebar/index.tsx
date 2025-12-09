@@ -39,7 +39,7 @@ export default function ReportSidebar() {
     >
       <Tabs
         value={tab}
-        className="sticky top-0 z-10 flex max-h-svh grow flex-col items-start space-y-4 overflow-hidden bg-white pt-14"
+        className="sticky top-0 z-10 flex max-h-svh grow flex-col items-start space-y-4 overflow-hidden bg-white"
         onValueChange={(value) => setTab(value as ReportResultsTab)}
       >
         <div className="flex grow flex-col overflow-hidden pb-4 pt-6">

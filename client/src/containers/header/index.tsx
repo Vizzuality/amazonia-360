@@ -25,7 +25,6 @@ import ConfirmLocation from "./confirm/desktop";
 import DesktopDrawingTools from "./drawing-tools/desktop";
 import Logo from "./logo";
 import MobileNavigation from "./mobile-navigation";
-import ReportResultsHeaderDesktop from "./results/desktop";
 
 function getRoutes(pathname: string, params: Params) {
   const { id } = params;
@@ -56,7 +55,7 @@ export default function Header() {
   const { setOpen } = useSidebar();
 
   const DYNAMIC_HEADER = useMemo(() => {
-    const { isHome, isReportSub, isReportResults } = getRoutes(pathname, params);
+    const { isHome, isReportSub } = getRoutes(pathname, params);
 
     return (
       <>
@@ -69,8 +68,7 @@ export default function Header() {
         )}
         {!location && isReportSub && <DesktopDrawingTools />}
         {location && isReportSub && <ConfirmLocation />}
-        {isReportResults && <ReportResultsHeaderDesktop />}
-        {(isReportResults || isReportSub) && <Separator className="h-4 w-px bg-border" />}
+        {isReportSub && <Separator className="h-4 w-px bg-border" />}
       </>
     );
   }, [pathname, params, location, t]);
@@ -87,7 +85,7 @@ export default function Header() {
   return (
     <header
       className={cn({
-        "fixed left-0 top-0 z-40 w-full": true,
+        "relative left-0 top-0 z-10 w-full": true,
         "box-border flex h-16 flex-col justify-center border-b border-blue-50 bg-white backdrop-blur print:hidden": true,
         // "border-blue-100": isReport,
       })}
