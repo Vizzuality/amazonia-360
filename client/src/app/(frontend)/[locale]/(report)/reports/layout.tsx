@@ -21,7 +21,7 @@ export default async function ReportNewLayout({ children }: LayoutProps<"/[local
       <Suspense fallback={null}>
         <Header />
         <FeedbackButton />
-        <main className="relative top-16 flex min-h-[calc(100svh_-_theme(space.16))] flex-col">
+        <main className="relative flex min-h-[calc(100svh_-_theme(space.16))] flex-col">
           {children}
           <ReportMap />
         </main>

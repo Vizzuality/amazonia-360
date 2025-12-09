@@ -9,7 +9,7 @@ import { reportEditionModeAtom, resultsSidebarTabAtom } from "@/app/(frontend)/s
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 
-export default function IndicatorsReport() {
+export default function EditReport() {
   const t = useTranslations();
   const { open, setOpen } = useSidebar();
   const setResultsSidebarTab = useSetAtom(resultsSidebarTabAtom);
