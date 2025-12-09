@@ -3,8 +3,8 @@ import Image from "next/image";
 export default async function AuthLayout({ children }: LayoutProps<"/[locale]/auth">) {
   return (
     <>
-      <main className="relative flex lg:min-h-svh">
-        <div className="container flex grow flex-col pt-20 lg:min-h-svh lg:pt-16">
+      <main className="relative flex lg:min-h-[calc(100svh_-_theme(space.16))]">
+        <div className="container flex grow flex-col pt-20 lg:min-h-[calc(100svh_-_theme(space.16))] lg:pt-16">
           <div className="grid grow grid-cols-12">
             <div className="col-span-12 flex grow flex-col lg:col-span-8">{children}</div>
           </div>
