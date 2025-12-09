@@ -129,6 +129,27 @@ export function SignInForm(props: React.ComponentProps<"div">) {
               </Button>
             </Field>
 
+            <div className="text-center text-sm font-normal text-muted-foreground">
+              {t("auth-agreement-text")}{" "}
+              <a
+                href="https://www.iadb.org/en/terms-conditions-and-notices/terms-and-conditions"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium underline underline-offset-4 hover:text-primary"
+              >
+                {t("auth-agreement-terms")}
+              </a>{" "}
+              {t("conjunction-and")}{" "}
+              <a
+                href="https://www.iadb.org/en/home/terms-conditions-and-notices/privacy-notice"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium underline underline-offset-4 hover:text-primary"
+              >
+                {t("auth-agreement-privacy")}
+              </a>
+            </div>
+
             <Field>
               <Button
                 variant="outline"

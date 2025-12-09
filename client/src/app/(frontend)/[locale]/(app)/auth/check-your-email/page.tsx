@@ -22,7 +22,7 @@ export default async function CheckYourEmailPage(
 ) {
   return (
     <section className="flex grow items-center justify-center">
-      <div className="mx-auto w-full max-w-md">
+      <div className="mx-auto w-full max-w-lg">
         <CheckYourEmail />
       </div>
     </section>
