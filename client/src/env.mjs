@@ -11,7 +11,7 @@ export const env = createEnv({
     DATABASE_PASSWORD: z.string().optional(),
     APP_KEY: z.string(),
     AUTH_SECRET: z.string(),
-    AUTH_URL: z.url(),
+    AUTH_URL: z.url().optional(),
     AWS_SES_IAM_USER_ACCESS_KEY_ID: z.string(),
     AWS_SES_IAM_USER_SECRET_ACCESS_KEY: z.string(),
     AWS_SES_REGION: z.string(),
