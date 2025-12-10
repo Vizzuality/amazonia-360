@@ -205,7 +205,7 @@
   "report-results-sidebar-ai-summaries-checkbox-active-indicators-info": "Incluir apenas os indicadores ativos nos resumos gerados. Alterações nos indicadores exigirão a geração de novos resumos.",
   "report-results-sidebar-ai-summaries-generating": "Geração de resumos de IA",
   "report-results-sidebar-ai-summaries-generating-info": "Os resumos gerados por IA podem ser imprecisos. Recomendamos que verifique cuidadosamente o conteúdo",
-  "report-results-sidebar-ai-summaries-disclaimer": "Este texto que você está prestes a gerar utiliza IA e pode conter erros ou omissões. Você é o único responsável por revisar, editar e validar a precisão e adequação do conteúdo final.",
+  "report-results-sidebar-ai-summaries-disclaimer": "O resumo é gerado usando IA e pode conter erros ou omissões. Você é o único responsável por revisar, editar e validar a precisão e adequação do conteúdo final.",
   "report-results-copy-title": "Compartilhar e salvar relatório",
   "report-results-copy-description": "Este link permite compartilhar o relatório e salvar seu estado atual. Copie-o para revisitá-lo ou compartilhá-lo com outros.",
   "indicators-custom-municipalities-selected-area-intersects": "A área selecionada intersecta",

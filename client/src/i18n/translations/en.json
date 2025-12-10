@@ -205,7 +205,7 @@
   "report-results-sidebar-ai-summaries-checkbox-active-indicators-info": "Include only active indicators in the generated summaries. Changes to the indicators will require generating new summaries.",
   "report-results-sidebar-ai-summaries-generating": "Generating AI summaries",
   "report-results-sidebar-ai-summaries-generating-info": "AI generated summaries can be inaccurate. We encourage you to verify the content carefully",
-  "report-results-sidebar-ai-summaries-disclaimer": "You are going to generate is using AI and may contain errors or omissions. You are solely responsible for reviewing, editing, and validating the accuracy and suitability of the final content.",
+  "report-results-sidebar-ai-summaries-disclaimer": "The summary is generated using AI and may contain errors or omissions. You are solely responsible for reviewing, editing, and validating the accuracy and suitability of the final content.",
   "report-results-copy-title": "Share & Save",
   "report-results-copy-description": "This link lets you share the report and saves its current status. Copy it to revisit or share with others.",
   "indicators-custom-municipalities-selected-area-intersects": "The selected area intersects",
