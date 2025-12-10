@@ -14,6 +14,8 @@ import { useCanEditReport, useDuplicateReport, useReport, useSaveReport } from "
 import { TopicView } from "@/app/(frontend)/parsers";
 import { useSyncLocation, useSyncTitle, useSyncTopics } from "@/app/(frontend)/store";
 
+import { AuthWrapper } from "@/containers/auth/wrapper";
+
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -81,19 +83,27 @@ export default function SaveReport() {
 
   if (CAN_EDIT) {
     return (
-      <Button onClick={handleSave} className="space-x-2" disabled={saveMutation.isPending}>
-        {!saveMutation.isPending && <LuFileText className="h-5 w-5" />}
-        {saveMutation.isPending && <Spinner className="h-5 w-5" />}
-        <span>{t("save")}</span>
-      </Button>
+      <AuthWrapper>
+        <Button onClick={handleSave} className="space-x-2" disabled={saveMutation.isPending}>
+          {!saveMutation.isPending && <LuFileText className="h-5 w-5" />}
+          {saveMutation.isPending && <Spinner className="h-5 w-5" />}
+          <span>{t("save")}</span>
+        </Button>
+      </AuthWrapper>
     );
   }
 
   return (
-    <Button onClick={handleDuplicate} className="space-x-2" disabled={duplicateMutation.isPending}>
-      {!duplicateMutation.isPending && <LuFileText className="h-5 w-5" />}
-      {duplicateMutation.isPending && <Spinner className="h-5 w-5" />}
-      <span>Make a copy</span>
-    </Button>
+    <AuthWrapper>
+      <Button
+        onClick={handleDuplicate}
+        className="space-x-2"
+        disabled={duplicateMutation.isPending}
+      >
+        {!duplicateMutation.isPending && <LuFileText className="h-5 w-5" />}
+        {duplicateMutation.isPending && <Spinner className="h-5 w-5" />}
+        <span>Make a copy</span>
+      </Button>
+    </AuthWrapper>
   );
 }

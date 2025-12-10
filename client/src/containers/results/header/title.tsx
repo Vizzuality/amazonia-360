@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 
 import { useSyncTitle } from "@/app/(frontend)/store";
 
+import { AuthWrapper } from "@/containers/auth/wrapper";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -63,17 +65,19 @@ export default function TitleReport() {
           <h2 className="border border-transparent px-1 py-2 text-2xl font-medium text-foreground lg:text-3xl tall:xl:text-4xl">
             {title ?? t("selected-area")}
           </h2>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={startEdit}
-            aria-controls={id}
-            aria-label={t("edit")}
-            className="rounded-full"
-          >
-            <LuPen className="h-4 w-4 text-secondary-foreground" />
-          </Button>
+          <AuthWrapper>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={startEdit}
+              aria-controls={id}
+              aria-label={t("edit")}
+              className="rounded-full"
+            >
+              <LuPen className="h-4 w-4 text-secondary-foreground" />
+            </Button>
+          </AuthWrapper>
         </header>
       )}
 

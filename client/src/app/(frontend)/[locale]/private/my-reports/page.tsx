@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 
 export default async function MyReportsPage() {
   return (
-    <main className="relative top-16 flex min-h-[calc(100svh_-_theme(space.16))] flex-col bg-muted">
+    <main className="relative flex min-h-[calc(100svh_-_theme(space.16))] flex-col bg-muted">
       <div className="container space-y-5">
         <MyReports />
       </div>

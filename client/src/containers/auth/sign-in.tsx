@@ -1,9 +1,11 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
+
 import { useForm } from "@tanstack/react-form";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { LuGithub } from "react-icons/lu";
+// import { LuGithub } from "react-icons/lu";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -21,8 +23,13 @@ import { Input } from "@/components/ui/input";
 
 import { Link, useRouter } from "@/i18n/navigation";
 
-export function SignInForm(props: React.ComponentProps<"div">) {
+export type SignInFormProps = React.ComponentProps<"div"> & {
+  redirectUrl?: string;
+};
+
+export function SignInForm(props: SignInFormProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const t = useTranslations();
 
   const formSchema = z.object({
@@ -48,7 +55,9 @@ export function SignInForm(props: React.ComponentProps<"div">) {
           if (r?.error) {
             throw new Error(r.error);
           }
-          router.push("/private/my-reports");
+          router.push(
+            props.redirectUrl || searchParams.get("redirectUrl") || "/private/my-reports",
+          );
         }),
         {
           loading: t("auth-toast-logging-in"),
@@ -150,7 +159,7 @@ export function SignInForm(props: React.ComponentProps<"div">) {
               </a>
             </div>
 
-            <Field>
+            {/* <Field>
               <Button
                 variant="outline"
                 type="button"
@@ -161,7 +170,7 @@ export function SignInForm(props: React.ComponentProps<"div">) {
                 <LuGithub className="mr-2 h-4 w-4" />
                 {t("auth-button-continue-github")}
               </Button>
-            </Field>
+            </Field> */}
           </FieldGroup>
         </form>
       </CardContent>
