@@ -16,7 +16,7 @@ export default function ReportResultsHeaderDesktop() {
       })}
     >
       <div className="container">
-        <div className="relative flex h-full justify-between gap-4">
+        <div className="relative flex h-full justify-between gap-10">
           <TitleReport />
 
           <div className="flex items-center space-x-2 print:hidden">

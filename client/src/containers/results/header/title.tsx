@@ -1,9 +1,11 @@
 "use client";
 
-import { ChangeEvent, useCallback, useRef, useState } from "react";
+import { useState } from "react";
 
+import { useForm } from "@tanstack/react-form";
 import { useTranslations } from "next-intl";
 import { LuPen, LuCheck, LuX } from "react-icons/lu";
+import { z } from "zod";
 
 import { cn } from "@/lib/utils";
 
@@ -12,57 +14,49 @@ import { useSyncTitle } from "@/app/(frontend)/store";
 import { AuthWrapper } from "@/containers/auth/wrapper";
 
 import { Button } from "@/components/ui/button";
+import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+
+const renameSchema = z.object({
+  title: z.string().min(1, "Title is required").max(60, "Title must be at most 60 characters"),
+});
 
 export default function TitleReport() {
   const t = useTranslations();
 
   const [title, setTitle] = useSyncTitle();
-  const [pendingTitle, setPendingTitle] = useState(title);
   const [editMode, setEditMode] = useState(false);
-  const shouldSelect = useRef(false);
 
-  const setInputRef = (el: HTMLInputElement | null) => {
-    if (el && editMode && shouldSelect.current) {
-      el.focus();
-      el.select();
-      shouldSelect.current = false;
-    }
-  };
+  // const { id: reportId } = useParams();
+  // const { data: reportData } = useReport({ id: `${reportId}` });
 
-  const onInputChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      setPendingTitle(value);
+  const form = useForm({
+    defaultValues: {
+      title: title || "",
     },
-    [setPendingTitle],
-  );
-
-  const id = "report-title-input";
+    validators: {
+      onSubmit: renameSchema,
+    },
+    onSubmit: async ({ value }) => {
+      setTitle(value.title);
+      setEditMode(false);
+    },
+  });
 
   const startEdit = () => {
-    setPendingTitle(title);
-    shouldSelect.current = true;
     setEditMode(true);
   };
 
-  const handleSave = useCallback(() => {
-    setTitle(pendingTitle);
-    shouldSelect.current = false;
-    setEditMode(false);
-  }, [pendingTitle, setTitle]);
-
   const handleCancel = () => {
-    setPendingTitle(title);
-    shouldSelect.current = false;
+    form.reset();
     setEditMode(false);
   };
 
   return (
-    <div className="relative -ml-1.5 flex h-full w-full items-center justify-between">
+    <div className="relative -ml-1.5 flex h-20 w-full grow items-center justify-between">
       {!editMode && (
-        <header className="flex items-center space-x-4">
-          <h2 className="border border-transparent px-1 py-2 text-2xl font-medium text-foreground lg:text-3xl tall:xl:text-4xl">
+        <header className="flex grow items-center space-x-4">
+          <h2 className="border-b-2 border-l border-t-2 border-transparent px-1 py-2 text-2xl font-medium text-foreground lg:text-3xl tall:xl:text-4xl">
             {title ?? t("selected-area")}
           </h2>
           <AuthWrapper>
@@ -71,7 +65,6 @@ export default function TitleReport() {
               variant="ghost"
               size="icon"
               onClick={startEdit}
-              aria-controls={id}
               aria-label={t("edit")}
               className="shrink-0 rounded-full"
             >
@@ -82,30 +75,44 @@ export default function TitleReport() {
       )}
 
       {editMode && (
-        <header className="flex items-center space-x-4">
-          <Input
-            id={id}
-            ref={setInputRef}
-            autoFocus={editMode}
-            value={pendingTitle ?? title ?? t("selected-area")}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleSave();
-              if (e.key === "Escape") handleCancel();
-            }}
-            onChange={onInputChange}
-            readOnly={!editMode}
-            aria-readonly={!editMode}
-            maxLength={60}
-            className={cn(
-              "mx-0 inline h-full w-fit rounded-md bg-blue-50 px-1 py-2 text-2xl font-medium text-foreground shadow-none outline-none ring-2 ring-primary/40 focus:ring-0 lg:text-3xl tall:xl:text-4xl",
-            )}
-          />
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit();
+          }}
+          className="flex grow items-center space-x-4"
+        >
+          <FieldGroup>
+            <form.Field name="title">
+              {(field) => {
+                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      autoFocus={editMode}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                      maxLength={60}
+                      className={cn(
+                        "mx-0 inline h-full w-full rounded-md bg-blue-50 px-1 py-2 text-2xl font-medium text-foreground shadow-none outline-none ring-2 ring-primary/40 focus:ring-0 lg:text-3xl tall:xl:text-4xl",
+                      )}
+                    />
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                  </Field>
+                );
+              }}
+            </form.Field>
+          </FieldGroup>
+
           <div className="flex gap-2">
             <Button
               variant="outline"
               size="icon-sm"
-              type="button"
-              onClick={handleSave}
+              type="submit"
               aria-label={t("save")}
               className="rounded-full"
             >
@@ -122,7 +129,7 @@ export default function TitleReport() {
               <LuX className="h-4 w-4" />
             </Button>
           </div>
-        </header>
+        </form>
       )}
     </div>
   );
