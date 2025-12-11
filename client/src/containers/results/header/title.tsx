@@ -73,7 +73,7 @@ export default function TitleReport() {
               onClick={startEdit}
               aria-controls={id}
               aria-label={t("edit")}
-              className="rounded-full"
+              className="shrink-0 rounded-full"
             >
               <LuPen className="h-4 w-4 text-secondary-foreground" />
             </Button>
@@ -95,6 +95,7 @@ export default function TitleReport() {
             onChange={onInputChange}
             readOnly={!editMode}
             aria-readonly={!editMode}
+            maxLength={60}
             className={cn(
               "mx-0 inline h-full w-fit rounded-md bg-blue-50 px-1 py-2 text-2xl font-medium text-foreground shadow-none outline-none ring-2 ring-primary/40 focus:ring-0 lg:text-3xl tall:xl:text-4xl",
             )}

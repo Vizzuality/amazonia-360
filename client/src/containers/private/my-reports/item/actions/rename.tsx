@@ -6,6 +6,7 @@ import { useForm } from "@tanstack/react-form";
 import { useTranslations } from "next-intl";
 import { LuTextCursorInput } from "react-icons/lu";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import { useSaveReport } from "@/lib/report";
 
@@ -25,6 +26,11 @@ import { Textarea } from "@/components/ui/textarea";
 
 import type { ReportActionsProps } from "./types";
 
+const renameSchema = z.object({
+  title: z.string().min(1, "Title is required").max(60, "Title must be at most 60 characters"),
+  description: z.string().max(200, "Description must be at most 200 characters"),
+});
+
 export const RenameAction = ({ report }: ReportActionsProps) => {
   const t = useTranslations();
   const [open, setOpen] = useState(false);
@@ -34,6 +40,9 @@ export const RenameAction = ({ report }: ReportActionsProps) => {
     defaultValues: {
       title: report.title || "",
       description: report.description || "",
+    },
+    validators: {
+      onSubmit: renameSchema,
     },
     onSubmit: async ({ value }) => {
       if (!report.location) return;
@@ -95,6 +104,7 @@ export const RenameAction = ({ report }: ReportActionsProps) => {
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
                         aria-invalid={isInvalid}
+                        maxLength={60}
                       />
                       {isInvalid && <FieldError errors={field.state.meta.errors} />}
                     </Field>
