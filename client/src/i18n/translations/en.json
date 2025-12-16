@@ -430,5 +430,8 @@
   "pdf-outro-description-1": "Click the link bellow or scan the QR code to access the online version of this report.",
   "pdf-outro-description-2": "There, you can review updated information, interact with the data, and access the content in additional languages.",
   "pdf-outro-scan-me": "Scan me!",
-  "pdf-outro-tagline": "Keep understanding Amazonia like never before."
+  "pdf-outro-tagline": "Keep understanding Amazonia like never before.",
+  "pdf-report-button-title": "Download or Print PDF",
+  "pdf-report-button-description": "In the dialog window, select **Save as PDF, Save to PDF, Print to File**, or a printer to print the report. For best results, set the layout to Landscape and disable page margins.",
+  "pdf-report-button-text": "Download / Print PDF"
 }

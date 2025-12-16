@@ -51,10 +51,12 @@ export const Pdf = () => {
       <div
         className={cn({
           relative: true,
-          "space-y-5 py-10 print:space-y-0 print:py-0": true,
+          "space-y-5 pb-10 print:space-y-0 print:py-0": true,
         })}
         ref={ref}
       >
+        <PrintButton />
+
         <PdfContainer index={0}>
           <PdfCover />
         </PdfContainer>
@@ -66,12 +68,6 @@ export const Pdf = () => {
         <PdfTopics />
 
         <PdfOutro />
-
-        <PrintButton
-          onClick={() => {
-            window.print();
-          }}
-        />
       </div>
     </LoadProvider>
   );

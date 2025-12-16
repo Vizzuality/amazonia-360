@@ -430,5 +430,8 @@
   "pdf-outro-description-1": "Clique no link abaixo ou escaneie o código QR para acessar a versão online deste relatório.",
   "pdf-outro-description-2": "Lá, você pode revisar informações atualizadas, interagir com os dados e acessar o conteúdo em idiomas adicionais.",
   "pdf-outro-scan-me": "Escaneie-me!",
-  "pdf-outro-tagline": "Continue entendendo a Amazônia como nunca antes."
+  "pdf-outro-tagline": "Continue entendendo a Amazônia como nunca antes.",
+  "pdf-report-button-title": "Baixar ou imprimir PDF",
+  "pdf-report-button-description": "Na janela de diálogo, selecione **Salvar como PDF, Salvar em PDF, Imprimir em arquivo** ou uma impressora para imprimir o relatório. Para melhores resultados, defina o layout como Paisagem e desative as margens da página.",
+  "pdf-report-button-text": "Baixar / Imprimir PDF"
 }
