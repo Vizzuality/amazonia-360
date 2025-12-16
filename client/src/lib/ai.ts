@@ -2,12 +2,17 @@ import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
 import { getIndicators, getQueryFeatureId } from "@/lib/indicators";
 
-import { Context, ContextLanguage } from "@/types/generated/api.schemas";
+import { Context, ContextDescriptionType, ContextLanguage } from "@/types/generated/api.schemas";
 import { generateDescriptionTextAiPost } from "@/types/generated/text-generation";
 import { Indicator, ResourceFeature } from "@/types/indicator";
 import { Topic } from "@/types/topic";
 
-import { AiSummary } from "@/app/(frontend)/parsers";
+export type AiSummary = {
+  type?: ContextDescriptionType;
+  only_active?: boolean;
+  enabled?: boolean;
+  generating?: Record<string, boolean>;
+};
 
 export type GetAISummaryParams = Context;
 

@@ -1,10 +1,7 @@
 "use client";
 
-import { useParams } from "next/navigation";
-
 import { atom, useAtom } from "jotai";
 import { useQueryState } from "nuqs";
-import { useLocalStorage } from "usehooks-ts";
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 
@@ -19,7 +16,6 @@ import {
   indicatorsSettingsParser,
   Location,
   TopicView,
-  AiSummary,
 } from "@/app/(frontend)/parsers";
 
 import { SketchProps } from "@/components/map/sketch";
@@ -89,17 +85,6 @@ export const useSyncGridSelectedDataset = () => {
 
 export const useSyncGridTableSettings = () => {
   return useQueryState("gridTableSettings", gridTableSettingsParser);
-};
-
-// AI SUMMARY PARAMS
-export const useSyncAiSummary = () => {
-  const { id } = useParams();
-  return useLocalStorage<AiSummary>(`${id ?? "new"}:ai-summary`, {
-    type: "Normal",
-    only_active: true,
-    enabled: false,
-    generating: {},
-  });
 };
 
 // JOTAI PARAMS

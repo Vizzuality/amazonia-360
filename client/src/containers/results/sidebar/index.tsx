@@ -17,7 +17,6 @@ import {
 import { Sidebar, SidebarContent, SidebarHeader, useSidebar } from "@/components/ui/sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// import AiSidebarContent from "./ai-content";
 import IndicatorsSidebarContent from "./indicators";
 
 export default function ReportSidebar() {

@@ -1,7 +1,6 @@
 import { parseAsArrayOf, parseAsFloat, parseAsInteger, parseAsJson, parseAsString } from "nuqs";
 import { z } from "zod";
 
-import { ContextDescriptionType } from "@/types/generated/api.schemas";
 import { VisualizationTypes } from "@/types/indicator";
 
 import { BasemapIds } from "@/constants/basemaps";
@@ -50,13 +49,6 @@ export type CustomLocation = {
 };
 
 export type Location = SearchLocation | CustomLocation;
-
-export type AiSummary = {
-  type?: ContextDescriptionType;
-  only_active?: boolean;
-  enabled?: boolean;
-  generating?: Record<string, boolean>;
-};
 
 export const bboxParser = parseAsArrayOf(parseAsFloat);
 
