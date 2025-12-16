@@ -25,6 +25,7 @@ export const Reports: CollectionConfig = {
       name: "title",
       type: "text",
       localized: true,
+      maxLength: 60,
     },
     {
       name: "description",
