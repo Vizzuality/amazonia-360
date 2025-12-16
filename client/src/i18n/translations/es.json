@@ -430,5 +430,8 @@
   "pdf-outro-description-1": "Haz clic en el enlace a continuación o escanea el código QR para acceder a la versión en línea de este informe.",
   "pdf-outro-description-2": "Allí, podrás revisar información actualizada, interactuar con los datos y acceder al contenido en idiomas adicionales.",
   "pdf-outro-scan-me": "¡Escanéame!",
-  "pdf-outro-tagline": "Sigue entendiendo la Amazonia como nunca antes."
+  "pdf-outro-tagline": "Sigue entendiendo la Amazonia como nunca antes.",
+  "pdf-report-button-title": "Descargar o imprimir PDF",
+  "pdf-report-button-description": "En la ventana de diálogo, seleccione **Guardar como PDF, Guardar en PDF, Imprimir en archivo** o una impresora para imprimir el informe. Para obtener mejores resultados, configure el diseño en Horizontal y desactive los márgenes de página.",
+  "pdf-report-button-text": "Descargar / Imprimir PDF"
 }
