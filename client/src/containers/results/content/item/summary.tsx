@@ -22,7 +22,7 @@ export interface ReportResultsSummaryProps {
 }
 
 export const ReportResultsSummary = ({ topic, editing, mutation }: ReportResultsSummaryProps) => {
-  const [topics, setTopics] = useSyncTopics();
+  const { topics, setTopics } = useSyncTopics();
 
   const TOPIC = useMemo(() => {
     return topics?.find((t) => t.topic_id === topic?.id);

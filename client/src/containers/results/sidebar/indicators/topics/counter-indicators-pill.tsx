@@ -5,7 +5,7 @@ import { Topic } from "@/types/topic";
 import { useSyncTopics } from "@/app/(frontend)/store";
 
 export function CounterIndicatorsPill({ id }: { id: Topic["id"] }) {
-  const [topics] = useSyncTopics();
+  const { topics } = useSyncTopics();
   const t = topics?.find((t) => t.id === id);
 
   if (!t || !t.indicators || !t.indicators?.length) return null;

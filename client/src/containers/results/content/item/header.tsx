@@ -27,7 +27,7 @@ export const ReportTopicHeader = (props: Topic) => {
 
   const { data: session } = useSession();
 
-  const [topics, setTopics] = useSyncTopics();
+  const { topics, setTopics } = useSyncTopics();
   const [location] = useSyncLocation();
 
   const [editing, setEditing] = useState(false);

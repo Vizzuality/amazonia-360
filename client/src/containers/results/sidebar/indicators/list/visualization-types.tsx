@@ -27,7 +27,7 @@ export function VisualizationType({
 }) {
   const t = useTranslations();
   const locale = useLocale();
-  const [topics, setTopics] = useSyncTopics();
+  const { topics, setTopics } = useSyncTopics();
   const { data: subtopicsData } = useGetDefaultSubtopics({ locale, topicId });
 
   const handleVisualizationType = (visualizationType: VisualizationTypes) => {

@@ -11,7 +11,6 @@ import { getTranslations } from "next-intl/server";
 import { reportQueryOptions } from "@/lib/report";
 
 import Footer from "@/containers/footer";
-import { LoadProvider } from "@/containers/indicators/load-provider";
 import { ReportResults } from "@/containers/results";
 
 import config from "@/payload.config";
@@ -50,10 +49,8 @@ export default async function ReportResultsPage({ params }: PageProps<"/[locale]
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <LoadProvider>
-        <ReportResults />
-        <Footer />
-      </LoadProvider>
+      <ReportResults />
+      <Footer />
     </HydrationBoundary>
   );
 }

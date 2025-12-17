@@ -31,7 +31,7 @@ export const ReportResultsContentItem = ({
 }: ReportResultsContentItemProps) => {
   const locale = useLocale();
 
-  const [, setTopics] = useSyncTopics();
+  const { setTopics } = useSyncTopics();
   const [reportEditionMode] = useAtom(reportEditionModeAtom);
 
   const EDITABLE = editable && reportEditionMode;

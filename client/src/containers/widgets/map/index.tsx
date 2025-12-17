@@ -62,7 +62,7 @@ export default function WidgetMap({
   ...viewProps
 }: WidgetMapProps) {
   const GEOMETRY = useLocationGeometry(location);
-  const [topics, setTopics] = useSyncTopics();
+  const { topics, setTopics } = useSyncTopics();
   const [defaultTopics, setDefaultTopics] = useSyncDefaultTopics();
 
   const { onIndicatorViewLoaded, onIndicatorViewLoading } = useIndicator();

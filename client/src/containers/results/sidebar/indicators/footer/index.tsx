@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 export default function SidebarIndicatorsFooter() {
   const t = useTranslations();
   const locale = useLocale();
-  const [topics, setTopics] = useSyncTopics();
+  const { topics, setTopics } = useSyncTopics();
 
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
 

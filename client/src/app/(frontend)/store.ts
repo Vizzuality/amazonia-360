@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormContext, useWatch } from "react-hook-form";
+
 import { atom, useAtom } from "jotai";
 import { useQueryState } from "nuqs";
 
@@ -17,6 +19,8 @@ import {
   Location,
   TopicView,
 } from "@/app/(frontend)/parsers";
+
+import { ReportFormData } from "@/containers/results";
 
 import { SketchProps } from "@/components/map/sketch";
 
@@ -50,7 +54,17 @@ export const useSyncLocation = () => {
 
 export const topicsViewAtom = atom<TopicView[] | null | undefined>(null);
 export const useSyncTopics = () => {
-  return useAtom(topicsViewAtom);
+  const form = useFormContext<ReportFormData>();
+  const topics = useWatch({ control: form.control, name: "topics" });
+
+  return {
+    topics: topics as TopicView[],
+    setTopics: (newTopics: TopicView[] | null | ((prev: TopicView[]) => TopicView[] | null)) => {
+      const nextTopics =
+        typeof newTopics === "function" ? newTopics(topics as TopicView[]) : newTopics;
+      form.setValue("topics", nextTopics as ReportFormData["topics"]);
+    },
+  };
 };
 
 export const useSyncDefaultTopics = () => {

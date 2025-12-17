@@ -40,7 +40,7 @@ export const LoadProvider: React.FC<{
       status: "loading" | "ready";
     }[]
   >([]);
-  const [topics] = useSyncTopics();
+  const { topics } = useSyncTopics();
   const [overviewTopics] = useSyncDefaultTopics();
 
   const setPdfIndicatorsMapState = useSetAtom(pdfIndicatorsMapStateAtom); // pdfIndicatorsMapStateAtom

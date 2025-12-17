@@ -13,7 +13,7 @@ import { Markdown } from "@/components/ui/markdown";
 export default function PdfTopicCover(topic: Topic) {
   const { name, description, image } = topic;
 
-  const [topics] = useSyncTopics();
+  const { topics } = useSyncTopics();
 
   const TOPIC = useMemo(() => topics?.find((t) => t.topic_id === topic.id), [topic.id, topics]);
 

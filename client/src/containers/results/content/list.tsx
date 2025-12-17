@@ -10,7 +10,7 @@ import ReportResultsContentItem from "@/containers/results/content/item";
 
 export default function ReportResultsContentList() {
   const locale = useLocale();
-  const [topics] = useSyncTopics();
+  const { topics } = useSyncTopics();
   const { data: topicsData } = useGetDefaultTopics({ locale });
 
   return (

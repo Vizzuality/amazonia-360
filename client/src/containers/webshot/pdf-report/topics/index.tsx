@@ -15,7 +15,7 @@ import PdfTopicSection from "@/containers/webshot/pdf-report/topics/section";
 export default function PdfTopics() {
   const locale = useLocale();
 
-  const [topics] = useSyncTopics();
+  const { topics } = useSyncTopics();
 
   const { data: allTopics } = useGetTopics(locale);
 

@@ -36,7 +36,7 @@ export default function SearchC() {
   const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [topics, setTopics] = useSyncTopics();
+  const { topics, setTopics } = useSyncTopics();
 
   const queryIndicators = useGetDefaultIndicators({ locale });
 

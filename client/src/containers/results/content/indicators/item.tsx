@@ -26,7 +26,7 @@ export const ReportResultsContentIndicatorItem = ({
   editable = true,
   editing = false,
 }: ReportResultsContentIndicatorItemProps) => {
-  const [, setTopics] = useSyncTopics();
+  const { setTopics } = useSyncTopics();
   const [editionModeIndicator, setEditionModeIndicator] = useAtom(indicatorsEditionModeAtom);
   const { indicator_id, type } = indicatorView;
 

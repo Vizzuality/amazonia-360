@@ -16,7 +16,7 @@ export function CounterIndicatorsPill({
   topic_id: Subtopic["topic_id"];
 }) {
   const locale = useLocale();
-  const [topics] = useSyncTopics();
+  const { topics } = useSyncTopics();
   const { data: indicatorsData } = useGetDefaultIndicators({ subtopicId: id, locale });
 
   const indicators = topics?.find((t) => t.topic_id === topic_id)?.indicators;

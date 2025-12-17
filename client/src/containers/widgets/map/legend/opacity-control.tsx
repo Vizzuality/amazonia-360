@@ -10,7 +10,7 @@ import { FALLBACK_WIDGET_DEFAULT_BASEMAP_ID } from "@/containers/widgets/map/uti
 import OpacityControl from "@/components/map/legend/controls/opacity";
 
 const OpacityControlButton = ({ indicator }: { indicator: Omit<Indicator, "resource"> }) => {
-  const [topics, setTopics] = useSyncTopics();
+  const { topics, setTopics } = useSyncTopics();
   const [defaultTopics, setDefaultTopics] = useSyncDefaultTopics();
 
   const { opacity } = useMemo(() => {

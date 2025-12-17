@@ -30,7 +30,7 @@ export default function SaveReport() {
   const { data: session } = useSession();
 
   const [title] = useSyncTitle();
-  const [topics] = useSyncTopics();
+  const { topics } = useSyncTopics();
   const [location] = useSyncLocation();
 
   const saveMutation = useSaveReport();

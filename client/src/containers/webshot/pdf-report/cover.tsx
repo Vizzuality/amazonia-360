@@ -19,7 +19,7 @@ export default function DocumentCoverPdfSection() {
   const { id: reportId } = useParams();
   const { data: reportData } = useReport({ id: `${reportId}` });
 
-  const [topics] = useSyncTopics();
+  const { topics } = useSyncTopics();
   const { data: allTopics } = useGetTopics(locale);
 
   const selectedTopics = useMemo(

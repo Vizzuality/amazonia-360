@@ -34,7 +34,7 @@ export function IndicatorsItem({
 }) {
   const t = useTranslations();
 
-  const [topics] = useSyncTopics();
+  const { topics } = useSyncTopics();
 
   const selectedTopicIndicators = topics?.find(({ topic_id }) => topic_id === topicId)?.indicators;
   const selectedIndicator = selectedTopicIndicators?.find(

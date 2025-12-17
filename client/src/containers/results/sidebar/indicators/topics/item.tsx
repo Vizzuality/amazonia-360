@@ -28,7 +28,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
 
   const TOPIC = useGetTopicsId({ id, locale });
 
-  const [topics, setTopics] = useSyncTopics();
+  const { topics, setTopics } = useSyncTopics();
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
 
   const handleClick = (open: boolean) => {

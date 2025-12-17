@@ -19,7 +19,7 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
 }
 
 export default function PdfTopicSection(topic: Topic) {
-  const [topics] = useSyncTopics();
+  const { topics } = useSyncTopics();
 
   const TOPIC = useMemo(() => topics?.find((t) => t.topic_id === topic.id), [topic.id, topics]);
 
