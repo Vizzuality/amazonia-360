@@ -6,7 +6,7 @@ import { useAtom } from "jotai";
 import { VisualizationTypes } from "@/types/indicator";
 
 import { IndicatorView, IndicatorMapView, TopicView } from "@/app/(frontend)/parsers";
-import { indicatorsEditionModeAtom, useSyncTopics } from "@/app/(frontend)/store";
+import { indicatorsEditionModeAtom, useFormTopics } from "@/app/(frontend)/store";
 
 import IndicatorCard from "@/containers/results/content/indicators/card";
 import DeleteHandler from "@/containers/results/content/indicators/controls/delete";
@@ -26,7 +26,7 @@ export const ReportResultsContentIndicatorItem = ({
   editable = true,
   editing = false,
 }: ReportResultsContentIndicatorItemProps) => {
-  const { setTopics } = useSyncTopics();
+  const { setTopics } = useFormTopics();
   const [editionModeIndicator, setEditionModeIndicator] = useAtom(indicatorsEditionModeAtom);
   const { indicator_id, type } = indicatorView;
 

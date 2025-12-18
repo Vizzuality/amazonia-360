@@ -8,14 +8,14 @@ import { useLocale, useTranslations } from "next-intl";
 import { useGetDefaultSubtopics } from "@/lib/subtopics";
 import { useGetDefaultTopics } from "@/lib/topics";
 
-import { indicatorsExpandAtom, useSyncTopics } from "@/app/(frontend)/store";
+import { indicatorsExpandAtom, useFormTopics } from "@/app/(frontend)/store";
 
 import { Button } from "@/components/ui/button";
 
 export default function SidebarIndicatorsFooter() {
   const t = useTranslations();
   const locale = useLocale();
-  const { topics, setTopics } = useSyncTopics();
+  const { topics, setTopics } = useFormTopics();
 
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
 

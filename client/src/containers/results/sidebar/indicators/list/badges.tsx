@@ -4,12 +4,12 @@ import { useCallback } from "react";
 
 import { VisualizationTypes } from "@/types/indicator";
 
-import { useSyncTopics } from "@/app/(frontend)/store";
+import { useFormTopics } from "@/app/(frontend)/store";
 
 import { Badge } from "@/components/ui/badge";
 
 export function Badges({ topicId, indicatorId }: { topicId: number; indicatorId: number }) {
-  const { topics, setTopics } = useSyncTopics();
+  const { topics, setTopics } = useFormTopics();
 
   const topic = topics?.find(({ topic_id }) => topic_id === topicId);
   const indicatorsDisplay = topic?.indicators?.filter(

@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { VisualizationTypes } from "@/types/indicator";
 import { Topic } from "@/types/topic";
 
-import { useSyncTopics } from "@/app/(frontend)/store";
+import { useFormTopics } from "@/app/(frontend)/store";
 
 import ReportResultsIndicator from "@/containers/results/content/indicators/card";
 import PdfContainer from "@/containers/webshot/pdf-report/container";
@@ -19,7 +19,7 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
 }
 
 export default function PdfTopicSection(topic: Topic) {
-  const { topics } = useSyncTopics();
+  const { topics } = useFormTopics();
 
   const TOPIC = useMemo(() => topics?.find((t) => t.topic_id === topic.id), [topic.id, topics]);
 

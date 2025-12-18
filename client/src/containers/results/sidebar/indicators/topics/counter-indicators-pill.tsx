@@ -2,10 +2,10 @@
 
 import { Topic } from "@/types/topic";
 
-import { useSyncTopics } from "@/app/(frontend)/store";
+import { useFormTopics } from "@/app/(frontend)/store";
 
 export function CounterIndicatorsPill({ id }: { id: Topic["id"] }) {
-  const { topics } = useSyncTopics();
+  const { topics } = useFormTopics();
   const t = topics?.find((t) => t.topic_id === id);
 
   if (!t || !t.indicators || !t.indicators?.length) return null;

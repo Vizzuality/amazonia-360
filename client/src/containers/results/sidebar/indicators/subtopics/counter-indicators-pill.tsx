@@ -6,7 +6,7 @@ import { useGetDefaultIndicators } from "@/lib/indicators";
 
 import { Subtopic } from "@/types/topic";
 
-import { useSyncTopics } from "@/app/(frontend)/store";
+import { useFormTopics } from "@/app/(frontend)/store";
 
 export function CounterIndicatorsPill({
   id,
@@ -16,7 +16,7 @@ export function CounterIndicatorsPill({
   topic_id: Subtopic["topic_id"];
 }) {
   const locale = useLocale();
-  const { topics } = useSyncTopics();
+  const { topics } = useFormTopics();
   const { data: indicatorsData } = useGetDefaultIndicators({ subtopicId: id, locale });
 
   const indicators = topics?.find((t) => t.topic_id === topic_id)?.indicators;

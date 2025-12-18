@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 
 import { IndicatorView } from "@/app/(frontend)/parsers";
-import { useSyncTopics } from "@/app/(frontend)/store";
+import { useFormTopics } from "@/app/(frontend)/store";
 
 import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
 
@@ -36,7 +36,7 @@ export default function SearchC() {
   const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const { topics, setTopics } = useSyncTopics();
+  const { topics, setTopics } = useFormTopics();
 
   const queryIndicators = useGetDefaultIndicators({ locale });
 

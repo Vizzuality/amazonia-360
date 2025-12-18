@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 import { Topic } from "@/types/topic";
 
-import { indicatorsExpandAtom, useSyncTopics } from "@/app/(frontend)/store";
+import { indicatorsExpandAtom, useFormTopics } from "@/app/(frontend)/store";
 
 import SubtopicList from "@/containers/results/sidebar/indicators/subtopics";
 
@@ -28,7 +28,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
 
   const TOPIC = useGetTopicsId({ id, locale });
 
-  const { topics, setTopics } = useSyncTopics();
+  const { topics, setTopics } = useFormTopics();
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
 
   const handleClick = (open: boolean) => {

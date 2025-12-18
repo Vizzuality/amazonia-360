@@ -7,7 +7,7 @@ import { LuPlus, LuInfo } from "react-icons/lu";
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 import { Topic } from "@/types/topic";
 
-import { useSyncTopics } from "@/app/(frontend)/store";
+import { useFormTopics } from "@/app/(frontend)/store";
 
 import Info from "@/containers/info";
 import { VisualizationType } from "@/containers/results/sidebar/indicators/list/visualization-types";
@@ -34,7 +34,7 @@ export function IndicatorsItem({
 }) {
   const t = useTranslations();
 
-  const { topics } = useSyncTopics();
+  const { topics } = useFormTopics();
 
   const selectedTopicIndicators = topics?.find(({ topic_id }) => topic_id === topicId)?.indicators;
   const selectedIndicator = selectedTopicIndicators?.find(

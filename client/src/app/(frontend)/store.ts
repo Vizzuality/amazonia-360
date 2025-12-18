@@ -53,7 +53,7 @@ export const useSyncLocation = () => {
 };
 
 export const topicsViewAtom = atom<TopicView[] | null | undefined>(null);
-export const useSyncTopics = () => {
+export const useFormTopics = () => {
   const form = useFormContext<ReportFormData>();
   const topics = useWatch({ control: form.control, name: "topics" });
 
