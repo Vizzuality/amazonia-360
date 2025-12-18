@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import { useSyncIndicators } from "@/app/(frontend)/store";
 
-import { LegendItem } from "@/containers/report/map/legend/item";
+import { LegendItem } from "@/containers/map/legend/item";
 
 import Legend from "@/components/map/legend";
 

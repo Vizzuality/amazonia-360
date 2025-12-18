@@ -22,7 +22,7 @@ import { BasemapIds } from "@/constants/basemaps";
 import { DATASETS } from "@/constants/datasets";
 
 import { useIndicator } from "@/containers/indicators/provider";
-import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
+import SelectedLayer from "@/containers/map/layer-manager/selected-layer";
 import { WidgetLegend } from "@/containers/widgets/map/legend";
 
 import Controls from "@/components/map/controls";

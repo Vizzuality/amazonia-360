@@ -21,8 +21,8 @@ import {
 
 import { BUFFERS } from "@/constants/map";
 
-import GridLegend from "@/containers/report/map/grid-legend/grid";
-import { SketchTooltips } from "@/containers/report/map/sketch-tooltips";
+import GridLegend from "@/containers/map/grid-legend/grid";
+import { SketchTooltips } from "@/containers/map/sketch-tooltips";
 
 import Controls from "@/components/map/controls";
 import BasemapControl from "@/components/map/controls/basemap";

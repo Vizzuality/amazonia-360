@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { useCanEditReport, useDuplicateReport, useReport, useSaveReport } from "@/lib/report";
 
 import { TopicView } from "@/app/(frontend)/parsers";
-import { useSyncLocation, useFormTitle, useFormTopics } from "@/app/(frontend)/store";
+import { useFormTitle, useFormTopics, useFormLocation } from "@/app/(frontend)/store";
 
 import { AuthWrapper } from "@/containers/auth/wrapper";
 
@@ -31,7 +31,7 @@ export default function SaveReport() {
 
   const { title } = useFormTitle();
   const { topics } = useFormTopics();
-  const [location] = useSyncLocation();
+  const { location } = useFormLocation();
 
   const saveMutation = useSaveReport();
   const duplicateMutation = useDuplicateReport();

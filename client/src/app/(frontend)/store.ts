@@ -68,6 +68,28 @@ export const useFormTitle = () => {
   };
 };
 
+export const useFormLocation = () => {
+  const form = useFormContext<ReportFormData>();
+  const location = useWatch({ control: form.control, name: "location" });
+
+  return {
+    location: location as Location | undefined | null,
+    setLocation: (
+      newLocation:
+        | Location
+        | undefined
+        | null
+        | ((prev: Location | undefined | null) => Location | undefined | null),
+    ) => {
+      const nextLocation =
+        typeof newLocation === "function"
+          ? newLocation(location as Location | undefined | null)
+          : newLocation;
+      form.setValue("location", nextLocation as ReportFormData["location"]);
+    },
+  };
+};
+
 export const useFormTopics = () => {
   const form = useFormContext<ReportFormData>();
   const topics = useWatch({ control: form.control, name: "topics" });
