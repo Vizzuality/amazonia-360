@@ -43,8 +43,24 @@ export const useSyncBbox = () => {
 };
 // REPORT PARAMS
 export const titleAtom = atom<string | undefined | null>(null);
-export const useSyncTitle = () => {
-  return useAtom(titleAtom);
+export const useFormTitle = () => {
+  const form = useFormContext<ReportFormData>();
+  const title = useWatch({ control: form.control, name: "title" });
+
+  return [
+    title as string | undefined | null,
+    (
+      newTitle:
+        | string
+        | undefined
+        | null
+        | ((prev: string | undefined | null) => string | undefined | null),
+    ) => {
+      const nextTitle =
+        typeof newTitle === "function" ? newTitle(title as string | undefined | null) : newTitle;
+      form.setValue("title", nextTitle as ReportFormData["title"]);
+    },
+  ] as const;
 };
 
 export const locationAtom = atom<Location | null>(null);

@@ -9,7 +9,7 @@ import { z } from "zod";
 
 import { cn } from "@/lib/utils";
 
-import { useSyncTitle } from "@/app/(frontend)/store";
+import { useFormTitle } from "@/app/(frontend)/store";
 
 import { AuthWrapper } from "@/containers/auth/wrapper";
 
@@ -24,7 +24,7 @@ const renameSchema = z.object({
 export default function TitleReport() {
   const t = useTranslations();
 
-  const [title, setTitle] = useSyncTitle();
+  const [title, setTitle] = useFormTitle();
   const [editMode, setEditMode] = useState(false);
 
   // const { id: reportId } = useParams();
@@ -112,9 +112,10 @@ export default function TitleReport() {
             <Button
               variant="outline"
               size="icon-sm"
-              type="submit"
+              type="button"
               aria-label={t("save")}
               className="rounded-full"
+              onClick={() => form.handleSubmit()}
             >
               <LuCheck className="h-4 w-4" />
             </Button>
