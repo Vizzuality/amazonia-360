@@ -29,7 +29,7 @@ export default function SaveReport() {
   const { data: reportData } = useReport({ id: `${id}` });
   const { data: session } = useSession();
 
-  const [title] = useFormTitle();
+  const { title } = useFormTitle();
   const { topics } = useFormTopics();
   const [location] = useSyncLocation();
 

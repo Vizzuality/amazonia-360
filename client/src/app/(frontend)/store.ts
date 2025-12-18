@@ -41,15 +41,20 @@ export type GridHoverType = {
 export const useSyncBbox = () => {
   return useQueryState("bbox", bboxParser);
 };
+
+export const locationAtom = atom<Location | null>(null);
+export const useSyncLocation = () => {
+  return useAtom(locationAtom);
+};
+
 // REPORT PARAMS
-export const titleAtom = atom<string | undefined | null>(null);
 export const useFormTitle = () => {
   const form = useFormContext<ReportFormData>();
   const title = useWatch({ control: form.control, name: "title" });
 
-  return [
-    title as string | undefined | null,
-    (
+  return {
+    title: title as string | undefined | null,
+    setTitle: (
       newTitle:
         | string
         | undefined
@@ -60,15 +65,9 @@ export const useFormTitle = () => {
         typeof newTitle === "function" ? newTitle(title as string | undefined | null) : newTitle;
       form.setValue("title", nextTitle as ReportFormData["title"]);
     },
-  ] as const;
+  };
 };
 
-export const locationAtom = atom<Location | null>(null);
-export const useSyncLocation = () => {
-  return useAtom(locationAtom);
-};
-
-export const topicsViewAtom = atom<TopicView[] | null | undefined>(null);
 export const useFormTopics = () => {
   const form = useFormContext<ReportFormData>();
   const topics = useWatch({ control: form.control, name: "topics" });

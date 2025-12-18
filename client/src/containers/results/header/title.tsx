@@ -24,7 +24,7 @@ const renameSchema = z.object({
 export default function TitleReport() {
   const t = useTranslations();
 
-  const [title, setTitle] = useFormTitle();
+  const { title, setTitle } = useFormTitle();
   const [editMode, setEditMode] = useState(false);
 
   // const { id: reportId } = useParams();

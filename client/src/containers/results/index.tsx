@@ -10,7 +10,7 @@ import { useHydrateAtoms } from "jotai/utils";
 
 import { useReport } from "@/lib/report";
 
-import { locationAtom, titleAtom, topicsViewAtom } from "@/app/(frontend)/store";
+import { locationAtom } from "@/app/(frontend)/store";
 
 import { LoadProvider } from "@/containers/indicators/load-provider";
 import ReportResultsContent from "@/containers/results/content";
@@ -38,9 +38,7 @@ export const ReportResults = () => {
     console.log("Form submitted:", data);
   }, []);
   // Hydrate atoms on initial mount
-  useHydrateAtoms(new Map([[titleAtom, reportData?.title]]));
   useHydrateAtoms(new Map([[locationAtom, reportData?.location]]));
-  useHydrateAtoms(new Map([[topicsViewAtom, reportData?.topics]]));
 
   return (
     <FormProvider {...methods}>

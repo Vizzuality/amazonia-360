@@ -12,7 +12,7 @@ import { useTranslations } from "next-intl";
 import { useReport } from "@/lib/report";
 import { cn } from "@/lib/utils";
 
-import { locationAtom, titleAtom, topicsViewAtom } from "@/app/(frontend)/store";
+import { locationAtom } from "@/app/(frontend)/store";
 
 import { LoadProvider } from "@/containers/indicators/load-provider";
 import { ReportFormData } from "@/containers/results";
@@ -39,9 +39,7 @@ export const Pdf = () => {
   });
 
   // Hydrate atoms on initial mount
-  useHydrateAtoms(new Map([[titleAtom, reportData?.title]]));
   useHydrateAtoms(new Map([[locationAtom, reportData?.location]]));
-  useHydrateAtoms(new Map([[topicsViewAtom, reportData?.topics]]));
 
   const ref = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
