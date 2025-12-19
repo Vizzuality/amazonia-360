@@ -6,13 +6,14 @@ import dynamic from "next/dynamic";
 
 import { useAtom, useSetAtom } from "jotai";
 
-import { getGeometryWithBuffer } from "@/lib/location";
+import { getGeometryWithBuffer, useLocationGeometry } from "@/lib/location";
 
 import {
   gridHoverAtom,
   sketchActionAtom,
   sketchAtom,
   tmpBboxAtom,
+  useFormLocation,
   useSyncGridSelectedDataset,
   useSyncLocation,
 } from "@/app/(frontend)/store";
@@ -43,16 +44,13 @@ const Legend = dynamic(() => import("./legend"), {
   ssr: false,
 });
 
-export default function MapEditContainer({
-  desktop,
-  bbox,
-}: {
-  desktop?: boolean;
-  bbox?: number[];
-}) {
+export default function MapEditContainer({ desktop }: { desktop?: boolean }) {
   const pathname = usePathname();
 
   const [tmpBbox, setTmpBbox] = useAtom(tmpBboxAtom);
+
+  const { location: defaultLocation } = useFormLocation();
+  const GEOMETRY = useLocationGeometry(defaultLocation);
 
   const [sketch, setSketch] = useAtom(sketchAtom);
   const [sketchAction, setSketchAction] = useAtom(sketchActionAtom);
@@ -63,13 +61,19 @@ export default function MapEditContainer({
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
 
   const defaultBbox = useMemo(() => {
-    if (bbox) return bbox;
+    if (GEOMETRY?.extent)
+      return [
+        GEOMETRY.extent.xmin,
+        GEOMETRY.extent.ymin,
+        GEOMETRY.extent.xmax,
+        GEOMETRY.extent.ymax,
+      ];
 
     if (desktop)
       return [-12710193.369428927, -2766739.914202488, -4682470.91080871, 1719196.4017967433];
 
     return [-8999366.738755312, -4376503.729887867, -4792272.701940329, 2354846.7290161047];
-  }, [bbox, desktop]);
+  }, [GEOMETRY, desktop]);
 
   const handleCreate = useCallback(
     (graphic: __esri.Graphic) => {
