@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 
-import { useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 
 import { cn } from "@/lib/utils";
 
@@ -17,7 +17,7 @@ import SketchMobile from "./sketch/mobile";
 
 export default function ReportLocation() {
   const [location] = useSyncLocation();
-  const reportPanel = useAtomValue(reportPanelAtom);
+  const [reportPanel, setReportPanel] = useAtom(reportPanelAtom);
 
   return (
     <Suspense fallback={null}>
@@ -41,7 +41,7 @@ export default function ReportLocation() {
           <div className="absolute bottom-0 z-10 w-full bg-white">
             <div className="container grid grid-cols-12">
               <div className="col-span-12 py-6">
-                <Confirm />
+                <Confirm onConfirm={() => setReportPanel("topics")} />
               </div>
             </div>
           </div>

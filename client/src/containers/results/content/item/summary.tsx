@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 import { Topic } from "@/types/topic";
 
-import { useSyncTopics } from "@/app/(frontend)/store";
+import { useFormTopics } from "@/app/(frontend)/store";
 
 import { ForwardRefEditor } from "@/components/ui/editor";
 import { Markdown } from "@/components/ui/markdown";
@@ -22,7 +22,7 @@ export interface ReportResultsSummaryProps {
 }
 
 export const ReportResultsSummary = ({ topic, editing, mutation }: ReportResultsSummaryProps) => {
-  const [topics, setTopics] = useSyncTopics();
+  const { topics, setTopics } = useFormTopics();
 
   const TOPIC = useMemo(() => {
     return topics?.find((t) => t.topic_id === topic?.id);

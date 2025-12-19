@@ -4,13 +4,13 @@ import { useLocale } from "next-intl";
 
 import { useGetDefaultTopics } from "@/lib/topics";
 
-import { useSyncTopics } from "@/app/(frontend)/store";
+import { useFormTopics } from "@/app/(frontend)/store";
 
 import ReportResultsContentItem from "@/containers/results/content/item";
 
 export default function ReportResultsContentList() {
   const locale = useLocale();
-  const [topics] = useSyncTopics();
+  const { topics } = useFormTopics();
   const { data: topicsData } = useGetDefaultTopics({ locale });
 
   return (

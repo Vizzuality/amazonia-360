@@ -13,14 +13,14 @@ import {
 
 import { DATASETS } from "@/constants/datasets";
 
-import GridLayer from "@/containers/report/map/layer-manager/grid-layer";
-import LayerManagerItem from "@/containers/report/map/layer-manager/item";
-import PlaceholderGridLayer from "@/containers/report/map/layer-manager/placeholder-grid-layer";
+import GridLayer from "@/containers/map/layer-manager/grid-layer";
+import LayerManagerItem from "@/containers/map/layer-manager/item";
+import PlaceholderGridLayer from "@/containers/map/layer-manager/placeholder-grid-layer";
 
 import { LayerProps } from "@/components/map/layers/types";
 
 import { usePathname } from "@/i18n/navigation";
-// import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
+// import SelectedLayer from "@/containers/map/layer-manager/selected-layer";
 
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 

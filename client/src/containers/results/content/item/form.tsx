@@ -43,6 +43,7 @@ export const AISummaryForm = ({ mutation, onSubmit, onClose }: AISummaryFormProp
 
   return (
     <form
+      id="report-ai-summary"
       onSubmit={(e) => {
         e.preventDefault();
         form.handleSubmit();
@@ -155,6 +156,7 @@ export const AISummaryForm = ({ mutation, onSubmit, onClose }: AISummaryFormProp
                 </TooltipProvider>
               </div>
               <Switch
+                type="button"
                 className="h-4 w-8"
                 checked={field.state.value}
                 onCheckedChange={(checked) => field.handleChange(checked)}
@@ -169,7 +171,12 @@ export const AISummaryForm = ({ mutation, onSubmit, onClose }: AISummaryFormProp
       </p>
 
       {/* Submit Button */}
-      <Button type="submit" className="w-full gap-2" disabled={mutation?.isPending}>
+      <Button
+        type="submit"
+        className="w-full gap-2"
+        disabled={mutation?.isPending}
+        form="report-ai-summary"
+      >
         {mutation?.isPending && <Spinner className="h-5 w-5" />}
         {!mutation?.isPending && <LuSparkles className="h-5 w-5" />}
         <span>Generate Summary</span>

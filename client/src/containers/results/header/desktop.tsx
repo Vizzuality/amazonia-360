@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 
 import { ActionsReport } from "@/containers/results/header/actions";
 import EditReport from "@/containers/results/header/edit";
+import EditLocationReport from "@/containers/results/header/edit-location";
 import SaveReport from "@/containers/results/header/save";
 import TitleReport from "@/containers/results/header/title";
 
@@ -20,6 +21,7 @@ export default function ReportResultsHeaderDesktop() {
           <TitleReport />
 
           <div className="flex items-center space-x-2 print:hidden">
+            <EditLocationReport />
             <EditReport />
             <SaveReport />
             <ActionsReport />

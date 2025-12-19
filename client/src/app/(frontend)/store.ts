@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormContext, useWatch } from "react-hook-form";
+
 import { atom, useAtom } from "jotai";
 import { useQueryState } from "nuqs";
 
@@ -17,6 +19,8 @@ import {
   Location,
   TopicView,
 } from "@/app/(frontend)/parsers";
+
+import { ReportFormData } from "@/containers/results";
 
 import { SketchProps } from "@/components/map/sketch";
 
@@ -37,20 +41,67 @@ export type GridHoverType = {
 export const useSyncBbox = () => {
   return useQueryState("bbox", bboxParser);
 };
-// REPORT PARAMS
-export const titleAtom = atom<string | undefined | null>(null);
-export const useSyncTitle = () => {
-  return useAtom(titleAtom);
-};
 
 export const locationAtom = atom<Location | null>(null);
 export const useSyncLocation = () => {
   return useAtom(locationAtom);
 };
 
-export const topicsViewAtom = atom<TopicView[] | null | undefined>(null);
-export const useSyncTopics = () => {
-  return useAtom(topicsViewAtom);
+// REPORT PARAMS
+export const useFormTitle = () => {
+  const form = useFormContext<ReportFormData>();
+  const title = useWatch({ control: form.control, name: "title" });
+
+  return {
+    title: title as string | undefined | null,
+    setTitle: (
+      newTitle:
+        | string
+        | undefined
+        | null
+        | ((prev: string | undefined | null) => string | undefined | null),
+    ) => {
+      const nextTitle =
+        typeof newTitle === "function" ? newTitle(title as string | undefined | null) : newTitle;
+      form.setValue("title", nextTitle as ReportFormData["title"]);
+    },
+  };
+};
+
+export const useFormLocation = () => {
+  const form = useFormContext<ReportFormData>();
+  const location = useWatch({ control: form.control, name: "location" });
+
+  return {
+    location: location as Location | undefined | null,
+    setLocation: (
+      newLocation:
+        | Location
+        | undefined
+        | null
+        | ((prev: Location | undefined | null) => Location | undefined | null),
+    ) => {
+      const nextLocation =
+        typeof newLocation === "function"
+          ? newLocation(location as Location | undefined | null)
+          : newLocation;
+      form.setValue("location", nextLocation as ReportFormData["location"]);
+    },
+  };
+};
+
+export const useFormTopics = () => {
+  const form = useFormContext<ReportFormData>();
+  const topics = useWatch({ control: form.control, name: "topics" });
+
+  return {
+    topics: topics as TopicView[],
+    setTopics: (newTopics: TopicView[] | null | ((prev: TopicView[]) => TopicView[] | null)) => {
+      const nextTopics =
+        typeof newTopics === "function" ? newTopics(topics as TopicView[]) : newTopics;
+      form.setValue("topics", nextTopics as ReportFormData["topics"]);
+    },
+  };
 };
 
 export const useSyncDefaultTopics = () => {

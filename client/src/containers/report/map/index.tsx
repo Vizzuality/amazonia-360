@@ -2,8 +2,8 @@
 
 import { Suspense } from "react";
 
+import MapContainer from "@/containers/map";
 import { Media } from "@/containers/media";
-import MapContainer from "@/containers/report/map/map";
 
 export default function ReportMap() {
   return (

@@ -12,7 +12,7 @@ import { useLocationGeometry } from "@/lib/location";
 import { ContextDescriptionType } from "@/types/generated/api.schemas";
 import { Topic } from "@/types/topic";
 
-import { useSyncLocation, useSyncTopics } from "@/app/(frontend)/store";
+import { useFormTopics, useFormLocation } from "@/app/(frontend)/store";
 
 import { AuthWrapper } from "@/containers/auth/wrapper";
 import { AISummaryForm } from "@/containers/results/content/item/form";
@@ -27,8 +27,8 @@ export const ReportTopicHeader = (props: Topic) => {
 
   const { data: session } = useSession();
 
-  const [topics, setTopics] = useSyncTopics();
-  const [location] = useSyncLocation();
+  const { topics, setTopics } = useFormTopics();
+  const { location } = useFormLocation();
 
   const [editing, setEditing] = useState(false);
 

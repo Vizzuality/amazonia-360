@@ -10,7 +10,7 @@ import { useGetTopicsId } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 
 import { TopicView } from "@/app/(frontend)/parsers";
-import { reportEditionModeAtom, useSyncTopics } from "@/app/(frontend)/store";
+import { reportEditionModeAtom, useFormTopics } from "@/app/(frontend)/store";
 
 import { MIN_VISUALIZATION_SIZES } from "@/constants/topics";
 
@@ -31,7 +31,7 @@ export const ReportResultsContentItem = ({
 }: ReportResultsContentItemProps) => {
   const locale = useLocale();
 
-  const [, setTopics] = useSyncTopics();
+  const { setTopics } = useFormTopics();
   const [reportEditionMode] = useAtom(reportEditionModeAtom);
 
   const EDITABLE = editable && reportEditionMode;
