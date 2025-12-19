@@ -1,5 +1,9 @@
 "use client";
 
+import { useState } from "react";
+
+import { useFormContext } from "react-hook-form";
+
 import {
   Dialog,
   DialogContent,
@@ -12,19 +16,27 @@ import {
 import { useTranslations } from "next-intl";
 import { LuSquareMousePointer } from "react-icons/lu";
 
+import { useSyncLocation } from "@/app/(frontend)/store";
+
 import { AuthWrapper } from "@/containers/auth/wrapper";
 import MapContainer from "@/containers/map/edit";
+import Confirm from "@/containers/report/location/confirm";
+import SearchLocation from "@/containers/report/location/search";
+import Sketch from "@/containers/report/location/sketch";
 
 import { Button } from "@/components/ui/button";
 
 export default function EditLocationReport() {
+  const [open, setOpen] = useState(false);
   const t = useTranslations();
+  const [location] = useSyncLocation();
+  const form = useFormContext();
 
   return (
-    <Dialog>
+    <Dialog open={open}>
       <AuthWrapper>
         <DialogTrigger asChild>
-          <Button className="space-x-2" variant="outline">
+          <Button className="space-x-2" variant="outline" onClick={() => setOpen(true)}>
             <LuSquareMousePointer className="h-5 w-5" />
             <span>{t("grid-sidebar-report-location-filters-alert-redefine-area-title")}</span>
           </Button>
@@ -42,6 +54,25 @@ export default function EditLocationReport() {
           </DialogDescription>
           <div className="flex h-full w-full grow flex-col bg-background">
             <MapContainer desktop />
+
+            <div className="absolute left-6 top-6 z-10 w-full max-w-md rounded-lg bg-background p-6 shadow-lg">
+              {!location && (
+                <div className="space-y-4">
+                  <SearchLocation />
+
+                  <Sketch />
+                </div>
+              )}
+
+              {location && (
+                <Confirm
+                  onConfirm={() => {
+                    form.setValue("location", location);
+                    setOpen(false);
+                  }}
+                />
+              )}
+            </div>
           </div>
         </DialogContent>
       </DialogPortal>

@@ -1,13 +1,12 @@
 import React, { useCallback } from "react";
 
-import { useParams } from "next/navigation";
-
 import { useLocale } from "next-intl";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
-import { useReport } from "@/lib/report";
 
 import { Indicator } from "@/types/indicator";
+
+import { useFormLocation } from "@/app/(frontend)/store";
 
 import { ChartIndicatorsFeature } from "@/containers/indicators/chart/feature";
 import { ChartImageryIndicators } from "@/containers/indicators/chart/imagery";
@@ -19,8 +18,7 @@ export const ChartIndicators = ({ id }: { id: Indicator["id"] }) => {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
 
-  const { id: reportId } = useParams();
-  const { data: reportData } = useReport({ id: `${reportId}` });
+  const { location } = useFormLocation();
 
   const { onReady } = useLoad();
 
@@ -32,25 +30,17 @@ export const ChartIndicators = ({ id }: { id: Indicator["id"] }) => {
 
   return (
     <IndicatorProvider onLoad={handleLoad}>
-      {indicator.resource.type === "feature" && reportData?.location && (
-        <ChartIndicatorsFeature
-          {...indicator}
-          resource={indicator.resource}
-          location={reportData?.location}
-        />
+      {indicator.resource.type === "feature" && location && (
+        <ChartIndicatorsFeature {...indicator} resource={indicator.resource} location={location} />
       )}
-      {indicator.resource.type === "imagery" && reportData?.location && (
-        <ChartImageryIndicators
-          {...indicator}
-          resource={indicator.resource}
-          location={reportData?.location}
-        />
+      {indicator.resource.type === "imagery" && location && (
+        <ChartImageryIndicators {...indicator} resource={indicator.resource} location={location} />
       )}
-      {indicator.resource.type === "imagery-tile" && reportData?.location && (
+      {indicator.resource.type === "imagery-tile" && location && (
         <ChartImageryTileIndicators
           {...indicator}
           resource={indicator.resource}
-          location={reportData?.location}
+          location={location}
         />
       )}
     </IndicatorProvider>

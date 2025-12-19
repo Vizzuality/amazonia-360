@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 import { useSyncLocation } from "@/app/(frontend)/store";
 
-import Confirm from "@/containers/report/location/create";
+import Create from "@/containers/report/location/create";
 import SearchLocation from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
 
@@ -44,7 +44,7 @@ export default function SidebarLocationContent() {
         </div>
       )}
 
-      {location && isMounted() && <Confirm />}
+      {location && isMounted() && <Create />}
     </div>
   );
 }

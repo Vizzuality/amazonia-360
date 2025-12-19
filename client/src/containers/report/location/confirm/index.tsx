@@ -17,21 +17,15 @@ import {
   useLocationTitle,
 } from "@/lib/location";
 
-import {
-  reportPanelAtom,
-  sketchActionAtom,
-  tmpBboxAtom,
-  useSyncLocation,
-} from "@/app/(frontend)/store";
+import { sketchActionAtom, tmpBboxAtom, useSyncLocation } from "@/app/(frontend)/store";
 
 import { BUFFERS } from "@/constants/map";
 
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 
-export default function Confirm() {
+export default function Confirm({ onConfirm }: { onConfirm: () => void }) {
   const t = useTranslations();
-  const setReportPanel = useSetAtom(reportPanelAtom);
   const setSketchAction = useSetAtom(sketchActionAtom);
   const setTmpBbox = useSetAtom(tmpBboxAtom);
 
@@ -100,7 +94,7 @@ export default function Confirm() {
             {t("grid-sidebar-report-location-button-clear")}
           </Button>
 
-          <Button size="lg" className="w-full grow" onClick={() => setReportPanel("topics")}>
+          <Button size="lg" className="w-full grow" onClick={onConfirm}>
             {t("grid-sidebar-report-location-button-confirm")}
           </Button>
         </div>
