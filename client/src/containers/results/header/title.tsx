@@ -76,6 +76,7 @@ export default function TitleReport() {
 
       {editMode && (
         <form
+          id="report-title"
           onSubmit={(e) => {
             e.preventDefault();
             form.handleSubmit();
@@ -112,7 +113,8 @@ export default function TitleReport() {
             <Button
               variant="outline"
               size="icon-sm"
-              type="button"
+              type="submit"
+              form="report-title"
               aria-label={t("save")}
               className="rounded-full"
               onClick={() => form.handleSubmit()}

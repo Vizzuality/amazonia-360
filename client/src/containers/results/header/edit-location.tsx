@@ -40,6 +40,7 @@ export default function EditLocationReport() {
       <DialogTrigger asChild>
         <AuthWrapper>
           <Button
+            type="button"
             className="space-x-2"
             variant="outline"
             onClick={() => {
@@ -83,6 +84,7 @@ export default function EditLocationReport() {
               {location && (
                 <Create>
                   <Button
+                    type="button"
                     size="lg"
                     className="w-full grow"
                     onClick={() => {

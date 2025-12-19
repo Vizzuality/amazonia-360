@@ -1,7 +1,5 @@
 "use client";
 
-import { useCallback } from "react";
-
 import { FormProvider, useForm } from "react-hook-form";
 
 import { useParams } from "next/navigation";
@@ -34,9 +32,6 @@ export const ReportResults = () => {
     },
   });
 
-  const onSubmit = useCallback((data: ReportFormData) => {
-    console.log("Form submitted:", data);
-  }, []);
   // Hydrate atoms on initial mount
   useHydrateAtoms(new Map([[locationAtom, reportData?.location]]));
 
@@ -44,15 +39,15 @@ export const ReportResults = () => {
     <FormProvider {...methods}>
       <LoadProvider>
         <main className="relative flex bg-blue-50 pb-5 print:w-full print:bg-white print:p-0">
-          <form onSubmit={methods.handleSubmit(onSubmit)} className="flex w-full">
-            <div className="w-full flex-col print:w-full">
-              <ReportResultsHeader />
-              <ReportResultsContent />
-            </div>
-            <div className="relative print:hidden">
-              <ReportResultsSidebar />
-            </div>
-          </form>
+          {/* <form onSubmit={methods.handleSubmit(onSubmit)} className="flex w-full"> */}
+          <div className="w-full flex-col print:w-full">
+            <ReportResultsHeader />
+            <ReportResultsContent />
+          </div>
+          <div className="relative print:hidden">
+            <ReportResultsSidebar />
+          </div>
+          {/* </form> */}
         </main>
       </LoadProvider>
     </FormProvider>
