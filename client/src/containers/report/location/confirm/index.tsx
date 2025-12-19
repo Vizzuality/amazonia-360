@@ -68,8 +68,10 @@ export default function Confirm({ onConfirm }: { onConfirm: () => void }) {
     <div className="flex w-full flex-col justify-between gap-4 overflow-hidden text-sm">
       <section className="space-y-2">
         <div className="flex items-end justify-between">
-          <div className="text-sm font-semibold leading-none text-blue-500">{TITLE}</div>
-          <div className="text-xs leading-none text-foreground">
+          <div className="text-sm font-semibold uppercase leading-none text-muted-foreground">
+            {TITLE}
+          </div>
+          <div className="text-xs font-bold leading-none text-foreground">
             {formatNumber(AREA, {
               maximumFractionDigits: 0,
             })}{" "}
