@@ -69,8 +69,8 @@ export default function CreateReport({ children }: { children?: ReactNode }) {
 
   return (
     <div className="flex w-full flex-col justify-between gap-4 overflow-hidden bg-white text-sm">
-      <section className="space-y-2">
-        <div className="flex items-end justify-between">
+      <section className="space-y-4">
+        <div className="flex items-center justify-between gap-2">
           <div className="text-sm font-semibold uppercase leading-none text-muted-foreground">
             {TITLE}
           </div>
