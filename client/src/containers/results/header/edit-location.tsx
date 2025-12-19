@@ -13,14 +13,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@radix-ui/react-dialog";
+import { useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
 import { LuSquareMousePointer } from "react-icons/lu";
 
-import { useSyncLocation } from "@/app/(frontend)/store";
+import { sketchActionAtom, useFormLocation, useSyncLocation } from "@/app/(frontend)/store";
 
 import { AuthWrapper } from "@/containers/auth/wrapper";
 import MapContainer from "@/containers/map/edit";
-import Confirm from "@/containers/report/location/confirm";
+import Create from "@/containers/report/location/create";
 import SearchLocation from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
 
@@ -29,14 +30,26 @@ import { Button } from "@/components/ui/button";
 export default function EditLocationReport() {
   const [open, setOpen] = useState(false);
   const t = useTranslations();
-  const [location] = useSyncLocation();
+  const { location: defaultLocation } = useFormLocation();
+  const [location, setLocation] = useSyncLocation();
+  const setSketchAction = useSetAtom(sketchActionAtom);
   const form = useFormContext();
 
   return (
     <Dialog open={open}>
       <DialogTrigger asChild>
         <AuthWrapper>
-          <Button className="space-x-2" variant="outline" onClick={() => setOpen(true)}>
+          <Button
+            className="space-x-2"
+            variant="outline"
+            onClick={() => {
+              setOpen(true);
+              if (defaultLocation) {
+                setLocation(defaultLocation);
+                setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
+              }
+            }}
+          >
             <LuSquareMousePointer className="h-5 w-5" />
             <span>{t("grid-sidebar-report-location-filters-alert-redefine-area-title")}</span>
           </Button>
@@ -68,12 +81,18 @@ export default function EditLocationReport() {
               )}
 
               {location && (
-                <Confirm
-                  onConfirm={() => {
-                    form.setValue("location", location);
-                    setOpen(false);
-                  }}
-                />
+                <Create>
+                  <Button
+                    size="lg"
+                    className="w-full grow"
+                    onClick={() => {
+                      form.setValue("location", location);
+                      setOpen(false);
+                    }}
+                  >
+                    {t("grid-sidebar-report-location-button-confirm")}
+                  </Button>
+                </Create>
               )}
             </div>
           </div>

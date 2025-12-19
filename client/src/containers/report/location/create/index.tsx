@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 
 import { geodesicArea } from "@arcgis/core/geometry/geometryEngine";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
@@ -21,20 +21,11 @@ import { sketchActionAtom, sketchAtom, tmpBboxAtom, useSyncLocation } from "@/ap
 
 import { BUFFERS } from "@/constants/map";
 
-import ReportGenerate from "@/containers/report/generate";
-
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-export default function CreateReport() {
+export default function CreateReport({ children }: { children?: ReactNode }) {
   const t = useTranslations();
   const [sketch, setSketch] = useAtom(sketchAtom);
 
@@ -80,8 +71,10 @@ export default function CreateReport() {
     <div className="flex w-full flex-col justify-between gap-4 overflow-hidden bg-white text-sm">
       <section className="space-y-2">
         <div className="flex items-end justify-between">
-          <div className="text-sm font-semibold leading-none text-blue-500">{TITLE}</div>
-          <div className="text-xs leading-none text-foreground">
+          <div className="text-sm font-semibold uppercase leading-none text-muted-foreground">
+            {TITLE}
+          </div>
+          <div className="text-base font-bold leading-none text-foreground">
             {formatNumber(AREA, {
               maximumFractionDigits: 0,
             })}{" "}
@@ -141,7 +134,9 @@ export default function CreateReport() {
             </Tooltip>
           )}
 
-          <Dialog>
+          {children}
+
+          {/* <Dialog>
             <DialogTrigger asChild>
               <Button size="lg" className="w-full grow">
                 {t("landing-key-features-grid-buttons-create-report")}
@@ -155,7 +150,7 @@ export default function CreateReport() {
               <ReportGenerate />
               <DialogClose />
             </DialogContent>
-          </Dialog>
+          </Dialog> */}
         </div>
       </section>
 
