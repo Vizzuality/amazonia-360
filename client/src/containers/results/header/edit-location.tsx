@@ -6,6 +6,7 @@ import { useFormContext } from "react-hook-form";
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogOverlay,
@@ -15,7 +16,7 @@ import {
 } from "@radix-ui/react-dialog";
 import { useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
-import { LuSquareMousePointer } from "react-icons/lu";
+import { LuSquareMousePointer, LuX } from "react-icons/lu";
 
 import { sketchActionAtom, useFormLocation, useSyncLocation } from "@/app/(frontend)/store";
 
@@ -69,6 +70,18 @@ export default function EditLocationReport() {
           <DialogDescription className="sr-only">
             {t("grid-sidebar-report-location-filters-alert-redefine-area-title")}
           </DialogDescription>
+
+          <DialogClose className="absolute right-6 top-6 z-10" asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="bg-white"
+              aria-label={t("grid-sidebar-report-location-filters-alert-redefine-area-title")}
+              onClick={() => setOpen(false)}
+            >
+              <LuX className="h-5 w-5" />
+            </Button>
+          </DialogClose>
           <div className="flex h-full w-full grow flex-col bg-background">
             <MapContainer desktop />
 
