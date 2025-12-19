@@ -34,14 +34,14 @@ export default function EditLocationReport() {
 
   return (
     <Dialog open={open}>
-      <AuthWrapper>
-        <DialogTrigger asChild>
+      <DialogTrigger asChild>
+        <AuthWrapper>
           <Button className="space-x-2" variant="outline" onClick={() => setOpen(true)}>
             <LuSquareMousePointer className="h-5 w-5" />
             <span>{t("grid-sidebar-report-location-filters-alert-redefine-area-title")}</span>
           </Button>
-        </DialogTrigger>
-      </AuthWrapper>
+        </AuthWrapper>
+      </DialogTrigger>
 
       <DialogPortal>
         <DialogOverlay
