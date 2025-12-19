@@ -1,12 +1,9 @@
 import { useCallback, useMemo } from "react";
 
-import { useParams } from "next/navigation";
-
 import { useAtomValue } from "jotai";
 import { useLocale } from "next-intl";
 
 import { useGetIndicatorsLayerId } from "@/lib/indicators";
-import { useReport } from "@/lib/report";
 
 import {
   ResourceFeature,
@@ -16,7 +13,7 @@ import {
 } from "@/types/indicator";
 import { Indicator } from "@/types/indicator";
 
-import { pdfIndicatorsMapStateAtom } from "@/app/(frontend)/store";
+import { pdfIndicatorsMapStateAtom, useFormLocation } from "@/app/(frontend)/store";
 
 import { BasemapIds } from "@/constants/basemaps";
 
@@ -36,8 +33,7 @@ export const MapIndicators = (
 
   const locale = useLocale();
 
-  const { id: reportId } = useParams();
-  const { data: reportData } = useReport({ id: `${reportId}` });
+  const { location } = useFormLocation();
 
   const LAYER = useGetIndicatorsLayerId(id, locale, {});
 
@@ -72,13 +68,14 @@ export const MapIndicators = (
     onReady(`${id}-map`);
   }, [id, onReady]);
 
-  if (!LAYER || !reportData?.location) return null;
+  if (!LAYER || !location) return null;
 
   return (
     <IndicatorProvider onLoading={handleLoading} onLoad={handleLoad}>
       <WidgetMap
+        key={JSON.stringify(location)}
         indicator={props}
-        location={reportData?.location}
+        location={location}
         basemapId={basemapId}
         layers={[LAYER]}
         isWebshot={props.isWebshot}

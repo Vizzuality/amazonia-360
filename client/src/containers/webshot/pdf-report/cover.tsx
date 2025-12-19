@@ -10,7 +10,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useReport } from "@/lib/report";
 import { useGetTopics } from "@/lib/topics";
 
-import { useSyncTopics } from "@/app/(frontend)/store";
+import { useFormTopics } from "@/app/(frontend)/store";
 
 export default function DocumentCoverPdfSection() {
   const locale = useLocale();
@@ -19,7 +19,7 @@ export default function DocumentCoverPdfSection() {
   const { id: reportId } = useParams();
   const { data: reportData } = useReport({ id: `${reportId}` });
 
-  const [topics] = useSyncTopics();
+  const { topics } = useFormTopics();
   const { data: allTopics } = useGetTopics(locale);
 
   const selectedTopics = useMemo(

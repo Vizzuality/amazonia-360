@@ -16,13 +16,13 @@ import {
 } from "@/types/indicator";
 
 import { IndicatorMapView } from "@/app/(frontend)/parsers";
-import { useSyncTopics, useSyncDefaultTopics } from "@/app/(frontend)/store";
+import { useFormTopics, useSyncDefaultTopics } from "@/app/(frontend)/store";
 
 import { BasemapIds } from "@/constants/basemaps";
 import { DATASETS } from "@/constants/datasets";
 
 import { useIndicator } from "@/containers/indicators/provider";
-import SelectedLayer from "@/containers/report/map/layer-manager/selected-layer";
+import SelectedLayer from "@/containers/map/layer-manager/selected-layer";
 import { WidgetLegend } from "@/containers/widgets/map/legend";
 
 import Controls from "@/components/map/controls";
@@ -62,7 +62,7 @@ export default function WidgetMap({
   ...viewProps
 }: WidgetMapProps) {
   const GEOMETRY = useLocationGeometry(location);
-  const [topics, setTopics] = useSyncTopics();
+  const { topics, setTopics } = useFormTopics();
   const [defaultTopics, setDefaultTopics] = useSyncDefaultTopics();
 
   const { onIndicatorViewLoaded, onIndicatorViewLoading } = useIndicator();

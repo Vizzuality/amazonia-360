@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import { Indicator } from "@/types/indicator";
 
-import { useSyncTopics, useSyncDefaultTopics } from "@/app/(frontend)/store";
+import { useFormTopics, useSyncDefaultTopics } from "@/app/(frontend)/store";
 
 import { handleMapIndicatorPropertyChange } from "@/containers/widgets/map/utils";
 import { FALLBACK_WIDGET_DEFAULT_BASEMAP_ID } from "@/containers/widgets/map/utils";
@@ -10,7 +10,7 @@ import { FALLBACK_WIDGET_DEFAULT_BASEMAP_ID } from "@/containers/widgets/map/uti
 import OpacityControl from "@/components/map/legend/controls/opacity";
 
 const OpacityControlButton = ({ indicator }: { indicator: Omit<Indicator, "resource"> }) => {
-  const [topics, setTopics] = useSyncTopics();
+  const { topics, setTopics } = useFormTopics();
   const [defaultTopics, setDefaultTopics] = useSyncDefaultTopics();
 
   const { opacity } = useMemo(() => {

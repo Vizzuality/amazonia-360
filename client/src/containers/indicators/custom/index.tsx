@@ -1,13 +1,12 @@
 import React, { createElement, useCallback } from "react";
 
-import { useParams } from "next/navigation";
-
 import { useLocale } from "next-intl";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
-import { useReport } from "@/lib/report";
 
 import { Indicator } from "@/types/indicator";
+
+import { useFormLocation } from "@/app/(frontend)/store";
 
 import { Municipalities } from "@/containers/indicators/custom/municipalities";
 import { TotalArea } from "@/containers/indicators/custom/total-area";
@@ -25,8 +24,7 @@ export const CustomIndicators = ({ id }: { id: Indicator["id"] }) => {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
 
-  const { id: reportId } = useParams();
-  const { data: reportData } = useReport({ id: `${reportId}` });
+  const { location } = useFormLocation();
 
   const { onReady } = useLoad();
 
@@ -39,11 +37,11 @@ export const CustomIndicators = ({ id }: { id: Indicator["id"] }) => {
   return (
     <IndicatorProvider onLoad={handleLoad}>
       {indicator.resource.type === "component" &&
-        reportData?.location &&
+        location &&
         !!COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS] &&
         createElement(
           COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS],
-          { indicator, location: reportData?.location },
+          { indicator, location: location },
         )}
     </IndicatorProvider>
   );

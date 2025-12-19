@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { Indicator } from "@/types/indicator";
 import { VisualizationTypes } from "@/types/indicator";
 
-import { useSyncTopics } from "@/app/(frontend)/store";
+import { useFormTopics } from "@/app/(frontend)/store";
 
 import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
 
@@ -27,7 +27,7 @@ export function VisualizationType({
 }) {
   const t = useTranslations();
   const locale = useLocale();
-  const [topics, setTopics] = useSyncTopics();
+  const { topics, setTopics } = useFormTopics();
   const { data: subtopicsData } = useGetDefaultSubtopics({ locale, topicId });
 
   const handleVisualizationType = (visualizationType: VisualizationTypes) => {

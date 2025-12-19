@@ -1,13 +1,12 @@
 import React, { useCallback } from "react";
 
-import { useParams } from "next/navigation";
-
 import { useLocale } from "next-intl";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
-import { useReport } from "@/lib/report";
 
 import { Indicator } from "@/types/indicator";
+
+import { useFormLocation } from "@/app/(frontend)/store";
 
 import { useLoad } from "@/containers/indicators/load-provider";
 import { IndicatorProvider } from "@/containers/indicators/provider";
@@ -17,8 +16,7 @@ export const TableIndicators = ({ id }: { id: Indicator["id"] }) => {
   const locale = useLocale();
   const indicator = useGetIndicatorsId(id, locale);
 
-  const { id: reportId } = useParams();
-  const { data: reportData } = useReport({ id: `${reportId}` });
+  const { location } = useFormLocation();
 
   const { onReady } = useLoad();
 
@@ -30,12 +28,8 @@ export const TableIndicators = ({ id }: { id: Indicator["id"] }) => {
 
   return (
     <IndicatorProvider onLoad={handleLoad}>
-      {indicator.resource.type === "feature" && reportData?.location && (
-        <TableIndicatorsFeature
-          {...indicator}
-          location={reportData.location}
-          resource={indicator.resource}
-        />
+      {indicator.resource.type === "feature" && location && (
+        <TableIndicatorsFeature {...indicator} location={location} resource={indicator.resource} />
       )}
     </IndicatorProvider>
   );

@@ -6,7 +6,7 @@ import { useLocale } from "next-intl";
 
 import { useGetTopics } from "@/lib/topics";
 
-import { useSyncTopics } from "@/app/(frontend)/store";
+import { useFormTopics } from "@/app/(frontend)/store";
 
 import PdfContainer from "@/containers/webshot/pdf-report/container";
 import PdfTopicCover from "@/containers/webshot/pdf-report/topics/cover";
@@ -15,7 +15,7 @@ import PdfTopicSection from "@/containers/webshot/pdf-report/topics/section";
 export default function PdfTopics() {
   const locale = useLocale();
 
-  const [topics] = useSyncTopics();
+  const { topics } = useFormTopics();
 
   const { data: allTopics } = useGetTopics(locale);
 

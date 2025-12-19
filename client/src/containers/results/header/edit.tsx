@@ -21,6 +21,7 @@ export default function EditReport() {
   return (
     <AuthWrapper>
       <Button
+        type="button"
         className="space-x-2"
         onClick={() => {
           setReportEditionMode(!reportEditionMode);

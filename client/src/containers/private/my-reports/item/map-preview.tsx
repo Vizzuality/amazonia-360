@@ -10,10 +10,9 @@ import { Report } from "@/payload-types";
 
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
-const SelectedLayer = dynamic(
-  () => import("@/containers/report/map/layer-manager/selected-layer"),
-  { ssr: false },
-);
+const SelectedLayer = dynamic(() => import("@/containers/map/layer-manager/selected-layer"), {
+  ssr: false,
+});
 
 export default function ReportMapPreview({ id, location }: Report) {
   const GEOMETRY = useLocationGeometry(location);

@@ -9,7 +9,7 @@ import { Indicator, VisualizationTypes } from "@/types/indicator";
 import {
   pdfIndicatorsMapStateAtom,
   useSyncDefaultTopics,
-  useSyncTopics,
+  useFormTopics,
 } from "@/app/(frontend)/store";
 
 type ID = `${Indicator["id"]}-${VisualizationTypes | "custom"}`;
@@ -40,7 +40,7 @@ export const LoadProvider: React.FC<{
       status: "loading" | "ready";
     }[]
   >([]);
-  const [topics] = useSyncTopics();
+  const { topics } = useFormTopics();
   const [overviewTopics] = useSyncDefaultTopics();
 
   const setPdfIndicatorsMapState = useSetAtom(pdfIndicatorsMapStateAtom); // pdfIndicatorsMapStateAtom
