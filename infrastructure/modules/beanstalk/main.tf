@@ -64,7 +64,16 @@ data "aws_region" "current" {}
 
 # Settings for the elastic beanstalk environment
 locals {
-  environment_settings = [
+  # Convert environment_variables_for_db_init map to EB settings format
+  custom_env_settings_for_db_init = [
+    for key, value in var.environment_variables_for_db_init : {
+      namespace = "aws:elasticbeanstalk:application:environment"
+      name      = key
+      value     = value
+    }
+  ]
+
+  environment_settings = concat([
     {
       namespace = "aws:elasticbeanstalk:application:environment"
       name      = "S3_BUCKET_NAME"
@@ -193,7 +202,7 @@ locals {
       name      = "HealthCheckPath"
       value     = "/local-api/health"
     }
-  ]
+  ], local.custom_env_settings_for_db_init)
 }
 
 # Create a map of domain aliases with their indices for priority calculation

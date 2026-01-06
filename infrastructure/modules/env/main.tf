@@ -87,6 +87,16 @@ module "beanstalk" {
   acm_certificate_alias_validations             = aws_acm_certificate_validation.alias_certificate_validation
   elasticbeanstalk_iam_service_linked_role_name = var.elasticbeanstalk_iam_service_linked_role_name
   cname_prefix                                  = var.cname_prefix
+  environment_variables_for_db_init = {
+    # Database initialization credentials
+    TF_DB_HOST            = var.db_host
+    TF_DB_PORT            = var.db_port
+    TF_DB_MASTER_USERNAME = var.db_master_username
+    TF_DB_MASTER_PASSWORD = var.db_master_password
+    TF_DB_NAME            = local.db_name
+    TF_DB_USERNAME        = local.db_username
+    TF_DB_PASSWORD        = local.db_password
+  }
 }
 
 module "github" {

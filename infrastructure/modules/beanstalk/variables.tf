@@ -89,3 +89,9 @@ variable "cname_prefix" {
   description = "The CNAME prefix to use for the environment"
   default     = null
 }
+
+variable "environment_variables_for_db_init" {
+  type        = map(string)
+  description = "Map of environment variables to set in the Elastic Beanstalk environment for database initialization"
+  default     = {}
+}

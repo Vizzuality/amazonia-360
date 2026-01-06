@@ -151,6 +151,13 @@ module "dev" {
   cname_prefix                                  = "amazonia360-dev-environment"
   github_owner                                  = var.github_owner
   github_token                                  = var.github_token
+
+  # Database credentials for initialization script
+  db_host            = module.database.db_instance_address
+  db_port            = tostring(module.database.db_instance_port)
+  db_master_username = module.database.db_admin_username
+  db_master_password = module.database.db_admin_password
+
   github_additional_environment_variables = {
     TF_AWS_REGION = var.dev.aws_region
 
@@ -214,6 +221,13 @@ module "staging" {
   cname_prefix                                  = "amazonia360-staging-environment"
   github_owner                                  = var.github_owner
   github_token                                  = var.github_token
+
+  # Database credentials for initialization script
+  db_host            = module.database.db_instance_address
+  db_port            = tostring(module.database.db_instance_port)
+  db_master_username = module.database.db_admin_username
+  db_master_password = module.database.db_admin_password
+
   github_additional_environment_variables = {
     TF_AWS_REGION = var.staging.aws_region
 
@@ -277,6 +291,13 @@ module "prod" {
   cname_prefix                                  = "amazonia360-prod-environment"
   github_owner                                  = var.github_owner
   github_token                                  = var.github_token
+
+  # Database credentials for initialization script
+  db_host            = module.database.db_instance_address
+  db_port            = tostring(module.database.db_instance_port)
+  db_master_username = module.database.db_admin_username
+  db_master_password = module.database.db_admin_password
+
   github_additional_environment_variables = {
     TF_AWS_REGION = var.prod.aws_region
 

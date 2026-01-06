@@ -86,3 +86,26 @@ variable "github_additional_environment_variables" {
   description = "Github additional environment-specific variables"
   default     = {}
 }
+
+variable "db_host" {
+  type        = string
+  description = "Database host (RDS instance address)"
+}
+
+variable "db_port" {
+  type        = string
+  description = "Database port (as a string)"
+  default     = "5432"
+}
+
+variable "db_master_username" {
+  type        = string
+  description = "Master username for database"
+  sensitive   = true
+}
+
+variable "db_master_password" {
+  type        = string
+  description = "Master password for database"
+  sensitive   = true
+}
