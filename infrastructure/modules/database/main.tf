@@ -74,7 +74,7 @@ resource "random_password" "master_password" {
   length  = 32
   special = true
   # RDS password constraints
-  override_special = "!#$%&*()-_=+[]{}<>:?"
+  override_special = "!#$%&*()_=+[]{}<>:?"
 }
 
 # Create the RDS PostgreSQL instance
