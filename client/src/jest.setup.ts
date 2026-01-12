@@ -10,6 +10,8 @@ jest.mock("query-string", () => ({
   stringify: jest.fn(),
 }));
 
+jest.mock("rehype-raw", () => jest.fn());
+
 jest.mock("react-markdown", () => ({ children }: { children?: string }) => {
   return children;
 });
