@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import { useParams } from "next/navigation";
 
@@ -10,6 +10,8 @@ import { useTranslations } from "next-intl";
 import { useCanEditReport } from "@/lib/report";
 
 import { useReportFormChanged } from "@/app/(frontend)/store";
+
+import { useSaveReportCallback } from "@/containers/results/callbacks";
 
 import {
   AlertDialog,
@@ -23,7 +25,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown";
 
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 
 export const NewReportAction = () => {
   const t = useTranslations();
@@ -34,6 +36,16 @@ export const NewReportAction = () => {
   const CHANGED = useReportFormChanged();
 
   const CAN_EDIT = useCanEditReport(`${id}`);
+
+  const router = useRouter();
+
+  const callback = useCallback(() => {
+    setOpen(false);
+    // Create a link to download the report after saving
+    router.push("/reports");
+  }, [router]);
+
+  const { mutation: saveMutation, handleSave } = useSaveReportCallback(callback);
 
   return (
     <>
@@ -79,7 +91,15 @@ export const NewReportAction = () => {
             <div className="flex justify-end space-x-2">
               <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
 
-              <AlertDialogAction>{t("save")}</AlertDialogAction>
+              <AlertDialogAction
+                disabled={saveMutation.isPending}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSave();
+                }}
+              >
+                {t("save")}
+              </AlertDialogAction>
             </div>
           </AlertDialogFooter>
         </AlertDialogContent>

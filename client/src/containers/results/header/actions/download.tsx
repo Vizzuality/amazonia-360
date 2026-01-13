@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import { useLocale, useTranslations } from "next-intl";
 import { LuDownload } from "react-icons/lu";
 
 import { useReportFormChanged } from "@/app/(frontend)/store";
+
+import { useSaveReportCallback } from "@/containers/results/callbacks";
 
 import {
   AlertDialog,
@@ -28,6 +30,18 @@ export const DownloadAction = ({ reportId }: ReportResultsActionsProps) => {
   const [open, setOpen] = useState(false);
 
   const CHANGED = useReportFormChanged();
+
+  const callback = useCallback(() => {
+    setOpen(false);
+    // Create a link to download the report after saving
+    const link = document.createElement("a");
+    link.href = `/${locale}/webshot/reports/${reportId}`;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.click();
+  }, [locale, reportId]);
+
+  const { mutation: saveMutation, handleSave } = useSaveReportCallback(callback);
 
   return (
     <>
@@ -79,7 +93,15 @@ export const DownloadAction = ({ reportId }: ReportResultsActionsProps) => {
               <div className="flex justify-end space-x-2">
                 <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
 
-                <AlertDialogAction>{t("save")}</AlertDialogAction>
+                <AlertDialogAction
+                  disabled={saveMutation.isPending}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSave();
+                  }}
+                >
+                  {t("save")}
+                </AlertDialogAction>
               </div>
             </AlertDialogFooter>
           </AlertDialogContent>
