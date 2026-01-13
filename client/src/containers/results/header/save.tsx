@@ -2,6 +2,8 @@
 
 import { useCallback } from "react";
 
+import { useFormContext } from "react-hook-form";
+
 import { useParams } from "next/navigation";
 
 import { useSession } from "next-auth/react";
@@ -12,7 +14,12 @@ import { toast } from "sonner";
 import { useCanEditReport, useDuplicateReport, useReport, useSaveReport } from "@/lib/report";
 
 import { TopicView } from "@/app/(frontend)/parsers";
-import { useFormTitle, useFormTopics, useFormLocation } from "@/app/(frontend)/store";
+import {
+  useFormTitle,
+  useFormTopics,
+  useFormLocation,
+  useReportFormChanged,
+} from "@/app/(frontend)/store";
 
 import { AuthWrapper } from "@/containers/auth/wrapper";
 
@@ -29,6 +36,7 @@ export default function SaveReport() {
   const { data: reportData } = useReport({ id: `${id}` });
   const { data: session } = useSession();
 
+  const form = useFormContext();
   const { title } = useFormTitle();
   const { topics } = useFormTopics();
   const { location } = useFormLocation();
@@ -36,25 +44,35 @@ export default function SaveReport() {
   const saveMutation = useSaveReport();
   const duplicateMutation = useDuplicateReport();
 
+  const CHANGED = useReportFormChanged();
   const CAN_EDIT = useCanEditReport(`${id}`);
+
+  console.log("Render SaveReport - CAN_EDIT:", CAN_EDIT, "CHANGED:", CHANGED);
 
   const handleSave = useCallback(() => {
     toast.promise(
-      saveMutation.mutateAsync({
-        id: `${id}`,
-        title: title || reportData?.title || t("selected-area"),
-        description: reportData?.description || null,
-        topics: topics || (reportData?.topics as TopicView[]) || [],
-        location: location || reportData?.location || null,
-        status: session?.user.collection === "users" ? "published" : "draft",
-      }),
+      saveMutation.mutateAsync(
+        {
+          id: `${id}`,
+          title: title || reportData?.title || t("selected-area"),
+          description: reportData?.description || null,
+          topics: topics || (reportData?.topics as TopicView[]) || [],
+          location: location || reportData?.location || null,
+          status: session?.user.collection === "users" ? "published" : "draft",
+        },
+        {
+          onSuccess: () => {
+            form.reset(form.getValues()); // Reset form state to current values after saving
+          },
+        },
+      ),
       {
         loading: "Saving report...",
         success: "Report saved successfully!",
         error: "Failed to save the report.",
       },
     );
-  }, [id, title, topics, location, session, saveMutation, t, reportData]);
+  }, [id, title, topics, location, session, saveMutation, t, reportData, form]);
 
   const handleDuplicate = useCallback(() => {
     toast.promise(
@@ -84,7 +102,11 @@ export default function SaveReport() {
   if (CAN_EDIT) {
     return (
       <AuthWrapper>
-        <Button onClick={handleSave} className="space-x-2" disabled={saveMutation.isPending}>
+        <Button
+          onClick={handleSave}
+          className="space-x-2"
+          disabled={saveMutation.isPending || !CHANGED}
+        >
           {!saveMutation.isPending && <LuFileText className="h-5 w-5" />}
           {saveMutation.isPending && <Spinner className="h-5 w-5" />}
           <span>{t("save")}</span>
