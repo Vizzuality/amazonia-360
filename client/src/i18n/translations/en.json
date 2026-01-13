@@ -437,5 +437,11 @@
   "pdf-outro-tagline": "Keep understanding Amazonia like never before.",
   "pdf-report-button-title": "Download or Print PDF",
   "pdf-report-button-description": "In the dialog window, select **Save as PDF, Save to PDF, Print to File**, or a printer to print the report. For best results, set the layout to Landscape and disable page margins.",
-  "pdf-report-button-text": "Download / Print PDF"
+  "pdf-report-button-text": "Download / Print PDF",
+  "report-save-loading": "Saving report...",
+  "report-save-success": "Report saved successfully!",
+  "report-save-error": "Failed to save the report.",
+  "report-duplicate-loading": "Duplicating report...",
+  "report-duplicate-success": "Report duplicated successfully!",
+  "report-duplicate-error": "Failed to duplicate the report."
 }

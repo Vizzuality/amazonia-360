@@ -51,9 +51,9 @@ export const useSaveReportCallback = (callback?: () => void) => {
         },
       ),
       {
-        loading: "Saving report...",
-        success: "Report saved successfully!",
-        error: "Failed to save the report.",
+        loading: t("report-save-loading"),
+        success: t("report-save-success"),
+        error: t("report-save-error"),
       },
     );
   }, [id, title, topics, location, session, saveMutation, t, reportData, form, callback]);
@@ -99,9 +99,9 @@ export const useDuplicateReportCallback = (callback?: (newReportId: string) => v
         },
       ),
       {
-        loading: "Duplicating report...",
-        success: "Report duplicated successfully!",
-        error: "Failed to duplicate the report.",
+        loading: t("report-duplicate-loading"),
+        success: t("report-duplicate-success"),
+        error: t("report-duplicate-error"),
       },
     );
   }, [title, topics, location, session, duplicateMutation, t, reportData, router, callback]);
