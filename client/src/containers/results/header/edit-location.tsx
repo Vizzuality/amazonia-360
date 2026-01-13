@@ -14,11 +14,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@radix-ui/react-dialog";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
 import { LuSquareMousePointer, LuX } from "react-icons/lu";
 
-import { sketchActionAtom, useFormLocation, useSyncLocation } from "@/app/(frontend)/store";
+import {
+  sketchActionAtom,
+  sketchAtom,
+  useFormLocation,
+  useSyncLocation,
+} from "@/app/(frontend)/store";
 
 import { AuthWrapper } from "@/containers/auth/wrapper";
 import MapContainer from "@/containers/map/edit";
@@ -33,6 +38,7 @@ export default function EditLocationReport() {
   const t = useTranslations();
   const { location: defaultLocation } = useFormLocation();
   const [location, setLocation] = useSyncLocation();
+  const sketch = useAtomValue(sketchAtom);
   const setSketchAction = useSetAtom(sketchActionAtom);
   const form = useFormContext();
 
@@ -100,6 +106,7 @@ export default function EditLocationReport() {
                     type="button"
                     size="lg"
                     className="w-full grow"
+                    disabled={sketch.enabled === "create" || sketch.enabled === "edit"}
                     onClick={() => {
                       form.setValue("location", location);
                       setOpen(false);
