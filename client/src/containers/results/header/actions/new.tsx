@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 
 import { PlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { LuFileText } from "react-icons/lu";
 
 import { useCanEditReport } from "@/lib/report";
 
@@ -24,6 +25,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown";
+import { Spinner } from "@/components/ui/spinner";
 
 import { Link, useRouter } from "@/i18n/navigation";
 
@@ -93,12 +95,16 @@ export const NewReportAction = () => {
 
               <AlertDialogAction
                 disabled={saveMutation.isPending}
+                className="space-x-2"
                 onClick={(e) => {
                   e.preventDefault();
                   handleSave();
                 }}
               >
-                {t("save")}
+                {!saveMutation.isPending && <LuFileText className="h-5 w-5" />}
+                {saveMutation.isPending && <Spinner className="h-5 w-5" />}
+
+                <span>{t("save")}</span>
               </AlertDialogAction>
             </div>
           </AlertDialogFooter>

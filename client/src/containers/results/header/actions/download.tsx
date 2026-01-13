@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 
 import { useLocale, useTranslations } from "next-intl";
-import { LuDownload } from "react-icons/lu";
+import { LuDownload, LuFileText } from "react-icons/lu";
 
 import { useReportFormChanged } from "@/app/(frontend)/store";
 
@@ -20,6 +20,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown";
+import { Spinner } from "@/components/ui/spinner";
 
 import type { ReportResultsActionsProps } from "./types";
 
@@ -51,7 +52,7 @@ export const DownloadAction = ({ reportId }: ReportResultsActionsProps) => {
             href={`/${locale}/webshot/reports/${reportId}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex cursor-pointer items-center"
+            className="flex cursor-pointer items-center space-x-2"
           >
             <LuDownload className="mr-2 h-4 w-4 shrink-0" />
             <span>{t("download")}</span>
@@ -95,12 +96,16 @@ export const DownloadAction = ({ reportId }: ReportResultsActionsProps) => {
 
                 <AlertDialogAction
                   disabled={saveMutation.isPending}
+                  className="space-x-2"
                   onClick={(e) => {
                     e.preventDefault();
                     handleSave();
                   }}
                 >
-                  {t("save")}
+                  {!saveMutation.isPending && <LuFileText className="h-5 w-5" />}
+                  {saveMutation.isPending && <Spinner className="h-5 w-5" />}
+
+                  <span>{t("save")}</span>
                 </AlertDialogAction>
               </div>
             </AlertDialogFooter>
