@@ -15,8 +15,6 @@ import { useDuplicateReport, useReport, useSaveReport } from "@/lib/report";
 import { TopicView } from "@/app/(frontend)/parsers";
 import { useFormLocation, useFormTitle, useFormTopics } from "@/app/(frontend)/store";
 
-import { useRouter } from "@/i18n/navigation";
-
 export const useSaveReportCallback = (callback?: () => void) => {
   const t = useTranslations();
 
@@ -69,8 +67,6 @@ export const useDuplicateReportCallback = (callback?: (newReportId: string) => v
 
   const { id } = useParams();
 
-  const router = useRouter();
-
   const { data: reportData } = useReport({ id: `${id}` });
   const { data: session } = useSession();
 
@@ -93,7 +89,6 @@ export const useDuplicateReportCallback = (callback?: (newReportId: string) => v
         {
           onSuccess: (data) => {
             // Redirect to the new duplicated report
-            router.push(`/reports/${data.id}`);
             if (callback) callback(data.id);
           },
         },
@@ -104,7 +99,7 @@ export const useDuplicateReportCallback = (callback?: (newReportId: string) => v
         error: t("report-duplicate-error"),
       },
     );
-  }, [title, topics, location, session, duplicateMutation, t, reportData, router, callback]);
+  }, [title, topics, location, session, duplicateMutation, t, reportData, callback]);
 
   return {
     mutation: duplicateMutation,

@@ -141,6 +141,7 @@
   "report-results-unsaved-changes-title": "Cambios sin guardar",
   "report-results-unsaved-changes-description": "Tienes cambios sin guardar en tu informe actual. Si continúas, perderás tu progreso.",
   "report-results-unsaved-changes-download-warning": "Ten cuidado, tienes cambios sin guardar. Por favor, guarda tu informe antes de descargarlo.",
+  "report-results-unsaved-changes-download-warning-duplicate": "Ten cuidado, tienes cambios sin guardar. Por favor, duplica tu informe antes de descargarlo.",
   "report-results-discard-and-continue": "Descartar y continuar",
   "report-results-buttons-edit-report": "Editar reporte",
   "report-results-buttons-edit-close-report": "Cerrar edición",
@@ -443,5 +444,6 @@
   "report-save-error": "Error al guardar el informe.",
   "report-duplicate-loading": "Duplicando informe...",
   "report-duplicate-success": "¡Informe duplicado exitosamente!",
-  "report-duplicate-error": "Error al duplicar el informe."
+  "report-duplicate-error": "Error al duplicar el informe.",
+  "make-a-copy": "Hacer una copia"
 }

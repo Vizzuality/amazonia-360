@@ -141,6 +141,7 @@
   "report-results-unsaved-changes-title": "Alterações não guardadas",
   "report-results-unsaved-changes-description": "Você tem alterações não guardadas no seu relatório atual. Se continuar, o seu progresso será perdido.",
   "report-results-unsaved-changes-download-warning": "Tenha cuidado, você tem alterações não guardadas. Por favor, guarde o seu relatório antes de descarregar.",
+  "report-results-unsaved-changes-download-warning-duplicate": "Tenha cuidado, você tem alterações não guardadas. Por favor, duplique o seu relatório antes de descarregar.",
   "report-results-discard-and-continue": "Descartar e continuar",
   "report-results-buttons-edit-report": "Editar relatório",
   "report-results-buttons-edit-close-report": "Fechar edição",
@@ -443,5 +444,6 @@
   "report-save-error": "Falha ao salvar o relatório.",
   "report-duplicate-loading": "Duplicando relatório...",
   "report-duplicate-success": "Relatório duplicado com sucesso!",
-  "report-duplicate-error": "Falha ao duplicar o relatório."
+  "report-duplicate-error": "Falha ao duplicar o relatório.",
+  "make-a-copy": "Fazer uma cópia"
 }

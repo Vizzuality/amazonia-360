@@ -141,6 +141,7 @@
   "report-results-unsaved-changes-title": "Unsaved changes",
   "report-results-unsaved-changes-description": "You have unsaved changes in your current report. If you continue, your progress will be lost.",
   "report-results-unsaved-changes-download-warning": "Be careful, you have unsaved changes. Please save your report before downloading.",
+  "report-results-unsaved-changes-download-warning-duplicate": "Be careful, you have unsaved changes. Please duplicate your report before downloading.",
   "report-results-discard-and-continue": "Discard & continue",
   "report-results-buttons-edit-report": "Edit report",
   "report-results-buttons-edit-close-report": "Close editing",
@@ -443,5 +444,6 @@
   "report-save-error": "Failed to save the report.",
   "report-duplicate-loading": "Duplicating report...",
   "report-duplicate-success": "Report duplicated successfully!",
-  "report-duplicate-error": "Failed to duplicate the report."
+  "report-duplicate-error": "Failed to duplicate the report.",
+  "make-a-copy": "Make a copy"
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { useCallback } from "react";
+
 import { useParams } from "next/navigation";
 
 import { useTranslations } from "next-intl";
@@ -15,16 +17,27 @@ import { useDuplicateReportCallback, useSaveReportCallback } from "@/containers/
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 
+import { useRouter } from "@/i18n/navigation";
+
 export default function SaveReport() {
   const t = useTranslations();
   const { id } = useParams();
+
+  const router = useRouter();
 
   const CHANGED = useReportFormChanged();
   const CAN_EDIT = useCanEditReport(`${id}`);
 
   const { mutation: saveMutation, handleSave } = useSaveReportCallback();
 
-  const { mutation: duplicateMutation, handleDuplicate } = useDuplicateReportCallback();
+  const duplicateCallback = useCallback(
+    (newReportId: string) => {
+      router.push(`/reports/${newReportId}`);
+    },
+    [router],
+  );
+  const { mutation: duplicateMutation, handleDuplicate } =
+    useDuplicateReportCallback(duplicateCallback);
 
   if (CAN_EDIT) {
     return (
@@ -51,7 +64,7 @@ export default function SaveReport() {
       >
         {!duplicateMutation.isPending && <LuFileText className="h-5 w-5" />}
         {duplicateMutation.isPending && <Spinner className="h-5 w-5" />}
-        <span>Make a copy</span>
+        <span>{t("make-a-copy")}</span>
       </Button>
     </AuthWrapper>
   );

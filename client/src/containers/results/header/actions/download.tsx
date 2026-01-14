@@ -5,9 +5,11 @@ import { useCallback, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { LuDownload, LuFileText } from "react-icons/lu";
 
+import { useCanEditReport } from "@/lib/report";
+
 import { useReportFormChanged } from "@/app/(frontend)/store";
 
-import { useSaveReportCallback } from "@/containers/results/callbacks";
+import { useDuplicateReportCallback, useSaveReportCallback } from "@/containers/results/callbacks";
 
 import {
   AlertDialog,
@@ -22,17 +24,22 @@ import {
 import { DropdownMenuItem } from "@/components/ui/dropdown";
 import { Spinner } from "@/components/ui/spinner";
 
+import { useRouter } from "@/i18n/navigation";
+
 import type { ReportResultsActionsProps } from "./types";
 
 export const DownloadAction = ({ reportId }: ReportResultsActionsProps) => {
   const t = useTranslations();
   const locale = useLocale();
 
+  const router = useRouter();
+
   const [open, setOpen] = useState(false);
 
   const CHANGED = useReportFormChanged();
+  const CAN_EDIT = useCanEditReport(`${reportId}`);
 
-  const callback = useCallback(() => {
+  const saveCallback = useCallback(() => {
     setOpen(false);
     // Create a link to download the report after saving
     const link = document.createElement("a");
@@ -42,7 +49,24 @@ export const DownloadAction = ({ reportId }: ReportResultsActionsProps) => {
     link.click();
   }, [locale, reportId]);
 
-  const { mutation: saveMutation, handleSave } = useSaveReportCallback(callback);
+  const duplicateCallback = useCallback(
+    (newReportId: string) => {
+      setOpen(false);
+      // Create a link to download the report after saving
+      const link = document.createElement("a");
+      link.href = `/${locale}/webshot/reports/${newReportId}`;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.click();
+
+      router.push(`/reports/${newReportId}`);
+    },
+    [locale, router],
+  );
+
+  const { mutation: saveMutation, handleSave } = useSaveReportCallback(saveCallback);
+  const { mutation: duplicateMutation, handleDuplicate } =
+    useDuplicateReportCallback(duplicateCallback);
 
   return (
     <>
@@ -52,7 +76,7 @@ export const DownloadAction = ({ reportId }: ReportResultsActionsProps) => {
             href={`/${locale}/webshot/reports/${reportId}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex cursor-pointer items-center space-x-2"
+            className="flex cursor-pointer items-center"
           >
             <LuDownload className="mr-2 h-4 w-4 shrink-0" />
             <span>{t("download")}</span>
@@ -73,11 +97,13 @@ export const DownloadAction = ({ reportId }: ReportResultsActionsProps) => {
             <span>{t("download")}</span>
           </DropdownMenuItem>
 
-          <AlertDialogContent>
+          <AlertDialogContent className="max-w-xl">
             <AlertDialogHeader>
               <AlertDialogTitle>{t("report-results-unsaved-changes-title")}</AlertDialogTitle>
               <AlertDialogDescription>
-                {t("report-results-unsaved-changes-download-warning")}
+                {CAN_EDIT
+                  ? t("report-results-unsaved-changes-download-warning")
+                  : t("report-results-unsaved-changes-download-warning-duplicate")}
               </AlertDialogDescription>
             </AlertDialogHeader>
 
@@ -94,19 +120,37 @@ export const DownloadAction = ({ reportId }: ReportResultsActionsProps) => {
               <div className="flex justify-end space-x-2">
                 <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
 
-                <AlertDialogAction
-                  disabled={saveMutation.isPending}
-                  className="space-x-2"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleSave();
-                  }}
-                >
-                  {!saveMutation.isPending && <LuFileText className="h-5 w-5" />}
-                  {saveMutation.isPending && <Spinner className="h-5 w-5" />}
+                {CAN_EDIT && (
+                  <AlertDialogAction
+                    disabled={saveMutation.isPending}
+                    className="space-x-2"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSave();
+                    }}
+                  >
+                    {!saveMutation.isPending && <LuFileText className="h-5 w-5" />}
+                    {saveMutation.isPending && <Spinner className="h-5 w-5" />}
 
-                  <span>{t("save")}</span>
-                </AlertDialogAction>
+                    <span>{t("save")}</span>
+                  </AlertDialogAction>
+                )}
+
+                {!CAN_EDIT && (
+                  <AlertDialogAction
+                    disabled={duplicateMutation.isPending}
+                    className="space-x-2"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleDuplicate();
+                    }}
+                  >
+                    {!duplicateMutation.isPending && <LuFileText className="h-5 w-5" />}
+                    {duplicateMutation.isPending && <Spinner className="h-5 w-5" />}
+
+                    <span>{t("make-a-copy")}</span>
+                  </AlertDialogAction>
+                )}
               </div>
             </AlertDialogFooter>
           </AlertDialogContent>
