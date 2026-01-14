@@ -1,12 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
-import ReactMarkdown from "react-markdown";
+import { useParams } from "next/navigation";
 
 import { PlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { LuCircleAlert } from "react-icons/lu";
+import { LuFileText } from "react-icons/lu";
+
+import { useCanEditReport } from "@/lib/report";
+
+import { useReportFormChanged } from "@/app/(frontend)/store";
+
+import { useDuplicateReportCallback, useSaveReportCallback } from "@/containers/results/callbacks";
 
 import {
   AlertDialog,
@@ -19,55 +25,107 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown";
+import { Spinner } from "@/components/ui/spinner";
 
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 
 export const NewReportAction = () => {
   const t = useTranslations();
   const [open, setOpen] = useState(false);
 
-  const handleNewReport = () => {
-    localStorage.removeItem("new:location");
+  const { id } = useParams();
+
+  const CHANGED = useReportFormChanged();
+
+  const CAN_EDIT = useCanEditReport(`${id}`);
+
+  const router = useRouter();
+
+  const callback = useCallback(() => {
     setOpen(false);
-  };
+    // Create a link to download the report after saving
+    router.push("/reports");
+  }, [router]);
+
+  const { mutation: saveMutation, handleSave } = useSaveReportCallback(callback);
+  const { mutation: duplicateMutation, handleDuplicate } = useDuplicateReportCallback(callback);
 
   return (
     <>
-      <DropdownMenuItem
-        onClick={(e) => {
-          e.preventDefault();
-          setOpen(true);
-        }}
-        className="cursor-pointer"
-      >
-        <PlusCircle className="mr-2 h-4 w-4 shrink-0" />
-        <span>{t("report-results-buttons-new-report")}</span>
-      </DropdownMenuItem>
+      {CHANGED && (
+        <DropdownMenuItem
+          onClick={(e) => {
+            e.preventDefault();
+            setOpen(true);
+          }}
+          className="cursor-pointer"
+        >
+          <PlusCircle className="mr-2 h-4 w-4 shrink-0" />
+          <span>{t("report-results-buttons-new-report")}</span>
+        </DropdownMenuItem>
+      )}
 
-      <AlertDialog open={open} onOpenChange={setOpen}>
+      {!CHANGED && (
+        <Link href="/reports">
+          <DropdownMenuItem className="cursor-pointer">
+            <PlusCircle className="mr-2 h-4 w-4 shrink-0" />
+            <span>{t("report-results-buttons-new-report")}</span>
+          </DropdownMenuItem>
+        </Link>
+      )}
+
+      <AlertDialog key="new-report-dialog" open={open} onOpenChange={setOpen}>
         <AlertDialogContent
-          area-describedby={t("report-results-buttons-new-report-description")}
-          className="max-w-lg"
+          area-describedby={t("report-results-unsaved-changes-description")}
+          className="max-w-xl"
         >
           <AlertDialogHeader>
-            <AlertDialogTitle>{t("report-results-buttons-new-report")}</AlertDialogTitle>
-            <AlertDialogDescription asChild>
-              <ReactMarkdown>{t("report-results-buttons-new-report-description")}</ReactMarkdown>
+            <AlertDialogTitle>{t("report-results-unsaved-changes-title")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("report-results-unsaved-changes-description")}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="flex items-start space-x-4 rounded-sm border border-border bg-blue-50 p-3">
-            <LuCircleAlert className="text-alert h-5 w-5 shrink-0" />
-            <p className="text-sm font-medium text-foreground">{t("new-report-modal-warning")}</p>
-          </div>
 
-          <AlertDialogFooter className="flex w-full justify-end space-x-2 justify-self-end">
-            <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
-
-            <Link href="/reports" onClick={handleNewReport}>
-              <AlertDialogAction>
-                {t("report-results-buttons-new-report-confirm")}
-              </AlertDialogAction>
+          <AlertDialogFooter className="flex w-full space-x-2 sm:justify-between">
+            <Link href="/reports">
+              <AlertDialogCancel>{t("report-results-discard-and-continue")}</AlertDialogCancel>
             </Link>
+
+            <div className="flex justify-end space-x-2">
+              <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+
+              {CAN_EDIT && (
+                <AlertDialogAction
+                  disabled={saveMutation.isPending}
+                  className="space-x-2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSave();
+                  }}
+                >
+                  {!saveMutation.isPending && <LuFileText className="h-5 w-5" />}
+                  {saveMutation.isPending && <Spinner className="h-5 w-5" />}
+
+                  <span>{t("save")}</span>
+                </AlertDialogAction>
+              )}
+
+              {!CAN_EDIT && (
+                <AlertDialogAction
+                  disabled={duplicateMutation.isPending}
+                  className="space-x-2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleDuplicate();
+                  }}
+                >
+                  {!duplicateMutation.isPending && <LuFileText className="h-5 w-5" />}
+                  {duplicateMutation.isPending && <Spinner className="h-5 w-5" />}
+
+                  <span>{t("make-a-copy")}</span>
+                </AlertDialogAction>
+              )}
+            </div>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

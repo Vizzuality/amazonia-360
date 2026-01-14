@@ -132,7 +132,8 @@ export const useSaveReport = () => {
         // TODO: Consider saving in the current locale instead and handle localization of reports properly
       });
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["report", data.id] });
       queryClient.invalidateQueries({ queryKey: ["my-reports"] });
     },
   });
@@ -169,7 +170,8 @@ export const useDuplicateReport = () => {
         // TODO: Consider saving in the current locale instead and handle localization of reports properly
       });
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["report", data.id] });
       queryClient.invalidateQueries({ queryKey: ["my-reports"] });
     },
   });

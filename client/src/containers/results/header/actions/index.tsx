@@ -24,11 +24,12 @@ export const ActionsReport = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" type="button">
           <LuEllipsisVertical className="h-5 w-5" />
           <span className="sr-only">Open menu</span>
         </Button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent align="end" className="w-48">
         <NewReportAction />
 
