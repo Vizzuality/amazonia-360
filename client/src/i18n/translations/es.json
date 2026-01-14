@@ -138,6 +138,11 @@
   "report-results-buttons-new-report-description": "Al seleccionar una nueva área se iniciará un informe nuevo se reiniciará tu sesión actual.\n Todo el progreso en tu informe existente se perderá.",
   "new-report-modal-warning": "Para guardar tu informe actual, puedes copiar el enlace para compartir antes de continuar.",
   "report-results-buttons-new-report-confirm": "Iniciar nuevo informe",
+  "report-results-unsaved-changes-title": "Cambios sin guardar",
+  "report-results-unsaved-changes-description": "Tienes cambios sin guardar en tu informe actual. Si continúas, perderás tu progreso.",
+  "report-results-unsaved-changes-download-warning": "Ten cuidado, tienes cambios sin guardar. Por favor, guarda tu informe antes de descargarlo.",
+  "report-results-unsaved-changes-download-warning-duplicate": "Ten cuidado, tienes cambios sin guardar. Por favor, duplica tu informe antes de descargarlo.",
+  "report-results-discard-and-continue": "Descartar y continuar",
   "report-results-buttons-edit-report": "Editar reporte",
   "report-results-buttons-edit-close-report": "Cerrar edición",
   "report-results-disclaimer-part-1": "Los mapas, datos e información geográfica presentados en AmazoniaForever360+ se proporcionan únicamente con fines de referencia y están destinados exclusivamente a mejorar el conocimiento territorial del área de trabajo del programa Amazonia Forever.",
@@ -433,5 +438,12 @@
   "pdf-outro-tagline": "Sigue entendiendo la Amazonia como nunca antes.",
   "pdf-report-button-title": "Descargar o imprimir PDF",
   "pdf-report-button-description": "En la ventana de diálogo, seleccione **Guardar como PDF, Guardar en PDF, Imprimir en archivo** o una impresora para imprimir el informe. Para obtener mejores resultados, configure el diseño en Horizontal y desactive los márgenes de página.",
-  "pdf-report-button-text": "Descargar / Imprimir PDF"
+  "pdf-report-button-text": "Descargar / Imprimir PDF",
+  "report-save-loading": "Guardando informe...",
+  "report-save-success": "¡Informe guardado exitosamente!",
+  "report-save-error": "Error al guardar el informe.",
+  "report-duplicate-loading": "Duplicando informe...",
+  "report-duplicate-success": "¡Informe duplicado exitosamente!",
+  "report-duplicate-error": "Error al duplicar el informe.",
+  "make-a-copy": "Hacer una copia"
 }

@@ -138,6 +138,11 @@
   "report-results-buttons-new-report-description": "Ao selecionar uma nova área, será iniciado um novo relatório e a sua sessão atual será reiniciada. \n Todo o progresso no relatório existente será perdido.",
   "new-report-modal-warning": "Para salvar o seu relatório atual, você pode copiar o link compartilhável antes de continuar.",
   "report-results-buttons-new-report-confirm": "Iniciar novo relatório",
+  "report-results-unsaved-changes-title": "Alterações não guardadas",
+  "report-results-unsaved-changes-description": "Você tem alterações não guardadas no seu relatório atual. Se continuar, o seu progresso será perdido.",
+  "report-results-unsaved-changes-download-warning": "Tenha cuidado, você tem alterações não guardadas. Por favor, guarde o seu relatório antes de descarregar.",
+  "report-results-unsaved-changes-download-warning-duplicate": "Tenha cuidado, você tem alterações não guardadas. Por favor, duplique o seu relatório antes de descarregar.",
+  "report-results-discard-and-continue": "Descartar e continuar",
   "report-results-buttons-edit-report": "Editar relatório",
   "report-results-buttons-edit-close-report": "Fechar edição",
   "report-results-disclaimer-part-1": "Os mapas, dados e informações geográficas apresentados no AmazoniaForever360+ são fornecidos apenas para fins de referência e destinam-se exclusivamente a melhorar o conhecimento territorial da área de trabalho do programa Amazonia Forever.",
@@ -433,5 +438,12 @@
   "pdf-outro-tagline": "Continue entendendo a Amazônia como nunca antes.",
   "pdf-report-button-title": "Baixar ou imprimir PDF",
   "pdf-report-button-description": "Na janela de diálogo, selecione **Salvar como PDF, Salvar em PDF, Imprimir em arquivo** ou uma impressora para imprimir o relatório. Para melhores resultados, defina o layout como Paisagem e desative as margens da página.",
-  "pdf-report-button-text": "Baixar / Imprimir PDF"
+  "pdf-report-button-text": "Baixar / Imprimir PDF",
+  "report-save-loading": "Salvando relatório...",
+  "report-save-success": "Relatório salvo com sucesso!",
+  "report-save-error": "Falha ao salvar o relatório.",
+  "report-duplicate-loading": "Duplicando relatório...",
+  "report-duplicate-success": "Relatório duplicado com sucesso!",
+  "report-duplicate-error": "Falha ao duplicar o relatório.",
+  "make-a-copy": "Fazer uma cópia"
 }

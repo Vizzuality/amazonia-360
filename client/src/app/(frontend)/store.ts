@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef } from "react";
+
 import { useFormContext, useWatch } from "react-hook-form";
 
 import { atom, useAtom } from "jotai";
@@ -102,6 +104,18 @@ export const useFormTopics = () => {
       form.setValue("topics", nextTopics as ReportFormData["topics"]);
     },
   };
+};
+
+export const useReportFormChanged = (): boolean => {
+  const form = useFormContext<ReportFormData>();
+  const intialState = useRef(form.formState.defaultValues);
+
+  if (form.formState.isReady) {
+    intialState.current = form.formState.defaultValues;
+    return JSON.stringify(intialState.current) !== JSON.stringify(form.getValues());
+  }
+
+  return false;
 };
 
 export const useSyncDefaultTopics = () => {
