@@ -97,7 +97,10 @@ export const DownloadAction = ({ reportId }: ReportResultsActionsProps) => {
             <span>{t("download")}</span>
           </DropdownMenuItem>
 
-          <AlertDialogContent className="max-w-xl">
+          <AlertDialogContent
+            area-describedby={t("report-results-unsaved-changes-download-warning")}
+            className="max-w-xl"
+          >
             <AlertDialogHeader>
               <AlertDialogTitle>{t("report-results-unsaved-changes-title")}</AlertDialogTitle>
               <AlertDialogDescription>
