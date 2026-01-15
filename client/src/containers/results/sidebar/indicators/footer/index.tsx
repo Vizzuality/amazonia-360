@@ -50,10 +50,9 @@ export default function SidebarIndicatorsFooter() {
   const handleClear = useCallback(() => {
     if (!!topics?.length) {
       setTopics([]);
-      setIndicatorsExpand({});
       return;
     }
-  }, [topics, setTopics, setIndicatorsExpand]);
+  }, [topics, setTopics]);
 
   return (
     <div className="flex items-center justify-between">

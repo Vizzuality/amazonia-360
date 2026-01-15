@@ -9,7 +9,6 @@ import {
   useSyncGridDatasets,
   selectedFiltersViewAtom,
   useSyncGridSelectedDataset,
-  indicatorsExpandAtom,
 } from "@/app/(frontend)/store";
 
 import { Button } from "@/components/ui/button";
@@ -19,14 +18,12 @@ export default function GridClear() {
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
   const setSelectedFiltersView = useSetAtom(selectedFiltersViewAtom);
   const [, setGridSelectedDataset] = useSyncGridSelectedDataset();
-  const setIndicatorsExpand = useSetAtom(indicatorsExpandAtom);
 
   const handleClick = useCallback(() => {
     setSelectedFiltersView(false);
     setGridDatasets([]);
     setGridSelectedDataset(null);
-    setIndicatorsExpand({});
-  }, [setGridDatasets, setSelectedFiltersView, setGridSelectedDataset, setIndicatorsExpand]);
+  }, [setGridDatasets, setSelectedFiltersView, setGridSelectedDataset]);
 
   useEffect(() => {
     if (gridDatasets.length === 0) {
