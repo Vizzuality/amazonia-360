@@ -4,6 +4,7 @@ import { isServer, QueryClient, QueryClientProvider } from "@tanstack/react-quer
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { Locale } from "next-intl";
+import { NavigationGuardProvider } from "next-navigation-guard";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { MediaContextProvider } from "@/containers/media";
@@ -67,7 +68,9 @@ export default function LayoutProviders({
             }}
           >
             <ArcGISProvider locale={locale}>
-              <TooltipProvider>{children}</TooltipProvider>
+              <NavigationGuardProvider>
+                <TooltipProvider>{children}</TooltipProvider>
+              </NavigationGuardProvider>
             </ArcGISProvider>
           </NuqsAdapter>
         </QueryClientProvider>

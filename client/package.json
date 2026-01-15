@@ -93,6 +93,7 @@
     "next": "15.5.9",
     "next-auth": "5.0.0-beta.30",
     "next-intl": "4.4.0",
+    "next-navigation-guard": "0.2.0",
     "nodemailer": "7.0.10",
     "numeral": "2.0.6",
     "nuqs": "2.7.2",
