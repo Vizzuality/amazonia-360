@@ -26,6 +26,19 @@ After `terraform apply -var-file="vars/local.tfvars"` created all the resources 
     dynamodb_table = "amazonia360-terraform-state-lock"
   }
 ```
+## PostgreSQL database for Payload CMS
+
+The Tofu project provisions a single AWS RDS PostgreSQL database node, which is
+then shared by all the application instances (dev/staging/production).
+
+Each instance relies on a distinct PostgreSQL database on this RDS node; this is
+provisioned automatically via an `ebextensions` script. In practice, this script
+only effects changes the first time it is run successfully (for example, the
+first time a new instance is created, once its Elastic Beanstalk environment is
+deployed); however, since the script is idempotent, it is configured to run on
+each deployment: on successive runs, it will detect that the relevant database
+and credentials used to access it from Payload already exist, and will quietly
+quit without further action.
 
 ## Domain Aliases
 
