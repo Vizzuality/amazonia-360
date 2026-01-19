@@ -14,11 +14,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@radix-ui/react-dialog";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
 import { LuSquareMousePointer, LuX } from "react-icons/lu";
 
 import {
+  gridEnabledAtom,
   sketchActionAtom,
   sketchAtom,
   useFormLocation,
@@ -27,14 +28,17 @@ import {
 
 import { AuthWrapper } from "@/containers/auth/wrapper";
 import MapContainer from "@/containers/map/edit";
+import ReportGridDesktop from "@/containers/report/grid/desktop";
 import Create from "@/containers/report/location/create";
 import SearchLocation from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
 
 import { Button } from "@/components/ui/button";
+import { HexagonIcon } from "@/components/ui/icons/hexagon";
 
 export default function EditLocationReport() {
   const [open, setOpen] = useState(false);
+  const [gridEnabled, setGridEnabled] = useAtom(gridEnabledAtom);
   const t = useTranslations();
   const { location: defaultLocation } = useFormLocation();
   const [location, setLocation] = useSyncLocation();
@@ -89,36 +93,61 @@ export default function EditLocationReport() {
             </Button>
           </DialogClose>
           <div className="flex h-full w-full grow flex-col bg-background">
-            <MapContainer desktop />
+            <MapContainer desktop gridEnabled={gridEnabled} />
 
-            <div className="absolute left-6 top-6 z-10 space-y-2">
-              <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-lg">
-                {!location && (
-                  <div className="space-y-4">
-                    <SearchLocation />
+            <div className="absolute left-6 top-6 z-10 max-w-md space-y-2">
+              {!gridEnabled && (
+                <>
+                  <div className="w-full rounded-lg bg-background p-6 shadow-lg">
+                    {!location && (
+                      <div className="space-y-4">
+                        <SearchLocation />
 
-                    <Sketch />
+                        <Sketch />
+                      </div>
+                    )}
+
+                    {location && (
+                      <Create>
+                        <Button
+                          type="button"
+                          size="lg"
+                          className="w-full grow"
+                          disabled={sketch.enabled === "create" || sketch.enabled === "edit"}
+                          onClick={() => {
+                            form.setValue("location", location);
+                            setOpen(false);
+                          }}
+                        >
+                          {t("grid-sidebar-report-location-button-confirm")}
+                        </Button>
+                      </Create>
+                    )}
                   </div>
-                )}
 
-                {location && (
-                  <Create>
-                    <Button
-                      type="button"
-                      size="lg"
-                      className="w-full grow"
-                      disabled={sketch.enabled === "create" || sketch.enabled === "edit"}
-                      onClick={() => {
-                        form.setValue("location", location);
-                        setOpen(false);
-                      }}
-                    >
-                      {t("grid-sidebar-report-location-button-confirm")}
-                    </Button>
-                  </Create>
-                )}
-              </div>
-              <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-lg">Grid</div>
+                  <button
+                    type="button"
+                    className="group pointer-events-auto flex rounded-lg border border-border bg-white p-4 text-left shadow-lg transition-colors duration-300 hover:border-cyan-500"
+                    onClick={() => setGridEnabled(true)}
+                  >
+                    <div className="flex items-start space-x-4">
+                      <div className="rounded-sm bg-muted p-3 transition-colors duration-300 group-hover:bg-cyan-100">
+                        <HexagonIcon className="h-5 w-5 text-foreground transition-colors duration-300 group-hover:text-cyan-500" />
+                      </div>
+                      <div className="flex flex-col items-start justify-start space-y-1">
+                        <span className="text-base font-semibold text-primary transition-colors duration-300 group-hover:text-primary">
+                          {t("sidebar-report-grid-title")}
+                        </span>
+                        <span className="text-sm font-medium text-muted-foreground">
+                          {t("sidebar-report-grid-description")}
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                </>
+              )}
+
+              {gridEnabled && <ReportGridDesktop />}
             </div>
           </div>
         </DialogContent>

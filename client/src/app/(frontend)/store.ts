@@ -4,6 +4,8 @@ import { useRef } from "react";
 
 import { useFormContext, useWatch } from "react-hook-form";
 
+import { useParams } from "next/navigation";
+
 import { atom, useAtom } from "jotai";
 import { useQueryState } from "nuqs";
 
@@ -133,23 +135,38 @@ export const useSyncIndicatorsSettings = () => {
 
 // GRID PARAMS
 export const useSyncGridDatasetContinousSettings = () => {
-  return useQueryState("gridDatasetContinousSettings", gridDatasetSettingsParser);
+  const { id } = useParams();
+  const urlState = useQueryState("gridDatasetContinousSettings", gridDatasetSettingsParser);
+  const atomState = useAtom(gridDatasetContinousSettingsAtom);
+  return !id ? urlState : atomState;
 };
 
 export const useSyncGridDatasetCategoricalSettings = () => {
-  return useQueryState("gridDatasetCategoricalSettings", gridDatasetSettingsParser);
+  const { id } = useParams();
+  const urlState = useQueryState("gridDatasetCategoricalSettings", gridDatasetSettingsParser);
+  const atomState = useAtom(gridDatasetCategoricalSettingsAtom);
+  return !id ? urlState : atomState;
 };
 
 export const useSyncGridDatasets = () => {
-  return useQueryState("gridDatasets", gridDatasetsParser);
+  const { id } = useParams();
+  const urlState = useQueryState("gridDatasets", gridDatasetsParser);
+  const atomState = useAtom(gridDatasetsAtom);
+  return !id ? urlState : atomState;
 };
 
 export const useSyncGridSelectedDataset = () => {
-  return useQueryState("gridDatasetSelected", gridDatasetSelectedParser);
+  const { id } = useParams();
+  const urlState = useQueryState("gridDatasetSelected", gridDatasetSelectedParser);
+  const atomState = useAtom(gridSelectedDatasetAtom);
+  return !id ? urlState : atomState;
 };
 
 export const useSyncGridTableSettings = () => {
-  return useQueryState("gridTableSettings", gridTableSettingsParser);
+  const { id } = useParams();
+  const urlState = useQueryState("gridTableSettings", gridTableSettingsParser);
+  const atomState = useAtom(gridTableSettingsAtom);
+  return !id ? urlState : atomState;
 };
 
 // JOTAI ATOMS
@@ -172,7 +189,27 @@ export const sketchActionAtom = atom<{
 export const reportPanelAtom = atom<"location" | "topics">("location");
 
 // GRID ATOMS
+export const gridEnabledAtom = atom<boolean>(false);
 export const gridPanelAtom = atom<"filters" | "table">("filters");
+export const gridDatasetContinousSettingsAtom = atom<Record<string, number[] | undefined> | null>(
+  null,
+);
+
+export const gridDatasetCategoricalSettingsAtom = atom<Record<string, number[] | undefined> | null>(
+  null,
+);
+
+export const gridDatasetsAtom = atom<string[]>([]);
+
+export const gridSelectedDatasetAtom = atom<string | null>(null);
+
+export const gridTableSettingsAtom = atom<{
+  [key: string]: number[] | number | string;
+  limit: number;
+  opacity: number;
+  direction: "asc" | "desc";
+}>({ limit: 10, opacity: 100, direction: "asc" });
+
 export const gridCellHighlightAtom = atom<{ id: number | null; index: string | undefined }>({
   id: null,
   index: undefined,

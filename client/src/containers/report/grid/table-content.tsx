@@ -2,10 +2,11 @@
 
 import { useSearchParams } from "next/navigation";
 
+import { useAtom } from "jotai";
 import { useTranslations } from "next-intl";
 import { LuArrowLeft } from "react-icons/lu";
 
-import { useSyncGridDatasets } from "@/app/(frontend)/store";
+import { gridEnabledAtom, useSyncGridDatasets } from "@/app/(frontend)/store";
 
 import GridTable from "@/containers/report/grid/table";
 
@@ -19,18 +20,30 @@ export default function SidebarGridTableContent() {
 
   const [gridDatasets] = useSyncGridDatasets();
 
+  const [gridEnabled, setGridEnabled] = useAtom(gridEnabledAtom);
+
   return (
     <div className="relative flex h-full grow flex-col space-y-2 overflow-hidden rounded-lg border border-blue-100 bg-white py-6 backdrop-blur-xl xl:space-y-4">
       <div className="space-y-2 px-6">
         <div className="flex items-start justify-between">
           <header className="flex items-start gap-2">
             <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
-              <Link
-                href={`/reports${searchParams ? `?${searchParams.toString()}` : ""}`}
-                className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
-              >
-                <LuArrowLeft className="h-4 w-4" />
-              </Link>
+              {!gridEnabled && (
+                <Link
+                  href={`/reports${searchParams ? `?${searchParams.toString()}` : ""}`}
+                  className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
+                >
+                  <LuArrowLeft className="h-4 w-4" />
+                </Link>
+              )}
+              {gridEnabled && (
+                <button
+                  onClick={() => setGridEnabled(false)}
+                  className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
+                >
+                  <LuArrowLeft className="h-4 w-4" />
+                </button>
+              )}{" "}
               {t("grid-sidebar-grid-filters-title")}
             </h1>
           </header>

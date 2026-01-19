@@ -4,18 +4,12 @@ import ReportIndicatorsContent from "@/containers/report/indicators/content";
 
 export default function ReportIndicatorsDesktop() {
   return (
-    <div className="pointer-events-none z-10 w-full lg:absolute lg:bottom-8 lg:left-0 lg:top-10">
-      <div className="container grid grid-cols-12">
-        <div className="col-span-12 space-y-1 lg:col-span-5 2xl:col-span-4">
-          <aside className="pointer-events-auto flex w-full shrink-0 flex-col overflow-hidden">
-            <div className="flex max-h-[calc(100vh_-_(theme(spacing.16)_+_theme(spacing.20)))] grow flex-col">
-              <div className="relative flex max-h-full grow flex-col overflow-hidden">
-                <ReportIndicatorsContent />
-              </div>
-            </div>
-          </aside>
+    <aside className="pointer-events-auto flex w-full shrink-0 flex-col overflow-hidden">
+      <div className="flex max-h-[calc(100vh_-_(theme(spacing.16)_+_theme(spacing.20)))] grow flex-col">
+        <div className="relative flex max-h-full grow flex-col overflow-hidden">
+          <ReportIndicatorsContent />
         </div>
       </div>
-    </div>
+    </aside>
   );
 }

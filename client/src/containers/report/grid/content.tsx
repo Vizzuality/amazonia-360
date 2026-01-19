@@ -16,6 +16,7 @@ import {
   indicatorsExpandAtom,
   gridSelectedFiltersViewAtom,
   useSyncGridDatasets,
+  gridEnabledAtom,
 } from "@/app/(frontend)/store";
 
 import GridFooter from "@/containers/report/grid/footer";
@@ -39,6 +40,8 @@ export default function SidebarGridContent() {
 
   const gridSelectedFiltersView = useAtomValue(gridSelectedFiltersViewAtom);
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
+
+  const [gridEnabled, setGridEnabled] = useAtom(gridEnabledAtom);
 
   useEffect(() => {
     const i = indicators ?? [];
@@ -77,12 +80,24 @@ export default function SidebarGridContent() {
         <div className="flex items-center justify-between">
           <header className="flex w-full items-start gap-2">
             <h1 className="flex w-full items-center gap-2 pr-56 text-lg font-bold leading-tight text-primary">
-              <Link
-                href={`/reports${searchParams ? `?${searchParams.toString()}` : ""}`}
-                className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
-              >
-                <LuArrowLeft className="h-4 w-4" />
-              </Link>
+              {!gridEnabled && (
+                <Link
+                  href={`/reports${searchParams ? `?${searchParams.toString()}` : ""}`}
+                  className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
+                >
+                  <LuArrowLeft className="h-4 w-4" />
+                </Link>
+              )}
+
+              {gridEnabled && (
+                <button
+                  onClick={() => setGridEnabled(false)}
+                  className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
+                >
+                  <LuArrowLeft className="h-4 w-4" />
+                </button>
+              )}
+
               {t("grid-sidebar-grid-filters-title")}
             </h1>
           </header>

@@ -19,19 +19,16 @@ import PlaceholderGridLayer from "@/containers/map/layer-manager/placeholder-gri
 
 import { LayerProps } from "@/components/map/layers/types";
 
-import { usePathname } from "@/i18n/navigation";
 // import SelectedLayer from "@/containers/map/layer-manager/selected-layer";
 
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
-export default function LayerManager() {
+export default function LayerManager({ gridEnabled }: { gridEnabled?: boolean }) {
   // const [location] = useSyncLocation();
   const [indicators] = useSyncIndicators();
   const [indicatorsSettings, setIndicatorsSettings] = useSyncIndicatorsSettings();
   const [gridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
-
-  const pathname = usePathname();
 
   // Sync layers settings with layers
   useMemo(() => {
@@ -64,13 +61,13 @@ export default function LayerManager() {
       <Layer index={0} layer={DATASETS.area_afp.layer as LayerProps} />
       {/* <SelectedLayer location={location} /> */}
 
-      {!pathname.includes("/grid") &&
+      {!gridEnabled &&
         indicators?.map((indicator, index) => (
           <LayerManagerItem key={indicator} id={indicator} index={index} />
         ))}
 
-      {pathname.includes("/grid") && !!gridDatasets.length && <GridLayer />}
-      {pathname.includes("/grid") &&
+      {gridEnabled && !!gridDatasets.length && <GridLayer />}
+      {gridEnabled &&
         (!gridDatasets.length || (!!gridDatasets.length && gridSelectedDataset === "no-layer")) && (
           <PlaceholderGridLayer />
         )}
