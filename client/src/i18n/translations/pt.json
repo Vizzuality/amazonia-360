@@ -168,7 +168,7 @@
   "auth-toast-resetting-password": "Redefinindo sua senha...",
   "auth-toast-password-reset-success": "Senha redefinida com sucesso!",
   "auth-toast-password-reset-failed": "Falha ao redefinir senha. Por favor, tente novamente. O token é inválido ou expirou.",
-  "auth-signin-title": "Bem-vindo de volta",
+  "auth-signin-title": "Bem-vindo",
   "auth-signin-description": "Faça login para acessar seus relatórios.",
   "auth-signup-title": "Criar uma conta",
   "auth-signup-description": "Digite suas informações abaixo para criar sua conta",

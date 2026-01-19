@@ -168,7 +168,7 @@
   "auth-toast-resetting-password": "Restableciendo su contraseña...",
   "auth-toast-password-reset-success": "¡Contraseña restablecida correctamente!",
   "auth-toast-password-reset-failed": "Error al restablecer la contraseña. Por favor, inténtelo de nuevo. El token no es válido o ha expirado.",
-  "auth-signin-title": "Bienvenido de nuevo",
+  "auth-signin-title": "Bienvenido",
   "auth-signin-description": "Inicia sesión para acceder a tus informes.",
   "auth-signup-title": "Crear una cuenta",
   "auth-signup-description": "Introduce tu información a continuación para crear tu cuenta",
