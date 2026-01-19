@@ -91,31 +91,34 @@ export default function EditLocationReport() {
           <div className="flex h-full w-full grow flex-col bg-background">
             <MapContainer desktop />
 
-            <div className="absolute left-6 top-6 z-10 w-full max-w-md rounded-lg bg-background p-6 shadow-lg">
-              {!location && (
-                <div className="space-y-4">
-                  <SearchLocation />
+            <div className="absolute left-6 top-6 z-10 space-y-2">
+              <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-lg">
+                {!location && (
+                  <div className="space-y-4">
+                    <SearchLocation />
 
-                  <Sketch />
-                </div>
-              )}
+                    <Sketch />
+                  </div>
+                )}
 
-              {location && (
-                <Create>
-                  <Button
-                    type="button"
-                    size="lg"
-                    className="w-full grow"
-                    disabled={sketch.enabled === "create" || sketch.enabled === "edit"}
-                    onClick={() => {
-                      form.setValue("location", location);
-                      setOpen(false);
-                    }}
-                  >
-                    {t("grid-sidebar-report-location-button-confirm")}
-                  </Button>
-                </Create>
-              )}
+                {location && (
+                  <Create>
+                    <Button
+                      type="button"
+                      size="lg"
+                      className="w-full grow"
+                      disabled={sketch.enabled === "create" || sketch.enabled === "edit"}
+                      onClick={() => {
+                        form.setValue("location", location);
+                        setOpen(false);
+                      }}
+                    >
+                      {t("grid-sidebar-report-location-button-confirm")}
+                    </Button>
+                  </Create>
+                )}
+              </div>
+              <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-lg">Grid</div>
             </div>
           </div>
         </DialogContent>

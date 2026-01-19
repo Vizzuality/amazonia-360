@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 import {
   indicatorsExpandAtom,
-  selectedFiltersViewAtom,
+  gridSelectedFiltersViewAtom,
   useSyncGridDatasets,
 } from "@/app/(frontend)/store";
 
@@ -37,7 +37,7 @@ export default function SidebarGridContent() {
 
   const { data: indicatorsData } = useGetH3Indicators({ locale });
 
-  const selectedFiltersView = useAtomValue(selectedFiltersViewAtom);
+  const gridSelectedFiltersView = useAtomValue(gridSelectedFiltersViewAtom);
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
 
   useEffect(() => {
@@ -101,8 +101,8 @@ export default function SidebarGridContent() {
         <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2 bg-gradient-to-b from-white to-transparent xl:h-4" />
         <ScrollArea className="flex grow flex-col">
           <div className="px-6 py-2 xl:py-4">
-            {!selectedFiltersView && <GridTopicsList />}
-            {selectedFiltersView && <GridIndicatorsList />}
+            {!gridSelectedFiltersView && <GridTopicsList />}
+            {gridSelectedFiltersView && <GridIndicatorsList />}
           </div>
         </ScrollArea>
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-50 h-2 bg-gradient-to-t from-white to-transparent xl:h-4" />

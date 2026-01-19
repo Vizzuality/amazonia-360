@@ -152,12 +152,13 @@ export const useSyncGridTableSettings = () => {
   return useQueryState("gridTableSettings", gridTableSettingsParser);
 };
 
-// JOTAI PARAMS
+// JOTAI ATOMS
 export const indicatorsEditionModeAtom = atom<{ [key: string]: boolean }>({});
 export const reportEditionModeAtom = atom<boolean>(false);
 
 export const tmpBboxAtom = atom<__esri.Extent | undefined>(undefined);
 
+// SKETCH ATOMS
 export const sketchAtom = atom<SketchProps>({
   enabled: undefined,
   type: undefined,
@@ -168,9 +169,10 @@ export const sketchActionAtom = atom<{
   geometryType?: __esri.Geometry["type"];
 }>({});
 
+// CREATE REPORT ATOMS
 export const reportPanelAtom = atom<"location" | "topics">("location");
 
-// GRID PARAMS
+// GRID ATOMS
 export const gridPanelAtom = atom<"filters" | "table">("filters");
 export const gridCellHighlightAtom = atom<{ id: number | null; index: string | undefined }>({
   id: null,
@@ -185,12 +187,9 @@ export const gridHoverAtom = atom<GridHoverType>({
   values: [],
   coordinates: undefined,
 });
+export const gridSelectedFiltersViewAtom = atom<boolean>(false);
 
-export const selectedFiltersViewAtom = atom<boolean>(false);
-
-export type ReportResultsTab = "indicators" | "ai_summaries";
-export const resultsSidebarTabAtom = atom<ReportResultsTab>("indicators");
-
+// EXPAND INDICATORS ATOM
 export const indicatorsExpandAtom = atom<Record<number, number[] | undefined> | undefined>({});
 
 // PDF ATOMS
