@@ -114,7 +114,7 @@ export const LegendItem = ({ id }: { id: Indicator["id"] }) => {
 
           <li>
             <OpacityControl
-              value={indicatorsSettings[id]?.opacity ?? 1}
+              value={indicatorsSettings?.[id]?.opacity ?? 1}
               onValueChange={(value) => {
                 setIndicatorsSettings((prev) => ({
                   ...prev,
@@ -129,7 +129,7 @@ export const LegendItem = ({ id }: { id: Indicator["id"] }) => {
                 setIndicators((prev) => {
                   if (!prev) return prev;
 
-                  if (prev.length === 1) return null;
+                  if (prev.length === 1) return undefined;
 
                   return prev.filter((i) => i !== id);
                 });

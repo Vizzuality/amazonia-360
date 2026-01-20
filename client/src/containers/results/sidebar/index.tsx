@@ -2,17 +2,13 @@
 
 import { useCallback } from "react";
 
-import { useAtom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
 import { LuX } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import {
-  reportEditionModeAtom,
-  ReportResultsTab,
-  resultsSidebarTabAtom,
-} from "@/app/(frontend)/store";
+import { reportEditionModeAtom } from "@/app/(frontend)/store";
 
 import { Sidebar, SidebarContent, SidebarHeader, useSidebar } from "@/components/ui/sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -22,7 +18,6 @@ import IndicatorsSidebarContent from "./indicators";
 export default function ReportSidebar() {
   const t = useTranslations();
   const { toggleSidebar } = useSidebar();
-  const [tab, setTab] = useAtom(resultsSidebarTabAtom);
   const setReportEditionMode = useSetAtom(reportEditionModeAtom);
 
   const handleReportEditionMode = useCallback(() => {
@@ -37,9 +32,8 @@ export default function ReportSidebar() {
       })}
     >
       <Tabs
-        value={tab}
+        value="indicators"
         className="sticky top-0 z-10 flex max-h-svh grow flex-col items-start space-y-4 overflow-hidden bg-white"
-        onValueChange={(value) => setTab(value as ReportResultsTab)}
       >
         <div className="flex grow flex-col overflow-hidden pb-4 pt-6">
           <SidebarHeader className="flex w-full flex-row items-baseline justify-between px-6 py-0">
