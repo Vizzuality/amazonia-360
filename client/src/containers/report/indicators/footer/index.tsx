@@ -47,7 +47,7 @@ export default function IndicatorsFooter() {
   }, [isAllExpanded, topicsData, subtopicsData, setIndicatorsExpand]);
 
   const handleClear = () => {
-    setIndicators(null);
+    setIndicators(undefined);
   };
 
   return (

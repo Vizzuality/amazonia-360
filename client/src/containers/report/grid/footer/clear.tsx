@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 
 import {
   useSyncGridDatasets,
-  selectedFiltersViewAtom,
+  gridSelectedFiltersViewAtom,
   useSyncGridSelectedDataset,
 } from "@/app/(frontend)/store";
 
@@ -16,21 +16,21 @@ import { Button } from "@/components/ui/button";
 export default function GridClear() {
   const t = useTranslations();
   const [gridDatasets, setGridDatasets] = useSyncGridDatasets();
-  const setSelectedFiltersView = useSetAtom(selectedFiltersViewAtom);
+  const setGridSelectedFiltersView = useSetAtom(gridSelectedFiltersViewAtom);
   const [, setGridSelectedDataset] = useSyncGridSelectedDataset();
 
   const handleClick = useCallback(() => {
-    setSelectedFiltersView(false);
+    setGridSelectedFiltersView(false);
     setGridDatasets([]);
     setGridSelectedDataset(null);
-  }, [setGridDatasets, setSelectedFiltersView, setGridSelectedDataset]);
+  }, [setGridDatasets, setGridSelectedFiltersView, setGridSelectedDataset]);
 
   useEffect(() => {
     if (gridDatasets.length === 0) {
-      setSelectedFiltersView(false);
+      setGridSelectedFiltersView(false);
       setGridSelectedDataset(null);
     }
-  }, [gridDatasets, setSelectedFiltersView, setGridSelectedDataset]);
+  }, [gridDatasets, setGridSelectedFiltersView, setGridSelectedDataset]);
 
   return (
     <Button

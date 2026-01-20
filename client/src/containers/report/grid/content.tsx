@@ -14,8 +14,9 @@ import { cn } from "@/lib/utils";
 
 import {
   indicatorsExpandAtom,
-  selectedFiltersViewAtom,
+  gridSelectedFiltersViewAtom,
   useSyncGridDatasets,
+  gridEnabledAtom,
 } from "@/app/(frontend)/store";
 
 import GridFooter from "@/containers/report/grid/footer";
@@ -37,8 +38,10 @@ export default function SidebarGridContent() {
 
   const { data: indicatorsData } = useGetH3Indicators({ locale });
 
-  const selectedFiltersView = useAtomValue(selectedFiltersViewAtom);
+  const gridSelectedFiltersView = useAtomValue(gridSelectedFiltersViewAtom);
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
+
+  const [gridEnabled, setGridEnabled] = useAtom(gridEnabledAtom);
 
   useEffect(() => {
     const i = indicators ?? [];
@@ -77,12 +80,24 @@ export default function SidebarGridContent() {
         <div className="flex items-center justify-between">
           <header className="flex w-full items-start gap-2">
             <h1 className="flex w-full items-center gap-2 pr-56 text-lg font-bold leading-tight text-primary">
-              <Link
-                href={`/reports${searchParams ? `?${searchParams.toString()}` : ""}`}
-                className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
-              >
-                <LuArrowLeft className="h-4 w-4" />
-              </Link>
+              {!gridEnabled && (
+                <Link
+                  href={`/reports${searchParams ? `?${searchParams.toString()}` : ""}`}
+                  className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
+                >
+                  <LuArrowLeft className="h-4 w-4" />
+                </Link>
+              )}
+
+              {gridEnabled && (
+                <button
+                  onClick={() => setGridEnabled(false)}
+                  className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
+                >
+                  <LuArrowLeft className="h-4 w-4" />
+                </button>
+              )}
+
               {t("grid-sidebar-grid-filters-title")}
             </h1>
           </header>
@@ -101,8 +116,8 @@ export default function SidebarGridContent() {
         <div className="pointer-events-none absolute left-0 right-0 top-0 z-50 h-2 bg-gradient-to-b from-white to-transparent xl:h-4" />
         <ScrollArea className="flex grow flex-col">
           <div className="px-6 py-2 xl:py-4">
-            {!selectedFiltersView && <GridTopicsList />}
-            {selectedFiltersView && <GridIndicatorsList />}
+            {!gridSelectedFiltersView && <GridTopicsList />}
+            {gridSelectedFiltersView && <GridIndicatorsList />}
           </div>
         </ScrollArea>
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-50 h-2 bg-gradient-to-t from-white to-transparent xl:h-4" />

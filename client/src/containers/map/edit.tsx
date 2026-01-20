@@ -30,8 +30,6 @@ import MapPopup from "@/components/map/popup";
 import Sketch from "@/components/map/sketch";
 import Tooltip from "@/components/map/tooltip";
 
-import { usePathname } from "@/i18n/navigation";
-
 const Map = dynamic(() => import("@/components/map"), {
   ssr: false,
 });
@@ -44,9 +42,13 @@ const Legend = dynamic(() => import("./legend"), {
   ssr: false,
 });
 
-export default function MapEditContainer({ desktop }: { desktop?: boolean }) {
-  const pathname = usePathname();
-
+export default function MapEditContainer({
+  desktop,
+  gridEnabled,
+}: {
+  desktop?: boolean;
+  gridEnabled?: boolean;
+}) {
   const [tmpBbox, setTmpBbox] = useAtom(tmpBboxAtom);
 
   const { location: defaultLocation } = useFormLocation();
@@ -197,13 +199,13 @@ export default function MapEditContainer({ desktop }: { desktop?: boolean }) {
         }}
         onPointerLeave={handlePointerLeave}
       >
-        <LayerManager />
+        <LayerManager gridEnabled={gridEnabled} />
         <Tooltip />
 
         <Sketch
           type={sketch.type}
           enabled={sketch.enabled}
-          updatable={location?.type !== "search" && !pathname.includes("/grid")}
+          updatable={location?.type !== "search" && !gridEnabled}
           completed={sketchAction.type === "create" && sketchAction.state === "complete"}
           location={location}
           onCreate={handleCreate}
@@ -221,9 +223,9 @@ export default function MapEditContainer({ desktop }: { desktop?: boolean }) {
         <MapPopup />
       </Map>
 
-      {!pathname.includes("/grid") && <Legend />}
+      {!gridEnabled && <Legend />}
 
-      {gridSelectedDataset && pathname.includes("/grid") && <GridLegend />}
+      {gridSelectedDataset && gridEnabled && <GridLegend />}
 
       <SketchTooltips />
     </div>

@@ -3,8 +3,8 @@ import { Suspense } from "react";
 import { Provider as JotaiProvider } from "jotai";
 
 import Header from "@/containers/header";
-import ReportMap from "@/containers/map";
 import FeedbackButton from "@/containers/report/feedback";
+import ReportMap from "@/containers/report/map";
 import ThirdParty from "@/containers/third-party";
 
 import { routing } from "@/i18n/routing";

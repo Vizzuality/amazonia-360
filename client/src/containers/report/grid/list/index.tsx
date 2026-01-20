@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 import { Subtopic } from "@/types/topic";
 
-import { selectedFiltersViewAtom, useSyncGridDatasets } from "@/app/(frontend)/store";
+import { gridSelectedFiltersViewAtom, useSyncGridDatasets } from "@/app/(frontend)/store";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -20,7 +20,7 @@ export default function GridIndicatorsList({ subtopicId }: { subtopicId?: Subtop
   const locale = useLocale();
   const t = useTranslations();
 
-  const selectedFiltersView = useAtomValue(selectedFiltersViewAtom);
+  const gridSelectedFiltersView = useAtomValue(gridSelectedFiltersViewAtom);
   const [gridDatasets] = useSyncGridDatasets();
 
   const {
@@ -34,11 +34,11 @@ export default function GridIndicatorsList({ subtopicId }: { subtopicId?: Subtop
 
   const DATA = useMemo(() => {
     if (!indicatorsData) return [];
-    if (selectedFiltersView) {
+    if (gridSelectedFiltersView) {
       return indicatorsData.filter((indicator) => gridDatasets.includes(indicator.resource.column));
     }
     return indicatorsData || [];
-  }, [indicatorsData, gridDatasets, selectedFiltersView]);
+  }, [indicatorsData, gridDatasets, gridSelectedFiltersView]);
 
   return (
     <div

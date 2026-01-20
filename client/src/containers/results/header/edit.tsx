@@ -1,10 +1,10 @@
 "use client";
 
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { useTranslations } from "next-intl";
 import { LuPen, LuX } from "react-icons/lu";
 
-import { reportEditionModeAtom, resultsSidebarTabAtom } from "@/app/(frontend)/store";
+import { reportEditionModeAtom } from "@/app/(frontend)/store";
 
 import { AuthWrapper } from "@/containers/auth/wrapper";
 
@@ -14,7 +14,6 @@ import { useSidebar } from "@/components/ui/sidebar";
 export default function EditReport() {
   const t = useTranslations();
   const { open, setOpen } = useSidebar();
-  const setResultsSidebarTab = useSetAtom(resultsSidebarTabAtom);
 
   const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
 
@@ -26,7 +25,6 @@ export default function EditReport() {
         onClick={() => {
           setReportEditionMode(!reportEditionMode);
           setOpen(!open);
-          setResultsSidebarTab("indicators");
         }}
         variant="outline"
       >

@@ -1,12 +1,10 @@
 "use client";
-import { useCallback, useMemo } from "react";
-
-import { useAtom } from "jotai";
+import { useCallback, useMemo, useState } from "react";
 
 import { VisualizationTypes } from "@/types/indicator";
 
 import { IndicatorView, IndicatorMapView, TopicView } from "@/app/(frontend)/parsers";
-import { indicatorsEditionModeAtom, useFormTopics } from "@/app/(frontend)/store";
+import { useFormTopics } from "@/app/(frontend)/store";
 
 import IndicatorCard from "@/containers/results/content/indicators/card";
 import DeleteHandler from "@/containers/results/content/indicators/controls/delete";
@@ -27,7 +25,7 @@ export const ReportResultsContentIndicatorItem = ({
   editing = false,
 }: ReportResultsContentIndicatorItemProps) => {
   const { setTopics } = useFormTopics();
-  const [editionModeIndicator, setEditionModeIndicator] = useAtom(indicatorsEditionModeAtom);
+  const [editionModeIndicator, setEditionModeIndicator] = useState(false);
   const { indicator_id, type } = indicatorView;
 
   const handleDelete = useCallback(
@@ -52,7 +50,7 @@ export const ReportResultsContentIndicatorItem = ({
         return newTopics;
       });
 
-      setEditionModeIndicator({});
+      setEditionModeIndicator(false);
     },
     [topic.topic_id, setTopics, setEditionModeIndicator],
   );
@@ -76,23 +74,23 @@ export const ReportResultsContentIndicatorItem = ({
       className="relative z-10 flex h-full flex-col"
       onMouseEnter={() => {
         if (editing) {
-          setEditionModeIndicator({ [`${indicator_id}-${type}`]: true });
+          setEditionModeIndicator(true);
         }
       }}
       onMouseLeave={() => {
         if (editing) {
-          setEditionModeIndicator({ [`${indicator_id}-${type}`]: false });
+          setEditionModeIndicator(false);
         }
       }}
     >
-      {editionModeIndicator[`${indicator_id}-${type}`] && editing && <MoveHandler />}
-      {editionModeIndicator[`${indicator_id}-${type}`] && editing && (
+      {editionModeIndicator && editing && <MoveHandler />}
+      {editionModeIndicator && editing && (
         <DeleteHandler indicatorId={indicator_id} type={type} onClick={handleDelete} />
       )}
 
       {INDICATOR}
 
-      {editionModeIndicator[`${indicator_id}-${type}`] && editing && <ResizeHandler />}
+      {editionModeIndicator && editing && <ResizeHandler />}
     </div>
   );
 };

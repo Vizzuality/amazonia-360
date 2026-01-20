@@ -178,4 +178,4 @@ export const gridTableSettingsParser = parseAsJson<{
     opacity: z.number().min(0).max(100),
     direction: z.enum(["asc", "desc"]),
   }),
-).withDefault({ limit: 10, opacity: 100, direction: "asc" });
+).withDefault({ limit: 10, opacity: 100, direction: "desc" });
