@@ -208,7 +208,7 @@ export const gridTableSettingsAtom = atom<{
   limit: number;
   opacity: number;
   direction: "asc" | "desc";
-}>({ limit: 10, opacity: 100, direction: "asc" });
+}>({ limit: 10, opacity: 100, direction: "desc" });
 
 export const gridCellHighlightAtom = atom<{ id: number | null; index: string | undefined }>({
   id: null,
