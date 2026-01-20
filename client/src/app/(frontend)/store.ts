@@ -4,7 +4,7 @@ import { useRef } from "react";
 
 import { useFormContext, useWatch } from "react-hook-form";
 
-import { useParams } from "next/navigation";
+// import { useParams } from "next/navigation";
 
 import { atom, useAtom } from "jotai";
 import { useQueryState } from "nuqs";
@@ -13,13 +13,13 @@ import { Indicator, VisualizationTypes } from "@/types/indicator";
 
 import {
   bboxParser,
-  gridDatasetSelectedParser,
-  gridDatasetsParser,
-  gridDatasetSettingsParser,
-  gridTableSettingsParser,
+  // gridDatasetSelectedParser,
+  // gridDatasetsParser,
+  // gridDatasetSettingsParser,
+  // gridTableSettingsParser,
   defaultTopicsConfigParser,
-  indicatorsParser,
-  indicatorsSettingsParser,
+  // indicatorsParser,
+  // indicatorsSettingsParser,
   Location,
   TopicView,
 } from "@/app/(frontend)/parsers";
@@ -126,47 +126,49 @@ export const useSyncDefaultTopics = () => {
 
 // INDICATORS PARAMS
 export const useSyncIndicators = () => {
-  return useQueryState("indicators", indicatorsParser);
+  return useAtom(indicatorsAtom);
+  // return useQueryState("indicators", indicatorsParser);
 };
 
 export const useSyncIndicatorsSettings = () => {
-  return useQueryState("indicatorsSettings", indicatorsSettingsParser);
+  return useAtom(indicatorsSettingsAtom);
+  // return useQueryState("indicatorsSettings", indicatorsSettingsParser);
 };
 
 // GRID PARAMS
 export const useSyncGridDatasetContinousSettings = () => {
-  const { id } = useParams();
-  const urlState = useQueryState("gridDatasetContinousSettings", gridDatasetSettingsParser);
-  const atomState = useAtom(gridDatasetContinousSettingsAtom);
-  return !id ? urlState : atomState;
+  // const { id } = useParams();
+  // const urlState = useQueryState("gridDatasetContinousSettings", gridDatasetSettingsParser);
+  return useAtom(gridDatasetContinousSettingsAtom);
+  // return !id ? urlState : atomState;
 };
 
 export const useSyncGridDatasetCategoricalSettings = () => {
-  const { id } = useParams();
-  const urlState = useQueryState("gridDatasetCategoricalSettings", gridDatasetSettingsParser);
-  const atomState = useAtom(gridDatasetCategoricalSettingsAtom);
-  return !id ? urlState : atomState;
+  // const { id } = useParams();
+  // const urlState = useQueryState("gridDatasetCategoricalSettings", gridDatasetSettingsParser);
+  return useAtom(gridDatasetCategoricalSettingsAtom);
+  // return !id ? urlState : atomState;
 };
 
 export const useSyncGridDatasets = () => {
-  const { id } = useParams();
-  const urlState = useQueryState("gridDatasets", gridDatasetsParser);
-  const atomState = useAtom(gridDatasetsAtom);
-  return !id ? urlState : atomState;
+  // const { id } = useParams();
+  // const urlState = useQueryState("gridDatasets", gridDatasetsParser);
+  return useAtom(gridDatasetsAtom);
+  // return !id ? urlState : atomState;
 };
 
 export const useSyncGridSelectedDataset = () => {
-  const { id } = useParams();
-  const urlState = useQueryState("gridDatasetSelected", gridDatasetSelectedParser);
-  const atomState = useAtom(gridSelectedDatasetAtom);
-  return !id ? urlState : atomState;
+  // const { id } = useParams();
+  // const urlState = useQueryState("gridDatasetSelected", gridDatasetSelectedParser);
+  return useAtom(gridSelectedDatasetAtom);
+  // return !id ? urlState : atomState;
 };
 
 export const useSyncGridTableSettings = () => {
-  const { id } = useParams();
-  const urlState = useQueryState("gridTableSettings", gridTableSettingsParser);
-  const atomState = useAtom(gridTableSettingsAtom);
-  return !id ? urlState : atomState;
+  // const { id } = useParams();
+  // const urlState = useQueryState("gridTableSettings", gridTableSettingsParser);
+  return useAtom(gridTableSettingsAtom);
+  // return !id ? urlState : atomState;
 };
 
 // JOTAI ATOMS
@@ -187,6 +189,14 @@ export const sketchActionAtom = atom<{
 
 // CREATE REPORT ATOMS
 export const reportPanelAtom = atom<"location" | "topics">("location");
+
+// INDICATORS ATOMS
+export const indicatorsAtom = atom<number[]>();
+export const indicatorsSettingsAtom = atom<{
+  [key: string]: {
+    opacity?: number;
+  };
+}>({});
 
 // GRID ATOMS
 export const gridEnabledAtom = atom<boolean>(false);

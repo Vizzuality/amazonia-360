@@ -36,7 +36,7 @@ export default function LayerManager({ gridEnabled }: { gridEnabled?: boolean })
 
     if (!indicators?.length && indicatorsSettings) {
       setTimeout(() => {
-        setIndicatorsSettings(null);
+        setIndicatorsSettings({});
       }, 0);
       return;
     }
