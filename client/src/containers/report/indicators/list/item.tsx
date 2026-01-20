@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 import { Indicator } from "@/types/indicator";
 
-import { useSyncIndicators } from "@/app/(frontend)/store";
+import { useSyncIndicators, useSyncIndicatorsSettings } from "@/app/(frontend)/store";
 
 import Info from "@/containers/info";
 
@@ -25,6 +25,7 @@ type IndicatorsItemProps = Indicator;
 
 export default function IndicatorsItem({ id, name, description_short }: IndicatorsItemProps) {
   const [indicators, setIndicators] = useSyncIndicators();
+  const [, setIndicatorsSettings] = useSyncIndicatorsSettings();
 
   const handleChangeIndicator = (checked: boolean) => {
     setIndicators((prev) => {
@@ -35,6 +36,14 @@ export default function IndicatorsItem({ id, name, description_short }: Indicato
       } else {
         return p.filter((indicator) => indicator !== id);
       }
+    });
+
+    setIndicatorsSettings((prev) => {
+      const current = { ...prev };
+      if (!checked) {
+        delete current[id];
+      }
+      return current;
     });
   };
 

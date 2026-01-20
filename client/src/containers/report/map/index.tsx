@@ -9,7 +9,6 @@ import { usePathname } from "@/i18n/navigation";
 
 export default function ReportMap() {
   const pathname = usePathname();
-  console.log(pathname.includes("/grid"));
 
   return (
     <Suspense fallback={null}>
