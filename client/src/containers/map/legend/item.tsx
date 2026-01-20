@@ -133,6 +133,12 @@ export const LegendItem = ({ id }: { id: Indicator["id"] }) => {
 
                   return prev.filter((i) => i !== id);
                 });
+
+                setIndicatorsSettings((prev) => {
+                  const current = { ...prev };
+                  delete current[id];
+                  return current;
+                });
               }}
             />
           </li>

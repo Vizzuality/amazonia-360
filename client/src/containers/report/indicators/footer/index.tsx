@@ -8,7 +8,11 @@ import { useLocale, useTranslations } from "next-intl";
 import { useGetDefaultSubtopics } from "@/lib/subtopics";
 import { useGetDefaultTopics } from "@/lib/topics";
 
-import { indicatorsExpandAtom, useSyncIndicators } from "@/app/(frontend)/store";
+import {
+  indicatorsExpandAtom,
+  useSyncIndicators,
+  useSyncIndicatorsSettings,
+} from "@/app/(frontend)/store";
 
 import { Button } from "@/components/ui/button";
 
@@ -16,6 +20,7 @@ export default function IndicatorsFooter() {
   const t = useTranslations();
   const locale = useLocale();
   const [indicators, setIndicators] = useSyncIndicators();
+  const [, setIndicatorsSettings] = useSyncIndicatorsSettings();
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
 
   const { data: topicsData } = useGetDefaultTopics({ locale });
@@ -48,6 +53,7 @@ export default function IndicatorsFooter() {
 
   const handleClear = () => {
     setIndicators(undefined);
+    setIndicatorsSettings({});
   };
 
   return (

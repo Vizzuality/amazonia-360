@@ -1,14 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
-
 import dynamic from "next/dynamic";
 
 import {
   useSyncGridDatasets,
   useSyncGridSelectedDataset,
   useSyncIndicators,
-  useSyncIndicatorsSettings,
 } from "@/app/(frontend)/store";
 
 import { DATASETS } from "@/constants/datasets";
@@ -26,35 +23,35 @@ const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 export default function LayerManager({ gridEnabled }: { gridEnabled?: boolean }) {
   // const [location] = useSyncLocation();
   const [indicators] = useSyncIndicators();
-  const [indicatorsSettings, setIndicatorsSettings] = useSyncIndicatorsSettings();
+  // const [indicatorsSettings, setIndicatorsSettings] = useSyncIndicatorsSettings();
   const [gridDatasets] = useSyncGridDatasets();
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
 
-  // Sync layers settings with layers
-  useMemo(() => {
-    if (!indicators?.length && !indicatorsSettings) return;
+  // // Sync layers settings with layers
+  // useMemo(() => {
+  //   if (!indicators?.length && !indicatorsSettings) return;
 
-    if (!indicators?.length && indicatorsSettings) {
-      setTimeout(() => {
-        setIndicatorsSettings({});
-      }, 0);
-      return;
-    }
+  //   if (!indicators?.length && indicatorsSettings) {
+  //     setTimeout(() => {
+  //       setIndicatorsSettings({});
+  //     }, 0);
+  //     return;
+  //   }
 
-    const lSettingsKeys = Object.keys(indicatorsSettings || {}).map((key) => Number(key));
+  //   const lSettingsKeys = Object.keys(indicatorsSettings || {}).map((key) => Number(key));
 
-    lSettingsKeys.forEach((key) => {
-      if (indicators?.includes(key)) return;
+  //   lSettingsKeys.forEach((key) => {
+  //     if (indicators?.includes(key)) return;
 
-      setTimeout(() => {
-        setIndicatorsSettings((prev) => {
-          const current = { ...prev };
-          delete current[key];
-          return current;
-        });
-      }, 0);
-    });
-  }, [indicators, indicatorsSettings, setIndicatorsSettings]);
+  //     setTimeout(() => {
+  //       setIndicatorsSettings((prev) => {
+  //         const current = { ...prev };
+  //         delete current[key];
+  //         return current;
+  //       });
+  //     }, 0);
+  //   });
+  // }, [indicators, indicatorsSettings, setIndicatorsSettings]);
 
   return (
     <>
