@@ -169,7 +169,7 @@
   "auth-toast-password-reset-success": "Password reset successfully!",
   "auth-toast-password-reset-failed": "Failed to reset password. Please try again. Token is either invalid or has expired.",
   "auth-signin-title": "Welcome",
-  "auth-signin-description": "Sign in to access your reports.",
+  "auth-signin-description": "Sign in to save and manage your reports, and gain access to the AI Assistant for generating and refining summaries.",
   "auth-signup-title": "Create an account",
   "auth-signup-description": "Enter your information below to create your account",
   "auth-forgot-password-title": "Forgot password",
