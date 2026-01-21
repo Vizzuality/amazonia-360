@@ -32,6 +32,8 @@ import ReportGridDesktop from "@/containers/report/grid/desktop";
 import Create from "@/containers/report/location/create";
 import SearchLocation from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
+import EditLocationDrawingConfirm from "@/containers/results/header/edit-location/drawing-confirm";
+import EditLocationDrawingTools from "@/containers/results/header/edit-location/drawing-tools";
 
 import { Button } from "@/components/ui/button";
 import { HexagonIcon } from "@/components/ui/icons/hexagon";
@@ -45,6 +47,11 @@ export default function EditLocationReport() {
   const sketch = useAtomValue(sketchAtom);
   const setSketchAction = useSetAtom(sketchActionAtom);
   const form = useFormContext();
+
+  const handleConfirm = () => {
+    form.setValue("location", location);
+    setOpen(false);
+  };
 
   return (
     <Dialog open={open}>
@@ -95,59 +102,65 @@ export default function EditLocationReport() {
           <div className="flex h-full w-full grow flex-col bg-background">
             <MapContainer desktop gridEnabled={gridEnabled} />
 
-            <div className="absolute left-6 top-6 z-10 max-w-md space-y-2">
-              {!gridEnabled && (
-                <>
-                  <div className="w-full rounded-lg bg-background p-6 shadow-lg">
-                    {!location && (
-                      <div className="space-y-4">
-                        <SearchLocation />
+            <div className="absolute left-6 top-6 z-10 max-w-md">
+              <div className="space-y-2">
+                {!gridEnabled && (
+                  <>
+                    <div className="w-full rounded-lg bg-background p-6 shadow-lg">
+                      {!location && (
+                        <div className="space-y-4">
+                          <SearchLocation />
 
-                        <Sketch />
-                      </div>
-                    )}
+                          <Sketch />
+                        </div>
+                      )}
 
-                    {location && (
-                      <Create>
-                        <Button
-                          type="button"
-                          size="lg"
-                          className="w-full grow"
-                          disabled={sketch.enabled === "create" || sketch.enabled === "edit"}
-                          onClick={() => {
-                            form.setValue("location", location);
-                            setOpen(false);
-                          }}
-                        >
-                          {t("grid-sidebar-report-location-button-confirm")}
-                        </Button>
-                      </Create>
-                    )}
-                  </div>
-
-                  <button
-                    type="button"
-                    className="group pointer-events-auto flex rounded-lg border border-border bg-white p-4 text-left shadow-lg transition-colors duration-300 hover:border-cyan-500"
-                    onClick={() => setGridEnabled(true)}
-                  >
-                    <div className="flex items-start space-x-4">
-                      <div className="rounded-sm bg-muted p-3 transition-colors duration-300 group-hover:bg-cyan-100">
-                        <HexagonIcon className="h-5 w-5 text-foreground transition-colors duration-300 group-hover:text-cyan-500" />
-                      </div>
-                      <div className="flex flex-col items-start justify-start space-y-1">
-                        <span className="text-base font-semibold text-primary transition-colors duration-300 group-hover:text-primary">
-                          {t("sidebar-report-grid-title")}
-                        </span>
-                        <span className="text-sm font-medium text-muted-foreground">
-                          {t("sidebar-report-grid-description")}
-                        </span>
-                      </div>
+                      {location && (
+                        <Create>
+                          <Button
+                            type="button"
+                            size="lg"
+                            className="w-full grow"
+                            disabled={sketch.enabled === "create" || sketch.enabled === "edit"}
+                            onClick={handleConfirm}
+                          >
+                            {t("grid-sidebar-report-location-button-confirm")}
+                          </Button>
+                        </Create>
+                      )}
                     </div>
-                  </button>
-                </>
-              )}
 
-              {gridEnabled && <ReportGridDesktop />}
+                    <button
+                      type="button"
+                      className="group pointer-events-auto flex rounded-lg border border-border bg-white p-4 text-left shadow-lg transition-colors duration-300 hover:border-cyan-500"
+                      onClick={() => setGridEnabled(true)}
+                    >
+                      <div className="flex items-start space-x-4">
+                        <div className="rounded-sm bg-muted p-3 transition-colors duration-300 group-hover:bg-cyan-100">
+                          <HexagonIcon className="h-5 w-5 text-foreground transition-colors duration-300 group-hover:text-cyan-500" />
+                        </div>
+                        <div className="flex flex-col items-start justify-start space-y-1">
+                          <span className="text-base font-semibold text-primary transition-colors duration-300 group-hover:text-primary">
+                            {t("sidebar-report-grid-title")}
+                          </span>
+                          <span className="text-sm font-medium text-muted-foreground">
+                            {t("sidebar-report-grid-description")}
+                          </span>
+                        </div>
+                      </div>
+                    </button>
+                  </>
+                )}
+
+                {gridEnabled && <ReportGridDesktop />}
+              </div>
+
+              {gridEnabled && (
+                <div className="absolute left-full top-3 ml-2 rounded-lg bg-white px-4 py-2 shadow-lg">
+                  {!location && <EditLocationDrawingTools />}
+                  {location && <EditLocationDrawingConfirm onConfirm={handleConfirm} />}
+                </div>
+              )}
             </div>
           </div>
         </DialogContent>
