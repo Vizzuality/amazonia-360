@@ -4,11 +4,7 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import { useParams } from "next/navigation";
 
-import { useHydrateAtoms } from "jotai/utils";
-
 import { useReport } from "@/lib/report";
-
-import { locationAtom } from "@/app/(frontend)/store";
 
 import { LoadProvider } from "@/containers/indicators/load-provider";
 import ReportResultsContent from "@/containers/results/content";
@@ -31,9 +27,6 @@ export const ReportResults = () => {
       location: reportData?.location,
     },
   });
-
-  // Hydrate atoms on initial mount
-  useHydrateAtoms(new Map([[locationAtom, reportData?.location]]));
 
   return (
     <FormProvider {...methods}>

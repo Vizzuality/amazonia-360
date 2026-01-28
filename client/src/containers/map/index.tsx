@@ -225,7 +225,17 @@ export default function MapContainer({
 
       {gridSelectedDataset && gridEnabled && <GridLegend />}
 
-      <SketchTooltips />
+      <div className="pointer-events-none absolute left-0 top-4 z-10 w-full duration-300 animate-in fade-in-0 lg:top-10">
+        <div className="container">
+          <div className="grid grid-cols-12">
+            <div className="col-span-10 lg:col-span-5 lg:col-start-8">
+              <div className="-mx-1 flex lg:mx-0 lg:justify-center lg:text-center">
+                <SketchTooltips />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -21,7 +21,6 @@ import {
 import { BUFFERS } from "@/constants/map";
 
 import GridLegend from "@/containers/map/grid-legend/grid";
-import { SketchTooltips } from "@/containers/map/sketch-tooltips";
 
 import Controls from "@/components/map/controls";
 import BasemapControl from "@/components/map/controls/basemap";
@@ -226,8 +225,6 @@ export default function MapEditContainer({
       {!gridEnabled && <Legend />}
 
       {gridSelectedDataset && gridEnabled && <GridLegend />}
-
-      <SketchTooltips />
     </div>
   );
 }

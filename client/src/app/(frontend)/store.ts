@@ -112,8 +112,9 @@ export const useReportFormChanged = (): boolean => {
   const form = useFormContext<ReportFormData>();
   const intialState = useRef(form.formState.defaultValues);
 
-  if (form.formState.isReady) {
+  if (form.formState.isReady && !!form.formState.defaultValues) {
     intialState.current = form.formState.defaultValues;
+
     return JSON.stringify(intialState.current) !== JSON.stringify(form.getValues());
   }
 
