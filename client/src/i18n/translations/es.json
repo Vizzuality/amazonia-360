@@ -445,5 +445,7 @@
   "report-duplicate-loading": "Duplicando informe...",
   "report-duplicate-success": "¡Informe duplicado exitosamente!",
   "report-duplicate-error": "Error al duplicar el informe.",
-  "make-a-copy": "Hacer una copia"
+  "make-a-copy": "Hacer una copia",
+  "edit-location-confirm-dialog-title": "¿Continuar con la nueva área?",
+  "edit-location-confirm-dialog-description": "Has cambiado tu área de interés. Ten en cuenta:\n\n- Cualquier texto generado por IA que ya hayas creado puede no reflejar completamente esta nueva área. Puedes editarlos si es necesario.\n- Algunos indicadores podrían no tener datos para esta selección."
 }

@@ -445,5 +445,7 @@
   "report-duplicate-loading": "Duplicating report...",
   "report-duplicate-success": "Report duplicated successfully!",
   "report-duplicate-error": "Failed to duplicate the report.",
-  "make-a-copy": "Make a copy"
+  "make-a-copy": "Make a copy",
+  "edit-location-confirm-dialog-title": "Continue with new area?",
+  "edit-location-confirm-dialog-description": "You've changed your area of interest. Please note:\n\n- Any AI-generated texts you've already created may not fully reflect this new area. You can still edit them if needed.\n- Some indicators might not have data for this selection."
 }
