@@ -62,26 +62,14 @@ export const SketchTooltips = () => {
   )
     return null;
   return (
-    <div className="pointer-events-none absolute left-0 top-4 z-10 w-full duration-300 animate-in fade-in-0 lg:top-10">
-      <div className="container">
-        <div className="grid grid-cols-12">
-          <div className="col-span-10 lg:col-span-5 lg:col-start-8">
-            <div className="-mx-1 flex lg:mx-0 lg:justify-center">
-              <div className="rounded bg-white p-2 shadow-md">
-                <div className="prose prose-sm text-2xs font-light text-foreground lg:text-center lg:text-sm">
-                  {sketchAction.type === "create" &&
-                    CREATE_MESSAGES[`${sketchAction.geometryType}`][sketchAction?.state ?? "start"]}
+    <div className="rounded bg-white p-2 shadow-md">
+      <div className="prose prose-sm text-2xs font-light text-foreground lg:text-sm">
+        {sketchAction.type === "create" &&
+          CREATE_MESSAGES[`${sketchAction.geometryType}`][sketchAction?.state ?? "start"]}
 
-                  {sketchAction.type === "update" &&
-                    UPDATE_MESSAGES[`${sketchAction.geometryType}`][sketchAction?.state ?? "start"]}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {sketchAction.type === "update" &&
+          UPDATE_MESSAGES[`${sketchAction.geometryType}`][sketchAction?.state ?? "start"]}
       </div>
     </div>
   );
-
-  return null;
 };

@@ -224,7 +224,7 @@ export default function Sketch({
     }
 
     handleListeners();
-  }, [location, updatable, LOCATION, drawBuffer, handleListeners]);
+  }, [enabled, location, updatable, LOCATION, drawBuffer, handleListeners]);
 
   useEffect(() => {
     if (completed) {

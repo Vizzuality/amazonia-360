@@ -14,24 +14,25 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@radix-ui/react-dialog";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
 import { LuSquareMousePointer, LuX } from "react-icons/lu";
 
 import {
   gridEnabledAtom,
   sketchActionAtom,
-  sketchAtom,
   useFormLocation,
   useSyncLocation,
 } from "@/app/(frontend)/store";
 
 import { AuthWrapper } from "@/containers/auth/wrapper";
 import MapContainer from "@/containers/map/edit";
+import { SketchTooltips } from "@/containers/map/sketch-tooltips";
 import ReportGridDesktop from "@/containers/report/grid/desktop";
 import Create from "@/containers/report/location/create";
 import SearchLocation from "@/containers/report/location/search";
 import Sketch from "@/containers/report/location/sketch";
+import { ConfirmDialog } from "@/containers/results/header/edit-location/confirm-dialog";
 import EditLocationDrawingConfirm from "@/containers/results/header/edit-location/drawing-confirm";
 import EditLocationDrawingTools from "@/containers/results/header/edit-location/drawing-tools";
 
@@ -44,7 +45,6 @@ export default function EditLocationReport() {
   const t = useTranslations();
   const { location: defaultLocation } = useFormLocation();
   const [location, setLocation] = useSyncLocation();
-  const sketch = useAtomValue(sketchAtom);
   const setSketchAction = useSetAtom(sketchActionAtom);
   const form = useFormContext();
 
@@ -62,10 +62,10 @@ export default function EditLocationReport() {
             className="space-x-2"
             variant="outline"
             onClick={() => {
-              setOpen(true);
               if (defaultLocation) {
                 setLocation(defaultLocation);
                 setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
+                setOpen(true);
               }
             }}
           >
@@ -117,15 +117,7 @@ export default function EditLocationReport() {
 
                       {location && (
                         <Create>
-                          <Button
-                            type="button"
-                            size="lg"
-                            className="w-full grow"
-                            disabled={sketch.enabled === "create" || sketch.enabled === "edit"}
-                            onClick={handleConfirm}
-                          >
-                            {t("grid-sidebar-report-location-button-confirm")}
-                          </Button>
+                          <ConfirmDialog onConfirm={handleConfirm} />
                         </Create>
                       )}
                     </div>
@@ -155,12 +147,16 @@ export default function EditLocationReport() {
                 {gridEnabled && <ReportGridDesktop />}
               </div>
 
-              {gridEnabled && (
-                <div className="absolute left-full top-3 ml-2 rounded-lg bg-white px-4 py-2 shadow-lg">
-                  {!location && <EditLocationDrawingTools />}
-                  {location && <EditLocationDrawingConfirm onConfirm={handleConfirm} />}
-                </div>
-              )}
+              <div className="absolute left-full top-0 ml-2 min-w-96 space-y-2">
+                {gridEnabled && (
+                  <div className="rounded-lg bg-white px-4 py-2 shadow-lg">
+                    {!location && <EditLocationDrawingTools />}
+                    {location && <EditLocationDrawingConfirm onConfirm={handleConfirm} />}
+                  </div>
+                )}
+
+                <SketchTooltips />
+              </div>
             </div>
           </div>
         </DialogContent>

@@ -14,6 +14,8 @@ import { useLocation, useLocationGeometry, useLocationTitle } from "@/lib/locati
 
 import { sketchActionAtom, sketchAtom, useSyncLocation } from "@/app/(frontend)/store";
 
+import { ConfirmDialog } from "@/containers/results/header/edit-location/confirm-dialog";
+
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -95,9 +97,7 @@ export default function EditLocationDrawingConfirm({ onConfirm }: { onConfirm: (
           </TooltipPortal>
         </Tooltip>
 
-        <Button size="lg" className="grow" onClick={onConfirm}>
-          {t("grid-sidebar-report-location-button-confirm")}
-        </Button>
+        <ConfirmDialog onConfirm={onConfirm} />
       </div>
     </div>
   );
