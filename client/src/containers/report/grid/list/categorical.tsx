@@ -87,7 +87,7 @@ export default function GridIndicatorsItemCategorical(indicator: H3Indicator) {
                 key={option.value}
                 variant="outline"
                 size="xs"
-                pressed={categoricalValue?.includes(option.value) ?? false}
+                pressed={categoricalValue?.includes(+option.value) ?? false}
                 onPressedChange={(pressed) => {
                   if (!H3_INDICATOR?.resource.column) return;
 
@@ -95,7 +95,7 @@ export default function GridIndicatorsItemCategorical(indicator: H3Indicator) {
                     // Add
                     setGridDatasetCategoricalSettings((prev) => ({
                       ...prev,
-                      [H3_INDICATOR.resource.column]: [...(categoricalValue ?? []), option.value],
+                      [H3_INDICATOR.resource.column]: [...(categoricalValue ?? []), +option.value],
                     }));
                   } else {
                     // Remove
