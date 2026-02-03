@@ -482,7 +482,7 @@ export default function GridLayer() {
 
       if (dataset?.legend.legend_type === "categorical" && "entries" in dataset.legend) {
         const entries = dataset.legend.entries;
-        return CHROMA.scale(entries.map((e) => e.color)).domain(entries.map((e) => e.value));
+        return CHROMA.scale(entries.map((e) => e.color)).domain(entries.map((e) => +e.value));
       }
     }
 

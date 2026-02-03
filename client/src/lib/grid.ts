@@ -7,7 +7,6 @@ import {
   ReadTableGridTablePostParams,
   GridDatasetMetadataInAreaGridMetaPostParams,
   Feature,
-  FeatureGeometry,
 } from "@/types/generated/api.schemas";
 import {
   gridDatasetMetadataGridMetaGet,
@@ -179,7 +178,7 @@ export const useMeta = (GEOMETRY: __esri.Polygon | null) => {
       geometry: {
         type: "Polygon",
         coordinates: GEOMETRY?.toJSON().rings,
-      } as FeatureGeometry,
+      },
       properties: {},
       id: null,
     };
