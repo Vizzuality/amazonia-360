@@ -1,10 +1,11 @@
 "use client";
 
-import { MouseEvent } from "react";
+import { MouseEvent, useState } from "react";
 
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useAtom, useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
+import { LuUpload } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
@@ -17,11 +18,14 @@ import { PolygonIcon } from "@/components/ui/icons/polygon";
 import { PolylineIcon } from "@/components/ui/icons/polyline";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipArrow } from "@/components/ui/tooltip";
 
+import UploadDialog from "./upload-dialog";
+
 export default function SketchButtons({ iconOnly = false }: { iconOnly: boolean }) {
   const t = useTranslations();
   const [sketch, setSketch] = useAtom(sketchAtom);
   const setSketchAction = useSetAtom(sketchActionAtom);
   const [, setLocation] = useSyncLocation();
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>, type: SketchProps["type"]) => {
     e.preventDefault();
@@ -47,6 +51,11 @@ export default function SketchButtons({ iconOnly = false }: { iconOnly: boolean 
     }
   };
 
+  const handleUploadClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setUploadDialogOpen(true);
+  };
+
   const DRAWING_BUTTONS = [
     {
       id: "point",
@@ -68,37 +77,78 @@ export default function SketchButtons({ iconOnly = false }: { iconOnly: boolean 
     },
   ] as const;
 
-  return DRAWING_BUTTONS.map((button) => {
-    const Icon = button.Icon;
-    return (
-      <Tooltip key={button.id}>
+  return (
+    <>
+      {DRAWING_BUTTONS.map((button) => {
+        const Icon = button.Icon;
+        return (
+          <Tooltip key={button.id}>
+            <TooltipTrigger
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                sketch.enabled &&
+                  sketch.type === button.id &&
+                  buttonVariants({ variant: "default" }),
+                "group flex w-full items-center justify-center rounded-md border border-border p-0",
+                iconOnly ? "h-10 w-10" : "space-x-2.5 px-4 py-2",
+              )}
+              aria-label={t("grid-sketch-start-drawing")}
+              onClick={(e) => handleClick(e, button.id)}
+              type="button"
+            >
+              <Icon
+                className={cn({
+                  "h-5 w-5": true,
+                })}
+              />
+              {!iconOnly && <span>{button.label}</span>}
+            </TooltipTrigger>
+
+            <TooltipPortal>
+              <TooltipContent
+                side={iconOnly ? "bottom" : "top"}
+                align="center"
+                className="max-w-60"
+              >
+                <div className="text-xxs">{iconOnly ? button.label : button.description}</div>
+
+                <TooltipArrow className="fill-foreground" width={10} height={5} />
+              </TooltipContent>
+            </TooltipPortal>
+          </Tooltip>
+        );
+      })}
+
+      <Tooltip>
         <TooltipTrigger
           className={cn(
-            buttonVariants({ variant: "outline" }),
-            sketch.enabled && sketch.type === button.id && buttonVariants({ variant: "default" }),
-            "group flex w-full items-center justify-center rounded-md border border-border p-0",
+            buttonVariants({ variant: "ghost" }),
             iconOnly ? "h-10 w-10" : "space-x-2.5 px-4 py-2",
           )}
-          aria-label={t("grid-sketch-start-drawing")}
-          onClick={(e) => handleClick(e, button.id)}
+          aria-label="Upload geometry"
+          onClick={handleUploadClick}
           type="button"
         >
-          <Icon
+          <LuUpload
             className={cn({
               "h-5 w-5": true,
             })}
           />
-          {!iconOnly && <span>{button.label}</span>}
+          {!iconOnly && <span>Upload</span>}
         </TooltipTrigger>
 
         <TooltipPortal>
           <TooltipContent side={iconOnly ? "bottom" : "top"} align="center" className="max-w-60">
-            <div className="text-xxs">{iconOnly ? button.label : button.description}</div>
+            <div className="text-xxs">
+              {iconOnly ? "Upload geometry file" : "Upload a geometry file to draw on the map"}
+            </div>
 
             <TooltipArrow className="fill-foreground" width={10} height={5} />
           </TooltipContent>
         </TooltipPortal>
       </Tooltip>
-    );
-  });
+
+      <UploadDialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen} />
+    </>
+  );
 }

@@ -1,3 +1,7 @@
+import ArcGISPoint from "@arcgis/core/geometry/Point";
+import ArcGISPolygon from "@arcgis/core/geometry/Polygon";
+import Polyline from "@arcgis/core/geometry/Polyline";
+import { project } from "@arcgis/core/geometry/projection";
 import { selectLoader, load, parse } from "@loaders.gl/core";
 import { _GeoJSONLoader as GeoJSONLoader } from "@loaders.gl/json";
 import { KMLLoader } from "@loaders.gl/kml";
@@ -11,11 +15,22 @@ import {
   FeatureCollection,
   GeoJSON,
   GeometryCollection,
+  LineString,
+  MultiLineString,
+  MultiPoint,
   MultiPolygon,
+  Point,
   Polygon,
 } from "geojson";
 
-export type ValidGeometryType = Polygon | MultiPolygon | GeometryCollection;
+export type ValidGeometryType =
+  | Point
+  | MultiPoint
+  | LineString
+  | MultiLineString
+  | Polygon
+  | MultiPolygon
+  | GeometryCollection;
 
 export enum UploadErrorType {
   Generic = "generic-error",
@@ -24,6 +39,109 @@ export enum UploadErrorType {
   UnsupportedFile = "unsupported-file",
   AreaTooBig = "area-too-big",
   OutsideOfBounds = "outside-of-bounds",
+}
+
+/**
+ * Convert GeoJSON geometry to ArcGIS JSON geometry
+ * Based on terraformer-arcgis-parser conversion logic
+ * Automatically reprojects from WGS84 (4326) to Web Mercator (102100)
+ */
+export function geojsonToArcGIS(geojson: Feature<ValidGeometryType>): Record<string, unknown> {
+  const geometry = geojson.geometry;
+
+  if (!geometry) {
+    throw new Error("Invalid geometry");
+  }
+
+  let arcgisGeometry: __esri.Geometry;
+
+  switch (geometry.type) {
+    case "Point": {
+      arcgisGeometry = new ArcGISPoint({
+        x: geometry.coordinates[0],
+        y: geometry.coordinates[1],
+        spatialReference: { wkid: 4326 },
+      });
+      break;
+    }
+
+    case "MultiPoint": {
+      // MultiPoint doesn't have a direct ArcGIS equivalent, using points in Polyline
+      arcgisGeometry = new Polyline({
+        paths: geometry.coordinates.map((coord) => [coord]),
+        spatialReference: { wkid: 4326 },
+      });
+      break;
+    }
+
+    case "LineString": {
+      arcgisGeometry = new Polyline({
+        paths: [geometry.coordinates],
+        spatialReference: { wkid: 4326 },
+      });
+      break;
+    }
+
+    case "MultiLineString": {
+      arcgisGeometry = new Polyline({
+        paths: geometry.coordinates,
+        spatialReference: { wkid: 4326 },
+      });
+      break;
+    }
+
+    case "Polygon": {
+      arcgisGeometry = new ArcGISPolygon({
+        rings: geometry.coordinates,
+        spatialReference: { wkid: 4326 },
+      });
+      break;
+    }
+
+    case "MultiPolygon": {
+      const rings: number[][][] = [];
+      geometry.coordinates.forEach((polygon) => {
+        polygon.forEach((ring) => {
+          rings.push(ring);
+        });
+      });
+      arcgisGeometry = new ArcGISPolygon({
+        rings,
+        spatialReference: { wkid: 4326 },
+      });
+      break;
+    }
+
+    case "GeometryCollection": {
+      // For GeometryCollection, we'll convert the first valid geometry we find
+      const validGeometry = geometry.geometries.find(
+        (g) =>
+          g.type === "Point" ||
+          g.type === "MultiPoint" ||
+          g.type === "LineString" ||
+          g.type === "MultiLineString" ||
+          g.type === "Polygon" ||
+          g.type === "MultiPolygon",
+      );
+
+      if (!validGeometry) {
+        throw new Error("No valid geometry found in collection");
+      }
+
+      // Recursively convert the found geometry
+      return geojsonToArcGIS({ type: "Feature", geometry: validGeometry, properties: {} });
+    }
+
+    default: {
+      throw new Error(`Unsupported geometry type`);
+    }
+  }
+
+  // Project from WGS84 (4326) to Web Mercator (102100)
+  const projected = project(arcgisGeometry, { wkid: 102100 });
+  const projectedGeometry = Array.isArray(projected) ? projected[0] : projected;
+
+  return projectedGeometry.toJSON();
 }
 
 export const supportedFileformats = [
@@ -64,7 +182,7 @@ export const validateGeoJSONSize = (geojson: Feature<ValidGeometryType>, maxSize
 };
 
 export const validateGeoJSONBounds = (
-  geojson: Feature<ValidGeometryType>,
+  _geojson: Feature<ValidGeometryType>,
   _bounds: [[number, number], [number, number]],
 ) => {
   return true; // Temporarily disable bounds check
@@ -272,15 +390,19 @@ function cleanupGeoJSON(geoJSON: GeoJSON): Feature<ValidGeometryType> | null {
 
   const features: Feature<ValidGeometryType>[] = collection.features.filter(
     (f) =>
-      f.geometry?.type === "MultiPolygon" ||
+      f.geometry?.type === "Point" ||
+      f.geometry?.type === "MultiPoint" ||
+      f.geometry?.type === "LineString" ||
+      f.geometry?.type === "MultiLineString" ||
       f.geometry?.type === "Polygon" ||
+      f.geometry?.type === "MultiPolygon" ||
       f.geometry?.type === "GeometryCollection",
   ) as Feature<ValidGeometryType>[];
 
   // NOTE: Only the first feature is imported
   const feature = features[0];
   if (!feature) {
-    // No feature with polygon or multipolygon found in geojson
+    // No valid geometry found in geojson
     throw new Error();
   }
 
