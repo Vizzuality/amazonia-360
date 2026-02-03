@@ -53,8 +53,8 @@ variable "database_instance_class" {
 
 variable "database_allocated_storage" {
   type        = number
-  description = "The allocated storage in gigabytes for the RDS database"
-  default     = 20
+  description = "The allocated storage in gigabytes for the RDS database (minimum 100 for gp3)"
+  default     = 100
 }
 
 variable "database_backup_retention_period" {

@@ -16,8 +16,8 @@ variable "instance_class" {
 
 variable "allocated_storage" {
   type        = number
-  description = "The allocated storage in gigabytes"
-  default     = 20
+  description = "The allocated storage in gigabytes (minimum 100 for gp3)"
+  default     = 100
 }
 
 variable "storage_type" {
