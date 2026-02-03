@@ -8,7 +8,7 @@ import { useGetGridMeta, useGetGridTable } from "@/lib/grid";
 import { useGetH3Indicators } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
-import { BodyReadTableGridTablePostFiltersItem } from "@/types/generated/api.schemas";
+import { BodyReadTableGridTablePost } from "@/types/generated/api.schemas";
 
 import {
   useSyncGridDatasets,
@@ -55,7 +55,7 @@ export default function GridTable() {
         }),
         filters: gridDatasets
           .map((dataset) => {
-            const f = [] as BodyReadTableGridTablePostFiltersItem[];
+            const f = [] as BodyReadTableGridTablePost["filters"];
             const d = queryMeta.data?.datasets.find((d) => d.var_name === dataset);
             if (!d) return f;
 
