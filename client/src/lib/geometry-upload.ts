@@ -1,22 +1,31 @@
+<<<<<<< HEAD
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import ArcGISPoint from "@arcgis/core/geometry/Point";
 import ArcGISPolygon from "@arcgis/core/geometry/Polygon";
 import ArcGISPolyline from "@arcgis/core/geometry/Polyline";
 import { project } from "@arcgis/core/geometry/projection";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+=======
+>>>>>>> 93cc7cfb (Upload: core functionality)
 import { selectLoader, load, parse } from "@loaders.gl/core";
 import { _GeoJSONLoader as GeoJSONLoader } from "@loaders.gl/json";
 import { KMLLoader } from "@loaders.gl/kml";
 import { Loader } from "@loaders.gl/loader-utils";
 import { ShapefileLoader } from "@loaders.gl/shapefile";
 import { ZipLoader } from "@loaders.gl/zip";
+<<<<<<< HEAD
 import { geojsonToArcGIS } from "@terraformer/arcgis";
 import { featureCollection } from "@turf/turf";
+=======
+// import turfIntersect from "@turf/boolean-intersects";
+import { area, featureCollection } from "@turf/turf";
+>>>>>>> 93cc7cfb (Upload: core functionality)
 import {
   Feature,
   FeatureCollection,
   GeoJSON,
   GeometryCollection,
+<<<<<<< HEAD
   LineString,
   MultiLineString,
   MultiPoint,
@@ -35,6 +44,13 @@ export type ValidGeometryType =
   | Polygon
   | MultiPolygon
   | GeometryCollection;
+=======
+  MultiPolygon,
+  Polygon,
+} from "geojson";
+
+export type ValidGeometryType = Polygon | MultiPolygon | GeometryCollection;
+>>>>>>> 93cc7cfb (Upload: core functionality)
 
 export enum UploadErrorType {
   Generic = "generic-error",
@@ -45,6 +61,7 @@ export enum UploadErrorType {
   OutsideOfBounds = "outside-of-bounds",
 }
 
+<<<<<<< HEAD
 /**
  * Convert GeoJSON geometry to ArcGIS JSON geometry
  * Based on terraformer-arcgis-parser conversion logic
@@ -97,12 +114,17 @@ export function geojsonToArcGISCustom(geojson: Feature<ValidGeometryType>): __es
   };
 }
 
+=======
+>>>>>>> 93cc7cfb (Upload: core functionality)
 export const supportedFileformats = [
   ...KMLLoader.extensions,
   ...["geojson"],
   ...["kmz"],
   ...["shp", "prj", "shx", "dbf", "cpg"],
+<<<<<<< HEAD
   ...["zip"],
+=======
+>>>>>>> 93cc7cfb (Upload: core functionality)
 ];
 
 /**
@@ -130,6 +152,7 @@ const readFileAsText = (file: File | ArrayBuffer): Promise<string> => {
   });
 };
 
+<<<<<<< HEAD
 /**
  * Validate geometry size using ArcGIS geometryEngine geodesicArea
  * @param geometry ArcGIS geometry to validate
@@ -177,6 +200,19 @@ export const validateGeometryBounds = async (geometry: __esri.Geometry): Promise
     console.error("Error validating geometry bounds:", error);
     return false;
   }
+=======
+export const validateGeoJSONSize = (geojson: Feature<ValidGeometryType>, maxSize: number) => {
+  const areaSize = area(geojson);
+  return areaSize <= maxSize;
+};
+
+export const validateGeoJSONBounds = (
+  geojson: Feature<ValidGeometryType>,
+  _bounds: [[number, number], [number, number]],
+) => {
+  return true; // Temporarily disable bounds check
+  // return turfIntersect(US_BOUNDARY_GEOJSON.features[0], geojson);
+>>>>>>> 93cc7cfb (Upload: core functionality)
 };
 
 /**
@@ -223,6 +259,7 @@ export const validateFile = async (
  * @param options Define a maximum area size in square meters or bounds
  * @returns Error code if the convertion fails
  */
+<<<<<<< HEAD
 export async function convertFilesToGeojson(files: File[]): Promise<Feature<ValidGeometryType>> {
   // Handle zipped shapefiles
   if (files.length === 1 && files[0].type === "application/zip") {
@@ -265,6 +302,12 @@ export async function convertFilesToGeojson(files: File[]): Promise<Feature<Vali
     }
   }
 
+=======
+export async function convertFilesToGeojson(
+  files: File[],
+  options?: { maxAreaSize?: number; bounds?: [[number, number], [number, number]] },
+): Promise<Feature<ValidGeometryType>> {
+>>>>>>> 93cc7cfb (Upload: core functionality)
   // If multiple files are uploaded and one of them is a ShapeFile, this is the one we pass to the
   // loader because it is the one `ShapefileLoader` expects (out of the .prj, .shx, etc. other
   // Shapefile-related files). If the user uploaded files of a different extension, we just take the
@@ -387,6 +430,20 @@ export async function convertFilesToGeojson(files: File[]): Promise<Feature<Vali
     return Promise.reject(UploadErrorType.UnsupportedFile);
   }
 
+<<<<<<< HEAD
+=======
+  if (
+    options?.maxAreaSize !== undefined &&
+    !validateGeoJSONSize(cleanedGeoJSON, options.maxAreaSize)
+  ) {
+    return Promise.reject(UploadErrorType.AreaTooBig);
+  }
+
+  if (options?.bounds !== undefined && !validateGeoJSONBounds(cleanedGeoJSON, options.bounds)) {
+    return Promise.reject(UploadErrorType.OutsideOfBounds);
+  }
+
+>>>>>>> 93cc7cfb (Upload: core functionality)
   return cleanedGeoJSON;
 }
 
@@ -407,24 +464,34 @@ function cleanupGeoJSON(geoJSON: GeoJSON): Feature<ValidGeometryType> | null {
 
   const features: Feature<ValidGeometryType>[] = collection.features.filter(
     (f) =>
+<<<<<<< HEAD
       f.geometry?.type === "Point" ||
       f.geometry?.type === "MultiPoint" ||
       f.geometry?.type === "LineString" ||
       f.geometry?.type === "MultiLineString" ||
       f.geometry?.type === "Polygon" ||
       f.geometry?.type === "MultiPolygon" ||
+=======
+      f.geometry?.type === "MultiPolygon" ||
+      f.geometry?.type === "Polygon" ||
+>>>>>>> 93cc7cfb (Upload: core functionality)
       f.geometry?.type === "GeometryCollection",
   ) as Feature<ValidGeometryType>[];
 
   // NOTE: Only the first feature is imported
   const feature = features[0];
   if (!feature) {
+<<<<<<< HEAD
     // No valid geometry found in geojson
+=======
+    // No feature with polygon or multipolygon found in geojson
+>>>>>>> 93cc7cfb (Upload: core functionality)
     throw new Error();
   }
 
   return feature;
 }
+<<<<<<< HEAD
 
 /**
  * Convert uploaded files directly to ArcGIS geometry
@@ -459,3 +526,5 @@ export async function convertFilesToGeometry(
 
   return arcgisGeometry;
 }
+=======
+>>>>>>> 93cc7cfb (Upload: core functionality)
