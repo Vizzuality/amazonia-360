@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import ArcGISPoint from "@arcgis/core/geometry/Point";
 import ArcGISPolygon from "@arcgis/core/geometry/Polygon";
@@ -7,6 +8,12 @@ import { project } from "@arcgis/core/geometry/projection";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 =======
 >>>>>>> 93cc7cfb (Upload: core functionality)
+=======
+import ArcGISPoint from "@arcgis/core/geometry/Point";
+import ArcGISPolygon from "@arcgis/core/geometry/Polygon";
+import Polyline from "@arcgis/core/geometry/Polyline";
+import { project } from "@arcgis/core/geometry/projection";
+>>>>>>> 1eb5aeb2 (Upload: working)
 import { selectLoader, load, parse } from "@loaders.gl/core";
 import { _GeoJSONLoader as GeoJSONLoader } from "@loaders.gl/json";
 import { KMLLoader } from "@loaders.gl/kml";
@@ -25,6 +32,7 @@ import {
   FeatureCollection,
   GeoJSON,
   GeometryCollection,
+<<<<<<< HEAD
 <<<<<<< HEAD
   LineString,
   MultiLineString,
@@ -45,12 +53,29 @@ export type ValidGeometryType =
   | MultiPolygon
   | GeometryCollection;
 =======
+=======
+  LineString,
+  MultiLineString,
+  MultiPoint,
+>>>>>>> 1eb5aeb2 (Upload: working)
   MultiPolygon,
+  Point,
   Polygon,
 } from "geojson";
 
+<<<<<<< HEAD
 export type ValidGeometryType = Polygon | MultiPolygon | GeometryCollection;
 >>>>>>> 93cc7cfb (Upload: core functionality)
+=======
+export type ValidGeometryType =
+  | Point
+  | MultiPoint
+  | LineString
+  | MultiLineString
+  | Polygon
+  | MultiPolygon
+  | GeometryCollection;
+>>>>>>> 1eb5aeb2 (Upload: working)
 
 export enum UploadErrorType {
   Generic = "generic-error",
@@ -62,18 +87,26 @@ export enum UploadErrorType {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1eb5aeb2 (Upload: working)
 /**
  * Convert GeoJSON geometry to ArcGIS JSON geometry
  * Based on terraformer-arcgis-parser conversion logic
  * Automatically reprojects from WGS84 (4326) to Web Mercator (102100)
  */
+<<<<<<< HEAD
 export function geojsonToArcGISCustom(geojson: Feature<ValidGeometryType>): __esri.Geometry {
+=======
+export function geojsonToArcGIS(geojson: Feature<ValidGeometryType>): Record<string, unknown> {
+>>>>>>> 1eb5aeb2 (Upload: working)
   const geometry = geojson.geometry;
 
   if (!geometry) {
     throw new Error("Invalid geometry");
   }
 
+<<<<<<< HEAD
   const arcgisGeometry = geojsonToArcGIS(geojson) as {
     attributes?: Record<string, unknown>;
     geometry: Record<string, unknown>;
@@ -116,6 +149,99 @@ export function geojsonToArcGISCustom(geojson: Feature<ValidGeometryType>): __es
 
 =======
 >>>>>>> 93cc7cfb (Upload: core functionality)
+=======
+  let arcgisGeometry: __esri.Geometry;
+
+  switch (geometry.type) {
+    case "Point": {
+      arcgisGeometry = new ArcGISPoint({
+        x: geometry.coordinates[0],
+        y: geometry.coordinates[1],
+        spatialReference: { wkid: 4326 },
+      });
+      break;
+    }
+
+    case "MultiPoint": {
+      // MultiPoint doesn't have a direct ArcGIS equivalent, using points in Polyline
+      arcgisGeometry = new Polyline({
+        paths: geometry.coordinates.map((coord) => [coord]),
+        spatialReference: { wkid: 4326 },
+      });
+      break;
+    }
+
+    case "LineString": {
+      arcgisGeometry = new Polyline({
+        paths: [geometry.coordinates],
+        spatialReference: { wkid: 4326 },
+      });
+      break;
+    }
+
+    case "MultiLineString": {
+      arcgisGeometry = new Polyline({
+        paths: geometry.coordinates,
+        spatialReference: { wkid: 4326 },
+      });
+      break;
+    }
+
+    case "Polygon": {
+      arcgisGeometry = new ArcGISPolygon({
+        rings: geometry.coordinates,
+        spatialReference: { wkid: 4326 },
+      });
+      break;
+    }
+
+    case "MultiPolygon": {
+      const rings: number[][][] = [];
+      geometry.coordinates.forEach((polygon) => {
+        polygon.forEach((ring) => {
+          rings.push(ring);
+        });
+      });
+      arcgisGeometry = new ArcGISPolygon({
+        rings,
+        spatialReference: { wkid: 4326 },
+      });
+      break;
+    }
+
+    case "GeometryCollection": {
+      // For GeometryCollection, we'll convert the first valid geometry we find
+      const validGeometry = geometry.geometries.find(
+        (g) =>
+          g.type === "Point" ||
+          g.type === "MultiPoint" ||
+          g.type === "LineString" ||
+          g.type === "MultiLineString" ||
+          g.type === "Polygon" ||
+          g.type === "MultiPolygon",
+      );
+
+      if (!validGeometry) {
+        throw new Error("No valid geometry found in collection");
+      }
+
+      // Recursively convert the found geometry
+      return geojsonToArcGIS({ type: "Feature", geometry: validGeometry, properties: {} });
+    }
+
+    default: {
+      throw new Error(`Unsupported geometry type`);
+    }
+  }
+
+  // Project from WGS84 (4326) to Web Mercator (102100)
+  const projected = project(arcgisGeometry, { wkid: 102100 });
+  const projectedGeometry = Array.isArray(projected) ? projected[0] : projected;
+
+  return projectedGeometry.toJSON();
+}
+
+>>>>>>> 1eb5aeb2 (Upload: working)
 export const supportedFileformats = [
   ...KMLLoader.extensions,
   ...["geojson"],
@@ -207,7 +333,7 @@ export const validateGeoJSONSize = (geojson: Feature<ValidGeometryType>, maxSize
 };
 
 export const validateGeoJSONBounds = (
-  geojson: Feature<ValidGeometryType>,
+  _geojson: Feature<ValidGeometryType>,
   _bounds: [[number, number], [number, number]],
 ) => {
   return true; // Temporarily disable bounds check
@@ -465,16 +591,24 @@ function cleanupGeoJSON(geoJSON: GeoJSON): Feature<ValidGeometryType> | null {
   const features: Feature<ValidGeometryType>[] = collection.features.filter(
     (f) =>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1eb5aeb2 (Upload: working)
       f.geometry?.type === "Point" ||
       f.geometry?.type === "MultiPoint" ||
       f.geometry?.type === "LineString" ||
       f.geometry?.type === "MultiLineString" ||
+<<<<<<< HEAD
       f.geometry?.type === "Polygon" ||
       f.geometry?.type === "MultiPolygon" ||
 =======
       f.geometry?.type === "MultiPolygon" ||
       f.geometry?.type === "Polygon" ||
 >>>>>>> 93cc7cfb (Upload: core functionality)
+=======
+      f.geometry?.type === "Polygon" ||
+      f.geometry?.type === "MultiPolygon" ||
+>>>>>>> 1eb5aeb2 (Upload: working)
       f.geometry?.type === "GeometryCollection",
   ) as Feature<ValidGeometryType>[];
 
@@ -482,10 +616,14 @@ function cleanupGeoJSON(geoJSON: GeoJSON): Feature<ValidGeometryType> | null {
   const feature = features[0];
   if (!feature) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     // No valid geometry found in geojson
 =======
     // No feature with polygon or multipolygon found in geojson
 >>>>>>> 93cc7cfb (Upload: core functionality)
+=======
+    // No valid geometry found in geojson
+>>>>>>> 1eb5aeb2 (Upload: working)
     throw new Error();
   }
 
