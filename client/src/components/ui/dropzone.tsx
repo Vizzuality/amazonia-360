@@ -5,6 +5,7 @@ import { createContext, useContext, ReactNode } from "react";
 import { useDropzone } from "react-dropzone";
 import type { DropEvent, DropzoneOptions, FileRejection } from "react-dropzone";
 
+import { useTranslations } from "next-intl";
 import { LuUpload } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
@@ -18,19 +19,6 @@ interface DropzoneContextType {
   minSize?: DropzoneOptions["minSize"];
   maxFiles?: DropzoneOptions["maxFiles"];
 }
-
-const renderBytes = (bytes: number) => {
-  const units = ["B", "KB", "MB", "GB", "TB", "PB"];
-  let size = bytes;
-  let unitIndex = 0;
-
-  while (size >= 1024 && unitIndex < units.length - 1) {
-    size /= 1024;
-    unitIndex++;
-  }
-
-  return `${size.toFixed(2)}${units[unitIndex]}`;
-};
 
 const DropzoneContext = createContext<DropzoneContextType | undefined>(undefined);
 
@@ -115,6 +103,7 @@ const maxLabelItems = 3;
 
 export const DropzoneContent = ({ children, className }: DropzoneContentProps) => {
   const { src } = useDropzoneContext();
+  const t = useTranslations();
 
   if (!src) {
     return null;
@@ -133,11 +122,11 @@ export const DropzoneContent = ({ children, className }: DropzoneContentProps) =
         {src.length > maxLabelItems
           ? `${new Intl.ListFormat("en").format(
               src.slice(0, maxLabelItems).map((file) => file.name),
-            )} and ${src.length - maxLabelItems} more`
+            )} ${t("dropzone-and-more", { count: src.length - maxLabelItems })}`
           : new Intl.ListFormat("en").format(src.map((file) => file.name))}
       </p>
       <p className="w-full text-wrap text-xs text-muted-foreground">
-        Drag and drop or click to replace
+        {t("dropzone-drag-drop-replace")}
       </p>
     </div>
   );
@@ -149,7 +138,8 @@ export interface DropzoneEmptyStateProps {
 }
 
 export const DropzoneEmptyState = ({ children, className }: DropzoneEmptyStateProps) => {
-  const { src, accept, maxSize, minSize, maxFiles } = useDropzoneContext();
+  const { src, maxFiles } = useDropzoneContext();
+  const t = useTranslations();
 
   if (src) {
     return null;
@@ -159,33 +149,17 @@ export const DropzoneEmptyState = ({ children, className }: DropzoneEmptyStatePr
     return children;
   }
 
-  let caption = "";
-
-  if (accept) {
-    caption += "Accepts ";
-    caption += new Intl.ListFormat("en").format(Object.keys(accept));
-  }
-
-  if (minSize && maxSize) {
-    caption += ` between ${renderBytes(minSize)} and ${renderBytes(maxSize)}`;
-  } else if (minSize) {
-    caption += ` at least ${renderBytes(minSize)}`;
-  } else if (maxSize) {
-    caption += ` less than ${renderBytes(maxSize)}`;
-  }
-
   return (
     <div className={cn("flex flex-col items-center justify-center", className)}>
       <div className="flex size-8 items-center justify-center rounded-md bg-muted text-muted-foreground">
         <LuUpload size={16} />
       </div>
       <p className="my-2 w-full truncate text-wrap text-sm font-medium">
-        Upload {maxFiles === 1 ? "a file" : "files"}
+        {maxFiles === 1 ? t("dropzone-upload-file") : t("dropzone-upload-files")}
       </p>
       <p className="w-full truncate text-wrap text-xs text-muted-foreground">
-        Drag and drop or click to upload
+        {t("dropzone-drag-drop-upload")}
       </p>
-      {caption && <p className="text-wrap text-xs text-muted-foreground">{caption}.</p>}
     </div>
   );
 };

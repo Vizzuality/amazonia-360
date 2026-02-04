@@ -5,13 +5,9 @@ import { useState, useCallback } from "react";
 import type { DropEvent, FileRejection } from "react-dropzone";
 
 import { useSetAtom } from "jotai";
+import { useTranslations } from "next-intl";
 
-import {
-  convertFilesToGeojson,
-  geojsonToArcGIS,
-  supportedFileformats,
-  UploadErrorType,
-} from "@/lib/geometry-upload";
+import { convertFilesToGeojson, geojsonToArcGIS, UploadErrorType } from "@/lib/geometry-upload";
 import { getGeometryByType, getGeometryWithBuffer } from "@/lib/location";
 
 import { tmpBboxAtom, useSyncLocation } from "@/app/(frontend)/store";
@@ -26,6 +22,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from "@/components/ui/dropzone";
+import { Markdown } from "@/components/ui/markdown";
 
 interface UploadDialogProps {
   open: boolean;
@@ -33,6 +30,7 @@ interface UploadDialogProps {
 }
 
 export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
+  const t = useTranslations();
   const [error, setError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[] | undefined>(undefined);
@@ -86,26 +84,26 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
         onOpenChange(false);
       } catch (err) {
         // Handle different error types
-        let errorMessage = "An error occurred while uploading the file";
+        let errorMessage = t("generic-error");
 
-        switch (err) {
-          case UploadErrorType.InvalidXMLSyntax:
-            errorMessage = "Invalid XML syntax in the file";
-            break;
-          case UploadErrorType.SHPMissingFile:
-            errorMessage = "Shapefile is missing required files (.shp, .shx, .dbf, .prj)";
-            break;
-          case UploadErrorType.UnsupportedFile:
-            errorMessage = "Unsupported file format";
-            break;
-          case UploadErrorType.AreaTooBig:
-            errorMessage = "The area is too large";
-            break;
-          case UploadErrorType.OutsideOfBounds:
-            errorMessage = "The geometry is outside of the allowed bounds";
-            break;
-          default:
-            errorMessage = "An unexpected error occurred";
+        if (typeof err === "string") {
+          switch (err) {
+            case UploadErrorType.InvalidXMLSyntax:
+              errorMessage = t("invalid-xml-syntax");
+              break;
+            case UploadErrorType.SHPMissingFile:
+              errorMessage = t("shp-missing-file");
+              break;
+            case UploadErrorType.UnsupportedFile:
+              errorMessage = t("unsupported-file");
+              break;
+            case UploadErrorType.AreaTooBig:
+              errorMessage = t("area-too-big");
+              break;
+            case UploadErrorType.OutsideOfBounds:
+              errorMessage = t("outside-of-bounds");
+              break;
+          }
         }
 
         setError(errorMessage);
@@ -114,7 +112,7 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
         setIsUploading(false);
       }
     },
-    [onOpenChange, setLocation, setTmpBbox],
+    [onOpenChange, setLocation, setTmpBbox, t],
   );
 
   const handleOpenChange = (newOpen: boolean) => {
@@ -133,16 +131,19 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
     "application/vnd.google-earth.kml+xml": [".kml"],
     "application/vnd.google-earth.kmz": [".kmz"],
     "application/x-esri-shape": [".shp", ".shx", ".dbf", ".prj", ".cpg"],
+    "application/zip": [".zip"],
   };
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent
+        className="sm:max-w-md"
+        aria-describedby={t("upload-geometry-dialog-description")}
+      >
         <DialogHeader>
-          <DialogTitle>Upload Geometry</DialogTitle>
-          <DialogDescription>
-            Upload a geometry file to draw on the map. Supported formats:{" "}
-            {supportedFileformats.join(", ")}
+          <DialogTitle>{t("upload-geometry-dialog-title")}</DialogTitle>
+          <DialogDescription asChild>
+            <Markdown>{t("upload-geometry-dialog-description")}</Markdown>
           </DialogDescription>
         </DialogHeader>
 
@@ -160,7 +161,9 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
           </Dropzone>
 
           {isUploading && (
-            <div className="text-center text-sm text-muted-foreground">Processing files...</div>
+            <div className="text-center text-sm text-muted-foreground">
+              {t("upload-geometry-processing-files")}
+            </div>
           )}
 
           {error && (
