@@ -95,3 +95,19 @@ output "db_admin_password" {
   value       = module.database.db_admin_password
   sensitive   = true
 }
+
+# tfvars backup outputs
+output "tfvars_backup_secret_arn" {
+  description = "ARN of the Secrets Manager secret storing local.tfvars backup"
+  value       = module.tfvars_backup.secret_arn
+}
+
+output "tfvars_backup_secret_name" {
+  description = "Name of the Secrets Manager secret storing local.tfvars backup"
+  value       = module.tfvars_backup.secret_name
+}
+
+output "tfvars_backup_content_hash" {
+  description = "SHA256 hash of the current local.tfvars content"
+  value       = module.tfvars_backup.content_hash
+}
