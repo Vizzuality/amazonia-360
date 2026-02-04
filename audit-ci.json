@@ -1,0 +1,10 @@
+{
+  "$schema": "https://github.com/IBM/audit-ci/raw/main/docs/schema.json",
+  "critical": true,
+  "high": false,
+  "moderate": false,
+  "low": false,
+  "allowlist": [],
+  "package-manager": "pnpm",
+  "directories": ["client", "webshot"]
+}

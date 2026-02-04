@@ -1,0 +1,63 @@
+name: Dependency Scan
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - staging
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  audit:
+    name: Security Audit
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5.0.0
+
+      - name: Node setup
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "client/.nvmrc"
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v4.2.3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - name: Install dependencies (client)
+        run: pnpm install --frozen-lockfile
+        working-directory: client
+
+      - name: Install dependencies (webshot)
+        run: pnpm install --frozen-lockfile
+        working-directory: webshot
+
+      - name: Run audit-ci
+        run: pnpm dlx audit-ci --config audit-ci.json
+
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5.0.0
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: critical
+          comment-summary-in-pr: always
