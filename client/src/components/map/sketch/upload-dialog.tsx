@@ -9,6 +9,7 @@ import { useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
+<<<<<<< HEAD
 import { convertFilesToGeometry, UploadErrorType } from "@/lib/geometry-upload";
 =======
 
@@ -19,6 +20,13 @@ import {
   UploadErrorType,
 } from "@/lib/geometry-upload";
 >>>>>>> 1eb5aeb2 (Upload: working)
+=======
+import {
+  convertFilesToGeojson,
+  geojsonToArcGISCustom,
+  UploadErrorType,
+} from "@/lib/geometry-upload";
+>>>>>>> 58ca1e39 (Zip and correct conversion)
 import { getGeometryByType, getGeometryWithBuffer } from "@/lib/location";
 
 import { tmpBboxAtom, useSyncLocation } from "@/app/(frontend)/store";
@@ -148,7 +156,7 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
         });
 
         // Convert GeoJSON to ArcGIS JSON format
-        const arcgisGeometry = geojsonToArcGIS(geometry);
+        const arcgisGeometry = geojsonToArcGISCustom(geometry);
 
         // Set location with the uploaded geometry
         const geometryType = geometry.geometry.type.toLowerCase() as __esri.Geometry["type"];
