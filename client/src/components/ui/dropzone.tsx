@@ -5,10 +5,7 @@ import { createContext, useContext, ReactNode } from "react";
 import { useDropzone } from "react-dropzone";
 import type { DropEvent, DropzoneOptions, FileRejection } from "react-dropzone";
 
-<<<<<<< HEAD
 import { useTranslations } from "next-intl";
-=======
->>>>>>> 1eb5aeb2 (Upload: working)
 import { LuUpload } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
@@ -23,22 +20,6 @@ interface DropzoneContextType {
   maxFiles?: DropzoneOptions["maxFiles"];
 }
 
-<<<<<<< HEAD
-=======
-const renderBytes = (bytes: number) => {
-  const units = ["B", "KB", "MB", "GB", "TB", "PB"];
-  let size = bytes;
-  let unitIndex = 0;
-
-  while (size >= 1024 && unitIndex < units.length - 1) {
-    size /= 1024;
-    unitIndex++;
-  }
-
-  return `${size.toFixed(2)}${units[unitIndex]}`;
-};
-
->>>>>>> 1eb5aeb2 (Upload: working)
 const DropzoneContext = createContext<DropzoneContextType | undefined>(undefined);
 
 export type DropzoneProps = Omit<DropzoneOptions, "onDrop"> & {
@@ -118,14 +99,9 @@ export interface DropzoneContentProps {
   className?: string;
 }
 
-const maxLabelItems = 3;
-
 export const DropzoneContent = ({ children, className }: DropzoneContentProps) => {
   const { src } = useDropzoneContext();
-<<<<<<< HEAD
   const t = useTranslations();
-=======
->>>>>>> 1eb5aeb2 (Upload: working)
 
   if (!src) {
     return null;
@@ -140,23 +116,8 @@ export const DropzoneContent = ({ children, className }: DropzoneContentProps) =
       <div className="flex size-8 items-center justify-center rounded-md bg-muted text-muted-foreground">
         <LuUpload size={16} />
       </div>
-      <p className="my-2 w-full truncate text-sm font-medium">
-        {src.length > maxLabelItems
-          ? `${new Intl.ListFormat("en").format(
-              src.slice(0, maxLabelItems).map((file) => file.name),
-<<<<<<< HEAD
-            )} ${t("dropzone-and-more", { count: src.length - maxLabelItems })}`
-          : new Intl.ListFormat("en").format(src.map((file) => file.name))}
-      </p>
       <p className="w-full text-wrap text-xs text-muted-foreground">
         {t("dropzone-drag-drop-replace")}
-=======
-            )} and ${src.length - maxLabelItems} more`
-          : new Intl.ListFormat("en").format(src.map((file) => file.name))}
-      </p>
-      <p className="w-full text-wrap text-xs text-muted-foreground">
-        Drag and drop or click to replace
->>>>>>> 1eb5aeb2 (Upload: working)
       </p>
     </div>
   );
@@ -168,12 +129,8 @@ export interface DropzoneEmptyStateProps {
 }
 
 export const DropzoneEmptyState = ({ children, className }: DropzoneEmptyStateProps) => {
-<<<<<<< HEAD
   const { src, maxFiles } = useDropzoneContext();
   const t = useTranslations();
-=======
-  const { src, accept, maxSize, minSize, maxFiles } = useDropzoneContext();
->>>>>>> 1eb5aeb2 (Upload: working)
 
   if (src) {
     return null;
@@ -183,44 +140,17 @@ export const DropzoneEmptyState = ({ children, className }: DropzoneEmptyStatePr
     return children;
   }
 
-<<<<<<< HEAD
-=======
-  let caption = "";
-
-  if (accept) {
-    caption += "Accepts ";
-    caption += new Intl.ListFormat("en").format(Object.keys(accept));
-  }
-
-  if (minSize && maxSize) {
-    caption += ` between ${renderBytes(minSize)} and ${renderBytes(maxSize)}`;
-  } else if (minSize) {
-    caption += ` at least ${renderBytes(minSize)}`;
-  } else if (maxSize) {
-    caption += ` less than ${renderBytes(maxSize)}`;
-  }
-
->>>>>>> 1eb5aeb2 (Upload: working)
   return (
     <div className={cn("flex flex-col items-center justify-center", className)}>
       <div className="flex size-8 items-center justify-center rounded-md bg-muted text-muted-foreground">
         <LuUpload size={16} />
       </div>
       <p className="my-2 w-full truncate text-wrap text-sm font-medium">
-<<<<<<< HEAD
         {maxFiles === 1 ? t("dropzone-upload-file") : t("dropzone-upload-files")}
       </p>
       <p className="w-full truncate text-wrap text-xs text-muted-foreground">
         {t("dropzone-drag-drop-upload")}
       </p>
-=======
-        Upload {maxFiles === 1 ? "a file" : "files"}
-      </p>
-      <p className="w-full truncate text-wrap text-xs text-muted-foreground">
-        Drag and drop or click to upload
-      </p>
-      {caption && <p className="text-wrap text-xs text-muted-foreground">{caption}.</p>}
->>>>>>> 1eb5aeb2 (Upload: working)
     </div>
   );
 };
