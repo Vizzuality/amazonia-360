@@ -10,11 +10,7 @@ export default function Sketch() {
   const t = useTranslations();
 
   return (
-    <div
-      className={cn(
-        "flex w-full flex-col justify-between gap-2 text-sm xl:flex-row xl:items-center",
-      )}
-    >
+    <div className={cn("flex w-full flex-col justify-between gap-2 text-sm")}>
       <span className="font-semibold leading-none text-muted-foreground">
         {t("draw-on-the-map")}
       </span>
