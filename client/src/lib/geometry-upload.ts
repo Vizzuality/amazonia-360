@@ -220,7 +220,6 @@ export const validateFile = async (
 /**
  * Convert files to a GeoJSON
  * @param files Files to convert
- * @param options Define a maximum area size in square meters or bounds
  * @returns Error code if the conversion fails
  */
 export async function convertFilesToGeojson(files: File[]): Promise<Feature<ValidGeometryType>> {
