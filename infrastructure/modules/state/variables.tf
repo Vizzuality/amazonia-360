@@ -9,7 +9,7 @@ variable "project_name" {
 }
 
 variable "aws_profile" {
-    type        = string
-    description = "AWS profile to use to perform TF operations"
+  type        = string
+  description = "AWS profile to use to perform TF operations"
 }
 

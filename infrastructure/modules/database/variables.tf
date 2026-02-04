@@ -11,7 +11,7 @@ variable "aws_region" {
 variable "instance_class" {
   type        = string
   description = "The instance type of the RDS instance"
-  default     = "db.t3.micro"
+  default     = "db.t3.medium"
 }
 
 variable "allocated_storage" {

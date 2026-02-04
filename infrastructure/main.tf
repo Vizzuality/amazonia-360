@@ -27,6 +27,18 @@ module "state" {
   aws_profile  = var.aws_profile
 }
 
+# Backup local.tfvars to Secrets Manager to prevent configuration drift
+# Run `terraform plan -target=module.tfvars_backup` to check for tfvars changes
+module "tfvars_backup" {
+  source = "./modules/tfvars-backup"
+  providers = {
+    aws = aws.state_region
+  }
+
+  project_name     = var.project_name
+  tfvars_file_path = "${path.root}/vars/local.tfvars"
+}
+
 module "iam" {
   source  = "./modules/iam"
   project = var.project_name
