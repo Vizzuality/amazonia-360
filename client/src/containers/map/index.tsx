@@ -78,6 +78,12 @@ export default function MapContainer({
     (graphic: __esri.Graphic) => {
       setSketch({ enabled: undefined, type: undefined });
 
+      console.log({
+        type: graphic.geometry.type,
+        geometry: graphic.geometry.toJSON(),
+        buffer: BUFFERS[graphic.geometry.type],
+      });
+
       setLocation({
         type: graphic.geometry.type,
         geometry: graphic.geometry.toJSON(),

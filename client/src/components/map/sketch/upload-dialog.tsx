@@ -53,23 +53,28 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
         // Convert GeoJSON to ArcGIS JSON format
         const arcgisGeometry = geojsonToArcGIS(geometry);
 
-        // Set location with the uploaded geometry
-        const geometryType = geometry.geometry.type.toLowerCase() as __esri.Geometry["type"];
+        if (!arcgisGeometry || !arcgisGeometry.type) {
+          throw UploadErrorType.UnsupportedFile;
+        }
+
         setLocation({
-          type: geometryType,
-          geometry: arcgisGeometry,
-          buffer: BUFFERS[geometryType] || 0,
+          type: arcgisGeometry.type,
+          geometry: arcgisGeometry as unknown as Record<string, unknown>,
+          buffer: BUFFERS[arcgisGeometry.type] || 0,
         });
 
         // Move map to the uploaded geometry
         const esriGeometry = getGeometryByType({
-          type: geometryType,
-          geometry: arcgisGeometry,
-          buffer: BUFFERS[geometryType] || 0,
+          type: arcgisGeometry.type,
+          geometry: arcgisGeometry as unknown as Record<string, unknown>,
+          buffer: BUFFERS[arcgisGeometry.type] || 0,
         });
 
         if (esriGeometry) {
-          const bufferedGeometry = getGeometryWithBuffer(esriGeometry, BUFFERS[geometryType] || 0);
+          const bufferedGeometry = getGeometryWithBuffer(
+            esriGeometry,
+            BUFFERS[arcgisGeometry.type] || 0,
+          );
           if (bufferedGeometry) {
             setTmpBbox(bufferedGeometry.extent);
           }

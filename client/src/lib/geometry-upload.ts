@@ -1,6 +1,6 @@
 import ArcGISPoint from "@arcgis/core/geometry/Point";
 import ArcGISPolygon from "@arcgis/core/geometry/Polygon";
-import Polyline from "@arcgis/core/geometry/Polyline";
+import ArcGISPolyline from "@arcgis/core/geometry/Polyline";
 import { project } from "@arcgis/core/geometry/projection";
 import { selectLoader, load, parse } from "@loaders.gl/core";
 import { _GeoJSONLoader as GeoJSONLoader } from "@loaders.gl/json";
@@ -46,7 +46,7 @@ export enum UploadErrorType {
  * Based on terraformer-arcgis-parser conversion logic
  * Automatically reprojects from WGS84 (4326) to Web Mercator (102100)
  */
-export function geojsonToArcGIS(geojson: Feature<ValidGeometryType>): Record<string, unknown> {
+export function geojsonToArcGIS(geojson: Feature<ValidGeometryType>): __esri.Geometry {
   const geometry = geojson.geometry;
 
   if (!geometry) {
@@ -65,17 +65,8 @@ export function geojsonToArcGIS(geojson: Feature<ValidGeometryType>): Record<str
       break;
     }
 
-    case "MultiPoint": {
-      // MultiPoint doesn't have a direct ArcGIS equivalent, using points in Polyline
-      arcgisGeometry = new Polyline({
-        paths: geometry.coordinates.map((coord) => [coord]),
-        spatialReference: { wkid: 4326 },
-      });
-      break;
-    }
-
     case "LineString": {
-      arcgisGeometry = new Polyline({
+      arcgisGeometry = new ArcGISPolyline({
         paths: [geometry.coordinates],
         spatialReference: { wkid: 4326 },
       });
@@ -83,7 +74,7 @@ export function geojsonToArcGIS(geojson: Feature<ValidGeometryType>): Record<str
     }
 
     case "MultiLineString": {
-      arcgisGeometry = new Polyline({
+      arcgisGeometry = new ArcGISPolyline({
         paths: geometry.coordinates,
         spatialReference: { wkid: 4326 },
       });
@@ -112,26 +103,6 @@ export function geojsonToArcGIS(geojson: Feature<ValidGeometryType>): Record<str
       break;
     }
 
-    case "GeometryCollection": {
-      // For GeometryCollection, we'll convert the first valid geometry we find
-      const validGeometry = geometry.geometries.find(
-        (g) =>
-          g.type === "Point" ||
-          g.type === "MultiPoint" ||
-          g.type === "LineString" ||
-          g.type === "MultiLineString" ||
-          g.type === "Polygon" ||
-          g.type === "MultiPolygon",
-      );
-
-      if (!validGeometry) {
-        throw new Error("No valid geometry found in collection");
-      }
-
-      // Recursively convert the found geometry
-      return geojsonToArcGIS({ type: "Feature", geometry: validGeometry, properties: {} });
-    }
-
     default: {
       throw new Error(`Unsupported geometry type`);
     }
@@ -141,7 +112,10 @@ export function geojsonToArcGIS(geojson: Feature<ValidGeometryType>): Record<str
   const projected = project(arcgisGeometry, { wkid: 102100 });
   const projectedGeometry = Array.isArray(projected) ? projected[0] : projected;
 
-  return projectedGeometry.toJSON();
+  return {
+    type: projectedGeometry.type,
+    ...projectedGeometry.toJSON(),
+  };
 }
 
 export const supportedFileformats = [
