@@ -8,6 +8,7 @@ import { KMLLoader } from "@loaders.gl/kml";
 import { Loader } from "@loaders.gl/loader-utils";
 import { ShapefileLoader } from "@loaders.gl/shapefile";
 import { ZipLoader } from "@loaders.gl/zip";
+import { geojsonToArcGIS } from "@terraformer/arcgis";
 // import turfIntersect from "@turf/boolean-intersects";
 import { area, featureCollection } from "@turf/turf";
 import {
@@ -46,70 +47,48 @@ export enum UploadErrorType {
  * Based on terraformer-arcgis-parser conversion logic
  * Automatically reprojects from WGS84 (4326) to Web Mercator (102100)
  */
-export function geojsonToArcGIS(geojson: Feature<ValidGeometryType>): __esri.Geometry {
+export function geojsonToArcGISCustom(geojson: Feature<ValidGeometryType>): __esri.Geometry {
   const geometry = geojson.geometry;
+
+  console.log("geojsonToArcGISCustom", { geojson });
 
   if (!geometry) {
     throw new Error("Invalid geometry");
   }
 
-  let arcgisGeometry: __esri.Geometry;
+  const arcgisGeometry = geojsonToArcGIS(geojson) as {
+    attributes?: Record<string, unknown>;
+    geometry: Record<string, unknown>;
+  };
+
+  console.log("arcgisGeometry", { arcgisGeometry });
+  let arcgisGeometryInstance: __esri.Geometry;
 
   switch (geometry.type) {
-    case "Point": {
-      arcgisGeometry = new ArcGISPoint({
-        x: geometry.coordinates[0],
-        y: geometry.coordinates[1],
-        spatialReference: { wkid: 4326 },
-      });
+    case "Point":
+      arcgisGeometryInstance = new ArcGISPoint(arcgisGeometry.geometry);
       break;
-    }
-
-    case "LineString": {
-      arcgisGeometry = new ArcGISPolyline({
-        paths: [geometry.coordinates],
-        spatialReference: { wkid: 4326 },
-      });
+    case "MultiPoint":
+      arcgisGeometryInstance = new ArcGISPoint(arcgisGeometry.geometry);
       break;
-    }
-
-    case "MultiLineString": {
-      arcgisGeometry = new ArcGISPolyline({
-        paths: geometry.coordinates,
-        spatialReference: { wkid: 4326 },
-      });
+    case "LineString":
+      arcgisGeometryInstance = new ArcGISPolyline(arcgisGeometry.geometry);
       break;
-    }
-
-    case "Polygon": {
-      arcgisGeometry = new ArcGISPolygon({
-        rings: geometry.coordinates,
-        spatialReference: { wkid: 4326 },
-      });
+    case "MultiLineString":
+      arcgisGeometryInstance = new ArcGISPolyline(arcgisGeometry.geometry);
       break;
-    }
-
-    case "MultiPolygon": {
-      const rings: number[][][] = [];
-      geometry.coordinates.forEach((polygon) => {
-        polygon.forEach((ring) => {
-          rings.push(ring);
-        });
-      });
-      arcgisGeometry = new ArcGISPolygon({
-        rings,
-        spatialReference: { wkid: 4326 },
-      });
+    case "Polygon":
+      arcgisGeometryInstance = new ArcGISPolygon(arcgisGeometry.geometry);
       break;
-    }
-
-    default: {
-      throw new Error(`Unsupported geometry type`);
-    }
+    case "MultiPolygon":
+      arcgisGeometryInstance = new ArcGISPolygon(arcgisGeometry.geometry);
+      break;
+    default:
+      throw new Error("Unsupported geometry type");
   }
 
   // Project from WGS84 (4326) to Web Mercator (102100)
-  const projected = project(arcgisGeometry, { wkid: 102100 });
+  const projected = project(arcgisGeometryInstance, { wkid: 102100 });
   const projectedGeometry = Array.isArray(projected) ? projected[0] : projected;
 
   return {
@@ -123,6 +102,7 @@ export const supportedFileformats = [
   ...["geojson"],
   ...["kmz"],
   ...["shp", "prj", "shx", "dbf", "cpg"],
+  ...["zip"],
 ];
 
 /**
@@ -211,6 +191,47 @@ export async function convertFilesToGeojson(
   files: File[],
   options?: { maxAreaSize?: number; bounds?: [[number, number], [number, number]] },
 ): Promise<Feature<ValidGeometryType>> {
+  // Handle zipped shapefiles
+  if (files.length === 1 && files[0].type === "application/zip") {
+    try {
+      const fileMap = (await load(files[0], ZipLoader, {
+        log: {
+          log: () => {},
+          warn: () => {},
+          error: () => {}, // Suppress zip loader errors for missing/irrelevant files
+        },
+      })) as Record<string, ArrayBuffer>;
+
+      // Check if this is a shapefile archive
+      const hasShp = Object.keys(fileMap).some((name) => name.toLowerCase().endsWith(".shp"));
+
+      if (hasShp) {
+        // Convert the file map to File objects for processing
+        const extractedFiles: File[] = [];
+        for (const [filename, content] of Object.entries(fileMap)) {
+          // Skip directories and system files
+          if (filename.endsWith("/") || filename.includes("__MACOSX") || !content) {
+            continue;
+          }
+
+          const ext = filename.split(".").pop()?.toLowerCase();
+          if (["shp", "shx", "dbf", "prj", "cpg"].includes(ext || "")) {
+            const blob = new Blob([content]);
+            const file = new File([blob], filename.split("/").pop() || filename, {
+              type: "application/octet-stream",
+            });
+            extractedFiles.push(file);
+          }
+        }
+
+        // Replace files array with extracted files for shapefile processing
+        files = extractedFiles;
+      }
+    } catch (_e) {
+      return Promise.reject(UploadErrorType.UnsupportedFile);
+    }
+  }
+
   // If multiple files are uploaded and one of them is a ShapeFile, this is the one we pass to the
   // loader because it is the one `ShapefileLoader` expects (out of the .prj, .shx, etc. other
   // Shapefile-related files). If the user uploaded files of a different extension, we just take the

@@ -7,7 +7,11 @@ import type { DropEvent, FileRejection } from "react-dropzone";
 import { useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
 
-import { convertFilesToGeojson, geojsonToArcGIS, UploadErrorType } from "@/lib/geometry-upload";
+import {
+  convertFilesToGeojson,
+  geojsonToArcGISCustom,
+  UploadErrorType,
+} from "@/lib/geometry-upload";
 import { getGeometryByType, getGeometryWithBuffer } from "@/lib/location";
 
 import { tmpBboxAtom, useSyncLocation } from "@/app/(frontend)/store";
@@ -49,7 +53,7 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
         });
 
         // Convert GeoJSON to ArcGIS JSON format
-        const arcgisGeometry = geojsonToArcGIS(geometry);
+        const arcgisGeometry = geojsonToArcGISCustom(geometry);
 
         if (!arcgisGeometry || !arcgisGeometry.type) {
           throw UploadErrorType.UnsupportedFile;
