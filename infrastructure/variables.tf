@@ -48,13 +48,13 @@ variable "ses_verified_emails" {
 variable "database_instance_class" {
   type        = string
   description = "The instance class for the RDS database"
-  default     = "db.t3.micro"
+  default     = "db.t3.medium"
 }
 
 variable "database_allocated_storage" {
   type        = number
-  description = "The allocated storage in gigabytes for the RDS database"
-  default     = 20
+  description = "The allocated storage in gigabytes for the RDS database (minimum 100 for gp3)"
+  default     = 50
 }
 
 variable "database_backup_retention_period" {
