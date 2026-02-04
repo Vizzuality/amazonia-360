@@ -1,7 +1,9 @@
+import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import ArcGISPoint from "@arcgis/core/geometry/Point";
 import ArcGISPolygon from "@arcgis/core/geometry/Polygon";
 import ArcGISPolyline from "@arcgis/core/geometry/Polyline";
 import { project } from "@arcgis/core/geometry/projection";
+import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import { selectLoader, load, parse } from "@loaders.gl/core";
 import { _GeoJSONLoader as GeoJSONLoader } from "@loaders.gl/json";
 import { KMLLoader } from "@loaders.gl/kml";
@@ -9,8 +11,7 @@ import { Loader } from "@loaders.gl/loader-utils";
 import { ShapefileLoader } from "@loaders.gl/shapefile";
 import { ZipLoader } from "@loaders.gl/zip";
 import { geojsonToArcGIS } from "@terraformer/arcgis";
-// import turfIntersect from "@turf/boolean-intersects";
-import { area, featureCollection } from "@turf/turf";
+import { featureCollection } from "@turf/turf";
 import {
   Feature,
   FeatureCollection,
@@ -23,6 +24,8 @@ import {
   Point,
   Polygon,
 } from "geojson";
+
+import { DATASETS } from "@/constants/datasets";
 
 export type ValidGeometryType =
   | Point
@@ -50,8 +53,6 @@ export enum UploadErrorType {
 export function geojsonToArcGISCustom(geojson: Feature<ValidGeometryType>): __esri.Geometry {
   const geometry = geojson.geometry;
 
-  console.log("geojsonToArcGISCustom", { geojson });
-
   if (!geometry) {
     throw new Error("Invalid geometry");
   }
@@ -61,7 +62,6 @@ export function geojsonToArcGISCustom(geojson: Feature<ValidGeometryType>): __es
     geometry: Record<string, unknown>;
   };
 
-  console.log("arcgisGeometry", { arcgisGeometry });
   let arcgisGeometryInstance: __esri.Geometry;
 
   switch (geometry.type) {
@@ -130,17 +130,53 @@ const readFileAsText = (file: File | ArrayBuffer): Promise<string> => {
   });
 };
 
-export const validateGeoJSONSize = (geojson: Feature<ValidGeometryType>, maxSize: number) => {
-  const areaSize = area(geojson);
+/**
+ * Validate geometry size using ArcGIS geometryEngine geodesicArea
+ * @param geometry ArcGIS geometry to validate
+ * @param maxSize Maximum area size in square meters
+ * @returns true if area is within limit
+ */
+export const validateGeometrySize = (geometry: __esri.Polygon, maxSize: number): boolean => {
+  const areaSize = Math.abs(geometryEngine.geodesicArea(geometry, "square-kilometers"));
   return areaSize <= maxSize;
 };
 
-export const validateGeoJSONBounds = (
-  _geojson: Feature<ValidGeometryType>,
-  _bounds: [[number, number], [number, number]],
-) => {
-  return true; // Temporarily disable bounds check
-  // return turfIntersect(US_BOUNDARY_GEOJSON.features[0], geojson);
+/**
+ * Validate if geometry intersects with area_afp dataset bounds
+ * @param geometry ArcGIS geometry to validate
+ * @returns true if geometry intersects with area_afp
+ */
+export const validateGeometryBounds = async (geometry: __esri.Geometry): Promise<boolean> => {
+  try {
+    // Create a FeatureLayer from the area_afp dataset
+    const afpLayer = new FeatureLayer({
+      url: DATASETS.area_afp.layer.url,
+    });
+
+    // Query all features from the area_afp dataset
+    const queryResult = await afpLayer.queryFeatures({
+      where: "1=1",
+      outFields: ["*"],
+      returnGeometry: true,
+    });
+
+    // Check if the uploaded geometry intersects with any feature in area_afp
+    if (queryResult.features.length === 0) {
+      return false;
+    }
+
+    // Check intersection with each feature (usually there's only one)
+    for (const feature of queryResult.features) {
+      if (feature.geometry && geometryEngine.intersects(geometry, feature.geometry)) {
+        return true;
+      }
+    }
+
+    return false;
+  } catch (error) {
+    console.error("Error validating geometry bounds:", error);
+    return false;
+  }
 };
 
 /**
@@ -187,10 +223,7 @@ export const validateFile = async (
  * @param options Define a maximum area size in square meters or bounds
  * @returns Error code if the convertion fails
  */
-export async function convertFilesToGeojson(
-  files: File[],
-  options?: { maxAreaSize?: number; bounds?: [[number, number], [number, number]] },
-): Promise<Feature<ValidGeometryType>> {
+export async function convertFilesToGeojson(files: File[]): Promise<Feature<ValidGeometryType>> {
   // Handle zipped shapefiles
   if (files.length === 1 && files[0].type === "application/zip") {
     try {
@@ -354,17 +387,6 @@ export async function convertFilesToGeojson(
     return Promise.reject(UploadErrorType.UnsupportedFile);
   }
 
-  if (
-    options?.maxAreaSize !== undefined &&
-    !validateGeoJSONSize(cleanedGeoJSON, options.maxAreaSize)
-  ) {
-    return Promise.reject(UploadErrorType.AreaTooBig);
-  }
-
-  if (options?.bounds !== undefined && !validateGeoJSONBounds(cleanedGeoJSON, options.bounds)) {
-    return Promise.reject(UploadErrorType.OutsideOfBounds);
-  }
-
   return cleanedGeoJSON;
 }
 
@@ -402,4 +424,38 @@ function cleanupGeoJSON(geoJSON: GeoJSON): Feature<ValidGeometryType> | null {
   }
 
   return feature;
+}
+
+/**
+ * Convert uploaded files directly to ArcGIS geometry
+ * Combines convertFilesToGeojson and geojsonToArcGISCustom into a single operation
+ * @param files Files to convert
+ * @param options Define a maximum area size in square meters or validate bounds against area_afp
+ * @returns ArcGIS geometry ready for use with Esri maps
+ */
+export async function convertFilesToGeometry(
+  files: File[],
+  options?: { maxAreaSize?: number; validateBounds?: boolean },
+): Promise<__esri.Geometry> {
+  // First convert files to GeoJSON
+  const geojson = await convertFilesToGeojson(files);
+
+  // Then convert GeoJSON to ArcGIS geometry
+  const arcgisGeometry = geojsonToArcGISCustom(geojson);
+
+  // Validate area size using geodesicArea
+  if (
+    options?.maxAreaSize !== undefined &&
+    arcgisGeometry.type === "polygon" &&
+    !validateGeometrySize(arcgisGeometry as __esri.Polygon, options.maxAreaSize)
+  ) {
+    return Promise.reject(UploadErrorType.AreaTooBig);
+  }
+
+  // Validate bounds by checking intersection with area_afp
+  if (options?.validateBounds && !(await validateGeometryBounds(arcgisGeometry))) {
+    return Promise.reject(UploadErrorType.OutsideOfBounds);
+  }
+
+  return arcgisGeometry;
 }

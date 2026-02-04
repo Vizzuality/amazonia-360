@@ -451,6 +451,7 @@
   "upload-geometry-dialog-title": "Cargar geometría",
   "upload-geometry-dialog-description": "Cargue uno o varios archivos de geometrías en uno de los siguientes formatos:\n\n- **Shapefile**: 3 archivos obligatorios (.shp, .shx, .dbf) y 2 archivos opcionales (.prj, .cpg)\n- **KML**: 1 archivo .kml\n- **KMZ**: 1 archivo .kmz\n- **GeoJSON**: 1 archivo .geojson o .json",
   "upload-geometry-processing-files": "Procesando archivos...",
+  "upload-geometry-success": "Geometría cargada exitosamente",
   "generic-error": "Se ha producido un error al cargar el archivo",
   "invalid-xml-syntax": "Sintaxis XML no válida en el archivo",
   "shp-missing-file": "Faltan archivos requeridos en el Shapefile (.shp, .shx, .dbf, .prj)",

@@ -451,6 +451,7 @@
   "upload-geometry-dialog-title": "Upload Geometry",
   "upload-geometry-dialog-description": "Upload one or multiple geometry files in one of the following formats:\n\n- **Shapefile**: 3 mandatory files (.shp, .shx, .dbf) and 2 optional files (.prj, .cpg)\n- **KML**: 1 .kml file\n- **KMZ**: 1 .kmz file\n- **GeoJSON**: 1 .geojson or .json file",
   "upload-geometry-processing-files": "Processing files...",
+  "upload-geometry-success": "Geometry uploaded successfully",
   "generic-error": "An error occurred while uploading the file",
   "invalid-xml-syntax": "Invalid XML syntax in the file",
   "shp-missing-file": "Shapefile is missing required files (.shp, .shx, .dbf, .prj)",
