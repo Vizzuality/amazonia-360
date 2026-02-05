@@ -1,8 +1,9 @@
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
+import * as projectOperator from "@arcgis/core/geometry/operators/projectOperator";
 import ArcGISPoint from "@arcgis/core/geometry/Point";
 import ArcGISPolygon from "@arcgis/core/geometry/Polygon";
 import ArcGISPolyline from "@arcgis/core/geometry/Polyline";
-import { project } from "@arcgis/core/geometry/projection";
+import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import { selectLoader, load, parse } from "@loaders.gl/core";
 import { _GeoJSONLoader as GeoJSONLoader } from "@loaders.gl/json";
@@ -26,6 +27,10 @@ import {
 } from "geojson";
 
 import { DATASETS } from "@/constants/datasets";
+
+if (!projectOperator.isLoaded()) {
+  await projectOperator.load();
+}
 
 export type ValidGeometryType =
   | Point
@@ -62,7 +67,7 @@ export function geojsonToArcGISCustom(geojson: Feature<ValidGeometryType>): __es
     geometry: Record<string, unknown>;
   };
 
-  let arcgisGeometryInstance: __esri.Geometry;
+  let arcgisGeometryInstance: __esri.GeometryUnion;
 
   switch (geometry.type) {
     case "Point":
@@ -88,7 +93,10 @@ export function geojsonToArcGISCustom(geojson: Feature<ValidGeometryType>): __es
   }
 
   // Project from WGS84 (4326) to Web Mercator (102100)
-  const projected = project(arcgisGeometryInstance, { wkid: 102100 });
+  const projected = projectOperator.execute(
+    arcgisGeometryInstance,
+    new SpatialReference({ wkid: 102100 }),
+  );
   const projectedGeometry = Array.isArray(projected) ? projected[0] : projected;
 
   return {

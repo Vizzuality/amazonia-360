@@ -4,8 +4,9 @@ import { useCallback, useMemo, useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
 
+import * as projectOperator from "@arcgis/core/geometry/operators/projectOperator";
 import Point from "@arcgis/core/geometry/Point";
-import { project } from "@arcgis/core/geometry/projection";
+import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import { Accessor, Color, PickingInfo } from "@deck.gl/core";
 import { DataFilterExtension, DataFilterExtensionProps } from "@deck.gl/extensions";
 import { H3HexagonLayer } from "@deck.gl/geo-layers";
@@ -54,6 +55,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+
+if (!projectOperator.isLoaded()) {
+  await projectOperator.load();
+}
 
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
@@ -543,7 +548,7 @@ export default function GridLayer() {
       y: latLng[0],
       spatialReference: { wkid: 4326 },
     });
-    const projectedGeom = project(p, { wkid: 102100 });
+    const projectedGeom = projectOperator.execute(p, new SpatialReference({ wkid: 102100 }));
     const g = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
 
     setLocation({
@@ -553,7 +558,7 @@ export default function GridLayer() {
     });
 
     const gWithBuffer = getGeometryWithBuffer(g, BUFFERS.point);
-    if (gWithBuffer) {
+    if (gWithBuffer && gWithBuffer.extent) {
       setTmpBbox(gWithBuffer.extent);
     }
   }, [alert, setLocation, setTmpBbox]);

@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 
 import { geodesicBuffer } from "@arcgis/core/geometry/geometryEngine";
+import * as projectOperator from "@arcgis/core/geometry/operators/projectOperator";
 import Point from "@arcgis/core/geometry/Point";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import Polyline from "@arcgis/core/geometry/Polyline";
-import { project } from "@arcgis/core/geometry/projection";
+import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import Graphic from "@arcgis/core/Graphic";
 import { useTranslations } from "next-intl";
 
@@ -15,6 +16,10 @@ import { Location, SearchLocation } from "@/app/(frontend)/parsers";
 
 import { DATASETS } from "@/constants/datasets";
 import { BUFFERS } from "@/constants/map";
+
+if (!projectOperator.isLoaded()) {
+  await projectOperator.load();
+}
 
 export type AdministrativeBoundary = {
   FID: string | number;
@@ -107,21 +112,22 @@ export const useLocationTitle = (location?: Location | null) => {
 
 export const useLocationGeometry = (
   location?: Location | null,
-  outSpatialReference?: __esri.SpatialReference | __esri.SpatialReferenceProperties,
+  outSpatialReference?: __esri.SpatialReferenceProperties,
 ) => {
   const LOCATION = useLocation(location);
 
   const GEOMETRY = useMemo(() => {
-    if (LOCATION) {
+    if (LOCATION && LOCATION.geometry) {
       const b = location?.type !== "search" ? location?.buffer : BUFFERS[LOCATION.geometry.type];
       const g = getGeometryWithBuffer(LOCATION.geometry, b || BUFFERS[LOCATION.geometry.type]);
 
       if (!g) return null;
 
-      const projectedGeom = project(
-        g,
-        outSpatialReference || LOCATION.geometry.spatialReference || { wkid: 102100 },
+      const SR = new SpatialReference(
+        outSpatialReference || LOCATION.geometry.spatialReference.toJSON() || { wkid: 102100 },
       );
+
+      const projectedGeom = projectOperator.execute(g, SR);
 
       const geom = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
 
