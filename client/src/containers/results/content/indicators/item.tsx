@@ -42,7 +42,6 @@ export const ReportResultsContentIndicatorItem = ({
         newTopics[i] = {
           ...newTopics[i],
           indicators: newTopics[i]?.indicators?.filter((ind) => {
-            console.log(!(ind.indicator_id === indicatorId && ind.type === type));
             return !(ind.indicator_id === indicatorId && ind.type === type);
           }),
         };

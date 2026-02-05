@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { geodesicBuffer } from "@arcgis/core/geometry/geometryEngine";
+import * as geodesicBufferOperator from "@arcgis/core/geometry/operators/geodesicBufferOperator";
 import * as projectOperator from "@arcgis/core/geometry/operators/projectOperator";
 import Point from "@arcgis/core/geometry/Point";
 import Polygon from "@arcgis/core/geometry/Polygon";
@@ -19,6 +19,10 @@ import { BUFFERS } from "@/constants/map";
 
 if (!projectOperator.isLoaded()) {
   await projectOperator.load();
+}
+
+if (!geodesicBufferOperator.isLoaded()) {
+  await geodesicBufferOperator.load();
 }
 
 export type AdministrativeBoundary = {
@@ -189,19 +193,23 @@ export const getGeometryByType = (location: Location) => {
 };
 
 export const getGeometryWithBuffer = (
-  geometry: __esri.Geometry | null,
+  geometry: __esri.GeometryUnion | null,
   buffer: number,
 ): __esri.Polygon | null => {
   if (!geometry) return null;
 
   if (geometry.type === "point") {
-    const g = geodesicBuffer(geometry, buffer, "kilometers");
+    const g = geodesicBufferOperator.execute(geometry, buffer, { unit: "kilometers" });
+
+    if (!g) return null;
 
     return Array.isArray(g) ? g[0] : g;
   }
 
   if (geometry.type === "polyline") {
-    const g = geodesicBuffer(geometry, buffer, "kilometers");
+    const g = geodesicBufferOperator.execute(geometry, buffer, { unit: "kilometers" });
+
+    if (!g) return null;
 
     return Array.isArray(g) ? g[0] : g;
   }
