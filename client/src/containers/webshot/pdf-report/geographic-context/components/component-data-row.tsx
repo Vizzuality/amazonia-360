@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { geodesicArea } from "@arcgis/core/geometry/geometryEngine";
+import * as geodesicAreaOperator from "@arcgis/core/geometry/operators/geodeticAreaOperator";
 
 import { formatNumber } from "@/lib/formats";
 import { useGetIndicatorsId } from "@/lib/indicators";
@@ -11,6 +11,10 @@ import { useLocationGeometry } from "@/lib/location";
 import { useIndicator } from "@/containers/indicators/provider";
 
 import { DataRowProps } from "./types";
+
+if (!geodesicAreaOperator.isLoaded()) {
+  await geodesicAreaOperator.load();
+}
 
 export default function ComponentDataRow({ id, locale, location }: DataRowProps) {
   const indicator = useGetIndicatorsId(id, locale);
@@ -25,9 +29,12 @@ export default function ComponentDataRow({ id, locale, location }: DataRowProps)
   const VALUE = useMemo(() => {
     if (!GEOMETRY || !indicator) return null;
 
-    const area = formatNumber(geodesicArea(GEOMETRY, "square-kilometers"), {
-      maximumFractionDigits: 0,
-    });
+    const area = formatNumber(
+      geodesicAreaOperator.execute(GEOMETRY, { unit: "square-kilometers" }),
+      {
+        maximumFractionDigits: 0,
+      },
+    );
 
     if (indicator[`unit_${locale}`]) return `${area} ${indicator.unit}`;
 

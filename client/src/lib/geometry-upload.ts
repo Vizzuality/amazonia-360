@@ -1,4 +1,5 @@
-import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
+import * as geodesicAreaOperator from "@arcgis/core/geometry/operators/geodeticAreaOperator";
+import * as intersectsOperator from "@arcgis/core/geometry/operators/intersectsOperator";
 import * as projectOperator from "@arcgis/core/geometry/operators/projectOperator";
 import ArcGISPoint from "@arcgis/core/geometry/Point";
 import ArcGISPolygon from "@arcgis/core/geometry/Polygon";
@@ -32,6 +33,10 @@ if (!projectOperator.isLoaded()) {
   await projectOperator.load();
 }
 
+if (!geodesicAreaOperator.isLoaded()) {
+  await geodesicAreaOperator.load();
+}
+
 export type ValidGeometryType =
   | Point
   | MultiPoint
@@ -55,7 +60,7 @@ export enum UploadErrorType {
  * Based on terraformer-arcgis-parser conversion logic
  * Automatically reprojects from WGS84 (4326) to Web Mercator (102100)
  */
-export function geojsonToArcGISCustom(geojson: Feature<ValidGeometryType>): __esri.Geometry {
+export function geojsonToArcGISCustom(geojson: Feature<ValidGeometryType>): __esri.GeometryUnion {
   const geometry = geojson.geometry;
 
   if (!geometry) {
@@ -139,13 +144,13 @@ const readFileAsText = (file: File | ArrayBuffer): Promise<string> => {
 };
 
 /**
- * Validate geometry size using ArcGIS geometryEngine geodesicArea
+ * Validate geometry size using ArcGIS geodesicAreaOperator
  * @param geometry ArcGIS geometry to validate
  * @param maxSize Maximum area size in square meters
  * @returns true if area is within limit
  */
 export const validateGeometrySize = (geometry: __esri.Polygon, maxSize: number): boolean => {
-  const areaSize = Math.abs(geometryEngine.geodesicArea(geometry, "square-kilometers"));
+  const areaSize = Math.abs(geodesicAreaOperator.execute(geometry, { unit: "square-kilometers" }));
   return areaSize <= maxSize;
 };
 
@@ -154,7 +159,7 @@ export const validateGeometrySize = (geometry: __esri.Polygon, maxSize: number):
  * @param geometry ArcGIS geometry to validate
  * @returns true if geometry intersects with area_afp
  */
-export const validateGeometryBounds = async (geometry: __esri.Geometry): Promise<boolean> => {
+export const validateGeometryBounds = async (geometry: __esri.GeometryUnion): Promise<boolean> => {
   try {
     // Create a FeatureLayer from the area_afp dataset
     const afpLayer = new FeatureLayer({
@@ -175,7 +180,7 @@ export const validateGeometryBounds = async (geometry: __esri.Geometry): Promise
 
     // Check intersection with each feature (usually there's only one)
     for (const feature of queryResult.features) {
-      if (feature.geometry && geometryEngine.intersects(geometry, feature.geometry)) {
+      if (feature.geometry && intersectsOperator.execute(geometry, feature.geometry)) {
         return true;
       }
     }

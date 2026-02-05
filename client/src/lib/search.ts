@@ -179,11 +179,12 @@ export const getSearch = async (params: GetSearchParams) => {
         r.feature.geometry,
         new SpatialReference({ wkid: 102100 }),
       );
-      const g = Array.isArray(projectedGeo) ? projectedGeo[0] : projectedGeo;
+
+      if (!projectedGeo) return null;
 
       return {
-        type: g.type,
-        geometry: g.toJSON(),
+        type: projectedGeo.type,
+        geometry: projectedGeo.toJSON(),
       };
     }
     return null;
