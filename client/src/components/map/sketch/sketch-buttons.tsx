@@ -124,7 +124,7 @@ export default function SketchButtons({ iconOnly = false }: { iconOnly: boolean 
           className={cn(
             buttonVariants({ variant: "ghost" }),
             "group flex w-full items-center justify-center rounded-md p-0",
-            iconOnly ? "h-10 w-10" : "space-x-2.5 px-4 py-2",
+            iconOnly ? "h-10 w-10 border border-border" : "space-x-2.5 px-4 py-2",
           )}
           aria-label="Upload geometry"
           onClick={handleUploadClick}
