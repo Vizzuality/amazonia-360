@@ -1,4 +1,5 @@
-import { project } from "@arcgis/core/geometry/projection";
+import * as projectOperator from "@arcgis/core/geometry/operators/projectOperator";
+import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import SearchVM from "@arcgis/core/widgets/Search/SearchViewModel";
 import {
@@ -13,6 +14,10 @@ import {
 import { omit } from "@/lib/utils";
 
 import { DATASETS } from "@/constants/datasets";
+
+if (!projectOperator.isLoaded()) {
+  await projectOperator.load();
+}
 
 const searchVM = new SearchVM({
   popupEnabled: false,
@@ -166,11 +171,14 @@ export const getSearch = async (params: GetSearchParams) => {
 
   const g = await searchVM.search(params as unknown as __esri.SuggestResult).then((res) => {
     if (res?.numResults === 1) {
-      const r = res?.results[0].results[0];
+      const r = res?.results?.[0].results?.[0];
 
-      const projectedGeo = project(r.feature.geometry, {
-        wkid: 102100,
-      });
+      if (!r || !r.feature || !r.feature.geometry) return null;
+
+      const projectedGeo = projectOperator.execute(
+        r.feature.geometry,
+        new SpatialReference({ wkid: 102100 }),
+      );
       const g = Array.isArray(projectedGeo) ? projectedGeo[0] : projectedGeo;
 
       return {
