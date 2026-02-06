@@ -53,16 +53,16 @@ export const FeatureLegend = ({
 
       return {
         type: "basic",
-        items: r.uniqueValueInfos
-          ?.map((u) => {
-            if (!u.symbol || !u.symbol.color) return null;
-            return {
-              id: u.value,
-              color: new Color(u.symbol.color).toHex(),
-              label: `${u.value}`,
-            };
-          })
-          .filter(Boolean),
+        items:
+          r.uniqueValueInfos
+            ?.map((u) => {
+              return {
+                id: u.value,
+                color: !u.symbol || !u.symbol.color ? undefined : new Color(u.symbol.color).toHex(),
+                label: `${u.value}`,
+              };
+            })
+            .filter(Boolean) ?? [],
       };
     }
 
@@ -71,16 +71,16 @@ export const FeatureLegend = ({
 
       return {
         type: "basic",
-        items: r.classBreakInfos
-          ?.map((c) => {
-            if (!c.symbol || !c.symbol.color) return null;
-            return {
-              id: c.label,
-              color: new Color(c.symbol.color).toHex(),
-              label: `${c.label}`,
-            };
-          })
-          .filter(Boolean),
+        items:
+          r.classBreakInfos
+            ?.map((c) => {
+              return {
+                id: `${c.label}`,
+                color: !c.symbol || !c.symbol.color ? undefined : new Color(c.symbol.color).toHex(),
+                label: `${c.label}`,
+              };
+            })
+            .filter(Boolean) ?? [],
       };
     }
 
