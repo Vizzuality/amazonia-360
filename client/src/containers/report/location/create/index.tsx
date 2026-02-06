@@ -2,7 +2,7 @@
 
 import { ReactNode, useMemo } from "react";
 
-import { geodesicArea } from "@arcgis/core/geometry/geometryEngine";
+import * as geodesicAreaOperator from "@arcgis/core/geometry/operators/geodeticAreaOperator";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useAtom, useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
@@ -25,6 +25,10 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
+if (!geodesicAreaOperator.isLoaded()) {
+  await geodesicAreaOperator.load();
+}
+
 export default function CreateReport({ children }: { children?: ReactNode }) {
   const t = useTranslations();
   const [sketch, setSketch] = useAtom(sketchAtom);
@@ -41,14 +45,14 @@ export default function CreateReport({ children }: { children?: ReactNode }) {
     if (!location || (location.type !== "point" && location.type !== "polyline")) return;
     const gWithBuffer = getGeometryWithBuffer(GEOMETRY, location.buffer);
 
-    if (gWithBuffer) {
+    if (gWithBuffer && gWithBuffer.extent) {
       setTmpBbox(gWithBuffer.extent);
     }
   }, 500);
 
   const AREA = useMemo(() => {
     if (!GEOMETRY) return 0;
-    return geodesicArea(GEOMETRY, "square-kilometers");
+    return geodesicAreaOperator.execute(GEOMETRY, { unit: "square-kilometers" });
   }, [GEOMETRY]);
 
   const onValueChange = (value: number[]) => {
@@ -154,14 +158,14 @@ export default function CreateReport({ children }: { children?: ReactNode }) {
         </div>
       </section>
 
-      {location.type !== "search" && LOCATION?.geometry.type !== "polygon" && (
+      {location.type !== "search" && LOCATION?.geometry?.type !== "polygon" && (
         <section className="space-y-2">
           <div className="flex items-end justify-between">
             <div className="text-sm font-semibold leading-none text-blue-500">
               {t("grid-sidebar-report-location-buffer-size")}
             </div>
             <div className="text-xs leading-none text-foreground">
-              {`${location.buffer || BUFFERS[LOCATION?.geometry.type || "point"]} km`}
+              {`${location.buffer || BUFFERS[LOCATION?.geometry?.type || "point"]} km`}
             </div>
           </div>
           <div className="space-y-1 px-1">
@@ -169,7 +173,7 @@ export default function CreateReport({ children }: { children?: ReactNode }) {
               min={1}
               max={100}
               step={1}
-              value={[location.buffer || BUFFERS[LOCATION?.geometry.type || "point"]]}
+              value={[location.buffer || BUFFERS[LOCATION?.geometry?.type || "point"]]}
               minStepsBetweenThumbs={1}
               onValueChange={onValueChange}
             />

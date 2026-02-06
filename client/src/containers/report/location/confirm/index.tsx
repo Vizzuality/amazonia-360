@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import ReactMarkdown from "react-markdown";
 
-import { geodesicArea } from "@arcgis/core/geometry/geometryEngine";
+import * as geodesicAreaOperator from "@arcgis/core/geometry/operators/geodeticAreaOperator";
 import { useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
 
@@ -24,6 +24,10 @@ import { BUFFERS } from "@/constants/map";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 
+if (!geodesicAreaOperator.isLoaded()) {
+  await geodesicAreaOperator.load();
+}
+
 export default function Confirm({ onConfirm }: { onConfirm: () => void }) {
   const t = useTranslations();
   const setSketchAction = useSetAtom(sketchActionAtom);
@@ -38,14 +42,14 @@ export default function Confirm({ onConfirm }: { onConfirm: () => void }) {
     if (!location || (location.type !== "point" && location.type !== "polyline")) return;
     const gWithBuffer = getGeometryWithBuffer(GEOMETRY, location.buffer);
 
-    if (gWithBuffer) {
+    if (gWithBuffer && gWithBuffer.extent) {
       setTmpBbox(gWithBuffer.extent);
     }
   }, 500);
 
   const AREA = useMemo(() => {
     if (!GEOMETRY) return 0;
-    return geodesicArea(GEOMETRY, "square-kilometers");
+    return geodesicAreaOperator.execute(GEOMETRY, { unit: "square-kilometers" });
   }, [GEOMETRY]);
 
   const onValueChange = (value: number[]) => {
@@ -102,14 +106,14 @@ export default function Confirm({ onConfirm }: { onConfirm: () => void }) {
         </div>
       </section>
 
-      {location.type !== "search" && LOCATION?.geometry.type !== "polygon" && (
+      {location.type !== "search" && LOCATION?.geometry?.type !== "polygon" && (
         <section className="space-y-2">
           <div className="flex items-end justify-between">
             <div className="text-sm font-semibold leading-none text-blue-500">
               {t("grid-sidebar-report-location-buffer-size")}
             </div>
             <div className="text-xs leading-none text-foreground">
-              {`${location.buffer || BUFFERS[LOCATION?.geometry.type || "point"]} km`}
+              {`${location.buffer || BUFFERS[LOCATION?.geometry?.type || "point"]} km`}
             </div>
           </div>
           <div className="space-y-1 px-1">
@@ -117,7 +121,7 @@ export default function Confirm({ onConfirm }: { onConfirm: () => void }) {
               min={1}
               max={100}
               step={1}
-              value={[location.buffer || BUFFERS[LOCATION?.geometry.type || "point"]]}
+              value={[location.buffer || BUFFERS[LOCATION?.geometry?.type || "point"]]}
               minStepsBetweenThumbs={1}
               onValueChange={onValueChange}
             />

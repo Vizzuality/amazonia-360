@@ -21,7 +21,7 @@ export const getBasemap = async (params: GetBasemapParams) => {
   }
 
   return Basemap.fromId(id)
-    .load()
+    ?.load()
     .then((basemap) => {
       const b = basemap as Basemap;
       return b.clone();

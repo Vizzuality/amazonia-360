@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 
 import dynamic from "next/dynamic";
 
-import { geodesicBuffer } from "@arcgis/core/geometry/geometryEngine";
+import * as geodesicBufferOperator from "@arcgis/core/geometry/operators/geodesicBufferOperator";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
@@ -25,6 +25,10 @@ import {
 import { useMap } from "@/components/map/provider";
 
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
+
+if (!geodesicBufferOperator.isLoaded()) {
+  await geodesicBufferOperator.load();
+}
 
 export type SketchProps = {
   type?: "point" | "polygon" | "polyline";
@@ -63,7 +67,7 @@ export default function Sketch({
 
   const drawBuffer = useCallback(
     (l: __esri.Graphic) => {
-      if (!l) return;
+      if (!l || !l.geometry) return;
 
       bufferRef.current.removeAll();
 
@@ -76,9 +80,11 @@ export default function Sketch({
           location?.type !== "search"
             ? location?.buffer || BUFFERS[l.geometry.type]
             : BUFFERS[l.geometry.type];
-        const g = geodesicBuffer(l.geometry, b, "kilometers");
+        const g = geodesicBufferOperator.execute(l.geometry, b, { unit: "kilometers" });
 
-        buffer.geometry = Array.isArray(g) ? g[0] : g;
+        if (!g) return;
+
+        buffer.geometry = g;
       }
 
       if (buffer.geometry) {
@@ -217,6 +223,7 @@ export default function Sketch({
 
     if (LOCATION) {
       const L = LOCATION.clone();
+      if (!L.geometry) return;
       L.symbol = SYMBOLS[L.geometry.type];
       layerRef.current.add(L);
 

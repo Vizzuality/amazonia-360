@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { geodesicArea } from "@arcgis/core/geometry/geometryEngine";
+import * as geodeticAreaOperator from "@arcgis/core/geometry/operators/geodeticAreaOperator";
 
 import { formatNumber } from "@/lib/formats";
 import { useLocationGeometry } from "@/lib/location";
@@ -13,6 +13,10 @@ import { CardWidgetNumber } from "@/containers/card";
 import { useIndicator } from "@/containers/indicators/provider";
 
 import { Report } from "@/payload-types";
+
+if (!geodeticAreaOperator.isLoaded()) {
+  await geodeticAreaOperator.load();
+}
 
 export const TotalArea = ({
   indicator,
@@ -32,7 +36,7 @@ export const TotalArea = ({
   const AREA = useMemo(() => {
     if (!GEOMETRY) return null;
 
-    return formatNumber(geodesicArea(GEOMETRY, "square-kilometers"), {
+    return formatNumber(geodeticAreaOperator.execute(GEOMETRY, { unit: "square-kilometers" }), {
       maximumFractionDigits: 0,
     });
   }, [GEOMETRY]);
