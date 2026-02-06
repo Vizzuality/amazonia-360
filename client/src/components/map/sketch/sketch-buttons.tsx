@@ -81,16 +81,17 @@ export default function SketchButtons({ iconOnly = false }: { iconOnly: boolean 
     <>
       {DRAWING_BUTTONS.map((button) => {
         const Icon = button.Icon;
+
         return (
           <Tooltip key={button.id}>
             <TooltipTrigger
               className={cn(
-                buttonVariants({ variant: "outline" }),
+                buttonVariants({ variant: "outline", size: "responsive" }),
                 sketch.enabled &&
                   sketch.type === button.id &&
-                  buttonVariants({ variant: "default" }),
-                "group flex w-full items-center justify-center rounded-md border border-border p-0",
-                iconOnly ? "h-10 w-10" : "space-x-2.5 px-4 py-2",
+                  buttonVariants({ variant: "default", size: "responsive" }),
+                "group flex items-center justify-center rounded-md border border-border xl:w-full xl:p-0",
+                iconOnly ? "h-10 w-10 xl:h-10 xl:w-10" : "space-x-2.5",
               )}
               aria-label={t("grid-sketch-start-drawing")}
               onClick={(e) => handleClick(e, button.id)}
@@ -122,9 +123,9 @@ export default function SketchButtons({ iconOnly = false }: { iconOnly: boolean 
       <Tooltip>
         <TooltipTrigger
           className={cn(
-            buttonVariants({ variant: "ghost" }),
-            "group flex w-full items-center justify-center rounded-md p-0",
-            iconOnly ? "h-10 w-10 border border-border" : "space-x-2.5 px-4 py-2",
+            buttonVariants({ variant: "ghost", size: "responsive" }),
+            "group flex items-center justify-center rounded-md xl:w-full xl:p-0",
+            iconOnly ? "h-10 w-10 border border-border xl:h-10 xl:w-10" : "space-x-2.5",
           )}
           aria-label="Upload geometry"
           onClick={handleUploadClick}
