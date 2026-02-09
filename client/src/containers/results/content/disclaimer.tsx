@@ -24,14 +24,13 @@ export default function ReportResultsDisclaimer() {
 
   return (
     <div className="container">
-      <div className="space-y-2 rounded-md border border-border bg-orange-50 px-4 py-3">
+      <div className="flex flex-col gap-4 rounded-md border border-border bg-orange-50 px-4 py-3">
         <Markdown className="text-normal mt-2 text-foreground 2xl:text-lg">
           {t("report-results-anonymous-disclaimer")}
         </Markdown>
-
-        <div className="flex">
+        <div className="flex shrink-0">
           <Link href={signInHref}>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="responsive">
               {t("auth-sign-in")}
             </Button>
           </Link>
