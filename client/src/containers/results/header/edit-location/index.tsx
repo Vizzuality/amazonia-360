@@ -25,7 +25,6 @@ import {
   useSyncLocation,
 } from "@/app/(frontend)/store";
 
-import { AuthWrapper } from "@/containers/auth/wrapper";
 import MapContainer from "@/containers/map/edit";
 import { SketchTooltips } from "@/containers/map/sketch-tooltips";
 import ReportGridDesktop from "@/containers/report/grid/desktop";
@@ -56,23 +55,21 @@ export default function EditLocationReport() {
   return (
     <Dialog open={open}>
       <DialogTrigger asChild>
-        <AuthWrapper>
-          <Button
-            type="button"
-            className="space-x-2"
-            variant="outline"
-            onClick={() => {
-              if (defaultLocation) {
-                setLocation(defaultLocation);
-                setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
-                setOpen(true);
-              }
-            }}
-          >
-            <LuSquareMousePointer className="h-5 w-5" />
-            <span>{t("grid-sidebar-report-location-filters-alert-redefine-area-title")}</span>
-          </Button>
-        </AuthWrapper>
+        <Button
+          type="button"
+          className="space-x-2"
+          variant="outline"
+          onClick={() => {
+            if (defaultLocation) {
+              setLocation(defaultLocation);
+              setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
+              setOpen(true);
+            }
+          }}
+        >
+          <LuSquareMousePointer className="h-5 w-5" />
+          <span>{t("grid-sidebar-report-location-filters-alert-redefine-area-title")}</span>
+        </Button>
       </DialogTrigger>
 
       <DialogPortal>

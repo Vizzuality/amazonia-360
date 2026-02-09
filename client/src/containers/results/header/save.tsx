@@ -11,7 +11,6 @@ import { useCanEditReport } from "@/lib/report";
 
 import { useReportFormChanged } from "@/app/(frontend)/store";
 
-import { AuthWrapper } from "@/containers/auth/wrapper";
 import { useDuplicateReportCallback, useSaveReportCallback } from "@/containers/results/callbacks";
 
 import { Button } from "@/components/ui/button";
@@ -41,31 +40,23 @@ export default function SaveReport() {
 
   if (CAN_EDIT) {
     return (
-      <AuthWrapper>
-        <Button
-          onClick={handleSave}
-          className="space-x-2"
-          disabled={saveMutation.isPending || !CHANGED}
-        >
-          {!saveMutation.isPending && <LuFileText className="h-5 w-5" />}
-          {saveMutation.isPending && <Spinner className="h-5 w-5" />}
-          <span>{t("save")}</span>
-        </Button>
-      </AuthWrapper>
+      <Button
+        onClick={handleSave}
+        className="space-x-2"
+        disabled={saveMutation.isPending || !CHANGED}
+      >
+        {!saveMutation.isPending && <LuFileText className="h-5 w-5" />}
+        {saveMutation.isPending && <Spinner className="h-5 w-5" />}
+        <span>{t("save")}</span>
+      </Button>
     );
   }
 
   return (
-    <AuthWrapper>
-      <Button
-        onClick={handleDuplicate}
-        className="space-x-2"
-        disabled={duplicateMutation.isPending}
-      >
-        {!duplicateMutation.isPending && <LuFileText className="h-5 w-5" />}
-        {duplicateMutation.isPending && <Spinner className="h-5 w-5" />}
-        <span>{t("make-a-copy")}</span>
-      </Button>
-    </AuthWrapper>
+    <Button onClick={handleDuplicate} className="space-x-2" disabled={duplicateMutation.isPending}>
+      {!duplicateMutation.isPending && <LuFileText className="h-5 w-5" />}
+      {duplicateMutation.isPending && <Spinner className="h-5 w-5" />}
+      <span>{t("make-a-copy")}</span>
+    </Button>
   );
 }

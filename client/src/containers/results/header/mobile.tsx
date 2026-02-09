@@ -12,7 +12,6 @@ import ShareReport from "@/containers/results/header/share";
 
 export default function ReportResultsHeaderMobile() {
   const t = useTranslations();
-
   const { id: reportId } = useParams();
   const { data: reportData } = useReport({ id: `${reportId}` });
 
