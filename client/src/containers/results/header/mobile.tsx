@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 
+import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 
 import { useReport } from "@/lib/report";
@@ -12,6 +13,8 @@ import ShareReport from "@/containers/results/header/share";
 
 export default function ReportResultsHeaderMobile() {
   const t = useTranslations();
+  const { data: session } = useSession();
+  const isAnonymous = !session?.user || session.user.collection === "anonymous-users";
 
   const { id: reportId } = useParams();
   const { data: reportData } = useReport({ id: `${reportId}` });
@@ -36,6 +39,11 @@ export default function ReportResultsHeaderMobile() {
             </div>
           </div>
         </div>
+        {isAnonymous && (
+          <p className="mt-4 rounded-md border border-blue-100 bg-white/70 px-4 py-3 text-sm text-slate-700">
+            {t("report-results-anonymous-disclaimer")}
+          </p>
+        )}
       </div>
     </header>
   );

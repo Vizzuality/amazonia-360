@@ -11,8 +11,6 @@ import { cn } from "@/lib/utils";
 
 import { useFormTitle } from "@/app/(frontend)/store";
 
-import { AuthWrapper } from "@/containers/auth/wrapper";
-
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -59,18 +57,16 @@ export default function TitleReport() {
           <h2 className="border-b-2 border-l border-t-2 border-transparent px-1 py-2 text-2xl font-medium text-foreground lg:text-3xl tall:xl:text-4xl">
             {title ?? t("selected-area")}
           </h2>
-          <AuthWrapper>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={startEdit}
-              aria-label={t("edit")}
-              className="shrink-0 rounded-full"
-            >
-              <LuPen className="h-4 w-4 text-secondary-foreground" />
-            </Button>
-          </AuthWrapper>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={startEdit}
+            aria-label={t("edit")}
+            className="shrink-0 rounded-full"
+          >
+            <LuPen className="h-4 w-4 text-secondary-foreground" />
+          </Button>
         </header>
       )}
 

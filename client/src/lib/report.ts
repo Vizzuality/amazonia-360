@@ -211,9 +211,9 @@ export const useCanEditReport = (reportId?: string | null) => {
 
   if (!reportId) return false;
 
-  if (session?.user.collection === "anonymous-users" || !session?.user) {
-    return true;
-  }
+  // if (session?.user.collection === "anonymous-users" || !session?.user) {
+  //   return true;
+  // }
 
   return String(REPORT_USER_ID) === session?.user.id;
 };
