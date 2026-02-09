@@ -6,6 +6,7 @@ import type { DropEvent, FileRejection } from "react-dropzone";
 
 import { useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
+import { LuFileCheck } from "react-icons/lu";
 import { toast } from "sonner";
 
 import { convertFilesToGeometry, UploadErrorType } from "@/lib/geometry-upload";
@@ -17,6 +18,7 @@ import { BUFFERS } from "@/constants/map";
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -142,11 +144,14 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
-        className="sm:max-w-md"
+        className="sm:max-w-lg"
         aria-describedby={t("upload-geometry-dialog-description")}
       >
+        <DialogClose />
         <DialogHeader>
-          <DialogTitle>{t("upload-geometry-dialog-title")}</DialogTitle>
+          <DialogTitle className="text-xl text-primary">
+            {t("upload-geometry-dialog-title")}
+          </DialogTitle>
           <DialogDescription asChild>
             <Markdown>{t("upload-geometry-dialog-description")}</Markdown>
           </DialogDescription>
@@ -164,6 +169,13 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
             <DropzoneEmptyState />
             <DropzoneContent />
           </Dropzone>
+        </div>
+
+        <div className="flex items-start space-x-4 rounded bg-blue-50 p-3">
+          <LuFileCheck className="h-5 w-5 shrink-0 text-foreground" />
+          <Markdown className="pt-0.5 text-xs text-foreground">
+            {t("upload-geometry-supported-formats")}
+          </Markdown>
         </div>
       </DialogContent>
     </Dialog>

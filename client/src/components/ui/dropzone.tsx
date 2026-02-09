@@ -10,7 +10,7 @@ import { LuUpload } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 interface DropzoneContextType {
   src?: File[];
@@ -100,7 +100,7 @@ export interface DropzoneContentProps {
 }
 
 export const DropzoneContent = ({ children, className }: DropzoneContentProps) => {
-  const { src } = useDropzoneContext();
+  const { src, maxFiles } = useDropzoneContext();
   const t = useTranslations();
 
   if (!src) {
@@ -112,13 +112,25 @@ export const DropzoneContent = ({ children, className }: DropzoneContentProps) =
   }
 
   return (
-    <div className={cn("flex flex-col items-center justify-center", className)}>
-      <div className="flex size-8 items-center justify-center rounded-md bg-muted text-muted-foreground">
-        <LuUpload size={16} />
+    <div className={cn("flex flex-col items-center justify-center space-y-2", className)}>
+      <div className="flex size-10 items-center justify-center rounded-full bg-muted text-primary">
+        <LuUpload size={24} />
       </div>
-      <p className="w-full text-wrap text-xs text-muted-foreground">
-        {t("dropzone-drag-drop-replace")}
+
+      <p className="w-full truncate text-wrap text-sm font-medium text-primary">
+        {maxFiles === 1 ? t("dropzone-upload-file") : t("dropzone-upload-files")}
       </p>
+
+      <p className="w-full text-wrap text-xs font-medium capitalize text-muted-foreground">
+        -- {t("or")} --
+      </p>
+
+      <Button
+        className={cn(buttonVariants({ variant: "default", size: "sm" }), "pointer-events-none")}
+        type="button"
+      >
+        {t("dropzone-upload-browse")}
+      </Button>
     </div>
   );
 };
@@ -141,16 +153,25 @@ export const DropzoneEmptyState = ({ children, className }: DropzoneEmptyStatePr
   }
 
   return (
-    <div className={cn("flex flex-col items-center justify-center", className)}>
-      <div className="flex size-8 items-center justify-center rounded-md bg-muted text-muted-foreground">
-        <LuUpload size={16} />
+    <div className={cn("flex flex-col items-center justify-center space-y-2", className)}>
+      <div className="flex size-10 items-center justify-center rounded-full bg-muted text-primary">
+        <LuUpload size={24} />
       </div>
-      <p className="my-2 w-full truncate text-wrap text-sm font-medium">
+
+      <p className="w-full truncate text-wrap text-sm font-medium text-primary">
         {maxFiles === 1 ? t("dropzone-upload-file") : t("dropzone-upload-files")}
       </p>
-      <p className="w-full truncate text-wrap text-xs text-muted-foreground">
-        {t("dropzone-drag-drop-upload")}
+
+      <p className="w-full text-wrap text-xs font-medium capitalize text-muted-foreground">
+        -- {t("or")} --
       </p>
+
+      <Button
+        className={cn(buttonVariants({ variant: "default", size: "sm" }), "pointer-events-none")}
+        type="button"
+      >
+        {t("dropzone-upload-browse")}
+      </Button>
     </div>
   );
 };

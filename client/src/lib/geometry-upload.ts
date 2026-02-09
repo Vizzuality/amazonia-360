@@ -440,7 +440,6 @@ export async function convertFilesToGeometry(
 
   // Then convert GeoJSON to ArcGIS geometry
   const arcgisGeometry = geojsonToArcGISCustom(geojson);
-  console.log("convertFilesToGeometry", { arcgisGeometry });
 
   // Validate area size using geodesicArea
   if (
