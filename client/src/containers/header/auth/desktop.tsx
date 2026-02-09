@@ -1,5 +1,7 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
+
 import { signOut, useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { LuFilePlus2, LuFiles, LuLogOut, LuSettings2 } from "react-icons/lu";
@@ -14,11 +16,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown";
 
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 
 const AuthHeader = () => {
   const t = useTranslations();
   const { data: session } = useSession();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentUrl = `${pathname}${searchParams?.toString() ? `?${searchParams.toString()}` : ""}`;
+  const signInHref = `/auth/sign-in?redirectUrl=${encodeURIComponent(currentUrl)}`;
 
   if (session && session.user.collection === "users") {
     // Get user initials for fallback
@@ -112,7 +118,7 @@ const AuthHeader = () => {
   }
 
   return (
-    <Link href="/auth/sign-in">
+    <Link href={signInHref}>
       <Button variant="outline">{t("auth-sign-in")}</Button>
     </Link>
   );
