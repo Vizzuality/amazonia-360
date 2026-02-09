@@ -230,8 +230,13 @@ importers:
         specifier: 3.12.0
         version: 3.12.0
       axios:
+<<<<<<< HEAD
         specifier: 1.13.5
         version: 1.13.5
+=======
+        specifier: 1.13.4
+        version: 1.13.4
+>>>>>>> e7a3ea91 (Upload: styles)
       chroma-js:
         specifier: 2.6.0
         version: 2.6.0
@@ -7651,6 +7656,7 @@ packages:
       }
     engines: { node: ">=4" }
 
+<<<<<<< HEAD
   axios@1.13.5:
 <<<<<<< HEAD
     resolution:
@@ -7659,7 +7665,14 @@ packages:
       }
 =======
     resolution: {integrity: sha512-cz4ur7Vb0xS4/KUN0tPWe44eqxrIu31me+fbang3ijiNscE129POzipJJA6zniq2C/Z6sJCjMimjS8Lc/GAs8Q==}
+<<<<<<< HEAD
 >>>>>>> b23fa632 (build(deps): bump axios from 1.13.4 to 1.13.5 in /client (#315))
+=======
+=======
+  axios@1.13.4:
+    resolution: {integrity: sha512-1wVkUaAO6WyaYtCkcYCOx12ZgpGf9Zif+qXa4n+oYzK558YryKqiL6UWwd5DqiH3VRW0GYhTZQ/vlgJrCoNQlg==}
+>>>>>>> e7a3ea91 (Upload: styles)
+>>>>>>> 24836dff (Upload: styles)
 
   axobject-query@4.1.0:
     resolution:
@@ -22169,7 +22182,11 @@ snapshots:
 
   axe-core@4.11.0: {}
 
+<<<<<<< HEAD
   axios@1.13.5:
+=======
+  axios@1.13.4:
+>>>>>>> e7a3ea91 (Upload: styles)
     dependencies:
       follow-redirects: 1.15.11
       form-data: 4.0.5
