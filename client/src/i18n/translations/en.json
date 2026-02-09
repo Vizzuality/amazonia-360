@@ -448,8 +448,9 @@
   "make-a-copy": "Make a copy",
   "edit-location-confirm-dialog-title": "Continue with new area?",
   "edit-location-confirm-dialog-description": "You've changed your area of interest. Please note:\n\n- Any AI-generated texts you've already created may not fully reflect this new area. You can still edit them if needed.\n- Some indicators might not have data for this selection.",
-  "upload-geometry-dialog-title": "Upload Geometry",
-  "upload-geometry-dialog-description": "Upload one or multiple geometry files in one of the following formats:\n\n- **Shapefile**: 3 mandatory files (.shp, .shx, .dbf) and 2 optional files (.prj, .cpg)\n- **KML**: 1 .kml file\n- **KMZ**: 1 .kmz file\n- **GeoJSON**: 1 .geojson or .json file",
+  "upload-geometry-dialog-title": "Upload area file",
+  "upload-geometry-dialog-description": "Select one or multiple geometries files.",
+  "upload-geometry-supported-formats": "**Accepted file types:**\n\n- **Shapefile**: 3 mandatory files (.shp, .shx, .dbf) and 2 optional files (.prj, .cpg)\n- **KML**: 1 .kml file\n- **KMZ**: 1 .kmz file\n- **GeoJSON**: 1 .geojson or .json file",
   "upload-geometry-processing-files": "Processing files...",
   "upload-geometry-success": "Geometry uploaded successfully",
   "generic-error": "Something went wrong while uploading your geometry file. Please try again or upload a different file.",
@@ -458,9 +459,11 @@
   "unsupported-file": "This file type is not supported. Please upload a valid geometry file.",
   "area-too-big": "The uploaded geometry is too large. Please upload a smaller or more simplified geometry.",
   "outside-of-bounds": "The geometry is outside the supported geographic bounds. Please upload a file within the allowed area.",
-  "dropzone-upload-file": "Upload a file",
-  "dropzone-upload-files": "Upload files",
+  "dropzone-upload-file": "Drag & drop your file here",
+  "dropzone-upload-files": "Drag & drop your files here",
+  "dropzone-upload-browse": "Browse files",
   "dropzone-drag-drop-upload": "Drag and drop or click to upload",
   "dropzone-drag-drop-replace": "Drag and drop or click to replace",
-  "dropzone-and-more": "and {count} more"
+  "dropzone-and-more": "and {count} more",
+  "or": "or"
 }

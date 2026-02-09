@@ -448,8 +448,9 @@
   "make-a-copy": "Hacer una copia",
   "edit-location-confirm-dialog-title": "¿Continuar con la nueva área?",
   "edit-location-confirm-dialog-description": "Has cambiado tu área de interés. Ten en cuenta:\n\n- Los textos generados por IA que ya has creado pueden no reflejar completamente esta nueva área. Aún puedes editarlos si es necesario.\n- Es posible que algunos indicadores no tengan datos para esta selección.",
-  "upload-geometry-dialog-title": "Cargar geometría",
-  "upload-geometry-dialog-description": "Cargue uno o varios archivos de geometrías en uno de los siguientes formatos:\n\n- **Shapefile**: 3 archivos obligatorios (.shp, .shx, .dbf) y 2 archivos opcionales (.prj, .cpg)\n- **KML**: 1 archivo .kml\n- **KMZ**: 1 archivo .kmz\n- **GeoJSON**: 1 archivo .geojson o .json",
+  "upload-geometry-dialog-title": "Cargar archivo",
+  "upload-geometry-dialog-description": "Seleccione uno o varios archivos de geometría.",
+  "upload-geometry-supported-formats": "**Tipos de archivo aceptados:**\n\n- **Shapefile**: 3 archivos obligatorios (.shp, .shx, .dbf) y 2 archivos opcionales (.prj, .cpg)\n- **KML**: 1 archivo .kml\n- **KMZ**: 1 archivo .kmz\n- **GeoJSON**: 1 archivo .geojson o .json",
   "upload-geometry-processing-files": "Procesando archivos...",
   "upload-geometry-success": "Geometría cargada exitosamente",
   "generic-error": "Ha ocurrido un error al subir tu geometría. Por favor, inténtalo de nuevo o sube un archivo diferente.",
@@ -458,9 +459,11 @@
   "unsupported-file": "Este tipo de archivo no es compatible. Por favor, cargue un archivo de geometría válido.",
   "area-too-big": "La geometría cargada es demasiado grande. Por favor, cargue una geometría más pequeña o simplificada.",
   "outside-of-bounds": "La geometría está fuera de los límites geográficos soportados. Por favor, cargue un archivo dentro del área permitida.",
-  "dropzone-upload-file": "Cargar un archivo",
-  "dropzone-upload-files": "Cargar archivos",
+  "dropzone-upload-file": "Arrastra y suelta tu archivo aquí",
+  "dropzone-upload-files": "Arrastra y suelta tus archivos aquí",
+  "dropzone-upload-browse": "Buscar archivos",
   "dropzone-drag-drop-upload": "Arrastra y suelta o haz clic para cargar",
   "dropzone-drag-drop-replace": "Arrastra y suelta o haz clic para reemplazar",
-  "dropzone-and-more": "y {count} más"
+  "dropzone-and-more": "y {count} más",
+  "or": "o"
 }
