@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "exactextract>=0.2.0",
     "fastapi>=0.115.8",
+    "geojson-pydantic>=2.1.0",
     "h3>=4.2.1",
     "h3ronpy>=0.22.0",
     "openai>=1.63.2",
@@ -17,7 +18,6 @@ dependencies = [
     "pydantic-settings>=2.7.1",
     "shapely>=2.0.7",
     "sqlalchemy>=2.0.38",
-    "titiler-core>=0.21.1",
     "uvicorn>=0.34.0",
 ]
 
