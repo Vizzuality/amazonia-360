@@ -1,24 +1,37 @@
 "use client";
 
+import { useMemo, useState } from "react";
+
 import Markdown from "react-markdown";
 
-import { useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 
-import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 
-import { Button } from "@/components/ui/button";
-
-import { Link, usePathname } from "@/i18n/navigation";
+import { useReport } from "@/lib/report";
 
 export default function ReportResultsDisclaimer() {
+  const { id: reportId } = useParams();
+  const { data: reportData } = useReport({ id: `${reportId}` });
+  const [now] = useState(() => Date.now());
+
   const t = useTranslations();
-  const { data: session } = useSession();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const isAnonymous = !session?.user || session.user.collection === "anonymous-users";
-  const currentUrl = `${pathname}${searchParams?.toString() ? `?${searchParams.toString()}` : ""}`;
-  const signInHref = `/auth/sign-in?redirectUrl=${encodeURIComponent(currentUrl)}`;
+  const expirationDays = 30;
+  const isAnonymous = !reportData?.user || reportData.user.relationTo === "anonymous-users";
+  const createdAt = useMemo(() => {
+    if (!reportData?.user || reportData.user.relationTo !== "anonymous-users") return null;
+    const value = reportData.user.value;
+    if (!value || typeof value === "string") return null;
+    return value.createdAt ? new Date(value.createdAt) : null;
+  }, [reportData?.user]);
+
+  const daysLeft = useMemo(() => {
+    const msPerDay = 1000 * 60 * 60 * 24;
+
+    return createdAt
+      ? Math.max(expirationDays - Math.floor((now - createdAt.getTime()) / msPerDay), 0)
+      : expirationDays;
+  }, [now, createdAt, expirationDays]);
 
   if (!isAnonymous) return null;
 
@@ -26,15 +39,8 @@ export default function ReportResultsDisclaimer() {
     <div className="container">
       <div className="flex flex-col gap-4 rounded-md border border-border bg-orange-50 px-4 py-3">
         <Markdown className="text-normal mt-2 text-foreground 2xl:text-lg">
-          {t("report-results-anonymous-disclaimer")}
+          {t("report-results-anonymous-disclaimer", { days: daysLeft })}
         </Markdown>
-        <div className="flex shrink-0">
-          <Link href={signInHref}>
-            <Button variant="outline" size="responsive">
-              {t("auth-sign-in")}
-            </Button>
-          </Link>
-        </div>
       </div>
     </div>
   );

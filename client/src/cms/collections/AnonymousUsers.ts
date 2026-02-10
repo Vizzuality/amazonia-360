@@ -3,15 +3,15 @@ import type { CollectionConfig } from "payload";
 import { auth, signOut } from "@/lib/auth";
 
 import { adminAccess } from "@/cms/access/admin";
+import { anyoneAccess } from "@/cms/access/anyone";
 import { appAccess } from "@/cms/access/app";
 import { beforeDeleteAnonymousUser } from "@/cms/hooks/user";
 
 export const AnonymousUsers: CollectionConfig = {
   slug: "anonymous-users",
   auth: {
-    useAPIKey: true,
     disableLocalStrategy: true,
-    tokenExpiration: 60 * 60 * 24 * 180, // 180 days
+    tokenExpiration: 60 * 60 * 24 * 30, // 30 days
     strategies: [
       {
         name: "authjs",
@@ -35,7 +35,7 @@ export const AnonymousUsers: CollectionConfig = {
   },
   access: {
     create: appAccess,
-    read: adminAccess,
+    read: anyoneAccess,
     update: adminAccess,
     delete: adminAccess,
   },

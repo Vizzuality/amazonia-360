@@ -57,7 +57,11 @@ export const beforeChangeLinkUser: CollectionBeforeChangeHook = async ({
   }
 
   if (req.user?.id) {
-    data.user = { relationTo: req.user.collection, value: req.user.id };
+    data.user = {
+      relationTo: req.user.collection,
+      value: req.user.id,
+      createdAt: req.user.createdAt,
+    };
     return data;
   }
 

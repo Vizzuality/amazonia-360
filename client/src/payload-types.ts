@@ -336,9 +336,6 @@ export interface AnonymousUser {
   id: string;
   updatedAt: string;
   createdAt: string;
-  enableAPIKey?: boolean | null;
-  apiKey?: string | null;
-  apiKeyIndex?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -626,9 +623,6 @@ export interface UsersSelect<T extends boolean = true> {
 export interface AnonymousUsersSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
-  enableAPIKey?: T;
-  apiKey?: T;
-  apiKeyIndex?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
