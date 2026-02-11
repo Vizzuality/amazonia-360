@@ -9,7 +9,7 @@ export const cleanAnonymousUsers: TaskHandler<"CleanAnonymousUsers"> = async ({ 
       collection: "anonymous-users",
       where: {
         createdAt: {
-          less_than: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30).toISOString(), // 30 days
+          less_than: new Date(Date.now() - 1000 * 60 * 60 * 24 * 60).toISOString(), // 60 days
         },
       },
       limit: 1000,

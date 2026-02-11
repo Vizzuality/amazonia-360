@@ -21,6 +21,7 @@ import { Media } from "@/cms/collections/Media";
 import { Reports } from "@/cms/collections/Reports";
 import { Users } from "@/cms/collections/Users";
 import { CleanAnonymousUsers } from "@/cms/cron/clean-anonymous-users";
+import { CleanDraftReports } from "@/cms/cron/clean-draft-reports";
 import { routing } from "@/i18n/routing";
 
 import { getDatabaseUrlFromUrlAndPassword } from "./utils/database-url";
@@ -86,6 +87,6 @@ export default buildConfig({
         queue: "nightly",
       },
     ],
-    tasks: [CleanAnonymousUsers],
+    tasks: [CleanAnonymousUsers, CleanDraftReports],
   },
 });

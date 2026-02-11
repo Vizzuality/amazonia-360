@@ -124,6 +124,7 @@ export interface Config {
   jobs: {
     tasks: {
       CleanAnonymousUsers: TaskCleanAnonymousUsers;
+      CleanDraftReports: TaskCleanDraftReports;
       inline: {
         input: unknown;
         output: unknown;
@@ -425,7 +426,7 @@ export interface PayloadJob {
     | {
         executedAt: string;
         completedAt: string;
-        taskSlug: 'inline' | 'CleanAnonymousUsers';
+        taskSlug: 'inline' | 'CleanAnonymousUsers' | 'CleanDraftReports';
         taskID: string;
         input?:
           | {
@@ -458,7 +459,7 @@ export interface PayloadJob {
         id?: string | null;
       }[]
     | null;
-  taskSlug?: ('inline' | 'CleanAnonymousUsers') | null;
+  taskSlug?: ('inline' | 'CleanAnonymousUsers' | 'CleanDraftReports') | null;
   queue?: string | null;
   waitUntil?: string | null;
   processing?: boolean | null;
@@ -794,6 +795,14 @@ export interface PayloadJobsStatsSelect<T extends boolean = true> {
  * via the `definition` "TaskCleanAnonymousUsers".
  */
 export interface TaskCleanAnonymousUsers {
+  input?: unknown;
+  output?: unknown;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskCleanDraftReports".
+ */
+export interface TaskCleanDraftReports {
   input?: unknown;
   output?: unknown;
 }

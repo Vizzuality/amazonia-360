@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import Markdown from "react-markdown";
 
@@ -10,30 +10,21 @@ import { useTranslations } from "next-intl";
 
 import { useReport } from "@/lib/report";
 
+const EXPIRATION_DAYS = 30;
+
 export default function ReportResultsDisclaimer() {
   const { id: reportId } = useParams();
   const { data: reportData } = useReport({ id: `${reportId}` });
   const [now] = useState(() => Date.now());
 
   const t = useTranslations();
-  const expirationDays = 30;
-  const isAnonymous = !reportData?.user || reportData.user.relationTo === "anonymous-users";
-  const createdAt = useMemo(() => {
-    if (!reportData?.user || reportData.user.relationTo !== "anonymous-users") return null;
-    const value = reportData.user.value;
-    if (!value || typeof value === "string") return null;
-    return value.createdAt ? new Date(value.createdAt) : null;
-  }, [reportData?.user]);
+  const isDraft = reportData?._status === "draft";
 
-  const daysLeft = useMemo(() => {
-    const msPerDay = 1000 * 60 * 60 * 24;
+  const msPerDay = 1000 * 60 * 60 * 24;
+  const updatedAt = reportData?.updatedAt ? new Date(reportData.updatedAt).getTime() : now;
+  const daysLeft = Math.max(EXPIRATION_DAYS - Math.floor((now - updatedAt) / msPerDay), 0);
 
-    return createdAt
-      ? Math.max(expirationDays - Math.floor((now - createdAt.getTime()) / msPerDay), 0)
-      : expirationDays;
-  }, [now, createdAt, expirationDays]);
-
-  if (!isAnonymous) return null;
+  if (!isDraft) return null;
 
   return (
     <div className="container">

@@ -3,7 +3,6 @@ import type { CollectionConfig } from "payload";
 import { auth, signOut } from "@/lib/auth";
 
 import { adminAccess } from "@/cms/access/admin";
-import { anyoneAccess } from "@/cms/access/anyone";
 import { appAccess } from "@/cms/access/app";
 import { beforeDeleteAnonymousUser } from "@/cms/hooks/user";
 
@@ -35,7 +34,7 @@ export const AnonymousUsers: CollectionConfig = {
   },
   access: {
     create: appAccess,
-    read: anyoneAccess,
+    read: appAccess,
     update: adminAccess,
     delete: adminAccess,
   },
