@@ -22,7 +22,8 @@ export default function ReportResultsDisclaimer() {
 
   const msPerDay = 1000 * 60 * 60 * 24;
   const updatedAt = reportData?.updatedAt ? new Date(reportData.updatedAt).getTime() : now;
-  const daysLeft = Math.max(EXPIRATION_DAYS - Math.floor((now - updatedAt) / msPerDay), 0);
+  const elapsedDays = Math.max(0, Math.floor((now - updatedAt) / msPerDay));
+  const daysLeft = EXPIRATION_DAYS - elapsedDays;
 
   if (!isDraft) return null;
 
