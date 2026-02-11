@@ -2,7 +2,7 @@
   "name": "amazonia-360",
   "version": "0.2.0",
   "description": "Amazonia 360 platform",
-  "packageManager": "pnpm@10.18.2",
+  "packageManager": "pnpm@10.29.2",
   "scripts": {
     "clean": "rimraf dist coverage .next && pnpm -r clean",
     "lint": "pnpm -r lint",

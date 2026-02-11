@@ -31,7 +31,7 @@ export default function SaveReport() {
 
   const duplicateCallback = useCallback(
     (newReportId: string) => {
-      router.push(`/reports/${newReportId}`);
+      router.replace(`/reports/${newReportId}`);
     },
     [router],
   );

@@ -12,14 +12,12 @@ import { sdk } from "@/services/sdk";
 declare module "next-auth" {
   interface User {
     collection?: string;
-    apiKey?: string | null;
   }
 
   interface Session {
     user: {
       id: string;
       collection?: string;
-      apiKey?: string | null;
       name?: string | null;
       email?: string | null;
       image?: string | null;
@@ -84,10 +82,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           .create(
             {
               collection: "anonymous-users",
-              data: {
-                apiKey: crypto.randomUUID(),
-                enableAPIKey: true,
-              },
+              data: {},
             },
             {
               headers: {
@@ -98,7 +93,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           .then((res) => ({
             ...res,
             id: String(res.id),
-            apiKey: res.apiKey,
             collection: "anonymous-users",
           }));
       },
