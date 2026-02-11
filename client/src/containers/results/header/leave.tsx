@@ -36,7 +36,7 @@ export const LeaveReport = () => {
   const CAN_EDIT = useCanEditReport(`${id}`);
 
   const navGuard = useNavigationGuard({
-    enabled: CHANGED,
+    enabled: ({ type }) => type !== "replace" && CHANGED,
   });
 
   const callback = useCallback(() => {
