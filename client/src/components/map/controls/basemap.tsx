@@ -87,13 +87,15 @@ export const BasemapControl: FC<BasemapControlProps> = ({
                     onClick={() => handleBasemap(b.id)}
                   >
                     <div className="w-16 shrink-0 shadow-sm">
-                      <Image
-                        src={b.basemap.thumbnailUrl}
-                        alt={t(`${b.label}`)}
-                        width={200}
-                        height={133}
-                        className="transition-transform duration-200 ease-in-out group-hover:scale-105"
-                      />
+                      {b.basemap?.thumbnailUrl && (
+                        <Image
+                          src={b.basemap?.thumbnailUrl}
+                          alt={t(`${b.label}`)}
+                          width={200}
+                          height={133}
+                          className="transition-transform duration-200 ease-in-out group-hover:scale-105"
+                        />
+                      )}
                     </div>
                     <span
                       className={cn({

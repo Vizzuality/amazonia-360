@@ -2,8 +2,9 @@
 
 import { useMemo } from "react";
 
+import * as projectOperator from "@arcgis/core/geometry/operators/projectOperator";
 import Point from "@arcgis/core/geometry/Point";
-import { project } from "@arcgis/core/geometry/projection";
+import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { cellToLatLng } from "h3-js";
 import { useSetAtom } from "jotai";
@@ -37,6 +38,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import { HexagonIcon } from "@/components/ui/icons/hexagon";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
+if (!projectOperator.isLoaded()) {
+  await projectOperator.load();
+}
 
 export const GridTableItem = (
   props: Record<string, string | number> & { id: number; cell: string },
@@ -89,13 +94,14 @@ export const GridTableItem = (
     const latLng = cellToLatLng(cell);
 
     const p = new Point({ x: latLng[1], y: latLng[0], spatialReference: { wkid: 4326 } });
-    const projectedGeom = project(p, { wkid: 102100 });
+    const projectedGeom = projectOperator.execute(p, new SpatialReference({ wkid: 102100 }));
+
     const g = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
 
     setLocation({ type: "point", geometry: g.toJSON(), buffer: BUFFERS.point });
 
     const gWithBuffer = getGeometryWithBuffer(g, BUFFERS.point);
-    if (gWithBuffer) {
+    if (gWithBuffer && gWithBuffer.extent) {
       setTmpBbox(gWithBuffer.extent);
     }
   };

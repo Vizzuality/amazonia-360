@@ -147,16 +147,22 @@ jest.mock("@arcgis/core/rest/support/Query", () => {
   };
 });
 
-jest.mock("@arcgis/core/geometry/geometryEngine", () => ({
-  geodesicBuffer: jest.fn(),
-  geodesicArea: jest.fn(),
-  intersect: jest.fn(),
-  union: jest.fn(),
+jest.mock("@arcgis/core/geometry/operators/geodeticAreaOperator", () => ({
+  execute: jest.fn(),
+  load: jest.fn(),
+  isLoaded: jest.fn(),
 }));
 
-jest.mock("@arcgis/core/geometry/geometryEngineAsync", () => ({
-  intersect: jest.fn(),
-  union: jest.fn(),
+jest.mock("@arcgis/core/geometry/operators/intersectionOperator", () => ({
+  execute: jest.fn(),
+  load: jest.fn(),
+  isLoaded: jest.fn(),
+}));
+
+jest.mock("@arcgis/core/geometry/operators/intersectsOperator", () => ({
+  execute: jest.fn(),
+  load: jest.fn(),
+  isLoaded: jest.fn(),
 }));
 
 jest.mock("@arcgis/core/geometry/projection", () => ({

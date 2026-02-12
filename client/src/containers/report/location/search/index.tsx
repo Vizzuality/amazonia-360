@@ -77,7 +77,7 @@ export default function SearchC() {
 
               const g = getGeometryWithBuffer(geo, BUFFERS[data.type]);
 
-              if (g) {
+              if (g && g.extent) {
                 setTmpBbox(g.extent);
               }
             }
@@ -99,7 +99,7 @@ export default function SearchC() {
           options={
             (q.data?.results
               .map((r) =>
-                r.results.map((r1) => ({
+                r.results?.map((r1) => ({
                   label: r1.text,
                   value: r1.key,
                   key: r1.key,
