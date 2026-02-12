@@ -29,8 +29,8 @@ export default function ReportResultsDisclaimer() {
 
   return (
     <div className="container">
-      <div className="flex flex-col gap-4 rounded-md border border-border bg-orange-50 px-4 py-3">
-        <Markdown className="text-normal mt-2 text-foreground 2xl:text-lg">
+      <div className="flex flex-col gap-4">
+        <Markdown className="mt-2 text-sm text-foreground 2xl:text-base">
           {t("report-results-anonymous-disclaimer", { days: daysLeft })}
         </Markdown>
       </div>
