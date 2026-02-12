@@ -58,21 +58,15 @@ export default function createDeckLayerView2D(BaseLayerViewGL2D: any) {
       // The view state must be kept in-sync with the MapView of the ArcGIS API.
       const state = renderParameters.state;
 
-      render(
-        this.resources,
-        {
-          width,
-          height,
-          latitude: this.view.center.latitude,
-          longitude: this.view.center.longitude,
-          zoom: this.view.featuresTilingScheme.scaleToLevel(state.scale),
-          bearing: -state.rotation,
-          pitch: 0,
-        },
-        this.getRenderTarget(),
-      );
-
-      this.bindRenderTarget();
+      render(this.resources, {
+        width,
+        height,
+        latitude: this.view.center.latitude,
+        longitude: this.view.center.longitude,
+        zoom: this.view.featuresTilingScheme.scaleToLevel(state.scale),
+        bearing: -state.rotation,
+        pitch: 0,
+      });
     },
   });
 }
