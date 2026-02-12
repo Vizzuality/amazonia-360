@@ -34,7 +34,7 @@ export const AnonymousUsers: CollectionConfig = {
   },
   access: {
     create: appAccess,
-    read: appAccess,
+    read: adminAccess,
     update: adminAccess,
     delete: adminAccess,
   },
