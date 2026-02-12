@@ -230,13 +230,8 @@ importers:
         specifier: 3.12.0
         version: 3.12.0
       axios:
-<<<<<<< HEAD
         specifier: 1.13.5
         version: 1.13.5
-=======
-        specifier: 1.13.4
-        version: 1.13.4
->>>>>>> e7a3ea91 (Upload: styles)
       chroma-js:
         specifier: 2.6.0
         version: 2.6.0
@@ -827,6 +822,7 @@ packages:
     engines: { node: ">=6.9.0" }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   "@babel/code-frame@7.29.0":
     resolution:
       {
@@ -838,6 +834,8 @@ packages:
     resolution: {integrity: sha512-9NhCeYjq9+3uxgdtp20LSiJXJvN0FeCtNGpJxuMFZ1Kv3cWUNb6DOhJwUvcVCzKGR66cw4njwM6hrJLqgOwbcw==}
     engines: {node: '>=6.9.0'}
 
+=======
+>>>>>>> b7cf207c (Axios fix)
   '@babel/compat-data@7.28.5':
     resolution: {integrity: sha512-6uFXyCayocRbqhZOB+6XcuZbkMNimwfVGFji8CTZnCzOHVGvDqzvitu1re2AU5LROliz7eQPhB8CpAMvnx9EjA==}
     engines: {node: '>=6.9.0'}
@@ -1087,6 +1085,7 @@ packages:
     engines: { node: ">=6.9.0" }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   "@babel/runtime@7.28.6":
     resolution:
       {
@@ -1098,6 +1097,8 @@ packages:
     resolution: {integrity: sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==}
     engines: {node: '>=6.9.0'}
 
+=======
+>>>>>>> b7cf207c (Axios fix)
   '@babel/template@7.27.2':
     resolution: {integrity: sha512-LPDZ85aEJyYSd18/DkjNh4/y1ntkE5KwUHWTiqgRxruuZL2F1yuHligVHLvcHY2vMHXttKFpJn6LwfI7cw7ODw==}
     engines: {node: '>=6.9.0'}
@@ -7656,7 +7657,6 @@ packages:
       }
     engines: { node: ">=4" }
 
-<<<<<<< HEAD
   axios@1.13.5:
 <<<<<<< HEAD
     resolution:
@@ -7666,6 +7666,7 @@ packages:
 =======
     resolution: {integrity: sha512-cz4ur7Vb0xS4/KUN0tPWe44eqxrIu31me+fbang3ijiNscE129POzipJJA6zniq2C/Z6sJCjMimjS8Lc/GAs8Q==}
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> b23fa632 (build(deps): bump axios from 1.13.4 to 1.13.5 in /client (#315))
 =======
 =======
@@ -7673,6 +7674,8 @@ packages:
     resolution: {integrity: sha512-1wVkUaAO6WyaYtCkcYCOx12ZgpGf9Zif+qXa4n+oYzK558YryKqiL6UWwd5DqiH3VRW0GYhTZQ/vlgJrCoNQlg==}
 >>>>>>> e7a3ea91 (Upload: styles)
 >>>>>>> 24836dff (Upload: styles)
+=======
+>>>>>>> b7cf207c (Axios fix)
 
   axobject-query@4.1.0:
     resolution:
@@ -10186,8 +10189,12 @@ packages:
       }
 =======
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
+<<<<<<< HEAD
 >>>>>>> b23fa632 (build(deps): bump axios from 1.13.4 to 1.13.5 in /client (#315))
     deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+=======
+    deprecated: Glob versions prior to v9 are no longer supported
+>>>>>>> b7cf207c (Axios fix)
 
   globals@14.0.0:
     resolution:
@@ -11559,6 +11566,7 @@ packages:
         integrity: sha512-3VuV8xXhh5xJA6tzvfDvE0YBCMkIZUmxtRilJQDDdCgJCc+eut6qAv2qbN+pbqvarqcQqPN1UF+8YvsjmyOZpw==,
       }
 
+<<<<<<< HEAD
   lib0@0.2.117:
 <<<<<<< HEAD
     resolution:
@@ -11568,6 +11576,10 @@ packages:
     engines: { node: ">=16" }
 =======
     resolution: {integrity: sha512-DeXj9X5xDCjgKLU/7RR+/HQEVzuuEUiwldwOGsHK/sfAfELGWEyTcf0x+uOvCvK3O2zPmZePXWL85vtia6GyZw==}
+=======
+  lib0@0.2.115:
+    resolution: {integrity: sha512-noaW4yNp6hCjOgDnWWxW0vGXE3kZQI5Kqiwz+jIWXavI9J9WyfJ9zjsbQlQlgjIbHBrvlA/x3TSIXBUJj+0L6g==}
+>>>>>>> b7cf207c (Axios fix)
     engines: {node: '>=16'}
 >>>>>>> b23fa632 (build(deps): bump axios from 1.13.4 to 1.13.5 in /client (#315))
     hasBin: true
@@ -15442,8 +15454,11 @@ packages:
 =======
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
+<<<<<<< HEAD
 >>>>>>> b23fa632 (build(deps): bump axios from 1.13.4 to 1.13.5 in /client (#315))
     deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+=======
+>>>>>>> b7cf207c (Axios fix)
 
   whatwg-mimetype@4.0.0:
     resolution:
@@ -16313,6 +16328,7 @@ snapshots:
       picocolors: 1.1.1
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   "@babel/code-frame@7.29.0":
 =======
   '@babel/code-frame@7.29.0':
@@ -16321,6 +16337,8 @@ snapshots:
       js-tokens: 4.0.0
       picocolors: 1.1.1
 
+=======
+>>>>>>> b7cf207c (Axios fix)
   '@babel/compat-data@7.28.5': {}
 
   '@babel/core@7.28.5':
@@ -16491,12 +16509,15 @@ snapshots:
   "@babel/runtime@7.28.4": {}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   "@babel/runtime@7.28.6": {}
 
   "@babel/template@7.27.2":
 =======
   '@babel/runtime@7.28.6': {}
 
+=======
+>>>>>>> b7cf207c (Axios fix)
   '@babel/template@7.27.2':
 >>>>>>> b23fa632 (build(deps): bump axios from 1.13.4 to 1.13.5 in /client (#315))
     dependencies:
@@ -20004,12 +20025,17 @@ snapshots:
   "@testing-library/dom@10.4.1":
     dependencies:
 <<<<<<< HEAD
+<<<<<<< HEAD
       "@babel/code-frame": 7.29.0
       "@babel/runtime": 7.28.6
       "@types/aria-query": 5.0.4
 =======
       '@babel/code-frame': 7.29.0
       '@babel/runtime': 7.28.6
+=======
+      '@babel/code-frame': 7.27.1
+      '@babel/runtime': 7.28.4
+>>>>>>> b7cf207c (Axios fix)
       '@types/aria-query': 5.0.4
 >>>>>>> b23fa632 (build(deps): bump axios from 1.13.4 to 1.13.5 in /client (#315))
       aria-query: 5.3.0
@@ -22182,11 +22208,7 @@ snapshots:
 
   axe-core@4.11.0: {}
 
-<<<<<<< HEAD
   axios@1.13.5:
-=======
-  axios@1.13.4:
->>>>>>> e7a3ea91 (Upload: styles)
     dependencies:
       follow-redirects: 1.15.11
       form-data: 4.0.5
@@ -24831,7 +24853,7 @@ snapshots:
 
   lexical@0.35.0: {}
 
-  lib0@0.2.117:
+  lib0@0.2.115:
     dependencies:
       isomorphic.js: 0.2.5
 
@@ -27590,7 +27612,7 @@ snapshots:
 
   yjs@13.6.27:
     dependencies:
-      lib0: 0.2.117
+      lib0: 0.2.115
 
   yn@3.1.1: {}
 
