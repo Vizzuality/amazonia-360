@@ -3,6 +3,7 @@
 // Copyright (c) vis.gl contributors
 
 import { Deck } from "@deck.gl/core";
+import { GL } from "@luma.gl/constants";
 import type { Device, Texture, Framebuffer } from "@luma.gl/core";
 import { Model, Geometry } from "@luma.gl/engine";
 import { WebGLDevice } from "@luma.gl/webgl";
@@ -91,10 +92,8 @@ export async function initializeResources(
       deckglTexture: texture,
     },
     parameters: {
-      // For the fullscreen blit we must not reject the quad due to the map's depth buffer.
-      // Make the blit always pass and don't write depth.
-      depthWriteEnabled: false,
       blend: true,
+      depthWriteEnabled: true,
       depthCompare: "less-equal",
       blendColorSrcFactor: "one",
       blendColorDstFactor: "one-minus-src-alpha",
@@ -150,78 +149,36 @@ export function render(
     pitch: number;
     bearing: number;
   },
-  target: {
-    framebuffer: WebGLFramebuffer | null;
-  },
 ) {
-  const { model, deck } = resources;
-  const device = model.device;
-
+  const { deck } = resources;
+  // @ts-expect-error accessing protected property
+  const device: Device = deck.device;
   if (device instanceof WebGLDevice) {
-    const screenFbo = device.getDefaultCanvasContext().getCurrentFramebuffer();
+    const viewState = viewport;
 
-    const { width, height, ...viewState } = viewport;
+    // Get ArcGIS's currently bound framebuffer
+    const _framebuffer = device.getParametersWebGL(GL.FRAMEBUFFER_BINDING);
 
-    /* global window */
-    const dpr = window.devicePixelRatio;
-    const pixelWidth = Math.round(width * dpr);
-    const pixelHeight = Math.round(height * dpr);
-
-    // // Create a new texture with correct dimensions
-    const newTexture = device.createTexture({
-      format: "rgba8unorm",
-      width: pixelWidth,
-      height: pixelHeight,
-      sampler: {
-        minFilter: "linear",
-        magFilter: "linear",
-        addressModeU: "clamp-to-edge",
-        addressModeV: "clamp-to-edge",
-      },
+    // Render deck.gl layers directly to ArcGIS's framebuffer
+    deck.setProps({
+      viewState,
+      _framebuffer,
     });
 
-    // Create a new framebuffer with the correctly sized texture
-    const resizedFbo = device.createFramebuffer({
-      id: "deckfbo-resized",
-      width: pixelWidth,
-      height: pixelHeight,
-      colorAttachments: [newTexture],
-    });
-
-    // fbo.resize({ width: pixelWidth, height: pixelHeight });
-
-    deck.setProps({ viewState, _framebuffer: resizedFbo });
-    // redraw deck immediately into deckFbo
-    deck.redraw("arcgis");
-
-    // Update the model's texture binding to use the new texture
-    model.setBindings({
-      deckglTexture: newTexture,
-    });
-
-    const targetFramebuffer = device.createFramebuffer({
-      id: "target-framebuffer",
-      width: screenFbo.width,
-      height: screenFbo.height,
-      colorAttachments: [null] as unknown as Texture[],
-      depthStencilAttachment: screenFbo.depthStencilAttachment,
-      handle: target.framebuffer,
-    });
-
-    const textureToScreenPass = device.beginRenderPass({
-      framebuffer: targetFramebuffer,
-      parameters: {
-        viewport: [0, 0, pixelWidth, pixelHeight],
-      },
+    // Clear only the depth buffer to ensure deck.gl layers render on top of the base map
+    // This prevents z-fighting and ensures deck.gl content is always visible
+    const clearPass = device.beginRenderPass({
+      framebuffer: _framebuffer,
       clearColor: false,
-      clearDepth: false,
+      clearDepth: 1,
       clearStencil: false,
     });
-    try {
-      model.draw(textureToScreenPass);
-    } finally {
-      textureToScreenPass.end();
-    }
+    clearPass.end();
+
+    // Render deck.gl layers without clearing color (preserves base map)
+    deck._drawLayers("arcgis", {
+      clearCanvas: false,
+    });
   }
 }
 
