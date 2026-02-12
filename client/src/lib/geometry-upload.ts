@@ -60,7 +60,9 @@ export enum UploadErrorType {
  * Based on terraformer-arcgis-parser conversion logic
  * Automatically reprojects from WGS84 (4326) to Web Mercator (102100)
  */
-export function geojsonToArcGISCustom(geojson: Feature<ValidGeometryType>): __esri.GeometryUnion {
+export function geojsonToArcGISCustom(
+  geojson: Feature<ValidGeometryType>,
+): __esri.GeometryUnion | nullish {
   const geometry = geojson.geometry;
 
   if (!geometry) {
@@ -102,12 +104,8 @@ export function geojsonToArcGISCustom(geojson: Feature<ValidGeometryType>): __es
     arcgisGeometryInstance,
     new SpatialReference({ wkid: 102100 }),
   );
-  const projectedGeometry = Array.isArray(projected) ? projected[0] : projected;
 
-  return {
-    type: projectedGeometry.type,
-    ...projectedGeometry.toJSON(),
-  };
+  return projected;
 }
 
 export const supportedFileformats = [
@@ -454,11 +452,14 @@ export async function convertFilesToGeometry(
   // Then convert GeoJSON to ArcGIS geometry
   const arcgisGeometry = geojsonToArcGISCustom(geojson);
 
+  if (!arcgisGeometry) {
+    return Promise.reject(UploadErrorType.UnsupportedFile);
+  }
   // Validate area size using geodesicArea
   if (
     options?.maxAreaSize !== undefined &&
     arcgisGeometry.type === "polygon" &&
-    !validateGeometrySize(arcgisGeometry as __esri.Polygon, options.maxAreaSize)
+    !validateGeometrySize(arcgisGeometry, options.maxAreaSize)
   ) {
     return Promise.reject(UploadErrorType.AreaTooBig);
   }
@@ -468,5 +469,8 @@ export async function convertFilesToGeometry(
     return Promise.reject(UploadErrorType.OutsideOfBounds);
   }
 
-  return arcgisGeometry;
+  return {
+    type: arcgisGeometry.type,
+    ...arcgisGeometry.toJSON(),
+  };
 }

@@ -84,6 +84,7 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
             onOpenChange(false);
             resolve();
           } catch (err) {
+            console.error("Error processing uploaded geometry:", err);
             // Handle different error types
             let errorMessage = t("generic-error");
 
