@@ -50,13 +50,14 @@
     "@types/lodash": "4.17.18",
     "@types/supertest": "6.0.3",
     "env-cmd": "^11.0.0",
-    "supertest": "7.1.0",
+    "supertest": "7.2.2",
     "testcontainers": "11.11.0",
     "vitest": "^3.2.4"
   },
   "pnpm": {
     "overrides": {
-      "archiver-utils>glob": ">=11.1.0"
+      "archiver-utils>glob": ">=11.1.0",
+      "qs@<6.14.1": ">=6.14.1"
     }
   },
   "packageManager": "pnpm@10.14.0"
