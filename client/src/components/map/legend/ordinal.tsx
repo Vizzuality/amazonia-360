@@ -35,12 +35,12 @@ export default function LegendOrdinal<T extends LegendOrdinalT>({
           {labels.map((label) => (
             <div key={`legend-quantile-${label.datum.id}`} className="flex">
               <div
-                className="mr-1 mt-0.5 h-2 w-2 shrink-0 rounded-[2px] shadow-[0_0_1px_0px_rgba(0,0,0,0.25)]"
+                className="mt-0.5 mr-1 h-2 w-2 shrink-0 rounded-[2px] shadow-[0_0_1px_0px_rgba(0,0,0,0.25)]"
                 style={{
                   backgroundColor: label.value,
                 }}
               />
-              <span className="text-2xs font-semibold text-foreground">
+              <span className="text-2xs text-foreground font-semibold">
                 {label.datum.label}{" "}
                 {!!label.datum.size && (
                   <span>

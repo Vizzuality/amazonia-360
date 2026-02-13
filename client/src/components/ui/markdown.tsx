@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 export const Markdown = ({ children, className }: { children?: string; className?: string }) => {
   return (
     <ReactMarkdown
-      className={cn("prose prose-sm font-medium prose-a:break-words", className)}
+      className={cn("prose prose-sm prose-a:break-words font-medium", className)}
       rehypePlugins={[rehypeRaw]}
       components={{
         a: (props) => (

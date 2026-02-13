@@ -71,7 +71,7 @@ export default function DocumentCoverPdfSection() {
       </div>
 
       <Image
-        className="absolute left-0 top-0 z-0 h-full w-full object-cover"
+        className="absolute top-0 left-0 z-0 h-full w-full object-cover"
         src="/images/report/world-globe.webp"
         alt=""
         role="presentation"

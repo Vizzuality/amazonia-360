@@ -78,11 +78,11 @@ export const GridLegend: FC = () => {
   );
 
   return (
-    <div className="border-muted-background absolute bottom-16 right-4 flex w-72 flex-col space-y-1 rounded-lg border bg-white shadow-md">
+    <div className="border-muted-background absolute right-4 bottom-16 flex w-72 flex-col space-y-1 rounded-lg border bg-white shadow-md">
       <div className="flex items-center justify-between gap-1 px-4 pt-4">
         <div
           className={cn({
-            "text-xs text-foreground": true,
+            "text-foreground text-xs": true,
             "opacity-50": !gridDatasets.length || gridSelectedDataset === "no-layer",
           })}
         >
@@ -103,7 +103,7 @@ export const GridLegend: FC = () => {
           <Select value={gridSelectedDataset || gridDatasets[0]} onValueChange={onChangeDataset}>
             <Tooltip>
               <SelectTrigger
-                className="flex h-6 w-6 items-center justify-center rounded-sm border-none p-0 shadow-none hover:bg-blue-100 focus:border-none focus:ring-0 focus:ring-transparent"
+                className="flex h-6 w-6 items-center justify-center rounded-xs border-none p-0 shadow-none hover:bg-blue-100 focus:border-none focus:ring-0 focus:ring-transparent"
                 hasArrow={false}
               >
                 <TooltipTrigger asChild>
@@ -140,10 +140,10 @@ export const GridLegend: FC = () => {
         <div className="flex flex-col space-y-1 px-4 pb-4">
           {GRID_SELECTED_DATASET?.legend?.legend_type === "continuous" && (
             <>
-              <div className="h-2 w-full rounded-full bg-viridis" />
+              <div className="bg-viridis h-2 w-full rounded-full" />
 
               {"stats" in GRID_SELECTED_DATASET.legend && (
-                <div className="flex w-full justify-between text-[10px] font-medium text-muted-foreground">
+                <div className="text-muted-foreground flex w-full justify-between text-[10px] font-medium">
                   <span>{formatNumber(GRID_SELECTED_DATASET.legend.stats[0].min ?? 0)}</span>
                   <span>{formatNumber(GRID_SELECTED_DATASET.legend.stats[0].max ?? 1)}</span>
                 </div>

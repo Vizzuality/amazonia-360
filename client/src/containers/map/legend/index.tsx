@@ -18,9 +18,9 @@ const LegendContainer = () => {
   if (!INDICATORS) return null;
 
   return (
-    <div className="absolute bottom-16 right-4 z-10 w-72">
+    <div className="absolute right-4 bottom-16 z-10 w-72">
       <Legend defaultOpen>
-        <div className="divide-y divide-muted">
+        <div className="divide-muted divide-y">
           {INDICATORS?.map((indicator) => (
             <LegendItem key={indicator} id={indicator} />
           ))}

@@ -40,7 +40,7 @@ export default function TopicsItem({ id, name, image, description }: Topic) {
         <div
           className={cn(
             "pointer-events-none absolute bottom-0 left-0 z-10 w-full p-4 text-white",
-            "after:absolute after:left-0 after:top-0 after:h-full after:w-full after:bg-gradient-to-b after:from-gray-900/0 after:via-gray-900/50 after:to-gray-900/50",
+            "after:absolute after:top-0 after:left-0 after:h-full after:w-full after:bg-gradient-to-b after:from-gray-900/0 after:via-gray-900/50 after:to-gray-900/50",
           )}
         >
           <div className="relative z-10">

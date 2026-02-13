@@ -33,7 +33,7 @@ export default function MobileNavigation() {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="fixed right-5 top-1/2 z-[110] flex h-6 w-6 -translate-y-1/2 transform cursor-pointer flex-col flex-wrap justify-around"
+          className="fixed top-1/2 right-5 z-[110] flex h-6 w-6 -translate-y-1/2 transform cursor-pointer flex-col flex-wrap justify-around"
         >
           <div
             className={`block h-0.5 w-6 origin-[1px] rounded-full bg-blue-600 transition-all ${
@@ -55,7 +55,7 @@ export default function MobileNavigation() {
 
       <DialogDescription className="sr-only">AmazoniaForever360+ menu</DialogDescription>
 
-      <DialogContent className="fixed left-0 top-0 z-[100] h-full w-screen max-w-none !translate-x-0 !translate-y-0 border-none px-0 py-0 text-blue-600">
+      <DialogContent className="fixed top-0 left-0 z-[100] h-full w-screen max-w-none !translate-x-0 !translate-y-0 border-none px-0 py-0 text-blue-600">
         <div>
           <DialogHeader className="flex h-16 w-full flex-col items-center bg-white text-center backdrop-blur sm:text-left">
             <div className="flex h-full w-full flex-col justify-center bg-white backdrop-blur">

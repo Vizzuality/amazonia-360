@@ -14,7 +14,7 @@ export default function ReportResultsHeaderDesktop() {
     <header
       className={cn({
         "relative mb-6 bg-blue-50 pt-6 print:hidden": true,
-        "after:absolute after:inset-0 after:left-0 after:top-full after:-z-10 after:h-6 after:w-full after:bg-gradient-to-b after:from-blue-50 after:to-blue-50/0": true,
+        "after:absolute after:inset-0 after:top-full after:left-0 after:-z-10 after:h-6 after:w-full after:bg-gradient-to-b after:from-blue-50 after:to-blue-50/0": true,
       })}
     >
       <div className="container">

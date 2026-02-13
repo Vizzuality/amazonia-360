@@ -155,7 +155,7 @@ export function CardPopover({
             <button
               aria-label={t("indicator-menu")}
               type="button"
-              className="h-8 w-8 rounded-sm hover:bg-blue-100"
+              className="h-8 w-8 rounded-xs hover:bg-blue-100"
             >
               <span className="h-4 w-4">⋮</span>
             </button>
@@ -164,15 +164,15 @@ export function CardPopover({
 
         <DropdownMenuPortal>
           <DropdownMenuContent side="left" align="start" sideOffset={6}>
-            <DropdownMenuGroup className="px-2 py-1.5 text-sm text-popover-foreground">
+            <DropdownMenuGroup className="text-popover-foreground px-2 py-1.5 text-sm">
               <DropdownMenuItem onSelect={onClick} className="space-x-2">
                 <LuPen className="inline-block h-4 w-4" />
                 <span>{t("edit-indicator")}</span>
               </DropdownMenuItem>
             </DropdownMenuGroup>
 
-            <DropdownMenuSeparator className="-mx-1 my-1 h-px bg-border" />
-            <DropdownMenuGroup className="px-2 py-1.5 text-sm text-popover-foreground">
+            <DropdownMenuSeparator className="bg-border -mx-1 my-1 h-px" />
+            <DropdownMenuGroup className="text-popover-foreground px-2 py-1.5 text-sm">
               <CardDownload
                 onWebshotDownload={(format) => onWebshotDownload(format)}
                 isDownloading={isDownloading}
@@ -215,7 +215,7 @@ export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className
         <TooltipTrigger asChild>
           <DialogTrigger
             className={cn(
-              "flex h-8 w-8 items-center justify-center rounded-sm hover:bg-blue-100",
+              "flex h-8 w-8 items-center justify-center rounded-xs hover:bg-blue-100",
               className,
             )}
           >
@@ -296,13 +296,13 @@ export function CardWidgetNumber({
         </span>
 
         {!!unit && (
-          <span className="relative bottom-1.5 text-xs font-medium text-muted-foreground">
+          <span className="text-muted-foreground relative bottom-1.5 text-xs font-medium">
             {unit}
           </span>
         )}
       </div>
 
-      {subvalue && <p className="text-xs text-foreground">{subvalue}</p>}
+      {subvalue && <p className="text-foreground text-xs">{subvalue}</p>}
     </div>
   );
 }

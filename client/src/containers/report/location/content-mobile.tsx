@@ -20,9 +20,9 @@ export default function SidebarLocationContent() {
       })}
     >
       <div className="space-y-4">
-        <h1 className="text-2xl font-bold text-primary">{t("grid-sidebar-report-title")}</h1>
+        <h1 className="text-primary text-2xl font-bold">{t("grid-sidebar-report-title")}</h1>
 
-        <p className="text-sm font-medium text-muted-foreground">
+        <p className="text-muted-foreground text-sm font-medium">
           {t("grid-sidebar-report-description")}
         </p>
       </div>

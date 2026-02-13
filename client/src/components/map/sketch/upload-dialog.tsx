@@ -150,7 +150,7 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
       >
         <DialogClose />
         <DialogHeader>
-          <DialogTitle className="text-xl text-primary">
+          <DialogTitle className="text-primary text-xl">
             {t("upload-geometry-dialog-title")}
           </DialogTitle>
           <DialogDescription asChild>
@@ -173,8 +173,8 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
         </div>
 
         <div className="flex items-start space-x-4 rounded bg-blue-50 p-3">
-          <LuFileCheck className="h-5 w-5 shrink-0 text-foreground" />
-          <Markdown className="pt-0.5 text-xs text-foreground">
+          <LuFileCheck className="text-foreground h-5 w-5 shrink-0" />
+          <Markdown className="text-foreground pt-0.5 text-xs">
             {t("upload-geometry-supported-formats")}
           </Markdown>
         </div>

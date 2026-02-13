@@ -61,14 +61,14 @@ export default function Header() {
       <>
         {isHome && (
           <>
-            <Link href="/reports" className="text-sm text-foreground hover:text-cyan-500">
+            <Link href="/reports" className="text-foreground text-sm hover:text-cyan-500">
               {t("header-report-tool")}
             </Link>
           </>
         )}
         {!location && isReportSub && <DesktopDrawingTools />}
         {location && isReportSub && <ConfirmLocation />}
-        {isReportSub && <Separator className="h-4 w-px bg-border" />}
+        {isReportSub && <Separator className="bg-border h-4 w-px" />}
       </>
     );
   }, [pathname, params, location, t]);
@@ -85,7 +85,7 @@ export default function Header() {
   return (
     <header
       className={cn({
-        "relative left-0 top-0 z-10 w-full": true,
+        "relative top-0 left-0 z-10 w-full": true,
         "box-border flex h-16 flex-col justify-center border-b border-blue-50 bg-white backdrop-blur print:hidden": true,
         // "border-blue-100": isReport,
       })}

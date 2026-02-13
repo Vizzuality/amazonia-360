@@ -16,10 +16,10 @@ const HeroHome = () => {
     <Element name="moreInfo" className="-mt-2 w-screen md:mt-0">
       <section
         ref={sectionRef}
-        className="relative h-full w-screen overflow-hidden bg-green-800 bg-center text-white md:h-[calc(100svh_-_theme(space.80)_+_1px)]"
+        className="relative h-full w-screen overflow-hidden bg-green-800 bg-center text-white md:h-[calc(100svh_-_calc(var(--spacing)*80)_+_1px)]"
       >
         <div
-          className={`relative h-80 max-h-[250px] w-screen overflow-hidden md:h-[calc(100svh_-_theme(space.80)_+_1px)] md:max-h-none md:max-w-none`}
+          className={`relative h-80 max-h-[250px] w-screen overflow-hidden md:h-[calc(100svh_-_calc(var(--spacing)*80)_+_1px)] md:max-h-none md:max-w-none`}
         >
           <div
             className={`relative h-full ${

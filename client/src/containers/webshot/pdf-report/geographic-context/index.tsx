@@ -46,7 +46,7 @@ export default function PfdGeographicContext() {
   return (
     <div className="relative flex h-full">
       <div className="flex w-[50%] flex-col justify-center gap-8 bg-blue-50 px-14">
-        <h1 className="text-2xl text-primary">{DATA?.name}</h1>
+        <h1 className="text-primary text-2xl">{DATA?.name}</h1>
         <div className="flex flex-col">
           {indicators &&
             reportData?.location &&
