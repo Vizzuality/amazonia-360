@@ -23,7 +23,7 @@ export default function PdfTopicCover(topic: Topic) {
         className="grow bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${image})` }}
       >
-        <div className="flex h-full flex-col justify-end bg-gradient-to-t from-black to-transparent">
+        <div className="flex h-full flex-col justify-end bg-linear-to-t from-black to-transparent">
           <div className="flex flex-col gap-2 px-14 pb-20 text-white">
             <h1 className="text-5xl">{name}</h1>
             {description && <p className="ml-2">{description}</p>}

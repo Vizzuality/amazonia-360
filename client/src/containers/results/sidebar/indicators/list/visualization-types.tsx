@@ -104,7 +104,7 @@ export function VisualizationType({
 
   return (
     <div className="p-1">
-      <span className="px-2 py-1.5 text-xs font-semibold text-muted-foreground/90">
+      <span className="text-muted-foreground/90 px-2 py-1.5 text-xs font-semibold">
         {t("visualization-type")}
       </span>
       <ul className="flex flex-col">
@@ -121,7 +121,7 @@ export function VisualizationType({
               <button
                 type="button"
                 className={cn({
-                  "flex w-full items-center space-x-2 rounded-[2px] px-2 py-1.5 hover:bg-blue-100": true,
+                  "flex w-full items-center space-x-2 rounded-sm px-2 py-1.5 hover:bg-blue-100": true,
                   "pointer-events-none cursor-none opacity-50": isDisabled,
                 })}
                 disabled={isDisabled}
@@ -131,14 +131,14 @@ export function VisualizationType({
 
                 <span
                   className={cn({
-                    "text-xs font-semibold capitalize text-foreground transition-colors hover:text-accent-foreground": true,
+                    "text-foreground hover:text-accent-foreground text-xs font-semibold capitalize transition-colors": true,
                   })}
                 >
                   {t(`${type}`)}
                 </span>
 
                 {defaultVisualizationsPerIndicator === type && (
-                  <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold">
+                  <span className="bg-secondary rounded-full px-2.5 py-0.5 text-xs font-semibold">
                     {t("default")}
                   </span>
                 )}

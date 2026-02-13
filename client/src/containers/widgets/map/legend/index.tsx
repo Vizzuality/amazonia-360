@@ -22,9 +22,9 @@ export const WidgetLegend = (
   },
 ) => {
   return (
-    <div className="absolute bottom-4 left-4 z-10 w-full max-w-60 shadow-sm duration-700 animate-in fade-in-0">
+    <div className="animate-in fade-in-0 absolute bottom-4 left-4 z-10 w-full max-w-60 shadow-xs duration-700">
       <Legend defaultOpen interactive={indicator.interactive}>
-        <div className="divide-y divide-muted">
+        <div className="divide-muted divide-y">
           <LegendItem id={indicator.id} interactive={indicator.interactive} />
         </div>
       </Legend>

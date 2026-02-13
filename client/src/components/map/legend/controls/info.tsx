@@ -24,7 +24,7 @@ export default function InfoControl({ id, description_short }: Indicator) {
       <Dialog>
         <TooltipTrigger asChild>
           <DialogTrigger className={cn("flex cursor-pointer items-center justify-center p-0.5")}>
-            <LuInfo className="h-4 w-4 text-foreground" />
+            <LuInfo className="text-foreground h-4 w-4" />
           </DialogTrigger>
         </TooltipTrigger>
         <DialogContent className="max-w-2xl p-0">

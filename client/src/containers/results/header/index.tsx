@@ -7,7 +7,7 @@ import ReportResultsHeaderMobile from "@/containers/results/header/mobile";
 export default function ReportResultsHeader() {
   return (
     <>
-      <Media greaterThanOrEqual="md" className="sticky left-0 top-0 z-10">
+      <Media greaterThanOrEqual="md" className="sticky top-0 left-0 z-10">
         <ReportResultsHeaderDesktop />
       </Media>
 

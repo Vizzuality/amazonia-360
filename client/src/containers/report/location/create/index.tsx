@@ -75,10 +75,10 @@ export default function CreateReport({ children }: { children?: ReactNode }) {
     <div className="flex w-full flex-col justify-between gap-4 overflow-hidden bg-white text-sm">
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-2">
-          <div className="text-sm font-semibold uppercase leading-none text-muted-foreground">
+          <div className="text-muted-foreground text-sm leading-none font-semibold uppercase">
             {TITLE}
           </div>
-          <div className="text-base font-bold leading-none text-foreground">
+          <div className="text-foreground text-base leading-none font-bold">
             {formatNumber(AREA, {
               maximumFractionDigits: 0,
             })}{" "}
@@ -161,10 +161,10 @@ export default function CreateReport({ children }: { children?: ReactNode }) {
       {location.type !== "search" && LOCATION?.geometry?.type !== "polygon" && (
         <section className="space-y-2">
           <div className="flex items-end justify-between">
-            <div className="text-sm font-semibold leading-none text-blue-500">
+            <div className="text-sm leading-none font-semibold text-blue-500">
               {t("grid-sidebar-report-location-buffer-size")}
             </div>
-            <div className="text-xs leading-none text-foreground">
+            <div className="text-foreground text-xs leading-none">
               {`${location.buffer || BUFFERS[LOCATION?.geometry?.type || "point"]} km`}
             </div>
           </div>
@@ -178,7 +178,7 @@ export default function CreateReport({ children }: { children?: ReactNode }) {
               onValueChange={onValueChange}
             />
 
-            <div className="flex w-full justify-between text-2xs font-bold text-muted-foreground">
+            <div className="text-2xs text-muted-foreground flex w-full justify-between font-bold">
               <span>1 km</span>
               <span>100 km</span>
             </div>

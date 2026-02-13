@@ -37,15 +37,15 @@ export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
   return (
     <header
       className={cn({
-        "absolute left-0 top-0 box-border flex h-16 w-full shrink-0 flex-col justify-center px-14": true,
+        "absolute top-0 left-0 box-border flex h-16 w-full shrink-0 flex-col justify-center px-14": true,
         "border-transparent bg-transparent": transparent,
         "border-b border-blue-50 bg-blue-50": !transparent,
-        "after:absolute after:left-0 after:top-0 after:z-0 after:h-40 after:w-full after:bg-gradient-to-b after:from-black/50 after:to-transparent":
+        "after:absolute after:top-0 after:left-0 after:z-0 after:h-40 after:w-full after:bg-linear-to-b after:from-black/50 after:to-transparent":
           transparent,
       })}
     >
       <div className="relative z-10 flex items-center justify-between gap-10">
-        <div className="z-[120] flex shrink-0 items-center space-x-2">
+        <div className="z-120 flex shrink-0 items-center space-x-2">
           <div className="flex items-center space-x-2 lg:space-x-4">
             <Image
               src={transparent ? "/IDB-logo-white.svg" : "/IDB-logo.svg"}

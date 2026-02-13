@@ -74,10 +74,10 @@ export default function EditLocationReport() {
 
       <DialogPortal>
         <DialogOverlay
-          className="fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
+          className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/80"
           onClick={() => setOpen(false)}
         />
-        <DialogContent className="fixed left-[50%] top-[50%] z-50 grid h-[calc(100%_-_theme(space.16))] w-[calc(100%_-_theme(space.16))] translate-x-[-50%] translate-y-[-50%] gap-4 overflow-hidden rounded-lg shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]">
+        <DialogContent className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-top-[2%] data-[state=open]:slide-in-from-top-[2%] fixed top-1/2 left-1/2 z-50 grid h-[calc(100%-calc(var(--spacing)*16))] w-[calc(100%-calc(var(--spacing)*16))] -translate-x-1/2 -translate-y-1/2 gap-4 overflow-hidden rounded-lg shadow-lg duration-200">
           <DialogTitle className="sr-only">
             {t("grid-sidebar-report-location-filters-alert-redefine-area-title")}
           </DialogTitle>
@@ -85,7 +85,7 @@ export default function EditLocationReport() {
             {t("grid-sidebar-report-location-filters-alert-redefine-area-title")}
           </DialogDescription>
 
-          <DialogClose className="absolute right-6 top-6 z-10" asChild>
+          <DialogClose className="absolute top-6 right-6 z-10" asChild>
             <Button
               variant="outline"
               size="icon"
@@ -96,14 +96,14 @@ export default function EditLocationReport() {
               <LuX className="h-5 w-5" />
             </Button>
           </DialogClose>
-          <div className="flex h-full w-full grow flex-col bg-background">
+          <div className="bg-background flex h-full w-full grow flex-col">
             <MapContainer desktop gridEnabled={gridEnabled} />
 
-            <div className="absolute left-6 top-6 z-10 max-w-md">
+            <div className="absolute top-6 left-6 z-10 max-w-md">
               <div className="space-y-2">
                 {!gridEnabled && (
                   <>
-                    <div className="w-full rounded-lg bg-background p-6 shadow-lg">
+                    <div className="bg-background w-full rounded-lg p-6 shadow-lg">
                       {!location && (
                         <div className="space-y-4">
                           <SearchLocation />
@@ -121,18 +121,18 @@ export default function EditLocationReport() {
 
                     <button
                       type="button"
-                      className="group pointer-events-auto flex rounded-lg border border-border bg-white p-4 text-left shadow-lg transition-colors duration-300 hover:border-cyan-500"
+                      className="group border-border pointer-events-auto flex rounded-lg border bg-white p-4 text-left shadow-lg transition-colors duration-300 hover:border-cyan-500"
                       onClick={() => setGridEnabled(true)}
                     >
                       <div className="flex items-start space-x-4">
-                        <div className="rounded-sm bg-muted p-3 transition-colors duration-300 group-hover:bg-cyan-100">
-                          <HexagonIcon className="h-5 w-5 text-foreground transition-colors duration-300 group-hover:text-cyan-500" />
+                        <div className="bg-muted rounded-xs p-3 transition-colors duration-300 group-hover:bg-cyan-100">
+                          <HexagonIcon className="text-foreground h-5 w-5 transition-colors duration-300 group-hover:text-cyan-500" />
                         </div>
                         <div className="flex flex-col items-start justify-start space-y-1">
-                          <span className="text-base font-semibold text-primary transition-colors duration-300 group-hover:text-primary">
+                          <span className="text-primary group-hover:text-primary text-base font-semibold transition-colors duration-300">
                             {t("sidebar-report-grid-title")}
                           </span>
-                          <span className="text-sm font-medium text-muted-foreground">
+                          <span className="text-muted-foreground text-sm font-medium">
                             {t("sidebar-report-grid-description")}
                           </span>
                         </div>
@@ -144,7 +144,7 @@ export default function EditLocationReport() {
                 {gridEnabled && <ReportGridDesktop />}
               </div>
 
-              <div className="absolute left-full top-0 ml-2 min-w-96 space-y-2">
+              <div className="absolute top-0 left-full ml-2 min-w-96 space-y-2">
                 {gridEnabled && (
                   <div className="rounded-lg bg-white px-4 py-2 shadow-lg">
                     {!location && <EditLocationDrawingTools />}

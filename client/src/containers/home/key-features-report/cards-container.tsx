@@ -26,11 +26,11 @@ export default function CardsContainer() {
         ref={textRef}
         className={cn({
           "opacity-0": !isTextInView,
-          "md:delay-0 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-top-10":
+          "md:animate-in md:fade-in-0 md:slide-in-from-top-10 md:delay-0 md:duration-700":
             isTextInView,
         })}
       >
-        <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-blue-400">
+        <h3 className="tracking-wide-lg text-sm font-extrabold text-blue-400 uppercase">
           {t("landing-key-features-note")}
         </h3>
         <h2 className="m-auto pb-6 text-2xl text-blue-600 lg:text-4xl">
@@ -45,12 +45,12 @@ export default function CardsContainer() {
           <div
             className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-lg bg-blue-50 p-4 ${
               isCardInView
-                ? "md:delay-0 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
+                ? "md:animate-in md:fade-in-0 md:slide-in-from-left-5 md:delay-0 md:duration-700"
                 : "opacity-0"
             }`}
           >
             <LuMapPinned size={32} strokeWidth={1} className="text-blue-400" />
-            <h4 className="font-semibold text-foreground">
+            <h4 className="text-foreground font-semibold">
               {t("landing-key-features-report-buttons-select-area-of-interest")}
             </h4>
           </div>
@@ -59,12 +59,12 @@ export default function CardsContainer() {
           <div
             className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-lg bg-blue-50 p-4 ${
               isCardInView
-                ? "md:delay-150 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
+                ? "md:animate-in md:fade-in-0 md:slide-in-from-left-5 md:delay-150 md:duration-700"
                 : "opacity-0"
             }`}
           >
             <LuLayoutDashboard size={32} strokeWidth={1} className="text-blue-400" />
-            <h4 className="font-semibold text-foreground">
+            <h4 className="text-foreground font-semibold">
               {t("landing-key-features-report-buttons-define-topics-of-interest")}
             </h4>
           </div>
@@ -74,12 +74,12 @@ export default function CardsContainer() {
           <div
             className={`flex flex-1 flex-col items-start justify-start space-y-2 overflow-hidden rounded-lg bg-blue-50 p-4 ${
               isCardInView
-                ? "md:delay-300 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-5"
+                ? "md:animate-in md:fade-in-0 md:slide-in-from-left-5 md:delay-300 md:duration-700"
                 : "opacity-0"
             }`}
           >
             <LuShare2 size={32} strokeWidth={1} className="h-8 w-8 text-blue-400" />
-            <h4 className="font-semibold text-foreground">
+            <h4 className="text-foreground font-semibold">
               {t("landing-key-features-report-buttons-share-and-download")}
             </h4>
           </div>

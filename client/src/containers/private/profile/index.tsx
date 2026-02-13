@@ -12,14 +12,14 @@ export const Profile = () => {
         <ProfileHeader />
       </div>
 
-      <div className="col-span-12 space-y-8 rounded-2xl border border-border bg-card p-8 lg:col-span-8">
+      <div className="border-border bg-card col-span-12 space-y-8 rounded-2xl border p-8 lg:col-span-8">
         <UpdateNameForm />
 
-        <div className="border-t border-border pt-8">
+        <div className="border-border border-t pt-8">
           <ChangePasswordForm />
         </div>
 
-        <div className="border-t border-border pt-8">
+        <div className="border-border border-t pt-8">
           <DeleteAccount />
         </div>
       </div>
