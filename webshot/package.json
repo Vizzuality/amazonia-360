@@ -22,9 +22,9 @@
     "test:e2e-debug": "pnpm splitenv && vitest run --config ./vitest.config-e2e.ts --color --inspect-brk --no-file-parallelism"
   },
   "dependencies": {
-    "@nestjs/common": "11.0.12",
-    "@nestjs/core": "11.0.12",
-    "@nestjs/platform-express": "11.0.12",
+    "@nestjs/common": "11.0.21",
+    "@nestjs/core": "11.0.21",
+    "@nestjs/platform-express": "11.0.21",
     "@nestjs/swagger": "11.1.0",
     "axios": "1.13.5",
     "class-transformer": "0.5.1",
@@ -42,7 +42,7 @@
   "devDependencies": {
     "@nestjs/cli": "11.0.5",
     "@nestjs/schematics": "11.0.2",
-    "@nestjs/testing": "11.0.12",
+    "@nestjs/testing": "11.0.21",
     "@types/compression": "1.7.5",
     "@types/config": "^3.3.5",
     "@types/express": "5.0.1",
