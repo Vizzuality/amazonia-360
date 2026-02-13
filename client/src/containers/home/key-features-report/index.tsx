@@ -31,15 +31,15 @@ export default function KeyFeatures() {
         {/* Gradients */}
         <Media greaterThanOrEqual="lg">
           <>
-            <div className="pointer-events-none top-0 z-10 h-36 bg-gradient-to-b from-white to-transparent lg:absolute lg:right-0 lg:left-0" />
-            <div className="pointer-events-none absolute right-0 bottom-0 left-0 z-10 h-36 bg-gradient-to-t from-white to-transparent" />
+            <div className="pointer-events-none top-0 z-10 h-36 bg-linear-to-b from-white to-transparent lg:absolute lg:right-0 lg:left-0" />
+            <div className="pointer-events-none absolute right-0 bottom-0 left-0 z-10 h-36 bg-linear-to-t from-white to-transparent" />
           </>
         </Media>
 
         <Media lessThan="lg">
           <>
-            <div className="pointer-events-none absolute top-0 bottom-0 -left-8 z-10 w-5 bg-gradient-to-r from-white to-transparent" />
-            <div className="pointer-events-none absolute top-0 -right-8 bottom-0 z-10 w-5 bg-gradient-to-l from-white to-transparent" />
+            <div className="pointer-events-none absolute top-0 bottom-0 -left-8 z-10 w-5 bg-linear-to-r from-white to-transparent" />
+            <div className="pointer-events-none absolute top-0 -right-8 bottom-0 z-10 w-5 bg-linear-to-l from-white to-transparent" />
           </>
         </Media>
 
@@ -55,7 +55,7 @@ export default function KeyFeatures() {
             </Media>
           </div>
 
-          <div className="relative mt-4 flex flex-col justify-center lg:mt-0 lg:translate-y-[20px]">
+          <div className="relative mt-4 flex flex-col justify-center lg:mt-0 lg:translate-y-5">
             <Media greaterThanOrEqual="lg">
               <KeyFeaturesChartsColumn2 inView={inViewCol} />
             </Media>

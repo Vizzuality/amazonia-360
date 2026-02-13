@@ -56,14 +56,14 @@ export default function SidebarGridTableContent() {
         )}
       </div>
 
-      <div className="relative !m-0 flex grow flex-col overflow-hidden">
-        <div className="pointer-events-none absolute top-0 right-0 left-0 z-50 h-2 bg-gradient-to-b from-white to-transparent xl:h-4" />
+      <div className="relative m-0! flex grow flex-col overflow-hidden">
+        <div className="pointer-events-none absolute top-0 right-0 left-0 z-50 h-2 bg-linear-to-b from-white to-transparent xl:h-4" />
         <ScrollArea className="flex grow flex-col">
           <div className="px-6 py-2 xl:py-4">
             <GridTable />
           </div>
         </ScrollArea>
-        <div className="pointer-events-none absolute right-0 bottom-0 left-0 z-50 h-2 bg-gradient-to-t from-white to-transparent xl:h-4" />
+        <div className="pointer-events-none absolute right-0 bottom-0 left-0 z-50 h-2 bg-linear-to-t from-white to-transparent xl:h-4" />
       </div>
     </div>
   );

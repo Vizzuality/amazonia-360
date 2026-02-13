@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ReportResultsLoading() {
   return (
-    <main className="relative flex min-h-[calc(100svh_-_calc(var(--spacing)*40)_+_1px)] flex-col bg-blue-50 py-12">
+    <main className="relative flex min-h-[calc(100svh-calc(var(--spacing)*40)+1px)] flex-col bg-blue-50 py-12">
       <div className="flex flex-col space-y-6">
         <div className="container">
           <Skeleton className="h-12 w-full" />

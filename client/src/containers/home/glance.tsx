@@ -115,7 +115,7 @@ export default function Glance() {
           <h3 className="tracking-wide-lg text-sm font-extrabold text-blue-400 uppercase">
             {t("landing-glance-note")}
           </h3>
-          <h2 className="pb-6 text-2xl text-blue-600 md:max-w-[520px] lg:text-3xl xl:text-4xl">
+          <h2 className="pb-6 text-2xl text-blue-600 md:max-w-130 lg:text-3xl xl:text-4xl">
             {t("landing-glance-title")}
           </h2>
           <div className="text-base font-normal text-blue-900 lg:text-lg">
@@ -191,7 +191,7 @@ export default function Glance() {
           </p>
         </header>
         <div className="w-full">
-          <MarimekkoChart format={FORMAT[chartKey]} data={parsedData} className="h-[510px]" />
+          <MarimekkoChart format={FORMAT[chartKey]} data={parsedData} className="h-127.5" />
         </div>
         <div className="text-muted-foreground space-y-1 text-xs md:hidden">
           <p className="text-xs lg:text-sm"> {t("landing-glance-chart-source-note")}</p>

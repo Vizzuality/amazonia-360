@@ -45,7 +45,7 @@ export default function PfdGeographicContext() {
 
   return (
     <div className="relative flex h-full">
-      <div className="flex w-[50%] flex-col justify-center gap-8 bg-blue-50 px-14">
+      <div className="flex w-1/2 flex-col justify-center gap-8 bg-blue-50 px-14">
         <h1 className="text-primary text-2xl">{DATA?.name}</h1>
         <div className="flex flex-col">
           {indicators &&
@@ -60,7 +60,7 @@ export default function PfdGeographicContext() {
             ))}
         </div>
       </div>
-      <div className="h-full w-[50%] bg-gray-400">
+      <div className="h-full w-1/2 bg-gray-400">
         {map && mapIndicator && (
           <MapIndicators
             {...(mapIndicator as Omit<Indicator, "resource"> & {

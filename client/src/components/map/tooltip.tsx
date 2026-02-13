@@ -40,7 +40,7 @@ export const Tooltip = () => {
 
   return (
     <div
-      className="absolute flex -translate-x-1/2 -translate-y-[200%] transform items-center space-x-2 rounded bg-cyan-500 px-2 text-white before:absolute before:top-full before:left-1/2 before:-translate-x-1/2 before:border-[6px] before:border-x-transparent before:border-t-cyan-500 before:border-b-transparent"
+      className="absolute flex -translate-x-1/2 -translate-y-[200%] transform items-center space-x-2 rounded-sm bg-cyan-500 px-2 text-white before:absolute before:top-full before:left-1/2 before:-translate-x-1/2 before:border-[6px] before:border-x-transparent before:border-t-cyan-500 before:border-b-transparent"
       style={{
         top: position.y,
         left: position.x,

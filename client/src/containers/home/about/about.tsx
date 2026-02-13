@@ -19,7 +19,7 @@ const AboutHeroHome = ({ textVisible }: { textVisible: boolean }) => {
           >
             <div className="container md:px-0">
               <div className="flex flex-col items-start justify-start space-y-6 py-8 text-white">
-                <h3 className="text-sm font-bold tracking-[0.7px] uppercase">
+                <h3 className="tracking-wide-lg text-sm font-bold uppercase">
                   {t("landing-about-title")}
                 </h3>
                 <p className="text-lg font-normal md:text-xl">{t("landing-about-description")}</p>

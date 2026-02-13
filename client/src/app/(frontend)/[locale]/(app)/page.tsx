@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default function HomePage() {
   return (
-    <main className="relative flex min-h-[calc(100svh_-_calc(var(--spacing)*16))] flex-col">
+    <main className="relative flex min-h-[calc(100svh-calc(var(--spacing)*16))] flex-col">
       <Hero />
       <About />
       <KeyFeaturesReport />

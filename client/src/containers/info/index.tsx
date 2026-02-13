@@ -16,7 +16,7 @@ const InfoItem = ({ id }: { id: Indicator["id"] }) => {
 
 export default function Info({ ids }: { ids: Indicator["id"][] }) {
   return (
-    <ScrollArea className="flex max-h-[calc(100svh_-_calc(var(--spacing)*20))] grow flex-col">
+    <ScrollArea className="flex max-h-[calc(100svh-calc(var(--spacing)*20))] grow flex-col">
       <ul className="space-y-4 divide-y p-6">
         {ids.map((id) => (
           <InfoItem key={id} id={id} />

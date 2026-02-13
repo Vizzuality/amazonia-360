@@ -20,7 +20,7 @@ function Slider({ className, ...props }: React.ComponentProps<typeof SliderPrimi
         (key) => (
           <SliderPrimitive.Thumb
             key={key}
-            className="border-primary/50 bg-background focus-visible:ring-ring block h-3 w-3 cursor-pointer rounded-full border shadow transition-colors focus-visible:ring-1 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+            className="border-primary/50 bg-background focus-visible:ring-ring block h-3 w-3 cursor-pointer rounded-full border shadow-sm transition-colors focus-visible:ring-1 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
           />
         ),
       )}

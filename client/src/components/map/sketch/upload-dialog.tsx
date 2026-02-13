@@ -165,14 +165,14 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
             onDrop={onDrop}
             disabled={isUploading}
             src={uploadedFiles}
-            className="min-h-[200px]"
+            className="min-h-50"
           >
             <DropzoneEmptyState />
             <DropzoneContent />
           </Dropzone>
         </div>
 
-        <div className="flex items-start space-x-4 rounded bg-blue-50 p-3">
+        <div className="flex items-start space-x-4 rounded-sm bg-blue-50 p-3">
           <LuFileCheck className="text-foreground h-5 w-5 shrink-0" />
           <Markdown className="text-foreground pt-0.5 text-xs">
             {t("upload-geometry-supported-formats")}

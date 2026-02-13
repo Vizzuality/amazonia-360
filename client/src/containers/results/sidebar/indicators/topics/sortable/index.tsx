@@ -137,7 +137,7 @@ export const SortableList: React.FC<SortableListProps> = ({
 
       <DragOverlay>
         {isValidElement(ActiveItem) && (
-          <div className="flex max-h-[calc(100vh_-_calc(var(--spacing)*16)_-_calc(var(--spacing)*6)_-_calc(var(--spacing)*48)_-_calc(var(--spacing)*40))] flex-col overflow-hidden">
+          <div className="flex max-h-[calc(100vh-calc(var(--spacing)*16)-calc(var(--spacing)*6)-calc(var(--spacing)*48)-calc(var(--spacing)*40))] flex-col overflow-hidden">
             {cloneElement(
               ActiveItem as ReactElement<{
                 sortable?: typeof sortable;

@@ -126,7 +126,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
     <Form {...form}>
       <form
         className={cn(
-          "relative flex h-full max-h-[calc(100svh_-_calc(var(--spacing)*16))] grow flex-col justify-between overflow-hidden rounded-lg py-4 lg:max-h-[calc(100vh_-_(calc(var(--spacing)*16)_+_calc(var(--spacing)*20)))]",
+          "relative flex h-full max-h-[calc(100svh-calc(var(--spacing)*16))] grow flex-col justify-between overflow-hidden rounded-lg py-4 lg:max-h-[calc(100vh-(calc(var(--spacing)*16)+calc(var(--spacing)*20)))]",
           "lg:border lg:border-blue-100",
         )}
         onSubmit={form.handleSubmit(onSubmit)}
@@ -142,13 +142,13 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
           </header>
 
           <div className="relative flex grow flex-col overflow-hidden">
-            <div className="pointer-events-none absolute top-0 right-0 left-0 z-10 h-4 bg-gradient-to-b from-white to-transparent" />
+            <div className="pointer-events-none absolute top-0 right-0 left-0 z-10 h-4 bg-linear-to-b from-white to-transparent" />
             <ScrollArea className="flex grow flex-col lg:px-6">
               <div className="py-4">
                 <Topics />
               </div>
             </ScrollArea>
-            <div className="pointer-events-none absolute right-0 bottom-0 left-0 z-10 h-4 bg-gradient-to-t from-white to-transparent" />
+            <div className="pointer-events-none absolute right-0 bottom-0 left-0 z-10 h-4 bg-linear-to-t from-white to-transparent" />
           </div>
         </div>
 

@@ -76,7 +76,7 @@ export default function ShareReport() {
             </p>
           </div>
           <div className="mb-6 flex w-full space-x-2 overflow-hidden">
-            <div className="bg-background flex h-10 w-[calc(100%_-_calc(var(--spacing)*32))] rounded-xs border px-3 py-2 text-sm text-gray-900">
+            <div className="bg-background flex h-10 w-[calc(100%-calc(var(--spacing)*32))] rounded-xs border px-3 py-2 text-sm text-gray-900">
               <p className="text-foreground truncate text-base font-normal">{URL}</p>
             </div>
             <Button className="h-10 w-40 gap-2" onClick={copyShareLink}>

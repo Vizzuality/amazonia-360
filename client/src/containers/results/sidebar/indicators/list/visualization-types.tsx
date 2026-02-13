@@ -121,7 +121,7 @@ export function VisualizationType({
               <button
                 type="button"
                 className={cn({
-                  "flex w-full items-center space-x-2 rounded-[2px] px-2 py-1.5 hover:bg-blue-100": true,
+                  "flex w-full items-center space-x-2 rounded-sm px-2 py-1.5 hover:bg-blue-100": true,
                   "pointer-events-none cursor-none opacity-50": isDisabled,
                 })}
                 disabled={isDisabled}
