@@ -17,7 +17,7 @@ export default function RemoveControl({ onClick }: { onClick?: () => void }) {
         className={cn("flex cursor-pointer items-center justify-center p-0.5")}
         onClick={onClick}
       >
-        <LuX className="h-4 w-4 text-foreground" />
+        <LuX className="text-foreground h-4 w-4" />
       </TooltipTrigger>
       <TooltipPortal>
         <TooltipContent sideOffset={0} className="max-w-72">

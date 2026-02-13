@@ -72,10 +72,10 @@ export default function Confirm({ onConfirm }: { onConfirm: () => void }) {
     <div className="flex w-full flex-col justify-between gap-4 overflow-hidden text-sm">
       <section className="space-y-2">
         <div className="flex items-end justify-between">
-          <div className="text-sm font-semibold uppercase leading-none text-muted-foreground">
+          <div className="text-muted-foreground text-sm leading-none font-semibold uppercase">
             {TITLE}
           </div>
-          <div className="text-xs font-bold leading-none text-foreground">
+          <div className="text-foreground text-xs leading-none font-bold">
             {formatNumber(AREA, {
               maximumFractionDigits: 0,
             })}{" "}
@@ -83,7 +83,7 @@ export default function Confirm({ onConfirm }: { onConfirm: () => void }) {
           </div>
         </div>
         {location.type !== "search" && (
-          <div className="text-sm tracking-[0.14px] text-muted-foreground">
+          <div className="text-muted-foreground text-sm tracking-[0.14px]">
             <ReactMarkdown>{t("grid-sidebar-report-location-note")}</ReactMarkdown>
           </div>
         )}{" "}
@@ -109,10 +109,10 @@ export default function Confirm({ onConfirm }: { onConfirm: () => void }) {
       {location.type !== "search" && LOCATION?.geometry?.type !== "polygon" && (
         <section className="space-y-2">
           <div className="flex items-end justify-between">
-            <div className="text-sm font-semibold leading-none text-blue-500">
+            <div className="text-sm leading-none font-semibold text-blue-500">
               {t("grid-sidebar-report-location-buffer-size")}
             </div>
-            <div className="text-xs leading-none text-foreground">
+            <div className="text-foreground text-xs leading-none">
               {`${location.buffer || BUFFERS[LOCATION?.geometry?.type || "point"]} km`}
             </div>
           </div>
@@ -126,7 +126,7 @@ export default function Confirm({ onConfirm }: { onConfirm: () => void }) {
               onValueChange={onValueChange}
             />
 
-            <div className="flex w-full justify-between text-2xs font-bold text-muted-foreground">
+            <div className="text-2xs text-muted-foreground flex w-full justify-between font-bold">
               <span>1 km</span>
               <span>100 km</span>
             </div>

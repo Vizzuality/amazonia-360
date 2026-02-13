@@ -48,7 +48,7 @@ const AuthHeader = () => {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex items-center rounded-full focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
+          <button className="flex items-center rounded-full focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:outline-hidden">
             <Avatar>
               {session.user?.image && (
                 <AvatarImage src={session.user.image} alt={session.user?.name || "User avatar"} />
@@ -67,10 +67,10 @@ const AuthHeader = () => {
               <AvatarFallback>{userInitials}</AvatarFallback>
             </Avatar>
             <div>
-              <p className="px-2 pt-2 text-sm font-semibold text-foreground">
+              <p className="text-foreground px-2 pt-2 text-sm font-semibold">
                 {session.user?.name}
               </p>
-              <p className="px-2 pb-2 text-2xs text-muted-foreground">{session.user?.email}</p>
+              <p className="text-2xs text-muted-foreground px-2 pb-2">{session.user?.email}</p>
             </div>
           </header>
 

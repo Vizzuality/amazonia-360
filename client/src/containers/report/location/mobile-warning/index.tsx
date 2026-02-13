@@ -23,7 +23,7 @@ export default function ReportMobileWarning() {
         <div>
           <h2 className="text-lg">{t("mobile-alert-title")}</h2>
 
-          <p className="mt-2 text-sm text-muted-foreground">{t("mobile-alert-description")}.</p>
+          <p className="text-muted-foreground mt-2 text-sm">{t("mobile-alert-description")}.</p>
 
           <div className="mt-4 flex justify-end">
             <Button onClick={() => setOpen(false)} variant="default">

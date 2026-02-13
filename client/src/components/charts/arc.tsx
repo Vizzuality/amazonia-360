@@ -51,7 +51,7 @@ export default function ArcChart({ value, color = "#FFDA00" }: ArcChartProps) {
           />
         </Group>
       </svg>
-      <span className="absolute left-1/2 top-full block -translate-x-1/2 -translate-y-full text-center text-4xl font-bold">
+      <span className="absolute top-full left-1/2 block -translate-x-1/2 -translate-y-full text-center text-4xl font-bold">
         {formatPercentage(value)}
       </span>
     </div>

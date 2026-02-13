@@ -127,7 +127,7 @@ export const GridTableItem = (
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              <button className="flex min-w-16 shrink-0 items-center gap-2 rounded-sm bg-cyan-100 px-2 py-1 group-hover:bg-cyan-500 group-hover:text-white">
+              <button className="flex min-w-16 shrink-0 items-center gap-2 rounded-xs bg-cyan-100 px-2 py-1 group-hover:bg-cyan-500 group-hover:text-white">
                 <HexagonIcon className="h-4 w-4 text-current" />
                 <span className="text-sm font-semibold">{id + 1}º</span>
               </button>
@@ -145,20 +145,20 @@ export const GridTableItem = (
                       >
                         {dataset?.name}
                       </p>
-                      <span className="flex-1 overflow-hidden whitespace-nowrap font-extralight tracking-[2.5px] text-muted-foreground">
+                      <span className="text-muted-foreground flex-1 overflow-hidden font-extralight tracking-[2.5px] whitespace-nowrap">
                         {".".repeat(200)}
                       </span>
                     </div>
 
                     {dataset?.legend.legend_type === "continuous" && (
-                      <span className="flex-shrink-0 whitespace-nowrap text-blue-700">
+                      <span className="shrink-0 whitespace-nowrap text-blue-700">
                         {formatNumberUnit(+(dataset?.value ?? 0), `${dataset?.unit}`)}
                       </span>
                     )}
 
                     {dataset?.legend.legend_type === "categorical" &&
                       "entries" in dataset.legend && (
-                        <span className="flex-shrink-0 whitespace-nowrap text-blue-700">
+                        <span className="shrink-0 whitespace-nowrap text-blue-700">
                           {dataset.legend.entries.find((e) => e.value === dataset?.value)?.label ||
                             dataset?.value}
                         </span>
