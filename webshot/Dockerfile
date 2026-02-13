@@ -13,7 +13,7 @@ RUN corepack enable pnpm
 # exactly the same as those expected by the Playwright library. Alternatively,
 # chromium and dependencies should be installed via the playwright binary
 # directly exposed in the Playwright module installed via pnpm.
-RUN pnpx playwright@1.54.2 install chromium --with-deps
+RUN pnpx playwright@1.58.2 install chromium --with-deps
 
 COPY package.json pnpm-lock.yaml tsconfig.json nest-cli.json entrypoint.sh ./
 COPY ./src ./src
