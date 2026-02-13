@@ -76,7 +76,7 @@ export const ReportTopicHeader = (props: Topic) => {
   return (
     <>
       <header className="flex items-center justify-between gap-2">
-        <h2 className="text-2xl font-semibold text-primary">{props.name}</h2>
+        <h2 className="text-primary text-2xl font-semibold">{props.name}</h2>
 
         <div className="flex gap-2">
           <Popover>
@@ -88,7 +88,7 @@ export const ReportTopicHeader = (props: Topic) => {
                 </Button>
               </PopoverTrigger>
             </AuthWrapper>
-            <PopoverContent className="w-96 bg-popover" align="end">
+            <PopoverContent className="bg-popover w-96" align="end">
               <AISummaryForm
                 mutation={summaryMutation}
                 onSubmit={(values) => {

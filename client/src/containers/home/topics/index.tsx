@@ -20,7 +20,7 @@ export default function Topics() {
   return (
     <section className="mt-10 md:mt-28 md:space-y-6" ref={imagesRef}>
       <div
-        className={`grid grid-cols-12 gap-0 ${isImagesInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-40" : "md:opacity-0"}`}
+        className={`grid grid-cols-12 gap-0 ${isImagesInView ? "md:animate-in md:fade-in-0 md:slide-in-from-left-40 overflow-hidden md:duration-700" : "md:opacity-0"}`}
       >
         {!!topicsData?.length &&
           topicsData?.map((topic) => {

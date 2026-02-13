@@ -6,26 +6,26 @@ import * as SliderPrimitive from "@radix-ui/react-slider";
 
 import { cn } from "@/lib/utils";
 
-const Slider = React.forwardRef<
-  React.ElementRef<typeof SliderPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <SliderPrimitive.Root
-    ref={ref}
-    className={cn("relative flex w-full touch-none select-none items-center", className)}
-    {...props}
-  >
-    <SliderPrimitive.Track className="relative h-0.5 w-full grow overflow-hidden rounded-full bg-primary/20">
-      <SliderPrimitive.Range className="absolute h-full bg-primary" />
-    </SliderPrimitive.Track>
-    {Array.from(Array(props.value?.length || props.defaultValue?.length || 0).keys()).map((key) => (
-      <SliderPrimitive.Thumb
-        key={key}
-        className="block h-3 w-3 cursor-pointer rounded-full border border-primary/50 bg-background shadow transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-      />
-    ))}
-  </SliderPrimitive.Root>
-));
-Slider.displayName = SliderPrimitive.Root.displayName;
+function Slider({ className, ...props }: React.ComponentProps<typeof SliderPrimitive.Root>) {
+  return (
+    <SliderPrimitive.Root
+      data-slot="slider"
+      className={cn("relative flex w-full touch-none items-center select-none", className)}
+      {...props}
+    >
+      <SliderPrimitive.Track className="bg-primary/20 relative h-0.5 w-full grow overflow-hidden rounded-full">
+        <SliderPrimitive.Range className="bg-primary absolute h-full" />
+      </SliderPrimitive.Track>
+      {Array.from(Array(props.value?.length || props.defaultValue?.length || 0).keys()).map(
+        (key) => (
+          <SliderPrimitive.Thumb
+            key={key}
+            className="border-primary/50 bg-background focus-visible:ring-ring block h-3 w-3 cursor-pointer rounded-full border shadow-sm transition-colors focus-visible:ring-1 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+          />
+        ),
+      )}
+    </SliderPrimitive.Root>
+  );
+}
 
 export { Slider };

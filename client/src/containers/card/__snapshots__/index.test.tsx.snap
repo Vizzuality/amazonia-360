@@ -13,7 +13,7 @@ exports[`CardLoader > renders CardLoader Children component when query is not fe
 exports[`CardLoader > renders CardLoader Skeleton component when query is fetching 1`] = `
 <div>
   <div
-    class="animate-pulse rounded-md bg-primary/10"
+    class="bg-primary/10 animate-pulse rounded-md"
     data-testid="card-loader"
   />
 </div>
@@ -22,7 +22,7 @@ exports[`CardLoader > renders CardLoader Skeleton component when query is fetchi
 exports[`CardLoader > renders CardLoader component without crashing 1`] = `
 <div>
   <div
-    class="animate-pulse rounded-md bg-primary/10"
+    class="bg-primary/10 animate-pulse rounded-md"
     data-testid="card-loader"
   />
 </div>

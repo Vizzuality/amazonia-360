@@ -219,7 +219,7 @@ export default function MapEditContainer({
           onUpdateChange={handleUpdateChange}
         />
 
-        <Controls className="absolute right-7 top-20">
+        <Controls className="absolute top-20 right-7">
           <ZoomControl />
           <BasemapControl />
         </Controls>

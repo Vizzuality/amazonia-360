@@ -13,7 +13,7 @@ export function CheckYourEmail(props: React.ComponentProps<"div">) {
   return (
     <Card className="border-none shadow-none" {...props}>
       <CardHeader>
-        <CardTitle className="text-3xl text-primary">{t("auth-check-email-title")}</CardTitle>
+        <CardTitle className="text-primary text-3xl">{t("auth-check-email-title")}</CardTitle>
         <CardDescription className="font-medium">
           {t("auth-check-email-description")}
         </CardDescription>

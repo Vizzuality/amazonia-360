@@ -12,7 +12,7 @@ export default function InformationOn() {
   return (
     <section className="bg-blue-700">
       <div className="container flex flex-col space-y-2 pt-20 md:space-y-0 md:pt-28">
-        <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-blue-200">
+        <h3 className="tracking-wide-lg text-sm font-extrabold text-blue-200 uppercase">
           {t("landing-information-on-note")}
         </h3>
         <div className="flex w-full flex-col justify-between md:grid md:grid-cols-2 md:gap-14">

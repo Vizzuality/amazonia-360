@@ -84,7 +84,7 @@ export const LegendItem = ({ id }: { id: Indicator["id"] }) => {
     <div className="space-y-1 p-4">
       <header className="flex justify-between gap-2 pl-1">
         <div className="relative flex pl-2">
-          <div className="absolute right-full top-0 -mr-1.5">
+          <div className="absolute top-0 right-full -mr-1.5">
             <Button
               variant="ghost"
               type="button"
@@ -104,7 +104,7 @@ export const LegendItem = ({ id }: { id: Indicator["id"] }) => {
               <LuChevronDown className="h-3 w-3" />
             </Button>
           </div>
-          <h3 className="mt-1 text-xs font-semibold text-foreground">{name}</h3>
+          <h3 className="text-foreground mt-1 text-xs font-semibold">{name}</h3>
         </div>
 
         <ul className="flex items-center gap-1">

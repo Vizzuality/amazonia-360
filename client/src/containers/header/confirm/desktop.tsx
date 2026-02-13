@@ -49,8 +49,8 @@ export default function ConfirmLocation() {
 
   return (
     <div className="flex w-full items-center justify-between space-x-2 text-sm">
-      <div className="font-semibold uppercase text-muted-foreground">{TITLE}</div>
-      <div className="text-xs font-bold text-foreground">
+      <div className="text-muted-foreground font-semibold uppercase">{TITLE}</div>
+      <div className="text-foreground text-xs font-bold">
         {formatNumber(AREA, {
           maximumFractionDigits: 0,
         })}{" "}

@@ -43,8 +43,8 @@ export default function EditLocationDrawingConfirm({ onConfirm }: { onConfirm: (
   return (
     <div className="flex w-full items-center justify-between gap-4 text-sm">
       <header>
-        <div className="text-nowrap font-semibold uppercase text-muted-foreground">{TITLE}</div>
-        <div className="text-xs font-bold text-foreground">
+        <div className="text-muted-foreground font-semibold text-nowrap uppercase">{TITLE}</div>
+        <div className="text-foreground text-xs font-bold">
           {formatNumber(AREA, {
             maximumFractionDigits: 0,
           })}{" "}
