@@ -25,3 +25,5 @@ __pycache__/
 /infrastructure/**/local.tfvars
 /infrastructure/.terraform/
 
+/.claude
+CLAUDE.md
