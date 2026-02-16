@@ -92,12 +92,12 @@ export default function Hero() {
         </div>
       </div>
       <Media greaterThanOrEqual="md">
-        <div className="aspect-[2286/1294] w-full overflow-hidden rounded-3xl border-8 border-primary shadow-2xl duration-700 animate-in slide-in-from-bottom-40 slide-in-from-right-72 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]">
+        <div className="aspect-[2880/1640] w-full overflow-hidden rounded-3xl border-[16px] border-primary shadow-2xl duration-700 animate-in slide-in-from-bottom-40 slide-in-from-right-72 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]">
           <Image
             src="/images/home/hero1.webp"
             alt="Amazonia"
-            width={2286}
-            height={1294}
+            width={2880}
+            height={1640}
             className={cn({
               "absolute left-0 top-0 w-full object-cover opacity-0 transition-opacity duration-1000": true,
               "z-20 opacity-100": img === 0,
@@ -109,8 +109,8 @@ export default function Hero() {
           <Image
             src="/images/home/hero2.webp"
             alt="Amazonia"
-            width={2286}
-            height={1294}
+            width={2880}
+            height={1640}
             className={cn({
               "absolute left-0 top-0 w-full object-cover opacity-0 transition-opacity duration-1000": true,
               "z-20 opacity-100": img === 1,
@@ -122,12 +122,12 @@ export default function Hero() {
         </div>
       </Media>
       <Media lessThan="md">
-        <div className="mx-4 aspect-[1143/647] overflow-hidden rounded-t-3xl border-8 border-b-0 border-primary shadow-2xl duration-700 animate-in slide-in-from-bottom-40">
+        <div className="mx-4 aspect-[1440/820] overflow-hidden rounded-t-3xl border-8 border-b-0 border-primary shadow-2xl duration-700 animate-in slide-in-from-bottom-40">
           <Image
             src="/images/home/hero-mobile.webp"
             alt="Amazonia"
-            width={1143}
-            height={647}
+            width={1440}
+            height={820}
             className="w-full max-w-fit object-cover"
             draggable={false}
             priority
