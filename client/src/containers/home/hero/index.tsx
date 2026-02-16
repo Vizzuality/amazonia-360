@@ -1,13 +1,13 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 import ReactMarkdown from "react-markdown";
-import { scroller } from "react-scroll";
 
 import Image from "next/image";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { LuCirclePlay } from "react-icons/lu";
 import { useInterval } from "usehooks-ts";
 
 import { cn } from "@/lib/utils";
@@ -15,20 +15,30 @@ import { cn } from "@/lib/utils";
 import { Media } from "@/containers/media";
 
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 import { Link } from "@/i18n/navigation";
 
+const VIDEO_IDS: Record<string, string> = {
+  es: "56ax7U-kFKg",
+  en: "uCzzKJ5PNJs",
+  pt: "Qp5jI-UqJ_4",
+};
+
 export default function Hero() {
   const [img, setImg] = useState(0);
-  const handleScroll = useCallback(() => {
-    scroller.scrollTo("moreInfo", {
-      duration: 1000,
-      delay: 20,
-      smooth: "easeInOutQuint",
-    });
-  }, []);
+  const [videoOpen, setVideoOpen] = useState(false);
 
   const t = useTranslations();
+  const locale = useLocale();
+  const videoId = VIDEO_IDS[locale] || VIDEO_IDS.en;
 
   useInterval(() => {
     setImg((prev) => (prev + 1) % 2);
@@ -50,14 +60,34 @@ export default function Hero() {
                 {t("landing-hero-buttons-access-the-tool")}
               </Button>
             </Link>
-            <Button
-              size="lg"
-              className="flex space-x-2.5 px-8 capitalize"
-              variant="outline"
-              onClick={handleScroll}
-            >
-              {t("landing-hero-buttons-more-info")}
-            </Button>
+            <Dialog open={videoOpen} onOpenChange={setVideoOpen}>
+              <DialogTrigger asChild>
+                <Button size="lg" className="flex space-x-2.5 px-8" variant="outline">
+                  <LuCirclePlay className="h-5 w-5" />
+                  <span>{t("landing-hero-buttons-more-info")}</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-[min(75vw,calc(80vh*16/9))] gap-0 border-0 p-0">
+                <DialogTitle className="sr-only">
+                  {t("landing-hero-video-dialog-title")}
+                </DialogTitle>
+                <DialogDescription className="sr-only">
+                  {t("landing-hero-buttons-more-info")}
+                </DialogDescription>
+                <div className="aspect-video max-h-[80vh] w-full">
+                  {videoOpen && (
+                    <iframe
+                      className="h-full w-full rounded-lg"
+                      src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+                      title={t("landing-hero-video-dialog-title")}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  )}
+                </div>
+                <DialogClose />
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </div>
