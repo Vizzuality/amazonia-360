@@ -1,6 +1,8 @@
 "use client";
 import { useCallback, useMemo, useState } from "react";
 
+import { useParams } from "next/navigation";
+
 import { VisualizationTypes } from "@/types/indicator";
 
 import { IndicatorView, IndicatorMapView, TopicView } from "@/app/(frontend)/parsers";
@@ -24,6 +26,7 @@ export const ReportResultsContentIndicatorItem = ({
   editable = true,
   editing = false,
 }: ReportResultsContentIndicatorItemProps) => {
+  const { id } = useParams<{ id: string }>();
   const { setTopics } = useFormTopics();
   const [editionModeIndicator, setEditionModeIndicator] = useState(false);
   const { indicator_id, type } = indicatorView;
@@ -59,13 +62,14 @@ export const ReportResultsContentIndicatorItem = ({
     return (
       <IndicatorCard
         key={`${topic.id}-${indicator_id}-${type}`}
-        id={indicator_id}
+        id={id}
+        indicatorId={indicator_id}
         type={type}
         editable={editable}
         basemapId={type === "map" ? indicatorView.basemapId : undefined}
       />
     );
-  }, [topic.id, indicator_id, type, editable, indicatorBasemap]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [id, topic.id, indicator_id, type, editable, indicatorBasemap]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div

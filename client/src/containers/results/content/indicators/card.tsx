@@ -36,17 +36,21 @@ import { TableIndicators } from "@/containers/indicators/table";
 
 import { useSidebar } from "@/components/ui/sidebar";
 
+import { Report } from "@/payload-types";
+
 // custom indicators
 
 export default function ReportResultsIndicator({
   id,
+  indicatorId,
   type,
   basemapId,
   editable,
   isWebshot = false,
   isPdf = false,
 }: {
-  id: Indicator["id"];
+  id: Report["id"];
+  indicatorId: Indicator["id"];
   type: VisualizationTypes;
   basemapId?: BasemapIds;
   editable: boolean;
@@ -56,7 +60,7 @@ export default function ReportResultsIndicator({
   const { toasts } = useSonner();
   const locale = useLocale();
   const t = useTranslations();
-  const indicator = useGetIndicatorsId(id, locale);
+  const indicator = useGetIndicatorsId(indicatorId, locale);
   const searchParams = useSearchParams();
 
   const { toggleSidebar } = useSidebar();
@@ -71,20 +75,20 @@ export default function ReportResultsIndicator({
 
   const handleWebshotDownload = useCallback(
     async (format: string) => {
-      if (toasts.find((t) => t.id === `indicator-${id}-${type}`)) return;
+      if (toasts.find((t) => t.id === `indicator-${indicatorId}-${type}`)) return;
 
       toast.promise(
         postWebshotWidgetsMutation.mutateAsync(
           {
-            pagePath: `/${locale}/webshot/widgets/${id}/${type}?${searchParams.toString()}`,
-            outputFileName: `indicator-${id}.${format.toLowerCase()}`,
+            pagePath: `/${locale}/webshot/widgets/${id}/${indicatorId}/${type}?${searchParams.toString()}`,
+            outputFileName: `indicator-${id}-${indicatorId}-${type}.${format.toLowerCase()}`,
             params: undefined,
           },
           {
             onSuccess: async (res) => {
               await downloadBlobResponse(
                 res.data,
-                `indicator-${id}-${type}.${format.toLowerCase()}`,
+                `indicator-${id}-${indicatorId}-${type}.${format.toLowerCase()}`,
               );
             },
             onError: (error) => {
@@ -93,14 +97,14 @@ export default function ReportResultsIndicator({
           },
         ),
         {
-          id: `indicator-${id}-${type}`,
+          id: `indicator-${id}-${indicatorId}-${type}`,
           loading: t("indicator-webshot-loading", { name: indicator?.name ?? "" }),
           success: t("indicator-webshot-success", { name: indicator?.name ?? "" }),
           error: t("indicator-webshot-error", { name: indicator?.name ?? "" }),
         },
       );
     },
-    [id, t, indicator, type, toasts, locale, searchParams, postWebshotWidgetsMutation],
+    [id, indicatorId, t, indicator, type, toasts, locale, searchParams, postWebshotWidgetsMutation],
   );
 
   if (!indicator) return null;
@@ -144,19 +148,19 @@ export default function ReportResultsIndicator({
             Charts
           */}
           {type === "chart" && indicator.resource.type !== "component" && (
-            <ChartIndicators id={id} />
+            <ChartIndicators id={indicatorId} />
           )}
 
           {/*
             Custom
           */}
-          {indicator.resource.type === "component" && <CustomIndicators id={id} />}
+          {indicator.resource.type === "component" && <CustomIndicators id={indicatorId} />}
 
           {/*
             Numeric
           */}
           {type === "numeric" && indicator.resource.type !== "component" && (
-            <NumericIndicators id={id} isPdf={isPdf} />
+            <NumericIndicators id={indicatorId} isPdf={isPdf} />
           )}
 
           {/*
@@ -164,7 +168,7 @@ export default function ReportResultsIndicator({
           */}
           {type === "table" &&
             indicator.resource.type !== "component" &&
-            indicator.resource.type === "feature" && <TableIndicators id={id} />}
+            indicator.resource.type === "feature" && <TableIndicators id={indicatorId} />}
         </CardContent>
       </Card>
     </div>
