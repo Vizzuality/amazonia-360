@@ -22,7 +22,8 @@ vi.mock("react-markdown", () => ({
 
 vi.mock("next-intl", () => {
   return {
-    useTranslations: vi.fn().mockReturnValue(() => "translated"),
+    useTranslations: vi.fn().mockReturnValue((key: string) => key),
+    useLocale: vi.fn().mockReturnValue("en"),
   };
 });
 

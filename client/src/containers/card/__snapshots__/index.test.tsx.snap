@@ -56,7 +56,7 @@ exports[`CardNoData > renders CardNoData component when query is fetched and no 
     <div
       class="text-center text-sm font-medium text-blue-900"
     >
-      translated
+      card-no-results
     </div>
   </div>
 </div>
@@ -80,7 +80,7 @@ exports[`CardNoData > renders CardNoData component without crashing 1`] = `
     <div
       class="text-center text-sm font-medium text-blue-900"
     >
-      translated
+      card-no-results
     </div>
   </div>
 </div>
