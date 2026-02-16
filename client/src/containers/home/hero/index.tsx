@@ -92,7 +92,7 @@ export default function Hero() {
         </div>
       </div>
       <Media greaterThanOrEqual="md">
-        <div className="border-primary animate-in slide-in-from-bottom-40 slide-in-from-right-72 aspect-2880/1640 w-full overflow-hidden rounded-3xl border-8 shadow-2xl duration-700 md:absolute md:top-1/4 md:-right-1/4 md:w-375 md:max-w-3/4">
+        <div className="border-primary animate-in slide-in-from-bottom-40 slide-in-from-right-72 aspect-2880/1640 w-full overflow-hidden rounded-3xl border-16 shadow-2xl duration-700 md:absolute md:top-1/4 md:-right-1/4 md:w-375 md:max-w-3/4">
           <Image
             src="/images/home/hero1.webp"
             alt="Amazonia"
