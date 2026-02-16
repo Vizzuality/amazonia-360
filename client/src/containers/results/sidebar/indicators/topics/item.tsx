@@ -8,6 +8,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/r
 import { useAtom } from "jotai";
 import { useLocale } from "next-intl";
 
+import { useScrollOnExpand } from "@/lib/hooks";
 import { PLACEHOLDER } from "@/lib/images";
 import { useGetTopicsId } from "@/lib/topics";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
 
   const { topics, setTopics } = useFormTopics();
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
+  const scrollRef = useScrollOnExpand(!!indicatorsExpand?.[id]);
 
   const handleClick = (open: boolean) => {
     setIndicatorsExpand((prev) => {
@@ -86,6 +88,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
 
   return (
     <li
+      ref={scrollRef as React.RefObject<HTMLLIElement | null>}
       key={id}
       className={cn(
         "h-full w-full grow cursor-pointer overflow-hidden rounded-sm bg-white text-left",

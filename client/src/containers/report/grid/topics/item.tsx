@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useAtom } from "jotai";
 import { useLocale } from "next-intl";
 
+import { useScrollOnExpand } from "@/lib/hooks";
 import { PLACEHOLDER } from "@/lib/images";
 import { useGetH3Indicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ export default function TopicsItem({ id, name, image }: TopicsItemProps) {
   const locale = useLocale();
   const [gridDatasets] = useSyncGridDatasets();
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
+  const scrollRef = useScrollOnExpand(!!indicatorsExpand?.[id]);
 
   const { data: indicatorsData } = useGetH3Indicators({ topicId: id, locale });
 
@@ -55,6 +57,7 @@ export default function TopicsItem({ id, name, image }: TopicsItemProps) {
 
   return (
     <div
+      ref={scrollRef as React.RefObject<HTMLDivElement | null>}
       key={id}
       className={cn(
         "h-full w-full grow cursor-pointer overflow-hidden rounded-sm bg-white text-left",

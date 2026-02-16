@@ -8,6 +8,7 @@ import { LuPlus, LuX } from "react-icons/lu";
 import { LuInfo } from "react-icons/lu";
 
 import { useMeta } from "@/lib/grid";
+import { useScrollOnExpand } from "@/lib/hooks";
 import { useLocationGeometry } from "@/lib/location";
 import { cn } from "@/lib/utils";
 
@@ -68,6 +69,7 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
   }, [META, indicator]);
 
   const open = gridDatasets?.includes(H3_INDICATOR?.resource.column ?? "");
+  const scrollRef = useScrollOnExpand(!!open);
 
   const onOpenChange = (open: boolean) => {
     if (open && gridDatasets.length >= 4) {
@@ -113,7 +115,7 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
   }
 
   return (
-    <div className="space-y-1">
+    <div ref={scrollRef as React.RefObject<HTMLDivElement | null>} className="space-y-1">
       <Collapsible
         open={open}
         onOpenChange={onOpenChange}

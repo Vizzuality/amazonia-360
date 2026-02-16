@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from "react";
+import { type RefObject, useRef, useEffect, useCallback } from "react";
 
 /**
  * usePreviousDifferent hook for React
@@ -53,4 +53,23 @@ function useDebounce<T extends (...args: any[]) => any>(callback: T, delay: numb
   ) as T;
 }
 
-export { usePreviousDifferent, useDebounce };
+function useScrollOnExpand(open: boolean): RefObject<HTMLElement | null> {
+  const ref = useRef<HTMLElement | null>(null);
+  const previousOpen = useRef(open);
+
+  useEffect(() => {
+    if (open && !previousOpen.current && ref.current) {
+      requestAnimationFrame(() => {
+        ref.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
+      });
+    }
+    previousOpen.current = open;
+  }, [open]);
+
+  return ref;
+}
+
+export { usePreviousDifferent, useDebounce, useScrollOnExpand };

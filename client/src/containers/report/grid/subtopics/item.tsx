@@ -6,6 +6,7 @@ import { useAtom } from "jotai";
 import { useLocale } from "next-intl";
 import { LuChevronRight } from "react-icons/lu";
 
+import { useScrollOnExpand } from "@/lib/hooks";
 import { useGetH3Indicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +28,7 @@ export default function SubtopicsItem({ id, topic_id, name }: Subtopic) {
   });
   const [gridDatasets] = useSyncGridDatasets();
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
+  const scrollRef = useScrollOnExpand(!!indicatorsExpand?.[topic_id]?.includes(id));
 
   const SELECTED = useMemo(() => {
     if (!indicatorsData || !gridDatasets) return 0;
@@ -52,6 +54,7 @@ export default function SubtopicsItem({ id, topic_id, name }: Subtopic) {
 
   return (
     <div
+      ref={scrollRef as React.RefObject<HTMLDivElement | null>}
       key={id}
       className={cn(
         "h-full w-full grow cursor-pointer overflow-hidden rounded-sm bg-white text-left",
