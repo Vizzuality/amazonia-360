@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown";
 
 import { DownloadAction } from "./download";
+import { DuplicateAction } from "./duplicate";
 import { NewReportAction } from "./new";
 import { ShareAction } from "./share";
 
@@ -31,12 +32,16 @@ export const ActionsReport = () => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-48">
+        <ShareAction reportId={id} />
+        <DownloadAction reportId={id} />
+        <DuplicateAction reportId={id} />
+
+        <DropdownMenuSeparator />
+
         <NewReportAction />
 
         <DropdownMenuSeparator />
 
-        <ShareAction reportId={id} />
-        <DownloadAction reportId={id} />
         <HelpAction reportId={id} />
       </DropdownMenuContent>
     </DropdownMenu>

@@ -144,6 +144,7 @@
   "report-results-unsaved-changes-download-warning": "You have made changes to your report, please save before downloading to see the latest version",
   "report-results-unsaved-changes-download-warning-duplicate": "You have made changes to this report, please duplicate before downloading to see the latest version",
   "report-results-discard-and-continue": "Discard & continue",
+  "report-results-action-duplicate": "Duplicate",
   "report-results-buttons-edit-report": "Edit report",
   "report-results-buttons-edit-close-report": "Close editing",
   "report-results-disclaimer-part-1": "The maps, data, and geographic information presented on AmazoniaForever360+ are provided for reference purposes only and are intended solely to enhance territorial knowledge of the Amazonia Forever program's work area.",
