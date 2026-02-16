@@ -25,11 +25,6 @@ __pycache__/
 /infrastructure/**/local.tfvars
 /infrastructure/.terraform/
 
-<<<<<<< HEAD
-/.claude
-CLAUDE.md
-=======
 # Claude Code
 .claude/
 CLAUDE.md
->>>>>>> d50cb76d (chore: vitest migration (#317))
