@@ -2,6 +2,8 @@
 
 import { useMemo } from "react";
 
+import { useParams } from "next/navigation";
+
 import { VisualizationTypes } from "@/types/indicator";
 import { Topic } from "@/types/topic";
 
@@ -19,6 +21,7 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
 }
 
 export default function PdfTopicSection(topic: Topic) {
+  const { id } = useParams<{ id: string }>();
   const { topics } = useFormTopics();
 
   const TOPIC = useMemo(() => topics?.find((t) => t.topic_id === topic.id), [topic.id, topics]);
@@ -67,7 +70,8 @@ export default function PdfTopicSection(topic: Topic) {
                   <ReportResultsIndicator
                     key={indicator.id}
                     type={indicator.type}
-                    id={indicator.indicator_id}
+                    id={id}
+                    indicatorId={indicator.indicator_id}
                     editable={false}
                     isPdf
                   />
@@ -89,7 +93,8 @@ export default function PdfTopicSection(topic: Topic) {
                   <ReportResultsIndicator
                     key={indicator.id}
                     type={indicator.type}
-                    id={indicator.indicator_id}
+                    id={id}
+                    indicatorId={indicator.indicator_id}
                     editable={false}
                     isPdf
                   />
@@ -108,7 +113,8 @@ export default function PdfTopicSection(topic: Topic) {
                   <ReportResultsIndicator
                     key={indicator.id}
                     type={indicator.type}
-                    id={indicator.indicator_id}
+                    id={id}
+                    indicatorId={indicator.indicator_id}
                     editable={false}
                     isPdf
                   />
@@ -130,7 +136,8 @@ export default function PdfTopicSection(topic: Topic) {
                   <ReportResultsIndicator
                     key={indicator.id}
                     type={indicator.type}
-                    id={indicator.indicator_id}
+                    id={id}
+                    indicatorId={indicator.indicator_id}
                     editable={false}
                     isPdf
                   />
