@@ -3,6 +3,7 @@
 import { useAtom } from "jotai";
 import { LuChevronRight } from "react-icons/lu";
 
+import { useScrollOnExpand } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 
 import { Subtopic } from "@/types/topic";
@@ -17,6 +18,7 @@ import { CounterIndicatorsPill } from "./counter-indicators-pill";
 
 export default function SubtopicsItem({ id, topic_id, name }: Subtopic) {
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
+  const scrollRef = useScrollOnExpand(!!indicatorsExpand?.[topic_id]?.includes(id));
 
   const handleClick = (open: boolean) => {
     setIndicatorsExpand((prev) => {
@@ -36,6 +38,7 @@ export default function SubtopicsItem({ id, topic_id, name }: Subtopic) {
 
   return (
     <div
+      ref={scrollRef as React.RefObject<HTMLDivElement | null>}
       key={id}
       className={cn(
         "h-full w-full grow cursor-pointer overflow-hidden rounded-sm bg-white text-left",

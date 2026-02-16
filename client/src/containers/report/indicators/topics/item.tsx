@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useAtom } from "jotai";
 import { useLocale } from "next-intl";
 
+import { useScrollOnExpand } from "@/lib/hooks";
 import { PLACEHOLDER } from "@/lib/images";
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,7 @@ export default function TopicsItem({ id, name, image }: TopicsItemProps) {
   });
   const [indicators] = useSyncIndicators();
   const [indicatorsExpand, setIndicatorsExpand] = useAtom(indicatorsExpandAtom);
+  const scrollRef = useScrollOnExpand(!!indicatorsExpand?.[id]);
 
   const SELECTED = useMemo(() => {
     if (!indicatorsData || !indicators) return 0;
@@ -54,6 +56,7 @@ export default function TopicsItem({ id, name, image }: TopicsItemProps) {
 
   return (
     <div
+      ref={scrollRef as React.RefObject<HTMLDivElement | null>}
       key={id}
       className={cn(
         "h-full w-full grow cursor-pointer overflow-hidden rounded-sm bg-white text-left",
