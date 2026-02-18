@@ -178,9 +178,6 @@
       "sharp",
       "unrs-resolver",
       "es5-ext"
-    ],
-    "overrides": {
-      "fast-xml-parser": ">=5.3.6"
-    }
+    ]
   }
 }
