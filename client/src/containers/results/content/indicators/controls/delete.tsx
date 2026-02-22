@@ -22,7 +22,7 @@ const DeleteHandler = ({ indicatorId, type, onClick }: DeleteHandlerProps) => {
         <button
           id={`${indicatorId}`}
           type="button"
-          className="absolute -right-3 -top-2.5 z-10 rounded-full bg-primary p-2"
+          className="bg-primary absolute -top-2.5 -right-3 z-10 rounded-full p-2"
           onClick={() => {
             onClick(indicatorId, type);
           }}

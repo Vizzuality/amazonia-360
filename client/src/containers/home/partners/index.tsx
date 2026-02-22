@@ -108,10 +108,10 @@ export default function Partners() {
     <section ref={sectionRef} className="bg-blue-50 py-20 md:py-28">
       <div className="container flex flex-col items-end md:flex-row md:items-center md:space-x-28">
         <div
-          className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-6 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-20" : "md:opacity-0"}`}
+          className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-6 ${isSectionInView ? "md:animate-in md:fade-in-0 md:slide-in-from-left-20 overflow-hidden md:duration-700" : "md:opacity-0"}`}
         >
           <div>
-            <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-blue-400">
+            <h3 className="tracking-wide-lg text-sm font-extrabold text-blue-400 uppercase">
               {t("landing-partners-note")}
             </h3>
             <h2 className="max-w-44 pb-6 text-2xl text-blue-600 md:max-w-[390px] lg:text-3xl xl:text-4xl">
@@ -126,7 +126,7 @@ export default function Partners() {
           </Button> */}
         </div>
         <div
-          className={`mt-10 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-right-20" : "opacity-0"}`}
+          className={`mt-10 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${isSectionInView ? "md:animate-in md:fade-in-0 md:slide-in-from-right-20 overflow-hidden md:duration-700" : "opacity-0"}`}
         >
           <ul className="mx-auto flex max-w-xl flex-wrap items-center justify-center gap-x-2 gap-y-4 xl:gap-x-4">
             {PARTNERS.map((partner, index) => (

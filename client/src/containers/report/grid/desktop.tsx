@@ -25,15 +25,15 @@ export default function ReportGridDesktop() {
 
   return (
     <aside className="pointer-events-auto flex w-full shrink-0 flex-col overflow-hidden">
-      <div className="flex max-h-[calc(100vh_-_(theme(spacing.16)_+_theme(spacing.20)))] grow flex-col">
+      <div className="flex max-h-[calc(100vh-(calc(var(--spacing)*16)+calc(var(--spacing)*20)))] grow flex-col">
         <div className="relative flex max-h-full grow flex-col overflow-hidden">
           <Tabs
             value={gridPanel}
             onValueChange={(value) => setGridPanel(value as "filters" | "table")}
             className="relative flex grow flex-col overflow-hidden"
           >
-            <div className="absolute right-6 top-6 z-10 flex items-center space-x-1">
-              <TabsList className="z-10 space-x-0.5 rounded-lg border border-border bg-secondary p-0.5">
+            <div className="absolute top-6 right-6 z-10 flex items-center space-x-1">
+              <TabsList className="border-border bg-secondary z-10 space-x-0.5 rounded-lg border p-0.5">
                 <TabsTrigger value="filters" asChild>
                   <Button size="sm" variant={gridPanel === "filters" ? "default" : "secondary"}>
                     {t("grid-sidebar-grid-tab")}
@@ -48,7 +48,7 @@ export default function ReportGridDesktop() {
 
               <a href={HELP_LINKS[locale]} target="_blank" rel="noreferrer noopener">
                 <Button size="icon" variant="ghost" type="button" className="gap-2">
-                  <LucideHelpCircle className="h-4 w-4 text-secondary-foreground" />
+                  <LucideHelpCircle className="text-secondary-foreground h-4 w-4" />
                 </Button>
               </a>
             </div>

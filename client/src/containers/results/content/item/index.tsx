@@ -92,9 +92,9 @@ export const ReportResultsContentItem = ({
           <div
             id={`${refKey}-outline`}
             className={cn(
-              "pointer-events-none absolute -left-0.5 -top-0.5 z-0 h-[calc(100%+4px)] w-[calc(100%+4px)] rounded-2xl bg-primary",
+              "bg-primary pointer-events-none absolute -top-0.5 -left-0.5 z-0 h-[calc(100%+4px)] w-[calc(100%+4px)] rounded-2xl",
               "scale-95 opacity-0 transition-all duration-1000",
-              "data-[status=active]:scale-100 data-[status=inactive]:scale-95 data-[status=active]:opacity-100 data-[status=inactive]:opacity-0",
+              "data-[status=active]:scale-100 data-[status=active]:opacity-100 data-[status=inactive]:scale-95 data-[status=inactive]:opacity-0",
               // "scale-100 opacity-100 transition-all duration-1000",
             )}
           />
@@ -118,7 +118,7 @@ export const ReportResultsContentItem = ({
     <div
       key={topic.id}
       className={cn({
-        "container relative space-y-4 print:break-before-auto print:px-0": true,
+        "relative container space-y-4 print:break-before-auto print:px-0": true,
       })}
     >
       {!!TOPIC && TOPIC?.id !== 0 && <ReportTopicHeader {...TOPIC} />}

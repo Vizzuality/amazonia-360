@@ -74,7 +74,7 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
                 esriGeometry,
                 BUFFERS[arcgisGeometry.type] || 0,
               );
-              if (bufferedGeometry) {
+              if (bufferedGeometry && bufferedGeometry.extent) {
                 setTmpBbox(bufferedGeometry.extent);
               }
             }
@@ -84,6 +84,7 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
             onOpenChange(false);
             resolve();
           } catch (err) {
+            console.error("Error processing uploaded geometry:", err);
             // Handle different error types
             let errorMessage = t("generic-error");
 
@@ -149,7 +150,7 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
       >
         <DialogClose />
         <DialogHeader>
-          <DialogTitle className="text-xl text-primary">
+          <DialogTitle className="text-primary text-xl">
             {t("upload-geometry-dialog-title")}
           </DialogTitle>
           <DialogDescription asChild>
@@ -164,16 +165,16 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
             onDrop={onDrop}
             disabled={isUploading}
             src={uploadedFiles}
-            className="min-h-[200px]"
+            className="min-h-50"
           >
             <DropzoneEmptyState />
             <DropzoneContent />
           </Dropzone>
         </div>
 
-        <div className="flex items-start space-x-4 rounded bg-blue-50 p-3">
-          <LuFileCheck className="h-5 w-5 shrink-0 text-foreground" />
-          <Markdown className="pt-0.5 text-xs text-foreground">
+        <div className="flex items-start space-x-4 rounded-sm bg-blue-50 p-3">
+          <LuFileCheck className="text-foreground h-5 w-5 shrink-0" />
+          <Markdown className="text-foreground pt-0.5 text-xs">
             {t("upload-geometry-supported-formats")}
           </Markdown>
         </div>

@@ -12,7 +12,7 @@ import { routing } from "@/i18n/routing";
 const intlMiddleware = createMiddleware(routing);
 
 // Main middleware handler
-export default async function middleware(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   // Step 1: Ignore requests for static files like images, icons, etc.
   const PUBLIC_FILE = /\.(.*)$/;
   if (PUBLIC_FILE.test(req.nextUrl.pathname)) {

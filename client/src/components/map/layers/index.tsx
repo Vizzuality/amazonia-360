@@ -193,7 +193,9 @@ export default function Layer({
 
       if (map.findLayerById(id)) {
         const l = map.findLayerById(id);
-        map.remove(l);
+        if (l) {
+          map.remove(l);
+        }
       }
     };
   }, [id, mapInstance]);

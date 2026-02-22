@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function KeyFeaturesChartsColumn2({ inView }: { inView: boolean }) {
   return (
     <div
-      className={`relative flex space-x-4 lg:flex-col lg:space-x-0 lg:space-y-4 ${inView ? "animate-slide-down" : "translate-y-[-10px]"}`}
+      className={`relative flex space-x-4 lg:flex-col lg:space-y-4 lg:space-x-0 ${inView ? "animate-slide-down" : "translate-y-[-10px]"}`}
     >
       <Image
         alt="funding-by-type-chart"

@@ -48,13 +48,13 @@ export const MyReportsItem = ({ report }: MyReportsItemProps) => {
         <header className="flex justify-between gap-2">
           <div className="space-y-2">
             <div className="flex items-start justify-between gap-2">
-              <h3 className="line-clamp-2 text-lg font-medium text-foreground">
+              <h3 className="text-foreground line-clamp-2 text-lg font-medium">
                 {report.title || t("my-reports-item-untitled")}
               </h3>
             </div>
 
             {report.description && (
-              <p className="line-clamp-3 text-sm font-medium text-muted-foreground">
+              <p className="text-muted-foreground line-clamp-3 text-sm font-medium">
                 {report.description}
               </p>
             )}
@@ -65,18 +65,18 @@ export const MyReportsItem = ({ report }: MyReportsItemProps) => {
 
         {/* Metadata */}
         <div className="space-y-2">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="text-muted-foreground flex items-center gap-2 text-sm">
             <LuMapPin className="h-4 w-4 shrink-0" />
             <span className="line-clamp-1">{getLocationLabel(report.location)}</span>
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="text-muted-foreground flex items-center gap-2 text-sm">
             <LuCalendar className="h-4 w-4 shrink-0" />
             <span>{formatDate(report.createdAt)}</span>
           </div>
         </div>
 
-        <div className="relative flex min-h-[12rem] w-full grow flex-col overflow-hidden rounded-sm bg-muted">
+        <div className="bg-muted relative flex min-h-[12rem] w-full grow flex-col overflow-hidden rounded-xs">
           <div className="grow">
             <ReportMapPreview {...report} />
           </div>

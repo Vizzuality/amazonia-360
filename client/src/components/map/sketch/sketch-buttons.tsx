@@ -90,7 +90,7 @@ export default function SketchButtons({ iconOnly = false }: { iconOnly: boolean 
                 sketch.enabled &&
                   sketch.type === button.id &&
                   buttonVariants({ variant: "default", size: "responsive" }),
-                "group flex items-center justify-center rounded-md border border-border xl:w-full xl:p-0",
+                "group border-border flex items-center justify-center rounded-md border xl:w-full xl:p-0",
                 iconOnly ? "h-10 w-10 xl:h-10 xl:w-10" : "space-x-2.5",
               )}
               aria-label={t("grid-sketch-start-drawing")}
@@ -125,7 +125,7 @@ export default function SketchButtons({ iconOnly = false }: { iconOnly: boolean 
           className={cn(
             buttonVariants({ variant: "ghost", size: "responsive" }),
             "group flex items-center justify-center rounded-md xl:w-full xl:p-0",
-            iconOnly ? "h-10 w-10 border border-border xl:h-10 xl:w-10" : "space-x-2.5",
+            iconOnly ? "border-border h-10 w-10 border xl:h-10 xl:w-10" : "space-x-2.5",
           )}
           aria-label="Upload geometry"
           onClick={handleUploadClick}

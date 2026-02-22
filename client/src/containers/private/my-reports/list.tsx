@@ -27,12 +27,12 @@ export const MyReportsList = ({ data, isLoading }: MyReportsListProps) => {
 
   if (!data.length) {
     return (
-      <div className="flex min-h-[400px] items-center justify-center">
+      <div className="flex min-h-100 items-center justify-center">
         <div className="text-center">
-          <p className="text-lg font-medium text-muted-foreground">
+          <p className="text-muted-foreground text-lg font-medium">
             {t("my-reports-no-reports-found")}
           </p>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="text-muted-foreground mt-2 text-sm">
             {t("my-reports-no-reports-description")}
           </p>
         </div>

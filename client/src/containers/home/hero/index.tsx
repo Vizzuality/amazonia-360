@@ -45,9 +45,9 @@ export default function Hero() {
   }, 4000);
 
   return (
-    <section className="relative w-full overflow-hidden md:h-[calc(100svh_-_64px)] md:bg-blue-50">
-      <div className="container relative grid h-full w-full grid-cols-12 items-center">
-        <div className="relative z-10 col-span-12 flex flex-col space-y-6 py-8 md:col-span-5 md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-40">
+    <section className="relative w-full overflow-hidden md:h-[calc(100svh-64px)] md:bg-blue-50">
+      <div className="relative container grid h-full w-full grid-cols-12 items-center">
+        <div className="md:animate-in md:fade-in-0 md:slide-in-from-left-40 relative z-10 col-span-12 flex flex-col space-y-6 py-8 md:col-span-5 md:duration-700">
           <h2 className="text-4xl text-blue-600 lg:text-4xl xl:text-5xl">
             <ReactMarkdown>{t("landing-hero-title")}</ReactMarkdown>
           </h2>
@@ -92,14 +92,14 @@ export default function Hero() {
         </div>
       </div>
       <Media greaterThanOrEqual="md">
-        <div className="aspect-[2880/1640] w-full overflow-hidden rounded-3xl border-[16px] border-primary shadow-2xl duration-700 animate-in slide-in-from-bottom-40 slide-in-from-right-72 md:absolute md:right-[-25%] md:top-[25%] md:w-[1500px] md:max-w-[75%]">
+        <div className="border-primary animate-in slide-in-from-bottom-40 slide-in-from-right-72 aspect-2880/1640 w-full overflow-hidden rounded-3xl border-16 shadow-2xl duration-700 md:absolute md:top-1/4 md:-right-1/4 md:w-375 md:max-w-3/4">
           <Image
             src="/images/home/hero1.webp"
             alt="Amazonia"
             width={2880}
             height={1640}
             className={cn({
-              "absolute left-0 top-0 w-full object-cover opacity-0 transition-opacity duration-1000": true,
+              "absolute top-0 left-0 w-full object-cover opacity-0 transition-opacity duration-1000": true,
               "z-20 opacity-100": img === 0,
               "opacity-0 delay-500": img === 1,
             })}
@@ -112,7 +112,7 @@ export default function Hero() {
             width={2880}
             height={1640}
             className={cn({
-              "absolute left-0 top-0 w-full object-cover opacity-0 transition-opacity duration-1000": true,
+              "absolute top-0 left-0 w-full object-cover opacity-0 transition-opacity duration-1000": true,
               "z-20 opacity-100": img === 1,
               "opacity-0 delay-500": img === 0,
             })}
@@ -122,7 +122,7 @@ export default function Hero() {
         </div>
       </Media>
       <Media lessThan="md">
-        <div className="mx-4 aspect-[1440/820] overflow-hidden rounded-t-3xl border-8 border-b-0 border-primary shadow-2xl duration-700 animate-in slide-in-from-bottom-40">
+        <div className="border-primary animate-in slide-in-from-bottom-40 mx-4 aspect-1440/820 overflow-hidden rounded-t-3xl border-8 border-b-0 shadow-2xl duration-700">
           <Image
             src="/images/home/hero-mobile.webp"
             alt="Amazonia"

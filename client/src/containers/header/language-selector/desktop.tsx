@@ -30,7 +30,7 @@ const LanguageSelector = () => {
   };
   return (
     <Select value={locale} onValueChange={onSelectLocale}>
-      <SelectTrigger className="w-fit rounded-sm border-none shadow-none outline-none hover:bg-secondary focus:ring-0">
+      <SelectTrigger className="hover:bg-secondary w-fit rounded-xs border-none shadow-none outline-hidden focus:ring-0">
         <SelectValue className="flex text-sm">{localeLabelsShort[locale]}</SelectValue>
       </SelectTrigger>
       <SelectContent className="no-scrollbar max-h-96 overflow-y-auto border-none shadow-md">

@@ -43,7 +43,7 @@ export const DeleteAction = ({ report }: ReportActionsProps) => {
           e.preventDefault();
           setOpen(true);
         }}
-        className="cursor-pointer text-destructive focus:text-destructive"
+        className="text-destructive focus:text-destructive cursor-pointer"
       >
         <LuTrash className="mr-2 h-4 w-4" />
         <span>{t("my-reports-action-delete")}</span>

@@ -41,9 +41,9 @@ export default function NewReport() {
             <ReactMarkdown>{t("report-results-buttons-new-report-description")}</ReactMarkdown>
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <div className="flex items-start space-x-4 rounded-sm border border-border bg-blue-50 p-3">
+        <div className="border-border flex items-start space-x-4 rounded-xs border bg-blue-50 p-3">
           <LuCircleAlert className="text-alert h-5 w-5 shrink-0" />
-          <p className="text-sm font-medium text-foreground">{t("new-report-modal-warning")}</p>
+          <p className="text-foreground text-sm font-medium">{t("new-report-modal-warning")}</p>
         </div>
 
         <AlertDialogFooter className="flex w-full justify-end space-x-2 justify-self-end">

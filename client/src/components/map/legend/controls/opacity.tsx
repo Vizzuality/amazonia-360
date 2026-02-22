@@ -30,7 +30,7 @@ const OpacityControl = ({
       <Tooltip>
         <PopoverTrigger
           className={cn(
-            "flex h-6 w-6 items-center justify-center rounded-sm p-0 hover:bg-blue-100",
+            "flex h-6 w-6 items-center justify-center rounded-xs p-0 hover:bg-blue-100",
           )}
         >
           <TooltipTrigger asChild>
@@ -64,7 +64,7 @@ const OpacityControl = ({
                 className="cursor-pointer"
               />
             </div>
-            <div className="flex w-full justify-between text-[10px] font-medium text-muted-foreground">
+            <div className="text-muted-foreground flex w-full justify-between text-[10px] font-medium">
               <span>0%</span>
               <span>100%</span>
             </div>

@@ -50,7 +50,7 @@ export const MapPopup = () => {
 
   return (
     <div
-      className="pointer-events-none absolute flex min-w-60 max-w-72 flex-col space-y-1.5 rounded-lg bg-white p-4 shadow-md"
+      className="pointer-events-none absolute flex max-w-72 min-w-60 flex-col space-y-1.5 rounded-lg bg-white p-4 shadow-md"
       style={{
         ...(gridHover?.y && { top: gridHover?.y + 10 }),
         ...(gridHover?.x && { left: gridHover?.x + 10 }),
@@ -59,13 +59,13 @@ export const MapPopup = () => {
       <div className="flex flex-col space-y-1">
         {VALUES.map((v) => (
           <div key={`${v?.name}-${v?.value}`} className="flex justify-between space-x-4">
-            <p className="text-xs font-semibold text-foreground">{v?.name}</p>
-            <p className="text-right text-xs font-medium text-foreground">{v?.value}</p>
+            <p className="text-foreground text-xs font-semibold">{v?.name}</p>
+            <p className="text-foreground text-right text-xs font-medium">{v?.value}</p>
           </div>
         ))}
       </div>
 
-      <p className="text-xs italic text-muted-foreground">{t("grid-map-tooltip")}</p>
+      <p className="text-muted-foreground text-xs italic">{t("grid-map-tooltip")}</p>
     </div>
   );
 };

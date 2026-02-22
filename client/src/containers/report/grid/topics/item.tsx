@@ -60,7 +60,7 @@ export default function TopicsItem({ id, name, image }: TopicsItemProps) {
       ref={scrollRef as React.RefObject<HTMLDivElement | null>}
       key={id}
       className={cn(
-        "h-full w-full grow cursor-pointer overflow-hidden rounded-sm bg-white text-left",
+        "h-full w-full grow cursor-pointer overflow-hidden rounded-xs bg-white text-left",
       )}
     >
       <Collapsible open={!!indicatorsExpand?.[id]} onOpenChange={handleClick}>
@@ -70,7 +70,7 @@ export default function TopicsItem({ id, name, image }: TopicsItemProps) {
           )}
         >
           <div className={cn("flex items-center space-x-2.5")}>
-            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-sm bg-cyan-100">
+            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xs bg-cyan-100">
               <Image
                 src={image}
                 alt={`${name}`}
