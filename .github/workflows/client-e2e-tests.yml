@@ -14,6 +14,7 @@ jobs:
       github.event.deployment_status.state == 'success' &&
       contains(github.event.deployment_status.environment, 'Preview')
     runs-on: ubuntu-24.04
+    environment: develop
     steps:
       - name: Checkout code
         uses: actions/checkout@v5.0.0
@@ -37,8 +38,8 @@ jobs:
         run: pnpm test:e2e
         env:
           BASE_URL: ${{ github.event.deployment_status.target_url }}
-          BASIC_AUTH_USER: ${{ secrets.BASIC_AUTH_USER }}
-          BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
+          BASIC_AUTH_USER: ${{ secrets.TF_CLIENT_BASIC_AUTH_USER }}
+          BASIC_AUTH_PASSWORD: ${{ secrets.TF_CLIENT_BASIC_AUTH_PASSWORD }}
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
         if: always()
