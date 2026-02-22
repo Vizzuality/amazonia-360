@@ -1,6 +1,13 @@
 name: Client E2E Tests
 
-on: deployment_status
+on:
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "URL to test against"
+        required: true
+        type: string
 
 defaults:
   run:
@@ -11,8 +18,9 @@ jobs:
   e2e-tests:
     name: Playwright E2E Tests
     if: >
-      github.event.deployment_status.state == 'success' &&
-      contains(github.event.deployment_status.environment, 'Preview')
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+      contains(github.event.deployment_status.environment, 'Preview'))
     runs-on: ubuntu-24.04
     environment: develop
     steps:
@@ -37,7 +45,7 @@ jobs:
       - name: Run E2E tests
         run: pnpm test:e2e
         env:
-          BASE_URL: ${{ github.event.deployment_status.target_url }}
+          BASE_URL: ${{ inputs.base_url || github.event.deployment_status.target_url }}
           BASIC_AUTH_USER: ${{ secrets.TF_CLIENT_BASIC_AUTH_USER }}
           BASIC_AUTH_PASSWORD: ${{ secrets.TF_CLIENT_BASIC_AUTH_PASSWORD }}
       - name: Upload Playwright report
