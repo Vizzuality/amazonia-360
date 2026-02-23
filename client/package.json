@@ -13,6 +13,9 @@
     "prepare": "cd .. && husky client/.husky",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:report": "playwright show-report e2e/playwright-report",
     "payload": "payload",
     "ci": "payload migrate && pnpm build"
   },
@@ -139,6 +142,7 @@
   "devDependencies": {
     "@auth/core": "0.34.3",
     "@eslint/eslintrc": "3.3.1",
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/typography": "^0.5.19",
     "@tanstack/eslint-plugin-query": "5.91.2",
@@ -157,6 +161,7 @@
     "@types/terraformer__arcgis": "^2.0.5",
     "@vitejs/plugin-react": "^5.1.4",
     "@vitest/coverage-v8": "^4.0.18",
+    "dotenv": "^17.3.1",
     "eslint": "9.38.0",
     "eslint-config-next": "15.5.6",
     "eslint-config-prettier": "9.1.2",
