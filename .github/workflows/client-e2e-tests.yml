@@ -78,6 +78,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-
 
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: client/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('client/pnpm-lock.yaml') }}-${{ hashFiles('client/src/**/*.ts', 'client/src/**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('client/pnpm-lock.yaml') }}-
+
       - name: Install client dependencies
         run: pnpm install --frozen-lockfile
 
