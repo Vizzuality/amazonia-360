@@ -1,13 +1,17 @@
 name: Client E2E Tests
 
 on:
-  deployment_status:
+  push:
+    branches: [develop]
+    paths:
+      - "client/**"
+      - ".github/workflows/client-e2e-tests.yml"
+  pull_request:
+    branches: [develop]
+    paths:
+      - "client/**"
+      - ".github/workflows/client-e2e-tests.yml"
   workflow_dispatch:
-    inputs:
-      base_url:
-        description: "URL to test against"
-        required: true
-        type: string
 
 defaults:
   run:
@@ -17,40 +21,73 @@ defaults:
 jobs:
   e2e-tests:
     name: Playwright E2E Tests
-    if: >
-      github.event_name == 'workflow_dispatch' ||
-      (github.event.deployment_status.state == 'success' &&
-      contains(github.event.deployment_status.environment, 'Preview'))
     runs-on: ubuntu-24.04
-    environment: develop
+    timeout-minutes: 30
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: amazonia360_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/amazonia360_test
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5.0.0
-      - name: Node setup
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install API dependencies
+        working-directory: api
+        run: uv sync --frozen
+
+      - name: Create minimal grid data
+        run: |
+          mkdir -p /tmp/grid-tiles
+          echo '{"datasets":[],"h3_grid_info":[]}' > /tmp/grid-tiles/meta.json
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: "client/.nvmrc"
-      - uses: pnpm/action-setup@v4
-      - name: Cache pnpm modules
-        uses: actions/cache@v4.2.3
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-${{ hashFiles('client/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('client/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-
-      - name: Install dependencies
+            ${{ runner.os }}-pnpm-
+
+      - name: Install client dependencies
         run: pnpm install --frozen-lockfile
+
       - name: Install Playwright browsers
         run: pnpm exec playwright install chromium --with-deps
+
       - name: Run E2E tests
         run: pnpm test:e2e
-        env:
-          BASE_URL: ${{ inputs.base_url || github.event.deployment_status.target_url }}
-          BASIC_AUTH_USER: ${{ secrets.TF_CLIENT_BASIC_AUTH_USER }}
-          BASIC_AUTH_PASSWORD: ${{ secrets.TF_CLIENT_BASIC_AUTH_PASSWORD }}
-          E2E_TEST_USER_EMAIL: ${{ secrets.E2E_TEST_USER_EMAIL }}
-          E2E_TEST_USER_PASSWORD: ${{ secrets.E2E_TEST_USER_PASSWORD }}
-          E2E_SEED_SECRET: ${{ secrets.E2E_SEED_SECRET }}
+
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
         if: always()
@@ -58,6 +95,7 @@ jobs:
           name: playwright-report
           path: client/e2e/playwright-report/
           retention-days: 14
+
       - name: Upload test results
         uses: actions/upload-artifact@v4
         if: failure()

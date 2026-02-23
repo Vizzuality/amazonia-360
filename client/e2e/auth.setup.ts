@@ -7,7 +7,12 @@ setup("authenticate as test user", async ({ page, request }) => {
   const email = process.env.E2E_TEST_USER_EMAIL;
   const password = process.env.E2E_TEST_USER_PASSWORD;
 
-  setup.skip(!email || !password, "E2E_TEST_USER_EMAIL and E2E_TEST_USER_PASSWORD not set");
+  if (!email || !password) {
+    return setup.skip(
+      !email || !password,
+      "E2E_TEST_USER_EMAIL and E2E_TEST_USER_PASSWORD not set",
+    );
+  }
 
   // Seed the test user via the server endpoint when E2E_SEED_SECRET is set.
   // The endpoint must also have E2E_SEED_SECRET in its server environment.
@@ -21,14 +26,13 @@ setup("authenticate as test user", async ({ page, request }) => {
 
       if (response.ok()) {
         const result = await response.json();
-        // eslint-disable-next-line no-console
         console.log(`Seed user result: ${result.status}`);
       } else {
-        // eslint-disable-next-line no-console
-        console.warn(`Seed endpoint returned ${response.status()} — user may need to exist already`);
+        console.warn(
+          `Seed endpoint returned ${response.status()} — user may need to exist already`,
+        );
       }
     } catch {
-      // eslint-disable-next-line no-console
       console.warn("Seed endpoint unreachable — user must already exist");
     }
   }
