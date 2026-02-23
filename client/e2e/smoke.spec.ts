@@ -1,15 +1,8 @@
 import { test, expect } from "./fixtures";
+import { dismissCookieConsent } from "./helpers/cookie-consent";
 import { LOCALES, type Locale } from "./helpers/locale";
 import { HomePage } from "./pages/home.page";
 import { LanguageSelector } from "./pages/language-selector.page";
-
-/** Dismiss the cookies consent dialog regardless of locale. */
-async function dismissCookieConsent(page: import("@playwright/test").Page) {
-  // Button text varies by locale: Accept (en), Aceptar (es), Aceitar (pt)
-  const acceptBtn = page.getByRole("button", { name: /^accept|^aceptar|^aceitar/i });
-  await acceptBtn.click({ timeout: 5_000 }).catch(() => {});
-  await acceptBtn.waitFor({ state: "hidden", timeout: 5_000 }).catch(() => {});
-}
 
 test.describe("homepage", () => {
   for (const locale of LOCALES) {

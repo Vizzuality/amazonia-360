@@ -65,7 +65,7 @@ export default async function PrivateLayout({
 
     redirect({
       locale,
-      href: `/auth/sign-in?callbackUrl=${encodeURIComponent(currentUrl)}`,
+      href: `/auth/sign-in?redirectUrl=${encodeURIComponent(currentUrl)}`,
     });
   }
 

@@ -48,6 +48,9 @@ jobs:
           BASE_URL: ${{ inputs.base_url || github.event.deployment_status.target_url }}
           BASIC_AUTH_USER: ${{ secrets.TF_CLIENT_BASIC_AUTH_USER }}
           BASIC_AUTH_PASSWORD: ${{ secrets.TF_CLIENT_BASIC_AUTH_PASSWORD }}
+          E2E_TEST_USER_EMAIL: ${{ secrets.E2E_TEST_USER_EMAIL }}
+          E2E_TEST_USER_PASSWORD: ${{ secrets.E2E_TEST_USER_PASSWORD }}
+          E2E_SEED_SECRET: ${{ secrets.E2E_SEED_SECRET }}
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
         if: always()
