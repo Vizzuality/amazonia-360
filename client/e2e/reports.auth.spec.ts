@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { test } from "./fixtures";
 import { mockArcGISFeatureServer } from "./helpers/arcgis-mock";
 import { dismissCookieConsent } from "./helpers/cookie-consent";
-import { ReportPage } from "./pages/report.page";
+import { ReportsPage } from "./pages/reports.page";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const hasCredentials = !!(process.env.E2E_TEST_USER_EMAIL && process.env.E2E_TEST_USER_PASSWORD);
@@ -19,32 +19,32 @@ test.describe("report creation (authenticated)", () => {
   }) => {
     test.skip(!hasCredentials, "E2E test user credentials not set");
 
-    const reportPage = new ReportPage(page);
-    await reportPage.goto();
-    await reportPage.expectLoaded();
+    const reportsPage = new ReportsPage(page);
+    await reportsPage.goto();
+    await reportsPage.expectLoaded();
     await dismissCookieConsent(page);
 
-    await reportPage.drawPoint();
-    await reportPage.expectLocationCreated();
-    await reportPage.createReportWithTopics();
+    await reportsPage.drawPoint();
+    await reportsPage.expectLocationCreated();
+    await reportsPage.createReportWithTopics();
   });
 
   test("draw a polyline, change buffer, select topics, and create report", async ({ page }) => {
     test.skip(!hasCredentials, "E2E test user credentials not set");
 
-    const reportPage = new ReportPage(page);
-    await reportPage.goto();
-    await reportPage.expectLoaded();
+    const reportsPage = new ReportsPage(page);
+    await reportsPage.goto();
+    await reportsPage.expectLoaded();
     await dismissCookieConsent(page);
 
-    await reportPage.drawPolyline();
-    await reportPage.expectLocationCreated();
-    await reportPage.expectBufferVisible();
+    await reportsPage.drawPolyline();
+    await reportsPage.expectLocationCreated();
+    await reportsPage.expectBufferVisible();
 
-    await reportPage.setBufferValue(40);
-    await reportPage.expectBufferDisplayedValue(40);
+    await reportsPage.setBufferValue(40);
+    await reportsPage.expectBufferDisplayedValue(40);
 
-    await reportPage.createReportWithTopics();
+    await reportsPage.createReportWithTopics();
   });
 
   test("upload KML file and create report as authenticated user", async ({ page }) => {
@@ -52,13 +52,13 @@ test.describe("report creation (authenticated)", () => {
 
     await mockArcGISFeatureServer(page);
 
-    const reportPage = new ReportPage(page);
-    await reportPage.goto();
-    await reportPage.expectLoaded();
+    const reportsPage = new ReportsPage(page);
+    await reportsPage.goto();
+    await reportsPage.expectLoaded();
     await dismissCookieConsent(page);
 
-    await reportPage.uploadFile(KML_FILE);
-    await reportPage.expectLocationCreated();
-    await reportPage.createReportWithTopics();
+    await reportsPage.uploadFile(KML_FILE);
+    await reportsPage.expectLocationCreated();
+    await reportsPage.createReportWithTopics();
   });
 });

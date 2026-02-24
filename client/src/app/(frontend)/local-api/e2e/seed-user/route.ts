@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import { getPayload } from "payload";
 
 import config from "@payload-config";
@@ -5,24 +6,24 @@ import config from "@payload-config";
 export async function POST(request: Request) {
   const secret = process.env.E2E_SEED_SECRET;
   if (!secret) {
-    return Response.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
   let body: { email?: string; password?: string; secret?: string };
   try {
     body = await request.json();
   } catch {
-    return Response.json({ error: "Invalid JSON body" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
   const { email, password, secret: requestSecret } = body;
 
   if (!requestSecret || requestSecret !== secret) {
-    return Response.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
   if (!email || !password) {
-    return Response.json({ error: "email and password are required" }, { status: 400 });
+    return NextResponse.json({ error: "email and password are required" }, { status: 400 });
   }
 
   const payload = await getPayload({ config });
@@ -46,7 +47,7 @@ export async function POST(request: Request) {
       });
     }
 
-    return Response.json({ status: "existing" });
+    return NextResponse.json({ status: "existing" });
   }
 
   // Create the user
@@ -67,7 +68,7 @@ export async function POST(request: Request) {
       data: { _verified: true },
     });
 
-    return Response.json({ status: "created" });
+    return NextResponse.json({ status: "created" });
   } catch (error) {
     // Handle race condition: another request may have created the user
     const retryFind = await payload.find({
@@ -87,10 +88,10 @@ export async function POST(request: Request) {
         });
       }
 
-      return Response.json({ status: "existing" });
+      return NextResponse.json({ status: "existing" });
     }
 
-    return Response.json(
+    return NextResponse.json(
       { error: "Failed to create user", details: (error as Error).message },
       { status: 500 },
     );

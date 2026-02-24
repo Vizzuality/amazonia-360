@@ -88,7 +88,7 @@ const LABELS: Record<
   },
 };
 
-export class ReportPage {
+export class ReportsPage {
   readonly page: Page;
   readonly locale: Locale;
 
@@ -256,7 +256,7 @@ export class ReportPage {
     // an empty MIME type, which causes react-dropzone to reject the file.
     // Use the buffer overload to supply the correct MIME type when needed.
     const ext = path.extname(filePath).toLowerCase();
-    const mimeOverride = ReportPage.MIME_OVERRIDES[ext];
+    const mimeOverride = ReportsPage.MIME_OVERRIDES[ext];
 
     if (mimeOverride) {
       await fileInput.setInputFiles({
