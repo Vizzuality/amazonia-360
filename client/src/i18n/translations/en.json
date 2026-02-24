@@ -143,6 +143,8 @@
   "report-results-unsaved-changes-description": "You have unsaved changes in your current report. If you continue, your progress will be lost.",
   "report-results-unsaved-changes-download-warning": "You have made changes to your report, please save before downloading to see the latest version",
   "report-results-unsaved-changes-download-warning-duplicate": "You have made changes to this report, please duplicate before downloading to see the latest version",
+  "report-results-unsaved-changes-share-warning": "You have made changes to your report, please save before sharing to ensure others see the latest version",
+  "report-results-unsaved-changes-share-warning-duplicate": "You have made changes to this report, please duplicate before sharing to ensure others see the latest version",
   "report-results-discard-and-continue": "Discard & continue",
   "report-results-action-duplicate": "Duplicate",
   "report-results-buttons-edit-report": "Edit report",

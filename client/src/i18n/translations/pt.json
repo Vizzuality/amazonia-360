@@ -143,6 +143,8 @@
   "report-results-unsaved-changes-description": "Você tem alterações não guardadas no seu relatório atual. Se continuar, o seu progresso será perdido.",
   "report-results-unsaved-changes-download-warning": "Você fez alterações no seu relatório, por favor salve antes de baixar para ver a versão mais recente",
   "report-results-unsaved-changes-download-warning-duplicate": "Você fez alterações no seu relatório, por favor duplique antes de baixar para ver a versão mais recente",
+  "report-results-unsaved-changes-share-warning": "Você fez alterações no seu relatório, por favor salve antes de compartilhar para que outros vejam a versão mais recente",
+  "report-results-unsaved-changes-share-warning-duplicate": "Você fez alterações no seu relatório, por favor duplique antes de compartilhar para que outros vejam a versão mais recente",
   "report-results-discard-and-continue": "Descartar e continuar",
   "report-results-action-duplicate": "Duplicar",
   "report-results-buttons-edit-report": "Editar relatório",
