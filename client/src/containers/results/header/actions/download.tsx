@@ -98,7 +98,7 @@ export const DownloadAction = ({ reportId }: ReportResultsActionsProps) => {
           </DropdownMenuItem>
 
           <AlertDialogContent
-            area-describedby={t("report-results-unsaved-changes-download-warning")}
+            aria-describedby={t("report-results-unsaved-changes-download-warning")}
             className="max-w-xl"
           >
             <AlertDialogHeader>
