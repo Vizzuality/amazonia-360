@@ -12,6 +12,9 @@ on:
       - ".github/workflows/client-e2e-tests.yml"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 defaults:
   run:
     shell: bash
