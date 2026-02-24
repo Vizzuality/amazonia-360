@@ -9,6 +9,8 @@ import ThirdParty from "@/containers/third-party";
 
 import { routing } from "@/i18n/routing";
 
+import E2EBridge from "@/components/e2e-bridge";
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({
     locale,
@@ -26,6 +28,7 @@ export default async function ReportNewLayout({ children }: LayoutProps<"/[local
           <ReportMap />
         </main>
         <ThirdParty />
+        {process.env.NEXT_PUBLIC_E2E_BRIDGE === "true" && <E2EBridge />}
       </Suspense>
     </JotaiProvider>
   );
