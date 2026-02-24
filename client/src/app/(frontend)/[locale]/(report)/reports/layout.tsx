@@ -7,9 +7,9 @@ import FeedbackButton from "@/containers/report/feedback";
 import ReportMap from "@/containers/report/map";
 import ThirdParty from "@/containers/third-party";
 
-import { routing } from "@/i18n/routing";
-
 import E2EBridge from "@/components/e2e-bridge";
+
+import { routing } from "@/i18n/routing";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({
