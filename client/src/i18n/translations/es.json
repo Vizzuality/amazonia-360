@@ -143,6 +143,8 @@
   "report-results-unsaved-changes-description": "Tienes cambios sin guardar en tu informe actual. Si continúas, perderás tu progreso.",
   "report-results-unsaved-changes-download-warning": "Has realizado cambios en tu informe, por favor guarda antes de descargar para ver la última versión",
   "report-results-unsaved-changes-download-warning-duplicate": "Has realizado cambios en tu informe, por favor duplica antes de descargar para ver la última versión",
+  "report-results-unsaved-changes-share-warning": "Has realizado cambios en tu informe, por favor guarda antes de compartir para que otros vean la última versión",
+  "report-results-unsaved-changes-share-warning-duplicate": "Has realizado cambios en tu informe, por favor duplica antes de compartir para que otros vean la versión más reciente",
   "report-results-discard-and-continue": "Descartar y continuar",
   "report-results-action-duplicate": "Duplicar",
   "report-results-buttons-edit-report": "Editar reporte",
