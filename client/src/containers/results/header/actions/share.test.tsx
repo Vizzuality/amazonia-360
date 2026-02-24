@@ -1,9 +1,40 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 
-import { DropdownMenuWrapper } from "@/containers/results/header/__tests__/helpers";
+import {
+  createMockMutation,
+  DropdownMenuWrapper,
+} from "@/containers/results/header/__tests__/helpers";
 
 import { ShareAction } from "./share";
+
+const mockHandleSave = vi.fn();
+const mockHandleDuplicate = vi.fn();
+const mockSaveMutation = createMockMutation();
+const mockDuplicateMutation = createMockMutation();
+
+vi.mock("@/i18n/navigation", () => ({
+  useRouter: vi.fn().mockReturnValue({ replace: vi.fn() }),
+}));
+
+vi.mock("@/containers/results/callbacks", () => ({
+  useSaveReportCallback: vi.fn(() => ({
+    mutation: mockSaveMutation,
+    handleSave: mockHandleSave,
+  })),
+  useDuplicateReportCallback: vi.fn(() => ({
+    mutation: mockDuplicateMutation,
+    handleDuplicate: mockHandleDuplicate,
+  })),
+}));
+
+vi.mock("@/lib/report", () => ({
+  useCanEditReport: vi.fn(() => true),
+}));
+
+vi.mock("@/app/(frontend)/store", () => ({
+  useReportFormChanged: vi.fn(() => false),
+}));
 
 describe("ShareAction", () => {
   beforeEach(() => {
