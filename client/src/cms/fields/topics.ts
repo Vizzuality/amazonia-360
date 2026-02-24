@@ -19,7 +19,6 @@ export const TopicsField: Field = {
     {
       name: "indicators",
       type: "array",
-      required: true,
       fields: [
         {
           name: "indicator_id",
