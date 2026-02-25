@@ -25,5 +25,7 @@ __pycache__/
 /infrastructure/**/local.tfvars
 /infrastructure/.terraform/
 
-/.claude
+# Claude Code
+.claude/
 CLAUDE.md
+.mcp.json
