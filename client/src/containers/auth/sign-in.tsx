@@ -72,7 +72,7 @@ export function SignInForm(props: SignInFormProps) {
   return (
     <Card className="border-none shadow-none" {...props}>
       <CardHeader>
-        <CardTitle className="text-3xl text-primary">{t("auth-signin-title")}</CardTitle>
+        <CardTitle className="text-primary text-3xl">{t("auth-signin-title")}</CardTitle>
         <CardDescription className="font-medium">{t("auth-signin-description")}</CardDescription>
       </CardHeader>
       <CardContent>
@@ -123,7 +123,7 @@ export function SignInForm(props: SignInFormProps) {
 
                     <Link
                       href="/auth/forgot-password"
-                      className="ml-auto inline-block text-right text-sm font-medium text-muted-foreground underline underline-offset-4"
+                      className="text-muted-foreground ml-auto inline-block text-right text-sm font-medium underline underline-offset-4"
                     >
                       {t("auth-link-forgot-password")}
                     </Link>
@@ -138,13 +138,13 @@ export function SignInForm(props: SignInFormProps) {
               </Button>
             </Field>
 
-            <div className="text-center text-sm font-normal text-muted-foreground">
+            <div className="text-muted-foreground text-center text-sm font-normal">
               {t("auth-agreement-text")}{" "}
               <a
                 href="https://www.iadb.org/en/terms-conditions-and-notices/terms-and-conditions"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium underline underline-offset-4 hover:text-primary"
+                className="hover:text-primary font-medium underline underline-offset-4"
               >
                 {t("auth-agreement-terms")}
               </a>{" "}
@@ -153,7 +153,7 @@ export function SignInForm(props: SignInFormProps) {
                 href="https://www.iadb.org/en/home/terms-conditions-and-notices/privacy-notice"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium underline underline-offset-4 hover:text-primary"
+                className="hover:text-primary font-medium underline underline-offset-4"
               >
                 {t("auth-agreement-privacy")}
               </a>
@@ -175,7 +175,7 @@ export function SignInForm(props: SignInFormProps) {
         </form>
       </CardContent>
 
-      <CardFooter className="justify-center gap-1 text-sm font-medium text-muted-foreground">
+      <CardFooter className="text-muted-foreground justify-center gap-1 text-sm font-medium">
         <span>{t("auth-link-dont-have-account")}</span>
         <Link href="/auth/sign-up" className="font-medium hover:underline">
           {t("auth-link-sign-up")}

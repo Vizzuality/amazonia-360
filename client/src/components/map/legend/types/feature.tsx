@@ -33,8 +33,8 @@ export const FeatureLegend = ({
       const r = renderer as __esri.SimpleRenderer;
 
       if (!r.symbol) return null;
-
       if (!("color" in r.symbol)) return null;
+      if (!r.symbol.color) return null;
 
       return {
         type: "basic",
@@ -53,11 +53,16 @@ export const FeatureLegend = ({
 
       return {
         type: "basic",
-        items: r.uniqueValueInfos?.map((u) => ({
-          id: u.value,
-          color: new Color(u.symbol.color).toHex(),
-          label: `${u.label}`,
-        })),
+        items:
+          r.uniqueValueInfos
+            ?.map((u) => {
+              return {
+                id: u.value,
+                color: !u.symbol || !u.symbol.color ? undefined : new Color(u.symbol.color).toHex(),
+                label: `${u.value}`,
+              };
+            })
+            .filter(Boolean) ?? [],
       };
     }
 
@@ -66,11 +71,16 @@ export const FeatureLegend = ({
 
       return {
         type: "basic",
-        items: r.classBreakInfos?.map((c) => ({
-          id: c.label,
-          color: new Color(c.symbol.color).toHex(),
-          label: `${c.label}`,
-        })),
+        items:
+          r.classBreakInfos
+            ?.map((c) => {
+              return {
+                id: `${c.label}`,
+                color: !c.symbol || !c.symbol.color ? undefined : new Color(c.symbol.color).toHex(),
+                label: `${c.label}`,
+              };
+            })
+            .filter(Boolean) ?? [],
       };
     }
 

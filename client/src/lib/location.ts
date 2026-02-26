@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 
-import { geodesicBuffer } from "@arcgis/core/geometry/geometryEngine";
+import * as geodesicBufferOperator from "@arcgis/core/geometry/operators/geodesicBufferOperator";
+import * as projectOperator from "@arcgis/core/geometry/operators/projectOperator";
 import Point from "@arcgis/core/geometry/Point";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import Polyline from "@arcgis/core/geometry/Polyline";
-import { project } from "@arcgis/core/geometry/projection";
+import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import Graphic from "@arcgis/core/Graphic";
 import { useTranslations } from "next-intl";
 
@@ -15,6 +16,14 @@ import { Location, SearchLocation } from "@/app/(frontend)/parsers";
 
 import { DATASETS } from "@/constants/datasets";
 import { BUFFERS } from "@/constants/map";
+
+if (!projectOperator.isLoaded()) {
+  await projectOperator.load();
+}
+
+if (!geodesicBufferOperator.isLoaded()) {
+  await geodesicBufferOperator.load();
+}
 
 export type AdministrativeBoundary = {
   FID: string | number;
@@ -107,21 +116,22 @@ export const useLocationTitle = (location?: Location | null) => {
 
 export const useLocationGeometry = (
   location?: Location | null,
-  outSpatialReference?: __esri.SpatialReference | __esri.SpatialReferenceProperties,
+  outSpatialReference?: __esri.SpatialReferenceProperties,
 ) => {
   const LOCATION = useLocation(location);
 
   const GEOMETRY = useMemo(() => {
-    if (LOCATION) {
+    if (LOCATION && LOCATION.geometry) {
       const b = location?.type !== "search" ? location?.buffer : BUFFERS[LOCATION.geometry.type];
       const g = getGeometryWithBuffer(LOCATION.geometry, b || BUFFERS[LOCATION.geometry.type]);
 
       if (!g) return null;
 
-      const projectedGeom = project(
-        g,
-        outSpatialReference || LOCATION.geometry.spatialReference || { wkid: 102100 },
+      const SR = new SpatialReference(
+        outSpatialReference || LOCATION.geometry.spatialReference.toJSON() || { wkid: 102100 },
       );
+
+      const projectedGeom = projectOperator.execute(g, SR);
 
       const geom = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
 
@@ -183,19 +193,23 @@ export const getGeometryByType = (location: Location) => {
 };
 
 export const getGeometryWithBuffer = (
-  geometry: __esri.Geometry | null,
+  geometry: __esri.GeometryUnion | null,
   buffer: number,
 ): __esri.Polygon | null => {
   if (!geometry) return null;
 
   if (geometry.type === "point") {
-    const g = geodesicBuffer(geometry, buffer, "kilometers");
+    const g = geodesicBufferOperator.execute(geometry, buffer, { unit: "kilometers" });
+
+    if (!g) return null;
 
     return Array.isArray(g) ? g[0] : g;
   }
 
   if (geometry.type === "polyline") {
-    const g = geodesicBuffer(geometry, buffer, "kilometers");
+    const g = geodesicBufferOperator.execute(geometry, buffer, { unit: "kilometers" });
+
+    if (!g) return null;
 
     return Array.isArray(g) ? g[0] : g;
   }

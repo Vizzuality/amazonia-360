@@ -40,7 +40,8 @@ export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
 
     if (renderer?.type === "simple") {
       const r = renderer as __esri.SimpleRenderer;
-      const c = new Color(r.symbol.color);
+      const c = r.symbol?.color ? new Color(r.symbol.color) : new Color("#009ADE");
+
       return [
         {
           id: indicator.name_en,
@@ -53,40 +54,44 @@ export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
     if (renderer?.type === "uniqueValue") {
       const r = renderer as __esri.UniqueValueRenderer;
 
-      return r.uniqueValueInfos
-        ?.map((u) => {
-          const c = new Color(u.symbol.color);
+      return (
+        r.uniqueValueInfos
+          ?.map((u) => {
+            const c = u.symbol?.color ? new Color(u.symbol.color) : new Color("#009ADE");
 
-          return {
-            id: `${u.value}`,
-            label: u.label,
-            color: c.toHex() ?? "#009ADE",
-          };
-        })
-        .filter((u) => {
-          // @ts-expect-error- I don't know why the type does not correspond to the real data.
-          return query.data?.features?.some((d) => `${d.attributes[r.field1]}` === `${u.id}`);
-        });
+            return {
+              id: `${u.value}`,
+              label: u.label,
+              color: c.toHex() ?? "#009ADE",
+            };
+          })
+          .filter((u) => {
+            // @ts-expect-error- I don't know why the type does not correspond to the real data.
+            return query.data?.features?.some((d) => `${d.attributes[r.field1]}` === `${u.id}`);
+          }) ?? []
+      );
     }
 
     if (renderer?.type === "classBreaks") {
       const r = renderer as __esri.ClassBreaksRenderer;
 
-      return r.classBreakInfos
-        ?.map((u) => {
-          const c = new Color(u.symbol.color);
+      return (
+        r.classBreakInfos
+          ?.map((u) => {
+            const c = u.symbol?.color ? new Color(u.symbol.color) : new Color("#009ADE");
 
-          return {
-            // @ts-expect-error- I don't know why the type does not correspond to the real data.
-            // It's true that the documentation says that "classMaxValue" does not exists https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-support-ClassBreakInfo.html
-            id: u.classMaxValue,
-            label: `${u.label}`,
-            color: c.toHex() ?? "#009ADE",
-          };
-        })
-        .filter((u) => {
-          return query.data?.features?.some((d) => `${d.attributes[r.field]}` >= `${u.id}`);
-        });
+            return {
+              // @ts-expect-error- I don't know why the type does not correspond to the real data.
+              // It's true that the documentation says that "classMaxValue" does not exists https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-support-ClassBreakInfo.html
+              id: u.classMaxValue,
+              label: `${u.label}`,
+              color: c.toHex() ?? "#009ADE",
+            };
+          })
+          .filter((u) => {
+            return query.data?.features?.some((d) => `${d.attributes[r.field]}` >= `${u.id}`);
+          }) ?? []
+      );
     }
 
     return null;
@@ -117,7 +122,7 @@ export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
 
         if (renderer?.type === "simple") {
           const r = renderer as __esri.SimpleRenderer;
-          const c = new Color(r.symbol.color);
+          const c = r.symbol?.color ? new Color(r.symbol.color) : new Color("#009ADE");
           return c.toHex() ?? "#009ADE";
         }
 
@@ -131,7 +136,9 @@ export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
           );
 
           if (uniqueValue) {
-            const c = new Color(uniqueValue?.symbol.color);
+            const c = uniqueValue?.symbol?.color
+              ? new Color(uniqueValue?.symbol.color)
+              : new Color("#009ADE");
             return c.toHex() ?? "#009ADE";
           }
 
@@ -151,7 +158,9 @@ export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
           );
 
           if (classBreak) {
-            const c = new Color(classBreak?.symbol.color);
+            const c = classBreak?.symbol.color
+              ? new Color(classBreak?.symbol.color)
+              : new Color("#009ADE");
             return c.toHex() ?? "#009ADE";
           }
         }

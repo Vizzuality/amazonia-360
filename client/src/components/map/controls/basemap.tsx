@@ -71,14 +71,14 @@ export const BasemapControl: FC<BasemapControlProps> = ({
           </TooltipTrigger>
         </PopoverTrigger>
 
-        <PopoverContent side="left" align="start" className="w-auto bg-background p-0">
+        <PopoverContent side="left" align="start" className="bg-background w-auto p-0">
           <ul className="flex flex-col">
             {BS.map((b) => {
               return (
                 <li key={b.id} className="flex">
                   <button
                     className={cn({
-                      "group flex w-full items-center space-x-2 p-2 transition-colors duration-200 hover:bg-muted":
+                      "group hover:bg-muted flex w-full items-center space-x-2 p-2 transition-colors duration-200":
                         //
                         true,
                       "bg-foreground hover:bg-foreground": activeBasemapId === b.id,
@@ -86,18 +86,20 @@ export const BasemapControl: FC<BasemapControlProps> = ({
                     type="button"
                     onClick={() => handleBasemap(b.id)}
                   >
-                    <div className="w-16 shrink-0 shadow-sm">
-                      <Image
-                        src={b.basemap.thumbnailUrl}
-                        alt={t(`${b.label}`)}
-                        width={200}
-                        height={133}
-                        className="transition-transform duration-200 ease-in-out group-hover:scale-105"
-                      />
+                    <div className="w-16 shrink-0 shadow-xs">
+                      {b.basemap?.thumbnailUrl && (
+                        <Image
+                          src={b.basemap?.thumbnailUrl}
+                          alt={t(`${b.label}`)}
+                          width={200}
+                          height={133}
+                          className="transition-transform duration-200 ease-in-out group-hover:scale-105"
+                        />
+                      )}
                     </div>
                     <span
                       className={cn({
-                        "text-xs text-foreground transition-colors": true,
+                        "text-foreground text-xs transition-colors": true,
                         "text-background": activeBasemapId === b.id,
                       })}
                     >

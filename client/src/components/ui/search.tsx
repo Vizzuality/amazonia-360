@@ -62,10 +62,10 @@ export function Search<T extends Option>({
   return (
     <Popover onOpenChange={setOpened} open={opened}>
       <PopoverTrigger ref={triggerRef} className="relative w-full">
-        <LuSearch className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 stroke-1 text-black" />
+        <LuSearch className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 stroke-1 text-black" />
         <div
           className={cn(
-            "flex h-14 w-full items-center rounded-sm border border-input bg-white py-5 pl-10 text-sm",
+            "border-input flex h-14 w-full items-center rounded-xs border bg-white py-5 pl-10 text-sm",
             !value && "text-gray-500",
             size === "sm" && "h-10 py-3",
           )}
@@ -73,7 +73,7 @@ export function Search<T extends Option>({
           {value || placeholder || "Search..."}
         </div>
 
-        <div className="absolute right-6 top-1/2 -translate-y-1/2">
+        <div className="absolute top-1/2 right-6 -translate-y-1/2">
           {isFetching && (
             <span className="h-4 w-4 animate-spin text-blue-500">
               <LuLoader className="text-current" />
@@ -82,7 +82,7 @@ export function Search<T extends Option>({
           {value && (
             <span
               role="button"
-              className="block h-6 w-6 rounded-full bg-secondary p-1 hover:text-cyan-500 focus:outline-none"
+              className="bg-secondary block h-6 w-6 rounded-full p-1 hover:text-cyan-500 focus:outline-hidden"
               onClick={() => {
                 onSelect(null);
               }}
@@ -99,18 +99,18 @@ export function Search<T extends Option>({
           updatePositionStrategy="always"
           sideOffset={(triggerRef.current?.getBoundingClientRect()?.height || 0) * -1}
           className={cn(
-            "z-50 w-popover-width overflow-hidden rounded-sm border-0 bg-white p-0 text-popover-foreground shadow-md outline-none",
+            "w-popover-width text-popover-foreground z-50 overflow-hidden rounded-xs border-0 bg-white p-0 shadow-md outline-hidden",
           )}
         >
           <Command shouldFilter={false}>
             <div className="relative w-full" cmdk-input-wrapper="">
-              <LuSearch className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 stroke-1 text-black" />
+              <LuSearch className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 stroke-1 text-black" />
 
               <CommandPrimitive.Input
                 value={value}
                 placeholder={placeholder ?? "Search..."}
                 className={cn(
-                  "flex h-14 w-full items-center rounded-sm border border-input bg-white py-0 pl-10 text-sm placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+                  "border-input placeholder:text-muted-foreground flex h-14 w-full items-center rounded-xs border bg-white py-0 pl-10 text-sm disabled:cursor-not-allowed disabled:opacity-50",
                   size === "sm" && "h-10",
                 )}
                 onValueChange={(e) => {
@@ -118,7 +118,7 @@ export function Search<T extends Option>({
                 }}
               />
 
-              <div className="absolute right-6 top-1/2 flex -translate-y-1/2 items-center space-x-2">
+              <div className="absolute top-1/2 right-6 flex -translate-y-1/2 items-center space-x-2">
                 {isFetching && (
                   <span className="h-4 w-4 animate-spin text-blue-500">
                     <LuLoader className="text-current" />
@@ -127,7 +127,7 @@ export function Search<T extends Option>({
                 {value && (
                   <span
                     role="button"
-                    className="block h-6 w-6 rounded-full bg-secondary p-1 hover:text-cyan-500 focus:outline-none"
+                    className="bg-secondary block h-6 w-6 rounded-full p-1 hover:text-cyan-500 focus:outline-hidden"
                     onClick={() => {
                       onSelect(null);
                     }}

@@ -62,7 +62,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({ className }: ZoomControlProp
   return (
     <div
       className={cn(
-        "flex flex-col overflow-hidden rounded-full border border-border bg-white",
+        "border-border flex flex-col overflow-hidden rounded-full border bg-white",
         className,
       )}
     >

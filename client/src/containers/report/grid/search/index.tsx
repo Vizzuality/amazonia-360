@@ -130,7 +130,7 @@ export default function SearchC({ className }: { className?: string }) {
         size="sm"
         extra={
           gridDatasets.length >= 4 && (
-            <div className="bg-amber-100 px-4 py-2 text-xs text-foreground">
+            <div className="text-foreground bg-amber-100 px-4 py-2 text-xs">
               {t("grid-sidebar-report-location-filters-alert-maximum-selected")}
             </div>
           )

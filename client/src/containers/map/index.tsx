@@ -78,6 +78,7 @@ export default function MapContainer({
     (graphic: __esri.Graphic) => {
       setSketch({ enabled: undefined, type: undefined });
 
+      if (!graphic.geometry) return;
       setLocation({
         type: graphic.geometry.type,
         geometry: graphic.geometry.toJSON(),
@@ -85,7 +86,7 @@ export default function MapContainer({
       });
 
       const g = getGeometryWithBuffer(graphic.geometry, BUFFERS[graphic.geometry.type]);
-      if (g) {
+      if (g && g.extent) {
         setTmpBbox(g.extent);
       }
 
@@ -113,7 +114,7 @@ export default function MapContainer({
 
   const handleUpdate = useCallback(
     (graphic: __esri.Graphic) => {
-      if (!location) return;
+      if (!location || !graphic.geometry) return;
       const b = location.type !== "search" ? location.buffer : BUFFERS[graphic.geometry.type];
       // Update the location state with the updated geometry
       setLocation({
@@ -124,7 +125,7 @@ export default function MapContainer({
 
       // Optionally update the bounding box based on the updated geometry
       const g = getGeometryWithBuffer(graphic.geometry, b);
-      if (g) {
+      if (g && g.extent) {
         setTmpBbox(g.extent);
       }
 
@@ -139,11 +140,13 @@ export default function MapContainer({
       if (sketchActionTimeoutRef.current) {
         clearTimeout(sketchActionTimeoutRef.current);
       }
-      setSketchAction({
-        type: "update",
-        state: e.state,
-        geometryType: e.graphics[0].geometry.type,
-      });
+      if (!!e.graphics.length && e.graphics[0].geometry) {
+        setSketchAction({
+          type: "update",
+          state: e.state,
+          geometryType: e.graphics[0].geometry.type,
+        });
+      }
     },
     [setSketchAction],
   );
@@ -225,7 +228,7 @@ export default function MapContainer({
 
       {gridSelectedDataset && gridEnabled && <GridLegend />}
 
-      <div className="pointer-events-none absolute left-0 top-4 z-10 w-full duration-300 animate-in fade-in-0 lg:top-10">
+      <div className="animate-in fade-in-0 pointer-events-none absolute top-4 left-0 z-10 w-full duration-300 lg:top-10">
         <div className="container">
           <div className="grid grid-cols-12">
             <div className="col-span-10 lg:col-span-5 lg:col-start-8">

@@ -2,8 +2,9 @@
 
 import { useMemo } from "react";
 
+import * as projectOperator from "@arcgis/core/geometry/operators/projectOperator";
 import Point from "@arcgis/core/geometry/Point";
-import { project } from "@arcgis/core/geometry/projection";
+import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { cellToLatLng } from "h3-js";
 import { useSetAtom } from "jotai";
@@ -37,6 +38,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import { HexagonIcon } from "@/components/ui/icons/hexagon";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
+if (!projectOperator.isLoaded()) {
+  await projectOperator.load();
+}
 
 export const GridTableItem = (
   props: Record<string, string | number> & { id: number; cell: string },
@@ -89,13 +94,14 @@ export const GridTableItem = (
     const latLng = cellToLatLng(cell);
 
     const p = new Point({ x: latLng[1], y: latLng[0], spatialReference: { wkid: 4326 } });
-    const projectedGeom = project(p, { wkid: 102100 });
+    const projectedGeom = projectOperator.execute(p, new SpatialReference({ wkid: 102100 }));
+
     const g = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
 
     setLocation({ type: "point", geometry: g.toJSON(), buffer: BUFFERS.point });
 
     const gWithBuffer = getGeometryWithBuffer(g, BUFFERS.point);
-    if (gWithBuffer) {
+    if (gWithBuffer && gWithBuffer.extent) {
       setTmpBbox(gWithBuffer.extent);
     }
   };
@@ -121,7 +127,7 @@ export const GridTableItem = (
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              <button className="flex min-w-16 shrink-0 items-center gap-2 rounded-sm bg-cyan-100 px-2 py-1 group-hover:bg-cyan-500 group-hover:text-white">
+              <button className="flex min-w-16 shrink-0 items-center gap-2 rounded-xs bg-cyan-100 px-2 py-1 group-hover:bg-cyan-500 group-hover:text-white">
                 <HexagonIcon className="h-4 w-4 text-current" />
                 <span className="text-sm font-semibold">{id + 1}º</span>
               </button>
@@ -139,20 +145,20 @@ export const GridTableItem = (
                       >
                         {dataset?.name}
                       </p>
-                      <span className="flex-1 overflow-hidden whitespace-nowrap font-extralight tracking-[2.5px] text-muted-foreground">
+                      <span className="text-muted-foreground flex-1 overflow-hidden font-extralight tracking-[2.5px] whitespace-nowrap">
                         {".".repeat(200)}
                       </span>
                     </div>
 
                     {dataset?.legend.legend_type === "continuous" && (
-                      <span className="flex-shrink-0 whitespace-nowrap text-blue-700">
+                      <span className="shrink-0 whitespace-nowrap text-blue-700">
                         {formatNumberUnit(+(dataset?.value ?? 0), `${dataset?.unit}`)}
                       </span>
                     )}
 
                     {dataset?.legend.legend_type === "categorical" &&
                       "entries" in dataset.legend && (
-                        <span className="flex-shrink-0 whitespace-nowrap text-blue-700">
+                        <span className="shrink-0 whitespace-nowrap text-blue-700">
                           {dataset.legend.entries.find((e) => e.value === dataset?.value)?.label ||
                             dataset?.value}
                         </span>

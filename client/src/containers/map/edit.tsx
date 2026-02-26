@@ -80,15 +80,17 @@ export default function MapEditContainer({
     (graphic: __esri.Graphic) => {
       setSketch({ enabled: undefined, type: undefined });
 
-      setLocation({
-        type: graphic.geometry.type,
-        geometry: graphic.geometry.toJSON(),
-        buffer: BUFFERS[graphic.geometry.type],
-      });
+      if (graphic.geometry) {
+        setLocation({
+          type: graphic.geometry.type,
+          geometry: graphic.geometry.toJSON(),
+          buffer: BUFFERS[graphic.geometry.type],
+        });
 
-      const g = getGeometryWithBuffer(graphic.geometry, BUFFERS[graphic.geometry.type]);
-      if (g) {
-        setTmpBbox(g.extent);
+        const g = getGeometryWithBuffer(graphic.geometry, BUFFERS[graphic.geometry.type]);
+        if (g && g.extent) {
+          setTmpBbox(g.extent);
+        }
       }
 
       sketchActionTimeoutRef.current = setTimeout(() => {
@@ -115,7 +117,7 @@ export default function MapEditContainer({
 
   const handleUpdate = useCallback(
     (graphic: __esri.Graphic) => {
-      if (!location) return;
+      if (!location || !graphic.geometry) return;
       const b = location.type !== "search" ? location.buffer : BUFFERS[graphic.geometry.type];
       // Update the location state with the updated geometry
       setLocation({
@@ -126,7 +128,7 @@ export default function MapEditContainer({
 
       // Optionally update the bounding box based on the updated geometry
       const g = getGeometryWithBuffer(graphic.geometry, b);
-      if (g) {
+      if (g && g.extent) {
         setTmpBbox(g.extent);
       }
 
@@ -141,11 +143,14 @@ export default function MapEditContainer({
       if (sketchActionTimeoutRef.current) {
         clearTimeout(sketchActionTimeoutRef.current);
       }
-      setSketchAction({
-        type: "update",
-        state: e.state,
-        geometryType: e.graphics[0].geometry.type,
-      });
+
+      if (!!e.graphics.length && e.graphics[0].geometry) {
+        setSketchAction({
+          type: "update",
+          state: e.state,
+          geometryType: e.graphics[0].geometry.type,
+        });
+      }
     },
     [setSketchAction],
   );
@@ -214,7 +219,7 @@ export default function MapEditContainer({
           onUpdateChange={handleUpdateChange}
         />
 
-        <Controls className="absolute right-7 top-20">
+        <Controls className="absolute top-20 right-7">
           <ZoomControl />
           <BasemapControl />
         </Controls>

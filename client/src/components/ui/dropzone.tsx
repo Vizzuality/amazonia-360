@@ -69,7 +69,7 @@ export const Dropzone = ({
       <Button
         className={cn(
           "relative h-auto w-full flex-col overflow-hidden p-8",
-          isDragActive && "outline-none ring-1 ring-ring",
+          isDragActive && "ring-ring ring-1 outline-hidden",
           className,
         )}
         disabled={disabled}
@@ -113,15 +113,15 @@ export const DropzoneContent = ({ children, className }: DropzoneContentProps) =
 
   return (
     <div className={cn("flex flex-col items-center justify-center space-y-2", className)}>
-      <div className="flex size-10 items-center justify-center rounded-full bg-muted text-primary">
+      <div className="bg-muted text-primary flex size-10 items-center justify-center rounded-full">
         <LuUpload size={24} />
       </div>
 
-      <p className="w-full truncate text-wrap text-sm font-medium text-primary">
+      <p className="text-primary w-full truncate text-sm font-medium text-wrap">
         {maxFiles === 1 ? t("dropzone-upload-file") : t("dropzone-upload-files")}
       </p>
 
-      <p className="w-full text-wrap text-xs font-medium capitalize text-muted-foreground">
+      <p className="text-muted-foreground w-full text-xs font-medium text-wrap capitalize">
         -- {t("or")} --
       </p>
 
@@ -154,15 +154,15 @@ export const DropzoneEmptyState = ({ children, className }: DropzoneEmptyStatePr
 
   return (
     <div className={cn("flex flex-col items-center justify-center space-y-2", className)}>
-      <div className="flex size-10 items-center justify-center rounded-full bg-muted text-primary">
+      <div className="bg-muted text-primary flex size-10 items-center justify-center rounded-full">
         <LuUpload size={24} />
       </div>
 
-      <p className="w-full truncate text-wrap text-sm font-medium text-primary">
+      <p className="text-primary w-full truncate text-sm font-medium text-wrap">
         {maxFiles === 1 ? t("dropzone-upload-file") : t("dropzone-upload-files")}
       </p>
 
-      <p className="w-full text-wrap text-xs font-medium capitalize text-muted-foreground">
+      <p className="text-muted-foreground w-full text-xs font-medium text-wrap capitalize">
         -- {t("or")} --
       </p>
 

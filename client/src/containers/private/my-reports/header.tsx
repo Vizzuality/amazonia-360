@@ -11,10 +11,10 @@ export const MyReportsHeader = () => {
   const t = useTranslations();
 
   return (
-    <header className="flex items-center justify-between pb-10 pt-14">
+    <header className="flex items-center justify-between pt-14 pb-10">
       <div className="space-y-2">
-        <h1 className="text-4xl font-semibold text-primary">{t("my-reports-title")}</h1>
-        <p className="text-sm font-medium text-muted-foreground">{t("my-reports-description")}</p>
+        <h1 className="text-primary text-4xl font-semibold">{t("my-reports-title")}</h1>
+        <p className="text-muted-foreground text-sm font-medium">{t("my-reports-description")}</p>
       </div>
 
       <div>

@@ -51,12 +51,12 @@ export default function IndicatorsItem({ id, name, description_short }: Indicato
     <div
       key={id}
       className={cn(
-        "flex h-full w-full grow cursor-pointer items-center justify-between space-x-2.5 overflow-hidden rounded-sm bg-white text-left",
+        "flex h-full w-full grow cursor-pointer items-center justify-between space-x-2.5 overflow-hidden rounded-xs bg-white text-left",
       )}
     >
       <button
         className={cn(
-          "flex grow space-x-2.5 rounded-sm p-1 px-2 text-left text-sm font-medium text-gray-400 transition-colors duration-300 ease-in-out hover:bg-blue-50",
+          "flex grow space-x-2.5 rounded-xs p-1 px-2 text-left text-sm font-medium text-gray-400 transition-colors duration-300 ease-in-out hover:bg-blue-50",
         )}
         onClick={() => handleChangeIndicator(!indicators?.includes(id))}
       >
@@ -69,7 +69,7 @@ export default function IndicatorsItem({ id, name, description_short }: Indicato
               <DialogTrigger
                 className={cn("flex cursor-pointer items-center justify-center p-0.5")}
               >
-                <LuInfo className="h-4 w-4 text-foreground" />
+                <LuInfo className="text-foreground h-4 w-4" />
               </DialogTrigger>
             </TooltipTrigger>
             <DialogContent className="max-w-2xl p-0">

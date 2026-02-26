@@ -21,7 +21,7 @@ export const TableTotal = ({ total, pageIndex, pageSize }: TableTotalProps) => {
   if (total === 0) return null;
 
   return (
-    <div className="flex items-center justify-between gap-2 text-xs font-medium text-muted-foreground">
+    <div className="text-muted-foreground flex items-center justify-between gap-2 text-xs font-medium">
       <span>{`${start} - ${end}`}</span>
       {"/"}
       <strong>{`${total} ${Pluralize(t("result"), total)}`}</strong>

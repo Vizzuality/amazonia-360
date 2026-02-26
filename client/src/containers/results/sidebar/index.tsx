@@ -28,19 +28,19 @@ export default function ReportSidebar() {
   return (
     <Sidebar
       className={cn({
-        "fixed bottom-0 top-0 h-full w-96 border-none bg-white shadow-md": true,
+        "fixed top-0 bottom-0 h-full w-96 border-none bg-white shadow-md": true,
       })}
     >
       <Tabs
         value="indicators"
         className="sticky top-0 z-10 flex max-h-svh grow flex-col items-start space-y-4 overflow-hidden bg-white"
       >
-        <div className="flex grow flex-col overflow-hidden pb-4 pt-6">
+        <div className="flex grow flex-col overflow-hidden pt-6 pb-4">
           <SidebarHeader className="flex w-full flex-row items-baseline justify-between px-6 py-0">
             <TabsList className="justify-start gap-x-4 gap-y-1 bg-transparent">
               <TabsTrigger
                 value="indicators"
-                className="px-0 py-0 text-lg font-bold text-muted-foreground"
+                className="text-muted-foreground px-0 py-0 text-lg font-bold"
               >
                 {t("report-results-sidebar-indicators-title")}
               </TabsTrigger>
