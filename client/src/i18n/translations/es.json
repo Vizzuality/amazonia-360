@@ -470,5 +470,6 @@
   "dropzone-drag-drop-upload": "Arrastra y suelta o haz clic para cargar",
   "dropzone-drag-drop-replace": "Arrastra y suelta o haz clic para reemplazar",
   "dropzone-and-more": "y {count} más",
-  "or": "o"
+  "or": "o",
+  "field-character-count": "{current}/{max} caracteres"
 }

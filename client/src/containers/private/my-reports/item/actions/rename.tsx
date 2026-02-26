@@ -20,7 +20,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import {
+  Field,
+  FieldCharacterCount,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -104,8 +110,15 @@ export const RenameAction = ({ report }: ReportActionsProps) => {
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
                         aria-invalid={isInvalid}
+                        aria-describedby={`${field.name}-character-count`}
                         maxLength={60}
                       />
+                      <FieldCharacterCount
+                        id={`${field.name}-character-count`}
+                        className={field.state.value.length >= 50 ? "text-destructive" : undefined}
+                      >
+                        {t("field-character-count", { current: field.state.value.length, max: 60 })}
+                      </FieldCharacterCount>
                       {isInvalid && <FieldError errors={field.state.meta.errors} />}
                     </Field>
                   );
@@ -127,8 +140,19 @@ export const RenameAction = ({ report }: ReportActionsProps) => {
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
                         aria-invalid={isInvalid}
+                        aria-describedby={`${field.name}-character-count`}
+                        maxLength={200}
                         rows={3}
                       />
+                      <FieldCharacterCount
+                        id={`${field.name}-character-count`}
+                        className={field.state.value.length >= 190 ? "text-destructive" : undefined}
+                      >
+                        {t("field-character-count", {
+                          current: field.state.value.length,
+                          max: 200,
+                        })}
+                      </FieldCharacterCount>
                       {isInvalid && <FieldError errors={field.state.meta.errors} />}
                     </Field>
                   );

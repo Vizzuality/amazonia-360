@@ -176,6 +176,18 @@ function FieldSeparator({
   );
 }
 
+function FieldCharacterCount({ className, ...props }: React.ComponentProps<"p">) {
+  return (
+    <p
+      data-slot="field-character-count"
+      aria-live="polite"
+      aria-atomic
+      className={cn("text-muted-foreground text-right text-xs", className)}
+      {...props}
+    />
+  );
+}
+
 function FieldError({
   className,
   children,
@@ -222,6 +234,7 @@ function FieldError({
 
 export {
   Field,
+  FieldCharacterCount,
   FieldLabel,
   FieldDescription,
   FieldError,
