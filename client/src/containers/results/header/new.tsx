@@ -32,7 +32,7 @@ export default function NewReport() {
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent
-        area-describedby={t("report-results-buttons-new-report-description")}
+        aria-describedby={t("report-results-buttons-new-report-description")}
         className="max-w-lg"
       >
         <AlertDialogHeader>
