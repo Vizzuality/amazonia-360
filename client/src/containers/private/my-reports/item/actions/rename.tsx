@@ -83,7 +83,7 @@ export const RenameAction = ({ report }: ReportActionsProps) => {
       </DropdownMenuItem>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-100">
           <DialogHeader>
             <DialogTitle>{t("my-reports-rename-dialog-title")}</DialogTitle>
             <DialogDescription>{t("my-reports-rename-dialog-description")}</DialogDescription>
