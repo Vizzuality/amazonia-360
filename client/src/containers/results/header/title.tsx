@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { useFormTitle } from "@/app/(frontend)/store";
 
 import { Button } from "@/components/ui/button";
-import { Field, FieldError, FieldGroup } from "@/components/ui/field";
+import { Field, FieldCharacterCount, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
 const renameSchema = z.object({
@@ -54,7 +54,7 @@ export default function TitleReport() {
     <div className="relative -ml-1.5 flex h-20 w-full grow items-center justify-between">
       {!editMode && (
         <header className="flex grow items-center space-x-4">
-          <h2 className="text-foreground tall:xl:text-4xl border-t-2 border-b-2 border-l border-transparent px-1 py-2 text-2xl font-medium lg:text-3xl">
+          <h2 className="text-foreground tall:xl:text-4xl border-t-4 border-b-2 border-l border-transparent px-1 py-2 text-2xl font-medium lg:text-3xl">
             {title ?? t("selected-area")}
           </h2>
           <Button
@@ -84,7 +84,19 @@ export default function TitleReport() {
               {(field) => {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
-                  <Field data-invalid={isInvalid}>
+                  <Field data-invalid={isInvalid} className="relative">
+                    <FieldCharacterCount
+                      id={`${field.name}-character-count`}
+                      className={cn(
+                        "absolute -top-5 right-0",
+                        field.state.value.length >= 50 ? "text-destructive" : undefined,
+                      )}
+                    >
+                      {t("field-character-count", {
+                        current: field.state.value.length,
+                        max: 60,
+                      })}
+                    </FieldCharacterCount>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -93,6 +105,7 @@ export default function TitleReport() {
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
+                      aria-describedby={`${field.name}-character-count`}
                       maxLength={60}
                       className={cn(
                         "text-foreground ring-primary/40 tall:xl:text-4xl mx-0 inline h-full w-full rounded-md bg-blue-50 px-1 py-2 text-2xl font-medium shadow-none ring-2 outline-hidden focus:ring-0 lg:text-3xl",
