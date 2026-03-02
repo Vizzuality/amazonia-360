@@ -180,7 +180,11 @@
       "es5-ext"
     ],
     "overrides": {
-      "fast-xml-parser": ">=5.3.6"
+      "fast-xml-parser": ">=5.3.6",
+      "@esri/calcite-components>lodash-es": "4.17.23",
+      "@visx/text>lodash": "4.17.23",
+      "@visx/responsive>lodash": "4.17.23",
+      "@visx/shape>lodash": "4.17.23"
     }
   }
 }
