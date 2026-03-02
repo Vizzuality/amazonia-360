@@ -186,7 +186,8 @@
       "@visx/text>lodash": "4.17.23",
       "@visx/responsive>lodash": "4.17.23",
       "@visx/shape>lodash": "4.17.23",
-      "payload>ajv": "8.18.0"
+      "payload>ajv": "8.18.0",
+      "@auth/core>cookie": "0.7.0"
     }
   }
 }
