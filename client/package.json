@@ -40,7 +40,7 @@
     "@loaders.gl/loader-utils": "^4.3.4",
     "@loaders.gl/shapefile": "^4.3.4",
     "@loaders.gl/zip": "^4.3.4",
-    "@mdxeditor/editor": "3.48.0",
+    "@mdxeditor/editor": "3.52.4",
     "@next/bundle-analyzer": "15.5.6",
     "@next/eslint-plugin-next": "15.5.6",
     "@payloadcms/db-postgres": "3.78.0",
