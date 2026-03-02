@@ -180,7 +180,8 @@
       "es5-ext"
     ],
     "overrides": {
-      "fast-xml-parser": ">=5.3.6",
+      "@aws-sdk/xml-builder>fast-xml-parser": "5.3.8",
+      "@loaders.gl/xml>fast-xml-parser": "5.3.8",
       "@esri/calcite-components>lodash-es": "4.17.23",
       "@visx/text>lodash": "4.17.23",
       "@visx/responsive>lodash": "4.17.23",
