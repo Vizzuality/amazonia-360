@@ -25,7 +25,7 @@ export default function DesktopNavigation() {
 
       <Link
         className={cn({
-          "whitespace-nowrap text-sm hover:text-cyan-500": true,
+          "text-sm whitespace-nowrap hover:text-cyan-500": true,
           "text-cyan-500": pathname.includes("/reports"),
         })}
         href="/reports"

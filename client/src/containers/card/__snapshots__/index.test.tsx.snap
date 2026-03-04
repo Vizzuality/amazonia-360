@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`CardLoader renders CardLoader Children component when query is not fetching 1`] = `
+exports[`CardLoader > renders CardLoader Children component when query is not fetching 1`] = `
 <div>
   <div
     role="presentation"
@@ -10,25 +10,25 @@ exports[`CardLoader renders CardLoader Children component when query is not fetc
 </div>
 `;
 
-exports[`CardLoader renders CardLoader Skeleton component when query is fetching 1`] = `
+exports[`CardLoader > renders CardLoader Skeleton component when query is fetching 1`] = `
 <div>
   <div
-    class="animate-pulse rounded-md bg-primary/10"
+    class="bg-primary/10 animate-pulse rounded-md"
     data-testid="card-loader"
   />
 </div>
 `;
 
-exports[`CardLoader renders CardLoader component without crashing 1`] = `
+exports[`CardLoader > renders CardLoader component without crashing 1`] = `
 <div>
   <div
-    class="animate-pulse rounded-md bg-primary/10"
+    class="bg-primary/10 animate-pulse rounded-md"
     data-testid="card-loader"
   />
 </div>
 `;
 
-exports[`CardNoData renders CardNoData Children component when query is fetched and there is data 1`] = `
+exports[`CardNoData > renders CardNoData Children component when query is fetched and there is data 1`] = `
 <div>
   <div
     role="presentation"
@@ -38,7 +38,7 @@ exports[`CardNoData renders CardNoData Children component when query is fetched 
 </div>
 `;
 
-exports[`CardNoData renders CardNoData component when query is fetched and no data 1`] = `
+exports[`CardNoData > renders CardNoData component when query is fetched and no data 1`] = `
 <div>
   <div
     class="flex grow flex-col items-center justify-center space-y-6 py-12"
@@ -56,13 +56,13 @@ exports[`CardNoData renders CardNoData component when query is fetched and no da
     <div
       class="text-center text-sm font-medium text-blue-900"
     >
-      translated
+      card-no-results
     </div>
   </div>
 </div>
 `;
 
-exports[`CardNoData renders CardNoData component without crashing 1`] = `
+exports[`CardNoData > renders CardNoData component without crashing 1`] = `
 <div>
   <div
     class="flex grow flex-col items-center justify-center space-y-6 py-12"
@@ -80,7 +80,7 @@ exports[`CardNoData renders CardNoData component without crashing 1`] = `
     <div
       class="text-center text-sm font-medium text-blue-900"
     >
-      translated
+      card-no-results
     </div>
   </div>
 </div>

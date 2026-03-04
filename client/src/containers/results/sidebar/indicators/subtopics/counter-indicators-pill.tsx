@@ -28,7 +28,7 @@ export function CounterIndicatorsPill({
   if (NUMBER === 0) return null;
 
   return (
-    <span className="flex size-5 items-center justify-center rounded-full border border-border px-1 py-0.5 text-2xs font-semibold text-primary">
+    <span className="border-border text-2xs text-primary flex size-5 items-center justify-center rounded-full border px-1 py-0.5 font-semibold">
       {NUMBER}
     </span>
   );

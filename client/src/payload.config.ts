@@ -9,6 +9,7 @@ import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 
 import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2";
+import type { TransportOptions } from "nodemailer";
 import nodemailer from "nodemailer";
 import sharp from "sharp";
 
@@ -29,6 +30,27 @@ import { getDatabaseUrlFromUrlAndPassword } from "./utils/database-url";
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
+// Use a JSON transport (no-op) when AWS SES credentials are dummy/test values.
+// This avoids SES validation errors during E2E tests and local development.
+const isTestCredentials =
+  env.AWS_SES_IAM_USER_ACCESS_KEY_ID === "no-ses-configured" ||
+  env.AWS_SES_IAM_USER_ACCESS_KEY_ID === "";
+
+const emailTransport = isTestCredentials
+  ? nodemailer.createTransport({ jsonTransport: true } as TransportOptions)
+  : nodemailer.createTransport({
+      SES: {
+        sesClient: new SESv2Client({
+          region: env.AWS_SES_REGION,
+          credentials: {
+            accessKeyId: env.AWS_SES_IAM_USER_ACCESS_KEY_ID,
+            secretAccessKey: env.AWS_SES_IAM_USER_SECRET_ACCESS_KEY,
+          },
+        }),
+        SendEmailCommand,
+      },
+    });
+
 export default buildConfig({
   admin: {
     user: Admins.slug,
@@ -47,18 +69,7 @@ export default buildConfig({
   }),
   editor: lexicalEditor(),
   email: nodemailerAdapter({
-    transport: nodemailer.createTransport({
-      SES: {
-        sesClient: new SESv2Client({
-          region: env.AWS_SES_REGION,
-          credentials: {
-            accessKeyId: env.AWS_SES_IAM_USER_ACCESS_KEY_ID,
-            secretAccessKey: env.AWS_SES_IAM_USER_SECRET_ACCESS_KEY,
-          },
-        }),
-        SendEmailCommand,
-      },
-    }),
+    transport: emailTransport,
     defaultFromAddress: "info@amazoniaforever360.org",
     defaultFromName: "Amazonia Forever 360",
   }),

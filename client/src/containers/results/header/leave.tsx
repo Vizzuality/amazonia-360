@@ -50,7 +50,7 @@ export const LeaveReport = () => {
     <>
       <AlertDialog key="new-report-dialog" open={navGuard.active}>
         <AlertDialogContent
-          area-describedby={t("report-results-unsaved-changes-description")}
+          aria-describedby={t("report-results-unsaved-changes-description")}
           className="max-w-xl"
         >
           <AlertDialogHeader>

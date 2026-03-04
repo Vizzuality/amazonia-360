@@ -112,7 +112,7 @@ export default function ReportResultsIndicator({
   return (
     <div className="flex h-full flex-col">
       <Card withoutBorder={isWebshot}>
-        <CardHeader className="h-auto px-4 pb-1.5 pt-2">
+        <CardHeader className="h-auto px-4 pt-2 pb-1.5">
           <CardTitle>{indicator?.name}</CardTitle>
           <CardControls>
             {!isWebshot && !isPdf && <CardInfo ids={[indicator.id]} />}

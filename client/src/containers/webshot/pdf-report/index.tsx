@@ -52,7 +52,7 @@ export const Pdf = () => {
     <FormProvider {...methods}>
       <LoadProvider onLoad={handleLoad}>
         {!loaded && (
-          <div className="fixed left-0 top-0 z-50 flex h-full w-full flex-col items-center justify-center bg-foreground/90 text-background">
+          <div className="bg-foreground/90 text-background fixed top-0 left-0 z-50 flex h-full w-full flex-col items-center justify-center">
             <div className="flex max-w-sm flex-col items-center justify-center gap-2 text-center">
               <h3 className="text-xl font-bold">{t("pdf-report-generating")}</h3>
               <p className="text-sm">{t("pdf-report-generating-subtitle")}</p>

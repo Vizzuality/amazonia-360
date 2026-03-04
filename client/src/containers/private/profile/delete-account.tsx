@@ -48,12 +48,12 @@ export function DeleteAccount() {
     <>
       <div className="space-y-4">
         <div className="space-y-1">
-          <h3 className="text-xs font-bold uppercase tracking-wide text-destructive">
+          <h3 className="text-destructive text-xs font-bold tracking-wide uppercase">
             {t("profile-delete-account-title")}
           </h3>
         </div>
 
-        <p className="text-sm text-muted-foreground">{t("profile-delete-account-description")}</p>
+        <p className="text-muted-foreground text-sm">{t("profile-delete-account-description")}</p>
 
         <Button variant="destructive" onClick={() => setIsDialogOpen(true)}>
           {t("profile-delete-account-button")}

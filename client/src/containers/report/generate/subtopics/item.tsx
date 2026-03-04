@@ -22,7 +22,7 @@ export default function SubtopicsItem({ id, name }: Subtopic) {
       render={({ field }) => (
         <div
           className={cn(
-            "relative h-full w-full grow cursor-pointer overflow-hidden rounded-sm bg-white text-left",
+            "relative h-full w-full grow cursor-pointer overflow-hidden rounded-xs bg-white text-left",
           )}
         >
           <button
@@ -67,7 +67,7 @@ export default function SubtopicsItem({ id, name }: Subtopic) {
               </div>
             </div>
           </button>
-          <div className="pointer-events-none absolute right-1 top-1">
+          <div className="pointer-events-none absolute top-1 right-1">
             <Checkbox
               className="block"
               checked={

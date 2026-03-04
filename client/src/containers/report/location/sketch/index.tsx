@@ -11,7 +11,7 @@ export default function Sketch() {
 
   return (
     <div className={cn("flex w-full flex-col justify-between gap-2 text-sm")}>
-      <span className="font-semibold leading-none text-muted-foreground">
+      <span className="text-muted-foreground leading-none font-semibold">
         {t("draw-on-the-map")}
       </span>
       <div className="flex gap-1">

@@ -7,7 +7,7 @@ export default function FeedbackButton() {
   const t = useTranslations();
   const locale = useLocale();
   return (
-    <div className="fixed right-0 top-1/2 hidden -translate-y-1/2 lg:block print:hidden">
+    <div className="fixed top-1/2 right-0 hidden -translate-y-1/2 lg:block print:hidden">
       <a
         href={`${FEEDBACK_URL}?lang=${locale}`}
         target="_blank"

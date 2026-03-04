@@ -3,13 +3,14 @@ import React from "react";
 import { scroller } from "react-scroll";
 
 import { render, act } from "@testing-library/react";
+import { vi, Mock, MockInstance } from "vitest";
 
 import { useHighlightNewIndicator } from "./hooks";
 
 // Mock react-scroll's scroller
-jest.mock("react-scroll", () => ({
+vi.mock("react-scroll", () => ({
   scroller: {
-    scrollTo: jest.fn(),
+    scrollTo: vi.fn(),
   },
 }));
 
@@ -30,20 +31,20 @@ function TestComponent({
 }
 
 describe("useHighlightNewIndicator", () => {
-  let getElementByIdSpy: jest.SpyInstance;
-  let classListAddMock: jest.Mock;
-  let classListRemoveMock: jest.Mock;
-  let addEventListenerMock: jest.Mock;
-  let removeEventListenerMock: jest.Mock;
+  let getElementByIdSpy: MockInstance;
+  let classListAddMock: Mock;
+  let classListRemoveMock: Mock;
+  let addEventListenerMock: Mock;
+  let removeEventListenerMock: Mock;
 
   beforeEach(() => {
-    jest.useFakeTimers();
-    classListAddMock = jest.fn();
-    classListRemoveMock = jest.fn();
-    addEventListenerMock = jest.fn();
-    removeEventListenerMock = jest.fn();
+    vi.useFakeTimers();
+    classListAddMock = vi.fn();
+    classListRemoveMock = vi.fn();
+    addEventListenerMock = vi.fn();
+    removeEventListenerMock = vi.fn();
 
-    getElementByIdSpy = jest.spyOn(document, "getElementById").mockImplementation((id) => {
+    getElementByIdSpy = vi.spyOn(document, "getElementById").mockImplementation((id) => {
       return {
         dataset: {
           status: "",
@@ -58,12 +59,12 @@ describe("useHighlightNewIndicator", () => {
       } as unknown as HTMLElement;
     });
 
-    (scroller.scrollTo as jest.Mock).mockClear();
+    (scroller.scrollTo as Mock).mockClear();
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
-    jest.clearAllTimers();
+    vi.clearAllMocks();
+    vi.clearAllTimers();
   });
 
   it("should not trigger when disabled", () => {
@@ -71,7 +72,7 @@ describe("useHighlightNewIndicator", () => {
     render(<TestComponent indicators={indicators} disabled={true} />);
 
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
 
     expect(getElementByIdSpy).not.toHaveBeenCalled();
@@ -86,7 +87,7 @@ describe("useHighlightNewIndicator", () => {
     rerender(<TestComponent indicators={indicators} />);
 
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
 
     expect(getElementByIdSpy).toHaveBeenCalledWith("widget-2-b");

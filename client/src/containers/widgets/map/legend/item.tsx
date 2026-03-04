@@ -54,7 +54,7 @@ export const LegendItem = ({ id, interactive }: { id: Indicator["id"]; interacti
   return (
     <div className="space-y-1 p-4">
       <header className="flex justify-between gap-2">
-        <h3 className="text-xs font-semibold text-foreground">{name}</h3>
+        <h3 className="text-foreground text-xs font-semibold">{name}</h3>
 
         {interactive && (
           <ul className="flex -translate-y-1 items-center gap-1">

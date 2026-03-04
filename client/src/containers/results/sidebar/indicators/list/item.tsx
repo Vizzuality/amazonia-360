@@ -49,13 +49,13 @@ export function IndicatorsItem({
             <Button
               variant="ghost"
               aria-label={indicator.name}
-              className="h-auto w-full justify-start py-1 pl-2 pr-14 font-medium"
+              className="h-auto w-full justify-start py-1 pr-14 pl-2 font-medium"
             >
-              <span className="text-wrap text-left">{indicator.name}</span>
+              <span className="text-left text-wrap">{indicator.name}</span>
             </Button>
           </PopoverTrigger>
 
-          <div className="pointer-events-none absolute right-0.5 top-1 mt-px flex items-center space-x-1">
+          <div className="pointer-events-none absolute top-1 right-0.5 mt-px flex items-center space-x-1">
             <Tooltip>
               <Dialog>
                 <TooltipTrigger asChild>
@@ -64,7 +64,7 @@ export function IndicatorsItem({
                       aria-label={t("visualization-type")}
                       type="button"
                       variant="ghost"
-                      className="pointer-events-auto h-5 w-5 rounded-sm p-0"
+                      className="pointer-events-auto h-5 w-5 rounded-xs p-0"
                     >
                       <LuInfo className="h-4 w-4" aria-label="Topic info" />
                     </Button>
@@ -94,13 +94,13 @@ export function IndicatorsItem({
                 aria-label={t("visualization-type")}
                 type="button"
                 variant="secondary"
-                className="h-5 w-5 rounded-sm p-0"
+                className="h-5 w-5 rounded-xs p-0"
               >
                 <LuPlus />
               </Button>
             </PopoverAnchor>
 
-            <PopoverContent side="left" align="start" className="w-auto bg-background p-0">
+            <PopoverContent side="left" align="start" className="bg-background w-auto p-0">
               <VisualizationType
                 topicId={topicId}
                 types={

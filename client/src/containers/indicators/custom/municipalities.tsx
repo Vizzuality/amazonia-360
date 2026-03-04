@@ -94,7 +94,7 @@ export const Municipalities = ({
 
   return (
     <CardLoader query={[query]} className="h-72">
-      <p className="pb-4 pt-2 text-sm font-medium text-muted-foreground">
+      <p className="text-muted-foreground pt-2 pb-4 text-sm font-medium">
         {t("indicators-custom-municipalities-selected-area-intersects")}{" "}
         <span className="font-bold">
           {indicatorsTotals[3] || indicatorsTotals["Countries"]}{" "}

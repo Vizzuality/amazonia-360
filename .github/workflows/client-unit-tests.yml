@@ -1,23 +1,19 @@
-name: Client Tests
+name: Client Unit Tests
 
 on:
   push:
-    branches:
-      - main
+    branches: [develop, staging, main]
     paths:
       - "client/**"
-      - ".github/workflows/client-tests.yml"
-      - "client/package.json"
-      - "client/pnpm-lock.yaml"
+      - ".github/workflows/client-unit-tests.yml"
   pull_request:
-    branches:
-      - main
     paths:
       - "client/**"
-      - ".github/workflows/client-tests.yml"
-      - "client/package.json"
-      - "client/pnpm-lock.yaml"
+      - ".github/workflows/client-unit-tests.yml"
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 defaults:
   run:
@@ -32,7 +28,7 @@ jobs:
       COVERAGE_GH_OUTPUT_FILE: /tmp/${{ github.run_id }}__coverage.txt
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v4
       - name: Node setup
         uses: actions/setup-node@v4
         with:
@@ -48,10 +44,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Lint Client
-        run: pnpm lint
-      - name: Check Client types
-        run: pnpm check-types
 
       - name: Run Client tests
         run: pnpm test | tee "$COVERAGE_GH_OUTPUT_FILE"

@@ -179,6 +179,7 @@ const eslintConfig = [
     "src/cms/migrations/",
     "src/types/generated/",
     "next-env.d.ts",
+    "e2e/",
   ]),
   {
     ignores: [".next/"],

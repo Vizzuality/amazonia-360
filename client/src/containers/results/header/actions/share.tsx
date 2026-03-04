@@ -188,14 +188,14 @@ export const ShareAction = ({ reportId }: ReportResultsActionsProps) => {
             {t("report-results-copy-description")}
           </DialogDescription>
           <div className="mb-6 flex max-w-fit flex-col space-y-2">
-            <h3 className="text-lg font-bold text-foreground">{t("report-results-copy-title")}</h3>
-            <p className="text-base font-medium text-muted-foreground">
+            <h3 className="text-foreground text-lg font-bold">{t("report-results-copy-title")}</h3>
+            <p className="text-muted-foreground text-base font-medium">
               {t("report-results-copy-description")}
             </p>
           </div>
           <div className="mb-6 flex w-full space-x-2 overflow-hidden">
-            <div className="flex h-10 w-[calc(100%_-_theme(space.32))] rounded-sm border bg-background px-3 py-2 text-sm text-gray-900">
-              <p className="truncate text-base font-normal text-foreground">{shareUrl}</p>
+            <div className="bg-background flex h-10 w-[calc(100%-calc(var(--spacing)*32))] rounded-xs border px-3 py-2 text-sm text-gray-900">
+              <p className="text-foreground truncate text-base font-normal">{shareUrl}</p>
             </div>
             <Button className="h-10 w-40 gap-2" onClick={copyShareLink}>
               <LuCopy className="h-4 w-4" />

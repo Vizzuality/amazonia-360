@@ -57,7 +57,7 @@ export default function SubtopicsItem({ id, topic_id, name }: Subtopic) {
       ref={scrollRef as React.RefObject<HTMLDivElement | null>}
       key={id}
       className={cn(
-        "h-full w-full grow cursor-pointer overflow-hidden rounded-sm bg-white text-left",
+        "h-full w-full grow cursor-pointer overflow-hidden rounded-xs bg-white text-left",
       )}
     >
       <Collapsible open={!!indicatorsExpand?.[topic_id]?.includes(id)} onOpenChange={handleClick}>
@@ -77,7 +77,7 @@ export default function SubtopicsItem({ id, topic_id, name }: Subtopic) {
             </div>
           </div>
           {!!SELECTED && (
-            <Badge variant="secondary" className="rounded-full text-2xs">
+            <Badge variant="secondary" className="text-2xs rounded-full">
               {SELECTED}
             </Badge>
           )}

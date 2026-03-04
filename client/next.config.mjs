@@ -6,11 +6,6 @@ import "./src/env.mjs";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    // Uncomment to allow production builds to successfully complete even if
-    // your project has ESLint errors.
-    //   ignoreDuringBuilds: true,
-  },
   output: "standalone",
   images: {
     unoptimized: true,
@@ -22,7 +17,6 @@ const nextConfig = {
     ],
   },
   transpilePackages: ["@t3-oss/env-nextjs", "@t3-oss/env-core"],
-  // serverExternalPackages: ["@arcgis/core/*"],
   experimental: {
     optimizePackageImports: ["@arcgis/core/*"],
   },

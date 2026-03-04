@@ -470,5 +470,6 @@
   "dropzone-drag-drop-upload": "Arrastar e soltar ou clicar para carregar",
   "dropzone-drag-drop-replace": "Arrastar e soltar ou clicar para substituir",
   "dropzone-and-more": "e mais {count}",
-  "or": "ou"
+  "or": "ou",
+  "field-character-count": "{current}/{max} caracteres"
 }
