@@ -190,7 +190,8 @@
       "@auth/core>cookie": "0.7.0",
       "ts-node>diff": "4.0.4",
       "uvu>diff": "5.2.2",
-      "unidiff>diff": "5.2.2"
+      "unidiff>diff": "5.2.2",
+      "sass>immutable": "4.3.8"
     }
   }
 }
