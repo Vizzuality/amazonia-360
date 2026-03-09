@@ -21,6 +21,7 @@ import { useFormTopics, useSyncDefaultTopics } from "@/app/(frontend)/store";
 import { BasemapIds } from "@/constants/basemaps";
 import { DATASETS } from "@/constants/datasets";
 
+import { MapExportRegistrar } from "@/containers/indicators/map/export-registrar";
 import { useIndicator } from "@/containers/indicators/provider";
 import SelectedLayer from "@/containers/map/layer-manager/selected-layer";
 import { WidgetLegend } from "@/containers/widgets/map/legend";
@@ -162,6 +163,8 @@ export default function WidgetMap({
           <Layer index={1} layer={DATASETS.area_afp.layer as LayerProps} />
           <SelectedLayer index={layers.length + 2} location={location} />
           <Layer layer={LABELS_LAYER} index={layers.length + 3} />
+
+          <MapExportRegistrar />
 
           {!isWebshot && !isPdf && (
             <Controls>
