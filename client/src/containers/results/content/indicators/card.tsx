@@ -8,6 +8,7 @@ import { toast, useSonner } from "sonner";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
+import { exportToPng } from "@/lib/webshot";
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 import { ResourceFeature, ResourceImageryTile, ResourceWebTile } from "@/types/indicator";
@@ -30,7 +31,6 @@ import { CustomIndicators } from "@/containers/indicators/custom";
 import { MapIndicators } from "@/containers/indicators/map";
 import { NumericIndicators } from "@/containers/indicators/numeric";
 import { TableIndicators } from "@/containers/indicators/table";
-import { exportToPng } from "@/lib/webshot";
 
 import { useSidebar } from "@/components/ui/sidebar";
 
