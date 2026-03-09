@@ -1,8 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
-
-import { useSearchParams } from "next/navigation";
+import { useCallback, useRef, useState } from "react";
 
 import { useAtom } from "jotai";
 import { useLocale, useTranslations } from "next-intl";
@@ -10,7 +8,7 @@ import { toast, useSonner } from "sonner";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
-import { downloadBlobResponse, usePostWebshotWidgetsMutation } from "@/lib/webshot";
+import { exportToPng } from "@/lib/webshot";
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 import { ResourceFeature, ResourceImageryTile, ResourceWebTile } from "@/types/indicator";
@@ -38,9 +36,19 @@ import { useSidebar } from "@/components/ui/sidebar";
 
 import { Report } from "@/payload-types";
 
-// custom indicators
+export default function ReportResultsIndicator(props: {
+  id: Report["id"];
+  indicatorId: Indicator["id"];
+  type: VisualizationTypes;
+  basemapId?: BasemapIds;
+  editable: boolean;
+  isWebshot?: boolean;
+  isPdf?: boolean;
+}) {
+  return <ReportResultsIndicatorContent {...props} />;
+}
 
-export default function ReportResultsIndicator({
+function ReportResultsIndicatorContent({
   id,
   indicatorId,
   type,
@@ -61,41 +69,30 @@ export default function ReportResultsIndicator({
   const locale = useLocale();
   const t = useTranslations();
   const indicator = useGetIndicatorsId(indicatorId, locale);
-  const searchParams = useSearchParams();
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   const { toggleSidebar } = useSidebar();
   const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
-
-  const postWebshotWidgetsMutation = usePostWebshotWidgetsMutation();
-
   const handleEdit = useCallback(() => {
     toggleSidebar();
     setReportEditionMode(!reportEditionMode);
   }, [toggleSidebar, setReportEditionMode, reportEditionMode]);
 
-  const handleWebshotDownload = useCallback(
+  const handleDownload = useCallback(
     async (format: string) => {
       if (toasts.find((t) => t.id === `indicator-${indicatorId}-${type}`)) return;
+      if (!cardRef.current) return;
+
+      const filename = `indicator-${id}-${indicatorId}-${type}.${format.toLowerCase()}`;
+      const element = cardRef.current;
+
+      setIsExporting(true);
 
       toast.promise(
-        postWebshotWidgetsMutation.mutateAsync(
-          {
-            pagePath: `/${locale}/webshot/widgets/${id}/${indicatorId}/${type}?${searchParams.toString()}`,
-            outputFileName: `indicator-${id}-${indicatorId}-${type}.${format.toLowerCase()}`,
-            params: undefined,
-          },
-          {
-            onSuccess: async (res) => {
-              await downloadBlobResponse(
-                res.data,
-                `indicator-${id}-${indicatorId}-${type}.${format.toLowerCase()}`,
-              );
-            },
-            onError: (error) => {
-              console.error("Error downloading widget:", error);
-            },
-          },
-        ),
+        exportToPng(element, filename).finally(() => {
+          setIsExporting(false);
+        }),
         {
           id: `indicator-${id}-${indicatorId}-${type}`,
           loading: t("indicator-webshot-loading", { name: indicator?.name ?? "" }),
@@ -104,25 +101,25 @@ export default function ReportResultsIndicator({
         },
       );
     },
-    [id, indicatorId, t, indicator, type, toasts, locale, searchParams, postWebshotWidgetsMutation],
+    [id, indicatorId, t, indicator, type, toasts],
   );
 
   if (!indicator) return null;
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col" ref={cardRef}>
       <Card withoutBorder={isWebshot}>
         <CardHeader className="h-auto px-4 pt-2 pb-1.5">
           <CardTitle>{indicator?.name}</CardTitle>
-          <CardControls>
+          <CardControls data-export-exclude>
             {!isWebshot && !isPdf && <CardInfo ids={[indicator.id]} />}
 
             {editable && (
               <CardPopover
                 id={indicator?.id}
                 onClick={handleEdit}
-                onWebshotDownload={handleWebshotDownload}
-                isDownloading={postWebshotWidgetsMutation.isPending}
+                onDownload={handleDownload}
+                isDownloading={isExporting}
               />
             )}
           </CardControls>

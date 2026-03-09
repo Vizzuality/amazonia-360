@@ -103,10 +103,10 @@ export function CardSettings({
 }
 
 export function CardDownload({
-  onWebshotDownload = () => undefined,
+  onDownload = () => undefined,
   isDownloading = false,
 }: PropsWithChildren<{
-  onWebshotDownload?: (format: string) => void;
+  onDownload?: (format: string) => void;
   isDownloading?: boolean;
 }>) {
   const t = useTranslations();
@@ -119,7 +119,7 @@ export function CardDownload({
       <ul>
         {DOWNLOAD_FORMATS.map((format) => {
           return (
-            <DropdownMenuItem key={format.value} onSelect={() => onWebshotDownload(format.value)}>
+            <DropdownMenuItem key={format.value} onSelect={() => onDownload(format.value)}>
               {isDownloading && (
                 <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
               )}
@@ -137,12 +137,12 @@ export function CardDownload({
 
 export function CardPopover({
   onClick,
-  onWebshotDownload = () => undefined,
+  onDownload = () => undefined,
   isDownloading = false,
 }: PropsWithChildren<{
   id: Indicator["id"];
   onClick?: (e: Event) => void;
-  onWebshotDownload?: (format: string) => void;
+  onDownload?: (format: string) => void;
   isDownloading?: boolean;
 }>) {
   const t = useTranslations();
@@ -174,7 +174,7 @@ export function CardPopover({
             <DropdownMenuSeparator className="bg-border -mx-1 my-1 h-px" />
             <DropdownMenuGroup className="text-popover-foreground px-2 py-1.5 text-sm">
               <CardDownload
-                onWebshotDownload={(format) => onWebshotDownload(format)}
+                onDownload={(format) => onDownload(format)}
                 isDownloading={isDownloading}
               />
             </DropdownMenuGroup>
@@ -191,9 +191,12 @@ export function CardPopover({
   );
 }
 
-export function CardControls({ children }: PropsWithChildren) {
+export function CardControls({
+  children,
+  ...props
+}: PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) {
   return (
-    <div className="relative flex items-center space-x-0">
+    <div className="relative flex items-center space-x-0" {...props}>
       <TooltipProvider delayDuration={500}>{children}</TooltipProvider>
     </div>
   );
