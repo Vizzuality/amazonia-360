@@ -30,10 +30,7 @@ import { CustomIndicators } from "@/containers/indicators/custom";
 import { MapIndicators } from "@/containers/indicators/map";
 import { NumericIndicators } from "@/containers/indicators/numeric";
 import { TableIndicators } from "@/containers/indicators/table";
-import {
-  CardExportProvider,
-  useCardExport,
-} from "@/containers/results/content/indicators/export-provider";
+import { exportToPng } from "@/lib/webshot";
 
 import { useSidebar } from "@/components/ui/sidebar";
 
@@ -48,11 +45,7 @@ export default function ReportResultsIndicator(props: {
   isWebshot?: boolean;
   isPdf?: boolean;
 }) {
-  return (
-    <CardExportProvider>
-      <ReportResultsIndicatorContent {...props} />
-    </CardExportProvider>
-  );
+  return <ReportResultsIndicatorContent {...props} />;
 }
 
 function ReportResultsIndicatorContent({
@@ -81,8 +74,6 @@ function ReportResultsIndicatorContent({
 
   const { toggleSidebar } = useSidebar();
   const [reportEditionMode, setReportEditionMode] = useAtom(reportEditionModeAtom);
-  const { exportAsPng } = useCardExport();
-
   const handleEdit = useCallback(() => {
     toggleSidebar();
     setReportEditionMode(!reportEditionMode);
@@ -99,7 +90,7 @@ function ReportResultsIndicatorContent({
       setIsExporting(true);
 
       toast.promise(
-        exportAsPng(element, filename).finally(() => {
+        exportToPng(element, filename).finally(() => {
           setIsExporting(false);
         }),
         {
@@ -110,7 +101,7 @@ function ReportResultsIndicatorContent({
         },
       );
     },
-    [id, indicatorId, t, indicator, type, toasts, exportAsPng],
+    [id, indicatorId, t, indicator, type, toasts],
   );
 
   if (!indicator) return null;

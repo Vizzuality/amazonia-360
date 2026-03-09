@@ -15,6 +15,7 @@ import ArcGISScaleBar from "@arcgis/core/widgets/ScaleBar";
 import { merge } from "ts-deepmerge";
 
 import { omit } from "@/lib/utils";
+import { registerMapForExport, unregisterMapForExport } from "@/lib/webshot";
 
 import { BasemapIds } from "@/constants/basemaps";
 import { DEFAULT_MAP_VIEW_PROPERTIES } from "@/constants/map";
@@ -148,13 +149,27 @@ export function MapView({
 
       // check if the map is mounted
       mapViewRef.current.when(() => {
-        if (!mapViewRef.current || !mapRef.current) {
+        if (!mapViewRef.current || !mapRef.current || !mapContainerRef.current) {
           return;
         }
         onMapMount({
           map: mapRef.current,
           view: mapViewRef.current,
         });
+
+        // Register for PNG export — the .map container is used as the WeakMap key
+        // so exportToPng can look up screenshot functions by querying ".map" elements.
+        const viewRef = mapViewRef.current;
+        registerMapForExport(mapContainerRef.current, async () => {
+          try {
+            await ArcGISReactiveUtils.whenOnce(() => !viewRef.updating);
+            const screenshot = await viewRef.takeScreenshot();
+            return screenshot?.dataUrl ?? null;
+          } catch {
+            return null;
+          }
+        });
+
         setMounted(true);
       });
 
@@ -167,6 +182,9 @@ export function MapView({
       );
 
       return () => {
+        if (mapContainerRef.current) {
+          unregisterMapForExport(mapContainerRef.current);
+        }
         onMapUnmount();
       };
     }
