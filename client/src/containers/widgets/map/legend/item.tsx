@@ -57,7 +57,7 @@ export const LegendItem = ({ id, interactive }: { id: Indicator["id"]; interacti
         <h3 className="text-foreground text-xs font-semibold">{name}</h3>
 
         {interactive && (
-          <ul className="flex -translate-y-1 items-center gap-1">
+          <ul className="flex -translate-y-1 items-center gap-1" data-export-exclude>
             <li>
               <InfoControl {...indicator} />
             </li>

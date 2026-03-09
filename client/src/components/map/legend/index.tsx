@@ -27,6 +27,7 @@ export default function Legend({
       {open && interactive && (
         <CollapsibleTrigger asChild>
           <Button
+            data-export-exclude
             variant="default"
             size="xs"
             className="absolute right-2 bottom-full z-0 -translate-y-px rounded-b-none"
@@ -38,7 +39,12 @@ export default function Legend({
 
       {!open && interactive && (
         <CollapsibleTrigger className="px-4 py-2" asChild>
-          <Button variant="ghost" size="sm" className="flex w-full items-center justify-between">
+          <Button
+            data-export-exclude
+            variant="ghost"
+            size="sm"
+            className="flex w-full items-center justify-between"
+          >
             {t("legend")}
 
             <LuChevronUp className="h-5 w-5" />
