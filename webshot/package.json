@@ -61,7 +61,8 @@
       "readdir-glob>minimatch": "5.1.8",
       "glob>minimatch": "10.2.3",
       "vite>rollup": "4.59.0",
-      "terser-webpack-plugin>serialize-javascript": "7.0.3"
+      "terser-webpack-plugin>serialize-javascript": "7.0.3",
+      "vitest>vite": "7.1.12"
     }
   },
   "packageManager": "pnpm@10.14.0"
