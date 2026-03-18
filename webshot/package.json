@@ -56,8 +56,7 @@
   },
   "pnpm": {
     "overrides": {
-      "archiver-utils>glob": ">=11.1.0",
-      "qs@<6.14.1": ">=6.14.1"
+      "archiver-utils>glob": "13.0.6"
     }
   },
   "packageManager": "pnpm@10.14.0"
