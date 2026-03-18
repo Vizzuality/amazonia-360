@@ -196,7 +196,8 @@
       "react-world-flags>svgo": "3.3.3",
       "flat-cache>flatted": "3.4.0",
       "@payloadcms/next>file-type": "21.3.2",
-      "payload>file-type": "21.3.2"
+      "payload>file-type": "21.3.2",
+      "monaco-editor>dompurify": "3.3.2"
     }
   }
 }
