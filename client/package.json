@@ -194,7 +194,9 @@
       "sass>immutable": "4.3.8",
       "payload>undici": "7.24.0",
       "react-world-flags>svgo": "3.3.3",
-      "flat-cache>flatted": "3.4.0"
+      "flat-cache>flatted": "3.4.0",
+      "@payloadcms/next>file-type": "21.3.2",
+      "payload>file-type": "21.3.2"
     }
   }
 }
