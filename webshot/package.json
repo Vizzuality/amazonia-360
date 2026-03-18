@@ -56,7 +56,10 @@
   },
   "pnpm": {
     "overrides": {
-      "archiver-utils>glob": "13.0.6"
+      "archiver-utils>glob": "13.0.6",
+      "fork-ts-checker-webpack-plugin>minimatch": "3.1.4",
+      "readdir-glob>minimatch": "5.1.8",
+      "glob>minimatch": "10.2.3"
     }
   },
   "packageManager": "pnpm@10.14.0"
