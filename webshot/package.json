@@ -31,7 +31,7 @@
     "class-validator": "0.14.3",
     "compression": "1.8.0",
     "config": "^4.1.0",
-    "express": "5.1.0",
+    "express": "5.2.1",
     "geojson": "0.5.0",
     "helmet": "8.1.0",
     "lodash": "4.17.21",
