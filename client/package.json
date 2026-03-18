@@ -192,7 +192,8 @@
       "uvu>diff": "5.2.2",
       "unidiff>diff": "5.2.2",
       "sass>immutable": "4.3.8",
-      "payload>undici": "7.24.0"
+      "payload>undici": "7.24.0",
+      "react-world-flags>svgo": "3.3.3"
     }
   }
 }
