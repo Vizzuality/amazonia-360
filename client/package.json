@@ -197,7 +197,8 @@
       "flat-cache>flatted": "3.4.0",
       "@payloadcms/next>file-type": "21.3.2",
       "payload>file-type": "21.3.2",
-      "monaco-editor>dompurify": "3.3.2"
+      "monaco-editor>dompurify": "3.3.2",
+      "@esbuild-kit/core-utils>esbuild": "0.25.0"
     }
   }
 }
