@@ -22,19 +22,19 @@
     "test:e2e-debug": "pnpm splitenv && vitest run --config ./vitest.config-e2e.ts --color --inspect-brk --no-file-parallelism"
   },
   "dependencies": {
-    "@nestjs/common": "11.0.21",
-    "@nestjs/core": "11.0.21",
-    "@nestjs/platform-express": "11.0.21",
-    "@nestjs/swagger": "11.1.0",
+    "@nestjs/common": "11.1.17",
+    "@nestjs/core": "11.1.17",
+    "@nestjs/platform-express": "11.1.17",
+    "@nestjs/swagger": "11.2.6",
     "axios": "1.13.5",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.3",
-    "compression": "1.8.0",
+    "compression": "1.8.1",
     "config": "^4.1.0",
-    "express": "5.1.0",
+    "express": "5.2.1",
     "geojson": "0.5.0",
     "helmet": "8.1.0",
-    "lodash": "4.17.21",
+    "lodash": "4.17.23",
     "playwright": "1.58.2",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.2"
@@ -42,7 +42,7 @@
   "devDependencies": {
     "@nestjs/cli": "11.0.16",
     "@nestjs/schematics": "11.0.2",
-    "@nestjs/testing": "11.0.21",
+    "@nestjs/testing": "11.1.17",
     "@types/compression": "1.7.5",
     "@types/config": "^3.3.5",
     "@types/express": "5.0.1",
@@ -51,13 +51,21 @@
     "@types/supertest": "6.0.3",
     "env-cmd": "^11.0.0",
     "supertest": "7.2.2",
-    "testcontainers": "11.11.0",
+    "testcontainers": "11.13.0",
     "vitest": "^3.2.4"
   },
   "pnpm": {
     "overrides": {
-      "archiver-utils>glob": ">=11.1.0",
-      "qs@<6.14.1": ">=6.14.1"
+      "archiver-utils>glob": "13.0.6",
+      "fork-ts-checker-webpack-plugin>minimatch": "3.1.4",
+      "readdir-glob>minimatch": "5.1.8",
+      "glob>minimatch": "10.2.3",
+      "vite>rollup": "4.59.0",
+      "terser-webpack-plugin>serialize-javascript": "7.0.3",
+      "vitest>vite": "7.1.12",
+      "cosmiconfig>js-yaml": "4.1.1",
+      "ajv@<6.14.0": "6.14.0",
+      "ajv@>=8.0.0 <8.18.0": "8.18.0"
     }
   },
   "packageManager": "pnpm@10.14.0"

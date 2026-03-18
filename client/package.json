@@ -98,7 +98,7 @@
     "html-react-parser": "5.2.7",
     "jotai": "2.15.0",
     "lucide-react": "0.546.0",
-    "next": "15.5.10",
+    "next": "15.5.13",
     "next-auth": "5.0.0-beta.30",
     "next-intl": "4.4.0",
     "next-navigation-guard": "0.2.0",
@@ -180,8 +180,8 @@
       "es5-ext"
     ],
     "overrides": {
-      "@aws-sdk/xml-builder>fast-xml-parser": "5.3.8",
-      "@loaders.gl/xml>fast-xml-parser": "5.3.8",
+      "@aws-sdk/xml-builder>fast-xml-parser": "5.5.6",
+      "@loaders.gl/xml>fast-xml-parser": "5.5.6",
       "@esri/calcite-components>lodash-es": "4.17.23",
       "@visx/text>lodash": "4.17.23",
       "@visx/responsive>lodash": "4.17.23",
@@ -191,7 +191,14 @@
       "ts-node>diff": "4.0.4",
       "uvu>diff": "5.2.2",
       "unidiff>diff": "5.2.2",
-      "sass>immutable": "4.3.8"
+      "sass>immutable": "4.3.8",
+      "payload>undici": "7.24.0",
+      "react-world-flags>svgo": "3.3.3",
+      "flat-cache>flatted": "3.4.0",
+      "@payloadcms/next>file-type": "21.3.2",
+      "payload>file-type": "21.3.2",
+      "monaco-editor>dompurify": "3.3.2",
+      "@esbuild-kit/core-utils>esbuild": "0.25.0"
     }
   }
 }
