@@ -1,0 +1,24 @@
+[     792ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/es:0
+[    1030ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(pages-dir-browser)/./node_modules/.pnpm/react-dom@19.2.1_react@19.2.1/node_modules/react-dom/cjs/react-dom-client.development.js:28004
+[    1133ms] Error: Cannot find module './vendor-chunks/@arcgis+core@4.30.9_@floating-ui+utils@0.2.11.js'
+Require stack:
+- /Users/miguelbarrenecheasanchez/Projects/amazonia-360/client/.next/server/webpack-runtime.js
+- /Users/miguelbarrenecheasanchez/Projects/amazonia-360/client/.next/server/app/(frontend)/[locale]/(app)/page.js
+- /Users/miguelbarrenecheasanchez/Projects/amazonia-360/client/node_modules/.pnpm/next@15.5.13_@babel+core@7.29.0_react-dom@19.2.1_react@19.2.1/node_modules/next/dist/server/require.js
+- /Users/miguelbarrenecheasanchez/Projects/amazonia-360/client/node_modules/.pnpm/next@15.5.13_@babel+core@7.29.0_react-dom@19.2.1_react@19.2.1/node_modules/next/dist/server/load-components.js
+- /Users/miguelbarrenecheasanchez/Projects/amazonia-360/client/node_modules/.pnpm/next@15.5.13_@babel+core@7.29.0_react-dom@19.2.1_react@19.2.1/node_modules/next/dist/build/utils.js
+- /Users/miguelbarrenecheasanchez/Projects/amazonia-360/client/node_modules/.pnpm/next@15.5.13_@babel+core@7.29.0_react-dom@19.2.1_react@19.2.1/node_modules/next/dist/server/dev/static-paths-worker.js
+- /Users/miguelbarrenecheasanchez/Projects/amazonia-360/client/node_modules/.pnpm/next@15.5.13_@babel+core@7.29.0_react-dom@19.2.1_react@19.2.1/node_modules/next/dist/compiled/jest-worker/processChild.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1225:15)
+    at <unknown> (file:///Users/miguelbarrenecheasanchez/Projects/amazonia-360/client/node_modules/.pnpm/next@15.5.13_@babel+core@7.29.0_react-dom@19.2.1_react@19.2.1/node_modules/next/dist/server/require-hook.js:57:36)
+    at Function._load (node:internal/modules/cjs/loader:1055:27)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:220:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1311:12)
+    at mod.require (file:///Users/miguelbarrenecheasanchez/Projects/amazonia-360/client/node_modules/.pnpm/next@15.5.13_@babel+core@7.29.0_react-dom@19.2.1_react@19.2.1/node_modules/next/dist/server/require-hook.js:68:28)
+    at require (node:internal/modules/helpers:136:16)
+    at __webpack_require__.f.require (file:///Users/miguelbarrenecheasanchez/Projects/amazonia-360/client/.next/server/webpack-runtime.js:269:28)
+    at <unknown> (file:///Users/miguelbarrenecheasanchez/Projects/amazonia-360/client/.next/server/webpack-runtime.js:177:40)
+[    1105ms] [LOG] [HMR] connected @ webpack-internal:///(pages-dir-browser)/./node_modules/.pnpm/next@15.5.13_@babel+core@7.29.0_react-dom@19.2.1_react@19.2.1/node_modules/next/dist/client/dev/hot-reloader/pages/websocket.js:45
+[   44037ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/es:0
+[   44080ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/favicon.ico:0
