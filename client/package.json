@@ -98,7 +98,7 @@
     "html-react-parser": "5.2.7",
     "jotai": "2.15.0",
     "lucide-react": "0.546.0",
-    "next": "15.5.13",
+    "next": "15.5.14",
     "next-auth": "5.0.0-beta.30",
     "next-intl": "4.4.0",
     "next-navigation-guard": "0.2.0",
