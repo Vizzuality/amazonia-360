@@ -32,7 +32,7 @@
     "@dnd-kit/sortable": "8.0.0",
     "@dnd-kit/utilities": "3.2.2",
     "@hookform/resolvers": "5.2.2",
-    "@lexical/markdown": "0.35.0",
+    "@lexical/markdown": "0.41.0",
     "@loaders.gl/arrow": "4.3.4",
     "@loaders.gl/core": "4.3.4",
     "@loaders.gl/json": "^4.3.4",
@@ -207,7 +207,17 @@
       "micromatch>picomatch": "2.3.2",
       "jest-util>picomatch": "4.0.4",
       "tinyglobby>picomatch": "4.0.4",
-      "@payloadcms/email-nodemailer>nodemailer": "8.0.5"
+      "@payloadcms/email-nodemailer>nodemailer": "8.0.5",
+      "@mdxeditor/editor>lexical": "0.41.0",
+      "@mdxeditor/editor>@lexical/clipboard": "0.41.0",
+      "@mdxeditor/editor>@lexical/link": "0.41.0",
+      "@mdxeditor/editor>@lexical/list": "0.41.0",
+      "@mdxeditor/editor>@lexical/react": "0.41.0",
+      "@mdxeditor/editor>@lexical/utils": "0.41.0",
+      "@mdxeditor/editor>@lexical/markdown": "0.41.0",
+      "@mdxeditor/editor>@lexical/rich-text": "0.41.0",
+      "@mdxeditor/editor>@lexical/selection": "0.41.0",
+      "@mdxeditor/editor>@lexical/plain-text": "0.41.0"
     }
   }
 }
