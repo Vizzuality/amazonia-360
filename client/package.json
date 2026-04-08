@@ -102,7 +102,7 @@
     "next-auth": "5.0.0-beta.30",
     "next-intl": "4.4.0",
     "next-navigation-guard": "0.2.0",
-    "nodemailer": "7.0.11",
+    "nodemailer": "8.0.5",
     "numeral": "2.0.6",
     "nuqs": "2.7.2",
     "payload": "3.79.1",
@@ -206,7 +206,8 @@
       "@loaders.gl/kml>@xmldom/xmldom": "0.8.12",
       "micromatch>picomatch": "2.3.2",
       "jest-util>picomatch": "4.0.4",
-      "tinyglobby>picomatch": "4.0.4"
+      "tinyglobby>picomatch": "4.0.4",
+      "@payloadcms/email-nodemailer>nodemailer": "8.0.5"
     }
   }
 }
