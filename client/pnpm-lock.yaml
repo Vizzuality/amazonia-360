@@ -28,6 +28,7 @@ overrides:
   '@payloadcms/drizzle>drizzle-orm': 0.45.2
   '@payloadcms/db-postgres>drizzle-orm': 0.45.2
   ts-jest>handlebars: 4.7.9
+  '@loaders.gl/kml>@xmldom/xmldom': 0.8.12
 
 importers:
 
@@ -4545,10 +4546,9 @@ packages:
   '@webcomponents/shadycss@1.11.2':
     resolution: {integrity: sha512-vRq+GniJAYSBmTRnhCYPAPq6THYqovJ/gzGThWbgEZUQaBccndGTi1hdiUP15HzEco0I6t4RCtXyX0rsSmwgPw==}
 
-  '@xmldom/xmldom@0.7.13':
-    resolution: {integrity: sha512-lm2GW5PkosIzccsaZIz7tp8cPADSIlIHWDFTR1N0SzfinhhYgeIQjFMz4rYzanCScr3DqQLeomUDArp6MWKm+g==}
+  '@xmldom/xmldom@0.8.12':
+    resolution: {integrity: sha512-9k/gHF6n/pAi/9tqr3m3aqkuiNosYTurLLUtc7xQ9sxB/wm7WPygCv8GYa6mS0fLJEHhqMC1ATYhz++U/lRHqg==}
     engines: {node: '>=10.0.0'}
-    deprecated: this version is no longer supported, please update to at least 0.8.*
 
   '@xobotyi/scrollbar-width@1.9.5':
     resolution: {integrity: sha512-N8tkAACJx2ww8vFMneJmaAgmjAG1tnVBZJRLRcx061tmsLRZHSEZSLuGWnwPtunsSLvSqXQ2wfp7Mgqg1I+2dQ==}
@@ -11767,7 +11767,7 @@ snapshots:
       '@loaders.gl/loader-utils': 4.3.4(@loaders.gl/core@4.3.4)
       '@loaders.gl/schema': 4.3.4(@loaders.gl/core@4.3.4)
       '@tmcw/togeojson': 4.7.0
-      '@xmldom/xmldom': 0.7.13
+      '@xmldom/xmldom': 0.8.12
 
   '@loaders.gl/loader-utils@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -15380,7 +15380,7 @@ snapshots:
 
   '@webcomponents/shadycss@1.11.2': {}
 
-  '@xmldom/xmldom@0.7.13': {}
+  '@xmldom/xmldom@0.8.12': {}
 
   '@xobotyi/scrollbar-width@1.9.5': {}
 

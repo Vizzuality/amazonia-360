@@ -202,7 +202,8 @@
       "@esbuild-kit/core-utils>esbuild": "0.25.0",
       "@payloadcms/drizzle>drizzle-orm": "0.45.2",
       "@payloadcms/db-postgres>drizzle-orm": "0.45.2",
-      "ts-jest>handlebars": "4.7.9"
+      "ts-jest>handlebars": "4.7.9",
+      "@loaders.gl/kml>@xmldom/xmldom": "0.8.12"
     }
   }
 }
