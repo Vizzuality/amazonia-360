@@ -203,7 +203,10 @@
       "@payloadcms/drizzle>drizzle-orm": "0.45.2",
       "@payloadcms/db-postgres>drizzle-orm": "0.45.2",
       "ts-jest>handlebars": "4.7.9",
-      "@loaders.gl/kml>@xmldom/xmldom": "0.8.12"
+      "@loaders.gl/kml>@xmldom/xmldom": "0.8.12",
+      "micromatch>picomatch": "2.3.2",
+      "jest-util>picomatch": "4.0.4",
+      "tinyglobby>picomatch": "4.0.4"
     }
   }
 }
