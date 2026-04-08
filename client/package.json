@@ -198,7 +198,9 @@
       "@payloadcms/next>file-type": "21.3.2",
       "payload>file-type": "21.3.2",
       "monaco-editor>dompurify": "3.3.2",
-      "@esbuild-kit/core-utils>esbuild": "0.25.0"
+      "@esbuild-kit/core-utils>esbuild": "0.25.0",
+      "@payloadcms/drizzle>drizzle-orm": "0.45.2",
+      "@payloadcms/db-postgres>drizzle-orm": "0.45.2"
     }
   }
 }
