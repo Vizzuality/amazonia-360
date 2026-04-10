@@ -7,12 +7,10 @@ import { auth, signOut } from "@/lib/auth";
 import { adminAccess } from "@/cms/access/admin";
 import { anyoneAccess } from "@/cms/access/anyone";
 import { userAccess } from "@/cms/access/user";
+import { buildVerifyEmailHTML, VERIFY_EMAIL_SUBJECT } from "@/cms/emails/verify-email";
+import { resendVerificationHandler } from "@/cms/endpoints/resend-verification";
 import { beforeDeleteUser } from "@/cms/hooks/user";
 import { or } from "@/cms/utils/or";
-import {
-  buildVerifyEmailHTML,
-  VERIFY_EMAIL_SUBJECT,
-} from "@/cms/emails/verify-email";
 
 export const Users: CollectionConfig = {
   slug: "users",
@@ -118,6 +116,11 @@ export const Users: CollectionConfig = {
           message: "You have been logged out successfully.",
         });
       },
+    },
+    {
+      path: "/resend-verification",
+      method: "post",
+      handler: resendVerificationHandler,
     },
   ],
   hooks: {
