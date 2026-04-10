@@ -7,7 +7,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 import { Link } from "@/i18n/navigation";
 
-export function CheckYourEmail(props: React.ComponentProps<"div">) {
+export function CheckYourEmail({
+  email,
+  ...props
+}: React.ComponentProps<"div"> & { email?: string }) {
   const t = useTranslations();
 
   return (
