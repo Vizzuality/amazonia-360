@@ -217,7 +217,8 @@
       "@mdxeditor/editor>@lexical/markdown": "0.41.0",
       "@mdxeditor/editor>@lexical/rich-text": "0.41.0",
       "@mdxeditor/editor>@lexical/selection": "0.41.0",
-      "@mdxeditor/editor>@lexical/plain-text": "0.41.0"
+      "@mdxeditor/editor>@lexical/plain-text": "0.41.0",
+      "axios>follow-redirects": "1.16.0"
     }
   }
 }
