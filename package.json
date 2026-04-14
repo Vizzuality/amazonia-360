@@ -13,6 +13,11 @@
     "splitenv": "node scripts/splitenv.mts .env API CLIENT DATABASE LOAD_TESTS WEBSHOT",
     "test:splitenv": "vitest run scripts/splitenv.test.mts"
   },
+  "pnpm": {
+    "overrides": {
+      "vitest>vite": "6.4.2"
+    }
+  },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.0",
     "@eslint/js": "9.22.0",
