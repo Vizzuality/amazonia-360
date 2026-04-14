@@ -20,9 +20,7 @@ describe("verify-email", () => {
         token: "abc123",
       });
 
-      expect(html).toContain(
-        "http://localhost:3000/auth/verify-email?token=abc123",
-      );
+      expect(html).toContain("http://localhost:3000/auth/verify-email?token=abc123");
     });
 
     it("includes the user email in the greeting", () => {
@@ -50,9 +48,7 @@ describe("verify-email", () => {
         token: "token456",
       });
 
-      expect(html).toContain(
-        '<a href="http://localhost:3000/auth/verify-email?token=token456">',
-      );
+      expect(html).toContain('<a href="http://localhost:3000/auth/verify-email?token=token456">');
     });
   });
 });

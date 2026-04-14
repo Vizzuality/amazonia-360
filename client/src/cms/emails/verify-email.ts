@@ -2,10 +2,7 @@ import { env } from "@/env.mjs";
 
 export const VERIFY_EMAIL_SUBJECT = "Verify your email address";
 
-export function buildVerifyEmailHTML(params: {
-  email: string;
-  token: string;
-}): string {
+export function buildVerifyEmailHTML(params: { email: string; token: string }): string {
   const verifyEmailURL = `${env.NEXT_PUBLIC_URL}/auth/verify-email?token=${params.token}`;
 
   return `
