@@ -17,7 +17,8 @@
     "overrides": {
       "vitest>vite": "6.4.2",
       "micromatch>picomatch": "2.3.2",
-      "vite>picomatch": "4.0.4"
+      "vite>picomatch": "4.0.4",
+      "archiver-utils>lodash": "4.18.1"
     }
   },
   "devDependencies": {
