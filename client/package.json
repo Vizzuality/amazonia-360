@@ -87,7 +87,7 @@
     "@visx/shape": "3.12.0",
     "@visx/tooltip": "3.3.0",
     "@visx/vendor": "3.12.0",
-    "axios": "1.13.5",
+    "axios": "1.15.0",
     "chroma-js": "2.6.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
@@ -98,9 +98,9 @@
     "html-react-parser": "5.2.7",
     "jotai": "2.15.0",
     "lucide-react": "0.546.0",
-    "next": "15.5.14",
+    "next": "15.5.15",
     "next-auth": "5.0.0-beta.30",
-    "next-intl": "4.4.0",
+    "next-intl": "4.9.1",
     "next-navigation-guard": "0.2.0",
     "nodemailer": "8.0.5",
     "numeral": "2.0.6",
@@ -217,7 +217,8 @@
       "@mdxeditor/editor>@lexical/markdown": "0.41.0",
       "@mdxeditor/editor>@lexical/rich-text": "0.41.0",
       "@mdxeditor/editor>@lexical/selection": "0.41.0",
-      "@mdxeditor/editor>@lexical/plain-text": "0.41.0"
+      "@mdxeditor/editor>@lexical/plain-text": "0.41.0",
+      "axios>follow-redirects": "1.16.0"
     }
   }
 }
