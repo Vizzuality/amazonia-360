@@ -12,8 +12,8 @@ import { Link } from "@/i18n/navigation";
 
 const COOLDOWN_SECONDS = 30;
 
-interface CheckYourEmailProps extends React.ComponentProps<"div"> {
-  email?: string;
+interface CheckYourEmailProps extends Readonly<React.ComponentProps<"div">> {
+  readonly email?: string;
 }
 
 export function CheckYourEmail({ email, ...props }: CheckYourEmailProps) {

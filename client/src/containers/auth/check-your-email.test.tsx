@@ -20,7 +20,7 @@ jest.mock("@/i18n/navigation", () => ({
 
 // Mock fetch globally
 const mockFetch = jest.fn();
-global.fetch = mockFetch;
+globalThis.fetch = mockFetch;
 
 import { CheckYourEmail } from "./check-your-email";
 
