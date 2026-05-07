@@ -2,7 +2,9 @@
 
 import { sdk } from "@/services/sdk";
 
-export type VerifyEmailResult = { success: true } | { success: false; reason: "invalid" | "unknown" };
+export type VerifyEmailResult =
+  | { success: true }
+  | { success: false; reason: "invalid" | "unknown" };
 
 export async function verifyEmailAction(token: string): Promise<VerifyEmailResult> {
   if (!token) {
