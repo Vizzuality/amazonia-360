@@ -27,6 +27,19 @@ export type SignInFormProps = React.ComponentProps<"div"> & {
   redirectUrl?: string;
 };
 
+const DEFAULT_REDIRECT = "/private/my-reports";
+
+function safeRedirect(url: string | null | undefined): string {
+  if (!url) return DEFAULT_REDIRECT;
+  // Reject anything that isn't a same-origin absolute path
+  if (!url.startsWith("/") || url.startsWith("//")) return DEFAULT_REDIRECT;
+  // Reject auth pages — signing in shouldn't bounce back to verify-email,
+  // sign-in itself, sign-up, password flows, etc.
+  const pathname = url.split("?")[0];
+  if (pathname.startsWith("/auth/")) return DEFAULT_REDIRECT;
+  return url;
+}
+
 export function SignInForm(props: SignInFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -55,9 +68,7 @@ export function SignInForm(props: SignInFormProps) {
           if (r?.error) {
             throw new Error(r.error);
           }
-          router.push(
-            props.redirectUrl || searchParams.get("redirectUrl") || "/private/my-reports",
-          );
+          router.push(safeRedirect(props.redirectUrl || searchParams.get("redirectUrl")));
         }),
         {
           loading: t("auth-toast-logging-in"),
