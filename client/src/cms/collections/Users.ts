@@ -63,7 +63,14 @@ export const Users: CollectionConfig = {
     strategies: [
       {
         name: "authjs",
-        authenticate: async ({ payload }) => {
+        authenticate: async ({ headers, payload }) => {
+          // Skip authentication for Payload admin requests so a non-admin app user
+          // cannot impersonate an admin and trigger Payload's Unauthorized view.
+          const currentPath = headers.get("x-current-path") ?? "";
+          if (currentPath === "/admin" || currentPath.startsWith("/admin/")) {
+            return { user: null };
+          }
+
           const session = await auth();
 
           if (!session || !session?.user?.id) {

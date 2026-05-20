@@ -14,7 +14,14 @@ export const AnonymousUsers: CollectionConfig = {
     strategies: [
       {
         name: "authjs",
-        authenticate: async ({ payload }) => {
+        authenticate: async ({ headers, payload }) => {
+          // Skip authentication for Payload admin requests so a non-admin session
+          // does not get surfaced inside the admin panel.
+          const currentPath = headers.get("x-current-path") ?? "";
+          if (currentPath === "/admin" || currentPath.startsWith("/admin/")) {
+            return { user: null };
+          }
+
           const session = await auth();
 
           if (!session || !session?.user?.id) {
