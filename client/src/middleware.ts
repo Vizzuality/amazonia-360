@@ -57,7 +57,5 @@ function isAuthenticated(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/((?!local-api|api|_next|.*\\..*).*)",
-  ],
+  matcher: ["/((?!local-api|api|_next|.*\\..*).*)"],
 };
