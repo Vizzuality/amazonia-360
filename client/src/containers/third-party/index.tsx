@@ -6,7 +6,10 @@ import useCookie from "react-use-cookie";
 
 import Script from "next/script";
 
+import { GoogleTagManager } from "@next/third-parties/google";
 import { useTranslations } from "next-intl";
+
+import { env } from "@/env.mjs";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -36,12 +39,11 @@ const ThirdParty: React.FC = () => {
 
   return (
     <>
+      {consent && env.NEXT_PUBLIC_GTM_ID && <GoogleTagManager gtmId={env.NEXT_PUBLIC_GTM_ID} />}
+
       {consent && (
-        <>
-          {/* Third Party Script needing cookies */}
-          {/* Global site tag (gtag.js) - Google Analytics */}
-          <Script id="fullstory" strategy="lazyOnload">
-            {`
+        <Script id="fullstory" strategy="lazyOnload">
+          {`
               window['_fs_host'] = 'fullstory.com';
               window['_fs_script'] = 'edge.fullstory.com/s/fs.js';
               window['_fs_org'] = 'o-206Z64-na1';
@@ -63,8 +65,7 @@ const ThirdParty: React.FC = () => {
               f="XMLHttpRequest",g._w={},g._w[f]=m[f],g._w[s]=m[s],m[s]&&(m[s]=function(){return g._w[s].apply(this,arguments)}),g._v="2.0.0")
               }(window,document,window._fs_namespace,"script",window._fs_script);
           `}
-          </Script>
-        </>
+        </Script>
       )}
 
       <Dialog open={consent === undefined}>

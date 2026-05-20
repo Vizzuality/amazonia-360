@@ -31,6 +31,7 @@ export const env = createEnv({
     NEXT_PUBLIC_API_URL: z.url(),
     NEXT_PUBLIC_API_KEY: z.string(),
     NEXT_PUBLIC_ARCGIS_API_KEY: z.string(),
+    NEXT_PUBLIC_GTM_ID: z.string().optional(),
   },
   runtimeEnv: {
     BASIC_AUTH_ENABLED: process.env.BASIC_AUTH_ENABLED,
@@ -42,6 +43,7 @@ export const env = createEnv({
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     NEXT_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_API_KEY,
     NEXT_PUBLIC_ARCGIS_API_KEY: process.env.NEXT_PUBLIC_ARCGIS_API_KEY,
+    NEXT_PUBLIC_GTM_ID: process.env.NEXT_PUBLIC_GTM_ID,
     PAYLOAD_SECRET: process.env.PAYLOAD_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,
