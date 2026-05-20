@@ -2,11 +2,10 @@ import type { CollectionConfig } from "payload";
 
 import { env } from "@/env.mjs";
 
-import { auth, signOut } from "@/lib/auth";
-
 import { adminAccess } from "@/cms/access/admin";
 import { anyoneAccess } from "@/cms/access/anyone";
 import { userAccess } from "@/cms/access/user";
+import { createAuthjsStrategy, logoutEndpoint } from "@/cms/auth/authjs-strategy";
 import { buildVerifyEmailHTML, VERIFY_EMAIL_SUBJECT } from "@/cms/emails/verify-email";
 import { resendVerificationHandler } from "@/cms/endpoints/resend-verification";
 import { beforeDeleteUser } from "@/cms/hooks/user";
@@ -60,33 +59,7 @@ export const Users: CollectionConfig = {
         `;
       },
     },
-    strategies: [
-      {
-        name: "authjs",
-        authenticate: async ({ headers, payload }) => {
-          // Skip authentication for Payload admin requests so a non-admin app user
-          // cannot impersonate an admin and trigger Payload's Unauthorized view.
-          const currentPath = headers.get("x-current-path") ?? "";
-          if (currentPath === "/admin" || currentPath.startsWith("/admin/")) {
-            return { user: null };
-          }
-
-          const session = await auth();
-
-          if (!session || !session?.user?.id) {
-            return { user: null };
-          }
-
-          const user = await payload.findByID({
-            collection: "users",
-            id: session.user.id,
-            disableErrors: true,
-          });
-
-          return { user: user ? { ...user, collection: "users" } : null };
-        },
-      },
-    ],
+    strategies: [createAuthjsStrategy("users")],
   },
   access: {
     create: anyoneAccess,
@@ -112,18 +85,7 @@ export const Users: CollectionConfig = {
     },
   ],
   endpoints: [
-    {
-      path: "/logout",
-      method: "post",
-      handler: async () => {
-        await signOut({
-          redirect: false,
-        });
-        return Response.json({
-          message: "You have been logged out successfully.",
-        });
-      },
-    },
+    logoutEndpoint,
     {
       path: "/resend-verification",
       method: "post",
