@@ -21,14 +21,18 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (!isAuthenticated(req)) {
+  const pathname = req.nextUrl.pathname;
+
+  // Skip basic auth for Payload paths (/admin, /v1) so server-to-self REST
+  // calls from NextAuth / server actions aren't blocked by the gate. The
+  // matcher still includes these paths so x-current-path is forwarded
+  // downstream, which the authjs strategy needs for the /admin loop fix.
+  if (!isPayloadPath(pathname) && !isAuthenticated(req)) {
     return new NextResponse("Authentication required", {
       status: 401,
       headers: { "WWW-Authenticate": "Basic" },
     });
   }
-
-  const pathname = req.nextUrl.pathname;
 
   // Forward the pathname so downstream auth strategies can detect admin-context
   // requests (Payload admin + REST). Without this, the Users authjs strategy would
