@@ -1,8 +1,6 @@
 "use server";
 
-import { getPayload } from "payload";
-
-import config from "@/payload.config";
+import { sdk } from "@/services/sdk";
 
 export type VerifyEmailResult =
   | { success: true }
@@ -14,13 +12,14 @@ export async function verifyEmailAction(token: string): Promise<VerifyEmailResul
   }
 
   try {
-    const payload = await getPayload({ config });
-    await payload.verifyEmail({ collection: "users", token });
+    await sdk.verifyEmail({
+      collection: "users",
+      token,
+    });
     return { success: true };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    const status = (error as { status?: number } | null)?.status;
-    const isInvalid = status === 403 || /invalid/i.test(message);
+    const isInvalid = /invalid/i.test(message) || /403/.test(message);
 
     console.error("[verify-email] verification failed", {
       reason: isInvalid ? "invalid" : "unknown",

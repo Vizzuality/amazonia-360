@@ -10,10 +10,7 @@ import { routing } from "@/i18n/routing";
 
 const intlMiddleware = createMiddleware(routing);
 
-const PAYLOAD_PATH_PREFIXES = ["/admin", "/v1"];
-
-const isPayloadPath = (pathname: string) =>
-  PAYLOAD_PATH_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+const isAdminPath = (pathname: string) => pathname === "/admin" || pathname.startsWith("/admin/");
 
 export default async function middleware(req: NextRequest) {
   const PUBLIC_FILE = /\.(.*)$/;
@@ -21,22 +18,25 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (!isAuthenticated(req)) {
+  const pathname = req.nextUrl.pathname;
+
+  // Skip basic auth for /admin so the Payload admin panel isn't double-gated.
+  // /v1 is excluded from the matcher entirely (see config below) so server-to-
+  // self SDK calls bypass the gate without paying middleware overhead.
+  if (!isAdminPath(pathname) && !isAuthenticated(req)) {
     return new NextResponse("Authentication required", {
       status: 401,
       headers: { "WWW-Authenticate": "Basic" },
     });
   }
 
-  const pathname = req.nextUrl.pathname;
-
-  // Forward the pathname so downstream auth strategies can detect admin-context
-  // requests (Payload admin + REST). Without this, the Users authjs strategy would
-  // authenticate non-admin users on /admin and trigger Payload's Unauthorized loop.
+  // Forward the pathname so the authjs strategy can detect admin-context
+  // requests and return null, breaking the Payload Unauthorized loop for
+  // non-admin Users sessions.
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-current-path", pathname);
 
-  if (isPayloadPath(pathname)) {
+  if (isAdminPath(pathname)) {
     return NextResponse.next({ request: { headers: requestHeaders } });
   }
 
@@ -57,5 +57,5 @@ function isAuthenticated(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!local-api|api|_next|.*\\..*).*)"],
+  matcher: ["/((?!local-api|api|v1|_next|.*\\..*).*)"],
 };
