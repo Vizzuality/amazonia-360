@@ -32,6 +32,9 @@ export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Pr
   return {
     title: t("metadata-app-layout-title"),
     description: t("metadata-app-layout-description"),
+    verification: {
+      google: "4kLfup1Xp504REXNWUYnh6iRRYfWHzqILrIcgK00E9E",
+    },
     icons: {
       icon: [
         { url: "/favicon.ico", type: "image/x-icon" },
