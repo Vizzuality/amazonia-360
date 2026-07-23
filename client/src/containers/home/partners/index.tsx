@@ -135,7 +135,7 @@ export default function Partners() {
           </ul>
           <div className="h-px w-full bg-gradient-to-r from-transparent via-blue-300 to-transparent" />
           <div className="flex items-center justify-center gap-4 pt-6">
-            <p className="text-sm font-semibold uppercase tracking-wide-lg text-blue-400">
+            <p className="tracking-wide-lg text-sm font-semibold text-blue-400 uppercase">
               {t("landing-partners-powered-by")}
             </p>
             <a
