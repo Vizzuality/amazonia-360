@@ -1,4 +1,6 @@
-jest.mock("@/env.mjs", () => ({
+import { vi } from "vitest";
+
+vi.mock("@/env.mjs", () => ({
   env: {
     NEXT_PUBLIC_URL: "http://localhost:3000",
   },

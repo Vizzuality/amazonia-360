@@ -1,33 +1,34 @@
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { vi } from "vitest";
 
 // Override the global next-intl mock to return keys for readable assertions
-jest.mock("next-intl", () => ({
-  useTranslations: jest.fn().mockReturnValue((key: string) => key),
+vi.mock("next-intl", () => ({
+  useTranslations: vi.fn().mockReturnValue((key: string) => key),
 }));
 
-jest.mock("sonner", () => ({
+vi.mock("sonner", () => ({
   toast: {
-    promise: jest.fn((promise: Promise<unknown>) => promise.catch(() => {})),
+    promise: vi.fn((promise: Promise<unknown>) => promise.catch(() => {})),
   },
 }));
 
-jest.mock("@/i18n/navigation", () => ({
+vi.mock("@/i18n/navigation", () => ({
   Link: ({ children, href }: { children: React.ReactNode; href: string }) => (
     <a href={href}>{children}</a>
   ),
 }));
 
 // Mock fetch globally
-const mockFetch = jest.fn();
+const mockFetch = vi.fn();
 globalThis.fetch = mockFetch;
 
 import { CheckYourEmail } from "./check-your-email";
 
 describe("CheckYourEmail", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    jest.useFakeTimers();
+    vi.clearAllMocks();
+    vi.useFakeTimers({ shouldAdvanceTime: true });
     mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({ message: "Success" }),
@@ -35,7 +36,7 @@ describe("CheckYourEmail", () => {
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it("renders the card with title and description", () => {
@@ -64,7 +65,7 @@ describe("CheckYourEmail", () => {
   });
 
   it("calls the resend endpoint when button is clicked", async () => {
-    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    const user = userEvent.setup({ advanceTimers: (ms: number) => vi.advanceTimersByTime(ms) });
     render(<CheckYourEmail email="test@example.com" />);
 
     await user.click(screen.getByText("auth-check-email-resend-button"));
@@ -77,7 +78,7 @@ describe("CheckYourEmail", () => {
   });
 
   it("disables the button and shows countdown after clicking", async () => {
-    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    const user = userEvent.setup({ advanceTimers: (ms: number) => vi.advanceTimersByTime(ms) });
     render(<CheckYourEmail email="test@example.com" />);
 
     await user.click(screen.getByText("auth-check-email-resend-button"));
@@ -88,14 +89,14 @@ describe("CheckYourEmail", () => {
   });
 
   it("re-enables the button after cooldown expires", async () => {
-    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    const user = userEvent.setup({ advanceTimers: (ms: number) => vi.advanceTimersByTime(ms) });
     render(<CheckYourEmail email="test@example.com" />);
 
     await user.click(screen.getByText("auth-check-email-resend-button"));
 
     // Fast-forward past the 30-second cooldown
     act(() => {
-      jest.advanceTimersByTime(30_000);
+      vi.advanceTimersByTime(30_000);
     });
 
     await waitFor(() => {
