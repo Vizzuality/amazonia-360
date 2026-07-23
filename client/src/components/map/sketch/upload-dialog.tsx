@@ -9,7 +9,7 @@ import { useTranslations } from "next-intl";
 import { LuFileCheck } from "react-icons/lu";
 import { toast } from "sonner";
 
-import { convertFilesToGeometry, UploadErrorType } from "@/lib/geometry-upload";
+import { convertFilesToGeometry, UploadError, UploadErrorType } from "@/lib/geometry-upload";
 import { getGeometryByType, getGeometryWithBuffer } from "@/lib/location";
 
 import { tmpBboxAtom, useSyncLocation } from "@/app/(frontend)/store";
@@ -53,7 +53,7 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
             });
 
             if (!arcgisGeometry || !arcgisGeometry.type) {
-              throw UploadErrorType.UnsupportedFile;
+              throw new UploadError(UploadErrorType.UnsupportedFile);
             }
 
             setLocation({
@@ -88,8 +88,8 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
             // Handle different error types
             let errorMessage = t("generic-error");
 
-            if (typeof err === "string") {
-              switch (err) {
+            if (err instanceof UploadError) {
+              switch (err.type) {
                 case UploadErrorType.InvalidXMLSyntax:
                   errorMessage = t("invalid-xml-syntax");
                   break;
