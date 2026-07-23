@@ -14,6 +14,7 @@ test.describe("sign-in page rendering", () => {
     test(`loads correctly for locale: ${locale}`, async ({ page }) => {
       const signInPage = new SignInPage(page, locale);
       await signInPage.goto();
+      await dismissCookieConsent(page);
       await signInPage.expectLoaded();
     });
   }

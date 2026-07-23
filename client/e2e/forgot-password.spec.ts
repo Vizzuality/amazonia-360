@@ -10,6 +10,7 @@ test.describe("forgot-password page rendering", () => {
     test(`loads correctly for locale: ${locale}`, async ({ page }) => {
       const forgotPasswordPage = new ForgotPasswordPage(page, locale);
       await forgotPasswordPage.goto();
+      await dismissCookieConsent(page);
       await forgotPasswordPage.expectLoaded();
     });
   }

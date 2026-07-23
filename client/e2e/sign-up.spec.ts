@@ -10,6 +10,7 @@ test.describe("sign-up page rendering", () => {
     test(`loads correctly for locale: ${locale}`, async ({ page }) => {
       const signUpPage = new SignUpPage(page, locale);
       await signUpPage.goto();
+      await dismissCookieConsent(page);
       await signUpPage.expectLoaded();
     });
   }
