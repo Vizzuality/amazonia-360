@@ -10,7 +10,7 @@ interface SeedReportBody {
   secret?: string;
   title?: string;
   location?: Report["location"];
-  topics?: Report["topics"];
+  topics?: Exclude<Report["topics"], undefined>;
   status?: "draft" | "published";
   userEmail?: string;
 }

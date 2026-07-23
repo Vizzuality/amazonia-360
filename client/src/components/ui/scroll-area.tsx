@@ -10,7 +10,7 @@ interface ScrollAreaProps extends React.ComponentProps<typeof ScrollAreaPrimitiv
   viewportRef?: React.Ref<HTMLDivElement>;
 }
 
-function ScrollArea({ className, children, viewportRef, ...props }: ScrollAreaProps) {
+function ScrollArea({ className, children, viewportRef, ...props }: Readonly<ScrollAreaProps>) {
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"
