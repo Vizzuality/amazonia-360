@@ -7,7 +7,6 @@ import dynamic from "next/dynamic";
 import * as projectOperator from "@arcgis/core/geometry/operators/projectOperator";
 import Point from "@arcgis/core/geometry/Point";
 import SpatialReference from "@arcgis/core/geometry/SpatialReference";
-import { DeckLayer } from "@deck.gl/arcgis";
 import { Accessor, Color, PickingInfo } from "@deck.gl/core";
 import { DataFilterExtension, DataFilterExtensionProps } from "@deck.gl/extensions";
 import { H3HexagonLayer } from "@deck.gl/geo-layers";
@@ -43,6 +42,7 @@ import {
 
 import { BUFFERS } from "@/constants/map";
 
+import { DeckLayer } from "@/components/map/layers/deck";
 import H3TileLayer from "@/components/map/layers/h3-tile-layer";
 import { useMap } from "@/components/map/provider";
 import {
