@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
 // deck.gl
 // SPDX-License-Identifier: MIT
 // Copyright (c) vis.gl contributors
+
+// @ts-nocheck vendored from @deck.gl/arcgis 9.3.7 src (2D only)
 
 const properties = {
   layers: {},

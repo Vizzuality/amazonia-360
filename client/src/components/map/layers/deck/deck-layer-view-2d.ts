@@ -1,11 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // deck.gl
 // SPDX-License-Identifier: MIT
 // Copyright (c) vis.gl contributors
 
+// @ts-nocheck vendored from @deck.gl/arcgis 9.3.7 src (2D only)
+
 import { initializeResources, render, finalizeResources } from "./commons";
 
-export default function createDeckLayerView2D(BaseLayerViewGL2D: any) {
+export default function createDeckLayerView2D(BaseLayerViewGL2D) {
   return BaseLayerViewGL2D.createSubclass({
     properties: {
       cancelInitialization: null,
@@ -29,7 +30,7 @@ export default function createDeckLayerView2D(BaseLayerViewGL2D: any) {
       this.resources = resources;
 
       // Update deck props
-      this.layer.deck.on("change", (props: any) => resources.deck.setProps(props));
+      this.layer.deck.on("change", (props) => resources.deck.setProps(props));
 
       // We need to start drawing the deck.gl layer immediately.
       resources.deck.setProps(this.layer.deck.toJSON());
@@ -49,7 +50,7 @@ export default function createDeckLayerView2D(BaseLayerViewGL2D: any) {
     },
 
     // Called every time that the layer view must be rendered.
-    render(renderParameters: __esri.BaseLayerView2DRenderRenderParameters) {
+    render(renderParameters) {
       if (!this.resources) {
         return;
       }
