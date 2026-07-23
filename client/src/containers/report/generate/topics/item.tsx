@@ -56,7 +56,7 @@ export default function TopicsItem({ id, name, image }: Topic) {
                 )}
               >
                 <div className={cn("flex items-center space-x-2.5")}>
-                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-sm bg-cyan-100">
+                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xs bg-cyan-100">
                     <Image
                       src={image}
                       alt={`${name}`}
@@ -75,7 +75,7 @@ export default function TopicsItem({ id, name, image }: Topic) {
                 </div>
               </CollapsibleTrigger>
 
-              <div className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2">
+              <div className="pointer-events-none absolute top-1/2 right-1 -translate-y-1/2">
                 <Checkbox
                   className="block"
                   checked={!!field.value.find((topic) => topic.id === id)}

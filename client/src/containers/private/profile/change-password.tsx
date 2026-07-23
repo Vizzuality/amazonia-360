@@ -61,7 +61,7 @@ export function ChangePasswordForm() {
   return (
     <div className="space-y-4">
       <div className="space-y-1">
-        <h3 className="text-xs font-bold uppercase tracking-wide">
+        <h3 className="text-xs font-bold tracking-wide uppercase">
           {t("profile-change-password-title")}
         </h3>
       </div>

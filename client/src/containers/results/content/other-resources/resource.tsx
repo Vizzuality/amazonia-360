@@ -68,10 +68,10 @@ export default function Resource({
             <h3 title={Name} className="line-clamp-3 text-base font-semibold text-blue-500">
               {Name}
             </h3>
-            <p className="text-xs font-semibold text-muted-foreground">
+            <p className="text-muted-foreground text-xs font-semibold">
               {Month} {Year}
             </p>
-            <p className="text-xs font-semibold text-muted-foreground">
+            <p className="text-muted-foreground text-xs font-semibold">
               {Country.split(";")
                 .map((c) => c.trim())
                 .join(", ")}
@@ -91,8 +91,8 @@ export default function Resource({
                 <DialogTitle className="sr-only">{t("other-resources-resource-info")}</DialogTitle>
                 <div className="flex flex-col space-y-4">
                   <h3 className="pr-4 text-lg font-semibold text-blue-500">{Name}</h3>
-                  <p className="text-sm font-medium text-foreground">{Description}</p>
-                  <div className="space-y-2 text-xs font-medium text-foreground">
+                  <p className="text-foreground text-sm font-medium">{Description}</p>
+                  <div className="text-foreground space-y-2 text-xs font-medium">
                     <p>
                       <span className="font-semibold">{t("type")}:</span> {Type}
                     </p>

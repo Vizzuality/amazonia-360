@@ -21,7 +21,7 @@ export default function ReportResultsHeaderMobile() {
         <div className="relative flex h-full justify-between">
           {/* Name */}
           <div className="flex w-full flex-col">
-            <h1 className="text-2xl font-medium text-foreground lg:text-3xl tall:xl:text-4xl">
+            <h1 className="text-foreground tall:xl:text-4xl text-2xl font-medium lg:text-3xl">
               {reportData?.title ?? t("selected-area")}
             </h1>
 

@@ -109,7 +109,7 @@ export default function GridIndicatorsItemContinous(indicator: H3Indicator) {
 
             <div className="flex justify-between gap-20">
               <div className="relative">
-                <div className="pointer-events-none h-6 min-w-20 p-1 text-center text-sm text-foreground opacity-0">
+                <div className="text-foreground pointer-events-none h-6 min-w-20 p-1 text-center text-sm opacity-0">
                   {formatNumber(continuosValue[0] || continuosOptions.min || 0)}
                 </div>
                 <Input
@@ -136,11 +136,11 @@ export default function GridIndicatorsItemContinous(indicator: H3Indicator) {
                       }
                     }
                   }}
-                  className="absolute left-0 top-0 h-full w-full min-w-20 bg-white p-1 text-center text-sm"
+                  className="absolute top-0 left-0 h-full w-full min-w-20 bg-white p-1 text-center text-sm"
                 />
               </div>
               <div className="relative">
-                <div className="pointer-events-none h-6 min-w-20 p-1 text-center text-sm text-foreground opacity-0">
+                <div className="text-foreground pointer-events-none h-6 min-w-20 p-1 text-center text-sm opacity-0">
                   {formatNumber(continuosValue[1] || continuosOptions.min || 0)}
                 </div>
                 <Input
@@ -170,7 +170,7 @@ export default function GridIndicatorsItemContinous(indicator: H3Indicator) {
                       }
                     }
                   }}
-                  className="absolute left-0 top-0 h-full w-full bg-white p-1 text-center text-sm"
+                  className="absolute top-0 left-0 h-full w-full bg-white p-1 text-center text-sm"
                 />
               </div>
             </div>

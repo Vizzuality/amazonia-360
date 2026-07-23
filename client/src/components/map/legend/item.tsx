@@ -8,8 +8,8 @@ export interface LegendItemProps {
   items: {
     id: string | number;
     label?: string | null;
-    color?: string;
-    image?: string;
+    color?: string | null;
+    image?: string | null;
   }[];
   direction?: "horizontal" | "vertical";
 }

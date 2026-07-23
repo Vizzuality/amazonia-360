@@ -10,7 +10,7 @@ const ResizeHandler = () => (
     <TooltipTrigger asChild>
       <button
         type="button"
-        className="pointer-events-none absolute -bottom-2.5 -right-3 rounded-full bg-primary p-2"
+        className="bg-primary pointer-events-none absolute -right-3 -bottom-2.5 rounded-full p-2"
       >
         <LuMoveDiagonal2 className="h-4 w-4 font-bold text-white" />
       </button>

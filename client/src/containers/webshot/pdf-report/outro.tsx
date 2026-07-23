@@ -25,12 +25,12 @@ export const PdfOutro = () => {
       <div className="flex grow flex-col items-center justify-between px-16 py-12">
         <div className="flex grow flex-col items-center justify-center space-y-6 text-center">
           <header className="max-w-2xl space-y-4 font-normal">
-            <h1 className="text-2xl font-semibold text-primary">{t("pdf-outro-title")}</h1>
+            <h1 className="text-primary text-2xl font-semibold">{t("pdf-outro-title")}</h1>
 
             <div className="space-y-6">
-              <p className="text-xs text-foreground">{t("pdf-outro-description-1")}</p>
+              <p className="text-foreground text-xs">{t("pdf-outro-description-1")}</p>
 
-              <p className="text-xs text-foreground">{t("pdf-outro-description-2")}</p>
+              <p className="text-foreground text-xs">{t("pdf-outro-description-2")}</p>
             </div>
           </header>
 
@@ -38,7 +38,7 @@ export const PdfOutro = () => {
             <QRCode />
           </div>
 
-          <p className="max-w-3xl text-xs font-semibold text-foreground">
+          <p className="text-foreground max-w-3xl text-xs font-semibold">
             {t("pdf-outro-tagline")}
           </p>
         </div>

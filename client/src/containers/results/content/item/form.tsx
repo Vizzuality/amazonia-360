@@ -53,7 +53,7 @@ export const AISummaryForm = ({ mutation, onSubmit, onClose }: AISummaryFormProp
       {/* Header */}
       <div className="space-y-2">
         <h3 className="text-lg font-semibold">AI settings</h3>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {t("report-results-sidebar-ai-summaries-description")}
         </p>
       </div>
@@ -138,7 +138,7 @@ export const AISummaryForm = ({ mutation, onSubmit, onClose }: AISummaryFormProp
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex space-x-2">
-                <span className="text-sm font-medium text-foreground">
+                <span className="text-foreground text-sm font-medium">
                   {t("report-results-sidebar-ai-summaries-checkbox-active-indicators")}
                 </span>
                 <TooltipProvider>
@@ -166,7 +166,7 @@ export const AISummaryForm = ({ mutation, onSubmit, onClose }: AISummaryFormProp
         )}
       </form.Field>
 
-      <p className="text-xs text-muted-foreground">
+      <p className="text-muted-foreground text-xs">
         {t("report-results-sidebar-ai-summaries-disclaimer")}
       </p>
 

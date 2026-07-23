@@ -87,7 +87,7 @@ export function DataTable<TData, TValue>({
                               {flexRender(header.column.columnDef.header, header.getContext())}
                             </span>
                             {header.column.getIsSorted() && (
-                              <LuArrowUpDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+                              <LuArrowUpDown className="text-muted-foreground h-4 w-4 shrink-0" />
                             )}
                           </div>
                         )}

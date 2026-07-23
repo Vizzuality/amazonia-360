@@ -24,20 +24,20 @@ export const MyReportsItemSkeleton = () => {
 
         {/* Metadata */}
         <div className="mb-4 space-y-2">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <LuMapPin className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <div className="text-muted-foreground flex items-center gap-2 text-sm">
+            <LuMapPin className="text-muted-foreground h-4 w-4 shrink-0" />
             <Skeleton className="h-4 w-32" />
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <LuCalendar className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <div className="text-muted-foreground flex items-center gap-2 text-sm">
+            <LuCalendar className="text-muted-foreground h-4 w-4 shrink-0" />
             <Skeleton className="h-4 w-24" />
           </div>
         </div>
 
         {/* Map preview skeleton */}
-        <div className="relative h-48 w-full overflow-hidden rounded-sm">
-          <Skeleton className="h-full w-full rounded-sm" />
+        <div className="relative h-48 w-full overflow-hidden rounded-xs">
+          <Skeleton className="h-full w-full rounded-xs" />
         </div>
       </div>
     </Card>

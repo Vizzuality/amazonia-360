@@ -40,7 +40,8 @@ export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
 
     if (renderer?.type === "simple") {
       const r = renderer as __esri.SimpleRenderer;
-      const c = new Color(r.symbol.color);
+      const c = r.symbol?.color ? new Color(r.symbol.color) : new Color("#009ADE");
+
       return [
         {
           id: indicator.name_en,
@@ -53,44 +54,50 @@ export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
     if (renderer?.type === "uniqueValue") {
       const r = renderer as __esri.UniqueValueRenderer;
 
-      return r.uniqueValueInfos
-        ?.map((u) => {
-          const c = new Color(u.symbol.color);
+      return (
+        r.uniqueValueInfos
+          ?.map((u) => {
+            const c = u.symbol?.color ? new Color(u.symbol.color) : new Color("#009ADE");
 
-          return {
-            id: `${u.value}`,
-            label: u.label,
-            color: c.toHex() ?? "#009ADE",
-          };
-        })
-        .filter((u) => {
-          // @ts-expect-error- I don't know why the type does not correspond to the real data.
-          return query.data?.features?.some((d) => `${d.attributes[r.field1]}` === `${u.id}`);
-        });
+            return {
+              id: `${u.value}`,
+              label: u.label,
+              color: c.toHex() ?? "#009ADE",
+            };
+          })
+          .filter((u) => {
+            // @ts-expect-error- I don't know why the type does not correspond to the real data.
+            return query.data?.features?.some((d) => `${d.attributes[r.field1]}` === `${u.id}`);
+          }) ?? []
+      );
     }
 
     if (renderer?.type === "classBreaks") {
       const r = renderer as __esri.ClassBreaksRenderer;
 
-      return r.classBreakInfos
-        ?.map((u) => {
-          const c = new Color(u.symbol.color);
+      return (
+        r.classBreakInfos
+          ?.map((u) => {
+            const c = u.symbol?.color ? new Color(u.symbol.color) : new Color("#009ADE");
 
-          return {
-            // @ts-expect-error- I don't know why the type does not correspond to the real data.
-            // It's true that the documentation says that "classMaxValue" does not exists https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-support-ClassBreakInfo.html
-            id: u.classMaxValue,
-            label: `${u.label}`,
-            color: c.toHex() ?? "#009ADE",
-          };
-        })
-        .filter((u) => {
-          return query.data?.features?.some((d) => `${d.attributes[r.field]}` >= `${u.id}`);
-        });
+            return {
+              // @ts-expect-error- I don't know why the type does not correspond to the real data.
+              // It's true that the documentation says that "classMaxValue" does not exists https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-support-ClassBreakInfo.html
+              id: u.classMaxValue,
+              label: `${u.label}`,
+              color: c.toHex() ?? "#009ADE",
+            };
+          })
+          .filter((u) => {
+            return query.data?.features?.some((d) => `${d.attributes[r.field]}` >= `${u.id}`);
+          }) ?? []
+      );
     }
 
     return null;
   }, [indicator, query.data, queryResourceFeatureLayer.data]);
+
+  type Feature = NonNullable<typeof query.data>["features"][number];
 
   const COLOR_SCALE = useMemo(() => {
     const domain =
@@ -111,53 +118,70 @@ export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
         return d.attributes.label;
       }) ?? [];
 
-    const range =
-      query.data?.features?.map((d) => {
-        const renderer = queryResourceFeatureLayer.data?.drawingInfo?.renderer;
+    const getSimpleColor = (r: __esri.SimpleRenderer): string => {
+      const c = r.symbol?.color ? new Color(r.symbol.color) : new Color("#009ADE");
+      return c.toHex() ?? "#009ADE";
+    };
 
-        if (renderer?.type === "simple") {
-          const r = renderer as __esri.SimpleRenderer;
-          const c = new Color(r.symbol.color);
-          return c.toHex() ?? "#009ADE";
-        }
+    const getUniqueValueColor = (r: __esri.UniqueValueRenderer, d: Feature): string => {
+      const uniqueValue = r.uniqueValueInfos?.find(
+        // @ts-expect-error- I don't know why the type does not correspond to the real data.
+        // It's true that the documentation says that "field1" does not exists https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-UniqueValueRenderer.html#field
+        (u) => `${u.value}` === `${d.attributes[r.field1]}`,
+      );
 
-        if (renderer?.type === "uniqueValue") {
-          const r = renderer as __esri.UniqueValueRenderer;
+      if (uniqueValue) {
+        const c = uniqueValue?.symbol?.color
+          ? new Color(uniqueValue?.symbol.color)
+          : new Color("#009ADE");
+        return c.toHex() ?? "#009ADE";
+      }
 
-          const uniqueValue = r.uniqueValueInfos?.find(
-            // @ts-expect-error- I don't know why the type does not correspond to the real data.
-            // It's true that the documentation says that "field1" does not exists https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-UniqueValueRenderer.html#field
-            (u) => `${u.value}` === `${d.attributes[r.field1]}`,
-          );
+      if (r.defaultSymbol?.color) {
+        const defaultColor = new Color(r.defaultSymbol?.color);
 
-          if (uniqueValue) {
-            const c = new Color(uniqueValue?.symbol.color);
-            return c.toHex() ?? "#009ADE";
-          }
+        return defaultColor.toHex() ?? "#009ADE";
+      }
 
-          if (r.defaultSymbol?.color) {
-            const defaultColor = new Color(r.defaultSymbol?.color);
+      return "#009ADE";
+    };
 
-            return defaultColor.toHex() ?? "#009ADE";
-          }
-        }
+    const getClassBreaksColor = (r: __esri.ClassBreaksRenderer, d: Feature): string => {
+      const classBreak = r.classBreakInfos?.find(
+        // @ts-expect-error- I don't know why the type does not correspond to the real data.
+        // It's true that the documentation says that "classMaxValue" does not exists https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-support-ClassBreakInfo.html
+        (u) => `${u.classMaxValue}` >= `${d.attributes[r.field]}`,
+      );
 
-        if (renderer?.type === "classBreaks") {
-          const r = renderer as __esri.ClassBreaksRenderer;
-          const classBreak = r.classBreakInfos?.find(
-            // @ts-expect-error- I don't know why the type does not correspond to the real data.
-            // It's true that the documentation says that "classMaxValue" does not exists https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-support-ClassBreakInfo.html
-            (u) => `${u.classMaxValue}` >= `${d.attributes[r.field]}`,
-          );
+      if (classBreak) {
+        const c = classBreak?.symbol.color
+          ? new Color(classBreak?.symbol.color)
+          : new Color("#009ADE");
+        return c.toHex() ?? "#009ADE";
+      }
 
-          if (classBreak) {
-            const c = new Color(classBreak?.symbol.color);
-            return c.toHex() ?? "#009ADE";
-          }
-        }
+      return "#009ADE";
+    };
 
-        return "#009ADE";
-      }) ?? [];
+    const resolveColor = (d: Feature): string => {
+      const renderer = queryResourceFeatureLayer.data?.drawingInfo?.renderer;
+
+      if (renderer?.type === "simple") {
+        return getSimpleColor(renderer as __esri.SimpleRenderer);
+      }
+
+      if (renderer?.type === "uniqueValue") {
+        return getUniqueValueColor(renderer as __esri.UniqueValueRenderer, d);
+      }
+
+      if (renderer?.type === "classBreaks") {
+        return getClassBreaksColor(renderer as __esri.ClassBreaksRenderer, d);
+      }
+
+      return "#009ADE";
+    };
+
+    const range = query.data?.features?.map((d) => resolveColor(d)) ?? [];
 
     return scaleOrdinal({
       domain,

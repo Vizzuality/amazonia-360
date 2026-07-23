@@ -17,7 +17,7 @@ export default function Help() {
   const locale = useLocale();
 
   return (
-    <section className="relative overflow-hidden bg-blue-700 text-white lg:after:absolute lg:after:left-1/2 lg:after:top-0 lg:after:h-full lg:after:w-px lg:after:-translate-x-1/2 lg:after:bg-blue-900">
+    <section className="relative overflow-hidden bg-blue-700 text-white lg:after:absolute lg:after:top-0 lg:after:left-1/2 lg:after:h-full lg:after:w-px lg:after:-translate-x-1/2 lg:after:bg-blue-900">
       <div className="container py-10">
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 flex flex-col items-start justify-between lg:col-span-5 lg:py-16">

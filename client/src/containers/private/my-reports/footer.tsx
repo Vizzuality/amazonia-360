@@ -28,7 +28,7 @@ export const MyReportsFooter = ({
 
   return (
     <div className="flex items-center justify-between pt-4">
-      <div className="text-sm text-muted-foreground">
+      <div className="text-muted-foreground text-sm">
         {t("my-reports-showing-page", { page, totalPages })}
         {" • "}
         {t("my-reports-total-reports", { totalDocs })}

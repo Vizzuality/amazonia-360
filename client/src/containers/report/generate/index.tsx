@@ -102,10 +102,10 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
   const HEADER = {
     select: (
       <div className="flex items-center justify-between">
-        <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
+        <h1 className="text-primary flex items-center gap-2 text-lg font-bold">
           <Link
             href={`/reports${searchParams.toString() ? `?${searchParams.toString()}` : ""}`}
-            className="duration-400 flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors ease-in-out hover:bg-blue-100"
+            className="flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors duration-400 ease-in-out hover:bg-blue-100"
           >
             <LuArrowLeft className="h-4 w-4" onClick={() => setReportPanel("location")} />
           </Link>
@@ -115,7 +115,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
     ),
     create: (
       <div className="flex items-baseline justify-between">
-        <h1 className="flex items-center gap-2 text-lg font-bold text-primary">
+        <h1 className="text-primary flex items-center gap-2 text-lg font-bold">
           {t("landing-key-features-grid-buttons-create-report")}
         </h1>
       </div>
@@ -126,7 +126,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
     <Form {...form}>
       <form
         className={cn(
-          "relative flex h-full max-h-[calc(100svh_-_theme(spacing.16))] grow flex-col justify-between overflow-hidden rounded-lg py-4 lg:max-h-[calc(100vh_-_(theme(spacing.16)_+_theme(spacing.20)))]",
+          "relative flex h-full max-h-[calc(100svh-calc(var(--spacing)*16))] grow flex-col justify-between overflow-hidden rounded-lg py-4 lg:max-h-[calc(100vh-(calc(var(--spacing)*16)+calc(var(--spacing)*20)))]",
           "lg:border lg:border-blue-100",
         )}
         onSubmit={form.handleSubmit(onSubmit)}
@@ -135,20 +135,20 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
           <header className="shrink-0 space-y-2 lg:px-6">
             {HEADER[heading]}
             <div className="space-y-1">
-              <div className="text-sm font-medium text-muted-foreground">
+              <div className="text-muted-foreground text-sm font-medium">
                 <ReactMarkdown>{t("sidebar-report-location-indicators-description")}</ReactMarkdown>
               </div>
             </div>
           </header>
 
           <div className="relative flex grow flex-col overflow-hidden">
-            <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 h-4 bg-gradient-to-b from-white to-transparent" />
+            <div className="pointer-events-none absolute top-0 right-0 left-0 z-10 h-4 bg-linear-to-b from-white to-transparent" />
             <ScrollArea className="flex grow flex-col lg:px-6">
               <div className="py-4">
                 <Topics />
               </div>
             </ScrollArea>
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-4 bg-gradient-to-t from-white to-transparent" />
+            <div className="pointer-events-none absolute right-0 bottom-0 left-0 z-10 h-4 bg-linear-to-t from-white to-transparent" />
           </div>
         </div>
 

@@ -9,7 +9,7 @@ export default function DesktopDrawingTools() {
 
   return (
     <div className="flex items-center space-x-4 print:hidden">
-      <span className="text-sm font-semibold text-muted-foreground">{t("draw")}</span>
+      <span className="text-muted-foreground text-sm font-semibold">{t("draw")}</span>
       <div className="flex items-center space-x-1">
         <SketchButtons iconOnly={true} />
       </div>

@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { geodesicArea } from "@arcgis/core/geometry/geometryEngine";
+import * as geodesicAreaOperator from "@arcgis/core/geometry/operators/geodeticAreaOperator";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useAtom } from "jotai";
 import { Trash2 } from "lucide-react";
@@ -19,6 +19,10 @@ import { ConfirmDialog } from "@/containers/results/header/edit-location/confirm
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
+if (!geodesicAreaOperator.isLoaded()) {
+  await geodesicAreaOperator.load();
+}
+
 export default function EditLocationDrawingConfirm({ onConfirm }: { onConfirm: () => void }) {
   const t = useTranslations();
   const [sketch, setSketch] = useAtom(sketchAtom);
@@ -31,7 +35,7 @@ export default function EditLocationDrawingConfirm({ onConfirm }: { onConfirm: (
 
   const AREA = useMemo(() => {
     if (!GEOMETRY) return 0;
-    return geodesicArea(GEOMETRY, "square-kilometers");
+    return geodesicAreaOperator.execute(GEOMETRY, { unit: "square-kilometers" });
   }, [GEOMETRY]);
 
   if (!location || !LOCATION) return null;
@@ -39,8 +43,8 @@ export default function EditLocationDrawingConfirm({ onConfirm }: { onConfirm: (
   return (
     <div className="flex w-full items-center justify-between gap-4 text-sm">
       <header>
-        <div className="text-nowrap font-semibold uppercase text-muted-foreground">{TITLE}</div>
-        <div className="text-xs font-bold text-foreground">
+        <div className="text-muted-foreground font-semibold text-nowrap uppercase">{TITLE}</div>
+        <div className="text-foreground text-xs font-bold">
           {formatNumber(AREA, {
             maximumFractionDigits: 0,
           })}{" "}

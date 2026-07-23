@@ -1,7 +1,9 @@
+import { vi } from "vitest";
+
 import { cn, getKeys, joinWithAnd, convertHexToRgbaArray, getTextSize } from "./utils";
 
 // Mock document.createElement for canvas testing
-const mockDocumentCreateElement = jest.spyOn(document, "createElement");
+const mockDocumentCreateElement = vi.spyOn(document, "createElement");
 
 describe("utils", () => {
   test("cn merges class names correctly", () => {
@@ -31,7 +33,7 @@ describe("utils", () => {
         font: "",
         measureText: () => ({ width: 100 }),
       }),
-      remove: jest.fn(),
+      remove: vi.fn(),
     } as unknown as HTMLCanvasElement);
 
     const textSize = getTextSize({ text: "hello", maxWidth: 100 });
@@ -44,7 +46,7 @@ describe("utils", () => {
     // This simulates when canvas context is not available
     mockDocumentCreateElement.mockReturnValue({
       getContext: () => null,
-      remove: jest.fn(),
+      remove: vi.fn(),
     } as unknown as HTMLCanvasElement);
 
     const textSize = getTextSize({ text: "hello", maxWidth: 100 });

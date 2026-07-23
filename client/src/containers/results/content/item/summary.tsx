@@ -71,7 +71,7 @@ export const ReportResultsSummary = ({ topic, editing, mutation }: ReportResults
           <Markdown
             className={cn({
               hidden: editing,
-              "prose prose-base max-w-none xl:prose-lg 2xl:prose-xl": true,
+              "prose prose-base xl:prose-lg 2xl:prose-xl max-w-none": true,
             })}
           >
             {TOPIC.description}

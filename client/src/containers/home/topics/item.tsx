@@ -13,9 +13,9 @@ export default function TopicsItem({ id, name, image, description }: Topic) {
   const descriptionRef = useRef<HTMLParagraphElement>(null);
 
   return (
-    <div key={id} className="col-span-6 aspect-[4/3] xl:col-span-3 xl:aspect-square">
-      <div className="group relative overflow-hidden shadow after:absolute after:bottom-0 after:left-0 after:h-16 after:w-full after:bg-gradient-to-b after:from-transparent after:to-[#09090B]/85 after:content-['']">
-        <div className="relative aspect-[4/3] xl:aspect-square">
+    <div key={id} className="col-span-6 aspect-4/3 xl:col-span-3 xl:aspect-square">
+      <div className="group relative overflow-hidden shadow-sm after:absolute after:bottom-0 after:left-0 after:h-16 after:w-full after:bg-linear-to-b after:from-transparent after:to-[#09090B]/85 after:content-['']">
+        <div className="relative aspect-4/3 xl:aspect-square">
           <Image
             src={image}
             alt={`${name}`}
@@ -40,7 +40,7 @@ export default function TopicsItem({ id, name, image, description }: Topic) {
         <div
           className={cn(
             "pointer-events-none absolute bottom-0 left-0 z-10 w-full p-4 text-white",
-            "after:absolute after:left-0 after:top-0 after:h-full after:w-full after:bg-gradient-to-b after:from-gray-900/0 after:via-gray-900/50 after:to-gray-900/50",
+            "after:absolute after:top-0 after:left-0 after:h-full after:w-full after:bg-linear-to-b after:from-gray-900/0 after:via-gray-900/50 after:to-gray-900/50",
           )}
         >
           <div className="relative z-10">

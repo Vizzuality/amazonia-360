@@ -2,6 +2,8 @@
 
 import { useMemo } from "react";
 
+import * as geodeticAreaOperator from "@arcgis/core/geometry/operators/geodeticAreaOperator";
+import * as intersectionOperator from "@arcgis/core/geometry/operators/intersectionOperator";
 import { QueryFunction, UseQueryOptions, useQuery, useQueries } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -434,8 +436,6 @@ export type QueryFeatureIdParams = {
 export const getQueryFeatureId = async ({ type, resource, geometry }: QueryFeatureIdParams) => {
   const FeatureLayer = (await import("@arcgis/core/layers/FeatureLayer")).default;
   const Query = (await import("@arcgis/core/rest/support/Query")).default;
-  const geodesicArea = (await import("@arcgis/core/geometry/geometryEngine")).geodesicArea;
-  const intersect = (await import("@arcgis/core/geometry/geometryEngineAsync")).intersect;
 
   const f = new FeatureLayer({
     url: resource.url + resource.layer_id,
@@ -460,30 +460,24 @@ export const getQueryFeatureId = async ({ type, resource, geometry }: QueryFeatu
       if (!geometry) {
         return null;
       }
-      const geometryArea = geodesicArea(geometry, "square-kilometers");
 
-      await Promise.all(
-        fs.features.map(async (f) => {
-          if (!f.geometry) return null;
+      const geometryArea = geodeticAreaOperator.execute(geometry, { unit: "square-kilometers" });
 
-          const intersections = (await intersect([f.geometry], geometry)) as unknown as
-            | __esri.Polygon[]
-            | null[];
+      fs.features.map((f) => {
+        if (!f.geometry) return null;
 
-          f.setAttribute(
-            "value",
-            intersections.reduce((acc, i) => {
-              if (!i) return acc;
+        const intersection = intersectionOperator.execute(f.geometry, geometry);
 
-              return acc + geodesicArea(i, "square-kilometers");
-            }, 0),
-          );
-          f.setAttribute("total", geometryArea);
-        }),
-      );
+        if (!intersection) return null;
+
+        f.setAttribute(
+          "value",
+          geodeticAreaOperator.execute(intersection, { unit: "square-kilometers" }),
+        );
+        f.setAttribute("total", geometryArea);
+      });
 
       // Group all results by label
-
       if (!!fs.fields.find((f) => f.name === "label" || f.alias === "label")) {
         const features = fs.features.reduce((acc, curr) => {
           const index = acc.findIndex((f) => f.attributes.label === curr.attributes.label);

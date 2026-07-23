@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { geodesicArea } from "@arcgis/core/geometry/geometryEngine";
+import * as geodeticAreaOperator from "@arcgis/core/geometry/operators/geodeticAreaOperator";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useAtom } from "jotai";
 import { Trash2 } from "lucide-react";
@@ -26,6 +26,10 @@ import {
 } from "@/components/ui/dialog";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
+if (!geodeticAreaOperator.isLoaded()) {
+  await geodeticAreaOperator.load();
+}
+
 export default function ConfirmLocation() {
   const t = useTranslations();
   const [sketch, setSketch] = useAtom(sketchAtom);
@@ -38,15 +42,15 @@ export default function ConfirmLocation() {
 
   const AREA = useMemo(() => {
     if (!GEOMETRY) return 0;
-    return geodesicArea(GEOMETRY, "square-kilometers");
+    return geodeticAreaOperator.execute(GEOMETRY, { unit: "square-kilometers" });
   }, [GEOMETRY]);
 
   if (!location || !LOCATION) return null;
 
   return (
     <div className="flex w-full items-center justify-between space-x-2 text-sm">
-      <div className="font-semibold uppercase text-muted-foreground">{TITLE}</div>
-      <div className="text-xs font-bold text-foreground">
+      <div className="text-muted-foreground font-semibold uppercase">{TITLE}</div>
+      <div className="text-foreground text-xs font-bold">
         {formatNumber(AREA, {
           maximumFractionDigits: 0,
         })}{" "}

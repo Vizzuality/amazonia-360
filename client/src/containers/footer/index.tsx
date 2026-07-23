@@ -15,11 +15,11 @@ export default function Footer() {
   return (
     <section className="bg-blue-900 pt-4 text-white print:hidden">
       <div className="container">
-        <div className="divide-y divide-primary">
+        <div className="divide-primary divide-y">
           <DataDisclaimer />
 
           <div className="flex w-full flex-col items-center justify-between py-4 md:flex-row md:items-center">
-            <div className="flex h-full w-full flex-col items-start space-y-10 pb-6 sm:flex-row md:items-center md:space-x-10 md:space-y-0 md:pb-0">
+            <div className="flex h-full w-full flex-col items-start space-y-10 pb-6 sm:flex-row md:items-center md:space-y-0 md:space-x-10 md:pb-0">
               <div className="flex w-full items-center justify-start space-x-10">
                 <div className="flex items-center justify-center">
                   <Image
@@ -43,12 +43,12 @@ export default function Footer() {
               </div>
             </div>
             <div className="flex w-full items-center justify-start space-x-0 text-sm font-light sm:space-x-6 md:justify-end">
-              <Button variant="link" className="leading-1 p-0 text-white">
+              <Button variant="link" className="p-0 leading-1 text-white">
                 <a href="https://www.iadb.org/en/home/terms-and-conditions" target="_blank">
                   {t("terms-and-conditions")}
                 </a>
               </Button>
-              <Button variant="link" className="leading-1 p-0 text-white">
+              <Button variant="link" className="p-0 leading-1 text-white">
                 <a href="https://www.iadb.org/en/home/privacy-notice" target="_blank">
                   {t("privacy-policy")}
                 </a>

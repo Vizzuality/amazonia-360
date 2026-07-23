@@ -82,6 +82,10 @@ variable "dev" {
       basic_auth_enabled         = string
       basic_auth_user            = string
       basic_auth_password        = string
+      payload_secret             = string
+      database_url               = string
+      app_key                    = string
+      auth_secret                = string
     })
   })
 }
@@ -105,6 +109,10 @@ variable "staging" {
       basic_auth_enabled         = string
       basic_auth_user            = string
       basic_auth_password        = string
+      payload_secret             = string
+      database_url               = string
+      app_key                    = string
+      auth_secret                = string
     })
   })
 }
@@ -128,6 +136,10 @@ variable "prod" {
       basic_auth_enabled         = string
       basic_auth_user            = string
       basic_auth_password        = string
+      payload_secret             = string
+      database_url               = string
+      app_key                    = string
+      auth_secret                = string
     })
   })
 }

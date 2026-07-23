@@ -29,7 +29,7 @@ export default function Legend({
           <Button
             variant="default"
             size="xs"
-            className="absolute bottom-full right-2 z-0 -translate-y-px rounded-b-none"
+            className="absolute right-2 bottom-full z-0 -translate-y-px rounded-b-none"
           >
             <LuChevronDown className="h-5 w-5" />
           </Button>

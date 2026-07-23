@@ -31,7 +31,7 @@ export default function GridActive() {
       />
       <Label
         htmlFor="selected-filters"
-        className="cursor-pointer text-start text-xs text-muted-foreground group-hover:underline"
+        className="text-muted-foreground cursor-pointer text-start text-xs group-hover:underline"
       >
         {t("grid-sidebar-grid-filters-checkbox-selected-indicators")}
       </Label>

@@ -30,7 +30,7 @@ export default function ReportLocation() {
           className={cn({
             "flex h-full w-full flex-col": true,
             relative: reportPanel === "location",
-            "absolute bottom-0 left-0 top-0 z-10 w-screen bg-white": reportPanel === "topics",
+            "absolute top-0 bottom-0 left-0 z-10 w-screen bg-white": reportPanel === "topics",
           })}
         >
           <ReportLocationMobile />

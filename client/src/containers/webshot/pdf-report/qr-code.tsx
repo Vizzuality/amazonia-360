@@ -23,7 +23,7 @@ export const QRCodeHelp = () => {
 
   return (
     <>
-      <a href={URL} className="text-xs font-semibold text-primary underline">
+      <a href={URL} className="text-primary text-xs font-semibold underline">
         {URL}
       </a>
       <div className="flex flex-col items-center space-y-2">

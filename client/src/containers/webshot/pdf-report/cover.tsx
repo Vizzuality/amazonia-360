@@ -56,7 +56,7 @@ export default function DocumentCoverPdfSection() {
 
   return (
     <div className="relative w-full grow">
-      <div className="absolute bottom-[60px] z-10 flex w-2/3 flex-col gap-8 bg-blue-700 px-14 py-10">
+      <div className="absolute bottom-15 z-10 flex w-2/3 flex-col gap-8 bg-blue-700 px-14 py-10">
         <h1 className="line-clamp-3 text-4xl text-white">
           {reportData?.title || t("pdf-report-cover-title")}
         </h1>
@@ -71,7 +71,7 @@ export default function DocumentCoverPdfSection() {
       </div>
 
       <Image
-        className="absolute left-0 top-0 z-0 h-full w-full object-cover"
+        className="absolute top-0 left-0 z-0 h-full w-full object-cover"
         src="/images/report/world-globe.webp"
         alt=""
         role="presentation"

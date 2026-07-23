@@ -132,7 +132,7 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
           >
             <TooltipTrigger asChild>
               <CollapsibleTrigger
-                className="flex grow space-x-2.5 rounded-sm p-1.5 px-2 text-left text-sm font-medium text-gray-400 transition-colors duration-300 ease-in-out hover:bg-blue-50"
+                className="flex grow space-x-2.5 rounded-xs p-1.5 px-2 text-left text-sm font-medium text-gray-400 transition-colors duration-300 ease-in-out hover:bg-blue-50"
                 onClick={() => setMax4Open(false)}
               >
                 <h3 className="text-left text-sm font-medium text-gray-400">
@@ -158,7 +158,7 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
                   <DialogTrigger
                     className={cn("flex cursor-pointer items-center justify-center p-0.5")}
                   >
-                    <LuInfo className="h-4 w-4 text-foreground" />
+                    <LuInfo className="text-foreground h-4 w-4" />
                   </DialogTrigger>
                 </TooltipTrigger>
                 <DialogContent className="max-w-2xl p-0">
@@ -179,12 +179,12 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
               <TooltipTrigger asChild>
                 <CollapsibleTrigger
                   className={cn({
-                    "flex items-center justify-center rounded bg-blue-50 p-0.5 transition-colors hover:bg-blue-100": true,
+                    "flex items-center justify-center rounded-sm bg-blue-50 p-0.5 transition-colors hover:bg-blue-100": true,
                   })}
                   onClick={() => setMax4Open(false)}
                 >
-                  {!open && <LuPlus className="h-4 w-4 cursor-pointer text-primary" />}
-                  {open && <LuX className="h-4 w-4 cursor-pointer text-primary" />}
+                  {!open && <LuPlus className="text-primary h-4 w-4 cursor-pointer" />}
+                  {open && <LuX className="text-primary h-4 w-4 cursor-pointer" />}
                 </CollapsibleTrigger>
               </TooltipTrigger>
 
@@ -201,9 +201,7 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
         </div>
 
         <CollapsibleContent className="p-2">
-          {(gridMetaIsFetching || gridMetaFromGeometryIsFetching) && (
-            <Skeleton className="h-[34px]" />
-          )}
+          {(gridMetaIsFetching || gridMetaFromGeometryIsFetching) && <Skeleton className="h-8.5" />}
 
           <GridIndicatorsItemContinous {...indicator} />
 

@@ -118,7 +118,7 @@ export default function GridTableSetup() {
       <PopoverTrigger
         disabled={!gridDatasets.length}
         className={cn({
-          "duration-400 flex shrink-0 items-center justify-center rounded-lg px-2.5 py-2.5 transition-colors ease-in-out": true,
+          "flex shrink-0 items-center justify-center rounded-lg px-2.5 py-2.5 transition-colors duration-400 ease-in-out": true,
           "hover:bg-blue-100": gridDatasets.length,
           "opacity-50": !gridDatasets.length,
         })}
@@ -134,26 +134,26 @@ export default function GridTableSetup() {
         alignOffset={-26}
         sideOffset={32}
         align="start"
-        className="w-auto max-w-80 bg-background p-2"
+        className="bg-background w-auto max-w-80 p-2"
       >
         <div className="space-y-4 p-2">
           <div className="space-y-1">
-            <h2 className="text-base font-medium text-foreground">
+            <h2 className="text-foreground text-base font-medium">
               {t("grid-sidebar-grid-filters-ranking-set-up-title")}
             </h2>
-            <span className="text-sm text-muted-foreground">
+            <span className="text-muted-foreground text-sm">
               {t("grid-sidebar-grid-filters-ranking-set-up-description")}
             </span>
           </div>
           <div className="w-full gap-2 overflow-hidden">
-            <span className="text-sm text-foreground">
+            <span className="text-foreground text-sm">
               {t("grid-sidebar-grid-filters-ranking-set-up-order-by")}
             </span>
             <div className="flex gap-2">
               <Select value={selectedDataset} onValueChange={handleRankingChange}>
-                <SelectTrigger className="h-10 w-full max-w-36 rounded-sm">
+                <SelectTrigger className="h-10 w-full max-w-36 rounded-xs">
                   <SelectValue className="text-sm">
-                    <p className="flex-grow truncate md:max-w-80 lg:max-w-none">
+                    <p className="grow truncate md:max-w-80 lg:max-w-none">
                       {OPTIONS?.find((opt) => opt.key === selectedDataset)?.label ||
                         "selectedDataset"}
                     </p>
@@ -169,7 +169,7 @@ export default function GridTableSetup() {
                 </SelectContent>
               </Select>
               <Select value={selectedDirection} onValueChange={handleDirectionChange}>
-                <SelectTrigger className="h-10 w-32 rounded-sm">
+                <SelectTrigger className="h-10 w-32 rounded-xs">
                   <SelectValue className="text-sm">
                     <p className="w-fit max-w-64 flex-1 truncate md:max-w-80 lg:max-w-none">
                       {RANKING_DIRECTION.find((opt) => opt.key === selectedDirection)?.label || ""}
@@ -188,7 +188,7 @@ export default function GridTableSetup() {
             </div>
           </div>
           <div className="gap-2">
-            <Label htmlFor="cells-number" className="text-sm text-foreground">
+            <Label htmlFor="cells-number" className="text-foreground text-sm">
               {t("grid-sidebar-grid-filters-ranking-set-up-max-number-cell")}
             </Label>
             <Input
@@ -199,7 +199,7 @@ export default function GridTableSetup() {
               className="h-10 w-full"
               onChange={onInputChange}
             />
-            <span className="text-xs text-muted-foreground">
+            <span className="text-muted-foreground text-xs">
               {t("grid-sidebar-grid-filters-ranking-set-up-max-number-cell-note")}.
             </span>
           </div>

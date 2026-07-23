@@ -69,7 +69,6 @@ export const DATASETS = {
       type: "feature",
       url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/AFP_AREA_DE_TRABAJO_PANAMAZONIA/FeatureServer/0",
       renderer: {
-        // @ts-expect-error I hate my life
         type: "simple",
         symbol: {
           type: "simple-fill",

@@ -11,7 +11,7 @@ export function CounterIndicatorsPill({ id }: { id: Topic["id"] }) {
   if (!t || !t.indicators || !t.indicators?.length) return null;
 
   return (
-    <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-primary">
+    <span className="bg-secondary text-primary rounded-full px-2.5 py-0.5 text-xs font-semibold">
       {t.indicators.length}
     </span>
   );

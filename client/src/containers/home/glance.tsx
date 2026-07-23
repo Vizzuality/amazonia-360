@@ -109,13 +109,13 @@ export default function Glance() {
       className="container flex flex-col items-end pt-20 md:flex-row md:items-start md:space-x-28 md:py-28"
     >
       <div
-        className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-10 lg:space-y-44 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-left-20" : "md:opacity-0"}`}
+        className={`flex w-full flex-col space-y-5 md:w-1/2 md:space-y-10 lg:space-y-44 ${isSectionInView ? "md:animate-in md:fade-in-0 md:slide-in-from-left-20 overflow-hidden md:duration-700" : "md:opacity-0"}`}
       >
         <div>
-          <h3 className="text-sm font-extrabold uppercase tracking-wide-lg text-blue-400">
+          <h3 className="tracking-wide-lg text-sm font-extrabold text-blue-400 uppercase">
             {t("landing-glance-note")}
           </h3>
-          <h2 className="pb-6 text-2xl text-blue-600 md:max-w-[520px] lg:text-3xl xl:text-4xl">
+          <h2 className="pb-6 text-2xl text-blue-600 md:max-w-130 lg:text-3xl xl:text-4xl">
             {t("landing-glance-title")}
           </h2>
           <div className="text-base font-normal text-blue-900 lg:text-lg">
@@ -129,7 +129,7 @@ export default function Glance() {
 
             <Popover open={open}>
               <PopoverTrigger
-                className="relative h-9 w-full rounded-sm border border-input focus:border-foreground active:border-foreground"
+                className="border-input focus:border-foreground active:border-foreground relative h-9 w-full rounded-xs border"
                 onClick={() => setOpen(!open)}
               >
                 <p className="max-w-64 truncate px-3 py-2 text-left text-sm md:max-w-80 lg:max-w-none">
@@ -137,20 +137,20 @@ export default function Glance() {
                     `label_${locale}` as keyof (typeof MOSAIC_OPTIONS)[number]
                   ] ?? ""}
                 </p>
-                <LuChevronDown className="absolute right-2 top-2 h-5 w-5 text-blue-900" />
+                <LuChevronDown className="absolute top-2 right-2 h-5 w-5 text-blue-900" />
               </PopoverTrigger>
 
               <PopoverContent
                 align="start"
                 alignOffset={-2}
-                className="no-scrollbar group z-10 max-h-96 w-popover-width overflow-y-auto border-none border-input bg-white px-1 py-3 text-sm shadow-md"
+                className="no-scrollbar group w-popover-width border-input z-10 max-h-96 overflow-y-auto border-none bg-white px-1 py-3 text-sm shadow-md"
               >
                 {MOSAIC_OPTIONS &&
                   MOSAIC_OPTIONS.map((opt) => (
                     <div
                       key={opt.key}
                       className={cn({
-                        "flex cursor-pointer items-center justify-between rounded-sm px-3 py-2 hover:bg-blue-50": true,
+                        "flex cursor-pointer items-center justify-between rounded-xs px-3 py-2 hover:bg-blue-50": true,
                         "bg-blue-50 group-hover:bg-transparent": opt.key === chartKey,
                       })}
                       onClick={() => handleSingleValueChange(opt.key)}
@@ -164,7 +164,7 @@ export default function Glance() {
           </div>
         </div>
 
-        <div className="hidden space-y-1 text-xs text-muted-foreground md:block">
+        <div className="text-muted-foreground hidden space-y-1 text-xs md:block">
           <p className="text-xs lg:text-sm"> {t("landing-glance-chart-source-note")}</p>
           <ul className="space-y-2">
             <li>
@@ -176,24 +176,24 @@ export default function Glance() {
         </div>
       </div>
       <div
-        className={`mb-10 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${isSectionInView ? "overflow-hidden md:duration-700 md:animate-in md:fade-in-0 md:slide-in-from-right-20" : "opacity-0"}`}
+        className={`mb-10 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${isSectionInView ? "md:animate-in md:fade-in-0 md:slide-in-from-right-20 overflow-hidden md:duration-700" : "opacity-0"}`}
       >
         <header className="hidden space-y-1 md:block">
-          <h3 className="text-xl font-semibold text-foreground">
+          <h3 className="text-foreground text-xl font-semibold">
             {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.[
               `label_${locale}` as keyof (typeof MOSAIC_OPTIONS)[number]
             ] || ""}
           </h3>
-          <p className="text-xs font-medium text-foreground">
+          <p className="text-foreground text-xs font-medium">
             {MOSAIC_OPTIONS.find((opt) => opt.key === chartKey)?.[
               `description_${locale}` as keyof (typeof MOSAIC_OPTIONS)[number]
             ] || ""}
           </p>
         </header>
         <div className="w-full">
-          <MarimekkoChart format={FORMAT[chartKey]} data={parsedData} className="h-[510px]" />
+          <MarimekkoChart format={FORMAT[chartKey]} data={parsedData} className="h-127.5" />
         </div>
-        <div className="space-y-1 text-xs text-muted-foreground md:hidden">
+        <div className="text-muted-foreground space-y-1 text-xs md:hidden">
           <p className="text-xs lg:text-sm"> {t("landing-glance-chart-source-note")}</p>
           <ul className="space-y-2">
             <li>

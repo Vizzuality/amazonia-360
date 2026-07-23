@@ -33,7 +33,7 @@ export function VerifyEmail({ token, ...props }: VerifyEmailProps) {
     return (
       <Card className="border-none shadow-none" {...props}>
         <CardHeader>
-          <CardTitle className="text-3xl text-primary">{t("auth-verify-email-title")}</CardTitle>
+          <CardTitle className="text-primary text-3xl">{t("auth-verify-email-title")}</CardTitle>
           <CardDescription className="font-medium">
             {t("auth-verify-email-description")}
           </CardDescription>
@@ -53,7 +53,7 @@ export function VerifyEmail({ token, ...props }: VerifyEmailProps) {
     return (
       <Card className="border-none shadow-none" {...props}>
         <CardHeader>
-          <CardTitle className="text-3xl text-primary">
+          <CardTitle className="text-primary text-3xl">
             {t("auth-verify-email-error-title")}
           </CardTitle>
           <CardDescription className="font-medium">
@@ -74,7 +74,7 @@ export function VerifyEmail({ token, ...props }: VerifyEmailProps) {
   return (
     <Card className="border-none shadow-none" {...props}>
       <CardHeader>
-        <CardTitle className="text-3xl text-primary">
+        <CardTitle className="text-primary text-3xl">
           {t("auth-verify-email-confirm-title")}
         </CardTitle>
         <CardDescription className="font-medium">

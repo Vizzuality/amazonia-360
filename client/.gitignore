@@ -41,3 +41,9 @@ next-env.d.ts
 
 # webshot
 .env*.webshot
+
+# Playwright
+/e2e/.auth/
+!/e2e/.auth/.gitkeep
+/e2e/test-results/
+/e2e/playwright-report/

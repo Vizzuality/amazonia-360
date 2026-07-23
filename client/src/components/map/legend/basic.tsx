@@ -19,7 +19,7 @@ export default function LegendBasic({
       {items.map((item, i) => (
         <div key={`legend-quantile-${item.color}-${item.id}-${item.label}-${i}`} className="flex">
           <div
-            className="mr-1 mt-0.5 h-2 w-2 shrink-0 rounded-[2px] shadow-[0_0_1px_0px_rgba(0,0,0,0.25)]"
+            className="mt-0.5 mr-1 h-2 w-2 shrink-0 rounded-sm shadow-[0_0_1px_0px_rgba(0,0,0,0.25)]"
             style={{
               ...(!!item.image && {
                 backgroundImage: `url("data:image/png;base64,${item.image}")`,
@@ -31,7 +31,7 @@ export default function LegendBasic({
               }),
             }}
           />
-          <span className="text-2xs font-semibold text-foreground">{item.label} </span>
+          <span className="text-2xs text-foreground font-semibold">{item.label} </span>
         </div>
       ))}
     </div>

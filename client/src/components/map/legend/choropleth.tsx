@@ -9,7 +9,7 @@ export default function LegendChoropleth({
         {items.map(({ image, color }) => (
           <li
             key={`${color || image}`}
-            className="h-2 flex-shrink-0"
+            className="h-2 shrink-0"
             style={{
               width: `${100 / items.length}%`,
               ...(!!image && {
@@ -30,7 +30,7 @@ export default function LegendChoropleth({
         {items.map(({ label }, i) => (
           <li
             key={`${label}-${i}`}
-            className="flex-shrink-0 text-center text-2xs"
+            className="text-2xs shrink-0 text-center"
             style={{
               width: `${100 / items.length}%`,
             }}
