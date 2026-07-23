@@ -248,9 +248,9 @@ vi.mock("@arcgis/core/Color", () => ({
         if (color.startsWith("#")) {
           const hex = color.slice(1);
           if (hex.length === 6) {
-            this.r = parseInt(hex.slice(0, 2), 16);
-            this.g = parseInt(hex.slice(2, 4), 16);
-            this.b = parseInt(hex.slice(4, 6), 16);
+            this.r = Number.parseInt(hex.slice(0, 2), 16);
+            this.g = Number.parseInt(hex.slice(2, 4), 16);
+            this.b = Number.parseInt(hex.slice(4, 6), 16);
             this.a = 1;
           }
         }

@@ -298,18 +298,18 @@
 }
 @media (width >= theme(--breakpoint-xl)) {
   .container {
-    max-width: theme(--breakpoint-xl);
+    max-width: var(--breakpoint-xl);
   }
 }
 @media (width >= theme(--breakpoint-2xl)) {
   .container {
-    max-width: theme(--breakpoint-2xl);
+    max-width: var(--breakpoint-2xl);
     padding-inline: 4rem;
   }
 }
 @media (width >= theme(--breakpoint-3xl)) {
   .container {
-    max-width: theme(--breakpoint-3xl);
+    max-width: var(--breakpoint-3xl);
     padding-inline: 6rem;
   }
 }

@@ -91,6 +91,7 @@ export default function SidebarGridContent() {
 
               {gridEnabled && (
                 <button
+                  type="button"
                   onClick={() => setGridEnabled(false)}
                   className="flex shrink-0 items-center justify-center rounded-lg bg-blue-50 px-2.5 py-2.5 transition-colors duration-400 ease-in-out hover:bg-blue-100"
                 >

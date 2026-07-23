@@ -15,7 +15,7 @@ const isAdminPath = (pathname: string) => pathname === "/admin" || pathname.star
 // Main middleware handler (Next 16: file renamed middleware.ts -> proxy.ts)
 export default async function proxy(req: NextRequest) {
   // Step 1: Ignore requests for static files like images, icons, etc.
-  const PUBLIC_FILE = /\.(.*)$/;
+  const PUBLIC_FILE = /\./;
   if (PUBLIC_FILE.test(req.nextUrl.pathname)) {
     return NextResponse.next();
   }

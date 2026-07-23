@@ -16,7 +16,7 @@ function Slider({ className, ...props }: React.ComponentProps<typeof SliderPrimi
       <SliderPrimitive.Track className="bg-primary/20 relative h-0.5 w-full grow overflow-hidden rounded-full">
         <SliderPrimitive.Range className="bg-primary absolute h-full" />
       </SliderPrimitive.Track>
-      {Array.from(Array(props.value?.length || props.defaultValue?.length || 0).keys()).map(
+      {Array.from(new Array(props.value?.length || props.defaultValue?.length || 0).keys()).map(
         (key) => (
           <SliderPrimitive.Thumb
             key={key}

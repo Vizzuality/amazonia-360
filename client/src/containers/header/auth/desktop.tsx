@@ -51,7 +51,10 @@ const AuthHeader = () => {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex items-center rounded-full focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:outline-hidden">
+          <button
+            type="button"
+            className="flex items-center rounded-full focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:outline-hidden"
+          >
             <Avatar>
               {session.user?.image && (
                 <AvatarImage src={session.user.image} alt={session.user?.name || "User avatar"} />
