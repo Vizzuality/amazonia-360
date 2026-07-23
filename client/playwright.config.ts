@@ -1,3 +1,4 @@
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -45,7 +46,7 @@ export default defineConfig({
       stderr: "pipe",
       env: {
         AUTH_TOKEN: process.env.NEXT_PUBLIC_API_KEY ?? "e2e-test-api-token",
-        GRID_TILES_PATH: process.env.GRID_TILES_PATH ?? "/tmp/grid-tiles",
+        GRID_TILES_PATH: process.env.GRID_TILES_PATH ?? path.join(os.tmpdir(), "grid-tiles"),
         OPENAI_TOKEN: process.env.OPENAI_TOKEN ?? "sk-dummy-openai-token-for-e2e",
       },
     },
@@ -68,18 +69,18 @@ export default defineConfig({
   projects: [
     {
       name: "setup",
-      testMatch: /.*\.setup\.ts/,
+      testMatch: /\.setup\.ts/,
     },
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
-      testIgnore: /.*\.(setup\.ts|auth\.spec\.ts)/,
+      testIgnore: /\.(setup\.ts|auth\.spec\.ts)/,
     },
     {
       name: "chromium-authenticated",
       use: { ...devices["Desktop Chrome"], storageState: AUTH_FILE },
       dependencies: ["setup"],
-      testMatch: /.*\.auth\.spec\.ts/,
+      testMatch: /\.auth\.spec\.ts/,
     },
   ],
 });
