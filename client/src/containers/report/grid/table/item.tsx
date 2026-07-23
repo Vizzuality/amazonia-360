@@ -101,7 +101,7 @@ export const GridTableItem = (
     setLocation({ type: "point", geometry: g.toJSON(), buffer: BUFFERS.point });
 
     const gWithBuffer = getGeometryWithBuffer(g, BUFFERS.point);
-    if (gWithBuffer && gWithBuffer.extent) {
+    if (gWithBuffer?.extent) {
       setTmpBbox(gWithBuffer.extent);
     }
   };

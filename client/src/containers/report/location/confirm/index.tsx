@@ -42,7 +42,7 @@ export default function Confirm({ onConfirm }: { onConfirm: () => void }) {
     if (!location || (location.type !== "point" && location.type !== "polyline")) return;
     const gWithBuffer = getGeometryWithBuffer(GEOMETRY, location.buffer);
 
-    if (gWithBuffer && gWithBuffer.extent) {
+    if (gWithBuffer?.extent) {
       setTmpBbox(gWithBuffer.extent);
     }
   }, 500);

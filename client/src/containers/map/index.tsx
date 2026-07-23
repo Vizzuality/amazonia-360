@@ -86,7 +86,7 @@ export default function MapContainer({
       });
 
       const g = getGeometryWithBuffer(graphic.geometry, BUFFERS[graphic.geometry.type]);
-      if (g && g.extent) {
+      if (g?.extent) {
         setTmpBbox(g.extent);
       }
 
@@ -125,7 +125,7 @@ export default function MapContainer({
 
       // Optionally update the bounding box based on the updated geometry
       const g = getGeometryWithBuffer(graphic.geometry, b);
-      if (g && g.extent) {
+      if (g?.extent) {
         setTmpBbox(g.extent);
       }
 

@@ -58,7 +58,7 @@ export const FeatureLegend = ({
             ?.map((u) => {
               return {
                 id: u.value,
-                color: !u.symbol || !u.symbol.color ? undefined : new Color(u.symbol.color).toHex(),
+                color: u.symbol?.color ? new Color(u.symbol.color).toHex() : undefined,
                 label: `${u.value}`,
               };
             })
@@ -76,7 +76,7 @@ export const FeatureLegend = ({
             ?.map((c) => {
               return {
                 id: `${c.label}`,
-                color: !c.symbol || !c.symbol.color ? undefined : new Color(c.symbol.color).toHex(),
+                color: c.symbol?.color ? new Color(c.symbol.color).toHex() : undefined,
                 label: `${c.label}`,
               };
             })

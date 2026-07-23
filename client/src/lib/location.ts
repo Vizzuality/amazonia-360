@@ -121,7 +121,7 @@ export const useLocationGeometry = (
   const LOCATION = useLocation(location);
 
   const GEOMETRY = useMemo(() => {
-    if (LOCATION && LOCATION.geometry) {
+    if (LOCATION?.geometry) {
       const b = location?.type !== "search" ? location?.buffer : BUFFERS[LOCATION.geometry.type];
       const g = getGeometryWithBuffer(LOCATION.geometry, b || BUFFERS[LOCATION.geometry.type]);
 

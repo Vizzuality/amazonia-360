@@ -67,7 +67,7 @@ export default function Sketch({
 
   const drawBuffer = useCallback(
     (l: __esri.Graphic) => {
-      if (!l || !l.geometry) return;
+      if (!l?.geometry) return;
 
       bufferRef.current.removeAll();
 

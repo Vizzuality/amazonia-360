@@ -173,7 +173,7 @@ export const getSearch = async (params: GetSearchParams) => {
     if (res?.numResults === 1) {
       const r = res?.results?.[0].results?.[0];
 
-      if (!r || !r.feature || !r.feature.geometry) return null;
+      if (!r?.feature?.geometry) return null;
 
       const projectedGeo = projectOperator.execute(
         r.feature.geometry,

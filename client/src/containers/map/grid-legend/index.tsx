@@ -117,12 +117,11 @@ export const GridLegend: FC = () => {
                 align="start"
                 className="no-scrollbar max-h-96 w-72 overflow-y-auto border-none shadow-md"
               >
-                {OPTIONS &&
-                  OPTIONS.map((opt) => (
-                    <SelectItem key={opt.key} value={opt.key} className="cursor-pointer">
-                      {opt.name}
-                    </SelectItem>
-                  ))}
+                {OPTIONS?.map((opt) => (
+                  <SelectItem key={opt.key} value={opt.key} className="cursor-pointer">
+                    {opt.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
 
               <TooltipPortal>

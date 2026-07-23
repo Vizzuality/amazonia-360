@@ -558,7 +558,7 @@ export default function GridLayer() {
     });
 
     const gWithBuffer = getGeometryWithBuffer(g, BUFFERS.point);
-    if (gWithBuffer && gWithBuffer.extent) {
+    if (gWithBuffer?.extent) {
       setTmpBbox(gWithBuffer.extent);
     }
   }, [alert, setLocation, setTmpBbox]);

@@ -77,7 +77,7 @@ export default function SearchC() {
 
               const g = getGeometryWithBuffer(geo, BUFFERS[data.type]);
 
-              if (g && g.extent) {
+              if (g?.extent) {
                 setTmpBbox(g.extent);
               }
             }

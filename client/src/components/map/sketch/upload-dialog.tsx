@@ -74,7 +74,7 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
                 esriGeometry,
                 BUFFERS[arcgisGeometry.type] || 0,
               );
-              if (bufferedGeometry && bufferedGeometry.extent) {
+              if (bufferedGeometry?.extent) {
                 setTmpBbox(bufferedGeometry.extent);
               }
             }
