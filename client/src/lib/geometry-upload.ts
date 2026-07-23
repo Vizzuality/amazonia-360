@@ -282,7 +282,7 @@ export async function convertFilesToGeojson(files: File[]): Promise<Feature<Vali
         files = extractedFiles;
       }
     } catch (_e) {
-      return Promise.reject(new UploadError(UploadErrorType.UnsupportedFile));
+      throw new UploadError(UploadErrorType.UnsupportedFile);
     }
   }
   // If multiple files are uploaded and one of them is a ShapeFile, this is the one we pass to the
@@ -307,7 +307,7 @@ export async function convertFilesToGeojson(files: File[]): Promise<Feature<Vali
     const hasPrj = files.some((f) => f.name.toLowerCase().endsWith(".prj"));
 
     if (!hasShp || !hasShx || !hasDbf || !hasPrj) {
-      return Promise.reject(new UploadError(UploadErrorType.SHPMissingFile));
+      throw new UploadError(UploadErrorType.SHPMissingFile);
     }
   }
 
@@ -333,17 +333,17 @@ export async function convertFilesToGeojson(files: File[]): Promise<Feature<Vali
       ] as Loader[]);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      return Promise.reject(new UploadError(UploadErrorType.UnsupportedFile));
+      throw new UploadError(UploadErrorType.UnsupportedFile);
     }
   }
 
   if (!loader) {
-    return Promise.reject(new UploadError(UploadErrorType.UnsupportedFile));
+    throw new UploadError(UploadErrorType.UnsupportedFile);
   }
 
   const validationError = await validateFile(fileToParse, loader);
   if (validationError) {
-    return Promise.reject(new UploadError(validationError));
+    throw new UploadError(validationError);
   }
 
   let content:
@@ -387,7 +387,7 @@ export async function convertFilesToGeojson(files: File[]): Promise<Feature<Vali
     })) as Awaited<ReturnType<typeof KMLLoader.parse | typeof ShapefileLoader.parse>>;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
-    return Promise.reject(new UploadError(UploadErrorType.UnsupportedFile));
+    throw new UploadError(UploadErrorType.UnsupportedFile);
   }
 
   if (loader === ShapefileLoader) {
@@ -400,11 +400,11 @@ export async function convertFilesToGeojson(files: File[]): Promise<Feature<Vali
     cleanedGeoJSON = cleanupGeoJSON(content as GeoJSON);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
-    return Promise.reject(new UploadError(UploadErrorType.UnsupportedFile));
+    throw new UploadError(UploadErrorType.UnsupportedFile);
   }
 
   if (cleanedGeoJSON === null) {
-    return Promise.reject(new UploadError(UploadErrorType.UnsupportedFile));
+    throw new UploadError(UploadErrorType.UnsupportedFile);
   }
 
   return cleanedGeoJSON;
@@ -464,7 +464,7 @@ export async function convertFilesToGeometry(
   const arcgisGeometry = geojsonToArcGISCustom(geojson);
 
   if (!arcgisGeometry) {
-    return Promise.reject(new UploadError(UploadErrorType.UnsupportedFile));
+    throw new UploadError(UploadErrorType.UnsupportedFile);
   }
   // Validate area size using geodesicArea
   if (
@@ -472,12 +472,12 @@ export async function convertFilesToGeometry(
     arcgisGeometry.type === "polygon" &&
     !validateGeometrySize(arcgisGeometry, options.maxAreaSize)
   ) {
-    return Promise.reject(new UploadError(UploadErrorType.AreaTooBig));
+    throw new UploadError(UploadErrorType.AreaTooBig);
   }
 
   // Validate bounds by checking intersection with area_afp
   if (options?.validateBounds && !(await validateGeometryBounds(arcgisGeometry))) {
-    return Promise.reject(new UploadError(UploadErrorType.OutsideOfBounds));
+    throw new UploadError(UploadErrorType.OutsideOfBounds);
   }
 
   return {
