@@ -58,13 +58,14 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
           .create({
             collection: "users",
             data: {
+              collection: "users",
               name: value.name,
               email: value.email,
               password: value.password,
             },
           })
           .then(() => {
-            router.push("/auth/check-your-email");
+            router.push(`/auth/check-your-email?email=${encodeURIComponent(value.email)}`);
           }),
         {
           loading: t("auth-toast-creating-account"),

@@ -17,13 +17,15 @@ export async function generateMetadata({
   };
 }
 
-export default async function CheckYourEmailPage(
-  _props: PageProps<"/[locale]/auth/check-your-email">,
-) {
+export default async function CheckYourEmailPage({
+  searchParams,
+}: PageProps<"/[locale]/auth/check-your-email">) {
+  const { email } = await searchParams;
+
   return (
     <section className="flex grow items-center justify-center">
       <div className="mx-auto w-full max-w-lg">
-        <CheckYourEmail />
+        <CheckYourEmail email={typeof email === "string" ? email : undefined} />
       </div>
     </section>
   );

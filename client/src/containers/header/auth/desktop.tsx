@@ -24,7 +24,10 @@ const AuthHeader = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentUrl = `${pathname}${searchParams?.toString() ? `?${searchParams.toString()}` : ""}`;
-  const signInHref = `/auth/sign-in?redirectUrl=${encodeURIComponent(currentUrl)}`;
+  const isAuthPage = pathname.startsWith("/auth/");
+  const signInHref = isAuthPage
+    ? "/auth/sign-in"
+    : `/auth/sign-in?redirectUrl=${encodeURIComponent(currentUrl)}`;
 
   if (session && session.user.collection === "users") {
     // Get user initials for fallback

@@ -82,7 +82,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           .create(
             {
               collection: "anonymous-users",
-              data: {},
+              data: { collection: "anonymous-users" },
             },
             {
               headers: {

@@ -72,14 +72,6 @@ const PARTNERS = [
     height: 192,
   },
   {
-    href: "https://www.greenclimate.fund/",
-    src: "/partners/green-climate-fund.avif",
-    alt: "Green Climate Fund",
-    className: "p-1 -top-4",
-    width: 331,
-    height: 192,
-  },
-  {
     href: "https://www.esri.com/",
     src: "/partners/esri.avif",
     alt: "Esri",
@@ -96,6 +88,14 @@ const PARTNERS = [
     height: 192,
   },
 ];
+
+const GCF_PARTNER = {
+  href: "https://www.greenclimate.fund/",
+  src: "/partners/green-climate-fund.avif",
+  alt: "Green Climate Fund",
+  width: 331,
+  height: 192,
+};
 export default function Partners() {
   const t = useTranslations();
 
@@ -133,6 +133,26 @@ export default function Partners() {
               <Partner {...partner} key={`partner-${index}`} />
             ))}
           </ul>
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-blue-300 to-transparent" />
+          <div className="flex items-center justify-center gap-4 pt-6">
+            <p className="text-sm font-semibold uppercase tracking-wide-lg text-blue-400">
+              {t("landing-partners-powered-by")}
+            </p>
+            <a
+              href={GCF_PARTNER.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center"
+            >
+              <Image
+                src={GCF_PARTNER.src}
+                alt={GCF_PARTNER.alt}
+                width={GCF_PARTNER.width}
+                height={GCF_PARTNER.height}
+                className="h-auto max-h-20 w-auto object-contain"
+              />
+            </a>
+          </div>
         </div>
       </div>
     </section>

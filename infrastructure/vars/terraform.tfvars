@@ -27,17 +27,18 @@ dev = {
   }
 
   client = {
-    next_public_api_url          = ""
-    next_public_api_key          = ""
-    next_public_webshot_url      = ""
-    next_public_arcgis_api_key   = ""
-    basic_auth_enabled           = ""
-    basic_auth_user              = ""
-    basic_auth_password          = ""
-    payload_secret               = ""
-    database_url                 = ""
-    app_key                      = ""
-    auth_secret                  = ""
+    next_public_api_url        = ""
+    next_public_api_key        = ""
+    next_public_webshot_url    = ""
+    next_public_arcgis_api_key = ""
+    next_public_gtm_id         = ""
+    basic_auth_enabled         = ""
+    basic_auth_user            = ""
+    basic_auth_password        = ""
+    payload_secret             = ""
+    database_url               = ""
+    app_key                    = ""
+    auth_secret                = ""
   }
 }
 
@@ -52,17 +53,18 @@ staging = {
   }
 
   client = {
-    next_public_api_url          = ""
-    next_public_api_key          = ""
-    next_public_webshot_url      = ""
-    next_public_arcgis_api_key   = ""
-    basic_auth_enabled           = ""
-    basic_auth_user              = ""
-    basic_auth_password          = ""
-    payload_secret               = ""
-    database_url                 = ""
-    app_key                      = ""
-    auth_secret                  = ""
+    next_public_api_url        = ""
+    next_public_api_key        = ""
+    next_public_webshot_url    = ""
+    next_public_arcgis_api_key = ""
+    next_public_gtm_id         = ""
+    basic_auth_enabled         = ""
+    basic_auth_user            = ""
+    basic_auth_password        = ""
+    payload_secret             = ""
+    database_url               = ""
+    app_key                    = ""
+    auth_secret                = ""
   }
 }
 
@@ -77,16 +79,17 @@ prod = {
   }
 
   client = {
-    next_public_api_url          = ""
-    next_public_api_key          = ""
-    next_public_webshot_url      = ""
-    next_public_arcgis_api_key   = ""
-    basic_auth_enabled           = ""
-    basic_auth_user              = ""
-    basic_auth_password          = ""
-    payload_secret               = ""
-    database_url                 = ""
-    app_key                      = ""
-    auth_secret                  = ""
+    next_public_api_url        = ""
+    next_public_api_key        = ""
+    next_public_webshot_url    = ""
+    next_public_arcgis_api_key = ""
+    next_public_gtm_id         = ""
+    basic_auth_enabled         = ""
+    basic_auth_user            = ""
+    basic_auth_password        = ""
+    payload_secret             = ""
+    database_url               = ""
+    app_key                    = ""
+    auth_secret                = ""
   }
 }

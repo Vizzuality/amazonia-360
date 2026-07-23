@@ -7,8 +7,6 @@ import { VerifyEmail } from "@/containers/auth/verify-email";
 
 import { redirect } from "@/i18n/navigation";
 
-import { sdk } from "@/services/sdk";
-
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ locale: Locale }>;
@@ -41,17 +39,10 @@ export default async function VerifyEmailPage({
     });
   }
 
-  if (!!token && !Array.isArray(token)) {
-    await sdk.verifyEmail({
-      collection: "users",
-      token,
-    });
-  }
-
   return (
     <section className="flex grow items-center justify-center">
       <div className="mx-auto w-full max-w-lg">
-        <VerifyEmail />
+        <VerifyEmail token={token as string} />
       </div>
     </section>
   );

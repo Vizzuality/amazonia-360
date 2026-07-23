@@ -121,6 +121,7 @@ jobs:
             NEXT_PUBLIC_ARCGIS_API_KEY=${{ secrets.TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY }}
             NEXT_PUBLIC_API_KEY=${{ secrets.TF_CLIENT_NEXT_PUBLIC_API_KEY }}
             NEXT_PUBLIC_WEBSHOT_URL=${{ vars.TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL }}
+            NEXT_PUBLIC_GTM_ID=${{ vars.TF_CLIENT_NEXT_PUBLIC_GTM_ID }}
             BASIC_AUTH_ENABLED=${{ vars.TF_CLIENT_BASIC_AUTH_ENABLED }}
             BASIC_AUTH_USER=${{ secrets.TF_CLIENT_BASIC_AUTH_USER }}
             BASIC_AUTH_PASSWORD=${{ secrets.TF_CLIENT_BASIC_AUTH_PASSWORD }}
@@ -306,7 +307,7 @@ jobs:
                 APP_BASIC_AUTH_PASSWORD: ${APP_BASIC_AUTH_PASSWORD_ESCAPED}
               restart: always
             nginx:
-              image: nginx
+              image: nginx:1.30.1-alpine
               restart: always
               networks:
                 - amazonia360-network
