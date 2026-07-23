@@ -240,26 +240,36 @@ vi.mock("@arcgis/core/Color", () => ({
 
     constructor(color?: string | number[] | MockColorProperties) {
       if (Array.isArray(color)) {
-        this.r = color[0] || 255;
-        this.g = color[1] || 255;
-        this.b = color[2] || 255;
-        this.a = color[3] !== undefined ? color[3] : 1;
+        this.setFromArray(color);
       } else if (typeof color === "string") {
-        if (color.startsWith("#")) {
-          const hex = color.slice(1);
-          if (hex.length === 6) {
-            this.r = Number.parseInt(hex.slice(0, 2), 16);
-            this.g = Number.parseInt(hex.slice(2, 4), 16);
-            this.b = Number.parseInt(hex.slice(4, 6), 16);
-            this.a = 1;
-          }
-        }
+        this.setFromHex(color);
       } else if (typeof color === "object" && color !== null) {
-        this.r = color.r !== undefined ? color.r : 255;
-        this.g = color.g !== undefined ? color.g : 255;
-        this.b = color.b !== undefined ? color.b : 255;
-        this.a = color.a !== undefined ? color.a : 1;
+        this.setFromObject(color);
       }
+    }
+
+    private setFromArray(color: number[]) {
+      this.r = color[0] || 255;
+      this.g = color[1] || 255;
+      this.b = color[2] || 255;
+      this.a = color[3] ?? 1;
+    }
+
+    private setFromHex(color: string) {
+      if (!color.startsWith("#")) return;
+      const hex = color.slice(1);
+      if (hex.length !== 6) return;
+      this.r = Number.parseInt(hex.slice(0, 2), 16);
+      this.g = Number.parseInt(hex.slice(2, 4), 16);
+      this.b = Number.parseInt(hex.slice(4, 6), 16);
+      this.a = 1;
+    }
+
+    private setFromObject(color: MockColorProperties) {
+      this.r = color.r ?? 255;
+      this.g = color.g ?? 255;
+      this.b = color.b ?? 255;
+      this.a = color.a ?? 1;
     }
 
     static fromArray(arr: number[]) {
