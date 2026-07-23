@@ -7,6 +7,9 @@ import "./src/env.mjs";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
+  turbopack: {
+    root: import.meta.dirname,
+  },
   images: {
     unoptimized: true,
     remotePatterns: [
