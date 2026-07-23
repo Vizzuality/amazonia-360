@@ -59,5 +59,5 @@ function isAuthenticated(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [String.raw`/((?!local-api|api|v1|_next|.*\..*).*)`],
+  matcher: ["/((?!local-api|api|v1|_next|.*\\..*).*)"],
 };
