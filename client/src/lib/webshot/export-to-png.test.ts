@@ -154,6 +154,36 @@ describe("exportToPng", () => {
     el.remove();
   });
 
+  it("neutralizes animations and transitions on the clone before capture", async () => {
+    const mockDataUrl = "data:image/png;base64,abc123";
+    const mockBlob = new Blob(["png-data"], { type: "image/png" });
+
+    vi.mocked(toPng).mockResolvedValue(mockDataUrl);
+    global.fetch = vi.fn().mockResolvedValue({ blob: () => Promise.resolve(mockBlob) });
+
+    const el = createElement();
+    // Mimic the map legend's tailwindcss-animate enter animation.
+    const legend = document.createElement("div");
+    legend.style.animation = "fade-in 700ms";
+    legend.style.transition = "opacity 300ms";
+    el.appendChild(legend);
+
+    await exportToPng(el, "test.png");
+
+    const clone = vi.mocked(toPng).mock.calls[0][0] as HTMLElement;
+    expect(clone.style.animation).toBe("none");
+    expect(clone.style.transition).toBe("none");
+
+    const clonedLegend = clone.querySelector("div") as HTMLElement;
+    expect(clonedLegend.style.animation).toBe("none");
+    expect(clonedLegend.style.transition).toBe("none");
+
+    // Original is untouched.
+    expect(legend.style.animation).toBe("fade-in 700ms");
+
+    el.remove();
+  });
+
   it("creates a temporary overlay for registered maps on the clone", async () => {
     const mockMapDataUrl = "data:image/png;base64,mapScreenshot";
     const mockCardDataUrl = "data:image/png;base64,cardCapture";

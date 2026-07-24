@@ -13,6 +13,21 @@ import { getMapScreenshotFn } from "./map-export-registry";
  * them as inline `style` attributes on a CLONE. The original is never
  * modified — no visual flash, no restore step needed.
  */
+/**
+ * Inserting the clone into the DOM re-triggers CSS enter animations (e.g.
+ * tailwindcss-animate `animate-in fade-in-0` on the map legend). html-to-image
+ * would then serialize computed styles mid-animation, capturing the element at
+ * partial opacity. Force animations and transitions off so every node in the
+ * clone renders at its resting state.
+ */
+function neutralizeAnimations(clone: HTMLElement) {
+  const nodes = [clone, ...Array.from(clone.querySelectorAll<HTMLElement>("*"))];
+  for (const node of nodes) {
+    node.style.animation = "none";
+    node.style.transition = "none";
+  }
+}
+
 function inlineForeignObjectStyles(original: HTMLElement, clone: HTMLElement) {
   const origFOs = original.querySelectorAll("svg foreignObject");
   const cloneFOs = clone.querySelectorAll("svg foreignObject");
@@ -84,6 +99,10 @@ export async function exportToPng(element: HTMLElement, filename: string): Promi
     //    and skips style inlining for SVG children, so class-based styles
     //    (including CHROMA-luminance text colors) would be lost without this.
     inlineForeignObjectStyles(element, clone);
+
+    // 3b. Kill enter animations/transitions re-triggered by inserting the
+    //     clone, so nothing is captured mid-fade (e.g. the legend's opacity).
+    neutralizeAnimations(clone);
 
     // 4. Capture the clone with html-to-image.
     //    The `style` option overrides the root element on html-to-image's
