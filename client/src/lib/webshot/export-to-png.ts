@@ -4,16 +4,6 @@ import { downloadBlobResponse } from "./download";
 import { getMapScreenshotFn } from "./map-export-registry";
 
 /**
- * html-to-image deep-clones <svg> elements via cloneNode(true) and skips
- * computed-style inlining for their children. This means HTML inside
- * <foreignObject> (e.g. visx HtmlLabel) loses all class-based styles
- * when serialized to a data URI (no stylesheet available).
- *
- * This function reads computed styles from the ORIGINAL DOM and writes
- * them as inline `style` attributes on a CLONE. The original is never
- * modified — no visual flash, no restore step needed.
- */
-/**
  * Inserting the clone into the DOM re-triggers CSS enter animations (e.g.
  * tailwindcss-animate `animate-in fade-in-0` on the map legend). html-to-image
  * would then serialize computed styles mid-animation, capturing the element at
@@ -28,6 +18,16 @@ function neutralizeAnimations(clone: HTMLElement) {
   }
 }
 
+/**
+ * html-to-image deep-clones <svg> elements via cloneNode(true) and skips
+ * computed-style inlining for their children. This means HTML inside
+ * <foreignObject> (e.g. visx HtmlLabel) loses all class-based styles
+ * when serialized to a data URI (no stylesheet available).
+ *
+ * This function reads computed styles from the ORIGINAL DOM and writes
+ * them as inline `style` attributes on a CLONE. The original is never
+ * modified — no visual flash, no restore step needed.
+ */
 function inlineForeignObjectStyles(original: HTMLElement, clone: HTMLElement) {
   const origFOs = original.querySelectorAll("svg foreignObject");
   const cloneFOs = clone.querySelectorAll("svg foreignObject");
@@ -42,8 +42,7 @@ function inlineForeignObjectStyles(original: HTMLElement, clone: HTMLElement) {
       if (!(origNode instanceof HTMLElement) || !(cloneNode instanceof HTMLElement)) continue;
 
       const computed = window.getComputedStyle(origNode);
-      for (let k = 0; k < computed.length; k++) {
-        const prop = computed[k];
+      for (const prop of Array.from(computed)) {
         cloneNode.style.setProperty(prop, computed.getPropertyValue(prop));
       }
     }

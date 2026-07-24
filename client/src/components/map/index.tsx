@@ -39,6 +39,20 @@ export type MapProps = {
   onLoad?: (layerViews: LayerView[]) => void;
 };
 
+// Builds the screenshot callback registered for PNG export. Kept at module
+// scope so it doesn't nest inside the mount effect's `.when` closure.
+function createMapScreenshotFn(view: ArcGISMapView): () => Promise<string | null> {
+  return async () => {
+    try {
+      await ArcGISReactiveUtils.whenOnce(() => !view.updating);
+      const screenshot = await view.takeScreenshot();
+      return screenshot?.dataUrl ?? null;
+    } catch {
+      return null;
+    }
+  };
+}
+
 export default function Map(mapProps: MapProps) {
   const [loaded, setLoaded] = useState(false);
 
@@ -159,16 +173,7 @@ export function MapView({
 
         // Register for PNG export — the .map container is used as the WeakMap key
         // so exportToPng can look up screenshot functions by querying ".map" elements.
-        const viewRef = mapViewRef.current;
-        registerMapForExport(mapContainerRef.current, async () => {
-          try {
-            await ArcGISReactiveUtils.whenOnce(() => !viewRef.updating);
-            const screenshot = await viewRef.takeScreenshot();
-            return screenshot?.dataUrl ?? null;
-          } catch {
-            return null;
-          }
-        });
+        registerMapForExport(mapContainerRef.current, createMapScreenshotFn(mapViewRef.current));
 
         setMounted(true);
       });

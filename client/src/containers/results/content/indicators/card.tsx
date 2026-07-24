@@ -37,13 +37,13 @@ import { useSidebar } from "@/components/ui/sidebar";
 import { Report } from "@/payload-types";
 
 export default function ReportResultsIndicator(props: {
-  id: Report["id"];
-  indicatorId: Indicator["id"];
-  type: VisualizationTypes;
-  basemapId?: BasemapIds;
-  editable: boolean;
-  isWebshot?: boolean;
-  isPdf?: boolean;
+  readonly id: Report["id"];
+  readonly indicatorId: Indicator["id"];
+  readonly type: VisualizationTypes;
+  readonly basemapId?: BasemapIds;
+  readonly editable: boolean;
+  readonly isWebshot?: boolean;
+  readonly isPdf?: boolean;
 }) {
   return <ReportResultsIndicatorContent {...props} />;
 }
@@ -57,13 +57,13 @@ function ReportResultsIndicatorContent({
   isWebshot = false,
   isPdf = false,
 }: {
-  id: Report["id"];
-  indicatorId: Indicator["id"];
-  type: VisualizationTypes;
-  basemapId?: BasemapIds;
-  editable: boolean;
-  isWebshot?: boolean;
-  isPdf?: boolean;
+  readonly id: Report["id"];
+  readonly indicatorId: Indicator["id"];
+  readonly type: VisualizationTypes;
+  readonly basemapId?: BasemapIds;
+  readonly editable: boolean;
+  readonly isWebshot?: boolean;
+  readonly isPdf?: boolean;
 }) {
   const { toasts } = useSonner();
   const locale = useLocale();

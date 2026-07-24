@@ -87,7 +87,7 @@ describe("exportToPng", () => {
     vi.mocked(toPng).mockImplementation(async () => {
       expect(el.innerHTML).toBe(originalHTML);
       expect(el.getAttribute("style")).toBe(originalStyle);
-      expect(el.childNodes.length).toBe(originalChildCount);
+      expect(el.childNodes).toHaveLength(originalChildCount);
       return mockDataUrl;
     });
 
@@ -111,7 +111,7 @@ describe("exportToPng", () => {
 
     await exportToPng(el, "test.png");
 
-    expect(el.parentElement!.childNodes.length).toBe(parentChildCount);
+    expect(el.parentElement!.childNodes).toHaveLength(parentChildCount);
 
     el.remove();
   });
@@ -123,7 +123,7 @@ describe("exportToPng", () => {
     const parentChildCount = el.parentElement!.childNodes.length;
 
     await expect(exportToPng(el, "fail.png")).rejects.toThrow("capture failed");
-    expect(el.parentElement!.childNodes.length).toBe(parentChildCount);
+    expect(el.parentElement!.childNodes).toHaveLength(parentChildCount);
 
     el.remove();
   });
@@ -205,8 +205,8 @@ describe("exportToPng", () => {
 
     vi.mocked(toPng).mockImplementation(async (element) => {
       const clone = element as HTMLElement;
-      expect(clone.querySelectorAll("img").length).toBe(1);
-      expect(el.querySelectorAll("img").length).toBe(0);
+      expect(clone.querySelectorAll("img")).toHaveLength(1);
+      expect(el.querySelectorAll("img")).toHaveLength(0);
       return mockCardDataUrl;
     });
 
@@ -215,7 +215,7 @@ describe("exportToPng", () => {
     expect(takeScreenshot).toHaveBeenCalled();
     expect(toPng).toHaveBeenCalled();
     expect(downloadBlobResponse).toHaveBeenCalledWith(mockBlob, "map.png");
-    expect(mapParent.querySelectorAll("img").length).toBe(0);
+    expect(mapParent.querySelectorAll("img")).toHaveLength(0);
 
     unregisterMapForExport(mapContainer);
     el.remove();
