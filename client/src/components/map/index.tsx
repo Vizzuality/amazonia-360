@@ -15,6 +15,7 @@ import ArcGISScaleBar from "@arcgis/core/widgets/ScaleBar";
 import { merge } from "ts-deepmerge";
 
 import { omit } from "@/lib/utils";
+import { registerMapForExport, unregisterMapForExport } from "@/lib/webshot";
 
 import { BasemapIds } from "@/constants/basemaps";
 import { DEFAULT_MAP_VIEW_PROPERTIES } from "@/constants/map";
@@ -37,6 +38,20 @@ export type MapProps = {
   loaded?: boolean;
   onLoad?: (layerViews: LayerView[]) => void;
 };
+
+// Builds the screenshot callback registered for PNG export. Kept at module
+// scope so it doesn't nest inside the mount effect's `.when` closure.
+function createMapScreenshotFn(view: ArcGISMapView): () => Promise<string | null> {
+  return async () => {
+    try {
+      await ArcGISReactiveUtils.whenOnce(() => !view.updating);
+      const screenshot = await view.takeScreenshot();
+      return screenshot?.dataUrl ?? null;
+    } catch {
+      return null;
+    }
+  };
+}
 
 export default function Map(mapProps: MapProps) {
   const [loaded, setLoaded] = useState(false);
@@ -148,13 +163,18 @@ export function MapView({
 
       // check if the map is mounted
       mapViewRef.current.when(() => {
-        if (!mapViewRef.current || !mapRef.current) {
+        if (!mapViewRef.current || !mapRef.current || !mapContainerRef.current) {
           return;
         }
         onMapMount({
           map: mapRef.current,
           view: mapViewRef.current,
         });
+
+        // Register for PNG export — the .map container is used as the WeakMap key
+        // so exportToPng can look up screenshot functions by querying ".map" elements.
+        registerMapForExport(mapContainerRef.current, createMapScreenshotFn(mapViewRef.current));
+
         setMounted(true);
       });
 
@@ -167,6 +187,9 @@ export function MapView({
       );
 
       return () => {
+        if (mapContainerRef.current) {
+          unregisterMapForExport(mapContainerRef.current);
+        }
         onMapUnmount();
       };
     }
