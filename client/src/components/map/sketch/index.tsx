@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 
 import dynamic from "next/dynamic";
 
-import * as geodesicBufferOperator from "@arcgis/core/geometry/operators/geodesicBufferOperator";
+import * as geometryEngineAsync from "@arcgis/core/geometry/geometryEngineAsync";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
@@ -25,10 +25,6 @@ import {
 import { useMap } from "@/components/map/provider";
 
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
-
-if (!geodesicBufferOperator.isLoaded()) {
-  await geodesicBufferOperator.load();
-}
 
 export type SketchProps = {
   type?: "point" | "polygon" | "polyline";
@@ -64,12 +60,15 @@ export default function Sketch({
   const sketchViewModelRef = useRef<SketchViewModel | null>(null);
   const sketchViewModelOnCreateRef = useRef<IHandle | null>(null);
   const sketchViewModelOnUpdateRef = useRef<IHandle | null>(null);
+  const bufferDrawTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // Monotonic token so a slow/stale async buffer can't overwrite a newer one.
+  const bufferDrawTokenRef = useRef(0);
 
   const drawBuffer = useCallback(
-    (l: __esri.Graphic) => {
+    async (l: __esri.Graphic) => {
       if (!l?.geometry) return;
 
-      bufferRef.current.removeAll();
+      const token = ++bufferDrawTokenRef.current;
 
       const buffer = new Graphic({
         symbol: BUFFER_SYMBOL,
@@ -80,13 +79,22 @@ export default function Sketch({
           location?.type !== "search"
             ? location?.buffer || BUFFERS[l.geometry.type]
             : BUFFERS[l.geometry.type];
-        const g = geodesicBufferOperator.execute(l.geometry, b, { unit: "kilometers" });
-
-        if (!g) return;
-
-        buffer.geometry = g;
+        // Async/off-thread: buffering a long polyline densifies into thousands of
+        // vertices and blocks the main thread when done synchronously.
+        try {
+          const g = await geometryEngineAsync.geodesicBuffer(l.geometry, b, "kilometers");
+          buffer.geometry = Array.isArray(g) ? g[0] : g;
+        } catch {
+          // Worker error/cancel: keep the current buffer instead of clearing it.
+          return;
+        }
       }
 
+      // A newer draw started while we awaited — let it win, don't clobber.
+      if (token !== bufferDrawTokenRef.current) return;
+
+      // Clear the previous buffer only once the new one is ready, to avoid flicker.
+      bufferRef.current.removeAll();
       if (buffer.geometry) {
         bufferRef.current.add(buffer);
       }
@@ -124,7 +132,15 @@ export default function Sketch({
       if (onUpdateChange) onUpdateChange(e);
 
       if (e.state === "active") {
-        drawBuffer(e.graphics[0].clone());
+        // Reshape fires "active" on every pointer move; debounce so we don't queue a
+        // buffer computation per move when dragging a long polyline.
+        const graphic = e.graphics[0].clone();
+        if (bufferDrawTimeoutRef.current) {
+          clearTimeout(bufferDrawTimeoutRef.current);
+        }
+        bufferDrawTimeoutRef.current = setTimeout(() => {
+          drawBuffer(graphic);
+        }, 150);
       }
 
       if (e.state === "complete" && e.graphics.length) {
@@ -219,15 +235,20 @@ export default function Sketch({
 
   useEffect(() => {
     layerRef.current.removeAll();
-    bufferRef.current.removeAll();
 
     if (LOCATION) {
       const L = LOCATION.clone();
-      if (!L.geometry) return;
-      L.symbol = SYMBOLS[L.geometry.type];
-      layerRef.current.add(L);
+      if (L.geometry) {
+        L.symbol = SYMBOLS[L.geometry.type];
+        layerRef.current.add(L);
 
-      drawBuffer(L);
+        // drawBuffer owns the buffer layer: it clears the old graphic only once the
+        // new (async) buffer is ready, so the buffer never blinks out mid-recompute.
+        drawBuffer(L);
+      }
+    } else {
+      // Nothing to draw — clear any leftover buffer.
+      bufferRef.current.removeAll();
     }
 
     handleListeners();
@@ -244,6 +265,14 @@ export default function Sketch({
       sketchViewModelRef.current?.update(layerRef.current.graphics.toArray());
     }
   }, [layerRef, enabled]);
+
+  useEffect(() => {
+    return () => {
+      if (bufferDrawTimeoutRef.current) {
+        clearTimeout(bufferDrawTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <>

@@ -75,7 +75,7 @@ export default function MapContainer({
   }, 500);
 
   const handleCreate = useCallback(
-    (graphic: __esri.Graphic) => {
+    async (graphic: __esri.Graphic) => {
       setSketch({ enabled: undefined, type: undefined });
 
       if (!graphic.geometry) return;
@@ -85,7 +85,7 @@ export default function MapContainer({
         buffer: BUFFERS[graphic.geometry.type],
       });
 
-      const g = getGeometryWithBuffer(graphic.geometry, BUFFERS[graphic.geometry.type]);
+      const g = await getGeometryWithBuffer(graphic.geometry, BUFFERS[graphic.geometry.type]);
       if (g?.extent) {
         setTmpBbox(g.extent);
       }
@@ -113,7 +113,7 @@ export default function MapContainer({
   }, [setSketch, setSketchAction]);
 
   const handleUpdate = useCallback(
-    (graphic: __esri.Graphic) => {
+    async (graphic: __esri.Graphic) => {
       if (!location || !graphic.geometry) return;
       const b = location.type !== "search" ? location.buffer : BUFFERS[graphic.geometry.type];
       // Update the location state with the updated geometry
@@ -124,7 +124,7 @@ export default function MapContainer({
       });
 
       // Optionally update the bounding box based on the updated geometry
-      const g = getGeometryWithBuffer(graphic.geometry, b);
+      const g = await getGeometryWithBuffer(graphic.geometry, b);
       if (g?.extent) {
         setTmpBbox(g.extent);
       }

@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
 import * as geodesicAreaOperator from "@arcgis/core/geometry/operators/geodeticAreaOperator";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
@@ -9,11 +9,10 @@ import { useTranslations } from "next-intl";
 import { LuPen, LuTrash2 } from "react-icons/lu";
 
 import { formatNumber } from "@/lib/formats";
-import { useDebounce } from "@/lib/hooks";
 import {
   getGeometryWithBuffer,
   useLocation,
-  useLocationGeometry,
+  useLocationGeometryWithStatus,
   useLocationTitle,
 } from "@/lib/location";
 
@@ -23,6 +22,7 @@ import { BUFFERS } from "@/constants/map";
 
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { Spinner } from "@/components/ui/spinner";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 if (!geodesicAreaOperator.isLoaded()) {
@@ -39,34 +39,69 @@ export default function CreateReport({ children }: { children?: ReactNode }) {
   const [location, setLocation] = useSyncLocation();
   const TITLE = useLocationTitle(location);
   const LOCATION = useLocation(location);
-  const GEOMETRY = useLocationGeometry(location);
-
-  const onValueChangeDebounced = useDebounce(() => {
-    if (!location || (location.type !== "point" && location.type !== "polyline")) return;
-    const gWithBuffer = getGeometryWithBuffer(GEOMETRY, location.buffer);
-
-    if (gWithBuffer?.extent) {
-      setTmpBbox(gWithBuffer.extent);
-    }
-  }, 500);
+  const { geometry: GEOMETRY, isCalculating } = useLocationGeometryWithStatus(location);
 
   const AREA = useMemo(() => {
     if (!GEOMETRY) return 0;
     return geodesicAreaOperator.execute(GEOMETRY, { unit: "square-kilometers" });
   }, [GEOMETRY]);
 
-  const onValueChange = (value: number[]) => {
-    setLocation((prev) => {
-      if (prev) {
-        return {
-          ...prev,
-          buffer: value[0],
-        };
-      }
-      return prev;
-    });
+  // Local buffer value drives the slider/label live while dragging. We commit it to
+  // the (shared) location state once per drag instead of once per pointer-move tick.
+  const committedBuffer =
+    (location && location.type !== "search" ? location.buffer : undefined) ||
+    BUFFERS[LOCATION?.geometry?.type || "point"];
+  const [bufferValue, setBufferValue] = useState(committedBuffer);
 
-    onValueChangeDebounced();
+  // Latest dragged value, captured synchronously so the commit never reads a stale
+  // React-state value. Radix only fires onValueCommit when its (controlled) value
+  // differs from the slide-start value; on a fast drag the controlled value hasn't
+  // flushed by pointer-up, so onValueCommit gets skipped and the buffer never updates.
+  // A trailing debounce off onValueChange guarantees the final value commits.
+  const pendingBufferRef = useRef(committedBuffer);
+  const commitTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Sync local slider state when the committed buffer changes from outside (reset,
+  // upload, edit-location).
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setBufferValue(committedBuffer);
+    pendingBufferRef.current = committedBuffer;
+  }, [committedBuffer]);
+
+  useEffect(() => {
+    return () => {
+      if (commitTimeoutRef.current) clearTimeout(commitTimeoutRef.current);
+    };
+  }, []);
+
+  const commitBuffer = async () => {
+    const value = pendingBufferRef.current;
+    setLocation((prev) => (prev ? { ...prev, buffer: value } : prev));
+
+    const geometry = LOCATION?.geometry;
+    if (!location || !geometry || (location.type !== "point" && location.type !== "polyline")) {
+      return;
+    }
+
+    const gWithBuffer = await getGeometryWithBuffer(geometry, value);
+    if (gWithBuffer?.extent) {
+      setTmpBbox(gWithBuffer.extent);
+    }
+  };
+
+  const onValueChange = (value: number[]) => {
+    pendingBufferRef.current = value[0];
+    setBufferValue(value[0]);
+    if (commitTimeoutRef.current) clearTimeout(commitTimeoutRef.current);
+    commitTimeoutRef.current = setTimeout(commitBuffer, 120);
+  };
+
+  // Radix fires this on release for slow drags / track clicks. Commit immediately and
+  // cancel the pending debounce; reads pendingBufferRef (not the possibly-stale arg).
+  const onValueCommit = () => {
+    if (commitTimeoutRef.current) clearTimeout(commitTimeoutRef.current);
+    commitBuffer();
   };
 
   if (!location || !LOCATION) return null;
@@ -78,7 +113,8 @@ export default function CreateReport({ children }: { children?: ReactNode }) {
           <div className="text-muted-foreground text-sm leading-none font-semibold uppercase">
             {TITLE}
           </div>
-          <div className="text-foreground text-base leading-none font-bold">
+          <div className="text-foreground flex items-center gap-1 text-base leading-none font-bold">
+            {isCalculating && <Spinner className="text-muted-foreground size-3.5" />}
             {formatNumber(AREA, {
               maximumFractionDigits: 0,
             })}{" "}
@@ -164,8 +200,9 @@ export default function CreateReport({ children }: { children?: ReactNode }) {
             <div className="text-sm leading-none font-semibold text-blue-500">
               {t("grid-sidebar-report-location-buffer-size")}
             </div>
-            <div className="text-foreground text-xs leading-none">
-              {`${location.buffer || BUFFERS[LOCATION?.geometry?.type || "point"]} km`}
+            <div className="text-foreground flex items-center gap-1 text-xs leading-none">
+              {isCalculating && <Spinner className="text-muted-foreground size-3" />}
+              {`${bufferValue} km`}
             </div>
           </div>
           <div className="space-y-1 px-1">
@@ -173,9 +210,10 @@ export default function CreateReport({ children }: { children?: ReactNode }) {
               min={1}
               max={100}
               step={1}
-              value={[location.buffer || BUFFERS[LOCATION?.geometry?.type || "point"]]}
+              value={[bufferValue]}
               minStepsBetweenThumbs={1}
               onValueChange={onValueChange}
+              onValueCommit={onValueCommit}
             />
 
             <div className="text-2xs text-muted-foreground flex w-full justify-between font-bold">

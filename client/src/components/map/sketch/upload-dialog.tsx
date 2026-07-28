@@ -70,7 +70,7 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
             });
 
             if (esriGeometry) {
-              const bufferedGeometry = getGeometryWithBuffer(
+              const bufferedGeometry = await getGeometryWithBuffer(
                 esriGeometry,
                 BUFFERS[arcgisGeometry.type] || 0,
               );
