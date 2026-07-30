@@ -10,12 +10,12 @@ export function BufferSlider({
   isCalculating,
   onValueChange,
   onValueCommit,
-}: {
+}: Readonly<{
   bufferValue: number;
   isCalculating: boolean;
   onValueChange: (value: number[]) => void;
   onValueCommit: () => void;
-}) {
+}>) {
   const t = useTranslations();
 
   return (
