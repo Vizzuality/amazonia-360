@@ -30,6 +30,12 @@ vi.mock("next-intl", () => {
 vi.mock("@/i18n/routing", () => ({
   locales: ["en", "es", "pt"],
   defaultLocale: "en",
+  // The real module's public export. The content lookups read `routing.defaultLocale`
+  // to resolve translation fallbacks, so omitting it makes them throw.
+  routing: {
+    locales: ["en", "es", "pt"],
+    defaultLocale: "en",
+  },
 }));
 
 /****************
