@@ -4,12 +4,7 @@ import { useLocale } from "next-intl";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
 
-import {
-  Indicator,
-  ResourceFeature,
-  ResourceImagery,
-  ResourceImageryTile,
-} from "@/types/indicator";
+import { Indicator, ResourceFeature, ResourceImagery } from "@/types/indicator";
 
 import OpacityControl from "@/containers/widgets/map/legend/opacity-control";
 
@@ -34,13 +29,6 @@ export const LegendItem = ({ id, interactive }: { id: Indicator["id"]; interacti
       case "imagery": {
         const i = indicator as Omit<Indicator, "resource"> & {
           resource: ResourceImagery;
-        };
-        return <ImageryLegend {...i} />;
-      }
-
-      case "imagery-tile": {
-        const i = indicator as Omit<Indicator, "resource"> & {
-          resource: ResourceImageryTile;
         };
         return <ImageryLegend {...i} />;
       }

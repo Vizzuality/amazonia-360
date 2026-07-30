@@ -5,9 +5,7 @@ import { useCallback, useEffect } from "react";
 import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import ImageryLayer from "@arcgis/core/layers/ImageryLayer";
-import ImageryTileLayer from "@arcgis/core/layers/ImageryTileLayer";
 import VectorTileLayer from "@arcgis/core/layers/VectorTileLayer";
-import WebTileLayer from "@arcgis/core/layers/WebTileLayer";
 import PopupTemplate from "@arcgis/core/PopupTemplate";
 
 import { omit } from "@/lib/utils";
@@ -92,24 +90,6 @@ export default function Layer({
 
     if (layer.type === "vector-tile") {
       const l = new VectorTileLayer(omit(layer, ["type"]));
-      map.add(l, index);
-
-      map.reorder(l, index);
-
-      handleLoad(l);
-    }
-
-    if (layer.type === "web-tile") {
-      const l = new WebTileLayer(omit(layer, ["type"]));
-      map.add(l, index);
-
-      map.reorder(l, index);
-
-      handleLoad(l);
-    }
-
-    if (layer.type === "imagery-tile") {
-      const l = new ImageryTileLayer(omit(layer, ["type"]));
       map.add(l, index);
 
       map.reorder(l, index);

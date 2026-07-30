@@ -5,12 +5,7 @@ import { useLocale } from "next-intl";
 
 import { useGetIndicatorsLayerId } from "@/lib/indicators";
 
-import {
-  ResourceFeature,
-  ResourceImagery,
-  ResourceImageryTile,
-  ResourceWebTile,
-} from "@/types/indicator";
+import { ResourceFeature, ResourceImagery } from "@/types/indicator";
 import { Indicator } from "@/types/indicator";
 
 import { pdfIndicatorsMapStateAtom, useFormLocation } from "@/app/(frontend)/store";
@@ -23,7 +18,7 @@ import WidgetMap from "@/containers/widgets/map";
 
 export const MapIndicators = (
   props: Omit<Indicator, "resource"> & {
-    resource: ResourceFeature | ResourceWebTile | ResourceImageryTile | ResourceImagery;
+    resource: ResourceFeature | ResourceImagery;
     basemapId?: BasemapIds;
     isWebshot?: boolean;
     isPdf?: boolean;

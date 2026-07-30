@@ -8,12 +8,7 @@ import dynamic from "next/dynamic";
 
 import { useLocationGeometry } from "@/lib/location";
 
-import {
-  Indicator,
-  ResourceFeature,
-  ResourceImagery,
-  ResourceImageryTile,
-} from "@/types/indicator";
+import { Indicator, ResourceFeature, ResourceImagery } from "@/types/indicator";
 
 import { IndicatorMapView } from "@/app/(frontend)/parsers";
 import { useFormTopics, useSyncDefaultTopics } from "@/app/(frontend)/store";
@@ -183,12 +178,10 @@ export default function WidgetMap({
             </Controls>
           )}
 
-          {(indicator.resource.type === "feature" ||
-            indicator.resource.type === "imagery" ||
-            indicator.resource.type === "imagery-tile") && (
+          {(indicator.resource.type === "feature" || indicator.resource.type === "imagery") && (
             <WidgetLegend
               {...(indicator as Omit<Indicator, "resource"> & {
-                resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
+                resource: ResourceFeature | ResourceImagery;
               })}
               interactive={!isWebshot && !isPdf}
             />

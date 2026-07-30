@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Indicator,
-  ResourceFeature,
-  ResourceImagery,
-  ResourceImageryTile,
-} from "@/types/indicator";
+import { Indicator, ResourceFeature, ResourceImagery } from "@/types/indicator";
 
 import { LegendItem } from "@/containers/widgets/map/legend/item";
 
@@ -17,7 +12,7 @@ export interface WidgetLegendProps {
 
 export const WidgetLegend = (
   indicator: Omit<Indicator, "resource"> & {
-    resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
+    resource: ResourceFeature | ResourceImagery;
     interactive?: boolean;
   },
 ) => {

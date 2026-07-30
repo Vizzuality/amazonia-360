@@ -11,7 +11,6 @@ import { useFormLocation } from "@/app/(frontend)/store";
 import { useLoad } from "@/containers/indicators/load-provider";
 import { NumericIndicatorsFeature } from "@/containers/indicators/numeric/feature";
 import { NumericImageryIndicators } from "@/containers/indicators/numeric/imagery";
-import { NumericImageryTileIndicators } from "@/containers/indicators/numeric/imagery-tile";
 import { IndicatorProvider } from "@/containers/indicators/provider";
 
 export const NumericIndicators = ({ id, isPdf }: { id: Indicator["id"]; isPdf?: boolean }) => {
@@ -40,14 +39,6 @@ export const NumericIndicators = ({ id, isPdf }: { id: Indicator["id"]; isPdf?: 
       )}
       {indicator.resource.type === "imagery" && location && (
         <NumericImageryIndicators
-          {...indicator}
-          location={location}
-          resource={indicator.resource}
-          isPdf={isPdf}
-        />
-      )}
-      {indicator.resource.type === "imagery-tile" && location && (
-        <NumericImageryTileIndicators
           {...indicator}
           location={location}
           resource={indicator.resource}

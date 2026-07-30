@@ -10,7 +10,6 @@ import { useFormLocation } from "@/app/(frontend)/store";
 
 import { ChartIndicatorsFeature } from "@/containers/indicators/chart/feature";
 import { ChartImageryIndicators } from "@/containers/indicators/chart/imagery";
-import { ChartImageryTileIndicators } from "@/containers/indicators/chart/imagery-tile";
 import { useLoad } from "@/containers/indicators/load-provider";
 import { IndicatorProvider } from "@/containers/indicators/provider";
 
@@ -35,13 +34,6 @@ export const ChartIndicators = ({ id }: { id: Indicator["id"] }) => {
       )}
       {indicator.resource.type === "imagery" && location && (
         <ChartImageryIndicators {...indicator} resource={indicator.resource} location={location} />
-      )}
-      {indicator.resource.type === "imagery-tile" && location && (
-        <ChartImageryTileIndicators
-          {...indicator}
-          resource={indicator.resource}
-          location={location}
-        />
       )}
     </IndicatorProvider>
   );

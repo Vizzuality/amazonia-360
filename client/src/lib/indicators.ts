@@ -10,14 +10,7 @@ import axios from "axios";
 import { getSubtopics } from "@/lib/subtopics";
 import { getTopics } from "@/lib/topics";
 
-import {
-  Indicator,
-  ResourceFeature,
-  ResourceImagery,
-  ResourceImageryTile,
-  ResourceWebTile,
-  VisualizationTypes,
-} from "@/types/indicator";
+import { Indicator, ResourceFeature, ResourceImagery, VisualizationTypes } from "@/types/indicator";
 import { Subtopic, Topic } from "@/types/topic";
 
 import { LayerProps } from "@/components/map/layers/types";
@@ -200,25 +193,6 @@ export const useGetIndicatorsLayerId = (
   return useMemo(() => {
     if (!resource || resource.type === "h3" || resource.type === "component") return null;
 
-    if (resource.type === "web-tile") {
-      return {
-        id: `${id}`,
-        urlTemplate: resource.url,
-        type: "web-tile",
-        ...settings,
-      } satisfies LayerProps;
-    }
-
-    if (resource.type === "imagery-tile") {
-      return {
-        id: `${id}`,
-        url: resource.url,
-        type: "imagery-tile",
-        rasterFunction: resource.rasterFunction,
-        ...settings,
-      } satisfies LayerProps;
-    }
-
     if (resource.type === "imagery") {
       return {
         id: `${id}`,
@@ -250,7 +224,7 @@ export const useGetIndicatorsLayerId = (
  ************************************************************
  */
 export type ResourceIdParams = {
-  resource: ResourceFeature | ResourceImageryTile | ResourceWebTile | ResourceImagery;
+  resource: ResourceFeature | ResourceImagery;
 };
 
 export type ResourceIdQueryOptions<TData, TError> = UseQueryOptions<
@@ -353,7 +327,7 @@ export const useResourceFeatureLayerId = <
 };
 
 export type ResourceImageryLegendIdParams = {
-  resource: ResourceImagery | ResourceImageryTile;
+  resource: ResourceImagery;
 };
 
 export type ResourceImageryLegendIdQueryOptions<TData, TError> = UseQueryOptions<
@@ -422,13 +396,19 @@ export const useResourceImageryLegendId = <
  ************************************************************
  * QUERIES
  * - useQueryFeatureId
- * - useQueryImageryTileId
+ * - useQueryImageryId
  ************************************************************
  ************************************************************
  */
 export type QueryFeatureIdParams = {
   id: Indicator["id"];
-  type: Exclude<VisualizationTypes, "ai" | "custom">;
+  /**
+   * Only the visualization types a feature resource actually carries a query
+   * for. "map" is excluded because there is no query_map — the lookup below
+   * indexes `query_${type}`, so allowing it would silently resolve to
+   * undefined and return no data.
+   */
+  type: Exclude<VisualizationTypes, "ai" | "custom" | "map">;
   resource: ResourceFeature;
   geometry: __esri.Polygon | null;
 };
@@ -621,133 +601,6 @@ export const useQueryImageryId = <
   options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const { queryKey, queryFn } = getQueryImageryIdOptions(params, options);
-
-  return useQuery({
-    queryKey,
-    queryFn,
-    ...options,
-  });
-};
-
-export type QueryImageryTileIdParams = {
-  id: Indicator["id"];
-  type: VisualizationTypes;
-  resource: ResourceImageryTile;
-  geometry: __esri.Polygon | null;
-};
-
-export const getQueryImageryTileId = async ({
-  resource,
-  geometry,
-}: QueryImageryTileIdParams): Promise<{
-  RAT: {
-    features: {
-      attributes: {
-        Value: number;
-        Class: string;
-        Red: number;
-        Green: number;
-        Blue: number;
-        Alpha: number;
-      };
-    }[];
-  };
-  histograms: __esri.RasterHistogram[];
-  statistics: __esri.RasterBandStatistics[];
-} | null> => {
-  const ImageryTileLayer = (await import("@arcgis/core/layers/ImageryTileLayer")).default;
-  const f = new ImageryTileLayer({
-    url: resource.url,
-  });
-
-  try {
-    const RAT = await axios
-      .get<{
-        features: {
-          attributes: {
-            Value: number;
-            Class: string;
-            Red: number;
-            Green: number;
-            Blue: number;
-            Alpha: number;
-          };
-        }[];
-      }>(`${resource.url}/rasterattributetable`, {
-        params: {
-          f: "json",
-        },
-      })
-      .then((response) => response.data);
-
-    // If we only use Dynamic Layers this is the way to get more statistics
-
-    // const statistics: {
-    //   histograms: __esri.RasterHistogram[];
-    //   statistics: __esri.RasterBandStatistics[];
-    // } = await axios
-    //   .request({
-    //     url: `${resource.url}/computeStatisticsHistograms`,
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/x-www-form-urlencoded",
-    //     },
-    //     data: {
-    //       geometryType: "esriGeometryPolygon",
-    //       geometry: JSON.stringify(geometry?.toJSON()),
-    //       processAsMultidimensional: JSON.stringify(true),
-    //       token,
-    //       f: "pjson",
-    //     },
-    //   })
-    //   .then((response) => response.data);
-    const statistics: {
-      histograms: __esri.RasterHistogram[];
-      statistics: __esri.RasterBandStatistics[];
-    } = await f.computeStatisticsHistograms({
-      ...(!!geometry && { geometry }),
-    });
-
-    return {
-      RAT,
-      ...statistics,
-    };
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
-
-export const getQueryImageryTileIdKey = ({
-  id,
-  type,
-  resource,
-  geometry,
-}: QueryImageryTileIdParams) => {
-  return ["query-imagery-tile", id, type, resource.url, geometry?.toJSON()];
-};
-
-export const getQueryImageryTileIdOptions = <
-  TData = Awaited<ReturnType<typeof getQueryImageryTileId>>,
-  TError = unknown,
->(
-  params: QueryImageryTileIdParams,
-  options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
-) => {
-  const queryKey = getQueryImageryTileIdKey(params);
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getQueryImageryTileId>>> = () =>
-    getQueryImageryTileId(params);
-  return { queryKey, queryFn, ...options } as IndicatorsQueryOptions<TData, TError>;
-};
-
-export const useQueryImageryTileId = <
-  TData = Awaited<ReturnType<typeof getQueryImageryTileId>>,
-  TError = unknown,
->(
-  params: QueryImageryTileIdParams,
-  options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
-) => {
-  const { queryKey, queryFn } = getQueryImageryTileIdOptions(params, options);
 
   return useQuery({
     queryKey,

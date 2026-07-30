@@ -10,12 +10,7 @@ import { useGetIndicatorsId } from "@/lib/indicators";
 import { useReport } from "@/lib/report";
 import { useGetOverviewTopics } from "@/lib/topics";
 
-import {
-  Indicator,
-  ResourceFeature,
-  ResourceWebTile,
-  ResourceImageryTile,
-} from "@/types/indicator";
+import { Indicator, ResourceFeature, ResourceImagery } from "@/types/indicator";
 
 import { MapIndicators } from "../../../indicators/map";
 
@@ -64,7 +59,7 @@ export default function PfdGeographicContext() {
         {map && mapIndicator && (
           <MapIndicators
             {...(mapIndicator as Omit<Indicator, "resource"> & {
-              resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
+              resource: ResourceFeature | ResourceImagery;
             })}
             basemapId={map.basemapId}
             isWebshot={true}

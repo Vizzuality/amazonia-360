@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { exportToPng } from "@/lib/webshot";
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
-import { ResourceFeature, ResourceImageryTile, ResourceWebTile } from "@/types/indicator";
+import { ResourceFeature, ResourceImagery } from "@/types/indicator";
 
 import { reportEditionModeAtom } from "@/app/(frontend)/store";
 
@@ -133,7 +133,7 @@ function ReportResultsIndicatorContent({
           {type === "map" && !!indicator.resource.type && indicator.resource.type !== "h3" && (
             <MapIndicators
               {...(indicator as Omit<Indicator, "resource"> & {
-                resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
+                resource: ResourceFeature | ResourceImagery;
               })}
               basemapId={basemapId}
               isWebshot={isWebshot}

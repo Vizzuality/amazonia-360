@@ -72,10 +72,6 @@ vi.mock("@arcgis/core/layers/FeatureLayer", () => ({
   },
 }));
 
-vi.mock("@arcgis/core/layers/WebTileLayer", () => ({
-  default: class MockWebTileLayer {},
-}));
-
 vi.mock("@arcgis/core/layers/GraphicsLayer", () => {
   // Define a mock Graphic type for better type safety if possible, or use unknown
   type MockGraphic = Record<string, unknown>; // Or more specific if known
@@ -116,10 +112,6 @@ vi.mock("@arcgis/core/layers/GeoJSONLayer", () => ({
 
 vi.mock("@arcgis/core/layers/MapImageLayer", () => ({
   default: class MockMapImageLayer {},
-}));
-
-vi.mock("@arcgis/core/layers/ImageryTileLayer", () => ({
-  default: class MockImageryTileLayer {},
 }));
 
 // Layer support
