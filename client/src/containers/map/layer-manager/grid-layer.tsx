@@ -536,7 +536,7 @@ export default function GridLayer() {
     setAlert(info);
   }, []);
 
-  const handleConfirmAlert = useCallback(() => {
+  const handleConfirmAlert = useCallback(async () => {
     if (!alert?.coordinate) return;
 
     const cell = latLngToCell(alert.coordinate[1], alert.coordinate[0], 6);
@@ -557,7 +557,7 @@ export default function GridLayer() {
       buffer: BUFFERS.point,
     });
 
-    const gWithBuffer = getGeometryWithBuffer(g, BUFFERS.point);
+    const gWithBuffer = await getGeometryWithBuffer(g, BUFFERS.point);
     if (gWithBuffer?.extent) {
       setTmpBbox(gWithBuffer.extent);
     }

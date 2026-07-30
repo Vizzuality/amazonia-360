@@ -90,7 +90,7 @@ export const GridTableItem = (
     });
   }, [gridDatasets, queryMeta.data, rest]);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     const latLng = cellToLatLng(cell);
 
     const p = new Point({ x: latLng[1], y: latLng[0], spatialReference: { wkid: 4326 } });
@@ -100,7 +100,7 @@ export const GridTableItem = (
 
     setLocation({ type: "point", geometry: g.toJSON(), buffer: BUFFERS.point });
 
-    const gWithBuffer = getGeometryWithBuffer(g, BUFFERS.point);
+    const gWithBuffer = await getGeometryWithBuffer(g, BUFFERS.point);
     if (gWithBuffer?.extent) {
       setTmpBbox(gWithBuffer.extent);
     }

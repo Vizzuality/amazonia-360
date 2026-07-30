@@ -56,7 +56,7 @@ export default function SearchC() {
           text: value.label,
         },
         {
-          onSuccess: (data) => {
+          onSuccess: async (data) => {
             setLocation({
               type: "search",
               key: value.key,
@@ -75,7 +75,7 @@ export default function SearchC() {
 
               if (!geo) return;
 
-              const g = getGeometryWithBuffer(geo, BUFFERS[data.type]);
+              const g = await getGeometryWithBuffer(geo, BUFFERS[data.type]);
 
               if (g?.extent) {
                 setTmpBbox(g.extent);

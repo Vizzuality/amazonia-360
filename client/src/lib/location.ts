@@ -1,6 +1,6 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-import * as geodesicBufferOperator from "@arcgis/core/geometry/operators/geodesicBufferOperator";
+import * as geometryEngineAsync from "@arcgis/core/geometry/geometryEngineAsync";
 import * as projectOperator from "@arcgis/core/geometry/operators/projectOperator";
 import Point from "@arcgis/core/geometry/Point";
 import Polygon from "@arcgis/core/geometry/Polygon";
@@ -19,10 +19,6 @@ import { BUFFERS } from "@/constants/map";
 
 if (!projectOperator.isLoaded()) {
   await projectOperator.load();
-}
-
-if (!geodesicBufferOperator.isLoaded()) {
-  await geodesicBufferOperator.load();
 }
 
 export type AdministrativeBoundary = {
@@ -114,35 +110,114 @@ export const useLocationTitle = (location?: Location | null) => {
   }, [location, searchData, t]);
 };
 
-export const useLocationGeometry = (
+const srKeyOf = (
+  outSpatialReference?: __esri.SpatialReference | __esri.SpatialReferenceProperties,
+): number | string | null =>
+  (outSpatialReference as __esri.SpatialReferenceProperties | undefined)?.wkid ??
+  (outSpatialReference as __esri.SpatialReferenceProperties | undefined)?.wkt ??
+  null;
+
+// Buffering + projecting runs ArcGIS's geodesicBuffer (now async/off-thread).
+// `useLocationGeometry` is consumed by ~29 components, so without a shared cache the
+// same buffer is recomputed once per component on every location change. Cache the
+// in-flight *promise* by (geometry, buffer, target spatial reference) so concurrent
+// consumers share a single computation and later renders read the resolved value.
+const MAX_GEOMETRY_CACHE_ENTRIES = 50;
+const bufferedGeometryCache = new Map<string, Promise<__esri.Polygon | null>>();
+
+const getBufferedProjectedGeometry = (
+  geometry: __esri.GeometryUnion,
+  buffer: number,
+  outSpatialReference?: __esri.SpatialReference | __esri.SpatialReferenceProperties,
+): Promise<__esri.Polygon | null> => {
+  const geometryJSON = geometry.toJSON();
+  const srKey = srKeyOf(outSpatialReference) ?? geometry.spatialReference?.wkid ?? 102100;
+  const cacheKey = JSON.stringify({ g: geometryJSON, buffer, srKey });
+
+  const cached = bufferedGeometryCache.get(cacheKey);
+  if (cached) return cached;
+
+  const promise = (async () => {
+    const buffered = await getGeometryWithBuffer(geometry, buffer);
+    if (!buffered) return null;
+
+    const SR = new SpatialReference(
+      (outSpatialReference as __esri.SpatialReferenceProperties) ||
+        geometry.spatialReference?.toJSON() || { wkid: 102100 },
+    );
+    const projectedGeom = projectOperator.execute(buffered, SR);
+    return (Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom) as __esri.Polygon;
+  })().catch((error) => {
+    // Don't cache failures, so a transient worker error can be retried.
+    bufferedGeometryCache.delete(cacheKey);
+    throw error;
+  });
+
+  if (bufferedGeometryCache.size >= MAX_GEOMETRY_CACHE_ENTRIES) {
+    const oldest = bufferedGeometryCache.keys().next().value;
+    if (oldest !== undefined) bufferedGeometryCache.delete(oldest);
+  }
+  bufferedGeometryCache.set(cacheKey, promise);
+
+  return promise;
+};
+
+// Same as `useLocationGeometry` but also reports whether the buffer is still being
+// computed off-thread, so callers can show a loader. `useLocationGeometry` delegates
+// here and drops the flag, keeping its many consumers unchanged.
+export const useLocationGeometryWithStatus = (
   location?: Location | null,
-  outSpatialReference?: __esri.SpatialReferenceProperties,
+  outSpatialReference?: __esri.SpatialReference | __esri.SpatialReferenceProperties,
 ) => {
   const LOCATION = useLocation(location);
 
-  const GEOMETRY = useMemo(() => {
-    if (LOCATION?.geometry) {
-      const b = location?.type !== "search" ? location?.buffer : BUFFERS[LOCATION.geometry.type];
-      const g = getGeometryWithBuffer(LOCATION.geometry, b || BUFFERS[LOCATION.geometry.type]);
+  // Most call sites pass an inline `{ wkid: 4326 }` literal, which is a new object
+  // every render. Depending on its identity would re-run the buffer on every render,
+  // so key the effect on its wkid/wkt instead of object identity.
+  const outSpatialReferenceKey = srKeyOf(outSpatialReference);
 
-      if (!g) return null;
+  // The buffer is computed asynchronously (off the main thread), so the geometry
+  // resolves after render. Consumers that gate queries on `!!GEOMETRY` simply wait.
+  const [GEOMETRY, setGEOMETRY] = useState<__esri.Polygon | null>(null);
+  const [isCalculating, setIsCalculating] = useState(false);
 
-      const SR = new SpatialReference(
-        outSpatialReference || LOCATION.geometry.spatialReference.toJSON() || { wkid: 102100 },
-      );
-
-      const projectedGeom = projectOperator.execute(g, SR);
-
-      const geom = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
-
-      return geom as __esri.Polygon;
+  useEffect(() => {
+    const geometry = LOCATION?.geometry;
+    if (!geometry) {
+      setGEOMETRY(null);
+      setIsCalculating(false);
+      return;
     }
 
-    return null;
-  }, [LOCATION, location, outSpatialReference]);
+    let cancelled = false;
+    const b = location?.type !== "search" ? location?.buffer : BUFFERS[geometry.type];
+    const buffer = b || BUFFERS[geometry.type];
 
-  return GEOMETRY;
+    setIsCalculating(true);
+    getBufferedProjectedGeometry(geometry, buffer, outSpatialReference)
+      .then((geometry) => {
+        if (!cancelled) setGEOMETRY(geometry);
+      })
+      .catch(() => {
+        if (!cancelled) setGEOMETRY(null);
+      })
+      .finally(() => {
+        if (!cancelled) setIsCalculating(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [LOCATION, location, outSpatialReferenceKey]);
+
+  return { geometry: GEOMETRY, isCalculating };
 };
+
+export const useLocationGeometry = (
+  location?: Location | null,
+  outSpatialReference?: __esri.SpatialReference | __esri.SpatialReferenceProperties,
+) => useLocationGeometryWithStatus(location, outSpatialReference).geometry;
 
 export const useLocationGadm = (location?: Location | null) => {
   const GEOMETRY = useLocationGeometry(location);
@@ -192,24 +267,18 @@ export const getGeometryByType = (location: Location) => {
   return null;
 };
 
-export const getGeometryWithBuffer = (
+// Runs ArcGIS's *asynchronous* geodesicBuffer, which offloads the work to a worker
+// instead of blocking the main thread. Buffering a long (~887 km) polyline densifies
+// the offset curve into thousands of vertices and took ~700 ms synchronously, freezing
+// the UI on upload. Keep this async so callers await it off the render path.
+export const getGeometryWithBuffer = async (
   geometry: __esri.GeometryUnion | null,
   buffer: number,
-): __esri.Polygon | null => {
+): Promise<__esri.Polygon | null> => {
   if (!geometry) return null;
 
-  if (geometry.type === "point") {
-    const g = geodesicBufferOperator.execute(geometry, buffer, { unit: "kilometers" });
-
-    if (!g) return null;
-
-    return Array.isArray(g) ? g[0] : g;
-  }
-
-  if (geometry.type === "polyline") {
-    const g = geodesicBufferOperator.execute(geometry, buffer, { unit: "kilometers" });
-
-    if (!g) return null;
+  if (geometry.type === "point" || geometry.type === "polyline") {
+    const g = await geometryEngineAsync.geodesicBuffer(geometry, buffer, "kilometers");
 
     return Array.isArray(g) ? g[0] : g;
   }

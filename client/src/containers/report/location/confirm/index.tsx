@@ -1,70 +1,35 @@
 "use client";
 
-import { useMemo } from "react";
-
 import ReactMarkdown from "react-markdown";
 
-import * as geodesicAreaOperator from "@arcgis/core/geometry/operators/geodeticAreaOperator";
 import { useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
 
 import { formatNumber } from "@/lib/formats";
-import { useDebounce } from "@/lib/hooks";
-import {
-  getGeometryWithBuffer,
-  useLocation,
-  useLocationGeometry,
-  useLocationTitle,
-} from "@/lib/location";
 
-import { sketchActionAtom, tmpBboxAtom, useSyncLocation } from "@/app/(frontend)/store";
+import { sketchActionAtom } from "@/app/(frontend)/store";
 
-import { BUFFERS } from "@/constants/map";
+import { BufferSlider } from "@/containers/report/location/buffer/slider";
+import { useLocationBuffer } from "@/containers/report/location/buffer/use-location-buffer";
 
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-
-if (!geodesicAreaOperator.isLoaded()) {
-  await geodesicAreaOperator.load();
-}
+import { Spinner } from "@/components/ui/spinner";
 
 export default function Confirm({ onConfirm }: { onConfirm: () => void }) {
   const t = useTranslations();
   const setSketchAction = useSetAtom(sketchActionAtom);
-  const setTmpBbox = useSetAtom(tmpBboxAtom);
 
-  const [location, setLocation] = useSyncLocation();
-  const TITLE = useLocationTitle(location);
-  const LOCATION = useLocation(location);
-  const GEOMETRY = useLocationGeometry(location);
-
-  const onValueChangeDebounced = useDebounce(() => {
-    if (!location || (location.type !== "point" && location.type !== "polyline")) return;
-    const gWithBuffer = getGeometryWithBuffer(GEOMETRY, location.buffer);
-
-    if (gWithBuffer?.extent) {
-      setTmpBbox(gWithBuffer.extent);
-    }
-  }, 500);
-
-  const AREA = useMemo(() => {
-    if (!GEOMETRY) return 0;
-    return geodesicAreaOperator.execute(GEOMETRY, { unit: "square-kilometers" });
-  }, [GEOMETRY]);
-
-  const onValueChange = (value: number[]) => {
-    setLocation((prev) => {
-      if (prev) {
-        return {
-          ...prev,
-          buffer: value[0],
-        };
-      }
-      return prev;
-    });
-
-    onValueChangeDebounced();
-  };
+  const {
+    location,
+    setLocation,
+    LOCATION,
+    TITLE,
+    AREA,
+    isCalculating,
+    bufferValue,
+    onValueChange,
+    onValueCommit,
+  } = useLocationBuffer();
 
   if (!location || !LOCATION) return null;
 
@@ -75,7 +40,8 @@ export default function Confirm({ onConfirm }: { onConfirm: () => void }) {
           <div className="text-muted-foreground text-sm leading-none font-semibold uppercase">
             {TITLE}
           </div>
-          <div className="text-foreground text-xs leading-none font-bold">
+          <div className="text-foreground flex items-center gap-1 text-xs leading-none font-bold">
+            {isCalculating && <Spinner className="text-muted-foreground size-3" />}
             {formatNumber(AREA, {
               maximumFractionDigits: 0,
             })}{" "}
@@ -107,31 +73,12 @@ export default function Confirm({ onConfirm }: { onConfirm: () => void }) {
       </section>
 
       {location.type !== "search" && LOCATION?.geometry?.type !== "polygon" && (
-        <section className="space-y-2">
-          <div className="flex items-end justify-between">
-            <div className="text-sm leading-none font-semibold text-blue-500">
-              {t("grid-sidebar-report-location-buffer-size")}
-            </div>
-            <div className="text-foreground text-xs leading-none">
-              {`${location.buffer || BUFFERS[LOCATION?.geometry?.type || "point"]} km`}
-            </div>
-          </div>
-          <div className="space-y-1 px-1">
-            <Slider
-              min={1}
-              max={100}
-              step={1}
-              value={[location.buffer || BUFFERS[LOCATION?.geometry?.type || "point"]]}
-              minStepsBetweenThumbs={1}
-              onValueChange={onValueChange}
-            />
-
-            <div className="text-2xs text-muted-foreground flex w-full justify-between font-bold">
-              <span>1 km</span>
-              <span>100 km</span>
-            </div>
-          </div>
-        </section>
+        <BufferSlider
+          bufferValue={bufferValue}
+          isCalculating={isCalculating}
+          onValueChange={onValueChange}
+          onValueCommit={onValueCommit}
+        />
       )}
     </div>
   );

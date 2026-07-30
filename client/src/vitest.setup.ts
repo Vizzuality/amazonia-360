@@ -198,6 +198,26 @@ vi.mock("@arcgis/core/geometry/projection", () => ({
   project: vi.fn(),
 }));
 
+vi.mock("@arcgis/core/geometry/operators/projectOperator", () => ({
+  execute: vi.fn(),
+  load: vi.fn(),
+  isLoaded: vi.fn(),
+}));
+
+vi.mock("@arcgis/core/geometry/geometryEngineAsync", () => ({
+  geodesicBuffer: vi.fn(),
+  geodesicArea: vi.fn(),
+  intersects: vi.fn(),
+}));
+
+vi.mock("@arcgis/core/geometry/SpatialReference", () => ({
+  default: class MockSpatialReference {
+    constructor(properties?: Record<string, unknown>) {
+      Object.assign(this, properties || {});
+    }
+  },
+}));
+
 // Renderers
 vi.mock("@arcgis/core/renderers/SimpleRenderer", () => ({
   default: class MockSimpleRenderer {},
