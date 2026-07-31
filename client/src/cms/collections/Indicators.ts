@@ -71,8 +71,11 @@ export const Indicators: CollectionConfig = {
       name: "visualizationTypes",
       type: "select",
       hasMany: true,
-      required: true,
       options: VISUALIZATION_TYPE_OPTIONS,
+      admin: {
+        description:
+          "How this Indicator can be rendered. Left empty for H3 grid columns, which are not shown as tiles.",
+      },
     },
     DataSourceField,
   ],

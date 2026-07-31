@@ -18,7 +18,9 @@
     "test:e2e:report": "playwright show-report e2e/playwright-report",
     "payload": "payload",
     "ci": "payload migrate && pnpm build",
-    "transform-content": "tsx scripts/transform-content.ts"
+    "transform-content": "tsx scripts/transform-content.ts",
+    "load-content": "tsx scripts/load-content.ts",
+    "verify-content": "tsx scripts/verify-content.ts"
   },
   "dependencies": {
     "@arcgis/core": "4.34.8",
@@ -233,6 +235,9 @@
       "@mdxeditor/editor>@lexical/selection": "0.41.0",
       "@mdxeditor/editor>@lexical/plain-text": "0.41.0",
       "axios>follow-redirects": "1.16.0"
+    },
+    "patchedDependencies": {
+      "@payloadcms/drizzle@3.79.1": "patches/@payloadcms__drizzle@3.79.1.patch"
     }
   }
 }

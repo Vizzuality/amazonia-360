@@ -45,6 +45,11 @@ overrides:
   '@mdxeditor/editor>@lexical/plain-text': 0.41.0
   axios>follow-redirects: 1.16.0
 
+patchedDependencies:
+  '@payloadcms/drizzle@3.79.1':
+    hash: 3a34c8dc7668cdc585e1610f73af5a3c5d2569b0412813bd77abf212d0dcc38c
+    path: patches/@payloadcms__drizzle@3.79.1.patch
+
 importers:
 
   .:
@@ -12805,7 +12810,7 @@ snapshots:
 
   '@payloadcms/db-postgres@3.79.1(payload@3.79.1(graphql@16.11.0)(typescript@5.9.3))':
     dependencies:
-      '@payloadcms/drizzle': 3.79.1(@types/pg@8.10.2)(payload@3.79.1(graphql@16.11.0)(typescript@5.9.3))(pg@8.16.3)
+      '@payloadcms/drizzle': 3.79.1(patch_hash=3a34c8dc7668cdc585e1610f73af5a3c5d2569b0412813bd77abf212d0dcc38c)(@types/pg@8.10.2)(payload@3.79.1(graphql@16.11.0)(typescript@5.9.3))(pg@8.16.3)
       '@types/pg': 8.10.2
       console-table-printer: 2.12.1
       drizzle-kit: 0.31.7
@@ -12846,7 +12851,7 @@ snapshots:
       - sqlite3
       - supports-color
 
-  '@payloadcms/drizzle@3.79.1(@types/pg@8.10.2)(payload@3.79.1(graphql@16.11.0)(typescript@5.9.3))(pg@8.16.3)':
+  '@payloadcms/drizzle@3.79.1(patch_hash=3a34c8dc7668cdc585e1610f73af5a3c5d2569b0412813bd77abf212d0dcc38c)(@types/pg@8.10.2)(payload@3.79.1(graphql@16.11.0)(typescript@5.9.3))(pg@8.16.3)':
     dependencies:
       console-table-printer: 2.12.1
       dequal: 2.0.3

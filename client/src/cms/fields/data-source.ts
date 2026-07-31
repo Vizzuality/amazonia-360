@@ -1,5 +1,7 @@
 import type { Field } from "payload";
 
+import { requiredInDefaultLocale } from "@/cms/fields/validation";
+
 /**
  * An Indicator's data source, modelled as a set of mutually exclusive kinds.
  *
@@ -10,12 +12,18 @@ import type { Field } from "payload";
  * combination impossible to express rather than merely hidden.
  */
 
-/** Labels shown on the map popup and in the legend are translatable. */
+/**
+ * Labels shown on the map popup and in the legend are translatable.
+ *
+ * Required in English only. These are seeded with English and translated later,
+ * so a plain `required` would reject every save made while another locale is
+ * active — including saves that have nothing to do with the label.
+ */
 const translatableLabel: Field = {
   name: "label",
   type: "text",
   localized: true,
-  required: true,
+  validate: requiredInDefaultLocale("Label"),
 };
 
 const popupField: Field = {
@@ -93,7 +101,13 @@ export const DataSourceField: Field = {
       slug: "feature",
       labels: { singular: "Feature layer", plural: "Feature layers" },
       fields: [
-        { name: "name", type: "text", required: true },
+        {
+          name: "name",
+          type: "text",
+          admin: {
+            description: "Optional label for the service. 14 Indicators have none.",
+          },
+        },
         { name: "url", type: "text", required: true },
         {
           name: "layerId",
@@ -109,7 +123,13 @@ export const DataSourceField: Field = {
       slug: "imagery",
       labels: { singular: "Imagery layer", plural: "Imagery layers" },
       fields: [
-        { name: "name", type: "text", required: true },
+        {
+          name: "name",
+          type: "text",
+          admin: {
+            description: "Optional label for the service. 14 Indicators have none.",
+          },
+        },
         { name: "url", type: "text", required: true },
         { name: "rasterFunction", type: "text" },
         legendField,
@@ -119,7 +139,13 @@ export const DataSourceField: Field = {
       slug: "h3",
       labels: { singular: "H3 grid column", plural: "H3 grid columns" },
       fields: [
-        { name: "name", type: "text", required: true },
+        {
+          name: "name",
+          type: "text",
+          admin: {
+            description: "Optional label for the service. 14 Indicators have none.",
+          },
+        },
         {
           name: "column",
           type: "text",

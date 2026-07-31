@@ -1,3 +1,4 @@
+import { isVisualizationType } from "./types";
 import type { LayoutEntry } from "./types";
 
 /**
@@ -52,10 +53,18 @@ export const toLayout = ({
       return [];
     }
 
+    if (!isVisualizationType(entry.type)) {
+      // The CMS select field only accepts the known values, so an unknown one
+      // would fail on load. Better to stop here than write a broken record.
+      throw new Error(
+        `${owner} layout entry for Indicator ${indicatorId} has an unknown visualization type: ${JSON.stringify(entry.type)}`,
+      );
+    }
+
     return [
       {
         indicatorId,
-        type: typeof entry.type === "string" ? entry.type : "",
+        type: entry.type,
         x: num(entry.x),
         y: num(entry.y),
         w: num(entry.w),

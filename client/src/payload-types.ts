@@ -440,13 +440,19 @@ export interface Indicator {
   } | null;
   descriptionShort?: string | null;
   unit?: string | null;
-  visualizationTypes: ('map' | 'table' | 'chart' | 'numeric' | 'ai' | 'custom')[];
+  /**
+   * How this Indicator can be rendered. Left empty for H3 grid columns, which are not shown as tiles.
+   */
+  visualizationTypes?: ('map' | 'table' | 'chart' | 'numeric' | 'ai' | 'custom')[] | null;
   /**
    * Exactly one data source. Pick the kind that matches the service.
    */
   dataSource: (
     | {
-        name: string;
+        /**
+         * Optional label for the service. 14 Indicators have none.
+         */
+        name?: string | null;
         url: string;
         /**
          * Layer index appended to the service URL.
@@ -504,7 +510,7 @@ export interface Indicator {
           fields?:
             | {
                 fieldName: string;
-                label: string;
+                label?: string | null;
                 id?: string | null;
               }[]
             | null;
@@ -514,7 +520,10 @@ export interface Indicator {
         blockType: 'feature';
       }
     | {
-        name: string;
+        /**
+         * Optional label for the service. 14 Indicators have none.
+         */
+        name?: string | null;
         url: string;
         rasterFunction?: string | null;
         legend?: {
@@ -522,7 +531,7 @@ export interface Indicator {
           items?:
             | {
                 color: string;
-                label: string;
+                label?: string | null;
                 id?: string | null;
               }[]
             | null;
@@ -532,7 +541,10 @@ export interface Indicator {
         blockType: 'imagery';
       }
     | {
-        name: string;
+        /**
+         * Optional label for the service. 14 Indicators have none.
+         */
+        name?: string | null;
         /**
          * Column in the H3 grid tiles.
          */

@@ -1,0 +1,31 @@
+diff --git a/dist/updateOne.js b/dist/updateOne.js
+index c6d6cbf2fea7c42a01942a025989d1f38590a5de..1ab3188fc484c7998cd1cc3995656873d48e8af7 100644
+--- a/dist/updateOne.js
++++ b/dist/updateOne.js
+@@ -10,7 +10,7 @@ export const updateOne = async function updateOne({ id, collection: collectionSl
+     const tableName = this.tableNameMap.get(toSnakeCase(collection.slug));
+     let idToUpdate = id;
+     const db = await getTransaction(this, req);
+-    if (!idToUpdate) {
++    if (idToUpdate === undefined || idToUpdate === null) {
+         const { joins, selectFields, where } = buildQuery({
+             adapter: this,
+             fields: collection.flattenedFields,
+@@ -28,7 +28,7 @@ export const updateOne = async function updateOne({ id, collection: collectionSl
+             tableName,
+             where
+         });
+-        if (selectDistinctResult?.[0]?.id) {
++        if (selectDistinctResult?.[0]?.id !== undefined && selectDistinctResult?.[0]?.id !== null) {
+             idToUpdate = selectDistinctResult?.[0]?.id;
+         // If id wasn't passed but `where` without any joins, retrieve it with findFirst
+         } else if (whereArg && !joins.length) {
+@@ -39,7 +39,7 @@ export const updateOne = async function updateOne({ id, collection: collectionSl
+             idToUpdate = docsToUpdate?.[0]?.id;
+         }
+     }
+-    if (!idToUpdate && !options.upsert) {
++    if ((idToUpdate === undefined || idToUpdate === null) && !options.upsert) {
+         // TODO: In 4.0, if returning === false, we should differentiate between:
+         // - No document found to update
+         // - Document found, but returning === false

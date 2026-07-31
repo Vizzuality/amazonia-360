@@ -8,6 +8,7 @@ import type { DroppedLayoutEntry } from "./layout";
 import { localizeConverted, localizeText, readLocaleTexts } from "./localize";
 import { markdownToRichText } from "./markdown";
 import type { RichText } from "./markdown";
+import { isVisualizationType } from "./types";
 import type {
   ContentDataset,
   IndicatorRecord,
@@ -130,9 +131,15 @@ export const buildDataset = ({
       ...(description ? { description } : {}),
       ...(descriptionShort ? { descriptionShort } : {}),
       ...(unit ? { unit } : {}),
-      visualizationTypes: Array.isArray(indicator.visualization_types)
-        ? (indicator.visualization_types as string[])
-        : [],
+      visualizationTypes: (Array.isArray(indicator.visualization_types)
+        ? indicator.visualization_types
+        : []
+      ).map((type) => {
+        if (!isVisualizationType(type)) {
+          throw new Error(`Indicator ${id} has an unknown visualization type: ${JSON.stringify(type)}`);
+        }
+        return type;
+      }),
       dataSource: toDataSource(indicator.resource),
     };
   });

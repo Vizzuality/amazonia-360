@@ -76,10 +76,28 @@ export type DataSource =
       name: string;
     };
 
+/**
+ * How an Indicator can be rendered. Mirrors `VisualizationTypes` in
+ * `@/types/indicator`; the CMS select field offers exactly these values.
+ */
+export const VISUALIZATION_TYPES = [
+  "map",
+  "table",
+  "chart",
+  "numeric",
+  "ai",
+  "custom",
+] as const;
+
+export type VisualizationType = (typeof VISUALIZATION_TYPES)[number];
+
+export const isVisualizationType = (value: unknown): value is VisualizationType =>
+  typeof value === "string" && (VISUALIZATION_TYPES as readonly string[]).includes(value);
+
 /** One tile in a Topic's or Subtopic's default layout. */
 export type LayoutEntry = {
   indicatorId: number;
-  type: string;
+  type: VisualizationType;
   x: number;
   y: number;
   w: number;
@@ -110,7 +128,7 @@ export type IndicatorRecord = Published & {
   description?: Localized<RichText>;
   descriptionShort?: Localized<string>;
   unit?: Localized<string>;
-  visualizationTypes: string[];
+  visualizationTypes: VisualizationType[];
   dataSource: DataSource;
 };
 

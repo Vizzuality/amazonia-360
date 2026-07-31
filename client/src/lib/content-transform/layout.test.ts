@@ -67,6 +67,26 @@ describe("toLayout", () => {
     expect(toLayout({ entries: "nope", ...args })).toEqual([]);
   });
 
+  test("refuses an unknown visualization type instead of writing a broken record", () => {
+    // The CMS select field only accepts the known values, so an unknown one
+    // would fail at load time with a much less useful message.
+    expect(() =>
+      toLayout({
+        entries: [entry(1, { type: "sankey" })],
+        knownIndicatorIds: new Set([1]),
+        owner: "Topic 1",
+      }),
+    ).toThrow(/unknown visualization type: "sankey"/);
+
+    expect(() =>
+      toLayout({
+        entries: [entry(1, { type: undefined })],
+        knownIndicatorIds: new Set([1]),
+        owner: "Topic 1",
+      }),
+    ).toThrow(/unknown visualization type/);
+  });
+
   test("coerces numeric strings in the geometry", () => {
     const result = toLayout({
       entries: [entry(1, { x: "2", w: "3" })],
