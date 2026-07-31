@@ -19,6 +19,7 @@
     "payload": "payload",
     "ci": "payload migrate && pnpm build",
     "seed": "payload run scripts/seed.ts",
+    "seed:force": "payload run scripts/seed-force.ts",
     "seed:verify": "payload run scripts/seed-verify.ts"
   },
   "dependencies": {

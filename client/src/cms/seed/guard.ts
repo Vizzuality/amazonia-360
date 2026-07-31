@@ -61,10 +61,13 @@ export const assertSafeToSeed = async ({
       `Refusing to seed: the database already holds ${describeCounts(counts)}.`,
       "",
       "Seeding upserts by id, so this would overwrite any content edited in the",
-      "admin since the last seed. If that is what you want — a fresh migration",
-      "run, or recovering from a seed that failed part way — re-run with --force:",
+      "admin since the last seed. If that is what you want — a fresh environment,",
+      "or recovering from a seed that failed part way — run:",
       "",
-      "  pnpm seed --force",
+      "  pnpm seed:force",
+      "",
+      "(A separate script, not a flag: `payload run` discards arguments, so",
+      "`pnpm seed --force` would seed without forcing.)",
     ].join("\n"),
   );
 };

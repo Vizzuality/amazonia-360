@@ -37,7 +37,7 @@ describe("assertSafeToSeed", () => {
     const { payload, preload } = createFakePayload();
     preload("topics", [{ id: 0 }]);
 
-    await expect(assertSafeToSeed({ payload })).rejects.toThrow(/pnpm seed --force/);
+    await expect(assertSafeToSeed({ payload })).rejects.toThrow(/pnpm seed:force/);
   });
 
   test("force overrides a populated database", async () => {

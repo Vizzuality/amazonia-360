@@ -3,10 +3,15 @@
 Applies the reviewed content dataset to the CMS (AM-669).
 
 ```bash
-pnpm seed            # empty database only
-pnpm seed --force    # overwrite whatever is already there
-pnpm seed:verify     # read-only checks, no writes
+pnpm seed          # empty database only
+pnpm seed:force    # overwrite whatever is already there
+pnpm seed:verify   # read-only checks, no writes
 ```
+
+> `seed:force` is a separate script, not a flag. `payload run` discards every
+> argument after the script path, so `pnpm seed --force` arrives with an empty
+> `process.argv` and would seed *without* forcing — the override has to be its
+> own entry point.
 
 `pnpm seed` runs the verify checks itself straight after seeding and exits
 non-zero on any problem, so a bad seed cannot pass quietly.
@@ -19,6 +24,8 @@ non-zero on any problem, so a bad seed cannot pass quietly.
 | `content.ts` | `seedContent`, the three-phase upsert |
 | `guard.ts` | Refuses to overwrite a populated database |
 | `verify.ts` | Post-seed checks, returning problems rather than exiting |
+| `run.ts` | `runSeed` — guard, seed, verify, in order |
+| `cli.ts` | Shared body of the two seed scripts; returns an exit code |
 | `data/content.json` | The dataset — reviewed output, applied verbatim |
 
 ## Where the dataset came from
