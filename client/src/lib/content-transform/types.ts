@@ -80,14 +80,7 @@ export type DataSource =
  * How an Indicator can be rendered. Mirrors `VisualizationTypes` in
  * `@/types/indicator`; the CMS select field offers exactly these values.
  */
-export const VISUALIZATION_TYPES = [
-  "map",
-  "table",
-  "chart",
-  "numeric",
-  "ai",
-  "custom",
-] as const;
+export const VISUALIZATION_TYPES = ["map", "table", "chart", "numeric", "ai", "custom"] as const;
 
 export type VisualizationType = (typeof VISUALIZATION_TYPES)[number];
 

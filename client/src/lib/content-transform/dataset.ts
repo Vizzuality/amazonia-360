@@ -136,7 +136,9 @@ export const buildDataset = ({
         : []
       ).map((type) => {
         if (!isVisualizationType(type)) {
-          throw new Error(`Indicator ${id} has an unknown visualization type: ${JSON.stringify(type)}`);
+          throw new Error(
+            `Indicator ${id} has an unknown visualization type: ${JSON.stringify(type)}`,
+          );
         }
         return type;
       }),
