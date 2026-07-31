@@ -148,7 +148,8 @@ const main = async () => {
   process.exit(problems.length ? 1 : 0);
 };
 
-main().catch((error) => {
+// Awaited so `payload run` does not exit the process before the checks finish.
+await main().catch((error) => {
   console.error(error);
   process.exit(1);
 });

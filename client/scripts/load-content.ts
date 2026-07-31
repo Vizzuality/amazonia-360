@@ -76,7 +76,8 @@ const main = async () => {
   process.exit(0);
 };
 
-main().catch((error) => {
+// Awaited so `payload run` does not exit the process before the load finishes.
+await main().catch((error) => {
   console.error(error);
   process.exit(1);
 });

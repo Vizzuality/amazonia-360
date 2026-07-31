@@ -19,8 +19,8 @@
     "payload": "payload",
     "ci": "payload migrate && pnpm build",
     "transform-content": "tsx scripts/transform-content.ts",
-    "load-content": "tsx scripts/load-content.ts",
-    "verify-content": "tsx scripts/verify-content.ts"
+    "load-content": "payload run scripts/load-content.ts",
+    "verify-content": "payload run scripts/verify-content.ts"
   },
   "dependencies": {
     "@arcgis/core": "4.34.8",
