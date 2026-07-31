@@ -1,4 +1,16 @@
-import type { RichText } from "./markdown";
+import type { DefaultNodeTypes, TypedEditorState } from "@payloadcms/richtext-lexical";
+
+/**
+ * The shape of the seed dataset (AM-669).
+ *
+ * Lives next to the seeder rather than with the offline prepare-seed job that
+ * produced it: preparing is authoring-time tooling and is not in the repo, while
+ * the seeder ships and runs in every environment. Keeping the contract here is
+ * what let that tooling go without a refactor.
+ */
+
+/** Rich text as the Payload markdown converter emits it. */
+export type RichText = TypedEditorState<DefaultNodeTypes>;
 
 /** Locales the platform ships. English is the fallback for the other two. */
 export const LOCALES = ["en", "es", "pt"] as const;
@@ -100,7 +112,7 @@ export type LayoutEntry = {
 type Published = {
   /** Original numeric id. Saved reports and shared URLs reference these. */
   id: number;
-  /** Loaded as published, not draft, or the public site cannot see it. */
+  /** Seeded as published, not draft, or the public site cannot see it. */
   _status: "published";
 };
 
@@ -130,3 +142,8 @@ export type ContentDataset = {
   subtopics: SubtopicRecord[];
   indicators: IndicatorRecord[];
 };
+
+/** The collections the seed writes, in dependency order. */
+export const SEEDED_COLLECTIONS = ["topics", "subtopics", "indicators"] as const;
+
+export type SeededCollection = (typeof SEEDED_COLLECTIONS)[number];

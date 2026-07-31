@@ -142,6 +142,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./tsconfig.json
 COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 
+# Needed by `pnpm seed` / `pnpm seed:verify` (AM-669). The dataset itself rides
+# along in src/cms/seed/data, which is why it lives there and not in datum/.
+COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
+
 COPY entrypoint.sh ./
 
 USER nextjs

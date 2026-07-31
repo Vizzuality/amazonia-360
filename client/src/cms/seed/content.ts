@@ -1,39 +1,33 @@
 import type { Payload } from "payload";
 
-import type {
-  ContentDataset,
-  DataSource,
-  IndicatorRecord,
-  LayoutEntry,
-  Locale,
-  Localized,
-  SubtopicRecord,
-  TopicRecord,
-} from "@/lib/content-transform/types";
-import { DEFAULT_LOCALE, LOCALES } from "@/lib/content-transform/types";
+import type { ContentDataset, DataSource, LayoutEntry, Locale, Localized } from "./types";
+import { DEFAULT_LOCALE, LOCALES } from "./types";
 
 /**
- * Loads the reviewed dataset into the CMS (AM-669).
+ * Seeds the reviewed dataset into the CMS (AM-669).
  *
  * Contains no conversion logic of its own — all the judgement happened in the
- * transform and was signed off there. That keeps the result identical on
- * staging and production and makes re-running trivial.
+ * offline prepare-seed job and was signed off there. That keeps the result
+ * identical on staging and production and makes re-running trivial.
  *
  * Two things fail quietly if got wrong, so both are enforced here:
  *
  *  - Records must keep their **original numeric ids**. Renumbering the
  *    catalogue breaks every saved report and every shared report URL.
- *  - Records must be created **published**. Loaded as drafts they appear in the
+ *  - Records must be created **published**. Seeded as drafts they appear in the
  *    admin but are invisible to the public site, which looks exactly like a
  *    caching problem.
  *
- * Loading happens in two phases because a Topic's default layout points at
+ * Seeding happens in three phases because a Topic's default layout points at
  * Indicators, which do not exist while the Topics are being created. Topics and
  * Subtopics land first without layouts, then Indicators, then the layouts are
  * attached.
+ *
+ * Upserts by id unconditionally, so this overwrites whatever an editor has
+ * changed. `assertSafeToSeed` is what stops that happening by accident.
  */
 
-export type LoadReport = {
+export type SeedReport = {
   topics: number;
   subtopics: number;
   indicators: number;
@@ -217,7 +211,7 @@ const splitText = (fields: readonly { key: string; value: Localized<unknown> | u
   return { base, translations };
 };
 
-export const loadContent = async ({
+export const seedContent = async ({
   payload,
   dataset,
   log = () => {},
@@ -225,7 +219,7 @@ export const loadContent = async ({
   payload: Payload;
   dataset: ContentDataset;
   log?: (message: string) => void;
-}): Promise<LoadReport> => {
+}): Promise<SeedReport> => {
   // Phase 1: Topics and Subtopics without layouts — the Indicators they point
   // at do not exist yet.
   for (const topic of dataset.topics) {
