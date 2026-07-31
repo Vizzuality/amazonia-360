@@ -17,16 +17,16 @@ describe("assertSafeToSeed", () => {
     // descriptions, and someone re-runs the seed. Upserting by id would restore
     // the dataset over the top of their work with no warning.
     const { payload, preload } = createFakePayload();
-    preload("topics", [{ id: 0 }, { id: 1 }]);
-    preload("indicators", [{ id: 7 }]);
+    preload("topics", [{ name: "Fires" }, { name: "Water" }]);
+    preload("indicators", [{ name: "Fire count" }]);
 
     await expect(assertSafeToSeed({ payload })).rejects.toThrow(/Refusing to seed/);
   });
 
   test("names what it found, so the operator can tell a half-seed from live content", async () => {
     const { payload, preload } = createFakePayload();
-    preload("topics", [{ id: 0 }]);
-    preload("subtopics", [{ id: 0 }, { id: 1 }]);
+    preload("topics", [{ name: "Fires" }]);
+    preload("subtopics", [{ name: "Hotspots" }, { name: "Rivers" }]);
 
     await expect(assertSafeToSeed({ payload })).rejects.toThrow(
       /1 topics, 2 subtopics, 0 indicators/,
@@ -35,14 +35,14 @@ describe("assertSafeToSeed", () => {
 
   test("points at the escape hatch rather than just failing", async () => {
     const { payload, preload } = createFakePayload();
-    preload("topics", [{ id: 0 }]);
+    preload("topics", [{ name: "Fires" }]);
 
     await expect(assertSafeToSeed({ payload })).rejects.toThrow(/pnpm seed:force/);
   });
 
   test("force overrides a populated database", async () => {
     const { payload, preload } = createFakePayload();
-    preload("indicators", [{ id: 3 }]);
+    preload("indicators", [{ name: "Fire count" }]);
 
     await expect(assertSafeToSeed({ payload, force: true })).resolves.toEqual({
       topics: 0,
@@ -55,7 +55,7 @@ describe("assertSafeToSeed", () => {
     // A seed that died after Topics and a database an editor is working in look
     // identical from here. Only a person can tell them apart, so it stops.
     const { payload, preload } = createFakePayload();
-    preload("topics", [{ id: 0 }]);
+    preload("topics", [{ name: "Fires" }]);
 
     await expect(assertSafeToSeed({ payload })).rejects.toThrow(/Refusing to seed/);
   });
@@ -64,8 +64,8 @@ describe("assertSafeToSeed", () => {
 describe("countSeeded", () => {
   test("counts each collection independently", async () => {
     const { payload, preload } = createFakePayload();
-    preload("topics", [{ id: 0 }, { id: 1 }]);
-    preload("indicators", [{ id: 0 }, { id: 1 }, { id: 2 }]);
+    preload("topics", [{ name: "Fires" }, { name: "Water" }]);
+    preload("indicators", [{ name: "A" }, { name: "B" }, { name: "C" }]);
 
     await expect(countSeeded(payload)).resolves.toEqual({
       topics: 2,

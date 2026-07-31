@@ -4,13 +4,13 @@ Applies the reviewed content dataset to the CMS (AM-669).
 
 ```bash
 pnpm seed          # empty database only
-pnpm seed:force    # overwrite whatever is already there
+pnpm seed:force    # clear whatever is already there, then reload
 pnpm seed:verify   # read-only checks, no writes
 ```
 
 > `seed:force` is a separate script, not a flag. `payload run` discards every
 > argument after the script path, so `pnpm seed --force` arrives with an empty
-> `process.argv` and would seed *without* forcing — the override has to be its
+> `process.argv` and would seed _without_ forcing — the override has to be its
 > own entry point.
 
 `pnpm seed` runs the verify checks itself straight after seeding and exits
@@ -18,15 +18,16 @@ non-zero on any problem, so a bad seed cannot pass quietly.
 
 ## Files
 
-| File | Purpose |
-| --- | --- |
-| `types.ts` | The dataset contract — the shape the seed accepts |
-| `content.ts` | `seedContent`, the three-phase upsert |
-| `guard.ts` | Refuses to overwrite a populated database |
-| `verify.ts` | Post-seed checks, returning problems rather than exiting |
-| `run.ts` | `runSeed` — guard, seed, verify, in order |
-| `cli.ts` | Shared body of the two seed scripts; returns an exit code |
-| `data/content.json` | The dataset — reviewed output, applied verbatim |
+| File                | Purpose                                                   |
+| ------------------- | --------------------------------------------------------- |
+| `types.ts`          | The dataset contract — the shape the seed accepts         |
+| `content.ts`        | `seedContent`, the three-phase load                       |
+| `guard.ts`          | Refuses to overwrite a populated database                 |
+| `clear.ts`          | Empties the collections, for the forced path              |
+| `verify.ts`         | Post-seed checks, returning problems rather than exiting  |
+| `run.ts`            | `runSeed` — guard, clear, seed, verify, in order          |
+| `cli.ts`            | Shared body of the two seed scripts; returns an exit code |
+| `data/content.json` | The dataset — reviewed output, applied verbatim           |
 
 ## Where the dataset came from
 
@@ -59,7 +60,7 @@ The scripts talk to whatever database the environment points at, so the same two
 commands serve local, develop, staging and production. Schema comes first and is
 already automatic — `entrypoint.sh` runs `pnpm payload migrate` on container
 start in production, and the collections migration is
-`20260730_182416_am535_content_collections`.
+`20260731_095538_am535_content_collections`.
 
 Content is **not** automatic. Someone runs `pnpm seed` once per environment.
 Two ways to do that:
@@ -81,15 +82,16 @@ deliberately, with a guard, fits that better.
 The trade-off is real: nothing verifies the seed has happened in a given
 environment. `pnpm seed:verify` is how you check.
 
-## The guard, and why idempotent is not enough
+## The guard
 
-`seedContent` upserts by original id, so re-running is safe *during* the
-migration. It stops being safe the moment editors start working in the admin:
-upserting by id restores the dataset over the top of their edits, silently.
+`seedContent` creates records and lets Payload mint their uuids, so it cannot
+recognise anything an earlier run wrote. Re-running it over a populated database
+would duplicate the whole catalogue, which is why the forced path clears the three
+collections first and reloads them. That discards editorial work irrecoverably.
 
 So `assertSafeToSeed` refuses any database that already holds content, and says
-what it found. `--force` is the deliberate override. It also refuses a
-*partially* seeded database, because a seed that died half way and a database an
+what it found. `pnpm seed:force` is the deliberate override. It also refuses a
+_partially_ seeded database, because a seed that died half way and a database an
 editor has been working in are indistinguishable from here — only a person can
 tell them apart.
 
@@ -100,14 +102,25 @@ The failure modes that report success and leave the site quietly wrong:
 - a short count, from the dataset's own totals rather than a hardcoded number
 - a Subtopic or Indicator orphaned from its parent
 - a layout tile pointing at an Indicator that does not exist
-- the overview Topic (id 0) losing its deliberate cross-Topic references
+- every Topic layout flattened to a single Topic, losing the curated cross-Topic
+  references in _Geographic context_
 - a locale resolving to a blank name — the sparse-translation failure mode
-- records left as drafts, or with non-numeric ids, both invisible to the public site
+- records left as drafts, invisible to the public site
+- a record not keyed by a uuid
 - an anonymous reader not seeing the whole catalogue
 
 ## Ids
 
-Records keep their original numeric ids, including Topic 0. Renumbering would
-break every saved report and every shared report URL. Topic 0's id being falsy is
-also why `content.ts` selects by `where` rather than passing `id` — Payload's
-update treats a falsy `id` as "no id given" and then rejects the call.
+The CMS keys these collections by uuid, like every other collection. Numeric
+primary keys are not an option: Payload decides whether you are editing or
+creating from whether the record id is truthy, so _Geographic context_ — number 0
+in the static catalogue — always opened in the admin as a blank create form, and
+22 files in Payload's UI package branch on that.
+
+The numbers in `data/content.json` are the dataset's own references. The seeder
+uses them to wire a Subtopic to its Topic and a layout tile to its Indicator, and
+never stores them; a number it cannot resolve stops the seed.
+
+Saved reports still carry `topic_id` and `indicator_id` as plain numbers, and
+nothing in the CMS matches those any more. Giving them a real reference is
+AM-675.

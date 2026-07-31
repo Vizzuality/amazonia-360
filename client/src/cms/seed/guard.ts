@@ -4,17 +4,16 @@ import type { SeededCollection } from "./types";
 import { SEEDED_COLLECTIONS } from "./types";
 
 /**
- * Stops the seed reverting editorial work (AM-669).
+ * Stops the seed destroying editorial work (AM-669).
  *
- * `seedContent` upserts by id unconditionally, which is what makes it
- * re-runnable during the migration and dangerous afterwards: once the CMS is the
- * source of truth and editors have changed content in the admin, re-running the
- * seed silently restores the dataset over the top of their edits. Idempotent is
- * not the same as safe to re-run.
+ * `seedContent` cannot recognise what an earlier run wrote, so the forced path
+ * *clears* the content collections and reloads them. Once the CMS is the source of
+ * truth and editors are working in the admin, that discards their edits
+ * irrecoverably.
  *
- * So a populated database has to be opted into explicitly. The counts are
- * reported rather than just refused, because the operator's next question is
- * always "populated with what?".
+ * So a populated database has to be opted into explicitly. The counts are reported
+ * rather than just refused, because the operator's next question is always
+ * "populated with what?".
  */
 
 export type SeedCounts = Record<SeededCollection, number>;
@@ -60,9 +59,10 @@ export const assertSafeToSeed = async ({
     [
       `Refusing to seed: the database already holds ${describeCounts(counts)}.`,
       "",
-      "Seeding upserts by id, so this would overwrite any content edited in the",
-      "admin since the last seed. If that is what you want — a fresh environment,",
-      "or recovering from a seed that failed part way — run:",
+      "Seeding replaces the content collections wholesale, so this would discard",
+      "any content edited in the admin since the last seed. If that is what you",
+      "want — a fresh environment, or recovering from a seed that failed part way",
+      "— run:",
       "",
       "  pnpm seed:force",
       "",

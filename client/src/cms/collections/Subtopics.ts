@@ -4,13 +4,12 @@ import { adminAccess } from "@/cms/access/admin";
 import { publishedOrAuthenticatedAccess } from "@/cms/access/published";
 import { DefaultLayoutField } from "@/cms/fields/default-layout";
 import { requiredInDefaultLocale } from "@/cms/fields/validation";
-import { assignNextNumericId } from "@/cms/hooks/next-numeric-id";
 
 export const Subtopics: CollectionConfig = {
   slug: "subtopics",
   admin: {
     useAsTitle: "name",
-    defaultColumns: ["id", "name", "topic", "_status"],
+    defaultColumns: ["name", "topic", "_status"],
     group: "Content",
   },
   access: {
@@ -20,14 +19,6 @@ export const Subtopics: CollectionConfig = {
     delete: adminAccess,
   },
   fields: [
-    {
-      name: "id",
-      type: "number",
-      required: true,
-      admin: {
-        description: "Assigned automatically. Change only to preserve an existing id.",
-      },
-    },
     {
       name: "topic",
       type: "relationship",
@@ -48,9 +39,6 @@ export const Subtopics: CollectionConfig = {
     },
     DefaultLayoutField,
   ],
-  hooks: {
-    beforeValidate: [assignNextNumericId("subtopics")],
-  },
   versions: {
     drafts: true,
   },

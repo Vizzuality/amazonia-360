@@ -8,9 +8,12 @@ import { LOCALES, SEEDED_COLLECTIONS } from "./types";
  *
  * Covers the failure modes that are silent — the ones where the seed reports
  * success and the site is quietly wrong: a short count, a broken hierarchy,
- * layout tiles pointing at Indicators that no longer exist, the overview Topic
- * losing its deliberate cross-Topic references, a locale resolving to a blank
- * name, records left as drafts, and content invisible to an anonymous reader.
+ * layout tiles pointing at Indicators that no longer exist, the curated
+ * cross-Topic layout being flattened, a locale resolving to a blank name, records
+ * left as drafts, and content invisible to an anonymous reader.
+ *
+ * Findings name records rather than numbering them, because a uuid tells the
+ * operator nothing about which record is broken.
  *
  * Returns the problems instead of exiting, so the seed can fail on them and a
  * test can assert on them.
@@ -31,17 +34,29 @@ export const expectedFrom = (dataset: ContentDataset): ExpectedCounts => ({
   indicators: dataset.indicators.length,
 });
 
-/** A relationship field comes back as an id or as a populated object. */
-const refId = (value: unknown): number | undefined => {
-  if (typeof value === "number") return value;
-  if (typeof value === "object" && value !== null) return (value as { id?: number }).id;
+/** A relationship field comes back as a uuid or as a populated object. */
+const refId = (value: unknown): string | undefined => {
+  if (typeof value === "string") return value;
+  if (typeof value === "object" && value !== null) {
+    const { id } = value as { id?: unknown };
+    return typeof id === "string" ? id : undefined;
+  }
   return undefined;
 };
 
-type LayoutOwner = {
-  id: number;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+type Record_ = {
+  id: unknown;
+  name?: unknown;
   defaultLayout?: { indicator?: unknown }[] | null;
 };
+
+/** How a record is identified in a finding. Its name, falling back to its id. */
+const label = (record: Record_) =>
+  typeof record.name === "string" && record.name.trim() !== ""
+    ? `"${record.name}"`
+    : `id ${String(record.id)}`;
 
 export const verifySeed = async ({
   payload,
@@ -64,7 +79,7 @@ export const verifySeed = async ({
         overrideAccess: true,
         draft,
       })
-    ).docs;
+    ).docs as unknown as Record_[];
 
   const topics = await all("topics", "en");
   const subtopics = await all("subtopics", "en");
@@ -92,47 +107,60 @@ export const verifySeed = async ({
   const subtopicIds = new Set(subtopics.map((subtopic) => subtopic.id));
 
   for (const subtopic of subtopics) {
-    const parent = refId(subtopic.topic);
+    const parent = refId((subtopic as { topic?: unknown }).topic);
     if (parent === undefined || !topicIds.has(parent)) {
-      problems.push(`subtopic ${subtopic.id} -> missing topic ${parent}`);
+      problems.push(`subtopic ${label(subtopic)} -> missing topic`);
     }
   }
   for (const indicator of indicators) {
-    const parent = refId(indicator.subtopic);
+    const parent = refId((indicator as { subtopic?: unknown }).subtopic);
     if (parent === undefined || !subtopicIds.has(parent)) {
-      problems.push(`indicator ${indicator.id} -> missing subtopic ${parent}`);
+      problems.push(`indicator ${label(indicator)} -> missing subtopic`);
     }
   }
   lines.push("hierarchy: every Subtopic under a Topic, every Indicator under a Subtopic");
 
   // Layout tiles resolve
   const indicatorIds = new Set(indicators.map((indicator) => indicator.id));
-  const subtopicTopic = new Map(subtopics.map((s) => [s.id, refId(s.topic)]));
+  const subtopicTopic = new Map(
+    subtopics.map((subtopic) => [subtopic.id, refId((subtopic as { topic?: unknown }).topic)]),
+  );
   const indicatorTopic = new Map(
-    indicators.map((i) => [i.id, subtopicTopic.get(refId(i.subtopic) as number)]),
+    indicators.map((indicator) => [
+      indicator.id,
+      subtopicTopic.get(refId((indicator as { subtopic?: unknown }).subtopic)),
+    ]),
   );
 
   let tiles = 0;
-  for (const record of [...topics, ...subtopics] as unknown as LayoutOwner[]) {
+  for (const record of [...topics, ...subtopics]) {
     for (const entry of record.defaultLayout ?? []) {
       tiles += 1;
       const ref = refId(entry.indicator);
       if (ref === undefined || !indicatorIds.has(ref)) {
-        problems.push(`layout of ${record.id} -> missing indicator ${ref}`);
+        problems.push(`layout of ${label(record)} -> missing indicator`);
       }
     }
   }
   lines.push(`layout tiles: ${tiles}, all resolving to real Indicators`);
 
-  // The overview Topic deliberately pulls Indicators from several Topics
-  const overview = (topics as unknown as LayoutOwner[]).find((topic) => topic.id === 0);
-  const overviewTopics = new Set(
-    (overview?.defaultLayout ?? []).map((entry) =>
-      indicatorTopic.get(refId(entry.indicator) as number),
+  /*
+   * *Geographic context* deliberately pulls Indicators from several other Topics,
+   * and a prepare step that filtered layout entries to same-Topic Indicators would
+   * silently flatten it. Checked as a property of the catalogue rather than of a
+   * named record, since no record carries a stable number to look up any more.
+   */
+  const widestSpan = Math.max(
+    0,
+    ...topics.map(
+      (topic) =>
+        new Set(
+          (topic.defaultLayout ?? []).map((entry) => indicatorTopic.get(refId(entry.indicator))),
+        ).size,
     ),
   );
-  lines.push(`overview Topic pulls Indicators from ${overviewTopics.size} different Topics`);
-  if (overviewTopics.size < 2) problems.push("overview Topic lost its cross-topic references");
+  lines.push(`widest Topic layout pulls Indicators from ${widestSpan} different Topics`);
+  if (widestSpan < 2) problems.push("no Topic layout crosses Topic boundaries any more");
 
   // Every locale resolves a name, by translation or by fallback
   for (const locale of LOCALES) {
@@ -147,7 +175,7 @@ export const verifySeed = async ({
   }
 
   /*
-   * Published, with numeric ids.
+   * Published, and keyed by uuid.
    *
    * Read the *published* view, not the draft view. A `draft: true` query returns
    * the draft version wherever one exists, which makes a published record with a
@@ -155,11 +183,16 @@ export const verifySeed = async ({
    * published — and only the second is a problem. Checking the draft view instead
    * fails every healthy database where somebody has unpublished changes in the
    * admin, which is a normal state and not this script's business.
+   *
+   * The uuid check guards against sliding back to numeric keys, which made the
+   * record numbered 0 open in the admin as a blank create form.
    */
   for (const collection of SEEDED_COLLECTIONS) {
     const published = await all(collection, "en");
-    const unpublished = published.filter((doc) => doc._status !== "published");
-    const nonNumeric = published.filter((doc) => typeof doc.id !== "number");
+    const unpublished = published.filter(
+      (doc) => (doc as { _status?: unknown })._status !== "published",
+    );
+    const notUuid = published.filter((doc) => typeof doc.id !== "string" || !UUID.test(doc.id));
 
     if (published.length !== expected[collection]) {
       problems.push(
@@ -169,13 +202,13 @@ export const verifySeed = async ({
     if (unpublished.length) {
       problems.push(`${collection}: ${unpublished.length} record(s) not published`);
     }
-    if (nonNumeric.length) {
-      problems.push(`${collection}: ${nonNumeric.length} record(s) without a numeric id`);
+    if (notUuid.length) {
+      problems.push(`${collection}: ${notUuid.length} record(s) not keyed by a uuid`);
     }
 
     // Reported, never a problem: someone is mid-edit in the admin.
     const pendingDrafts = (await all(collection, "en", true)).filter(
-      (doc) => doc._status !== "published",
+      (doc) => (doc as { _status?: unknown })._status !== "published",
     );
     if (pendingDrafts.length) {
       lines.push(
@@ -183,7 +216,7 @@ export const verifySeed = async ({
       );
     }
   }
-  lines.push("every record published and keyed by a numeric id");
+  lines.push("every record published and keyed by a uuid");
 
   // An anonymous reader must see the whole catalogue
   const anonymous = await payload.find({

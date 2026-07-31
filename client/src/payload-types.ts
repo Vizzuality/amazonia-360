@@ -367,10 +367,7 @@ export interface Media {
  * via the `definition` "topics".
  */
 export interface Topic {
-  /**
-   * Assigned automatically. Change only to preserve an existing id.
-   */
-  id: number;
+  id: string;
   name?: string | null;
   description?: {
     root: {
@@ -395,7 +392,7 @@ export interface Topic {
         /**
          * Searchable across every Indicator.
          */
-        indicator: number | Indicator;
+        indicator: string | Indicator;
         type: 'map' | 'table' | 'chart' | 'numeric' | 'ai' | 'custom';
         x: number;
         y: number;
@@ -413,11 +410,8 @@ export interface Topic {
  * via the `definition` "indicators".
  */
 export interface Indicator {
-  /**
-   * Assigned automatically. Change only to preserve an existing id.
-   */
-  id: number;
-  subtopic: number | Subtopic;
+  id: string;
+  subtopic: string | Subtopic;
   /**
    * Position within the Subtopic.
    */
@@ -573,11 +567,8 @@ export interface Indicator {
  * via the `definition` "subtopics".
  */
 export interface Subtopic {
-  /**
-   * Assigned automatically. Change only to preserve an existing id.
-   */
-  id: number;
-  topic: number | Topic;
+  id: string;
+  topic: string | Topic;
   name?: string | null;
   description?: {
     root: {
@@ -602,7 +593,7 @@ export interface Subtopic {
         /**
          * Searchable across every Indicator.
          */
-        indicator: number | Indicator;
+        indicator: string | Indicator;
         type: 'map' | 'table' | 'chart' | 'numeric' | 'ai' | 'custom';
         x: number;
         y: number;
@@ -766,15 +757,15 @@ export interface PayloadLockedDocument {
       } | null)
     | ({
         relationTo: 'topics';
-        value: number | Topic;
+        value: string | Topic;
       } | null)
     | ({
         relationTo: 'subtopics';
-        value: number | Subtopic;
+        value: string | Subtopic;
       } | null)
     | ({
         relationTo: 'indicators';
-        value: number | Indicator;
+        value: string | Indicator;
       } | null);
   globalSlug?: string | null;
   user:
@@ -965,7 +956,6 @@ export interface ReportsSelect<T extends boolean = true> {
  * via the `definition` "topics_select".
  */
 export interface TopicsSelect<T extends boolean = true> {
-  id?: T;
   name?: T;
   description?: T;
   defaultLayout?:
@@ -988,7 +978,6 @@ export interface TopicsSelect<T extends boolean = true> {
  * via the `definition` "subtopics_select".
  */
 export interface SubtopicsSelect<T extends boolean = true> {
-  id?: T;
   topic?: T;
   name?: T;
   description?: T;
@@ -1012,7 +1001,6 @@ export interface SubtopicsSelect<T extends boolean = true> {
  * via the `definition` "indicators_select".
  */
 export interface IndicatorsSelect<T extends boolean = true> {
-  id?: T;
   subtopic?: T;
   order?: T;
   name?: T;

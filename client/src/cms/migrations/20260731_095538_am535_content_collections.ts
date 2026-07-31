@@ -21,9 +21,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TYPE "public"."enum_payload_jobs_task_slug" ADD VALUE 'CleanDraftReports';
   CREATE TABLE "topics_default_layout" (
   	"_order" integer NOT NULL,
-  	"_parent_id" numeric NOT NULL,
+  	"_parent_id" uuid NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
-  	"indicator_id" numeric,
+  	"indicator_id" uuid,
   	"type" "enum_topics_default_layout_type",
   	"x" numeric,
   	"y" numeric,
@@ -32,7 +32,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   );
   
   CREATE TABLE "topics" (
-  	"id" numeric PRIMARY KEY NOT NULL,
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"_status" "enum_topics_status" DEFAULT 'draft'
@@ -43,14 +43,14 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"description" jsonb,
   	"id" serial PRIMARY KEY NOT NULL,
   	"_locale" "_locales" NOT NULL,
-  	"_parent_id" numeric NOT NULL
+  	"_parent_id" uuid NOT NULL
   );
   
   CREATE TABLE "_topics_v_version_default_layout" (
   	"_order" integer NOT NULL,
   	"_parent_id" uuid NOT NULL,
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-  	"indicator_id" numeric,
+  	"indicator_id" uuid,
   	"type" "enum__topics_v_version_default_layout_type",
   	"x" numeric,
   	"y" numeric,
@@ -61,7 +61,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   CREATE TABLE "_topics_v" (
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-  	"parent_id" numeric,
+  	"parent_id" uuid,
   	"version_updated_at" timestamp(3) with time zone,
   	"version_created_at" timestamp(3) with time zone,
   	"version__status" "enum__topics_v_version_status" DEFAULT 'draft',
@@ -82,9 +82,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   CREATE TABLE "subtopics_default_layout" (
   	"_order" integer NOT NULL,
-  	"_parent_id" numeric NOT NULL,
+  	"_parent_id" uuid NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
-  	"indicator_id" numeric,
+  	"indicator_id" uuid,
   	"type" "enum_subtopics_default_layout_type",
   	"x" numeric,
   	"y" numeric,
@@ -93,8 +93,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   );
   
   CREATE TABLE "subtopics" (
-  	"id" numeric PRIMARY KEY NOT NULL,
-  	"topic_id" numeric,
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  	"topic_id" uuid,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"_status" "enum_subtopics_status" DEFAULT 'draft'
@@ -105,14 +105,14 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"description" jsonb,
   	"id" serial PRIMARY KEY NOT NULL,
   	"_locale" "_locales" NOT NULL,
-  	"_parent_id" numeric NOT NULL
+  	"_parent_id" uuid NOT NULL
   );
   
   CREATE TABLE "_subtopics_v_version_default_layout" (
   	"_order" integer NOT NULL,
   	"_parent_id" uuid NOT NULL,
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-  	"indicator_id" numeric,
+  	"indicator_id" uuid,
   	"type" "enum__subtopics_v_version_default_layout_type",
   	"x" numeric,
   	"y" numeric,
@@ -123,8 +123,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   CREATE TABLE "_subtopics_v" (
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-  	"parent_id" numeric,
-  	"version_topic_id" numeric,
+  	"parent_id" uuid,
+  	"version_topic_id" uuid,
   	"version_updated_at" timestamp(3) with time zone,
   	"version_created_at" timestamp(3) with time zone,
   	"version__status" "enum__subtopics_v_version_status" DEFAULT 'draft',
@@ -145,7 +145,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   CREATE TABLE "indicators_visualization_types" (
   	"order" integer NOT NULL,
-  	"parent_id" numeric NOT NULL,
+  	"parent_id" uuid NOT NULL,
   	"value" "enum_indicators_visualization_types",
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL
   );
@@ -166,7 +166,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   CREATE TABLE "indicators_blocks_feature" (
   	"_order" integer NOT NULL,
-  	"_parent_id" numeric NOT NULL,
+  	"_parent_id" uuid NOT NULL,
   	"_path" text NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
   	"name" varchar,
@@ -202,7 +202,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   CREATE TABLE "indicators_blocks_imagery" (
   	"_order" integer NOT NULL,
-  	"_parent_id" numeric NOT NULL,
+  	"_parent_id" uuid NOT NULL,
   	"_path" text NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
   	"name" varchar,
@@ -214,7 +214,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   CREATE TABLE "indicators_blocks_h3" (
   	"_order" integer NOT NULL,
-  	"_parent_id" numeric NOT NULL,
+  	"_parent_id" uuid NOT NULL,
   	"_path" text NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
   	"name" varchar,
@@ -225,7 +225,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   CREATE TABLE "indicators_blocks_component" (
   	"_order" integer NOT NULL,
-  	"_parent_id" numeric NOT NULL,
+  	"_parent_id" uuid NOT NULL,
   	"_path" text NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
   	"name" varchar,
@@ -233,8 +233,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   );
   
   CREATE TABLE "indicators" (
-  	"id" numeric PRIMARY KEY NOT NULL,
-  	"subtopic_id" numeric,
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  	"subtopic_id" uuid,
   	"order" numeric DEFAULT 0,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
@@ -248,7 +248,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"unit" varchar,
   	"id" serial PRIMARY KEY NOT NULL,
   	"_locale" "_locales" NOT NULL,
-  	"_parent_id" numeric NOT NULL
+  	"_parent_id" uuid NOT NULL
   );
   
   CREATE TABLE "_indicators_v_version_visualization_types" (
@@ -348,8 +348,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   CREATE TABLE "_indicators_v" (
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-  	"parent_id" numeric,
-  	"version_subtopic_id" numeric,
+  	"parent_id" uuid,
+  	"version_subtopic_id" uuid,
   	"version_order" numeric DEFAULT 0,
   	"version_updated_at" timestamp(3) with time zone,
   	"version_created_at" timestamp(3) with time zone,
@@ -371,9 +371,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"_parent_id" uuid NOT NULL
   );
   
-  ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "topics_id" numeric;
-  ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "subtopics_id" numeric;
-  ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "indicators_id" numeric;
+  ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "topics_id" uuid;
+  ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "subtopics_id" uuid;
+  ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "indicators_id" uuid;
   ALTER TABLE "topics_default_layout" ADD CONSTRAINT "topics_default_layout_indicator_id_indicators_id_fk" FOREIGN KEY ("indicator_id") REFERENCES "public"."indicators"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "topics_default_layout" ADD CONSTRAINT "topics_default_layout_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."topics"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "topics_locales" ADD CONSTRAINT "topics_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."topics"("id") ON DELETE cascade ON UPDATE no action;

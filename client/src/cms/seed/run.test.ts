@@ -53,7 +53,7 @@ describe("runSeed", () => {
 
   test("refuses a populated database without force", async () => {
     const { payload, preload } = createFakePayload();
-    preload("topics", [{ id: 0 }]);
+    preload("topics", [{ name: "Fires" }]);
 
     await expect(runSeed({ payload, dataset: dataset() })).rejects.toThrow(/Refusing to seed/);
   });
@@ -64,7 +64,7 @@ describe("runSeed", () => {
     // forcing. The override has to be its own script, and the message has to say
     // so — an earlier version told people to use a flag that could never arrive.
     const { payload, preload } = createFakePayload();
-    preload("topics", [{ id: 0 }]);
+    preload("topics", [{ name: "Fires" }]);
 
     const message = await runSeed({ payload, dataset: dataset() }).then(
       () => "did not throw",
@@ -77,21 +77,22 @@ describe("runSeed", () => {
   });
 
   describe("force", () => {
-    test("seeds over a populated database", async () => {
-      const { payload, preload, read } = createFakePayload();
-      preload("indicators", [{ id: 0, name: "Edited by hand", _status: "published" }]);
+    test("clears and reloads a populated database", async () => {
+      const { payload, preload, all } = createFakePayload();
+      preload("indicators", [{ name: "Edited by hand", _status: "published" }]);
 
       const { report, problems } = await runSeed({ payload, dataset: dataset(), force: true });
 
       expect(report.indicators).toBe(2);
       expect(problems).toEqual([]);
-      // The hand edit is gone — which is exactly why the guard exists.
-      expect(read("indicators", 0).name).toBe("Forest area");
+      // The hand edit is gone, and not left sitting alongside the reload — which
+      // is exactly why the guard exists.
+      expect(all("indicators").map((doc) => doc.name)).toEqual(["Forest area", "Fire count"]);
     });
 
     test("says what it overwrote", async () => {
       const { payload, preload } = createFakePayload();
-      preload("topics", [{ id: 0 }]);
+      preload("topics", [{ name: "Fires" }]);
       const logged: string[] = [];
 
       await runSeed({
@@ -121,7 +122,23 @@ describe("runSeed", () => {
 
   test("returns problems rather than throwing when verification fails", async () => {
     // A bad seed must surface as a problem the caller can exit on, naming the
-    // check that failed — not as an exception that buries it.
+    // check that failed — not as an exception that buries it. A blank name is the
+    // right shape of fault for this: it writes cleanly and only verification can
+    // see that a reader gets nothing.
+    const content = dataset();
+    content.indicators[0].name = { en: "" };
+    const { payload } = createFakePayload();
+
+    const { report, problems } = await runSeed({ payload, dataset: content });
+
+    // The seed itself completed — it is verification that objects.
+    expect(report.indicators).toBe(2);
+    expect(problems.some((problem) => problem.includes("blank indicator name"))).toBe(true);
+  });
+
+  test("throws on a dataset reference that cannot resolve", async () => {
+    // This used to be written as a null relationship and surface later as a Topic
+    // rendering a hole. There is no uuid to write now, so it fails here instead.
     const content = dataset();
     content.topics[0].defaultLayout.push({
       indicatorId: 404,
@@ -133,10 +150,6 @@ describe("runSeed", () => {
     });
     const { payload } = createFakePayload();
 
-    const { report, problems } = await runSeed({ payload, dataset: content });
-
-    // The seed itself completed — it is verification that objects.
-    expect(report.indicators).toBe(2);
-    expect(problems).toContainEqual("layout of 0 -> missing indicator 404");
+    await expect(runSeed({ payload, dataset: content })).rejects.toThrow(/indicator 404/);
   });
 });

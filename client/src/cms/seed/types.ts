@@ -99,7 +99,11 @@ export type VisualizationType = (typeof VISUALIZATION_TYPES)[number];
 export const isVisualizationType = (value: unknown): value is VisualizationType =>
   typeof value === "string" && (VISUALIZATION_TYPES as readonly string[]).includes(value);
 
-/** One tile in a Topic's or Subtopic's default layout. */
+/**
+ * One tile in a Topic's or Subtopic's default layout.
+ *
+ * `indicatorId` is the dataset's own number for the Indicator, not a record id.
+ */
 export type LayoutEntry = {
   indicatorId: number;
   type: VisualizationType;
@@ -110,7 +114,14 @@ export type LayoutEntry = {
 };
 
 type Published = {
-  /** Original numeric id. Saved reports and shared URLs reference these. */
+  /**
+   * The dataset's own reference number, and the key other records in the file use
+   * to point at this one.
+   *
+   * **Not** a record id and never stored — the CMS keys these collections by uuid
+   * and the seeder uses these numbers only to wire up relationships. Keeps the name
+   * `id` because that is what prepare-seed emits into `data/content.json`.
+   */
   id: number;
   /** Seeded as published, not draft, or the public site cannot see it. */
   _status: "published";
@@ -123,10 +134,12 @@ export type TopicRecord = Published & {
 };
 
 export type SubtopicRecord = TopicRecord & {
+  /** The parent Topic's dataset number, resolved to a uuid during the seed. */
   topic: number;
 };
 
 export type IndicatorRecord = Published & {
+  /** The parent Subtopic's dataset number, resolved to a uuid during the seed. */
   subtopic: number;
   order: number;
   name: Localized<string>;

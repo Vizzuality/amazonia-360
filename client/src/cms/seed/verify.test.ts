@@ -7,15 +7,16 @@ const richText = (text: string) => ({ root: { children: [{ text }] } }) as unkno
 
 /**
  * A miniature but structurally honest catalogue: two Topics, two Subtopics, two
- * Indicators, and an overview Topic whose layout crosses Topic boundaries — the
- * property the real overview Topic has and that a naive migration loses.
+ * Indicators, and a curated Topic whose layout crosses Topic boundaries — the
+ * property the real *Geographic context* Topic has and that a naive migration
+ * loses.
  */
 const dataset = (): ContentDataset => ({
   topics: [
     {
       id: 0,
       _status: "published",
-      name: { en: "Overview" },
+      name: { en: "Geographic context" },
       description: { en: richText("Everything") },
       defaultLayout: [
         { indicatorId: 0, type: "map", x: 0, y: 0, w: 1, h: 1 },
@@ -79,7 +80,7 @@ describe("verifySeed", () => {
     const { lines } = await verifySeed({ payload, expected: expectedFrom(content) });
 
     expect(lines.join("\n")).toContain("2 topics, 2 subtopics, 2 indicators");
-    expect(lines.join("\n")).toContain("every record published and keyed by a numeric id");
+    expect(lines.join("\n")).toContain("every record published and keyed by a uuid");
   });
 
   test("catches a short count", async () => {
@@ -96,59 +97,93 @@ describe("verifySeed", () => {
   });
 
   test("catches an Indicator orphaned from its Subtopic", async () => {
-    const content = dataset();
-    content.indicators[1].subtopic = 99;
-    const { payload } = await seeded(content);
+    // What a Subtopic deleted from under its children looks like: the
+    // relationship is set null and the Indicator falls out of the hierarchy.
+    const fake = await seeded();
+    fake.preload("indicators", [{ name: "Orphan", subtopic: null, _status: "published" }]);
 
-    const { problems } = await verifySeed({ payload, expected: expectedFrom(content) });
+    const { problems } = await verifySeed({
+      payload: fake.payload,
+      expected: { topics: 2, subtopics: 2, indicators: 3 },
+    });
 
-    expect(problems).toContainEqual("indicator 1 -> missing subtopic 99");
+    expect(problems).toContainEqual('indicator "Orphan" -> missing subtopic');
   });
 
   test("catches a Subtopic orphaned from its Topic", async () => {
-    const content = dataset();
-    content.subtopics[0].topic = 42;
-    const { payload } = await seeded(content);
+    const fake = await seeded();
+    fake.preload("subtopics", [{ name: "Orphan", topic: null, _status: "published" }]);
 
-    const { problems } = await verifySeed({ payload, expected: expectedFrom(content) });
+    const { problems } = await verifySeed({
+      payload: fake.payload,
+      expected: { topics: 2, subtopics: 3, indicators: 2 },
+    });
 
-    expect(problems).toContainEqual("subtopic 0 -> missing topic 42");
+    expect(problems).toContainEqual('subtopic "Orphan" -> missing topic');
   });
 
   test("catches a layout tile pointing at a missing Indicator", async () => {
-    // This is what a dropped Indicator looks like downstream: the catalogue is
-    // fine, but a Topic renders a hole.
-    const content = dataset();
-    content.topics[0].defaultLayout[1].indicatorId = 777;
-    const { payload } = await seeded(content);
+    // What a deleted Indicator looks like downstream: the catalogue is fine, but a
+    // Topic renders a hole. Only an editor's delete can get you here now.
+    const fake = await seeded();
+    fake.preload("topics", [
+      { name: "Hand made", _status: "published", defaultLayout: [{ indicator: null }] },
+    ]);
 
-    const { problems } = await verifySeed({ payload, expected: expectedFrom(content) });
+    const { problems } = await verifySeed({
+      payload: fake.payload,
+      expected: { topics: 3, subtopics: 2, indicators: 2 },
+    });
 
-    expect(problems).toContainEqual("layout of 0 -> missing indicator 777");
+    expect(problems).toContainEqual('layout of "Hand made" -> missing indicator');
   });
 
-  test("catches the overview Topic losing its cross-Topic references", async () => {
-    // Topic 0 deliberately pulls Indicators from several Topics. A prepare step that
-    // filters layout entries to same-Topic Indicators would silently flatten it.
+  test("catches the curated layout being flattened to a single Topic", async () => {
+    // Geographic context deliberately pulls Indicators from several Topics. A
+    // prepare step that filtered layout entries to same-Topic Indicators would
+    // silently flatten it.
     const content = dataset();
     content.topics[0].defaultLayout = [{ indicatorId: 0, type: "map", x: 0, y: 0, w: 1, h: 1 }];
     const { payload } = await seeded(content);
 
     const { problems } = await verifySeed({ payload, expected: expectedFrom(content) });
 
-    expect(problems).toContainEqual("overview Topic lost its cross-topic references");
+    expect(problems).toContainEqual("no Topic layout crosses Topic boundaries any more");
+  });
+
+  test("counts how many Topics the widest layout spans", async () => {
+    const content = dataset();
+    const { payload } = await seeded(content);
+
+    const { lines } = await verifySeed({ payload, expected: expectedFrom(content) });
+
+    expect(lines.join("\n")).toContain("pulls Indicators from 2 different Topics");
+  });
+
+  test("catches a record that is not keyed by a uuid", async () => {
+    // A numeric key made the record numbered 0 open as a blank create form, so a
+    // slide back has to be loud.
+    const fake = await seeded();
+    fake.preload("topics", [{ id: "0", name: "Numbered", _status: "published" }]);
+
+    const { problems } = await verifySeed({
+      payload: fake.payload,
+      expected: { topics: 3, subtopics: 2, indicators: 2 },
+    });
+
+    expect(problems).toContainEqual("topics: 1 record(s) not keyed by a uuid");
   });
 
   describe("drafts", () => {
     test("does not fault a published record that has a pending draft revision", async () => {
-      // Indicator 121 "Riverine Flood Risk" is in exactly this state on a real
-      // database: published and publicly visible, with a newer unpublished edit
-      // on top. Querying the draft view returns that revision, so an earlier
-      // version of this check reported it as "left as draft" and would have
-      // failed a deploy over somebody's unsaved work.
+      // One real Indicator is in exactly this state on a live database: published
+      // and publicly visible, with a newer unpublished edit on top. Querying the
+      // draft view returns that revision, so an earlier version of this check
+      // reported it as "left as draft" and would have failed a deploy over
+      // somebody's unsaved work.
       const content = dataset();
       const fake = await seeded(content);
-      fake.setPendingDraft("indicators", 1);
+      fake.setPendingDraft("indicators", fake.ids("indicators")[0]);
 
       const { problems } = await verifySeed({
         payload: fake.payload,
@@ -161,7 +196,7 @@ describe("verifySeed", () => {
     test("reports the pending draft, without calling it a problem", async () => {
       const content = dataset();
       const fake = await seeded(content);
-      fake.setPendingDraft("indicators", 1);
+      fake.setPendingDraft("indicators", fake.ids("indicators")[0]);
 
       const { lines } = await verifySeed({
         payload: fake.payload,

@@ -5,13 +5,12 @@ import { publishedOrAuthenticatedAccess } from "@/cms/access/published";
 import { DataSourceField } from "@/cms/fields/data-source";
 import { requiredInDefaultLocale } from "@/cms/fields/validation";
 import { VISUALIZATION_TYPE_OPTIONS } from "@/cms/fields/visualization-types";
-import { assignNextNumericId } from "@/cms/hooks/next-numeric-id";
 
 export const Indicators: CollectionConfig = {
   slug: "indicators",
   admin: {
     useAsTitle: "name",
-    defaultColumns: ["id", "name", "subtopic", "_status"],
+    defaultColumns: ["name", "subtopic", "order", "_status"],
     group: "Content",
   },
   access: {
@@ -21,14 +20,6 @@ export const Indicators: CollectionConfig = {
     delete: adminAccess,
   },
   fields: [
-    {
-      name: "id",
-      type: "number",
-      required: true,
-      admin: {
-        description: "Assigned automatically. Change only to preserve an existing id.",
-      },
-    },
     {
       name: "subtopic",
       type: "relationship",
@@ -79,9 +70,6 @@ export const Indicators: CollectionConfig = {
     },
     DataSourceField,
   ],
-  hooks: {
-    beforeValidate: [assignNextNumericId("indicators")],
-  },
   versions: {
     drafts: true,
   },

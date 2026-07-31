@@ -7,24 +7,22 @@ import { DEFAULT_LOCALE, LOCALES } from "./types";
  * Seeds the reviewed dataset into the CMS (AM-669).
  *
  * Contains no conversion logic of its own — all the judgement happened in the
- * offline prepare-seed job and was signed off there. That keeps the result
- * identical on staging and production and makes re-running trivial.
+ * offline prepare-seed job and was signed off there.
  *
- * Two things fail quietly if got wrong, so both are enforced here:
+ * Payload mints the uuids. The dataset's own numbers are correlation keys for this
+ * run only, used to wire a Subtopic to its Topic and a layout tile to its
+ * Indicator, and are never stored.
  *
- *  - Records must keep their **original numeric ids**. Renumbering the
- *    catalogue breaks every saved report and every shared report URL.
- *  - Records must be created **published**. Seeded as drafts they appear in the
- *    admin but are invisible to the public site, which looks exactly like a
- *    caching problem.
+ * Two things fail quietly if got wrong, so both are enforced: records must be
+ * created **published**, or they are invisible to the public site; and localized
+ * text must be written per locale and only where a locale differs, or an empty
+ * string blocks the fallback to English.
  *
- * Seeding happens in three phases because a Topic's default layout points at
- * Indicators, which do not exist while the Topics are being created. Topics and
- * Subtopics land first without layouts, then Indicators, then the layouts are
- * attached.
+ * Three phases, because a Topic's layout points at Indicators that do not exist
+ * while the Topics are being created.
  *
- * Upserts by id unconditionally, so this overwrites whatever an editor has
- * changed. `assertSafeToSeed` is what stops that happening by accident.
+ * Create-only, so it expects an empty database — `assertSafeToSeed` enforces that
+ * and `clearContent` is how the forced path gets there.
  */
 
 export type SeedReport = {
@@ -33,6 +31,9 @@ export type SeedReport = {
   indicators: number;
   layoutsAttached: number;
 };
+
+/** Dataset number → the uuid Payload gave that record on this run. */
+type Minted = Map<number, string>;
 
 const atLocale = <T>(value: Localized<T> | undefined, locale: Locale): T | undefined =>
   value?.[locale as keyof Localized<T>] as T | undefined;
@@ -93,9 +94,48 @@ const toBlock = (dataSource: DataSource) => {
   return { blockType: kind, ...rest };
 };
 
-const toLayout = (entries: LayoutEntry[]) =>
+/**
+ * Resolves a dataset number to the uuid the record was given, so a number the
+ * dataset never defines stops the seed instead of writing a null relationship.
+ *
+ * `Map.get` rather than a truthiness check: number 0 is a real reference.
+ */
+const mintedId = ({
+  minted,
+  number,
+  kind,
+  context,
+}: {
+  minted: Minted;
+  number: number;
+  kind: "topic" | "subtopic" | "indicator";
+  context: string;
+}): string => {
+  const id = minted.get(number);
+
+  if (id === undefined) {
+    throw new Error(`${context} references ${kind} ${number}, which the dataset does not define`);
+  }
+
+  return id;
+};
+
+const toLayout = ({
+  entries,
+  indicators,
+  context,
+}: {
+  entries: LayoutEntry[];
+  indicators: Minted;
+  context: string;
+}) =>
   entries.map((entry) => ({
-    indicator: entry.indicatorId,
+    indicator: mintedId({
+      minted: indicators,
+      number: entry.indicatorId,
+      kind: "indicator",
+      context: `layout of ${context}`,
+    }),
     type: entry.type,
     x: entry.x,
     y: entry.y,
@@ -103,89 +143,44 @@ const toLayout = (entries: LayoutEntry[]) =>
     h: entry.h,
   }));
 
-/**
- * Updates one record, selected by a `where` clause rather than passed as `id`.
- *
- * Payload's update treats a falsy `id` as "no id given" and then rejects the
- * call for having no `where`. This catalogue's ids start at zero — Topic 0 is
- * the overview Topic — so passing the id directly fails on the very first
- * record.
- */
-const updateById = async ({
+/** Creates one published record, writes the locales that differ, returns its uuid. */
+const createRecord = async ({
   payload,
   collection,
-  id,
-  data,
-  locale,
-}: {
-  payload: Payload;
-  collection: "topics" | "subtopics" | "indicators";
-  id: number;
-  data: Record<string, unknown>;
-  locale: Locale;
-}) => {
-  const result = await payload.update({
-    collection,
-    where: { id: { equals: id } },
-    data,
-    locale,
-    overrideAccess: true,
-  });
-
-  if (result.errors?.length) {
-    throw new Error(`Failed to update ${collection} ${id}: ${JSON.stringify(result.errors)}`);
-  }
-
-  if (!result.docs.length) {
-    throw new Error(`Update of ${collection} ${id} matched no records`);
-  }
-};
-
-/**
- * Creates or updates a record under its original id, published, in the default
- * locale, then writes the locales that genuinely differ.
- */
-const upsert = async ({
-  payload,
-  collection,
-  id,
   base,
   translations,
 }: {
   payload: Payload;
   collection: "topics" | "subtopics" | "indicators";
-  id: number;
   base: Record<string, unknown>;
   translations: Partial<Record<Locale, Record<string, unknown>>>;
-}) => {
-  const existing = await payload.find({
+}): Promise<string> => {
+  const created = await payload.create({
     collection,
-    where: { id: { equals: id } },
-    limit: 1,
-    depth: 0,
+    data: { ...base, _status: "published" },
+    locale: DEFAULT_LOCALE,
     overrideAccess: true,
-    draft: true,
   });
 
-  const data = { ...base, id, _status: "published" as const };
+  const id = created.id;
 
-  if (existing.docs.length) {
-    await updateById({ payload, collection, id, data, locale: DEFAULT_LOCALE });
-  } else {
-    await payload.create({ collection, data, locale: DEFAULT_LOCALE, overrideAccess: true });
+  if (typeof id !== "string") {
+    throw new Error(`${collection} was created without a uuid id (got ${JSON.stringify(id)})`);
   }
 
   for (const [locale, fields] of Object.entries(translations)) {
     if (!fields || !Object.keys(fields).length) continue;
 
-    await updateById({
-      payload,
+    await payload.update({
       collection,
       id,
       data: { ...fields, _status: "published" as const },
       locale: locale as Locale,
+      overrideAccess: true,
     });
   }
+
+  return id;
 };
 
 /**
@@ -211,6 +206,9 @@ const splitText = (fields: readonly { key: string; value: Localized<unknown> | u
   return { base, translations };
 };
 
+/** How a record is named in an error message, since it has no number to quote. */
+const describe = (name: Localized<string>) => `"${atLocale(name, DEFAULT_LOCALE) ?? "unnamed"}"`;
+
 export const seedContent = async ({
   payload,
   dataset,
@@ -220,6 +218,10 @@ export const seedContent = async ({
   dataset: ContentDataset;
   log?: (message: string) => void;
 }): Promise<SeedReport> => {
+  const topicIds: Minted = new Map();
+  const subtopicIds: Minted = new Map();
+  const indicatorIds: Minted = new Map();
+
   // Phase 1: Topics and Subtopics without layouts — the Indicators they point
   // at do not exist yet.
   for (const topic of dataset.topics) {
@@ -228,7 +230,10 @@ export const seedContent = async ({
       { key: "description", value: topic.description },
     ]);
 
-    await upsert({ payload, collection: "topics", id: topic.id, base, translations });
+    topicIds.set(
+      topic.id,
+      await createRecord({ payload, collection: "topics", base, translations }),
+    );
   }
   log(`topics: ${dataset.topics.length}`);
 
@@ -238,13 +243,22 @@ export const seedContent = async ({
       { key: "description", value: subtopic.description },
     ]);
 
-    await upsert({
-      payload,
-      collection: "subtopics",
-      id: subtopic.id,
-      base: { ...base, topic: subtopic.topic },
-      translations,
+    const topic = mintedId({
+      minted: topicIds,
+      number: subtopic.topic,
+      kind: "topic",
+      context: `subtopic ${describe(subtopic.name)}`,
     });
+
+    subtopicIds.set(
+      subtopic.id,
+      await createRecord({
+        payload,
+        collection: "subtopics",
+        base: { ...base, topic },
+        translations,
+      }),
+    );
   }
   log(`subtopics: ${dataset.subtopics.length}`);
 
@@ -257,49 +271,88 @@ export const seedContent = async ({
       { key: "unit", value: indicator.unit },
     ]);
 
-    await upsert({
-      payload,
-      collection: "indicators",
-      id: indicator.id,
-      base: {
-        ...base,
-        subtopic: indicator.subtopic,
-        order: indicator.order,
-        visualizationTypes: indicator.visualizationTypes,
-        dataSource: [toBlock(indicator.dataSource)],
-      },
-      translations,
+    const subtopic = mintedId({
+      minted: subtopicIds,
+      number: indicator.subtopic,
+      kind: "subtopic",
+      context: `indicator ${describe(indicator.name)}`,
     });
+
+    indicatorIds.set(
+      indicator.id,
+      await createRecord({
+        payload,
+        collection: "indicators",
+        base: {
+          ...base,
+          subtopic,
+          order: indicator.order,
+          visualizationTypes: indicator.visualizationTypes,
+          dataSource: [toBlock(indicator.dataSource)],
+        },
+        translations,
+      }),
+    );
   }
   log(`indicators: ${dataset.indicators.length}`);
 
   // Phase 3: attach the layouts now that every Indicator resolves.
   let layoutsAttached = 0;
 
+  const attachLayout = async ({
+    collection,
+    id,
+    entries,
+    context,
+  }: {
+    collection: "topics" | "subtopics";
+    id: string;
+    entries: LayoutEntry[];
+    context: string;
+  }) => {
+    await payload.update({
+      collection,
+      id,
+      data: {
+        defaultLayout: toLayout({ entries, indicators: indicatorIds, context }),
+        _status: "published",
+      },
+      locale: DEFAULT_LOCALE,
+      overrideAccess: true,
+    });
+    layoutsAttached += 1;
+  };
+
   for (const topic of dataset.topics) {
     if (!topic.defaultLayout.length) continue;
 
-    await updateById({
-      payload,
+    await attachLayout({
       collection: "topics",
-      id: topic.id,
-      data: { defaultLayout: toLayout(topic.defaultLayout), _status: "published" },
-      locale: DEFAULT_LOCALE,
+      id: mintedId({
+        minted: topicIds,
+        number: topic.id,
+        kind: "topic",
+        context: `layout owner ${describe(topic.name)}`,
+      }),
+      entries: topic.defaultLayout,
+      context: `topic ${describe(topic.name)}`,
     });
-    layoutsAttached += 1;
   }
 
   for (const subtopic of dataset.subtopics) {
     if (!subtopic.defaultLayout.length) continue;
 
-    await updateById({
-      payload,
+    await attachLayout({
       collection: "subtopics",
-      id: subtopic.id,
-      data: { defaultLayout: toLayout(subtopic.defaultLayout), _status: "published" },
-      locale: DEFAULT_LOCALE,
+      id: mintedId({
+        minted: subtopicIds,
+        number: subtopic.id,
+        kind: "subtopic",
+        context: `layout owner ${describe(subtopic.name)}`,
+      }),
+      entries: subtopic.defaultLayout,
+      context: `subtopic ${describe(subtopic.name)}`,
     });
-    layoutsAttached += 1;
   }
   log(`layouts attached: ${layoutsAttached}`);
 

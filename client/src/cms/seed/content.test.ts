@@ -8,11 +8,11 @@ const richText = (text: string) => ({ root: { children: [{ text }] } }) as unkno
 const dataset = (): ContentDataset => ({
   topics: [
     {
-      // Topic 0 is the real overview Topic. Its id is falsy, which is the case
-      // Payload's update silently mishandles.
+      // The overview Topic. Its dataset number is 0, the value that used to make
+      // this record unreachable in the admin.
       id: 0,
       _status: "published",
-      name: { en: "Overview", es: "Resumen" },
+      name: { en: "Geographic context", es: "Contexto geográfico" },
       description: { en: richText("All topics") },
       defaultLayout: [{ indicatorId: 0, type: "map", x: 0, y: 0, w: 2, h: 2 }],
     },
@@ -56,86 +56,152 @@ describe("seedContent", () => {
       topics: 2,
       subtopics: 1,
       indicators: 1,
-      // Topic 0 and Subtopic 0 have layouts; Topic 1's is empty and is skipped.
+      // The overview Topic and Subtopic 0 have layouts; Topic 1's is empty.
       layoutsAttached: 2,
     });
   });
 
-  test("keeps original ids, including the falsy id 0", async () => {
-    // Renumbering would break every saved report and shared report URL.
-    const { payload, ids } = createFakePayload();
+  test("lets Payload mint the ids rather than supplying them", async () => {
+    // A record id of 0 made the admin open the edit screen as a blank create form.
+    const { payload, ids, calls } = createFakePayload();
 
     await seedContent({ payload, dataset: dataset() });
 
-    expect(ids("topics")).toEqual([0, 1]);
-    expect(ids("subtopics")).toEqual([0]);
-    expect(ids("indicators")).toEqual([0]);
+    expect(ids("topics")).toHaveLength(2);
+    for (const id of ids("topics")) expect(id).toMatch(/^[0-9a-f-]{36}$/);
+    // The fake throws on an explicit id, so reaching here proves none was sent.
+    expect(calls.filter((call) => call.op === "create")).toHaveLength(4);
   });
 
   test("writes records published, not as drafts", async () => {
     // Seeded as drafts they show in the admin but are invisible to the public
     // site, which looks exactly like a caching problem.
-    const { payload, read } = createFakePayload();
+    const { payload, named } = createFakePayload();
 
     await seedContent({ payload, dataset: dataset() });
 
-    expect(read("topics", 0)._status).toBe("published");
-    expect(read("subtopics", 0)._status).toBe("published");
-    expect(read("indicators", 0)._status).toBe("published");
+    expect(named("topics", "Geographic context")._status).toBe("published");
+    expect(named("subtopics", "Land cover")._status).toBe("published");
+    expect(named("indicators", "Forest area")._status).toBe("published");
   });
 
   test("carries non-localized fields", async () => {
-    const { payload, read } = createFakePayload();
+    const { payload, named } = createFakePayload();
 
     await seedContent({ payload, dataset: dataset() });
 
-    expect(read("subtopics", 0).topic).toBe(0);
-    expect(read("indicators", 0)).toMatchObject({
-      subtopic: 0,
+    expect(named("indicators", "Forest area")).toMatchObject({
       order: 1,
       visualizationTypes: ["map", "chart"],
     });
   });
 
   test("writes the data source as a single typed block", async () => {
-    const { payload, read } = createFakePayload();
+    const { payload, named } = createFakePayload();
 
     await seedContent({ payload, dataset: dataset() });
 
-    expect(read("indicators", 0).dataSource).toEqual([
+    expect(named("indicators", "Forest area").dataSource).toEqual([
       { blockType: "h3", name: "forest", column: "forest_ha" },
     ]);
   });
 
-  describe("locales", () => {
-    test("writes a translation that differs from English", async () => {
-      const { payload, read } = createFakePayload();
+  describe("relationships", () => {
+    test("points a Subtopic at the uuid its Topic was given", async () => {
+      const { payload, named } = createFakePayload();
 
       await seedContent({ payload, dataset: dataset() });
 
-      expect(read("indicators", 0, "es").name).toBe("Área de bosque");
-      expect(read("topics", 0, "es").name).toBe("Resumen");
+      expect(named("subtopics", "Land cover").topic).toBe(named("topics", "Geographic context").id);
+    });
+
+    test("points an Indicator at the uuid its Subtopic was given", async () => {
+      const { payload, named } = createFakePayload();
+
+      await seedContent({ payload, dataset: dataset() });
+
+      expect(named("indicators", "Forest area").subtopic).toBe(named("subtopics", "Land cover").id);
+    });
+
+    test("points a layout tile at the uuid its Indicator was given", async () => {
+      const { payload, named } = createFakePayload();
+
+      await seedContent({ payload, dataset: dataset() });
+
+      expect(named("topics", "Geographic context").defaultLayout).toEqual([
+        { indicator: named("indicators", "Forest area").id, type: "map", x: 0, y: 0, w: 2, h: 2 },
+      ]);
+    });
+
+    test("resolves a dataset number of 0, rather than reading it as absent", async () => {
+      // Every reference in the miniature dataset is to number 0. A truthiness
+      // check anywhere in the resolution path would drop the lot.
+      const { payload, named } = createFakePayload();
+
+      await seedContent({ payload, dataset: dataset() });
+
+      expect(named("subtopics", "Land cover").topic).toBeDefined();
+      expect(named("indicators", "Forest area").subtopic).toBeDefined();
+    });
+  });
+
+  describe("dangling references", () => {
+    test("refuses a Subtopic whose Topic the dataset never defines", async () => {
+      const content = dataset();
+      content.subtopics[0].topic = 42;
+      const { payload } = createFakePayload();
+
+      await expect(seedContent({ payload, dataset: content })).rejects.toThrow(/topic 42/);
+    });
+
+    test("refuses an Indicator whose Subtopic the dataset never defines", async () => {
+      const content = dataset();
+      content.indicators[0].subtopic = 99;
+      const { payload } = createFakePayload();
+
+      await expect(seedContent({ payload, dataset: content })).rejects.toThrow(/subtopic 99/);
+    });
+
+    test("refuses a layout tile pointing at an Indicator the dataset never defines", async () => {
+      // Previously this could be written and only surfaced later as a Topic
+      // rendering a hole. There is no uuid to write now, so it fails here.
+      const content = dataset();
+      content.topics[0].defaultLayout[0].indicatorId = 404;
+      const { payload } = createFakePayload();
+
+      await expect(seedContent({ payload, dataset: content })).rejects.toThrow(/indicator 404/);
+    });
+  });
+
+  describe("locales", () => {
+    test("writes a translation that differs from English", async () => {
+      const { payload, named } = createFakePayload();
+
+      await seedContent({ payload, dataset: dataset() });
+
+      expect(named("indicators", "Área de bosque", "es").name).toBe("Área de bosque");
+      expect(named("topics", "Contexto geográfico", "es").name).toBe("Contexto geográfico");
     });
 
     test("leaves an absent translation to fall back to English", async () => {
-      // Sparse by design: Portuguese is not written for Topic 0, so a Portuguese
-      // reader resolves the English name rather than a blank.
-      const { payload, read, calls } = createFakePayload();
+      // Sparse by design: Portuguese is not written for the overview Topic, so a
+      // Portuguese reader resolves the English name rather than a blank.
+      const { payload, named, calls } = createFakePayload();
 
       await seedContent({ payload, dataset: dataset() });
 
-      expect(read("topics", 0, "pt").name).toBe("Overview");
+      expect(named("topics", "Geographic context", "pt").name).toBe("Geographic context");
       expect(calls.some((call) => call.collection === "topics" && call.locale === "pt")).toBe(
         false,
       );
     });
 
     test("writes each locale that is present", async () => {
-      const { payload, read } = createFakePayload();
+      const { payload, named } = createFakePayload();
 
       await seedContent({ payload, dataset: dataset() });
 
-      expect(read("subtopics", 0, "pt").name).toBe("Cobertura");
+      expect(named("subtopics", "Cobertura", "pt").name).toBe("Cobertura");
     });
   });
 
@@ -160,34 +226,13 @@ describe("seedContent", () => {
       for (const index of layoutWrites) expect(index).toBeGreaterThan(lastIndicatorWrite);
     });
 
-    test("stores layout tiles against the indicator relationship field", async () => {
-      const { payload, read } = createFakePayload();
-
-      await seedContent({ payload, dataset: dataset() });
-
-      expect(read("topics", 0).defaultLayout).toEqual([
-        { indicator: 0, type: "map", x: 0, y: 0, w: 2, h: 2 },
-      ]);
-    });
-
     test("skips records whose layout is empty", async () => {
-      const { payload, read } = createFakePayload();
+      const { payload, named } = createFakePayload();
 
       await seedContent({ payload, dataset: dataset() });
 
-      expect(read("topics", 1).defaultLayout).toBeUndefined();
+      expect(named("topics", "Fires").defaultLayout).toBeUndefined();
     });
-  });
-
-  test("is idempotent — a second run updates rather than duplicates", async () => {
-    const { payload, ids, read } = createFakePayload();
-
-    await seedContent({ payload, dataset: dataset() });
-    await seedContent({ payload, dataset: dataset() });
-
-    expect(ids("topics")).toEqual([0, 1]);
-    expect(ids("indicators")).toEqual([0]);
-    expect(read("indicators", 0).name).toBe("Forest area");
   });
 
   describe("failure", () => {

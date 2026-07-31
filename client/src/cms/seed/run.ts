@@ -1,5 +1,6 @@
 import type { Payload } from "payload";
 
+import { clearContent } from "./clear";
 import type { SeedReport } from "./content";
 import { seedContent } from "./content";
 import type { SeedCounts } from "./guard";
@@ -8,13 +9,16 @@ import type { ContentDataset } from "./types";
 import { expectedFrom, verifySeed } from "./verify";
 
 /**
- * Guard, seed, verify — the whole sequence, in one place (AM-669).
+ * Guard, clear, seed, verify — the whole sequence, in one place (AM-669).
  *
  * Shared by `pnpm seed` and `pnpm seed:force` so the two differ only in the
  * `force` flag. They are separate scripts rather than one script taking
  * `--force` because `payload run` discards every argument after the script path:
  * a flag passed to `pnpm seed` never reaches `process.argv`, so the override
  * would be silently unreachable.
+ *
+ * The clear step only runs on the forced path, and only when there is something to
+ * clear — the guard has already refused every other populated case.
  */
 
 export type RunSeedResult = {
@@ -40,6 +44,7 @@ export const runSeed = async ({
 
   if (force && Object.values(before).some((count) => count > 0)) {
     log(`force: overwriting ${describeCounts(before)}`);
+    await clearContent({ payload, log });
   }
 
   const report = await seedContent({ payload, dataset, log });

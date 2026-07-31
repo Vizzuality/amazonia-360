@@ -2223,7 +2223,7 @@
         },
         "_parent_id": {
           "name": "_parent_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -2235,7 +2235,7 @@
         },
         "indicator_id": {
           "name": "indicator_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -2358,9 +2358,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "updated_at": {
           "name": "updated_at",
@@ -2470,7 +2471,7 @@
         },
         "_parent_id": {
           "name": "_parent_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         }
@@ -2544,7 +2545,7 @@
         },
         "indicator_id": {
           "name": "indicator_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -2680,7 +2681,7 @@
         },
         "parent_id": {
           "name": "parent_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -2988,7 +2989,7 @@
         },
         "_parent_id": {
           "name": "_parent_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -3000,7 +3001,7 @@
         },
         "indicator_id": {
           "name": "indicator_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -3123,13 +3124,14 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "topic_id": {
           "name": "topic_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -3270,7 +3272,7 @@
         },
         "_parent_id": {
           "name": "_parent_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         }
@@ -3344,7 +3346,7 @@
         },
         "indicator_id": {
           "name": "indicator_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -3480,13 +3482,13 @@
         },
         "parent_id": {
           "name": "parent_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
         "version_topic_id": {
           "name": "version_topic_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -3822,7 +3824,7 @@
         },
         "parent_id": {
           "name": "parent_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -4062,7 +4064,7 @@
         },
         "_parent_id": {
           "name": "_parent_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -4437,7 +4439,7 @@
         },
         "_parent_id": {
           "name": "_parent_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -4565,7 +4567,7 @@
         },
         "_parent_id": {
           "name": "_parent_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -4686,7 +4688,7 @@
         },
         "_parent_id": {
           "name": "_parent_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -4789,13 +4791,14 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "subtopic_id": {
           "name": "subtopic_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -4955,7 +4958,7 @@
         },
         "_parent_id": {
           "name": "_parent_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         }
@@ -6032,13 +6035,13 @@
         },
         "parent_id": {
           "name": "parent_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
         "version_subtopic_id": {
           "name": "version_subtopic_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -6942,19 +6945,19 @@
         },
         "topics_id": {
           "name": "topics_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
         "subtopics_id": {
           "name": "subtopics_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
         "indicators_id": {
           "name": "indicators_id",
-          "type": "numeric",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         }
@@ -7957,6 +7960,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "09841485-2e9b-478d-a63b-8e4557f66f51",
+  "id": "3adef808-b70f-4680-8a12-27d0398f3c40",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }

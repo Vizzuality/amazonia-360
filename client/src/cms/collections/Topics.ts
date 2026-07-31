@@ -4,19 +4,19 @@ import { adminAccess } from "@/cms/access/admin";
 import { publishedOrAuthenticatedAccess } from "@/cms/access/published";
 import { DefaultLayoutField } from "@/cms/fields/default-layout";
 import { requiredInDefaultLocale } from "@/cms/fields/validation";
-import { assignNextNumericId } from "@/cms/hooks/next-numeric-id";
 
 /**
  * Top level of the content hierarchy: Topic → Subtopic → Indicator.
  *
- * Ids are the original numeric ones, because saved reports and shared report
- * URLs reference them.
+ * Keyed by uuid like every other collection. Numeric ids are not an option:
+ * Payload treats a falsy id as "creating", so *Geographic context* — number 0 in
+ * the old catalogue — always opened as a blank create form.
  */
 export const Topics: CollectionConfig = {
   slug: "topics",
   admin: {
     useAsTitle: "name",
-    defaultColumns: ["id", "name", "_status"],
+    defaultColumns: ["name", "_status"],
     group: "Content",
   },
   access: {
@@ -26,14 +26,6 @@ export const Topics: CollectionConfig = {
     delete: adminAccess,
   },
   fields: [
-    {
-      name: "id",
-      type: "number",
-      required: true,
-      admin: {
-        description: "Assigned automatically. Change only to preserve an existing id.",
-      },
-    },
     {
       name: "name",
       type: "text",
@@ -48,9 +40,6 @@ export const Topics: CollectionConfig = {
     },
     DefaultLayoutField,
   ],
-  hooks: {
-    beforeValidate: [assignNextNumericId("topics")],
-  },
   versions: {
     drafts: true,
   },

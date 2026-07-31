@@ -25,7 +25,9 @@ describe("seed dataset", () => {
     expect(expectedFrom(content)).toEqual({ topics: 9, subtopics: 28, indicators: 164 });
   });
 
-  test("keeps Topic 0, whose falsy id is the seeder's awkward case", () => {
+  test("still numbers a Topic 0, the reference a truthiness check would drop", () => {
+    // Number 0 is no longer a record id, but it is still a reference the seeder
+    // has to resolve, and `if (number)` would silently skip it.
     expect(content.topics.map((topic) => topic.id)).toContain(0);
   });
 
