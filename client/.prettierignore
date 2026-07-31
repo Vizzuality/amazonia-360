@@ -1,0 +1,6 @@
+# Reviewed seed dataset — ships verbatim. Reformatting it is a 183k-line diff.
+src/cms/seed/data/content.json
+
+# Generated
+src/payload-types.ts
+src/cms/migrations/*.json
