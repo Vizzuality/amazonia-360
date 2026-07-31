@@ -1,7 +1,6 @@
 import type { Payload } from "payload";
 
 import type { SeedCounts } from "./guard";
-import type { SeededCollection } from "./types";
 import { SEEDED_COLLECTIONS } from "./types";
 
 /**
@@ -22,9 +21,9 @@ export const clearContent = async ({
   payload: Payload;
   log?: (message: string) => void;
 }): Promise<SeedCounts> => {
-  const removed = {} as SeedCounts;
+  const removed: SeedCounts = { topics: 0, subtopics: 0, indicators: 0 };
 
-  for (const collection of [...SEEDED_COLLECTIONS].reverse() as SeededCollection[]) {
+  for (const collection of [...SEEDED_COLLECTIONS].reverse()) {
     // Bulk delete requires a `where`, and an empty one is not a match-all.
     const { docs } = await payload.delete({
       collection,

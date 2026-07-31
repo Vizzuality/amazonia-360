@@ -59,7 +59,19 @@ const seeded = async (content: ContentDataset = dataset()) => {
 
 describe("expectedFrom", () => {
   test("takes the expected counts from the dataset, not a hardcoded number", async () => {
-    expect(expectedFrom(dataset())).toEqual({ topics: 2, subtopics: 2, indicators: 2 });
+    expect(expectedFrom(dataset())).toEqual({
+      topics: 2,
+      subtopics: 2,
+      indicators: 2,
+      crossTopicLayouts: 1,
+    });
+  });
+
+  test("counts the Topics whose layout crosses Topic boundaries", async () => {
+    const flattened = dataset();
+    flattened.topics[0].defaultLayout = [{ indicatorId: 0, type: "map", x: 0, y: 0, w: 1, h: 1 }];
+
+    expect(expectedFrom(flattened).crossTopicLayouts).toBe(0);
   });
 });
 
@@ -104,7 +116,7 @@ describe("verifySeed", () => {
 
     const { problems } = await verifySeed({
       payload: fake.payload,
-      expected: { topics: 2, subtopics: 2, indicators: 3 },
+      expected: { topics: 2, subtopics: 2, indicators: 3, crossTopicLayouts: 1 },
     });
 
     expect(problems).toContainEqual('indicator "Orphan" -> missing subtopic');
@@ -116,7 +128,7 @@ describe("verifySeed", () => {
 
     const { problems } = await verifySeed({
       payload: fake.payload,
-      expected: { topics: 2, subtopics: 3, indicators: 2 },
+      expected: { topics: 2, subtopics: 3, indicators: 2, crossTopicLayouts: 1 },
     });
 
     expect(problems).toContainEqual('subtopic "Orphan" -> missing topic');
@@ -132,7 +144,7 @@ describe("verifySeed", () => {
 
     const { problems } = await verifySeed({
       payload: fake.payload,
-      expected: { topics: 3, subtopics: 2, indicators: 2 },
+      expected: { topics: 3, subtopics: 2, indicators: 2, crossTopicLayouts: 1 },
     });
 
     expect(problems).toContainEqual('layout of "Hand made" -> missing indicator');
@@ -141,23 +153,40 @@ describe("verifySeed", () => {
   test("catches the curated layout being flattened to a single Topic", async () => {
     // Geographic context deliberately pulls Indicators from several Topics. A
     // prepare step that filtered layout entries to same-Topic Indicators would
-    // silently flatten it.
-    const content = dataset();
-    content.topics[0].defaultLayout = [{ indicatorId: 0, type: "map", x: 0, y: 0, w: 1, h: 1 }];
-    const { payload } = await seeded(content);
+    // silently flatten it. Expectations come from the intact dataset, which is
+    // the whole point — comparing a flattened seed against itself proves nothing.
+    const flattened = dataset();
+    flattened.topics[0].defaultLayout = [{ indicatorId: 0, type: "map", x: 0, y: 0, w: 1, h: 1 }];
+    const { payload } = await seeded(flattened);
 
-    const { problems } = await verifySeed({ payload, expected: expectedFrom(content) });
+    const { problems } = await verifySeed({ payload, expected: expectedFrom(dataset()) });
 
-    expect(problems).toContainEqual("no Topic layout crosses Topic boundaries any more");
+    expect(problems).toContainEqual(
+      "cross-Topic layouts: expected at least 1, found 0 — curated layouts have been flattened",
+    );
   });
 
-  test("counts how many Topics the widest layout spans", async () => {
+  test("does not fault an editor adding another cross-Topic layout", async () => {
+    // Losing curation is the fault. More of it is not this script's business.
+    const richer = dataset();
+    richer.topics[1].defaultLayout = [
+      { indicatorId: 0, type: "map", x: 0, y: 0, w: 1, h: 1 },
+      { indicatorId: 1, type: "chart", x: 1, y: 0, w: 1, h: 1 },
+    ];
+    const { payload } = await seeded(richer);
+
+    const { problems } = await verifySeed({ payload, expected: expectedFrom(dataset()) });
+
+    expect(problems).toEqual([]);
+  });
+
+  test("reports the cross-Topic count it found against the one it wanted", async () => {
     const content = dataset();
     const { payload } = await seeded(content);
 
     const { lines } = await verifySeed({ payload, expected: expectedFrom(content) });
 
-    expect(lines.join("\n")).toContain("pulls Indicators from 2 different Topics");
+    expect(lines.join("\n")).toContain("cross-Topic layouts: 1 of an expected 1");
   });
 
   test("catches a record that is not keyed by a uuid", async () => {
@@ -168,7 +197,7 @@ describe("verifySeed", () => {
 
     const { problems } = await verifySeed({
       payload: fake.payload,
-      expected: { topics: 3, subtopics: 2, indicators: 2 },
+      expected: { topics: 3, subtopics: 2, indicators: 2, crossTopicLayouts: 1 },
     });
 
     expect(problems).toContainEqual("topics: 1 record(s) not keyed by a uuid");

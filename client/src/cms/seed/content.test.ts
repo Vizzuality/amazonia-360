@@ -162,6 +162,18 @@ describe("seedContent", () => {
       await expect(seedContent({ payload, dataset: content })).rejects.toThrow(/subtopic 99/);
     });
 
+    test("refuses a dataset that uses the same number twice", async () => {
+      // A repeat would overwrite the first record's entry and re-parent its
+      // children, and the counts and hierarchy would both still look right.
+      const content = dataset();
+      content.topics[1].id = 0;
+      const { payload } = createFakePayload();
+
+      await expect(seedContent({ payload, dataset: content })).rejects.toThrow(
+        /topic 0 more than once/,
+      );
+    });
+
     test("refuses a layout tile pointing at an Indicator the dataset never defines", async () => {
       // Previously this could be written and only surfaced later as a Topic
       // rendering a hole. There is no uuid to write now, so it fails here.

@@ -19,7 +19,10 @@ import { LOCALES, SEEDED_COLLECTIONS } from "./types";
  * test can assert on them.
  */
 
-export type ExpectedCounts = Record<SeededCollection, number>;
+export type ExpectedCounts = Record<SeededCollection, number> & {
+  /** Topics whose layout pulls Indicators from two or more Topics. */
+  crossTopicLayouts: number;
+};
 
 export type VerifyResult = {
   /** Human-readable findings, in check order. Printed by the caller. */
@@ -28,10 +31,24 @@ export type VerifyResult = {
   problems: string[];
 };
 
+/** Counts, over the dataset's own numbers, the Topics whose layout crosses Topics. */
+const crossTopicLayoutsIn = (dataset: ContentDataset): number => {
+  const subtopicTopic = new Map(dataset.subtopics.map((s) => [s.id, s.topic]));
+  const indicatorTopic = new Map(
+    dataset.indicators.map((i) => [i.id, subtopicTopic.get(i.subtopic)]),
+  );
+
+  return dataset.topics.filter(
+    (topic) =>
+      new Set(topic.defaultLayout.map((entry) => indicatorTopic.get(entry.indicatorId))).size >= 2,
+  ).length;
+};
+
 export const expectedFrom = (dataset: ContentDataset): ExpectedCounts => ({
   topics: dataset.topics.length,
   subtopics: dataset.subtopics.length,
   indicators: dataset.indicators.length,
+  crossTopicLayouts: crossTopicLayoutsIn(dataset),
 });
 
 /** A relationship field comes back as a uuid or as a populated object. */
@@ -46,14 +63,21 @@ const refId = (value: unknown): string | undefined => {
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-type Record_ = {
+/**
+ * The fields these checks read, across all three collections. Declared loosely so
+ * one shape serves every collection without a cast at each use.
+ */
+type ContentDoc = {
   id: unknown;
   name?: unknown;
+  _status?: unknown;
+  topic?: unknown;
+  subtopic?: unknown;
   defaultLayout?: { indicator?: unknown }[] | null;
 };
 
 /** How a record is identified in a finding. Its name, falling back to its id. */
-const label = (record: Record_) =>
+const label = (record: ContentDoc) =>
   typeof record.name === "string" && record.name.trim() !== ""
     ? `"${record.name}"`
     : `id ${String(record.id)}`;
@@ -79,7 +103,7 @@ export const verifySeed = async ({
         overrideAccess: true,
         draft,
       })
-    ).docs as unknown as Record_[];
+    ).docs as unknown as ContentDoc[];
 
   const topics = await all("topics", "en");
   const subtopics = await all("subtopics", "en");
@@ -107,13 +131,13 @@ export const verifySeed = async ({
   const subtopicIds = new Set(subtopics.map((subtopic) => subtopic.id));
 
   for (const subtopic of subtopics) {
-    const parent = refId((subtopic as { topic?: unknown }).topic);
+    const parent = refId(subtopic.topic);
     if (parent === undefined || !topicIds.has(parent)) {
       problems.push(`subtopic ${label(subtopic)} -> missing topic`);
     }
   }
   for (const indicator of indicators) {
-    const parent = refId((indicator as { subtopic?: unknown }).subtopic);
+    const parent = refId(indicator.subtopic);
     if (parent === undefined || !subtopicIds.has(parent)) {
       problems.push(`indicator ${label(indicator)} -> missing subtopic`);
     }
@@ -122,14 +146,9 @@ export const verifySeed = async ({
 
   // Layout tiles resolve
   const indicatorIds = new Set(indicators.map((indicator) => indicator.id));
-  const subtopicTopic = new Map(
-    subtopics.map((subtopic) => [subtopic.id, refId((subtopic as { topic?: unknown }).topic)]),
-  );
+  const subtopicTopic = new Map(subtopics.map((subtopic) => [subtopic.id, refId(subtopic.topic)]));
   const indicatorTopic = new Map(
-    indicators.map((indicator) => [
-      indicator.id,
-      subtopicTopic.get(refId((indicator as { subtopic?: unknown }).subtopic)),
-    ]),
+    indicators.map((indicator) => [indicator.id, subtopicTopic.get(refId(indicator.subtopic))]),
   );
 
   let tiles = 0;
@@ -147,20 +166,27 @@ export const verifySeed = async ({
   /*
    * *Geographic context* deliberately pulls Indicators from several other Topics,
    * and a prepare step that filtered layout entries to same-Topic Indicators would
-   * silently flatten it. Checked as a property of the catalogue rather than of a
-   * named record, since no record carries a stable number to look up any more.
+   * silently flatten it. Counted rather than looked up by name, since no record
+   * carries a stable number any more.
+   *
+   * Compared as "no fewer than the dataset has", not an equality: losing curation
+   * is the fault, and an editor adding another cross-Topic layout in the admin is
+   * not this script's business.
    */
-  const widestSpan = Math.max(
-    0,
-    ...topics.map(
-      (topic) =>
-        new Set(
-          (topic.defaultLayout ?? []).map((entry) => indicatorTopic.get(refId(entry.indicator))),
-        ).size,
-    ),
+  const crossing = topics.filter(
+    (topic) =>
+      new Set(
+        (topic.defaultLayout ?? []).map((entry) => indicatorTopic.get(refId(entry.indicator))),
+      ).size >= 2,
+  ).length;
+  lines.push(
+    `cross-Topic layouts: ${crossing} of an expected ${expected.crossTopicLayouts} Topics pull Indicators from 2+ Topics`,
   );
-  lines.push(`widest Topic layout pulls Indicators from ${widestSpan} different Topics`);
-  if (widestSpan < 2) problems.push("no Topic layout crosses Topic boundaries any more");
+  if (crossing < expected.crossTopicLayouts) {
+    problems.push(
+      `cross-Topic layouts: expected at least ${expected.crossTopicLayouts}, found ${crossing} — curated layouts have been flattened`,
+    );
+  }
 
   // Every locale resolves a name, by translation or by fallback
   for (const locale of LOCALES) {
@@ -189,9 +215,7 @@ export const verifySeed = async ({
    */
   for (const collection of SEEDED_COLLECTIONS) {
     const published = await all(collection, "en");
-    const unpublished = published.filter(
-      (doc) => (doc as { _status?: unknown })._status !== "published",
-    );
+    const unpublished = published.filter((doc) => doc._status !== "published");
     const notUuid = published.filter((doc) => typeof doc.id !== "string" || !UUID.test(doc.id));
 
     if (published.length !== expected[collection]) {
@@ -208,7 +232,7 @@ export const verifySeed = async ({
 
     // Reported, never a problem: someone is mid-edit in the admin.
     const pendingDrafts = (await all(collection, "en", true)).filter(
-      (doc) => (doc as { _status?: unknown })._status !== "published",
+      (doc) => doc._status !== "published",
     );
     if (pendingDrafts.length) {
       lines.push(

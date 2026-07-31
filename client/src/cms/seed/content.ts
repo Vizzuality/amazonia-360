@@ -1,6 +1,13 @@
 import type { Payload } from "payload";
 
-import type { ContentDataset, DataSource, LayoutEntry, Locale, Localized } from "./types";
+import type {
+  ContentDataset,
+  DataSource,
+  LayoutEntry,
+  Locale,
+  Localized,
+  SeededCollection,
+} from "./types";
 import { DEFAULT_LOCALE, LOCALES } from "./types";
 
 /**
@@ -34,6 +41,31 @@ export type SeedReport = {
 
 /** Dataset number → the uuid Payload gave that record on this run. */
 type Minted = Map<number, string>;
+
+/**
+ * Records a number→uuid pairing, refusing a number the dataset already used.
+ *
+ * A repeat would overwrite the earlier entry and quietly re-parent its children,
+ * and every downstream check would still pass: both records exist, so the counts
+ * and the hierarchy look right.
+ */
+const remember = ({
+  minted,
+  number,
+  id,
+  kind,
+}: {
+  minted: Minted;
+  number: number;
+  id: string;
+  kind: string;
+}) => {
+  if (minted.has(number)) {
+    throw new Error(`the dataset defines ${kind} ${number} more than once`);
+  }
+
+  minted.set(number, id);
+};
 
 const atLocale = <T>(value: Localized<T> | undefined, locale: Locale): T | undefined =>
   value?.[locale as keyof Localized<T>] as T | undefined;
@@ -151,7 +183,7 @@ const createRecord = async ({
   translations,
 }: {
   payload: Payload;
-  collection: "topics" | "subtopics" | "indicators";
+  collection: SeededCollection;
   base: Record<string, unknown>;
   translations: Partial<Record<Locale, Record<string, unknown>>>;
 }): Promise<string> => {
@@ -207,7 +239,7 @@ const splitText = (fields: readonly { key: string; value: Localized<unknown> | u
 };
 
 /** How a record is named in an error message, since it has no number to quote. */
-const describe = (name: Localized<string>) => `"${atLocale(name, DEFAULT_LOCALE) ?? "unnamed"}"`;
+const quotedName = (name: Localized<string>) => `"${atLocale(name, DEFAULT_LOCALE) ?? "unnamed"}"`;
 
 export const seedContent = async ({
   payload,
@@ -230,10 +262,12 @@ export const seedContent = async ({
       { key: "description", value: topic.description },
     ]);
 
-    topicIds.set(
-      topic.id,
-      await createRecord({ payload, collection: "topics", base, translations }),
-    );
+    remember({
+      minted: topicIds,
+      number: topic.id,
+      kind: "topic",
+      id: await createRecord({ payload, collection: "topics", base, translations }),
+    });
   }
   log(`topics: ${dataset.topics.length}`);
 
@@ -247,18 +281,20 @@ export const seedContent = async ({
       minted: topicIds,
       number: subtopic.topic,
       kind: "topic",
-      context: `subtopic ${describe(subtopic.name)}`,
+      context: `subtopic ${quotedName(subtopic.name)}`,
     });
 
-    subtopicIds.set(
-      subtopic.id,
-      await createRecord({
+    remember({
+      minted: subtopicIds,
+      number: subtopic.id,
+      kind: "subtopic",
+      id: await createRecord({
         payload,
         collection: "subtopics",
         base: { ...base, topic },
         translations,
       }),
-    );
+    });
   }
   log(`subtopics: ${dataset.subtopics.length}`);
 
@@ -275,12 +311,14 @@ export const seedContent = async ({
       minted: subtopicIds,
       number: indicator.subtopic,
       kind: "subtopic",
-      context: `indicator ${describe(indicator.name)}`,
+      context: `indicator ${quotedName(indicator.name)}`,
     });
 
-    indicatorIds.set(
-      indicator.id,
-      await createRecord({
+    remember({
+      minted: indicatorIds,
+      number: indicator.id,
+      kind: "indicator",
+      id: await createRecord({
         payload,
         collection: "indicators",
         base: {
@@ -292,7 +330,7 @@ export const seedContent = async ({
         },
         translations,
       }),
-    );
+    });
   }
   log(`indicators: ${dataset.indicators.length}`);
 
@@ -332,10 +370,10 @@ export const seedContent = async ({
         minted: topicIds,
         number: topic.id,
         kind: "topic",
-        context: `layout owner ${describe(topic.name)}`,
+        context: `layout owner ${quotedName(topic.name)}`,
       }),
       entries: topic.defaultLayout,
-      context: `topic ${describe(topic.name)}`,
+      context: `topic ${quotedName(topic.name)}`,
     });
   }
 
@@ -348,10 +386,10 @@ export const seedContent = async ({
         minted: subtopicIds,
         number: subtopic.id,
         kind: "subtopic",
-        context: `layout owner ${describe(subtopic.name)}`,
+        context: `layout owner ${quotedName(subtopic.name)}`,
       }),
       entries: subtopic.defaultLayout,
-      context: `subtopic ${describe(subtopic.name)}`,
+      context: `subtopic ${quotedName(subtopic.name)}`,
     });
   }
   log(`layouts attached: ${layoutsAttached}`);

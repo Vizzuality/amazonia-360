@@ -22,7 +22,29 @@ describe("seed dataset", () => {
   test("holds the full catalogue", () => {
     // Nine Topics, 28 Subtopics, 164 Indicators. A short count here means the
     // prepare-seed emitted a partial dataset.
-    expect(expectedFrom(content)).toEqual({ topics: 9, subtopics: 28, indicators: 164 });
+    //
+    // Exactly one Topic — Geographic context — pulls Indicators from other
+    // Topics, so a drop to zero is that curation being flattened.
+    expect(expectedFrom(content)).toEqual({
+      topics: 9,
+      subtopics: 28,
+      indicators: 164,
+      crossTopicLayouts: 1,
+    });
+  });
+
+  test("gives every record a distinct number within its collection", () => {
+    // The seeder wires parents through these numbers. A repeat would re-parent a
+    // record's children onto whichever record won.
+    for (const [collection, records] of Object.entries({
+      topics: content.topics,
+      subtopics: content.subtopics,
+      indicators: content.indicators,
+    })) {
+      const numbers = records.map((record) => record.id);
+
+      expect(new Set(numbers).size, `${collection} has a repeated number`).toBe(numbers.length);
+    }
   });
 
   test("still numbers a Topic 0, the reference a truthiness check would drop", () => {

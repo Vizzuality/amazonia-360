@@ -10,7 +10,7 @@ export const Indicators: CollectionConfig = {
   slug: "indicators",
   admin: {
     useAsTitle: "name",
-    defaultColumns: ["name", "subtopic", "order", "_status"],
+    defaultColumns: ["name", "subtopic", "_status"],
     group: "Content",
   },
   access: {

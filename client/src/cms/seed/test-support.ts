@@ -39,6 +39,8 @@ export type RecordedCall = {
   id?: string;
   /** Field names written, so a test can tell a layout write from a locale write. */
   fields?: string[];
+  /** Recorded on delete: an empty `where` is not a match-all, so it is load-bearing. */
+  where?: unknown;
 };
 
 export type FakePayload = {
@@ -160,9 +162,9 @@ export const createFakePayload = ({
       return resolve(row, locale);
     },
 
-    delete: async ({ collection }: { collection: string }) => {
+    delete: async ({ collection, where }: { collection: string; where?: unknown }) => {
       const rows = [...table(collection).values()];
-      record({ op: "delete", collection });
+      record({ op: "delete", collection, where });
       table(collection).clear();
 
       return { docs: rows.map((row) => resolve(row, DEFAULT)), errors: [] };

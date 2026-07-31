@@ -19,8 +19,8 @@ type PaginatedResponse<T> = {
 };
 
 /**
- * Fetched at depth 0: relationships come back as numeric ids, which is all the
- * lookups need, and it keeps a 164-record response from ballooning.
+ * Fetched at depth 0: relationships come back as uuids, which is all the lookups
+ * need, and it keeps a 164-record response from ballooning.
  */
 export const buildContentUrl = ({
   collection,

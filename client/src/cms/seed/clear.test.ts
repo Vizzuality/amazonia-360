@@ -45,6 +45,17 @@ describe("clearContent", () => {
     ]);
   });
 
+  test("asks for every record, since an empty where is not a match-all", async () => {
+    const { payload, preload, calls } = createFakePayload();
+    preload("topics", [{ name: "Fires" }]);
+
+    await clearContent({ payload });
+
+    for (const call of calls.filter((c) => c.op === "delete")) {
+      expect(call.where).toEqual({ id: { exists: true } });
+    }
+  });
+
   test("says what it cleared", async () => {
     const { payload, preload } = createFakePayload();
     preload("topics", [{ name: "Fires" }]);
