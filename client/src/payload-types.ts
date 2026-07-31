@@ -75,6 +75,9 @@ export interface Config {
     accounts: Account;
     media: Media;
     reports: Report;
+    topics: Topic;
+    subtopics: Subtopic;
+    indicators: Indicator;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
@@ -94,6 +97,9 @@ export interface Config {
     accounts: AccountsSelect<false> | AccountsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     reports: ReportsSelect<false> | ReportsSelect<true>;
+    topics: TopicsSelect<false> | TopicsSelect<true>;
+    subtopics: SubtopicsSelect<false> | SubtopicsSelect<true>;
+    indicators: IndicatorsSelect<false> | IndicatorsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -358,6 +364,247 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "topics".
+ */
+export interface Topic {
+  /**
+   * Assigned automatically. Change only to preserve an existing id.
+   */
+  id: number;
+  name?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Indicators shown by default. Any Indicator may be used, including ones belonging to another Topic.
+   */
+  defaultLayout?:
+    | {
+        /**
+         * Searchable across every Indicator.
+         */
+        indicator: number | Indicator;
+        type: 'map' | 'table' | 'chart' | 'numeric' | 'ai' | 'custom';
+        x: number;
+        y: number;
+        w: number;
+        h: number;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "indicators".
+ */
+export interface Indicator {
+  /**
+   * Assigned automatically. Change only to preserve an existing id.
+   */
+  id: number;
+  subtopic: number | Subtopic;
+  /**
+   * Position within the Subtopic.
+   */
+  order: number;
+  name?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  descriptionShort?: string | null;
+  unit?: string | null;
+  visualizationTypes: ('map' | 'table' | 'chart' | 'numeric' | 'ai' | 'custom')[];
+  /**
+   * Exactly one data source. Pick the kind that matches the service.
+   */
+  dataSource: (
+    | {
+        name: string;
+        url: string;
+        /**
+         * Layer index appended to the service URL.
+         */
+        layerId: string;
+        /**
+         * ArcGIS query definitions, passed to the service unchanged.
+         */
+        queries?: {
+          table?:
+            | {
+                [k: string]: unknown;
+              }
+            | unknown[]
+            | string
+            | number
+            | boolean
+            | null;
+          chart?:
+            | {
+                [k: string]: unknown;
+              }
+            | unknown[]
+            | string
+            | number
+            | boolean
+            | null;
+          numeric?:
+            | {
+                [k: string]: unknown;
+              }
+            | unknown[]
+            | string
+            | number
+            | boolean
+            | null;
+          ai?:
+            | {
+                [k: string]: unknown;
+              }
+            | unknown[]
+            | string
+            | number
+            | boolean
+            | null;
+        };
+        /**
+         * Optional. Shown when a feature is clicked on the map.
+         */
+        popup?: {
+          /**
+           * Either an ArcGIS field substitution such as {NOMBCAP} or literal text. Substitution tokens must not contain spaces or they resolve to nothing.
+           */
+          title?: string | null;
+          fields?:
+            | {
+                fieldName: string;
+                label: string;
+                id?: string | null;
+              }[]
+            | null;
+        };
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'feature';
+      }
+    | {
+        name: string;
+        url: string;
+        rasterFunction?: string | null;
+        legend?: {
+          type?: string | null;
+          items?:
+            | {
+                color: string;
+                label: string;
+                id?: string | null;
+              }[]
+            | null;
+        };
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'imagery';
+      }
+    | {
+        name: string;
+        /**
+         * Column in the H3 grid tiles.
+         */
+        column: string;
+        url?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'h3';
+      }
+    | {
+        /**
+         * Identifier of the component that renders this indicator.
+         */
+        name: string;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'component';
+      }
+  )[];
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subtopics".
+ */
+export interface Subtopic {
+  /**
+   * Assigned automatically. Change only to preserve an existing id.
+   */
+  id: number;
+  topic: number | Topic;
+  name?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Indicators shown by default. Any Indicator may be used, including ones belonging to another Topic.
+   */
+  defaultLayout?:
+    | {
+        /**
+         * Searchable across every Indicator.
+         */
+        indicator: number | Indicator;
+        type: 'map' | 'table' | 'chart' | 'numeric' | 'ai' | 'custom';
+        x: number;
+        y: number;
+        w: number;
+        h: number;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -504,6 +751,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'reports';
         value: string | Report;
+      } | null)
+    | ({
+        relationTo: 'topics';
+        value: number | Topic;
+      } | null)
+    | ({
+        relationTo: 'subtopics';
+        value: number | Subtopic;
+      } | null)
+    | ({
+        relationTo: 'indicators';
+        value: number | Indicator;
       } | null);
   globalSlug?: string | null;
   user:
@@ -684,6 +943,140 @@ export interface ReportsSelect<T extends boolean = true> {
               id?: T;
             };
         id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "topics_select".
+ */
+export interface TopicsSelect<T extends boolean = true> {
+  id?: T;
+  name?: T;
+  description?: T;
+  defaultLayout?:
+    | T
+    | {
+        indicator?: T;
+        type?: T;
+        x?: T;
+        y?: T;
+        w?: T;
+        h?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subtopics_select".
+ */
+export interface SubtopicsSelect<T extends boolean = true> {
+  id?: T;
+  topic?: T;
+  name?: T;
+  description?: T;
+  defaultLayout?:
+    | T
+    | {
+        indicator?: T;
+        type?: T;
+        x?: T;
+        y?: T;
+        w?: T;
+        h?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "indicators_select".
+ */
+export interface IndicatorsSelect<T extends boolean = true> {
+  id?: T;
+  subtopic?: T;
+  order?: T;
+  name?: T;
+  description?: T;
+  descriptionShort?: T;
+  unit?: T;
+  visualizationTypes?: T;
+  dataSource?:
+    | T
+    | {
+        feature?:
+          | T
+          | {
+              name?: T;
+              url?: T;
+              layerId?: T;
+              queries?:
+                | T
+                | {
+                    table?: T;
+                    chart?: T;
+                    numeric?: T;
+                    ai?: T;
+                  };
+              popup?:
+                | T
+                | {
+                    title?: T;
+                    fields?:
+                      | T
+                      | {
+                          fieldName?: T;
+                          label?: T;
+                          id?: T;
+                        };
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        imagery?:
+          | T
+          | {
+              name?: T;
+              url?: T;
+              rasterFunction?: T;
+              legend?:
+                | T
+                | {
+                    type?: T;
+                    items?:
+                      | T
+                      | {
+                          color?: T;
+                          label?: T;
+                          id?: T;
+                        };
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        h3?:
+          | T
+          | {
+              name?: T;
+              column?: T;
+              url?: T;
+              id?: T;
+              blockName?: T;
+            };
+        component?:
+          | T
+          | {
+              name?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;
