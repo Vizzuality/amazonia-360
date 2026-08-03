@@ -1,6 +1,9 @@
-// client/scripts/seed-catalogue.ts
-/* eslint-disable no-console */
-import { getPayload, type Payload, type PayloadRequest } from "payload";
+import {
+  getPayload,
+  type Payload,
+  type PayloadRequest,
+  type RequiredDataFromCollectionSlug,
+} from "payload";
 
 import config from "@payload-config";
 
@@ -54,14 +57,15 @@ async function findByLegacyId(
 }
 
 /**
- * Writes one document as published in `en`, then translates it. Returns the document id, or
- * undefined when an existing row is left alone in create-only mode.
+ * Writes one document as published in `en`, then translates it. Returns the document id — the
+ * newly created/updated id, or the existing id when an existing row is left alone in
+ * create-only mode.
  */
-async function upsert(
+async function upsert<TSlug extends CatalogueSlug>(
   payload: Payload,
-  collection: CatalogueSlug,
+  collection: TSlug,
   legacyId: number,
-  base: Record<string, unknown>,
+  base: RequiredDataFromCollectionSlug<TSlug>,
   locales: Partial<Record<Locale, Record<string, unknown>>>,
   req: Partial<PayloadRequest>,
 ): Promise<string | undefined> {
@@ -72,12 +76,26 @@ async function upsert(
     return existing;
   }
 
+  // `_status` is not localized: setting it once on the `en` write is enough. `draft: false`
+  // alone does not publish — versions.drafts defaults `_status` to `draft` on create, and
+  // nothing else on the create path sets it to `published` unless localizeStatus is enabled
+  // (it is not, here).
+  const publishedBase = { ...base, _status: "published" as const };
+
   let id: string;
   if (existing) {
+    // `payload.update`'s data type is `DeepPartial<MarkOptional<DataFromCollectionSlug<TSlug>, ...>>`
+    // built through a nested generic composition that TypeScript cannot prove assignable for an
+    // abstract `TSlug` even though it holds for every concrete slug (verified: the identical
+    // assignment typechecks with a literal collection slug, only the generic-through-generic
+    // case fails) — see https://github.com/microsoft/TypeScript/issues/13995-style limitation.
+    // `payload.create` right below has no such issue and typechecks `publishedBase` against the
+    // real collection shape with no cast, which is what actually catches a mapper/collection
+    // mismatch; this cast only works around the `update` composition, not a real mismatch.
     const doc = await payload.update({
       collection,
       id: existing,
-      data: base,
+      data: publishedBase as never,
       locale: "en",
       draft: false,
       req,
@@ -87,7 +105,7 @@ async function upsert(
   } else {
     const doc = await payload.create({
       collection,
-      data: base as never,
+      data: publishedBase,
       locale: "en",
       draft: false,
       req,
@@ -100,7 +118,8 @@ async function upsert(
   for (const locale of TRANSLATION_LOCALES) {
     const data = locales[locale];
     if (!data || Object.keys(data).length === 0) continue;
-    await payload.update({ collection, id, data, locale, draft: false, req });
+    // Same `update` generic-composition limitation as above.
+    await payload.update({ collection, id, data: data as never, locale, draft: false, req });
   }
 
   return id;
@@ -120,7 +139,9 @@ async function idMap(
     draft: true,
     req,
   });
-  return new Map(docs.map((d) => [d.legacy_id as number, d.id as string]));
+  return new Map(
+    docs.filter((d) => d.legacy_id != null).map((d) => [d.legacy_id as number, d.id as string]),
+  );
 }
 
 async function seed(payload: Payload, req: Partial<PayloadRequest>) {
@@ -226,21 +247,29 @@ async function main() {
   const req: Partial<PayloadRequest> = { transactionID };
 
   try {
-    await seed(payload, req);
-  } catch (error) {
-    await payload.db.rollbackTransaction(transactionID);
-    throw error;
-  }
+    try {
+      await seed(payload, req);
+    } catch (error) {
+      try {
+        await payload.db.rollbackTransaction(transactionID);
+      } catch (rollbackError) {
+        console.error("\n  ❌ rollback also failed:", rollbackError);
+      }
+      // Always rethrow the original error — it carries the mapper's row-naming diagnostic,
+      // which matters far more than a rollback failure.
+      throw error;
+    }
 
-  if (dryRun) {
-    await payload.db.rollbackTransaction(transactionID);
-    console.log("\n  ↩ dry run — transaction rolled back, nothing persisted\n");
-  } else {
-    await payload.db.commitTransaction(transactionID);
-    console.log("\n  ✅ committed\n");
+    if (dryRun) {
+      await payload.db.rollbackTransaction(transactionID);
+      console.log("\n  ↩ dry run — transaction rolled back, nothing persisted\n");
+    } else {
+      await payload.db.commitTransaction(transactionID);
+      console.log("\n  ✅ committed\n");
+    }
+  } finally {
+    await payload.destroy();
   }
-
-  await payload.destroy();
 }
 
 await main().catch((error) => {

@@ -17,7 +17,7 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:report": "playwright show-report e2e/playwright-report",
     "payload": "payload",
-    "seed:catalogue": "payload run scripts/seed-catalogue.ts",
+    "seed:catalogue": "payload run scripts/seed-catalogue.ts --",
     "ci": "payload migrate && pnpm build"
   },
   "dependencies": {
