@@ -1,0 +1,95 @@
+import INDICATORS from "@/../datum/indicators.json";
+
+import { findVisualizationMismatches } from "./indicator-visualization";
+
+const featureResource = (overrides: Record<string, unknown> = {}) => ({
+  blockType: "feature",
+  name: "test-layer",
+  url: "https://example.test/FeatureServer/",
+  layer_id: "0",
+  ...overrides,
+});
+
+describe("findVisualizationMismatches", () => {
+  test("returns nothing when a declared type has a matching query", () => {
+    expect(
+      findVisualizationMismatches({
+        visualization_types: ["numeric"],
+        resource: featureResource({ query_numeric: { where: "1=1" } }),
+      }),
+    ).toEqual([]);
+  });
+
+  test("flags a declared type with no matching query", () => {
+    expect(
+      findVisualizationMismatches({
+        visualization_types: ["table"],
+        resource: featureResource(),
+      }),
+    ).toEqual([{ kind: "declared-without-query", type: "table" }]);
+  });
+
+  test("flags a query whose type is not declared", () => {
+    expect(
+      findVisualizationMismatches({
+        visualization_types: ["numeric"],
+        resource: featureResource({
+          query_numeric: { where: "1=1" },
+          query_chart: { where: "1=1" },
+        }),
+      }),
+    ).toEqual([{ kind: "query-without-declared", type: "chart" }]);
+  });
+
+  test("ignores `map`, which has no corresponding query field", () => {
+    expect(
+      findVisualizationMismatches({
+        visualization_types: ["map"],
+        resource: featureResource(),
+      }),
+    ).toEqual([]);
+  });
+
+  test("ignores imagery: its numerics come from histograms, not a query", () => {
+    expect(
+      findVisualizationMismatches({
+        visualization_types: ["map", "numeric"],
+        resource: { blockType: "imagery", name: "slope", url: "https://example.test/ImageServer" },
+      }),
+    ).toEqual([]);
+  });
+
+  test("ignores h3 rows, which declare no visualization types", () => {
+    expect(
+      findVisualizationMismatches({
+        visualization_types: [],
+        resource: { blockType: "h3", name: "altitude", column: "ALTMEAN" },
+      }),
+    ).toEqual([]);
+  });
+
+  test("tolerates missing and malformed input without throwing", () => {
+    expect(findVisualizationMismatches({})).toEqual([]);
+    expect(findVisualizationMismatches({ visualization_types: null, resource: null })).toEqual([]);
+    expect(findVisualizationMismatches({ visualization_types: "map", resource: 42 })).toEqual([]);
+  });
+});
+
+describe("findVisualizationMismatches against the real source data", () => {
+  test("flags exactly one row across all 164 indicators: indicator 5", () => {
+    const flagged = (INDICATORS as unknown as { id: number; visualization_types: string[]; resource: Record<string, unknown> }[])
+      .map((indicator) => ({
+        id: indicator.id,
+        mismatches: findVisualizationMismatches({
+          visualization_types: indicator.visualization_types,
+          // The source JSON uses `type`; Payload blocks use `blockType`.
+          resource: { ...indicator.resource, blockType: indicator.resource.type },
+        }),
+      }))
+      .filter(({ mismatches }) => mismatches.length > 0);
+
+    expect(flagged).toEqual([
+      { id: 5, mismatches: [{ kind: "query-without-declared", type: "chart" }] },
+    ]);
+  });
+});
