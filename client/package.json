@@ -18,6 +18,7 @@
     "test:e2e:report": "playwright show-report e2e/playwright-report",
     "payload": "payload",
     "seed:catalogue": "payload run scripts/seed-catalogue.ts --",
+    "verify:catalogue": "payload run scripts/verify-catalogue.ts --",
     "ci": "payload migrate && pnpm build"
   },
   "dependencies": {
