@@ -75,6 +75,9 @@ export interface Config {
     accounts: Account;
     media: Media;
     reports: Report;
+    topics: Topic;
+    subtopics: Subtopic;
+    indicators: Indicator;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
@@ -94,6 +97,9 @@ export interface Config {
     accounts: AccountsSelect<false> | AccountsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     reports: ReportsSelect<false> | ReportsSelect<true>;
+    topics: TopicsSelect<false> | TopicsSelect<true>;
+    subtopics: SubtopicsSelect<false> | SubtopicsSelect<true>;
+    indicators: IndicatorsSelect<false> | IndicatorsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -358,6 +364,330 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "topics".
+ */
+export interface Topic {
+  id: string;
+  /**
+   * Numeric id from the original datum JSON. Referenced by existing reports rows and by the defaultTopics URL param. Never change it.
+   */
+  legacy_id: number;
+  name: string;
+  /**
+   * Markdown. Rendered with react-markdown.
+   */
+  description?: string | null;
+  /**
+   * Path under client/public, e.g. /images/topics/territory.webp
+   */
+  image?: string | null;
+  default_visualization?:
+    | {
+        indicator: string | Indicator;
+        /**
+         * The source data only uses map, numeric, chart and table; custom and ai exist to match Reports.
+         */
+        type: 'map' | 'chart' | 'table' | 'numeric' | 'custom' | 'ai';
+        x: number;
+        y: number;
+        w: number;
+        h: number;
+        basemapId?:
+          | (
+              | 'gray-vector'
+              | 'dark-gray-vector'
+              | 'satellite'
+              | 'streets'
+              | 'hybrid'
+              | 'osm'
+              | 'topo-vector'
+              | 'terrain'
+            )
+          | null;
+        opacity?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "indicators".
+ */
+export interface Indicator {
+  id: string;
+  /**
+   * Numeric id from the original datum JSON. Referenced by existing reports rows and by the defaultTopics URL param. Never change it.
+   */
+  legacy_id: number;
+  /**
+   * Display order within a subtopic. Not the same as legacy_id — they diverge on some rows.
+   */
+  order: number;
+  subtopic: string | Subtopic;
+  name: string;
+  /**
+   * e.g. km², m. Empty on 63 of 164 rows.
+   */
+  unit?: string | null;
+  description_short: string;
+  /**
+   * Markdown. Rendered with react-markdown in containers/info.
+   */
+  description?: string | null;
+  /**
+   * Which widgets this indicator offers. Deliberately explicit, not derived: deriving would change 18 of 164 rows. Empty for all h3 indicators.
+   */
+  visualization_types?: ('map' | 'table' | 'chart' | 'numeric')[] | null;
+  /**
+   * Exactly one resource. The block type is the resource type.
+   */
+  resource: (
+    | {
+        /**
+         * Display/machine name. Empty on 14 source rows; not read by any code for this resource type.
+         */
+        name?: string | null;
+        url: string;
+        /**
+         * Text, not a number: lib/indicators.ts builds the layer URL as `url + layer_id`.
+         */
+        layer_id: string;
+        /**
+         * Rebuilt on read as { title, content: [{ type: 'fields', fieldInfos }] } — the only content shape present in the source data.
+         */
+        popupTemplate?: {
+          title?: string | null;
+          fieldInfos?:
+            | {
+                fieldName: string;
+                label: string;
+                id?: string | null;
+              }[]
+            | null;
+        };
+        /**
+         * ArcGIS __esri.QueryProperties, passed unmodified to `new Query()`.
+         */
+        query_numeric?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        /**
+         * ArcGIS __esri.QueryProperties, passed unmodified to `new Query()`.
+         */
+        query_table?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        /**
+         * ArcGIS __esri.QueryProperties, passed unmodified to `new Query()`.
+         */
+        query_chart?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        /**
+         * ArcGIS __esri.QueryProperties, passed unmodified to `new Query()`.
+         */
+        query_ai?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'feature';
+      }
+    | {
+        /**
+         * Display/machine name. Empty on 14 source rows; not read by any code for this resource type.
+         */
+        name?: string | null;
+        url: string;
+        /**
+         * ArcGIS __esri.RasterFunctionProperties, e.g. a Colormap function.
+         */
+        rasterFunction:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        legend: {
+          type: 'basic';
+          items: {
+            label: string;
+            /**
+             * Hex, e.g. #EEF0BA
+             */
+            color: string;
+            id?: string | null;
+          }[];
+        };
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'imagery';
+      }
+    | {
+        /**
+         * Display/machine name. Empty on 14 source rows; not read by any code for this resource type.
+         */
+        name?: string | null;
+        url: string;
+        /**
+         * ArcGIS __esri.RasterFunctionProperties, e.g. a Colormap function.
+         */
+        rasterFunction:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        legend: {
+          type: 'basic';
+          items: {
+            label: string;
+            /**
+             * Hex, e.g. #EEF0BA
+             */
+            color: string;
+            id?: string | null;
+          }[];
+        };
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'imagery-tile';
+      }
+    | {
+        /**
+         * Display/machine name. Empty on 14 source rows; not read by any code for this resource type.
+         */
+        name?: string | null;
+        url: string;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'web-tile';
+      }
+    | {
+        /**
+         * Machine name. Keys the COMPONENT_INDICATORS registry in containers/indicators/custom/index.tsx (`total-area`, `AMZ_LOCADM2`) — do not rename without checking that file.
+         */
+        name: string;
+        /**
+         * H3 variable name, matched against META.datasets[].var_name.
+         */
+        column: string;
+        url?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'h3';
+      }
+    | {
+        /**
+         * Machine name. Keys the COMPONENT_INDICATORS registry in containers/indicators/custom/index.tsx (`total-area`, `AMZ_LOCADM2`) — do not rename without checking that file.
+         */
+        name: string;
+        /**
+         * ArcGIS __esri.QueryProperties, passed unmodified to `new Query()`.
+         */
+        query_ai?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'component';
+      }
+  )[];
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subtopics".
+ */
+export interface Subtopic {
+  id: string;
+  /**
+   * Numeric id from the original datum JSON. Referenced by existing reports rows and by the defaultTopics URL param. Never change it.
+   */
+  legacy_id: number;
+  topic: string | Topic;
+  /**
+   * English only in the source data. ES and PT translations are seeded in phase 2; reads fall back to en until then.
+   */
+  name: string;
+  /**
+   * Markdown. Empty on every row in the source data.
+   */
+  description?: string | null;
+  default_visualization?:
+    | {
+        indicator: string | Indicator;
+        /**
+         * The source data only uses map, numeric, chart and table; custom and ai exist to match Reports.
+         */
+        type: 'map' | 'chart' | 'table' | 'numeric' | 'custom' | 'ai';
+        x: number;
+        y: number;
+        w: number;
+        h: number;
+        basemapId?:
+          | (
+              | 'gray-vector'
+              | 'dark-gray-vector'
+              | 'satellite'
+              | 'streets'
+              | 'hybrid'
+              | 'osm'
+              | 'topo-vector'
+              | 'terrain'
+            )
+          | null;
+        opacity?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -504,6 +834,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'reports';
         value: string | Report;
+      } | null)
+    | ({
+        relationTo: 'topics';
+        value: string | Topic;
+      } | null)
+    | ({
+        relationTo: 'subtopics';
+        value: string | Subtopic;
+      } | null)
+    | ({
+        relationTo: 'indicators';
+        value: string | Indicator;
       } | null);
   globalSlug?: string | null;
   user:
@@ -684,6 +1026,171 @@ export interface ReportsSelect<T extends boolean = true> {
               id?: T;
             };
         id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "topics_select".
+ */
+export interface TopicsSelect<T extends boolean = true> {
+  legacy_id?: T;
+  name?: T;
+  description?: T;
+  image?: T;
+  default_visualization?:
+    | T
+    | {
+        indicator?: T;
+        type?: T;
+        x?: T;
+        y?: T;
+        w?: T;
+        h?: T;
+        basemapId?: T;
+        opacity?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subtopics_select".
+ */
+export interface SubtopicsSelect<T extends boolean = true> {
+  legacy_id?: T;
+  topic?: T;
+  name?: T;
+  description?: T;
+  default_visualization?:
+    | T
+    | {
+        indicator?: T;
+        type?: T;
+        x?: T;
+        y?: T;
+        w?: T;
+        h?: T;
+        basemapId?: T;
+        opacity?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "indicators_select".
+ */
+export interface IndicatorsSelect<T extends boolean = true> {
+  legacy_id?: T;
+  order?: T;
+  subtopic?: T;
+  name?: T;
+  unit?: T;
+  description_short?: T;
+  description?: T;
+  visualization_types?: T;
+  resource?:
+    | T
+    | {
+        feature?:
+          | T
+          | {
+              name?: T;
+              url?: T;
+              layer_id?: T;
+              popupTemplate?:
+                | T
+                | {
+                    title?: T;
+                    fieldInfos?:
+                      | T
+                      | {
+                          fieldName?: T;
+                          label?: T;
+                          id?: T;
+                        };
+                  };
+              query_numeric?: T;
+              query_table?: T;
+              query_chart?: T;
+              query_ai?: T;
+              id?: T;
+              blockName?: T;
+            };
+        imagery?:
+          | T
+          | {
+              name?: T;
+              url?: T;
+              rasterFunction?: T;
+              legend?:
+                | T
+                | {
+                    type?: T;
+                    items?:
+                      | T
+                      | {
+                          label?: T;
+                          color?: T;
+                          id?: T;
+                        };
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        'imagery-tile'?:
+          | T
+          | {
+              name?: T;
+              url?: T;
+              rasterFunction?: T;
+              legend?:
+                | T
+                | {
+                    type?: T;
+                    items?:
+                      | T
+                      | {
+                          label?: T;
+                          color?: T;
+                          id?: T;
+                        };
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        'web-tile'?:
+          | T
+          | {
+              name?: T;
+              url?: T;
+              id?: T;
+              blockName?: T;
+            };
+        h3?:
+          | T
+          | {
+              name?: T;
+              column?: T;
+              url?: T;
+              id?: T;
+              blockName?: T;
+            };
+        component?:
+          | T
+          | {
+              name?: T;
+              query_ai?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;
