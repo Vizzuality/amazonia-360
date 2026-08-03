@@ -77,6 +77,32 @@ describe("DefaultVisualizationField", () => {
     expect(violations).toEqual([]);
   });
 
+  test.each(["basemapId", "opacity"] as const)(
+    "clears %s on save when the widget is not a map",
+    (fieldName) => {
+      const field = findFieldByName(arrayFields(), fieldName);
+      const beforeChange = field?.hooks?.beforeChange?.[0];
+
+      expect(beforeChange).toBeDefined();
+      expect(
+        beforeChange?.({ value: "some-value", siblingData: { type: "chart" } } as never),
+      ).toBeNull();
+    },
+  );
+
+  test.each(["basemapId", "opacity"] as const)(
+    "keeps %s on save when the widget is a map",
+    (fieldName) => {
+      const field = findFieldByName(arrayFields(), fieldName);
+      const beforeChange = field?.hooks?.beforeChange?.[0];
+
+      expect(beforeChange).toBeDefined();
+      expect(beforeChange?.({ value: "some-value", siblingData: { type: "map" } } as never)).toBe(
+        "some-value",
+      );
+    },
+  );
+
   test("only the documented dangling indicator reference exists", () => {
     const indicatorIds = new Set(
       (INDICATORS as unknown as { id: number }[]).map((indicator) => indicator.id),

@@ -7,6 +7,19 @@ const showForMapsOnly = {
 };
 
 /**
+ * Mirrors `cms/fields/topics.ts` (the Reports collection's equivalent field): clears
+ * `basemapId`/`opacity` on save when the widget is not a map, so switching a widget's
+ * `type` away from `map` doesn't leave a stale value behind that the UI no longer shows.
+ */
+const clearWhenNotMap = ({
+  value,
+  siblingData,
+}: {
+  value?: unknown;
+  siblingData?: { type?: string };
+}) => (siblingData?.type !== "map" ? null : value);
+
+/**
  * The pre-configured widget layout for a topic or subtopic.
  *
  * Deliberately NOT shared with `cms/fields/topics.ts` (used by Reports): that field
@@ -52,6 +65,7 @@ export const DefaultVisualizationField: Field = {
       options: BASEMAPS.map((basemap) => ({ label: basemap.id, value: basemap.id })),
       defaultValue: "gray-vector",
       admin: showForMapsOnly,
+      hooks: { beforeChange: [clearWhenNotMap] },
     },
     {
       name: "opacity",
@@ -59,6 +73,7 @@ export const DefaultVisualizationField: Field = {
       required: false,
       defaultValue: 1,
       admin: showForMapsOnly,
+      hooks: { beforeChange: [clearWhenNotMap] },
     },
   ],
 };
