@@ -48,17 +48,23 @@ describe("buildTranslationData", () => {
     expect(data).toHaveProperty("resource");
   });
 
-  it("does not let the locale payload override a carried field", () => {
-    const data = buildTranslationData(writtenIndicator(), ["resource"], {
-      ...localeText,
-      // A locale mapper emitting `resource` — partial, id-less, and missing the required
-      // localized labels — must not win, or the validation failure comes straight back.
-      resource: [{ blockType: "feature", url: "https://example.com/other" }],
-    });
-    const resource = data.resource as { id: string }[];
-
-    expect(resource).toHaveLength(1);
-    expect(resource[0].id).toBe("block-1");
+  it("throws when a locale mapper starts emitting a field that is also carried", () => {
+    // A locale mapper emitting `resource` — partial, id-less, and missing the required
+    // localized labels — must not be silently discarded or silently allowed to win; either
+    // one would hide a real collision. See CARRIED_TO_TRANSLATIONS in
+    // scripts/seed-catalogue.ts for where to resolve it.
+    expect(() =>
+      buildTranslationData(writtenIndicator(), ["resource"], {
+        ...localeText,
+        resource: [{ blockType: "feature", url: "https://example.com/other" }],
+      }),
+    ).toThrow(/resource/);
+    expect(() =>
+      buildTranslationData(writtenIndicator(), ["resource"], {
+        ...localeText,
+        resource: [{ blockType: "feature", url: "https://example.com/other" }],
+      }),
+    ).toThrow(/CARRIED_TO_TRANSLATIONS/);
   });
 
   it("returns only the locale payload when nothing is carried", () => {

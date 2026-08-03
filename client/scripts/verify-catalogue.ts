@@ -11,14 +11,35 @@ import { getPayload, type Payload } from "payload";
 
 import config from "@payload-config";
 
-import { LOCALES, type Locale } from "@/cms/seed/source";
+import { LOCALES, rawIndicators, rawSubtopics, rawTopics, type Locale } from "@/cms/seed/source";
 
 type CatalogueSlug = "topics" | "subtopics" | "indicators";
 
 const SLUGS = ["topics", "subtopics", "indicators"] as const satisfies readonly CatalogueSlug[];
 
-const EXPECTED_ROWS: Record<CatalogueSlug, number> = { topics: 9, subtopics: 28, indicators: 164 };
-const EXPECTED_DEFAULT_VIS = { topics: 8, subtopics: 28 } as const;
+/**
+ * Both derived from the source JSON rather than hand-typed, so the audit tracks the source
+ * instead of rotting against it: add an indicator to `datum/indicators.json` and this stays
+ * correct instead of FAILing for the wrong reason (a stale expected count), and removing one
+ * no longer risks a PASS while an orphaned published document lingers — see the legacy_id
+ * set-equality check below, which is what actually catches that second case.
+ */
+const EXPECTED_ROWS: Record<CatalogueSlug, number> = {
+  topics: rawTopics.length,
+  subtopics: rawSubtopics.length,
+  indicators: rawIndicators.length,
+};
+const EXPECTED_DEFAULT_VIS = {
+  topics: rawTopics.filter((r) => r.default_visualization?.length).length,
+  subtopics: rawSubtopics.filter((r) => r.default_visualization?.length).length,
+} as const;
+
+/** The `raw*` source arrays, keyed the same way as `EXPECTED_ROWS`/`SLUGS`. */
+const RAW_SOURCE: Record<CatalogueSlug, readonly { id: number }[]> = {
+  topics: rawTopics,
+  subtopics: rawSubtopics,
+  indicators: rawIndicators,
+};
 
 const expectEmpty = process.argv.slice(2).includes("--expect-empty");
 
@@ -163,6 +184,40 @@ function auditDefaultVisualization(views: Views) {
   }
 }
 
+/**
+ * Set-equality between the `legacy_id`s live in the database and the ids in the source JSON.
+ *
+ * Every other check in this file assumes the two are in sync; nothing before this one would
+ * catch a source deletion (a row removed from `datum/*.json` but never removed from the
+ * database — the row would keep passing `auditStatus`/`auditLocales` forever) or an orphaned
+ * database row (present here for some other reason, no matching source id). This is the one
+ * drift direction the rest of the audit is blind to.
+ */
+function auditLegacyIdCoverage(views: Views) {
+  console.log("\nSource drift — legacy_id set equality against datum/*.json\n");
+
+  for (const slug of SLUGS) {
+    const dbIds = new Set(
+      views[slug].live.map((r) => r.legacy_id).filter((id): id is number => typeof id === "number"),
+    );
+    const sourceIds = new Set(RAW_SOURCE[slug].map((r) => r.id));
+
+    const missingFromDb = [...sourceIds].filter((id) => !dbIds.has(id)).sort((a, b) => a - b);
+    const orphanedInDb = [...dbIds].filter((id) => !sourceIds.has(id)).sort((a, b) => a - b);
+
+    check(
+      missingFromDb.length === 0,
+      `${slug.padEnd(10)} ${missingFromDb.length} source id(s) missing from the database`,
+      missingFromDb.length ? `legacy_id: ${missingFromDb.slice(0, 20).join(", ")}` : undefined,
+    );
+    check(
+      orphanedInDb.length === 0,
+      `${slug.padEnd(10)} ${orphanedInDb.length} database row(s) with no matching source id`,
+      orphanedInDb.length ? `legacy_id: ${orphanedInDb.slice(0, 20).join(", ")}` : undefined,
+    );
+  }
+}
+
 async function auditFixes(payload: Payload) {
   console.log("\nTargeted spot checks\n");
 
@@ -257,6 +312,7 @@ async function main() {
     auditStatus(views);
     await auditLocales(payload);
     auditDefaultVisualization(views);
+    auditLegacyIdCoverage(views);
     await auditFixes(payload);
     console.log("");
   } finally {

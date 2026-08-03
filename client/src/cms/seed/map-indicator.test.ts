@@ -1,8 +1,49 @@
+import type { Field } from "payload";
+
 import { describe, expect, it } from "vitest";
+
+import { RESOURCE_BLOCKS } from "@/cms/fields/resource";
 
 import { INDICATOR_ADDS_CHART, INDICATOR_DROPS_RASTER_FUNCTION } from "./fixes";
 import { mapIndicatorBase, mapIndicatorLocale, mapResource } from "./map-indicator";
 import { rawIndicators, rawSubtopics, type RawResource } from "./source";
+
+/**
+ * Dot-paths of every `required: true` field in a block's fields, recursing into `group`
+ * fields (whose subfields flatten into the same output object) but not into `array`/`blocks`
+ * fields (whose required subfields are per-row, not per-block, and are already exercised by
+ * the dedicated tests below — e.g. "unwraps popupTemplate", "maps the imagery legend").
+ *
+ * Derived from `RESOURCE_BLOCKS` (client/src/cms/fields/resource.ts) instead of hand-copied,
+ * so a `required: true` field added to any block is caught here automatically — the `as
+ * ResourceBlock` casts in map-indicator.ts otherwise defeat `tsc` on exactly this kind of miss.
+ */
+function requiredFieldPaths(fields: Field[], prefix = ""): string[] {
+  const paths: string[] = [];
+  for (const field of fields) {
+    if (!("name" in field) || typeof field.name !== "string") continue;
+    const path = prefix ? `${prefix}.${field.name}` : field.name;
+    if ("required" in field && field.required === true) paths.push(path);
+    if (field.type === "group") paths.push(...requiredFieldPaths(field.fields, path));
+  }
+  return paths;
+}
+
+function getByPath(block: Record<string, unknown>, path: string): unknown {
+  return path
+    .split(".")
+    .reduce<unknown>(
+      (value, segment) =>
+        value && typeof value === "object"
+          ? (value as Record<string, unknown>)[segment]
+          : undefined,
+      block,
+    );
+}
+
+const REQUIRED_FIELD_PATHS: Record<string, string[]> = Object.fromEntries(
+  RESOURCE_BLOCKS.map((block) => [block.slug, requiredFieldPaths(block.fields)]),
+);
 
 const subtopicIds = new Map(rawSubtopics.map((s) => [s.id, `uuid-sub-${s.id}`] as const));
 const byId = (id: number) => rawIndicators.find((i) => i.id === id)!;
@@ -113,23 +154,32 @@ describe("mapResource field selection", () => {
   it("satisfies each block's required fields on all 164 rows", () => {
     for (const row of rawIndicators) {
       const block = mapResource(row.resource, row.id)[0] as Record<string, unknown>;
-      const required: Record<string, string[]> = {
-        feature: ["url", "layer_id"],
-        imagery: ["url", "rasterFunction", "legend"],
-        "imagery-tile": ["url", "rasterFunction", "legend"],
-        "web-tile": ["url"],
-        h3: ["name", "column"],
-        component: ["name"],
-      };
-      for (const key of required[block.blockType as string]) {
-        expect(block[key], `indicator ${row.id} needs ${key}`).toBeDefined();
-        expect(block[key], `indicator ${row.id} ${key} must not be null`).not.toBeNull();
+      const required = REQUIRED_FIELD_PATHS[block.blockType as string] ?? [];
+      for (const path of required) {
+        const value = getByPath(block, path);
+        expect(value, `indicator ${row.id} needs ${path}`).toBeDefined();
+        expect(value, `indicator ${row.id} ${path} must not be null`).not.toBeNull();
       }
       if (block.blockType === "imagery" || block.blockType === "imagery-tile") {
         const legend = block.legend as { items: unknown[] };
         expect(legend.items.length, `indicator ${row.id} legend.items`).toBeGreaterThan(0);
       }
     }
+  });
+
+  it("derives at least the previously hand-copied required fields per block", () => {
+    // Guards the deriving helper itself: if RESOURCE_BLOCKS ever stopped exposing these as
+    // `required: true`, this documents what used to be asserted by hand.
+    expect(REQUIRED_FIELD_PATHS.feature).toEqual(expect.arrayContaining(["url", "layer_id"]));
+    expect(REQUIRED_FIELD_PATHS.imagery).toEqual(
+      expect.arrayContaining(["url", "rasterFunction", "legend.type", "legend.items"]),
+    );
+    expect(REQUIRED_FIELD_PATHS["imagery-tile"]).toEqual(
+      expect.arrayContaining(["url", "rasterFunction", "legend.type", "legend.items"]),
+    );
+    expect(REQUIRED_FIELD_PATHS["web-tile"]).toEqual(expect.arrayContaining(["url"]));
+    expect(REQUIRED_FIELD_PATHS.h3).toEqual(expect.arrayContaining(["name", "column"]));
+    expect(REQUIRED_FIELD_PATHS.component).toEqual(expect.arrayContaining(["name"]));
   });
 });
 

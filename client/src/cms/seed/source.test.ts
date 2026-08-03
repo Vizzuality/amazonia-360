@@ -1,6 +1,16 @@
 import { describe, expect, it } from "vitest";
 
-import { isBlank, json, localized, text } from "./source";
+import { isBlank, json, localized, LOCALES, text, TRANSLATION_LOCALES } from "./source";
+
+describe("LOCALES and TRANSLATION_LOCALES", () => {
+  it("keeps the exact locale order the seed write sequence depends on", () => {
+    // TRANSLATION_LOCALES drives the create-then-update write order in scripts/seed-catalogue.ts
+    // (en create, then es, then pt updates). A silent reorder here would invert that sequence
+    // with no other test catching it.
+    expect(LOCALES).toEqual(["en", "es", "pt"]);
+    expect(TRANSLATION_LOCALES).toEqual(["es", "pt"]);
+  });
+});
 
 describe("isBlank", () => {
   it("treats the source's placeholder blanks as absent", () => {

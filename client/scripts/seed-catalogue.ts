@@ -1,3 +1,38 @@
+/**
+ * Writes `client/datum/{topics,subtopics,indicators}.json` into the topics/subtopics/indicators
+ * CMS collections as published, multi-locale documents. This is the write path — see
+ * `scripts/verify-catalogue.ts` for the read-only audit that should follow every run.
+ *
+ * ⚠ Always invoke this through `pnpm seed:catalogue`, never `payload run
+ * scripts/seed-catalogue.ts` directly.
+ *
+ * `client/package.json`'s `seed:catalogue` script is `payload run scripts/seed-catalogue.ts --`.
+ * That trailing `--` is not decorative — it is the entire reason flags below reach this file at
+ * all. `payload run` parses its own CLI invocation with `minimist` and then rebuilds
+ * `process.argv` from `minimist`'s *positional* arguments (`args._`) only, dropping everything
+ * `minimist` consumed as a named option. Without the `--`, minimist parses a flag like
+ * `--dry-run` as `{ 'dry-run': true }` — a named option, not a positional — so it never appears
+ * in `args._` and is silently discarded before this script's own `process.argv` is rebuilt.
+ * Concretely:
+ *
+ *   payload run scripts/seed-catalogue.ts --dry-run     — `--dry-run` is dropped; this runs
+ *                                                          as a REAL, COMMITTED write
+ *   payload run scripts/seed-catalogue.ts -- --dry-run  — `--dry-run` survives as a literal
+ *                                                          positional and reaches this file
+ *
+ * The obvious moves that skip the `--` — running `payload run scripts/seed-catalogue.ts
+ * --dry-run` directly while debugging, or invoking it in a container without the pnpm scripts —
+ * both silently commit. Always go through `pnpm seed:catalogue -- <flags>`.
+ *
+ *   pnpm seed:catalogue -- --dry-run                — rehearse: build everything, roll back
+ *   pnpm seed:catalogue -- --overwrite --yes         — also rewrite existing rows (destructive
+ *                                                       to translated labels — see the
+ *                                                       CARRIED_TO_TRANSLATIONS comment below)
+ *
+ * As a second line of defence, unknown flags (`--dryrun`, `--dry_run`, `-n`, `--overwite`, …)
+ * are rejected before any database connection opens rather than silently ignored — see
+ * KNOWN_FLAGS below.
+ */
 import {
   getPayload,
   type Payload,
@@ -6,6 +41,8 @@ import {
 } from "payload";
 
 import config from "@payload-config";
+
+import { env } from "@/env.mjs";
 
 import { buildTranslationData } from "@/cms/seed/carry-translations";
 import { describeAppliedFixes } from "@/cms/seed/fixes";
@@ -20,6 +57,7 @@ import {
   TRANSLATION_LOCALES,
   type Locale,
 } from "@/cms/seed/source";
+import { getDatabaseUrlFromUrlAndPassword } from "@/utils/database-url";
 
 type CatalogueSlug = "topics" | "subtopics" | "indicators";
 
@@ -51,8 +89,57 @@ const CARRIED_TO_TRANSLATIONS: Partial<Record<CatalogueSlug, readonly string[]>>
   indicators: ["resource"],
 };
 
-const args = new Set(process.argv.slice(2));
-const dryRun = args.has("--dry-run");
+/**
+ * Every flag this script understands. Anything else on the command line — a typo like
+ * `--dryrun`/`--dry_run`/`-n`/`--overwite`, or a flag from a different script entirely — throws
+ * immediately rather than being silently ignored. This is the same failure class as the
+ * `payload run` argv-drop problem documented in the file header, closed at this script's own
+ * argument-parsing layer instead of relying on every flag name being guessed correctly by
+ * whoever is invoking it.
+ *
+ * A bare `--` is allowed through unexamined: `pnpm seed:catalogue -- --dry-run` legitimately
+ * puts a literal `--` in `process.argv` here. `payload run` rebuilds `process.argv` from
+ * minimist's positional arguments only (see the file header); minimist treats the *first* `--`
+ * in its input as "stop parsing flags", consuming it, but a *second* `--` — the one contributed
+ * by `pnpm run seed:catalogue -- --dry-run` on top of the `--` already baked into the
+ * `seed:catalogue` package script — is just another positional string and survives verbatim
+ * into this script's argv alongside the real flags.
+ */
+const KNOWN_FLAGS = new Set(["--dry-run", "--overwrite", "--yes"]);
+
+function parseArgs(argv: readonly string[]): { dryRun: boolean; overwrite: boolean; yes: boolean } {
+  for (const arg of argv) {
+    if (arg === "--") continue;
+    if (!KNOWN_FLAGS.has(arg)) {
+      throw new Error(
+        `unknown flag ${arg} (known flags: ${[...KNOWN_FLAGS].join(", ")}) — invoke this ` +
+          `script via "pnpm seed:catalogue -- <flags>"; see the file header for why the "--" ` +
+          `matters`,
+      );
+    }
+  }
+  const flags = new Set(argv);
+  return {
+    dryRun: flags.has("--dry-run"),
+    overwrite: flags.has("--overwrite"),
+    yes: flags.has("--yes"),
+  };
+}
+
+const { dryRun, overwrite, yes } = parseArgs(process.argv.slice(2));
+
+/**
+ * Prints the database this run is about to write to — host and database name only, never the
+ * password or the full connection string — before any write happens, on every run (not just
+ * `--overwrite`). Reuses `getDatabaseUrlFromUrlAndPassword` (see `src/utils/database-url.ts`)
+ * to resolve the same env vars `payload.config.ts` does, rather than re-parsing `DATABASE_URL`
+ * by hand.
+ */
+function printDatabaseTarget(): void {
+  const resolvedUrl = getDatabaseUrlFromUrlAndPassword(env.DATABASE_URL, env.DATABASE_PASSWORD);
+  const { host, pathname } = new URL(resolvedUrl);
+  console.log(`\n  target      ${host}${pathname}`);
+}
 
 /**
  * ⚠ `--overwrite` rewrites existing rows from the source JSON instead of skipping them, and it
@@ -63,10 +150,38 @@ const dryRun = args.has("--dry-run");
  * the same way, since the source row is written verbatim.
  *
  * It is safe on a catalogue nobody has edited — a re-import, or fixing a bad seed. Treat it as
- * unsafe on a live one. As of this writing it has never been run against a real database, only
- * typechecked.
+ * unsafe on a live one.
+ *
+ * `--overwrite` alone therefore refuses to run: it requires an explicit `--yes` alongside it,
+ * checked here before any database connection opens (no interactive prompt — this has to stay
+ * non-interactive for CI and scripted use). `--yes` is required even under `--dry-run`: a dry
+ * run's transaction is rolled back, so nothing is actually destroyed, but the flag's meaning
+ * ("I intend the destructive rewrite") should not change depending on `--dry-run`, and an
+ * operator rehearsing a run should confirm the same thing they will need to confirm for real.
  */
-const overwrite = args.has("--overwrite");
+function assertOverwriteConfirmed(): void {
+  if (!overwrite || yes) return;
+
+  console.error(`
+  ❌ --overwrite refused: --yes is required.
+
+  --overwrite rewrites every existing topic, subtopic and indicator row from the source JSON.
+  In particular, it resets any editor-translated label back to its English source text on:
+
+    - resource[].popupTemplate.fieldInfos[].label
+    - resource[].legend.items[].label
+
+  Any other field an editor changed on a seeded row is overwritten the same way, since the
+  source row is written back verbatim. This applies even under --dry-run, whose transaction is
+  rolled back but whose intent should still be confirmed explicitly.
+
+  Re-run with "--overwrite --yes" once you have confirmed this is what you want.
+`);
+  process.exit(1);
+}
+
+printDatabaseTarget();
+assertOverwriteConfirmed();
 
 /** Documents this run created, per collection — pass 4 only backfills these. */
 const created = {
