@@ -22,6 +22,26 @@ import {
 
 type CatalogueSlug = "topics" | "subtopics" | "indicators";
 
+/**
+ * Fields copied from the `en` write into each translation write.
+ *
+ * Payload validates the *whole* document against the request locale on every update, and two
+ * subfields inside the indicator `resource` blocks — `popupTemplate.fieldInfos[].label` and
+ * `legend.items[].label` — are both `localized` and `required`. The block rows themselves are
+ * not localized, so they survive the `en` write, but their `label` values are empty in `es`
+ * and `pt`; a translation update that omits `resource` therefore fails validation on the 45
+ * indicators carrying popup field infos and the 27 carrying legend items.
+ *
+ * The source data has a single language for those labels — there is no `label_es`/`label_pt`
+ * anywhere in `datum/indicators.json` — so the blocks are sent back exactly as the `en` write
+ * returned them, ids included. That is what the admin UI itself does when a locale tab is
+ * saved, and it seeds the untranslated labels with the English text that locale fallback was
+ * already showing readers.
+ */
+const CARRIED_TO_TRANSLATIONS: Partial<Record<CatalogueSlug, readonly string[]>> = {
+  indicators: ["resource"],
+};
+
 const args = new Set(process.argv.slice(2));
 const dryRun = args.has("--dry-run");
 const overwrite = args.has("--overwrite");
@@ -82,44 +102,57 @@ async function upsert<TSlug extends CatalogueSlug>(
   // (it is not, here).
   const publishedBase = { ...base, _status: "published" as const };
 
-  let id: string;
+  let written: Record<string, unknown>;
   if (existing) {
-    // `payload.update`'s data type is `DeepPartial<MarkOptional<DataFromCollectionSlug<TSlug>, ...>>`
-    // built through a nested generic composition that TypeScript cannot prove assignable for an
-    // abstract `TSlug` even though it holds for every concrete slug (verified: the identical
-    // assignment typechecks with a literal collection slug, only the generic-through-generic
-    // case fails) — see https://github.com/microsoft/TypeScript/issues/13995-style limitation.
-    // `payload.create` right below has no such issue and typechecks `publishedBase` against the
-    // real collection shape with no cast, which is what actually catches a mapper/collection
-    // mismatch; this cast only works around the `update` composition, not a real mismatch.
-    const doc = await payload.update({
+    // `payload.update`'s data type is `DeepPartial<MarkOptional<DataFromCollectionSlug<TSlug>, ...>>`,
+    // composed through nested generics. TypeScript cannot prove that composition assignable while
+    // `TSlug` is still abstract, even though it holds for every concrete slug — the identical
+    // assignment typechecks once the collection slug is a literal, and only the
+    // generic-through-generic case fails. `payload.create` right below has no such issue and
+    // typechecks `publishedBase` against the real collection shape with no cast, which is what
+    // actually catches a mapper/collection mismatch; this cast only works around the `update`
+    // composition, not a real mismatch.
+    written = (await payload.update({
       collection,
       id: existing,
       data: publishedBase as never,
       locale: "en",
       draft: false,
+      depth: 0,
       req,
-    });
-    id = doc.id as string;
+    })) as Record<string, unknown>;
     counts[collection].updated += 1;
   } else {
-    const doc = await payload.create({
+    written = (await payload.create({
       collection,
       data: publishedBase,
       locale: "en",
       draft: false,
+      depth: 0,
       req,
-    });
-    id = doc.id as string;
+    })) as Record<string, unknown>;
     counts[collection].created += 1;
     created[collection].add(legacyId);
   }
+  const id = written.id as string;
+
+  const carried = Object.fromEntries(
+    (CARRIED_TO_TRANSLATIONS[collection] ?? []).map((field) => [field, written[field]]),
+  );
 
   for (const locale of TRANSLATION_LOCALES) {
     const data = locales[locale];
     if (!data || Object.keys(data).length === 0) continue;
     // Same `update` generic-composition limitation as above.
-    await payload.update({ collection, id, data: data as never, locale, draft: false, req });
+    await payload.update({
+      collection,
+      id,
+      data: { ...carried, ...data } as never,
+      locale,
+      draft: false,
+      depth: 0,
+      req,
+    });
   }
 
   return id;
@@ -268,7 +301,9 @@ async function main() {
       console.log("\n  ✅ committed\n");
     }
   } finally {
-    await payload.destroy();
+    // Swallowed on purpose: a `destroy` rejection thrown from `finally` would replace the
+    // original error and lose the mapper's row-naming diagnostic.
+    await payload.destroy().catch((e) => console.error("  destroy failed:", e));
   }
 }
 
