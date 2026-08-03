@@ -7,6 +7,7 @@ import {
 
 import config from "@payload-config";
 
+import { buildTranslationData } from "@/cms/seed/carry-translations";
 import { describeAppliedFixes } from "@/cms/seed/fixes";
 import { mapDefaultVisualization } from "@/cms/seed/map-default-visualization";
 import { mapIndicatorBase, mapIndicatorLocale } from "@/cms/seed/map-indicator";
@@ -37,6 +38,14 @@ type CatalogueSlug = "topics" | "subtopics" | "indicators";
  * returned them, ids included. That is what the admin UI itself does when a locale tab is
  * saved, and it seeds the untranslated labels with the English text that locale fallback was
  * already showing readers.
+ *
+ * ⚠ This is destructive under `--overwrite`. The carried block always holds the English
+ * labels, and nothing here can tell an editor's hand-typed Spanish label from one that was
+ * never translated — `mapIndicatorLocale` does not return `resource`, so there is no
+ * per-locale value to compare against. A `--overwrite` run against a catalogue whose
+ * `popupTemplate.fieldInfos[].label` or `legend.items[].label` have been translated in the
+ * admin UI will silently reset every one of them to English. Read the note on `overwrite`
+ * below before reaching for that flag on a live catalogue.
  */
 const CARRIED_TO_TRANSLATIONS: Partial<Record<CatalogueSlug, readonly string[]>> = {
   indicators: ["resource"],
@@ -44,6 +53,19 @@ const CARRIED_TO_TRANSLATIONS: Partial<Record<CatalogueSlug, readonly string[]>>
 
 const args = new Set(process.argv.slice(2));
 const dryRun = args.has("--dry-run");
+
+/**
+ * ⚠ `--overwrite` rewrites existing rows from the source JSON instead of skipping them, and it
+ * loses editor work in the admin UI. The clearest case is the localized block labels described
+ * on `CARRIED_TO_TRANSLATIONS` above: every translated `popupTemplate.fieldInfos[].label` and
+ * `legend.items[].label` is reset to its English source text, with no warning and no way to
+ * tell which ones had been translated. Anything else an editor changed on a seeded field goes
+ * the same way, since the source row is written verbatim.
+ *
+ * It is safe on a catalogue nobody has edited — a re-import, or fixing a bad seed. Treat it as
+ * unsafe on a live one. As of this writing it has never been run against a real database, only
+ * typechecked.
+ */
 const overwrite = args.has("--overwrite");
 
 /** Documents this run created, per collection — pass 4 only backfills these. */
@@ -135,10 +157,7 @@ async function upsert<TSlug extends CatalogueSlug>(
     created[collection].add(legacyId);
   }
   const id = written.id as string;
-
-  const carried = Object.fromEntries(
-    (CARRIED_TO_TRANSLATIONS[collection] ?? []).map((field) => [field, written[field]]),
-  );
+  const carryFields = CARRIED_TO_TRANSLATIONS[collection] ?? [];
 
   for (const locale of TRANSLATION_LOCALES) {
     const data = locales[locale];
@@ -147,7 +166,7 @@ async function upsert<TSlug extends CatalogueSlug>(
     await payload.update({
       collection,
       id,
-      data: { ...carried, ...data } as never,
+      data: buildTranslationData(written, carryFields, data) as never,
       locale,
       draft: false,
       depth: 0,
