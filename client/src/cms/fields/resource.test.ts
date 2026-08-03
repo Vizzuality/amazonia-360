@@ -1,4 +1,4 @@
-import type { Block } from "payload";
+import type { Block, Field } from "payload";
 
 import INDICATORS from "@/../datum/indicators.json";
 import {
@@ -40,6 +40,50 @@ const KEYS_DROPPED_BY_TYPE: Record<string, string[]> = {
 };
 
 const blocksBySlug = new Map<string, Block>(RESOURCE_BLOCKS.map((block) => [block.slug, block]));
+
+/**
+ * Recurses into `group` and `array` fields (fanning out once per array item) to find nested
+ * `required` fields that are empty in `data`. Deliberately kept local to this file rather than
+ * added to `find-field.ts`: it interleaves schema (`field.required`) with real data (fanning out
+ * over array *items*, not just the array field's own shape), which is business logic specific to
+ * this conformance check, not something the other three consumers of `find-field.ts` need.
+ *
+ * `namedFields`/`fieldNames` stay deliberately shallow (see their docstrings) — this reaches the
+ * fields they cannot: `legend.type`, `legend.items`, `legend.items[].label`,
+ * `legend.items[].color`, `popupTemplate.fieldInfos[].fieldName` and
+ * `popupTemplate.fieldInfos[].label`. These are the schema's only *nested* `required`
+ * constraints.
+ *
+ * Top-level (depth 0) required fields are intentionally NOT reported here — that's the "every
+ * required block field is non-empty on every row of that type" test's job. `path` starts empty
+ * and only becomes truthy once we've descended at least one level, which is what gates the check.
+ */
+const collectNestedRequiredViolations = (fields: Field[], data: unknown, path = ""): string[] => {
+  const violations: string[] = [];
+  const record = data && typeof data === "object" ? (data as Record<string, unknown>) : {};
+
+  for (const field of namedFields(fields)) {
+    const value = record[field.name];
+    const fieldPath = path ? `${path}.${field.name}` : field.name;
+
+    if (path && field.required && isEmptyValue(value)) {
+      violations.push(fieldPath);
+      continue;
+    }
+
+    if (field.type === "group") {
+      violations.push(...collectNestedRequiredViolations(field.fields, value, fieldPath));
+    } else if (field.type === "array" && Array.isArray(value)) {
+      value.forEach((item, index) => {
+        violations.push(
+          ...collectNestedRequiredViolations(field.fields, item, `${fieldPath}[${index}]`),
+        );
+      });
+    }
+  }
+
+  return violations;
+};
 
 describe("RESOURCE_BLOCKS", () => {
   test("exposes exactly the six expected block slugs", () => {
@@ -117,6 +161,86 @@ describe("RESOURCE_BLOCKS", () => {
       violations.push(
         `indicator ${indicator.id} (${type}): layer_id is ${JSON.stringify(indicator.resource.layer_id)}, not the expected constant "0"`,
       );
+    }
+
+    expect(violations).toEqual([]);
+  });
+
+  test("pins which blocks require resource.name", () => {
+    // Deliberate human ruling, not an oversight: 14 real source rows (12 `feature`, 2 `imagery`)
+    // carry `resource.name: ""`. Making `name` uniformly required would make those rows
+    // unseedable in phase 2, so it's required only on `component`/`h3` — where every row
+    // populates it, and where `component`'s name is load-bearing (it keys
+    // COMPONENT_INDICATORS in containers/indicators/custom/index.tsx). Do not "normalize"
+    // this back to required on all six blocks.
+    expect(findFieldByName(blocksBySlug.get("h3")!.fields, "name")?.required).toBe(true);
+    expect(findFieldByName(blocksBySlug.get("component")!.fields, "name")?.required).toBe(true);
+
+    expect(findFieldByName(blocksBySlug.get("feature")!.fields, "name")?.required).toBeFalsy();
+    expect(findFieldByName(blocksBySlug.get("imagery")!.fields, "name")?.required).toBeFalsy();
+    expect(findFieldByName(blocksBySlug.get("imagery-tile")!.fields, "name")?.required).toBeFalsy();
+    expect(findFieldByName(blocksBySlug.get("web-tile")!.fields, "name")?.required).toBeFalsy();
+  });
+
+  test("nested required fields (legend, popupTemplate.fieldInfos) are non-empty on every row", () => {
+    const violations: string[] = [];
+
+    for (const indicator of indicators) {
+      const block = blocksBySlug.get(indicator.resource.type)!;
+
+      for (const path of collectNestedRequiredViolations(block.fields, indicator.resource)) {
+        violations.push(
+          `indicator ${indicator.id} (${indicator.resource.type}): required "${path}" is empty`,
+        );
+      }
+    }
+
+    expect(violations).toEqual([]);
+  });
+
+  test("popupTemplate.content matches the shape the schema drops and reconstructs on read", () => {
+    // The schema drops `popupTemplate.content` and rebuilds it on read as
+    // `{ title, content: [{ type: "fields", fieldInfos }] }` (see the admin description on the
+    // `popupTemplate` field in resource.ts). That reconstruction is only lossless if this shape
+    // holds for every row that carries `content` today — phase 2's transform depends on it.
+    const violations: string[] = [];
+
+    for (const indicator of indicators) {
+      const popupTemplate = (indicator.resource as { popupTemplate?: { content?: unknown } })
+        .popupTemplate;
+      const content = popupTemplate?.content;
+      if (content === undefined) continue;
+
+      if (!Array.isArray(content) || content.length !== 1) {
+        const size = Array.isArray(content) ? content.length : typeof content;
+        violations.push(
+          `indicator ${indicator.id}: popupTemplate.content has ${size} elements, expected exactly 1`,
+        );
+        continue;
+      }
+
+      const [entry] = content as Record<string, unknown>[];
+      const entryKeys = Object.keys(entry).sort().join(",");
+      if (entryKeys !== "fieldInfos,type") {
+        violations.push(
+          `indicator ${indicator.id}: popupTemplate.content[0] keys are "${entryKeys}", expected exactly "fieldInfos,type"`,
+        );
+      }
+      if (entry.type !== "fields") {
+        violations.push(
+          `indicator ${indicator.id}: popupTemplate.content[0].type is ${JSON.stringify(entry.type)}, expected "fields"`,
+        );
+      }
+
+      const fieldInfos = (entry.fieldInfos as Record<string, unknown>[] | undefined) ?? [];
+      fieldInfos.forEach((fieldInfo, index) => {
+        const fieldInfoKeys = Object.keys(fieldInfo).sort().join(",");
+        if (fieldInfoKeys !== "fieldName,label") {
+          violations.push(
+            `indicator ${indicator.id}: popupTemplate.content[0].fieldInfos[${index}] keys are "${fieldInfoKeys}", expected exactly "fieldName,label"`,
+          );
+        }
+      });
     }
 
     expect(violations).toEqual([]);
