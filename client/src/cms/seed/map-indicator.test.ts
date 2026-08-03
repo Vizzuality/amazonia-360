@@ -29,9 +29,12 @@ describe("mapResource block selection", () => {
       rasterFunction: { functionName: "Colormap" },
       legend: { type: "basic", items: [{ label: "A", color: "#FFFFFF" }] },
     };
-    expect(mapResource(imageryTile, 900)[0]).toMatchObject({
+    expect(mapResource(imageryTile, 900)[0]).toEqual({
       blockType: "imagery-tile",
+      name: "Tiled",
       url: "https://example.test/tiles",
+      rasterFunction: { functionName: "Colormap" },
+      legend: { type: "basic", items: [{ label: "A", color: "#FFFFFF" }] },
     });
 
     const webTile: RawResource = { type: "web-tile", name: "Web", url: "https://example.test/w" };
@@ -58,10 +61,11 @@ describe("mapResource field selection", () => {
     }
   });
 
-  it("keeps layer_id as a string on feature blocks", () => {
-    const block = mapResource(byId(5).resource, 5)[0];
+  it("keeps layer_id as the source string on feature blocks", () => {
+    const row = byId(5);
+    const block = mapResource(row.resource, 5)[0];
     expect(block).toHaveProperty("layer_id");
-    expect(typeof (block as { layer_id: string }).layer_id).toBe("string");
+    expect((block as { layer_id: string }).layer_id).toBe(row.resource.layer_id);
   });
 
   it("unwraps popupTemplate.content into the group", () => {
@@ -119,6 +123,11 @@ describe("mapResource field selection", () => {
       };
       for (const key of required[block.blockType as string]) {
         expect(block[key], `indicator ${row.id} needs ${key}`).toBeDefined();
+        expect(block[key], `indicator ${row.id} ${key} must not be null`).not.toBeNull();
+      }
+      if (block.blockType === "imagery" || block.blockType === "imagery-tile") {
+        const legend = block.legend as { items: unknown[] };
+        expect(legend.items.length, `indicator ${row.id} legend.items`).toBeGreaterThan(0);
       }
     }
   });
@@ -181,6 +190,37 @@ describe("mapIndicatorLocale", () => {
           expect(value, `indicator ${row.id} ${locale}.${key}`).toBe(value.trim());
         }
       }
+
+      const block = mapResource(row.resource, row.id)[0] as Record<string, unknown>;
+
+      const popupTemplate = block.popupTemplate as
+        | { fieldInfos?: { fieldName: string; label: string }[] }
+        | undefined;
+      for (const field of popupTemplate?.fieldInfos ?? []) {
+        expect(field.fieldName, `indicator ${row.id} popupTemplate.fieldName`).toBe(
+          field.fieldName.trim(),
+        );
+        expect(field.label, `indicator ${row.id} popupTemplate.label`).toBe(field.label.trim());
+      }
+
+      const legend = block.legend as { items?: { label: string; color: string }[] } | undefined;
+      for (const item of legend?.items ?? []) {
+        expect(item.label, `indicator ${row.id} legend.label`).toBe(item.label.trim());
+        expect(item.color, `indicator ${row.id} legend.color`).toBe(item.color.trim());
+      }
     }
+  });
+
+  it("trims indicator 140's fieldName, fixing the broken ArcGIS field match", () => {
+    const row = byId(140);
+    expect(
+      (row.resource.popupTemplate as { content: { fieldInfos: { fieldName: string }[] }[] })
+        .content[0].fieldInfos[0].fieldName,
+    ).toBe("LENGTHm ");
+
+    const block = mapResource(row.resource, 140)[0] as {
+      popupTemplate?: { fieldInfos?: { fieldName: string; label: string }[] };
+    };
+    expect(block.popupTemplate?.fieldInfos?.[0].fieldName).toBe("LENGTHm");
   });
 });

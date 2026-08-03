@@ -36,7 +36,7 @@ type RawPopupTemplate = {
  * exactly one `type: 'fields'` element in all 45 rows that have content, and 10 rows are
  * title-only, so it is dropped on write and rebuilt deterministically on read.
  */
-function mapPopupTemplate(value: unknown) {
+function mapPopupTemplate(value: unknown, legacyId: number) {
   const raw = json<RawPopupTemplate>(value);
   if (!raw) return undefined;
 
@@ -44,20 +44,32 @@ function mapPopupTemplate(value: unknown) {
   const mapped = omitUndefined({
     title: text(raw.title),
     fieldInfos: fieldInfos?.length
-      ? fieldInfos.map((f) => ({ fieldName: f.fieldName, label: f.label }))
+      ? fieldInfos.map((f) => ({
+          fieldName: requireText(
+            f.fieldName,
+            `indicator ${legacyId}: popupTemplate fieldInfo missing fieldName`,
+          ),
+          label: requireText(
+            f.label,
+            `indicator ${legacyId}: popupTemplate fieldInfo missing label`,
+          ),
+        }))
       : undefined,
   });
 
   return Object.keys(mapped).length > 0 ? mapped : undefined;
 }
 
-function mapLegend(value: unknown) {
+function mapLegend(value: unknown, legacyId: number, blockType: string) {
   const raw = json<{ type?: string; items?: { label: string; color: string }[] }>(value);
-  if (!raw) throw new Error("imagery resource: missing legend");
+  if (!raw) throw new Error(`indicator ${legacyId}: ${blockType} resource missing legend`);
 
   return {
     type: (raw.type ?? "basic") as "basic",
-    items: (raw.items ?? []).map((i) => ({ label: i.label, color: i.color })),
+    items: (raw.items ?? []).map((i) => ({
+      label: requireText(i.label, `indicator ${legacyId}: legend item missing label`),
+      color: requireText(i.color, `indicator ${legacyId}: legend item missing color`),
+    })),
   };
 }
 
@@ -85,10 +97,13 @@ export function mapResource(resource: RawResource, legacyId: number): Indicator[
       const block = {
         blockType: "feature" as const,
         url: requireText(resource.url, `indicator ${legacyId}: feature resource missing url`),
-        layer_id: text(resource.layer_id) ?? "0",
+        layer_id: requireText(
+          resource.layer_id,
+          `indicator ${legacyId}: feature resource missing layer_id`,
+        ),
         ...omitUndefined({
           name,
-          popupTemplate: mapPopupTemplate(resource.popupTemplate),
+          popupTemplate: mapPopupTemplate(resource.popupTemplate, legacyId),
           query_numeric: json(resource.query_numeric),
           query_table: json(resource.query_table),
           query_chart: json(resource.query_chart),
@@ -100,12 +115,17 @@ export function mapResource(resource: RawResource, legacyId: number): Indicator[
 
     case "imagery":
     case "imagery-tile": {
+      const rasterFunction = json(resource.rasterFunction);
+      if (rasterFunction === undefined) {
+        throw new Error(`indicator ${legacyId}: ${resource.type} resource missing rasterFunction`);
+      }
+
       return [
         {
           blockType: resource.type,
           url: requireText(resource.url, `indicator ${legacyId}: imagery resource missing url`),
-          rasterFunction: json(resource.rasterFunction) ?? null,
-          legend: mapLegend(resource.legend),
+          rasterFunction,
+          legend: mapLegend(resource.legend, legacyId, resource.type),
           ...omitUndefined({ name }),
         } as ResourceBlock,
       ];
