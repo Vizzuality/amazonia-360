@@ -2,6 +2,7 @@ import type { SelectField } from "payload";
 
 import INDICATORS from "@/../datum/indicators.json";
 import SUBTOPICS from "@/../datum/subtopics.json";
+import { warnOnVisualizationMismatch } from "@/cms/hooks/indicator-visualization";
 import { findFieldByName, isEmptyValue } from "@/cms/test-utils/find-field";
 
 import { Indicators } from "./Indicators";
@@ -119,5 +120,13 @@ describe("Indicators", () => {
 
   test("registers the non-blocking visualization mismatch warning", () => {
     expect(Indicators.hooks?.beforeChange).toHaveLength(1);
+    expect(Indicators.hooks?.beforeChange?.[0]).toBe(warnOnVisualizationMismatch);
+  });
+
+  test("pins which localized fields are required", () => {
+    expect(findFieldByName(Indicators.fields, "name")?.required).toBe(true);
+    expect(findFieldByName(Indicators.fields, "description_short")?.required).toBe(true);
+    expect(findFieldByName(Indicators.fields, "unit")?.required).toBeFalsy();
+    expect(findFieldByName(Indicators.fields, "description")?.required).toBeFalsy();
   });
 });
