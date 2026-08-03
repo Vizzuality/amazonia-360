@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { mapDefaultVisualization } from "./map-default-visualization";
-import { rawSubtopics, rawTopics, type RawDefaultVisualization } from "./source";
+import { rawIndicators, rawSubtopics, rawTopics, type RawDefaultVisualization } from "./source";
 
 const entry = (over: Partial<RawDefaultVisualization> = {}): RawDefaultVisualization => ({
   id: 1,
@@ -60,34 +60,17 @@ describe("mapDefaultVisualization", () => {
   });
 
   it("resolves every entry in the real source once fix 1 is applied", () => {
-    const ids = new Map(
-      // every indicator legacy_id that exists, plus none that do not
-      [
-        ...new Set([
-          146,
-          ...rawTopics.flatMap((t) => t.default_visualization ?? []).map((e) => e.indicator_id),
-        ]),
-      ].map((id) => [id, `uuid-${id}`] as const),
-    );
-    const topicSkips = rawTopics.flatMap(
-      (t) => mapDefaultVisualization(t.default_visualization, t.id, ids).skipped,
-    );
-    expect(topicSkips).toEqual([]);
+    const ids = new Map(rawIndicators.map((i) => [i.id, `uuid-${i.id}`] as const));
 
-    const subtopicIds = new Map(
-      [
-        ...new Set([
-          146,
-          ...rawSubtopics
-            .flatMap((s) => s.default_visualization ?? [])
-            .map((e) => e.indicator_id)
-            .filter((id) => id !== 55),
-        ]),
-      ].map((id) => [id, `uuid-${id}`] as const),
-    );
-    const subtopicSkips = rawSubtopics.flatMap(
-      (s) => mapDefaultVisualization(s.default_visualization, s.id, subtopicIds).skipped,
-    );
-    expect(subtopicSkips).toEqual([]);
+    const skips = [
+      ...rawTopics.flatMap(
+        (t) => mapDefaultVisualization(t.default_visualization, t.id, ids).skipped,
+      ),
+      ...rawSubtopics.flatMap(
+        (s) => mapDefaultVisualization(s.default_visualization, s.id, ids).skipped,
+      ),
+    ];
+
+    expect(skips).toEqual([]);
   });
 });
