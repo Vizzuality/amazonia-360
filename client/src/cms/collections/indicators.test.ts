@@ -24,11 +24,18 @@ describe("Indicators", () => {
     expect(Indicators.versions).toEqual({ drafts: true });
   });
 
-  test("is publicly readable but only writable by admins", () => {
+  test("restricts read to published documents for everyone except admins", () => {
     const anonymous = { req: { user: null } } as never;
     const admin = { req: { user: { collection: "admins" } } } as never;
+    const signedInUser = { req: { user: { collection: "users" } } } as never;
 
-    expect(Indicators.access?.read?.(anonymous)).toBe(true);
+    expect(Indicators.access?.read?.(anonymous)).toEqual({ _status: { equals: "published" } });
+    // The owner-directed case: a signed-in non-admin still only sees published content.
+    expect(Indicators.access?.read?.(signedInUser)).toEqual({
+      _status: { equals: "published" },
+    });
+    expect(Indicators.access?.read?.(admin)).toBe(true);
+
     expect(Indicators.access?.update?.(anonymous)).toBe(false);
     expect(Indicators.access?.update?.(admin)).toBe(true);
   });

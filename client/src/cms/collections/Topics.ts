@@ -1,7 +1,7 @@
 import type { CollectionConfig, Field } from "payload";
 
 import { adminAccess } from "@/cms/access/admin";
-import { anyoneAccess } from "@/cms/access/anyone";
+import { publishedOrAdminAccess } from "@/cms/access/catalogue";
 import { DefaultVisualizationField } from "@/cms/fields/default-visualization";
 
 /**
@@ -29,8 +29,9 @@ export const legacyIdField: Field = {
 };
 
 export const catalogueAccess = {
-  // The catalogue is already public today, shipped as a bundled JSON in the client.
-  read: anyoneAccess,
+  // Published-only for everyone except admins; see the comment on
+  // `publishedOrAdminAccess` for why admins are exempt.
+  read: publishedOrAdminAccess,
   create: adminAccess,
   update: adminAccess,
   delete: adminAccess,

@@ -41,12 +41,17 @@ describe.each([
     expect(collection.versions).toEqual({ drafts: true });
   });
 
-  test("is publicly readable but only writable by admins", () => {
+  test("restricts read to published documents for everyone except admins", () => {
     const anonymous = { req: { user: null } } as never;
     const admin = { req: { user: { collection: "admins" } } } as never;
     const signedInUser = { req: { user: { collection: "users" } } } as never;
 
-    expect(collection.access?.read?.(anonymous)).toBe(true);
+    expect(collection.access?.read?.(anonymous)).toEqual({ _status: { equals: "published" } });
+    // The owner-directed case: a signed-in non-admin still only sees published content.
+    expect(collection.access?.read?.(signedInUser)).toEqual({
+      _status: { equals: "published" },
+    });
+    expect(collection.access?.read?.(admin)).toBe(true);
 
     for (const operation of ["create", "update", "delete"] as const) {
       expect(collection.access?.[operation]?.(anonymous)).toBe(false);
