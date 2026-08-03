@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { mapSubtopicBase, mapSubtopicLocale } from "./map-subtopic";
-import { rawSubtopics, rawTopics } from "./source";
+import { rawSubtopics, rawTopics, type RawSubtopic } from "./source";
 
 const topicIds = new Map(rawTopics.map((t) => [t.id, `uuid-topic-${t.id}`] as const));
 
@@ -38,6 +38,11 @@ describe("mapSubtopicBase", () => {
     const row = rawSubtopics[0];
     expect(() => mapSubtopicBase(row, new Map())).toThrow(/topic/i);
   });
+
+  it("throws when name_en is blank rather than writing a nameless subtopic", () => {
+    const row = { id: 999, topic_id: rawTopics[0].id, name_en: "" } as RawSubtopic;
+    expect(() => mapSubtopicBase(row, topicIds)).toThrow(/name_en/i);
+  });
 });
 
 describe("mapSubtopicLocale", () => {
@@ -59,5 +64,11 @@ describe("mapSubtopicLocale", () => {
     for (const row of rawSubtopics) {
       expect(mapSubtopicLocale(row, "es")).not.toHaveProperty("description");
     }
+  });
+
+  it("throws when the subtopic id has no translation entry, rather than dropping name", () => {
+    const row = { ...rawSubtopics[0], id: 999, name_en: "Untranslated" } as RawSubtopic;
+    expect(() => mapSubtopicLocale(row, "es")).toThrow(/999/);
+    expect(() => mapSubtopicLocale(row, "es")).toThrow(/translation/i);
   });
 });

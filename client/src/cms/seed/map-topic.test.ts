@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { mapTopicBase, mapTopicLocale } from "./map-topic";
-import { rawTopics } from "./source";
+import { rawTopics, type RawTopic } from "./source";
 
 describe("mapTopicBase", () => {
   it("maps the en payload without default_visualization", () => {
@@ -11,6 +11,11 @@ describe("mapTopicBase", () => {
     expect(data.legacy_id).toBe(3);
     expect(data.name).toBe(row.name_en);
     expect(data).not.toHaveProperty("default_visualization");
+  });
+
+  it("throws when name_en is blank rather than writing a nameless topic", () => {
+    const row = { id: 999, name_en: "  " } as RawTopic;
+    expect(() => mapTopicBase(row)).toThrow(/name_en/i);
   });
 
   it("produces a valid payload for all 9 rows", () => {
