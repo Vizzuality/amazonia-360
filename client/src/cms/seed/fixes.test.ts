@@ -39,10 +39,7 @@ describe("fix 2: indicator 5 gains chart", () => {
       "numeric",
       "chart",
     ]);
-    expect(fixVisualizationTypes(INDICATOR_ADDS_CHART, ["map", "chart"])).toEqual([
-      "map",
-      "chart",
-    ]);
+    expect(fixVisualizationTypes(INDICATOR_ADDS_CHART, ["map", "chart"])).toEqual(["map", "chart"]);
   });
 
   it("changes no other indicator", () => {
@@ -75,7 +72,11 @@ describe("fix 3: indicator 12 drops rasterFunction", () => {
 describe("describeAppliedFixes", () => {
   it("reports exactly the three named fixes against the real source", () => {
     expect(describeAppliedFixes()).toEqual([
-      { collection: "subtopics", legacy_id: 26, change: "default_visualization indicator 55 -> 146" },
+      {
+        collection: "subtopics",
+        legacy_id: 26,
+        change: "default_visualization indicator 55 -> 146",
+      },
       { collection: "indicators", legacy_id: 5, change: "visualization_types += chart" },
       { collection: "indicators", legacy_id: 12, change: "dropped resource.rasterFunction" },
     ]);
