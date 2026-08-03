@@ -1,7 +1,11 @@
 import { describe, expect, test, vi } from "vitest";
+
 import INDICATORS from "@/../datum/indicators.json";
 
-import { findVisualizationMismatches, warnOnVisualizationMismatch } from "./indicator-visualization";
+import {
+  findVisualizationMismatches,
+  warnOnVisualizationMismatch,
+} from "./indicator-visualization";
 
 const featureResource = (overrides: Record<string, unknown> = {}) => ({
   blockType: "feature",

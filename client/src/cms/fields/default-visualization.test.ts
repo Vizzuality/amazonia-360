@@ -48,7 +48,9 @@ describe("DefaultVisualizationField", () => {
       typeField.options.map((option) => (typeof option === "string" ? option : option.value)),
     );
     const used = new Set(
-      groups.flatMap(({ rows }) => rows.flatMap((row) => row.default_visualization.map((v) => v.type))),
+      groups.flatMap(({ rows }) =>
+        rows.flatMap((row) => row.default_visualization.map((v) => v.type)),
+      ),
     );
 
     expect([...used].filter((type) => !offered.has(type))).toEqual([]);

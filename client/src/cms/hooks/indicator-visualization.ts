@@ -13,7 +13,8 @@ export type VisualizationMismatch = {
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
-const isPresentQuery = (value: unknown): boolean => isRecord(value) && Object.keys(value).length > 0;
+const isPresentQuery = (value: unknown): boolean =>
+  isRecord(value) && Object.keys(value).length > 0;
 
 /**
  * Reports disagreements between an indicator's declared `visualization_types` and the
