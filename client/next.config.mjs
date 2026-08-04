@@ -6,7 +6,10 @@ import "./src/env.mjs";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone",
+  // Only client/Dockerfile consumes .next/standalone. On Vercel this collides
+  // with their build adapter: the adapter-driven Turbopack build never writes
+  // .next/next-server.js.nft.json, which copyTracedFiles then reads.
+  ...(process.env.VERCEL ? {} : { output: "standalone" }),
   turbopack: {
     root: import.meta.dirname,
   },
