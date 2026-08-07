@@ -29,7 +29,6 @@ overrides:
   micromatch>picomatch: 2.3.2
   jest-util>picomatch: 4.0.4
   tinyglobby>picomatch: 4.0.4
-  '@payloadcms/email-nodemailer>nodemailer': 8.0.5
   '@mdxeditor/editor>lexical': 0.41.0
   '@mdxeditor/editor>@lexical/clipboard': 0.41.0
   '@mdxeditor/editor>@lexical/link': 0.41.0
@@ -308,7 +307,7 @@ importers:
         version: 16.3.0(@babel/core@7.28.5)(@playwright/test@1.58.2)(@types/node@20.19.23)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.77.4)
       next-auth:
         specifier: 5.0.0-beta.32
-        version: 5.0.0-beta.32(next@16.3.0(@babel/core@7.28.5)(@playwright/test@1.58.2)(@types/node@20.19.23)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.77.4))(nodemailer@8.0.5)(react@19.2.1)
+        version: 5.0.0-beta.32(next@16.3.0(@babel/core@7.28.5)(@playwright/test@1.58.2)(@types/node@20.19.23)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.77.4))(nodemailer@9.0.5)(react@19.2.1)
       next-intl:
         specifier: 4.9.1
         version: 4.9.1(@swc/helpers@0.5.17)(next@16.3.0(@babel/core@7.28.5)(@playwright/test@1.58.2)(@types/node@20.19.23)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.77.4))(react@19.2.1)(typescript@5.9.3)
@@ -316,8 +315,8 @@ importers:
         specifier: 0.2.0
         version: 0.2.0(next@16.3.0(@babel/core@7.28.5)(@playwright/test@1.58.2)(@types/node@20.19.23)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.77.4))(react@19.2.1)
       nodemailer:
-        specifier: 8.0.5
-        version: 8.0.5
+        specifier: 9.0.5
+        version: 9.0.5
       numeral:
         specifier: 2.0.6
         version: 2.0.6
@@ -408,7 +407,7 @@ importers:
     devDependencies:
       '@auth/core':
         specifier: 0.41.3
-        version: 0.41.3(nodemailer@8.0.5)
+        version: 0.41.3(nodemailer@9.0.5)
       '@eslint/eslintrc':
         specifier: 3.3.4
         version: 3.3.4
@@ -443,8 +442,8 @@ importers:
         specifier: 20.19.23
         version: 20.19.23
       '@types/nodemailer':
-        specifier: 7.0.3
-        version: 7.0.3
+        specifier: 8.0.1
+        version: 8.0.1
       '@types/numeral':
         specifier: 2.0.5
         version: 2.0.5
@@ -4910,8 +4909,8 @@ packages:
   '@types/node@24.10.2':
     resolution: {integrity: sha512-WOhQTZ4G8xZ1tjJTvKOpyEVSGgOTvJAfDK3FNFgELyaTpzhdgHVHeqW8V+UJvzF5BT+/B54T/1S2K6gd9c7bbA==}
 
-  '@types/nodemailer@7.0.3':
-    resolution: {integrity: sha512-fC8w49YQ868IuPWRXqPfLf+MuTRex5Z1qxMoG8rr70riqqbOp2F5xgOKE9fODEBPzpnvjkJXFgK6IL2xgMSTnA==}
+  '@types/nodemailer@8.0.1':
+    resolution: {integrity: sha512-PxpaInm8V1JQDd4j0ds5HfvWQk8JupS1C0Picb96QJsrrRDjBH+DlK7L4ZdNSqNULhiZRQHc40nLVShaGxXAMw==}
 
   '@types/numeral@2.0.5':
     resolution: {integrity: sha512-kH8I7OSSwQu9DS9JYdFWbuvhVzvFRoCPCkGxNwoGgaPeDfEPJlcxNvEOypZhQ3XXHsGbfIuYcxcJxKUfJHnRfw==}
@@ -8044,8 +8043,8 @@ packages:
   node-releases@2.0.27:
     resolution: {integrity: sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA==}
 
-  nodemailer@8.0.5:
-    resolution: {integrity: sha512-0PF8Yb1yZuQfQbq+5/pZJrtF6WQcjTd5/S4JOHs9PGFxuTqoB/icwuB44pOdURHJbRKX1PPoJZtY7R4VUoCC8w==}
+  nodemailer@9.0.5:
+    resolution: {integrity: sha512-wvjiKvjczmsN7U/8006JOdXubgBk2XFAbioDMbT+sM7cPs0QrhJTa6KBRX7P5REGGkDcLUz/EarWidb8G8C1jQ==}
     engines: {node: '>=6.0.0'}
 
   normalize-path@3.0.0:
@@ -9980,7 +9979,7 @@ snapshots:
 
   '@asamuzakjp/nwsapi@2.3.9': {}
 
-  '@auth/core@0.41.3(nodemailer@8.0.5)':
+  '@auth/core@0.41.3(nodemailer@9.0.5)':
     dependencies:
       '@panva/hkdf': 1.2.1
       jose: 6.1.3
@@ -9988,7 +9987,7 @@ snapshots:
       preact: 10.24.3
       preact-render-to-string: 6.5.11(preact@10.24.3)
     optionalDependencies:
-      nodemailer: 8.0.5
+      nodemailer: 9.0.5
 
   '@aws-crypto/sha256-browser@5.2.0':
     dependencies:
@@ -13120,7 +13119,7 @@ snapshots:
 
   '@payloadcms/email-nodemailer@3.87.0(payload@3.87.0(graphql@16.11.0)(typescript@5.9.3))':
     dependencies:
-      nodemailer: 8.0.5
+      nodemailer: 9.0.5
       payload: 3.87.0(graphql@16.11.0)(typescript@5.9.3)
 
   '@payloadcms/graphql@3.87.0(graphql@16.11.0)(payload@3.87.0(graphql@16.11.0)(typescript@5.9.3))(typescript@5.9.3)':
@@ -16003,12 +16002,9 @@ snapshots:
     dependencies:
       undici-types: 7.16.0
 
-  '@types/nodemailer@7.0.3':
+  '@types/nodemailer@8.0.1':
     dependencies:
-      '@aws-sdk/client-sesv2': 3.981.0
       '@types/node': 20.19.23
-    transitivePeerDependencies:
-      - aws-crt
 
   '@types/numeral@2.0.5': {}
 
@@ -19679,13 +19675,13 @@ snapshots:
 
   negotiator@1.0.0: {}
 
-  next-auth@5.0.0-beta.32(next@16.3.0(@babel/core@7.28.5)(@playwright/test@1.58.2)(@types/node@20.19.23)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.77.4))(nodemailer@8.0.5)(react@19.2.1):
+  next-auth@5.0.0-beta.32(next@16.3.0(@babel/core@7.28.5)(@playwright/test@1.58.2)(@types/node@20.19.23)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.77.4))(nodemailer@9.0.5)(react@19.2.1):
     dependencies:
-      '@auth/core': 0.41.3(nodemailer@8.0.5)
+      '@auth/core': 0.41.3(nodemailer@9.0.5)
       next: 16.3.0(@babel/core@7.28.5)(@playwright/test@1.58.2)(@types/node@20.19.23)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.77.4)
       react: 19.2.1
     optionalDependencies:
-      nodemailer: 8.0.5
+      nodemailer: 9.0.5
 
   next-intl-swc-plugin-extractor@4.9.1: {}
 
@@ -19744,7 +19740,7 @@ snapshots:
 
   node-releases@2.0.27: {}
 
-  nodemailer@8.0.5: {}
+  nodemailer@9.0.5: {}
 
   normalize-path@3.0.0: {}
 
