@@ -108,7 +108,7 @@
     "lucide-react": "0.546.0",
     "next": "16.3.0",
     "next-auth": "5.0.0-beta.32",
-    "next-intl": "4.9.1",
+    "next-intl": "4.9.2",
     "next-navigation-guard": "0.2.0",
     "nodemailer": "9.0.5",
     "numeral": "2.0.6",
