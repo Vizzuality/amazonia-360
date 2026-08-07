@@ -227,7 +227,26 @@
       "@mdxeditor/editor>@lexical/markdown": "0.41.0",
       "@mdxeditor/editor>@lexical/rich-text": "0.41.0",
       "@mdxeditor/editor>@lexical/selection": "0.41.0",
-      "@mdxeditor/editor>@lexical/plain-text": "0.41.0"
+      "@mdxeditor/editor>@lexical/plain-text": "0.41.0",
+      "ajv>fast-uri": "3.1.5",
+      "react-use>js-cookie": "3.0.8",
+      "@eslint/eslintrc>js-yaml": "4.3.1",
+      "orval>js-yaml": "4.3.1",
+      "@mdxeditor/editor>js-yaml": "4.3.1",
+      "typedoc>markdown-it": "14.3.0",
+      "markdown-it>linkify-it": "5.0.2",
+      "vite>rollup": "4.62.4",
+      "jsdom>undici": "7.29.0",
+      "happy-dom>ws": "8.21.2",
+      "payload>ws": "8.21.2",
+      "webpack-bundle-analyzer>ws": "7.5.13",
+      "resolve-protobuf-schema>protocol-buffers-schema": "3.6.1",
+      "@vitejs/plugin-react>@babel/core": "7.29.7",
+      "eslint-plugin-react-hooks>@babel/core": "7.29.7",
+      "@orval/core>esbuild": "0.28.1",
+      "brace-expansion@1": "1.1.18",
+      "brace-expansion@2": "2.1.4",
+      "brace-expansion@5": "5.0.9"
     }
   }
 }
