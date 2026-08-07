@@ -12,9 +12,9 @@ ses_aws_region  = "sa-east-1"
 # Database configuration (shared RDS instance for all environments) Configurable
 # RDS SKU - adjust based on workload requirements; a small-ish instance should
 # be ok for most real-world use cases
-database_instance_class          = "db.t3.medium"
-database_allocated_storage       = 50
-database_backup_retention_period = 14
+database_instance_class          = "db.t3.micro"
+database_allocated_storage       = 100
+database_backup_retention_period = 7
 
 dev = {
   aws_region = "sa-east-1"

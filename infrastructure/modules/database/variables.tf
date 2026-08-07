@@ -29,7 +29,7 @@ variable "storage_type" {
 variable "postgres_version" {
   type        = string
   description = "PostgreSQL version"
-  default     = "18.1"
+  default     = "18.3"
 }
 
 variable "initial_db_name" {
