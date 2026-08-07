@@ -107,7 +107,7 @@
     "jotai": "2.15.0",
     "lucide-react": "0.546.0",
     "next": "16.3.0",
-    "next-auth": "5.0.0-beta.30",
+    "next-auth": "5.0.0-beta.32",
     "next-intl": "4.9.1",
     "next-navigation-guard": "0.2.0",
     "nodemailer": "8.0.5",
@@ -142,7 +142,7 @@
     "zod": "4.1.12"
   },
   "devDependencies": {
-    "@auth/core": "0.34.3",
+    "@auth/core": "0.41.3",
     "@eslint/eslintrc": "3.3.4",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4.1.18",
