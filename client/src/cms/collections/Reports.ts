@@ -32,7 +32,7 @@ export const Reports: CollectionConfig = {
     {
       name: "user",
       type: "relationship",
-      relationTo: ["users", "anonymous-users"],
+      relationTo: ["users"],
 
       admin: {
         readOnly: true,
