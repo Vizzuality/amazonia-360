@@ -17,8 +17,6 @@ import { ReportResults } from "@/containers/results";
 
 import config from "@/payload.config";
 
-export const dynamic = "force-dynamic";
-
 export async function generateMetadata({
   params,
 }: PageProps<"/[locale]/reports/[id]">): Promise<Metadata> {
@@ -37,16 +35,13 @@ export default async function ReportResultsPage({ params }: PageProps<"/[locale]
 
   const payload = await getPayload({ config });
 
-  let report;
-  try {
-    report = await payload.findByID({
+  const report = await payload
+    .findByID({
       collection: "reports",
       id,
       locale: locale as Locale,
-    });
-  } catch (_error) {
-    notFound();
-  }
+    })
+    .catch(() => notFound());
 
   const queryClient = new QueryClient();
   queryClient.setQueryData(reportQueryOptions({ id, locale: locale as Locale }).queryKey, report);

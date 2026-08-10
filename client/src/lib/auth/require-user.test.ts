@@ -45,7 +45,10 @@ describe("requireUser", () => {
 
     await requireUser("en");
 
-    expect(redirectMock).toHaveBeenCalled();
+    expect(redirectMock).toHaveBeenCalledWith({
+      locale: "en",
+      href: `/auth/sign-in?redirectUrl=${encodeURIComponent("/reports/abc")}`,
+    });
   });
 
   test("keeps the query string and the requested locale in the return URL", async () => {
