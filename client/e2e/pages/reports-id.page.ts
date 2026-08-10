@@ -131,26 +131,6 @@ export class ReportsIdPage {
   }
 
   // ---------------------------------------------------------------------------
-  // Draft disclaimer
-  // ---------------------------------------------------------------------------
-
-  /** Verify that the draft disclaimer is visible on the page. */
-  async expectDraftDisclaimerVisible() {
-    // The disclaimer text contains "temporary" and "expire" (in English)
-    // We match on the translation key pattern: "This report is temporary and will expire in X days"
-    await expect(
-      this.page.getByText(/temporary.*expire|temporal.*caduca|temporario.*expira/i),
-    ).toBeVisible({ timeout: 10_000 });
-  }
-
-  /** Verify that the draft disclaimer is not visible. */
-  async expectDraftDisclaimerNotVisible() {
-    await expect(
-      this.page.getByText(/temporary.*expire|temporal.*caduca|temporario.*expira/i),
-    ).not.toBeVisible();
-  }
-
-  // ---------------------------------------------------------------------------
   // Save / Make a copy buttons
   // ---------------------------------------------------------------------------
 

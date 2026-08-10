@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { Locale, useLocale } from "next-intl";
 
 import { IndicatorView, Location, TopicView } from "@/app/(frontend)/parsers";
@@ -88,18 +88,9 @@ export type SaveReport = ReportDataBase & {
 
 export const useSaveReport = () => {
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async (data: SaveReport) => {
-      if (!session) {
-        const res = await signIn("anonymous-users", { redirect: false });
-
-        if (!res.ok) {
-          throw new Error("Failed to sign in anonymously");
-        }
-      }
-
       if (!data.id) {
         if (!data.location) {
           throw new Error("Location is required to create the report.");
@@ -111,7 +102,7 @@ export const useSaveReport = () => {
             description: data.description,
             location: data.location,
             topics: parseTopicViews(data.topics ?? []),
-            _status: session?.user.collection === "users" ? "published" : "draft",
+            _status: "published",
           },
           locale: routing.defaultLocale, // Save in default locale so every locale can access the same report
           // TODO: Consider saving in the current locale instead and handle localization of reports properly
@@ -141,20 +132,11 @@ export const useSaveReport = () => {
 
 export const useDuplicateReport = () => {
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async (data: ReportDataBase) => {
       if (!data.location) {
         return Promise.reject(new Error("Location is required to duplicate the report."));
-      }
-
-      if (!session) {
-        const res = await signIn("anonymous-users", { redirect: false });
-
-        if (!res.ok) {
-          throw new Error("Failed to sign in anonymously");
-        }
       }
 
       return sdk.create({
@@ -164,7 +146,7 @@ export const useDuplicateReport = () => {
           description: data.description,
           location: data.location,
           topics: parseTopicViews(data.topics ?? []),
-          _status: session?.user.collection === "users" ? data.status : "draft",
+          _status: data.status ?? "published",
         },
         locale: routing.defaultLocale, // Save in default locale so every locale can access the same report
         // TODO: Consider saving in the current locale instead and handle localization of reports properly
@@ -210,10 +192,6 @@ export const useCanEditReport = (reportId?: string | null) => {
   }, [reportData]);
 
   if (!reportId) return false;
-
-  // if (session?.user.collection === "anonymous-users" || !session?.user) {
-  //   return true;
-  // }
 
   return String(REPORT_USER_ID) === session?.user.id;
 };
