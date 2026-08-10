@@ -26,9 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Link, useRouter } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 
-export type SignInFormProps = React.ComponentProps<"div"> & {
-  redirectUrl?: string;
-};
+export type SignInFormProps = React.ComponentProps<"div">;
 
 const DEFAULT_REDIRECT = "/private/my-reports";
 
@@ -66,7 +64,7 @@ export function SignInForm(props: SignInFormProps) {
           if (r?.error) {
             throw new Error(r.error);
           }
-          router.push(resolveRedirect(props.redirectUrl || searchParams.get("redirectUrl")));
+          router.push(resolveRedirect(searchParams.get("redirectUrl")));
         }),
         {
           loading: t("auth-toast-logging-in"),

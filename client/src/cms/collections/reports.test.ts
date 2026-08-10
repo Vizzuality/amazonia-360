@@ -16,7 +16,6 @@ vi.mock("@/env.mjs", () => ({
     BASIC_AUTH_PASSWORD: "test",
     PAYLOAD_SECRET: "test",
     DATABASE_URL: "postgresql://test",
-    APP_KEY: "test",
     AUTH_SECRET: "test",
     AWS_SES_IAM_USER_ACCESS_KEY_ID: "test",
     AWS_SES_IAM_USER_SECRET_ACCESS_KEY: "test",
