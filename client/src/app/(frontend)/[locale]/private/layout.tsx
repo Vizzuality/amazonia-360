@@ -2,19 +2,17 @@ import { Suspense } from "react";
 
 import { Metadata } from "next";
 
-import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 
-import { auth } from "@/lib/auth";
+import { requireUser } from "@/lib/auth/require-user";
 
 import Header from "@/containers/header";
 
 import { Toaster } from "@/components/ui/sonner";
 
-import { redirect } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 
 export const dynamic = "force-dynamic";
@@ -57,17 +55,7 @@ export default async function PrivateLayout({
     notFound();
   }
 
-  const session = await auth();
-
-  if (!session) {
-    const headersList = await headers();
-    const currentUrl = headersList.get("x-current-path") || "";
-
-    redirect({
-      locale,
-      href: `/auth/sign-in?redirectUrl=${encodeURIComponent(currentUrl)}`,
-    });
-  }
+  await requireUser(locale);
 
   return (
     <>

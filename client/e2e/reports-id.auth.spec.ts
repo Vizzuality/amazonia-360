@@ -254,3 +254,30 @@ test.describe("report view (authenticated non-owner)", () => {
     await reportsIdPage.expectActionsMenuItems();
   });
 });
+
+test.describe("report view (authenticated, misc)", () => {
+  test("knowledge resources section is visible", async ({ page, request }) => {
+    test.skip(!hasCredentials, "E2E test user credentials not set");
+    test.skip(!seedSecret, "E2E_SEED_SECRET not set");
+
+    const reportId = await seedReport(request, {
+      userEmail: process.env.E2E_TEST_USER_EMAIL,
+    });
+
+    const reportsIdPage = new ReportsIdPage(page);
+    await reportsIdPage.goto(reportId);
+    await dismissCookieConsent(page);
+    await reportsIdPage.expectLoaded();
+
+    await reportsIdPage.expectKnowledgeResourcesVisible();
+  });
+
+  test("not-found page for an invalid report ID", async ({ page }) => {
+    test.skip(!hasCredentials, "E2E test user credentials not set");
+
+    const reportsIdPage = new ReportsIdPage(page);
+    await reportsIdPage.goto("nonexistent-report-id-12345");
+    await dismissCookieConsent(page).catch(() => {});
+    await reportsIdPage.expectNotFound();
+  });
+});
