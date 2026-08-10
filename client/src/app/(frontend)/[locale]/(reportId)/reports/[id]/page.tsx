@@ -33,21 +33,23 @@ export async function generateMetadata({
 }
 
 export default async function ReportResultsPage({ params }: PageProps<"/[locale]/reports/[id]">) {
-  const queryClient = new QueryClient();
-
   const { id, locale } = await params;
 
   const payload = await getPayload({ config });
+
+  let report;
   try {
-    await payload.findByID({
+    report = await payload.findByID({
       collection: "reports",
       id,
+      locale: locale as Locale,
     });
   } catch (_error) {
     notFound();
   }
 
-  await queryClient.prefetchQuery(reportQueryOptions({ id, locale: locale as Locale }));
+  const queryClient = new QueryClient();
+  queryClient.setQueryData(reportQueryOptions({ id, locale: locale as Locale }).queryKey, report);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
