@@ -9,6 +9,8 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import * as z from "zod";
 
+import { isSafeRedirect, stripLocale } from "@/lib/auth/redirect-url";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,10 +22,9 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { isSafeRedirect, stripLocale } from "@/lib/auth/redirect-url";
 
-import { routing } from "@/i18n/routing";
 import { Link, useRouter } from "@/i18n/navigation";
+import { routing } from "@/i18n/routing";
 
 export type SignInFormProps = React.ComponentProps<"div"> & {
   redirectUrl?: string;
