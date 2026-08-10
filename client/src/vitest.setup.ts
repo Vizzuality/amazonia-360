@@ -5,6 +5,40 @@ import { CustomLocation, SearchLocation } from "@/app/(frontend)/parsers";
 import "@testing-library/jest-dom/vitest";
 
 /****************
+ * Environment
+ ****************/
+vi.mock("@/env.mjs", () => ({
+  env: {
+    NEXT_PUBLIC_WEBSHOT_URL: process.env.NEXT_PUBLIC_WEBSHOT_URL || "http://localhost:3003",
+    NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL || "http://localhost:3000",
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000",
+    NEXT_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_API_KEY || "test",
+    NEXT_PUBLIC_ARCGIS_API_KEY: process.env.NEXT_PUBLIC_ARCGIS_API_KEY || "test",
+    BASIC_AUTH_ENABLED: process.env.BASIC_AUTH_ENABLED || "false",
+    BASIC_AUTH_USER: process.env.BASIC_AUTH_USER || "test",
+    BASIC_AUTH_PASSWORD: process.env.BASIC_AUTH_PASSWORD || "test",
+    PAYLOAD_SECRET: process.env.PAYLOAD_SECRET || "test",
+    DATABASE_URL: process.env.DATABASE_URL || "postgresql://test",
+    APP_KEY: process.env.APP_KEY || "test",
+    AUTH_SECRET: process.env.AUTH_SECRET || "test",
+    AWS_SES_IAM_USER_ACCESS_KEY_ID: process.env.AWS_SES_IAM_USER_ACCESS_KEY_ID || "test",
+    AWS_SES_IAM_USER_SECRET_ACCESS_KEY: process.env.AWS_SES_IAM_USER_SECRET_ACCESS_KEY || "test",
+    AWS_SES_REGION: process.env.AWS_SES_REGION || "us-east-1",
+  },
+}));
+
+/****************
+ * CMS Auth mocking
+ ****************/
+vi.mock("@/cms/auth/authjs-strategy", () => ({
+  createAuthjsStrategy: vi.fn(() => ({
+    name: "authjs",
+    authenticate: vi.fn(),
+  })),
+  logoutEndpoint: { path: "/logout", method: "post", handler: vi.fn() },
+}));
+
+/****************
  * Node modules
  ****************/
 vi.mock("query-string", () => ({
