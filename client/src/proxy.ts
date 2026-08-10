@@ -34,9 +34,13 @@ export default async function proxy(req: NextRequest) {
 
   // Forward the pathname so the authjs strategy can detect admin-context
   // requests and return null, breaking the Payload Unauthorized loop for
-  // non-admin Users sessions.
+  // non-admin Users sessions. This one must stay bare: authjs-strategy
+  // compares it with === against "/admin".
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-current-path", pathname);
+  // Separate header with the query string, so a gated route can build a
+  // return URL that survives the round-trip through sign-in.
+  requestHeaders.set("x-current-url", `${pathname}${req.nextUrl.search}`);
 
   if (isAdminPath(pathname)) {
     return NextResponse.next({ request: { headers: requestHeaders } });
@@ -44,6 +48,7 @@ export default async function proxy(req: NextRequest) {
 
   const response = intlMiddleware(req);
   response.headers.set("x-current-path", pathname);
+  response.headers.set("x-current-url", `${pathname}${req.nextUrl.search}`);
   return response;
 }
 

@@ -28,6 +28,7 @@ vi.mock("next-intl", () => {
 });
 
 vi.mock("@/i18n/routing", () => ({
+  routing: { locales: ["en", "es", "pt"], defaultLocale: "en" },
   locales: ["en", "es", "pt"],
   defaultLocale: "en",
 }));
