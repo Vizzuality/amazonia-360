@@ -2,14 +2,12 @@ import type { CollectionConfig } from "payload";
 
 import { env } from "@/env.mjs";
 
-import { adminAccess } from "@/cms/access/admin";
 import { anyoneAccess } from "@/cms/access/anyone";
 import { userAccess } from "@/cms/access/user";
 import { createAuthjsStrategy, logoutEndpoint } from "@/cms/auth/authjs-strategy";
 import { buildVerifyEmailHTML, VERIFY_EMAIL_SUBJECT } from "@/cms/emails/verify-email";
 import { resendVerificationHandler } from "@/cms/endpoints/resend-verification";
 import { beforeDeleteUser } from "@/cms/hooks/user";
-import { or } from "@/cms/utils/or";
 
 export const Users: CollectionConfig = {
   slug: "users",
@@ -63,9 +61,9 @@ export const Users: CollectionConfig = {
   },
   access: {
     create: anyoneAccess,
-    read: or(userAccess, adminAccess),
-    update: or(userAccess, adminAccess),
-    delete: or(userAccess, adminAccess),
+    read: userAccess,
+    update: userAccess,
+    delete: userAccess,
   },
   fields: [
     { name: "name", type: "text" },
