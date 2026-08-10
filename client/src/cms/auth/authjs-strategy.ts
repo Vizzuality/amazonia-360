@@ -2,7 +2,7 @@ import type { AuthStrategy, AuthStrategyResult, CollectionSlug, Endpoint } from 
 
 import { auth, signOut } from "@/lib/auth";
 
-type AuthjsCollection = Extract<CollectionSlug, "users" | "anonymous-users">;
+type AuthjsCollection = Extract<CollectionSlug, "users">;
 
 const isAdminPath = (pathname: string): boolean =>
   pathname === "/admin" || pathname.startsWith("/admin/");
@@ -41,7 +41,7 @@ const isAdminRequest = (headers: Headers): boolean => {
   }
 };
 
-// Builds the NextAuth-backed Payload strategy used by Users and AnonymousUsers.
+// Builds the NextAuth-backed Payload strategy used by Users.
 export const createAuthjsStrategy = <C extends AuthjsCollection>(collection: C): AuthStrategy => ({
   name: "authjs",
   authenticate: async ({ headers, payload }) => {

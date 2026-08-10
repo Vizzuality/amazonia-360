@@ -100,13 +100,13 @@ describe("createAuthjsStrategy — public app traffic resolves the session", () 
   });
 
   test("resolves against the collection it was built for", async () => {
-    await createAuthjsStrategy("anonymous-users").authenticate({
+    await createAuthjsStrategy("users").authenticate({
       headers: new Headers({ referer: "http://localhost:3000/es/reports/1" }),
       payload,
     } as AuthStrategyFunctionArgs);
 
     expect(findByID).toHaveBeenCalledWith({
-      collection: "anonymous-users",
+      collection: "users",
       id: "user-1",
       disableErrors: true,
     });
