@@ -1,6 +1,9 @@
 import { Suspense } from "react";
 
 import { Provider as JotaiProvider } from "jotai";
+import { Locale } from "next-intl";
+
+import { requireUser } from "@/lib/auth/require-user";
 
 import Header from "@/containers/header";
 import FeedbackButton from "@/containers/report/feedback";
@@ -9,15 +12,15 @@ import ThirdParty from "@/containers/third-party";
 
 import E2EBridge from "@/components/e2e-bridge";
 
-import { routing } from "@/i18n/routing";
+export const dynamic = "force-dynamic";
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({
-    locale,
-  }));
-}
+export default async function ReportNewLayout({
+  children,
+  params,
+}: LayoutProps<"/[locale]/reports">) {
+  const { locale } = await params;
+  await requireUser(locale as Locale);
 
-export default async function ReportNewLayout({ children }: LayoutProps<"/[locale]/reports">) {
   return (
     <JotaiProvider>
       <Suspense fallback={null}>

@@ -9,6 +9,7 @@ import { ReportsPage } from "./pages/reports.page";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const hasCredentials = !!(process.env.E2E_TEST_USER_EMAIL && process.env.E2E_TEST_USER_PASSWORD);
 
+const GEOJSON_FILE = path.resolve(__dirname, "fixtures/files/amazon-polygon.geojson");
 const KML_FILE = path.resolve(__dirname, "fixtures/files/amazon-polygon.kml");
 
 // --- Report creation (authenticated) ---
@@ -60,5 +61,58 @@ test.describe("report creation (authenticated)", () => {
     await reportsPage.uploadFile(KML_FILE);
     await reportsPage.expectLocationCreated();
     await reportsPage.createReportWithTopics();
+  });
+});
+
+test.describe("report builder (authenticated)", () => {
+  test("loads the reports page with drawing tools", async ({ page }) => {
+    test.skip(!hasCredentials, "E2E test user credentials not set");
+
+    const reportsPage = new ReportsPage(page);
+    await reportsPage.goto();
+    await reportsPage.expectLoaded();
+  });
+
+  test("draw a point and change the buffer", async ({ page }) => {
+    test.skip(!hasCredentials, "E2E test user credentials not set");
+
+    const reportsPage = new ReportsPage(page);
+    await reportsPage.goto();
+    await reportsPage.expectLoaded();
+    await dismissCookieConsent(page);
+
+    await reportsPage.drawPoint();
+    await reportsPage.expectLocationCreated();
+    await reportsPage.expectBufferVisible();
+
+    await reportsPage.setBufferValue(50);
+    await reportsPage.expectBufferDisplayedValue(50);
+  });
+
+  test("draw a polygon (no buffer control)", async ({ page }) => {
+    test.skip(!hasCredentials, "E2E test user credentials not set");
+
+    const reportsPage = new ReportsPage(page);
+    await reportsPage.goto();
+    await reportsPage.expectLoaded();
+    await dismissCookieConsent(page);
+
+    await reportsPage.drawPolygon();
+    await reportsPage.expectLocationCreated();
+    await reportsPage.expectBufferNotVisible();
+  });
+
+  test("upload a GeoJSON file", async ({ page }) => {
+    test.skip(!hasCredentials, "E2E test user credentials not set");
+
+    await mockArcGISFeatureServer(page);
+
+    const reportsPage = new ReportsPage(page);
+    await reportsPage.goto();
+    await reportsPage.expectLoaded();
+    await dismissCookieConsent(page);
+
+    await reportsPage.uploadFile(GEOJSON_FILE);
+    await reportsPage.expectLocationCreated();
   });
 });
