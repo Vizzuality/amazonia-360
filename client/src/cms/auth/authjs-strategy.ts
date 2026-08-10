@@ -2,14 +2,14 @@ import type { AuthStrategy, AuthStrategyResult, CollectionSlug, Endpoint } from 
 
 import { auth, signOut } from "@/lib/auth";
 
-type AuthjsCollection = Extract<CollectionSlug, "users" | "anonymous-users">;
+type AuthjsCollection = Extract<CollectionSlug, "users">;
 
 const isAdminRequest = (headers: Headers): boolean => {
   const currentPath = headers.get("x-current-path") ?? "";
   return currentPath === "/admin" || currentPath.startsWith("/admin/");
 };
 
-// Builds the NextAuth-backed Payload strategy used by Users and AnonymousUsers.
+// Builds the NextAuth-backed Payload strategy used by Users.
 // Skipping admin-context requests prevents non-admin sessions from being surfaced
 // inside Payload's admin panel (which would trigger the Unauthorized loop).
 export const createAuthjsStrategy = <C extends AuthjsCollection>(collection: C): AuthStrategy => ({
