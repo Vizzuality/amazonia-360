@@ -39,6 +39,10 @@ describe("isSafeRedirect", () => {
     expect(isSafeRedirect("", LOCALES)).toBe(false);
     expect(isSafeRedirect("//evil.example.com", LOCALES)).toBe(false);
     expect(isSafeRedirect("https://evil.example.com", LOCALES)).toBe(false);
+    // Browsers normalise backslashes to slashes, so these become
+    // protocol-relative off-origin targets by the time a browser navigates.
+    expect(isSafeRedirect("/\\evil.com", LOCALES)).toBe(false);
+    expect(isSafeRedirect("/\\/evil.com", LOCALES)).toBe(false);
   });
 
   test("rejects auth pages so signing in cannot bounce back to itself", () => {
@@ -46,5 +50,6 @@ describe("isSafeRedirect", () => {
     // The gap: a locale prefix used to walk straight past the /auth/ guard.
     expect(isSafeRedirect("/en/auth/verify-email?token=x", LOCALES)).toBe(false);
     expect(isSafeRedirect("/pt/auth/reset-password", LOCALES)).toBe(false);
+    expect(isSafeRedirect("/auth", LOCALES)).toBe(false);
   });
 });
