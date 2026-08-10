@@ -65,13 +65,11 @@ export interface Config {
   auth: {
     admins: AdminAuthOperations;
     users: UserAuthOperations;
-    'anonymous-users': AnonymousUserAuthOperations;
   };
   blocks: {};
   collections: {
     admins: Admin;
     users: User;
-    'anonymous-users': AnonymousUser;
     accounts: Account;
     media: Media;
     reports: Report;
@@ -95,7 +93,6 @@ export interface Config {
   collectionsSelect: {
     admins: AdminsSelect<false> | AdminsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
-    'anonymous-users': AnonymousUsersSelect<false> | AnonymousUsersSelect<true>;
     accounts: AccountsSelect<false> | AccountsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     reports: ReportsSelect<false> | ReportsSelect<true>;
@@ -114,21 +111,15 @@ export interface Config {
     defaultIDType: string;
   };
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'es' | 'pt') | ('en' | 'es' | 'pt')[];
-  globals: {
-    'payload-jobs-stats': PayloadJobsStat;
-  };
-  globalsSelect: {
-    'payload-jobs-stats': PayloadJobsStatsSelect<false> | PayloadJobsStatsSelect<true>;
-  };
+  globals: {};
+  globalsSelect: {};
   locale: 'en' | 'es' | 'pt';
   widgets: {
     collections: CollectionsWidget;
   };
-  user: Admin | User | AnonymousUser;
+  user: Admin | User;
   jobs: {
     tasks: {
-      CleanAnonymousUsers: TaskCleanAnonymousUsers;
-      CleanDraftReports: TaskCleanDraftReports;
       createCollectionExport: TaskCreateCollectionExport;
       createCollectionImport: TaskCreateCollectionImport;
       inline: {
@@ -158,24 +149,6 @@ export interface AdminAuthOperations {
   };
 }
 export interface UserAuthOperations {
-  forgotPassword: {
-    email: string;
-    password: string;
-  };
-  login: {
-    email: string;
-    password: string;
-  };
-  registerFirstUser: {
-    email: string;
-    password: string;
-  };
-  unlock: {
-    email: string;
-    password: string;
-  };
-}
-export interface AnonymousUserAuthOperations {
   forgotPassword: {
     email: string;
     password: string;
@@ -282,15 +255,10 @@ export interface Report {
   id: string;
   title?: string | null;
   description?: string | null;
-  user?:
-    | ({
-        relationTo: 'users';
-        value: string | User;
-      } | null)
-    | ({
-        relationTo: 'anonymous-users';
-        value: string | AnonymousUser;
-      } | null);
+  user?: {
+    relationTo: 'users';
+    value: string | User;
+  } | null;
   location:
     | {
         type: 'search';
@@ -339,16 +307,6 @@ export interface Report {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "anonymous-users".
- */
-export interface AnonymousUser {
-  id: string;
-  updatedAt: string;
-  createdAt: string;
-  collection: 'anonymous-users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -834,12 +792,7 @@ export interface PayloadJob {
     | {
         executedAt: string;
         completedAt: string;
-        taskSlug:
-          | 'inline'
-          | 'CleanAnonymousUsers'
-          | 'CleanDraftReports'
-          | 'createCollectionExport'
-          | 'createCollectionImport';
+        taskSlug: 'inline' | 'createCollectionExport' | 'createCollectionImport';
         taskID: string;
         input?:
           | {
@@ -872,21 +825,10 @@ export interface PayloadJob {
         id?: string | null;
       }[]
     | null;
-  taskSlug?:
-    | ('inline' | 'CleanAnonymousUsers' | 'CleanDraftReports' | 'createCollectionExport' | 'createCollectionImport')
-    | null;
+  taskSlug?: ('inline' | 'createCollectionExport' | 'createCollectionImport') | null;
   queue?: string | null;
   waitUntil?: string | null;
   processing?: boolean | null;
-  meta?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -904,10 +846,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: string | User;
-      } | null)
-    | ({
-        relationTo: 'anonymous-users';
-        value: string | AnonymousUser;
       } | null)
     | ({
         relationTo: 'accounts';
@@ -942,10 +880,6 @@ export interface PayloadLockedDocument {
     | {
         relationTo: 'users';
         value: string | User;
-      }
-    | {
-        relationTo: 'anonymous-users';
-        value: string | AnonymousUser;
       };
   updatedAt: string;
   createdAt: string;
@@ -964,10 +898,6 @@ export interface PayloadPreference {
     | {
         relationTo: 'users';
         value: string | User;
-      }
-    | {
-        relationTo: 'anonymous-users';
-        value: string | AnonymousUser;
       };
   key?: string | null;
   value?:
@@ -1044,14 +974,6 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "anonymous-users_select".
- */
-export interface AnonymousUsersSelect<T extends boolean = true> {
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1378,7 +1300,6 @@ export interface PayloadJobsSelect<T extends boolean = true> {
   queue?: T;
   waitUntil?: T;
   processing?: T;
-  meta?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1416,34 +1337,6 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-jobs-stats".
- */
-export interface PayloadJobsStat {
-  id: string;
-  stats?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-jobs-stats_select".
- */
-export interface PayloadJobsStatsSelect<T extends boolean = true> {
-  stats?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "collections_widget".
  */
 export interface CollectionsWidget {
@@ -1451,22 +1344,6 @@ export interface CollectionsWidget {
     [k: string]: unknown;
   };
   width: 'full';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TaskCleanAnonymousUsers".
- */
-export interface TaskCleanAnonymousUsers {
-  input?: unknown;
-  output?: unknown;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TaskCleanDraftReports".
- */
-export interface TaskCleanDraftReports {
-  input?: unknown;
-  output?: unknown;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1480,7 +1357,6 @@ export interface TaskCreateCollectionExport {
     collectionSlug:
       | 'admins'
       | 'users'
-      | 'anonymous-users'
       | 'accounts'
       | 'media'
       | 'reports'
