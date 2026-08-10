@@ -13,8 +13,11 @@ export const isSafeRedirect = (
   locales: readonly string[],
 ): boolean => {
   if (!url) return false;
+  // Browsers normalise backslashes to slashes, so /\evil.com
+  // navigates off-origin exactly like //evil.com does.
   if (!url.startsWith("/") || url.startsWith("//")) return false;
+  if (url.includes("\\")) return false;
 
   const pathname = stripLocale(url.split("?")[0], locales);
-  return !pathname.startsWith("/auth/");
+  return pathname !== "/auth" && !pathname.startsWith("/auth/");
 };
