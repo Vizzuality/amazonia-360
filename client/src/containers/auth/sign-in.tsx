@@ -20,7 +20,9 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { isSafeRedirect, stripLocale } from "@/lib/auth/redirect-url";
 
+import { routing } from "@/i18n/routing";
 import { Link, useRouter } from "@/i18n/navigation";
 
 export type SignInFormProps = React.ComponentProps<"div"> & {
@@ -29,15 +31,10 @@ export type SignInFormProps = React.ComponentProps<"div"> & {
 
 const DEFAULT_REDIRECT = "/private/my-reports";
 
-function safeRedirect(url: string | null | undefined): string {
-  if (!url) return DEFAULT_REDIRECT;
-  // Reject anything that isn't a same-origin absolute path
-  if (!url.startsWith("/") || url.startsWith("//")) return DEFAULT_REDIRECT;
-  // Reject auth pages — signing in shouldn't bounce back to verify-email,
-  // sign-in itself, sign-up, password flows, etc.
-  const pathname = url.split("?")[0];
-  if (pathname.startsWith("/auth/")) return DEFAULT_REDIRECT;
-  return url;
+function resolveRedirect(url: string | null | undefined): string {
+  if (!isSafeRedirect(url, routing.locales)) return DEFAULT_REDIRECT;
+  // router comes from @/i18n/navigation and re-adds the locale itself.
+  return stripLocale(url as string, routing.locales);
 }
 
 export function SignInForm(props: SignInFormProps) {
@@ -68,7 +65,7 @@ export function SignInForm(props: SignInFormProps) {
           if (r?.error) {
             throw new Error(r.error);
           }
-          router.push(safeRedirect(props.redirectUrl || searchParams.get("redirectUrl")));
+          router.push(resolveRedirect(props.redirectUrl || searchParams.get("redirectUrl")));
         }),
         {
           loading: t("auth-toast-logging-in"),
