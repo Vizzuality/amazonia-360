@@ -2,8 +2,6 @@ import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Github from "next-auth/providers/github";
 
-import { env } from "@/env.mjs";
-
 import { PayloadAuthAdapter } from "@/lib/auth/adapter";
 
 import { sdk } from "@/services/sdk";
@@ -70,31 +68,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           .catch(() => {
             throw new InvalidLoginError();
           });
-      },
-    }),
-    Credentials({
-      id: "anonymous-users",
-      name: "Anonymous Users",
-      credentials: {},
-      async authorize() {
-        // For anonymous users, we just create a new anonymous user on each sign-in
-        return sdk
-          .create(
-            {
-              collection: "anonymous-users",
-              data: { collection: "anonymous-users" },
-            },
-            {
-              headers: {
-                "x-app-key": env.APP_KEY || "",
-              },
-            },
-          )
-          .then((res) => ({
-            ...res,
-            id: String(res.id),
-            collection: "anonymous-users",
-          }));
       },
     }),
     Github({
