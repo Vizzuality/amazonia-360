@@ -56,4 +56,18 @@ describe("Reports access", () => {
   test("keeps drafts enabled so the admin panel can roll back a bad edit", () => {
     expect(Reports.versions).toEqual({ drafts: true });
   });
+
+  test.each(["read", "create"] as const)("%s requires a signed-in account", async (operation) => {
+    expect(await Reports.access?.[operation]?.(noUser)).toBe(false);
+    expect(await Reports.access?.[operation]?.(signedIn)).toBe(true);
+    expect(await Reports.access?.[operation]?.(admin)).toBe(true);
+  });
+
+  test("owns reports through a single-target polymorphic relationship", () => {
+    const user = Reports.fields.find((field) => "name" in field && field.name === "user") as {
+      relationTo: string[];
+    };
+
+    expect(user.relationTo).toEqual(["users"]);
+  });
 });

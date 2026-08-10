@@ -1,6 +1,6 @@
 import type { CollectionConfig } from "payload";
 
-import { anyoneAccess } from "@/cms/access/anyone";
+import { authenticatedAccess } from "@/cms/access/authenticated";
 import { ownUserAccess } from "@/cms/access/owner";
 import { LocationField } from "@/cms/fields/location";
 import { TopicsField } from "@/cms/fields/topics";
@@ -12,8 +12,8 @@ export const Reports: CollectionConfig = {
     defaultColumns: ["id", "title", "user", "_status"],
   },
   access: {
-    read: anyoneAccess,
-    create: anyoneAccess,
+    read: authenticatedAccess,
+    create: authenticatedAccess,
     update: ownUserAccess,
     delete: ownUserAccess,
   },
