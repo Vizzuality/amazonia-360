@@ -7,16 +7,25 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   // ties them back to an anonymous owner any more.
   await db.execute(sql`
     DELETE FROM "_reports_v" WHERE "parent_id" IN (
-      SELECT "parent_id" FROM "reports_rels" WHERE "anonymous_users_id" IS NOT NULL
+      SELECT "parent_id" FROM "reports_rels"
+      WHERE "anonymous_users_id" IS NOT NULL
+        AND "users_id" IS NULL
     );
   `);
 
   // Anonymous access is gone, so the reports those sessions owned have no
   // owner left and no way to be reached. Delete them before the column that
   // identifies them is dropped.
+  //
+  // "users_id" IS NULL is the guard: a report carrying both a real owner and an
+  // anonymous one must never be deleted, and this delete is irreversible.
+  // Payload cannot write that state today, but the guard makes it a structural
+  // guarantee rather than something resting on a pre-flight count.
   await db.execute(sql`
     DELETE FROM "reports" WHERE "id" IN (
-      SELECT "parent_id" FROM "reports_rels" WHERE "anonymous_users_id" IS NOT NULL
+      SELECT "parent_id" FROM "reports_rels"
+      WHERE "anonymous_users_id" IS NOT NULL
+        AND "users_id" IS NULL
     );
   `);
 
