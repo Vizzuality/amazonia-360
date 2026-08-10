@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-import { useSession } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
 import { LuSparkles } from "react-icons/lu";
 
@@ -14,7 +13,6 @@ import { Topic } from "@/types/topic";
 
 import { useFormTopics, useFormLocation } from "@/app/(frontend)/store";
 
-import { AuthWrapper } from "@/containers/auth/wrapper";
 import { AISummaryForm } from "@/containers/results/content/item/form";
 import { ReportResultsSummary } from "@/containers/results/content/item/summary";
 
@@ -24,8 +22,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 export const ReportTopicHeader = (props: Topic) => {
   const t = useTranslations();
   const locale = useLocale();
-
-  const { data: session } = useSession();
 
   const { topics, setTopics } = useFormTopics();
   const { location } = useFormLocation();
@@ -80,14 +76,12 @@ export const ReportTopicHeader = (props: Topic) => {
 
         <div className="flex gap-2">
           <Popover>
-            <AuthWrapper>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="hidden gap-2 lg:inline-flex">
-                  <LuSparkles />
-                  <span>{t("report-results-sidebar-ai-summaries-title")}</span>
-                </Button>
-              </PopoverTrigger>
-            </AuthWrapper>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="hidden gap-2 lg:inline-flex">
+                <LuSparkles />
+                <span>{t("report-results-sidebar-ai-summaries-title")}</span>
+              </Button>
+            </PopoverTrigger>
             <PopoverContent className="bg-popover w-96" align="end">
               <AISummaryForm
                 mutation={summaryMutation}
@@ -98,19 +92,16 @@ export const ReportTopicHeader = (props: Topic) => {
             </PopoverContent>
           </Popover>
 
-          {!editing &&
-            TOPIC_VIEW?.description &&
-            session?.user &&
-            session.user.collection === "users" && (
-              <Button
-                onClick={() => setEditing(true)}
-                variant="outline"
-                disabled={summaryMutation.isPending}
-                className="hidden gap-2 lg:inline-flex"
-              >
-                {t("edit")}
-              </Button>
-            )}
+          {!editing && TOPIC_VIEW?.description && (
+            <Button
+              onClick={() => setEditing(true)}
+              variant="outline"
+              disabled={summaryMutation.isPending}
+              className="hidden gap-2 lg:inline-flex"
+            >
+              {t("edit")}
+            </Button>
+          )}
 
           {editing && TOPIC_VIEW?.description && (
             <Button
