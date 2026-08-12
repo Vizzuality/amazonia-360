@@ -1,8 +1,7 @@
 import { test, expect } from "./fixtures";
 import { dismissCookieConsent } from "./helpers/cookie-consent";
+import { skipWithoutCredentials } from "./helpers/credentials";
 import { SignInPage } from "./pages/sign-in.page";
-
-const hasCredentials = !!(process.env.E2E_TEST_USER_EMAIL && process.env.E2E_TEST_USER_PASSWORD);
 
 // A report ID that need not exist: the gate runs in the layout, before the
 // page looks the report up, so signed-out visitors cannot tell a real ID
@@ -35,10 +34,12 @@ test.describe("report view requires authentication", () => {
       await expect(page).toHaveURL(/\/en\/auth\/sign-in\?redirectUrl=/, { timeout: 30_000 });
     }
   });
+});
 
-  test("signing in returns the visitor to the report they asked for", async ({ page }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
+test.describe("signing in returns to the requested report", () => {
+  test.skip(skipWithoutCredentials, "E2E test user credentials not set");
 
+  test("lands back on the report the visitor asked for", async ({ page }) => {
     await page.goto(`/en/reports/${SOME_REPORT_ID}`);
     await expect(page).toHaveURL(/\/en\/auth\/sign-in\?redirectUrl=/, { timeout: 30_000 });
     await dismissCookieConsent(page).catch(() => {});
