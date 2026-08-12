@@ -1,9 +1,9 @@
 import { test, expect } from "./fixtures";
 import { dismissCookieConsent } from "./helpers/cookie-consent";
+import { skipWithoutCredentials, skipWithoutSeedSecret } from "./helpers/credentials";
 import { ReportsIdPage } from "./pages/reports-id.page";
 
-const hasCredentials = !!(process.env.E2E_TEST_USER_EMAIL && process.env.E2E_TEST_USER_PASSWORD);
-const seedSecret = process.env.E2E_SEED_SECRET;
+test.skip(skipWithoutCredentials, "E2E test user credentials not set");
 
 /** Sample location matching the point geometry used in report creation tests. */
 const SAMPLE_LOCATION = {
@@ -45,11 +45,12 @@ async function seedReport(
     status?: "draft" | "published";
   } = {},
 ): Promise<string> {
-  if (!seedSecret) throw new Error("E2E_SEED_SECRET not set");
+  const secret = process.env.E2E_SEED_SECRET;
+  if (!secret) throw new Error("E2E_SEED_SECRET not set");
 
   const response = await request.post("/local-api/e2e/seed-report", {
     data: {
-      secret: seedSecret,
+      secret,
       title: options.title ?? "E2E Test Report",
       location: SAMPLE_LOCATION,
       topics: SAMPLE_TOPICS,
@@ -70,10 +71,9 @@ async function seedReport(
 // --- Owner tests ---
 
 test.describe("report view (authenticated owner)", () => {
-  test("owner sees Save button, not Make a copy", async ({ page, request }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
-    test.skip(!seedSecret, "E2E_SEED_SECRET not set");
+  test.skip(skipWithoutSeedSecret, "E2E_SEED_SECRET not set");
 
+  test("owner sees Save button, not Make a copy", async ({ page, request }) => {
     const reportId = await seedReport(request, {
       title: "Owner Report",
       userEmail: process.env.E2E_TEST_USER_EMAIL,
@@ -90,9 +90,6 @@ test.describe("report view (authenticated owner)", () => {
   });
 
   test("owner can edit title and confirm", async ({ page, request }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
-    test.skip(!seedSecret, "E2E_SEED_SECRET not set");
-
     const reportId = await seedReport(request, {
       title: "Original Title",
       userEmail: process.env.E2E_TEST_USER_EMAIL,
@@ -112,9 +109,6 @@ test.describe("report view (authenticated owner)", () => {
   });
 
   test("owner can cancel title edit and preserve original title", async ({ page, request }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
-    test.skip(!seedSecret, "E2E_SEED_SECRET not set");
-
     const reportId = await seedReport(request, {
       title: "Keep This Title",
       userEmail: process.env.E2E_TEST_USER_EMAIL,
@@ -134,9 +128,6 @@ test.describe("report view (authenticated owner)", () => {
   });
 
   test("Edit Report button toggles sidebar", async ({ page, request }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
-    test.skip(!seedSecret, "E2E_SEED_SECRET not set");
-
     const reportId = await seedReport(request, {
       userEmail: process.env.E2E_TEST_USER_EMAIL,
     });
@@ -160,9 +151,6 @@ test.describe("report view (authenticated owner)", () => {
     page,
     request,
   }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
-    test.skip(!seedSecret, "E2E_SEED_SECRET not set");
-
     const reportId = await seedReport(request, {
       userEmail: process.env.E2E_TEST_USER_EMAIL,
     });
@@ -178,9 +166,6 @@ test.describe("report view (authenticated owner)", () => {
   });
 
   test("duplicate action changes URL to new report", async ({ page, request }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
-    test.skip(!seedSecret, "E2E_SEED_SECRET not set");
-
     const reportId = await seedReport(request, {
       userEmail: process.env.E2E_TEST_USER_EMAIL,
     });
@@ -204,10 +189,9 @@ test.describe("report view (authenticated owner)", () => {
 // --- Non-owner tests ---
 
 test.describe("report view (authenticated non-owner)", () => {
-  test("non-owner sees Make a copy, not Save", async ({ page, request }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
-    test.skip(!seedSecret, "E2E_SEED_SECRET not set");
+  test.skip(skipWithoutSeedSecret, "E2E_SEED_SECRET not set");
 
+  test("non-owner sees Make a copy, not Save", async ({ page, request }) => {
     // Seed report without userEmail so it has no owner
     const reportId = await seedReport(request, {
       title: "Someone Else Report",
@@ -224,9 +208,6 @@ test.describe("report view (authenticated non-owner)", () => {
   });
 
   test("non-owner can see report title", async ({ page, request }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
-    test.skip(!seedSecret, "E2E_SEED_SECRET not set");
-
     const reportId = await seedReport(request, {
       title: "Read Only Report",
     });
@@ -240,9 +221,6 @@ test.describe("report view (authenticated non-owner)", () => {
   });
 
   test("non-owner can access actions menu", async ({ page, request }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
-    test.skip(!seedSecret, "E2E_SEED_SECRET not set");
-
     const reportId = await seedReport(request);
 
     const reportsIdPage = new ReportsIdPage(page);
@@ -255,11 +233,10 @@ test.describe("report view (authenticated non-owner)", () => {
   });
 });
 
-test.describe("report view (authenticated, misc)", () => {
-  test("knowledge resources section is visible", async ({ page, request }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
-    test.skip(!seedSecret, "E2E_SEED_SECRET not set");
+test.describe("report view (authenticated, seeded report)", () => {
+  test.skip(skipWithoutSeedSecret, "E2E_SEED_SECRET not set");
 
+  test("knowledge resources section is visible", async ({ page, request }) => {
     const reportId = await seedReport(request, {
       userEmail: process.env.E2E_TEST_USER_EMAIL,
     });
@@ -271,10 +248,10 @@ test.describe("report view (authenticated, misc)", () => {
 
     await reportsIdPage.expectKnowledgeResourcesVisible();
   });
+});
 
+test.describe("report view (authenticated, invalid report ID)", () => {
   test("not-found page for an invalid report ID", async ({ page }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
-
     const reportsIdPage = new ReportsIdPage(page);
     await reportsIdPage.goto("nonexistent-report-id-12345");
     await dismissCookieConsent(page).catch(() => {});
