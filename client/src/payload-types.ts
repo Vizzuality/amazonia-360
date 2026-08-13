@@ -65,13 +65,11 @@ export interface Config {
   auth: {
     admins: AdminAuthOperations;
     users: UserAuthOperations;
-    'anonymous-users': AnonymousUserAuthOperations;
   };
   blocks: {};
   collections: {
     admins: Admin;
     users: User;
-    'anonymous-users': AnonymousUser;
     accounts: Account;
     media: Media;
     reports: Report;
@@ -79,7 +77,6 @@ export interface Config {
     subtopics: Subtopic;
     indicators: Indicator;
     'payload-kv': PayloadKv;
-    'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -93,7 +90,6 @@ export interface Config {
   collectionsSelect: {
     admins: AdminsSelect<false> | AdminsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
-    'anonymous-users': AnonymousUsersSelect<false> | AnonymousUsersSelect<true>;
     accounts: AccountsSelect<false> | AccountsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     reports: ReportsSelect<false> | ReportsSelect<true>;
@@ -101,7 +97,6 @@ export interface Config {
     subtopics: SubtopicsSelect<false> | SubtopicsSelect<true>;
     indicators: IndicatorsSelect<false> | IndicatorsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
-    'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -110,26 +105,15 @@ export interface Config {
     defaultIDType: string;
   };
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'es' | 'pt') | ('en' | 'es' | 'pt')[];
-  globals: {
-    'payload-jobs-stats': PayloadJobsStat;
-  };
-  globalsSelect: {
-    'payload-jobs-stats': PayloadJobsStatsSelect<false> | PayloadJobsStatsSelect<true>;
-  };
+  globals: {};
+  globalsSelect: {};
   locale: 'en' | 'es' | 'pt';
   widgets: {
     collections: CollectionsWidget;
   };
-  user: Admin | User | AnonymousUser;
+  user: Admin | User;
   jobs: {
-    tasks: {
-      CleanAnonymousUsers: TaskCleanAnonymousUsers;
-      CleanDraftReports: TaskCleanDraftReports;
-      inline: {
-        input: unknown;
-        output: unknown;
-      };
-    };
+    tasks: unknown;
     workflows: unknown;
   };
 }
@@ -152,24 +136,6 @@ export interface AdminAuthOperations {
   };
 }
 export interface UserAuthOperations {
-  forgotPassword: {
-    email: string;
-    password: string;
-  };
-  login: {
-    email: string;
-    password: string;
-  };
-  registerFirstUser: {
-    email: string;
-    password: string;
-  };
-  unlock: {
-    email: string;
-    password: string;
-  };
-}
-export interface AnonymousUserAuthOperations {
   forgotPassword: {
     email: string;
     password: string;
@@ -275,15 +241,10 @@ export interface Report {
   id: string;
   title?: string | null;
   description?: string | null;
-  user?:
-    | ({
-        relationTo: 'users';
-        value: string | User;
-      } | null)
-    | ({
-        relationTo: 'anonymous-users';
-        value: string | AnonymousUser;
-      } | null);
+  user?: {
+    relationTo: 'users';
+    value: string | User;
+  } | null;
   location:
     | {
         type: 'search';
@@ -332,16 +293,6 @@ export interface Report {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "anonymous-users".
- */
-export interface AnonymousUser {
-  id: string;
-  updatedAt: string;
-  createdAt: string;
-  collection: 'anonymous-users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -705,107 +656,6 @@ export interface PayloadKv {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-jobs".
- */
-export interface PayloadJob {
-  id: string;
-  /**
-   * Input data provided to the job
-   */
-  input?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  taskStatus?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  completedAt?: string | null;
-  totalTried?: number | null;
-  /**
-   * If hasError is true this job will not be retried
-   */
-  hasError?: boolean | null;
-  /**
-   * If hasError is true, this is the error that caused it
-   */
-  error?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  /**
-   * Task execution log
-   */
-  log?:
-    | {
-        executedAt: string;
-        completedAt: string;
-        taskSlug: 'inline' | 'CleanAnonymousUsers' | 'CleanDraftReports';
-        taskID: string;
-        input?:
-          | {
-              [k: string]: unknown;
-            }
-          | unknown[]
-          | string
-          | number
-          | boolean
-          | null;
-        output?:
-          | {
-              [k: string]: unknown;
-            }
-          | unknown[]
-          | string
-          | number
-          | boolean
-          | null;
-        state: 'failed' | 'succeeded';
-        error?:
-          | {
-              [k: string]: unknown;
-            }
-          | unknown[]
-          | string
-          | number
-          | boolean
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  taskSlug?: ('inline' | 'CleanAnonymousUsers' | 'CleanDraftReports') | null;
-  queue?: string | null;
-  waitUntil?: string | null;
-  processing?: boolean | null;
-  meta?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -818,10 +668,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: string | User;
-      } | null)
-    | ({
-        relationTo: 'anonymous-users';
-        value: string | AnonymousUser;
       } | null)
     | ({
         relationTo: 'accounts';
@@ -856,10 +702,6 @@ export interface PayloadLockedDocument {
     | {
         relationTo: 'users';
         value: string | User;
-      }
-    | {
-        relationTo: 'anonymous-users';
-        value: string | AnonymousUser;
       };
   updatedAt: string;
   createdAt: string;
@@ -878,10 +720,6 @@ export interface PayloadPreference {
     | {
         relationTo: 'users';
         value: string | User;
-      }
-    | {
-        relationTo: 'anonymous-users';
-        value: string | AnonymousUser;
       };
   key?: string | null;
   value?:
@@ -957,14 +795,6 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "anonymous-users_select".
- */
-export interface AnonymousUsersSelect<T extends boolean = true> {
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1206,38 +1036,6 @@ export interface PayloadKvSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-jobs_select".
- */
-export interface PayloadJobsSelect<T extends boolean = true> {
-  input?: T;
-  taskStatus?: T;
-  completedAt?: T;
-  totalTried?: T;
-  hasError?: T;
-  error?: T;
-  log?:
-    | T
-    | {
-        executedAt?: T;
-        completedAt?: T;
-        taskSlug?: T;
-        taskID?: T;
-        input?: T;
-        output?: T;
-        state?: T;
-        error?: T;
-        id?: T;
-      };
-  taskSlug?: T;
-  queue?: T;
-  waitUntil?: T;
-  processing?: T;
-  meta?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents_select".
  */
 export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
@@ -1270,34 +1068,6 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-jobs-stats".
- */
-export interface PayloadJobsStat {
-  id: string;
-  stats?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-jobs-stats_select".
- */
-export interface PayloadJobsStatsSelect<T extends boolean = true> {
-  stats?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "collections_widget".
  */
 export interface CollectionsWidget {
@@ -1305,22 +1075,6 @@ export interface CollectionsWidget {
     [k: string]: unknown;
   };
   width: 'full';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TaskCleanAnonymousUsers".
- */
-export interface TaskCleanAnonymousUsers {
-  input?: unknown;
-  output?: unknown;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TaskCleanDraftReports".
- */
-export interface TaskCleanDraftReports {
-  input?: unknown;
-  output?: unknown;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

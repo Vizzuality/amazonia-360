@@ -1,79 +1,58 @@
 import { test, expect } from "./fixtures";
 import { dismissCookieConsent } from "./helpers/cookie-consent";
-import { ReportsIdPage } from "./pages/reports-id.page";
-import { ReportsPage } from "./pages/reports.page";
+import { skipWithoutCredentials } from "./helpers/credentials";
+import { SignInPage } from "./pages/sign-in.page";
 
-// ---------------------------------------------------------------------------
-// Helper: create a report via the UI flow and return the report ID
-// ---------------------------------------------------------------------------
+// A report ID that need not exist: the gate runs in the layout, before the
+// page looks the report up, so signed-out visitors cannot tell a real ID
+// from a fake one.
+const SOME_REPORT_ID = "00000000-0000-0000-0000-000000000000";
 
-async function createReportViaUI(page: import("@playwright/test").Page): Promise<string> {
-  const reportsPage = new ReportsPage(page);
-  await reportsPage.goto();
-  await reportsPage.expectLoaded();
-  await dismissCookieConsent(page);
+test.describe("report view requires authentication", () => {
+  test("redirects a signed-out visitor to sign-in with a return URL", async ({ page }) => {
+    await page.goto(`/en/reports/${SOME_REPORT_ID}`);
 
-  await reportsPage.drawPoint();
-  await reportsPage.expectLocationCreated();
-  await reportsPage.createReportWithTopics();
-
-  // Extract the report ID from the URL: /en/reports/{id}
-  const url = page.url();
-  const match = url.match(/\/reports\/([\w-]+)/);
-  if (!match) throw new Error(`Could not extract report ID from URL: ${url}`);
-  return match[1];
-}
-
-// --- Report view page (anonymous) ---
-
-test.describe("report view page (anonymous)", () => {
-  test("anonymous user creates report and views it with correct elements", async ({ page }) => {
-    const reportId = await createReportViaUI(page);
-    const reportsIdPage = new ReportsIdPage(page);
-
-    // Page should already be on the report view URL after creation
-    await reportsIdPage.expectLoaded();
-
-    // Anonymous reports are drafts, so the disclaimer should be visible
-    await reportsIdPage.expectDraftDisclaimerVisible();
-
-    // Anonymous creator IS the owner (via anonymous-users session), so sees "Save"
-    await reportsIdPage.expectSaveButtonVisible();
-    await reportsIdPage.expectMakeACopyButtonNotVisible();
+    await expect(page).toHaveURL(
+      `/en/auth/sign-in?redirectUrl=${encodeURIComponent(`/reports/${SOME_REPORT_ID}`)}`,
+      { timeout: 30_000 },
+    );
   });
 
-  test("actions menu shows all expected items", async ({ page }) => {
-    const reportId = await createReportViaUI(page);
-    const reportsIdPage = new ReportsIdPage(page);
+  test("gates the webshot PDF page too", async ({ page }) => {
+    await page.goto(`/en/webshot/reports/${SOME_REPORT_ID}`);
 
-    await reportsIdPage.expectLoaded();
-    await reportsIdPage.openActionsMenu();
-    await reportsIdPage.expectActionsMenuItems();
+    await expect(page).toHaveURL(
+      `/en/auth/sign-in?redirectUrl=${encodeURIComponent(`/webshot/reports/${SOME_REPORT_ID}`)}`,
+      { timeout: 30_000 },
+    );
   });
 
-  test("share dialog shows correct URL with report ID", async ({ page }) => {
-    const reportId = await createReportViaUI(page);
-    const reportsIdPage = new ReportsIdPage(page);
-
-    await reportsIdPage.expectLoaded();
-    await reportsIdPage.openActionsMenu();
-    await reportsIdPage.clickShareAction();
-    await reportsIdPage.expectShareDialogWithUrl(reportId);
+  test("does not reveal whether a report ID exists", async ({ page }) => {
+    // Both a well-formed and a nonsense ID must produce the same redirect.
+    for (const id of [SOME_REPORT_ID, "definitely-not-a-report"]) {
+      await page.goto(`/en/reports/${id}`);
+      await expect(page).toHaveURL(/\/en\/auth\/sign-in\?redirectUrl=/, { timeout: 30_000 });
+    }
   });
+});
 
-  test("knowledge resources section is visible", async ({ page }) => {
-    const reportId = await createReportViaUI(page);
-    const reportsIdPage = new ReportsIdPage(page);
+test.describe("signing in returns to the requested report", () => {
+  test.skip(skipWithoutCredentials, "E2E test user credentials not set");
 
-    await reportsIdPage.expectLoaded();
-    await reportsIdPage.expectKnowledgeResourcesVisible();
-  });
-
-  test("not-found page for invalid report ID", async ({ page }) => {
+  test("lands back on the report the visitor asked for", async ({ page }) => {
+    await page.goto(`/en/reports/${SOME_REPORT_ID}`);
+    await expect(page).toHaveURL(/\/en\/auth\/sign-in\?redirectUrl=/, { timeout: 30_000 });
     await dismissCookieConsent(page).catch(() => {});
-    const reportsIdPage = new ReportsIdPage(page);
 
-    await reportsIdPage.goto("nonexistent-report-id-12345");
-    await reportsIdPage.expectNotFound();
+    const signInPage = new SignInPage(page);
+    await signInPage.signIn(
+      process.env.E2E_TEST_USER_EMAIL as string,
+      process.env.E2E_TEST_USER_PASSWORD as string,
+    );
+
+    // The assertion that matters: back on the requested report, with a single
+    // locale segment. A double-prefixed return URL passes every check above
+    // and fails only here.
+    await expect(page).toHaveURL(`/en/reports/${SOME_REPORT_ID}`, { timeout: 30_000 });
   });
 });

@@ -17,8 +17,6 @@ import { ReportResults } from "@/containers/results";
 
 import config from "@/payload.config";
 
-export const dynamic = "force-dynamic";
-
 export async function generateMetadata({
   params,
 }: PageProps<"/[locale]/reports/[id]">): Promise<Metadata> {
@@ -33,21 +31,20 @@ export async function generateMetadata({
 }
 
 export default async function ReportResultsPage({ params }: PageProps<"/[locale]/reports/[id]">) {
-  const queryClient = new QueryClient();
-
   const { id, locale } = await params;
 
   const payload = await getPayload({ config });
-  try {
-    await payload.findByID({
+
+  const report = await payload
+    .findByID({
       collection: "reports",
       id,
-    });
-  } catch (_error) {
-    notFound();
-  }
+      locale: locale as Locale,
+    })
+    .catch(() => notFound());
 
-  await queryClient.prefetchQuery(reportQueryOptions({ id, locale: locale as Locale }));
+  const queryClient = new QueryClient();
+  queryClient.setQueryData(reportQueryOptions({ id, locale: locale as Locale }).queryKey, report);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
