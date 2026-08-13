@@ -76,7 +76,7 @@ export function CheckYourEmail({ email, ...props }: CheckYourEmailProps) {
           {t("auth-check-email-description")}
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="flex flex-col gap-3">
         <Link href="/auth/sign-in">
           <Button size="lg" className="w-full">
             {t("auth-link-back-to-sign-in")}
