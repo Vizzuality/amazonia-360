@@ -55,7 +55,6 @@ describe("SignupForm", () => {
     render(<SignupForm />);
 
     expect(screen.getByText(/auth-agreement-text/)).toBeInTheDocument();
-    expect(screen.getByText(/auth-agreement-applies-all/)).toBeInTheDocument();
     expect(screen.getAllByRole("checkbox")).toHaveLength(1);
   });
 

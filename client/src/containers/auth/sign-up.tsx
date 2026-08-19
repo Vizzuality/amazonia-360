@@ -212,7 +212,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               >
                 {t("auth-agreement-privacy")}
               </a>
-              . {t("auth-agreement-applies-all")}
+              .
             </p>
 
             <FieldGroup>
