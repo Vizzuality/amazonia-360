@@ -435,6 +435,7 @@
   "profile-button-updating-communications": "Actualizando preferencias...",
   "profile-communications-toast-loading": "Actualizando tus preferencias...",
   "profile-communications-toast-success": "¡Preferencias actualizadas con éxito!",
+  "profile-communications-load-error": "No pudimos cargar tus preferencias de comunicación. Recarga la página para volver a intentarlo.",
   "profile-change-password-title": "Cambiar contraseña",
   "profile-field-new-password": "Nueva contraseña",
   "profile-field-new-password-placeholder": "ingrese nueva contraseña",

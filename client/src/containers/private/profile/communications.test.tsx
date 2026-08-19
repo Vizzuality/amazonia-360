@@ -6,7 +6,7 @@ const mockMutateAsync = vi.fn();
 const mockUseUser = vi.fn();
 
 vi.mock("next-auth/react", () => ({
-  useSession: () => ({ data: { user: { id: "user-1" } } }),
+  useSession: () => ({ data: { user: { id: "user-1" } }, status: "authenticated" }),
 }));
 
 vi.mock("sonner", () => ({
@@ -47,6 +47,22 @@ describe("CommunicationsForm", () => {
     await waitFor(() => {
       expect(screen.getByRole("checkbox")).toBeChecked();
     });
+  });
+
+  it("shows no control while the user is still loading", async () => {
+    mockUseUser.mockReturnValue({ data: undefined, isLoading: true });
+    render(<CommunicationsForm />);
+
+    expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("reports an inline error when the user cannot be read", async () => {
+    mockUseUser.mockReturnValue({ data: undefined, isError: true });
+    render(<CommunicationsForm />);
+
+    expect(screen.getByRole("alert")).toHaveTextContent("profile-communications-load-error");
+    expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
   });
 
   it("saves an opt-in", async () => {

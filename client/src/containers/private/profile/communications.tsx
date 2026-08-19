@@ -9,7 +9,8 @@ import { useUpdateUserCommunityOptIn, useUser } from "@/lib/user";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Field, FieldGroup } from "@/components/ui/field";
+import { Field, FieldError, FieldGroup } from "@/components/ui/field";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { User } from "@/payload-types";
 
@@ -83,8 +84,10 @@ function CommunicationsFields({
 
 export function CommunicationsForm() {
   const t = useTranslations();
-  const { data: session } = useSession();
-  const { data: user } = useUser(session?.user?.id);
+  const { data: session, status: sessionStatus } = useSession();
+  const { data: user, isLoading, isError } = useUser(session?.user?.id);
+
+  const isPending = sessionStatus === "loading" || isLoading;
 
   return (
     <div className="space-y-4">
@@ -93,6 +96,10 @@ export function CommunicationsForm() {
           {t("profile-communications-title")}
         </h3>
       </div>
+
+      {isPending && <Skeleton className="h-10 w-full" />}
+
+      {isError && <FieldError>{t("profile-communications-load-error")}</FieldError>}
 
       {!!user && <CommunicationsFields userId={user.id} communityOptIn={!!user.communityOptIn} />}
     </div>
