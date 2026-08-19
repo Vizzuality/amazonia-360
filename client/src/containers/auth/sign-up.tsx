@@ -32,9 +32,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       email: z.email(t("auth-validation-email-invalid")),
       password: z.string().min(6, t("auth-validation-password-min-length")),
       "confirm-password": z.string(),
-      termsAccepted: z.boolean().refine((val) => val === true, {
-        message: t("auth-validation-terms-required"),
-      }),
+      communityOptIn: z.boolean(),
     })
     .refine((data) => data.password === data["confirm-password"], {
       message: t("auth-validation-passwords-no-match"),
@@ -47,7 +45,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       email: "",
       password: "",
       "confirm-password": "",
-      termsAccepted: false,
+      communityOptIn: false,
     },
     validators: {
       onSubmit: formSchema,
@@ -62,6 +60,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               name: value.name,
               email: value.email,
               password: value.password,
+              communityOptIn: value.communityOptIn,
             },
           })
           .then(() => {
@@ -168,48 +167,53 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               }}
             </form.Field>
 
-            <form.Field name="termsAccepted">
+            <form.Field name="communityOptIn">
               {(field) => {
-                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
-                  <Field data-invalid={isInvalid}>
+                  <Field>
                     <div className="flex items-start gap-2">
                       <Checkbox
                         id={field.name}
                         checked={field.state.value}
                         onCheckedChange={(checked) => field.handleChange(checked as boolean)}
                         onBlur={field.handleBlur}
-                        aria-invalid={isInvalid}
                       />
                       <label
                         htmlFor={field.name}
-                        className="text-muted-foreground text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        className="text-muted-foreground text-sm leading-snug peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
-                        {t("auth-agreement-checkbox")}{" "}
-                        <a
-                          href="https://www.iadb.org/en/terms-conditions-and-notices/terms-and-conditions"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-primary font-medium underline underline-offset-4"
-                        >
-                          {t("auth-agreement-terms")}
-                        </a>{" "}
-                        {t("conjunction-and")}{" "}
-                        <a
-                          href="https://www.iadb.org/en/home/terms-conditions-and-notices/privacy-notice"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-primary font-medium underline underline-offset-4"
-                        >
-                          {t("auth-agreement-privacy")}
-                        </a>
+                        {t("auth-community-optin-label")}{" "}
+                        <span className="text-muted-foreground/70">
+                          {t("auth-community-optin-optional")}
+                        </span>
                       </label>
                     </div>
-                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
                 );
               }}
             </form.Field>
+
+            <p className="text-muted-foreground text-sm leading-snug">
+              {t("auth-agreement-text")}{" "}
+              <a
+                href="https://www.iadb.org/en/terms-conditions-and-notices/terms-and-conditions"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary font-medium underline underline-offset-4"
+              >
+                {t("auth-agreement-terms")}
+              </a>{" "}
+              {t("conjunction-and")}{" "}
+              <a
+                href="https://www.iadb.org/en/home/terms-conditions-and-notices/privacy-notice"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary font-medium underline underline-offset-4"
+              >
+                {t("auth-agreement-privacy")}
+              </a>
+              . {t("auth-agreement-applies-all")}
+            </p>
 
             <FieldGroup>
               <Field>

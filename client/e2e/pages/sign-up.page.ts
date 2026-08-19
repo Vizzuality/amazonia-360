@@ -56,7 +56,7 @@ export class SignUpPage {
   readonly emailInput: Locator;
   readonly passwordInput: Locator;
   readonly confirmPasswordInput: Locator;
-  readonly termsCheckbox: Locator;
+  readonly communityOptInCheckbox: Locator;
   readonly submitButton: Locator;
   readonly signInLink: Locator;
 
@@ -70,7 +70,7 @@ export class SignUpPage {
     this.emailInput = page.getByLabel(l.email);
     this.passwordInput = page.getByLabel(l.password, { exact: true });
     this.confirmPasswordInput = page.getByLabel(l.confirmPassword);
-    this.termsCheckbox = page.getByRole("checkbox");
+    this.communityOptInCheckbox = page.locator("#communityOptIn");
     this.submitButton = page.locator('button[type="submit"]');
     this.signInLink = page
       .locator('[data-slot="card-footer"]')
@@ -87,7 +87,7 @@ export class SignUpPage {
     await expect(this.emailInput).toBeVisible();
     await expect(this.passwordInput).toBeVisible();
     await expect(this.confirmPasswordInput).toBeVisible();
-    await expect(this.termsCheckbox).toBeVisible();
+    await expect(this.communityOptInCheckbox).toBeVisible();
     await expect(this.submitButton).toBeVisible();
   }
 
@@ -107,8 +107,8 @@ export class SignUpPage {
     await this.confirmPasswordInput.fill(password);
   }
 
-  async checkTerms() {
-    await this.termsCheckbox.check();
+  async checkCommunityOptIn() {
+    await this.communityOptInCheckbox.check();
   }
 
   async submit() {
@@ -120,14 +120,14 @@ export class SignUpPage {
     email: string;
     password: string;
     confirmPassword: string;
-    acceptTerms?: boolean;
+    communityOptIn?: boolean;
   }) {
     await this.fillName(data.name);
     await this.fillEmail(data.email);
     await this.fillPassword(data.password);
     await this.fillConfirmPassword(data.confirmPassword);
-    if (data.acceptTerms !== false) {
-      await this.checkTerms();
+    if (data.communityOptIn) {
+      await this.checkCommunityOptIn();
     }
     await this.submit();
   }
