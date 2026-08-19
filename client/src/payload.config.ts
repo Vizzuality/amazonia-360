@@ -6,6 +6,7 @@ import { buildConfig } from "payload";
 
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
+import { importExportPlugin } from "@payloadcms/plugin-import-export";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 
 import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2";
@@ -15,6 +16,7 @@ import sharp from "sharp";
 
 import { env } from "@/env.mjs";
 
+import { adminAccess } from "@/cms/access/admin";
 import { Accounts } from "@/cms/collections/Accounts";
 import { Admins } from "@/cms/collections/Admins";
 import { AnonymousUsers } from "@/cms/collections/AnonymousUsers";
@@ -100,6 +102,36 @@ export default buildConfig({
   sharp,
   plugins: [
     // storage-adapter-placeholder
+    importExportPlugin({
+      collections: [
+        {
+          slug: "users",
+          export: { disableJobsQueue: true },
+          import: { disableJobsQueue: true },
+        },
+      ],
+      // Exports and imports of the users collection carry every user's email and community
+      // opt-in. Payload's default access would let any authenticated user read those files,
+      // which is a wider surface than the users collection itself.
+      overrideExportCollection: ({ collection }) => {
+        collection.access = {
+          create: adminAccess,
+          delete: adminAccess,
+          read: adminAccess,
+          update: adminAccess,
+        };
+        return collection;
+      },
+      overrideImportCollection: ({ collection }) => {
+        collection.access = {
+          create: adminAccess,
+          delete: adminAccess,
+          read: adminAccess,
+          update: adminAccess,
+        };
+        return collection;
+      },
+    }),
   ],
   routes: {
     api: "/v1/api",
