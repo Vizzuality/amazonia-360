@@ -78,6 +78,28 @@ describe("CommunicationsForm", () => {
     });
   });
 
+  it("adopts a newer server value instead of the value captured on mount", async () => {
+    const { rerender } = render(<CommunicationsForm />);
+
+    await waitFor(() => {
+      expect(screen.getByRole("checkbox")).not.toBeChecked();
+    });
+
+    mockUseUser.mockReturnValue({ data: { id: "user-1", communityOptIn: true } });
+    rerender(<CommunicationsForm />);
+
+    await waitFor(() => {
+      expect(screen.getByRole("checkbox")).toBeChecked();
+    });
+
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: "profile-button-update-communications" }));
+
+    await waitFor(() => {
+      expect(mockMutateAsync).toHaveBeenCalledWith({ id: "user-1", communityOptIn: true });
+    });
+  });
+
   it("keeps a failed save visible inline instead of a toast", async () => {
     mockMutateAsync.mockRejectedValue(new Error("Forbidden"));
     const user = userEvent.setup();
