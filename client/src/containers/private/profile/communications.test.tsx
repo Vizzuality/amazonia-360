@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { toast } from "sonner";
 import { vi } from "vitest";
 
 const mockMutateAsync = vi.fn();
@@ -11,7 +12,7 @@ vi.mock("next-auth/react", () => ({
 
 vi.mock("sonner", () => ({
   toast: {
-    promise: vi.fn((promise: Promise<unknown>) => promise.catch(() => {})),
+    success: vi.fn(),
   },
 }));
 
@@ -75,6 +76,22 @@ describe("CommunicationsForm", () => {
     await waitFor(() => {
       expect(mockMutateAsync).toHaveBeenCalledWith({ id: "user-1", communityOptIn: true });
     });
+  });
+
+  it("keeps a failed save visible inline instead of a toast", async () => {
+    mockMutateAsync.mockRejectedValue(new Error("Forbidden"));
+    const user = userEvent.setup();
+    render(<CommunicationsForm />);
+
+    await user.click(screen.getByRole("checkbox"));
+    await user.click(screen.getByRole("button", { name: "profile-button-update-communications" }));
+
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveTextContent("Forbidden");
+    });
+
+    expect(toast.success).not.toHaveBeenCalled();
+    expect(screen.getByRole("alert")).toBeInTheDocument();
   });
 
   it("saves an opt-out", async () => {

@@ -3,6 +3,7 @@
 import { useForm } from "@tanstack/react-form";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { useUpdateUserCommunityOptIn, useUser } from "@/lib/user";
@@ -24,18 +25,20 @@ function CommunicationsFields({
   const t = useTranslations();
   const updateMutation = useUpdateUserCommunityOptIn();
 
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   const form = useForm({
     defaultValues: { communityOptIn },
     onSubmit: async ({ value }) => {
-      toast.promise(
-        updateMutation.mutateAsync({ id: userId, communityOptIn: value.communityOptIn }),
-        {
-          loading: t("profile-communications-toast-loading"),
-          success: t("profile-communications-toast-success"),
-          error: (err) => err.message,
-          duration: 2000,
-        },
-      );
+      setSubmitError(null);
+
+      try {
+        await updateMutation.mutateAsync({ id: userId, communityOptIn: value.communityOptIn });
+        toast.success(t("profile-communications-toast-success"), { duration: 2000 });
+      } catch (error) {
+        const message = error instanceof Error && error.message ? error.message : null;
+        setSubmitError(message ?? t("profile-communications-submit-error"));
+      }
     },
   });
 
@@ -69,6 +72,8 @@ function CommunicationsFields({
             );
           }}
         </form.Field>
+
+        {!!submitError && <FieldError>{submitError}</FieldError>}
 
         <div className="flex justify-end">
           <Button type="submit" disabled={updateMutation.isPending} className="ml-auto">
