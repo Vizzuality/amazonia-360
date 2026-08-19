@@ -1,9 +1,10 @@
 "use client";
 
+import { useState } from "react";
+
 import { useForm } from "@tanstack/react-form";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
 import { toast } from "sonner";
 
 import { useUpdateUserCommunityOptIn, useUser } from "@/lib/user";
