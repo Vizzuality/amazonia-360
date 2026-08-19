@@ -28,6 +28,7 @@ import { Topics } from "@/cms/collections/Topics";
 import { Users } from "@/cms/collections/Users";
 import { CleanAnonymousUsers } from "@/cms/cron/clean-anonymous-users";
 import { CleanDraftReports } from "@/cms/cron/clean-draft-reports";
+import { getAdminOnlyEndpoints } from "@/cms/endpoints/import-export";
 import { routing } from "@/i18n/routing";
 
 import { getDatabaseUrlFromUrlAndPassword } from "./utils/database-url";
@@ -120,6 +121,7 @@ export default buildConfig({
           read: adminAccess,
           update: adminAccess,
         };
+        collection.endpoints = getAdminOnlyEndpoints(collection.endpoints);
         return collection;
       },
       overrideImportCollection: ({ collection }) => {
@@ -129,6 +131,7 @@ export default buildConfig({
           read: adminAccess,
           update: adminAccess,
         };
+        collection.endpoints = getAdminOnlyEndpoints(collection.endpoints);
         return collection;
       },
     }),
