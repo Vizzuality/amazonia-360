@@ -16,7 +16,6 @@ import sharp from "sharp";
 
 import { env } from "@/env.mjs";
 
-import { adminAccess } from "@/cms/access/admin";
 import { Accounts } from "@/cms/collections/Accounts";
 import { Admins } from "@/cms/collections/Admins";
 import { AnonymousUsers } from "@/cms/collections/AnonymousUsers";
@@ -28,7 +27,6 @@ import { Topics } from "@/cms/collections/Topics";
 import { Users } from "@/cms/collections/Users";
 import { CleanAnonymousUsers } from "@/cms/cron/clean-anonymous-users";
 import { CleanDraftReports } from "@/cms/cron/clean-draft-reports";
-import { getAdminOnlyEndpoints } from "@/cms/endpoints/import-export";
 import { routing } from "@/i18n/routing";
 
 import { getDatabaseUrlFromUrlAndPassword } from "./utils/database-url";
@@ -122,33 +120,6 @@ export default buildConfig({
           import: { disableJobsQueue: true, limit: IMPORT_EXPORT_DOCUMENT_LIMIT },
         },
       ],
-      // Exports and imports of the users collection carry every user's email and community
-      // opt-in. Payload's default access would let any authenticated user read those files,
-      // which is a wider surface than the users collection itself.
-      overrideExportCollection: ({ collection }) => {
-        // Spread, not replace: the plugin sets `update: () => false` on purpose so a completed
-        // export/import document cannot be repointed at a different file afterwards.
-        collection.access = {
-          ...collection.access,
-          create: adminAccess,
-          delete: adminAccess,
-          read: adminAccess,
-        };
-        collection.endpoints = getAdminOnlyEndpoints(collection.endpoints);
-        return collection;
-      },
-      overrideImportCollection: ({ collection }) => {
-        // Spread, not replace: the plugin sets `update: () => false` on purpose so a completed
-        // export/import document cannot be repointed at a different file afterwards.
-        collection.access = {
-          ...collection.access,
-          create: adminAccess,
-          delete: adminAccess,
-          read: adminAccess,
-        };
-        collection.endpoints = getAdminOnlyEndpoints(collection.endpoints);
-        return collection;
-      },
     }),
   ],
   routes: {
