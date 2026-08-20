@@ -115,21 +115,25 @@ export default buildConfig({
       // opt-in. Payload's default access would let any authenticated user read those files,
       // which is a wider surface than the users collection itself.
       overrideExportCollection: ({ collection }) => {
+        // Spread, not replace: the plugin sets `update: () => false` on purpose so a completed
+        // export/import document cannot be repointed at a different file afterwards.
         collection.access = {
+          ...collection.access,
           create: adminAccess,
           delete: adminAccess,
           read: adminAccess,
-          update: adminAccess,
         };
         collection.endpoints = getAdminOnlyEndpoints(collection.endpoints);
         return collection;
       },
       overrideImportCollection: ({ collection }) => {
+        // Spread, not replace: the plugin sets `update: () => false` on purpose so a completed
+        // export/import document cannot be repointed at a different file afterwards.
         collection.access = {
+          ...collection.access,
           create: adminAccess,
           delete: adminAccess,
           read: adminAccess,
-          update: adminAccess,
         };
         collection.endpoints = getAdminOnlyEndpoints(collection.endpoints);
         return collection;
