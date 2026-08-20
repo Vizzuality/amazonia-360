@@ -54,6 +54,7 @@
     "@payloadcms/db-postgres": "3.87.0",
     "@payloadcms/email-nodemailer": "3.87.0",
     "@payloadcms/next": "3.87.0",
+    "@payloadcms/plugin-import-export": "3.87.0",
     "@payloadcms/richtext-lexical": "3.87.0",
     "@payloadcms/sdk": "3.87.0",
     "@radix-ui/react-alert-dialog": "1.1.15",

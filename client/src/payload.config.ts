@@ -6,6 +6,7 @@ import { buildConfig } from "payload";
 
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
+import { importExportPlugin } from "@payloadcms/plugin-import-export";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 
 import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2";
@@ -29,6 +30,8 @@ import { CleanDraftReports } from "@/cms/cron/clean-draft-reports";
 import { routing } from "@/i18n/routing";
 
 import { getDatabaseUrlFromUrlAndPassword } from "./utils/database-url";
+
+const IMPORT_EXPORT_DOCUMENT_LIMIT = 10000;
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -100,6 +103,24 @@ export default buildConfig({
   sharp,
   plugins: [
     // storage-adapter-placeholder
+    importExportPlugin({
+      collections: [
+        {
+          slug: "users",
+          // The queue is disabled, so each run is serialised inside the request. The plugin
+          // defaults to no ceiling, which outlives the request timeout once the table is large
+          // enough; a set limit surfaces the plugin's limitExceeded notice in the admin instead.
+          // disableSave keeps exports download-only: no storage adapter is configured, so a saved
+          // file lands on container-local disk and its url 404s after the next task replacement.
+          export: {
+            disableJobsQueue: true,
+            disableSave: true,
+            limit: IMPORT_EXPORT_DOCUMENT_LIMIT,
+          },
+          import: { disableJobsQueue: true, limit: IMPORT_EXPORT_DOCUMENT_LIMIT },
+        },
+      ],
+    }),
   ],
   routes: {
     api: "/v1/api",
