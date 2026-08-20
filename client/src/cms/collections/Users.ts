@@ -99,12 +99,24 @@ export const Users: CollectionConfig = {
       type: "join",
       collection: "accounts",
       on: "user",
+      // Payload resolves joins on find by default and the export flattens whatever it gets, so
+      // without this the users CSV grows accounts_docs_0_accessToken and every report payload.
+      custom: {
+        "plugin-import-export": {
+          disabled: true,
+        },
+      },
     },
     {
       name: "reports",
       type: "join",
       collection: "reports",
       on: "user",
+      custom: {
+        "plugin-import-export": {
+          disabled: true,
+        },
+      },
     },
   ],
   endpoints: [
