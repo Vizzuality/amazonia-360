@@ -76,18 +76,47 @@ export const Users: CollectionConfig = {
       type: "checkbox",
       defaultValue: false,
       label: "Community opt-in",
+      custom: {
+        "plugin-import-export": {
+          hooks: {
+            // csv-stringify renders booleans as "1" and "", so an opt-out is indistinguishable
+            // from missing data in the CSVs used to decide who gets mailed.
+            beforeExport: ({ format, value }) =>
+              format === "csv" ? String(Boolean(value)) : value,
+            beforeImport: ({ format, value }) => {
+              if (format !== "csv") {
+                return value;
+              }
+
+              return value === true || value === "true" || value === "1";
+            },
+          },
+        },
+      },
     },
     {
       name: "accounts",
       type: "join",
       collection: "accounts",
       on: "user",
+      // Payload resolves joins on find by default and the export flattens whatever it gets, so
+      // without this the users CSV grows accounts_docs_0_accessToken and every report payload.
+      custom: {
+        "plugin-import-export": {
+          disabled: true,
+        },
+      },
     },
     {
       name: "reports",
       type: "join",
       collection: "reports",
       on: "user",
+      custom: {
+        "plugin-import-export": {
+          disabled: true,
+        },
+      },
     },
   ],
   endpoints: [
