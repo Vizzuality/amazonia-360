@@ -1,6 +1,7 @@
 "use client";
 
 import { ChangePasswordForm } from "@/containers/private/profile/change-password";
+import { CommunicationsForm } from "@/containers/private/profile/communications";
 import { DeleteAccount } from "@/containers/private/profile/delete-account";
 import { ProfileHeader } from "@/containers/private/profile/header";
 import { UpdateNameForm } from "@/containers/private/profile/update-name";
@@ -17,6 +18,10 @@ export const Profile = () => {
 
         <div className="border-border border-t pt-8">
           <ChangePasswordForm />
+        </div>
+
+        <div className="border-border border-t pt-8">
+          <CommunicationsForm />
         </div>
 
         <div className="border-border border-t pt-8">

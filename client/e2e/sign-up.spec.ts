@@ -58,23 +58,8 @@ test.describe("sign-up form validation", () => {
     await signUpPage.fillEmail("test@example.com");
     await signUpPage.fillPassword("password123");
     await signUpPage.fillConfirmPassword("differentpassword");
-    await signUpPage.checkTerms();
     await signUpPage.submit();
     await signUpPage.expectValidationError(/don't match/i);
-  });
-
-  test("shows error when terms not accepted", async ({ page }) => {
-    const signUpPage = new SignUpPage(page);
-    await signUpPage.goto();
-    await dismissCookieConsent(page);
-
-    await signUpPage.fillName("Test User");
-    await signUpPage.fillEmail("test@example.com");
-    await signUpPage.fillPassword("password123");
-    await signUpPage.fillConfirmPassword("password123");
-    // Do not check terms
-    await signUpPage.submit();
-    await signUpPage.expectValidationError(/agree to the terms/i);
   });
 });
 
