@@ -33,6 +33,8 @@ import { routing } from "@/i18n/routing";
 
 import { getDatabaseUrlFromUrlAndPassword } from "./utils/database-url";
 
+const IMPORT_EXPORT_DOCUMENT_LIMIT = 10000;
+
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
@@ -107,8 +109,11 @@ export default buildConfig({
       collections: [
         {
           slug: "users",
-          export: { disableJobsQueue: true },
-          import: { disableJobsQueue: true },
+          // The queue is disabled, so each run is serialised inside the request. The plugin
+          // defaults to no ceiling, which outlives the request timeout once the table is large
+          // enough; a set limit surfaces the plugin's limitExceeded notice in the admin instead.
+          export: { disableJobsQueue: true, limit: IMPORT_EXPORT_DOCUMENT_LIMIT },
+          import: { disableJobsQueue: true, limit: IMPORT_EXPORT_DOCUMENT_LIMIT },
         },
       ],
       // Exports and imports of the users collection carry every user's email and community
