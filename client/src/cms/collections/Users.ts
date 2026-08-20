@@ -15,7 +15,7 @@ export const Users: CollectionConfig = {
   slug: "users",
   admin: {
     useAsTitle: "email",
-    defaultColumns: ["email", "name", "createdAt", "verified"],
+    defaultColumns: ["email", "name", "communityOptIn", "createdAt", "verified"],
   },
   auth: {
     verify: {
@@ -71,6 +71,12 @@ export const Users: CollectionConfig = {
     { name: "name", type: "text" },
     { name: "image", type: "text" },
     { name: "emailVerified", type: "date" },
+    {
+      name: "communityOptIn",
+      type: "checkbox",
+      defaultValue: false,
+      label: "Community opt-in",
+    },
     {
       name: "accounts",
       type: "join",

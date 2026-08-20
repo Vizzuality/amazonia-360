@@ -221,6 +221,7 @@ export interface User {
   name?: string | null;
   image?: string | null;
   emailVerified?: string | null;
+  communityOptIn?: boolean | null;
   accounts?: {
     docs?: (string | Account)[];
     hasNextPage?: boolean;
@@ -937,6 +938,7 @@ export interface UsersSelect<T extends boolean = true> {
   name?: T;
   image?: T;
   emailVerified?: T;
+  communityOptIn?: T;
   accounts?: T;
   reports?: T;
   updatedAt?: T;
