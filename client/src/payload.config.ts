@@ -112,7 +112,13 @@ export default buildConfig({
           // The queue is disabled, so each run is serialised inside the request. The plugin
           // defaults to no ceiling, which outlives the request timeout once the table is large
           // enough; a set limit surfaces the plugin's limitExceeded notice in the admin instead.
-          export: { disableJobsQueue: true, limit: IMPORT_EXPORT_DOCUMENT_LIMIT },
+          // disableSave keeps exports download-only: no storage adapter is configured, so a saved
+          // file lands on container-local disk and its url 404s after the next task replacement.
+          export: {
+            disableJobsQueue: true,
+            disableSave: true,
+            limit: IMPORT_EXPORT_DOCUMENT_LIMIT,
+          },
           import: { disableJobsQueue: true, limit: IMPORT_EXPORT_DOCUMENT_LIMIT },
         },
       ],
