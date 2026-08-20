@@ -4,6 +4,14 @@ import { CustomLocation, SearchLocation } from "@/app/(frontend)/parsers";
 
 import "@testing-library/jest-dom/vitest";
 
+// jsdom ships no ResizeObserver; Radix primitives that measure themselves (Checkbox via
+// useSize) throw on mount without it.
+globalThis.ResizeObserver ??= class {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+} as unknown as typeof ResizeObserver;
+
 /****************
  * Node modules
  ****************/
