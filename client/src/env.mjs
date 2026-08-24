@@ -17,7 +17,6 @@ export const env = createEnv({
     AWS_SES_REGION: z.string(),
   },
   client: {
-    NEXT_PUBLIC_WEBSHOT_URL: z.url(),
     NEXT_PUBLIC_URL: z
       .url()
       .optional()
@@ -37,7 +36,6 @@ export const env = createEnv({
     BASIC_AUTH_ENABLED: process.env.BASIC_AUTH_ENABLED,
     BASIC_AUTH_USER: process.env.BASIC_AUTH_USER,
     BASIC_AUTH_PASSWORD: process.env.BASIC_AUTH_PASSWORD,
-    NEXT_PUBLIC_WEBSHOT_URL: process.env.NEXT_PUBLIC_WEBSHOT_URL,
     NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
     AUTH_URL: process.env.AUTH_URL,
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
