@@ -24,7 +24,6 @@ services:
       #target: production
       args:
         NEXT_PUBLIC_URL: ${CLIENT__NEXT_PUBLIC_URL:-http://localhost:3000}
-        NEXT_PUBLIC_WEBSHOT_URL: ${CLIENT__NEXT_PUBLIC_WEBSHOT_URL:-http://webshot:3003/webshot/api/v1}
         NEXT_PUBLIC_API_URL: ${CLIENT__NEXT_PUBLIC_API_URL:-http://api:8000}
         NEXT_PUBLIC_ARCGIS_API_KEY: ${CLIENT__NEXT_PUBLIC_ARCGIS_API_KEY}
         NEXT_PUBLIC_API_KEY: ${CLIENT__NEXT_PUBLIC_API_KEY}
@@ -42,25 +41,6 @@ services:
         required: false
     ports:
       - "3000:3000"
-    networks:
-      - amazonia360-network
-
-  webshot:
-    platform: linux/amd64
-    container_name: amazonia360-webshot
-    build:
-      context: webshot
-      dockerfile: Dockerfile
-      target: production
-    ports:
-      - "${WEBSHOT__PORT:-3003}:3003"
-    environment:
-      - NODE_ENV=production
-      - PORT=3003
-    env_file:
-      - path: webshot/.env
-        required: false
-    restart: unless-stopped
     networks:
       - amazonia360-network
 

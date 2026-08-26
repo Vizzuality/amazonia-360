@@ -56,12 +56,6 @@ module "client_ecr" {
   repo_name    = "client"
 }
 
-module "webshot_ecr" {
-  source       = "./modules/ecr"
-  project_name = var.project_name
-  repo_name    = "webshot"
-}
-
 ## Specifically for production, as the deployment points to the production region to push the images to the ECR
 ## so we need to have a ECR in said region
 module "client_prod_ecr" {
@@ -80,15 +74,6 @@ module "api_prod_ecr" {
   source       = "./modules/ecr"
   project_name = var.project_name
   repo_name    = "api"
-}
-
-module "webshot_prod_ecr" {
-  providers = {
-    aws = aws.prod
-  }
-  source       = "./modules/ecr"
-  project_name = var.project_name
-  repo_name    = "webshot"
 }
 
 module "ses" {
@@ -135,9 +120,6 @@ module "github" {
 
     # Client
     TF_CLIENT_REPOSITORY_NAME = module.client_ecr.repository_name
-
-    # Webshot
-    TF_WEBSHOT_REPOSITORY_NAME = module.webshot_ecr.repository_name
   }
 }
 
@@ -187,11 +169,10 @@ module "dev" {
     TF_API_GRID_TILES_PATH = var.dev.api.grid_tiles_path
 
     # Client
-    TF_CLIENT_NEXT_PUBLIC_URL         = var.dev.client.next_public_url
-    TF_CLIENT_NEXT_PUBLIC_API_URL     = var.dev.client.next_public_api_url
-    TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL = var.dev.client.next_public_webshot_url
-    TF_CLIENT_NEXT_PUBLIC_GTM_ID      = var.dev.client.next_public_gtm_id
-    TF_CLIENT_BASIC_AUTH_ENABLED      = var.dev.client.basic_auth_enabled
+    TF_CLIENT_NEXT_PUBLIC_URL     = var.dev.client.next_public_url
+    TF_CLIENT_NEXT_PUBLIC_API_URL = var.dev.client.next_public_api_url
+    TF_CLIENT_NEXT_PUBLIC_GTM_ID  = var.dev.client.next_public_gtm_id
+    TF_CLIENT_BASIC_AUTH_ENABLED  = var.dev.client.basic_auth_enabled
   }
   github_additional_environment_secrets = {
     # SES
@@ -209,7 +190,7 @@ module "dev" {
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.dev.client.next_public_arcgis_api_key
     TF_CLIENT_BASIC_AUTH_USER            = var.dev.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD        = var.dev.client.basic_auth_password
-    
+
     TF_CLIENT_PAYLOAD_SECRET = var.dev.client.payload_secret
     TF_CLIENT_DATABASE_URL   = var.dev.client.database_url
     TF_CLIENT_APP_KEY        = var.dev.client.app_key
@@ -258,11 +239,10 @@ module "staging" {
     TF_API_GRID_TILES_PATH = var.staging.api.grid_tiles_path
 
     # Client
-    TF_CLIENT_NEXT_PUBLIC_URL         = var.staging.client.next_public_url
-    TF_CLIENT_NEXT_PUBLIC_API_URL     = var.staging.client.next_public_api_url
-    TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL = var.staging.client.next_public_webshot_url
-    TF_CLIENT_NEXT_PUBLIC_GTM_ID      = var.staging.client.next_public_gtm_id
-    TF_CLIENT_BASIC_AUTH_ENABLED      = var.staging.client.basic_auth_enabled
+    TF_CLIENT_NEXT_PUBLIC_URL     = var.staging.client.next_public_url
+    TF_CLIENT_NEXT_PUBLIC_API_URL = var.staging.client.next_public_api_url
+    TF_CLIENT_NEXT_PUBLIC_GTM_ID  = var.staging.client.next_public_gtm_id
+    TF_CLIENT_BASIC_AUTH_ENABLED  = var.staging.client.basic_auth_enabled
   }
   github_additional_environment_secrets = {
     # SES
@@ -281,7 +261,7 @@ module "staging" {
 
     TF_CLIENT_BASIC_AUTH_USER     = var.staging.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD = var.staging.client.basic_auth_password
-    
+
     TF_CLIENT_PAYLOAD_SECRET = var.staging.client.payload_secret
     TF_CLIENT_DATABASE_URL   = var.staging.client.database_url
     TF_CLIENT_APP_KEY        = var.staging.client.app_key
@@ -330,11 +310,10 @@ module "prod" {
     TF_API_GRID_TILES_PATH = var.prod.api.grid_tiles_path
 
     # Client
-    TF_CLIENT_NEXT_PUBLIC_URL         = var.prod.client.next_public_url
-    TF_CLIENT_NEXT_PUBLIC_API_URL     = var.prod.client.next_public_api_url
-    TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL = var.prod.client.next_public_webshot_url
-    TF_CLIENT_NEXT_PUBLIC_GTM_ID      = var.prod.client.next_public_gtm_id
-    TF_CLIENT_BASIC_AUTH_ENABLED      = var.prod.client.basic_auth_enabled
+    TF_CLIENT_NEXT_PUBLIC_URL     = var.prod.client.next_public_url
+    TF_CLIENT_NEXT_PUBLIC_API_URL = var.prod.client.next_public_api_url
+    TF_CLIENT_NEXT_PUBLIC_GTM_ID  = var.prod.client.next_public_gtm_id
+    TF_CLIENT_BASIC_AUTH_ENABLED  = var.prod.client.basic_auth_enabled
   }
   github_additional_environment_secrets = {
     # SES
@@ -352,7 +331,7 @@ module "prod" {
     TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY = var.prod.client.next_public_arcgis_api_key
     TF_CLIENT_BASIC_AUTH_USER            = var.prod.client.basic_auth_user
     TF_CLIENT_BASIC_AUTH_PASSWORD        = var.prod.client.basic_auth_password
-    
+
     TF_CLIENT_PAYLOAD_SECRET = var.prod.client.payload_secret
     TF_CLIENT_DATABASE_URL   = var.prod.client.database_url
     TF_CLIENT_APP_KEY        = var.prod.client.app_key

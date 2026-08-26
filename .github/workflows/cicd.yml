@@ -120,7 +120,6 @@ jobs:
             NEXT_PUBLIC_API_URL=${{ vars.TF_CLIENT_NEXT_PUBLIC_API_URL }}
             NEXT_PUBLIC_ARCGIS_API_KEY=${{ secrets.TF_CLIENT_NEXT_PUBLIC_ARCGIS_API_KEY }}
             NEXT_PUBLIC_API_KEY=${{ secrets.TF_CLIENT_NEXT_PUBLIC_API_KEY }}
-            NEXT_PUBLIC_WEBSHOT_URL=${{ vars.TF_CLIENT_NEXT_PUBLIC_WEBSHOT_URL }}
             NEXT_PUBLIC_GTM_ID=${{ vars.TF_CLIENT_NEXT_PUBLIC_GTM_ID }}
             BASIC_AUTH_ENABLED=${{ vars.TF_CLIENT_BASIC_AUTH_ENABLED }}
             BASIC_AUTH_USER=${{ secrets.TF_CLIENT_BASIC_AUTH_USER }}
@@ -143,55 +142,9 @@ jobs:
             ${{ steps.login-ecr.outputs.registry }}/${{ vars.TF_CLIENT_REPOSITORY_NAME }}:${{ github.sha }}
             ${{ steps.login-ecr.outputs.registry }}/${{ vars.TF_CLIENT_REPOSITORY_NAME }}:${{ needs.set_environment.outputs.env_name }}
 
-  build_webshot:
-    name: build-webshot
-    needs: [set_environment]
-    environment:
-      name: ${{ needs.set_environment.outputs.env_name }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5
-        with:
-          aws-access-key-id: ${{ vars.TF_PIPELINE_USER_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.TF_PIPELINE_USER_SECRET_ACCESS_KEY }}
-          aws-region: ${{ vars.TF_AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-        with:
-          mask-password: "true"
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Use Latest Corepack
-        run: |
-          echo "Before: corepack version => $(corepack --version || echo 'not installed')"
-          npm install -g corepack@latest
-          echo "After : corepack version => $(corepack --version)"
-          corepack enable
-          pnpm --version
-
-      - name: Build, tag, and push Webshot image to Amazon ECR
-        uses: docker/build-push-action@v5
-        with:
-          context: webshot
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          file: ./webshot/Dockerfile
-          push: true
-          tags: |
-            ${{ steps.login-ecr.outputs.registry }}/${{ vars.TF_WEBSHOT_REPOSITORY_NAME }}:${{ github.sha }}
-            ${{ steps.login-ecr.outputs.registry }}/${{ vars.TF_WEBSHOT_REPOSITORY_NAME }}:${{ needs.set_environment.outputs.env_name }}
-
   deploy:
     name: deploy
-    needs: [set_environment, build_api, build_client, build_webshot]
+    needs: [set_environment, build_api, build_client]
     runs-on: ubuntu-latest
     environment:
       name: ${{ needs.set_environment.outputs.env_name }}
@@ -209,15 +162,6 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Escape variables
-        shell: bash
-        run: |
-          app_basic_auth_password='${{ secrets.TF_CLIENT_BASIC_AUTH_PASSWORD }}'
-          app_basic_auth_password_escaped="${app_basic_auth_password//$/\$\$}"    # $ -> $$
-          echo "::add-mask::$app_basic_auth_password_escaped" # mask the escaped value in runner output
-          printf 'APP_BASIC_AUTH_PASSWORD_ESCAPED=%s\n' "$app_basic_auth_password_escaped" >> $GITHUB_ENV
-        id: escape_variables
 
       - name: Promote grid data to s3 of next environment
         shell: bash
@@ -251,7 +195,6 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY_API: ${{ vars.TF_API_REPOSITORY_NAME }}
           ECR_REPOSITORY_CLIENT: ${{ vars.TF_CLIENT_REPOSITORY_NAME }}
-          ECR_REPOSITORY_WEBSHOT: ${{ vars.TF_WEBSHOT_REPOSITORY_NAME }}
           IMAGE_TAG: ${{ needs.set_environment.outputs.env_name }}
           AWS_DEFAULT_REGION: ${{ vars.TF_AWS_REGION }}
 
@@ -293,18 +236,6 @@ jobs:
                 - AWS_SES_IAM_USER_ACCESS_KEY_ID=${AWS_SES_IAM_USER_ACCESS_KEY_ID}
                 - AWS_SES_IAM_USER_SECRET_ACCESS_KEY=${AWS_SES_IAM_USER_SECRET_ACCESS_KEY}
                 - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-              restart: always
-            webshot:
-              image: $ECR_REGISTRY/$ECR_REPOSITORY_WEBSHOT:$IMAGE_TAG
-              networks:
-                - amazonia360-network
-              ports:
-                - 3003:3003
-              environment:
-                PORT: 3003
-                APP_BASE_URL: http://client:3000
-                APP_BASIC_AUTH_USER: ${{ secrets.TF_CLIENT_BASIC_AUTH_USER }}
-                APP_BASIC_AUTH_PASSWORD: ${APP_BASIC_AUTH_PASSWORD_ESCAPED}
               restart: always
             nginx:
               image: nginx:1.30.1-alpine

@@ -39,7 +39,7 @@ pnpm splitenv
 Therefore, any changes to the root `.env` file need to be followed by running
 the `splitenv` script to update the `.env` files in each service's directory.
 
-The env vars for each service (client, api, webshot) _must_ be prefixed with the
+The env vars for each service (client, api) _must_ be prefixed with the
 service name in uppercase, followed by two underscores (`__`); for example,
 `CLIENT__NEXT_PUBLIC_URL`. `splitenv` will then pick only the env vars that
 match each service, strip the prefix and write them to the relevant `.env` file.
@@ -50,7 +50,7 @@ Once the `.env` files are up to date, to start the platform, run
 docker compose up --build
 ```
 
-from the root directory to spin all the services (client, api, webshot).
+from the root directory to spin all the services (client, api).
 
 Now visiting http://localhost:3000 in any browser should show the landing page.
 
