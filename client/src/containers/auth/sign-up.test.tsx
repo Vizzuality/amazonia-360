@@ -51,6 +51,17 @@ describe("SignupForm", () => {
     expect(screen.getByText("auth-community-optin-optional")).toBeInTheDocument();
   });
 
+  it("renders the account benefits list", () => {
+    render(<SignupForm />);
+
+    expect(screen.getByText("auth-signup-description")).toBeInTheDocument();
+    expect(screen.getAllByRole("listitem").map((item) => item.textContent)).toEqual([
+      "auth-signup-benefit-reports",
+      "auth-signup-benefit-summaries",
+      "auth-signup-benefit-community",
+    ]);
+  });
+
   it("renders the terms agreement as text rather than a checkbox", () => {
     render(<SignupForm />);
 
