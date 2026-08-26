@@ -1,6 +1,7 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
+import { Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -21,6 +22,12 @@ import { Input } from "@/components/ui/input";
 import { Link, useRouter } from "@/i18n/navigation";
 
 import { sdk } from "@/services/sdk";
+
+const BENEFIT_KEYS = [
+  "auth-signup-benefit-reports",
+  "auth-signup-benefit-summaries",
+  "auth-signup-benefit-community",
+] as const;
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
@@ -81,6 +88,14 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       <CardHeader>
         <CardTitle className="text-primary text-3xl">{t("auth-signup-title")}</CardTitle>
         <CardDescription className="font-medium">{t("auth-signup-description")}</CardDescription>
+        <ul className="text-muted-foreground mt-2 space-y-1.5 text-sm font-medium">
+          {BENEFIT_KEYS.map((key) => (
+            <li key={key} className="flex items-start gap-2">
+              <Check className="text-gold-500 mt-0.5 size-4 shrink-0" aria-hidden="true" />
+              <span>{t(key)}</span>
+            </li>
+          ))}
+        </ul>
       </CardHeader>
       <CardContent>
         <form
