@@ -1,8 +1,7 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
-import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import ImageryLayer from "@arcgis/core/layers/ImageryLayer";
 import ImageryTileLayer from "@arcgis/core/layers/ImageryTileLayer";
@@ -12,6 +11,7 @@ import PopupTemplate from "@arcgis/core/PopupTemplate";
 
 import { omit } from "@/lib/utils";
 
+import { whenLayerViewSettled } from "@/components/map/layers/layer-view-status";
 import { LayerProps } from "@/components/map/layers/types";
 import { useMap } from "@/components/map/provider";
 
@@ -27,30 +27,33 @@ export default function Layer({
   const mapInstance = useMap();
   const { id } = layer;
 
+  // Cancels the pending wait when this layer is removed, so an abandoned layer
+  // view can't report back into a map that has moved on.
+  const settleAbortRef = useRef<AbortController | null>(null);
+
   const handleLoad = useCallback(
     (l: __esri.Layer) => {
       if (!mapInstance) {
         return;
       }
 
-      const { view, onLayerViewLoading, onLayerViewLoaded, onLayerViewError } = mapInstance;
+      const { view, onLayerViewLoading, onLayerViewSettled } = mapInstance;
       if (!view) {
         return;
       }
 
       if (onLayerViewLoading) onLayerViewLoading(l.id);
 
-      view
-        .whenLayerView(l)
-        .then((lv) => {
-          ArcGISReactiveUtils.whenOnce(() => !lv.updating && lv.visible).then(() => {
-            if (onLayerViewLoaded) onLayerViewLoaded(l.id);
-          });
+      settleAbortRef.current?.abort();
+      const controller = new AbortController();
+      settleAbortRef.current = controller;
+
+      whenLayerViewSettled(view, l, { signal: controller.signal })
+        .then((status) => {
+          if (onLayerViewSettled) onLayerViewSettled(l.id, status);
         })
-        .catch((e) => {
-          if (e.name === "layerview:create-error") {
-            if (onLayerViewError) onLayerViewError(l.id);
-          }
+        .catch(() => {
+          // Aborted because the layer was removed — nothing to report.
         });
     },
     [mapInstance],
@@ -181,22 +184,24 @@ export default function Layer({
 
   useEffect(() => {
     return () => {
+      settleAbortRef.current?.abort();
+
       if (!mapInstance) {
         return;
       }
 
-      const { map } = mapInstance;
+      const { map, onLayerViewRemoved } = mapInstance;
 
       if (!map || !id) {
         return;
       }
 
-      if (map.findLayerById(id)) {
-        const l = map.findLayerById(id);
-        if (l) {
-          map.remove(l);
-        }
+      const l = map.findLayerById(id);
+      if (l) {
+        map.remove(l);
       }
+
+      if (onLayerViewRemoved) onLayerViewRemoved(id);
     };
   }, [id, mapInstance]);
 

@@ -10,12 +10,17 @@ import {
   useMemo,
 } from "react";
 
+import type {
+  LayerViewStatus,
+  SettledLayerViewStatus,
+} from "@/components/map/layers/layer-view-status";
+
 export type MapProps = {
   map?: __esri.Map;
   view?: __esri.MapView;
   onLayerViewLoading?: (id: string) => void;
-  onLayerViewLoaded?: (id: string) => void;
-  onLayerViewError?: (id: string) => void;
+  onLayerViewSettled?: (id: string, status: SettledLayerViewStatus) => void;
+  onLayerViewRemoved?: (id: string) => void;
 };
 
 export type MapContextProps = {
@@ -23,11 +28,11 @@ export type MapContextProps = {
   onMapMount: (map: MapProps) => void;
   onMapUnmount: () => void;
   onLayerViewLoading: (id: string) => void;
-  onLayerViewLoaded: (id: string) => void;
-  onLayerViewError: (id: string) => void;
+  onLayerViewSettled: (id: string, status: SettledLayerViewStatus) => void;
+  onLayerViewRemoved: (id: string) => void;
 };
 
-export type LayerViewStatus = "loading" | "success" | "error";
+export type { LayerViewStatus };
 
 export type LayerView = {
   id: string;
@@ -39,8 +44,8 @@ export const MapContext = createContext<MapContextProps>({
   onMapMount: () => {},
   onMapUnmount: () => {},
   onLayerViewLoading: () => {},
-  onLayerViewLoaded: () => {},
-  onLayerViewError: () => {},
+  onLayerViewSettled: () => {},
+  onLayerViewRemoved: () => {},
 });
 
 export const MapProvider: React.FC<{
@@ -50,13 +55,22 @@ export const MapProvider: React.FC<{
   const [mapInstance, setMapInstance] = useState<MapProps>();
   const layerViews = useRef<LayerView[]>([]);
   const onLoadRef = useRef(onLoad);
+  // `checkLoadingComplete` runs from ArcGIS callbacks, long after the render that
+  // scheduled them. Reading the map off a ref keeps it out of the callback's
+  // dependencies, so the whole context stays referentially stable.
+  const mapInstanceRef = useRef<MapProps | undefined>(undefined);
 
   // Keep onLoad ref up to date without causing rerenders
   onLoadRef.current = onLoad;
 
-  const onMapMount = useCallback((m: MapProps) => setMapInstance(m), []);
+  const onMapMount = useCallback((m: MapProps) => {
+    mapInstanceRef.current = m;
+    setMapInstance(m);
+  }, []);
 
   const onMapUnmount = useCallback(() => {
+    mapInstanceRef.current = undefined;
+    layerViews.current = [];
     setMapInstance(undefined);
   }, []);
 
@@ -67,44 +81,46 @@ export const MapProvider: React.FC<{
     layerViews.current.push({ id, status: "loading" });
   }, []);
 
-  const checkLoadingComplete = useCallback((mapInstanceParam: MapProps | undefined) => {
-    const { map } = mapInstanceParam || {};
+  const checkLoadingComplete = useCallback(() => {
+    const { map } = mapInstanceRef.current || {};
 
-    if (map) {
-      const MAP_LAYERS = map.allLayers.filter(
-        (l) => !!layerViews.current.find((lv) => lv.id === l.id),
-      );
+    if (!map) {
+      return;
+    }
 
-      if (
-        !!layerViews.current.length &&
-        layerViews.current.length === MAP_LAYERS.length &&
-        layerViews.current.every((lv) => lv.status !== "loading")
-      ) {
-        if (onLoadRef.current) onLoadRef.current(layerViews.current);
-      }
+    const MAP_LAYERS = map.allLayers.filter(
+      (l) => !!layerViews.current.find((lv) => lv.id === l.id),
+    );
+
+    if (
+      !!layerViews.current.length &&
+      layerViews.current.length === MAP_LAYERS.length &&
+      layerViews.current.every((lv) => lv.status !== "loading")
+    ) {
+      if (onLoadRef.current) onLoadRef.current(layerViews.current);
     }
   }, []);
 
-  const onLayerViewLoaded = useCallback(
-    (id: string) => {
+  const onLayerViewSettled = useCallback(
+    (id: string, status: SettledLayerViewStatus) => {
       const l = layerViews.current.find((lv) => lv.id === id);
       if (l) {
-        l.status = "success";
+        l.status = status;
       }
-      checkLoadingComplete(mapInstance);
+      checkLoadingComplete();
     },
-    [mapInstance, checkLoadingComplete],
+    [checkLoadingComplete],
   );
 
-  const onLayerViewError = useCallback(
+  // A layer that has left the map must stop counting towards "everything loaded",
+  // otherwise `layerViews` can never match `map.allLayers` again and the map is
+  // stuck loading for the rest of its life.
+  const onLayerViewRemoved = useCallback(
     (id: string) => {
-      const l = layerViews.current.find((lv) => lv.id === id);
-      if (l) {
-        l.status = "error";
-      }
-      checkLoadingComplete(mapInstance);
+      layerViews.current = layerViews.current.filter((lv) => lv.id !== id);
+      checkLoadingComplete();
     },
-    [mapInstance, checkLoadingComplete],
+    [checkLoadingComplete],
   );
 
   // Memoize the context value to prevent unnecessary rerenders
@@ -114,16 +130,16 @@ export const MapProvider: React.FC<{
       onMapMount,
       onMapUnmount,
       onLayerViewLoading,
-      onLayerViewLoaded,
-      onLayerViewError,
+      onLayerViewSettled,
+      onLayerViewRemoved,
     }),
     [
       mapInstance,
       onMapMount,
       onMapUnmount,
       onLayerViewLoading,
-      onLayerViewLoaded,
-      onLayerViewError,
+      onLayerViewSettled,
+      onLayerViewRemoved,
     ],
   );
 
@@ -131,7 +147,7 @@ export const MapProvider: React.FC<{
 };
 
 export function useMap(): MapProps | undefined {
-  const { mapInstance, onLayerViewLoading, onLayerViewLoaded, onLayerViewError } =
+  const { mapInstance, onLayerViewLoading, onLayerViewSettled, onLayerViewRemoved } =
     useContext(MapContext);
 
   // Memoize the returned object to prevent rerenders
@@ -139,9 +155,9 @@ export function useMap(): MapProps | undefined {
     () => ({
       ...mapInstance,
       onLayerViewLoading,
-      onLayerViewLoaded,
-      onLayerViewError,
+      onLayerViewSettled,
+      onLayerViewRemoved,
     }),
-    [mapInstance, onLayerViewLoading, onLayerViewLoaded, onLayerViewError],
+    [mapInstance, onLayerViewLoading, onLayerViewSettled, onLayerViewRemoved],
   );
 }
