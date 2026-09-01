@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo } from "react";
 
+import { useTranslations } from "next-intl";
 import { useDebounceCallback } from "usehooks-ts";
 
 import { usePostSummaryTopicMutation } from "@/lib/ai";
@@ -22,6 +23,7 @@ export interface ReportResultsSummaryProps {
 }
 
 export const ReportResultsSummary = ({ topic, editing, mutation }: ReportResultsSummaryProps) => {
+  const t = useTranslations();
   const { topics, setTopics } = useFormTopics();
 
   const TOPIC = useMemo(() => {
@@ -84,6 +86,15 @@ export const ReportResultsSummary = ({ topic, editing, mutation }: ReportResults
           >
             <ForwardRefEditor markdown={TOPIC.description} onChange={debouncedHandleEditorChange} />
           </div>
+
+          {!!mutation?.data && (
+            <p className="text-muted-foreground mt-2 text-xs">
+              {t("report-results-sidebar-ai-summaries-coverage", {
+                included: mutation.data.included,
+                total: mutation.data.total,
+              })}
+            </p>
+          )}
         </div>
       )}
     </div>

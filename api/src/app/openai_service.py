@@ -4,6 +4,44 @@ from openai import OpenAI, OpenAIError
 
 from app.config import get_settings
 
+LENGTHS = {
+    "Short": "A concise executive summary of around two sentences.",
+    "Normal": "Two paragraphs: the first a general overview, the second the notable data points.",
+    "Long": "A multi-paragraph analysis of the trends and their implications.",
+}
+
+# Every indicator arrives with a status. `unavailable` means the service failed or the indicator
+# defines no query, and `not_supported` means it is excluded from the summary by design — neither
+# says anything about the region, so reporting them as findings is what produced summaries
+# claiming there was no bioeconomy or extreme-heat data while the facing page listed both.
+STATUS_RULES = (
+    "Each indicator in the data carries a `status`:\n"
+    "- `ok`: it has measured values. Cite them.\n"
+    "- `no_coverage`: the query ran and the area genuinely holds none of it. This is the only "
+    "status you may describe as an absence of data.\n"
+    "- `unavailable`: the measurement could not be taken. Say nothing about the indicator at "
+    "all — do not mention it, do not say its data is missing, unavailable or unknown.\n"
+    "- `not_supported`: outside the scope of this summary. Say nothing about it either.\n"
+    "Never present a failed measurement as a finding about the region."
+)
+
+# Without this a section whose indicators all returned nothing still filled two columns with
+# general prose about Amazonia, which reviewers read as findings about their area.
+SCALING_RULE = (
+    "Scale the summary to the evidence. `indicators_included` of `indicators_total` indicators "
+    "have something to say; when that number is small, write proportionally less rather than "
+    "padding with general knowledge about Amazonia. Every figure must come from the data — never "
+    "infer, estimate or invent a value, and never restate a value the data does not contain."
+)
+
+FORMATTING_RULES = (
+    "Write flowing prose. No headings, blockquotes, lists, tables, images, links, code blocks, "
+    "horizontal rules or footnotes. Bold the key figures, names and classifications with "
+    "Markdown. Use percentages wherever the data allows. Refer to the area as 'the selected "
+    "area' or 'the region'. Do not open with an introductory phrase, and do not quote internal "
+    "codes such as SOL-T-XXX or BR-Lxxx."
+)
+
 
 def generate_description(context_data: dict, description_type: str, language: str) -> str:
     """
@@ -11,7 +49,9 @@ def generate_description(context_data: dict, description_type: str, language: st
     description type, and the desired language.
 
     Parameters:
-        context_data (dict): Data providing the context of the description (e.g., regional details).
+        context_data (dict): Evidence for one topic — an `indicators` array where each entry
+            carries an `id`, `name`, `status` and, when measured, an `evidence` object, plus
+            `indicators_included` / `indicators_total`.
         description_type (str): The type of description to generate. Allowed values are:
             - "Short": A concise, executive-style description.
             - "Normal": A standard description.
@@ -19,38 +59,20 @@ def generate_description(context_data: dict, description_type: str, language: st
         language (str): The language in which the description should be output.
 
     Returns:
-        str | dict: Generated description or an error message in case of a failure.
+        str: Generated description.
     """
-    # Prepare system message with dynamic instructions based on description type and language
     system_message = {
         "role": "system",
         "content": (
-            f"You are an AI assistant tasked with generating engaging and insightful regional descriptions "
-            f"based on structured JSON data. The description must be in {language}. "
-            "The data represents a custom area of analysis located in the Amazonia region and is grouped by indicators."
-            "Your goal is to analyze the data and generate a cohesive, "
-            "structured description that highlights key aspects and insights of the custom area and its context."
-            "Use percentages whenever possible to enhance clarity and comparability."
-            "Refer to the area of analysis with something like 'the selected area' or 'the region'."
-            "The total area or relevant count may also be provided."
-            "The output length should be based on user selection:\n"
-            "- **Short:** A concise executive summary (around 2 sentences).\n"
-            "- **Normal:** A balanced 2-paragraph description."
-            "The first paragraph provides a general overview, while the second focuses on notable data points.\n"
-            "- **Long:** A detailed, multi-paragraph analysis exploring deeper environmental "
-            "insights, trends, and main implications.\n"
-            "The description must be engaging, informative, and contextually relevant, "
-            "leveraging knowledge of Amazonia's ecosystem, geography, "
-            "and conservation efforts to enrich the narrative."
-            "If no occurrence data is provided for an indicator, just mention that no data is available, "
-            "avoiding empty sentences."
-            "Use Markdown formatting for the most critical insights, such as key figures, names, and classifications."
-            "Avoid using headers, blockquotes, or introductory phrases."
-            "Avoid using using code names like SOL-T-XXX or BR-Lxxx."
+            f"You write regional summaries from structured JSON measurements of a custom area of "
+            f"analysis in the Amazonia region. The summary must be in {language}.\n\n"
+            f"{STATUS_RULES}\n\n"
+            f"{SCALING_RULE}\n\n"
+            f"Length: {LENGTHS.get(description_type, LENGTHS['Normal'])}\n\n"
+            f"{FORMATTING_RULES}"
         ),
     }
 
-    # Prepare user message with contextual data and description type
     user_message = {
         "role": "user",
         "content": (
@@ -61,10 +83,8 @@ def generate_description(context_data: dict, description_type: str, language: st
         ),
     }
 
-    # Initialize the OpenAI client
     client = OpenAI(api_key=get_settings().openai_token.get_secret_value())
 
-    # Make the API call
     completion = client.chat.completions.create(
         model="gpt-4o",
         messages=[system_message, user_message],  # type: ignore
@@ -72,7 +92,6 @@ def generate_description(context_data: dict, description_type: str, language: st
         temperature=0.7,
     )
 
-    # Extract and validate the response content
     if not completion or not completion.choices[0] or not completion.choices[0].message.content:
         raise OpenAIError("OpenAI API response was empty or invalid")
     description = completion.choices[0].message.content.strip()

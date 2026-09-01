@@ -231,6 +231,7 @@
   "report-results-sidebar-ai-summaries-generating": "Generación de resúmenes de IA",
   "report-results-sidebar-ai-summaries-generating-info": "Los resúmenes generados por IA pueden ser inexactos. Le recomendamos que compruebe detenidamente el contenido",
   "report-results-sidebar-ai-summaries-disclaimer": "El resumen se genera mediante IA y puede contener errores u omisiones. Usted es el único responsable de revisar, editar y validar la precisión y adecuación del contenido final.",
+  "report-results-sidebar-ai-summaries-coverage": "Basado en {included} de {total} indicadores.",
   "report-results-copy-title": "Compartir y salvar reporte",
   "report-results-copy-description": "Este enlace te permite compartir el reporte y guardar su estado actual. Cópialo para volver a visitarlo o compartirlo con otros.",
   "indicators-custom-municipalities-selected-area-intersects": "El área seleccionada interseca",

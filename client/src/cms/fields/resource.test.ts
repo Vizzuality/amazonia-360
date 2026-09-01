@@ -39,6 +39,15 @@ const KEYS_DROPPED_BY_TYPE: Record<string, string[]> = {
   component: ["layer_id"],
 };
 
+/**
+ * `aggregation` (how to reduce an imagery raster to one scalar for the AI summary) is authored in
+ * `datum/indicators.json` and read by `lib/ai/evidence.ts`. Mirroring it onto the imagery block is
+ * a separate piece of work; until then it has no field here.
+ */
+const KEYS_AWAITING_A_FIELD: Record<string, string[]> = {
+  imagery: ["aggregation"],
+};
+
 const blocksBySlug = new Map<string, Block>(RESOURCE_BLOCKS.map((block) => [block.slug, block]));
 
 /**
@@ -115,6 +124,7 @@ describe("RESOURCE_BLOCKS", () => {
         if (names.includes(key)) continue;
         if (KEYS_WITH_NO_HOME[indicator.id]?.includes(key)) continue;
         if (KEYS_DROPPED_BY_TYPE[type]?.includes(key)) continue;
+        if (KEYS_AWAITING_A_FIELD[type]?.includes(key)) continue;
 
         violations.push(`indicator ${indicator.id} (${type}): "${key}" has no field`);
       }

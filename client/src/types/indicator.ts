@@ -6,6 +6,15 @@ import { LegendItemProps } from "@/components/map/legend/item";
 
 export type VisualizationTypes = "map" | "table" | "chart" | "numeric" | "ai" | "custom";
 
+/**
+ * How to reduce an imagery raster to one number for the AI summary. Authored per imagery
+ * indicator in `datum/indicators.json` rather than derived: `sum` and `mean` are not
+ * interchangeable (a population count adds up, a deprivation index does not), and `none` marks
+ * the categorical rasters where any scalar would be meaningless — those contribute a class
+ * distribution only.
+ */
+export type ImageryAggregation = "sum" | "mean" | "none";
+
 export type ResourceFeature = {
   name: string;
   url: string;
@@ -39,6 +48,7 @@ export type ResourceImagery = {
   type: "imagery";
   rasterFunction: __esri.RasterFunctionProperties;
   legend: LegendItemProps;
+  aggregation: ImageryAggregation;
 };
 
 export type ResourceH3 = {

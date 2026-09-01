@@ -9,6 +9,11 @@ export function cn(...inputs: ClassValue[]) {
 
 export const getKeys = Object.keys as <T extends object>(obj: T) => Array<keyof T>;
 
+export const roundTo = (value: number, decimals = 1) => {
+  const factor = 10 ** decimals;
+  return Math.round(value * factor) / factor;
+};
+
 export function joinWithAnd(arr: string[]) {
   if (arr.length === 0) return "";
   if (arr.length === 1) return arr[0];
