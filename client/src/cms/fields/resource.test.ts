@@ -41,7 +41,7 @@ const KEYS_DROPPED_BY_TYPE: Record<string, string[]> = {
 
 /**
  * `aggregation` (how to reduce an imagery raster to one scalar for the AI summary) is authored in
- * `datum/indicators.json` and read by `lib/ai/evidence.ts`. Mirroring it onto the imagery block is
+ * `datum/indicators.json` and read by `lib/ai.ts`. Mirroring it onto the imagery block is
  * a separate piece of work; until then it has no field here.
  */
 const KEYS_AWAITING_A_FIELD: Record<string, string[]> = {

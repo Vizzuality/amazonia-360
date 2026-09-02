@@ -19,17 +19,17 @@ export default function ImageryDataRow({ id, locale, location }: DataRowProps) {
 
   const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();
 
+  const resource = indicator?.resource as ResourceImagery | undefined;
+
   const query = useQueryImageryId({
-    id: id,
-    resource: indicator?.resource as ResourceImagery,
+    id,
+    resource: resource as ResourceImagery,
     type: "numeric",
     geometry: GEOMETRY,
   });
 
-  const resource = indicator?.resource as ResourceImagery | undefined;
-
   const VALUE = useMemo(
-    () => (resource ? imageryScalar(query.data, resource.aggregation) : null),
+    () => imageryScalar(query.data, resource?.aggregation ?? "none"),
     [query.data, resource],
   );
 

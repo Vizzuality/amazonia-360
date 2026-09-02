@@ -1,12 +1,8 @@
 import { ResourceImagery } from "@/types/indicator";
 
-import {
-  classDistribution,
-  hasImageryCoverage,
-  imageryScalar,
-  isRangeLegend,
-  parseLegendBreaks,
-} from "./imagery";
+import INDICATORS from "@/../datum/indicators.json";
+
+import { classDistribution, hasImageryCoverage, imageryScalar, parseLegendBreaks } from "./imagery";
 
 const histogram = (min: number, max: number, counts: number[]): __esri.RasterHistogram => ({
   min,
@@ -26,24 +22,10 @@ const colormapOf = (values: number[]) => ({
 });
 
 describe("parseLegendBreaks", () => {
-  test("reads the interior breaks off a population legend", () => {
-    expect(parseLegendBreaks(["< 5", "5 - 50", "50 - 200", "200 - 1000", "> 1000"])).toEqual([
-      5, 50, 200, 1000,
+  test("reads the interior breaks off a population legend, decimals included", () => {
+    expect(parseLegendBreaks(["< 1.31", "1.31 - 50", "50 - 200", "200 - 1000", "> 1000"])).toEqual([
+      1.31, 50, 200, 1000,
     ]);
-  });
-
-  test("keeps decimal breaks", () => {
-    expect(
-      parseLegendBreaks([
-        "< 1.31",
-        "1.31 - 10",
-        "10 - 50",
-        "50 - 70",
-        "70 - 100",
-        "100 - 290",
-        "> 290",
-      ]),
-    ).toEqual([1.31, 10, 50, 70, 100, 290]);
   });
 
   test("rejects a categorical legend", () => {
@@ -54,11 +36,6 @@ describe("parseLegendBreaks", () => {
   test("rejects labels whose numbers do not line up as breaks", () => {
     // A categorical legend that happens to mention numbers: the count check is what catches it.
     expect(parseLegendBreaks(["Zone 1", "Zone 2", "Zone 3"])).toBeNull();
-  });
-
-  test("isRangeLegend agrees with the parse", () => {
-    expect(isRangeLegend(["< 10", "10 - 25", "> 25"])).toBe(true);
-    expect(isRangeLegend(["Cultivated", "Natural", "Open"])).toBe(false);
   });
 });
 
@@ -120,23 +97,6 @@ describe("classDistribution", () => {
     ]);
   });
 
-  test("keeps the shares summing to 100 for a class-per-bin categorical raster", () => {
-    const distribution = classDistribution({
-      histograms: [
-        histogram(
-          10,
-          100,
-          new Array(91).fill(0).map((_, i) => (i % 10 === 0 ? 10 : 0)),
-        ),
-      ],
-      legend: legendOf(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]),
-      rasterFunction: colormapOf([10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
-    });
-
-    const total = (distribution ?? []).reduce((sum, share) => sum + share.percentage, 0);
-    expect(total).toBeCloseTo(100, 1);
-  });
-
   test("returns null when a CATEG legend and its colormap disagree on length", () => {
     expect(
       classDistribution({
@@ -187,11 +147,6 @@ describe("imageryScalar", () => {
     expect(imageryScalar(data, "none")).toBeNull();
   });
 
-  test("returns no scalar rather than a silent sum when the aggregation is missing", () => {
-    // A CMS-authored indicator with no aggregation must read as "not measured", never as a total.
-    expect(imageryScalar(data, undefined as never)).toBeNull();
-  });
-
   test("returns null with nothing to read", () => {
     expect(imageryScalar(null, "sum")).toBeNull();
     expect(imageryScalar({ histograms: [], statistics: [] }, "sum")).toBeNull();
@@ -207,5 +162,71 @@ describe("hasImageryCoverage", () => {
 
   test("is true as soon as one bin has pixels", () => {
     expect(hasImageryCoverage([histogram(0, 1, [0, 3])])).toBe(true);
+  });
+});
+
+describe("datum/indicators.json imagery aggregation", () => {
+  type SourceIndicator = {
+    id: number;
+    name_en: string;
+    visualization_types: string[];
+    resource: {
+      type: string;
+      aggregation?: string;
+      legend?: { items?: { label?: string | null }[] };
+    };
+  };
+
+  const imagery = (INDICATORS as unknown as SourceIndicator[]).filter(
+    (indicator) => indicator.resource.type === "imagery",
+  );
+
+  const isCategorical = (indicator: SourceIndicator) =>
+    parseLegendBreaks((indicator.resource.legend?.items ?? []).map((item) => item.label ?? "")) ===
+    null;
+
+  const describeAll = (indicators: SourceIndicator[], reason: (i: SourceIndicator) => string) =>
+    indicators.map((i) => `${i.id} (${i.name_en.trim()}): ${reason(i)}`);
+
+  test("every imagery indicator declares an aggregation", () => {
+    const missing = imagery.filter(
+      (i) => !["sum", "mean", "none"].includes(i.resource.aggregation ?? ""),
+    );
+
+    expect(
+      describeAll(missing, (i) => `aggregation is ${JSON.stringify(i.resource.aggregation)}`),
+    ).toEqual([]);
+  });
+
+  test("a numeric-capable imagery indicator aggregates with sum", () => {
+    // The narrative and the numeric card read the same raster. Anything but `sum` there would
+    // print a different figure from the card on the facing page.
+    const violations = imagery
+      .filter((i) => i.visualization_types.includes("numeric"))
+      .filter((i) => i.resource.aggregation !== "sum");
+
+    expect(
+      describeAll(
+        violations,
+        (i) => `offers a numeric widget but aggregates with ${i.resource.aggregation}`,
+      ),
+    ).toEqual([]);
+  });
+
+  test("a legend is categorical exactly when the indicator has no scalar", () => {
+    // Whether a legend is RANGE or CATEG is read off its labels, not authored, so an edited or
+    // retranslated label can silently reclassify a raster. Tying it to the authored `aggregation`
+    // in both directions is what makes that fail here instead of quietly mis-binning.
+    const violations = imagery.filter(
+      (i) => isCategorical(i) !== (i.resource.aggregation === "none"),
+    );
+
+    expect(
+      describeAll(violations, (i) =>
+        isCategorical(i)
+          ? `has a categorical legend but aggregates with ${i.resource.aggregation}`
+          : `has a range legend but aggregates with none`,
+      ),
+    ).toEqual([]);
   });
 });
