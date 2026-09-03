@@ -26,10 +26,28 @@ type IndicatorOtherView = IndicatorViewBase & {
 
 export type IndicatorView = IndicatorMapView | IndicatorOtherView;
 
+/**
+ * What the report looked like when `description` was generated, stored next to the prose so a
+ * later read can tell whether the prose still describes the report. Nothing regenerates on its
+ * own: the summary is editable by hand, and chasing a changed card would overwrite that edit.
+ * Written and compared by `lib/ai.ts`.
+ */
+export type TopicSummaryStamp = {
+  /** The topic's indicator ids in the report, sorted and deduped so the comparison is order-free. */
+  indicator_ids: number[];
+  /**
+   * Hashes the persisted `Location`, not the polygon it resolves to. The geometry is derived from
+   * the location deterministically (lib/location.ts caches on exactly that), and the location is
+   * orders of magnitude smaller than a buffered ring.
+   */
+  location_hash: string;
+};
+
 export type TopicView = {
   id: number | string;
   topic_id: number;
   description?: string;
+  description_stamp?: TopicSummaryStamp;
   indicators?: IndicatorView[];
 };
 

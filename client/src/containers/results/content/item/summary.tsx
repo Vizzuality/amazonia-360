@@ -5,13 +5,14 @@ import { useCallback, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { useDebounceCallback } from "usehooks-ts";
 
-import { useGetTopicSummary } from "@/lib/ai";
+import { getTopicSummaryStamp, isTopicSummaryStale, useGetTopicSummary } from "@/lib/ai";
 import { cn } from "@/lib/utils";
 
 import { Topic } from "@/types/topic";
 
-import { useFormTopics } from "@/app/(frontend)/store";
+import { useFormLocation, useFormTopics } from "@/app/(frontend)/store";
 
+import { Button } from "@/components/ui/button";
 import { ForwardRefEditor } from "@/components/ui/editor";
 import { Markdown } from "@/components/ui/markdown";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -20,15 +21,34 @@ export interface ReportResultsSummaryProps {
   topic?: Topic;
   editing?: boolean;
   mutation?: ReturnType<typeof useGetTopicSummary>;
+  onRegenerate?: () => void;
 }
 
-export const ReportResultsSummary = ({ topic, editing, mutation }: ReportResultsSummaryProps) => {
+export const ReportResultsSummary = ({
+  topic,
+  editing,
+  mutation,
+  onRegenerate,
+}: ReportResultsSummaryProps) => {
   const t = useTranslations();
   const { topics, setTopics } = useFormTopics();
+  const { location } = useFormLocation();
 
   const TOPIC = useMemo(() => {
     return topics?.find((t) => t.topic_id === topic?.id);
   }, [topic, topics]);
+
+  const outdated = useMemo(
+    () =>
+      isTopicSummaryStale(
+        TOPIC?.description_stamp,
+        getTopicSummaryStamp(
+          TOPIC?.indicators?.map(({ indicator_id }) => indicator_id) ?? [],
+          location,
+        ),
+      ),
+    [TOPIC, location],
+  );
 
   const handleEditorChange = useCallback(
     (markdown: string) => {
@@ -70,6 +90,22 @@ export const ReportResultsSummary = ({ topic, editing, mutation }: ReportResults
 
       {!mutation?.isPending && TOPIC?.description && (
         <div className="col-span-12 max-w-none xl:max-w-7xl">
+          {/*
+            Only for a caller that can act on it: `onRegenerate` is withheld from viewers who
+            cannot generate, and the whole notice sits behind the same `lg` breakpoint as the
+            edit and save buttons, whose popover it opens.
+          */}
+          {outdated && onRegenerate && (
+            <div className="mb-4 hidden flex-wrap items-center gap-x-3 gap-y-2 rounded bg-amber-100 px-3 py-2 lg:flex print:hidden">
+              <p className="text-foreground text-sm">
+                {t("report-results-sidebar-ai-summaries-outdated")}
+              </p>
+              <Button variant="outline" size="sm" onClick={onRegenerate}>
+                {t("report-results-sidebar-ai-summaries-regenerate")}
+              </Button>
+            </div>
+          )}
+
           <Markdown
             className={cn({
               hidden: editing,
