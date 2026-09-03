@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 
 import { formatNumber } from "@/lib/formats";
-import { imageryScalar } from "@/lib/imagery";
+import { getImageryScalar } from "@/lib/imagery";
 import { useGetIndicatorsId, useQueryImageryId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
@@ -29,7 +29,7 @@ export default function ImageryDataRow({ id, locale, location }: DataRowProps) {
   });
 
   const VALUE = useMemo(
-    () => imageryScalar(query.data, resource?.aggregation ?? "none"),
+    () => getImageryScalar(query.data, resource?.aggregation ?? "none"),
     [query.data, resource],
   );
 

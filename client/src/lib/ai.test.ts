@@ -2,7 +2,7 @@ import { getQueryFeatureId, getQueryImageryId } from "@/lib/indicators";
 
 import { ImageryAggregation, Indicator } from "@/types/indicator";
 
-import { collectTopicEvidence, featureEvidence } from "./ai";
+import { getTopicEvidence, getFeatureEvidence } from "./ai";
 
 vi.mock("@/lib/indicators", () => ({
   getIndicators: vi.fn(),
@@ -61,15 +61,15 @@ beforeEach(() => {
   vi.mocked(getQueryImageryId).mockResolvedValue(imageryData([4, 6], { sum: 42 }));
 });
 
-describe("collectTopicEvidence", () => {
+describe("getTopicEvidence", () => {
   test("asks feature indicators for query_ai, not query_chart", async () => {
-    await collectTopicEvidence([featureIndicator(1)], GEOMETRY);
+    await getTopicEvidence([featureIndicator(1)], GEOMETRY);
 
     expect(getQueryFeatureId).toHaveBeenCalledWith(expect.objectContaining({ id: 1, type: "ai" }));
   });
 
   test("reports ok with compacted feature evidence", async () => {
-    const result = await collectTopicEvidence([featureIndicator(1)], GEOMETRY);
+    const result = await getTopicEvidence([featureIndicator(1)], GEOMETRY);
 
     expect(result.indicators).toEqual([
       {
@@ -84,7 +84,7 @@ describe("collectTopicEvidence", () => {
   });
 
   test("measures nothing without an analysis area", async () => {
-    const result = await collectTopicEvidence([featureIndicator(1), imageryIndicator(35)], null);
+    const result = await getTopicEvidence([featureIndicator(1), imageryIndicator(35)], null);
 
     expect(result).toEqual({ indicators: [], included: 0, total: 0 });
     expect(getQueryFeatureId).not.toHaveBeenCalled();
@@ -92,7 +92,7 @@ describe("collectTopicEvidence", () => {
   });
 
   test("reports unavailable, without querying, when the indicator defines no query_ai", async () => {
-    const result = await collectTopicEvidence([featureIndicator(60, "")], GEOMETRY);
+    const result = await getTopicEvidence([featureIndicator(60, "")], GEOMETRY);
 
     expect(result.indicators[0]).toMatchObject({ id: 60, status: "unavailable" });
     expect(result.indicators[0].evidence).toBeUndefined();
@@ -103,7 +103,7 @@ describe("collectTopicEvidence", () => {
   test("reports no_coverage when a feature query returns nothing in the area", async () => {
     vi.mocked(getQueryFeatureId).mockResolvedValue(featureSet([]));
 
-    const result = await collectTopicEvidence([featureIndicator(1)], GEOMETRY);
+    const result = await getTopicEvidence([featureIndicator(1)], GEOMETRY);
 
     expect(result.indicators[0]).toMatchObject({ status: "no_coverage" });
     expect(result).toMatchObject({ included: 1, total: 1 });
@@ -115,13 +115,13 @@ describe("collectTopicEvidence", () => {
   ])("reports unavailable when a feature service %s", async (_, arrange) => {
     arrange();
 
-    const result = await collectTopicEvidence([featureIndicator(1)], GEOMETRY);
+    const result = await getTopicEvidence([featureIndicator(1)], GEOMETRY);
 
     expect(result.indicators[0]).toMatchObject({ status: "unavailable" });
   });
 
   test("includes imagery indicators with a scalar and a class distribution", async () => {
-    const result = await collectTopicEvidence([imageryIndicator(35)], GEOMETRY);
+    const result = await getTopicEvidence([imageryIndicator(35)], GEOMETRY);
 
     expect(result.indicators).toEqual([
       {
@@ -141,7 +141,7 @@ describe("collectTopicEvidence", () => {
   });
 
   test("gives a categorical imagery indicator a distribution but no scalar", async () => {
-    const result = await collectTopicEvidence([imageryIndicator(13, "none")], GEOMETRY);
+    const result = await getTopicEvidence([imageryIndicator(13, "none")], GEOMETRY);
 
     expect(result.indicators[0].evidence).toMatchObject({ aggregation: "none", value: null });
   });
@@ -149,7 +149,7 @@ describe("collectTopicEvidence", () => {
   test("reports no_coverage when the area holds no pixels", async () => {
     vi.mocked(getQueryImageryId).mockResolvedValue(imageryData([0, 0]));
 
-    const result = await collectTopicEvidence([imageryIndicator(35)], GEOMETRY);
+    const result = await getTopicEvidence([imageryIndicator(35)], GEOMETRY);
 
     expect(result.indicators[0]).toMatchObject({ status: "no_coverage" });
   });
@@ -157,13 +157,13 @@ describe("collectTopicEvidence", () => {
   test("reports unavailable when an imagery service fails", async () => {
     vi.mocked(getQueryImageryId).mockRejectedValue(new Error("boom"));
 
-    const result = await collectTopicEvidence([imageryIndicator(35)], GEOMETRY);
+    const result = await getTopicEvidence([imageryIndicator(35)], GEOMETRY);
 
     expect(result.indicators[0]).toMatchObject({ status: "unavailable" });
   });
 
   test("marks h3 not_supported and keeps it out of the N of M count", async () => {
-    const result = await collectTopicEvidence(
+    const result = await getTopicEvidence(
       [featureIndicator(1), h3Indicator(90), h3Indicator(91)],
       GEOMETRY,
     );
@@ -181,7 +181,7 @@ describe("collectTopicEvidence", () => {
       .mockRejectedValueOnce(new Error("503"))
       .mockResolvedValueOnce(featureSet([{ OBJECTID: 1 }]));
 
-    const result = await collectTopicEvidence([featureIndicator(1), featureIndicator(2)], GEOMETRY);
+    const result = await getTopicEvidence([featureIndicator(1), featureIndicator(2)], GEOMETRY);
 
     expect(result.indicators.map((i) => [i.id, i.status])).toEqual([
       [1, "unavailable"],
@@ -191,15 +191,15 @@ describe("collectTopicEvidence", () => {
   });
 });
 
-describe("featureEvidence", () => {
+describe("getFeatureEvidence", () => {
   test("counts features and keeps nothing else when the query returns no values", () => {
     expect(
-      featureEvidence([{ attributes: { OBJECTID: 1 } }, { attributes: { OBJECTID: 2 } }]),
+      getFeatureEvidence([{ attributes: { OBJECTID: 1 } }, { attributes: { OBJECTID: 2 } }]),
     ).toEqual({ feature_count: 2 });
   });
 
   test("sums intersection areas and reports them as a share of the analysis area", () => {
-    const evidence = featureEvidence([
+    const evidence = getFeatureEvidence([
       { attributes: { label: "Protected", value: 30, total: 200 } },
       { attributes: { label: "Protected", value: 10, total: 200 } },
       { attributes: { label: "Indigenous", value: 60, total: 200 } },
@@ -217,7 +217,7 @@ describe("featureEvidence", () => {
   });
 
   test("names the features when the layer is a list of named things", () => {
-    const evidence = featureEvidence([
+    const evidence = getFeatureEvidence([
       { attributes: { NAME: "Amazon Sustainable Landscapes", OBJECTID: 1 } },
       { attributes: { nombre: "Programa Bioeconomía", OBJECTID: 2 } },
     ]);
@@ -232,13 +232,13 @@ describe("featureEvidence", () => {
   });
 
   test("prefers an explicit label over a name", () => {
-    const evidence = featureEvidence([{ attributes: { NAME: "Ignored", label: "Wetlands" } }]);
+    const evidence = getFeatureEvidence([{ attributes: { NAME: "Ignored", label: "Wetlands" } }]);
 
     expect(evidence.classes).toEqual([{ label: "Wetlands", feature_count: 1 }]);
   });
 
   test("caps the class list and says so", () => {
-    const evidence = featureEvidence(
+    const evidence = getFeatureEvidence(
       Array.from({ length: 20 }, (_, index) => ({
         attributes: { label: `Class ${index}`, value: index + 1, total: 1000 },
       })),

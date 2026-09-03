@@ -2,7 +2,12 @@ import { ResourceImagery } from "@/types/indicator";
 
 import INDICATORS from "@/../datum/indicators.json";
 
-import { classDistribution, hasImageryCoverage, imageryScalar, parseLegendBreaks } from "./imagery";
+import {
+  getClassDistribution,
+  getImageryScalar,
+  hasImageryCoverage,
+  parseLegendBreaks,
+} from "./imagery";
 
 const histogram = (min: number, max: number, counts: number[]): __esri.RasterHistogram => ({
   min,
@@ -39,10 +44,10 @@ describe("parseLegendBreaks", () => {
   });
 });
 
-describe("classDistribution", () => {
+describe("getClassDistribution", () => {
   test("buckets a continuous histogram onto a RANGE legend's breaks", () => {
     // 4 bins of width 250 over [0, 1000): centres 125, 375, 625, 875 against breaks 200 and 600.
-    const distribution = classDistribution({
+    const distribution = getClassDistribution({
       histograms: [histogram(0, 1000, [10, 30, 40, 20])],
       legend: legendOf(["< 200", "200 - 600", "> 600"]),
       rasterFunction: colormapOf([1, 2, 3]),
@@ -56,7 +61,7 @@ describe("classDistribution", () => {
   });
 
   test("joins a CATEG legend to the histogram by colormap index", () => {
-    const distribution = classDistribution({
+    const distribution = getClassDistribution({
       histograms: [histogram(1, 3, [60, 30, 10])],
       legend: legendOf(["Tree Cover", "Grassland", "Cropland"]),
       rasterFunction: colormapOf([1, 2, 3]),
@@ -71,7 +76,7 @@ describe("classDistribution", () => {
 
   test("returns an empty distribution when the area holds no pixels", () => {
     expect(
-      classDistribution({
+      getClassDistribution({
         histograms: [histogram(1, 3, [0, 0, 0])],
         legend: legendOf(["A", "B", "C"]),
         rasterFunction: colormapOf([1, 2, 3]),
@@ -82,7 +87,7 @@ describe("classDistribution", () => {
   test("counts each bin once when a coarse histogram lumps two class values together", () => {
     // 3 bins over [10, 100]: centres 25, 55, 85. Classes 90/95/100 all sit in the last bin, so a
     // per-class lookup would have counted it three times and pushed the total past 100%.
-    const distribution = classDistribution({
+    const distribution = getClassDistribution({
       histograms: [histogram(10, 100, [40, 30, 30])],
       legend: legendOf(["Tree Cover", "Grassland", "Cropland", "Mangroves", "Moss"]),
       rasterFunction: colormapOf([10, 50, 90, 95, 100]),
@@ -99,7 +104,7 @@ describe("classDistribution", () => {
 
   test("returns null when a CATEG legend and its colormap disagree on length", () => {
     expect(
-      classDistribution({
+      getClassDistribution({
         histograms: [histogram(1, 3, [1, 1, 1])],
         legend: legendOf(["A", "B", "C"]),
         rasterFunction: colormapOf([1, 2]),
@@ -109,7 +114,7 @@ describe("classDistribution", () => {
 
   test("returns null without a histogram", () => {
     expect(
-      classDistribution({
+      getClassDistribution({
         histograms: [],
         legend: legendOf(["A", "B"]),
         rasterFunction: colormapOf([1, 2]),
@@ -118,38 +123,38 @@ describe("classDistribution", () => {
   });
 });
 
-describe("imageryScalar", () => {
+describe("getImageryScalar", () => {
   const data = {
     histograms: [histogram(0, 10, [2, 2, 2, 2, 2])],
     statistics: [{ min: 0, max: 10, avg: 4.2, sum: 1234 }],
   };
 
   test("prefers the sum the service reports", () => {
-    expect(imageryScalar(data, "sum")).toBe(1234);
+    expect(getImageryScalar(data, "sum")).toBe(1234);
   });
 
   test("falls back to the histogram when the service reports no sum", () => {
     const withoutSum = { ...data, statistics: [{ min: 0, max: 10 }] };
 
     // Same weighting as the numeric widget: min + index * max / (size - 1).
-    expect(imageryScalar(withoutSum, "sum")).toBe(2 * (0 + 2.5 + 5 + 7.5 + 10));
+    expect(getImageryScalar(withoutSum, "sum")).toBe(2 * (0 + 2.5 + 5 + 7.5 + 10));
   });
 
   test("reads the average for mean", () => {
-    expect(imageryScalar(data, "mean")).toBe(4.2);
+    expect(getImageryScalar(data, "mean")).toBe(4.2);
   });
 
   test("returns null for mean when the service reports no average", () => {
-    expect(imageryScalar({ ...data, statistics: [{ min: 0, max: 10 }] }, "mean")).toBeNull();
+    expect(getImageryScalar({ ...data, statistics: [{ min: 0, max: 10 }] }, "mean")).toBeNull();
   });
 
   test("returns no scalar for a categorical raster", () => {
-    expect(imageryScalar(data, "none")).toBeNull();
+    expect(getImageryScalar(data, "none")).toBeNull();
   });
 
   test("returns null with nothing to read", () => {
-    expect(imageryScalar(null, "sum")).toBeNull();
-    expect(imageryScalar({ histograms: [], statistics: [] }, "sum")).toBeNull();
+    expect(getImageryScalar(null, "sum")).toBeNull();
+    expect(getImageryScalar({ histograms: [], statistics: [] }, "sum")).toBeNull();
   });
 });
 

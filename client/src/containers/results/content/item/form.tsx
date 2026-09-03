@@ -4,7 +4,7 @@ import { useForm } from "@tanstack/react-form";
 import { useTranslations } from "next-intl";
 import { LuInfo, LuSparkles } from "react-icons/lu";
 
-import { usePostSummaryTopicMutation } from "@/lib/ai";
+import { useGetTopicSummary } from "@/lib/ai";
 
 import { ContextDescriptionType } from "@/types/generated/api.schemas";
 
@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/tooltip";
 
 interface AISummaryFormProps {
-  mutation?: ReturnType<typeof usePostSummaryTopicMutation>;
+  mutation?: ReturnType<typeof useGetTopicSummary>;
   onSubmit?: (values: { tone: ContextDescriptionType; onlyActiveIndicators: boolean }) => void;
   onClose?: () => void;
 }

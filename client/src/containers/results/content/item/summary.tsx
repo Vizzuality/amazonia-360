@@ -5,7 +5,7 @@ import { useCallback, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { useDebounceCallback } from "usehooks-ts";
 
-import { usePostSummaryTopicMutation } from "@/lib/ai";
+import { useGetTopicSummary } from "@/lib/ai";
 import { cn } from "@/lib/utils";
 
 import { Topic } from "@/types/topic";
@@ -19,7 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export interface ReportResultsSummaryProps {
   topic?: Topic;
   editing?: boolean;
-  mutation?: ReturnType<typeof usePostSummaryTopicMutation>;
+  mutation?: ReturnType<typeof useGetTopicSummary>;
 }
 
 export const ReportResultsSummary = ({ topic, editing, mutation }: ReportResultsSummaryProps) => {

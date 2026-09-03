@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import { useLocale } from "next-intl";
 
-import { imageryScalar } from "@/lib/imagery";
+import { getImageryScalar } from "@/lib/imagery";
 import { useGetIndicatorsId, useQueryImageryTileId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 import { cn } from "@/lib/utils";
@@ -36,7 +36,7 @@ export const NumericImageryTileIndicators = ({
 
   const query = useQueryImageryTileId({ id, resource, type: "numeric", geometry: GEOMETRY });
 
-  const VALUE = useMemo(() => imageryScalar(query.data, "sum"), [query.data]);
+  const VALUE = useMemo(() => getImageryScalar(query.data, "sum"), [query.data]);
 
   useMemo(() => {
     if (query.isLoading) {

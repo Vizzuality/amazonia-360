@@ -37,11 +37,11 @@ export const parseLegendBreaks = (labels: string[]): number[] | null => {
 };
 
 // `counts` is a union of array-likes in the ArcGIS typings, hence the spread before `reduce`.
-const histogramTotal = (histogram: __esri.RasterHistogram) =>
+const getHistogramTotal = (histogram: __esri.RasterHistogram) =>
   [...histogram.counts].reduce((total, count) => total + count, 0);
 
 /** Centre of bin `index`. ArcGIS spreads `size` equal-width bins over `[min, max]`. */
-const binCentre = (histogram: __esri.RasterHistogram, index: number) =>
+const getBinCentre = (histogram: __esri.RasterHistogram, index: number) =>
   histogram.min + ((index + 0.5) * (histogram.max - histogram.min)) / histogram.size;
 
 /**
@@ -53,7 +53,7 @@ const binCentre = (histogram: __esri.RasterHistogram, index: number) =>
  *
  * Null when the legend cannot be read, an empty array when the area holds no pixels.
  */
-export const classDistribution = ({
+export const getClassDistribution = ({
   histograms,
   legend,
   rasterFunction,
@@ -71,16 +71,16 @@ export const classDistribution = ({
   }
 
   const breaks = parseLegendBreaks(labels);
-  let classIndexFor: (value: number) => number;
+  let getClassIndex: (value: number) => number;
 
   if (breaks) {
-    classIndexFor = (value) => breaks.filter((bound) => value >= bound).length;
+    getClassIndex = (value) => breaks.filter((bound) => value >= bound).length;
   } else {
     const colormap = rasterFunction?.functionArguments?.colormap as number[][] | undefined;
     if (!Array.isArray(colormap) || colormap.length !== labels.length) return null;
 
     const values = colormap.map(([value]) => value);
-    classIndexFor = (value) =>
+    getClassIndex = (value) =>
       values.reduce(
         (best, candidate, index) =>
           Math.abs(candidate - value) < Math.abs(values[best] - value) ? index : best,
@@ -88,13 +88,13 @@ export const classDistribution = ({
       );
   }
 
-  const total = histogramTotal(histogram);
+  const total = getHistogramTotal(histogram);
   if (total === 0) return [];
 
   const counts = new Array<number>(labels.length).fill(0);
 
   histogram.counts.forEach((count, index) => {
-    counts[classIndexFor(binCentre(histogram, index))] += count;
+    counts[getClassIndex(getBinCentre(histogram, index))] += count;
   });
 
   return labels.map((label, index) => ({
@@ -112,7 +112,7 @@ export const classDistribution = ({
  * but it is the figure printed on the cards, and a narrative that disagreed with the card facing
  * it would be the worse bug. Correcting it is a data-team change across every imagery card at once.
  */
-export const imageryScalar = (
+export const getImageryScalar = (
   data:
     | { histograms?: __esri.RasterHistogram[]; statistics?: __esri.RasterBandStatistics[] }
     | null

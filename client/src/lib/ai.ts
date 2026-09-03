@@ -1,6 +1,11 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
-import { ClassShare, classDistribution, hasImageryCoverage, imageryScalar } from "@/lib/imagery";
+import {
+  ClassShare,
+  getClassDistribution,
+  getImageryScalar,
+  hasImageryCoverage,
+} from "@/lib/imagery";
 import { getIndicators, getQueryFeatureId, getQueryImageryId } from "@/lib/indicators";
 import { roundTo } from "@/lib/utils";
 
@@ -9,7 +14,7 @@ import { generateDescriptionTextAiPost } from "@/types/generated/text-generation
 import { ImageryAggregation, Indicator, ResourceFeature, ResourceImagery } from "@/types/indicator";
 import { Topic } from "@/types/topic";
 
-export type AiSummary = {
+export type AISummaryOptions = {
   type?: ContextDescriptionType;
   only_active?: boolean;
   enabled?: boolean;
@@ -63,7 +68,7 @@ const MAX_CLASSES = 15;
 /** First non-empty string among these wins: `query_ai` asks for `outFields: ["*"]`. */
 const LABEL_KEYS = ["label", "name", "nombre", "natname"];
 
-const readLabel = (attributes: Record<string, unknown>) => {
+const getFeatureLabel = (attributes: Record<string, unknown>) => {
   const byKey = new Map(
     Object.entries(attributes).map(([key, value]) => [key.toLowerCase(), value]),
   );
@@ -73,7 +78,7 @@ const readLabel = (attributes: Record<string, unknown>) => {
   );
 };
 
-const readNumber = (value: unknown) =>
+const getFiniteNumber = (value: unknown) =>
   typeof value === "number" && Number.isFinite(value) ? value : undefined;
 
 /**
@@ -82,13 +87,13 @@ const readNumber = (value: unknown) =>
  * and the analysis area in `total` (see `getQueryFeatureId`); the rest only say how many features
  * fall inside and what they are called.
  */
-export const featureEvidence = (
+export const getFeatureEvidence = (
   features: { attributes: Record<string, unknown> }[],
 ): FeatureEvidence => {
   const rows = features.map(({ attributes }) => ({
-    label: readLabel(attributes),
-    value: readNumber(attributes.value),
-    total: readNumber(attributes.total),
+    label: getFeatureLabel(attributes),
+    value: getFiniteNumber(attributes.value),
+    total: getFiniteNumber(attributes.total),
   }));
 
   const areas = rows.filter((row) => row.value !== undefined);
@@ -127,7 +132,7 @@ export const featureEvidence = (
 
 type EvidenceOutcome = Pick<IndicatorEvidence, "status" | "evidence">;
 
-const featureOutcome = async (
+const getFeatureOutcome = async (
   id: Indicator["id"],
   resource: ResourceFeature,
   geometry: __esri.Polygon,
@@ -139,10 +144,10 @@ const featureOutcome = async (
   if (!featureSet?.features) return { status: "unavailable" };
   if (featureSet.features.length === 0) return { status: "no_coverage" };
 
-  return { status: "ok", evidence: featureEvidence(featureSet.features) };
+  return { status: "ok", evidence: getFeatureEvidence(featureSet.features) };
 };
 
-const imageryOutcome = async (
+const getImageryOutcome = async (
   id: Indicator["id"],
   resource: ResourceImagery,
   geometry: __esri.Polygon,
@@ -152,7 +157,7 @@ const imageryOutcome = async (
   if (!data) return { status: "unavailable" };
   if (!hasImageryCoverage(data.histograms)) return { status: "no_coverage" };
 
-  const distribution = classDistribution({
+  const distribution = getClassDistribution({
     histograms: data.histograms,
     legend: resource.legend,
     rasterFunction: resource.rasterFunction,
@@ -162,13 +167,13 @@ const imageryOutcome = async (
     status: "ok",
     evidence: {
       aggregation: resource.aggregation,
-      value: imageryScalar(data, resource.aggregation),
+      value: getImageryScalar(data, resource.aggregation),
       distribution: distribution?.length ? distribution : undefined,
     },
   };
 };
 
-export const collectTopicEvidence = async (
+export const getTopicEvidence = async (
   indicators: Indicator[],
   geometry: __esri.Polygon | null,
 ): Promise<TopicEvidence> => {
@@ -178,8 +183,8 @@ export const collectTopicEvidence = async (
 
   const settled = await Promise.allSettled(
     indicators.map(({ id, resource }): Promise<EvidenceOutcome> => {
-      if (resource.type === "feature") return featureOutcome(id, resource, geometry);
-      if (resource.type === "imagery") return imageryOutcome(id, resource, geometry);
+      if (resource.type === "feature") return getFeatureOutcome(id, resource, geometry);
+      if (resource.type === "imagery") return getImageryOutcome(id, resource, geometry);
 
       // h3 indicators live in the report's grid section rather than as topic cards and are not
       // part of the narrative; `component`, `web-tile` and `imagery-tile` have nothing to query.
@@ -210,9 +215,9 @@ export const getAISummary = (params: GetAISummaryParams) => {
   return generateDescriptionTextAiPost(params);
 };
 
-export const postSummaryTopic = async (params: {
+export const getTopicSummary = async (params: {
   topic?: Topic;
-  options: AiSummary;
+  options: AISummaryOptions;
   activeIndicators?: Indicator["id"][];
   locale: string;
   location: __esri.Polygon | null;
@@ -228,7 +233,7 @@ export const postSummaryTopic = async (params: {
       (!only || only.includes(indicator.id)),
   );
 
-  const evidence = await collectTopicEvidence(indicators, location);
+  const evidence = await getTopicEvidence(indicators, location);
 
   // Formatting and tone rules live in the API's system prompt (api/src/app/openai_service.py),
   // not here: the client sends measurements, the service decides how to read them.
@@ -246,21 +251,21 @@ export const postSummaryTopic = async (params: {
   return { ...response, included: evidence.included, total: evidence.total };
 };
 
-export type GetSummaryTopicCompleteMutationOptions<TData, TError> = UseMutationOptions<
-  Awaited<ReturnType<typeof postSummaryTopic>>,
+export type TopicSummaryMutationOptions<TData, TError> = UseMutationOptions<
+  Awaited<ReturnType<typeof getTopicSummary>>,
   TError,
-  Parameters<typeof postSummaryTopic>[0],
+  Parameters<typeof getTopicSummary>[0],
   TData
 >;
 
-export const usePostSummaryTopicMutation = <
-  TData = Awaited<ReturnType<typeof postSummaryTopic>>,
+export const useGetTopicSummary = <
+  TData = Awaited<ReturnType<typeof getTopicSummary>>,
   TError = unknown,
 >(
-  options?: Omit<GetSummaryTopicCompleteMutationOptions<TData, TError>, "mutationFn">,
+  options?: Omit<TopicSummaryMutationOptions<TData, TError>, "mutationFn">,
 ) => {
   return useMutation({
-    mutationFn: postSummaryTopic,
+    mutationFn: getTopicSummary,
     ...options,
   });
 };
