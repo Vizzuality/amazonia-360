@@ -113,10 +113,33 @@ export const FeatureResourceBlock: Block = {
   ],
 };
 
+/**
+ * Mirrors ImageryAggregation in types/indicator.ts, which is where the three values are explained.
+ *
+ * Required with no default on purpose. A default would make an unanswered field read as a
+ * deliberate ruling, and the two wrong answers fail differently: `none` drops the indicator out of
+ * every summary with no error raised, `sum` prints a total for something that cannot be totalled.
+ * Only `imagery` carries it — `imagery-tile` has no aggregation on its TS type and no source rows.
+ */
+const aggregationField: Field = {
+  name: "aggregation",
+  type: "select",
+  required: true,
+  options: [
+    { label: "Sum", value: "sum" },
+    { label: "Mean", value: "mean" },
+    { label: "None (categorical)", value: "none" },
+  ],
+  admin: {
+    description:
+      "How the AI summary reduces this raster to one number. Sum for counts, mean for indices, none for categorical rasters.",
+  },
+};
+
 export const ImageryResourceBlock: Block = {
   slug: "imagery",
   labels: { singular: "Imagery layer", plural: "Imagery layers" },
-  fields: [nameField, urlField, rasterFunctionField, legendField],
+  fields: [nameField, urlField, rasterFunctionField, legendField, aggregationField],
 };
 
 export const ImageryTileResourceBlock: Block = {

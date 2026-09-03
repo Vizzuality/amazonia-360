@@ -1,4 +1,6 @@
-import type { Block, Field } from "payload";
+import type { Block, Field, SelectField } from "payload";
+
+import type { ImageryAggregation } from "@/types/indicator";
 
 import INDICATORS from "@/../datum/indicators.json";
 import {
@@ -39,16 +41,15 @@ const KEYS_DROPPED_BY_TYPE: Record<string, string[]> = {
   component: ["layer_id"],
 };
 
-/**
- * `aggregation` (how to reduce an imagery raster to one scalar for the AI summary) is authored in
- * `datum/indicators.json` and read by `lib/ai.ts`. Mirroring it onto the imagery block is
- * a separate piece of work; until then it has no field here.
- */
-const KEYS_AWAITING_A_FIELD: Record<string, string[]> = {
-  imagery: ["aggregation"],
-};
-
 const blocksBySlug = new Map<string, Block>(RESOURCE_BLOCKS.map((block) => [block.slug, block]));
+
+/** Sorted so the assertions read against the union spelled alphabetically, not in menu order. */
+const aggregationOptions = (): string[] => {
+  // `options` is select-specific, so narrow to SelectField rather than widening NamedField.
+  const field = findFieldByName(blocksBySlug.get("imagery")!.fields, "aggregation") as SelectField;
+
+  return field.options.map((option) => (typeof option === "string" ? option : option.value)).sort();
+};
 
 /**
  * Recurses into `group` and `array` fields (fanning out once per array item) to find nested
@@ -124,7 +125,6 @@ describe("RESOURCE_BLOCKS", () => {
         if (names.includes(key)) continue;
         if (KEYS_WITH_NO_HOME[indicator.id]?.includes(key)) continue;
         if (KEYS_DROPPED_BY_TYPE[type]?.includes(key)) continue;
-        if (KEYS_AWAITING_A_FIELD[type]?.includes(key)) continue;
 
         violations.push(`indicator ${indicator.id} (${type}): "${key}" has no field`);
       }
@@ -158,6 +158,41 @@ describe("RESOURCE_BLOCKS", () => {
 
   test("the component block keeps query_ai, which indicator 0 carries", () => {
     expect(fieldNames(blocksBySlug.get("component")!.fields)).toContain("query_ai");
+  });
+
+  test("the imagery block offers exactly the ImageryAggregation union", () => {
+    // Spelled out rather than derived from the source data: the union is the contract lib/ai.ts
+    // switches on, and a value the CMS can store but `getImageryScalar` doesn't know about would
+    // read as "not measured" with no error raised.
+    const union: ImageryAggregation[] = ["mean", "none", "sum"];
+
+    expect(aggregationOptions()).toEqual(union);
+  });
+
+  test("every aggregation authored in the source data is an offered option", () => {
+    const offered = aggregationOptions();
+    const authored = [
+      ...new Set(
+        indicators
+          .filter((indicator) => indicator.resource.type === "imagery")
+          .map((indicator) => String(indicator.resource.aggregation)),
+      ),
+    ];
+
+    expect(authored.filter((value) => !offered.includes(value))).toEqual([]);
+  });
+
+  test("aggregation is required with no default, so ingest cannot skip the ruling", () => {
+    // A default would let an unanswered field pass as a deliberate one. See the comment on
+    // aggregationField in resource.ts for why the two wrong answers both fail silently.
+    const field = findFieldByName(blocksBySlug.get("imagery")!.fields, "aggregation");
+
+    expect(field?.required).toBe(true);
+    expect(field?.defaultValue).toBeUndefined();
+  });
+
+  test("imagery-tile has no aggregation, matching ResourceImageryTile", () => {
+    expect(fieldNames(blocksBySlug.get("imagery-tile")!.fields)).not.toContain("aggregation");
   });
 
   test('layer_id is always the constant "0" on every type it\'s dropped from', () => {
