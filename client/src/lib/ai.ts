@@ -1,17 +1,212 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
-import { getIndicators, getQueryFeatureId } from "@/lib/indicators";
+import {
+  ClassShare,
+  getClassDistribution,
+  getImageryScalar,
+  hasImageryCoverage,
+} from "@/lib/imagery";
+import { getIndicators, getQueryFeatureId, getQueryImageryId } from "@/lib/indicators";
+import { roundTo } from "@/lib/utils";
 
 import { Context, ContextDescriptionType, ContextLanguage } from "@/types/generated/api.schemas";
 import { generateDescriptionTextAiPost } from "@/types/generated/text-generation";
-import { Indicator, ResourceFeature } from "@/types/indicator";
+import { ImageryAggregation, Indicator, ResourceFeature, ResourceImagery } from "@/types/indicator";
 import { Topic } from "@/types/topic";
 
-export type AiSummary = {
+export type AISummaryOptions = {
   type?: ContextDescriptionType;
   only_active?: boolean;
   enabled?: boolean;
   generating?: Record<string, boolean>;
+};
+
+/**
+ * - `ok` — read successfully, has values.
+ * - `no_coverage` — read successfully, the area genuinely has none. The only state that licenses
+ *   the summary to say data is absent.
+ * - `unavailable` — the read failed. A fault on our side, never a finding about the Amazon.
+ * - `not_supported` — this resource kind cannot be measured over a polygon at all.
+ */
+export type IndicatorEvidenceStatus = "ok" | "no_coverage" | "unavailable" | "not_supported";
+
+export type FeatureEvidence = {
+  feature_count: number;
+  /** Area of the analysis polygon covered by the layer. Only queries that return intersections. */
+  area_km2?: number;
+  /** `area_km2` as a share of the whole analysis area, 0-100. */
+  area_share?: number;
+  classes?: { label: string; feature_count: number; area_km2?: number; percentage?: number }[];
+  classes_truncated?: boolean;
+};
+
+export type ImageryEvidence = {
+  aggregation: ImageryAggregation;
+  value: number | null;
+  distribution?: ClassShare[];
+};
+
+export type IndicatorEvidence = {
+  id: number;
+  name?: string;
+  unit?: string;
+  status: IndicatorEvidenceStatus;
+  evidence?: FeatureEvidence | ImageryEvidence;
+};
+
+export type TopicEvidence = {
+  indicators: IndicatorEvidence[];
+  /** Indicators the summary can speak to: `ok` plus the genuine `no_coverage` findings. */
+  included: number;
+  /** Everything except `not_supported`, so a by-design exclusion never reads as a shortfall. */
+  total: number;
+};
+
+/** Beyond this the payload stops being prose material and starts being a data dump. */
+const MAX_CLASSES = 15;
+
+/** First non-empty string among these wins: `query_ai` asks for `outFields: ["*"]`. */
+const LABEL_KEYS = ["label", "name", "nombre", "natname"];
+
+const getFeatureLabel = (attributes: Record<string, unknown>) => {
+  const byKey = new Map(
+    Object.entries(attributes).map(([key, value]) => [key.toLowerCase(), value]),
+  );
+
+  return LABEL_KEYS.map((key) => byKey.get(key)).find(
+    (value): value is string => typeof value === "string" && value !== "",
+  );
+};
+
+const getFiniteNumber = (value: unknown) =>
+  typeof value === "number" && Number.isFinite(value) ? value : undefined;
+
+/**
+ * Forwarding the raw `outFields: ["*"]` attributes would spend most of the model's context on ids
+ * and geometry bookkeeping. Queries that return intersections carry a per-feature `value` in km²
+ * and the analysis area in `total` (see `getQueryFeatureId`); the rest only say how many features
+ * fall inside and what they are called.
+ */
+export const getFeatureEvidence = (
+  features: { attributes: Record<string, unknown> }[],
+): FeatureEvidence => {
+  const rows = features.map(({ attributes }) => ({
+    label: getFeatureLabel(attributes),
+    value: getFiniteNumber(attributes.value),
+    total: getFiniteNumber(attributes.total),
+  }));
+
+  const areas = rows.filter((row) => row.value !== undefined);
+  const totalArea = rows.find((row) => row.total !== undefined)?.total;
+  const area = areas.length > 0 ? areas.reduce((sum, row) => sum + row.value!, 0) : undefined;
+
+  const grouped = new Map<string, { feature_count: number; area_km2?: number }>();
+
+  for (const { label, value } of rows) {
+    if (!label) continue;
+
+    const entry = grouped.get(label) ?? { feature_count: 0 };
+    entry.feature_count += 1;
+    if (value !== undefined) entry.area_km2 = (entry.area_km2 ?? 0) + value;
+    grouped.set(label, entry);
+  }
+
+  const classes = [...grouped.entries()]
+    .map(([label, { feature_count, area_km2 }]) => ({
+      label,
+      feature_count,
+      area_km2: area_km2 === undefined ? undefined : roundTo(area_km2, 2),
+      percentage:
+        area_km2 !== undefined && totalArea ? roundTo((area_km2 / totalArea) * 100) : undefined,
+    }))
+    .sort((a, b) => (b.area_km2 ?? b.feature_count) - (a.area_km2 ?? a.feature_count));
+
+  return {
+    feature_count: features.length,
+    area_km2: area === undefined ? undefined : roundTo(area, 2),
+    area_share: area !== undefined && totalArea ? roundTo((area / totalArea) * 100) : undefined,
+    classes: classes.length > 0 ? classes.slice(0, MAX_CLASSES) : undefined,
+    classes_truncated: classes.length > MAX_CLASSES ? true : undefined,
+  };
+};
+
+type EvidenceOutcome = Pick<IndicatorEvidence, "status" | "evidence">;
+
+const getFeatureOutcome = async (
+  id: Indicator["id"],
+  resource: ResourceFeature,
+  geometry: __esri.Polygon,
+): Promise<EvidenceOutcome> => {
+  if (!resource.query_ai) return { status: "unavailable" };
+
+  const featureSet = await getQueryFeatureId({ id, type: "ai", resource, geometry });
+
+  if (!featureSet?.features) return { status: "unavailable" };
+  if (featureSet.features.length === 0) return { status: "no_coverage" };
+
+  return { status: "ok", evidence: getFeatureEvidence(featureSet.features) };
+};
+
+const getImageryOutcome = async (
+  id: Indicator["id"],
+  resource: ResourceImagery,
+  geometry: __esri.Polygon,
+): Promise<EvidenceOutcome> => {
+  const data = await getQueryImageryId({ id, type: "ai", resource, geometry });
+
+  if (!data) return { status: "unavailable" };
+  if (!hasImageryCoverage(data.histograms)) return { status: "no_coverage" };
+
+  const distribution = getClassDistribution({
+    histograms: data.histograms,
+    legend: resource.legend,
+    rasterFunction: resource.rasterFunction,
+  });
+
+  return {
+    status: "ok",
+    evidence: {
+      aggregation: resource.aggregation,
+      value: getImageryScalar(data, resource.aggregation),
+      distribution: distribution?.length ? distribution : undefined,
+    },
+  };
+};
+
+export const getTopicEvidence = async (
+  indicators: Indicator[],
+  geometry: __esri.Polygon | null,
+): Promise<TopicEvidence> => {
+  // Without an area there is nothing to measure, and an unfiltered `query_ai` would pull whole
+  // layers down only for `getQueryFeatureId` to throw them away.
+  if (!geometry) return { indicators: [], included: 0, total: 0 };
+
+  const settled = await Promise.allSettled(
+    indicators.map(({ id, resource }): Promise<EvidenceOutcome> => {
+      if (resource.type === "feature") return getFeatureOutcome(id, resource, geometry);
+      if (resource.type === "imagery") return getImageryOutcome(id, resource, geometry);
+
+      // h3 indicators live in the report's grid section rather than as topic cards and are not
+      // part of the narrative; `component`, `web-tile` and `imagery-tile` have nothing to query.
+      return Promise.resolve({ status: "not_supported" });
+    }),
+  );
+
+  const collected = settled.map((result, index): IndicatorEvidence => {
+    const { id, name, unit } = indicators[index];
+    const outcome: EvidenceOutcome =
+      result.status === "fulfilled" ? result.value : { status: "unavailable" };
+
+    return { id, name: name || undefined, unit: unit || undefined, ...outcome };
+  });
+
+  const supported = collected.filter(({ status }) => status !== "not_supported");
+
+  return {
+    indicators: collected,
+    included: supported.filter(({ status }) => status === "ok" || status === "no_coverage").length,
+    total: supported.length,
+  };
 };
 
 export type GetAISummaryParams = Context;
@@ -20,161 +215,57 @@ export const getAISummary = (params: GetAISummaryParams) => {
   return generateDescriptionTextAiPost(params);
 };
 
-export type FetchSummaryTopicDataParams = {
+export const getTopicSummary = async (params: {
   topic?: Topic;
-  indicators?: Indicator["id"][];
-  locale: string;
-  location: __esri.Polygon | null;
-};
-
-const fetchSummaryTopicData = async (
-  params: FetchSummaryTopicDataParams,
-): Promise<Record<string, unknown>[]> => {
-  const { topic, indicators: indicatorIds, locale, location } = params;
-
-  try {
-    // 1. Get geometry from location (assuming it's a proper Polygon geometry)
-    const GEOMETRY = location;
-
-    // 2. Fetch default indicators for the topic
-    const allIndicators = await getIndicators(locale);
-
-    // Filter indicators based on topic and resource type
-    const queryIndicatorsData = allIndicators.filter((indicator) => {
-      // Filter by topic if provided
-      if (topic) {
-        const hasTopicMatch = indicator.subtopic.topic_id === topic.id;
-        if (!hasTopicMatch) return false;
-      }
-
-      // Filter by specific indicator IDs if provided
-      if (indicatorIds) {
-        const hasIndicatorMatch = indicatorIds.includes(indicator.id);
-        if (!hasIndicatorMatch) return false;
-      }
-
-      // Only include indicators with feature resources (for data querying)
-      return indicator.resource.type === "feature";
-    });
-
-    // 3. Create and execute queries for each indicator
-    const indicatorPromises = queryIndicatorsData.map(async (indicator) => {
-      if (!indicator || !indicator.resource || indicator.resource.type !== "feature") {
-        return null;
-      }
-
-      try {
-        // Use the existing getQueryFeatureId infrastructure
-        const featureSet = await getQueryFeatureId({
-          id: indicator.id,
-          type: "chart", // Default visualization type for data fetching
-          resource: indicator.resource as ResourceFeature, // Type assertion for resource compatibility
-          geometry: GEOMETRY,
-        });
-
-        if (!featureSet || !featureSet.features) {
-          return {
-            id: indicator.id,
-            name: indicator.name,
-            data: [],
-          };
-        }
-
-        // Process the feature data into a usable format
-        const processedData = featureSet.features.map((feature) => ({
-          attributes: feature.attributes,
-          value: feature.attributes.value || 0,
-          label: feature.attributes.label || feature.attributes.name || "Unknown",
-        }));
-
-        return {
-          id: indicator.id,
-          name: indicator.name,
-          data: processedData,
-          total: featureSet.features.length,
-        };
-      } catch (error) {
-        console.error(`Error fetching data for indicator ${indicator.id}:`, error);
-        return {
-          id: indicator.id,
-          name: indicator.name,
-          data: [],
-          error: error instanceof Error ? error.message : "Unknown error",
-        };
-      }
-    });
-
-    // 4. Wait for all queries to complete and filter out null results
-    const results = await Promise.all(indicatorPromises);
-    const filteredResults = results.filter((result) => result !== null);
-
-    return filteredResults;
-  } catch (error) {
-    console.error("Error fetching summary topic data:", error);
-    return [];
-  }
-};
-
-// Enhanced mutation for summary topic that fetches all data internally
-export const postSummaryTopic = async (params: {
-  topic?: Topic;
-  options: AiSummary;
+  options: AISummaryOptions;
   activeIndicators?: Indicator["id"][];
   locale: string;
   location: __esri.Polygon | null;
 }) => {
   const { topic, options, locale, activeIndicators, location } = params;
+  const only = options?.only_active ? activeIndicators : undefined;
 
-  // First, fetch the indicators data internally
-  const indicators = options?.only_active ? activeIndicators : undefined;
+  const allIndicators = await getIndicators(locale);
 
-  const indicatorsData = await fetchSummaryTopicData({
-    topic,
-    indicators,
-    locale,
-    location,
-  });
+  const indicators = allIndicators.filter(
+    (indicator) =>
+      (!topic || indicator.subtopic.topic_id === topic.id) &&
+      (!only || only.includes(indicator.id)),
+  );
 
-  // Then generate the AI summary with the fetched data
-  return getAISummary({
+  const evidence = await getTopicEvidence(indicators, location);
+
+  // Formatting and tone rules live in the API's system prompt (api/src/app/openai_service.py),
+  // not here: the client sends measurements, the service decides how to read them.
+  const response = await getAISummary({
     data: {
-      indicators: indicatorsData,
       topic: topic?.name,
-      ai_notes: [
-        "Don't use blockquotes",
-        "Don't use headings",
-        "Don't use lists",
-        "Don't use tables",
-        "Don't use images",
-        "Don't use links",
-        "Don't use code blocks",
-        "Don't use horizontal rules",
-        "Don't use footnotes",
-        "Try to emphasize the most important information by putting in bold",
-        "Try to use percentages every time is possible",
-      ],
+      indicators: evidence.indicators,
+      indicators_included: evidence.included,
+      indicators_total: evidence.total,
     },
     language: locale as ContextLanguage,
     description_type: options?.type,
   });
+
+  return { ...response, included: evidence.included, total: evidence.total };
 };
 
-// Update the mutation to use the complete version
-export type GetSummaryTopicCompleteMutationOptions<TData, TError> = UseMutationOptions<
-  Awaited<ReturnType<typeof postSummaryTopic>>,
+export type TopicSummaryMutationOptions<TData, TError> = UseMutationOptions<
+  Awaited<ReturnType<typeof getTopicSummary>>,
   TError,
-  Parameters<typeof postSummaryTopic>[0],
+  Parameters<typeof getTopicSummary>[0],
   TData
 >;
 
-export const usePostSummaryTopicMutation = <
-  TData = Awaited<ReturnType<typeof postSummaryTopic>>,
+export const useGetTopicSummary = <
+  TData = Awaited<ReturnType<typeof getTopicSummary>>,
   TError = unknown,
 >(
-  options?: Omit<GetSummaryTopicCompleteMutationOptions<TData, TError>, "mutationFn">,
+  options?: Omit<TopicSummaryMutationOptions<TData, TError>, "mutationFn">,
 ) => {
   return useMutation({
-    mutationFn: postSummaryTopic,
+    mutationFn: getTopicSummary,
     ...options,
   });
 };

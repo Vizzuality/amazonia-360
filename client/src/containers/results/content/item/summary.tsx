@@ -2,9 +2,10 @@
 
 import { useCallback, useMemo } from "react";
 
+import { useTranslations } from "next-intl";
 import { useDebounceCallback } from "usehooks-ts";
 
-import { usePostSummaryTopicMutation } from "@/lib/ai";
+import { useGetTopicSummary } from "@/lib/ai";
 import { cn } from "@/lib/utils";
 
 import { Topic } from "@/types/topic";
@@ -18,10 +19,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 export interface ReportResultsSummaryProps {
   topic?: Topic;
   editing?: boolean;
-  mutation?: ReturnType<typeof usePostSummaryTopicMutation>;
+  mutation?: ReturnType<typeof useGetTopicSummary>;
 }
 
 export const ReportResultsSummary = ({ topic, editing, mutation }: ReportResultsSummaryProps) => {
+  const t = useTranslations();
   const { topics, setTopics } = useFormTopics();
 
   const TOPIC = useMemo(() => {
@@ -84,6 +86,15 @@ export const ReportResultsSummary = ({ topic, editing, mutation }: ReportResults
           >
             <ForwardRefEditor markdown={TOPIC.description} onChange={debouncedHandleEditorChange} />
           </div>
+
+          {!!mutation?.data && (
+            <p className="text-muted-foreground mt-2 text-xs">
+              {t("report-results-sidebar-ai-summaries-coverage", {
+                included: mutation.data.included,
+                total: mutation.data.total,
+              })}
+            </p>
+          )}
         </div>
       )}
     </div>

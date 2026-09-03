@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 
 import { formatNumber } from "@/lib/formats";
+import { getImageryScalar } from "@/lib/imagery";
 import { useGetIndicatorsId, useQueryImageryId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
@@ -18,31 +19,19 @@ export default function ImageryDataRow({ id, locale, location }: DataRowProps) {
 
   const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();
 
+  const resource = indicator?.resource as ResourceImagery | undefined;
+
   const query = useQueryImageryId({
-    id: id,
-    resource: indicator?.resource as ResourceImagery,
+    id,
+    resource: resource as ResourceImagery,
     type: "numeric",
     geometry: GEOMETRY,
   });
 
-  const VALUE = useMemo(() => {
-    if (!query.data || !("statistics" in query.data)) return null;
-
-    const [s] = query.data.statistics;
-
-    if (!s) return 0;
-
-    if ("sum" in s) return s.sum;
-
-    return query.data?.histograms?.reduce((acc, curr) => {
-      return (
-        acc +
-        [...curr.counts].reduce((a, c, i) => {
-          return a + c * (curr.min + (i * curr.max) / (curr.size - 1));
-        }, 0)
-      );
-    }, 0);
-  }, [query.data]);
+  const VALUE = useMemo(
+    () => getImageryScalar(query.data, resource?.aggregation ?? "none"),
+    [query.data, resource],
+  );
 
   useMemo(() => {
     if (query.isLoading) {

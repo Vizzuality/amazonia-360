@@ -513,6 +513,7 @@
                     }
                 ]
             },
+            "aggregation": "none",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Slope_classes/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -1038,6 +1039,7 @@
                     }
                 ]
             },
+            "aggregation": "none",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Land_Cover_Classes_in_the_Amazon/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -1160,6 +1162,7 @@
                     }
                 ]
             },
+            "aggregation": "none",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Forest_Cover/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -1282,6 +1285,7 @@
                     }
                 ]
             },
+            "aggregation": "none",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Forest_Cover_Loss_2000___2024/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -1404,6 +1408,7 @@
                     }
                 ]
             },
+            "aggregation": "none",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Canopy_height/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -2330,6 +2335,7 @@
                     }
                 ]
             },
+            "aggregation": "none",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Grassland_Coverage_Classes/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -2998,6 +3004,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/population25_amazonia/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -3121,6 +3128,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Female_Population_Distribution/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -3244,6 +3252,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Male_Population_Distribution/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -3367,6 +3376,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Children_Under_Five_Distribution/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -3490,6 +3500,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Elderly_population/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -3613,6 +3624,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Youth_population_distribution/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -3736,6 +3748,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Women_reproductive_age/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -3937,6 +3950,7 @@
                     }
                 ]
             },
+            "aggregation": "mean",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Deprivation_Levels_in_the_Amazon/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -4162,6 +4176,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Gross_Domestic_Product_in_Amazon/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -4457,6 +4472,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Cassava_Production/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -4593,6 +4609,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Corn_Production/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -4716,6 +4733,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Rice_Production/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -4839,6 +4857,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Sorghum_Production/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -4962,6 +4981,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Cocoa_Production/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -5085,6 +5105,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Arabic_Coffee_Production/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -5208,6 +5229,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Oil_Palm_Production/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -5344,6 +5366,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Rubber_Production/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -5480,6 +5503,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Soybean_Production/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -5629,6 +5653,7 @@
                     }
                 ]
             },
+            "aggregation": "sum",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Sugarcane_Production/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -6646,6 +6671,7 @@
                     }
                 ]
             },
+            "aggregation": "none",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Mobile_Network_Speed_Test_Results/ImageServer",
             "query_numeric": "",
             "query_table": "",
@@ -6768,6 +6794,7 @@
                     }
                 ]
             },
+            "aggregation": "none",
             "url": "https://atlas.iadb.org/image/rest/services/Imagery/Home_Internet_Speed_Test_Results/ImageServer",
             "query_numeric": "",
             "query_table": "",

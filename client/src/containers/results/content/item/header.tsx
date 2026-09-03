@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
 import { LuSparkles } from "react-icons/lu";
 
-import { usePostSummaryTopicMutation } from "@/lib/ai";
+import { useGetTopicSummary } from "@/lib/ai";
 import { useLocationGeometry } from "@/lib/location";
 
 import { ContextDescriptionType } from "@/types/generated/api.schemas";
@@ -36,7 +36,7 @@ export const ReportTopicHeader = (props: Topic) => {
 
   const LOCATION = useLocationGeometry(location);
 
-  const summaryMutation = usePostSummaryTopicMutation({
+  const summaryMutation = useGetTopicSummary({
     onSuccess: (data, variables) => {
       // Update the specific topic's description with the AI-generated result
       if (variables.topic?.id && data?.description) {
