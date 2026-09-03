@@ -309,6 +309,13 @@ export interface Report {
     | {
         topic_id: number;
         description?: string | null;
+        /**
+         * What the report looked like when the AI summary was generated. Written by the app; the report editor compares it against the live report to offer a regeneration. See TopicSummaryStamp in app/(frontend)/parsers.ts.
+         */
+        description_stamp?: {
+          indicator_ids?: number[];
+          location_hash?: string | null;
+        };
         indicators?:
           | {
               indicator_id: number;
@@ -1102,6 +1109,12 @@ export interface ReportsSelect<T extends boolean = true> {
     | {
         topic_id?: T;
         description?: T;
+        description_stamp?:
+          | T
+          | {
+              indicator_ids?: T;
+              location_hash?: T;
+            };
         indicators?:
           | T
           | {
