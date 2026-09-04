@@ -14,6 +14,8 @@ import { generateDescriptionTextAiPost } from "@/types/generated/text-generation
 import { ImageryAggregation, Indicator, ResourceFeature, ResourceImagery } from "@/types/indicator";
 import { Topic } from "@/types/topic";
 
+import { Location, TopicSummaryStamp } from "@/app/(frontend)/parsers";
+
 export type AISummaryOptions = {
   type?: ContextDescriptionType;
   only_active?: boolean;
@@ -268,4 +270,66 @@ export const useGetTopicSummary = <
     mutationFn: getTopicSummary,
     ...options,
   });
+};
+
+/** Key order in a `Location` is whatever built it, so a raw JSON.stringify would drift. */
+const stableStringify = (value: unknown): string => {
+  if (value === null || typeof value !== "object") return JSON.stringify(value) ?? "null";
+  if (Array.isArray(value)) return `[${value.map(stableStringify).join(",")}]`;
+
+  const entries = Object.entries(value as Record<string, unknown>)
+    .filter(([, entry]) => entry !== undefined)
+    .sort(([a], [b]) => a.localeCompare(b));
+
+  return `{${entries
+    .map(([key, entry]) => `${JSON.stringify(key)}:${stableStringify(entry)}`)
+    .join(",")}}`;
+};
+
+/**
+ * FNV-1a, 32-bit. Deliberately not a crypto hash: this only has to change when the area does, and
+ * the cost of the rare collision is a missed "out of date" notice, not a wrong figure.
+ */
+export const hashLocation = (location: Location | null | undefined): string => {
+  if (!location) return "";
+
+  const input = stableStringify(location);
+  let hash = 0x811c9dc5;
+
+  for (let index = 0; index < input.length; index += 1) {
+    hash ^= input.charCodeAt(index);
+    hash = Math.imul(hash, 0x01000193);
+  }
+
+  return (hash >>> 0).toString(16).padStart(8, "0");
+};
+
+export const getTopicSummaryStamp = (
+  indicatorIds: number[],
+  location: Location | null | undefined,
+): TopicSummaryStamp => ({
+  indicator_ids: [...new Set(indicatorIds)].sort((a, b) => a - b),
+  location_hash: hashLocation(location),
+});
+
+/**
+ * `Partial` because Payload types every stamp subfield as optional, so a row written by an older
+ * build — or hand-edited in the admin — can arrive half-filled.
+ */
+export const isTopicSummaryStale = (
+  stamp: Partial<TopicSummaryStamp> | null | undefined,
+  current: TopicSummaryStamp,
+): boolean => {
+  // An unstamped summary predates this check — every report saved before the stamp existed carries
+  // one. Flagging those would make the notice meaningless on day one, so it stays quiet until the
+  // next generation writes a stamp to compare against.
+  if (typeof stamp?.location_hash !== "string") return false;
+
+  const stamped = stamp.indicator_ids ?? [];
+
+  return (
+    stamp.location_hash !== current.location_hash ||
+    stamped.length !== current.indicator_ids.length ||
+    stamped.some((id, index) => id !== current.indicator_ids[index])
+  );
 };
