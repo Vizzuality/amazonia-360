@@ -6,27 +6,10 @@ settings:
 
 overrides:
   '@aws-sdk/xml-builder>fast-xml-parser': 5.10.1
-  '@loaders.gl/xml>fast-xml-parser': 5.10.1
-  '@esri/calcite-components>lodash-es': 4.18.1
-  '@visx/text>lodash': 4.18.1
-  '@visx/responsive>lodash': 4.18.1
-  '@visx/shape>lodash': 4.18.1
-  json-schema-to-typescript>lodash: 4.18.1
-  payload>ajv: 8.18.0
-  ts-node>diff: 4.0.4
-  uvu>diff: 5.2.2
-  unidiff>diff: 5.2.2
-  sass>immutable: 4.3.9
   payload>undici: 7.29.0
-  react-world-flags>svgo: 3.3.4
-  flat-cache>flatted: 3.4.2
-  '@payloadcms/next>file-type': 21.3.2
-  payload>file-type: 21.3.2
   monaco-editor>dompurify: 3.4.13
   '@esbuild-kit/core-utils>esbuild': 0.25.0
   '@loaders.gl/kml>@xmldom/xmldom': 0.8.13
-  micromatch>picomatch: 2.3.2
-  tinyglobby>picomatch: 4.0.4
   '@mdxeditor/editor>lexical': 0.41.0
   '@mdxeditor/editor>@lexical/clipboard': 0.41.0
   '@mdxeditor/editor>@lexical/link': 0.41.0
@@ -39,19 +22,8 @@ overrides:
   '@mdxeditor/editor>@lexical/plain-text': 0.41.0
   ajv>fast-uri: 3.1.5
   react-use>js-cookie: 3.0.8
-  '@eslint/eslintrc>js-yaml': 4.3.1
   orval>js-yaml: 4.3.1
   '@mdxeditor/editor>js-yaml': 4.3.1
-  typedoc>markdown-it: 14.3.0
-  markdown-it>linkify-it: 5.0.2
-  vite>rollup: 4.62.4
-  jsdom>undici: 7.29.0
-  happy-dom>ws: 8.21.2
-  payload>ws: 8.21.2
-  webpack-bundle-analyzer>ws: 7.5.13
-  resolve-protobuf-schema>protocol-buffers-schema: 3.6.1
-  '@vitejs/plugin-react>@babel/core': 7.29.7
-  eslint-plugin-react-hooks>@babel/core: 7.29.7
   '@orval/core>esbuild': 0.28.1
   brace-expansion@1: 1.1.18
   brace-expansion@2: 2.1.4
@@ -6484,8 +6456,8 @@ packages:
     resolution: {integrity: sha512-QgXo+mXTe8ljeqUFaX3QVHc5osSItJ/Km+xpocx0aSqWGMSCf6qYs/VnzZgS864Pjn5iceMRFigeAV7AfTlaig==}
     engines: {node: '>= 12'}
 
-  file-type@21.3.2:
-    resolution: {integrity: sha512-DLkUvGwep3poOV2wpzbHCOnSKGk1LzyXTv+aHFgN2VFl96wnp8YA9YjO2qPzg5PuL8q/SW9Pdi6WTkYOIh995w==}
+  file-type@21.3.4:
+    resolution: {integrity: sha512-Ievi/yy8DS3ygGvT47PjSfdFoX+2isQueoYP1cntFW1JLYAuS4GD7NUPGg4zv2iZfV52uDyk5w5Z0TdpRS6Q1g==}
     engines: {node: '>=20'}
 
   fill-range@7.1.1:
@@ -12675,7 +12647,7 @@ snapshots:
       '@payloadcms/ui': 3.87.0(@types/react@19.2.2)(monaco-editor@0.55.1)(next@16.3.3(@babel/core@7.29.7)(@playwright/test@1.58.2)(@types/node@20.19.23)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.77.4))(payload@3.87.0(graphql@16.11.0)(typescript@5.9.3))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(typescript@5.9.3)
       busboy: 1.6.0
       dequal: 2.0.3
-      file-type: 21.3.2
+      file-type: 21.3.4
       graphql: 16.11.0
       graphql-http: 1.22.4(graphql@16.11.0)
       graphql-playground-html: 1.6.30
@@ -17720,7 +17692,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  file-type@21.3.2:
+  file-type@21.3.4:
     dependencies:
       '@tokenizer/inflate': 0.4.1
       strtok3: 10.3.4
@@ -19496,7 +19468,7 @@ snapshots:
       croner: 10.0.1
       dataloader: 2.2.3
       deepmerge: 4.3.1
-      file-type: 21.3.2
+      file-type: 21.3.4
       get-tsconfig: 4.8.1
       graphql: 16.11.0
       http-status: 2.1.0
