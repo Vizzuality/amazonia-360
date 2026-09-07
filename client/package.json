@@ -199,7 +199,7 @@
       "payload>undici": "7.29.0",
       "monaco-editor>dompurify": "3.4.13",
       "@esbuild-kit/core-utils>esbuild": "0.25.0",
-      "@loaders.gl/kml>@xmldom/xmldom": "0.8.13",
+      "@loaders.gl/kml>@xmldom/xmldom": "0.8.15",
       "@mdxeditor/editor>lexical": "0.41.0",
       "@mdxeditor/editor>@lexical/clipboard": "0.41.0",
       "@mdxeditor/editor>@lexical/link": "0.41.0",

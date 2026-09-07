@@ -9,7 +9,7 @@ overrides:
   payload>undici: 7.29.0
   monaco-editor>dompurify: 3.4.13
   '@esbuild-kit/core-utils>esbuild': 0.25.0
-  '@loaders.gl/kml>@xmldom/xmldom': 0.8.13
+  '@loaders.gl/kml>@xmldom/xmldom': 0.8.15
   '@mdxeditor/editor>lexical': 0.41.0
   '@mdxeditor/editor>@lexical/clipboard': 0.41.0
   '@mdxeditor/editor>@lexical/link': 0.41.0
@@ -5085,8 +5085,8 @@ packages:
   '@webcomponents/shadycss@1.11.2':
     resolution: {integrity: sha512-vRq+GniJAYSBmTRnhCYPAPq6THYqovJ/gzGThWbgEZUQaBccndGTi1hdiUP15HzEco0I6t4RCtXyX0rsSmwgPw==}
 
-  '@xmldom/xmldom@0.8.13':
-    resolution: {integrity: sha512-KRYzxepc14G/CEpEGc3Yn+JKaAeT63smlDr+vjB8jRfgTBBI9wRj/nkQEO+ucV8p8I9bfKLWp37uHgFrbntPvw==}
+  '@xmldom/xmldom@0.8.15':
+    resolution: {integrity: sha512-/5NV/vDALVFDXgLmfsy9TRCBlKwO2LNBFzpzvb9iIj+jR+eSc6DLYYvVOdivT/jm7MtU6TebYuRmzEOI7w40UA==}
     engines: {node: '>=10.0.0'}
 
   '@xobotyi/scrollbar-width@1.9.5':
@@ -11938,7 +11938,7 @@ snapshots:
       '@loaders.gl/loader-utils': 4.3.4(@loaders.gl/core@4.3.4)
       '@loaders.gl/schema': 4.3.4(@loaders.gl/core@4.3.4)
       '@tmcw/togeojson': 4.7.0
-      '@xmldom/xmldom': 0.8.13
+      '@xmldom/xmldom': 0.8.15
 
   '@loaders.gl/loader-utils@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -16149,7 +16149,7 @@ snapshots:
 
   '@webcomponents/shadycss@1.11.2': {}
 
-  '@xmldom/xmldom@0.8.13': {}
+  '@xmldom/xmldom@0.8.15': {}
 
   '@xobotyi/scrollbar-width@1.9.5': {}
 
