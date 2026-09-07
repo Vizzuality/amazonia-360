@@ -2,7 +2,15 @@ import { getQueryFeatureId, getQueryImageryId } from "@/lib/indicators";
 
 import { ImageryAggregation, Indicator } from "@/types/indicator";
 
-import { getTopicEvidence, getFeatureEvidence } from "./ai";
+import { Location } from "@/app/(frontend)/parsers";
+
+import {
+  getTopicEvidence,
+  getFeatureEvidence,
+  getTopicSummaryStamp,
+  hashLocation,
+  isTopicSummaryStale,
+} from "./ai";
 
 vi.mock("@/lib/indicators", () => ({
   getIndicators: vi.fn(),
@@ -248,5 +256,75 @@ describe("getFeatureEvidence", () => {
     expect(evidence.classes_truncated).toBe(true);
     // Ranked by area, so the largest class survives the cap.
     expect(evidence.classes?.[0]).toMatchObject({ label: "Class 19", area_km2: 20 });
+  });
+});
+
+const searchLocation = (key: string | number): Location => ({
+  type: "search",
+  key,
+  text: `Location ${key}`,
+  sourceIndex: 0,
+});
+
+describe("hashLocation", () => {
+  test("is stable across key order", () => {
+    const a = { type: "polygon", buffer: 10, geometry: { rings: [[[0, 0]]] } } as Location;
+    const b = { geometry: { rings: [[[0, 0]]] }, type: "polygon", buffer: 10 } as Location;
+
+    expect(hashLocation(a)).toBe(hashLocation(b));
+  });
+
+  test("changes when the buffer changes", () => {
+    const geometry = { rings: [[[0, 0]]] };
+
+    expect(hashLocation({ type: "polygon", geometry, buffer: 10 } as Location)).not.toBe(
+      hashLocation({ type: "polygon", geometry, buffer: 20 } as Location),
+    );
+  });
+
+  test("changes when a search location points somewhere else", () => {
+    expect(hashLocation(searchLocation("manaus"))).not.toBe(hashLocation(searchLocation("belem")));
+  });
+
+  test("treats no location as its own value rather than throwing", () => {
+    expect(hashLocation(null)).toBe("");
+    expect(hashLocation(undefined)).toBe("");
+  });
+});
+
+describe("getTopicSummaryStamp", () => {
+  test("sorts and dedupes the ids, so reordering cards is not a change", () => {
+    const location = searchLocation("manaus");
+
+    expect(getTopicSummaryStamp([12, 5, 12, 3], location)).toEqual(
+      getTopicSummaryStamp([3, 5, 12], location),
+    );
+  });
+});
+
+describe("isTopicSummaryStale", () => {
+  const location = searchLocation("manaus");
+  const stamp = getTopicSummaryStamp([3, 5], location);
+
+  test("is quiet while nothing has moved", () => {
+    expect(isTopicSummaryStale(stamp, getTopicSummaryStamp([5, 3], location))).toBe(false);
+  });
+
+  test("flags an added indicator", () => {
+    expect(isTopicSummaryStale(stamp, getTopicSummaryStamp([3, 5, 9], location))).toBe(true);
+  });
+
+  test("flags a removed indicator", () => {
+    expect(isTopicSummaryStale(stamp, getTopicSummaryStamp([3], location))).toBe(true);
+  });
+
+  test("flags a redrawn area", () => {
+    expect(isTopicSummaryStale(stamp, getTopicSummaryStamp([3, 5], searchLocation("belem")))).toBe(
+      true,
+    );
+  });
+
+  test("stays quiet for a summary written before stamps existed", () => {
+    expect(isTopicSummaryStale(undefined, getTopicSummaryStamp([99], location))).toBe(false);
   });
 });

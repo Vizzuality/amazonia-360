@@ -17,6 +17,29 @@ export const TopicsField: Field = {
       localized: true,
     },
     {
+      name: "description_stamp",
+      type: "group",
+      // Localized alongside `description`: each locale holds its own summary, so a regeneration in
+      // one language must not mark the others up to date.
+      localized: true,
+      admin: {
+        readOnly: true,
+        description:
+          "What the report looked like when the AI summary was generated. Written by the app; the report editor compares it against the live report to offer a regeneration. See TopicSummaryStamp in app/(frontend)/parsers.ts.",
+      },
+      fields: [
+        {
+          name: "indicator_ids",
+          type: "json",
+          // Without this a `json` field generates the widest possible union in payload-types.ts,
+          // and every read site would have to narrow it back to the array it always is.
+          typescriptSchema: [() => ({ type: "array", items: { type: "number" } })],
+          admin: { description: "The topic's indicator ids at generation time, sorted." },
+        },
+        { name: "location_hash", type: "text" },
+      ],
+    },
+    {
       name: "indicators",
       type: "array",
       fields: [
