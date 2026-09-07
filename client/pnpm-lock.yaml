@@ -10,6 +10,7 @@ overrides:
   monaco-editor>dompurify: 3.4.13
   '@esbuild-kit/core-utils>esbuild': 0.25.0
   '@loaders.gl/kml>@xmldom/xmldom': 0.8.15
+  '@loaders.gl/compression>fflate': 0.7.5
   '@mdxeditor/editor>lexical': 0.41.0
   '@mdxeditor/editor>@lexical/clipboard': 0.41.0
   '@mdxeditor/editor>@lexical/link': 0.41.0
@@ -6460,8 +6461,8 @@ packages:
       picomatch:
         optional: true
 
-  fflate@0.7.4:
-    resolution: {integrity: sha512-5u2V/CDW15QM1XbbgS+0DfPxVB+jUKhWEKuuFuHncbk3tEEqzmoXL+2KyOFuKGqOnmdIy0/davWF1CkuwtibCw==}
+  fflate@0.7.5:
+    resolution: {integrity: sha512-QieYf//cis6ywHNi5qW1+PXPQ4bC+XVJAtS4AXIML8P76GroEiOxm/oQtn1f02UkJY1+KsXMJcC+R2v/Eg4G3g==}
 
   figures@6.1.0:
     resolution: {integrity: sha512-d+l3qxjSesT4V7v2fh+QnmFnUWv9lSpjarhShNTgBOfA0ttejbQUAlHLitbjkoRiDulW0OPoQPYIGhIC8ohejg==}
@@ -11775,7 +11776,7 @@ snapshots:
       '@loaders.gl/worker-utils': 4.3.4(@loaders.gl/core@4.3.4)
       '@types/brotli': 1.3.4
       '@types/pako': 1.0.7
-      fflate: 0.7.4
+      fflate: 0.7.5
       lzo-wasm: 0.0.4
       pako: 1.0.11
       snappyjs: 0.6.1
@@ -11790,7 +11791,7 @@ snapshots:
       '@loaders.gl/loader-utils': 4.4.3(@loaders.gl/core@4.3.4)
       '@loaders.gl/worker-utils': 4.4.3(@loaders.gl/core@4.3.4)
       '@types/pako': 1.0.7
-      fflate: 0.7.4
+      fflate: 0.7.5
       pako: 1.0.11
       snappyjs: 0.6.1
     optionalDependencies:
@@ -17699,7 +17700,7 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.4
 
-  fflate@0.7.4: {}
+  fflate@0.7.5: {}
 
   figures@6.1.0:
     dependencies:
