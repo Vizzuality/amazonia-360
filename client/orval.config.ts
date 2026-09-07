@@ -6,7 +6,7 @@ module.exports = {
       target: "./src/types/generated/api.ts",
       mock: false,
       clean: true,
-      prettier: true,
+      formatter: "prettier",
       override: {
         mutator: {
           path: "./src/services/api.ts",
