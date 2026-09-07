@@ -210,7 +210,6 @@
       "@mdxeditor/editor>@lexical/rich-text": "0.41.0",
       "@mdxeditor/editor>@lexical/selection": "0.41.0",
       "@mdxeditor/editor>@lexical/plain-text": "0.41.0",
-      "ajv>fast-uri": "3.1.5",
       "react-use>js-cookie": "3.0.8",
       "orval>js-yaml": "4.3.1",
       "@mdxeditor/editor>js-yaml": "4.3.1",
