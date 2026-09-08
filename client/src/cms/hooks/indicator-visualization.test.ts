@@ -119,7 +119,7 @@ describe("warnOnVisualizationMismatch", () => {
           query_chart: { where: "1=1" },
         },
       ],
-      legacy_id: 42,
+      id: "42",
     };
 
     const result = warnOnVisualizationMismatch({ req, data } as never);
@@ -141,7 +141,7 @@ describe("warnOnVisualizationMismatch", () => {
         name: "test-layer",
         url: "https://example.test/FeatureServer/",
       },
-      legacy_id: 5,
+      id: "5",
     };
 
     const result = warnOnVisualizationMismatch({ req, data } as never);
@@ -164,7 +164,7 @@ describe("warnOnVisualizationMismatch", () => {
         url: "https://example.test/FeatureServer/",
         query_numeric: { where: "1=1" },
       },
-      legacy_id: 10,
+      id: "10",
     };
 
     const result = warnOnVisualizationMismatch({ req, data } as never);
@@ -186,7 +186,7 @@ describe("warnOnVisualizationMismatch", () => {
     expect(result).toBe(data);
   });
 
-  test("uses legacy_id fallback when legacy_id is absent", () => {
+  test("uses id fallback when id is absent", () => {
     const warn = vi.fn();
     const req = { payload: { logger: { warn } } } as never;
     const data = {
@@ -217,7 +217,7 @@ describe("warnOnVisualizationMismatch", () => {
           url: "https://example.test/FeatureServer/",
         },
       ],
-      legacy_id: 99,
+      id: "99",
     };
 
     warnOnVisualizationMismatch({ req, data } as never);
@@ -243,7 +243,7 @@ describe("warnOnVisualizationMismatch", () => {
         name: "test-layer",
         url: "https://example.test/FeatureServer/",
       },
-      legacy_id: 7,
+      id: "7",
     };
 
     const result = warnOnVisualizationMismatch({ req, data } as never);

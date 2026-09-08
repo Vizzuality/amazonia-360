@@ -1,5 +1,7 @@
 import type { Access } from "payload";
 
+import { adminAccess } from "./admin";
+
 /**
  * Read access for the catalogue collections (Topics, Subtopics, Indicators).
  *
@@ -16,4 +18,11 @@ export const publishedOrAdminAccess: Access = ({ req: { user } }) => {
   if (user?.collection === "admins") return true;
 
   return { _status: { equals: "published" } };
+};
+
+export const catalogueAccess = {
+  read: publishedOrAdminAccess,
+  create: adminAccess,
+  update: adminAccess,
+  delete: adminAccess,
 };

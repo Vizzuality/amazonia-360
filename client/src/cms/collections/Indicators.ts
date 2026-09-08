@@ -1,28 +1,30 @@
 import type { CollectionConfig } from "payload";
 
+import { catalogueAccess } from "@/cms/access/catalogue";
 import { ResourceField } from "@/cms/fields/resource";
+import { sourceIdField } from "@/cms/fields/source-id";
+import { autoIncrementSourceId } from "@/cms/hooks/auto-increment-source-id";
 import { warnOnVisualizationMismatch } from "@/cms/hooks/indicator-visualization";
-
-import { catalogueAccess, legacyIdField } from "./Topics";
 
 export const Indicators: CollectionConfig = {
   slug: "indicators",
   admin: {
     group: "Catalogue",
     useAsTitle: "name",
-    defaultColumns: ["legacy_id", "name", "subtopic", "_status"],
+    defaultColumns: ["id", "name", "subtopic", "_status"],
   },
   access: catalogueAccess,
   versions: { drafts: true },
   fields: [
-    legacyIdField,
+    sourceIdField,
+    //TODO: Check why this separate order field is needed.
     {
       name: "order",
       type: "number",
       required: true,
       admin: {
         description:
-          "Display order within a subtopic. Not the same as legacy_id — they diverge on some rows.",
+          "Display order within a subtopic. Not the same as the Source ID — they diverge on some rows.",
       },
     },
     { name: "subtopic", type: "relationship", relationTo: "subtopics", required: true },
@@ -59,5 +61,6 @@ export const Indicators: CollectionConfig = {
   ],
   hooks: {
     beforeChange: [warnOnVisualizationMismatch],
+    beforeValidate: [autoIncrementSourceId],
   },
 };

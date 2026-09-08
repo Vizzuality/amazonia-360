@@ -68,7 +68,7 @@ export const warnOnVisualizationMismatch: CollectionBeforeChangeHook = ({ req, d
         : `has a query_${mismatch.type} but does not declare "${mismatch.type}"`;
 
     req.payload.logger.warn(
-      `Indicator ${data?.legacy_id ?? "(new)"} ${detail}. The widget may render empty.`,
+      `Indicator ${data?.id ?? "(new)"} ${detail}. The widget may render empty.`,
     );
   }
 

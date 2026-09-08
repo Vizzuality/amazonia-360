@@ -374,11 +374,10 @@ export interface Media {
  * via the `definition` "topics".
  */
 export interface Topic {
-  id: string;
   /**
-   * Numeric id from the original datum JSON. Referenced by existing reports rows and by the defaultTopics URL param. Never change it.
+   * Custom ID in order to match the original datum JSON. Referenced by existing reports and code. Cannot be changed.
    */
-  legacy_id: number;
+  id: string;
   name: string;
   /**
    * Markdown. Rendered with react-markdown.
@@ -424,13 +423,12 @@ export interface Topic {
  * via the `definition` "indicators".
  */
 export interface Indicator {
+  /**
+   * Custom ID in order to match the original datum JSON. Referenced by existing reports and code. Cannot be changed.
+   */
   id: string;
   /**
-   * Numeric id from the original datum JSON. Referenced by existing reports rows and by the defaultTopics URL param. Never change it.
-   */
-  legacy_id: number;
-  /**
-   * Display order within a subtopic. Not the same as legacy_id — they diverge on some rows.
+   * Display order within a subtopic. Not the same as the Source ID — they diverge on some rows.
    */
   order: number;
   subtopic: string | Subtopic;
@@ -648,11 +646,10 @@ export interface Indicator {
  * via the `definition` "subtopics".
  */
 export interface Subtopic {
-  id: string;
   /**
-   * Numeric id from the original datum JSON. Referenced by existing reports rows and by the defaultTopics URL param. Never change it.
+   * Custom ID in order to match the original datum JSON. Referenced by existing reports and code. Cannot be changed.
    */
-  legacy_id: number;
+  id: string;
   topic: string | Topic;
   /**
    * English only in the source data. ES and PT translations are seeded in phase 2; reads fall back to en until then.
@@ -1126,7 +1123,7 @@ export interface ReportsSelect<T extends boolean = true> {
  * via the `definition` "topics_select".
  */
 export interface TopicsSelect<T extends boolean = true> {
-  legacy_id?: T;
+  id?: T;
   name?: T;
   description?: T;
   image?: T;
@@ -1152,7 +1149,7 @@ export interface TopicsSelect<T extends boolean = true> {
  * via the `definition` "subtopics_select".
  */
 export interface SubtopicsSelect<T extends boolean = true> {
-  legacy_id?: T;
+  id?: T;
   topic?: T;
   name?: T;
   description?: T;
@@ -1178,7 +1175,7 @@ export interface SubtopicsSelect<T extends boolean = true> {
  * via the `definition` "indicators_select".
  */
 export interface IndicatorsSelect<T extends boolean = true> {
-  legacy_id?: T;
+  id?: T;
   order?: T;
   subtopic?: T;
   name?: T;
