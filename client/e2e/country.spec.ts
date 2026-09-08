@@ -18,13 +18,21 @@ test.describe("country switching", () => {
   test("swaps the segment and leaves the path and search params alone", async ({ page }) => {
     const selector = new CountrySelector(page);
 
-    await page.goto(`${countryPath()}/reports/grid?bbox=-70%2C-10%2C-60%2C0`);
+    // `bbox` belongs to the map, which fits the requested extent to the viewport and
+    // writes the result back — continuously, and down to fractions of a metre. `ref`
+    // stands in for the params the picker has to carry across verbatim.
+    await page.goto(`${countryPath()}/reports/grid?bbox=-70%2C-10%2C-60%2C0&ref=newsletter`);
     await dismissCookieConsent(page);
 
     await selector.expectActiveCountry(AMAZON_REGION);
     await selector.switchTo("ECU");
 
-    await expect(page).toHaveURL("/en/ECU/reports/grid?bbox=-70%2C-10%2C-60%2C0");
+    await expect.poll(() => new URL(page.url()).pathname).toBe("/en/ECU/reports/grid");
+
+    const params = new URL(page.url()).searchParams;
+    expect(params.get("ref")).toBe("newsletter");
+    expect(params.has("bbox")).toBe(true);
+
     await selector.expectActiveCountry("ECU");
   });
 
@@ -99,7 +107,8 @@ test.describe("country switching", () => {
     await selector.expectActiveCountry(AMAZON_REGION);
     await selector.switchTo("ECU");
 
-    await expect(page).toHaveURL("/es/ECU/reports/grid");
+    // The map appends its own `bbox` once the view settles, so pin the path only.
+    await expect.poll(() => new URL(page.url()).pathname).toBe("/es/ECU/reports/grid");
     await selector.expectActiveCountry("ECU");
   });
 });
