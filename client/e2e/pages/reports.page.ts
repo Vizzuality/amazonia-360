@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { type Locator, type Page, expect } from "@playwright/test";
 
-import { type Locale } from "../helpers/locale";
+import { AMAZON_REGION, type Locale, countryPath } from "../helpers/locale";
 
 /**
  * Sample ArcGIS JSON geometries in Web Mercator (WKID 102100) for the Amazon
@@ -120,8 +120,8 @@ export class ReportsPage {
     this.createButton = page.locator('button[type="submit"]');
   }
 
-  async goto() {
-    await this.page.goto(`/${this.locale}/reports`);
+  async goto(country: string = AMAZON_REGION) {
+    await this.page.goto(`${countryPath(this.locale, country)}/reports`);
   }
 
   async expectLoaded() {

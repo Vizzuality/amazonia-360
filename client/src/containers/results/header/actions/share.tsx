@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { LuCopy, LuFileText, LuShare2 } from "react-icons/lu";
 
 import { useCanEditReport } from "@/lib/report";
+import { reportShareUrl } from "@/lib/report-url";
 
 import { useReportFormChanged } from "@/app/(frontend)/store";
 
@@ -49,13 +50,7 @@ export const ShareAction = ({ reportId }: ReportResultsActionsProps) => {
   const CHANGED = useReportFormChanged();
   const CAN_EDIT = useCanEditReport(`${reportId}`);
 
-  const shareUrl = useMemo(() => {
-    if (typeof window !== "undefined") {
-      const baseUrl = window.location.origin;
-      return `${baseUrl}/${locale}/reports/${reportId}`;
-    }
-    return "";
-  }, [reportId, locale]);
+  const shareUrl = useMemo(() => reportShareUrl(locale, `${reportId}`), [reportId, locale]);
 
   const copyShareLink = useCallback(() => {
     if (!shareUrl) return;

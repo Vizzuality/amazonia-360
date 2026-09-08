@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
+import MobileCountrySelector from "@/containers/header/country-selector/mobile";
 import MobileLanguageSelector from "@/containers/header/language-selector/mobile";
 
 import {
@@ -26,12 +27,14 @@ export default function MobileNavigation() {
   const pathname = usePathname();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const menuLabel = t("header-menu-label");
 
   return (
     <Dialog key={pathname} open={isOpen}>
       <DialogTrigger asChild>
         <button
           type="button"
+          aria-label={menuLabel}
           onClick={() => setIsOpen(!isOpen)}
           className="fixed top-1/2 right-5 z-110 flex h-6 w-6 -translate-y-1/2 transform cursor-pointer flex-col flex-wrap justify-around"
         >
@@ -53,14 +56,14 @@ export default function MobileNavigation() {
         </button>
       </DialogTrigger>
 
-      <DialogDescription className="sr-only">AmazoniaForever360+ menu</DialogDescription>
+      <DialogDescription className="sr-only">{menuLabel}</DialogDescription>
 
       <DialogContent className="fixed top-0 left-0 z-100 h-full w-screen max-w-none translate-x-0! translate-y-0! border-none px-0 py-0 text-blue-600">
         <div>
           <DialogHeader className="flex h-16 w-full flex-col items-center bg-white text-center backdrop-blur-sm sm:text-left">
             <div className="flex h-full w-full flex-col justify-center bg-white backdrop-blur-sm">
               <div className="mx-4 flex items-center justify-between md:container md:mx-auto">
-                <DialogTitle className="sr-only">AmazoniaForever360+ menu</DialogTitle>
+                <DialogTitle className="sr-only">{menuLabel}</DialogTitle>
                 <Logo />
 
                 <button
@@ -115,6 +118,8 @@ export default function MobileNavigation() {
             >
               {t("header-hub")}
             </Link> */}
+
+            <MobileCountrySelector />
 
             <MobileLanguageSelector />
           </nav>

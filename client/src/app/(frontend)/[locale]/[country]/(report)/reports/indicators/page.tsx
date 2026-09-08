@@ -3,11 +3,11 @@ import { Metadata } from "next";
 import { Locale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 
-import ReportGrid from "@/containers/report/grid";
+import ReportIndicators from "@/containers/report/indicators";
 
 export async function generateMetadata({
   params,
-}: PageProps<"/[locale]/reports/grid">): Promise<Metadata> {
+}: PageProps<"/[locale]/[country]/reports/indicators">): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale: locale as Locale });
 
@@ -17,6 +17,8 @@ export async function generateMetadata({
   };
 }
 
-export default async function ReportPage(_props: PageProps<"/[locale]/reports/grid">) {
-  return <ReportGrid />;
+export default async function ReportPage(
+  _props: PageProps<"/[locale]/[country]/reports/indicators">,
+) {
+  return <ReportIndicators />;
 }

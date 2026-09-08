@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { notFound } from "next/navigation";
 
+import { Provider as JotaiProvider } from "jotai";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Toaster } from "sonner";
@@ -72,9 +73,14 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[lo
 
         <body className={`${montserrat.className} w-full overflow-x-hidden`}>
           <Toaster position="top-center" richColors />
-          <SidebarProvider>
-            <NextIntlClientProvider locale={locale}>{children}</NextIntlClientProvider>
-          </SidebarProvider>
+          {/* Must stay above `[country]`: React resets the state of every segment below a
+              dynamic param when that param changes, which would take the drawn geometry
+              with it on every module switch. `Header` clears the draft on the way out. */}
+          <JotaiProvider>
+            <SidebarProvider>
+              <NextIntlClientProvider locale={locale}>{children}</NextIntlClientProvider>
+            </SidebarProvider>
+          </JotaiProvider>
         </body>
       </html>
     </LayoutProviders>

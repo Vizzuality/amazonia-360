@@ -247,3 +247,26 @@ export const pdfIndicatorsMapStateAtom = atom<
     status: "loading" | "ready";
   }[]
 >([]);
+
+/** Resets everything a report draft is made of. `Header` calls it on the way out. */
+export const resetReportDraftAtom = atom(null, (_get, set) => {
+  set(locationAtom, null);
+  set(tmpBboxAtom, undefined);
+  set(sketchAtom, { enabled: undefined, type: undefined });
+  set(sketchActionAtom, {});
+  set(reportPanelAtom, "location");
+  set(reportEditionModeAtom, false);
+  set(indicatorsAtom, undefined);
+  set(indicatorsSettingsAtom, {});
+  set(indicatorsExpandAtom, {});
+  set(gridEnabledAtom, false);
+  set(gridPanelAtom, "filters");
+  set(gridDatasetContinousSettingsAtom, null);
+  set(gridDatasetCategoricalSettingsAtom, null);
+  set(gridDatasetsAtom, []);
+  set(gridSelectedDatasetAtom, null);
+  set(gridTableSettingsAtom, { limit: 10, opacity: 100, direction: "desc" });
+  set(gridCellHighlightAtom, { id: null, index: undefined });
+  set(gridSelectedFiltersViewAtom, false);
+  set(pdfIndicatorsMapStateAtom, []);
+});

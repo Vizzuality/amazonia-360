@@ -1,6 +1,6 @@
 import { type Locator, type Page, expect } from "@playwright/test";
 
-import { type Locale } from "../helpers/locale";
+import { type Locale, countryPath } from "../helpers/locale";
 
 const LABELS: Record<
   Locale,
@@ -102,7 +102,7 @@ export class ReportsIdPage {
   }
 
   async goto(reportId: string) {
-    await this.page.goto(`/${this.locale}/reports/${reportId}`);
+    await this.page.goto(`${countryPath(this.locale)}/reports/${reportId}`);
   }
 
   // ---------------------------------------------------------------------------

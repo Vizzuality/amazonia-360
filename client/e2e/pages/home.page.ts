@@ -1,6 +1,6 @@
 import { type Locator, type Page, expect } from "@playwright/test";
 
-import { type Locale } from "../helpers/locale";
+import { type Locale, countryPath } from "../helpers/locale";
 
 export class HomePage {
   readonly page: Page;
@@ -16,7 +16,7 @@ export class HomePage {
   }
 
   async goto(locale: Locale = "en") {
-    await this.page.goto(`/${locale}`);
+    await this.page.goto(countryPath(locale));
   }
 
   async expectLoaded() {

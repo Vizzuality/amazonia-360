@@ -21,7 +21,7 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
-}: PageProps<"/[locale]/reports/[id]">): Promise<Metadata> {
+}: PageProps<"/[locale]/[country]/reports/[id]">): Promise<Metadata> {
   const { id, locale } = await params;
 
   const t = await getTranslations({ locale: locale as Locale });
@@ -32,7 +32,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function ReportResultsPage({ params }: PageProps<"/[locale]/reports/[id]">) {
+export default async function ReportResultsPage({
+  params,
+}: PageProps<"/[locale]/[country]/reports/[id]">) {
   const queryClient = new QueryClient();
 
   const { id, locale } = await params;

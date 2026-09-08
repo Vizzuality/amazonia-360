@@ -6,6 +6,8 @@ import { useParams } from "next/navigation";
 
 import { useLocale, useTranslations } from "next-intl";
 
+import { reportShareUrl } from "@/lib/report-url";
+
 import { QRCode, QRCodeCanvas } from "@/components/ui/qr-code";
 
 export const QRCodeHelp = () => {
@@ -13,13 +15,7 @@ export const QRCodeHelp = () => {
   const { id } = useParams();
   const locale = useLocale();
 
-  const URL = useMemo(() => {
-    if (typeof window !== "undefined") {
-      const baseUrl = window.location.origin;
-      return `${baseUrl}/${locale}/reports/${id}`;
-    }
-    return "";
-  }, [id, locale]);
+  const URL = useMemo(() => reportShareUrl(locale, `${id}`), [id, locale]);
 
   return (
     <>

@@ -80,7 +80,7 @@ describe("ShareAction", () => {
     fireEvent.click(menuItem!);
 
     expect(
-      screen.getByText(`${window.location.origin}/en/reports/test-report-123`),
+      screen.getByText(`${window.location.origin}/en/~/reports/test-report-123`),
     ).toBeInTheDocument();
   });
 
@@ -99,7 +99,7 @@ describe("ShareAction", () => {
 
     await waitFor(() => {
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
-        `${window.location.origin}/en/reports/test-report-123`,
+        `${window.location.origin}/en/~/reports/test-report-123`,
       );
     });
   });
