@@ -17,7 +17,8 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:report": "playwright show-report e2e/playwright-report",
     "payload": "payload",
-    "ci": "payload migrate && pnpm build"
+    "ci": "payload migrate && pnpm build",
+    "seed:data": "payload run src/cms/seed/seed-data.ts"
   },
   "dependencies": {
     "@arcgis/core": "4.34.8",

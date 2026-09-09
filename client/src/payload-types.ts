@@ -468,7 +468,7 @@ export interface Indicator {
           fieldInfos?:
             | {
                 fieldName: string;
-                label: string;
+                label?: string | null;
                 id?: string | null;
               }[]
             | null;
@@ -546,7 +546,7 @@ export interface Indicator {
         legend: {
           type: 'basic';
           items: {
-            label: string;
+            label?: string | null;
             /**
              * Hex, e.g. #EEF0BA
              */
@@ -579,7 +579,7 @@ export interface Indicator {
         legend: {
           type: 'basic';
           items: {
-            label: string;
+            label?: string | null;
             /**
              * Hex, e.g. #EEF0BA
              */

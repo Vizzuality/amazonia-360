@@ -58,10 +58,12 @@ const blocksBySlug = new Map<string, Block>(RESOURCE_BLOCKS.map((block) => [bloc
  * this conformance check, not something the other three consumers of `find-field.ts` need.
  *
  * `namedFields`/`fieldNames` stay deliberately shallow (see their docstrings) — this reaches the
- * fields they cannot: `legend.type`, `legend.items`, `legend.items[].label`,
- * `legend.items[].color`, `popupTemplate.fieldInfos[].fieldName` and
- * `popupTemplate.fieldInfos[].label`. These are the schema's only *nested* `required`
- * constraints.
+ * fields they cannot: `legend.type`, `legend.items`, `legend.items[].color` and
+ * `popupTemplate.fieldInfos[].fieldName`. These are the schema's only *nested* `required`
+ * constraints. `legend.items[].label` and `popupTemplate.fieldInfos[].label` are deliberately NOT
+ * required: both are also `localized`, and no source row ever carries an es/pt translation for
+ * them — required+localized together means every write must supply every locale, which real data
+ * never satisfies (see resource.ts).
  *
  * Top-level (depth 0) required fields are intentionally NOT reported here — that's the "every
  * required block field is non-empty on every row of that type" test's job. `path` starts empty
