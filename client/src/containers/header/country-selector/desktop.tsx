@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import Image from "next/image";
 
 import { Check, ChevronDown, Globe } from "lucide-react";
@@ -13,6 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Link } from "@/i18n/navigation";
 
 import { ComingSoonBadge } from "./coming-soon";
+import { ModuleSwitchHandler, moduleSwitchHandler } from "./module-switch";
 import { CountryOption, useCountryOptions } from "./options";
 
 function CountryIcon({ option, size }: { option: CountryOption; size: number }) {
@@ -32,7 +35,13 @@ function CountryIcon({ option, size }: { option: CountryOption; size: number }) 
   );
 }
 
-function CountryRow({ option }: { option: CountryOption }) {
+function CountryRow({
+  option,
+  onSelect,
+}: {
+  option: CountryOption;
+  onSelect: ModuleSwitchHandler;
+}) {
   const body = (
     <>
       <CountryIcon option={option} size={24} />
@@ -58,6 +67,7 @@ function CountryRow({ option }: { option: CountryOption }) {
   return (
     <Link
       href={option.href}
+      onClick={onSelect}
       aria-current={option.active ? "page" : undefined}
       className={cn({
         "flex items-start gap-3 rounded-xs px-3 py-2.5 hover:bg-blue-50": true,
@@ -93,13 +103,17 @@ function Partnerships() {
 export default function CountrySelector() {
   const t = useTranslations();
   const options = useCountryOptions();
+  // Controlled because choosing a module does not navigate: nothing else would take the
+  // popover down, and it would sit open over the module you just chose.
+  const [open, setOpen] = useState(false);
+  const onSelect = moduleSwitchHandler(() => setOpen(false));
 
   if (!options) return null;
 
   const active = options.find((option) => option.active) ?? options[0];
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
           type="button"
@@ -118,7 +132,7 @@ export default function CountrySelector() {
         </p>
         <nav className="flex flex-col">
           {options.map((option) => (
-            <CountryRow key={option.segment} option={option} />
+            <CountryRow key={option.segment} option={option} onSelect={onSelect} />
           ))}
         </nav>
         <Partnerships />

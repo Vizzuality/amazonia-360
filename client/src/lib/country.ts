@@ -187,3 +187,17 @@ export function canonicalCountryPathname(
 
   return `/${[locale, AMAZON_REGION, ...rest].join("/")}`;
 }
+
+/**
+ * The country a locale-prefixed pathname carries, or the Amazon Region when it carries
+ * none. Reads the URL rather than the route param on purpose: the picker swaps the
+ * segment with `history.pushState`, which moves the URL without asking the server for a
+ * new tree, so the param stays behind at whatever the last real navigation resolved.
+ * The pathname is the only reading that is right after a switch, after a `popstate`, and
+ * after a full navigation alike.
+ */
+export function countryFromPathname(pathname: string, locales: readonly string[]): string {
+  const segments = segmentsOf(pathname);
+  const first = locales.includes(segments[0]) ? segments[1] : segments[0];
+  return isCountrySegment(first) ? first : AMAZON_REGION;
+}

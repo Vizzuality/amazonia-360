@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 
@@ -40,10 +40,22 @@ vi.mock("@/i18n/navigation", () => ({
   },
 }));
 
+let pushState: ReturnType<typeof vi.spyOn>;
+
 beforeEach(() => {
   mockPathname.mockReturnValue("/reports/grid");
   mockSearchParams.mockReturnValue(new URLSearchParams());
   mockCountry.mockReturnValue("~");
+
+  // The switch reads the current URL to tell "somewhere else" from "where you already
+  // are". Stubbed rather than spied through, so one test's push is not the next one's
+  // starting point.
+  window.history.replaceState(null, "", "/~/reports/grid");
+  pushState = vi.spyOn(window.history, "pushState").mockImplementation(() => {});
+});
+
+afterEach(() => {
+  pushState.mockRestore();
 });
 
 /** Opens the popover, which renders its rows in a portal only once open. */
@@ -93,6 +105,43 @@ describe("CountrySelector (desktop)", () => {
     expect(screen.queryByRole("link", { name: /country-module-SUR-name/ })).toBeNull();
   });
 
+  test("choosing a module swaps the URL instead of following the link", async () => {
+    await openPicker();
+
+    const row = screen.getByRole("link", { name: /country-module-ECU-name/ });
+    const followed = fireEvent.click(row);
+
+    expect(followed).toBe(false);
+    expect(pushState).toHaveBeenCalledWith(null, "", "/ECU/reports/grid");
+  });
+
+  test("choosing a module closes the picker", async () => {
+    await openPicker();
+
+    fireEvent.click(screen.getByRole("link", { name: /country-module-ECU-name/ }));
+
+    expect(screen.queryByRole("navigation")).toBeNull();
+  });
+
+  test("the module you are already in adds no history entry", async () => {
+    await openPicker();
+
+    fireEvent.click(screen.getByRole("link", { name: /country-module-amazon-region-name/ }));
+
+    expect(pushState).not.toHaveBeenCalled();
+    expect(screen.queryByRole("navigation")).toBeNull();
+  });
+
+  test("a cmd/ctrl-click is left to the browser", async () => {
+    await openPicker();
+
+    const row = screen.getByRole("link", { name: /country-module-ECU-name/ });
+
+    expect(fireEvent.click(row, { metaKey: true })).toBe(true);
+    expect(fireEvent.click(row, { ctrlKey: true })).toBe(true);
+    expect(pushState).not.toHaveBeenCalled();
+  });
+
   test("the partnerships control does not navigate", async () => {
     await openPicker();
 
@@ -103,7 +152,7 @@ describe("CountrySelector (desktop)", () => {
 
 describe("MobileCountrySelector", () => {
   test("offers the same modules as links", () => {
-    render(<MobileCountrySelector />);
+    render(<MobileCountrySelector onSelected={vi.fn()} />);
 
     expect(
       screen.getByRole("link", { name: /country-module-amazon-region-name/ }),
@@ -114,7 +163,7 @@ describe("MobileCountrySelector", () => {
 
   test("switching keeps the path and every search param", () => {
     mockSearchParams.mockReturnValue(new URLSearchParams({ bbox: "1,2,3,4" }));
-    render(<MobileCountrySelector />);
+    render(<MobileCountrySelector onSelected={vi.fn()} />);
 
     expect(screen.getByRole("link", { name: /country-module-ECU-name/ })).toHaveAttribute(
       "href",
@@ -126,9 +175,20 @@ describe("MobileCountrySelector", () => {
     );
   });
 
+  test("choosing a module swaps the URL and closes the menu", () => {
+    const onSelected = vi.fn();
+    render(<MobileCountrySelector onSelected={onSelected} />);
+
+    const followed = fireEvent.click(screen.getByRole("link", { name: /country-module-ECU-name/ }));
+
+    expect(followed).toBe(false);
+    expect(pushState).toHaveBeenCalledWith(null, "", "/ECU/reports/grid");
+    expect(onSelected).toHaveBeenCalled();
+  });
+
   test("offers nothing on a route that carries no module", () => {
     mockPathname.mockReturnValue("/private/my-reports");
-    const { container } = render(<MobileCountrySelector />);
+    const { container } = render(<MobileCountrySelector onSelected={vi.fn()} />);
 
     expect(container).toBeEmptyDOMElement();
   });

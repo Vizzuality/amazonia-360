@@ -119,7 +119,7 @@ export default function MobileNavigation() {
               {t("header-hub")}
             </Link> */}
 
-            <MobileCountrySelector />
+            <MobileCountrySelector onSelected={() => setIsOpen(false)} />
 
             <MobileLanguageSelector />
           </nav>

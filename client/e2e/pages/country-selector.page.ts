@@ -49,6 +49,24 @@ export class CountrySelector {
     await this.page.getByRole("link", { name: new RegExp(this.name(country)) }).click();
   }
 
+  /**
+   * Opens the picker and opens the row for `country` in a new tab, returning it. A click
+   * that means "somewhere else" has to keep working as a link, so it navigates for real.
+   */
+  async switchToInNewTab(country: string, how: "modifier" | "middle" = "modifier") {
+    await this.open();
+
+    const [opened] = await Promise.all([
+      this.page.context().waitForEvent("page"),
+      this.page
+        .getByRole("link", { name: new RegExp(this.name(country)) })
+        .click(how === "middle" ? { button: "middle" } : { modifiers: ["ControlOrMeta"] }),
+    ]);
+
+    await opened.waitForLoadState("domcontentloaded");
+    return opened;
+  }
+
   async expectActiveCountry(country: string) {
     await expect(this.trigger).toContainText(this.name(country));
   }

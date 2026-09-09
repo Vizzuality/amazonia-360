@@ -30,9 +30,11 @@ export type CountryOption = {
 
 /**
  * The rows the picker shows, in the order it shows them: the Amazon Region, then live
- * countries, then the ones still coming. Every row that can be entered is a real link to
- * the current path under a different country, so switching keeps the path and every
- * search param and leaves a history entry behind.
+ * countries, then the ones still coming. Every row that can be entered carries a real
+ * href for the current path under a different country — which is what a new tab and "copy
+ * link address" hand out, and where `module-switch.ts` reads the path to push. A module
+ * that is not yet available gets no href at all, which is what keeps it out of reach from
+ * the client.
  *
  * `null` on routes that carry no country — there is nothing to show and nothing to
  * switch, which is why the selection is lost on a round trip through them.

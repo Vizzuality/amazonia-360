@@ -5,6 +5,7 @@ import { test, expect } from "./fixtures";
 import { mockArcGISFeatureServer } from "./helpers/arcgis-mock";
 import { dismissCookieConsent } from "./helpers/cookie-consent";
 import { AMAZON_REGION, countryPath } from "./helpers/locale";
+import { expectNodeKept, markNode } from "./helpers/node-identity";
 import { CountrySelector } from "./pages/country-selector.page";
 import { HomePage } from "./pages/home.page";
 import { ReportsPage } from "./pages/reports.page";
@@ -47,6 +48,103 @@ test.describe("country switching", () => {
 
     await page.goBack();
     await expect(page).toHaveURL(/\/en\/~\/reports\/grid/);
+    await selector.expectActiveCountry(AMAZON_REGION);
+  });
+
+  test("the home page is not rebuilt", async ({ page }) => {
+    const homePage = new HomePage(page);
+    const selector = new CountrySelector(page);
+
+    await homePage.goto();
+    await homePage.expectLoaded();
+    await dismissCookieConsent(page);
+
+    await markNode(page, "main");
+    await selector.switchTo("ECU");
+
+    await expect.poll(() => new URL(page.url()).pathname).toBe("/en/ECU");
+    // A navigation would remount `main`, replaying every scroll animation on the way.
+    await expectNodeKept(page, "main");
+    await selector.expectActiveCountry("ECU");
+  });
+
+  test("the report map is not touched", async ({ page }) => {
+    const reportsPage = new ReportsPage(page);
+    const selector = new CountrySelector(page);
+
+    await reportsPage.goto();
+    await reportsPage.expectLoaded();
+    await dismissCookieConsent(page);
+
+    await markNode(page, ".esri-view");
+    await selector.switchTo("ECU");
+
+    await expect(page).toHaveURL(/\/en\/ECU\/reports/);
+    await expectNodeKept(page, ".esri-view");
+  });
+
+  test("in-app links point at the new country straight away", async ({ page }) => {
+    const homePage = new HomePage(page);
+    const selector = new CountrySelector(page);
+
+    await homePage.goto();
+    await homePage.expectLoaded();
+    await dismissCookieConsent(page);
+
+    await selector.switchTo("ECU");
+
+    await expect(homePage.reportToolLink).toHaveAttribute("href", "/en/ECU/reports");
+  });
+
+  for (const how of ["modifier", "middle"] as const) {
+    test(`a ${how === "middle" ? "middle click" : "cmd/ctrl-click"} opens the country in a new tab`, async ({
+      page,
+    }) => {
+      const selector = new CountrySelector(page);
+
+      await page.goto(`${countryPath()}/reports/grid`);
+      await dismissCookieConsent(page);
+
+      const opened = await selector.switchToInNewTab("ECU", how);
+
+      await expect(opened).toHaveURL(/\/en\/ECU\/reports\/grid/);
+      // The tab you were on is untouched: this is not a switch.
+      await expect(page).toHaveURL(/\/en\/~\/reports\/grid/);
+      await selector.expectActiveCountry(AMAZON_REGION);
+    });
+  }
+
+  test("a real navigation after a switch lands on the new country", async ({ page }) => {
+    const homePage = new HomePage(page);
+    const selector = new CountrySelector(page);
+
+    await homePage.goto();
+    await homePage.expectLoaded();
+    await dismissCookieConsent(page);
+
+    await selector.switchTo("ECU");
+
+    // The router's own tree still names the module the last real navigation resolved, so
+    // the next navigation has to be driven by the URL rather than by that tree.
+    await homePage.reportToolLink.click();
+
+    await expect.poll(() => new URL(page.url()).pathname).toBe("/en/ECU/reports");
+    await selector.expectActiveCountry("ECU");
+  });
+
+  test("a reload after a switch stays in the new country", async ({ page }) => {
+    const selector = new CountrySelector(page);
+
+    await page.goto(`${countryPath()}/reports/grid`);
+    await dismissCookieConsent(page);
+
+    await selector.switchTo("ECU");
+    await expect.poll(() => new URL(page.url()).pathname).toBe("/en/ECU/reports/grid");
+
+    await page.reload();
+
+    await expect.poll(() => new URL(page.url()).pathname).toBe("/en/ECU/reports/grid");
+    await selector.expectActiveCountry("ECU");
   });
 
   test("a drawn area survives the switch", async ({ page }) => {
@@ -183,5 +281,8 @@ test.describe("country switching on mobile", () => {
 
     await selector.mobileLink("ECU").click();
     await expect(page).toHaveURL(/\/en\/ECU\/reports\/grid/);
+
+    // Nothing unmounts the dialog any more, so the picker has to close it itself.
+    await expect(page.getByRole("dialog")).toBeHidden();
   });
 });

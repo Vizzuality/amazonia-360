@@ -7,15 +7,20 @@ import { cn } from "@/lib/utils";
 import { Link } from "@/i18n/navigation";
 
 import { ComingSoonBadge } from "./coming-soon";
+import { moduleSwitchHandler } from "./module-switch";
 import { useCountryOptions } from "./options";
 
 /**
  * The choice inside the hamburger dialog, as a plain list of links — the same shape the
  * language selector already uses there. No popover below `md`.
+ *
+ * `onSelected` closes the menu: choosing a module does not navigate, so nothing remounts
+ * the dialog out from under the choice.
  */
-const MobileCountrySelector = () => {
+const MobileCountrySelector = ({ onSelected }: { onSelected: () => void }) => {
   const t = useTranslations();
   const options = useCountryOptions();
+  const onSelect = moduleSwitchHandler(onSelected);
 
   if (!options) return null;
 
@@ -30,6 +35,7 @@ const MobileCountrySelector = () => {
           <Link
             key={option.segment}
             href={option.href}
+            onClick={onSelect}
             aria-current={option.active ? "page" : undefined}
             className={cn({
               "px-6 py-4 text-lg text-blue-900 hover:bg-blue-200 hover:text-blue-500": true,
