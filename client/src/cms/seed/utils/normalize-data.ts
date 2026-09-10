@@ -5,23 +5,15 @@ import type {
   MappedPopupTemplate,
   MappedResourceBlock,
   MappedVisualizationEntry,
-  RawPopupTemplate,
   RawResource,
   RawVisualizationEntry,
 } from "./types";
 
-export const localizeValue = (en: string, es: string, pt: string): LocalizedValue => ({
-  en,
-  ...(isEmptyValue(es) ? {} : { es }),
-  ...(isEmptyValue(pt) ? {} : { pt }),
-});
-
-const emptyToUndefined = <T>(value: T): T | undefined => (isEmptyValue(value) ? undefined : value);
-
-const mapPopupTemplate = (raw: RawResource["popupTemplate"]): MappedPopupTemplate | undefined => {
-  if (isEmptyValue(raw)) return undefined;
-  const { title, content } = raw as RawPopupTemplate;
-  return { title, fieldInfos: content?.[0]?.fieldInfos ?? [] };
+export const localizeValue = (en: string, es: string, pt: string): LocalizedValue => {
+  const value: LocalizedValue = { en };
+  if (!isEmptyValue(es)) value.es = es;
+  if (!isEmptyValue(pt)) value.pt = pt;
+  return value;
 };
 
 export const mapResource = (raw: RawResource): MappedResourceBlock => {
@@ -67,14 +59,28 @@ export const mapDefaultVisualization = (
   entries: RawVisualizationEntry[],
   validIndicatorIds: Set<string>,
 ): { mapped: MappedVisualizationEntry[]; droppedIndicatorIds: number[] } => {
+  const mapped: MappedVisualizationEntry[] = [];
   const droppedIndicatorIds: number[] = [];
-  const mapped = entries.flatMap((entry) => {
+
+  for (const entry of entries) {
     const indicator = String(entry.indicator_id);
     if (!validIndicatorIds.has(indicator)) {
       droppedIndicatorIds.push(entry.indicator_id);
-      return [];
+      continue;
     }
-    return [{ indicator, type: entry.type, x: entry.x, y: entry.y, w: entry.w, h: entry.h }];
-  });
+    mapped.push({ indicator, type: entry.type, x: entry.x, y: entry.y, w: entry.w, h: entry.h });
+  }
+
   return { mapped, droppedIndicatorIds };
 };
+
+// ---------- HELPERS ----------
+
+const mapPopupTemplate = (raw: RawResource["popupTemplate"]): MappedPopupTemplate | undefined => {
+  if (raw === "") return undefined;
+
+  const fieldInfos = raw.content?.[0]?.fieldInfos ?? [];
+  return { title: raw.title, fieldInfos };
+};
+
+const emptyToUndefined = <T>(value: T): T | undefined => (isEmptyValue(value) ? undefined : value);

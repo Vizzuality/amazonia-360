@@ -17,7 +17,6 @@ export const Indicators: CollectionConfig = {
   versions: { drafts: true },
   fields: [
     sourceIdField,
-    //TODO: Check why this separate order field is needed.
     {
       name: "order",
       type: "number",
