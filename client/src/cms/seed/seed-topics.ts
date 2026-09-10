@@ -6,10 +6,10 @@ import { localizeValue } from "./utils/normalize-data";
 import { updateLocales } from "./utils/seed-helpers";
 import type { RawTopic } from "./utils/types";
 
-export const seedTopics = async (payload: Payload, rawTopics: RawTopic[]): Promise<void> => {
+export const seedTopics = async (payload: Payload, topics: RawTopic[]): Promise<void> => {
   const seenIds = new Set<number>();
 
-  for (const raw of rawTopics) {
+  for (const raw of topics) {
     if (seenIds.has(raw.id)) {
       payload.logger.warn(`topics: duplicate id ${raw.id}, skipped`);
       continue;
@@ -20,16 +20,24 @@ export const seedTopics = async (payload: Payload, rawTopics: RawTopic[]): Promi
     const name = localizeValue(raw.name_en, raw.name_es, raw.name_pt);
     const description = localizeValue(raw.description_en, raw.description_es, raw.description_pt);
 
-    await payload.create({
+    const data = {
+      name: name.en,
+      ...(isEmptyValue(description.en) ? {} : { description: description.en }),
+      ...(isEmptyValue(raw.image) ? {} : { image: raw.image }),
+      _status: "published" as const,
+    };
+
+    const existing = await payload.findByID({
       collection: "topics",
-      data: {
-        id,
-        name: name.en,
-        ...(isEmptyValue(description.en) ? {} : { description: description.en }),
-        ...(isEmptyValue(raw.image) ? {} : { image: raw.image }),
-        _status: "published",
-      },
+      id,
+      disableErrors: true,
+      select: {},
     });
+    if (existing) {
+      await payload.update({ collection: "topics", id, data });
+    } else {
+      await payload.create({ collection: "topics", data: { id, ...data } });
+    }
 
     await updateLocales(payload, "topics", id, { name, description });
   }

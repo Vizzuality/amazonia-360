@@ -46,9 +46,9 @@ const patchDefaultVisualizations = async <
 
 export const seedDefaultVisualizations = async (
   payload: Payload,
-  rawTopics: RawTopic[],
-  rawSubtopics: RawSubtopic[],
+  topics: RawTopic[],
+  subtopics: RawSubtopic[],
 ): Promise<void> => {
-  await patchDefaultVisualizations(payload, "topics", rawTopics);
-  await patchDefaultVisualizations(payload, "subtopics", rawSubtopics);
+  await patchDefaultVisualizations(payload, "topics", topics);
+  await patchDefaultVisualizations(payload, "subtopics", subtopics);
 };

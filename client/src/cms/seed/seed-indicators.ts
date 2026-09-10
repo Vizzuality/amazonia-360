@@ -8,11 +8,11 @@ import type { RawIndicator } from "./utils/types";
 
 export const seedIndicators = async (
   payload: Payload,
-  rawIndicators: RawIndicator[],
+  indicators: RawIndicator[],
 ): Promise<void> => {
   const seenIds = new Set<number>();
 
-  for (const raw of rawIndicators) {
+  for (const raw of indicators) {
     if (seenIds.has(raw.id)) {
       payload.logger.warn(`indicators: duplicate id ${raw.id}, skipped`);
       continue;
@@ -43,21 +43,29 @@ export const seedIndicators = async (
     );
     const description = localizeValue(raw.description_en, raw.description_es, raw.description_pt);
 
-    await payload.create({
+    const data = {
+      order: raw.order,
+      subtopic,
+      name: name.en,
+      ...(isEmptyValue(unit.en) ? {} : { unit: unit.en }),
+      description_short: descriptionShort.en,
+      ...(isEmptyValue(description.en) ? {} : { description: description.en }),
+      visualization_types: raw.visualization_types,
+      resource: [mapResource(raw.resource)],
+      _status: "published" as const,
+    };
+
+    const existing = await payload.findByID({
       collection: "indicators",
-      data: {
-        id,
-        order: raw.order,
-        subtopic,
-        name: name.en,
-        ...(isEmptyValue(unit.en) ? {} : { unit: unit.en }),
-        description_short: descriptionShort.en,
-        ...(isEmptyValue(description.en) ? {} : { description: description.en }),
-        visualization_types: raw.visualization_types,
-        resource: [mapResource(raw.resource)],
-        _status: "published",
-      },
+      id,
+      disableErrors: true,
+      select: {},
     });
+    if (existing) {
+      await payload.update({ collection: "indicators", id, data });
+    } else {
+      await payload.create({ collection: "indicators", data: { id, ...data } });
+    }
 
     await updateLocales(payload, "indicators", id, {
       name,
