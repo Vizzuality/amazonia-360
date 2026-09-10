@@ -40,14 +40,14 @@ describe("Indicators", () => {
     expect(Indicators.access?.update?.(admin)).toBe(true);
   });
 
-  test("keeps legacy_id required, unique and immutable", () => {
-    const legacyId = findFieldByName(Indicators.fields, "legacy_id");
+  test("keeps id (the Content Code) required, read-only and immutable", () => {
+    const id = findFieldByName(Indicators.fields, "id");
 
-    expect(legacyId).toMatchObject({ type: "number", required: true, unique: true, index: true });
-    expect(legacyId?.access?.update?.({} as never)).toBe(false);
+    expect(id).toMatchObject({ type: "text", required: true, admin: { readOnly: true } });
+    expect(id?.access?.update?.({} as never)).toBe(false);
   });
 
-  test("keeps order separate from legacy_id, since they diverge in the source data", () => {
+  test("keeps order separate from id, since they diverge in the source data", () => {
     expect(findFieldByName(Indicators.fields, "order")).toMatchObject({
       type: "number",
       required: true,

@@ -59,7 +59,7 @@ const legendField: Field = {
       required: true,
       minRows: 1,
       fields: [
-        { name: "label", type: "text", required: true, localized: true },
+        { name: "label", type: "text", localized: true },
         {
           name: "color",
           type: "text",
@@ -97,7 +97,7 @@ export const FeatureResourceBlock: Block = {
           type: "array",
           fields: [
             { name: "fieldName", type: "text", required: true },
-            { name: "label", type: "text", required: true, localized: true },
+            { name: "label", type: "text", localized: true },
           ],
         },
       ],

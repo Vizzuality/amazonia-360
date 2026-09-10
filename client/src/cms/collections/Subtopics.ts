@@ -1,20 +1,24 @@
 import type { CollectionConfig } from "payload";
 
+import { catalogueAccess } from "@/cms/access/catalogue";
 import { DefaultVisualizationField } from "@/cms/fields/default-visualization";
-
-import { catalogueAccess, legacyIdField } from "./Topics";
+import { sourceIdField } from "@/cms/fields/source-id";
+import { autoIncrementSourceId } from "@/cms/hooks/auto-increment-source-id";
 
 export const Subtopics: CollectionConfig = {
   slug: "subtopics",
   admin: {
     group: "Catalogue",
     useAsTitle: "name",
-    defaultColumns: ["legacy_id", "name", "topic", "_status"],
+    defaultColumns: ["id", "name", "topic", "_status"],
   },
   access: catalogueAccess,
   versions: { drafts: true },
+  hooks: {
+    beforeValidate: [autoIncrementSourceId],
+  },
   fields: [
-    legacyIdField,
+    sourceIdField,
     { name: "topic", type: "relationship", relationTo: "topics", required: true },
     {
       name: "name",

@@ -65,15 +65,15 @@ describe.each([
     expect(collection.admin?.useAsTitle).toBe("name");
   });
 
-  test("keeps legacy_id required, unique and immutable", () => {
-    const legacyId = findFieldByName(collection.fields, "legacy_id");
+  test("keeps id (the Content Code) required, read-only and immutable", () => {
+    const id = findFieldByName(collection.fields, "id");
 
-    expect(legacyId?.type).toBe("number");
-    expect(legacyId).toMatchObject({ required: true, unique: true, index: true });
-    expect(legacyId?.access?.update?.({} as never)).toBe(false);
+    expect(id?.type).toBe("text");
+    expect(id).toMatchObject({ required: true, admin: { readOnly: true } });
+    expect(id?.access?.update?.({} as never)).toBe(false);
   });
 
-  test("every legacy_id in the source data is a unique number", () => {
+  test("every id in the source data is a unique number", () => {
     const ids = rows.map((row) => row.id);
 
     expect(new Set(ids).size).toBe(ids.length);
