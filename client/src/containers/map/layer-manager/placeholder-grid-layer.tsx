@@ -74,7 +74,11 @@ export const getPlaceholderGridLayerProps = ({
   zoom?: number;
 }) => {
   const polygon = geometry ? geometry.rings[0] : DEFAULT_POLYGON;
-  const res = geometry ? 5 : Math.min(4, Math.floor(zoom || 4));
+  // ArcGIS reports the zoom as -1 until the view resolves a LOD, and h3 throws on a
+  // negative resolution — hard enough to take the page down through the error boundary.
+  // An unknown zoom means "use the default", not "zoomed all the way out".
+  const zoomRes = typeof zoom === "number" && zoom >= 0 ? Math.floor(zoom) : 4;
+  const res = geometry ? 5 : Math.min(4, zoomRes);
   const cells = polygonToCells(
     polygon.map((p) => p.toReversed()),
     res,

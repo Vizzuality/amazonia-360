@@ -10,6 +10,8 @@ import { Share2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { LuCopy } from "react-icons/lu";
 
+import { reportShareUrl } from "@/lib/report-url";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,13 +30,7 @@ export default function ShareReport() {
 
   const [shareLinkBtnText, setShareLinkBtnText] = useState<"copy" | "copied">("copy");
 
-  const URL = useMemo(() => {
-    if (typeof window !== "undefined") {
-      const baseUrl = window.location.origin;
-      return `${baseUrl}/${locale}/reports/${id}`;
-    }
-    return "";
-  }, [id, locale]);
+  const URL = useMemo(() => reportShareUrl(locale, `${id}`), [id, locale]);
 
   const copyShareLink = useCallback(() => {
     if (!URL) return;

@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 
 import { useTranslations } from "next-intl";
 
-import { verifyEmailAction } from "@/app/(frontend)/[locale]/(app)/auth/verify-email/actions";
+import { verifyEmailAction } from "@/app/(frontend)/[locale]/auth/verify-email/actions";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

@@ -11,9 +11,14 @@ import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
-import { reportEditionModeAtom, useSyncLocation } from "@/app/(frontend)/store";
+import {
+  reportEditionModeAtom,
+  resetReportDraftAtom,
+  useSyncLocation,
+} from "@/app/(frontend)/store";
 
 import AuthHeader from "@/containers/header/auth/desktop";
+import CountrySelector from "@/containers/header/country-selector/desktop";
 import LanguageSelector from "@/containers/header/language-selector/desktop";
 import { Media } from "@/containers/media";
 
@@ -51,12 +56,14 @@ export default function Header() {
 
   const [location] = useSyncLocation();
   const setEditionMode = useSetAtom(reportEditionModeAtom);
+  const resetReportDraft = useSetAtom(resetReportDraftAtom);
 
   const { setOpen } = useSidebar();
 
-  const DYNAMIC_HEADER = useMemo(() => {
-    const { isHome, isReportSub } = getRoutes(pathname, params);
+  const { isHome, isReportRoot, isReportSub } = getRoutes(pathname, params);
+  const isBuildingReport = isReportRoot || isReportSub;
 
+  const DYNAMIC_HEADER = useMemo(() => {
     return (
       <>
         {isHome && (
@@ -71,7 +78,7 @@ export default function Header() {
         {isReportSub && <Separator className="bg-border h-4 w-px" />}
       </>
     );
-  }, [pathname, params, location, t]);
+  }, [isHome, isReportSub, location, t]);
 
   useEffect(() => {
     // Hide sidebar when navigating away from report
@@ -81,6 +88,14 @@ export default function Header() {
       setEditionMode(false);
     }
   }, [params.id, pathname, setOpen, setEditionMode]);
+
+  useEffect(() => {
+    // The store sits above `[country]`, so it outlives the report-building flow that the
+    // per-route-group providers used to bound.
+    if (!isBuildingReport) {
+      resetReportDraft();
+    }
+  }, [isBuildingReport, resetReportDraft]);
 
   return (
     <header
@@ -96,6 +111,7 @@ export default function Header() {
           {DYNAMIC_HEADER}
 
           <div className="flex items-center space-x-1">
+            <CountrySelector />
             <LanguageSelector />
             <AuthHeader />
           </div>

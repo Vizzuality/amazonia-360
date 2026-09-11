@@ -62,10 +62,14 @@ export default async function PrivateLayout({
   if (!session) {
     const headersList = await headers();
     const currentUrl = headersList.get("x-current-path") || "";
+    // `redirectUrl` is handed back to the router, which prefixes the locale itself and
+    // reads the first segment to decide whether the path is country-scoped. A leading
+    // locale would defeat both.
+    const returnTo = currentUrl.replace(new RegExp(`^/${locale}(?=/|$)`), "");
 
     redirect({
       locale,
-      href: `/auth/sign-in?redirectUrl=${encodeURIComponent(currentUrl)}`,
+      href: `/auth/sign-in?redirectUrl=${encodeURIComponent(returnTo)}`,
     });
   }
 

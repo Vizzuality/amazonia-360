@@ -6,6 +6,8 @@ import createMiddleware from "next-intl/middleware";
 
 import { env } from "@/env.mjs";
 
+import { canonicalCountryPathname } from "@/lib/country";
+
 import { routing } from "@/i18n/routing";
 
 const intlMiddleware = createMiddleware(routing);
@@ -40,6 +42,15 @@ export default async function proxy(req: NextRequest) {
 
   if (isAdminPath(pathname)) {
     return NextResponse.next({ request: { headers: requestHeaders } });
+  }
+
+  // 307, not 308: report URL semantics may change once reports gain a country of their
+  // own, and a permanently-cached redirect cannot be withdrawn from users' browsers.
+  const canonical = canonicalCountryPathname(pathname, routing.locales);
+  if (canonical && canonical !== pathname) {
+    const url = req.nextUrl.clone();
+    url.pathname = canonical;
+    return NextResponse.redirect(url, 307);
   }
 
   const response = intlMiddleware(req);

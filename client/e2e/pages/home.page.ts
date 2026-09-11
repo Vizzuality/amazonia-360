@@ -1,22 +1,25 @@
 import { type Locator, type Page, expect } from "@playwright/test";
 
-import { type Locale } from "../helpers/locale";
+import { type Locale, countryPath } from "../helpers/locale";
 
 export class HomePage {
   readonly page: Page;
   readonly heroHeading: Locator;
   readonly accessToolButton: Locator;
   readonly videoButton: Locator;
+  /** The header's shortcut into the report flow, shown on the home page only. */
+  readonly reportToolLink: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.heroHeading = page.locator("h2").first();
     this.accessToolButton = page.getByRole("link", { name: /access the tool|acceder|acessar/i });
     this.videoButton = page.getByRole("button", { name: /video|vídeo/i });
+    this.reportToolLink = page.locator('header a[href$="/reports"]').first();
   }
 
   async goto(locale: Locale = "en") {
-    await this.page.goto(`/${locale}`);
+    await this.page.goto(countryPath(locale));
   }
 
   async expectLoaded() {

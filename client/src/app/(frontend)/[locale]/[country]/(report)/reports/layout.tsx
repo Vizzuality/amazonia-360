@@ -1,0 +1,33 @@
+import { Suspense } from "react";
+
+import { countryStaticParams } from "@/lib/country";
+
+import Header from "@/containers/header";
+import FeedbackButton from "@/containers/report/feedback";
+import ReportMap from "@/containers/report/map";
+import ThirdParty from "@/containers/third-party";
+
+import E2EBridge from "@/components/e2e-bridge";
+
+import { routing } from "@/i18n/routing";
+
+export function generateStaticParams() {
+  return countryStaticParams(routing.locales);
+}
+
+export default async function ReportNewLayout({
+  children,
+}: LayoutProps<"/[locale]/[country]/reports">) {
+  return (
+    <Suspense fallback={null}>
+      <Header />
+      <FeedbackButton />
+      <main className="relative flex min-h-[calc(100svh-calc(var(--spacing)*16))] flex-col">
+        {children}
+        <ReportMap />
+      </main>
+      <ThirdParty />
+      {process.env.NEXT_PUBLIC_E2E_BRIDGE === "true" && <E2EBridge />}
+    </Suspense>
+  );
+}

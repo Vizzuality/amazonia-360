@@ -4,9 +4,10 @@ import { Metadata } from "next";
 
 import { notFound } from "next/navigation";
 
-import { Provider as JotaiProvider } from "jotai";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+
+import { countryStaticParams } from "@/lib/country";
 
 import Header from "@/containers/header";
 import ThirdParty from "@/containers/third-party";
@@ -14,12 +15,12 @@ import ThirdParty from "@/containers/third-party";
 import { routing } from "@/i18n/routing";
 
 export function generateStaticParams() {
-  return routing.locales.map((locale) => ({
-    locale,
-  }));
+  return countryStaticParams(routing.locales);
 }
 
-export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: LayoutProps<"/[locale]/[country]">): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     return {};
@@ -46,7 +47,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Pr
   };
 }
 
-export default async function AppLayout({ children, params }: LayoutProps<"/[locale]">) {
+export default async function AppLayout({ children, params }: LayoutProps<"/[locale]/[country]">) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     notFound();
@@ -56,12 +57,10 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
   setRequestLocale(locale);
 
   return (
-    <JotaiProvider>
-      <Suspense fallback={null}>
-        <Header />
-        {children}
-        <ThirdParty />
-      </Suspense>
-    </JotaiProvider>
+    <Suspense fallback={null}>
+      <Header />
+      {children}
+      <ThirdParty />
+    </Suspense>
   );
 }

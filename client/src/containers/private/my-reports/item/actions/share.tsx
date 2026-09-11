@@ -5,6 +5,8 @@ import { useCallback, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { LuCopy, LuShare2 } from "react-icons/lu";
 
+import { reportShareUrl } from "@/lib/report-url";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,13 +25,7 @@ export const ShareAction = ({ report }: ReportActionsProps) => {
   const [open, setOpen] = useState(false);
   const [shareLinkBtnText, setShareLinkBtnText] = useState<"copy" | "copied">("copy");
 
-  const URL = useMemo(() => {
-    if (typeof window !== "undefined") {
-      const baseUrl = window.location.origin;
-      return `${baseUrl}/${locale}/reports/${report.id}`;
-    }
-    return "";
-  }, [report.id, locale]);
+  const URL = useMemo(() => reportShareUrl(locale, report.id), [report.id, locale]);
 
   const copyShareLink = useCallback(() => {
     if (!URL) return;

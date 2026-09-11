@@ -7,7 +7,7 @@ import ReportLocation from "@/containers/report/location";
 
 export async function generateMetadata({
   params,
-}: PageProps<"/[locale]/reports">): Promise<Metadata> {
+}: PageProps<"/[locale]/[country]/reports">): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale: locale as Locale });
 
@@ -17,6 +17,6 @@ export async function generateMetadata({
   };
 }
 
-export default async function ReportPage(_props: PageProps<"/[locale]/reports">) {
+export default async function ReportPage(_props: PageProps<"/[locale]/[country]/reports">) {
   return <ReportLocation />;
 }
