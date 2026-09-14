@@ -17,7 +17,7 @@ import { LocaleLink } from "@/i18n/navigation";
 import { ComingSoonBadge } from "./coming-soon";
 import { CountryOption, useCountryOptions } from "./options";
 
-function CountryIcon({ option, size }: { option: CountryOption; size: number }) {
+function CountryIcon({ option, size }: Readonly<{ option: CountryOption; size: number }>) {
   if (!option.flagSrc) {
     return <Globe className="shrink-0 text-blue-500" style={{ width: size, height: size }} />;
   }
@@ -34,7 +34,10 @@ function CountryIcon({ option, size }: { option: CountryOption; size: number }) 
   );
 }
 
-function CountryRow({ option, onSelect }: { option: CountryOption; onSelect: () => void }) {
+function CountryRow({
+  option,
+  onSelect,
+}: Readonly<{ option: CountryOption; onSelect: () => void }>) {
   const body = (
     <>
       <CountryIcon option={option} size={24} />
