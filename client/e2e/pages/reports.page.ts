@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { type Locator, type Page, expect } from "@playwright/test";
 
-import { type Locale } from "../helpers/locale";
+import { type Locale, countryPath } from "../helpers/locale";
 
 /**
  * Sample ArcGIS JSON geometries in Web Mercator (WKID 102100) for the Amazon
@@ -101,6 +101,9 @@ export class ReportsPage {
   readonly createReportButton: Locator;
   readonly selectAllButton: Locator;
   readonly createButton: Locator;
+  readonly gridCard: Locator;
+  readonly indicatorsCard: Locator;
+  readonly backToReports: Locator;
 
   constructor(page: Page, locale: Locale = "en") {
     this.page = page;
@@ -118,10 +121,17 @@ export class ReportsPage {
     this.createReportButton = page.getByRole("button", { name: l.createReport });
     this.selectAllButton = page.getByRole("button", { name: l.selectAll });
     this.createButton = page.locator('button[type="submit"]');
+    this.gridCard = page.locator('a[href$="/reports/grid"], a[href*="/reports/grid?"]').first();
+    this.indicatorsCard = page
+      .locator('main a[href$="/reports/indicators"], main a[href*="/reports/indicators?"]')
+      .first();
+    this.backToReports = page
+      .locator('main a[href$="/reports"], main a[href*="/reports?"]')
+      .first();
   }
 
-  async goto() {
-    await this.page.goto(`/${this.locale}/reports`);
+  async goto(country?: string) {
+    await this.page.goto(`${countryPath(this.locale, country)}/reports`);
   }
 
   async expectLoaded() {
