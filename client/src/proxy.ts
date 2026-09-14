@@ -6,6 +6,8 @@ import createMiddleware from "next-intl/middleware";
 
 import { env } from "@/env.mjs";
 
+import { canonicalCountryPathname, routedPathname } from "@/lib/country";
+
 import { routing } from "@/i18n/routing";
 
 const intlMiddleware = createMiddleware(routing);
@@ -42,7 +44,34 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.next({ request: { headers: requestHeaders } });
   }
 
+  // A lowercase country code is what a person types; the data speaks uppercase. 307 and
+  // not 308: report URL semantics may change once reports gain a country of their own,
+  // and a permanently-cached redirect cannot be withdrawn from users' browsers.
+  const canonical = canonicalCountryPathname(pathname, routing.locales);
+  if (canonical && canonical !== pathname) {
+    const url = req.nextUrl.clone();
+    url.pathname = canonical;
+    return NextResponse.redirect(url, 307);
+  }
+
   const response = intlMiddleware(req);
+
+  // The country module is stripped before Next routes the request, so the route tree
+  // never contains it and no navigation crosses a module boundary. Reading the resolved
+  // path back out of `x-middleware-rewrite` is next-intl's documented way to compose a
+  // rewrite with its own; `response.ok` keeps us off its redirects.
+  if (response.ok) {
+    const resolved = new URL(response.headers.get("x-middleware-rewrite") || req.url);
+    const routed = routedPathname(resolved.pathname, routing.locales);
+
+    if (routed) {
+      resolved.pathname = routed;
+      const rewritten = NextResponse.rewrite(resolved, { headers: response.headers });
+      rewritten.headers.set("x-current-path", pathname);
+      return rewritten;
+    }
+  }
+
   response.headers.set("x-current-path", pathname);
   return response;
 }
