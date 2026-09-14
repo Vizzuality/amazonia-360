@@ -43,17 +43,19 @@ export const COUNTRIES = [
  * absent from the route tree, a three-letter first segment is the only thing that tells
  * `proxy.ts` a module was named.
  */
-const LIVE_CODES: readonly string[] = COUNTRIES.filter((c) => c.available).map((c) => c.code);
+const LIVE_CODES: ReadonlySet<string> = new Set(
+  COUNTRIES.filter((c) => c.available).map((c) => c.code),
+);
 
 /**
  * First path segments that never carry a module: a route carries one only where the
  * module changes what is shown, and "which country is this password reset in" has no
  * answer.
  */
-const UNSCOPED_ROOTS: readonly string[] = ["auth", "private", "webshot"];
+const UNSCOPED_ROOTS: ReadonlySet<string> = new Set(["auth", "private", "webshot"]);
 
 export function isCountryCode(value: string | undefined): boolean {
-  return !!value && LIVE_CODES.includes(value);
+  return !!value && LIVE_CODES.has(value);
 }
 
 export function countryFlagSrc(code: string): string {
@@ -67,7 +69,7 @@ function segmentsOf(pathname: string): string[] {
 /** Whether a locale-relative path stays unprefixed whatever the module. */
 export function isUnscopedPathname(pathname: string): boolean {
   const first = segmentsOf(pathname)[0];
-  return !!first && UNSCOPED_ROOTS.includes(first);
+  return !!first && UNSCOPED_ROOTS.has(first);
 }
 
 /**
