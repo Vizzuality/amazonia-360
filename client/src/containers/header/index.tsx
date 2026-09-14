@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { reportEditionModeAtom, useSyncLocation } from "@/app/(frontend)/store";
 
 import AuthHeader from "@/containers/header/auth/desktop";
+import CountrySelector from "@/containers/header/country-selector/desktop";
 import LanguageSelector from "@/containers/header/language-selector/desktop";
 import { Media } from "@/containers/media";
 
@@ -96,6 +97,7 @@ export default function Header() {
           {DYNAMIC_HEADER}
 
           <div className="flex items-center space-x-1">
+            <CountrySelector />
             <LanguageSelector />
             <AuthHeader />
           </div>
