@@ -7,7 +7,6 @@ export class HomePage {
   readonly heroHeading: Locator;
   readonly accessToolButton: Locator;
   readonly videoButton: Locator;
-  /** The header's shortcut into the report flow, shown on the home page only. */
   readonly reportToolLink: Locator;
 
   constructor(page: Page) {

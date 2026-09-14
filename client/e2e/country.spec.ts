@@ -6,17 +6,10 @@ import { CountrySelector } from "./pages/country-selector.page";
 import { HomePage } from "./pages/home.page";
 import { ReportsPage } from "./pages/reports.page";
 
-// ---------------------------------------------------------------------------
-// What the URL promises
-// ---------------------------------------------------------------------------
-
 test.describe("the module in the URL", () => {
   test("switching adds the code and leaves the path and search params alone", async ({ page }) => {
     const selector = new CountrySelector(page);
 
-    // `bbox` belongs to the map, which fits the requested extent to the viewport and
-    // writes the result back — continuously, and down to fractions of a metre. `ref`
-    // stands in for the params the picker has to carry across verbatim.
     await page.goto(`${countryPath()}/reports/grid?bbox=-70%2C-10%2C-60%2C0&ref=newsletter`);
     await dismissCookieConsent(page);
 
@@ -32,9 +25,6 @@ test.describe("the module in the URL", () => {
     await selector.expectActiveCountry("ECU");
   });
 
-  // The Amazon Region is the path with nothing between the locale and the route, which is
-  // what makes every URL minted before modules existed resolve without a redirect — the
-  // shape printed on every PDF's QR code.
   test("the path with no code in it is the Amazon Region", async ({ page }) => {
     const selector = new CountrySelector(page);
 
@@ -117,7 +107,6 @@ test.describe("the module in the URL", () => {
       const opened = await selector.switchToInNewTab("ECU", how);
 
       await expect(opened).toHaveURL(/\/en\/ECU\/reports\/grid/);
-      // The tab you were on is untouched: this is not a switch.
       await expect.poll(() => new URL(page.url()).pathname).toBe("/en/reports/grid");
       await selector.expectActiveCountry(null);
     });
@@ -134,8 +123,6 @@ test.describe("the module in the URL", () => {
     await selector.expectComingSoon("SUR");
   });
 
-  // `proxy.ts` leaves a code it does not know in the path, so the reader sees what they
-  // typed. Nothing matches it, and the catch-all turns the miss into the translated 404.
   for (const segment of ["SUR", "XYZ"]) {
     test(`/en/${segment} is not found, with the code still in the address bar`, async ({
       page,
@@ -157,10 +144,6 @@ test.describe("the module in the URL", () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// Nothing is rebuilt
-// ---------------------------------------------------------------------------
-
 test.describe("nothing is rebuilt", () => {
   test("switching module on the home page keeps it", async ({ page }) => {
     const homePage = new HomePage(page);
@@ -174,7 +157,6 @@ test.describe("nothing is rebuilt", () => {
     await selector.switchTo("ECU");
 
     await expect.poll(() => new URL(page.url()).pathname).toBe("/en/ECU");
-    // A rebuild would replay every scroll animation on the way.
     await expectNodeKept(page, "main");
     await selector.expectActiveCountry("ECU");
   });
@@ -194,12 +176,6 @@ test.describe("nothing is rebuilt", () => {
     await expectNodeKept(page, ".esri-view");
   });
 
-  /**
-   * Moving between the report tool's panels shares a layout, so the ArcGIS view is never
-   * torn down. `switchFirst` is the case this suite exists for: with the module in the
-   * route tree it was a real navigation across a dynamic segment, and every one of these
-   * hops rebuilt the map once you had chosen a country.
-   */
   const HOPS = [
     {
       name: "from the report tool to the grid",

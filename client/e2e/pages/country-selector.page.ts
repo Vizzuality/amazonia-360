@@ -20,7 +20,6 @@ const REGION_NAME: Record<Locale, string> = {
   pt: "Região Amazônica",
 };
 
-/** Only the countries the specs name. Names are translated per locale. */
 const COUNTRY_NAMES: Record<Locale, Record<string, string>> = {
   en: { ECU: "Ecuador", SUR: "Suriname" },
   es: { ECU: "Ecuador", SUR: "Surinam" },
@@ -36,7 +35,6 @@ export class CountrySelector {
     this.locale = locale;
   }
 
-  /** `null` is the Amazon Region, which has no code. */
   name(country: string | null) {
     return country === null ? REGION_NAME[this.locale] : COUNTRY_NAMES[this.locale][country];
   }
@@ -50,13 +48,11 @@ export class CountrySelector {
     await this.trigger.click();
   }
 
-  /** Opens the picker and follows the row for `country`. */
   async switchTo(country: string | null) {
     await this.open();
     await this.page.getByRole("link", { name: new RegExp(this.name(country)) }).click();
   }
 
-  /** Opens the picker and opens the row for `country` in a new tab, returning it. */
   async switchToInNewTab(country: string | null, how: "modifier" | "middle" = "modifier") {
     await this.open();
 
@@ -79,7 +75,6 @@ export class CountrySelector {
     await expect(this.trigger).toHaveCount(0);
   }
 
-  /** A country that is configured but not yet available is listed, but not a link. */
   async expectComingSoon(country: string) {
     await this.open();
     const name = new RegExp(this.name(country));

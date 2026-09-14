@@ -86,9 +86,6 @@ function Partnerships() {
       <p className="text-muted-foreground mt-1 text-xs font-medium">
         {t("country-module-partnerships-description")}
       </p>
-      {/* Disabled rather than an anchor: the country-scoped partners page does not exist
-          yet, and an empty href jumps to the top of the page while announcing itself a
-          link. Greying it out says "not yet" instead of looking broken when clicked. */}
       <Button type="button" variant="outline" size="sm" className="mt-3" disabled>
         {t("country-module-partnerships-cta")}
       </Button>

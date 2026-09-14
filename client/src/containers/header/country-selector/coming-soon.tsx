@@ -4,7 +4,6 @@ import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
-/** Marks a country that is configured but has no data yet, on both surfaces. */
 export function ComingSoonBadge({ className }: Readonly<{ className?: string }>) {
   const t = useTranslations();
 

@@ -8,9 +8,6 @@ import { Button } from "@/components/ui/button";
 
 import { Link } from "@/i18n/navigation";
 
-// Sits at the locale level rather than inside `(app)`, so that it also wraps the
-// `[...rest]` catch-all — a segment's `not-found.tsx` catches what its children throw, not
-// what its siblings do. It brings its own header because it no longer inherits `(app)`'s.
 export default function Custom404() {
   const t = useTranslations();
 

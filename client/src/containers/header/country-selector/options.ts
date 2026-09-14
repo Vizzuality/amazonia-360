@@ -12,27 +12,14 @@ import { usePathname } from "@/i18n/navigation";
 import { useCountry } from "@/i18n/use-country";
 
 export type CountryOption = {
-  /** `null` for the Amazon Region, which is the path with no country code in it. */
   code: string | null;
   name: string;
   description: string;
   active: boolean;
-  /** `undefined` for the Amazon Region, which shows a globe instead. */
   flagSrc?: string;
-  /** `undefined` for a country that is configured but not yet available. */
   href?: { pathname: string; query: Record<string, string> };
 };
 
-/**
- * The rows the picker shows, in the order it shows them: the Amazon Region, then live
- * countries, then the ones still coming. Every row that can be entered carries the current
- * path under a different module, which is what the link navigates to and what "copy link
- * address" hands out. A module that is not yet available gets no href at all, which is what
- * keeps it out of reach from the client.
- *
- * `null` on routes that carry no module — there is nothing to show and nothing to switch,
- * which is why the selection is lost on a round trip through them.
- */
 export function useCountryOptions(): CountryOption[] | null {
   const t = useTranslations();
   const pathname = usePathname();

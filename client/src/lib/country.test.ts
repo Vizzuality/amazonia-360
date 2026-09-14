@@ -45,8 +45,6 @@ describe("withCountry", () => {
     expect(withCountry("/private/my-reports", "ECU")).toBe("/private/my-reports");
   });
 
-  // `Link` applies this to every href it is handed, including ones the picker has already
-  // resolved to another module.
   it("is idempotent", () => {
     expect(withCountry(withCountry("/reports", "ECU"), "ECU")).toBe("/ECU/reports");
     expect(withCountry("/ECU/reports", "BOL")).toBe("/ECU/reports");
@@ -73,8 +71,6 @@ describe("canonicalCountryPathname", () => {
     expect(canonicalCountryPathname("/en/auth/sign-in", LOCALES)).toBeNull();
   });
 
-  // Every URL minted before modules existed is already canonical, which is what lets the
-  // printed QR codes resolve without a redirect.
   it("does not insert anything for the Amazon Region", () => {
     expect(canonicalCountryPathname("/en/reports/abc123", LOCALES)).toBeNull();
   });
@@ -100,8 +96,6 @@ describe("routedPathname", () => {
     expect(routedPathname("/en", LOCALES)).toBeNull();
   });
 
-  // Left in place so it matches no route and falls into the catch-all, with the typed
-  // code still in the address bar.
   it("leaves a code that is not live in the path", () => {
     expect(routedPathname("/en/SUR/reports", LOCALES)).toBeNull();
     expect(routedPathname("/en/XYZ", LOCALES)).toBeNull();

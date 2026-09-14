@@ -44,7 +44,6 @@ beforeEach(() => {
   mockCountry.mockReturnValue(null);
 });
 
-/** Opens the popover, which renders its rows in a portal only once open. */
 async function openPicker() {
   render(<CountrySelector />);
   await userEvent.click(screen.getByRole("button", { name: /country-module-selector-label/ }));
@@ -88,8 +87,6 @@ describe("CountrySelector (desktop)", () => {
     );
   });
 
-  // The Amazon Region is the path with no code in it, so its row is the one href in the
-  // app that must not be prefixed with the module you are currently in.
   test("the Amazon Region links back to the unprefixed path from inside a country", async () => {
     mockCountry.mockReturnValue("ECU");
 

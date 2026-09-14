@@ -9,13 +9,6 @@ import { LocaleLink } from "@/i18n/navigation";
 import { ComingSoonBadge } from "./coming-soon";
 import { useCountryOptions } from "./options";
 
-/**
- * The choice inside the hamburger dialog, as a plain list of links — the same shape the
- * language selector already uses there. No popover below `md`.
- *
- * `onSelected` closes the menu: switching module resolves to the route already on screen,
- * so nothing remounts the dialog out from under the choice.
- */
 const MobileCountrySelector = ({ onSelected }: { onSelected: () => void }) => {
   const t = useTranslations();
   const options = useCountryOptions();
