@@ -1,19 +1,15 @@
 "use client";
 
-import { ScrollArea } from "@radix-ui/react-scroll-area";
-
-import TopicsList from "@/containers/results/sidebar/indicators/topics";
+import ReportIndicatorsContent from "@/containers/report/indicators/content";
 
 export default function ReportIndicatorsMobile() {
   return (
     <div className="container grid grid-cols-12">
-      <div className="col-span-12 space-y-1 lg:col-span-5 2xl:col-span-4">
+      <div className="col-span-12">
         <aside className="pointer-events-auto flex w-full shrink-0 flex-col overflow-hidden">
           <div className="flex max-h-[calc(100vh-(64px+40px+28px))] grow flex-col">
-            <div className="flex max-h-full grow flex-col overflow-hidden">
-              <ScrollArea className="h-full w-full grow">
-                <TopicsList />
-              </ScrollArea>
+            <div className="relative flex max-h-full grow flex-col overflow-hidden">
+              <ReportIndicatorsContent />
             </div>
           </div>
         </aside>
