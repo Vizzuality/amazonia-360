@@ -7,3 +7,7 @@ export type Locale = (typeof LOCALES)[number];
 export function localePath(locale: Locale): string {
   return `/${locale}`;
 }
+
+export function countryPath(locale: Locale = "en", country?: string): string {
+  return country ? `${localePath(locale)}/${country}` : localePath(locale);
+}
