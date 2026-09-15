@@ -4,6 +4,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
 
+import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
 import * as projectOperator from "@arcgis/core/geometry/operators/projectOperator";
 import Point from "@arcgis/core/geometry/Point";
 import SpatialReference from "@arcgis/core/geometry/SpatialReference";
@@ -440,7 +441,8 @@ export default function GridLayer() {
   const map = useMap();
   const [zoom, setZoom] = useState(map?.view?.zoom);
 
-  map?.view?.watch("zoom", setZoom);
+  const view = map?.view;
+  if (view) ArcGISReactiveUtils.watch(() => view.zoom, setZoom);
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
   });

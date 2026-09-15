@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
 
+import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
 import { H3HexagonLayer } from "@deck.gl/geo-layers";
 import { polygonToCells } from "h3-js";
 
@@ -113,7 +114,8 @@ export default function PlaceholderGridLayer() {
     setZoom(z);
   }, 100);
 
-  map?.view?.watch("zoom", setZoomDebounced);
+  const view = map?.view;
+  if (view) ArcGISReactiveUtils.watch(() => view.zoom, setZoomDebounced);
 
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
