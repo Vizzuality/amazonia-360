@@ -1,7 +1,6 @@
 import type { CollectionConfig } from "payload";
 
 import { catalogueAccess } from "@/cms/access/catalogue";
-import { DefaultVisualizationField } from "@/cms/fields/default-visualization";
 import { sourceIdField } from "@/cms/fields/source-id";
 import { autoIncrementSourceId } from "@/cms/hooks/auto-increment-source-id";
 
@@ -39,6 +38,5 @@ export const Subtopics: CollectionConfig = {
       localized: true,
       admin: { description: "Markdown. Empty on every row in the source data." },
     },
-    DefaultVisualizationField,
   ],
 };

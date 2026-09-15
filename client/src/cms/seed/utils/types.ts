@@ -92,7 +92,6 @@ export type RawSubtopic = {
   description_en: string;
   description_es: string;
   description_pt: string;
-  default_visualization: RawVisualizationEntry[];
 };
 
 export type RawIndicator = {
@@ -112,5 +111,6 @@ export type RawIndicator = {
   description_short_es: string;
   description_short_pt: string;
   visualization_types: ("map" | "table" | "chart" | "numeric")[];
+  default_visualization_type: "map" | "table" | "chart" | "numeric" | null;
   resource: RawResource;
 };

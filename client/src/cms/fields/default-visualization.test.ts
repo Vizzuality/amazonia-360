@@ -1,22 +1,15 @@
 import type { RadioField } from "payload";
 
 import INDICATORS from "@/../datum/indicators.json";
-import SUBTOPICS from "@/../datum/subtopics.json";
 import TOPICS from "@/../datum/topics.json";
 import { findFieldByName, isEmptyValue, namedFields } from "@/cms/test-utils/find-field";
 
 import { DefaultVisualizationField } from "./default-visualization";
 
 type SourceVisualization = Record<string, unknown> & { indicator_id: number; type: string };
-type SourceGroup = { id: number; default_visualization: SourceVisualization[] };
+type SourceTopic = { id: number; default_visualization: SourceVisualization[] };
 
-const groups: { collection: string; rows: SourceGroup[] }[] = [
-  { collection: "topics", rows: TOPICS as unknown as SourceGroup[] },
-  { collection: "subtopics", rows: SUBTOPICS as unknown as SourceGroup[] },
-];
-
-/** Documented defect from the spec (§9): subtopic 26 points at a nonexistent indicator 55. */
-const KNOWN_DANGLING = ["subtopics 26 -> indicator 55"];
+const topics = TOPICS as unknown as SourceTopic[];
 
 const arrayFields = () => {
   const field = DefaultVisualizationField;
@@ -47,11 +40,7 @@ describe("DefaultVisualizationField", () => {
     const offered = new Set(
       typeField.options.map((option) => (typeof option === "string" ? option : option.value)),
     );
-    const used = new Set(
-      groups.flatMap(({ rows }) =>
-        rows.flatMap((row) => row.default_visualization.map((v) => v.type)),
-      ),
-    );
+    const used = new Set(topics.flatMap((topic) => topic.default_visualization.map((v) => v.type)));
 
     expect([...used].filter((type) => !offered.has(type))).toEqual([]);
   });
@@ -60,16 +49,14 @@ describe("DefaultVisualizationField", () => {
     const violations: string[] = [];
     const required = namedFields(arrayFields()).filter((field) => field.required);
 
-    for (const { collection, rows } of groups) {
-      for (const row of rows) {
-        for (const [index, visualization] of row.default_visualization.entries()) {
-          for (const field of required) {
-            // `indicator` is the relationship replacing the source's `indicator_id`.
-            const key = field.name === "indicator" ? "indicator_id" : field.name;
-            if (!isEmptyValue(visualization[key])) continue;
+    for (const topic of topics) {
+      for (const [index, visualization] of topic.default_visualization.entries()) {
+        for (const field of required) {
+          // `indicator` is the relationship replacing the source's `indicator_id`.
+          const key = field.name === "indicator" ? "indicator_id" : field.name;
+          if (!isEmptyValue(visualization[key])) continue;
 
-            violations.push(`${collection} ${row.id}[${index}]: missing "${key}"`);
-          }
+          violations.push(`topics ${topic.id}[${index}]: missing "${key}"`);
         }
       }
     }
@@ -103,21 +90,19 @@ describe("DefaultVisualizationField", () => {
     },
   );
 
-  test("only the documented dangling indicator reference exists", () => {
+  test("every indicator referenced by a layout exists", () => {
     const indicatorIds = new Set(
       (INDICATORS as unknown as { id: number }[]).map((indicator) => indicator.id),
     );
     const dangling: string[] = [];
 
-    for (const { collection, rows } of groups) {
-      for (const row of rows) {
-        for (const visualization of row.default_visualization) {
-          if (indicatorIds.has(visualization.indicator_id)) continue;
-          dangling.push(`${collection} ${row.id} -> indicator ${visualization.indicator_id}`);
-        }
+    for (const topic of topics) {
+      for (const visualization of topic.default_visualization) {
+        if (indicatorIds.has(visualization.indicator_id)) continue;
+        dangling.push(`topics ${topic.id} -> indicator ${visualization.indicator_id}`);
       }
     }
 
-    expect(dangling).toEqual(KNOWN_DANGLING);
+    expect(dangling).toEqual([]);
   });
 });
