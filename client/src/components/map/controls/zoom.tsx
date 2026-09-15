@@ -47,12 +47,13 @@ export const ZoomControl: FC<ZoomControlProps> = ({ className }: ZoomControlProp
   useEffect(() => {
     const view = map?.view;
     if (!view) return;
-    ArcGISReactiveUtils.watch(
+    const handle = ArcGISReactiveUtils.watch(
       () => view.zoom,
       (z) => {
         setZoomDebounced(z);
       },
     );
+    return () => handle.remove();
   }, [map?.view, setZoomDebounced]);
 
   const increaseZoom = useCallback((e: MouseEvent<HTMLButtonElement>) => {

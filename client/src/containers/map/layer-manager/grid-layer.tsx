@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
 
@@ -442,7 +442,6 @@ export default function GridLayer() {
   const [zoom, setZoom] = useState(map?.view?.zoom);
 
   const view = map?.view;
-  if (view) ArcGISReactiveUtils.watch(() => view.zoom, setZoom);
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
   });
@@ -626,6 +625,12 @@ export default function GridLayer() {
     onCellClick,
     sketch.enabled,
   ]);
+
+  useEffect(() => {
+    if (!view) return;
+    const handle = ArcGISReactiveUtils.watch(() => view.zoom, setZoom);
+    return () => handle.remove();
+  }, [view, setZoom]);
 
   return (
     <>

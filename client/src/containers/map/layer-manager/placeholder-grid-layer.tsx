@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
 
@@ -115,7 +115,6 @@ export default function PlaceholderGridLayer() {
   }, 100);
 
   const view = map?.view;
-  if (view) ArcGISReactiveUtils.watch(() => view.zoom, setZoomDebounced);
 
   const GEOMETRY = useLocationGeometry(location, {
     wkid: 4326,
@@ -144,6 +143,12 @@ export default function PlaceholderGridLayer() {
 
     return GRID_LAYER.current;
   }, [GEOMETRY, zoom]);
+
+  useEffect(() => {
+    if (!view) return;
+    const handle = ArcGISReactiveUtils.watch(() => view.zoom, setZoomDebounced);
+    return () => handle.remove();
+  }, [view, setZoomDebounced]);
 
   return <Layer index={0} layer={layer} />;
 }
