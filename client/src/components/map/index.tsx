@@ -11,7 +11,7 @@ import Extent from "@arcgis/core/geometry/Extent";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import ArcGISMap from "@arcgis/core/Map";
 import ArcGISMapView from "@arcgis/core/views/MapView";
-import ArcGISScaleBar from "@arcgis/core/widgets/ScaleBar";
+import type { ArcgisScaleBar } from "@arcgis/map-components/components/arcgis-scale-bar";
 import { merge } from "ts-deepmerge";
 
 import { omit } from "@/lib/utils";
@@ -147,15 +147,22 @@ export function MapView({
 
       // Set the padding
 
-      const scaleBar = new ArcGISScaleBar({
-        view: mapViewRef.current,
-        unit: "dual",
-        style: "ruler",
-      });
       const mapWidth = mapContainerRef.current.offsetWidth;
       const scaleBarPosition = mapWidth >= 1024 ? "bottom-right" : "top-left";
 
-      if (!isPdf) mapViewRef.current.ui.add(scaleBar, scaleBarPosition);
+      if (!isPdf) {
+        const view = mapViewRef.current;
+        // customElements.define runs at import time, so this stays dynamic to avoid breaking SSR
+        import("@arcgis/map-components/components/arcgis-scale-bar").then(() => {
+          // Bail if a later effect run already replaced this view by the time the import resolves
+          if (mapViewRef.current !== view) return;
+          const scaleBar = document.createElement("arcgis-scale-bar") as ArcgisScaleBar;
+          scaleBar.view = view;
+          scaleBar.unit = "dual";
+          scaleBar.barStyle = "ruler";
+          view.ui.add(scaleBar, scaleBarPosition);
+        });
+      }
 
       mapViewRef.current.on("pointer-leave", () => {
         if (onPointerLeave) onPointerLeave();
