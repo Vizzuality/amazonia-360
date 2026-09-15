@@ -131,11 +131,14 @@ export function MapView({
             },
           },
         }),
-        highlightOptions: {
-          color: new Color("#009AFF"),
-          haloOpacity: 0.9,
-          fillOpacity: 0.2,
-        },
+        highlights: [
+          {
+            name: "default",
+            color: new Color("#009AFF"),
+            haloOpacity: 0.9,
+            fillOpacity: 0.2,
+          },
+        ],
         padding: {
           top: 0,
           right: 0,
