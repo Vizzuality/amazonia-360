@@ -44,7 +44,7 @@ export default function ReportMapPreview({ id, location }: Report) {
         })}
         viewProps={{
           navigation: {
-            mouseWheelZoomEnabled: false,
+            actionMap: { mouseWheel: "none" },
             browserTouchPanEnabled: false,
           },
           ui: {
