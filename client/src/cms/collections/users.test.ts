@@ -19,8 +19,6 @@ import { findFieldByName } from "@/cms/test-utils/find-field";
  * @vitest-environment node
  */
 
-import { vi } from "vitest";
-
 vi.mock("@/env.mjs", () => ({
   env: {
     NEXT_PUBLIC_WEBSHOT_URL: "http://localhost:3003",
