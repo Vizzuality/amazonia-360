@@ -2,6 +2,7 @@ import type { RadioField, SelectField } from "payload";
 
 import INDICATORS from "@/../datum/indicators.json";
 import SUBTOPICS from "@/../datum/subtopics.json";
+import { invalidDefaultMessage } from "@/cms/fields/default-visualization-type";
 import { warnOnVisualizationMismatch } from "@/cms/hooks/indicator-visualization";
 import { findFieldByName, isEmptyValue } from "@/cms/test-utils/find-field";
 
@@ -15,13 +16,6 @@ type SourceIndicator = Record<string, unknown> & {
   visualization_types: string[];
   default_visualization_type: string | null;
 };
-
-/**
- * Indicator 0 declares `numeric` but only offers `map`, so the sidebar can never draw its
- * badge. Inherited verbatim from the source data: the move off subtopics preserved every
- * value rather than quietly fixing this one, which is a data decision.
- */
-const KNOWN_UNREACHABLE_DEFAULT = [0];
 
 const indicators = INDICATORS as unknown as SourceIndicator[];
 const subtopicIds = new Set((SUBTOPICS as unknown as { id: number }[]).map((s) => s.id));
@@ -124,6 +118,36 @@ describe("Indicators", () => {
     expect([...used].filter((type) => !offered.has(type))).toEqual([]);
   });
 
+  test("constrains default_visualization_type to the indicator's own visualization_types", () => {
+    const field = findFieldByName(Indicators.fields, "default_visualization_type") as RadioField;
+    const run = (value: unknown, visualization_types: unknown) =>
+      field.validate?.(
+        value as never,
+        {
+          ...field,
+          siblingData: { visualization_types },
+        } as never,
+      );
+
+    expect(run("chart", ["map", "chart"])).toBe(true);
+    expect(run("chart", ["map"])).toBe(invalidDefaultMessage("chart"));
+    expect(run("chart", [])).toBe(invalidDefaultMessage("chart"));
+
+    // Optional: no default is always fine, including on the 76 rows that declare no type.
+    expect(run(null, [])).toBe(true);
+    expect(run(undefined, ["map"])).toBe(true);
+  });
+
+  test("renders default_visualization_type through the component that filters the radios", () => {
+    const field = findFieldByName(Indicators.fields, "default_visualization_type") as RadioField;
+
+    // `radio` has no `filterOptions`, so the narrowing on screen is the component's job.
+    // Losing it leaves the admin offering radios that `validate` rejects.
+    expect(field.admin?.components?.Field).toBe(
+      "/cms/components/default-visualization-type-field#DefaultVisualizationTypeField",
+    );
+  });
+
   test("offers default_visualization_type as an optional radio over the same four types", () => {
     const field = findFieldByName(Indicators.fields, "default_visualization_type") as RadioField;
     const visualizationTypes = findFieldByName(
@@ -155,7 +179,6 @@ describe("Indicators", () => {
 
   test("a declared default is one of the indicator's own visualization_types", () => {
     const violations = indicators
-      .filter((indicator) => !KNOWN_UNREACHABLE_DEFAULT.includes(indicator.id))
       .filter(
         (indicator) =>
           indicator.default_visualization_type !== null &&

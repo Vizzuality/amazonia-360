@@ -17,7 +17,7 @@
         "description_short_es": "Área seleccionada para reporte (km²)",
         "description_short_pt": "Área selecionada para o relatório (km²)",
         "visualization_types": [
-            "map"
+            "numeric"
         ],
         "default_visualization_type": "numeric",
         "resource": {
