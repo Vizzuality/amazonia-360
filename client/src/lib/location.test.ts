@@ -1,4 +1,4 @@
-import * as geometryEngineAsync from "@arcgis/core/geometry/geometryEngineAsync";
+import * as geodesicBufferOperator from "@arcgis/core/geometry/operators/geodesicBufferOperator";
 
 // location.ts pulls in these hook modules; stub them so importActual doesn't run their
 // module-level side effects (search.ts builds a SearchViewModel on import).
@@ -9,37 +9,34 @@ vi.mock("@/lib/query", () => ({ useGetFeatures: vi.fn() }));
 const { getGeometryWithBuffer } =
   await vi.importActual<typeof import("@/lib/location")>("@/lib/location");
 
-const geodesicBufferAsync = vi.mocked(geometryEngineAsync.geodesicBuffer);
+const geodesicBufferExecute = vi.mocked(geodesicBufferOperator.execute);
 
 describe("getGeometryWithBuffer", () => {
-  // Regression: uploading a long polyline (e.g. the ~887 km BR-319) froze the app
-  // because geodesicBuffer ran synchronously on the main thread. The buffer must run
-  // off-thread via geometryEngineAsync so the UI stays responsive.
-  it("buffers a polyline off the main thread via geometryEngineAsync", async () => {
+  it("resolves a buffered polygon for a polyline via geodesicBufferOperator", async () => {
     const buffered = { type: "polygon", rings: [[]] } as unknown as __esri.Polygon;
-    geodesicBufferAsync.mockResolvedValue(buffered);
+    geodesicBufferExecute.mockReturnValue(buffered);
 
     const polyline = { type: "polyline" } as unknown as __esri.GeometryUnion;
     const result = getGeometryWithBuffer(polyline, 30);
 
     expect(result).toBeInstanceOf(Promise);
     await expect(result).resolves.toBe(buffered);
-    expect(geodesicBufferAsync).toHaveBeenCalledWith(polyline, 30, "kilometers");
+    expect(geodesicBufferExecute).toHaveBeenCalledWith(polyline, 30, { unit: "kilometers" });
   });
 
-  it("buffers a point off the main thread via geometryEngineAsync", async () => {
+  it("resolves a buffered polygon for a point via geodesicBufferOperator", async () => {
     const buffered = { type: "polygon", rings: [[]] } as unknown as __esri.Polygon;
-    geodesicBufferAsync.mockResolvedValue(buffered);
+    geodesicBufferExecute.mockReturnValue(buffered);
 
     const point = { type: "point" } as unknown as __esri.GeometryUnion;
     await expect(getGeometryWithBuffer(point, 30)).resolves.toBe(buffered);
-    expect(geodesicBufferAsync).toHaveBeenCalledWith(point, 30, "kilometers");
+    expect(geodesicBufferExecute).toHaveBeenCalledWith(point, 30, { unit: "kilometers" });
   });
 
   it("returns a polygon unchanged without buffering", async () => {
     const polygon = { type: "polygon" } as __esri.Polygon;
     await expect(getGeometryWithBuffer(polygon, 30)).resolves.toBe(polygon);
-    expect(geodesicBufferAsync).not.toHaveBeenCalled();
+    expect(geodesicBufferExecute).not.toHaveBeenCalled();
   });
 
   it("resolves null for missing geometry", async () => {

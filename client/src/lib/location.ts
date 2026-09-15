@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-import * as geometryEngineAsync from "@arcgis/core/geometry/geometryEngineAsync";
+import * as geodesicBufferOperator from "@arcgis/core/geometry/operators/geodesicBufferOperator";
 import * as projectOperator from "@arcgis/core/geometry/operators/projectOperator";
 import Point from "@arcgis/core/geometry/Point";
 import Polygon from "@arcgis/core/geometry/Polygon";
@@ -19,6 +19,10 @@ import { BUFFERS } from "@/constants/map";
 
 if (!projectOperator.isLoaded()) {
   await projectOperator.load();
+}
+
+if (!geodesicBufferOperator.isLoaded()) {
+  await geodesicBufferOperator.load();
 }
 
 export type AdministrativeBoundary = {
@@ -117,7 +121,7 @@ const srKeyOf = (
   (outSpatialReference as __esri.SpatialReferenceProperties | undefined)?.wkt ??
   null;
 
-// Buffering + projecting runs ArcGIS's geodesicBuffer (now async/off-thread).
+// Buffering + projecting run through ArcGIS's geometry operators.
 // `useLocationGeometry` is consumed by ~29 components, so without a shared cache the
 // same buffer is recomputed once per component on every location change. Cache the
 // in-flight *promise* by (geometry, buffer, target spatial reference) so concurrent
@@ -163,8 +167,7 @@ const getBufferedProjectedGeometry = (
 };
 
 // Same as `useLocationGeometry` but also reports whether the buffer is still being
-// computed off-thread, so callers can show a loader. `useLocationGeometry` delegates
-// here and drops the flag, keeping its many consumers unchanged.
+// computed, so callers can show a loader. `useLocationGeometry` delegates and drops the flag.
 export const useLocationGeometryWithStatus = (
   location?: Location | null,
   outSpatialReference?: __esri.SpatialReference | __esri.SpatialReferenceProperties,
@@ -176,7 +179,7 @@ export const useLocationGeometryWithStatus = (
   // so key the effect on its wkid/wkt instead of object identity.
   const outSpatialReferenceKey = srKeyOf(outSpatialReference);
 
-  // The buffer is computed asynchronously (off the main thread), so the geometry
+  // The buffer resolves asynchronously (via the shared promise cache), so the geometry
   // resolves after render. Consumers that gate queries on `!!GEOMETRY` simply wait.
   const [GEOMETRY, setGEOMETRY] = useState<__esri.Polygon | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
@@ -267,10 +270,8 @@ export const getGeometryByType = (location: Location) => {
   return null;
 };
 
-// Runs ArcGIS's *asynchronous* geodesicBuffer, which offloads the work to a worker
-// instead of blocking the main thread. Buffering a long (~887 km) polyline densifies
-// the offset curve into thousands of vertices and took ~700 ms synchronously, freezing
-// the UI on upload. Keep this async so callers await it off the render path.
+// geodesicBufferOperator.execute() is synchronous; kept `async` so the existing
+// `await getGeometryWithBuffer(...)` call sites elsewhere keep working unchanged.
 export const getGeometryWithBuffer = async (
   geometry: __esri.GeometryUnion | null,
   buffer: number,
@@ -278,9 +279,9 @@ export const getGeometryWithBuffer = async (
   if (!geometry) return null;
 
   if (geometry.type === "point" || geometry.type === "polyline") {
-    const g = await geometryEngineAsync.geodesicBuffer(geometry, buffer, "kilometers");
+    const g = geodesicBufferOperator.execute(geometry, buffer, { unit: "kilometers" });
 
-    return Array.isArray(g) ? g[0] : g;
+    return (Array.isArray(g) ? g[0] : g) ?? null;
   }
 
   if (geometry.type === "polygon") {
