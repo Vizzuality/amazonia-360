@@ -1,13 +1,10 @@
 import type { CollectionConfig } from "payload";
 
-import { adminAccess } from "@/cms/access/admin";
-import { anyoneAccess } from "@/cms/access/anyone";
+import { authenticatedAccess } from "@/cms/access/authenticated";
 import { ownUserAccess } from "@/cms/access/owner";
-import { userAccess } from "@/cms/access/user";
 import { LocationField } from "@/cms/fields/location";
 import { TopicsField } from "@/cms/fields/topics";
 import { beforeChangeLinkUser } from "@/cms/hooks/user";
-import { or } from "@/cms/utils/or";
 
 export const Reports: CollectionConfig = {
   slug: "reports",
@@ -15,10 +12,10 @@ export const Reports: CollectionConfig = {
     defaultColumns: ["id", "title", "user", "_status"],
   },
   access: {
-    read: anyoneAccess,
-    create: anyoneAccess,
+    read: authenticatedAccess,
+    create: authenticatedAccess,
     update: ownUserAccess,
-    delete: or(userAccess, adminAccess),
+    delete: ownUserAccess,
   },
   fields: [
     {
@@ -35,7 +32,7 @@ export const Reports: CollectionConfig = {
     {
       name: "user",
       type: "relationship",
-      relationTo: ["users", "anonymous-users"],
+      relationTo: ["users"],
 
       admin: {
         readOnly: true,

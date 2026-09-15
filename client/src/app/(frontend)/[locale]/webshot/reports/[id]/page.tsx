@@ -3,11 +3,6 @@ import { notFound } from "next/navigation";
 
 import { getPayload } from "payload";
 
-import { QueryClient } from "@tanstack/react-query";
-import { Locale } from "next-intl";
-
-import { reportQueryOptions } from "@/lib/report";
-
 import Pdf from "@/containers/webshot/pdf-report";
 
 import config from "@/payload.config";
@@ -22,9 +17,7 @@ export const metadata = {
 export default async function WebshotReport({
   params,
 }: PageProps<"/[locale]/webshot/reports/[id]">) {
-  const queryClient = new QueryClient();
-
-  const { id, locale } = await params;
+  const { id } = await params;
 
   const payload = await getPayload({ config });
   try {
@@ -35,8 +28,6 @@ export default async function WebshotReport({
   } catch (_error) {
     notFound();
   }
-
-  await queryClient.prefetchQuery(reportQueryOptions({ id, locale: locale as Locale }));
 
   return (
     <>

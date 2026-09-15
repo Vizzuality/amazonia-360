@@ -1,21 +1,5 @@
 import { CollectionBeforeChangeHook, CollectionBeforeDeleteHook } from "payload";
 
-export const beforeDeleteAnonymousUser: CollectionBeforeDeleteHook = async ({ req, id }) => {
-  // Find and delete related documents in the 'reports' collection
-  await req.payload.delete({
-    collection: "reports",
-    where: {
-      "user.relationTo": {
-        equals: "anonymous-users",
-      },
-      "user.value": {
-        equals: id,
-      },
-    },
-    req,
-  });
-};
-
 export const beforeDeleteUser: CollectionBeforeDeleteHook = async ({ req, id }) => {
   // Find and delete related account in the 'accounts' collection
   await req.payload.delete({
