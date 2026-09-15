@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@arcgis/core": "4.34.8",
+    "@arcgis/map-components": "4.34.9",
     "@artsy/fresnel": "8.1.0",
     "@aws-sdk/client-ses": "3.981.0",
     "@aws-sdk/client-sesv2": "3.981.0",
@@ -35,6 +36,7 @@
     "@dnd-kit/modifiers": "7.0.0",
     "@dnd-kit/sortable": "8.0.0",
     "@dnd-kit/utilities": "3.2.2",
+    "@esri/calcite-components": "3.3.3",
     "@hookform/resolvers": "5.2.2",
     "@lexical/markdown": "0.41.0",
     "@loaders.gl/arrow": "4.3.4",

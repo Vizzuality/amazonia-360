@@ -1,8 +1,7 @@
 "use client";
 
-import { FC, useCallback, useMemo, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 
-import FullscreenVM from "@arcgis/core/widgets/Fullscreen/FullscreenViewModel";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useTranslations } from "next-intl";
 import { LuExpand, LuMinimize } from "react-icons/lu";
@@ -22,24 +21,29 @@ export const FullscreenControl: FC<FullscreenControlProps> = ({
   className,
 }: FullscreenControlProps) => {
   const t = useTranslations();
-  const fullscreenModelViewRef = useRef<FullscreenVM | null>(null);
-  const [active, setActive] = useState(false);
-
   const map = useMap();
 
-  useMemo(() => {
-    if (!fullscreenModelViewRef.current && map?.view) {
-      fullscreenModelViewRef.current = new FullscreenVM({
-        view: map?.view,
-        element: map?.view?.container,
-      });
-    }
-  }, [map?.view]);
+  const [active, setActive] = useState(false);
 
   const handleFullscreen = useCallback(() => {
-    setActive(!active);
-    fullscreenModelViewRef.current?.toggle();
-  }, [active]);
+    const container = map?.view?.container;
+    if (!container) return;
+
+    if (document.fullscreenElement === container) {
+      document.exitFullscreen();
+    } else {
+      container.requestFullscreen().catch(() => undefined);
+    }
+  }, [map?.view?.container]);
+
+  useEffect(() => {
+    const container = map?.view?.container;
+
+    const handleFullscreenChange = () => setActive(document.fullscreenElement === container);
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, [map?.view?.container]);
 
   return (
     <Tooltip>

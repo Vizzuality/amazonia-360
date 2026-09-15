@@ -134,7 +134,7 @@ export default function WidgetMap({
           })}
           viewProps={{
             navigation: {
-              mouseWheelZoomEnabled: false,
+              actionMap: { mouseWheel: "none" },
               browserTouchPanEnabled: false,
             },
             ...viewProps,
