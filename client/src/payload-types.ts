@@ -405,7 +405,7 @@ export interface Indicator {
    */
   visualization_types?: ('map' | 'table' | 'chart' | 'numeric')[] | null;
   /**
-   * Which of the visualization types above the sidebar marks as the default. Optional: only 31 of 164 indicators declare one, and the rest show no badge. Should be one of visualization_types — indicator 0 is the one row where it is not, inherited from the source data.
+   * The visualization type the sidebar badges as default. Optional.
    */
   default_visualization_type?: ('map' | 'table' | 'chart' | 'numeric') | null;
   /**
