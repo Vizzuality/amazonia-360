@@ -107,6 +107,7 @@ export function IndicatorsItem({
                   indicator.visualization_types as Exclude<VisualizationTypes, "ai" | "custom">[]
                 }
                 indicatorId={indicator.id}
+                defaultType={indicator.default_visualization_type}
               />
             </PopoverContent>
           </div>

@@ -87,6 +87,7 @@ export type Indicator = {
   subtopic: Subtopic;
   order: number;
   visualization_types: VisualizationTypes[];
+  default_visualization_type: Exclude<VisualizationTypes, "ai" | "custom"> | null;
   resource:
     | ResourceFeature
     | ResourceWebTile
@@ -118,5 +119,6 @@ export type IndicatorOverview = {
   unit_pt: string;
   topic: number;
   visualization_types: VisualizationTypes[];
+  default_visualization_type: Exclude<VisualizationTypes, "ai" | "custom"> | null;
   resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
 };

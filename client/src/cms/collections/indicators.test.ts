@@ -1,7 +1,8 @@
-import type { SelectField } from "payload";
+import type { RadioField, SelectField } from "payload";
 
 import INDICATORS from "@/../datum/indicators.json";
 import SUBTOPICS from "@/../datum/subtopics.json";
+import { invalidDefaultMessage } from "@/cms/fields/default-visualization-type";
 import { warnOnVisualizationMismatch } from "@/cms/hooks/indicator-visualization";
 import { findFieldByName, isEmptyValue } from "@/cms/test-utils/find-field";
 
@@ -13,6 +14,7 @@ type SourceIndicator = Record<string, unknown> & {
   id: number;
   subtopic_id: number;
   visualization_types: string[];
+  default_visualization_type: string | null;
 };
 
 const indicators = INDICATORS as unknown as SourceIndicator[];
@@ -114,6 +116,77 @@ describe("Indicators", () => {
     const used = new Set(indicators.flatMap((indicator) => indicator.visualization_types));
 
     expect([...used].filter((type) => !offered.has(type))).toEqual([]);
+  });
+
+  test("constrains default_visualization_type to the indicator's own visualization_types", () => {
+    const field = findFieldByName(Indicators.fields, "default_visualization_type") as RadioField;
+    const run = (value: unknown, visualization_types: unknown) =>
+      field.validate?.(
+        value as never,
+        {
+          ...field,
+          siblingData: { visualization_types },
+        } as never,
+      );
+
+    expect(run("chart", ["map", "chart"])).toBe(true);
+    expect(run("chart", ["map"])).toBe(invalidDefaultMessage("chart"));
+    expect(run("chart", [])).toBe(invalidDefaultMessage("chart"));
+
+    // Optional: no default is always fine, including on the 76 rows that declare no type.
+    expect(run(null, [])).toBe(true);
+    expect(run(undefined, ["map"])).toBe(true);
+  });
+
+  test("renders default_visualization_type through the component that filters the radios", () => {
+    const field = findFieldByName(Indicators.fields, "default_visualization_type") as RadioField;
+
+    // `radio` has no `filterOptions`, so the narrowing on screen is the component's job.
+    // Losing it leaves the admin offering radios that `validate` rejects.
+    expect(field.admin?.components?.Field).toBe(
+      "/cms/components/default-visualization-type-field#DefaultVisualizationTypeField",
+    );
+  });
+
+  test("offers default_visualization_type as an optional radio over the same four types", () => {
+    const field = findFieldByName(Indicators.fields, "default_visualization_type") as RadioField;
+    const visualizationTypes = findFieldByName(
+      Indicators.fields,
+      "visualization_types",
+    ) as SelectField;
+    const values = (options: RadioField["options"] | SelectField["options"]) =>
+      options.map((option) => (typeof option === "string" ? option : option.value));
+
+    expect(field.type).toBe("radio");
+    expect(field.required).toBeFalsy();
+    expect(values(field.options)).toEqual(values(visualizationTypes.options));
+  });
+
+  test("every default_visualization_type in the source data is an offered value", () => {
+    const field = findFieldByName(Indicators.fields, "default_visualization_type") as RadioField;
+    const offered = new Set(
+      field.options.map((option) => (typeof option === "string" ? option : option.value)),
+    );
+
+    const invalid = indicators.filter(
+      (indicator) =>
+        indicator.default_visualization_type !== null &&
+        !offered.has(indicator.default_visualization_type),
+    );
+
+    expect(invalid).toEqual([]);
+  });
+
+  test("a declared default is one of the indicator's own visualization_types", () => {
+    const violations = indicators
+      .filter(
+        (indicator) =>
+          indicator.default_visualization_type !== null &&
+          !indicator.visualization_types.includes(indicator.default_visualization_type),
+      )
+      .map((indicator) => indicator.id);
+
+    expect(violations).toEqual([]);
   });
 
   test("carries the resource blocks field, holding exactly one resource", () => {

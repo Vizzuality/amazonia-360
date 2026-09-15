@@ -22,7 +22,7 @@ async function main() {
   await seedTopics(payload, topics);
   await seedSubtopics(payload, subtopics);
   await seedIndicators(payload, indicators);
-  await seedDefaultVisualizations(payload, topics, subtopics);
+  await seedDefaultVisualizations(payload, topics);
 
   const [seededTopics, seededSubtopics, seededIndicators] = await Promise.all([
     payload.count({ collection: "topics" }),

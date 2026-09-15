@@ -1,6 +1,7 @@
-import type { CollectionConfig } from "payload";
+import type { CollectionConfig, RadioFieldValidation } from "payload";
 
 import { catalogueAccess } from "@/cms/access/catalogue";
+import { invalidDefaultMessage, isAllowedDefault } from "@/cms/fields/default-visualization-type";
 import { ResourceField } from "@/cms/fields/resource";
 import { sourceIdField } from "@/cms/fields/source-id";
 import { autoIncrementSourceId } from "@/cms/hooks/auto-increment-source-id";
@@ -54,6 +55,42 @@ export const Indicators: CollectionConfig = {
       admin: {
         description:
           "Which widgets this indicator offers. Deliberately explicit, not derived: deriving would change 18 of 164 rows. Empty for all h3 indicators.",
+      },
+    },
+    /**
+     * Stays a `radio` on purpose, and that is why it takes two pieces to constrain.
+     *
+     * The value must be one of the indicator's own `visualization_types`; a default outside
+     * them is a badge the sidebar can never draw. A `select` gets that for free through
+     * `filterOptions`, which both narrows the options and validates the save — but `radio`
+     * has no `filterOptions`. So the rule is enforced here by `validate`, which covers the
+     * admin, the REST API and the seed, and mirrored on screen by the field component. Both
+     * read the same function; see `cms/fields/default-visualization-type.ts`.
+     */
+    {
+      name: "default_visualization_type",
+      type: "radio",
+      required: false,
+      options: [
+        { label: "Map", value: "map" },
+        { label: "Table", value: "table" },
+        { label: "Chart", value: "chart" },
+        { label: "Numeric", value: "numeric" },
+      ],
+      validate: ((value, { options, siblingData }) => {
+        if (typeof value !== "string" || value === "") return true;
+
+        const { visualization_types } = (siblingData ?? {}) as { visualization_types?: unknown };
+
+        return (
+          isAllowedDefault(value, options, visualization_types) || invalidDefaultMessage(value)
+        );
+      }) satisfies RadioFieldValidation,
+      admin: {
+        description: "The visualization type the sidebar badges as default. Optional.",
+        components: {
+          Field: "/cms/components/default-visualization-type-field#DefaultVisualizationTypeField",
+        },
       },
     },
     ResourceField,

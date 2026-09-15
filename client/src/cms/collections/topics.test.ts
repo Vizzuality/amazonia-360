@@ -91,8 +91,13 @@ describe.each([
     expect(findFieldByName(collection.fields, "Numerotation")).toBeUndefined();
   });
 
-  test("carries the shared default_visualization array", () => {
-    expect(findFieldByName(collection.fields, "default_visualization")?.type).toBe("array");
+  test("only Topics carries the widget layout array", () => {
+    const layout = findFieldByName(collection.fields, "default_visualization");
+
+    if (slug === "topics") expect(layout?.type).toBe("array");
+    // Subtopics held a copy the app only ever mined for one type per indicator. That type is
+    // now Indicators.default_visualization_type, and a second copy here would drift from it.
+    else expect(layout).toBeUndefined();
   });
 
   test("every required localized field has an `en` value on every row, so the seed can create it", () => {

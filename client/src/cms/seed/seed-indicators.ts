@@ -51,6 +51,9 @@ export const seedIndicators = async (
       description_short: descriptionShort.en,
       ...(isEmptyValue(description.en) ? {} : { description: description.en }),
       visualization_types: raw.visualization_types,
+      // Written even when null, unlike the optional fields above: a re-seed has to clear a
+      // default the source data dropped, and an omitted key would leave the old one standing.
+      default_visualization_type: raw.default_visualization_type,
       resource: [mapResource(raw.resource)],
       _status: "published" as const,
     };

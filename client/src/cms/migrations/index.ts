@@ -5,6 +5,7 @@ import * as migration_20260818_165750_community_opt_in from './20260818_165750_c
 import * as migration_20260818_165800_backfill_community_opt_in from './20260818_165800_backfill_community_opt_in';
 import * as migration_20260819_081214_import_export_collections from './20260819_081214_import_export_collections';
 import * as migration_20260908_122337 from './20260908_122337';
+import * as migration_20260915_090222_default_visualization_type from './20260915_090222_default_visualization_type';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20260908_122337.up,
     down: migration_20260908_122337.down,
-    name: '20260908_122337'
+    name: '20260908_122337',
+  },
+  {
+    up: migration_20260915_090222_default_visualization_type.up,
+    down: migration_20260915_090222_default_visualization_type.down,
+    name: '20260915_090222_default_visualization_type'
   },
 ];
