@@ -4,6 +4,8 @@
 
 // @ts-nocheck vendored from @deck.gl/arcgis 9.3.7 src (2D only)
 
+import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
+
 const properties = {
   layers: {},
   layerFilter: {},
@@ -31,9 +33,13 @@ export default function createDeckProps(Accessor) {
     constructor() {
       this._callbacks = {};
 
-      this.watch(Object.keys(properties), (newValue, oldValue, propName) => {
-        this.emit("change", { [propName]: newValue });
-      });
+      // Diverges from vendored source: Accessor.watch is deprecated, replaced with one reactiveUtils.watch per property key.
+      for (const propName of Object.keys(properties)) {
+        ArcGISReactiveUtils.watch(
+          () => this[propName],
+          (newValue) => this.emit("change", { [propName]: newValue }),
+        );
+      }
     },
 
     on(eventName, cb) {
