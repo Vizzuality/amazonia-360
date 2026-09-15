@@ -447,6 +447,10 @@ export interface Indicator {
    */
   visualization_types?: ('map' | 'table' | 'chart' | 'numeric')[] | null;
   /**
+   * Which of the visualization types above the sidebar marks as the default. Optional: only 31 of 164 indicators declare one, and the rest show no badge. Should be one of visualization_types — indicator 0 is the one row where it is not, inherited from the source data.
+   */
+  default_visualization_type?: ('map' | 'table' | 'chart' | 'numeric') | null;
+  /**
    * Exactly one resource. The block type is the resource type.
    */
   resource: (
@@ -659,33 +663,6 @@ export interface Subtopic {
    * Markdown. Empty on every row in the source data.
    */
   description?: string | null;
-  default_visualization?:
-    | {
-        indicator: string | Indicator;
-        /**
-         * The source data only uses map, numeric, chart and table; custom and ai exist to match Reports.
-         */
-        type: 'map' | 'chart' | 'table' | 'numeric' | 'custom' | 'ai';
-        x: number;
-        y: number;
-        w: number;
-        h: number;
-        basemapId?:
-          | (
-              | 'gray-vector'
-              | 'dark-gray-vector'
-              | 'satellite'
-              | 'streets'
-              | 'hybrid'
-              | 'osm'
-              | 'topo-vector'
-              | 'terrain'
-            )
-          | null;
-        opacity?: number | null;
-        id?: string | null;
-      }[]
-    | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -1153,19 +1130,6 @@ export interface SubtopicsSelect<T extends boolean = true> {
   topic?: T;
   name?: T;
   description?: T;
-  default_visualization?:
-    | T
-    | {
-        indicator?: T;
-        type?: T;
-        x?: T;
-        y?: T;
-        w?: T;
-        h?: T;
-        basemapId?: T;
-        opacity?: T;
-        id?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1183,6 +1147,7 @@ export interface IndicatorsSelect<T extends boolean = true> {
   description_short?: T;
   description?: T;
   visualization_types?: T;
+  default_visualization_type?: T;
   resource?:
     | T
     | {

@@ -1,4 +1,4 @@
-import type { SelectField } from "payload";
+import type { RadioField, SelectField } from "payload";
 
 import INDICATORS from "@/../datum/indicators.json";
 import SUBTOPICS from "@/../datum/subtopics.json";
@@ -13,7 +13,15 @@ type SourceIndicator = Record<string, unknown> & {
   id: number;
   subtopic_id: number;
   visualization_types: string[];
+  default_visualization_type: string | null;
 };
+
+/**
+ * Indicator 0 declares `numeric` but only offers `map`, so the sidebar can never draw its
+ * badge. Inherited verbatim from the source data: the move off subtopics preserved every
+ * value rather than quietly fixing this one, which is a data decision.
+ */
+const KNOWN_UNREACHABLE_DEFAULT = [0];
 
 const indicators = INDICATORS as unknown as SourceIndicator[];
 const subtopicIds = new Set((SUBTOPICS as unknown as { id: number }[]).map((s) => s.id));
@@ -114,6 +122,48 @@ describe("Indicators", () => {
     const used = new Set(indicators.flatMap((indicator) => indicator.visualization_types));
 
     expect([...used].filter((type) => !offered.has(type))).toEqual([]);
+  });
+
+  test("offers default_visualization_type as an optional radio over the same four types", () => {
+    const field = findFieldByName(Indicators.fields, "default_visualization_type") as RadioField;
+    const visualizationTypes = findFieldByName(
+      Indicators.fields,
+      "visualization_types",
+    ) as SelectField;
+    const values = (options: RadioField["options"] | SelectField["options"]) =>
+      options.map((option) => (typeof option === "string" ? option : option.value));
+
+    expect(field.type).toBe("radio");
+    expect(field.required).toBeFalsy();
+    expect(values(field.options)).toEqual(values(visualizationTypes.options));
+  });
+
+  test("every default_visualization_type in the source data is an offered value", () => {
+    const field = findFieldByName(Indicators.fields, "default_visualization_type") as RadioField;
+    const offered = new Set(
+      field.options.map((option) => (typeof option === "string" ? option : option.value)),
+    );
+
+    const invalid = indicators.filter(
+      (indicator) =>
+        indicator.default_visualization_type !== null &&
+        !offered.has(indicator.default_visualization_type),
+    );
+
+    expect(invalid).toEqual([]);
+  });
+
+  test("a declared default is one of the indicator's own visualization_types", () => {
+    const violations = indicators
+      .filter((indicator) => !KNOWN_UNREACHABLE_DEFAULT.includes(indicator.id))
+      .filter(
+        (indicator) =>
+          indicator.default_visualization_type !== null &&
+          !indicator.visualization_types.includes(indicator.default_visualization_type),
+      )
+      .map((indicator) => indicator.id);
+
+    expect(violations).toEqual([]);
   });
 
   test("carries the resource blocks field, holding exactly one resource", () => {

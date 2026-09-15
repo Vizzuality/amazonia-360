@@ -25,5 +25,4 @@ export type Subtopic = {
   description_es: string;
   description_en: string;
   description_pt: string;
-  default_visualization: IndicatorView[];
 };

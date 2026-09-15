@@ -19,6 +19,7 @@
         "visualization_types": [
             "map"
         ],
+        "default_visualization_type": "numeric",
         "resource": {
             "name": "total-area",
             "type": "component",
@@ -62,6 +63,7 @@
         "visualization_types": [
             "map"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Amazonia",
             "type": "feature",
@@ -105,6 +107,7 @@
         "visualization_types": [
             "numeric"
         ],
+        "default_visualization_type": "numeric",
         "resource": {
             "name": "AMZ_LOCADM0",
             "type": "feature",
@@ -157,6 +160,7 @@
         "visualization_types": [
             "numeric"
         ],
+        "default_visualization_type": "numeric",
         "resource": {
             "name": "AMZ_LOCADM1",
             "type": "feature",
@@ -210,6 +214,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": "table",
         "resource": {
             "name": "AMZ_LOCADM2",
             "type": "feature",
@@ -272,6 +277,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Administrative_capitals_at_admin_0_to_2_levels",
             "type": "feature",
@@ -358,6 +364,7 @@
             "map",
             "chart"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "AMZ_NATTOPOALT_SINGL",
             "type": "feature",
@@ -423,6 +430,7 @@
         "visualization_types": [
             "map"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "sloper_rasterized",
             "type": "imagery",
@@ -543,6 +551,7 @@
             "map",
             "table"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_NATHYDROLOC",
             "type": "feature",
@@ -596,6 +605,7 @@
             "map",
             "table"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Principals_Amazon_Rivers",
             "type": "feature",
@@ -661,6 +671,7 @@
             "map",
             "chart"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_NATCOASTINF",
             "type": "feature",
@@ -729,6 +740,7 @@
             "numeric",
             "chart"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Protected_Areas",
             "type": "feature",
@@ -821,6 +833,7 @@
             "numeric",
             "chart"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Indigenous_territories",
             "type": "feature",
@@ -909,6 +922,7 @@
         "visualization_types": [
             "map"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Land_Cover_Classes_in_the_Amazon",
             "type": "imagery",
@@ -1068,6 +1082,7 @@
         "visualization_types": [
             "map"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "x",
             "type": "imagery",
@@ -1191,6 +1206,7 @@
         "visualization_types": [
             "map"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Forest_Cover_Change",
             "type": "imagery",
@@ -1314,6 +1330,7 @@
         "visualization_types": [
             "map"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "x",
             "type": "imagery",
@@ -1439,6 +1456,7 @@
             "table",
             "chart"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Forest_Fire_Frequency",
             "type": "feature",
@@ -1514,6 +1532,7 @@
             "table",
             "chart"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Carbon_Storage",
             "type": "feature",
@@ -1589,6 +1608,7 @@
             "numeric",
             "chart"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Large_terrestrial_biomes_in_the_Amazon",
             "type": "feature",
@@ -1654,6 +1674,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Ecosystem_Types",
             "type": "feature",
@@ -1715,6 +1736,7 @@
         "visualization_types": [
             "map"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Global_Mangrove_Extent",
             "type": "feature",
@@ -1762,6 +1784,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Tropical_Lowland_Rainforest",
             "type": "feature",
@@ -1837,6 +1860,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Tropical_Heath_Forest",
             "type": "feature",
@@ -1912,6 +1936,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Peat_Flooded_Forests",
             "type": "feature",
@@ -1987,6 +2012,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Fire_Adapted_Savannas",
             "type": "feature",
@@ -2062,6 +2088,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Permanent_Wetlands",
             "type": "feature",
@@ -2137,6 +2164,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Seasonal_Floodplain",
             "type": "feature",
@@ -2212,6 +2240,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Amazonian_Croplands",
             "type": "feature",
@@ -2285,6 +2314,7 @@
         "visualization_types": [
             "map"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Grassland_Coverage_Classes",
             "type": "imagery",
@@ -2366,6 +2396,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Built_Areas",
             "type": "feature",
@@ -2441,6 +2472,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Natural_Regeneration_Areas",
             "type": "feature",
@@ -2517,6 +2549,7 @@
             "numeric",
             "chart"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Conservation_priority",
             "type": "feature",
@@ -2601,6 +2634,7 @@
             "table",
             "chart"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Species_Richness",
             "type": "feature",
@@ -2666,6 +2700,7 @@
             "numeric",
             "chart"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_BIOKBAS",
             "type": "feature",
@@ -2751,6 +2786,7 @@
             "table",
             "chart"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Climatic_Types_According_to_the_K%C3%B6ppen_Classification",
             "type": "feature",
@@ -2831,6 +2867,7 @@
             "table",
             "chart"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Annual_Rainfall_Regimes_Layer",
             "type": "feature",
@@ -2910,6 +2947,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "population25_amazonia",
             "type": "imagery",
@@ -3034,6 +3072,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "population25_amazonia",
             "type": "imagery",
@@ -3158,6 +3197,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "population25_amazonia",
             "type": "imagery",
@@ -3282,6 +3322,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "population25_amazonia",
             "type": "imagery",
@@ -3406,6 +3447,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "population25_amazonia",
             "type": "imagery",
@@ -3530,6 +3572,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "population25_amazonia",
             "type": "imagery",
@@ -3654,6 +3697,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "population25_amazonia",
             "type": "imagery",
@@ -3779,6 +3823,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Electricity_Access",
             "type": "feature",
@@ -3843,6 +3888,7 @@
         "visualization_types": [
             "map"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Deprivation_Levels_in_the_Amazon",
             "type": "imagery",
@@ -3981,6 +4027,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Native_languages",
             "type": "feature",
@@ -4056,6 +4103,7 @@
         "visualization_types": [
             "map"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Gross_Domestic_Product_in_Amazon",
             "type": "imagery",
@@ -4208,6 +4256,7 @@
             "numeric",
             "chart"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Oil_Extraction_Areas",
             "type": "feature",
@@ -4281,6 +4330,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "",
             "type": "feature",
@@ -4365,6 +4415,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Cassava_Production",
             "type": "imagery",
@@ -4502,6 +4553,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Corn_Production",
             "type": "imagery",
@@ -4639,6 +4691,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Rice_Production",
             "type": "imagery",
@@ -4763,6 +4816,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Sorghum_Production",
             "type": "imagery",
@@ -4887,6 +4941,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Cocoa_Production",
             "type": "imagery",
@@ -5011,6 +5066,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Arabic_Coffee_Production",
             "type": "imagery",
@@ -5135,6 +5191,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Oil_Palm_Production",
             "type": "imagery",
@@ -5259,6 +5316,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Rubber_Production",
             "type": "imagery",
@@ -5396,6 +5454,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Soybean_Production",
             "type": "imagery",
@@ -5533,6 +5592,7 @@
             "map",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Sugarcane_Production",
             "type": "imagery",
@@ -5684,6 +5744,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Bioenconomy_Centers",
             "type": "feature",
@@ -5746,6 +5807,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "x",
             "type": "feature",
@@ -5820,6 +5882,7 @@
             "numeric",
             "chart"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Health_Facilities",
             "type": "feature",
@@ -5910,6 +5973,7 @@
             "numeric",
             "chart"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Higher_Education_Centers",
             "type": "feature",
@@ -6000,6 +6064,7 @@
             "numeric",
             "chart"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Transport_Corridors",
             "type": "feature",
@@ -6091,6 +6156,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "",
             "type": "feature",
@@ -6176,6 +6242,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "",
             "type": "feature",
@@ -6263,6 +6330,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "",
             "type": "feature",
@@ -6348,6 +6416,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "",
             "type": "feature",
@@ -6438,6 +6507,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "",
             "type": "feature",
@@ -6532,6 +6602,7 @@
         "visualization_types": [
             "map"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "",
             "type": "feature",
@@ -6577,6 +6648,7 @@
         "visualization_types": [
             "map"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "",
             "type": "imagery",
@@ -6700,6 +6772,7 @@
         "visualization_types": [
             "map"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "",
             "type": "imagery",
@@ -6825,6 +6898,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "",
             "type": "feature",
@@ -6900,6 +6974,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "",
             "type": "feature",
@@ -6963,6 +7038,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "",
             "type": "feature",
@@ -7038,6 +7114,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "",
             "type": "feature",
@@ -7113,6 +7190,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "",
             "type": "feature",
@@ -7188,6 +7266,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "cities",
             "type": "feature",
@@ -7277,6 +7356,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "urbanareas",
             "type": "feature",
@@ -7366,6 +7446,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "settlements",
             "type": "feature",
@@ -7455,6 +7536,7 @@
             "table",
             "chart"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Drought_Risk_Layer",
             "type": "feature",
@@ -7530,6 +7612,7 @@
             "table",
             "chart"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_CLIFLOODRI",
             "type": "feature",
@@ -7606,6 +7689,7 @@
             "numeric",
             "chart"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Extreme_Hot_Days",
             "type": "feature",
@@ -7676,6 +7760,7 @@
             "map",
             "chart"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Extreme_Droughtness",
             "type": "feature",
@@ -7737,6 +7822,7 @@
             "numeric",
             "chart"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "Conflict_Locations",
             "type": "feature",
@@ -7830,6 +7916,7 @@
             "map",
             "table"
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "Homicides_Rate",
             "type": "feature",
@@ -7902,6 +7989,7 @@
             "table",
             "numeric"
         ],
+        "default_visualization_type": "map",
         "resource": {
             "name": "IDB_operations_AF360",
             "type": "feature",
@@ -7982,6 +8070,7 @@
         "description_short_pt": "Média de altitude por célula, m",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_NATTOPOALT_H3L9",
             "type": "h3",
@@ -8016,6 +8105,7 @@
         "description_short_pt": "Média de declividade por célula, graus",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_NATTOPOSLOPE_H3L8",
             "type": "h3",
@@ -8050,6 +8140,7 @@
         "description_short_pt": "Média de proximidade de rio por célula (OSM)",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "rivers.csv",
             "type": "h3",
@@ -8084,6 +8175,7 @@
         "description_short_pt": "Classificação dominante de influência costeira, por proximidade à costa",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "coast.csv",
             "type": "h3",
@@ -8118,6 +8210,7 @@
         "description_short_pt": "Porcentagem de terra indígena (RAISG 2020) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_SAAINDIGTERR_H3L6",
             "type": "h3",
@@ -8152,6 +8245,7 @@
         "description_short_pt": "Porcentagem da classe de cobertura 'Arbustos' (WorldCover ESA 2021) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L7",
             "type": "h3",
@@ -8186,6 +8280,7 @@
         "description_short_pt": "Porcentagem da classe de cobertura 'Pastagem' (WorldCover ESA 2021) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L8",
             "type": "h3",
@@ -8220,6 +8315,7 @@
         "description_short_pt": "Porcentagem da classe de cobertura 'Terras Cultivadas' (WorldCover ESA 2021) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L9",
             "type": "h3",
@@ -8254,6 +8350,7 @@
         "description_short_pt": "Porcentagem da classe de cobertura 'Arbustos' (WorldCover ESA 2021) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L11",
             "type": "h3",
@@ -8288,6 +8385,7 @@
         "description_short_pt": "Porcentagem da classe de cobertura 'Corpos d'água permanentes' (WorldCover ESA 2021) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L13",
             "type": "h3",
@@ -8322,6 +8420,7 @@
         "description_short_pt": "Análise da amostragem GLAD de cobertura florestal 2024, por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "x",
             "type": "h3",
@@ -8356,6 +8455,7 @@
         "description_short_pt": "Análise da amostragem GLAD de perda de cobertura florestal 2000-2024, por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "x",
             "type": "h3",
@@ -8390,6 +8490,7 @@
         "description_short_pt": "Altura média do dossel arbóreo por célula, m (Ctrees 2020-2024)",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "x",
             "type": "h3",
@@ -8424,6 +8525,7 @@
         "description_short_pt": "Contagem de pontos de incêndio do FIRMS (2014-2016) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_CLIFIREFREQ_H3L6",
             "type": "h3",
@@ -8458,6 +8560,7 @@
         "description_short_pt": "Média de carbono fixado na biomassa, t/ha, por célula (GlobBiomass)",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_CRBSEQBIO_H3L8",
             "type": "h3",
@@ -8492,6 +8595,7 @@
         "description_short_pt": "Porcentagem de cobertura de manguezal por célula (JAXA)",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L15",
             "type": "h3",
@@ -8526,6 +8630,7 @@
         "description_short_pt": "Porcentagem de cobertura de Floresta Úmida de Terras Baixas (IUCN GET T1.1) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "ecosystems.csv",
             "type": "h3",
@@ -8560,6 +8665,7 @@
         "description_short_pt": "Porcentagem de cobertura de Floresta Tropical de Brejo (IUCN GET T1.4) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "ecosystems.csv",
             "type": "h3",
@@ -8594,6 +8700,7 @@
         "description_short_pt": "Porcentagem de cobertura de Florestas Tropicais Inundadas e Turfeiras Florestadas (IUCN GET TF1.1) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "ecosystems.csv",
             "type": "h3",
@@ -8628,6 +8735,7 @@
         "description_short_pt": "Porcentagem de cobertura de Savanas Adaptadas ao Fogo (IUCN GET T4.2) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "ecosystems.csv",
             "type": "h3",
@@ -8662,6 +8770,7 @@
         "description_short_pt": "Porcentagem de cobertura de Zonas Úmidas Permanentes (IUCN GET TF1.3) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "ecosystems.csv",
             "type": "h3",
@@ -8696,6 +8805,7 @@
         "description_short_pt": "Porcentagem de cobertura de Planícies de Inundação Sazonais (IUCN GET TF1.4) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "ecosystems.csv",
             "type": "h3",
@@ -8730,6 +8840,7 @@
         "description_short_pt": "Porcentagem de cobertura da classe 70 WorldCover 2021: Gelo e neve",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L12",
             "type": "h3",
@@ -8764,6 +8875,7 @@
         "description_short_pt": "Porcentagem de cobertura de Terras Agrícolas (IUCN GET T7.1) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "ecosystems.csv",
             "type": "h3",
@@ -8798,6 +8910,7 @@
         "description_short_pt": "Porcentagem de cobertura de classes de pastagens (GPW 2024) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "x",
             "type": "h3",
@@ -8832,6 +8945,7 @@
         "description_short_pt": "Porcentagem de cobertura de Ambientes Urbanos (IUCN GET T7.4) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_LNDCLSSCOVRG_H3L10",
             "type": "h3",
@@ -8866,6 +8980,7 @@
         "description_short_pt": "Contagem básica de espécies registradas por célula (IBAT / IUCN 2022)",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_BIOBASICSPEC_H3L6",
             "type": "h3",
@@ -8900,6 +9015,7 @@
         "description_short_pt": "Porcentagem de cobertura de Áreas-Chave para a Biodiversidade (KBA, IBAT, 2022) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "kba.csv",
             "type": "h3",
@@ -8934,6 +9050,7 @@
         "description_short_pt": "Média da precipitação média anual por célula (WORLDCLIM)",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_CLIANNUALPREC_H3L8",
             "type": "h3",
@@ -8968,6 +9085,7 @@
         "description_short_pt": "Média da temperatura média anual por célula (WORLDCLIM)",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_CLIANNUALTEMP_H3L8",
             "type": "h3",
@@ -9002,6 +9120,7 @@
         "description_short_pt": "População estimada para o ano de 1975 (modelo GHSPOP) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_PPLDEM7530POP_H3L10",
             "type": "h3",
@@ -9036,6 +9155,7 @@
         "description_short_pt": "População estimada para o ano de 1975 (modelo GHSPOP) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_PPLDEM7530POP_H3L9",
             "type": "h3",
@@ -9070,6 +9190,7 @@
         "description_short_pt": "População estimada para o ano de 1975 (modelo GHSPOP) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_PPLDEM7530POP_H3L8",
             "type": "h3",
@@ -9104,6 +9225,7 @@
         "description_short_pt": "População estimada para o ano de 1975 (modelo GHSPOP) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_PPLDEM7530POP_H3L7",
             "type": "h3",
@@ -9138,6 +9260,7 @@
         "description_short_pt": "População estimada para o ano de 2030 (modelo GHSPOP) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_PPLDEM7530POP_H3L6",
             "type": "h3",
@@ -9172,6 +9295,7 @@
         "description_short_pt": "Diferença simples entre as populações estimadas GHSPOP 1975 e 2030, por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_PPLDEM7530POP_H3L11",
             "type": "h3",
@@ -9206,6 +9330,7 @@
         "description_short_pt": "População feminina estimada 2010-2018, por célula. Modelo HRSL",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "x",
             "type": "h3",
@@ -9240,6 +9365,7 @@
         "description_short_pt": "População masculina estimada 2010-2018, por célula. Modelo HRSL",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "x",
             "type": "h3",
@@ -9274,6 +9400,7 @@
         "description_short_pt": "População estimada de crianças menores de cinco anos, 2010-2018, por célula. HRSL",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "x",
             "type": "h3",
@@ -9308,6 +9435,7 @@
         "description_short_pt": "População estimada de pessoas com mais de 60 anos, 2010-2018, por célula. HRSL",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "x",
             "type": "h3",
@@ -9342,6 +9470,7 @@
         "description_short_pt": "População estimada de pessoas entre 15 e 24 anos, 2010-2018, por célula. HRSL",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "x",
             "type": "h3",
@@ -9376,6 +9505,7 @@
         "description_short_pt": "População estimada de mulheres em idade fértil (15-49 anos), 2010-2018, por célula. HRSL",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "x",
             "type": "h3",
@@ -9410,6 +9540,7 @@
         "description_short_pt": "Média do índice de privação nas condições de vida (SEDAC/GRDI v1) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_PPLSOCDEPRVIND_H3L6",
             "type": "h3",
@@ -9444,6 +9575,7 @@
         "description_short_pt": "Número de línguas indígenas identificadas por célula (Native Lands)",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "NATLANG",
             "type": "h3",
@@ -9478,6 +9610,7 @@
         "description_short_pt": "Estimativa do produto interno bruto, USD (SEDAC) média por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "GDPMEAN",
             "type": "h3",
@@ -9512,6 +9645,7 @@
         "description_short_pt": "Proporção de áreas designadas para exploração e extração de petróleo (RAISG) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "OILAREAP",
             "type": "h3",
@@ -9546,6 +9680,7 @@
         "description_short_pt": "Proporção de áreas com evidências de garimpo ilegal (RAISG) por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "ILEGMINING",
             "type": "h3",
@@ -9580,6 +9715,7 @@
         "description_short_pt": "Área colhida de mandioca por célula (ha), modelo SPAM 2020",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "h3agripods.csv",
             "type": "h3",
@@ -9614,6 +9750,7 @@
         "description_short_pt": "Área colhida de milho por célula (ha), modelo SPAM 2020",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "h3agripods.csv",
             "type": "h3",
@@ -9648,6 +9785,7 @@
         "description_short_pt": "Área colhida de arroz por célula (ha), modelo SPAM 2020",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "h3agripods.csv",
             "type": "h3",
@@ -9682,6 +9820,7 @@
         "description_short_pt": "Área colhida de sorgo por célula (ha), modelo SPAM 2020",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "h3agripods.csv",
             "type": "h3",
@@ -9716,6 +9855,7 @@
         "description_short_pt": "Área colhida de cacau por célula (ha), modelo SPAM 2020",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "h3agripods.csv",
             "type": "h3",
@@ -9750,6 +9890,7 @@
         "description_short_pt": "Área colhida de café arábica por célula (ha), modelo SPAM 2020",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "h3agripods.csv",
             "type": "h3",
@@ -9784,6 +9925,7 @@
         "description_short_pt": "Área colhida de palma de óleo por célula (ha), modelo SPAM 2020",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "h3agripods.csv",
             "type": "h3",
@@ -9818,6 +9960,7 @@
         "description_short_pt": "Área colhida de seringueira por célula (ha), modelo SPAM 2020",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "h3agripods.csv",
             "type": "h3",
@@ -9852,6 +9995,7 @@
         "description_short_pt": "Área colhida de soja por célula (ha), modelo SPAM 2020",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "h3agripods.csv",
             "type": "h3",
@@ -9886,6 +10030,7 @@
         "description_short_pt": "Área colhida de cana-de-açúcar por célula (ha), modelo SPAM 2020",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "h3agripods.csv",
             "type": "h3",
@@ -9920,6 +10065,7 @@
         "description_short_pt": "Contagem de sítios do Patrimônio Mundial UNESCO por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "x",
             "type": "h3",
@@ -9954,6 +10100,7 @@
         "description_short_pt": "Total indiferenciada de estradas por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "AMZ_INURBROADENS_H3L6",
             "type": "h3",
@@ -9988,6 +10135,7 @@
         "description_short_pt": "Contagem de pontes rodoviárias e ferroviárias (OSM), por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "BRIDGES",
             "type": "h3",
@@ -10022,6 +10170,7 @@
         "description_short_pt": "Contagem de usinas hidrelétricas com capacidade > 45 MW (GHT/GEM), por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "HYDROELECT",
             "type": "h3",
@@ -10056,6 +10205,7 @@
         "description_short_pt": "Contagem de reservatórios artificiais (GDW), por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "GDWRESERVOIRS",
             "type": "h3",
@@ -10090,6 +10240,7 @@
         "description_short_pt": "Contagem de barreiras fluviais artificiais (GDW), por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "GDWBARRIERS",
             "type": "h3",
@@ -10124,6 +10275,7 @@
         "description_short_pt": "Contagem de instalações de geração de eletricidade (GPT/GEM), por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "GLOBENERGY",
             "type": "h3",
@@ -10158,6 +10310,7 @@
         "description_short_pt": "Contagem de torres de comunicações (OpenCelliD 2023-2025), por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "CELLTOWRS",
             "type": "h3",
@@ -10192,6 +10345,7 @@
         "description_short_pt": "Média de testes de velocidade de internet móvel durante 2025 (Ookla)",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "SPTSTMOB",
             "type": "h3",
@@ -10226,6 +10380,7 @@
         "description_short_pt": "Média de testes de velocidade de internet fixa durante 2025 (Ookla)",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "SPTSTFIX",
             "type": "h3",
@@ -10260,6 +10415,7 @@
         "description_short_pt": "Distância de cada célula até células vizinhas com infraestrutura policial",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "POLICEINSTAL",
             "type": "h3",
@@ -10294,6 +10450,7 @@
         "description_short_pt": "Distância de cada célula até células vizinhas com infraestrutura policial",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "MILINSTAL",
             "type": "h3",
@@ -10328,6 +10485,7 @@
         "description_short_pt": "Distância de cada célula até células vizinhas com infraestrutura de atendimento a emergências",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "FIREFIGRESCU",
             "type": "h3",
@@ -10362,6 +10520,7 @@
         "description_short_pt": "Distância de cada célula até células vizinhas com infraestrutura de vigilância aduaneira",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "MIGCUSTNET",
             "type": "h3",
@@ -10396,6 +10555,7 @@
         "description_short_pt": "Distância de cada célula até células vizinhas com passos de fronteira",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "INTBOCROSS",
             "type": "h3",
@@ -10430,6 +10590,7 @@
         "description_short_pt": "Equivalente à superfície construída por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "SETTLMNTPERC",
             "type": "h3",
@@ -10464,6 +10625,7 @@
         "description_short_pt": "Porcentagem de cobertura por categoria de frequência de dias de calor extremo, por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "extreme.csv",
             "type": "h3",
@@ -10498,6 +10660,7 @@
         "description_short_pt": "Porcentagem de cobertura por categoria de precipitação do mês mais seco, por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "extreme.csv",
             "type": "h3",
@@ -10532,6 +10695,7 @@
         "description_short_pt": "Porcentagem de cobertura por categoria de risco de inundação fluvial, por célula",
         "visualization_types": [
         ],
+        "default_visualization_type": null,
         "resource": {
             "name": "x",
             "type": "h3",

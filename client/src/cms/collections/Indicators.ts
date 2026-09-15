@@ -56,6 +56,21 @@ export const Indicators: CollectionConfig = {
           "Which widgets this indicator offers. Deliberately explicit, not derived: deriving would change 18 of 164 rows. Empty for all h3 indicators.",
       },
     },
+    {
+      name: "default_visualization_type",
+      type: "radio",
+      required: false,
+      options: [
+        { label: "Map", value: "map" },
+        { label: "Table", value: "table" },
+        { label: "Chart", value: "chart" },
+        { label: "Numeric", value: "numeric" },
+      ],
+      admin: {
+        description:
+          "Which of the visualization types above the sidebar marks as the default. Optional: only 31 of 164 indicators declare one, and the rest show no badge. Should be one of visualization_types — indicator 0 is the one row where it is not, inherited from the source data.",
+      },
+    },
     ResourceField,
   ],
   hooks: {
