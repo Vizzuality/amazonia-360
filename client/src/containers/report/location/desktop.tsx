@@ -2,30 +2,21 @@
 
 import { useSearchParams } from "next/navigation";
 
-import { LucideHelpCircle } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { LuDatabase } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 
 import SidebarLocationContent from "@/containers/report/location/content-desktop";
 
-import { Button } from "@/components/ui/button";
 import { HexagonIcon } from "@/components/ui/icons/hexagon";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Link } from "@/i18n/navigation";
 
-const HELP_LINKS = {
-  en: "https://rise.articulate.com/share/GWlgAGqnPZihWgXVpLCGge4Pjjk9k2Wo#/?locale=en-us",
-  es: "https://rise.articulate.com/share/GWlgAGqnPZihWgXVpLCGge4Pjjk9k2Wo#/",
-  pt: "https://rise.articulate.com/share/GWlgAGqnPZihWgXVpLCGge4Pjjk9k2Wo#/?locale=pt-br",
-};
-
 export default function ReportLocationDesktop() {
   const searchParams = useSearchParams();
 
-  const locale = useLocale();
   const t = useTranslations();
 
   const SIDEBAR_CARDS = [
@@ -51,18 +42,6 @@ export default function ReportLocationDesktop() {
             <aside className="pointer-events-auto flex w-full shrink-0 flex-col overflow-hidden">
               <div className="flex max-h-[calc(100vh-(64px+40px+28px))] grow flex-col">
                 <div className="relative flex max-h-full grow flex-col overflow-hidden">
-                  <a
-                    href={HELP_LINKS[locale]}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="absolute top-6 right-6 z-10"
-                  >
-                    <Button size="sm" variant="outline" type="button" className="gap-2">
-                      <LucideHelpCircle className="text-secondary-foreground h-4 w-4" />
-
-                      <span>{t("help")}</span>
-                    </Button>
-                  </a>
                   <ScrollArea className="h-full w-full grow">
                     <SidebarLocationContent />
                   </ScrollArea>

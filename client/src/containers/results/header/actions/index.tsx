@@ -4,8 +4,6 @@ import { useParams } from "next/navigation";
 
 import { LuEllipsisVertical } from "react-icons/lu";
 
-import { HelpAction } from "@/containers/results/header/actions/help";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -39,10 +37,6 @@ export const ActionsReport = () => {
         <DropdownMenuSeparator />
 
         <NewReportAction />
-
-        <DropdownMenuSeparator />
-
-        <HelpAction reportId={id} />
       </DropdownMenuContent>
     </DropdownMenu>
   );

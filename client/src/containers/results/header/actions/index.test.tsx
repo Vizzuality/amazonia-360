@@ -54,28 +54,9 @@ describe("ActionsReport", () => {
     expect(screen.getByText("download")).toBeInTheDocument();
     expect(screen.getByText("report-results-action-duplicate")).toBeInTheDocument();
     expect(screen.getByText("report-results-buttons-new-report")).toBeInTheDocument();
-    expect(screen.getByText("help")).toBeInTheDocument();
   });
 
-  test("passes report ID from useParams to child components", async () => {
-    render(<ActionsReport />);
-
-    const triggerButton = screen.getByRole("button", { name: /open menu/i });
-    fireEvent.pointerDown(triggerButton, { button: 0, pointerType: "mouse" });
-
-    await waitFor(() => {
-      expect(screen.getByText("help")).toBeInTheDocument();
-    });
-
-    // The help action renders an anchor with locale-based href
-    const helpMenuItem = screen.getByText("help").closest("[role='menuitem']");
-    expect(helpMenuItem).toHaveAttribute(
-      "href",
-      "https://rise.articulate.com/share/DzHpFspTQWmMCeeoMXA2_6v5Zljl-b7i#/?locale=en-us",
-    );
-  });
-
-  test("renders separators between action groups", async () => {
+  test("renders a separator between action groups", async () => {
     render(<ActionsReport />);
 
     const triggerButton = screen.getByRole("button", { name: /open menu/i });
@@ -86,6 +67,6 @@ describe("ActionsReport", () => {
     });
 
     const separators = screen.getAllByRole("separator");
-    expect(separators.length).toBeGreaterThanOrEqual(2);
+    expect(separators).toHaveLength(1);
   });
 });
