@@ -2,11 +2,10 @@
 
 import { useMemo } from "react";
 
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { LuChartPie, LuHash, LuMap, LuTable } from "react-icons/lu";
 
 import { findFirstAvailablePosition } from "@/lib/report";
-import { useGetDefaultSubtopics } from "@/lib/subtopics";
 import { cn } from "@/lib/utils";
 
 import { Indicator } from "@/types/indicator";
@@ -20,15 +19,15 @@ export function VisualizationType({
   types = ["map", "table", "chart", "numeric"],
   indicatorId,
   topicId,
+  defaultType,
 }: {
   types: Exclude<VisualizationTypes, "ai" | "custom">[];
   indicatorId: Indicator["id"];
   topicId: Topic["id"];
+  defaultType: Indicator["default_visualization_type"];
 }) {
   const t = useTranslations();
-  const locale = useLocale();
   const { topics, setTopics } = useFormTopics();
-  const { data: subtopicsData } = useGetDefaultSubtopics({ locale, topicId });
 
   const handleVisualizationType = (visualizationType: VisualizationTypes) => {
     const widgetSize = DEFAULT_VISUALIZATION_SIZES[visualizationType];
@@ -75,20 +74,6 @@ export function VisualizationType({
       return newTopics;
     });
   };
-
-  const defaultVisualizations = useMemo(
-    () =>
-      subtopicsData
-        ?.filter((s) => s.topic_id === topicId)
-        .map((s) => s.default_visualization)
-        .flat() || [],
-    [subtopicsData, topicId],
-  );
-
-  const defaultVisualizationsPerIndicator = useMemo(
-    () => defaultVisualizations?.find(({ indicator_id }) => indicator_id === indicatorId)?.type,
-    [defaultVisualizations, indicatorId],
-  );
 
   const activeVisualizationsPerIndicatorAndTopic = useMemo(
     () => topics?.find(({ topic_id }) => topic_id === topicId)?.indicators,
@@ -137,7 +122,7 @@ export function VisualizationType({
                   {t(`${type}`)}
                 </span>
 
-                {defaultVisualizationsPerIndicator === type && (
+                {defaultType === type && (
                   <span className="bg-secondary rounded-full px-2.5 py-0.5 text-xs font-semibold">
                     {t("default")}
                   </span>

@@ -1,18 +1,20 @@
 import type { Payload } from "payload";
 
 import { mapDefaultVisualization } from "./utils/normalize-data";
-import type { RawSubtopic, RawTopic, RawVisualizationEntry } from "./utils/types";
+import type { RawTopic } from "./utils/types";
 
-const patchDefaultVisualizations = async <
-  TRaw extends { id: number; default_visualization: RawVisualizationEntry[] },
->(
+export const seedDefaultVisualizations = async (
   payload: Payload,
-  collection: "topics" | "subtopics",
-  rawItems: TRaw[],
+  topics: RawTopic[],
 ): Promise<void> => {
-  for (const raw of rawItems) {
+  for (const raw of topics) {
     const id = String(raw.id);
-    const exists = await payload.findByID({ collection, id, disableErrors: true, select: {} });
+    const exists = await payload.findByID({
+      collection: "topics",
+      id,
+      disableErrors: true,
+      select: {},
+    });
     if (!exists) continue;
 
     const indicatorIds = new Set<string>();
@@ -39,16 +41,7 @@ const patchDefaultVisualizations = async <
       ),
     );
     if (default_visualization.length > 0) {
-      await payload.update({ collection, id, data: { default_visualization } });
+      await payload.update({ collection: "topics", id, data: { default_visualization } });
     }
   }
-};
-
-export const seedDefaultVisualizations = async (
-  payload: Payload,
-  topics: RawTopic[],
-  subtopics: RawSubtopic[],
-): Promise<void> => {
-  await patchDefaultVisualizations(payload, "topics", topics);
-  await patchDefaultVisualizations(payload, "subtopics", subtopics);
 };

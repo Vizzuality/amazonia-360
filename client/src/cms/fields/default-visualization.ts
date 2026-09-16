@@ -20,7 +20,7 @@ const clearWhenNotMap = ({
 }) => (siblingData?.type !== "map" ? null : value);
 
 /**
- * The pre-configured widget layout for a topic or subtopic.
+ * The pre-configured widget layout for a topic.
  *
  * Deliberately NOT shared with `cms/fields/topics.ts` (used by Reports): that field
  * stores `indicator_id` as a raw number to match untouched reports data, whereas this
