@@ -6,7 +6,6 @@ import { useFormContext } from "react-hook-form";
 
 import { useParams } from "next/navigation";
 
-import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
@@ -21,7 +20,6 @@ export const useSaveReportCallback = (callback?: () => void) => {
   const { id } = useParams();
 
   const { data: reportData } = useReport({ id: `${id}` });
-  const { data: session } = useSession();
 
   const form = useFormContext();
   const { title } = useFormTitle();
@@ -39,7 +37,7 @@ export const useSaveReportCallback = (callback?: () => void) => {
           description: reportData?.description || null,
           topics: topics || (reportData?.topics as TopicView[]) || [],
           location: location || reportData?.location || null,
-          status: session?.user.collection === "users" ? "published" : "draft",
+          status: "published",
         },
         {
           onSuccess: () => {
@@ -54,7 +52,7 @@ export const useSaveReportCallback = (callback?: () => void) => {
         error: t("report-save-error"),
       },
     );
-  }, [id, title, topics, location, session, saveMutation, t, reportData, form, callback]);
+  }, [id, title, topics, location, saveMutation, t, reportData, form, callback]);
 
   return {
     mutation: saveMutation,
@@ -68,7 +66,6 @@ export const useDuplicateReportCallback = (callback?: (newReportId: string) => v
   const { id } = useParams();
 
   const { data: reportData } = useReport({ id: `${id}` });
-  const { data: session } = useSession();
 
   const { title } = useFormTitle();
   const { topics } = useFormTopics();
@@ -84,7 +81,7 @@ export const useDuplicateReportCallback = (callback?: (newReportId: string) => v
           description: reportData?.description || null,
           topics: topics || (reportData?.topics as TopicView[]) || [],
           location: location || reportData?.location || null,
-          status: session?.user.collection === "users" ? "published" : "draft",
+          status: "published",
         },
         {
           onSuccess: (data) => {
@@ -99,7 +96,7 @@ export const useDuplicateReportCallback = (callback?: (newReportId: string) => v
         error: t("report-duplicate-error"),
       },
     );
-  }, [title, topics, location, session, duplicateMutation, t, reportData, callback]);
+  }, [title, topics, location, duplicateMutation, t, reportData, callback]);
 
   return {
     mutation: duplicateMutation,

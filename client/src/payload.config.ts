@@ -18,15 +18,12 @@ import { env } from "@/env.mjs";
 
 import { Accounts } from "@/cms/collections/Accounts";
 import { Admins } from "@/cms/collections/Admins";
-import { AnonymousUsers } from "@/cms/collections/AnonymousUsers";
 import { Indicators } from "@/cms/collections/Indicators";
 import { Media } from "@/cms/collections/Media";
 import { Reports } from "@/cms/collections/Reports";
 import { Subtopics } from "@/cms/collections/Subtopics";
 import { Topics } from "@/cms/collections/Topics";
 import { Users } from "@/cms/collections/Users";
-import { CleanAnonymousUsers } from "@/cms/cron/clean-anonymous-users";
-import { CleanDraftReports } from "@/cms/cron/clean-draft-reports";
 import { routing } from "@/i18n/routing";
 
 import { getDatabaseUrlFromUrlAndPassword } from "./utils/database-url";
@@ -64,17 +61,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [
-    Admins,
-    Users,
-    AnonymousUsers,
-    Accounts,
-    Media,
-    Reports,
-    Topics,
-    Subtopics,
-    Indicators,
-  ],
+  collections: [Admins, Users, Accounts, Media, Reports, Topics, Subtopics, Indicators],
   db: postgresAdapter({
     idType: "uuid",
     pool: {
@@ -124,14 +111,5 @@ export default buildConfig({
   ],
   routes: {
     api: "/v1/api",
-  },
-  jobs: {
-    autoRun: [
-      {
-        cron: process.env.ANONYMOUS_USERS_CLEANUP_CRON_SCHEDULE ?? "0 0 * * *", // Default: every day at midnight
-        queue: "nightly",
-      },
-    ],
-    tasks: [CleanAnonymousUsers, CleanDraftReports],
   },
 });

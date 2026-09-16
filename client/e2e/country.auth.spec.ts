@@ -1,10 +1,15 @@
 import { test, expect } from "./fixtures";
 import { dismissCookieConsent } from "./helpers/cookie-consent";
+import { skipWithoutCredentials } from "./helpers/credentials";
 import { countryPath } from "./helpers/locale";
 import { expectNodeKept, markNode } from "./helpers/node-identity";
 import { CountrySelector } from "./pages/country-selector.page";
 import { HomePage } from "./pages/home.page";
 import { ReportsPage } from "./pages/reports.page";
+
+// The picker lives in the header of the report tool, which is gated, so these run
+// in the signed-in `chromium-authenticated` project.
+test.skip(skipWithoutCredentials, "E2E test user credentials not set");
 
 test.describe("the module in the URL", () => {
   test("switching adds the code and leaves the path and search params alone", async ({ page }) => {
