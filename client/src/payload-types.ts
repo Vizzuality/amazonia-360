@@ -201,6 +201,7 @@ export interface User {
   image?: string | null;
   emailVerified?: string | null;
   communityOptIn?: boolean | null;
+  countriesOfInterest?: ('BRA' | 'COL' | 'PER' | 'VEN' | 'ECU' | 'BOL' | 'GUY' | 'SUR' | 'GUF' | 'PRY')[] | null;
   accounts?: {
     docs?: (string | Account)[];
     hasNextPage?: boolean;
@@ -931,6 +932,7 @@ export interface UsersSelect<T extends boolean = true> {
   image?: T;
   emailVerified?: T;
   communityOptIn?: T;
+  countriesOfInterest?: T;
   accounts?: T;
   reports?: T;
   updatedAt?: T;

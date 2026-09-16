@@ -10,6 +10,7 @@ const LABELS: Record<
     email: string;
     password: string;
     confirmPassword: string;
+    countriesLabel: string;
     signIn: string;
     accountCreated: RegExp;
     accountCreationFailed: RegExp;
@@ -21,6 +22,7 @@ const LABELS: Record<
     email: "Email",
     password: "Password",
     confirmPassword: "Confirm Password",
+    countriesLabel: "Countries of interest",
     signIn: "Sign in",
     accountCreated: /account created successfully/i,
     accountCreationFailed: /failed to create account/i,
@@ -31,6 +33,7 @@ const LABELS: Record<
     email: "Correo electrónico",
     password: "Contraseña",
     confirmPassword: "Confirmar contraseña",
+    countriesLabel: "Países de interés",
     signIn: "Iniciar sesión",
     accountCreated: /cuenta creada correctamente/i,
     accountCreationFailed: /error al crear la cuenta/i,
@@ -41,9 +44,49 @@ const LABELS: Record<
     email: "E-mail",
     password: "Senha",
     confirmPassword: "Confirmar senha",
+    countriesLabel: "Países de interesse",
     signIn: "Entrar",
     accountCreated: /conta criada com sucesso/i,
     accountCreationFailed: /falha ao criar conta/i,
+  },
+};
+
+const COUNTRY_NAMES: Record<Locale, Record<string, string>> = {
+  en: {
+    BOL: "Bolivia",
+    BRA: "Brazil",
+    COL: "Colombia",
+    ECU: "Ecuador",
+    GUF: "French Guiana",
+    GUY: "Guyana",
+    PER: "Peru",
+    PRY: "Paraguay",
+    SUR: "Suriname",
+    VEN: "Venezuela",
+  },
+  es: {
+    BOL: "Bolivia",
+    BRA: "Brasil",
+    COL: "Colombia",
+    ECU: "Ecuador",
+    GUF: "Guayana Francesa",
+    GUY: "Guyana",
+    PER: "Perú",
+    PRY: "Paraguay",
+    SUR: "Surinam",
+    VEN: "Venezuela",
+  },
+  pt: {
+    BOL: "Bolívia",
+    BRA: "Brasil",
+    COL: "Colômbia",
+    ECU: "Equador",
+    GUF: "Guiana Francesa",
+    GUY: "Guiana",
+    PER: "Peru",
+    PRY: "Paraguai",
+    SUR: "Suriname",
+    VEN: "Venezuela",
   },
 };
 
@@ -57,6 +100,7 @@ export class SignUpPage {
   readonly passwordInput: Locator;
   readonly confirmPasswordInput: Locator;
   readonly communityOptInCheckbox: Locator;
+  readonly countriesGroup: Locator;
   readonly submitButton: Locator;
   readonly signInLink: Locator;
 
@@ -71,6 +115,7 @@ export class SignUpPage {
     this.passwordInput = page.getByLabel(l.password, { exact: true });
     this.confirmPasswordInput = page.getByLabel(l.confirmPassword);
     this.communityOptInCheckbox = page.locator("#communityOptIn");
+    this.countriesGroup = page.getByRole("group", { name: l.countriesLabel });
     this.submitButton = page.locator('button[type="submit"]');
     this.signInLink = page
       .locator('[data-slot="card-footer"]')
@@ -88,6 +133,7 @@ export class SignUpPage {
     await expect(this.passwordInput).toBeVisible();
     await expect(this.confirmPasswordInput).toBeVisible();
     await expect(this.communityOptInCheckbox).toBeVisible();
+    await expect(this.countriesGroup).toBeVisible();
     await expect(this.submitButton).toBeVisible();
   }
 
@@ -109,6 +155,18 @@ export class SignUpPage {
 
   async checkCommunityOptIn() {
     await this.communityOptInCheckbox.check();
+  }
+
+  getCountryChip(iso3: string): Locator {
+    // Substring matching would make GUY ("Guiana") ambiguous against GUF ("Guiana Francesa") in pt.
+    return this.countriesGroup.getByRole("button", {
+      name: COUNTRY_NAMES[this.locale][iso3],
+      exact: true,
+    });
+  }
+
+  async toggleCountry(iso3: string) {
+    await this.getCountryChip(iso3).click();
   }
 
   async submit() {

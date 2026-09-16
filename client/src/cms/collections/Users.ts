@@ -2,6 +2,8 @@ import type { CollectionConfig } from "payload";
 
 import { env } from "@/env.mjs";
 
+import { COUNTRIES } from "@/constants/countries";
+
 import { anyoneAccess } from "@/cms/access/anyone";
 import { userAccess } from "@/cms/access/user";
 import { createAuthjsStrategy, logoutEndpoint } from "@/cms/auth/authjs-strategy";
@@ -9,11 +11,42 @@ import { buildVerifyEmailHTML, VERIFY_EMAIL_SUBJECT } from "@/cms/emails/verify-
 import { resendVerificationHandler } from "@/cms/endpoints/resend-verification";
 import { beforeDeleteUser } from "@/cms/hooks/user";
 
+const COUNTRIES_CSV_SEPARATOR = "|";
+
+function getCountriesOfInterestCsvCell(value: unknown): string {
+  if (!Array.isArray(value)) {
+    return "";
+  }
+
+  return value
+    .map(String)
+    .sort((a, b) => a.localeCompare(b, "en"))
+    .join(COUNTRIES_CSV_SEPARATOR);
+}
+
+function getCountriesOfInterestFromCsvCell(value: unknown): string[] {
+  if (typeof value !== "string") {
+    return [];
+  }
+
+  return value
+    .split(COUNTRIES_CSV_SEPARATOR)
+    .map((code) => code.trim())
+    .filter((code) => code.length > 0);
+}
+
 export const Users: CollectionConfig = {
   slug: "users",
   admin: {
     useAsTitle: "email",
-    defaultColumns: ["email", "name", "communityOptIn", "createdAt", "verified"],
+    defaultColumns: [
+      "email",
+      "name",
+      "communityOptIn",
+      "countriesOfInterest",
+      "createdAt",
+      "verified",
+    ],
   },
   auth: {
     verify: {
@@ -88,6 +121,25 @@ export const Users: CollectionConfig = {
 
               return value === true || value === "true" || value === "1";
             },
+          },
+        },
+      },
+    },
+    {
+      name: "countriesOfInterest",
+      type: "select",
+      hasMany: true,
+      label: "Countries of interest",
+      options: COUNTRIES.map(({ iso3, name }) => ({ label: name, value: iso3 })),
+      custom: {
+        "plugin-import-export": {
+          hooks: {
+            // The export flattens arrays into one column per index, so the column set of the
+            // CSVs used to decide who gets mailed would change with each row's selection count.
+            beforeExport: ({ format, value }) =>
+              format === "csv" ? getCountriesOfInterestCsvCell(value) : value,
+            beforeImport: ({ format, value }) =>
+              format === "csv" ? getCountriesOfInterestFromCsvCell(value) : value,
           },
         },
       },

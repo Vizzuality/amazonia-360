@@ -7,6 +7,7 @@ import * as migration_20260819_081214_import_export_collections from './20260819
 import * as migration_20260908_122337 from './20260908_122337';
 import * as migration_20260915_100844 from './20260915_100844';
 import * as migration_20260916_132710_default_visualization_type from './20260916_132710_default_visualization_type';
+import * as migration_20260916_155831_countries_of_interest from './20260916_155831_countries_of_interest';
 
 export const migrations = [
   {
@@ -52,6 +53,11 @@ export const migrations = [
   {
     up: migration_20260916_132710_default_visualization_type.up,
     down: migration_20260916_132710_default_visualization_type.down,
-    name: '20260916_132710_default_visualization_type'
+    name: '20260916_132710_default_visualization_type',
+  },
+  {
+    up: migration_20260916_155831_countries_of_interest.up,
+    down: migration_20260916_155831_countries_of_interest.down,
+    name: '20260916_155831_countries_of_interest'
   },
 ];
