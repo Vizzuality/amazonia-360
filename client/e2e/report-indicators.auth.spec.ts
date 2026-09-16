@@ -1,6 +1,11 @@
 import { test } from "./fixtures";
 import { dismissCookieConsent } from "./helpers/cookie-consent";
+import { skipWithoutCredentials } from "./helpers/credentials";
 import { ReportIndicatorsPage } from "./pages/report-indicators.page";
+
+// /reports/indicators is gated, so these run in the signed-in
+// `chromium-authenticated` project.
+test.skip(skipWithoutCredentials, "E2E test user credentials not set");
 
 test.describe("indicators panel", () => {
   test("lists the topics and opens one", async ({ page }) => {
