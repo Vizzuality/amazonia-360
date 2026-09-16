@@ -2,6 +2,7 @@
 
 import { FC, useCallback, MouseEvent, useRef, useMemo, useState, useEffect } from "react";
 
+import * as ArcGISReactiveUtils from "@arcgis/core/core/reactiveUtils";
 import ZoomVM from "@arcgis/core/widgets/Zoom/ZoomViewModel";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useTranslations } from "next-intl";
@@ -44,9 +45,15 @@ export const ZoomControl: FC<ZoomControlProps> = ({ className }: ZoomControlProp
   const maxZoom = map?.view?.constraints?.maxZoom;
 
   useEffect(() => {
-    map?.view?.watch("zoom", (z) => {
-      setZoomDebounced(z);
-    });
+    const view = map?.view;
+    if (!view) return;
+    const handle = ArcGISReactiveUtils.watch(
+      () => view.zoom,
+      (z) => {
+        setZoomDebounced(z);
+      },
+    );
+    return () => handle.remove();
   }, [map?.view, setZoomDebounced]);
 
   const increaseZoom = useCallback((e: MouseEvent<HTMLButtonElement>) => {

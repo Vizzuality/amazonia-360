@@ -212,10 +212,10 @@ vi.mock("@arcgis/core/geometry/operators/projectOperator", () => ({
   isLoaded: vi.fn(),
 }));
 
-vi.mock("@arcgis/core/geometry/geometryEngineAsync", () => ({
-  geodesicBuffer: vi.fn(),
-  geodesicArea: vi.fn(),
-  intersects: vi.fn(),
+vi.mock("@arcgis/core/geometry/operators/geodesicBufferOperator", () => ({
+  execute: vi.fn(),
+  load: vi.fn(),
+  isLoaded: vi.fn(),
 }));
 
 vi.mock("@arcgis/core/geometry/SpatialReference", () => ({
@@ -329,19 +329,6 @@ vi.mock("@arcgis/core/config", () => ({
     request: {
       interceptors: [],
     },
-  },
-}));
-
-vi.mock("@arcgis/core/widgets/Fullscreen/FullscreenViewModel", () => ({
-  default: class MockFullscreenViewModel {
-    constructor(properties?: Record<string, unknown>) {
-      Object.assign(this, properties || {});
-    }
-
-    toggle = vi.fn();
-    enter = vi.fn();
-    exit = vi.fn();
-    destroy = vi.fn();
   },
 }));
 

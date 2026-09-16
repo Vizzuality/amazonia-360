@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 
 import dynamic from "next/dynamic";
 
-import * as geometryEngineAsync from "@arcgis/core/geometry/geometryEngineAsync";
+import * as geodesicBufferOperator from "@arcgis/core/geometry/operators/geodesicBufferOperator";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
@@ -25,6 +25,10 @@ import {
 import { useMap } from "@/components/map/provider";
 
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
+
+if (!geodesicBufferOperator.isLoaded()) {
+  await geodesicBufferOperator.load();
+}
 
 export type SketchProps = {
   type?: "point" | "polygon" | "polyline";
@@ -61,11 +65,11 @@ export default function Sketch({
   const sketchViewModelOnCreateRef = useRef<IHandle | null>(null);
   const sketchViewModelOnUpdateRef = useRef<IHandle | null>(null);
   const bufferDrawTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  // Monotonic token so a slow/stale async buffer can't overwrite a newer one.
+  // Monotonic token guarding against a stale draw overwriting a newer one.
   const bufferDrawTokenRef = useRef(0);
 
   const drawBuffer = useCallback(
-    async (l: __esri.Graphic) => {
+    (l: __esri.Graphic) => {
       if (!l?.geometry) return;
 
       const token = ++bufferDrawTokenRef.current;
@@ -79,18 +83,15 @@ export default function Sketch({
           location?.type !== "search"
             ? location?.buffer || BUFFERS[l.geometry.type]
             : BUFFERS[l.geometry.type];
-        // Async/off-thread: buffering a long polyline densifies into thousands of
-        // vertices and blocks the main thread when done synchronously.
         try {
-          const g = await geometryEngineAsync.geodesicBuffer(l.geometry, b, "kilometers");
+          const g = geodesicBufferOperator.execute(l.geometry, b, { unit: "kilometers" });
           buffer.geometry = Array.isArray(g) ? g[0] : g;
         } catch {
-          // Worker error/cancel: keep the current buffer instead of clearing it.
+          // Keep the current buffer instead of clearing it on error.
           return;
         }
       }
 
-      // A newer draw started while we awaited — let it win, don't clobber.
       if (token !== bufferDrawTokenRef.current) return;
 
       // Clear the previous buffer only once the new one is ready, to avoid flicker.
@@ -243,7 +244,7 @@ export default function Sketch({
         layerRef.current.add(L);
 
         // drawBuffer owns the buffer layer: it clears the old graphic only once the
-        // new (async) buffer is ready, so the buffer never blinks out mid-recompute.
+        // new buffer is ready, so the buffer never blinks out mid-recompute.
         drawBuffer(L);
       }
     } else {
