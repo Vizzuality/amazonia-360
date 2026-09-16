@@ -15,7 +15,6 @@ const LABELS: Record<
     download: string;
     duplicate: string;
     newReport: string;
-    help: string;
     openMenu: string;
     knowledgeResources: string;
     notFoundTitle: string;
@@ -34,7 +33,6 @@ const LABELS: Record<
     download: "Download",
     duplicate: "Duplicate",
     newReport: "Start a New Report",
-    help: "Help",
     openMenu: "Open menu",
     knowledgeResources: "Additional knowledge resources",
     notFoundTitle: "404 - REPORT NOT FOUND",
@@ -52,7 +50,6 @@ const LABELS: Record<
     download: "Descargar",
     duplicate: "Duplicar",
     newReport: "Iniciar un nuevo informe",
-    help: "Ayuda",
     openMenu: "Open menu",
     knowledgeResources: "Recursos adicionales de conocimiento",
     notFoundTitle: "404 - REPORTE NO ENCONTRADO",
@@ -70,7 +67,6 @@ const LABELS: Record<
     download: "Descarregar",
     duplicate: "Duplicar",
     newReport: "Iniciar um novo relatório",
-    help: "Ajuda",
     openMenu: "Open menu",
     knowledgeResources: "Recursos adicionais de conhecimento",
     notFoundTitle: "404 - RELATÓRIO NÃO ENCONTRADO",
@@ -222,7 +218,6 @@ export class ReportsIdPage {
     await expect(this.page.getByRole("menuitem", { name: l.download })).toBeVisible();
     await expect(this.page.getByRole("menuitem", { name: l.duplicate })).toBeVisible();
     await expect(this.page.getByRole("menuitem", { name: l.newReport })).toBeVisible();
-    await expect(this.page.getByRole("menuitem", { name: l.help })).toBeVisible();
   }
 
   /** Click the Share action from the actions menu. */
