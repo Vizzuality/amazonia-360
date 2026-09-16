@@ -1,7 +1,8 @@
 "use client";
 
-import { forwardRef, useMemo } from "react";
+import { forwardRef, useCallback, useMemo } from "react";
 
+import { useLocale } from "next-intl";
 import { createNavigation } from "next-intl/navigation";
 
 import { resolveCountryHref, stripCountry } from "@/lib/country";
@@ -13,6 +14,7 @@ const {
   Link: IntlLink,
   usePathname: useIntlPathname,
   useRouter: useIntlRouter,
+  getPathname,
 } = createNavigation(routing);
 
 type IntlLinkProps = React.ComponentProps<typeof IntlLink>;
@@ -52,5 +54,23 @@ export function useRouter() {
         router.prefetch(resolveCountryHref(href, country), options)) as typeof router.prefetch,
     }),
     [router, country],
+  );
+}
+
+/**
+ * Navigates with a full page load. Every auth-state transition must use this: a soft
+ * navigation is answered from the client Router Cache, which holds the auth gate's
+ * redirect from back when the target was prefetched under the previous session, and
+ * replaying it bounces the user straight back to sign-in.
+ */
+export function useHardNavigate() {
+  const locale = useLocale();
+  const country = useCountry();
+
+  return useCallback(
+    (href: string) => {
+      window.location.assign(getPathname({ href: resolveCountryHref(href, country), locale }));
+    },
+    [country, locale],
   );
 }

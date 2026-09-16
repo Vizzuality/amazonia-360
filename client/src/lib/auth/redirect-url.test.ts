@@ -1,4 +1,9 @@
-import { isSafeRedirect, stripLocale } from "./redirect-url";
+import {
+  DEFAULT_SIGNED_IN_REDIRECT,
+  isSafeRedirect,
+  resolveRedirect,
+  stripLocale,
+} from "./redirect-url";
 
 const LOCALES = ["en", "es", "pt"] as const;
 
@@ -51,5 +56,28 @@ describe("isSafeRedirect", () => {
     expect(isSafeRedirect("/en/auth/verify-email?token=x", LOCALES)).toBe(false);
     expect(isSafeRedirect("/pt/auth/reset-password", LOCALES)).toBe(false);
     expect(isSafeRedirect("/auth", LOCALES)).toBe(false);
+  });
+});
+
+describe("resolveRedirect", () => {
+  test("strips the locale from a usable target", () => {
+    expect(resolveRedirect("/en/reports/grid?location=xyz")).toBe("/reports/grid?location=xyz");
+    expect(resolveRedirect("/reports")).toBe("/reports");
+  });
+
+  test("falls back for anything unusable", () => {
+    expect(resolveRedirect(null)).toBe(DEFAULT_SIGNED_IN_REDIRECT);
+    expect(resolveRedirect("")).toBe(DEFAULT_SIGNED_IN_REDIRECT);
+    expect(resolveRedirect("//evil.example.com")).toBe(DEFAULT_SIGNED_IN_REDIRECT);
+    expect(resolveRedirect("https://evil.example.com")).toBe(DEFAULT_SIGNED_IN_REDIRECT);
+  });
+
+  test("falls back for a repeated query param", () => {
+    expect(resolveRedirect(["/reports", "/private/profile"])).toBe(DEFAULT_SIGNED_IN_REDIRECT);
+  });
+
+  test("never sends anyone back into the auth pages", () => {
+    expect(resolveRedirect("/auth/sign-in")).toBe(DEFAULT_SIGNED_IN_REDIRECT);
+    expect(resolveRedirect("/en/auth/sign-up")).toBe(DEFAULT_SIGNED_IN_REDIRECT);
   });
 });

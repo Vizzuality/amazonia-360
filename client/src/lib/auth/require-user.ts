@@ -15,6 +15,10 @@ import { routing } from "@/i18n/routing";
  * stale anonymous JWT left in a cookie jar after the anonymous teardown does
  * not pass. Admins authenticate through Payload's local strategy inside
  * /admin and never hold a NextAuth session, so they are not affected.
+ *
+ * Served to a prefetch, this redirect lands in the client Router Cache under the
+ * gated route's own key. Any navigation into a gated route right after an
+ * auth-state change must therefore be a full load — see `useHardNavigate`.
  */
 export async function requireUser(locale: Locale) {
   const session = await auth();

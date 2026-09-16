@@ -9,7 +9,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import * as z from "zod";
 
-import { isSafeRedirect, stripLocale } from "@/lib/auth/redirect-url";
+import { resolveRedirect } from "@/lib/auth/redirect-url";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,22 +23,14 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-import { Link, useRouter } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
+import { Link } from "@/i18n/navigation";
+import { useHardNavigate } from "@/i18n/navigation-client";
 
 export type SignInFormProps = React.ComponentProps<"div">;
 
-const DEFAULT_REDIRECT = "/private/my-reports";
-
-function resolveRedirect(url: string | null | undefined): string {
-  if (!isSafeRedirect(url, routing.locales)) return DEFAULT_REDIRECT;
-  // router comes from @/i18n/navigation and re-adds the locale itself.
-  return stripLocale(url as string, routing.locales);
-}
-
 export function SignInForm(props: SignInFormProps) {
-  const router = useRouter();
   const searchParams = useSearchParams();
+  const hardNavigate = useHardNavigate();
   const t = useTranslations();
 
   const formSchema = z.object({
@@ -64,7 +56,8 @@ export function SignInForm(props: SignInFormProps) {
           if (r?.error) {
             throw new Error(r.error);
           }
-          router.push(resolveRedirect(searchParams.get("redirectUrl")));
+
+          hardNavigate(resolveRedirect(searchParams.get("redirectUrl")));
         }),
         {
           loading: t("auth-toast-logging-in"),

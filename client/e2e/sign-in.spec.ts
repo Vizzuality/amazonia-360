@@ -1,6 +1,7 @@
 import { test, expect } from "./fixtures";
 import { dismissCookieConsent } from "./helpers/cookie-consent";
 import { LOCALES } from "./helpers/locale";
+import { HomePage } from "./pages/home.page";
 import { SignInPage } from "./pages/sign-in.page";
 
 const TEST_EMAIL = process.env.E2E_TEST_USER_EMAIL;
@@ -161,5 +162,41 @@ test.describe("sign-in navigation links", () => {
 
     await signInPage.signUpLink.click();
     await expect(page).toHaveURL(/\/auth\/sign-up/, { timeout: 15_000 });
+  });
+});
+
+// --- Redirect loop regression ---
+
+test.describe("sign-in from a gated link", () => {
+  // Reaching sign-in through the header link is what breaks: Next prefetches
+  // /reports while signed out, so the client Router Cache holds the gate's
+  // redirect back to sign-in. A soft navigation after signing in replays it.
+  test("lands on the gated page and stays there", async ({ page }) => {
+    test.skip(!hasCredentials, "E2E test user credentials not set");
+
+    const homePage = new HomePage(page);
+    await homePage.goto();
+    await dismissCookieConsent(page);
+
+    await homePage.reportToolLink.click();
+    await expect(page).toHaveURL(/\/auth\/sign-in\?redirectUrl=%2Freports/, { timeout: 15_000 });
+
+    // The bounce is a client navigation landing after hydration, so watch for it
+    // rather than asserting the URL once and calling it settled.
+    const bounces: string[] = [];
+    page.on("framenavigated", (frame) => {
+      if (frame === page.mainFrame() && /\/auth\/sign-in/.test(frame.url())) {
+        bounces.push(frame.url());
+      }
+    });
+
+    const signInPage = new SignInPage(page);
+    await signInPage.signIn(TEST_EMAIL!, TEST_PASSWORD!);
+
+    await expect(page).toHaveURL(/\/reports/, { timeout: 15_000 });
+    await page.waitForLoadState("networkidle");
+
+    expect(bounces).toEqual([]);
+    await expect(page).toHaveURL(/\/reports/);
   });
 });
