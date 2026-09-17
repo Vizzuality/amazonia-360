@@ -3,13 +3,15 @@
 import { useSearchParams } from "next/navigation";
 
 import { useForm } from "@tanstack/react-form";
-import { signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 // import { LuGithub } from "react-icons/lu";
 import { toast } from "sonner";
 import * as z from "zod";
 
-import { isSafeRedirect, stripLocale } from "@/lib/auth/redirect-url";
+import { resolveRedirect } from "@/lib/auth/redirect-url";
+
+import { signInAction } from "@/app/(frontend)/[locale]/(app)/auth/sign-in/actions";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,21 +26,13 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input";
 
 import { Link, useRouter } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
 
 export type SignInFormProps = React.ComponentProps<"div">;
 
-const DEFAULT_REDIRECT = "/private/my-reports";
-
-function resolveRedirect(url: string | null | undefined): string {
-  if (!isSafeRedirect(url, routing.locales)) return DEFAULT_REDIRECT;
-  // router comes from @/i18n/navigation and re-adds the locale itself.
-  return stripLocale(url as string, routing.locales);
-}
-
 export function SignInForm(props: SignInFormProps) {
-  const router = useRouter();
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const { update: refreshSession } = useSession();
   const t = useTranslations();
 
   const formSchema = z.object({
@@ -56,15 +50,20 @@ export function SignInForm(props: SignInFormProps) {
     },
     onSubmit: async ({ value }) => {
       toast.promise(
-        signIn("users", {
-          redirect: false,
-          email: value.email,
-          password: value.password,
-        }).then((r) => {
-          if (r?.error) {
-            throw new Error(r.error);
+        signInAction({ email: value.email, password: value.password }).then(async (result) => {
+          if (!result.success) {
+            throw new Error(result.reason);
           }
-          router.push(resolveRedirect(searchParams.get("redirectUrl")));
+
+          // The action set the cookie behind the SessionProvider's back, and the provider
+          // only ever reads its `session` prop once. Without this the header keeps
+          // offering "sign in" until a full reload.
+          await refreshSession();
+
+          // Safe as a soft navigation only because the action wrote the session cookie:
+          // Next has evicted the client Router Cache by the time it resolves, so there is
+          // no longer a prefetched redirect back to this form to replay.
+          router.push(resolveRedirect(searchParams.getAll("redirectUrl")));
         }),
         {
           loading: t("auth-toast-logging-in"),

@@ -2,9 +2,11 @@
 
 import { useSearchParams } from "next/navigation";
 
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { LuFilePlus2, LuFiles, LuLogOut, LuSettings2 } from "react-icons/lu";
+
+import { useSignOut } from "@/lib/auth/use-sign-out";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -21,6 +23,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 const AuthHeader = () => {
   const t = useTranslations();
   const { data: session } = useSession();
+  const signOut = useSignOut();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentUrl = `${pathname}${searchParams?.toString() ? `?${searchParams.toString()}` : ""}`;
@@ -108,10 +111,7 @@ const AuthHeader = () => {
 
           <DropdownMenuItem
             onClick={() => {
-              signOut({
-                redirect: true,
-                redirectTo: "/auth/sign-in",
-              });
+              signOut("/auth/sign-in");
             }}
             className="cursor-pointer"
           >

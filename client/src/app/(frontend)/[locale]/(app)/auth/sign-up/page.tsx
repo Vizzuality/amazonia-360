@@ -3,6 +3,8 @@ import { Metadata } from "next";
 import { Locale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 
+import { requireGuest } from "@/lib/auth/require-guest";
+
 import { AuthSidePanel } from "@/containers/auth/side-panel";
 import { SignupForm } from "@/containers/auth/sign-up";
 import { SignupBenefits } from "@/containers/auth/signup-benefits";
@@ -19,7 +21,14 @@ export async function generateMetadata({
   };
 }
 
-export default async function SignUpPage(_props: PageProps<"/[locale]/auth/sign-up">) {
+export default async function SignUpPage({
+  params,
+  searchParams,
+}: PageProps<"/[locale]/auth/sign-up">) {
+  const { locale } = await params;
+  const { redirectUrl } = await searchParams;
+  await requireGuest(locale as Locale, redirectUrl);
+
   return (
     <>
       <section className="flex grow items-center justify-center">

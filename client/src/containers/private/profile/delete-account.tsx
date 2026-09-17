@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 
-import { useRouter } from "next/navigation";
-
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
+import { useSignOut } from "@/lib/auth/use-sign-out";
 import { useDeleteUser } from "@/lib/user";
 
 import {
@@ -23,7 +22,7 @@ import { Button } from "@/components/ui/button";
 export function DeleteAccount() {
   const t = useTranslations();
   const { data: session } = useSession();
-  const router = useRouter();
+  const signOut = useSignOut();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const deleteMutation = useDeleteUser();
 
@@ -31,11 +30,7 @@ export function DeleteAccount() {
     if (!session?.user?.id) return;
 
     toast.promise(
-      deleteMutation.mutateAsync(session.user.id).then(async () => {
-        // Sign out and redirect to home
-        await signOut({ redirect: false });
-        router.push("/");
-      }),
+      deleteMutation.mutateAsync(session.user.id).then(() => signOut()),
       {
         loading: t("profile-delete-account-toast-loading"),
         success: t("profile-delete-account-toast-success"),
