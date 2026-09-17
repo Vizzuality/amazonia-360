@@ -4,6 +4,9 @@ import { AuthError } from "next-auth";
 
 import { signIn } from "@/lib/auth";
 
+/** `signIn` may hand back a relative URL; `URL` needs a base to parse one. */
+const FALLBACK_ORIGIN = "http://localhost";
+
 export type SignInResult =
   | { success: true }
   | { success: false; reason: "credentials" | "unknown" };
@@ -23,7 +26,15 @@ export async function signInAction(credentials: {
   try {
     // `redirect: false` keeps the navigation on the client, where the country segment and
     // the `redirectUrl` param are known. The cookie is written either way.
-    await signIn("users", { ...credentials, redirect: false });
+    const result = await signIn("users", { ...credentials, redirect: false });
+
+    // `@auth/core` re-throws only an AuthError; anything else (a bad AUTH_SECRET, a
+    // failing adapter) it swallows and hands back as a URL pointing at the error page.
+    // Read as success that would set no cookie and send the user into the very redirect
+    // loop this action exists to prevent.
+    if (typeof result === "string" && new URL(result, FALLBACK_ORIGIN).searchParams.has("error")) {
+      return { success: false, reason: "unknown" };
+    }
   } catch (error) {
     if (error instanceof AuthError) {
       return {

@@ -32,6 +32,22 @@ describe("signInAction", () => {
     expect(signInMock).toHaveBeenCalledWith("users", { ...CREDENTIALS, redirect: false });
   });
 
+  // @auth/core swallows a non-AuthError and returns the error page's URL instead.
+  test("treats a returned error URL as a failure, not a silent success", async () => {
+    signInMock.mockResolvedValue("http://localhost:3000/auth/sign-in?error=Configuration");
+
+    await expect(signInAction(CREDENTIALS)).resolves.toEqual({
+      success: false,
+      reason: "unknown",
+    });
+  });
+
+  test("accepts a relative callback URL without an error param", async () => {
+    signInMock.mockResolvedValue("/private/my-reports");
+
+    await expect(signInAction(CREDENTIALS)).resolves.toEqual({ success: true });
+  });
+
   test("reports bad credentials back to the form", async () => {
     signInMock.mockRejectedValue(new CredentialsSigninStub());
 

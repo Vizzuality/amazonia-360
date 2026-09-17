@@ -63,7 +63,7 @@ export function SignInForm(props: SignInFormProps) {
           // Safe as a soft navigation only because the action wrote the session cookie:
           // Next has evicted the client Router Cache by the time it resolves, so there is
           // no longer a prefetched redirect back to this form to replay.
-          router.push(resolveRedirect(searchParams.get("redirectUrl")));
+          router.push(resolveRedirect(searchParams.getAll("redirectUrl")));
         }),
         {
           loading: t("auth-toast-logging-in"),

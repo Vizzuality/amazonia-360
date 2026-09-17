@@ -74,6 +74,13 @@ describe("resolveRedirect", () => {
 
   test("falls back for a repeated query param", () => {
     expect(resolveRedirect(["/reports", "/private/profile"])).toBe(DEFAULT_SIGNED_IN_REDIRECT);
+    expect(resolveRedirect([])).toBe(DEFAULT_SIGNED_IN_REDIRECT);
+  });
+
+  // `searchParams.getAll` hands over an array even for a param that appears once, so the
+  // form and the guest gate have to read that the same way.
+  test("reads a single-element array as the value it holds", () => {
+    expect(resolveRedirect(["/en/reports"])).toBe("/reports");
   });
 
   test("never sends anyone back into the auth pages", () => {
