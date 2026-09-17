@@ -1,19 +1,11 @@
 import { QueryFunction, useQuery, UseQueryOptions } from "@tanstack/react-query";
 
+import { fetchContent } from "@/lib/cms-content/fetch";
+import { toTopic } from "@/lib/cms-content/map";
+import { CmsTopic } from "@/lib/cms-content/types";
+
 import { Topic } from "@/types/topic";
 
-import TOPICS from "@/../datum/topics.json";
-import { routing } from "@/i18n/routing";
-
-/**
- ************************************************************
- ************************************************************
- * topicsData
- * - useGetTopics
- * - useGetTopicId
- ************************************************************
- ************************************************************
- */
 export type TopicsParams = unknown;
 
 export type TopicsQueryOptions<TData, TError> = UseQueryOptions<
@@ -23,19 +15,9 @@ export type TopicsQueryOptions<TData, TError> = UseQueryOptions<
 >;
 
 export const getTopics = async ({ locale }: { locale: string }): Promise<Topic[]> => {
-  const topics = TOPICS as Topic[];
+  const topics = await fetchContent<CmsTopic>({ collection: "topics", locale });
 
-  const topicsTranslated: Topic[] = topics.map((topic) => {
-    return {
-      ...topic,
-      name: (topic[`name_${locale}` as keyof Topic] ||
-        topic[`name_${routing.defaultLocale}` as keyof Topic]) as string,
-      description: (topic[`description_${locale}` as keyof Topic] ||
-        topic[`description_${routing.defaultLocale}` as keyof Topic]) as string,
-    };
-  });
-
-  return topicsTranslated;
+  return topics.map(toTopic);
 };
 
 export const getTopicsKey = (locale: string) => {

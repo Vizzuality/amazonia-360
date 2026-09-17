@@ -1,0 +1,581 @@
+[
+  {
+    "id": "0",
+    "order": 0,
+    "subtopic": {
+      "id": "0",
+      "topic": {
+        "id": "0",
+        "name": "Geographic context"
+      },
+      "name": "ACU",
+      "description": null
+    },
+    "name": "Total area",
+    "unit": "km\u00b2",
+    "description_short": "Selected area for report (km\u00b2)",
+    "description": "### Area selected \n  \nThe area drawed by the user in order to compute the contextual report.",
+    "visualization_types": [
+      "numeric"
+    ],
+    "default_visualization_type": "numeric",
+    "resource": [
+      {
+        "id": "6aabe0fecfc6d7a1c339aca9",
+        "name": "total-area",
+        "query_ai": {
+          "where": "1=1",
+          "outFields": [
+            "*"
+          ],
+          "returnGeometry": true,
+          "returnIntersections": true
+        },
+        "blockName": null,
+        "blockType": "component"
+      }
+    ],
+    "updatedAt": "2026-09-17T12:45:50.264Z",
+    "createdAt": "2026-09-15T08:16:05.184Z",
+    "_status": "published"
+  },
+  {
+    "id": "1",
+    "order": 1,
+    "subtopic": {
+      "id": "0",
+      "topic": {
+        "id": "0",
+        "name": "Geographic context"
+      },
+      "name": "ACU",
+      "description": null
+    },
+    "name": "Amazonia",
+    "unit": null,
+    "description_short": "Pan-Amazon, Amazonia Forever program boundary",
+    "description": "# Amazonia, area of work of the Amazonia Forever Program\n\n## Polygons representing the operational area of the AFP.\n\nThis layer defines the spatial boundary of the Amazonia Forever program's work area, covering an area of approximately 8.3 million square kilometers. It acts as a key reference for coordinating conservation efforts and developing initiatives in the Amazon, allowing the delimitation of action areas and guiding activities towards the optimization of resource management and preservation.\n\nThis layer is a proprietary compilation of AmazoniaForever360+, 2023-2024. It was adapted from the map of Amazonia at its maximum extent (Panamazonia) presented by RAISG GIS. The operations performed included the fine delimitation of the work area boundaries based on geographic, ecological and regional planning criteria. The information includes relevant attributes such as the total surface of the area (ASQKM), the estimated population for 2025 (POPGHS25) and the average population density (DENS, inhabitants per square kilometer), which allows evaluating its geographic and demographic context\n\nThis RAISG map is available for download at: https://www.raisg.org/es/mapas/\n\nThe original data were adapted to the operational area of the Inter-American Development Bank expressed in the territories of the borrowing member countries. The represented boundary was then interpreted and redrawn using various sources: \n\n-   Referenced International Boundaries (Office of the Geographer and Global Issues; U.S. Department: Large Scale International Boundaries (LSIB).\\\n    https://www.geodata.state.gov/geonetwork/srv/eng/catalog.search#/metadata/3bdb81a0-c1b9-439a-a0b1-85dac30c59b2)\n-   Watersheds: HydroBASINS (WWF 2013); GRDC (2020): WMO Basins and Sub-basins / Online provided by Global Runoff Data Centre. 3 ed. Koblenz: Federal Institute of Hydrology (BfG), 2020.\\\n    Subnational administrative boundaries: National geographic institutes; GADM V4.1: https://gadm.org/download_world.html\n-   For the Brazilian Legal Amazon, the boundaries of the Amaz\u00f4nia Legal have been integrated, taken from IBGE: https://www.ibge.gov.br/geociencias/cartas-e-mapas/mapas-regionais/15819-amazonia-legal.html\n-   High resolution coastline derived from the Compernicus DEM: Copernicus Digital Elevation Model of 30 meters resolution.\\\n    https://spacedata.copernicus.eu/es/collections/copernicus-digital-elevation-model   \n\n",
+    "visualization_types": [
+      "map"
+    ],
+    "default_visualization_type": null,
+    "resource": [
+      {
+        "id": "6aabe0fecfc6d7a1c339acaa",
+        "name": "Amazonia",
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Amazonia/FeatureServer",
+        "layer_id": "2",
+        "query_numeric": null,
+        "query_table": null,
+        "query_chart": null,
+        "query_ai": {
+          "where": "1=1",
+          "outFields": [
+            "*"
+          ],
+          "returnGeometry": true,
+          "returnIntersections": true
+        },
+        "blockName": null,
+        "blockType": "feature",
+        "popupTemplate": {
+          "title": null,
+          "fieldInfos": []
+        }
+      }
+    ],
+    "updatedAt": "2026-09-17T12:45:50.371Z",
+    "createdAt": "2026-09-15T08:16:05.249Z",
+    "_status": "published"
+  },
+  {
+    "id": "5",
+    "order": 5,
+    "subtopic": {
+      "id": "0",
+      "topic": {
+        "id": "0",
+        "name": "Geographic context"
+      },
+      "name": "ACU",
+      "description": null
+    },
+    "name": "Administrative Capitals",
+    "unit": null,
+    "description_short": "Administrative capitals (a360)",
+    "description": "**Administrative capitals at adm0, adm1 and adm2 level.**\n\nLayer of points representing the administrative capitals for Amazonia, at national, regional and municipal levels.\n\nIt provides information on the administrative capitals involved in the management and development of the Amazon. This layer is essential for identifying decision centers and coordinating joint actions between governments and organizations working in the sustainable management of the territory\n\nThis layer represents the capitals of the political-administrative units in each territorial hierarchy within the Amazon countries, using dots to identify their geographic locations. Each capital is associated with a compound name that combines the capital and the corresponding administrative divisions (e.g., 'Trinidad, Cercado, Beni, Bolivia'). It also includes the name of the country to which it belongs (NAME_0) along with its ISO code (ISO) and a unique country identifier (ID_0). The administrative divisions are represented by the unit name of first level (NAME_1) and second level (NAME_2), while the NOMBCAP field specifies the name of the capital city.\n\nOwn compilation AmazoniaForever360+, 2023, with successive corrections. This layer was assembled from the political-administrative division GADM 4.1, and data from the national cartographic services of the Amazonian countries, correcting the position of the population centers manually, using ESRI base maps, in ArcGIS Pro work sessions. This is for the purpose of analyzing the proximity of administrative centers, as a component of the Amazonian regional urban system.\n\n<https://gadm.org/download_world.html>   \n\n",
+    "visualization_types": [
+      "map",
+      "numeric"
+    ],
+    "default_visualization_type": "map",
+    "resource": [
+      {
+        "id": "6aabe0fecfc6d7a1c339acb0",
+        "name": "Administrative_capitals_at_admin_0_to_2_levels",
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Administrative_capitals_at_admin_0_to_2_levels/FeatureServer",
+        "layer_id": "9",
+        "query_numeric": {
+          "where": "1=1",
+          "outStatistics": [
+            {
+              "statisticType": "count",
+              "onStatisticField": "FID",
+              "outStatisticFieldName": "value"
+            }
+          ]
+        },
+        "query_table": null,
+        "query_chart": {
+          "where": "1=1",
+          "orderByFields": [
+            "value DESC"
+          ],
+          "outStatistics": [
+            {
+              "statisticType": "sum",
+              "onStatisticField": "Population2025",
+              "outStatisticFieldName": "value"
+            }
+          ],
+          "returnGeometry": false,
+          "groupByFieldsForStatistics": [
+            "COMPNAME"
+          ]
+        },
+        "query_ai": {
+          "where": "1=1",
+          "outFields": [
+            "*"
+          ],
+          "returnGeometry": true,
+          "returnIntersections": true
+        },
+        "blockName": null,
+        "blockType": "feature",
+        "popupTemplate": {
+          "title": "{NOMBCAP}",
+          "fieldInfos": [
+            {
+              "id": "6aabe0fecfc6d7a1c339acae",
+              "fieldName": "NAME_1",
+              "label": "State"
+            },
+            {
+              "id": "6aabe0fecfc6d7a1c339acaf",
+              "fieldName": "NAME_0",
+              "label": "Country"
+            }
+          ]
+        }
+      }
+    ],
+    "updatedAt": "2026-09-17T12:45:50.727Z",
+    "createdAt": "2026-09-15T08:16:05.504Z",
+    "_status": "published"
+  },
+  {
+    "id": "7",
+    "order": 7,
+    "subtopic": {
+      "id": "1",
+      "topic": {
+        "id": "1",
+        "name": "Territory"
+      },
+      "name": "Physical Geography",
+      "description": null
+    },
+    "name": "Slope",
+    "unit": null,
+    "description_short": "Slope ranges (degrees) Copernicus DEM",
+    "description": "### Slope Classes Indicator\n\nThis raster layer has been developed to represent **terrain slope indicators** based on the **Copernicus DEM GLO-30** digital elevation model, providing a detailed classification of the topographic characteristics of the Earth's surface.\n\n### Data source & methodology\n\nThe data comes from **Copernicus DEM**, managed by the **European Space Agency (ESA)** as part of the European Union's Copernicus program. Specifically, the **GLO-30** product was used, which offers global coverage altimetry with a **spatial resolution of 30 meters**. Processing was performed to generate a categorical slope classification based on degree inclination ranges.\n\n### Applications & benefits\n\n-   **Territorial planning:** Identification of areas suitable for urban development and infrastructure\n-   **Risk analysis:** Assessment of susceptibility to landslides and erosion\n-   **Environmental conservation:** Identification of protection areas and ecological corridors\n-   **Agriculture:** Determination of areas suitable for crops according to slope\n-   **Forest management:** Planning of forest activities and accessibility\n\n### Specific content of the layer\n\nThe layer classifies slope into **7 main categories:**\n\n-   **0\u00b0 - 1\u00b0:** Flat, plains, floodplains\n-   **1\u00b0 - 5\u00b0:** Undulating, gently sloping\n-   **5\u00b0 - 15\u00b0:** Very undulating, steeply sloping\n-   **15\u00b0 - 30\u00b0:** Strongly undulating, steep\n-   **30\u00b0 - 45\u00b0:** Very steep, inaccessible on foot\n-   **45\u00b0 - 60\u00b0:** Steep, abrupt\n-   **60\u00b0 - 90\u00b0:** Very steep, rocky walls\n\n### Technical details\n\n**Spatial resolution:** 30 meters\\\n**Geographic coverage:** Global\\\n**Data type:** Categorical raster\\\n**Base source:** Copernicus DEM GLO-30\\\n**Classification method:** Slope degree ranges\n\n### References & access links\n\n**Data access:** European Space Agency (ESA). (2023). Copernicus Contributing Missions: Collections Description. Copernicus Contributing Missions Portal. Available at: <https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM>\n\n**Methodological reference:** Fahrland, E., Iavarone, M., & Borla, M. (2022). Evolution of the Copernicus DEM: going beyond today's elevation data. VH-RODA 2022. Available at: <https://earth.esa.int/eogateway/documents/20142/4139742/2.16_VH-RODA%202022%20-%20CopernicusDEM%20Evolution-%20EFahrland.pdf>",
+    "visualization_types": [
+      "map"
+    ],
+    "default_visualization_type": null,
+    "resource": [
+      {
+        "id": "6aabe0fecfc6d7a1c339acba",
+        "name": "sloper_rasterized",
+        "url": "https://atlas.iadb.org/image/rest/services/Imagery/Slope_classes/ImageServer",
+        "rasterFunction": {
+          "functionName": "Colormap",
+          "outputPixelType": "U8",
+          "functionArguments": {
+            "raster": "$$",
+            "colormap": [
+              [
+                1,
+                238,
+                240,
+                186
+              ],
+              [
+                2,
+                218,
+                214,
+                164
+              ],
+              [
+                3,
+                198,
+                188,
+                143
+              ],
+              [
+                4,
+                178,
+                163,
+                122
+              ],
+              [
+                5,
+                158,
+                138,
+                102
+              ],
+              [
+                6,
+                139,
+                114,
+                82
+              ],
+              [
+                7,
+                120,
+                90,
+                62
+              ]
+            ]
+          }
+        },
+        "aggregation": "none",
+        "blockName": null,
+        "blockType": "imagery",
+        "legend": {
+          "type": "basic",
+          "items": [
+            {
+              "id": "6aabe0fecfc6d7a1c339acb3",
+              "color": "#EEF0BA",
+              "label": "Flat, plains, floodplains."
+            },
+            {
+              "id": "6aabe0fecfc6d7a1c339acb4",
+              "color": "#DAD6A4",
+              "label": "Undulating, gently sloping."
+            },
+            {
+              "id": "6aabe0fecfc6d7a1c339acb5",
+              "color": "#C6BC8F",
+              "label": "Very undulating, steeply sloping."
+            },
+            {
+              "id": "6aabe0fecfc6d7a1c339acb6",
+              "color": "#B2A37A",
+              "label": "Strongly undulating, steep."
+            },
+            {
+              "id": "6aabe0fecfc6d7a1c339acb7",
+              "color": "#9E8A66",
+              "label": "Very steep, inaccessible on foot."
+            },
+            {
+              "id": "6aabe0fecfc6d7a1c339acb8",
+              "color": "#8B7252",
+              "label": "Steep, abrupt."
+            },
+            {
+              "id": "6aabe0fecfc6d7a1c339acb9",
+              "color": "#785A3E",
+              "label": "Very steep, rocky walls."
+            }
+          ]
+        }
+      }
+    ],
+    "updatedAt": "2026-09-17T12:45:50.942Z",
+    "createdAt": "2026-09-15T08:16:05.624Z",
+    "_status": "published"
+  },
+  {
+    "id": "15",
+    "order": 16,
+    "subtopic": {
+      "id": "4",
+      "topic": {
+        "id": "2",
+        "name": "Nature"
+      },
+      "name": "Forest Dynamics and Carbon",
+      "description": null
+    },
+    "name": "Fire Frequency",
+    "unit": null,
+    "description_short": "Frequency classes of fire events larger than 1 km\u00b2 (NASA/FIRMS)",
+    "description": "### **Forest Fire Frequency Layer**\n\nThis GIS layer consists of polygons representing different classes of **forest fire frequency**, based on satellite-detected heat sources and fire events.\n\n### **Data Compilation and Methodology**\n\nCompiled by **AmazoniaForever360+ (2023)** using historical fire and heat anomaly data from NASA's **Fire Information for Resource Management System (FIRMS)**. The dataset covers **March 2014 -- March 2024** and includes detections from multiple satellite radiometers.\n\n#### **Processing Steps:**\n\n-   Historical heat anomaly points were sampled using a **10 km analysis grid** across the Amazon.\n-   Event centroids were generated, accumulated per grid cell, and converted into a **raster image**.\n-   The raster was reclassified to define **fire frequency classes**.\n-   Industrial and geological heat sources were filtered out.\n-   The final output consists of **polygons representing fire-prone regions** based on frequency categories.\n\n### **About FIRMS & Satellite Data**\n\nNASA's **FIRMS** provides near-real-time global fire data, derived from:\n\n-   **MODIS** (Moderate Resolution Imaging Spectroradiometer) -- onboard **Terra & Aqua satellites**\n-   **VIIRS** (Visible Infrared Imaging Radiometer Suite) -- onboard **Suomi-NPP & NOAA-20 satellites**\n\nFIRMS makes active fire detection data publicly available through online portals and GIS services (**WMS, WFS**). The data is updated multiple times daily, supporting:\n\n-   **Wildfire monitoring and habitat impact assessment**\n-   **Climate change and carbon emissions studies**\n-   **Long-term ecosystem analysis**\n\n### **Satellite Instruments & Fire Detection**\n\n-   **MODIS & VIIRS** are advanced radiometers that operate across multiple spectral bands.\n-   They detect **thermal radiation anomalies**, including active fires.\n-   These sensors also capture reflected data from the **atmosphere, vegetation, water bodies, and land surfaces**, aiding in **ecosystem change detection and impact evaluation**.\n\n### **Data Sources & Additional Information**\n\n-   **FIRMS Data Portal:** <https://firms.modaps.eosdis.nasa.gov/>\n-   **MODIS Instrument Overview:** <https://modis.gsfc.nasa.gov/>\n-   **VIIRS Instrument Overview:** <https://jointmission.gsfc.nasa.gov/viirs.html>\n-   **NASA Earthdata Access & Documentation:** <https://earthdata.nasa.gov/>",
+    "visualization_types": [
+      "map",
+      "table",
+      "chart"
+    ],
+    "default_visualization_type": null,
+    "resource": [
+      {
+        "id": "6aabe0ffcfc6d7a1c339ace5",
+        "name": "Forest_Fire_Frequency",
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Forest_Fire_Frequency/FeatureServer",
+        "layer_id": "5",
+        "query_numeric": null,
+        "query_table": {
+          "where": "1=1",
+          "outFields": [
+            "firepfreq as Frequency",
+            "FIREPclass as Class",
+            ","
+          ],
+          "returnGeometry": false
+        },
+        "query_chart": {
+          "where": "1=1",
+          "outFields": [
+            "gridcode",
+            "firepfreq as label",
+            ","
+          ],
+          "returnGeometry": true,
+          "returnIntersections": true
+        },
+        "query_ai": {
+          "where": "1=1",
+          "outFields": [
+            "*"
+          ],
+          "returnGeometry": true,
+          "returnIntersections": true
+        },
+        "blockName": null,
+        "blockType": "feature",
+        "popupTemplate": {
+          "title": "{firepfreq}",
+          "fieldInfos": [
+            {
+              "id": "6aabe0ffcfc6d7a1c339ace4",
+              "fieldName": "FIREPclass",
+              "label": "Class"
+            }
+          ]
+        }
+      }
+    ],
+    "updatedAt": "2026-09-17T12:45:51.732Z",
+    "createdAt": "2026-09-15T08:16:06.300Z",
+    "_status": "published"
+  },
+  {
+    "id": "37",
+    "order": 37,
+    "subtopic": {
+      "id": "11",
+      "topic": {
+        "id": "3",
+        "name": "People"
+      },
+      "name": "Social Development",
+      "description": null
+    },
+    "name": "Deprivation Levels",
+    "unit": null,
+    "description_short": "Population living conditions deprivation index (SEDAC/GRDI v1)",
+    "description": "### **Deprivation in Living Conditions**\n\nThis raster model represents levels of multidimensional deprivation in living conditions through an index assigned to each pixel with a resolution of one kilometer. The index displayed is the *Global Gridded Relative Deprivation Index (GRDI)*.\n\nThe *Global Gridded Relative Deprivation Index (GRDI)* is a dataset developed by the *Center for International Earth Science Information Network (CIESIN)* at *Columbia University*, in collaboration with NASA's *Socioeconomic Data and Applications Center (SEDAC)*. This index provides a characterization of relative deprivation and multidimensional poverty levels on a global scale, represented in a grid with a spatial resolution of 30 arc seconds, approximately one kilometer per pixel. GRDI values range from 0 to 100, where 0 indicates the lowest level of deprivation and 100 the highest.\n\nThe construction of the GRDI is based on the integration of socio-demographic and satellite data that have been spatially harmonized, indexed, and weighted across six main components to produce the final raster-format index. This methodology allows for a detailed assessment of relative deprivation in different regions worldwide, facilitating comparative studies and public policy analysis aimed at reducing poverty and inequality.\n\nThis layer is an adaptation by *AmazoniaForever360+* (2023) from the original dataset *povmap-grdi-v1-grdiv1-geotiff(1).zip*. The original global dataset was cropped to cover northern South America and optimized for web use.\n\nFor access to the GRDI dataset and additional information, including technical documentation and methodological details, visit:\n\n*NASA/ EARTHDATA*\\\n*Center for International Earth Science Information Network (CIESIN), Columbia University. 2022.* *Global Gridded Relative Deprivation Index (GRDI), Version 1.* Palisades, New York: NASA *Socioeconomic Data and Applications Center (SEDAC).* DOI: [10.7927/3xxe-ap97](https://doi.org/10.7927/3xxe-ap97)\n\nDataset catalog: <https://www.earthdata.nasa.gov/data/catalog/sedac-ciesin-sedac-pmp-grdi-2010-2020-1.00>",
+    "visualization_types": [
+      "map"
+    ],
+    "default_visualization_type": "map",
+    "resource": [
+      {
+        "id": "6aabe101cfc6d7a1c339ad3d",
+        "name": "Deprivation_Levels_in_the_Amazon",
+        "url": "https://atlas.iadb.org/image/rest/services/Imagery/Deprivation_Levels_in_the_Amazon/ImageServer",
+        "rasterFunction": {
+          "functionName": "Colormap",
+          "outputPixelType": "U8",
+          "functionArguments": {
+            "raster": {
+              "functionName": "Remap",
+              "functionArguments": {
+                "raster": "$$",
+                "inputRanges": [
+                  0,
+                  10,
+                  10,
+                  25,
+                  25,
+                  50,
+                  50,
+                  75,
+                  75,
+                  85,
+                  85,
+                  100
+                ],
+                "outputValues": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6
+                ]
+              }
+            },
+            "colormap": [
+              [
+                1,
+                242,
+                235,
+                247
+              ],
+              [
+                2,
+                198,
+                182,
+                217
+              ],
+              [
+                3,
+                160,
+                127,
+                191
+              ],
+              [
+                4,
+                136,
+                86,
+                167
+              ],
+              [
+                5,
+                74,
+                41,
+                96
+              ],
+              [
+                6,
+                46,
+                23,
+                64
+              ]
+            ]
+          }
+        },
+        "aggregation": "mean",
+        "blockName": null,
+        "blockType": "imagery",
+        "legend": {
+          "type": "basic",
+          "items": [
+            {
+              "id": "6aabe101cfc6d7a1c339ad37",
+              "color": "#F2EBF7",
+              "label": "< 10"
+            },
+            {
+              "id": "6aabe101cfc6d7a1c339ad38",
+              "color": "#C6B6D9",
+              "label": "10 - 25"
+            },
+            {
+              "id": "6aabe101cfc6d7a1c339ad39",
+              "color": "#A07FBF",
+              "label": "25 - 50"
+            },
+            {
+              "id": "6aabe101cfc6d7a1c339ad3a",
+              "color": "#8856A7",
+              "label": "50 - 75"
+            },
+            {
+              "id": "6aabe101cfc6d7a1c339ad3b",
+              "color": "#4A2960",
+              "label": "75 - 85"
+            },
+            {
+              "id": "6aabe101cfc6d7a1c339ad3c",
+              "color": "#2E1740",
+              "label": "> 85"
+            }
+          ]
+        }
+      }
+    ],
+    "updatedAt": "2026-09-17T12:45:53.794Z",
+    "createdAt": "2026-09-15T08:16:08.303Z",
+    "_status": "published"
+  },
+  {
+    "id": "65",
+    "order": 65,
+    "subtopic": {
+      "id": "1",
+      "topic": {
+        "id": "1",
+        "name": "Territory"
+      },
+      "name": "Physical Geography",
+      "description": null
+    },
+    "name": "Average altitude per cell",
+    "unit": "m",
+    "description_short": "Mean altitude per grid cell, m",
+    "description": "### Indicadores de altitud. \n\nMalla hexagonal H3L6 con indicadores de altitud.  \n\nLa altitud topogr\u00e1fica, y en general la disposici\u00f3n del relieve, resultan esenciales para comprender la variabilidad del paisaje, y los patrones de biodiversidad asociados a diferentes elevaciones. De all\u00ed que se considere una informaci\u00f3n clave para la planificaci\u00f3n de la conservaci\u00f3n y la gesti\u00f3n sostenible de los recursos naturales. Tambi\u00e9n condiciona el asentamiento de la poblaci\u00f3n, la actividad agr\u00edcola, el dise\u00f1o de infraestructuras y la presencia de procesos naturales que podr\u00edan representar factores de riesgo ambiental. \n\nEsta malla es una compilaci\u00f3n de AmazoniaForever360+, a partir del cuerpo de datos Copernicus DEM, que es un modelo r\u00e1ster de la superficie terrestre. Proporciona la capacidad de visualizar distintos indicadores de altitud como una malla hexagonal. Esto a partir de una simplificaci\u00f3n de los datos fuente que muestran con gran detalle las variaciones locales de altitud,  con 30 metros de intervalo, asociadas a un p\u00edxel. La malla permite clasificar la altitud en unidades concretas, hex\u00e1gonos, de 38,461 kil\u00f3metros cuadrados en promedio, que cubren la Amazonia. Se ha transferido la malla de referencia H3 nivel 6, los indicadores de altitud, en una operaci\u00f3n GIS llamada 'Estad\u00edstica zonal como tabla' en un entorno de ArcGIS Pro.  Para cada hex\u00e1gono se han asociado los siguientes indicadores: \n\nALTMIN; Altitud m\u00ednima por celda; metros sobre el nivel del mar (m.). \n\nALTMAX; Altitud m\u00e1xima por c\u00e9lula; metros sobre el nivel del mar (m.). \n\nALTRANGE; Rango de altitud por celda; metros sobre el nivel del mar (m.). \n\nALTMEAN; Altitud media por celda; metros sobre el nivel del mar (m.). \n\nEsto proporciona la capacidad de caracterizar cada celda y responder a preguntas como: \u00bfcu\u00e1l es el conjunto de celdas con mayor altitud promedio?; \u00bfcu\u00e1les celdas tienen mayor rango de variaci\u00f3n de altitud? En conjunto con otros datos de otras mallas hexa pueden definirse las celdas m\u00e1s pobladas en cualquier intervalo de altitud, o las m\u00e1s lluviosas, o las m\u00e1s expuestas a inundaci\u00f3n. \n\nEl Copernicus DEM es gestionado por la Agencia Espacial Europea (ESA) como parte del programa Copernicus de la Uni\u00f3n Europea. Este modelo se deriva principalmente de los datos obtenidos a trav\u00e9s de la misi\u00f3n TanDEM-X, una colaboraci\u00f3n entre el Centro Aeroespacial Alem\u00e1n (DLR) y Airbus Defence and Space, con adquisiciones realizadas entre 2011 y 2015. Se ha utilizado espec\u00edficamente el producto GLO-30: altimetr\u00eda de cobertura global con una resoluci\u00f3n de 30 metros. Est\u00e1 disponible para su descarga a trav\u00e9s del portal de las Misiones Contribuyentes de Copernicus:  \n\nEuropean  Space Agency (ESA). (2023). Copernicus  Contributing  Missions: Collections  Description. Portal de las Misiones Contribuyentes de Copernicus. Disponible en: <https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM> \n\nPara la metodolog\u00eda y aplicaciones del Copernicus DEM, se recomienda consultar: 'Evolution  of  the  Copernicus DEM: going  beyond  today's  elevation data', presentado en el VH-RODA 2022 por E. Fahrland y colaboradores. \n\nFahrland, E., Iavarone, M., & Borla, M. (2022). Evolution  of  the  Copernicus DEM: going  beyond  today's  elevation data. VH-RODA 2022. Disponible en: <https://earth.esa.int/eogateway/documents/20142/4139742/2.16_VH-RODA%202022%20-%20CopernicusDEM%20Evolution-%20EFahrland.pdf> \n\nDocumentaci\u00f3n para comprender y aplicar la t\u00e9cnica de Estad\u00edstica Zonal como tabla en entornos SIG: \n\nDocumentaci\u00f3n ESRI - ArcGIS Pro (Estad\u00edstica Zonal como Tabla): \n\n<https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/zonal-statistics-as-table.html> \n\nDocumentaci\u00f3n QGIS (Zonal Statistics): manual de usuario de QGIS con la descripci\u00f3n de la herramienta de estad\u00edsticas zonales, su configuraci\u00f3n y uso en proyectos GIS. \n\n<https://docs.qgis.org/latest/en/docs/user_manual/processing_algs/qgis/zonalstatistics.html> \n\nQGIS Plugins  Repository (Zonal Statistics Plugin): detalles sobre el plugin 'Zonal Statistics' y su instalaci\u00f3n. \n\n<https://plugins.qgis.org/search/?q=Zonal+Statis>",
+    "visualization_types": [],
+    "default_visualization_type": null,
+    "resource": [
+      {
+        "id": "6aabe105cfc6d7a1c339ade6",
+        "name": "AMZ_NATTOPOALT_H3L9",
+        "column": "ALTMEAN",
+        "url": null,
+        "blockName": null,
+        "blockType": "h3"
+      }
+    ],
+    "updatedAt": "2026-09-17T12:45:57.107Z",
+    "createdAt": "2026-09-15T08:16:10.767Z",
+    "_status": "published"
+  },
+  {
+    "id": "70",
+    "order": 70,
+    "subtopic": {
+      "id": "3",
+      "topic": {
+        "id": "1",
+        "name": "Territory"
+      },
+      "name": "Land Cover\n\n",
+      "description": null
+    },
+    "name": "Shrubland",
+    "unit": "%",
+    "description_short": "Percentage of 'Shrubland' cover class (WorldCover ESA 2021) per grid cell",
+    "description": null,
+    "visualization_types": [],
+    "default_visualization_type": null,
+    "resource": [
+      {
+        "id": "6aabe105cfc6d7a1c339adeb",
+        "name": "AMZ_LNDCLSSCOVRG_H3L7",
+        "column": "SHRUBLND",
+        "url": null,
+        "blockName": null,
+        "blockType": "h3"
+      }
+    ],
+    "updatedAt": "2026-09-17T12:45:57.408Z",
+    "createdAt": "2026-09-15T08:16:11.057Z",
+    "_status": "published"
+  }
+]

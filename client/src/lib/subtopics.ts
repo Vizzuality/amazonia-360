@@ -1,19 +1,11 @@
 import { QueryFunction, useQuery, UseQueryOptions } from "@tanstack/react-query";
 
+import { fetchContent } from "@/lib/cms-content/fetch";
+import { toSubtopic } from "@/lib/cms-content/map";
+import { CmsSubtopic } from "@/lib/cms-content/types";
+
 import { Subtopic } from "@/types/topic";
 
-import SUBTOPICS from "@/../datum/subtopics.json";
-import { routing } from "@/i18n/routing";
-
-/**
- ************************************************************
- ************************************************************
- * topicsData
- * - useGetSubtopics
- * - useGetSubtopicId
- ************************************************************
- ************************************************************
- */
 export type SubtopicsParams = unknown;
 
 export type SubtopicsQueryOptions<TData, TError> = UseQueryOptions<
@@ -23,19 +15,9 @@ export type SubtopicsQueryOptions<TData, TError> = UseQueryOptions<
 >;
 
 export const getSubtopics = async ({ locale }: { locale: string }): Promise<Subtopic[]> => {
-  const subtopics = SUBTOPICS as Subtopic[];
+  const subtopics = await fetchContent<CmsSubtopic>({ collection: "subtopics", locale });
 
-  const topicsTranslated: Subtopic[] = subtopics.map((subtopic) => {
-    return {
-      ...subtopic,
-      name: (subtopic[`name_${locale}` as keyof Subtopic] ||
-        subtopic[`name_${routing.defaultLocale}` as keyof Subtopic]) as string,
-      description: (subtopic[`description_${locale}` as keyof Subtopic] ||
-        subtopic[`description_${routing.defaultLocale}` as keyof Subtopic]) as string,
-    };
-  });
-
-  return topicsTranslated;
+  return subtopics.map(toSubtopic);
 };
 
 export const getSubtopicsKey = (locale: string) => {

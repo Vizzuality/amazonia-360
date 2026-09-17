@@ -68,7 +68,6 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
             return {
               ...indicator,
               id: `${indicator.id}-${crypto.randomUUID()}`,
-              indicator_id: Number(indicator.id),
             };
           }),
       }))

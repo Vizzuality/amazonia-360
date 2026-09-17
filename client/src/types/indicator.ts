@@ -1,4 +1,4 @@
-import { Subtopic, Topic } from "@/types/topic";
+import { Subtopic, TopicSummary } from "@/types/topic";
 
 import { IndicatorView } from "@/app/(frontend)/parsers";
 
@@ -15,16 +15,20 @@ export type VisualizationTypes = "map" | "table" | "chart" | "numeric" | "ai" | 
  */
 export type ImageryAggregation = "sum" | "mean" | "none";
 
+type ResourceQuery = (__esri.QueryProperties & { returnIntersections?: boolean }) | null;
+
 export type ResourceFeature = {
   name: string;
   url: string;
-  layer_id: number;
+  /** Text, not a number: the layer URL is built as `url + layer_id`. */
+  layer_id: string;
   type: "feature";
-  query_map: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
-  query_table: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
-  query_chart: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
-  query_numeric: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
-  query_ai: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
+  /** No source row carries one; `getQueryFeatureId` still looks it up by widget type. */
+  query_map?: ResourceQuery;
+  query_table: ResourceQuery;
+  query_chart: ResourceQuery;
+  query_numeric: ResourceQuery;
+  query_ai: ResourceQuery;
   popupTemplate?: __esri.PopupTemplateProperties;
 };
 
@@ -52,9 +56,7 @@ export type ResourceImagery = {
 };
 
 export type ResourceH3 = {
-  id: number;
   name: string;
-  description: string;
   column: string;
   type: "h3";
   url?: string;
@@ -68,22 +70,10 @@ export type ResourceComponent = {
 export type Indicator = {
   id: number;
   name?: string;
-  name_es: string;
-  name_en: string;
-  name_pt: string;
   description?: string;
-  description_es: string;
-  description_en: string;
-  description_pt: string;
   description_short?: string;
-  description_short_es: string;
-  description_short_en: string;
-  description_short_pt: string;
   unit?: string;
-  unit_es: string;
-  unit_en: string;
-  unit_pt: string;
-  topic: Topic;
+  topic: TopicSummary;
   subtopic: Subtopic;
   order: number;
   visualization_types: VisualizationTypes[];
@@ -99,7 +89,6 @@ export type Indicator = {
 
 export type H3Indicator = Indicator & {
   resource: ResourceH3;
-  topic: Topic;
 };
 
 export type IndicatorOverview = {

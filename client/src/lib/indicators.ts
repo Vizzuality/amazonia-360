@@ -7,8 +7,9 @@ import * as intersectionOperator from "@arcgis/core/geometry/operators/intersect
 import { QueryFunction, UseQueryOptions, useQuery, useQueries } from "@tanstack/react-query";
 import axios from "axios";
 
-import { getSubtopics } from "@/lib/subtopics";
-import { getTopics } from "@/lib/topics";
+import { fetchContent } from "@/lib/cms-content/fetch";
+import { toIndicator } from "@/lib/cms-content/map";
+import { CmsIndicator } from "@/lib/cms-content/types";
 
 import {
   Indicator,
@@ -22,20 +23,6 @@ import { Subtopic, Topic } from "@/types/topic";
 
 import { LayerProps } from "@/components/map/layers/types";
 
-import INDICATORS from "@/../datum/indicators.json";
-import { routing } from "@/i18n/routing";
-
-/**
- ************************************************************
- ************************************************************
- * INDICATORS
- * - useGetIndicators
- * - useGetDefaultIndicators
- * - useGetH3Indicators
- * - useGetIndicatorsId
- ************************************************************
- ************************************************************
- */
 export type IndicatorsParams = unknown;
 
 export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
@@ -44,35 +31,15 @@ export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
   TData
 >;
 
-export const getIndicators = async (locale: string) => {
-  const indicators = INDICATORS;
-  const topics = await getTopics({ locale });
-  const subtopics = await getSubtopics({ locale });
+/**
+ * `depth=2` already returns each Indicator's Subtopic and Topic in the requested locale, so
+ * there is no second lookup and nothing to join — `toIndicator` only flattens the Topic out
+ * from under the Subtopic, where the app holds the two as siblings.
+ */
+export const getIndicators = async (locale: string): Promise<Indicator[]> => {
+  const indicators = await fetchContent<CmsIndicator>({ collection: "indicators", locale });
 
-  return indicators
-    .map((indicator) => {
-      const s = subtopics.find((s) => s.id === indicator.subtopic_id);
-      const t = topics.find((t) => t.id === s?.topic_id);
-
-      return {
-        ...indicator,
-        name:
-          indicator[`name_${locale}` as keyof typeof indicator] ||
-          indicator[`name_${routing.defaultLocale}` as keyof typeof indicator],
-        description:
-          indicator[`description_${locale}` as keyof typeof indicator] ||
-          indicator[`description_${routing.defaultLocale}` as keyof typeof indicator],
-        description_short:
-          indicator[`description_short_${locale}` as keyof typeof indicator] ||
-          indicator[`description_short_${routing.defaultLocale}` as keyof typeof indicator],
-        unit:
-          indicator[`unit_${locale}` as keyof typeof indicator] ||
-          indicator[`unit_${routing.defaultLocale}` as keyof typeof indicator],
-        subtopic: s as Subtopic,
-        topic: t as Topic,
-      } as Indicator;
-    })
-    .sort((a, b) => (a.name || "")?.localeCompare(b.name || ""));
+  return indicators.map(toIndicator).sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 };
 
 export const getIndicatorsKey = (locale: string) => {

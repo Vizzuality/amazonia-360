@@ -36,10 +36,10 @@ export default function ComponentDataRow({ id, locale, location }: DataRowProps)
       },
     );
 
-    if (indicator[`unit_${locale}`]) return `${area} ${indicator.unit}`;
+    if (indicator.unit) return `${area} ${indicator.unit}`;
 
     return area;
-  }, [GEOMETRY, indicator, locale]);
+  }, [GEOMETRY, indicator]);
 
   useMemo(() => {
     onIndicatorViewLoaded(id);

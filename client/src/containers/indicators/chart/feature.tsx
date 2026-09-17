@@ -44,7 +44,7 @@ export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
 
       return [
         {
-          id: indicator.name_en,
+          id: indicator.id,
           label: indicator.name,
           color: c.toHex() ?? "#009ADE",
         },

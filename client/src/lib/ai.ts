@@ -1,4 +1,4 @@
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
+import { useMutation, UseMutationOptions, useQueryClient } from "@tanstack/react-query";
 
 import {
   ClassShare,
@@ -6,7 +6,12 @@ import {
   getImageryScalar,
   hasImageryCoverage,
 } from "@/lib/imagery";
-import { getIndicators, getQueryFeatureId, getQueryImageryId } from "@/lib/indicators";
+import {
+  getIndicators,
+  getIndicatorsOptions,
+  getQueryFeatureId,
+  getQueryImageryId,
+} from "@/lib/indicators";
 import { roundTo } from "@/lib/utils";
 
 import { Context, ContextDescriptionType, ContextLanguage } from "@/types/generated/api.schemas";
@@ -221,11 +226,23 @@ export const getTopicSummary = async (params: {
   activeIndicators?: Indicator["id"][];
   locale: string;
   location: __esri.Polygon | null;
+  /**
+   * How to reach the catalogue. `useGetTopicSummary` passes the query cache, so generating
+   * a summary for each of the nine topics reads one fetch rather than nine.
+   */
+  loadIndicators?: (locale: string) => Promise<Indicator[]>;
 }) => {
-  const { topic, options, locale, activeIndicators, location } = params;
+  const {
+    topic,
+    options,
+    locale,
+    activeIndicators,
+    location,
+    loadIndicators = getIndicators,
+  } = params;
   const only = options?.only_active ? activeIndicators : undefined;
 
-  const allIndicators = await getIndicators(locale);
+  const allIndicators = await loadIndicators(locale);
 
   const indicators = allIndicators.filter(
     (indicator) =>
@@ -264,8 +281,14 @@ export const useGetTopicSummary = <
 >(
   options?: Omit<TopicSummaryMutationOptions<TData, TError>, "mutationFn">,
 ) => {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: getTopicSummary,
+    mutationFn: (params: Parameters<typeof getTopicSummary>[0]) =>
+      getTopicSummary({
+        ...params,
+        loadIndicators: (locale) => queryClient.ensureQueryData(getIndicatorsOptions(locale)),
+      }),
     ...options,
   });
 };
