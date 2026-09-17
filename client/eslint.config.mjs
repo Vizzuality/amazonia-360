@@ -164,6 +164,30 @@ const eslintConfig = [
       },
     },
   },
+  {
+    files: ["src/**/*.ts", "src/**/*.tsx"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "next-auth/react",
+              importNames: ["signIn", "signOut"],
+              message:
+                "An auth-state change must not leave the client Router Cache holding the previous session's pages. Sign in with signInAction (a Server Action); sign out with useSignOut from @/lib/auth/use-sign-out.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/lib/auth/use-sign-out.ts"],
+    rules: {
+      "no-restricted-imports": "off",
+    },
+  },
   eslintPluginPrettierRecommended,
   ...pluginQuery.configs["flat/recommended"],
   // Ignores

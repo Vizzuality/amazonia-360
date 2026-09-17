@@ -149,4 +149,8 @@ export class SignUpPage {
   async expectRedirectedToCheckEmail() {
     await expect(this.page).toHaveURL(/\/auth\/check-your-email/, { timeout: 15_000 });
   }
+
+  async expectRedirectedTo(urlPattern: RegExp) {
+    await expect(this.page).toHaveURL(urlPattern, { timeout: 15_000 });
+  }
 }

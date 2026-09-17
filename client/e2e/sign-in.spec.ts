@@ -1,6 +1,7 @@
 import { test, expect } from "./fixtures";
 import { dismissCookieConsent } from "./helpers/cookie-consent";
 import { LOCALES } from "./helpers/locale";
+import { HomePage } from "./pages/home.page";
 import { SignInPage } from "./pages/sign-in.page";
 
 const TEST_EMAIL = process.env.E2E_TEST_USER_EMAIL;
@@ -161,5 +162,38 @@ test.describe("sign-in navigation links", () => {
 
     await signInPage.signUpLink.click();
     await expect(page).toHaveURL(/\/auth\/sign-up/, { timeout: 15_000 });
+  });
+});
+
+// --- Redirect loop regression ---
+
+test.describe("sign-in from a gated link", () => {
+  // Reaching sign-in through the header link is what breaks: Next prefetches
+  // /reports while signed out, so the client Router Cache holds the gate's
+  // redirect back to sign-in, and a soft navigation after signing in replays it.
+  // Signing in through a Server Action evicts that cache first.
+  test("lands on the gated page and stays there", async ({ page }) => {
+    test.skip(!hasCredentials, "E2E test user credentials not set");
+
+    const homePage = new HomePage(page);
+    await homePage.goto();
+    await dismissCookieConsent(page);
+
+    await homePage.reportToolLink.click();
+    await expect(page).toHaveURL(/\/auth\/sign-in\?redirectUrl=%2Freports/, { timeout: 15_000 });
+
+    const signInPage = new SignInPage(page);
+    await signInPage.signIn(TEST_EMAIL!, TEST_PASSWORD!);
+
+    await expect(page).toHaveURL(/\/reports/, { timeout: 15_000 });
+
+    // The bug let you touch /reports and bounced you back a beat later, so the first
+    // match is not proof. Re-assert once the dust has settled.
+    await page.waitForLoadState("networkidle");
+    await expect(page).toHaveURL(/\/reports/);
+
+    // And the header has to agree: the session the gate accepted is the one the client
+    // is holding, without a reload.
+    await expect(page.getByRole("banner").getByRole("button", { name: /sign in/i })).toHaveCount(0);
   });
 });
