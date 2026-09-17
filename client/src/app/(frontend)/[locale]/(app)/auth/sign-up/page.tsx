@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { Locale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 
+import { AuthSidePanel } from "@/containers/auth/side-panel";
 import { SignupForm } from "@/containers/auth/sign-up";
 import { SignupBenefits } from "@/containers/auth/signup-benefits";
 
@@ -28,9 +29,9 @@ export default async function SignUpPage(_props: PageProps<"/[locale]/auth/sign-
         </div>
       </section>
 
-      <div className="absolute top-0 right-0 z-10 hidden h-full w-5/12 lg:block print:hidden">
+      <AuthSidePanel className="z-10">
         <SignupBenefits className="absolute bottom-0 left-0 w-[78.6667%]" />
-      </div>
+      </AuthSidePanel>
     </>
   );
 }

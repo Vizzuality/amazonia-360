@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+import { AuthSidePanel } from "@/containers/auth/side-panel";
+
 export default async function AuthLayout({ children }: LayoutProps<"/[locale]/auth">) {
   return (
     <>
@@ -10,7 +12,7 @@ export default async function AuthLayout({ children }: LayoutProps<"/[locale]/au
           </div>
         </div>
 
-        <div className="absolute top-0 right-0 hidden h-full w-5/12 lg:block print:hidden">
+        <AuthSidePanel>
           <Image
             src="/images/auth/auth.webp"
             alt="Authentication background"
@@ -20,7 +22,7 @@ export default async function AuthLayout({ children }: LayoutProps<"/[locale]/au
             className="object-cover object-center"
             priority
           />
-        </div>
+        </AuthSidePanel>
       </main>
     </>
   );
