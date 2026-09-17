@@ -516,6 +516,10 @@ export interface Indicator {
             id?: string | null;
           }[];
         };
+        /**
+         * How the AI summary reduces this raster to one number. Sum for counts, mean for indices, none for categorical rasters.
+         */
+        aggregation: 'sum' | 'mean' | 'none';
         id?: string | null;
         blockName?: string | null;
         blockType: 'imagery';
@@ -1116,6 +1120,7 @@ export interface IndicatorsSelect<T extends boolean = true> {
                           id?: T;
                         };
                   };
+              aggregation?: T;
               id?: T;
               blockName?: T;
             };
