@@ -8,6 +8,7 @@ import * as migration_20260908_122337 from './20260908_122337';
 import * as migration_20260915_100844 from './20260915_100844';
 import * as migration_20260916_132710_default_visualization_type from './20260916_132710_default_visualization_type';
 import * as migration_20260916_155831_countries_of_interest from './20260916_155831_countries_of_interest';
+import * as migration_20260917_123018_indicator_aggregation from './20260917_123018_indicator_aggregation';
 
 export const migrations = [
   {
@@ -58,6 +59,11 @@ export const migrations = [
   {
     up: migration_20260916_155831_countries_of_interest.up,
     down: migration_20260916_155831_countries_of_interest.down,
-    name: '20260916_155831_countries_of_interest'
+    name: '20260916_155831_countries_of_interest',
+  },
+  {
+    up: migration_20260917_123018_indicator_aggregation.up,
+    down: migration_20260917_123018_indicator_aggregation.down,
+    name: '20260917_123018_indicator_aggregation',
   },
 ];

@@ -1,3 +1,5 @@
+import type { ImageryAggregation } from "@/types/indicator";
+
 export type LocalizedValue = { en: string; es?: string; pt?: string };
 
 export type RawPopupTemplate = {
@@ -17,6 +19,7 @@ export type RawResource = {
   layer_id: string;
   rasterFunction: JsonValue;
   legend: Legend;
+  aggregation: ImageryAggregation;
   url: string;
   query_numeric: JsonValue;
   query_table: JsonValue;
@@ -43,7 +46,15 @@ export type MappedResourceBlock =
       query_ai?: JsonValue;
     }
   | {
-      blockType: "imagery" | "imagery-tile";
+      blockType: "imagery";
+      name?: string;
+      url: string;
+      rasterFunction: JsonValue;
+      legend: Legend;
+      aggregation: ImageryAggregation;
+    }
+  | {
+      blockType: "imagery-tile";
       name?: string;
       url: string;
       rasterFunction: JsonValue;
