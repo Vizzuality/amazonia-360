@@ -31,9 +31,17 @@ export const mapResource = (raw: RawResource): MappedResourceBlock => {
         query_ai: emptyToUndefined(raw.query_ai),
       };
     case "imagery":
+      return {
+        blockType: "imagery",
+        name: emptyToUndefined(raw.name),
+        url: raw.url,
+        rasterFunction: raw.rasterFunction,
+        legend: raw.legend,
+        aggregation: raw.aggregation,
+      };
     case "imagery-tile":
       return {
-        blockType: raw.type,
+        blockType: "imagery-tile",
         name: emptyToUndefined(raw.name),
         url: raw.url,
         rasterFunction: raw.rasterFunction,
