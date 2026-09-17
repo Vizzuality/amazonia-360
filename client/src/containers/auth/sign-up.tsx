@@ -1,10 +1,13 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
-import { Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import * as z from "zod";
+
+import { COUNTRIES, type CountryCode } from "@/constants/countries";
+
+import { CountriesField } from "@/containers/auth/countries-field";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,11 +26,7 @@ import { Link, useRouter } from "@/i18n/navigation";
 
 import { sdk } from "@/services/sdk";
 
-const BENEFIT_KEYS = [
-  "auth-signup-benefit-reports",
-  "auth-signup-benefit-summaries",
-  "auth-signup-benefit-community",
-] as const;
+const COUNTRY_ISO3_CODES = COUNTRIES.map((country) => country.iso3);
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
@@ -40,6 +39,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       password: z.string().min(6, t("auth-validation-password-min-length")),
       "confirm-password": z.string(),
       communityOptIn: z.boolean(),
+      countriesOfInterest: z.array(z.enum(COUNTRY_ISO3_CODES)),
     })
     .refine((data) => data.password === data["confirm-password"], {
       message: t("auth-validation-passwords-no-match"),
@@ -53,6 +53,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       password: "",
       "confirm-password": "",
       communityOptIn: false,
+      countriesOfInterest: [] as CountryCode[],
     },
     validators: {
       onSubmit: formSchema,
@@ -68,6 +69,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               email: value.email,
               password: value.password,
               communityOptIn: value.communityOptIn,
+              countriesOfInterest: value.countriesOfInterest,
             },
           })
           .then(() => {
@@ -88,14 +90,6 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       <CardHeader>
         <CardTitle className="text-primary text-3xl">{t("auth-signup-title")}</CardTitle>
         <CardDescription className="font-medium">{t("auth-signup-description")}</CardDescription>
-        <ul className="text-muted-foreground mt-2 space-y-1.5 text-sm font-medium">
-          {BENEFIT_KEYS.map((key) => (
-            <li key={key} className="flex items-start gap-2">
-              <Check className="text-gold-500 mt-0.5 size-4 shrink-0" aria-hidden="true" />
-              <span>{t(key)}</span>
-            </li>
-          ))}
-        </ul>
       </CardHeader>
       <CardContent>
         <form
@@ -117,6 +111,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder={t("auth-field-name-placeholder")}
                       aria-invalid={isInvalid}
                     />
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -136,6 +131,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder={t("auth-field-email-placeholder")}
                       aria-invalid={isInvalid}
                     />
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -143,43 +139,58 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 );
               }}
             </form.Field>
-            <form.Field name="password">
-              {(field) => {
-                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>{t("auth-field-password")}</FieldLabel>
-                    <Input
-                      id={field.name}
-                      type="password"
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      aria-invalid={isInvalid}
-                    />
-                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                  </Field>
-                );
-              }}
-            </form.Field>
-            <form.Field name="confirm-password">
-              {(field) => {
-                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>{t("auth-field-confirm-password")}</FieldLabel>
-                    <Input
-                      id={field.name}
-                      type="password"
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      aria-invalid={isInvalid}
-                    />
-                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                  </Field>
-                );
-              }}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <form.Field name="password">
+                {(field) => {
+                  const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>{t("auth-field-password")}</FieldLabel>
+                      <Input
+                        id={field.name}
+                        type="password"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder={t("auth-field-password-placeholder")}
+                        aria-invalid={isInvalid}
+                      />
+                      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                    </Field>
+                  );
+                }}
+              </form.Field>
+              <form.Field name="confirm-password">
+                {(field) => {
+                  const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("auth-field-confirm-password")}
+                      </FieldLabel>
+                      <Input
+                        id={field.name}
+                        type="password"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder={t("auth-field-confirm-password-placeholder")}
+                        aria-invalid={isInvalid}
+                      />
+                      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                    </Field>
+                  );
+                }}
+              </form.Field>
+            </div>
+
+            <form.Field name="countriesOfInterest">
+              {(field) => (
+                <CountriesField
+                  value={field.state.value}
+                  onChange={(next) => field.handleChange(next)}
+                />
+              )}
             </form.Field>
 
             <form.Field name="communityOptIn">
