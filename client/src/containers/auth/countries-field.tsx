@@ -36,7 +36,7 @@ function getCountriesWithout(value: string[], iso3: string): string[] {
 const CHIP_CLASSNAME =
   "h-8 min-w-0 gap-2 rounded-md border border-border bg-transparent px-2 text-sm font-semibold text-foreground hover:bg-accent hover:text-foreground data-[state=on]:border-transparent data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:hover:bg-[hsl(var(--hover-primary))] data-[state=on]:hover:text-primary-foreground";
 
-export function CountriesField({ value, onChange }: CountriesFieldProps) {
+export function CountriesField({ value, onChange }: Readonly<CountriesFieldProps>) {
   const t = useTranslations();
   const locale = useLocale();
   const labelId = useId();
