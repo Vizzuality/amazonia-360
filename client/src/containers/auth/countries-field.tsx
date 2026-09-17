@@ -1,36 +1,25 @@
 "use client";
 
-import { useId, useMemo } from "react";
-
 import { useLocale, useTranslations } from "next-intl";
 
-import { COUNTRIES } from "@/constants/countries";
+import { COUNTRIES, type CountryCode } from "@/constants/countries";
 
+import { FieldDescription, FieldLegend, FieldSet } from "@/components/ui/field";
 import { Toggle } from "@/components/ui/toggle";
 
 type CountriesFieldProps = {
-  value: string[];
-  onChange: (next: string[]) => void;
+  value: CountryCode[];
+  onChange: (next: CountryCode[]) => void;
 };
 
 type TranslateFn = ReturnType<typeof useTranslations>;
-type MessageKey = Parameters<TranslateFn>[0];
 
 function getSortedCountries(t: TranslateFn, locale: string) {
   const collator = new Intl.Collator(locale);
-  return COUNTRIES.map(({ iso3 }) => ({
+  return COUNTRIES.map(({ iso3, nameKey }) => ({
     iso3,
-    // Cast: the key is built from a runtime iso3, so it can't be a message-key literal.
-    label: t(`country-module-${iso3}-name` as MessageKey),
+    label: t(nameKey),
   })).sort((a, b) => collator.compare(a.label, b.label));
-}
-
-function getCountriesWith(value: string[], iso3: string): string[] {
-  return [...value, iso3];
-}
-
-function getCountriesWithout(value: string[], iso3: string): string[] {
-  return value.filter((code) => code !== iso3);
 }
 
 const CHIP_CLASSNAME =
@@ -39,31 +28,25 @@ const CHIP_CLASSNAME =
 export function CountriesField({ value, onChange }: Readonly<CountriesFieldProps>) {
   const t = useTranslations();
   const locale = useLocale();
-  const labelId = useId();
-  const descriptionId = useId();
 
-  const countries = useMemo(() => getSortedCountries(t, locale), [t, locale]);
+  const countries = getSortedCountries(t, locale);
 
-  const handleToggleCountry = (iso3: string, pressed: boolean) => {
-    onChange(pressed ? getCountriesWith(value, iso3) : getCountriesWithout(value, iso3));
+  const handleToggleCountry = (iso3: CountryCode, pressed: boolean) => {
+    onChange(pressed ? [...value, iso3] : value.filter((code) => code !== iso3));
   };
 
   return (
-    <div className="flex flex-col gap-3 pb-2">
-      <p id={labelId} className="text-foreground text-sm leading-5 font-medium">
+    <FieldSet className="gap-3 pb-2">
+      <FieldLegend variant="label">
         {t("auth-countries-label")}{" "}
         <span className="text-muted-foreground font-medium italic">
           {t("auth-countries-optional")}
         </span>
-      </p>
-      <p id={descriptionId} className="text-muted-foreground text-xs leading-4 font-normal">
+      </FieldLegend>
+      <FieldDescription className="mt-0! text-xs leading-4">
         {t("auth-countries-description")}
-      </p>
-      <fieldset
-        aria-labelledby={labelId}
-        aria-describedby={descriptionId}
-        className="flex min-w-0 flex-wrap gap-2"
-      >
+      </FieldDescription>
+      <div className="flex min-w-0 flex-wrap gap-2">
         {countries.map(({ iso3, label }) => (
           <Toggle
             key={iso3}
@@ -74,7 +57,7 @@ export function CountriesField({ value, onChange }: Readonly<CountriesFieldProps
             {label}
           </Toggle>
         ))}
-      </fieldset>
-    </div>
+      </div>
+    </FieldSet>
   );
 }

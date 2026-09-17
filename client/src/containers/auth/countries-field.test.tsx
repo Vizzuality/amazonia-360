@@ -53,17 +53,11 @@ describe("CountriesField", () => {
     expect(pressed).toEqual(["country-module-BRA-name", "country-module-PER-name"]);
   });
 
-  it("associates the label and description with the fieldset", () => {
+  it("exposes the label as the group's accessible name and renders the description", () => {
     render(<CountriesField value={[]} onChange={vi.fn()} />);
 
-    const fieldset = screen.getByRole("group");
-    const labelId = fieldset.getAttribute("aria-labelledby");
-    const descriptionId = fieldset.getAttribute("aria-describedby");
-
-    expect(document.getElementById(labelId ?? "")).toHaveTextContent("auth-countries-label");
-    expect(document.getElementById(descriptionId ?? "")).toHaveTextContent(
-      "auth-countries-description",
-    );
+    expect(screen.getByRole("group", { name: /auth-countries-label/ })).toBeInTheDocument();
+    expect(screen.getByText("auth-countries-description")).toBeInTheDocument();
   });
 });
 

@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import * as z from "zod";
 
+import { COUNTRIES, type CountryCode } from "@/constants/countries";
+
 import { CountriesField } from "@/containers/auth/countries-field";
 
 import { Button } from "@/components/ui/button";
@@ -21,9 +23,10 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input";
 
 import { Link, useRouter } from "@/i18n/navigation";
-import type { User } from "@/payload-types";
 
 import { sdk } from "@/services/sdk";
+
+const COUNTRY_ISO3_CODES = COUNTRIES.map((country) => country.iso3);
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
@@ -36,7 +39,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       password: z.string().min(6, t("auth-validation-password-min-length")),
       "confirm-password": z.string(),
       communityOptIn: z.boolean(),
-      countriesOfInterest: z.array(z.string()),
+      countriesOfInterest: z.array(z.enum(COUNTRY_ISO3_CODES)),
     })
     .refine((data) => data.password === data["confirm-password"], {
       message: t("auth-validation-passwords-no-match"),
@@ -50,7 +53,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       password: "",
       "confirm-password": "",
       communityOptIn: false,
-      countriesOfInterest: [] as string[],
+      countriesOfInterest: [] as CountryCode[],
     },
     validators: {
       onSubmit: formSchema,
@@ -66,7 +69,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               email: value.email,
               password: value.password,
               communityOptIn: value.communityOptIn,
-              countriesOfInterest: value.countriesOfInterest as User["countriesOfInterest"],
+              countriesOfInterest: value.countriesOfInterest,
             },
           })
           .then(() => {
