@@ -3,13 +3,14 @@
 import { useSearchParams } from "next/navigation";
 
 import { useForm } from "@tanstack/react-form";
-import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
 // import { LuGithub } from "react-icons/lu";
 import { toast } from "sonner";
 import * as z from "zod";
 
 import { resolveRedirect } from "@/lib/auth/redirect-url";
+
+import { signInAction } from "@/app/(frontend)/[locale]/(app)/auth/sign-in/actions";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,14 +24,13 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-import { Link } from "@/i18n/navigation";
-import { useHardNavigate } from "@/i18n/navigation-client";
+import { Link, useRouter } from "@/i18n/navigation";
 
 export type SignInFormProps = React.ComponentProps<"div">;
 
 export function SignInForm(props: SignInFormProps) {
   const searchParams = useSearchParams();
-  const hardNavigate = useHardNavigate();
+  const router = useRouter();
   const t = useTranslations();
 
   const formSchema = z.object({
@@ -48,16 +48,15 @@ export function SignInForm(props: SignInFormProps) {
     },
     onSubmit: async ({ value }) => {
       toast.promise(
-        signIn("users", {
-          redirect: false,
-          email: value.email,
-          password: value.password,
-        }).then((r) => {
-          if (r?.error) {
-            throw new Error(r.error);
+        signInAction({ email: value.email, password: value.password }).then((result) => {
+          if (!result.success) {
+            throw new Error(result.reason);
           }
 
-          hardNavigate(resolveRedirect(searchParams.get("redirectUrl")));
+          // Safe as a soft navigation only because the action wrote the session cookie:
+          // Next has evicted the client Router Cache by the time it resolves, so there is
+          // no longer a prefetched redirect back to this form to replay.
+          router.push(resolveRedirect(searchParams.get("redirectUrl")));
         }),
         {
           loading: t("auth-toast-logging-in"),

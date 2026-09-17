@@ -170,7 +170,8 @@ test.describe("sign-in navigation links", () => {
 test.describe("sign-in from a gated link", () => {
   // Reaching sign-in through the header link is what breaks: Next prefetches
   // /reports while signed out, so the client Router Cache holds the gate's
-  // redirect back to sign-in. A soft navigation after signing in replays it.
+  // redirect back to sign-in, and a soft navigation after signing in replays it.
+  // Signing in through a Server Action evicts that cache first.
   test("lands on the gated page and stays there", async ({ page }) => {
     test.skip(!hasCredentials, "E2E test user credentials not set");
 

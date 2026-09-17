@@ -17,8 +17,9 @@ import { routing } from "@/i18n/routing";
  * /admin and never hold a NextAuth session, so they are not affected.
  *
  * Served to a prefetch, this redirect lands in the client Router Cache under the
- * gated route's own key. Any navigation into a gated route right after an
- * auth-state change must therefore be a full load — see `useHardNavigate`.
+ * gated route's own key, where a later soft navigation would replay it. Signing in
+ * therefore runs as a Server Action: mutating the session cookie makes Next evict
+ * that cache before the navigation happens — see `auth/sign-in/actions`.
  */
 export async function requireUser(locale: Locale) {
   const session = await auth();
