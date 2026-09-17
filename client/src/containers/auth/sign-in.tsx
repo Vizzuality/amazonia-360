@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 
 import { useForm } from "@tanstack/react-form";
+import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 // import { LuGithub } from "react-icons/lu";
 import { toast } from "sonner";
@@ -31,6 +32,7 @@ export type SignInFormProps = React.ComponentProps<"div">;
 export function SignInForm(props: SignInFormProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { update: refreshSession } = useSession();
   const t = useTranslations();
 
   const formSchema = z.object({
@@ -48,10 +50,15 @@ export function SignInForm(props: SignInFormProps) {
     },
     onSubmit: async ({ value }) => {
       toast.promise(
-        signInAction({ email: value.email, password: value.password }).then((result) => {
+        signInAction({ email: value.email, password: value.password }).then(async (result) => {
           if (!result.success) {
             throw new Error(result.reason);
           }
+
+          // The action set the cookie behind the SessionProvider's back, and the provider
+          // only ever reads its `session` prop once. Without this the header keeps
+          // offering "sign in" until a full reload.
+          await refreshSession();
 
           // Safe as a soft navigation only because the action wrote the session cookie:
           // Next has evicted the client Router Cache by the time it resolves, so there is
