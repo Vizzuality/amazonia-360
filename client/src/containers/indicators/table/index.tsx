@@ -28,7 +28,7 @@ export const TableIndicators = ({ id }: { id: Indicator["id"] }) => {
 
   return (
     <IndicatorProvider onLoad={handleLoad}>
-      {indicator.resource.type === "feature" && location && (
+      {indicator.resource.blockType === "feature" && location && (
         <TableIndicatorsFeature {...indicator} location={location} resource={indicator.resource} />
       )}
     </IndicatorProvider>

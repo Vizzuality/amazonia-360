@@ -6,7 +6,9 @@ export interface LegendItemProps {
   id?: string | number;
   type: "basic" | "gradient" | "choropleth";
   items: {
-    id: string | number;
+    // Payload gives an array row its id only once the document has been saved, so an item
+    // authored through the REST API arrives without one. Keys fall back to the position.
+    id?: string | number | null;
     label?: string | null;
     color?: string | null;
     image?: string | null;

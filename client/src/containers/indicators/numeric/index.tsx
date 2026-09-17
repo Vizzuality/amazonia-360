@@ -30,7 +30,7 @@ export const NumericIndicators = ({ id, isPdf }: { id: Indicator["id"]; isPdf?: 
 
   return (
     <IndicatorProvider onLoad={handleLoad}>
-      {indicator.resource.type === "feature" && location && (
+      {indicator.resource.blockType === "feature" && location && (
         <NumericIndicatorsFeature
           {...indicator}
           location={location}
@@ -38,7 +38,7 @@ export const NumericIndicators = ({ id, isPdf }: { id: Indicator["id"]; isPdf?: 
           isPdf={isPdf}
         />
       )}
-      {indicator.resource.type === "imagery" && location && (
+      {indicator.resource.blockType === "imagery" && location && (
         <NumericImageryIndicators
           {...indicator}
           location={location}
@@ -46,7 +46,7 @@ export const NumericIndicators = ({ id, isPdf }: { id: Indicator["id"]; isPdf?: 
           isPdf={isPdf}
         />
       )}
-      {indicator.resource.type === "imagery-tile" && location && (
+      {indicator.resource.blockType === "imagery-tile" && location && (
         <NumericImageryTileIndicators
           {...indicator}
           location={location}

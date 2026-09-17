@@ -61,7 +61,7 @@ export const GridTableItem = (
         .map((dataset) => {
           const matchingIndicator = H3IndicatorsData?.find(
             (indicator) =>
-              indicator.resource.type === "h3" &&
+              indicator.resource.blockType === "h3" &&
               indicator.resource.column &&
               indicator.resource.column === dataset.var_name,
           );

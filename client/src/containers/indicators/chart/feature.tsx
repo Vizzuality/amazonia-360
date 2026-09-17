@@ -244,7 +244,7 @@ export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
               const r = renderer as __esri.ClassBreaksRenderer;
 
               return (
-                LEGEND?.find((l) => l.id >= feature.attributes[r.field])?.label ??
+                LEGEND?.find((l) => l.id != null && l.id >= feature.attributes[r.field])?.label ??
                 feature.attributes.label
               );
             }

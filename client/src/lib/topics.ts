@@ -1,8 +1,6 @@
 import { QueryFunction, useQuery, UseQueryOptions } from "@tanstack/react-query";
 
-import { fetchContent } from "@/lib/cms-content/fetch";
-import { toTopic } from "@/lib/cms-content/map";
-import { CmsTopic } from "@/lib/cms-content/types";
+import { fetchTopics } from "@/lib/cms-content";
 
 import { Topic } from "@/types/topic";
 
@@ -14,11 +12,8 @@ export type TopicsQueryOptions<TData, TError> = UseQueryOptions<
   TData
 >;
 
-export const getTopics = async ({ locale }: { locale: string }): Promise<Topic[]> => {
-  const topics = await fetchContent<CmsTopic>({ collection: "topics", locale });
-
-  return topics.map(toTopic);
-};
+export const getTopics = ({ locale }: { locale: string }): Promise<Topic[]> =>
+  fetchTopics({ locale });
 
 export const getTopicsKey = (locale: string) => {
   return ["topics", locale];

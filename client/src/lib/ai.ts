@@ -188,8 +188,8 @@ export const getTopicEvidence = async (
 
   const settled = await Promise.allSettled(
     indicators.map(({ id, resource }): Promise<EvidenceOutcome> => {
-      if (resource.type === "feature") return getFeatureOutcome(id, resource, geometry);
-      if (resource.type === "imagery") return getImageryOutcome(id, resource, geometry);
+      if (resource.blockType === "feature") return getFeatureOutcome(id, resource, geometry);
+      if (resource.blockType === "imagery") return getImageryOutcome(id, resource, geometry);
 
       // h3 indicators live in the report's grid section rather than as topic cards and are not
       // part of the narrative; `component`, `web-tile` and `imagery-tile` have nothing to query.

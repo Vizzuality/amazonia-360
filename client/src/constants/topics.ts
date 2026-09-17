@@ -1,13 +1,3 @@
-import { IndicatorView } from "@/app/(frontend)/parsers";
-
-export type Topic = {
-  id: number;
-  name?: string;
-  image: string;
-  description?: string;
-  default_visualization?: IndicatorView[];
-};
-
 export const DEFAULT_VISUALIZATION_SIZES: {
   [key: string]: { w: number; h: number };
 } = {

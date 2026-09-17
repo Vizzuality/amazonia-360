@@ -22,7 +22,7 @@ const featureIndicator = (id: number, query_ai: unknown = QUERY): Indicator =>
     id,
     name: `Feature ${id}`,
     unit: "km²",
-    resource: { type: "feature", url: "https://example.test/", layer_id: 0, query_ai },
+    resource: { blockType: "feature", url: "https://example.test/", layer_id: 0, query_ai },
   }) as unknown as Indicator;
 
 const imageryIndicator = (id: number, aggregation: ImageryAggregation = "sum"): Indicator =>
@@ -30,7 +30,7 @@ const imageryIndicator = (id: number, aggregation: ImageryAggregation = "sum"): 
     id,
     name: `Imagery ${id}`,
     resource: {
-      type: "imagery",
+      blockType: "imagery",
       url: "https://example.test/ImageServer",
       aggregation,
       legend: {
@@ -45,7 +45,11 @@ const imageryIndicator = (id: number, aggregation: ImageryAggregation = "sum"): 
   }) as unknown as Indicator;
 
 const h3Indicator = (id: number): Indicator =>
-  ({ id, name: `H3 ${id}`, resource: { type: "h3", name: "ALTMEAN" } }) as unknown as Indicator;
+  ({
+    id,
+    name: `H3 ${id}`,
+    resource: { blockType: "h3", name: "ALTMEAN" },
+  }) as unknown as Indicator;
 
 const featureSet = (attributes: Record<string, unknown>[]) =>
   ({ features: attributes.map((a) => ({ attributes: a })) }) as unknown as __esri.FeatureSet;

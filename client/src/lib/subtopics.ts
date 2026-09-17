@@ -1,8 +1,6 @@
 import { QueryFunction, useQuery, UseQueryOptions } from "@tanstack/react-query";
 
-import { fetchContent } from "@/lib/cms-content/fetch";
-import { toSubtopic } from "@/lib/cms-content/map";
-import { CmsSubtopic } from "@/lib/cms-content/types";
+import { fetchSubtopics } from "@/lib/cms-content";
 
 import { Subtopic } from "@/types/topic";
 
@@ -14,11 +12,8 @@ export type SubtopicsQueryOptions<TData, TError> = UseQueryOptions<
   TData
 >;
 
-export const getSubtopics = async ({ locale }: { locale: string }): Promise<Subtopic[]> => {
-  const subtopics = await fetchContent<CmsSubtopic>({ collection: "subtopics", locale });
-
-  return subtopics.map(toSubtopic);
-};
+export const getSubtopics = ({ locale }: { locale: string }): Promise<Subtopic[]> =>
+  fetchSubtopics({ locale });
 
 export const getSubtopicsKey = (locale: string) => {
   return ["subtopics", locale];

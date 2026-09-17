@@ -23,7 +23,7 @@ export const LegendItem = ({ id, interactive }: { id: Indicator["id"]; interacti
 
   const LEGEND = useMemo(() => {
     if (!indicator) return null;
-    switch (indicator.resource.type) {
+    switch (indicator.resource.blockType) {
       case "feature": {
         const i = indicator as Omit<Indicator, "resource"> & {
           resource: ResourceFeature;

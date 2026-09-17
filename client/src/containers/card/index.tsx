@@ -288,7 +288,7 @@ export function CardWidgetNumber({
 }: {
   value: string | number | null;
   subvalue?: string | number | null;
-  unit?: string;
+  unit?: string | null;
   className?: string;
 }) {
   return (

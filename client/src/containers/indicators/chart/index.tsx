@@ -30,13 +30,13 @@ export const ChartIndicators = ({ id }: { id: Indicator["id"] }) => {
 
   return (
     <IndicatorProvider onLoad={handleLoad}>
-      {indicator.resource.type === "feature" && location && (
+      {indicator.resource.blockType === "feature" && location && (
         <ChartIndicatorsFeature {...indicator} resource={indicator.resource} location={location} />
       )}
-      {indicator.resource.type === "imagery" && location && (
+      {indicator.resource.blockType === "imagery" && location && (
         <ChartImageryIndicators {...indicator} resource={indicator.resource} location={location} />
       )}
-      {indicator.resource.type === "imagery-tile" && location && (
+      {indicator.resource.blockType === "imagery-tile" && location && (
         <ChartImageryTileIndicators
           {...indicator}
           resource={indicator.resource}

@@ -15,6 +15,9 @@ export const ReportResultsContentOverview = () => {
       ...topic,
       id: `${topic.id}`,
       topic_id: topic.id,
+      // TopicView is the shape a saved report and a shared URL serialize, where an absent
+      // description is absent rather than null.
+      description: topic.description ?? undefined,
       indicators: topic.default_visualization,
     };
 

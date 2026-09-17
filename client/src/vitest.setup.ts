@@ -41,6 +41,18 @@ vi.mock("@/i18n/routing", () => ({
   defaultLocale: "en",
 }));
 
+// The Payload SDK reads `env.mjs`, which validates the full server + client environment at
+// import time. Any module that reaches it — the catalogue reads do — would otherwise fail to
+// load in a unit test. A test that cares about a call declares its own mock over this one.
+vi.mock("@/services/sdk", () => ({
+  sdk: {
+    find: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    login: vi.fn(),
+  },
+}));
+
 /****************
  * ArcGIS JS API
  ****************/

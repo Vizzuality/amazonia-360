@@ -1,83 +1,83 @@
+import { CmsMeta } from "@/types/cms";
 import { Subtopic, TopicSummary } from "@/types/topic";
 
 import { IndicatorView } from "@/app/(frontend)/parsers";
 
-import { LegendItemProps } from "@/components/map/legend/item";
+import { Indicator as CmsIndicator } from "@/payload-types";
 
 export type VisualizationTypes = "map" | "table" | "chart" | "numeric" | "ai" | "custom";
 
-/**
- * How to reduce an imagery raster to one number for the AI summary. Authored per imagery
- * indicator in `datum/indicators.json` rather than derived: `sum` and `mean` are not
- * interchangeable (a population count adds up, a deprivation index does not), and `none` marks
- * the categorical rasters where any scalar would be meaningless — those contribute a class
- * distribution only.
- */
-export type ImageryAggregation = "sum" | "mean" | "none";
-
 type ResourceQuery = (__esri.QueryProperties & { returnIntersections?: boolean }) | null;
 
-export type ResourceFeature = {
-  name: string;
-  url: string;
-  /** Text, not a number: the layer URL is built as `url + layer_id`. */
-  layer_id: string;
-  type: "feature";
+type CmsResourceBlock = CmsIndicator["resource"][number];
+
+/**
+ * One resource block off the generated Indicator. The block type is the resource type, so
+ * `Extract` keeps the discriminated union the CMS already models and a resource kind added
+ * to the collection needs no declaration here at all.
+ *
+ * `blockName` and `id` are Payload's per-row bookkeeping and are dropped: nothing reads them,
+ * and leaving them in invites code that does.
+ */
+type ResourceBlock<TBlock extends CmsResourceBlock["blockType"]> = Omit<
+  Extract<CmsResourceBlock, { blockType: TBlock }>,
+  "blockName" | "id"
+>;
+
+/**
+ * The CMS stores the ArcGIS objects as opaque JSON — it has no opinion on their shape and
+ * validates nothing. Restating them as the ArcGIS types is an assertion, not a conversion:
+ * `new Query()` and `new ImageryLayer()` are what actually reject a malformed one, at the
+ * point of use. Everything else on a block is derived.
+ */
+export type ResourceFeature = Omit<
+  ResourceBlock<"feature">,
+  "query_ai" | "query_chart" | "query_numeric" | "query_table"
+> & {
   /** No source row carries one; `getQueryFeatureId` still looks it up by widget type. */
   query_map?: ResourceQuery;
-  query_table: ResourceQuery;
-  query_chart: ResourceQuery;
-  query_numeric: ResourceQuery;
-  query_ai: ResourceQuery;
-  popupTemplate?: __esri.PopupTemplateProperties;
+  query_numeric?: ResourceQuery;
+  query_table?: ResourceQuery;
+  query_chart?: ResourceQuery;
+  query_ai?: ResourceQuery;
 };
 
-export type ResourceWebTile = {
-  name: string;
-  url: string;
-  type: "web-tile";
-};
+export type ResourceWebTile = ResourceBlock<"web-tile">;
 
-export type ResourceImageryTile = {
-  name: string;
-  url: string;
-  type: "imagery-tile";
+export type ResourceImageryTile = Omit<ResourceBlock<"imagery-tile">, "rasterFunction"> & {
   rasterFunction: __esri.RasterFunctionProperties;
-  legend: LegendItemProps;
 };
 
-export type ResourceImagery = {
-  name: string;
-  url: string;
-  type: "imagery";
+export type ResourceImagery = Omit<ResourceBlock<"imagery">, "rasterFunction"> & {
   rasterFunction: __esri.RasterFunctionProperties;
-  legend: LegendItemProps;
-  aggregation: ImageryAggregation;
 };
 
-export type ResourceH3 = {
-  name: string;
-  column: string;
-  type: "h3";
-  url?: string;
-};
+export type ResourceH3 = ResourceBlock<"h3">;
 
-export type ResourceComponent = {
-  name: string;
-  type: "component";
-};
+export type ResourceComponent = ResourceBlock<"component">;
 
-export type Indicator = {
+/**
+ * How the AI summary reduces an imagery raster to one number. Authored per indicator rather
+ * than derived: `sum` and `mean` are not interchangeable (a population count adds up, a
+ * deprivation index does not), and `none` marks the categorical rasters where any scalar
+ * would be meaningless — those contribute a class distribution only.
+ */
+export type ImageryAggregation = ResourceImagery["aggregation"];
+
+/**
+ * Three things are restated over the generated Indicator, and only three: the numeric `id`
+ * that saved reports and shared URLs hold, the Topic lifted out from under the Subtopic to
+ * sit beside it, and the single resource — the CMS models "exactly one" as a one-entry
+ * block array, which `lib/cms-content` unwraps.
+ */
+export type Indicator = Omit<
+  CmsIndicator,
+  "id" | "resource" | "subtopic" | "visualization_types" | CmsMeta
+> & {
   id: number;
-  name?: string;
-  description?: string;
-  description_short?: string;
-  unit?: string;
-  topic: TopicSummary;
   subtopic: Subtopic;
-  order: number;
+  topic: TopicSummary;
   visualization_types: VisualizationTypes[];
-  default_visualization_type: Exclude<VisualizationTypes, "ai" | "custom"> | null;
   resource:
     | ResourceFeature
     | ResourceWebTile

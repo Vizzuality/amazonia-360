@@ -7,7 +7,7 @@ import Image from "next/image";
 import { PLACEHOLDER } from "@/lib/images";
 import { cn } from "@/lib/utils";
 
-import { Topic } from "@/constants/topics";
+import { Topic } from "@/types/topic";
 
 export default function TopicsItem({ id, name, image, description }: Topic) {
   const descriptionRef = useRef<HTMLParagraphElement>(null);
@@ -17,7 +17,7 @@ export default function TopicsItem({ id, name, image, description }: Topic) {
       <div className="group relative overflow-hidden shadow-sm after:absolute after:bottom-0 after:left-0 after:h-16 after:w-full after:bg-linear-to-b after:from-transparent after:to-[#09090B]/85 after:content-['']">
         <div className="relative aspect-4/3 xl:aspect-square">
           <Image
-            src={image}
+            src={image ?? ""}
             alt={`${name}`}
             priority
             fill

@@ -7,9 +7,7 @@ import * as intersectionOperator from "@arcgis/core/geometry/operators/intersect
 import { QueryFunction, UseQueryOptions, useQuery, useQueries } from "@tanstack/react-query";
 import axios from "axios";
 
-import { fetchContent } from "@/lib/cms-content/fetch";
-import { toIndicator } from "@/lib/cms-content/map";
-import { CmsIndicator } from "@/lib/cms-content/types";
+import { fetchIndicators } from "@/lib/cms-content";
 
 import {
   Indicator,
@@ -31,15 +29,10 @@ export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
   TData
 >;
 
-/**
- * `depth=2` already returns each Indicator's Subtopic and Topic in the requested locale, so
- * there is no second lookup and nothing to join — `toIndicator` only flattens the Topic out
- * from under the Subtopic, where the app holds the two as siblings.
- */
 export const getIndicators = async (locale: string): Promise<Indicator[]> => {
-  const indicators = await fetchContent<CmsIndicator>({ collection: "indicators", locale });
+  const indicators = await fetchIndicators({ locale });
 
-  return indicators.map(toIndicator).sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+  return indicators.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 };
 
 export const getIndicatorsKey = (locale: string) => {
@@ -93,20 +86,20 @@ export const useGetDefaultIndicators = ({
           if (topicId) {
             return (
               indicator.subtopic.topic_id === topicId &&
-              indicator.resource.type &&
-              indicator.resource.type !== "h3"
+              indicator.resource.blockType &&
+              indicator.resource.blockType !== "h3"
             );
           }
 
           if (subtopicId) {
             return (
               indicator.subtopic.id === subtopicId &&
-              indicator.resource.type &&
-              indicator.resource.type !== "h3"
+              indicator.resource.blockType &&
+              indicator.resource.blockType !== "h3"
             );
           }
 
-          return !!indicator.resource.type && indicator.resource.type !== "h3";
+          return !!indicator.resource.blockType && indicator.resource.blockType !== "h3";
         })
         .sort((a, b) => a.order - b.order);
     },
@@ -130,18 +123,18 @@ export const useGetH3Indicators = ({
       return data
         .filter((indicator) => {
           if (topicId) {
-            return indicator.subtopic.topic_id === topicId && indicator.resource.type === "h3";
+            return indicator.subtopic.topic_id === topicId && indicator.resource.blockType === "h3";
           }
 
           if (subtopicId) {
-            return indicator.subtopic.id === subtopicId && indicator.resource.type === "h3";
+            return indicator.subtopic.id === subtopicId && indicator.resource.blockType === "h3";
           }
 
-          return indicator.resource.type === "h3";
+          return indicator.resource.blockType === "h3";
         })
         .map((indicator) => ({
           ...indicator,
-          resource: indicator.resource as Indicator["resource"] & { type: "h3" },
+          resource: indicator.resource as Indicator["resource"] & { blockType: "h3" },
         }))
         .sort((a, b) => a.order - b.order);
     },
@@ -156,6 +149,39 @@ export const useGetIndicatorsId = (id: Indicator["id"], locale: string) => {
   return data?.find((indicator) => indicator.id === id);
 };
 
+/**
+ * ArcGIS wants `content`; the CMS stores the field list flat. Every popup in the catalogue is
+ * a single `fields` block, which is why the group has no content-type of its own.
+ *
+ * Ten features carry a title and no fields at all, so `content` is omitted rather than left
+ * empty — returning nothing for those would drop their popup instead of showing a bare title.
+ */
+const toPopupTemplate = (
+  popupTemplate: ResourceFeature["popupTemplate"],
+): __esri.PopupTemplateProperties | undefined => {
+  const title = popupTemplate?.title ?? undefined;
+  const fieldInfos = popupTemplate?.fieldInfos ?? [];
+
+  if (!title && !fieldInfos.length) return undefined;
+
+  return {
+    ...(title ? { title } : {}),
+    ...(fieldInfos.length
+      ? {
+          content: [
+            {
+              type: "fields",
+              fieldInfos: fieldInfos.map(({ fieldName, label }) => ({
+                fieldName,
+                label: label ?? undefined,
+              })),
+            },
+          ],
+        }
+      : {}),
+  };
+};
+
 export const useGetIndicatorsLayerId = (
   id: Indicator["id"],
   locale: string,
@@ -165,9 +191,9 @@ export const useGetIndicatorsLayerId = (
   const resource = indicatorData?.resource;
 
   return useMemo(() => {
-    if (!resource || resource.type === "h3" || resource.type === "component") return null;
+    if (!resource || resource.blockType === "h3" || resource.blockType === "component") return null;
 
-    if (resource.type === "web-tile") {
+    if (resource.blockType === "web-tile") {
       return {
         id: `${id}`,
         urlTemplate: resource.url,
@@ -176,7 +202,7 @@ export const useGetIndicatorsLayerId = (
       } satisfies LayerProps;
     }
 
-    if (resource.type === "imagery-tile") {
+    if (resource.blockType === "imagery-tile") {
       return {
         id: `${id}`,
         url: resource.url,
@@ -186,7 +212,7 @@ export const useGetIndicatorsLayerId = (
       } satisfies LayerProps;
     }
 
-    if (resource.type === "imagery") {
+    if (resource.blockType === "imagery") {
       return {
         id: `${id}`,
         url: resource.url,
@@ -200,7 +226,7 @@ export const useGetIndicatorsLayerId = (
       id: `${id}`,
       url: resource.url + resource.layer_id,
       type: "feature",
-      popupTemplate: resource.popupTemplate,
+      popupTemplate: toPopupTemplate(resource.popupTemplate),
       ...settings,
     } satisfies LayerProps;
   }, [id, resource, settings]);

@@ -104,7 +104,7 @@ export function TopicItem({ topic, id }: { topic: Topic; id: number }) {
             <div className={cn("flex items-center space-x-2.5")}>
               <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xs bg-cyan-100">
                 <Image
-                  src={image}
+                  src={image ?? ""}
                   alt={`${name}`}
                   priority
                   fill

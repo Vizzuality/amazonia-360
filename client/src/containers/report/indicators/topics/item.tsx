@@ -12,9 +12,9 @@ import { PLACEHOLDER } from "@/lib/images";
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
-import { indicatorsExpandAtom, useSyncIndicators } from "@/app/(frontend)/store";
+import { Topic } from "@/types/topic";
 
-import { Topic } from "@/constants/topics";
+import { indicatorsExpandAtom, useSyncIndicators } from "@/app/(frontend)/store";
 
 import SubtopicList from "@/containers/report/indicators/subtopics";
 
@@ -71,7 +71,7 @@ export default function TopicsItem({ id, name, image }: TopicsItemProps) {
           <div className={cn("flex items-center space-x-2.5")}>
             <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xs bg-cyan-100">
               <Image
-                src={image}
+                src={image ?? ""}
                 alt={`${name}`}
                 priority
                 fill

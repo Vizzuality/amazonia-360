@@ -183,9 +183,9 @@ export default function WidgetMap({
             </Controls>
           )}
 
-          {(indicator.resource.type === "feature" ||
-            indicator.resource.type === "imagery" ||
-            indicator.resource.type === "imagery-tile") && (
+          {(indicator.resource.blockType === "feature" ||
+            indicator.resource.blockType === "imagery" ||
+            indicator.resource.blockType === "imagery-tile") && (
             <WidgetLegend
               {...(indicator as Omit<Indicator, "resource"> & {
                 resource: ResourceFeature | ResourceImagery | ResourceImageryTile;
