@@ -182,22 +182,18 @@ test.describe("sign-in from a gated link", () => {
     await homePage.reportToolLink.click();
     await expect(page).toHaveURL(/\/auth\/sign-in\?redirectUrl=%2Freports/, { timeout: 15_000 });
 
-    // The bounce is a client navigation landing after hydration, so watch for it
-    // rather than asserting the URL once and calling it settled.
-    const bounces: string[] = [];
-    page.on("framenavigated", (frame) => {
-      if (frame === page.mainFrame() && /\/auth\/sign-in/.test(frame.url())) {
-        bounces.push(frame.url());
-      }
-    });
-
     const signInPage = new SignInPage(page);
     await signInPage.signIn(TEST_EMAIL!, TEST_PASSWORD!);
 
     await expect(page).toHaveURL(/\/reports/, { timeout: 15_000 });
-    await page.waitForLoadState("networkidle");
 
-    expect(bounces).toEqual([]);
+    // The bug let you touch /reports and bounced you back a beat later, so the first
+    // match is not proof. Re-assert once the dust has settled.
+    await page.waitForLoadState("networkidle");
     await expect(page).toHaveURL(/\/reports/);
+
+    // And the header has to agree: the session the gate accepted is the one the client
+    // is holding, without a reload.
+    await expect(page.getByRole("banner").getByRole("button", { name: /sign in/i })).toHaveCount(0);
   });
 });
