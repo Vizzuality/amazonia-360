@@ -13,7 +13,10 @@ const {
   Link: IntlLink,
   usePathname: useIntlPathname,
   useRouter: useIntlRouter,
+  getPathname,
 } = createNavigation(routing);
+
+export { getPathname };
 
 type IntlLinkProps = React.ComponentProps<typeof IntlLink>;
 
