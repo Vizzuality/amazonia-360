@@ -18,10 +18,10 @@ const LABELS: Record<
 > = {
   en: {
     heading: "Create an account",
-    name: "Name",
+    name: "Full name",
     email: "Email",
     password: "Password",
-    confirmPassword: "Confirm Password",
+    confirmPassword: "Confirm password",
     countriesLabel: "Countries of interest",
     signIn: "Sign in",
     accountCreated: /account created successfully/i,
@@ -29,7 +29,7 @@ const LABELS: Record<
   },
   es: {
     heading: "Crear una cuenta",
-    name: "Nombre",
+    name: "Nombre completo",
     email: "Correo electrónico",
     password: "Contraseña",
     confirmPassword: "Confirmar contraseña",
@@ -40,7 +40,7 @@ const LABELS: Record<
   },
   pt: {
     heading: "Criar uma conta",
-    name: "Nome",
+    name: "Nome completo",
     email: "E-mail",
     password: "Senha",
     confirmPassword: "Confirmar senha",
@@ -48,45 +48,6 @@ const LABELS: Record<
     signIn: "Entrar",
     accountCreated: /conta criada com sucesso/i,
     accountCreationFailed: /falha ao criar conta/i,
-  },
-};
-
-const COUNTRY_NAMES: Record<Locale, Record<string, string>> = {
-  en: {
-    BOL: "Bolivia",
-    BRA: "Brazil",
-    COL: "Colombia",
-    ECU: "Ecuador",
-    GUF: "French Guiana",
-    GUY: "Guyana",
-    PER: "Peru",
-    PRY: "Paraguay",
-    SUR: "Suriname",
-    VEN: "Venezuela",
-  },
-  es: {
-    BOL: "Bolivia",
-    BRA: "Brasil",
-    COL: "Colombia",
-    ECU: "Ecuador",
-    GUF: "Guayana Francesa",
-    GUY: "Guyana",
-    PER: "Perú",
-    PRY: "Paraguay",
-    SUR: "Surinam",
-    VEN: "Venezuela",
-  },
-  pt: {
-    BOL: "Bolívia",
-    BRA: "Brasil",
-    COL: "Colômbia",
-    ECU: "Equador",
-    GUF: "Guiana Francesa",
-    GUY: "Guiana",
-    PER: "Peru",
-    PRY: "Paraguai",
-    SUR: "Suriname",
-    VEN: "Venezuela",
   },
 };
 
@@ -155,18 +116,6 @@ export class SignUpPage {
 
   async checkCommunityOptIn() {
     await this.communityOptInCheckbox.check();
-  }
-
-  getCountryChip(iso3: string): Locator {
-    // Substring matching would make GUY ("Guiana") ambiguous against GUF ("Guiana Francesa") in pt.
-    return this.countriesGroup.getByRole("button", {
-      name: COUNTRY_NAMES[this.locale][iso3],
-      exact: true,
-    });
-  }
-
-  async toggleCountry(iso3: string) {
-    await this.getCountryChip(iso3).click();
   }
 
   async submit() {
