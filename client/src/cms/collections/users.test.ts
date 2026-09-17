@@ -215,7 +215,7 @@ function getLatestCountriesEnumValues(): string[] {
 describe("Users countriesOfInterest migration enum", () => {
   test("matches COUNTRIES exactly, so a new country can't reach a frozen DB enum", () => {
     const enumValues = getLatestCountriesEnumValues();
-    const configuredCodes = COUNTRIES.map(({ iso3 }) => iso3);
+    const configuredCodes: readonly string[] = COUNTRIES.map(({ iso3 }) => iso3);
 
     const missingFromMigration = configuredCodes.filter((code) => !enumValues.includes(code));
     const missingFromConfig = enumValues.filter((code) => !configuredCodes.includes(code));
