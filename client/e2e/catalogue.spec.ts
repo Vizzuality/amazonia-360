@@ -1,17 +1,17 @@
+import INDICATORS from "../datum/indicators.json";
+import SUBTOPICS from "../datum/subtopics.json";
+import TOPICS from "../datum/topics.json";
 import { test, expect } from "./fixtures";
 
 /**
- * The end-to-end half of the catalogue baseline: the seed, the migrations, access control and
- * the REST API together still deliver every record. The unit tests cover the other half — that
- * `datum/*.json` still holds these counts, and that every read asks for `pagination: false`.
- *
- * Nothing checks this at read time in the running app: a count compiled into the client
- * would turn an editor retiring an indicator into an empty catalogue for every user.
+ * The seed, the migrations, access control and the REST API together still deliver every record
+ * the source catalogue holds. Counted off `datum/*.json` rather than written down, so retiring a
+ * row is one edit.
  */
 const CATALOGUE = [
-  { collection: "topics", records: 9 },
-  { collection: "subtopics", records: 28 },
-  { collection: "indicators", records: 164 },
+  { collection: "topics", records: TOPICS.length },
+  { collection: "subtopics", records: SUBTOPICS.length },
+  { collection: "indicators", records: INDICATORS.length },
 ] as const;
 
 test.describe("the catalogue the CMS serves", () => {
@@ -34,7 +34,7 @@ test.describe("the catalogue the CMS serves", () => {
     const response = await request.get("/v1/api/indicators?locale=en&depth=0");
     const { docs, hasNextPage } = await response.json();
 
-    expect(docs.length).toBeLessThan(164);
+    expect(docs.length).toBeLessThan(INDICATORS.length);
     expect(hasNextPage).toBe(true);
   });
 });

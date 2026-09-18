@@ -13,19 +13,13 @@ export default function InfoArcGis({ id }: { id: Indicator["id"] }) {
   const indicator = useGetIndicatorsId(id, locale);
 
   const query = useGetMetadata(
-    indicator &&
-      !!indicator.resource.blockType &&
-      indicator.resource.blockType !== "h3" &&
-      "url" in indicator.resource
+    indicator && indicator.resource.type !== "h3" && "url" in indicator.resource
       ? { id, url: `${indicator.resource.url}/info/metadata` }
       : { id: 0, url: "" },
-    {
-      enabled:
-        !!indicator && !!indicator.resource.blockType && indicator.resource.blockType !== "h3",
-    },
+    { enabled: !!indicator && indicator.resource.type !== "h3" },
   );
 
-  if (!indicator || indicator.resource.blockType === "h3") return null;
+  if (!indicator || indicator.resource.type === "h3") return null;
 
   return (
     <div className="space-y-4 pt-4 first:pt-0">

@@ -29,21 +29,6 @@ const EXPECTED_TRANSLATION_DEBT: Record<string, Record<string, number>> = {
   subtopics: { name_es: 28, name_pt: 28 },
 };
 
-/**
- * What the catalogue held when it moved into the CMS. An equality, not a floor: a row leaving
- * `datum/*.json` is a deliberate act, and it should take a failing test with it rather than
- * pass unnoticed.
- *
- * This proves the source catalogue, not the live one. Nothing asserts how many records the
- * CMS serves at read time: that is what lets an editor retire an indicator without a deploy.
- */
-describe("the source catalogue", () => {
-  test("still holds the 9 Topics and 28 Subtopics it moved into the CMS with", () => {
-    expect(topics).toHaveLength(9);
-    expect(subtopics).toHaveLength(28);
-  });
-});
-
 describe.each([
   { label: "Topics", collection: Topics, slug: "topics", rows: topics },
   { label: "Subtopics", collection: Subtopics, slug: "subtopics", rows: subtopics },

@@ -27,4 +27,4 @@ Only needed when a collection's schema changes. Seed a database, then read it th
 Local API rather than over HTTP — a running dev server holds the Payload config it started
 with, so a field added since then is silently absent from its responses. Query with the same
 `depth` and `populate` as `lib/cms-content/index.ts`, plus `overrideAccess: false` and
-`fallbackLocale: "en"`, for each of `en`, `es` and `pt`.
+`fallbackLocale: "en"`, for `en` and `es`.

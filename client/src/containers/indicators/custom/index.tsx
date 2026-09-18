@@ -36,7 +36,7 @@ export const CustomIndicators = ({ id }: { id: Indicator["id"] }) => {
 
   return (
     <IndicatorProvider onLoad={handleLoad}>
-      {indicator.resource.blockType === "component" &&
+      {indicator.resource.type === "component" &&
         location &&
         !!COMPONENT_INDICATORS[`${indicator.resource.name}` as COMPONENT_INDICATORS_KEYS] &&
         createElement(

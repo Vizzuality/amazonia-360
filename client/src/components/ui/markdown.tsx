@@ -4,13 +4,7 @@ import rehypeRaw from "rehype-raw";
 
 import { cn } from "@/lib/utils";
 
-export const Markdown = ({
-  children,
-  className,
-}: {
-  children?: string | null;
-  className?: string;
-}) => {
+export const Markdown = ({ children, className }: { children?: string; className?: string }) => {
   return (
     <ReactMarkdown
       className={cn("prose prose-sm prose-a:break-words font-medium", className)}
@@ -23,7 +17,7 @@ export const Markdown = ({
         ),
       }}
     >
-      {children ?? undefined}
+      {children}
     </ReactMarkdown>
   );
 };

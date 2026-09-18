@@ -6,12 +6,7 @@ import {
   getImageryScalar,
   hasImageryCoverage,
 } from "@/lib/imagery";
-import {
-  getIndicators,
-  getIndicatorsOptions,
-  getQueryFeatureId,
-  getQueryImageryId,
-} from "@/lib/indicators";
+import { getIndicatorsOptions, getQueryFeatureId, getQueryImageryId } from "@/lib/indicators";
 import { roundTo } from "@/lib/utils";
 
 import { Context, ContextDescriptionType, ContextLanguage } from "@/types/generated/api.schemas";
@@ -188,8 +183,8 @@ export const getTopicEvidence = async (
 
   const settled = await Promise.allSettled(
     indicators.map(({ id, resource }): Promise<EvidenceOutcome> => {
-      if (resource.blockType === "feature") return getFeatureOutcome(id, resource, geometry);
-      if (resource.blockType === "imagery") return getImageryOutcome(id, resource, geometry);
+      if (resource.type === "feature") return getFeatureOutcome(id, resource, geometry);
+      if (resource.type === "imagery") return getImageryOutcome(id, resource, geometry);
 
       // h3 indicators live in the report's grid section rather than as topic cards and are not
       // part of the narrative; `component`, `web-tile` and `imagery-tile` have nothing to query.
@@ -220,26 +215,21 @@ export const getAISummary = (params: GetAISummaryParams) => {
   return generateDescriptionTextAiPost(params);
 };
 
-export const getTopicSummary = async (params: {
+type TopicSummaryParams = {
   topic?: Topic;
   options: AISummaryOptions;
   activeIndicators?: Indicator["id"][];
   locale: string;
   location: __esri.Polygon | null;
   /**
-   * How to reach the catalogue. `useGetTopicSummary` passes the query cache, so generating
-   * a summary for each of the nine topics reads one fetch rather than nine.
+   * How to reach the catalogue. `useGetTopicSummary` supplies the query cache, so a summary for
+   * each of the nine topics reads one fetch rather than nine.
    */
-  loadIndicators?: (locale: string) => Promise<Indicator[]>;
-}) => {
-  const {
-    topic,
-    options,
-    locale,
-    activeIndicators,
-    location,
-    loadIndicators = getIndicators,
-  } = params;
+  loadIndicators: (locale: string) => Promise<Indicator[]>;
+};
+
+export const getTopicSummary = async (params: TopicSummaryParams) => {
+  const { topic, options, locale, activeIndicators, location, loadIndicators } = params;
   const only = options?.only_active ? activeIndicators : undefined;
 
   const allIndicators = await loadIndicators(locale);
@@ -268,10 +258,12 @@ export const getTopicSummary = async (params: {
   return { ...response, included: evidence.included, total: evidence.total };
 };
 
+type TopicSummaryVariables = Omit<TopicSummaryParams, "loadIndicators">;
+
 export type TopicSummaryMutationOptions<TData, TError> = UseMutationOptions<
   Awaited<ReturnType<typeof getTopicSummary>>,
   TError,
-  Parameters<typeof getTopicSummary>[0],
+  TopicSummaryVariables,
   TData
 >;
 
@@ -284,7 +276,7 @@ export const useGetTopicSummary = <
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (params: Parameters<typeof getTopicSummary>[0]) =>
+    mutationFn: (params: TopicSummaryVariables) =>
       getTopicSummary({
         ...params,
         loadIndicators: (locale) => queryClient.ensureQueryData(getIndicatorsOptions(locale)),

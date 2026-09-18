@@ -130,35 +130,33 @@ function ReportResultsIndicatorContent({
             "justify-between": type === "numeric" && isPdf,
           })}
         >
-          {type === "map" &&
-            !!indicator.resource.blockType &&
-            indicator.resource.blockType !== "h3" && (
-              <MapIndicators
-                {...(indicator as Omit<Indicator, "resource"> & {
-                  resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
-                })}
-                basemapId={basemapId}
-                isWebshot={isWebshot}
-                isPdf={isPdf}
-              />
-            )}
+          {type === "map" && indicator.resource.type !== "h3" && (
+            <MapIndicators
+              {...(indicator as Omit<Indicator, "resource"> & {
+                resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
+              })}
+              basemapId={basemapId}
+              isWebshot={isWebshot}
+              isPdf={isPdf}
+            />
+          )}
 
           {/*
             Charts
           */}
-          {type === "chart" && indicator.resource.blockType !== "component" && (
+          {type === "chart" && indicator.resource.type !== "component" && (
             <ChartIndicators id={indicatorId} />
           )}
 
           {/*
             Custom
           */}
-          {indicator.resource.blockType === "component" && <CustomIndicators id={indicatorId} />}
+          {indicator.resource.type === "component" && <CustomIndicators id={indicatorId} />}
 
           {/*
             Numeric
           */}
-          {type === "numeric" && indicator.resource.blockType !== "component" && (
+          {type === "numeric" && indicator.resource.type !== "component" && (
             <NumericIndicators id={indicatorId} isPdf={isPdf} />
           )}
 
@@ -166,8 +164,8 @@ function ReportResultsIndicatorContent({
             Table
           */}
           {type === "table" &&
-            indicator.resource.blockType !== "component" &&
-            indicator.resource.blockType === "feature" && <TableIndicators id={indicatorId} />}
+            indicator.resource.type !== "component" &&
+            indicator.resource.type === "feature" && <TableIndicators id={indicatorId} />}
         </CardContent>
       </Card>
     </div>

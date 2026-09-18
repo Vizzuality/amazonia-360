@@ -17,6 +17,12 @@ const { fetchIndicators, fetchSubtopics, fetchTopics } = await import("./index")
 
 type Args = Record<string, unknown>;
 
+const READS = [
+  ["topics", fetchTopics, TOPICS_EN],
+  ["subtopics", fetchSubtopics, SUBTOPICS_EN],
+  ["indicators", fetchIndicators, INDICATORS_EN],
+] as const;
+
 const returning = (docs: unknown[]) => {
   mockFind.mockReset();
   mockFind.mockResolvedValue({ docs });
@@ -24,11 +30,7 @@ const returning = (docs: unknown[]) => {
 };
 
 describe("the catalogue reads", () => {
-  test.each([
-    ["topics", fetchTopics, TOPICS_EN],
-    ["subtopics", fetchSubtopics, SUBTOPICS_EN],
-    ["indicators", fetchIndicators, INDICATORS_EN],
-  ] as const)(
+  test.each(READS)(
     "%s disables pagination, which is the whole of the truncation guard",
     async (collection, read, docs) => {
       const args = returning(docs as unknown[]);
@@ -39,11 +41,7 @@ describe("the catalogue reads", () => {
     },
   );
 
-  test.each([
-    ["topics", fetchTopics, TOPICS_EN],
-    ["subtopics", fetchSubtopics, SUBTOPICS_EN],
-    ["indicators", fetchIndicators, INDICATORS_EN],
-  ] as const)(
+  test.each(READS)(
     "%s never asks the CMS to sort, since varchar ids sort lexicographically",
     async (_collection, read, docs) => {
       const args = returning(docs as unknown[]);
@@ -54,10 +52,7 @@ describe("the catalogue reads", () => {
     },
   );
 
-  test.each([
-    ["topics", fetchTopics, TOPICS_EN],
-    ["subtopics", fetchSubtopics, SUBTOPICS_EN],
-  ] as const)(
+  test.each(READS.slice(0, 2))(
     "%s is read flat: depth 0 already returns the id the app wants",
     async (_collection, read, docs) => {
       const args = returning(docs as unknown[]);
@@ -77,7 +72,7 @@ describe("the catalogue reads", () => {
     expect(args()).toMatchObject({
       depth: 2,
       populate: {
-        subtopics: { name: true, description: true, topic: true },
+        subtopics: { name: true, topic: true },
         topics: { name: true },
       },
     });
@@ -169,7 +164,7 @@ describe("indicators", () => {
 
     const [indicator] = await fetchIndicators({ locale: "en" });
 
-    expect(indicator.resource.blockType).toBe("component");
+    expect(indicator.resource.type).toBe("component");
     expect(Array.isArray(indicator.resource)).toBe(false);
   });
 
@@ -177,6 +172,35 @@ describe("indicators", () => {
     returning([{ ...INDICATORS_EN[0], resource: [] }]);
 
     await expect(fetchIndicators({ locale: "en" })).rejects.toThrow(/has no resource/);
+  });
+
+  test("rebuild a popup as the ArcGIS `content` shape, dropping Payload's row ids", async () => {
+    returning(INDICATORS_EN);
+
+    const indicator = (await fetchIndicators({ locale: "en" })).find(({ id }) => id === 5);
+
+    expect(indicator?.resource).toMatchObject({
+      popupTemplate: {
+        title: "{NOMBCAP}",
+        content: [
+          {
+            type: "fields",
+            fieldInfos: [
+              { fieldName: "NAME_1", label: "State" },
+              { fieldName: "NAME_0", label: "Country" },
+            ],
+          },
+        ],
+      },
+    });
+  });
+
+  test("leave a popup with neither a title nor a field out entirely", async () => {
+    returning(INDICATORS_EN);
+
+    const indicator = (await fetchIndicators({ locale: "en" })).find(({ id }) => id === 1);
+
+    expect(indicator?.resource).toMatchObject({ popupTemplate: undefined });
   });
 
   test("default an absent visualization_types to empty rather than null", async () => {

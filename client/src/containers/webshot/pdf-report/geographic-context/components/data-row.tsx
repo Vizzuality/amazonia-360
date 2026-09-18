@@ -31,13 +31,13 @@ export default function DataRow({ id, locale }: DataRowProps) {
 
   return (
     <IndicatorProvider onLoad={handleLoad}>
-      {indicator.resource.blockType === "component" && reportData?.location && (
+      {indicator.resource.type === "component" && reportData?.location && (
         <ComponentDataRow id={id} locale={locale} location={reportData.location} />
       )}
-      {indicator.resource.blockType === "imagery" && reportData?.location && (
+      {indicator.resource.type === "imagery" && reportData?.location && (
         <ImageryDataRow id={id} locale={locale} location={reportData.location} />
       )}
-      {indicator.resource.blockType === "feature" && reportData?.location && (
+      {indicator.resource.type === "feature" && reportData?.location && (
         <FeatureDataRow id={id} locale={locale} location={reportData.location} />
       )}
     </IndicatorProvider>

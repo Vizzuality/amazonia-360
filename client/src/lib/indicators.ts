@@ -12,6 +12,7 @@ import { fetchIndicators } from "@/lib/cms-content";
 import {
   Indicator,
   ResourceFeature,
+  ResourceH3,
   ResourceImagery,
   ResourceImageryTile,
   ResourceWebTile,
@@ -49,7 +50,12 @@ export const getIndicatorsOptions = <
   const queryKey = getIndicatorsKey(locale);
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getIndicators>>> = () =>
     getIndicators(locale);
-  return { queryKey, queryFn, ...options } as IndicatorsQueryOptions<TData, TError>;
+  // Editorial content, and the report flow is four routes: without this every navigation
+  // refetches the whole catalogue once the provider's 60s staleTime has passed.
+  return { queryKey, queryFn, staleTime: Infinity, ...options } as IndicatorsQueryOptions<
+    TData,
+    TError
+  >;
 };
 
 export const useGetIndicators = <
@@ -59,11 +65,12 @@ export const useGetIndicators = <
   locale: string,
   options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
 ) => {
-  const { queryKey, queryFn } = getIndicatorsOptions(locale, options);
+  const { queryKey, queryFn, staleTime } = getIndicatorsOptions(locale, options);
 
   return useQuery({
     queryKey,
     queryFn,
+    staleTime,
     ...options,
   });
 };
@@ -84,22 +91,14 @@ export const useGetDefaultIndicators = ({
       return data
         .filter((indicator) => {
           if (topicId) {
-            return (
-              indicator.subtopic.topic_id === topicId &&
-              indicator.resource.blockType &&
-              indicator.resource.blockType !== "h3"
-            );
+            return indicator.subtopic.topic_id === topicId && indicator.resource.type !== "h3";
           }
 
           if (subtopicId) {
-            return (
-              indicator.subtopic.id === subtopicId &&
-              indicator.resource.blockType &&
-              indicator.resource.blockType !== "h3"
-            );
+            return indicator.subtopic.id === subtopicId && indicator.resource.type !== "h3";
           }
 
-          return !!indicator.resource.blockType && indicator.resource.blockType !== "h3";
+          return indicator.resource.type !== "h3";
         })
         .sort((a, b) => a.order - b.order);
     },
@@ -123,18 +122,18 @@ export const useGetH3Indicators = ({
       return data
         .filter((indicator) => {
           if (topicId) {
-            return indicator.subtopic.topic_id === topicId && indicator.resource.blockType === "h3";
+            return indicator.subtopic.topic_id === topicId && indicator.resource.type === "h3";
           }
 
           if (subtopicId) {
-            return indicator.subtopic.id === subtopicId && indicator.resource.blockType === "h3";
+            return indicator.subtopic.id === subtopicId && indicator.resource.type === "h3";
           }
 
-          return indicator.resource.blockType === "h3";
+          return indicator.resource.type === "h3";
         })
         .map((indicator) => ({
           ...indicator,
-          resource: indicator.resource as Indicator["resource"] & { blockType: "h3" },
+          resource: indicator.resource as ResourceH3,
         }))
         .sort((a, b) => a.order - b.order);
     },
@@ -149,39 +148,6 @@ export const useGetIndicatorsId = (id: Indicator["id"], locale: string) => {
   return data?.find((indicator) => indicator.id === id);
 };
 
-/**
- * ArcGIS wants `content`; the CMS stores the field list flat. Every popup in the catalogue is
- * a single `fields` block, which is why the group has no content-type of its own.
- *
- * Ten features carry a title and no fields at all, so `content` is omitted rather than left
- * empty — returning nothing for those would drop their popup instead of showing a bare title.
- */
-const toPopupTemplate = (
-  popupTemplate: ResourceFeature["popupTemplate"],
-): __esri.PopupTemplateProperties | undefined => {
-  const title = popupTemplate?.title ?? undefined;
-  const fieldInfos = popupTemplate?.fieldInfos ?? [];
-
-  if (!title && !fieldInfos.length) return undefined;
-
-  return {
-    ...(title ? { title } : {}),
-    ...(fieldInfos.length
-      ? {
-          content: [
-            {
-              type: "fields",
-              fieldInfos: fieldInfos.map(({ fieldName, label }) => ({
-                fieldName,
-                label: label ?? undefined,
-              })),
-            },
-          ],
-        }
-      : {}),
-  };
-};
-
 export const useGetIndicatorsLayerId = (
   id: Indicator["id"],
   locale: string,
@@ -191,9 +157,9 @@ export const useGetIndicatorsLayerId = (
   const resource = indicatorData?.resource;
 
   return useMemo(() => {
-    if (!resource || resource.blockType === "h3" || resource.blockType === "component") return null;
+    if (!resource || resource.type === "h3" || resource.type === "component") return null;
 
-    if (resource.blockType === "web-tile") {
+    if (resource.type === "web-tile") {
       return {
         id: `${id}`,
         urlTemplate: resource.url,
@@ -202,7 +168,7 @@ export const useGetIndicatorsLayerId = (
       } satisfies LayerProps;
     }
 
-    if (resource.blockType === "imagery-tile") {
+    if (resource.type === "imagery-tile") {
       return {
         id: `${id}`,
         url: resource.url,
@@ -212,7 +178,7 @@ export const useGetIndicatorsLayerId = (
       } satisfies LayerProps;
     }
 
-    if (resource.blockType === "imagery") {
+    if (resource.type === "imagery") {
       return {
         id: `${id}`,
         url: resource.url,
@@ -226,7 +192,7 @@ export const useGetIndicatorsLayerId = (
       id: `${id}`,
       url: resource.url + resource.layer_id,
       type: "feature",
-      popupTemplate: toPopupTemplate(resource.popupTemplate),
+      popupTemplate: resource.popupTemplate,
       ...settings,
     } satisfies LayerProps;
   }, [id, resource, settings]);

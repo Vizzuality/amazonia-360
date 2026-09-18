@@ -1,8 +1,10 @@
 import { QueryFunction, useQuery, UseQueryOptions } from "@tanstack/react-query";
 
-import { fetchSubtopics } from "@/lib/cms-content";
+import { fetchSubtopics as getSubtopics } from "@/lib/cms-content";
 
 import { Subtopic } from "@/types/topic";
+
+export { getSubtopics };
 
 export type SubtopicsParams = unknown;
 
@@ -11,9 +13,6 @@ export type SubtopicsQueryOptions<TData, TError> = UseQueryOptions<
   TError,
   TData
 >;
-
-export const getSubtopics = ({ locale }: { locale: string }): Promise<Subtopic[]> =>
-  fetchSubtopics({ locale });
 
 export const getSubtopicsKey = (locale: string) => {
   return ["subtopics", locale];
@@ -33,6 +32,7 @@ export const getSubtopicsOptions = <
   return {
     queryKey,
     queryFn,
+    staleTime: Infinity,
     ...options,
   } as SubtopicsQueryOptions<TData, TError>;
 };
@@ -41,11 +41,12 @@ export const useGetSubtopics = <TData = Awaited<ReturnType<typeof getSubtopics>>
   locale: string,
   options?: Omit<SubtopicsQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) => {
-  const { queryKey, queryFn } = getSubtopicsOptions<TData, TError>(locale, options);
+  const { queryKey, queryFn, staleTime } = getSubtopicsOptions<TData, TError>(locale, options);
 
   return useQuery({
     queryKey,
     queryFn,
+    staleTime,
     ...options,
   });
 };

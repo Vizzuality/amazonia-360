@@ -2,6 +2,8 @@ import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
 export const env = createEnv({
+  // Unit tests import modules that reach the Payload SDK, which reads this at module scope.
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   server: {
     BASIC_AUTH_ENABLED: z.string().transform((value) => value === "true"),
     BASIC_AUTH_USER: z.string(),

@@ -1,13 +1,13 @@
-import { Populated } from "@/types/cms";
-import { Indicator } from "@/types/indicator";
-import { Subtopic, Topic, TopicSummary } from "@/types/topic";
+import { Locale } from "next-intl";
+
+import { Indicator, ResourceFeature } from "@/types/indicator";
+import { Subtopic, Topic } from "@/types/topic";
 
 import { IndicatorView } from "@/app/(frontend)/parsers";
 
 import { BasemapIds } from "@/constants/basemaps";
 
 import {
-  Config,
   Indicator as CmsIndicator,
   Subtopic as CmsSubtopic,
   Topic as CmsTopic,
@@ -15,19 +15,13 @@ import {
 
 import { sdk } from "@/services/sdk";
 
-type Locale = Config["locale"];
-
 type CmsIndicatorView = NonNullable<CmsTopic["default_visualization"]>[number];
+type CmsResource = CmsIndicator["resource"][number];
+type CmsPopupTemplate = Extract<CmsResource, { blockType: "feature" }>["popupTemplate"];
 
-/**
- * `pagination: false` is the whole of the truncation guard. Payload caps a response at 10
- * records otherwise — 10 of 164 Indicators, with nothing raised — and with pagination off
- * there is no page left to silently drop.
- *
- * Nothing here counts what came back, deliberately. A floor compiled into the client turns a
- * legitimate edit — an editor unpublishing a retired indicator — into an empty catalogue for
- * every user, fixable only by a deploy. The counts are asserted in tests instead.
- */
+// `pagination: false` is the truncation guard: Payload otherwise caps a response at 10 records,
+// silently. Nothing here counts what came back — a floor compiled into the client would turn an
+// unpublished indicator into an empty catalogue for everyone. The counts are asserted in tests.
 const read = (locale: string) => ({
   locale: locale as Locale,
   fallbackLocale: "en" as const,
@@ -35,20 +29,15 @@ const read = (locale: string) => ({
 });
 
 /**
- * The CMS keys the catalogue by varchar (`cms/fields/source-id.ts`); everything downstream is
- * numeric — saved reports store `topic_id`/`indicator_id` as numbers with no foreign key, and
- * the `defaultTopics` URL parser validates numbers. Coercion happens here and nowhere else, so
- * no saved report and no shared URL has to change.
- *
- * The corollary: never ask the CMS to sort by id. varchar sorts lexicographically
- * (0, 1, 10, 100, 11), which would reorder the catalogue without raising anything.
+ * The CMS keys the catalogue by varchar; saved reports and shared URLs hold numbers. Coercing
+ * here and nowhere else means neither has to change. The corollary: never ask the CMS to sort by
+ * id — varchar sorts 0, 1, 10, 100, 11.
  */
 const toNumericId = (id: string): number => {
   const parsed = Number(id);
 
-  // Number("") is 0, which is both a real Topic and a real Indicator — an empty id has to
-  // fail here rather than resolve to the wrong record.
-  if (typeof id !== "string" || id.trim() === "" || !Number.isInteger(parsed)) {
+  // Number("") is 0, which is both a real Topic and a real Indicator.
+  if (id.trim() === "" || !Number.isInteger(parsed)) {
     throw new Error(`Expected a numeric content id, got ${JSON.stringify(id)}`);
   }
 
@@ -56,17 +45,15 @@ const toNumericId = (id: string): number => {
 };
 
 /**
- * The runtime half of `Populated<T>`. Payload's generated types describe every depth at once
- * and no query option narrows them, so the depth each read asks for is only a contract until
- * something checks it — and a relationship that quietly came back flat would otherwise reach
- * the UI as a missing name rather than as an error.
+ * No query option narrows Payload's relationship types, so the depth a read asks for is only a
+ * contract until something checks it. A flat relationship would reach the UI as a missing name.
  */
-const asRecord = <T>(value: T, what: string): Populated<T> => {
+const asRecord = <T>(value: T, what: string): Exclude<T, string> => {
   if (typeof value === "string") {
     throw new Error(`${what} came back as the id ${value}: this read lost its depth.`);
   }
 
-  return value as Populated<T>;
+  return value as Exclude<T, string>;
 };
 
 /** The mirror, for the depth-0 reads that want the id the relationship points at. */
@@ -76,6 +63,46 @@ const asId = (value: unknown, what: string): string => {
   }
 
   return value;
+};
+
+/** The boundary emits `undefined`, never `null`: the app's own optionality is undefined-based. */
+const text = (value?: string | null) => value ?? undefined;
+
+/**
+ * ArcGIS wants `content`; the CMS stores the field list flat. Ten features carry a title and no
+ * fields, where an empty `content` would drop the popup instead of showing the bare title.
+ */
+const toPopupTemplate = (
+  popupTemplate: CmsPopupTemplate,
+): __esri.PopupTemplateProperties | undefined => {
+  const title = text(popupTemplate?.title);
+  const fieldInfos = (popupTemplate?.fieldInfos ?? []).map(({ fieldName, label }) => ({
+    fieldName,
+    label: text(label),
+  }));
+
+  if (!title && !fieldInfos.length) return undefined;
+
+  return {
+    title,
+    content: fieldInfos.length ? [{ type: "fields", fieldInfos }] : undefined,
+  };
+};
+
+const toResource = (resource: CmsResource): Indicator["resource"] => {
+  if (resource.blockType === "feature") {
+    const { blockType, popupTemplate, ...rest } = resource;
+
+    return {
+      ...rest,
+      type: blockType,
+      popupTemplate: toPopupTemplate(popupTemplate),
+    } as ResourceFeature;
+  }
+
+  const { blockType, ...rest } = resource;
+
+  return { ...rest, type: blockType } as Indicator["resource"];
 };
 
 const toIndicatorView = (entry: CmsIndicatorView): IndicatorView => {
@@ -92,8 +119,8 @@ const toIndicatorView = (entry: CmsIndicatorView): IndicatorView => {
     return {
       ...view,
       type: "map",
-      ...(entry.basemapId ? { basemapId: entry.basemapId as BasemapIds } : {}),
-      ...(typeof entry.opacity === "number" ? { opacity: entry.opacity } : {}),
+      basemapId: (entry.basemapId ?? undefined) as BasemapIds | undefined,
+      opacity: entry.opacity ?? undefined,
     };
   }
 
@@ -103,18 +130,23 @@ const toIndicatorView = (entry: CmsIndicatorView): IndicatorView => {
 const toTopic = (topic: CmsTopic): Topic => ({
   ...topic,
   id: toNumericId(topic.id),
+  description: text(topic.description),
+  // Only the Overview Topic has none, and it never renders as a card.
+  image: topic.image ?? "",
   default_visualization: (topic.default_visualization ?? []).map(toIndicatorView),
 });
 
 const toSubtopic = (subtopic: CmsSubtopic): Subtopic => ({
   ...subtopic,
   id: toNumericId(subtopic.id),
+  description: text(subtopic.description),
   topic_id: toNumericId(asId(subtopic.topic, `Subtopic ${subtopic.id}'s Topic`)),
 });
 
 const toIndicator = (indicator: CmsIndicator): Indicator => {
   const subtopic = asRecord(indicator.subtopic, `Indicator ${indicator.id}'s Subtopic`);
   const topic = asRecord(subtopic.topic, `Indicator ${indicator.id}'s Topic`);
+  const topicId = toNumericId(topic.id);
   const [resource] = indicator.resource;
 
   if (!resource) {
@@ -124,17 +156,17 @@ const toIndicator = (indicator: CmsIndicator): Indicator => {
   return {
     ...indicator,
     id: toNumericId(indicator.id),
+    description: text(indicator.description),
+    unit: text(indicator.unit),
     subtopic: {
       ...subtopic,
       id: toNumericId(subtopic.id),
-      topic_id: toNumericId(topic.id),
+      description: text(subtopic.description),
+      topic_id: topicId,
     },
-    topic: { id: toNumericId(topic.id), name: topic.name } satisfies TopicSummary,
+    topic: { id: topicId, name: topic.name },
     visualization_types: indicator.visualization_types ?? [],
-    // The only assertion on the way through. The CMS stores the ArcGIS query and raster
-    // objects as opaque JSON and validates nothing about them; ArcGIS is what rejects a
-    // malformed one, at the point of use.
-    resource: resource as Indicator["resource"],
+    resource: toResource(resource),
   };
 };
 
@@ -150,18 +182,16 @@ export const fetchSubtopics = async ({ locale }: { locale: string }): Promise<Su
   return docs.map(toSubtopic);
 };
 
-/**
- * `depth: 2` reaches the Topic through the Subtopic, and `populate` stops each of the 164
- * rows dragging a whole Topic — layout array included — along with it. Depth is always
- * explicit: the config default is 2 and would quietly make the two flat reads expensive.
- */
+// `depth: 2` reaches the Topic through the Subtopic; `populate` stops all 164 rows dragging a
+// whole Topic along with it. Depth is always explicit — the config default would make the two
+// flat reads expensive.
 export const fetchIndicators = async ({ locale }: { locale: string }): Promise<Indicator[]> => {
   const { docs } = await sdk.find({
     collection: "indicators",
     ...read(locale),
     depth: 2,
     populate: {
-      subtopics: { name: true, description: true, topic: true },
+      subtopics: { name: true, topic: true },
       topics: { name: true },
     },
   });

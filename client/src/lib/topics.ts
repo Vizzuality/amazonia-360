@@ -1,8 +1,10 @@
 import { QueryFunction, useQuery, UseQueryOptions } from "@tanstack/react-query";
 
-import { fetchTopics } from "@/lib/cms-content";
+import { fetchTopics as getTopics } from "@/lib/cms-content";
 
 import { Topic } from "@/types/topic";
+
+export { getTopics };
 
 export type TopicsParams = unknown;
 
@@ -11,9 +13,6 @@ export type TopicsQueryOptions<TData, TError> = UseQueryOptions<
   TError,
   TData
 >;
-
-export const getTopics = ({ locale }: { locale: string }): Promise<Topic[]> =>
-  fetchTopics({ locale });
 
 export const getTopicsKey = (locale: string) => {
   return ["topics", locale];
@@ -29,6 +28,7 @@ export const getTopicsOptions = <TData = Awaited<ReturnType<typeof getTopics>>, 
   return {
     queryKey,
     queryFn,
+    staleTime: Infinity,
     ...options,
   } as TopicsQueryOptions<TData, TError>;
 };
@@ -37,11 +37,12 @@ export const useGetTopics = <TData = Awaited<ReturnType<typeof getTopics>>, TErr
   locale: string,
   options?: Omit<TopicsQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) => {
-  const { queryKey, queryFn } = getTopicsOptions<TData, TError>(locale, options);
+  const { queryKey, queryFn, staleTime } = getTopicsOptions<TData, TError>(locale, options);
 
   return useQuery({
     queryKey,
     queryFn,
+    staleTime,
     ...options,
   });
 };

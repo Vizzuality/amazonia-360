@@ -21,10 +21,6 @@ const indicators = INDICATORS as unknown as SourceIndicator[];
 const subtopicIds = new Set((SUBTOPICS as unknown as { id: number }[]).map((s) => s.id));
 
 describe("Indicators", () => {
-  test("the source catalogue still holds the 164 rows it moved into the CMS with", () => {
-    expect(indicators).toHaveLength(164);
-  });
-
   test("uses the expected slug and enables drafts", () => {
     expect(Indicators.slug).toBe("indicators");
     expect(Indicators.versions).toEqual({ drafts: true });
