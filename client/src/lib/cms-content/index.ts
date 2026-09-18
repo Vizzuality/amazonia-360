@@ -50,7 +50,8 @@ const toNumericId = (id: string): number => {
  * the read as it comes, and showed its topics backwards. Order is part of what this boundary
  * hands over, so it is settled here, on the numeric id the CMS itself cannot sort by.
  */
-const byId = <T extends { id: number }>(records: T[]): T[] => records.sort((a, b) => a.id - b.id);
+const byId = <T extends { id: number }>(records: T[]): T[] =>
+  records.toSorted((a, b) => a.id - b.id);
 
 /**
  * No query option narrows Payload's relationship types, so the depth a read asks for is only a
