@@ -18,7 +18,7 @@ const histogram = (min: number, max: number, counts: number[]): __esri.RasterHis
 
 const legendOf = (labels: string[]): ResourceImagery["legend"] => ({
   type: "basic",
-  items: labels.map((label, id) => ({ id, label, color: "#000000" })),
+  items: labels.map((label) => ({ label, color: "#000000" })),
 });
 
 const colormapOf = (values: number[]) => ({

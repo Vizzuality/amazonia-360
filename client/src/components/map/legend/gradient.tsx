@@ -22,8 +22,8 @@ export default function LegendGradient({
       />
 
       <div className="flex justify-between space-x-4">
-        {items.map((item) => (
-          <span key={item.id} className="text-2xs font-medium">
+        {items.map((item, i) => (
+          <span key={item.id ?? i} className="text-2xs font-medium">
             {item.label}
           </span>
         ))}

@@ -130,7 +130,7 @@ function ReportResultsIndicatorContent({
             "justify-between": type === "numeric" && isPdf,
           })}
         >
-          {type === "map" && !!indicator.resource.type && indicator.resource.type !== "h3" && (
+          {type === "map" && indicator.resource.type !== "h3" && (
             <MapIndicators
               {...(indicator as Omit<Indicator, "resource"> & {
                 resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;

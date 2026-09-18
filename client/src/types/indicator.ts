@@ -1,93 +1,70 @@
-import { Subtopic, Topic } from "@/types/topic";
+import { CmsMeta } from "@/types/cms";
+import { Subtopic, TopicSummary } from "@/types/topic";
 
-import { IndicatorView } from "@/app/(frontend)/parsers";
-
-import { LegendItemProps } from "@/components/map/legend/item";
+import { Indicator as CmsIndicator } from "@/payload-types";
 
 export type VisualizationTypes = "map" | "table" | "chart" | "numeric" | "ai" | "custom";
 
+type ResourceQuery = (__esri.QueryProperties & { returnIntersections?: boolean }) | null;
+
+/** No source row carries a `query_map`; `getQueryFeatureId` still looks one up by widget type. */
+type FeatureQuery = "query_map" | "query_numeric" | "query_table" | "query_chart" | "query_ai";
+
+type CmsResourceBlock = CmsIndicator["resource"][number];
+
 /**
- * How to reduce an imagery raster to one number for the AI summary. Authored per imagery
- * indicator in `datum/indicators.json` rather than derived: `sum` and `mean` are not
- * interchangeable (a population count adds up, a deprivation index does not), and `none` marks
- * the categorical rasters where any scalar would be meaningless — those contribute a class
- * distribution only.
+ * One resource block off the generated Indicator, with the CMS discriminant re-emitted as `type`:
+ * Payload's vocabulary stops at `lib/cms-content`. `blockName` and `id` go with it.
  */
-export type ImageryAggregation = "sum" | "mean" | "none";
+type ResourceBlock<TBlock extends CmsResourceBlock["blockType"]> = Omit<
+  Extract<CmsResourceBlock, { blockType: TBlock }>,
+  "blockName" | "id" | "blockType"
+> & { type: TBlock };
 
-export type ResourceFeature = {
-  name: string;
-  url: string;
-  layer_id: number;
-  type: "feature";
-  query_map: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
-  query_table: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
-  query_chart: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
-  query_numeric: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
-  query_ai: (__esri.QueryProperties & { returnIntersections: boolean }) | null;
-  popupTemplate?: __esri.PopupTemplateProperties;
-};
+/**
+ * The CMS stores the ArcGIS objects as opaque JSON. Restating them as the ArcGIS types is an
+ * assertion, not a conversion: `new Query()` is what rejects a malformed one, at the point of use.
+ */
+export type ResourceFeature = Omit<ResourceBlock<"feature">, FeatureQuery | "popupTemplate"> &
+  Partial<Record<FeatureQuery, ResourceQuery>> & {
+    popupTemplate?: __esri.PopupTemplateProperties;
+  };
 
-export type ResourceWebTile = {
-  name: string;
-  url: string;
-  type: "web-tile";
-};
+export type ResourceWebTile = ResourceBlock<"web-tile">;
 
-export type ResourceImageryTile = {
-  name: string;
-  url: string;
-  type: "imagery-tile";
+export type ResourceImageryTile = Omit<ResourceBlock<"imagery-tile">, "rasterFunction"> & {
   rasterFunction: __esri.RasterFunctionProperties;
-  legend: LegendItemProps;
 };
 
-export type ResourceImagery = {
-  name: string;
-  url: string;
-  type: "imagery";
+export type ResourceImagery = Omit<ResourceBlock<"imagery">, "rasterFunction"> & {
   rasterFunction: __esri.RasterFunctionProperties;
-  legend: LegendItemProps;
-  aggregation: ImageryAggregation;
 };
 
-export type ResourceH3 = {
+export type ResourceH3 = ResourceBlock<"h3">;
+
+export type ResourceComponent = ResourceBlock<"component">;
+
+/**
+ * How the AI summary reduces an imagery raster to one number. Authored, not derived: a population
+ * count adds up, a deprivation index does not, and `none` marks the categorical rasters.
+ */
+export type ImageryAggregation = ResourceImagery["aggregation"];
+
+/**
+ * Restated over the generated Indicator: the numeric `id`, the Topic lifted out from under the
+ * Subtopic, the single resource the CMS models as a one-entry block array, and the optional text
+ * `lib/cms-content` normalises from `null` to absent.
+ */
+export type Indicator = Omit<
+  CmsIndicator,
+  "description" | "id" | "resource" | "subtopic" | "unit" | "visualization_types" | CmsMeta
+> & {
   id: number;
-  name: string;
-  description: string;
-  column: string;
-  type: "h3";
-  url?: string;
-};
-
-export type ResourceComponent = {
-  name: string;
-  type: "component";
-};
-
-export type Indicator = {
-  id: number;
-  name?: string;
-  name_es: string;
-  name_en: string;
-  name_pt: string;
   description?: string;
-  description_es: string;
-  description_en: string;
-  description_pt: string;
-  description_short?: string;
-  description_short_es: string;
-  description_short_en: string;
-  description_short_pt: string;
   unit?: string;
-  unit_es: string;
-  unit_en: string;
-  unit_pt: string;
-  topic: Topic;
   subtopic: Subtopic;
-  order: number;
+  topic: TopicSummary;
   visualization_types: VisualizationTypes[];
-  default_visualization_type: Exclude<VisualizationTypes, "ai" | "custom"> | null;
   resource:
     | ResourceFeature
     | ResourceWebTile
@@ -99,26 +76,4 @@ export type Indicator = {
 
 export type H3Indicator = Indicator & {
   resource: ResourceH3;
-  topic: Topic;
-};
-
-export type IndicatorOverview = {
-  id: number;
-  name_es: string;
-  name_en: string;
-  name_pt: string;
-  description_es: string;
-  description_en: string;
-  description_pt: string;
-  description_short_es: string;
-  description_short_en: string;
-  description_short_pt: string;
-  visualization: IndicatorView;
-  unit_es: string;
-  unit_en: string;
-  unit_pt: string;
-  topic: number;
-  visualization_types: VisualizationTypes[];
-  default_visualization_type: Exclude<VisualizationTypes, "ai" | "custom"> | null;
-  resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
 };

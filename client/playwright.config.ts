@@ -51,10 +51,13 @@ export default defineConfig({
       },
     },
     {
-      command: "pnpm payload migrate && pnpm build && pnpm start",
+      // The catalogue now comes from the CMS rather than the bundle, so an unseeded
+      // database serves an empty one and every indicator assertion fails.
+      command: "pnpm payload migrate && pnpm seed:data && pnpm build && pnpm start",
       url: "http://localhost:3000",
       reuseExistingServer: !isCI,
-      timeout: 180_000,
+      // migrate, seed (~900 sequential Local API writes), build, start.
+      timeout: 600_000,
       stdout: "pipe",
       stderr: "pipe",
       env: {
@@ -67,14 +70,22 @@ export default defineConfig({
   ],
 
   projects: [
+    // Gates the run: an empty or half-migrated database fails every other project for a
+    // reason that has nothing to do with what it tests. Dependants are skipped, not failed.
+    {
+      name: "catalogue",
+      testMatch: /catalogue\.setup\.ts/,
+    },
     {
       name: "setup",
-      testMatch: /\.setup\.ts/,
+      testMatch: /auth\.setup\.ts/,
+      dependencies: ["catalogue"],
     },
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
       testIgnore: /\.(setup\.ts|auth\.spec\.ts)/,
+      dependencies: ["catalogue"],
     },
     {
       name: "chromium-authenticated",

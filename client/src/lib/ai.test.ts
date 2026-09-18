@@ -45,7 +45,11 @@ const imageryIndicator = (id: number, aggregation: ImageryAggregation = "sum"): 
   }) as unknown as Indicator;
 
 const h3Indicator = (id: number): Indicator =>
-  ({ id, name: `H3 ${id}`, resource: { type: "h3", name: "ALTMEAN" } }) as unknown as Indicator;
+  ({
+    id,
+    name: `H3 ${id}`,
+    resource: { type: "h3", name: "ALTMEAN" },
+  }) as unknown as Indicator;
 
 const featureSet = (attributes: Record<string, unknown>[]) =>
   ({ features: attributes.map((a) => ({ attributes: a })) }) as unknown as __esri.FeatureSet;

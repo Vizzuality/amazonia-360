@@ -29,6 +29,24 @@ async function main() {
     payload.count({ collection: "subtopics" }),
     payload.count({ collection: "indicators" }),
   ]);
+  // Exiting 0 on a short seed leaves `migrate && seed:data && build && start` to serve an
+  // incomplete catalogue, and the failure surfaces much later as unrelated e2e specs.
+  const counted = [
+    ["topics", seededTopics.totalDocs, topics.length],
+    ["subtopics", seededSubtopics.totalDocs, subtopics.length],
+    ["indicators", seededIndicators.totalDocs, indicators.length],
+  ] as const;
+  const short = counted.filter(([, seeded, source]) => seeded !== source);
+
+  if (short.length) {
+    const shortfall = short
+      .map(([name, seeded, source]) => `${seeded} of ${source} ${name}`)
+      .join(", ");
+
+    payload.logger.error(`Seed incomplete: ${shortfall}.`);
+    process.exit(1);
+  }
+
   payload.logger.info(
     `Seeded ${seededTopics.totalDocs} topics, ${seededSubtopics.totalDocs} subtopics, ${seededIndicators.totalDocs} indicators.`,
   );

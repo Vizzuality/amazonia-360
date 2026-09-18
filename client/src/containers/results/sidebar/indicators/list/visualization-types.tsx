@@ -10,10 +10,11 @@ import { cn } from "@/lib/utils";
 
 import { Indicator } from "@/types/indicator";
 import { VisualizationTypes } from "@/types/indicator";
+import { Topic } from "@/types/topic";
 
 import { useFormTopics } from "@/app/(frontend)/store";
 
-import { DEFAULT_VISUALIZATION_SIZES, Topic } from "@/constants/topics";
+import { DEFAULT_VISUALIZATION_SIZES } from "@/constants/topics";
 
 export function VisualizationType({
   types = ["map", "table", "chart", "numeric"],

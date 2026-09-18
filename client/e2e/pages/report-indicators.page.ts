@@ -77,4 +77,43 @@ export class ReportIndicatorsPage {
     await expect(row).toHaveAttribute("aria-expanded", "true");
     await expect(this.collapseAllButton).toBeVisible();
   }
+
+  async expandAll() {
+    await this.expandAllButton.click();
+    await expect(this.collapseAllButton).toBeVisible();
+  }
+
+  /**
+   * An indicator row is the innermost element holding both the name button and the toggle,
+   * which is what separates it from the subtopic and topic rows wrapping it.
+   */
+  indicatorRow(name: string): Locator {
+    return this.panel
+      .locator("div")
+      .filter({ has: this.page.getByRole("button", { name, exact: true }) })
+      .filter({ has: this.page.getByRole("switch") })
+      .last();
+  }
+
+  async addIndicator(name: string) {
+    const row = this.indicatorRow(name);
+
+    await row.scrollIntoViewIfNeeded();
+    await row.getByRole("switch").click();
+    await expect(row.getByRole("switch")).toBeChecked();
+  }
+
+  async expectSelectionCount(count: number) {
+    await expect(this.clearSelectionButton).toContainText(`(${count})`);
+  }
+
+  /** Opens an indicator's info dialog. Its trigger is the icon button next to the toggle. */
+  async openIndicatorInfo(name: string): Promise<Locator> {
+    await this.indicatorRow(name).getByRole("button").nth(1).click();
+
+    const dialog = this.page.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+
+    return dialog;
+  }
 }

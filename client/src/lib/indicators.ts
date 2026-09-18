@@ -7,12 +7,12 @@ import * as intersectionOperator from "@arcgis/core/geometry/operators/intersect
 import { QueryFunction, UseQueryOptions, useQuery, useQueries } from "@tanstack/react-query";
 import axios from "axios";
 
-import { getSubtopics } from "@/lib/subtopics";
-import { getTopics } from "@/lib/topics";
+import { fetchIndicators } from "@/lib/cms-content";
 
 import {
   Indicator,
   ResourceFeature,
+  ResourceH3,
   ResourceImagery,
   ResourceImageryTile,
   ResourceWebTile,
@@ -22,20 +22,6 @@ import { Subtopic, Topic } from "@/types/topic";
 
 import { LayerProps } from "@/components/map/layers/types";
 
-import INDICATORS from "@/../datum/indicators.json";
-import { routing } from "@/i18n/routing";
-
-/**
- ************************************************************
- ************************************************************
- * INDICATORS
- * - useGetIndicators
- * - useGetDefaultIndicators
- * - useGetH3Indicators
- * - useGetIndicatorsId
- ************************************************************
- ************************************************************
- */
 export type IndicatorsParams = unknown;
 
 export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
@@ -44,35 +30,10 @@ export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
   TData
 >;
 
-export const getIndicators = async (locale: string) => {
-  const indicators = INDICATORS;
-  const topics = await getTopics({ locale });
-  const subtopics = await getSubtopics({ locale });
+export const getIndicators = async (locale: string): Promise<Indicator[]> => {
+  const indicators = await fetchIndicators({ locale });
 
-  return indicators
-    .map((indicator) => {
-      const s = subtopics.find((s) => s.id === indicator.subtopic_id);
-      const t = topics.find((t) => t.id === s?.topic_id);
-
-      return {
-        ...indicator,
-        name:
-          indicator[`name_${locale}` as keyof typeof indicator] ||
-          indicator[`name_${routing.defaultLocale}` as keyof typeof indicator],
-        description:
-          indicator[`description_${locale}` as keyof typeof indicator] ||
-          indicator[`description_${routing.defaultLocale}` as keyof typeof indicator],
-        description_short:
-          indicator[`description_short_${locale}` as keyof typeof indicator] ||
-          indicator[`description_short_${routing.defaultLocale}` as keyof typeof indicator],
-        unit:
-          indicator[`unit_${locale}` as keyof typeof indicator] ||
-          indicator[`unit_${routing.defaultLocale}` as keyof typeof indicator],
-        subtopic: s as Subtopic,
-        topic: t as Topic,
-      } as Indicator;
-    })
-    .sort((a, b) => (a.name || "")?.localeCompare(b.name || ""));
+  return indicators.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 };
 
 export const getIndicatorsKey = (locale: string) => {
@@ -89,7 +50,12 @@ export const getIndicatorsOptions = <
   const queryKey = getIndicatorsKey(locale);
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getIndicators>>> = () =>
     getIndicators(locale);
-  return { queryKey, queryFn, ...options } as IndicatorsQueryOptions<TData, TError>;
+  // Editorial content, and the report flow is four routes: without this every navigation
+  // refetches the whole catalogue once the provider's 60s staleTime has passed.
+  return { queryKey, queryFn, staleTime: Infinity, ...options } as IndicatorsQueryOptions<
+    TData,
+    TError
+  >;
 };
 
 export const useGetIndicators = <
@@ -99,11 +65,12 @@ export const useGetIndicators = <
   locale: string,
   options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
 ) => {
-  const { queryKey, queryFn } = getIndicatorsOptions(locale, options);
+  const { queryKey, queryFn, staleTime } = getIndicatorsOptions(locale, options);
 
   return useQuery({
     queryKey,
     queryFn,
+    staleTime,
     ...options,
   });
 };
@@ -124,22 +91,14 @@ export const useGetDefaultIndicators = ({
       return data
         .filter((indicator) => {
           if (topicId) {
-            return (
-              indicator.subtopic.topic_id === topicId &&
-              indicator.resource.type &&
-              indicator.resource.type !== "h3"
-            );
+            return indicator.subtopic.topic_id === topicId && indicator.resource.type !== "h3";
           }
 
           if (subtopicId) {
-            return (
-              indicator.subtopic.id === subtopicId &&
-              indicator.resource.type &&
-              indicator.resource.type !== "h3"
-            );
+            return indicator.subtopic.id === subtopicId && indicator.resource.type !== "h3";
           }
 
-          return !!indicator.resource.type && indicator.resource.type !== "h3";
+          return indicator.resource.type !== "h3";
         })
         .sort((a, b) => a.order - b.order);
     },
@@ -174,7 +133,7 @@ export const useGetH3Indicators = ({
         })
         .map((indicator) => ({
           ...indicator,
-          resource: indicator.resource as Indicator["resource"] & { type: "h3" },
+          resource: indicator.resource as ResourceH3,
         }))
         .sort((a, b) => a.order - b.order);
     },

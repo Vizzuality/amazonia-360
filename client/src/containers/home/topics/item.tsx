@@ -7,7 +7,7 @@ import Image from "next/image";
 import { PLACEHOLDER } from "@/lib/images";
 import { cn } from "@/lib/utils";
 
-import { Topic } from "@/constants/topics";
+import { Topic } from "@/types/topic";
 
 export default function TopicsItem({ id, name, image, description }: Topic) {
   const descriptionRef = useRef<HTMLParagraphElement>(null);

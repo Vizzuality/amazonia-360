@@ -1,19 +1,11 @@
 import { QueryFunction, useQuery, UseQueryOptions } from "@tanstack/react-query";
 
+import { fetchSubtopics as getSubtopics } from "@/lib/cms-content";
+
 import { Subtopic } from "@/types/topic";
 
-import SUBTOPICS from "@/../datum/subtopics.json";
-import { routing } from "@/i18n/routing";
+export { getSubtopics };
 
-/**
- ************************************************************
- ************************************************************
- * topicsData
- * - useGetSubtopics
- * - useGetSubtopicId
- ************************************************************
- ************************************************************
- */
 export type SubtopicsParams = unknown;
 
 export type SubtopicsQueryOptions<TData, TError> = UseQueryOptions<
@@ -21,22 +13,6 @@ export type SubtopicsQueryOptions<TData, TError> = UseQueryOptions<
   TError,
   TData
 >;
-
-export const getSubtopics = async ({ locale }: { locale: string }): Promise<Subtopic[]> => {
-  const subtopics = SUBTOPICS as Subtopic[];
-
-  const topicsTranslated: Subtopic[] = subtopics.map((subtopic) => {
-    return {
-      ...subtopic,
-      name: (subtopic[`name_${locale}` as keyof Subtopic] ||
-        subtopic[`name_${routing.defaultLocale}` as keyof Subtopic]) as string,
-      description: (subtopic[`description_${locale}` as keyof Subtopic] ||
-        subtopic[`description_${routing.defaultLocale}` as keyof Subtopic]) as string,
-    };
-  });
-
-  return topicsTranslated;
-};
 
 export const getSubtopicsKey = (locale: string) => {
   return ["subtopics", locale];
@@ -56,6 +32,7 @@ export const getSubtopicsOptions = <
   return {
     queryKey,
     queryFn,
+    staleTime: Infinity,
     ...options,
   } as SubtopicsQueryOptions<TData, TError>;
 };
@@ -64,11 +41,12 @@ export const useGetSubtopics = <TData = Awaited<ReturnType<typeof getSubtopics>>
   locale: string,
   options?: Omit<SubtopicsQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) => {
-  const { queryKey, queryFn } = getSubtopicsOptions<TData, TError>(locale, options);
+  const { queryKey, queryFn, staleTime } = getSubtopicsOptions<TData, TError>(locale, options);
 
   return useQuery({
     queryKey,
     queryFn,
+    staleTime,
     ...options,
   });
 };
@@ -82,14 +60,12 @@ export const useGetDefaultSubtopics = ({
 }) => {
   const query = useGetSubtopics(locale, {
     select(data) {
-      return data
-        .filter((subtopic) => {
-          if (typeof topicId === "number") {
-            return subtopic.topic_id === topicId;
-          }
-          return true;
-        })
-        .sort((a, b) => a.id - b.id);
+      return data.filter((subtopic) => {
+        if (typeof topicId === "number") {
+          return subtopic.topic_id === topicId;
+        }
+        return true;
+      });
     },
   });
 

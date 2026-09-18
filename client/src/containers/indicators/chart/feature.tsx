@@ -21,6 +21,9 @@ import { LegendItemProps } from "@/components/map/legend/item";
 
 import { Report } from "@/payload-types";
 
+/** A legend built from an ArcGIS renderer rather than read off the CMS: the id is always set. */
+type ChartLegendItem = LegendItemProps["items"][number] & { id: string | number };
+
 export interface ChartIndicatorsProps extends Indicator {
   resource: ResourceFeature;
   location: Report["location"];
@@ -35,7 +38,8 @@ export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
   const query = useQueryFeatureId({ id, resource, type: "chart", geometry: GEOMETRY });
   const queryResourceFeatureLayer = useResourceFeatureLayerId(indicator);
 
-  const LEGEND = useMemo<LegendItemProps["items"] | null>(() => {
+  // Every branch below sets an id: a unique value or a class-break threshold, compared with `>=`.
+  const LEGEND = useMemo<ChartLegendItem[] | null>(() => {
     const renderer = queryResourceFeatureLayer.data?.drawingInfo?.renderer;
 
     if (renderer?.type === "simple") {
@@ -44,7 +48,7 @@ export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
 
       return [
         {
-          id: indicator.name_en,
+          id: indicator.id,
           label: indicator.name,
           color: c.toHex() ?? "#009ADE",
         },
@@ -226,10 +230,7 @@ export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
             };
           }
 
-          const getLabel = (
-            feature: __esri.Graphic,
-            LEGEND: LegendItemProps["items"] | null,
-          ): string => {
+          const getLabel = (feature: __esri.Graphic, LEGEND: ChartLegendItem[] | null): string => {
             if (renderer?.type === "uniqueValue") {
               const r = renderer as __esri.ClassBreaksRenderer;
 

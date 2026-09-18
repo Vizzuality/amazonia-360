@@ -12,9 +12,9 @@ import { PLACEHOLDER } from "@/lib/images";
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
-import { indicatorsExpandAtom, useSyncIndicators } from "@/app/(frontend)/store";
+import { Topic } from "@/types/topic";
 
-import { Topic } from "@/constants/topics";
+import { indicatorsExpandAtom, useSyncIndicators } from "@/app/(frontend)/store";
 
 import SubtopicList from "@/containers/report/indicators/subtopics";
 
