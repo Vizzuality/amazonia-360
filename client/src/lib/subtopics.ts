@@ -60,14 +60,12 @@ export const useGetDefaultSubtopics = ({
 }) => {
   const query = useGetSubtopics(locale, {
     select(data) {
-      return data
-        .filter((subtopic) => {
-          if (typeof topicId === "number") {
-            return subtopic.topic_id === topicId;
-          }
-          return true;
-        })
-        .sort((a, b) => a.id - b.id);
+      return data.filter((subtopic) => {
+        if (typeof topicId === "number") {
+          return subtopic.topic_id === topicId;
+        }
+        return true;
+      });
     },
   });
 

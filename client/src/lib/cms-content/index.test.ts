@@ -87,6 +87,21 @@ describe("the catalogue reads", () => {
   });
 });
 
+// Indicators are absent: `lib/indicators` sorts them by name, so their id order is never read.
+describe("the order the catalogue arrives in", () => {
+  // The fixtures are recorded ascending, so only a reversed read can fail this.
+  test.each(READS.slice(0, 2))(
+    "%s is sorted by id, whatever order the CMS answered in",
+    async (_collection, read, docs) => {
+      returning([...(docs as unknown[])].reverse());
+
+      const ids = (await read({ locale: "en" })).map(({ id }) => id);
+
+      expect(ids).toEqual([...ids].sort((a, b) => a - b));
+    },
+  );
+});
+
 describe("content ids", () => {
   test("come back as the numbers saved reports and shared URLs hold", async () => {
     returning(TOPICS_EN);

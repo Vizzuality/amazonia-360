@@ -45,6 +45,14 @@ const toNumericId = (id: string): number => {
 };
 
 /**
+ * An unsorted read is answered `-createdAt`, so the catalogue arrives newest first — the reverse
+ * of the order it was authored in. Every screen that re-sorted hid that; the PDF report renders
+ * the read as it comes, and showed its topics backwards. Order is part of what this boundary
+ * hands over, so it is settled here, on the numeric id the CMS itself cannot sort by.
+ */
+const byId = <T extends { id: number }>(records: T[]): T[] => records.sort((a, b) => a.id - b.id);
+
+/**
  * No query option narrows Payload's relationship types, so the depth a read asks for is only a
  * contract until something checks it. A flat relationship would reach the UI as a missing name.
  */
@@ -173,13 +181,13 @@ const toIndicator = (indicator: CmsIndicator): Indicator => {
 export const fetchTopics = async ({ locale }: { locale: string }): Promise<Topic[]> => {
   const { docs } = await sdk.find({ collection: "topics", ...read(locale), depth: 0 });
 
-  return docs.map(toTopic);
+  return byId(docs.map(toTopic));
 };
 
 export const fetchSubtopics = async ({ locale }: { locale: string }): Promise<Subtopic[]> => {
   const { docs } = await sdk.find({ collection: "subtopics", ...read(locale), depth: 0 });
 
-  return docs.map(toSubtopic);
+  return byId(docs.map(toSubtopic));
 };
 
 // `depth: 2` reaches the Topic through the Subtopic; `populate` stops all 164 rows dragging a
