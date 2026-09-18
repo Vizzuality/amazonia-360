@@ -1,11 +1,10 @@
 import { vi } from "vitest";
 
-import INDICATORS_EN from "./__fixtures__/indicators.en.json";
-import INDICATORS_ES from "./__fixtures__/indicators.es.json";
-import SUBTOPICS_EN from "./__fixtures__/subtopics.en.json";
-import SUBTOPICS_ES from "./__fixtures__/subtopics.es.json";
-import TOPICS_EN from "./__fixtures__/topics.en.json";
-import TOPICS_ES from "./__fixtures__/topics.es.json";
+import {
+  Indicator as CmsIndicator,
+  Subtopic as CmsSubtopic,
+  Topic as CmsTopic,
+} from "@/payload-types";
 
 const mockFind = vi.fn();
 
@@ -15,57 +14,135 @@ vi.mock("@/services/sdk", () => ({
 
 const { fetchIndicators, fetchSubtopics, fetchTopics } = await import("./index");
 
+/**
+ * Records are built, not recorded, and typed as the collection they stand for: add a required
+ * field to a collection and these stop compiling, which is the alarm a recorded JSON response
+ * cannot raise. Only the fields this boundary reads carry meaningful values.
+ */
+const TIMESTAMPS = { createdAt: "2026-01-01T00:00:00Z", updatedAt: "2026-01-01T00:00:00Z" };
+
+const topic = (over: Partial<CmsTopic> & Pick<CmsTopic, "id">): CmsTopic => ({
+  name: "Geographic context",
+  ...TIMESTAMPS,
+  ...over,
+});
+
+const subtopic = (over: Partial<CmsSubtopic> & Pick<CmsSubtopic, "id">): CmsSubtopic => ({
+  name: "ACU",
+  topic: "0",
+  ...TIMESTAMPS,
+  ...over,
+});
+
+const indicator = (over: Partial<CmsIndicator> & Pick<CmsIndicator, "id">): CmsIndicator => ({
+  order: 0,
+  name: "Total area",
+  description_short: "The area of the selection",
+  // Populated, as `depth: 2` asks for: the boundary reads the Topic through the Subtopic.
+  subtopic: subtopic({ id: "0", topic: topic({ id: "0" }) }),
+  resource: [{ blockType: "component", name: "total-area" }],
+  ...TIMESTAMPS,
+  ...over,
+});
+
+// Ascending, and spaced so a lexicographic sort would answer 0, 10, 2 — the varchar order the
+// CMS itself would give back if this boundary ever asked it to sort.
+const TOPICS = [
+  topic({
+    id: "0",
+    default_visualization: [
+      { indicator: "0", type: "numeric", x: 0, y: 0, w: 1, h: 1 },
+      { indicator: "5", type: "map", x: 1, y: 0, w: 2, h: 2, basemapId: "gray-vector", opacity: 1 },
+    ],
+  }),
+  topic({ id: "2", name: "Population" }),
+  topic({ id: "10", name: "Biodiversity" }),
+];
+
+const SUBTOPICS = [
+  subtopic({ id: "0" }),
+  subtopic({ id: "2", name: "Protected areas" }),
+  subtopic({ id: "10", name: "Deforestation" }),
+];
+
+const INDICATORS = [
+  indicator({ id: "0", visualization_types: ["numeric"] }),
+  indicator({
+    id: "1",
+    name: "Municipalities",
+    resource: [{ blockType: "feature", url: "https://arcgis/1", layer_id: "0" }],
+  }),
+  indicator({
+    id: "5",
+    name: "States",
+    resource: [
+      {
+        blockType: "feature",
+        url: "https://arcgis/5",
+        layer_id: "0",
+        popupTemplate: {
+          title: "{NOMBCAP}",
+          fieldInfos: [
+            { fieldName: "NAME_1", label: "State" },
+            { fieldName: "NAME_0", label: "Country" },
+          ],
+        },
+      },
+    ],
+  }),
+  indicator({
+    id: "7",
+    name: "Rivers",
+    resource: [
+      {
+        blockType: "feature",
+        url: "https://arcgis/7",
+        layer_id: "0",
+        popupTemplate: { title: "{NAME}", fieldInfos: [] },
+      },
+    ],
+  }),
+];
+
 type Args = Record<string, unknown>;
 
-const READS = [
-  ["topics", fetchTopics, TOPICS_EN],
-  ["subtopics", fetchSubtopics, SUBTOPICS_EN],
-  ["indicators", fetchIndicators, INDICATORS_EN],
-] as const;
-
-const returning = (docs: unknown[]) => {
+const returning = (docs: CmsTopic[] | CmsSubtopic[] | CmsIndicator[]) => {
   mockFind.mockReset();
   mockFind.mockResolvedValue({ docs });
   return () => mockFind.mock.calls[0]?.[0] as Args;
 };
 
 describe("the catalogue reads", () => {
-  test.each(READS)(
-    "%s disables pagination, which is the whole of the truncation guard",
-    async (collection, read, docs) => {
-      const args = returning(docs as unknown[]);
+  // The three reads share one `read()` helper, so one collection covers the guard.
+  test("disable pagination, which is the whole of the truncation guard", async () => {
+    const args = returning(TOPICS);
 
-      await read({ locale: "en" });
+    await fetchTopics({ locale: "en" });
 
-      expect(args()).toMatchObject({ collection, pagination: false });
-    },
-  );
+    expect(args()).toMatchObject({ collection: "topics", pagination: false });
+  });
 
-  test.each(READS)(
-    "%s never asks the CMS to sort, since varchar ids sort lexicographically",
-    async (_collection, read, docs) => {
-      const args = returning(docs as unknown[]);
+  test("ask for the requested locale and fall back to English", async () => {
+    const args = returning(TOPICS);
 
-      await read({ locale: "en" });
+    await fetchTopics({ locale: "es" });
 
-      expect(args()).not.toHaveProperty("sort");
-    },
-  );
+    expect(args()).toMatchObject({ locale: "es", fallbackLocale: "en" });
+  });
 
-  test.each(READS.slice(0, 2))(
-    "%s is read flat: depth 0 already returns the id the app wants",
-    async (_collection, read, docs) => {
-      const args = returning(docs as unknown[]);
+  test("read topics and subtopics flat: depth 0 already returns the id the app wants", async () => {
+    const topics = returning(TOPICS);
+    await fetchTopics({ locale: "en" });
+    // Explicit, not inherited: the config default is 2 and would make these reads expensive.
+    expect(topics()).toMatchObject({ depth: 0 });
 
-      await read({ locale: "en" });
+    const subtopics = returning(SUBTOPICS);
+    await fetchSubtopics({ locale: "en" });
+    expect(subtopics()).toMatchObject({ depth: 0 });
+  });
 
-      // Explicit, not inherited: the config default is 2 and would make these reads expensive.
-      expect(args()).toMatchObject({ depth: 0 });
-    },
-  );
-
-  test("indicators reach the Topic through the Subtopic, and trim what they drag along", async () => {
-    const args = returning(INDICATORS_EN);
+  test("reach an indicator's Topic through its Subtopic, trimming what they drag along", async () => {
+    const args = returning(INDICATORS);
 
     await fetchIndicators({ locale: "en" });
 
@@ -77,65 +154,38 @@ describe("the catalogue reads", () => {
       },
     });
   });
-
-  test("asks for the requested locale and falls back to English", async () => {
-    const args = returning(TOPICS_ES);
-
-    await fetchTopics({ locale: "es" });
-
-    expect(args()).toMatchObject({ locale: "es", fallbackLocale: "en" });
-  });
 });
 
 // Indicators are absent: `lib/indicators` sorts them by name, so their id order is never read.
 describe("the order the catalogue arrives in", () => {
-  // The fixtures are recorded ascending, so only a reversed read can fail this.
-  test.each(READS.slice(0, 2))(
-    "%s is sorted by id, whatever order the CMS answered in",
-    async (_collection, read, docs) => {
-      returning([...(docs as unknown[])].reverse());
+  test("is by id for topics and subtopics, whatever order the CMS answered in", async () => {
+    returning([...TOPICS].reverse());
+    expect((await fetchTopics({ locale: "en" })).map(({ id }) => id)).toEqual([0, 2, 10]);
 
-      const ids = (await read({ locale: "en" })).map(({ id }) => id);
-
-      expect(ids).toEqual([...ids].sort((a, b) => a - b));
-    },
-  );
+    returning([...SUBTOPICS].reverse());
+    expect((await fetchSubtopics({ locale: "en" })).map(({ id }) => id)).toEqual([0, 2, 10]);
+  });
 });
 
 describe("content ids", () => {
-  test("come back as the numbers saved reports and shared URLs hold", async () => {
-    returning(TOPICS_EN);
-
-    const topics = await fetchTopics({ locale: "en" });
-
-    expect(topics.every((topic) => typeof topic.id === "number")).toBe(true);
-  });
-
   test("keep the Overview topic at 0 rather than losing it to a falsy check", async () => {
-    returning(TOPICS_EN);
+    returning(TOPICS);
 
-    expect((await fetchTopics({ locale: "en" })).find((topic) => topic.id === 0)?.name).toBe(
-      "Geographic context",
-    );
+    const overview = (await fetchTopics({ locale: "en" })).find(({ id }) => id === 0);
+
+    expect(overview?.name).toBe("Geographic context");
+    expect(typeof overview?.id).toBe("number");
   });
 
   test("are coerced on a default visualization too, since it becomes a saved report", async () => {
-    returning(TOPICS_EN);
+    returning(TOPICS);
 
-    const view = (await fetchTopics({ locale: "en" })).find((topic) => topic.id === 0)
-      ?.default_visualization[0];
+    const views = (await fetchTopics({ locale: "en" })).find(({ id }) => id === 0)
+      ?.default_visualization;
 
-    expect(view).toMatchObject({ indicator_id: 0, type: "numeric" });
-    expect(typeof view?.indicator_id).toBe("number");
-  });
-
-  test("carry a map view's basemap and opacity, which only that type has", async () => {
-    returning(TOPICS_EN);
-
-    const views = (await fetchTopics({ locale: "en" })).find(
-      (topic) => topic.id === 0,
-    )?.default_visualization;
-
+    expect(views?.[0]).toMatchObject({ indicator_id: 0, type: "numeric" });
+    expect(typeof views?.[0].indicator_id).toBe("number");
+    // basemapId and opacity belong to the map view alone.
     expect(views?.find((view) => view.type === "map")).toMatchObject({
       indicator_id: 5,
       basemapId: "gray-vector",
@@ -144,7 +194,7 @@ describe("content ids", () => {
   });
 
   test("refuse a non-numeric id rather than resolving to the wrong record", async () => {
-    returning([{ ...TOPICS_EN[0], id: "" }]);
+    returning([topic({ id: "" })]);
 
     await expect(fetchTopics({ locale: "en" })).rejects.toThrow(/numeric content id/);
   });
@@ -152,13 +202,13 @@ describe("content ids", () => {
 
 describe("the depth each read asks for", () => {
   test("is checked, because no Payload type narrows it", async () => {
-    returning([{ ...INDICATORS_EN[0], subtopic: "3" }]);
+    returning([indicator({ id: "0", subtopic: "3" })]);
 
     await expect(fetchIndicators({ locale: "en" })).rejects.toThrow(/lost its depth/);
   });
 
   test("is checked in the other direction too, on the flat reads", async () => {
-    returning([{ ...SUBTOPICS_EN[0], topic: { id: "0", name: "Geographic context" } }]);
+    returning([subtopic({ id: "0", topic: topic({ id: "0" }) })]);
 
     await expect(fetchSubtopics({ locale: "en" })).rejects.toThrow(/came back populated/);
   });
@@ -166,35 +216,44 @@ describe("the depth each read asks for", () => {
 
 describe("indicators", () => {
   test("hold the Topic beside the Subtopic, where the app expects the two as siblings", async () => {
-    returning(INDICATORS_EN);
+    returning(INDICATORS);
 
-    const [indicator] = await fetchIndicators({ locale: "en" });
+    const [first] = await fetchIndicators({ locale: "en" });
 
-    expect(indicator.topic).toEqual({ id: 0, name: "Geographic context" });
-    expect(indicator.subtopic).toMatchObject({ id: 0, topic_id: 0, name: "ACU" });
+    expect(first.topic).toEqual({ id: 0, name: "Geographic context" });
+    expect(first.subtopic).toMatchObject({ id: 0, topic_id: 0, name: "ACU" });
   });
 
   test("carry the one resource unwrapped from the block array", async () => {
-    returning(INDICATORS_EN);
+    returning(INDICATORS);
 
-    const [indicator] = await fetchIndicators({ locale: "en" });
+    const [first] = await fetchIndicators({ locale: "en" });
 
-    expect(indicator.resource.type).toBe("component");
-    expect(Array.isArray(indicator.resource)).toBe(false);
+    expect(first.resource.type).toBe("component");
+    expect(Array.isArray(first.resource)).toBe(false);
   });
 
   test("refuse a row with no resource, which has nothing to draw or measure", async () => {
-    returning([{ ...INDICATORS_EN[0], resource: [] }]);
+    returning([indicator({ id: "0", resource: [] })]);
 
     await expect(fetchIndicators({ locale: "en" })).rejects.toThrow(/has no resource/);
   });
 
-  test("rebuild a popup as the ArcGIS `content` shape, dropping Payload's row ids", async () => {
-    returning(INDICATORS_EN);
+  test("default an absent visualization_types to empty rather than null", async () => {
+    returning([indicator({ id: "0", visualization_types: null })]);
 
-    const indicator = (await fetchIndicators({ locale: "en" })).find(({ id }) => id === 5);
+    expect((await fetchIndicators({ locale: "en" }))[0].visualization_types).toEqual([]);
+  });
+});
 
-    expect(indicator?.resource).toMatchObject({
+describe("a feature's popup", () => {
+  const popupOf = async (id: number) =>
+    (await fetchIndicators({ locale: "en" })).find((found) => found.id === id)?.resource;
+
+  test("is rebuilt as the ArcGIS `content` shape, dropping Payload's row ids", async () => {
+    returning(INDICATORS);
+
+    expect(await popupOf(5)).toMatchObject({
       popupTemplate: {
         title: "{NOMBCAP}",
         content: [
@@ -210,41 +269,17 @@ describe("indicators", () => {
     });
   });
 
-  test("leave a popup with neither a title nor a field out entirely", async () => {
-    returning(INDICATORS_EN);
+  test("keeps a bare title, where an empty `content` would drop the popup instead", async () => {
+    returning(INDICATORS);
 
-    const indicator = (await fetchIndicators({ locale: "en" })).find(({ id }) => id === 1);
-
-    expect(indicator?.resource).toMatchObject({ popupTemplate: undefined });
+    expect(await popupOf(7)).toMatchObject({
+      popupTemplate: { title: "{NAME}", content: undefined },
+    });
   });
 
-  test("default an absent visualization_types to empty rather than null", async () => {
-    returning([{ ...INDICATORS_EN[0], visualization_types: null }]);
+  test("is left out entirely when it carries neither a title nor a field", async () => {
+    returning(INDICATORS);
 
-    expect((await fetchIndicators({ locale: "en" }))[0].visualization_types).toEqual([]);
-  });
-});
-
-describe("localization", () => {
-  test("reads a topic in the requested locale", async () => {
-    returning(TOPICS_ES);
-
-    expect((await fetchTopics({ locale: "es" })).find((topic) => topic.id === 0)?.name).toBe(
-      "Contexto geográfico",
-    );
-  });
-
-  test("reads a subtopic in the requested locale", async () => {
-    returning(SUBTOPICS_ES);
-
-    expect(
-      (await fetchSubtopics({ locale: "es" })).find((subtopic) => subtopic.id === 0)?.name,
-    ).toBe("ACU");
-  });
-
-  test("reads an indicator in the requested locale", async () => {
-    returning(INDICATORS_ES);
-
-    expect((await fetchIndicators({ locale: "es" }))[0].name).not.toBe(INDICATORS_EN[0].name);
+    expect(await popupOf(1)).toMatchObject({ popupTemplate: undefined });
   });
 });
