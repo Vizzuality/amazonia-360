@@ -38,7 +38,7 @@ const toNumericId = (id: string): number => {
 
   // Number("") is 0, which is both a real Topic and a real Indicator.
   if (id.trim() === "" || !Number.isInteger(parsed)) {
-    throw new Error(`Expected a numeric content id, got ${JSON.stringify(id)}`);
+    throw new TypeError(`Expected a numeric content id, got ${JSON.stringify(id)}`);
   }
 
   return parsed;
@@ -58,7 +58,7 @@ const byId = <T extends { id: number }>(records: T[]): T[] => records.sort((a, b
  */
 const asRecord = <T>(value: T, what: string): Exclude<T, string> => {
   if (typeof value === "string") {
-    throw new Error(`${what} came back as the id ${value}: this read lost its depth.`);
+    throw new TypeError(`${what} came back as the id ${value}: this read lost its depth.`);
   }
 
   return value as Exclude<T, string>;
@@ -67,7 +67,9 @@ const asRecord = <T>(value: T, what: string): Exclude<T, string> => {
 /** The mirror, for the depth-0 reads that want the id the relationship points at. */
 const asId = (value: unknown, what: string): string => {
   if (typeof value !== "string") {
-    throw new Error(`${what} came back populated: this read asked for more depth than it needs.`);
+    throw new TypeError(
+      `${what} came back populated: this read asked for more depth than it needs.`,
+    );
   }
 
   return value;
