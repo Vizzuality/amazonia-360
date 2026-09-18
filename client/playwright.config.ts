@@ -53,7 +53,9 @@ export default defineConfig({
     {
       // The catalogue now comes from the CMS rather than the bundle, so an unseeded
       // database serves an empty one and every indicator assertion fails.
-      command: "pnpm payload migrate && pnpm seed:data && pnpm build && pnpm start",
+      command: isCI
+        ? "pnpm build && pnpm start"
+        : "pnpm payload migrate && pnpm seed:data && pnpm build && pnpm start",
       url: "http://localhost:3000",
       reuseExistingServer: !isCI,
       // migrate, seed (~900 sequential Local API writes), build, start.

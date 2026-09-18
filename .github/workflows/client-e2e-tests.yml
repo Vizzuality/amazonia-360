@@ -95,6 +95,15 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm exec playwright install chromium --with-deps
 
+      - name: Run Payload migrations
+        run: pnpm payload migrate 2>&1 | tee /tmp/migrate.log
+
+      - name: Verify schema was created
+        run: psql "$DATABASE_URL" -c "SELECT 1 FROM payload_migrations LIMIT 1" -c "SELECT 1 FROM users LIMIT 1" || { echo "::error::payload migrate did not apply migrations"; cat /tmp/migrate.log; exit 1; }
+
+      - name: Seed the catalogue
+        run: pnpm seed:data
+
       - name: Run E2E tests
         run: pnpm test:e2e
 
