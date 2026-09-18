@@ -71,17 +71,6 @@ export class CountrySelector {
     await expect(this.trigger).toContainText(this.name(country));
   }
 
-  async expectNotVisible() {
-    await expect(this.trigger).toHaveCount(0);
-  }
-
-  async expectComingSoon(country: string) {
-    await this.open();
-    const name = new RegExp(this.name(country));
-    await expect(this.page.getByText(name).first()).toBeVisible();
-    await expect(this.page.getByRole("link", { name })).toHaveCount(0);
-  }
-
   async openMobileMenu() {
     await this.page.getByRole("button", { name: MENU_LABEL[this.locale] }).first().click();
     await expect(this.page.getByRole("dialog")).toBeVisible({ timeout: 10_000 });

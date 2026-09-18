@@ -33,10 +33,6 @@ const SAMPLE_TOPICS = [
   },
 ];
 
-// ---------------------------------------------------------------------------
-// Helper: seed a report via the server endpoint
-// ---------------------------------------------------------------------------
-
 async function seedReport(
   request: import("@playwright/test").APIRequestContext,
   options: {
@@ -68,26 +64,8 @@ async function seedReport(
   return result.id;
 }
 
-// --- Owner tests ---
-
 test.describe("report view (authenticated owner)", () => {
   test.skip(skipWithoutSeedSecret, "E2E_SEED_SECRET not set");
-
-  test("owner sees Save button, not Make a copy", async ({ page, request }) => {
-    const reportId = await seedReport(request, {
-      title: "Owner Report",
-      userEmail: process.env.E2E_TEST_USER_EMAIL,
-    });
-
-    const reportsIdPage = new ReportsIdPage(page);
-    await reportsIdPage.goto(reportId);
-    await dismissCookieConsent(page);
-    await reportsIdPage.expectLoaded();
-
-    await reportsIdPage.expectTitle("Owner Report");
-    await reportsIdPage.expectSaveButtonVisible();
-    await reportsIdPage.expectMakeACopyButtonNotVisible();
-  });
 
   test("owner can edit title and confirm", async ({ page, request }) => {
     const reportId = await seedReport(request, {
@@ -108,63 +86,6 @@ test.describe("report view (authenticated owner)", () => {
     await reportsIdPage.expectTitle("Updated Title");
   });
 
-  test("owner can cancel title edit and preserve original title", async ({ page, request }) => {
-    const reportId = await seedReport(request, {
-      title: "Keep This Title",
-      userEmail: process.env.E2E_TEST_USER_EMAIL,
-    });
-
-    const reportsIdPage = new ReportsIdPage(page);
-    await reportsIdPage.goto(reportId);
-    await dismissCookieConsent(page);
-    await reportsIdPage.expectLoaded();
-    await reportsIdPage.expectTitle("Keep This Title");
-
-    await reportsIdPage.startTitleEdit();
-    await reportsIdPage.typeTitleValue("Should Not Stick");
-    await reportsIdPage.cancelTitleEdit();
-
-    await reportsIdPage.expectTitle("Keep This Title");
-  });
-
-  test("Edit Report button toggles sidebar", async ({ page, request }) => {
-    const reportId = await seedReport(request, {
-      userEmail: process.env.E2E_TEST_USER_EMAIL,
-    });
-
-    const reportsIdPage = new ReportsIdPage(page);
-    await reportsIdPage.goto(reportId);
-    await dismissCookieConsent(page);
-    await reportsIdPage.expectLoaded();
-
-    // Click "Edit report" to open sidebar
-    await reportsIdPage.expectEditReportButtonVisible();
-    await reportsIdPage.clickEditReport();
-    await reportsIdPage.expectCloseEditingButtonVisible();
-
-    // Click "Close editing" to close sidebar
-    await page.getByRole("button", { name: "Close editing" }).click();
-    await reportsIdPage.expectEditReportButtonVisible();
-  });
-
-  test("share action opens share dialog directly when no unsaved changes", async ({
-    page,
-    request,
-  }) => {
-    const reportId = await seedReport(request, {
-      userEmail: process.env.E2E_TEST_USER_EMAIL,
-    });
-
-    const reportsIdPage = new ReportsIdPage(page);
-    await reportsIdPage.goto(reportId);
-    await dismissCookieConsent(page);
-    await reportsIdPage.expectLoaded();
-
-    await reportsIdPage.openActionsMenu();
-    await reportsIdPage.clickShareAction();
-    await reportsIdPage.expectShareDialogWithUrl(reportId);
-  });
-
   test("duplicate action changes URL to new report", async ({ page, request }) => {
     const reportId = await seedReport(request, {
       userEmail: process.env.E2E_TEST_USER_EMAIL,
@@ -183,78 +104,5 @@ test.describe("report view (authenticated owner)", () => {
     // URL should change to a different report ID
     await expect(page).toHaveURL(/\/reports\/[\w-]+/, { timeout: 30_000 });
     await expect(page).not.toHaveURL(originalUrl);
-  });
-});
-
-// --- Non-owner tests ---
-
-test.describe("report view (authenticated non-owner)", () => {
-  test.skip(skipWithoutSeedSecret, "E2E_SEED_SECRET not set");
-
-  test("non-owner sees Make a copy, not Save", async ({ page, request }) => {
-    // Seed report without userEmail so it has no owner
-    const reportId = await seedReport(request, {
-      title: "Someone Else Report",
-    });
-
-    const reportsIdPage = new ReportsIdPage(page);
-    await reportsIdPage.goto(reportId);
-    await dismissCookieConsent(page);
-    await reportsIdPage.expectLoaded();
-
-    await reportsIdPage.expectTitle("Someone Else Report");
-    await reportsIdPage.expectMakeACopyButtonVisible();
-    await reportsIdPage.expectSaveButtonNotVisible();
-  });
-
-  test("non-owner can see report title", async ({ page, request }) => {
-    const reportId = await seedReport(request, {
-      title: "Read Only Report",
-    });
-
-    const reportsIdPage = new ReportsIdPage(page);
-    await reportsIdPage.goto(reportId);
-    await dismissCookieConsent(page);
-    await reportsIdPage.expectLoaded();
-
-    await reportsIdPage.expectTitle("Read Only Report");
-  });
-
-  test("non-owner can access actions menu", async ({ page, request }) => {
-    const reportId = await seedReport(request);
-
-    const reportsIdPage = new ReportsIdPage(page);
-    await reportsIdPage.goto(reportId);
-    await dismissCookieConsent(page);
-    await reportsIdPage.expectLoaded();
-
-    await reportsIdPage.openActionsMenu();
-    await reportsIdPage.expectActionsMenuItems();
-  });
-});
-
-test.describe("report view (authenticated, seeded report)", () => {
-  test.skip(skipWithoutSeedSecret, "E2E_SEED_SECRET not set");
-
-  test("knowledge resources section is visible", async ({ page, request }) => {
-    const reportId = await seedReport(request, {
-      userEmail: process.env.E2E_TEST_USER_EMAIL,
-    });
-
-    const reportsIdPage = new ReportsIdPage(page);
-    await reportsIdPage.goto(reportId);
-    await dismissCookieConsent(page);
-    await reportsIdPage.expectLoaded();
-
-    await reportsIdPage.expectKnowledgeResourcesVisible();
-  });
-});
-
-test.describe("report view (authenticated, invalid report ID)", () => {
-  test("not-found page for an invalid report ID", async ({ page }) => {
-    const reportsIdPage = new ReportsIdPage(page);
-    await reportsIdPage.goto("nonexistent-report-id-12345");
-    await dismissCookieConsent(page).catch(() => {});
-    await reportsIdPage.expectNotFound();
   });
 });

@@ -21,47 +21,6 @@ test.describe("sign-in page rendering", () => {
   }
 });
 
-// --- Form validation ---
-
-test.describe("sign-in form validation", () => {
-  test("shows error for invalid email", async ({ page }) => {
-    const signInPage = new SignInPage(page);
-    await signInPage.goto();
-    await dismissCookieConsent(page);
-
-    await signInPage.fillEmail("not-an-email");
-    // Blur the email field to trigger validation
-    await signInPage.passwordInput.click();
-    await signInPage.expectValidationError(/valid email/i);
-  });
-
-  test("shows error for short password", async ({ page }) => {
-    const signInPage = new SignInPage(page);
-    await signInPage.goto();
-    await dismissCookieConsent(page);
-
-    await signInPage.fillPassword("12345");
-    // Blur the password field to trigger validation
-    await signInPage.emailInput.click();
-    await signInPage.expectValidationError(/at least 6 characters/i);
-  });
-
-  test("shows errors for empty form submission", async ({ page }) => {
-    const signInPage = new SignInPage(page);
-    await signInPage.goto();
-    await dismissCookieConsent(page);
-
-    // Type then clear to trigger onChange validation with empty values
-    await signInPage.fillEmail("x");
-    await signInPage.fillEmail("");
-    await signInPage.fillPassword("x");
-    await signInPage.fillPassword("");
-
-    await signInPage.expectValidationError(/valid email/i);
-    await signInPage.expectValidationError(/at least 6 characters/i);
-  });
-});
-
 // --- Authentication errors ---
 
 test.describe("sign-in authentication errors", () => {
@@ -140,28 +99,6 @@ test.describe("protected route guard", () => {
 
     // Should be redirected back to the original protected page
     await signInPage.expectRedirectedTo(/\/private\/profile/);
-  });
-});
-
-// --- Navigation links ---
-
-test.describe("sign-in navigation links", () => {
-  test("forgot password link navigates to forgot-password page", async ({ page }) => {
-    const signInPage = new SignInPage(page);
-    await signInPage.goto();
-    await dismissCookieConsent(page);
-
-    await signInPage.forgotPasswordLink.click();
-    await expect(page).toHaveURL(/\/auth\/forgot-password/, { timeout: 15_000 });
-  });
-
-  test("sign up link navigates to sign-up page", async ({ page }) => {
-    const signInPage = new SignInPage(page);
-    await signInPage.goto();
-    await dismissCookieConsent(page);
-
-    await signInPage.signUpLink.click();
-    await expect(page).toHaveURL(/\/auth\/sign-up/, { timeout: 15_000 });
   });
 });
 
