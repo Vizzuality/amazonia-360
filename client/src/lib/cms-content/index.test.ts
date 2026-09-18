@@ -180,8 +180,9 @@ describe("content ids", () => {
   test("are coerced on a default visualization too, since it becomes a saved report", async () => {
     returning(TOPICS);
 
-    const views = (await fetchTopics({ locale: "en" })).find(({ id }) => id === 0)
-      ?.default_visualization;
+    const views = (await fetchTopics({ locale: "en" })).find(
+      ({ id }) => id === 0,
+    )?.default_visualization;
 
     expect(views?.[0]).toMatchObject({ indicator_id: 0, type: "numeric" });
     expect(typeof views?.[0].indicator_id).toBe("number");
