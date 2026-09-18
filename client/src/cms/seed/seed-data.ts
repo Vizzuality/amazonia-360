@@ -39,9 +39,11 @@ async function main() {
   const short = counted.filter(([, seeded, source]) => seeded !== source);
 
   if (short.length) {
-    payload.logger.error(
-      `Seed incomplete: ${short.map(([name, seeded, source]) => `${seeded} of ${source} ${name}`).join(", ")}.`,
-    );
+    const shortfall = short
+      .map(([name, seeded, source]) => `${seeded} of ${source} ${name}`)
+      .join(", ");
+
+    payload.logger.error(`Seed incomplete: ${shortfall}.`);
     process.exit(1);
   }
 
