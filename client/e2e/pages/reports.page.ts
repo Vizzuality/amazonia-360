@@ -228,9 +228,6 @@ export class ReportsPage {
     await this.page.mouse.down();
     await this.page.mouse.move(targetX, thumbCenterY, { steps: 10 });
     await this.page.mouse.up();
-
-    // Wait for debounced update
-    await this.page.waitForTimeout(1_000);
   }
 
   /** Verify the displayed buffer value matches the expected km string. */
@@ -280,9 +277,6 @@ export class ReportsPage {
 
     // Wait for the dialog to close after successful upload processing
     await expect(dialog).not.toBeVisible({ timeout: 30_000 });
-
-    // Wait for location state to settle
-    await this.page.waitForTimeout(2_000);
   }
 
   // ---------------------------------------------------------------------------
