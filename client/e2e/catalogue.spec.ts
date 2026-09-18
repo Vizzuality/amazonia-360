@@ -1,6 +1,6 @@
-import INDICATORS from "../datum/indicators.json";
-import SUBTOPICS from "../datum/subtopics.json";
-import TOPICS from "../datum/topics.json";
+import INDICATORS from "../datum/indicators.json" with { type: "json" };
+import SUBTOPICS from "../datum/subtopics.json" with { type: "json" };
+import TOPICS from "../datum/topics.json" with { type: "json" };
 import { test, expect } from "./fixtures";
 
 /**
