@@ -70,14 +70,22 @@ export default defineConfig({
   ],
 
   projects: [
+    // Gates the run: an empty or half-migrated database fails every other project for a
+    // reason that has nothing to do with what it tests. Dependants are skipped, not failed.
+    {
+      name: "catalogue",
+      testMatch: /catalogue\.setup\.ts/,
+    },
     {
       name: "setup",
-      testMatch: /\.setup\.ts/,
+      testMatch: /auth\.setup\.ts/,
+      dependencies: ["catalogue"],
     },
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
       testIgnore: /\.(setup\.ts|auth\.spec\.ts)/,
+      dependencies: ["catalogue"],
     },
     {
       name: "chromium-authenticated",
