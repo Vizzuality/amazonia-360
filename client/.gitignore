@@ -48,6 +48,10 @@ next-env.d.ts
 /e2e/test-results/
 /e2e/playwright-report/
 
+# Vitest browser mode
+/.vitest-attachments/
+__screenshots__/
+
 # Payload import/export plugin upload dirs — generated CSVs contain user emails
 /exports/
 /imports/
