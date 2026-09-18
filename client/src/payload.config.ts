@@ -103,6 +103,9 @@ export default buildConfig({
             disableJobsQueue: true,
             disableSave: true,
             limit: IMPORT_EXPORT_DOCUMENT_LIMIT,
+            // Without a before hook the plugin keeps its schema-derived columns, which for a
+            // hasMany field is an always-empty `<name>_0` that re-imports as a junk first entry.
+            hooks: { before: ({ data }) => data },
           },
           import: { disableJobsQueue: true, limit: IMPORT_EXPORT_DOCUMENT_LIMIT },
         },

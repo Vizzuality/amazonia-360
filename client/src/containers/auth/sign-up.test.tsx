@@ -51,15 +51,10 @@ describe("SignupForm", () => {
     expect(screen.getByText("auth-community-optin-optional")).toBeInTheDocument();
   });
 
-  it("renders the account benefits list", () => {
+  it("renders the signup description", () => {
     render(<SignupForm />);
 
     expect(screen.getByText("auth-signup-description")).toBeInTheDocument();
-    expect(screen.getAllByRole("listitem").map((item) => item.textContent)).toEqual([
-      "auth-signup-benefit-reports",
-      "auth-signup-benefit-summaries",
-      "auth-signup-benefit-community",
-    ]);
   });
 
   it("renders the terms agreement as text rather than a checkbox", () => {
@@ -114,5 +109,37 @@ describe("SignupForm", () => {
       expect(screen.getByText("auth-validation-passwords-no-match")).toBeInTheDocument();
     });
     expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it("submits with countriesOfInterest empty when no chip is selected", async () => {
+    const user = userEvent.setup();
+    render(<SignupForm />);
+
+    await fillRequiredFields(user);
+    await submit(user);
+
+    await waitFor(() => {
+      expect(mockCreate).toHaveBeenCalledWith({
+        collection: "users",
+        data: expect.objectContaining({ countriesOfInterest: [] }),
+      });
+    });
+  });
+
+  it("submits with the selected countries' iso3 codes", async () => {
+    const user = userEvent.setup();
+    render(<SignupForm />);
+
+    await fillRequiredFields(user);
+    await user.click(screen.getByRole("button", { name: "country-module-BRA-name" }));
+    await user.click(screen.getByRole("button", { name: "country-module-PER-name" }));
+    await submit(user);
+
+    await waitFor(() => {
+      expect(mockCreate).toHaveBeenCalledWith({
+        collection: "users",
+        data: expect.objectContaining({ countriesOfInterest: ["BRA", "PER"] }),
+      });
+    });
   });
 });

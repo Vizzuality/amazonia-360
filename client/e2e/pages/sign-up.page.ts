@@ -10,6 +10,7 @@ const LABELS: Record<
     email: string;
     password: string;
     confirmPassword: string;
+    countriesLabel: string;
     signIn: string;
     accountCreated: RegExp;
     accountCreationFailed: RegExp;
@@ -17,30 +18,33 @@ const LABELS: Record<
 > = {
   en: {
     heading: "Create an account",
-    name: "Name",
+    name: "Full name",
     email: "Email",
     password: "Password",
-    confirmPassword: "Confirm Password",
+    confirmPassword: "Confirm password",
+    countriesLabel: "Countries of interest",
     signIn: "Sign in",
     accountCreated: /account created successfully/i,
     accountCreationFailed: /failed to create account/i,
   },
   es: {
     heading: "Crear una cuenta",
-    name: "Nombre",
+    name: "Nombre completo",
     email: "Correo electrónico",
     password: "Contraseña",
     confirmPassword: "Confirmar contraseña",
+    countriesLabel: "Países de interés",
     signIn: "Iniciar sesión",
     accountCreated: /cuenta creada correctamente/i,
     accountCreationFailed: /error al crear la cuenta/i,
   },
   pt: {
     heading: "Criar uma conta",
-    name: "Nome",
+    name: "Nome completo",
     email: "E-mail",
     password: "Senha",
     confirmPassword: "Confirmar senha",
+    countriesLabel: "Países de interesse",
     signIn: "Entrar",
     accountCreated: /conta criada com sucesso/i,
     accountCreationFailed: /falha ao criar conta/i,
@@ -57,6 +61,7 @@ export class SignUpPage {
   readonly passwordInput: Locator;
   readonly confirmPasswordInput: Locator;
   readonly communityOptInCheckbox: Locator;
+  readonly countriesGroup: Locator;
   readonly submitButton: Locator;
   readonly signInLink: Locator;
 
@@ -71,6 +76,7 @@ export class SignUpPage {
     this.passwordInput = page.getByLabel(l.password, { exact: true });
     this.confirmPasswordInput = page.getByLabel(l.confirmPassword);
     this.communityOptInCheckbox = page.locator("#communityOptIn");
+    this.countriesGroup = page.getByRole("group", { name: l.countriesLabel });
     this.submitButton = page.locator('button[type="submit"]');
     this.signInLink = page
       .locator('[data-slot="card-footer"]')
@@ -88,6 +94,7 @@ export class SignUpPage {
     await expect(this.passwordInput).toBeVisible();
     await expect(this.confirmPasswordInput).toBeVisible();
     await expect(this.communityOptInCheckbox).toBeVisible();
+    await expect(this.countriesGroup).toBeVisible();
     await expect(this.submitButton).toBeVisible();
   }
 
