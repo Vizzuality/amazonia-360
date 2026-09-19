@@ -32,14 +32,22 @@ import {
  *    it can report which row failed and why — in the ingest and in tests — not by a constraint
  *    that only bites the editor who opens the document next.
  *
- * 3. Multi-value fields are counted, not assumed. Postgres pays two tables and two enum types for
- *    every `hasMany` select, doubled again by the `_v` draft mirror this collection carries:
- *    `visualization_types` alone produced `indicators_visualization_types`,
- *    `_indicators_v_version_visualization_types` and their enums in migration 20260803_090559. A
- *    scalar field costs two columns and no table. So a list that a person curates gets the real
- *    field, and a list the sync job writes and nobody hand-edits gets `json` — the precedent is
- *    already here, in the `query_numeric` / `query_table` / `query_chart` fields of the resource
- *    block. Applied across these fields that is six new tables rather than eighteen.
+ * 3. Multi-value fields are counted, not assumed. Every `hasMany` select or array costs a table,
+ *    doubled by the `_v` draft mirror this collection carries, and a localized field inside an
+ *    array costs a `_locales` child on top: `visualization_types` alone produced
+ *    `indicators_visualization_types`, `_indicators_v_version_visualization_types` and their enums
+ *    in migration 20260803_090559. A scalar field costs a column and no table, and so does a
+ *    group, which flattens. So a list a person curates gets the real field, and a list the sync job
+ *    writes and nobody hand-edits gets `json` — the precedent is already here, in the
+ *    `query_numeric` / `query_table` / `query_chart` fields of the resource block.
+ *
+ * The cost of all ten fields, measured by generating the migration against a Postgres with the
+ * existing ones applied rather than reasoned about: 6 tables, 14 enum types, 40 columns (20 on
+ * `indicators`, 20 on `_indicators_v`). Eight of the ten fields create no table. The six are
+ * `spatial_coverage` (2) and `caveats` (4, because its text is localized). The same schema with
+ * every list as a real field instead — `queryable_fields` and `source_urls` as arrays,
+ * `admin_levels_supported` stored instead of derived — measures 12 tables. With no multi-value
+ * field at all it measures 0, which is what the trade-off below is weighed against.
  */
 
 /** What the number means, and what a tool is allowed to do with it. */
@@ -120,6 +128,24 @@ export const GovernanceFields: Field[] = [
         "Whether a generated answer may quote this indicator. Off until someone says otherwise.",
     },
   },
+  /**
+   * The most expensive field here — 4 of the 6 tables this module costs, because an array with a
+   * localized field inside pays a `_locales` child and the draft mirror doubles both. Worth it, and
+   * for a reason that is about content rather than editing comfort.
+   *
+   * Payload keeps the array rows OUT of the locales table: `indicators_caveats` holds `_order`,
+   * `_parent_id` and `id`, while `indicators_caveats_locales` holds the text keyed by `_locale`.
+   * The rows are therefore shared across the three locales and only the text varies, so an
+   * indicator cannot carry two caveats in Spanish and one in English — switching locale in the
+   * admin shows the same rows with that locale's text, and an untranslated caveat shows up as an
+   * empty row rather than as nothing at all.
+   *
+   * A single localized textarea would cost no table (it lands as a column on the existing
+   * `indicators_locales`) but loses exactly that: an empty English box means both "this indicator
+   * has no known defects" and "it has two and nobody translated them", and those two states have
+   * to stay distinguishable. A caveat is carried verbatim into the answer, so one that exists only
+   * in Spanish means an English answer ships without it and nothing reports the gap.
+   */
   {
     name: "caveats",
     type: "array",
@@ -137,10 +163,14 @@ export const GovernanceFields: Field[] = [
  *
  * A group rather than a `sources` collection, and that was a measurement rather than a preference:
  * across the 187 intake rows only 4 sources are shared by more than one indicator, and all 4 are
- * H3 CSVs. The 60 feature and 27 imagery services are one service per indicator. A relationship
- * that is 1:1 in 183 of 187 cases buys no deduplication and costs a whole collection — its own
- * table, locales table, draft mirror and rels table. A group flattens to `provenance_*` columns and
- * costs no table at all.
+ * H3 CSVs. The 60 feature and 27 imagery services are one service per indicator, so a relationship
+ * that is 1:1 in 183 of 187 cases deduplicates nothing.
+ *
+ * What it would cost, again measured rather than assumed: a `sources` collection with drafts adds
+ * `sources` and `_sources_v`, 2 tables. No `_locales` child, since nothing in provenance is
+ * localized, and no rels table either — a relationship with a single `relationTo` is stored as a
+ * `source_id` foreign key column on `indicators`. This group costs no table at all, flattening to
+ * `provenance_*` columns.
  */
 export const ProvenanceFields: GroupField = {
   name: "provenance",
