@@ -12,9 +12,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createStore, Provider as JotaiProvider, type WritableAtom } from "jotai";
 import { SessionProvider } from "next-auth/react";
 import { NextIntlClientProvider } from "next-intl";
-import { NavigationGuardProvider } from "next-navigation-guard";
 import { NuqsTestingAdapter } from "nuqs/adapters/testing";
-import { Toaster } from "sonner";
 import { vi } from "vitest";
 import { render } from "vitest-browser-react";
 
@@ -35,7 +33,6 @@ export type TestLocale = (typeof routing.locales)[number];
 
 export interface RenderWithProvidersOptions {
   locale?: TestLocale;
-  messages?: Record<string, unknown>;
   queryClient?: QueryClient;
   pathname?: string;
   searchParams?: URLSearchParams;
@@ -88,14 +85,13 @@ function getTestRouter(): AppRouterInstance {
  *
  * @param ui - The element under test.
  * @param options.locale - Active locale. Defaults to `en`.
- * @param options.messages - next-intl messages. Defaults to the real catalogue for `locale`.
  * @param options.queryClient - Query client to render with. Defaults to a retry-less one.
  * @param options.pathname - Browser pathname, locale prefix included. Defaults to `/{locale}`.
  * @param options.searchParams - Seeds `useSearchParams` and nuqs, which stay in sync.
  * @param options.initialAtoms - Jotai atom/value pairs written to this render's store.
  * @param options.session - NextAuth session. Defaults to `null` (signed out).
  * @param options.params - Route params seeded into `useParams()`, alongside `locale`.
- * @returns The rendered screen plus the query client, router stub and Jotai store it used.
+ * @returns The rendered screen and the router stub it used.
  */
 export async function renderWithProviders(
   ui: React.ReactNode,
@@ -103,7 +99,6 @@ export async function renderWithProviders(
 ) {
   const {
     locale = routing.defaultLocale,
-    messages = MESSAGES[locale],
     queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } }),
     pathname = `/${locale}`,
     searchParams = new URLSearchParams(),
@@ -112,6 +107,7 @@ export async function renderWithProviders(
     params = {},
   } = options;
 
+  const messages = MESSAGES[locale];
   const router = getTestRouter();
   const store = createStore();
 
@@ -131,18 +127,13 @@ export async function renderWithProviders(
                 <MediaContextProvider>
                   <QueryClientProvider client={queryClient}>
                     <ArcGISProvider locale={locale}>
-                      <NavigationGuardProvider>
-                        <TooltipProvider>
-                          <JotaiProvider store={store}>
-                            <NextIntlClientProvider locale={locale} messages={messages}>
-                              <SidebarProvider>
-                                <Toaster position="top-center" richColors />
-                                {children}
-                              </SidebarProvider>
-                            </NextIntlClientProvider>
-                          </JotaiProvider>
-                        </TooltipProvider>
-                      </NavigationGuardProvider>
+                      <TooltipProvider>
+                        <JotaiProvider store={store}>
+                          <NextIntlClientProvider locale={locale} messages={messages}>
+                            <SidebarProvider>{children}</SidebarProvider>
+                          </NextIntlClientProvider>
+                        </JotaiProvider>
+                      </TooltipProvider>
                     </ArcGISProvider>
                   </QueryClientProvider>
                 </MediaContextProvider>
@@ -156,5 +147,5 @@ export async function renderWithProviders(
 
   const screen = await render(ui, { wrapper: Providers });
 
-  return { screen, queryClient, router, store };
+  return { screen, router };
 }

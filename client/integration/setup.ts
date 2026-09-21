@@ -6,10 +6,6 @@ vi.mock("@/app/(frontend)/[locale]/(app)/auth/sign-in/actions", () => ({
   signInAction: vi.fn(),
 }));
 
-vi.mock("@/app/(frontend)/[locale]/(app)/auth/verify-email/actions", () => ({
-  verifyEmailAction: vi.fn(),
-}));
-
 globalThis.process ??= { env: {} } as typeof globalThis.process;
 Object.assign(process.env, import.meta.env);
 

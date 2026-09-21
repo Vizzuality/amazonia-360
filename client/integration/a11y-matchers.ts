@@ -1,14 +1,9 @@
 import axe from "axe-core";
 import { expect } from "vitest";
 
-export type A11yTarget = HTMLElement | { baseElement: HTMLElement };
-
 declare module "vitest" {
   interface Assertion<T> {
     toHaveNoA11yViolations(): Promise<T>;
-  }
-  interface AsymmetricMatchersContaining {
-    toHaveNoA11yViolations(): Promise<void>;
   }
 }
 
@@ -29,17 +24,9 @@ function getViolationReport(violations: axe.Result[]): string {
     .join("\n\n");
 }
 
-function getA11yRoot(target: A11yTarget): HTMLElement {
-  if (target instanceof HTMLElement) {
-    return target;
-  }
-
-  return target.baseElement;
-}
-
 expect.extend({
-  async toHaveNoA11yViolations(target: A11yTarget) {
-    const { violations } = await axe.run(getA11yRoot(target), {
+  async toHaveNoA11yViolations(target: { baseElement: HTMLElement }) {
+    const { violations } = await axe.run(target.baseElement, {
       runOnly: { type: "tag", values: WCAG_TAGS },
     });
 
