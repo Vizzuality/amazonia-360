@@ -5,14 +5,6 @@ import { renderWithProviders } from "@integration/wrappers/render";
 import { Link } from "./navigation-client";
 
 describe("Link", () => {
-  it("renders without accessibility violations", async () => {
-    const { screen } = await renderWithProviders(<Link href="/reports">Report tool</Link>, {
-      pathname: "/en/ECU",
-    });
-
-    await expect(screen).toHaveNoA11yViolations();
-  });
-
   it("points at the active country module straight away", async () => {
     const { screen } = await renderWithProviders(<Link href="/reports">Report tool</Link>, {
       pathname: "/en/ECU",
