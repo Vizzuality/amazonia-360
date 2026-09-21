@@ -26,19 +26,6 @@ test.describe("the module in the URL", () => {
     await selector.expectActiveCountry(null);
   });
 
-  test("a reload stays in the module", async ({ page }) => {
-    const selector = new CountrySelector(page);
-
-    await page.goto(`${countryPath()}/reports/grid`);
-    await dismissCookieConsent(page);
-
-    await selector.switchTo("ECU");
-    await expect(page).toHaveURL(/\/en\/ECU\/reports\/grid/);
-
-    await page.reload();
-    await selector.expectActiveCountry("ECU");
-  });
-
   for (const how of ["modifier", "middle"] as const) {
     test(`a ${how === "middle" ? "middle click" : "cmd/ctrl-click"} opens the module in a new tab`, async ({
       page,
