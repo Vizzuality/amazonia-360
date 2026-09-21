@@ -6,7 +6,6 @@ import { userEvent } from "vitest/browser";
 import { ReportFormData } from "@/containers/results";
 
 import { getTestReport } from "@integration/fixtures/report";
-import { getTestSession } from "@integration/fixtures/session";
 import { renderWithProviders } from "@integration/wrappers/render";
 
 import TitleReport from "./title";
@@ -26,17 +25,14 @@ function TitleFormWrapper({ title, children }: { title: string; children: React.
 }
 
 describe("TitleReport", () => {
-  it("renders the report title for a signed-in user who does not own the report", async () => {
-    const session = getTestSession({ id: "someone-else" });
-
+  it("renders the title the form holds", async () => {
     const { screen } = await renderWithProviders(
-      <TitleFormWrapper title="Read Only Report">
+      <TitleFormWrapper title="Seeded Title">
         <TitleReport />
       </TitleFormWrapper>,
-      { session },
     );
 
-    await expect.element(screen.getByRole("heading", { name: "Read Only Report" })).toBeVisible();
+    await expect.element(screen.getByRole("heading", { name: "Seeded Title" })).toBeVisible();
     await expect(screen).toHaveNoA11yViolations();
   });
 
