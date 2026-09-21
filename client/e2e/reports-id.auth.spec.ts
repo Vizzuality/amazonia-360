@@ -67,7 +67,7 @@ async function seedReport(
 test.describe("report view (authenticated owner)", () => {
   test.skip(skipWithoutSeedSecret, "E2E_SEED_SECRET not set");
 
-  test("owner can edit title and confirm", async ({ page, request }) => {
+  test("an owner's title edit survives a reload", async ({ page, request }) => {
     const reportId = await seedReport(request, {
       title: "Original Title",
       userEmail: process.env.E2E_TEST_USER_EMAIL,
@@ -82,7 +82,11 @@ test.describe("report view (authenticated owner)", () => {
     await reportsIdPage.startTitleEdit();
     await reportsIdPage.typeTitleValue("Updated Title");
     await reportsIdPage.confirmTitleEdit();
+    await reportsIdPage.expectTitle("Updated Title");
 
+    await reportsIdPage.saveReport();
+    await page.reload();
+    await reportsIdPage.expectLoaded();
     await reportsIdPage.expectTitle("Updated Title");
   });
 

@@ -130,6 +130,18 @@ export class ReportsIdPage {
   // Save / Make a copy buttons
   // ---------------------------------------------------------------------------
 
+  /** Save the report and wait for the update to land, so a reload can prove it persisted. */
+  async saveReport() {
+    const saved = this.page.waitForResponse(
+      (response) =>
+        response.request().method() === "PATCH" &&
+        response.url().includes("/reports") &&
+        response.ok(),
+    );
+    await this.saveButton.click();
+    await saved;
+  }
+
   async expectSaveButtonVisible() {
     await expect(this.saveButton).toBeVisible({ timeout: 10_000 });
   }
