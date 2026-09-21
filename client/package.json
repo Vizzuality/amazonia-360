@@ -169,7 +169,6 @@
     "@types/react-scroll": "1.8.10",
     "@types/terraformer__arcgis": "^2.0.5",
     "@vitejs/plugin-react": "^5.1.4",
-    "@vitest/browser": "4.1.10",
     "@vitest/browser-playwright": "4.1.10",
     "@vitest/coverage-v8": "4.1.10",
     "axe-core": "4.11.2",
@@ -193,8 +192,7 @@
     "vite": "7.3.6",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "4.1.10",
-    "vitest-browser-react": "2.2.0",
-    "vitest-dom": "0.1.1"
+    "vitest-browser-react": "2.2.0"
   },
   "packageManager": "pnpm@10.29.2",
   "pnpm": {

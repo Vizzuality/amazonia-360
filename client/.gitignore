@@ -50,7 +50,6 @@ next-env.d.ts
 
 # Vitest browser mode
 /.vitest-attachments/
-__screenshots__/
 
 # Payload import/export plugin upload dirs — generated CSVs contain user emails
 /exports/
