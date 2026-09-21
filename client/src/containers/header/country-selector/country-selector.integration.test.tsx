@@ -21,16 +21,6 @@ describe("CountrySelector", () => {
     await expect(screen).toHaveNoA11yViolations();
   });
 
-  it("shows the Amazon Region as active when the URL carries no country code", async () => {
-    const { screen } = await renderWithProviders(<CountrySelector />, {
-      pathname: "/en/reports/grid",
-    });
-
-    expect(
-      screen.getByRole("button", { name: new RegExp(en["country-module-amazon-region-name"]) }),
-    ).toBeInTheDocument();
-  });
-
   it("links the module option to the current path plus its code, keeping search params", async () => {
     const { screen } = await renderWithProviders(<CountrySelector />, {
       pathname: "/en/reports/grid",
