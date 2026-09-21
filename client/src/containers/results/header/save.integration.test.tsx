@@ -1,25 +1,14 @@
 import { FormProvider, useForm } from "react-hook-form";
 
-import { QueryClient } from "@tanstack/react-query";
 import { describe, expect, it } from "vitest";
-
-import { reportQueryOptions } from "@/lib/report";
 
 import { ReportFormData } from "@/containers/results";
 
-import { getTestReport } from "@integration/fixtures/report";
+import { getTestQueryClientWithReport, getTestReport } from "@integration/fixtures/report";
 import { getTestSession } from "@integration/fixtures/session";
 import { renderWithProviders } from "@integration/wrappers/render";
 
 import SaveReport from "./save";
-
-function getQueryClientWithReport(report: ReturnType<typeof getTestReport>) {
-  const queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: false, staleTime: Infinity } },
-  });
-  queryClient.setQueryData(reportQueryOptions({ id: report.id, locale: "en" }).queryKey, report);
-  return queryClient;
-}
 
 function ReportFormWrapper({ children }: { children: React.ReactNode }) {
   const report = getTestReport();
@@ -45,7 +34,7 @@ describe("SaveReport", () => {
         <SaveReport />
       </ReportFormWrapper>,
       {
-        queryClient: getQueryClientWithReport(report),
+        queryClient: getTestQueryClientWithReport(report),
         session,
         params: { id: report.id },
       },
@@ -67,7 +56,7 @@ describe("SaveReport", () => {
         <SaveReport />
       </ReportFormWrapper>,
       {
-        queryClient: getQueryClientWithReport(report),
+        queryClient: getTestQueryClientWithReport(report),
         session,
         params: { id: report.id },
       },

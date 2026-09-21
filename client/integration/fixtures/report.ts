@@ -1,3 +1,7 @@
+import { QueryClient } from "@tanstack/react-query";
+
+import { reportQueryOptions } from "@/lib/report";
+
 import type { Report } from "@/payload-types";
 
 const DEFAULT_LOCATION: Report["location"] = {
@@ -28,4 +32,12 @@ export function getTestReport(overrides: Partial<Report> = {}): Report {
     _status: "published",
     ...overrides,
   };
+}
+
+export function getTestQueryClientWithReport(report: Report): QueryClient {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, staleTime: Infinity } },
+  });
+  queryClient.setQueryData(reportQueryOptions({ id: report.id, locale: "en" }).queryKey, report);
+  return queryClient;
 }

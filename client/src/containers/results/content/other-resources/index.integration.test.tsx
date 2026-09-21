@@ -1,9 +1,6 @@
-import { QueryClient } from "@tanstack/react-query";
 import { describe, expect, it, vi } from "vitest";
 
-import { reportQueryOptions } from "@/lib/report";
-
-import { getTestReport } from "@integration/fixtures/report";
+import { getTestQueryClientWithReport, getTestReport } from "@integration/fixtures/report";
 import { renderWithProviders } from "@integration/wrappers/render";
 
 import OtherResources from "./index";
@@ -47,20 +44,12 @@ vi.mock("@/lib/query", async (importOriginal) => {
   };
 });
 
-function getQueryClientWithReport(report: ReturnType<typeof getTestReport>) {
-  const queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: false, staleTime: Infinity } },
-  });
-  queryClient.setQueryData(reportQueryOptions({ id: report.id, locale: "en" }).queryKey, report);
-  return queryClient;
-}
-
 describe("OtherResources", () => {
   it("renders the knowledge resources heading once features are loaded", async () => {
     const report = getTestReport();
 
     const { screen } = await renderWithProviders(<OtherResources />, {
-      queryClient: getQueryClientWithReport(report),
+      queryClient: getTestQueryClientWithReport(report),
       params: { id: report.id },
     });
 
