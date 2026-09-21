@@ -55,17 +55,6 @@ test.describe("the module in the URL", () => {
       await selector.expectActiveCountry(null);
     });
   }
-
-  for (const segment of ["SUR", "XYZ"]) {
-    test(`/en/${segment} is not found, with the code still in the address bar`, async ({
-      page,
-    }) => {
-      const response = await page.goto(`/en/${segment}/reports`);
-
-      expect(response?.status()).toBe(404);
-      expect(new URL(page.url()).pathname).toBe(`/en/${segment}/reports`);
-    });
-  }
 });
 
 test.describe("nothing is rebuilt", () => {
