@@ -130,7 +130,8 @@ test.describe("sign-in from a gated link", () => {
     await expect(page).toHaveURL(/\/reports/);
 
     // And the header has to agree: the session the gate accepted is the one the client
-    // is holding, without a reload.
-    await expect(page.getByRole("banner").getByRole("button", { name: /sign in/i })).toHaveCount(0);
+    // is holding, without a reload. Keyed on the href, because a negative assertion on
+    // translated copy passes under es/pt whether or not the button is there.
+    await expect(page.getByRole("banner").locator('a[href*="/auth/sign-in"]')).toHaveCount(0);
   });
 });
