@@ -167,17 +167,6 @@ export class ReportsPage {
     );
   }
 
-  /** Inject a polygon geometry via the bridge. */
-  async drawPolygon() {
-    await this.waitForBridge();
-    await this.page.evaluate(
-      ({ geometry, buffer }) => {
-        window.__E2E_SET_LOCATION__!({ type: "polygon", geometry, buffer });
-      },
-      { geometry: GEOMETRIES.polygon, buffer: DEFAULT_BUFFERS.polygon },
-    );
-  }
-
   /** Inject a polyline geometry via the bridge. */
   async drawPolyline() {
     await this.waitForBridge();
@@ -197,11 +186,6 @@ export class ReportsPage {
     const l = LABELS[this.locale];
     await expect(this.page.getByText(l.bufferSize)).toBeVisible({ timeout: 5_000 });
     await expect(this.bufferSlider).toBeVisible();
-  }
-
-  async expectBufferNotVisible() {
-    const l = LABELS[this.locale];
-    await expect(this.page.getByText(l.bufferSize)).not.toBeVisible();
   }
 
   /** Drag the slider thumb to approximately the target km value (range 1-100). */

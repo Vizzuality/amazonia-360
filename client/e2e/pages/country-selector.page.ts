@@ -70,15 +70,4 @@ export class CountrySelector {
   async expectActiveCountry(country: string | null) {
     await expect(this.trigger).toContainText(this.name(country));
   }
-
-  async openMobileMenu() {
-    await this.page.getByRole("button", { name: MENU_LABEL[this.locale] }).first().click();
-    await expect(this.page.getByRole("dialog")).toBeVisible({ timeout: 10_000 });
-  }
-
-  mobileLink(country: string | null) {
-    return this.page
-      .getByRole("dialog")
-      .getByRole("link", { name: new RegExp(this.name(country)) });
-  }
 }

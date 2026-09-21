@@ -11,9 +11,6 @@ const LABELS: Record<
     password: string;
     confirmPassword: string;
     countriesLabel: string;
-    signIn: string;
-    accountCreated: RegExp;
-    accountCreationFailed: RegExp;
   }
 > = {
   en: {
@@ -23,9 +20,6 @@ const LABELS: Record<
     password: "Password",
     confirmPassword: "Confirm password",
     countriesLabel: "Countries of interest",
-    signIn: "Sign in",
-    accountCreated: /account created successfully/i,
-    accountCreationFailed: /failed to create account/i,
   },
   es: {
     heading: "Crear una cuenta",
@@ -34,9 +28,6 @@ const LABELS: Record<
     password: "Contraseña",
     confirmPassword: "Confirmar contraseña",
     countriesLabel: "Países de interés",
-    signIn: "Iniciar sesión",
-    accountCreated: /cuenta creada correctamente/i,
-    accountCreationFailed: /error al crear la cuenta/i,
   },
   pt: {
     heading: "Criar uma conta",
@@ -45,9 +36,6 @@ const LABELS: Record<
     password: "Senha",
     confirmPassword: "Confirmar senha",
     countriesLabel: "Países de interesse",
-    signIn: "Entrar",
-    accountCreated: /conta criada com sucesso/i,
-    accountCreationFailed: /falha ao criar conta/i,
   },
 };
 
@@ -63,8 +51,6 @@ export class SignUpPage {
   readonly communityOptInCheckbox: Locator;
   readonly countriesGroup: Locator;
   readonly submitButton: Locator;
-  readonly signInLink: Locator;
-
   constructor(page: Page, locale: Locale = "en") {
     this.page = page;
     this.locale = locale;
@@ -78,9 +64,6 @@ export class SignUpPage {
     this.communityOptInCheckbox = page.locator("#communityOptIn");
     this.countriesGroup = page.getByRole("group", { name: l.countriesLabel });
     this.submitButton = page.locator('button[type="submit"]');
-    this.signInLink = page
-      .locator('[data-slot="card-footer"]')
-      .getByRole("link", { name: l.signIn });
   }
 
   async goto() {
@@ -96,65 +79,6 @@ export class SignUpPage {
     await expect(this.communityOptInCheckbox).toBeVisible();
     await expect(this.countriesGroup).toBeVisible();
     await expect(this.submitButton).toBeVisible();
-  }
-
-  async fillName(name: string) {
-    await this.nameInput.fill(name);
-  }
-
-  async fillEmail(email: string) {
-    await this.emailInput.fill(email);
-  }
-
-  async fillPassword(password: string) {
-    await this.passwordInput.fill(password);
-  }
-
-  async fillConfirmPassword(password: string) {
-    await this.confirmPasswordInput.fill(password);
-  }
-
-  async checkCommunityOptIn() {
-    await this.communityOptInCheckbox.check();
-  }
-
-  async submit() {
-    await this.submitButton.click();
-  }
-
-  async fillAndSubmit(data: {
-    name: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-    communityOptIn?: boolean;
-  }) {
-    await this.fillName(data.name);
-    await this.fillEmail(data.email);
-    await this.fillPassword(data.password);
-    await this.fillConfirmPassword(data.confirmPassword);
-    if (data.communityOptIn) {
-      await this.checkCommunityOptIn();
-    }
-    await this.submit();
-  }
-
-  async expectValidationError(message: string | RegExp) {
-    await expect(this.page.getByText(message)).toBeVisible({ timeout: 5_000 });
-  }
-
-  async expectAccountCreatedToast() {
-    const l = LABELS[this.locale];
-    await expect(this.page.getByText(l.accountCreated)).toBeVisible({ timeout: 30_000 });
-  }
-
-  async expectAccountCreationFailedToast() {
-    const l = LABELS[this.locale];
-    await expect(this.page.getByText(l.accountCreationFailed)).toBeVisible({ timeout: 30_000 });
-  }
-
-  async expectRedirectedToCheckEmail() {
-    await expect(this.page).toHaveURL(/\/auth\/check-your-email/, { timeout: 15_000 });
   }
 
   async expectRedirectedTo(urlPattern: RegExp) {

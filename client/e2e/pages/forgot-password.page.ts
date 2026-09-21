@@ -7,31 +7,23 @@ const LABELS: Record<
   {
     heading: string;
     email: string;
-    backToSignIn: string;
     resetEmailSent: RegExp;
-    resetEmailFailed: RegExp;
   }
 > = {
   en: {
     heading: "Forgot password",
     email: "Email",
-    backToSignIn: "Back to sign in",
     resetEmailSent: /password reset email sent successfully/i,
-    resetEmailFailed: /failed to send password reset email/i,
   },
   es: {
     heading: "Olvidé la contraseña",
     email: "Correo electrónico",
-    backToSignIn: "Volver a iniciar sesión",
     resetEmailSent: /correo de restablecimiento de contraseña enviado correctamente/i,
-    resetEmailFailed: /error al enviar el correo de restablecimiento/i,
   },
   pt: {
     heading: "Esqueci a senha",
     email: "E-mail",
-    backToSignIn: "Voltar para entrar",
     resetEmailSent: /e-mail de redefinição de senha enviado com sucesso/i,
-    resetEmailFailed: /falha ao enviar e-mail de redefinição/i,
   },
 };
 
@@ -42,8 +34,6 @@ export class ForgotPasswordPage {
   readonly heading: Locator;
   readonly emailInput: Locator;
   readonly submitButton: Locator;
-  readonly backToSignInLink: Locator;
-
   constructor(page: Page, locale: Locale = "en") {
     this.page = page;
     this.locale = locale;
@@ -52,7 +42,6 @@ export class ForgotPasswordPage {
     this.heading = page.locator('[data-slot="card-title"]', { hasText: l.heading });
     this.emailInput = page.getByLabel(l.email);
     this.submitButton = page.locator('button[type="submit"]');
-    this.backToSignInLink = page.getByRole("link", { name: l.backToSignIn });
   }
 
   async goto() {
@@ -78,17 +67,8 @@ export class ForgotPasswordPage {
     await this.submit();
   }
 
-  async expectValidationError(message: string | RegExp) {
-    await expect(this.page.getByText(message)).toBeVisible({ timeout: 5_000 });
-  }
-
   async expectResetEmailSentToast() {
     const l = LABELS[this.locale];
     await expect(this.page.getByText(l.resetEmailSent)).toBeVisible({ timeout: 30_000 });
-  }
-
-  async expectResetEmailFailedToast() {
-    const l = LABELS[this.locale];
-    await expect(this.page.getByText(l.resetEmailFailed)).toBeVisible({ timeout: 30_000 });
   }
 }

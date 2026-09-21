@@ -2,36 +2,31 @@ import { type Locator, type Page, expect } from "@playwright/test";
 
 import { type Locale } from "../helpers/locale";
 
-const LABELS: Record<Locale, {
-  heading: string;
-  email: string;
-  password: string;
-  forgotPassword: string;
-  signUp: string;
-  loginFailed: RegExp;
-}> = {
+const LABELS: Record<
+  Locale,
+  {
+    heading: string;
+    email: string;
+    password: string;
+    loginFailed: RegExp;
+  }
+> = {
   en: {
     heading: "Welcome",
     email: "Email",
     password: "Password",
-    forgotPassword: "Forgot your password?",
-    signUp: "Sign up",
     loginFailed: /failed to log in/i,
   },
   es: {
     heading: "Bienvenido",
     email: "Correo electrónico",
     password: "Contraseña",
-    forgotPassword: "¿Olvidaste tu contraseña?",
-    signUp: "Registrarse",
     loginFailed: /error al iniciar sesión/i,
   },
   pt: {
     heading: "Bem-vindo",
     email: "E-mail",
     password: "Senha",
-    forgotPassword: "Esqueceu sua senha?",
-    signUp: "Cadastrar-se",
     loginFailed: /falha no login/i,
   },
 };
@@ -44,9 +39,6 @@ export class SignInPage {
   readonly emailInput: Locator;
   readonly passwordInput: Locator;
   readonly submitButton: Locator;
-  readonly forgotPasswordLink: Locator;
-  readonly signUpLink: Locator;
-
   constructor(page: Page, locale: Locale = "en") {
     this.page = page;
     this.locale = locale;
@@ -56,8 +48,6 @@ export class SignInPage {
     this.emailInput = page.getByLabel(l.email);
     this.passwordInput = page.getByLabel(l.password);
     this.submitButton = page.locator('button[type="submit"]');
-    this.forgotPasswordLink = page.getByRole("link", { name: l.forgotPassword });
-    this.signUpLink = page.getByRole("link", { name: l.signUp });
   }
 
   async goto(redirectUrl?: string) {
@@ -88,10 +78,6 @@ export class SignInPage {
     await this.fillEmail(email);
     await this.fillPassword(password);
     await this.submit();
-  }
-
-  async expectValidationError(message: string | RegExp) {
-    await expect(this.page.getByText(message)).toBeVisible({ timeout: 5_000 });
   }
 
   async expectLoginFailedToast() {
