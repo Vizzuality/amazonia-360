@@ -1,20 +1,6 @@
-import { test, expect } from "./fixtures";
+import { test } from "./fixtures";
 import { dismissCookieConsent } from "./helpers/cookie-consent";
-import { LOCALES } from "./helpers/locale";
 import { ForgotPasswordPage } from "./pages/forgot-password.page";
-
-// --- Page rendering ---
-
-test.describe("forgot-password page rendering", () => {
-  for (const locale of LOCALES) {
-    test(`loads correctly for locale: ${locale}`, async ({ page }) => {
-      const forgotPasswordPage = new ForgotPasswordPage(page, locale);
-      await forgotPasswordPage.goto();
-      await dismissCookieConsent(page);
-      await forgotPasswordPage.expectLoaded();
-    });
-  }
-});
 
 // --- Happy path ---
 

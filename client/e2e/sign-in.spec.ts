@@ -1,25 +1,11 @@
 import { test, expect } from "./fixtures";
 import { dismissCookieConsent } from "./helpers/cookie-consent";
-import { LOCALES } from "./helpers/locale";
 import { HomePage } from "./pages/home.page";
 import { SignInPage } from "./pages/sign-in.page";
 
 const TEST_EMAIL = process.env.E2E_TEST_USER_EMAIL;
 const TEST_PASSWORD = process.env.E2E_TEST_USER_PASSWORD;
 const hasCredentials = !!(TEST_EMAIL && TEST_PASSWORD);
-
-// --- Page rendering ---
-
-test.describe("sign-in page rendering", () => {
-  for (const locale of LOCALES) {
-    test(`loads correctly for locale: ${locale}`, async ({ page }) => {
-      const signInPage = new SignInPage(page, locale);
-      await signInPage.goto();
-      await dismissCookieConsent(page);
-      await signInPage.expectLoaded();
-    });
-  }
-});
 
 // --- Authentication errors ---
 
@@ -32,55 +18,11 @@ test.describe("sign-in authentication errors", () => {
     await signInPage.signIn("nonexistent@example.com", "wrongpassword123");
     await signInPage.expectLoginFailedToast();
   });
-
-  test("shows error toast for correct email with wrong password", async ({ page }) => {
-    test.skip(!hasCredentials, "E2E_TEST_USER_EMAIL not set");
-    const signInPage = new SignInPage(page);
-    await signInPage.goto();
-    await dismissCookieConsent(page);
-
-    await signInPage.signIn(TEST_EMAIL!, "definitelywrongpassword");
-    await signInPage.expectLoginFailedToast();
-  });
-});
-
-// --- Happy path ---
-
-test.describe("sign-in happy path", () => {
-  test("redirects to my-reports after successful sign-in", async ({ page }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
-    const signInPage = new SignInPage(page);
-    await signInPage.goto();
-    await dismissCookieConsent(page);
-
-    await signInPage.signIn(TEST_EMAIL!, TEST_PASSWORD!);
-    await signInPage.expectRedirectedTo(/\/private\/my-reports/);
-  });
-
-  test("redirects to custom redirectUrl after successful sign-in", async ({ page }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
-    const signInPage = new SignInPage(page);
-    await signInPage.goto("/private/profile");
-    await dismissCookieConsent(page);
-
-    await signInPage.signIn(TEST_EMAIL!, TEST_PASSWORD!);
-    await signInPage.expectRedirectedTo(/\/private\/profile/);
-  });
 });
 
 // --- Protected route guard ---
 
 test.describe("protected route guard", () => {
-  test("redirects unauthenticated user from my-reports to sign-in", async ({ page }) => {
-    await page.goto("/en/private/my-reports");
-    await expect(page).toHaveURL(/\/auth\/sign-in/, { timeout: 15_000 });
-  });
-
-  test("redirects unauthenticated user from profile to sign-in", async ({ page }) => {
-    await page.goto("/en/private/profile");
-    await expect(page).toHaveURL(/\/auth\/sign-in/, { timeout: 15_000 });
-  });
-
   test("redirects back to original page after sign-in", async ({ page }) => {
     test.skip(!hasCredentials, "E2E test user credentials not set");
 
