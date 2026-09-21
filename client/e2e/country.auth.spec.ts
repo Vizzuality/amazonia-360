@@ -109,10 +109,10 @@ test.describe("nothing is rebuilt", () => {
       switchFirst: false,
     },
     {
-      name: "from the report tool to the grid",
+      name: "from the report tool to the indicators hub",
       from: "/reports",
-      click: (reports: ReportsPage) => reports.gridCard.click(),
-      to: /\/reports\/grid/,
+      click: (reports: ReportsPage) => reports.indicatorsCard.click(),
+      to: /\/reports\/indicators/,
       switchFirst: true,
     },
     {
