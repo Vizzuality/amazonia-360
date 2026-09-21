@@ -8,9 +8,9 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   root: path.resolve(import.meta.dirname, ".."),
   plugins: [tsconfigPaths(), react()],
+  // payload's upload helpers import node builtins, which the browser optimizer cannot bundle.
   optimizeDeps: {
     exclude: ["payload"],
-    include: ["nuqs", "@radix-ui/react-dialog", "react-icons/lu"],
   },
   server: {
     preTransformRequests: false,
