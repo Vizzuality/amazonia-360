@@ -82,16 +82,6 @@ function getTestRouter(): AppRouterInstance {
  * stubs for the App Router contexts Next would otherwise supply.
  *
  * The providers are passed as `render`'s `wrapper`, so `screen.rerender(ui)` keeps them.
- *
- * @param ui - The element under test.
- * @param options.locale - Active locale. Defaults to `en`.
- * @param options.queryClient - Query client to render with. Defaults to a retry-less one.
- * @param options.pathname - Browser pathname, locale prefix included. Defaults to `/{locale}`.
- * @param options.searchParams - Seeds `useSearchParams` and nuqs, which stay in sync.
- * @param options.initialAtoms - Jotai atom/value pairs written to this render's store.
- * @param options.session - NextAuth session. Defaults to `null` (signed out).
- * @param options.params - Route params seeded into `useParams()`, alongside `locale`.
- * @returns The rendered screen and the router stub it used.
  */
 export async function renderWithProviders(
   ui: React.ReactNode,

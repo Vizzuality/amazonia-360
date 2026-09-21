@@ -10,13 +10,6 @@ const DEFAULT_LOCATION: Report["location"] = {
   buffer: 60,
 };
 
-/**
- * Builds a `reports` collection document for seeding a query client, mirroring the
- * shape `queryClient.setQueryData` receives from the real `/reports/[id]` route loader.
- *
- * @param overrides - Report fields to replace on the default fixture.
- * @returns A complete `Report` document.
- */
 export function getTestReport(overrides: Partial<Report> = {}): Report {
   const now = new Date().toISOString();
 

@@ -20,12 +20,6 @@ const DEFAULT_TEST_USER: TestUser = {
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
-/**
- * Builds a NextAuth session for a signed-in test user.
- *
- * @param overrides - User fields to replace on the default test user.
- * @returns A session that expires a day from now, shaped as `SessionProvider` expects.
- */
 export function getTestSession(overrides: Partial<TestUser> = {}): TestSession {
   return {
     user: { ...DEFAULT_TEST_USER, ...overrides },
