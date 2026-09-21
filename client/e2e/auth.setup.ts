@@ -16,25 +16,19 @@ setup("authenticate as test user", async ({ page, request }) => {
 
   // Seed the test user via the server endpoint when E2E_SEED_SECRET is set.
   // The endpoint must also have E2E_SEED_SECRET in its server environment.
-  // If seeding fails (e.g. endpoint not available), continue and try to sign in.
   const seedSecret = process.env.E2E_SEED_SECRET;
   if (seedSecret) {
-    try {
-      const response = await request.post("/local-api/e2e/seed-user", {
-        data: { email, password, secret: seedSecret },
-      });
+    const response = await request.post("/local-api/e2e/seed-user", {
+      data: { email, password, secret: seedSecret },
+    });
 
-      if (response.ok()) {
-        const result = await response.json();
-        console.log(`Seed user result: ${result.status}`);
-      } else {
-        console.warn(
-          `Seed endpoint returned ${response.status()} — user may need to exist already`,
-        );
-      }
-    } catch {
-      console.warn("Seed endpoint unreachable — user must already exist");
+    if (!response.ok()) {
+      const body = await response.text();
+      throw new Error(`Seed endpoint returned ${response.status()}: ${body}`);
     }
+
+    const result = await response.json();
+    console.log(`Seed user result: ${result.status}`);
   }
 
   await page.goto("/en/auth/sign-in");
