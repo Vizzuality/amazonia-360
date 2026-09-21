@@ -5,10 +5,10 @@ import { test, expect } from "./fixtures";
 
 const SOME_REPORT_ID = "00000000-0000-0000-0000-000000000000";
 
+// One path per guarded layout: /reports/grid and /reports/indicators share the layout
+// that /reports already covers.
 const GATED_PATHS = [
   { path: "/en/reports", redirectUrl: "/reports" },
-  { path: "/en/reports/grid", redirectUrl: "/reports/grid" },
-  { path: "/en/reports/indicators", redirectUrl: "/reports/indicators" },
   { path: `/en/reports/${SOME_REPORT_ID}`, redirectUrl: `/reports/${SOME_REPORT_ID}` },
   {
     path: `/en/webshot/reports/${SOME_REPORT_ID}`,
