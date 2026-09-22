@@ -18,19 +18,9 @@ type SourceIndicator = { id: number; resource: SourceResource };
 const indicators = INDICATORS as unknown as SourceIndicator[];
 
 /**
- * Documented exceptions from the spec (§9). Any violation NOT listed here is a
- * genuine schema bug. Remove an entry once phase 2 resolves the underlying defect.
- */
-const KEYS_WITH_NO_HOME: Record<number, string[]> = {
-  // Indicator 12 is a `feature` but carries `rasterFunction: "Forest_Cover_Change"`,
-  // a bare string on a layer type that cannot use raster functions. Dropped on purpose.
-  12: ["rasterFunction"],
-};
-
-/**
  * Keys present in the source JSON that deliberately have no field on the block: the value is
- * constant across every row of that type and no code reads it. Unlike KEYS_WITH_NO_HOME these
- * are not defects — they are fields that belong to one resource type only.
+ * constant across every row of that type and no code reads it. These are not defects — they
+ * are fields that belong to one resource type only.
  */
 const KEYS_DROPPED_BY_TYPE: Record<string, string[]> = {
   // `layer_id` is the constant "0" on every imagery/h3/component row. types/indicator.ts
@@ -125,7 +115,6 @@ describe("RESOURCE_BLOCKS", () => {
       for (const [key, value] of Object.entries(rest)) {
         if (isEmptyValue(value)) continue;
         if (names.includes(key)) continue;
-        if (KEYS_WITH_NO_HOME[indicator.id]?.includes(key)) continue;
         if (KEYS_DROPPED_BY_TYPE[type]?.includes(key)) continue;
 
         violations.push(`indicator ${indicator.id} (${type}): "${key}" has no field`);
