@@ -78,4 +78,66 @@ describe("SignInForm", () => {
     expect(mockUpdateSession).not.toHaveBeenCalled();
     expect(mockPush).not.toHaveBeenCalled();
   });
+
+  it("shows an error for an invalid email once the field is touched", async () => {
+    const user = userEvent.setup();
+    render(<SignInForm />);
+
+    await user.type(screen.getByLabelText("auth-field-email"), "not-an-email");
+    await user.click(screen.getByLabelText("auth-field-password"));
+
+    await waitFor(() => {
+      expect(screen.getByText("auth-validation-email-invalid")).toBeInTheDocument();
+    });
+    expect(mockSignInAction).not.toHaveBeenCalled();
+  });
+
+  it("shows an error for a password under 6 characters once the field is touched", async () => {
+    const user = userEvent.setup();
+    render(<SignInForm />);
+
+    await user.type(screen.getByLabelText("auth-field-password"), "12345");
+    await user.click(screen.getByLabelText("auth-field-email"));
+
+    await waitFor(() => {
+      expect(screen.getByText("auth-validation-password-min-length")).toBeInTheDocument();
+    });
+    expect(mockSignInAction).not.toHaveBeenCalled();
+  });
+
+  it("shows both errors after typing and clearing an empty form", async () => {
+    const user = userEvent.setup();
+    render(<SignInForm />);
+
+    const emailInput = screen.getByLabelText("auth-field-email");
+    const passwordInput = screen.getByLabelText("auth-field-password");
+
+    await user.type(emailInput, "x");
+    await user.clear(emailInput);
+    await user.type(passwordInput, "x");
+    await user.clear(passwordInput);
+
+    await waitFor(() => {
+      expect(screen.getByText("auth-validation-email-invalid")).toBeInTheDocument();
+      expect(screen.getByText("auth-validation-password-min-length")).toBeInTheDocument();
+    });
+  });
+
+  it("links to the forgot-password page", () => {
+    render(<SignInForm />);
+
+    expect(screen.getByRole("link", { name: "auth-link-forgot-password" })).toHaveAttribute(
+      "href",
+      "/auth/forgot-password",
+    );
+  });
+
+  it("links to the sign-up page", () => {
+    render(<SignInForm />);
+
+    expect(screen.getByRole("link", { name: "auth-link-sign-up" })).toHaveAttribute(
+      "href",
+      "/auth/sign-up",
+    );
+  });
 });

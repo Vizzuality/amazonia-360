@@ -36,6 +36,7 @@ export function BufferSlider({
           step={1}
           value={[bufferValue]}
           minStepsBetweenThumbs={1}
+          thumbLabel={t("grid-sidebar-report-location-buffer-size")}
           onValueChange={onValueChange}
           onValueCommit={onValueCommit}
         />

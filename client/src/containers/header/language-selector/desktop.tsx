@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 
-import { Locale, useLocale } from "next-intl";
+import { Locale, useLocale, useTranslations } from "next-intl";
 
 import { LOCALES, localeLabelsShort, localeLabelsLong } from "@/lib/locales";
 import { cn } from "@/lib/utils";
@@ -19,6 +19,7 @@ import { useRouter, usePathname } from "@/i18n/navigation";
 
 const LanguageSelector = () => {
   const locale = useLocale();
+  const t = useTranslations();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -30,7 +31,10 @@ const LanguageSelector = () => {
   };
   return (
     <Select value={locale} onValueChange={onSelectLocale}>
-      <SelectTrigger className="hover:bg-secondary w-fit rounded-xs border-none shadow-none outline-hidden focus:ring-0">
+      <SelectTrigger
+        aria-label={t("language-selector-label")}
+        className="hover:bg-secondary w-fit rounded-xs border-none shadow-none outline-hidden focus:ring-0"
+      >
         <SelectValue className="flex text-sm">{localeLabelsShort[locale]}</SelectValue>
       </SelectTrigger>
       <SelectContent className="no-scrollbar max-h-96 overflow-y-auto border-none shadow-md">
