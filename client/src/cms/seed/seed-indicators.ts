@@ -24,11 +24,15 @@ export const seedIndicators = async (
   indicators: RawIndicator[],
 ): Promise<void> => {
   const seenIds = new Set<number>();
-  // Ids actually written, so a `replaces` pointing at a row the seed skipped is dropped with a
-  // warning rather than saved as a dangling relationship.
-  const seededIds = new Set<string>();
+  // A country target is not dropped like other bad values: `filterOptions` rejects it, and the
+  // seed aborts mid-write. So `replaces` resolves only against regional ids already written.
+  const seededRegionalIds = new Set<string>();
+  const ordered = [
+    ...indicators.filter(({ country }) => !country),
+    ...indicators.filter(({ country }) => country),
+  ];
 
-  for (const raw of indicators) {
+  for (const raw of ordered) {
     if (seenIds.has(raw.id)) {
       payload.logger.warn(`indicators: duplicate id ${raw.id}, skipped`);
       continue;
@@ -73,11 +77,11 @@ export const seedIndicators = async (
     let replaces: string | null = null;
     if (raw.replaces != null) {
       const target = String(raw.replaces);
-      if (seededIds.has(target)) {
+      if (seededRegionalIds.has(target)) {
         replaces = target;
       } else {
         payload.logger.warn(
-          `indicators: id ${raw.id} replaces missing indicator ${raw.replaces}, left empty`,
+          `indicators: id ${raw.id} replaces ${raw.replaces}, which is not a seeded regional indicator, left empty`,
         );
       }
     }
@@ -113,7 +117,7 @@ export const seedIndicators = async (
       await payload.create({ collection: "indicators", data: { id, ...data } });
     }
 
-    seededIds.add(id);
+    if (!country) seededRegionalIds.add(id);
 
     await updateLocales(payload, "indicators", id, {
       name,

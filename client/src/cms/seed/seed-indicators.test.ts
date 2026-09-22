@@ -91,7 +91,34 @@ describe("seedIndicators", () => {
     await seedIndicators(payload, [row({ id: 216, country: "ECU", replaces: 11 })]);
 
     expect(dataFor(written, 216)).toMatchObject({ replaces: null });
-    expect(warnings).toEqual(["indicators: id 216 replaces missing indicator 11, left empty"]);
+    expect(warnings).toEqual([
+      "indicators: id 216 replaces 11, which is not a seeded regional indicator, left empty",
+    ]);
+  });
+
+  test("resolves replaces whatever order the source rows arrive in", async () => {
+    const { payload, written } = fakePayload();
+
+    await seedIndicators(payload, [
+      row({ id: 216, country: "ECU", replaces: 11 }),
+      row({ id: 11 }),
+    ]);
+
+    expect(dataFor(written, 216)).toMatchObject({ replaces: "11" });
+  });
+
+  test("drops a replaces naming a country row, which filterOptions would reject mid-seed", async () => {
+    const { payload, written, warnings } = fakePayload();
+
+    await seedIndicators(payload, [
+      row({ id: 208, country: "ECU" }),
+      row({ id: 216, country: "ECU", replaces: 208 }),
+    ]);
+
+    expect(dataFor(written, 216)).toMatchObject({ replaces: null });
+    expect(warnings).toEqual([
+      "indicators: id 216 replaces 208, which is not a seeded regional indicator, left empty",
+    ]);
   });
 
   test("clears a replacement the source dropped rather than leaving the old one standing", async () => {

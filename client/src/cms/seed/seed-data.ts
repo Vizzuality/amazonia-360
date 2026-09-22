@@ -18,7 +18,6 @@ async function main() {
 
   const topics = TOPICS as RawTopic[];
   const subtopics = SUBTOPICS as RawSubtopic[];
-  // Regional rows first: a country row's `replaces` can only be written once its target is in.
   const indicators = [...INDICATORS, ...INDICATORS_ECU] as RawIndicator[];
 
   await seedTopics(payload, topics);
