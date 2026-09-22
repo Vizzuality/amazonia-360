@@ -5,6 +5,8 @@ export type Country = {
   nameKey: string;
 };
 
+// Also the source of the `enum_indicators_country` Postgres enums: a new code needs a Payload
+// migration before an indicator can be saved or seeded against it.
 export const COUNTRIES = [
   { code: "ECU", available: true, nameKey: "country-module-ECU-name" },
   { code: "BOL", available: false, nameKey: "country-module-BOL-name" },
