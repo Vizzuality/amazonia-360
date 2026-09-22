@@ -1,9 +1,10 @@
-import type { CollectionConfig } from "payload";
+import type { CollectionConfig, JoinField, RelationshipField } from "payload";
 
 import SUBTOPICS from "@/../datum/subtopics.json";
 import TOPICS from "@/../datum/topics.json";
 import { findFieldByName, isEmptyValue, namedFields } from "@/cms/test-utils/find-field";
 
+import { Indicators } from "./Indicators";
 import { Subtopics } from "./Subtopics";
 import { Topics } from "./Topics";
 
@@ -165,6 +166,68 @@ describe("Subtopics", () => {
   test("omits image, which is empty on every subtopic", () => {
     expect(findFieldByName(Subtopics.fields, "image")).toBeUndefined();
     expect(subtopics.every((subtopic) => isEmptyValue(subtopic.image))).toBe(true);
+  });
+});
+
+/**
+ * The two join fields are virtual — they read the relationship already stored on the child, so
+ * the pairing below is the whole contract. `on` naming a field that isn't a relationship back to
+ * this collection is the failure Payload only reports at boot.
+ */
+describe.each([
+  {
+    label: "Topics.subtopics",
+    parent: Topics,
+    field: "subtopics",
+    child: Subtopics,
+    childSlug: "subtopics" as const,
+    on: "topic",
+    // No topic holds more than 7 subtopics; the join's own default of 10 is the risk here.
+    minLimit: 28,
+  },
+  {
+    label: "Subtopics.indicators",
+    parent: Subtopics,
+    field: "indicators",
+    child: Indicators,
+    childSlug: "indicators" as const,
+    on: "subtopic",
+    // The busiest subtopic already holds 20, and every country module seeded adds to it.
+    minLimit: 100,
+  },
+])("$label", ({ parent, field, child, childSlug, on, minLimit }) => {
+  const join = findFieldByName(parent.fields, field) as unknown as JoinField;
+
+  test("joins the child collection on its existing relationship field", () => {
+    expect(join).toMatchObject({ type: "join", collection: childSlug, on });
+  });
+
+  test("points at a relationship field that actually relates back to the parent", () => {
+    const relationship = findFieldByName(child.fields, on) as RelationshipField;
+
+    expect(relationship?.type).toBe("relationship");
+    expect(relationship.relationTo).toBe(parent.slug);
+  });
+
+  /**
+   * Sorting a join on a localized field makes the Postgres adapter reference the unaliased
+   * child table and every read of the parent 500s (Payload 3.87). Sorting by `id` is wrong for
+   * a different reason — it is varchar, so 34 lands before 4.
+   */
+  test("sorts on a column that is neither localized nor the varchar id", () => {
+    const sortField = findFieldByName(child.fields, String(join.defaultSort));
+
+    expect(join.defaultSort).not.toBe("id");
+    expect(sortField?.localized).toBeFalsy();
+  });
+
+  test("raises the default limit of 10 above what a single parent can hold", () => {
+    expect(join.defaultLimit).toBeGreaterThanOrEqual(minLimit);
+  });
+
+  test("stores nothing on the parent, so no column and no migration", () => {
+    expect(join.index).toBeUndefined();
+    expect(findFieldByName(parent.fields, `${field}_ids`)).toBeUndefined();
   });
 });
 

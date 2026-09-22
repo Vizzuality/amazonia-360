@@ -181,14 +181,28 @@ const toIndicator = (indicator: CmsIndicator): Indicator => {
   };
 };
 
+// `joins: false` keeps Topics.subtopics and Subtopics.indicators — admin-only fields — out of
+// these two reads. A join populates at every depth, `depth: 0` included, and `toTopic` and
+// `toSubtopic` spread the document, so without it every Topic and Subtopic would drag a list of
+// child ids into the app's own types and down the RSC payload.
 export const fetchTopics = async ({ locale }: { locale: string }): Promise<Topic[]> => {
-  const { docs } = await sdk.find({ collection: "topics", ...read(locale), depth: 0 });
+  const { docs } = await sdk.find({
+    collection: "topics",
+    ...read(locale),
+    depth: 0,
+    joins: false,
+  });
 
   return byId(docs.map(toTopic));
 };
 
 export const fetchSubtopics = async ({ locale }: { locale: string }): Promise<Subtopic[]> => {
-  const { docs } = await sdk.find({ collection: "subtopics", ...read(locale), depth: 0 });
+  const { docs } = await sdk.find({
+    collection: "subtopics",
+    ...read(locale),
+    depth: 0,
+    joins: false,
+  });
 
   return byId(docs.map(toSubtopic));
 };
