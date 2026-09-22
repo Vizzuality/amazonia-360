@@ -37,3 +37,14 @@ gate("the catalogue the CMS serves is seeded and complete", async ({ request }) 
     ).toHaveLength(records);
   }
 });
+
+gate(
+  "the catalogue is capped without `pagination=false`, which is why every read passes it",
+  async ({ request }) => {
+    const response = await request.get("/v1/api/indicators?locale=en&depth=0");
+    const { docs, hasNextPage } = await response.json();
+
+    expect(docs.length).toBeLessThan(INDICATORS.length);
+    expect(hasNextPage).toBe(true);
+  },
+);

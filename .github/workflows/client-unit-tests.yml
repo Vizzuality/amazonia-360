@@ -45,6 +45,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generate Next.js route types
+        env:
+          SKIP_ENV_VALIDATION: "1"
+        run: pnpm exec next typegen
+
+      - name: Run Client type check
+        run: pnpm check-types
+
       - name: Run Client tests
         run: pnpm test | tee "$COVERAGE_GH_OUTPUT_FILE"
 

@@ -2,14 +2,9 @@
 
 import { useEffect } from "react";
 
-import { CustomLocation } from "@/app/(frontend)/parsers";
-import { useSyncLocation } from "@/app/(frontend)/store";
+import { E2ELocationInput } from "@/types/e2e-window";
 
-declare global {
-  interface Window {
-    __E2E_SET_LOCATION__?: (location: CustomLocation | null) => void;
-  }
-}
+import { useSyncLocation } from "@/app/(frontend)/store";
 
 /**
  * Invisible component that exposes `window.__E2E_SET_LOCATION__` so that
@@ -24,7 +19,7 @@ export default function E2EBridge() {
   const [, setLocation] = useSyncLocation();
 
   useEffect(() => {
-    window.__E2E_SET_LOCATION__ = (location) => {
+    window.__E2E_SET_LOCATION__ = (location: E2ELocationInput) => {
       setLocation(location);
     };
 
