@@ -3,6 +3,7 @@ import { type Page, test, expect } from "@playwright/test";
 import { dismissCookieConsent } from "./helpers/cookie-consent";
 import { skipWithoutCredentials } from "./helpers/credentials";
 
+// /reports/indicators is gated, so these run signed in, in `chromium-authenticated`.
 test.skip(skipWithoutCredentials, "E2E test user credentials not set");
 
 async function openIndicatorsPanel(page: Page) {
