@@ -21,7 +21,7 @@ test.describe("sign-in authentication errors", () => {
 
 test.describe("protected route guard", () => {
   test("redirects back to original page after sign-in", async ({ page }) => {
-    test.skip(skipWithoutCredentials, "E2E test user credentials not set");
+    test.skip(skipWithoutCredentials(), "E2E test user credentials not set");
 
     await page.goto("/en/private/profile");
     await expect(page).toHaveURL(/\/auth\/sign-in/, { timeout: 15_000 });
@@ -41,7 +41,7 @@ test.describe("sign-in from a gated link", () => {
   // Next prefetches /reports while signed out, so the client Router Cache holds the gate's
   // redirect back to sign-in and a soft navigation after signing in replays it.
   test("lands on the gated page and stays there", async ({ page }) => {
-    test.skip(skipWithoutCredentials, "E2E test user credentials not set");
+    test.skip(skipWithoutCredentials(), "E2E test user credentials not set");
 
     await page.goto("/en");
     await expect(page.locator("h2").first()).toBeVisible({ timeout: 30_000 });
