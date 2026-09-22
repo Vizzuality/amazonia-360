@@ -1,5 +1,6 @@
 import { ResourceImagery } from "@/types/indicator";
 
+import INDICATORS_ECU from "@/../datum/indicators.ECU.json";
 import INDICATORS from "@/../datum/indicators.json";
 
 import {
@@ -170,7 +171,7 @@ describe("hasImageryCoverage", () => {
   });
 });
 
-describe("datum/indicators.json imagery aggregation", () => {
+describe("datum imagery aggregation", () => {
   type SourceIndicator = {
     id: number;
     name_en: string;
@@ -182,7 +183,7 @@ describe("datum/indicators.json imagery aggregation", () => {
     };
   };
 
-  const imagery = (INDICATORS as unknown as SourceIndicator[]).filter(
+  const imagery = ([...INDICATORS, ...INDICATORS_ECU] as unknown as SourceIndicator[]).filter(
     (indicator) => indicator.resource.type === "imagery",
   );
 
