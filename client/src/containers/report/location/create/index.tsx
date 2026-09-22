@@ -59,13 +59,13 @@ export default function CreateReport({ children }: { children?: ReactNode }) {
                 variant="outline"
                 size="lg"
                 className="px-5"
+                aria-label={t("grid-sidebar-report-location-button-clear")}
                 onClick={() => {
                   setLocation(null);
                   setSketchAction({ type: undefined, state: undefined, geometryType: undefined });
                 }}
               >
                 <LuTrash2 className="h-5 w-5 text-current" />
-                {/* {t("grid-sidebar-report-location-button-clear")} */}
               </Button>
             </TooltipTrigger>
 
@@ -84,6 +84,11 @@ export default function CreateReport({ children }: { children?: ReactNode }) {
                   size="lg"
                   variant={sketch.enabled === "edit" ? "default" : "outline"}
                   className="px-5"
+                  aria-label={
+                    sketch.enabled === "edit"
+                      ? t("drawing-tools-edit-cancel")
+                      : t("drawing-tools-edit")
+                  }
                   onClick={() => {
                     setSketch({
                       enabled: sketch.enabled === "edit" ? undefined : "edit",

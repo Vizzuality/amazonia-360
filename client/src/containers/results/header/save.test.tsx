@@ -49,12 +49,6 @@ describe("SaveReport", () => {
     mockHandleDuplicate.mockClear();
   });
 
-  test("when CAN edit, renders save button", () => {
-    render(<SaveReport />);
-
-    expect(screen.getByRole("button", { name: /save/i })).toBeInTheDocument();
-  });
-
   test("when CAN edit AND form changed, save button is enabled", () => {
     mockUseReportFormChanged.mockReturnValue(true);
 
@@ -89,14 +83,6 @@ describe("SaveReport", () => {
 
     expect(screen.getByRole("status")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /save/i })).toBeDisabled();
-  });
-
-  test("when CANNOT edit, renders make-a-copy button", () => {
-    mockUseCanEditReport.mockReturnValue(false);
-
-    render(<SaveReport />);
-
-    expect(screen.getByRole("button", { name: /make-a-copy/i })).toBeInTheDocument();
   });
 
   test("when CANNOT edit, clicking calls handleDuplicate", () => {

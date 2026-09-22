@@ -16,6 +16,7 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:report": "playwright show-report e2e/playwright-report",
+    "test:integration": "vitest run --config integration/vitest.config.ts",
     "payload": "payload",
     "ci": "payload migrate && pnpm build",
     "seed:data": "payload run src/cms/seed/seed-data.ts"
@@ -149,7 +150,7 @@
   "devDependencies": {
     "@auth/core": "0.41.3",
     "@eslint/eslintrc": "3.3.4",
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "1.58.2",
     "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/typography": "^0.5.19",
     "@tanstack/eslint-plugin-query": "5.91.4",
@@ -168,7 +169,9 @@
     "@types/react-scroll": "1.8.10",
     "@types/terraformer__arcgis": "^2.0.5",
     "@vitejs/plugin-react": "^5.1.4",
+    "@vitest/browser-playwright": "4.1.10",
     "@vitest/coverage-v8": "4.1.10",
+    "axe-core": "4.11.2",
     "dotenv": "^17.3.1",
     "eslint": "9.38.0",
     "eslint-config-next": "16.3.3",
@@ -177,8 +180,9 @@
     "eslint-plugin-prettier": "5.5.4",
     "eslint-plugin-react-hooks": "7.0.0",
     "husky": "9.1.7",
-    "jsdom": "^28.0.0",
+    "jsdom": "28.0.0",
     "orval": "8.29.0",
+    "playwright": "1.58.2",
     "postcss": "8.5.26",
     "prettier": "3.6.2",
     "prettier-plugin-tailwindcss": "0.7.2",
@@ -187,7 +191,8 @@
     "typescript": "5.9.3",
     "vite": "7.3.6",
     "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "4.1.10"
+    "vitest": "4.1.10",
+    "vitest-browser-react": "2.2.0"
   },
   "packageManager": "pnpm@10.29.2",
   "pnpm": {

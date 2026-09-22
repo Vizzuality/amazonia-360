@@ -111,6 +111,63 @@ describe("SignupForm", () => {
     expect(mockCreate).not.toHaveBeenCalled();
   });
 
+  it("blocks submission for a name under 2 characters", async () => {
+    const user = userEvent.setup();
+    render(<SignupForm />);
+
+    await user.type(screen.getByLabelText("auth-field-name"), "A");
+    await user.type(screen.getByLabelText("auth-field-email"), "test@example.com");
+    await user.type(screen.getByLabelText("auth-field-password"), "password123");
+    await user.type(screen.getByLabelText("auth-field-confirm-password"), "password123");
+    await submit(user);
+
+    await waitFor(() => {
+      expect(screen.getByText("auth-validation-name-min-length")).toBeInTheDocument();
+    });
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it("blocks submission for an invalid email", async () => {
+    const user = userEvent.setup();
+    render(<SignupForm />);
+
+    await user.type(screen.getByLabelText("auth-field-name"), "Test User");
+    await user.type(screen.getByLabelText("auth-field-email"), "not-an-email");
+    await user.type(screen.getByLabelText("auth-field-password"), "password123");
+    await user.type(screen.getByLabelText("auth-field-confirm-password"), "password123");
+    await submit(user);
+
+    await waitFor(() => {
+      expect(screen.getByText("auth-validation-email-invalid")).toBeInTheDocument();
+    });
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it("blocks submission for a password under 6 characters", async () => {
+    const user = userEvent.setup();
+    render(<SignupForm />);
+
+    await user.type(screen.getByLabelText("auth-field-name"), "Test User");
+    await user.type(screen.getByLabelText("auth-field-email"), "test@example.com");
+    await user.type(screen.getByLabelText("auth-field-password"), "12345");
+    await user.type(screen.getByLabelText("auth-field-confirm-password"), "12345");
+    await submit(user);
+
+    await waitFor(() => {
+      expect(screen.getByText("auth-validation-password-min-length")).toBeInTheDocument();
+    });
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it("links to the sign-in page", () => {
+    render(<SignupForm />);
+
+    expect(screen.getByRole("link", { name: "auth-link-sign-in" })).toHaveAttribute(
+      "href",
+      "/auth/sign-in",
+    );
+  });
+
   it("submits with countriesOfInterest empty when no chip is selected", async () => {
     const user = userEvent.setup();
     render(<SignupForm />);
