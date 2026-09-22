@@ -391,6 +391,14 @@ export interface Indicator {
    */
   order: number;
   subtopic: string | Subtopic;
+  /**
+   * The country module this indicator belongs to. Empty is the Amazon Region — the regional scope, not every country.
+   */
+  country?: ('ECU' | 'BOL' | 'BRA' | 'COL' | 'GUF' | 'GUY' | 'PER' | 'SUR' | 'VEN') | null;
+  /**
+   * The regional indicator this one stands in for inside its module. Only regional indicators can be named.
+   */
+  replaces?: (string | null) | Indicator;
   name: string;
   /**
    * e.g. km², m. Empty on 63 of 164 rows.
@@ -1070,6 +1078,8 @@ export interface IndicatorsSelect<T extends boolean = true> {
   id?: T;
   order?: T;
   subtopic?: T;
+  country?: T;
+  replaces?: T;
   name?: T;
   unit?: T;
   description_short?: T;

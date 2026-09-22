@@ -2,6 +2,7 @@ import { getPayload } from "payload";
 
 import config from "@payload-config";
 
+import INDICATORS_ECU from "@/../datum/indicators.ECU.json";
 import INDICATORS from "@/../datum/indicators.json";
 import SUBTOPICS from "@/../datum/subtopics.json";
 import TOPICS from "@/../datum/topics.json";
@@ -17,7 +18,7 @@ async function main() {
 
   const topics = TOPICS as RawTopic[];
   const subtopics = SUBTOPICS as RawSubtopic[];
-  const indicators = INDICATORS as RawIndicator[];
+  const indicators = [...INDICATORS, ...INDICATORS_ECU] as RawIndicator[];
 
   await seedTopics(payload, topics);
   await seedSubtopics(payload, subtopics);

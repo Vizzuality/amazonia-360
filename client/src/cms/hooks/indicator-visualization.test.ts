@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 
+import INDICATORS_ECU from "@/../datum/indicators.ECU.json";
 import INDICATORS from "@/../datum/indicators.json";
 
 import {
@@ -81,9 +82,9 @@ describe("findVisualizationMismatches", () => {
 });
 
 describe("findVisualizationMismatches against the real source data", () => {
-  test("flags exactly one row across all 164 indicators: indicator 5", () => {
+  test("flags exactly one row across every seeded indicator: indicator 5", () => {
     const flagged = (
-      INDICATORS as unknown as {
+      [...INDICATORS, ...INDICATORS_ECU] as unknown as {
         id: number;
         visualization_types: string[];
         resource: Record<string, unknown>;

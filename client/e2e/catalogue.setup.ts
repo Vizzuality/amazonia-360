@@ -1,5 +1,6 @@
 import { test as gate, expect } from "@playwright/test";
 
+import INDICATORS_ECU from "../datum/indicators.ECU.json" with { type: "json" };
 import INDICATORS from "../datum/indicators.json" with { type: "json" };
 import SUBTOPICS from "../datum/subtopics.json" with { type: "json" };
 import TOPICS from "../datum/topics.json" with { type: "json" };
@@ -15,7 +16,7 @@ import TOPICS from "../datum/topics.json" with { type: "json" };
 const CATALOGUE = [
   { collection: "topics", records: TOPICS.length },
   { collection: "subtopics", records: SUBTOPICS.length },
-  { collection: "indicators", records: INDICATORS.length },
+  { collection: "indicators", records: INDICATORS.length + INDICATORS_ECU.length },
 ] as const;
 
 gate("the catalogue the CMS serves is seeded and complete", async ({ request }) => {
@@ -44,7 +45,7 @@ gate(
     const response = await request.get("/v1/api/indicators?locale=en&depth=0");
     const { docs, hasNextPage } = await response.json();
 
-    expect(docs.length).toBeLessThan(INDICATORS.length);
+    expect(docs.length).toBeLessThan(INDICATORS.length + INDICATORS_ECU.length);
     expect(hasNextPage).toBe(true);
   },
 );

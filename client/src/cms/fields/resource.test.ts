@@ -2,6 +2,7 @@ import type { Block, Field, SelectField } from "payload";
 
 import type { ImageryAggregation } from "@/types/indicator";
 
+import INDICATORS_ECU from "@/../datum/indicators.ECU.json";
 import INDICATORS from "@/../datum/indicators.json";
 import {
   fieldNames,
@@ -15,7 +16,7 @@ import { RESOURCE_BLOCKS } from "./resource";
 type SourceResource = Record<string, unknown> & { type: string };
 type SourceIndicator = { id: number; resource: SourceResource };
 
-const indicators = INDICATORS as unknown as SourceIndicator[];
+const indicators = [...INDICATORS, ...INDICATORS_ECU] as unknown as SourceIndicator[];
 
 /**
  * Keys present in the source JSON that deliberately have no field on the block: the value is
@@ -29,6 +30,9 @@ const KEYS_DROPPED_BY_TYPE: Record<string, string[]> = {
   imagery: ["layer_id"],
   h3: ["layer_id"],
   component: ["layer_id"],
+  // `column` repeats an attribute the row already lists in `query_table.outFields`, which is
+  // what the table reads. Nothing declares or reads it on a feature resource.
+  feature: ["column"],
 };
 
 const blocksBySlug = new Map<string, Block>(RESOURCE_BLOCKS.map((block) => [block.slug, block]));

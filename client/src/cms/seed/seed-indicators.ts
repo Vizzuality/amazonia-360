@@ -1,18 +1,38 @@
 import type { Payload } from "payload";
 
+import { COUNTRIES } from "@/lib/country";
+
 import { isEmptyValue } from "@/cms/test-utils/find-field";
+import type { Indicator } from "@/payload-types";
 
 import { localizeValue, mapResource } from "./utils/normalize-data";
 import { updateLocales } from "./utils/seed-helpers";
 import type { RawIndicator } from "./utils/types";
+
+type CountryModule = NonNullable<Indicator["country"]>;
+
+/**
+ * Deliberately not `isCountryCode` from `lib/country`, which answers whether a module is live.
+ * A row belongs to its module whether or not that module has been released, so the delivery
+ * for a country that is still dark seeds normally.
+ */
+const isCountryModule = (value: string): value is CountryModule =>
+  COUNTRIES.some(({ code }) => code === value);
 
 export const seedIndicators = async (
   payload: Payload,
   indicators: RawIndicator[],
 ): Promise<void> => {
   const seenIds = new Set<number>();
+  // A country target is not dropped like other bad values: `filterOptions` rejects it, and the
+  // seed aborts mid-write. So `replaces` resolves only against regional ids already written.
+  const seededRegionalIds = new Set<string>();
+  const ordered = [
+    ...indicators.filter(({ country }) => !country),
+    ...indicators.filter(({ country }) => country),
+  ];
 
-  for (const raw of indicators) {
+  for (const raw of ordered) {
     if (seenIds.has(raw.id)) {
       payload.logger.warn(`indicators: duplicate id ${raw.id}, skipped`);
       continue;
@@ -43,9 +63,36 @@ export const seedIndicators = async (
     );
     const description = localizeValue(raw.description_en, raw.description_es, raw.description_pt);
 
+    let country: CountryModule | null = null;
+    if (raw.country) {
+      if (isCountryModule(raw.country)) {
+        country = raw.country;
+      } else {
+        payload.logger.warn(
+          `indicators: id ${raw.id} names unknown country module ${raw.country}, left empty`,
+        );
+      }
+    }
+
+    let replaces: string | null = null;
+    if (raw.replaces != null) {
+      const target = String(raw.replaces);
+      if (seededRegionalIds.has(target)) {
+        replaces = target;
+      } else {
+        payload.logger.warn(
+          `indicators: id ${raw.id} replaces ${raw.replaces}, which is not a seeded regional indicator, left empty`,
+        );
+      }
+    }
+
     const data = {
       order: raw.order,
       subtopic,
+      // Written even when empty, like `default_visualization_type` below: a re-seed has to
+      // clear a scope or a replacement the source data dropped.
+      country,
+      replaces,
       name: name.en,
       ...(isEmptyValue(unit.en) ? {} : { unit: unit.en }),
       description_short: descriptionShort.en,
@@ -69,6 +116,8 @@ export const seedIndicators = async (
     } else {
       await payload.create({ collection: "indicators", data: { id, ...data } });
     }
+
+    if (!country) seededRegionalIds.add(id);
 
     await updateLocales(payload, "indicators", id, {
       name,

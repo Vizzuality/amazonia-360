@@ -154,6 +154,16 @@ describe("the catalogue reads", () => {
       },
     });
   });
+
+  // Temporary, and the reason it is asserted: the country rows are seeded and published, so
+  // this `where` is the only thing keeping them off the screen until there is a module UI.
+  test("withhold country-scoped indicators, leaving the regional catalogue alone", async () => {
+    const args = returning(INDICATORS);
+
+    await fetchIndicators({ locale: "en" });
+
+    expect(args()).toMatchObject({ where: { country: { exists: false } } });
+  });
 });
 
 // Indicators are absent: `lib/indicators` sorts them by name, so their id order is never read.

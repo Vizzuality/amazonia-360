@@ -1,5 +1,7 @@
 import type { CollectionConfig, RadioFieldValidation } from "payload";
 
+import { COUNTRIES } from "@/lib/country";
+
 import { catalogueAccess } from "@/cms/access/catalogue";
 import { invalidDefaultMessage, isAllowedDefault } from "@/cms/fields/default-visualization-type";
 import { ResourceField } from "@/cms/fields/resource";
@@ -28,6 +30,35 @@ export const Indicators: CollectionConfig = {
       },
     },
     { name: "subtopic", type: "relationship", relationTo: "subtopics", required: true },
+    {
+      name: "country",
+      type: "select",
+      options: COUNTRIES.map(({ code }) => ({ label: code, value: code })),
+      admin: {
+        description:
+          "The country module this indicator belongs to. Empty is the Amazon Region — the regional scope, not every country.",
+      },
+    },
+    /**
+     * Recorded, never resolved: nothing reads this at render time, and a saved report holding
+     * the regional Content Code keeps rendering the regional indicator in every module. ADR
+     * 0004 has the reasoning, and the case that decides it.
+     *
+     * `filterOptions` does the two jobs `radio` could not do for `default_visualization_type`
+     * below — it narrows the picker and validates the save — so the constraint holds for the
+     * admin, the REST API and the seed from this one declaration.
+     */
+    {
+      name: "replaces",
+      type: "relationship",
+      relationTo: "indicators",
+      filterOptions: () => ({ country: { exists: false } }),
+      admin: {
+        condition: (data) => !!data?.country,
+        description:
+          "The regional indicator this one stands in for inside its module. Only regional indicators can be named.",
+      },
+    },
     { name: "name", type: "text", localized: true, required: true },
     {
       name: "unit",
