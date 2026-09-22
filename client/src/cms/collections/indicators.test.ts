@@ -1,5 +1,8 @@
-import type { RadioField, SelectField } from "payload";
+import type { RadioField, RelationshipField, SelectField } from "payload";
 
+import { COUNTRIES } from "@/lib/country";
+
+import INDICATORS_ECU from "@/../datum/indicators.ECU.json";
 import INDICATORS from "@/../datum/indicators.json";
 import SUBTOPICS from "@/../datum/subtopics.json";
 import { invalidDefaultMessage } from "@/cms/fields/default-visualization-type";
@@ -15,9 +18,12 @@ type SourceIndicator = Record<string, unknown> & {
   subtopic_id: number;
   visualization_types: string[];
   default_visualization_type: string | null;
+  country?: string | null;
+  replaces?: number | null;
 };
 
-const indicators = INDICATORS as unknown as SourceIndicator[];
+const indicators = [...INDICATORS, ...INDICATORS_ECU] as unknown as SourceIndicator[];
+const regionalIds = new Set((INDICATORS as unknown as SourceIndicator[]).map(({ id }) => id));
 const subtopicIds = new Set((SUBTOPICS as unknown as { id: number }[]).map((s) => s.id));
 
 describe("Indicators", () => {
@@ -201,6 +207,47 @@ describe("Indicators", () => {
   test("registers the non-blocking visualization mismatch warning", () => {
     expect(Indicators.hooks?.beforeChange).toHaveLength(1);
     expect(Indicators.hooks?.beforeChange?.[0]).toBe(warnOnVisualizationMismatch);
+  });
+
+  test("scopes an indicator to one country module, and treats no country as the region", () => {
+    const country = findFieldByName(Indicators.fields, "country") as SelectField;
+
+    expect(country.type).toBe("select");
+    expect(country.required).toBeFalsy();
+    expect(country.hasMany).toBeFalsy();
+    expect(country.options).toEqual(COUNTRIES.map(({ code }) => ({ label: code, value: code })));
+
+    // The source agrees: the regional rows name no module, and absence is what makes them
+    // regional rather than a row that belongs to every country.
+    expect(INDICATORS.every((row) => !("country" in row))).toBe(true);
+    expect(INDICATORS_ECU.every((row) => row.country === "ECU")).toBe(true);
+  });
+
+  test("lets a country indicator name only a regional one as the indicator it replaces", () => {
+    const replaces = findFieldByName(Indicators.fields, "replaces") as RelationshipField;
+
+    expect(replaces).toMatchObject({ type: "relationship", relationTo: "indicators" });
+    expect(replaces.hasMany).toBeFalsy();
+
+    const filterOptions = replaces.filterOptions as (args: never) => unknown;
+    expect(filterOptions({} as never)).toEqual({ country: { exists: false } });
+
+    const condition = replaces.admin?.condition as (data: unknown) => boolean;
+    expect(condition({ country: "ECU" })).toBe(true);
+    expect(condition({ country: null })).toBe(false);
+    expect(condition({})).toBe(false);
+  });
+
+  test("keeps every replacement in the source pointed at a regional Content Code", () => {
+    const replacements = indicators.filter(({ replaces }) => replaces != null);
+
+    expect(replacements.length).toBeGreaterThan(0);
+
+    for (const { id, replaces } of replacements) {
+      expect(regionalIds.has(replaces as number), `indicator ${id} replaces ${replaces}`).toBe(
+        true,
+      );
+    }
   });
 
   test("pins which localized fields are required", () => {

@@ -200,6 +200,9 @@ export const fetchIndicators = async ({ locale }: { locale: string }): Promise<I
   const { docs } = await sdk.find({
     collection: "indicators",
     ...read(locale),
+    // Country-scoped indicators are seeded but withheld until there is a module UI to put them
+    // behind. Delete this first when that work starts — nothing else keeps them off the screen.
+    where: { country: { exists: false } },
     depth: 2,
     populate: {
       subtopics: { name: true, topic: true },

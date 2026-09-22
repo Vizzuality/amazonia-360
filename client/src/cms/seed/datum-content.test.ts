@@ -1,3 +1,4 @@
+import INDICATORS_ECU from "@/../datum/indicators.ECU.json";
 import INDICATORS from "@/../datum/indicators.json";
 import SUBTOPICS from "@/../datum/subtopics.json";
 import TOPICS from "@/../datum/topics.json";
@@ -27,7 +28,7 @@ type SourceIndicator = SourceRow & { resource: SourceResource };
 
 const topics = TOPICS as unknown as SourceRow[];
 const subtopics = SUBTOPICS as unknown as SourceRow[];
-const indicators = INDICATORS as unknown as SourceIndicator[];
+const indicators = [...INDICATORS, ...INDICATORS_ECU] as unknown as SourceIndicator[];
 
 const LOCALES = ["en", "es", "pt"] as const;
 

@@ -109,6 +109,10 @@ export type RawIndicator = {
   id: number;
   subtopic_id: number;
   order: number;
+  /** ISO 3166-1 alpha-3 of the country module. Absent on the 164 regional rows. */
+  country?: string | null;
+  /** Content Code of the regional indicator this one stands in for. See ADR 0004. */
+  replaces?: number | null;
   name_en: string;
   name_es: string;
   name_pt: string;

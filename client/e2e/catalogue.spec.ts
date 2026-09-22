@@ -1,3 +1,4 @@
+import INDICATORS_ECU from "../datum/indicators.ECU.json" with { type: "json" };
 import INDICATORS from "../datum/indicators.json" with { type: "json" };
 import { test, expect } from "./fixtures";
 
@@ -9,7 +10,7 @@ test.describe("the catalogue the CMS serves", () => {
     const response = await request.get("/v1/api/indicators?locale=en&depth=0");
     const { docs, hasNextPage } = await response.json();
 
-    expect(docs.length).toBeLessThan(INDICATORS.length);
+    expect(docs.length).toBeLessThan(INDICATORS.length + INDICATORS_ECU.length);
     expect(hasNextPage).toBe(true);
   });
 });
