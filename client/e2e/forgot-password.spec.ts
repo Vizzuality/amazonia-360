@@ -1,17 +1,18 @@
-import { test } from "./fixtures";
-import { dismissCookieConsent } from "./helpers/cookie-consent";
-import { ForgotPasswordPage } from "./pages/forgot-password.page";
+import { test, expect } from "@playwright/test";
 
-// --- Happy path ---
+import { dismissCookieConsent } from "./helpers/cookie-consent";
 
 test.describe("forgot-password happy path", () => {
   test("shows success toast for valid email submission", async ({ page }) => {
-    const forgotPasswordPage = new ForgotPasswordPage(page);
-    await forgotPasswordPage.goto();
+    await page.goto("/en/auth/forgot-password");
     await dismissCookieConsent(page);
 
     // Payload forgotPassword succeeds even for non-existent emails (avoids user enumeration)
-    await forgotPasswordPage.requestReset("any-user@example.com");
-    await forgotPasswordPage.expectResetEmailSentToast();
+    await page.getByLabel("Email").fill("any-user@example.com");
+    await page.locator('button[type="submit"]').click();
+
+    await expect(page.getByText(/password reset email sent successfully/i)).toBeVisible({
+      timeout: 30_000,
+    });
   });
 });

@@ -1,4 +1,4 @@
-import { test, expect } from "./fixtures";
+import { test, expect } from "@playwright/test";
 
 // No session needed, so these stay out of country.auth.spec.ts, whose credential skip silenced them.
 

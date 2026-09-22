@@ -1,4 +1,4 @@
-import { test, expect } from "./fixtures";
+import { test, expect } from "@playwright/test";
 
 // These run in the signed-out `chromium` project. Every report route is
 // gated, so each one must bounce to sign-in with a usable return URL.

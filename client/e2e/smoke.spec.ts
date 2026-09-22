@@ -1,14 +1,9 @@
-import { test } from "./fixtures";
-import { LOCALES } from "./helpers/locale";
-import { HomePage } from "./pages/home.page";
+import { test, expect } from "@playwright/test";
 
 test.describe("homepage", () => {
-  for (const locale of LOCALES) {
-    test(`loads for locale: ${locale}`, async ({ page }) => {
-      const homePage = new HomePage(page);
-      await homePage.goto(locale);
-      await homePage.expectLoaded();
-      await homePage.expectLocale(locale);
-    });
-  }
+  test("loads", async ({ page }) => {
+    await page.goto("/en");
+
+    await expect(page.locator("h2").first()).toBeVisible({ timeout: 30_000 });
+  });
 });

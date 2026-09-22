@@ -1,11 +1,10 @@
-import { test, expect } from "./fixtures";
+import { test, expect } from "@playwright/test";
+
 import { dismissCookieConsent } from "./helpers/cookie-consent";
 import { skipWithoutCredentials, skipWithoutSeedSecret } from "./helpers/credentials";
-import { ReportsIdPage } from "./pages/reports-id.page";
 
 test.skip(skipWithoutCredentials, "E2E test user credentials not set");
 
-/** Sample location matching the point geometry used in report creation tests. */
 const SAMPLE_LOCATION = {
   type: "point" as const,
   geometry: {
@@ -16,7 +15,6 @@ const SAMPLE_LOCATION = {
   buffer: 60,
 };
 
-/** Minimal topics array for seeded reports. */
 const SAMPLE_TOPICS = [
   {
     topic_id: 1,
@@ -64,6 +62,13 @@ async function seedReport(
   return result.id;
 }
 
+async function openReport(page: import("@playwright/test").Page, reportId: string) {
+  await page.goto(`/en/reports/${reportId}`);
+  await dismissCookieConsent(page);
+
+  await expect(page.locator("h2").first()).toBeVisible({ timeout: 30_000 });
+}
+
 test.describe("report view (authenticated owner)", () => {
   test.skip(skipWithoutSeedSecret, "E2E_SEED_SECRET not set");
 
@@ -73,21 +78,38 @@ test.describe("report view (authenticated owner)", () => {
       userEmail: process.env.E2E_TEST_USER_EMAIL,
     });
 
-    const reportsIdPage = new ReportsIdPage(page);
-    await reportsIdPage.goto(reportId);
-    await dismissCookieConsent(page);
-    await reportsIdPage.expectLoaded();
-    await reportsIdPage.expectTitle("Original Title");
+    await openReport(page, reportId);
+    await expect(page.getByRole("heading", { name: "Original Title", level: 2 })).toBeVisible({
+      timeout: 10_000,
+    });
 
-    await reportsIdPage.startTitleEdit();
-    await reportsIdPage.typeTitleValue("Updated Title");
-    await reportsIdPage.confirmTitleEdit();
-    await reportsIdPage.expectTitle("Updated Title");
+    await page.getByRole("button", { name: "Edit", exact: true }).click();
 
-    await reportsIdPage.saveReport();
+    const titleInput = page.locator("#title");
+    await expect(titleInput).toBeVisible({ timeout: 5_000 });
+    await titleInput.clear();
+    await titleInput.fill("Updated Title");
+    await page.locator('form#report-title button[type="submit"]').click();
+
+    await expect(page.getByRole("heading", { name: "Updated Title", level: 2 })).toBeVisible({
+      timeout: 10_000,
+    });
+
+    // Wait for the PATCH, so the reload below proves persistence instead of racing it.
+    const saved = page.waitForResponse(
+      (response) =>
+        response.request().method() === "PATCH" &&
+        response.url().includes("/reports") &&
+        response.ok(),
+    );
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await saved;
+
     await page.reload();
-    await reportsIdPage.expectLoaded();
-    await reportsIdPage.expectTitle("Updated Title");
+    await expect(page.locator("h2").first()).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByRole("heading", { name: "Updated Title", level: 2 })).toBeVisible({
+      timeout: 10_000,
+    });
   });
 
   test("duplicate action changes URL to new report", async ({ page, request }) => {
@@ -95,17 +117,13 @@ test.describe("report view (authenticated owner)", () => {
       userEmail: process.env.E2E_TEST_USER_EMAIL,
     });
 
-    const reportsIdPage = new ReportsIdPage(page);
-    await reportsIdPage.goto(reportId);
-    await dismissCookieConsent(page);
-    await reportsIdPage.expectLoaded();
+    await openReport(page, reportId);
 
     const originalUrl = page.url();
 
-    await reportsIdPage.openActionsMenu();
-    await reportsIdPage.clickDuplicateAction();
+    await page.getByRole("button", { name: "Open menu" }).click();
+    await page.getByRole("menuitem", { name: "Duplicate" }).click();
 
-    // URL should change to a different report ID
     await expect(page).toHaveURL(/\/reports\/[\w-]+/, { timeout: 30_000 });
     await expect(page).not.toHaveURL(originalUrl);
   });
