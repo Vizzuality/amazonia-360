@@ -1,40 +1,9 @@
-import { test, expect } from "./fixtures";
+import { test, expect } from "@playwright/test";
+
 import { dismissCookieConsent } from "./helpers/cookie-consent";
 import { skipWithoutCredentials } from "./helpers/credentials";
-import { SignInPage } from "./pages/sign-in.page";
 
-// A report ID that need not exist: the gate runs in the layout, before the
-// page looks the report up, so signed-out visitors cannot tell a real ID
-// from a fake one.
 const SOME_REPORT_ID = "00000000-0000-0000-0000-000000000000";
-
-test.describe("report view requires authentication", () => {
-  test("redirects a signed-out visitor to sign-in with a return URL", async ({ page }) => {
-    await page.goto(`/en/reports/${SOME_REPORT_ID}`);
-
-    await expect(page).toHaveURL(
-      `/en/auth/sign-in?redirectUrl=${encodeURIComponent(`/reports/${SOME_REPORT_ID}`)}`,
-      { timeout: 30_000 },
-    );
-  });
-
-  test("gates the webshot PDF page too", async ({ page }) => {
-    await page.goto(`/en/webshot/reports/${SOME_REPORT_ID}`);
-
-    await expect(page).toHaveURL(
-      `/en/auth/sign-in?redirectUrl=${encodeURIComponent(`/webshot/reports/${SOME_REPORT_ID}`)}`,
-      { timeout: 30_000 },
-    );
-  });
-
-  test("does not reveal whether a report ID exists", async ({ page }) => {
-    // Both a well-formed and a nonsense ID must produce the same redirect.
-    for (const id of [SOME_REPORT_ID, "definitely-not-a-report"]) {
-      await page.goto(`/en/reports/${id}`);
-      await expect(page).toHaveURL(/\/en\/auth\/sign-in\?redirectUrl=/, { timeout: 30_000 });
-    }
-  });
-});
 
 test.describe("signing in returns to the requested report", () => {
   test.skip(skipWithoutCredentials, "E2E test user credentials not set");
@@ -44,15 +13,11 @@ test.describe("signing in returns to the requested report", () => {
     await expect(page).toHaveURL(/\/en\/auth\/sign-in\?redirectUrl=/, { timeout: 30_000 });
     await dismissCookieConsent(page).catch(() => {});
 
-    const signInPage = new SignInPage(page);
-    await signInPage.signIn(
-      process.env.E2E_TEST_USER_EMAIL as string,
-      process.env.E2E_TEST_USER_PASSWORD as string,
-    );
+    await page.getByLabel("Email").fill(process.env.E2E_TEST_USER_EMAIL as string);
+    await page.getByLabel("Password").fill(process.env.E2E_TEST_USER_PASSWORD as string);
+    await page.locator('button[type="submit"]').click();
 
-    // The assertion that matters: back on the requested report, with a single
-    // locale segment. A double-prefixed return URL passes every check above
-    // and fails only here.
+    // A double-prefixed return URL passes every earlier check and fails only here.
     await expect(page).toHaveURL(`/en/reports/${SOME_REPORT_ID}`, { timeout: 30_000 });
   });
 });

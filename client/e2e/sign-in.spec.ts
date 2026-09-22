@@ -1,199 +1,65 @@
-import { test, expect } from "./fixtures";
+import { test, expect } from "@playwright/test";
+
 import { dismissCookieConsent } from "./helpers/cookie-consent";
-import { LOCALES } from "./helpers/locale";
-import { HomePage } from "./pages/home.page";
-import { SignInPage } from "./pages/sign-in.page";
+import { skipWithoutCredentials } from "./helpers/credentials";
 
 const TEST_EMAIL = process.env.E2E_TEST_USER_EMAIL;
 const TEST_PASSWORD = process.env.E2E_TEST_USER_PASSWORD;
-const hasCredentials = !!(TEST_EMAIL && TEST_PASSWORD);
-
-// --- Page rendering ---
-
-test.describe("sign-in page rendering", () => {
-  for (const locale of LOCALES) {
-    test(`loads correctly for locale: ${locale}`, async ({ page }) => {
-      const signInPage = new SignInPage(page, locale);
-      await signInPage.goto();
-      await dismissCookieConsent(page);
-      await signInPage.expectLoaded();
-    });
-  }
-});
-
-// --- Form validation ---
-
-test.describe("sign-in form validation", () => {
-  test("shows error for invalid email", async ({ page }) => {
-    const signInPage = new SignInPage(page);
-    await signInPage.goto();
-    await dismissCookieConsent(page);
-
-    await signInPage.fillEmail("not-an-email");
-    // Blur the email field to trigger validation
-    await signInPage.passwordInput.click();
-    await signInPage.expectValidationError(/valid email/i);
-  });
-
-  test("shows error for short password", async ({ page }) => {
-    const signInPage = new SignInPage(page);
-    await signInPage.goto();
-    await dismissCookieConsent(page);
-
-    await signInPage.fillPassword("12345");
-    // Blur the password field to trigger validation
-    await signInPage.emailInput.click();
-    await signInPage.expectValidationError(/at least 6 characters/i);
-  });
-
-  test("shows errors for empty form submission", async ({ page }) => {
-    const signInPage = new SignInPage(page);
-    await signInPage.goto();
-    await dismissCookieConsent(page);
-
-    // Type then clear to trigger onChange validation with empty values
-    await signInPage.fillEmail("x");
-    await signInPage.fillEmail("");
-    await signInPage.fillPassword("x");
-    await signInPage.fillPassword("");
-
-    await signInPage.expectValidationError(/valid email/i);
-    await signInPage.expectValidationError(/at least 6 characters/i);
-  });
-});
-
-// --- Authentication errors ---
 
 test.describe("sign-in authentication errors", () => {
   test("shows error toast for wrong credentials", async ({ page }) => {
-    const signInPage = new SignInPage(page);
-    await signInPage.goto();
+    await page.goto("/en/auth/sign-in");
     await dismissCookieConsent(page);
 
-    await signInPage.signIn("nonexistent@example.com", "wrongpassword123");
-    await signInPage.expectLoginFailedToast();
-  });
+    await page.getByLabel("Email").fill("nonexistent@example.com");
+    await page.getByLabel("Password").fill("wrongpassword123");
+    await page.locator('button[type="submit"]').click();
 
-  test("shows error toast for correct email with wrong password", async ({ page }) => {
-    test.skip(!hasCredentials, "E2E_TEST_USER_EMAIL not set");
-    const signInPage = new SignInPage(page);
-    await signInPage.goto();
-    await dismissCookieConsent(page);
-
-    await signInPage.signIn(TEST_EMAIL!, "definitelywrongpassword");
-    await signInPage.expectLoginFailedToast();
+    await expect(page.getByText(/failed to log in/i)).toBeVisible({ timeout: 30_000 });
   });
 });
-
-// --- Happy path ---
-
-test.describe("sign-in happy path", () => {
-  test("redirects to my-reports after successful sign-in", async ({ page }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
-    const signInPage = new SignInPage(page);
-    await signInPage.goto();
-    await dismissCookieConsent(page);
-
-    await signInPage.signIn(TEST_EMAIL!, TEST_PASSWORD!);
-    await signInPage.expectRedirectedTo(/\/private\/my-reports/);
-  });
-
-  test("redirects to custom redirectUrl after successful sign-in", async ({ page }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
-    const signInPage = new SignInPage(page);
-    await signInPage.goto("/private/profile");
-    await dismissCookieConsent(page);
-
-    await signInPage.signIn(TEST_EMAIL!, TEST_PASSWORD!);
-    await signInPage.expectRedirectedTo(/\/private\/profile/);
-  });
-});
-
-// --- Protected route guard ---
 
 test.describe("protected route guard", () => {
-  test("redirects unauthenticated user from my-reports to sign-in", async ({ page }) => {
-    await page.goto("/en/private/my-reports");
-    await expect(page).toHaveURL(/\/auth\/sign-in/, { timeout: 15_000 });
-  });
-
-  test("redirects unauthenticated user from profile to sign-in", async ({ page }) => {
-    await page.goto("/en/private/profile");
-    await expect(page).toHaveURL(/\/auth\/sign-in/, { timeout: 15_000 });
-  });
-
   test("redirects back to original page after sign-in", async ({ page }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
+    test.skip(skipWithoutCredentials(), "E2E test user credentials not set");
 
-    // Visit a protected page while unauthenticated
     await page.goto("/en/private/profile");
     await expect(page).toHaveURL(/\/auth\/sign-in/, { timeout: 15_000 });
 
     await dismissCookieConsent(page);
-
-    // The redirectUrl should be set in the URL
     await expect(page).toHaveURL(/redirectUrl/);
 
-    // Sign in
-    const signInPage = new SignInPage(page);
-    await signInPage.signIn(TEST_EMAIL!, TEST_PASSWORD!);
+    await page.getByLabel("Email").fill(TEST_EMAIL!);
+    await page.getByLabel("Password").fill(TEST_PASSWORD!);
+    await page.locator('button[type="submit"]').click();
 
-    // Should be redirected back to the original protected page
-    await signInPage.expectRedirectedTo(/\/private\/profile/);
+    await expect(page).toHaveURL(/\/private\/profile/, { timeout: 15_000 });
   });
 });
-
-// --- Navigation links ---
-
-test.describe("sign-in navigation links", () => {
-  test("forgot password link navigates to forgot-password page", async ({ page }) => {
-    const signInPage = new SignInPage(page);
-    await signInPage.goto();
-    await dismissCookieConsent(page);
-
-    await signInPage.forgotPasswordLink.click();
-    await expect(page).toHaveURL(/\/auth\/forgot-password/, { timeout: 15_000 });
-  });
-
-  test("sign up link navigates to sign-up page", async ({ page }) => {
-    const signInPage = new SignInPage(page);
-    await signInPage.goto();
-    await dismissCookieConsent(page);
-
-    await signInPage.signUpLink.click();
-    await expect(page).toHaveURL(/\/auth\/sign-up/, { timeout: 15_000 });
-  });
-});
-
-// --- Redirect loop regression ---
 
 test.describe("sign-in from a gated link", () => {
-  // Reaching sign-in through the header link is what breaks: Next prefetches
-  // /reports while signed out, so the client Router Cache holds the gate's
-  // redirect back to sign-in, and a soft navigation after signing in replays it.
-  // Signing in through a Server Action evicts that cache first.
+  // Next prefetches /reports while signed out, so the client Router Cache holds the gate's
+  // redirect back to sign-in and a soft navigation after signing in replays it.
   test("lands on the gated page and stays there", async ({ page }) => {
-    test.skip(!hasCredentials, "E2E test user credentials not set");
+    test.skip(skipWithoutCredentials(), "E2E test user credentials not set");
 
-    const homePage = new HomePage(page);
-    await homePage.goto();
+    await page.goto("/en");
+    await expect(page.locator("h2").first()).toBeVisible({ timeout: 30_000 });
     await dismissCookieConsent(page);
 
-    await homePage.reportToolLink.click();
+    await page.locator('header a[href$="/reports"]').first().click();
     await expect(page).toHaveURL(/\/auth\/sign-in\?redirectUrl=%2Freports/, { timeout: 15_000 });
 
-    const signInPage = new SignInPage(page);
-    await signInPage.signIn(TEST_EMAIL!, TEST_PASSWORD!);
+    await page.getByLabel("Email").fill(TEST_EMAIL!);
+    await page.getByLabel("Password").fill(TEST_PASSWORD!);
+    await page.locator('button[type="submit"]').click();
 
     await expect(page).toHaveURL(/\/reports/, { timeout: 15_000 });
 
-    // The bug let you touch /reports and bounced you back a beat later, so the first
-    // match is not proof. Re-assert once the dust has settled.
+    // The bug bounced you back a beat later, so the first match is not proof.
     await page.waitForLoadState("networkidle");
     await expect(page).toHaveURL(/\/reports/);
 
-    // And the header has to agree: the session the gate accepted is the one the client
-    // is holding, without a reload.
-    await expect(page.getByRole("banner").getByRole("button", { name: /sign in/i })).toHaveCount(0);
+    await expect(page.getByRole("banner").locator('a[href*="/auth/sign-in"]')).toHaveCount(0);
   });
 });

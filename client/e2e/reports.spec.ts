@@ -1,12 +1,20 @@
-import { test, expect } from "./fixtures";
+import { test, expect } from "@playwright/test";
 
 // These run in the signed-out `chromium` project. Every report route is
 // gated, so each one must bounce to sign-in with a usable return URL.
 
+const SOME_REPORT_ID = "00000000-0000-0000-0000-000000000000";
+
+// One path per guarded layout: /reports/grid and /reports/indicators share the layout
+// that /reports already covers.
 const GATED_PATHS = [
   { path: "/en/reports", redirectUrl: "/reports" },
-  { path: "/en/reports/grid", redirectUrl: "/reports/grid" },
-  { path: "/en/reports/indicators", redirectUrl: "/reports/indicators" },
+  { path: `/en/reports/${SOME_REPORT_ID}`, redirectUrl: `/reports/${SOME_REPORT_ID}` },
+  {
+    path: `/en/webshot/reports/${SOME_REPORT_ID}`,
+    redirectUrl: `/webshot/reports/${SOME_REPORT_ID}`,
+  },
+  { path: "/en/private/my-reports", redirectUrl: "/private/my-reports" },
 ];
 
 test.describe("report tool requires authentication", () => {
@@ -35,9 +43,8 @@ test.describe("report tool requires authentication", () => {
 
     // Guards the double-prefix bug: /pt/pt/auth/... would also "redirect to
     // sign-in" but leaves the user on a 404 after logging in.
-    await expect(page).toHaveURL(
-      `/pt/auth/sign-in?redirectUrl=${encodeURIComponent("/reports")}`,
-      { timeout: 30_000 },
-    );
+    await expect(page).toHaveURL(`/pt/auth/sign-in?redirectUrl=${encodeURIComponent("/reports")}`, {
+      timeout: 30_000,
+    });
   });
 });

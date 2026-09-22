@@ -8,10 +8,11 @@ setup("authenticate as test user", async ({ page, request }) => {
   const password = process.env.E2E_TEST_USER_PASSWORD;
 
   if (!email || !password) {
-    return setup.skip(
-      !email || !password,
-      "E2E_TEST_USER_EMAIL and E2E_TEST_USER_PASSWORD not set",
-    );
+    if (process.env.CI) {
+      throw new Error("E2E_TEST_USER_EMAIL and E2E_TEST_USER_PASSWORD must be set in CI");
+    }
+
+    return setup.skip(true, "E2E_TEST_USER_EMAIL and E2E_TEST_USER_PASSWORD not set");
   }
 
   // Seed the test user via the server endpoint when E2E_SEED_SECRET is set.
