@@ -131,8 +131,8 @@ describe("CountrySelector (desktop)", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  test("it is hidden when the build did not opt into the module picker", () => {
-    vi.stubEnv("NEXT_PUBLIC_COUNTRY_MODULE_PICKER", "");
+  test("it is hidden when the build did not enable the country-module flag", () => {
+    vi.stubEnv("NEXT_PUBLIC_FEATURE_FLAGS", "");
 
     const { container } = render(<CountrySelector />);
 
@@ -158,8 +158,8 @@ describe("MobileCountrySelector", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  test("it is hidden when the build did not opt into the module picker", () => {
-    vi.stubEnv("NEXT_PUBLIC_COUNTRY_MODULE_PICKER", "");
+  test("it is hidden when the build did not enable the country-module flag", () => {
+    vi.stubEnv("NEXT_PUBLIC_FEATURE_FLAGS", "");
 
     const { container } = render(<MobileCountrySelector onSelected={vi.fn()} />);
 
