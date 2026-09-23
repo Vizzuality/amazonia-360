@@ -1,17 +1,30 @@
 import { useLocale } from "next-intl";
 
-import { useGetIndicatorsId } from "@/lib/indicators";
+import { useGetIndicatorDescription } from "@/lib/indicators";
 
 import { Indicator } from "@/types/indicator";
 
 import { Markdown } from "@/components/ui/markdown";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const InfoItemSkeleton = () => (
+  <div className="space-y-3" aria-hidden>
+    <Skeleton className="h-6 w-1/2" />
+    <Skeleton className="h-4 w-full" />
+    <Skeleton className="h-4 w-full" />
+    <Skeleton className="h-4 w-11/12" />
+    <Skeleton className="h-4 w-2/3" />
+  </div>
+);
 
 const InfoItem = ({ id }: { id: Indicator["id"] }) => {
   const locale = useLocale();
-  const indicator = useGetIndicatorsId(id, locale);
+  const { data: description, isPending } = useGetIndicatorDescription(id, locale);
 
-  return <Markdown>{indicator?.description}</Markdown>;
+  if (isPending) return <InfoItemSkeleton />;
+
+  return <Markdown>{description}</Markdown>;
 };
 
 export default function Info({ ids }: { ids: Indicator["id"][] }) {
