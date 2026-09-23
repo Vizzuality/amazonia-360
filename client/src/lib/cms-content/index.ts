@@ -1,3 +1,5 @@
+import { Where } from "payload";
+
 import { Locale } from "next-intl";
 
 import { Indicator, ResourceFeature } from "@/types/indicator";
@@ -181,6 +183,29 @@ const toIndicator = (indicator: CmsIndicator): Indicator => {
   };
 };
 
+/**
+ * By id, so the lookup needs no country: `findByID` reaches an indicator whatever module it
+ * belongs to, where the catalogue only ever holds the modules its `where` asked for.
+ */
+export const fetchIndicatorDescription = async ({
+  id,
+  locale,
+}: {
+  id: number;
+  locale: string;
+}): Promise<string | undefined> => {
+  const indicator = await sdk.findByID({
+    collection: "indicators",
+    id: `${id}`,
+    locale: locale as Locale,
+    fallbackLocale: "en",
+    depth: 0,
+    select: { description: true },
+  });
+
+  return text(indicator.description);
+};
+
 // `joins: false` keeps Topics.subtopics and Subtopics.indicators — admin-only fields — out of
 // these two reads. A join populates at every depth, `depth: 0` included, and `toTopic` and
 // `toSubtopic` spread the document, so without it every Topic and Subtopic would drag a list of
@@ -207,16 +232,25 @@ export const fetchSubtopics = async ({ locale }: { locale: string }): Promise<Su
   return byId(docs.map(toSubtopic));
 };
 
+const getIndicatorsWhere = (countries: readonly string[]): Where =>
+  countries.length > 0
+    ? { or: [{ country: { exists: false } }, { country: { in: [...countries] } }] }
+    : { country: { exists: false } };
+
 // `depth: 2` reaches the Topic through the Subtopic; `populate` stops all 164 rows dragging a
 // whole Topic along with it. Depth is always explicit — the config default would make the two
 // flat reads expensive.
-export const fetchIndicators = async ({ locale }: { locale: string }): Promise<Indicator[]> => {
+export const fetchIndicators = async ({
+  locale,
+  countries,
+}: {
+  locale: string;
+  countries: readonly string[];
+}): Promise<Indicator[]> => {
   const { docs } = await sdk.find({
     collection: "indicators",
     ...read(locale),
-    // Country-scoped indicators are seeded but withheld until there is a module UI to put them
-    // behind. Delete this first when that work starts — nothing else keeps them off the screen.
-    where: { country: { exists: false } },
+    where: getIndicatorsWhere(countries),
     depth: 2,
     populate: {
       subtopics: { name: true, topic: true },

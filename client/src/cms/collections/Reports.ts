@@ -1,5 +1,7 @@
 import type { CollectionConfig } from "payload";
 
+import { COUNTRIES } from "@/lib/country";
+
 import { authenticatedAccess } from "@/cms/access/authenticated";
 import { ownUserAccess } from "@/cms/access/owner";
 import { LocationField } from "@/cms/fields/location";
@@ -36,6 +38,17 @@ export const Reports: CollectionConfig = {
 
       admin: {
         readOnly: true,
+      },
+    },
+    {
+      name: "country",
+      type: "select",
+      hasMany: true,
+      options: COUNTRIES.map(({ code }) => ({ label: code, value: code })),
+      admin: {
+        readOnly: true,
+        description:
+          "The country modules active when this report was created. Empty is the Amazon Region — reports created before country modules existed.",
       },
     },
     LocationField,

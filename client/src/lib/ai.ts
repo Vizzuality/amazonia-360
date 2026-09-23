@@ -1,5 +1,6 @@
 import { useMutation, UseMutationOptions, useQueryClient } from "@tanstack/react-query";
 
+import { getCountryCodes } from "@/lib/country";
 import {
   ClassShare,
   getClassDistribution,
@@ -13,6 +14,8 @@ import { Context, ContextDescriptionType, ContextLanguage } from "@/types/genera
 import { generateDescriptionTextAiPost } from "@/types/generated/text-generation";
 import { ImageryAggregation, Indicator, ResourceFeature, ResourceImagery } from "@/types/indicator";
 import { Topic } from "@/types/topic";
+
+import { useCountry } from "@/i18n/use-country";
 
 export type AISummaryOptions = {
   type?: ContextDescriptionType;
@@ -274,12 +277,14 @@ export const useGetTopicSummary = <
   options?: Omit<TopicSummaryMutationOptions<TData, TError>, "mutationFn">,
 ) => {
   const queryClient = useQueryClient();
+  const country = useCountry();
 
   return useMutation({
     mutationFn: (params: TopicSummaryVariables) =>
       getTopicSummary({
         ...params,
-        loadIndicators: (locale) => queryClient.ensureQueryData(getIndicatorsOptions(locale)),
+        loadIndicators: (locale) =>
+          queryClient.ensureQueryData(getIndicatorsOptions(locale, getCountryCodes(country))),
       }),
     ...options,
   });

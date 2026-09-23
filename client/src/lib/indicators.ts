@@ -7,7 +7,8 @@ import * as intersectionOperator from "@arcgis/core/geometry/operators/intersect
 import { QueryFunction, UseQueryOptions, useQuery, useQueries } from "@tanstack/react-query";
 import axios from "axios";
 
-import { fetchIndicators } from "@/lib/cms-content";
+import { fetchIndicatorDescription, fetchIndicators } from "@/lib/cms-content";
+import { getCountryCodes } from "@/lib/country";
 
 import {
   Indicator,
@@ -22,7 +23,12 @@ import { Subtopic, Topic } from "@/types/topic";
 
 import { LayerProps } from "@/components/map/layers/types";
 
+import { useCountry } from "@/i18n/use-country";
+
 export type IndicatorsParams = unknown;
+
+/** A single code (the URL's own module), the set a report stores, or null for regional only. */
+export type CountryModules = string | readonly (string | null)[] | null;
 
 export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
   Awaited<ReturnType<typeof getIndicators>>,
@@ -30,14 +36,17 @@ export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
   TData
 >;
 
-export const getIndicators = async (locale: string): Promise<Indicator[]> => {
-  const indicators = await fetchIndicators({ locale });
+export const getIndicators = async (
+  locale: string,
+  countries: readonly string[],
+): Promise<Indicator[]> => {
+  const indicators = await fetchIndicators({ locale, countries });
 
   return indicators.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 };
 
-export const getIndicatorsKey = (locale: string) => {
-  return ["indicators", locale];
+export const getIndicatorsKey = (locale: string, countries: readonly string[]) => {
+  return ["indicators", locale, ...countries];
 };
 
 export const getIndicatorsOptions = <
@@ -45,11 +54,12 @@ export const getIndicatorsOptions = <
   TError = unknown,
 >(
   locale: string,
+  countries: readonly string[],
   options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
 ) => {
-  const queryKey = getIndicatorsKey(locale);
+  const queryKey = getIndicatorsKey(locale, countries);
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getIndicators>>> = () =>
-    getIndicators(locale);
+    getIndicators(locale, countries);
   // Editorial content, and the report flow is four routes: without this every navigation
   // refetches the whole catalogue once the provider's 60s staleTime has passed.
   return { queryKey, queryFn, staleTime: Infinity, ...options } as IndicatorsQueryOptions<
@@ -58,14 +68,21 @@ export const getIndicatorsOptions = <
   >;
 };
 
+/**
+ * `country` left out reads the URL's own module; passed explicitly (including `null`, for the
+ * regional catalogue) it overrides the URL — the seam a report rendered outside its module uses.
+ */
 export const useGetIndicators = <
   TData = Awaited<ReturnType<typeof getIndicators>>,
   TError = unknown,
 >(
   locale: string,
   options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
+  country?: CountryModules,
 ) => {
-  const { queryKey, queryFn, staleTime } = getIndicatorsOptions(locale, options);
+  const urlCountry = useCountry();
+  const countries = getCountryCodes(country === undefined ? urlCountry : country);
+  const { queryKey, queryFn, staleTime } = getIndicatorsOptions(locale, countries, options);
 
   return useQuery({
     queryKey,
@@ -79,31 +96,37 @@ export const useGetDefaultIndicators = ({
   topicId,
   subtopicId,
   locale,
+  country,
   options = {},
 }: {
   topicId?: Topic["id"];
   subtopicId?: Subtopic["id"];
   locale: string;
+  country?: CountryModules;
   options?: Omit<IndicatorsQueryOptions<Indicator[], unknown>, "queryKey">;
 }) => {
-  const query = useGetIndicators(locale, {
-    select(data) {
-      return data
-        .filter((indicator) => {
-          if (topicId) {
-            return indicator.subtopic.topic_id === topicId && indicator.resource.type !== "h3";
-          }
+  const query = useGetIndicators(
+    locale,
+    {
+      select(data) {
+        return data
+          .filter((indicator) => {
+            if (topicId) {
+              return indicator.subtopic.topic_id === topicId && indicator.resource.type !== "h3";
+            }
 
-          if (subtopicId) {
-            return indicator.subtopic.id === subtopicId && indicator.resource.type !== "h3";
-          }
+            if (subtopicId) {
+              return indicator.subtopic.id === subtopicId && indicator.resource.type !== "h3";
+            }
 
-          return indicator.resource.type !== "h3";
-        })
-        .sort((a, b) => a.order - b.order);
+            return indicator.resource.type !== "h3";
+          })
+          .sort((a, b) => a.order - b.order);
+      },
+      ...options,
     },
-    ...options,
-  });
+    country,
+  );
 
   return query;
 };
@@ -112,38 +135,65 @@ export const useGetH3Indicators = ({
   topicId,
   subtopicId,
   locale,
+  country,
 }: {
   topicId?: Topic["id"];
   subtopicId?: Subtopic["id"];
   locale: string;
+  country?: string | null;
 }) => {
-  const query = useGetIndicators(locale, {
-    select(data) {
-      return data
-        .filter((indicator) => {
-          if (topicId) {
-            return indicator.subtopic.topic_id === topicId && indicator.resource.type === "h3";
-          }
+  const query = useGetIndicators(
+    locale,
+    {
+      select(data) {
+        return data
+          .filter((indicator) => {
+            if (topicId) {
+              return indicator.subtopic.topic_id === topicId && indicator.resource.type === "h3";
+            }
 
-          if (subtopicId) {
-            return indicator.subtopic.id === subtopicId && indicator.resource.type === "h3";
-          }
+            if (subtopicId) {
+              return indicator.subtopic.id === subtopicId && indicator.resource.type === "h3";
+            }
 
-          return indicator.resource.type === "h3";
-        })
-        .map((indicator) => ({
-          ...indicator,
-          resource: indicator.resource as ResourceH3,
-        }))
-        .sort((a, b) => a.order - b.order);
+            return indicator.resource.type === "h3";
+          })
+          .map((indicator) => ({
+            ...indicator,
+            resource: indicator.resource as ResourceH3,
+          }))
+          .sort((a, b) => a.order - b.order);
+      },
     },
-  });
+    country,
+  );
 
   return query;
 };
 
-export const useGetIndicatorsId = (id: Indicator["id"], locale: string) => {
-  const { data } = useGetIndicators(locale);
+export const getIndicatorDescriptionKey = (id: Indicator["id"], locale: string) => [
+  "indicator-description",
+  id,
+  locale,
+];
+
+/**
+ * Its own query, by id: the description is the one thing a dialog needs and the only lookup here
+ * that no module scopes, so it does not have to be told which catalogue the indicator lives in.
+ */
+export const useGetIndicatorDescription = (id: Indicator["id"], locale: string) =>
+  useQuery({
+    queryKey: getIndicatorDescriptionKey(id, locale),
+    queryFn: () => fetchIndicatorDescription({ id, locale }),
+    staleTime: Infinity,
+  });
+
+export const useGetIndicatorsId = (
+  id: Indicator["id"],
+  locale: string,
+  country?: CountryModules,
+) => {
+  const { data } = useGetIndicators(locale, undefined, country);
 
   return data?.find((indicator) => indicator.id === id);
 };
@@ -152,8 +202,9 @@ export const useGetIndicatorsLayerId = (
   id: Indicator["id"],
   locale: string,
   settings: Record<string, unknown>,
+  country?: CountryModules,
 ) => {
-  const indicatorData = useGetIndicatorsId(id, locale);
+  const indicatorData = useGetIndicatorsId(id, locale, country);
   const resource = indicatorData?.resource;
 
   return useMemo(() => {
