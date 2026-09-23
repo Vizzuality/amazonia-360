@@ -20,6 +20,17 @@ export type CountryOption = {
   href?: { pathname: string; query: Record<string, string> };
 };
 
+/**
+ * The country module is still being built. The picker is the only thing that announces it —
+ * nine "Coming soon" countries and a partnerships block — so it is opt-in per environment,
+ * off unless a build sets it. Same shape as `NEXT_PUBLIC_E2E_BRIDGE`: read at build time,
+ * which is enough because every environment is its own image.
+ *
+ * Deliberately scoped to the picker. `lib/country.ts` also feeds `proxy.ts`, so gating there
+ * would 404 the `/ECU` routes; those stay live on purpose.
+ */
+const pickerEnabled = () => process.env.NEXT_PUBLIC_COUNTRY_MODULE_PICKER === "true";
+
 export function useCountryOptions(): CountryOption[] | null {
   const t = useTranslations();
   const pathname = usePathname();
@@ -29,6 +40,7 @@ export function useCountryOptions(): CountryOption[] | null {
   const query = useMemo(() => Object.fromEntries(searchParams?.entries() ?? []), [searchParams]);
 
   return useMemo(() => {
+    if (!pickerEnabled()) return null;
     if (isUnscopedPathname(pathname)) return null;
 
     const toOption = (
