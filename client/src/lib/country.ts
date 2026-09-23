@@ -42,7 +42,7 @@ export function getCountryCodes(
   const values = typeof value === "string" ? [value] : (value ?? []);
   return [
     ...new Set(values.filter((entry): entry is CountryCode => isCountryCode(entry ?? undefined))),
-  ].sort();
+  ].sort((a, b) => a.localeCompare(b));
 }
 
 export function countryFlagSrc(code: string): string {
