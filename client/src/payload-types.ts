@@ -89,6 +89,12 @@ export interface Config {
       accounts: 'accounts';
       reports: 'reports';
     };
+    topics: {
+      subtopics: 'subtopics';
+    };
+    subtopics: {
+      indicators: 'indicators';
+    };
   };
   collectionsSelect: {
     admins: AdminsSelect<false> | AdminsSelect<true>;
@@ -373,6 +379,14 @@ export interface Topic {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Subtopics filed under this topic. Edited on the subtopic itself.
+   */
+  subtopics?: {
+    docs?: (string | Subtopic)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -634,6 +648,14 @@ export interface Subtopic {
    * Markdown. Empty on every row in the source data.
    */
   description?: string | null;
+  /**
+   * Indicators filed under this subtopic. Edited on the indicator itself.
+   */
+  indicators?: {
+    docs?: (string | Indicator)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -1053,6 +1075,7 @@ export interface TopicsSelect<T extends boolean = true> {
         opacity?: T;
         id?: T;
       };
+  subtopics?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1066,6 +1089,7 @@ export interface SubtopicsSelect<T extends boolean = true> {
   topic?: T;
   name?: T;
   description?: T;
+  indicators?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
