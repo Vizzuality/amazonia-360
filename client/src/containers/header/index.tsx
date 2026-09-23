@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { reportEditionModeAtom, useSyncLocation } from "@/app/(frontend)/store";
 
 import AuthHeader from "@/containers/header/auth/desktop";
-import CountrySelector from "@/containers/header/country-selector/desktop";
+import CountryBadge from "@/containers/header/country-badge";
 import LanguageSelector from "@/containers/header/language-selector/desktop";
 import { Media } from "@/containers/media";
 
@@ -93,11 +93,18 @@ export default function Header() {
     >
       <div className="container flex items-center justify-between md:mx-auto">
         <Logo />
+        <Media greaterThanOrEqual="md" className="flex grow items-center">
+          {/* `@artsy/fresnel` ships `.fresnel-container { margin: 0; padding: 0 }`, which beats
+              Tailwind's spacing on the container itself, so the inset lives one level in. */}
+          <div className="pl-6">
+            <CountryBadge />
+          </div>
+        </Media>
+
         <Media greaterThanOrEqual="md" className="flex items-center space-x-4">
           {DYNAMIC_HEADER}
 
           <div className="flex items-center space-x-1">
-            <CountrySelector />
             <LanguageSelector />
             <AuthHeader />
           </div>

@@ -1,72 +1,78 @@
 import { test, expect } from "@playwright/test";
 
 import { dismissCookieConsent } from "./helpers/cookie-consent";
-import { skipWithoutCredentials } from "./helpers/credentials";
 import {
-  AMAZON_REGION,
-  ECUADOR,
   expectActiveModule,
-  switchModule,
-  switchModuleInNewTab,
-} from "./helpers/module-selector";
+  expectRegionalModule,
+  leaveModule,
+  leaveModuleInNewTab,
+  suppressCountryModuleDialog,
+} from "./helpers/country-badge";
+import { skipWithoutCredentials } from "./helpers/credentials";
 import { expectNodeKept, markNode } from "./helpers/node-identity";
-import { openReportTool } from "./helpers/reports";
 
-// The picker lives in the header of the report tool, which is gated, so these run
-// in the signed-in `chromium-authenticated` project.
+// Entering a module is no longer a control: it happens when the drawn area is mostly inside
+// a country, which needs a real ArcGIS sketch. Only leaving can be driven from the DOM.
 test.skip(skipWithoutCredentials, "E2E test user credentials not set");
+
+test.beforeEach(async ({ page }) => {
+  await suppressCountryModuleDialog(page, "ECU");
+});
 
 test.describe("the module in the URL", () => {
   test("the back button returns to the module you came from", async ({ page }) => {
-    await page.goto("/en/reports/grid");
+    await page.goto("/en/ECU/reports/grid");
     await dismissCookieConsent(page);
+    await expectActiveModule(page, "ECU");
 
-    await switchModule(page, ECUADOR);
-    await expect(page).toHaveURL(/\/en\/ECU\/reports\/grid/);
+    await leaveModule(page);
+    await expect.poll(() => new URL(page.url()).pathname).toBe("/en/reports/grid");
+    await expectRegionalModule(page);
 
     await page.goBack();
-    await expect.poll(() => new URL(page.url()).pathname).toBe("/en/reports/grid");
-    await expectActiveModule(page, AMAZON_REGION);
+    await expect(page).toHaveURL(/\/en\/ECU\/reports\/grid/);
+    await expectActiveModule(page, "ECU");
   });
 
   for (const how of ["modifier", "middle"] as const) {
-    test(`a ${how === "middle" ? "middle click" : "cmd/ctrl-click"} opens the module in a new tab`, async ({
+    test(`a ${how === "middle" ? "middle click" : "cmd/ctrl-click"} leaves the module in a new tab`, async ({
       page,
     }) => {
-      await page.goto("/en/reports/grid");
+      await page.goto("/en/ECU/reports/grid");
       await dismissCookieConsent(page);
 
-      const opened = await switchModuleInNewTab(page, ECUADOR, how);
+      const opened = await leaveModuleInNewTab(page, how);
 
-      await expect(opened).toHaveURL(/\/en\/ECU\/reports\/grid/);
-      await expect.poll(() => new URL(page.url()).pathname).toBe("/en/reports/grid");
-      await expectActiveModule(page, AMAZON_REGION);
+      await expect.poll(() => new URL(opened.url()).pathname).toBe("/en/reports/grid");
+      await expect(page).toHaveURL(/\/en\/ECU\/reports\/grid/);
+      await expectActiveModule(page, "ECU");
     });
   }
 });
 
 test.describe("nothing is rebuilt", () => {
-  test("switching module on the home page keeps it", async ({ page }) => {
-    await page.goto("/en");
+  test("leaving the module on the home page keeps it", async ({ page }) => {
+    await page.goto("/en/ECU");
     await expect(page.locator("h2").first()).toBeVisible({ timeout: 30_000 });
     await dismissCookieConsent(page);
 
     await markNode(page, "main");
-    await switchModule(page, ECUADOR);
+    await leaveModule(page);
 
-    await expect.poll(() => new URL(page.url()).pathname).toBe("/en/ECU");
+    await expect.poll(() => new URL(page.url()).pathname).toBe("/en");
     await expectNodeKept(page, "main");
-    await expectActiveModule(page, ECUADOR);
+    await expectRegionalModule(page);
   });
 
-  test("switching module in the report flow keeps the map", async ({ page }) => {
-    await openReportTool(page);
+  test("leaving the module in the report flow keeps the map", async ({ page }) => {
+    await page.goto("/en/ECU/reports");
     await dismissCookieConsent(page);
+    await expect(page.locator(".esri-view").first()).toBeVisible({ timeout: 30_000 });
 
     await markNode(page, ".esri-view");
-    await switchModule(page, ECUADOR);
+    await leaveModule(page);
 
-    await expect(page).toHaveURL(/\/en\/ECU\/reports/);
+    await expect(page).toHaveURL(/\/en\/reports/);
     await expectNodeKept(page, ".esri-view");
   });
 
@@ -75,44 +81,34 @@ test.describe("nothing is rebuilt", () => {
       name: "from the report tool to the grid",
       from: "/reports",
       link: 'a[href$="/reports/grid"], a[href*="/reports/grid?"]',
-      to: /\/reports\/grid/,
-      switchFirst: false,
+      to: /\/ECU\/reports\/grid/,
     },
     {
       name: "from the report tool to the indicators hub",
       from: "/reports",
       link: 'main a[href$="/reports/indicators"], main a[href*="/reports/indicators?"]',
-      to: /\/reports\/indicators/,
-      switchFirst: true,
+      to: /\/ECU\/reports\/indicators/,
     },
     {
       name: "from the grid back to the report tool",
       from: "/reports/grid",
       link: 'main a[href$="/reports"], main a[href*="/reports?"]',
-      to: /\/reports(\?|$)/,
-      switchFirst: false,
+      to: /\/ECU\/reports(\?|$)/,
     },
   ];
 
   for (const hop of HOPS) {
-    const suffix = hop.switchFirst ? ", after switching module" : "";
-
-    test(`moving ${hop.name} keeps the map${suffix}`, async ({ page }) => {
-      await page.goto(`/en${hop.from}`);
+    test(`moving ${hop.name} inside a module keeps the map`, async ({ page }) => {
+      await page.goto(`/en/ECU${hop.from}`);
       await dismissCookieConsent(page);
       await expect(page.locator(".esri-view").first()).toBeVisible({ timeout: 30_000 });
-
-      if (hop.switchFirst) {
-        await switchModule(page, ECUADOR);
-        await expect.poll(() => new URL(page.url()).pathname).toContain("/ECU/");
-      }
 
       await markNode(page, ".esri-view");
       await page.locator(hop.link).first().click();
 
       await expect(page).toHaveURL(hop.to);
       await expectNodeKept(page, ".esri-view");
-      await expectActiveModule(page, hop.switchFirst ? ECUADOR : AMAZON_REGION);
+      await expectActiveModule(page, "ECU");
     });
   }
 });
