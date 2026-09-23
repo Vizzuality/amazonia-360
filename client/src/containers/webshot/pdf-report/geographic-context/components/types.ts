@@ -6,4 +6,5 @@ export interface DataRowProps {
   id: number;
   locale: Locale;
   location: Report["location"];
+  country: Report["country"];
 }

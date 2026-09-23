@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { useLocale, useTranslations } from "next-intl";
 
 import { useGetDefaultIndicators } from "@/lib/indicators";
@@ -7,13 +9,21 @@ import { cn } from "@/lib/utils";
 
 import { Subtopic } from "@/types/topic";
 
+import { useSyncIndicatorsScopeFilter } from "@/app/(frontend)/store";
+
+import { getFilteredIndicators } from "@/containers/indicators/filter-tabs";
+
 import { Skeleton } from "@/components/ui/skeleton";
+
+import { useCountry } from "@/i18n/use-country";
 
 import IndicatorsItem from "./item";
 
 export default function IndicatorsList({ subtopicId }: { subtopicId?: Subtopic["id"] }) {
   const t = useTranslations();
   const locale = useLocale();
+  const country = useCountry();
+  const [scopeFilter] = useSyncIndicatorsScopeFilter();
 
   const {
     data: indicatorsData,
@@ -23,6 +33,11 @@ export default function IndicatorsList({ subtopicId }: { subtopicId?: Subtopic["
     subtopicId,
     locale,
   });
+
+  const filteredIndicators = useMemo(
+    () => getFilteredIndicators(indicatorsData ?? [], country ? scopeFilter : "all"),
+    [indicatorsData, scopeFilter, country],
+  );
 
   return (
     <div
@@ -41,7 +56,7 @@ export default function IndicatorsList({ subtopicId }: { subtopicId?: Subtopic["
           </>
         )}
 
-        {!isFetching && isFetched && !indicatorsData?.length && (
+        {!isFetching && isFetched && !filteredIndicators.length && (
           <p className="text-muted-foreground p-2 text-sm font-medium">
             {t("grid-sidebar-grid-filters-no-indicators-available")}
           </p>
@@ -49,8 +64,8 @@ export default function IndicatorsList({ subtopicId }: { subtopicId?: Subtopic["
 
         {!isFetching &&
           isFetched &&
-          !!indicatorsData?.length &&
-          indicatorsData?.map((indicator) => {
+          !!filteredIndicators.length &&
+          filteredIndicators.map((indicator) => {
             return <IndicatorsItem key={indicator.id} {...indicator} />;
           })}
       </div>

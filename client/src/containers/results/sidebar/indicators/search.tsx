@@ -7,6 +7,7 @@ import { LuChartPie, LuHash, LuMap, LuTable } from "react-icons/lu";
 
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import { findFirstAvailablePosition } from "@/lib/report";
+import { useReportCountry } from "@/lib/use-report-country";
 import { cn } from "@/lib/utils";
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
@@ -38,7 +39,8 @@ export default function SearchC() {
   const [search, setSearch] = useState("");
   const { topics, setTopics } = useFormTopics();
 
-  const queryIndicators = useGetDefaultIndicators({ locale });
+  const country = useReportCountry();
+  const queryIndicators = useGetDefaultIndicators({ locale, country });
 
   const ICON_COMPONENTS = {
     map: LuMap,

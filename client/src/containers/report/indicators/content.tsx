@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 import { useSearchParams } from "next/navigation";
 
@@ -12,8 +12,13 @@ import { usePreviousDifferent } from "@/lib/hooks";
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
-import { indicatorsExpandAtom, useSyncIndicators } from "@/app/(frontend)/store";
+import {
+  indicatorsExpandAtom,
+  useSyncIndicators,
+  useSyncIndicatorsScopeFilter,
+} from "@/app/(frontend)/store";
 
+import { getIndicatorScopeCounts, IndicatorsFilterTabs } from "@/containers/indicators/filter-tabs";
 import IndicatorsFooter from "@/containers/report/indicators/footer";
 import IndicatorsSearch from "@/containers/report/indicators/search";
 import IndicatorsTopicsList from "@/containers/report/indicators/topics";
@@ -21,15 +26,22 @@ import IndicatorsTopicsList from "@/containers/report/indicators/topics";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Link } from "@/i18n/navigation";
+import { useCountry } from "@/i18n/use-country";
 
 export default function ReportIndicatorsContent() {
   const locale = useLocale();
   const t = useTranslations();
+  const country = useCountry();
+  const [scopeFilter, setScopeFilter] = useSyncIndicatorsScopeFilter();
 
   const [indicators] = useSyncIndicators();
   const previousIndicators = usePreviousDifferent(indicators);
 
   const { data: indicatorsData } = useGetDefaultIndicators({ locale });
+  const scopeCounts = useMemo(
+    () => getIndicatorScopeCounts(indicatorsData ?? []),
+    [indicatorsData],
+  );
 
   const searchParams = useSearchParams();
 
@@ -91,6 +103,16 @@ export default function ReportIndicatorsContent() {
       <div className="px-6">
         <IndicatorsSearch />
       </div>
+
+      {!!country && !!indicatorsData?.length && (
+        <div className="px-6">
+          <IndicatorsFilterTabs
+            value={scopeFilter}
+            onValueChange={setScopeFilter}
+            counts={scopeCounts}
+          />
+        </div>
+      )}
 
       <div className="relative m-0! flex grow flex-col overflow-hidden">
         <div className="pointer-events-none absolute top-0 right-0 left-0 z-50 h-2 bg-linear-to-b from-white to-transparent xl:h-4" />

@@ -5,13 +5,13 @@ import { userEvent } from "vitest/browser";
 
 import { ReportFormData } from "@/containers/results";
 
-import { getTestReport } from "@integration/fixtures/report";
+import { Report } from "@/payload-types";
+import { getTestQueryClientWithReport, getTestReport } from "@integration/fixtures/report";
 import { renderWithProviders } from "@integration/wrappers/render";
 
 import TitleReport from "./title";
 
-function TitleFormWrapper({ title, children }: { title: string; children: React.ReactNode }) {
-  const report = getTestReport({ title });
+function TitleFormWrapper({ report, children }: { report: Report; children: React.ReactNode }) {
   const methods = useForm<ReportFormData>({
     values: {
       title: report.title,
@@ -26,10 +26,12 @@ function TitleFormWrapper({ title, children }: { title: string; children: React.
 
 describe("TitleReport", () => {
   it("renders the title the form holds", async () => {
+    const report = getTestReport({ title: "Seeded Title" });
     const { screen } = await renderWithProviders(
-      <TitleFormWrapper title="Seeded Title">
+      <TitleFormWrapper report={report}>
         <TitleReport />
       </TitleFormWrapper>,
+      { queryClient: getTestQueryClientWithReport(report), params: { id: report.id } },
     );
 
     await expect.element(screen.getByRole("heading", { name: "Seeded Title" })).toBeVisible();
@@ -37,10 +39,12 @@ describe("TitleReport", () => {
   });
 
   it("reverts to the original title without a server round trip when the edit is cancelled", async () => {
+    const report = getTestReport({ title: "Keep This Title" });
     const { screen } = await renderWithProviders(
-      <TitleFormWrapper title="Keep This Title">
+      <TitleFormWrapper report={report}>
         <TitleReport />
       </TitleFormWrapper>,
+      { queryClient: getTestQueryClientWithReport(report), params: { id: report.id } },
     );
 
     await userEvent.click(screen.getByRole("button", { name: "Edit" }));

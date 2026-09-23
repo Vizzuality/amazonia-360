@@ -4,6 +4,7 @@ import { useAtomValue } from "jotai";
 import { useLocale } from "next-intl";
 
 import { useGetIndicatorsLayerId } from "@/lib/indicators";
+import { useReportCountry } from "@/lib/use-report-country";
 
 import {
   ResourceFeature,
@@ -35,7 +36,8 @@ export const MapIndicators = (
 
   const { location } = useFormLocation();
 
-  const LAYER = useGetIndicatorsLayerId(id, locale, {});
+  const country = useReportCountry();
+  const LAYER = useGetIndicatorsLayerId(id, locale, {}, country);
 
   const { onLoading, onReady } = useLoad();
 

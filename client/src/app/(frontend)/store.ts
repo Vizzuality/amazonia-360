@@ -136,6 +136,10 @@ export const useSyncIndicatorsSettings = () => {
   // return useQueryState("indicatorsSettings", indicatorsSettingsParser);
 };
 
+export const useSyncIndicatorsScopeFilter = () => {
+  return useAtom(indicatorsScopeFilterAtom);
+};
+
 // GRID PARAMS
 export const useSyncGridDatasetContinousSettings = () => {
   // const { id } = useParams();
@@ -198,6 +202,8 @@ export const indicatorsSettingsAtom = atom<{
     opacity?: number;
   };
 }>({});
+// Shared across the sidebar's tabs and every per-subtopic list, so one selection filters all of them.
+export const indicatorsScopeFilterAtom = atom<"all" | "regional" | "national">("all");
 
 // GRID ATOMS
 export const gridEnabledAtom = atom<boolean>(false);

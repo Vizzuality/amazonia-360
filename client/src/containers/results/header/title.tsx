@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils";
 
 import { useFormTitle } from "@/app/(frontend)/store";
 
+import ModuleReport from "@/containers/results/header/module";
+
 import { Button } from "@/components/ui/button";
 import { Field, FieldCharacterCount, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -67,6 +69,7 @@ export default function TitleReport() {
           >
             <LuPen className="text-secondary-foreground h-4 w-4" />
           </Button>
+          <ModuleReport />
         </header>
       )}
 

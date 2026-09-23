@@ -16,8 +16,8 @@ if (!geodesicAreaOperator.isLoaded()) {
   await geodesicAreaOperator.load();
 }
 
-export default function ComponentDataRow({ id, locale, location }: DataRowProps) {
-  const indicator = useGetIndicatorsId(id, locale);
+export default function ComponentDataRow({ id, locale, location, country }: DataRowProps) {
+  const indicator = useGetIndicatorsId(id, locale, country);
   const GEOMETRY = useLocationGeometry(location);
 
   const { onIndicatorViewLoading, onIndicatorViewLoaded } = useIndicator();

@@ -3,6 +3,7 @@
 import { useLocale } from "next-intl";
 
 import { useGetDefaultIndicators } from "@/lib/indicators";
+import { useReportCountry } from "@/lib/use-report-country";
 
 import { Subtopic } from "@/types/topic";
 
@@ -17,7 +18,8 @@ export function CounterIndicatorsPill({
 }) {
   const locale = useLocale();
   const { topics } = useFormTopics();
-  const { data: indicatorsData } = useGetDefaultIndicators({ subtopicId: id, locale });
+  const country = useReportCountry();
+  const { data: indicatorsData } = useGetDefaultIndicators({ subtopicId: id, locale, country });
 
   const indicators = topics?.find((t) => t.topic_id === topic_id)?.indicators;
 

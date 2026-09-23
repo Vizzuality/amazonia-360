@@ -7,11 +7,13 @@ import { useLocale, useTranslations } from "next-intl";
 import { toast, useSonner } from "sonner";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
+import { useReportCountry } from "@/lib/use-report-country";
 import { cn } from "@/lib/utils";
 import { exportToPng } from "@/lib/webshot";
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 import { ResourceFeature, ResourceImageryTile, ResourceWebTile } from "@/types/indicator";
+import { Topic } from "@/types/topic";
 
 import { reportEditionModeAtom } from "@/app/(frontend)/store";
 
@@ -31,6 +33,7 @@ import { CustomIndicators } from "@/containers/indicators/custom";
 import { MapIndicators } from "@/containers/indicators/map";
 import { NumericIndicators } from "@/containers/indicators/numeric";
 import { TableIndicators } from "@/containers/indicators/table";
+import IndicatorScopeToggle from "@/containers/results/content/indicators/scope-toggle";
 
 import { useSidebar } from "@/components/ui/sidebar";
 
@@ -39,6 +42,7 @@ import { Report } from "@/payload-types";
 export default function ReportResultsIndicator(props: {
   readonly id: Report["id"];
   readonly indicatorId: Indicator["id"];
+  readonly topicId?: Topic["id"];
   readonly type: VisualizationTypes;
   readonly basemapId?: BasemapIds;
   readonly editable: boolean;
@@ -51,6 +55,7 @@ export default function ReportResultsIndicator(props: {
 function ReportResultsIndicatorContent({
   id,
   indicatorId,
+  topicId,
   type,
   basemapId,
   editable,
@@ -59,6 +64,7 @@ function ReportResultsIndicatorContent({
 }: {
   readonly id: Report["id"];
   readonly indicatorId: Indicator["id"];
+  readonly topicId?: Topic["id"];
   readonly type: VisualizationTypes;
   readonly basemapId?: BasemapIds;
   readonly editable: boolean;
@@ -68,7 +74,8 @@ function ReportResultsIndicatorContent({
   const { toasts } = useSonner();
   const locale = useLocale();
   const t = useTranslations();
-  const indicator = useGetIndicatorsId(indicatorId, locale);
+  const country = useReportCountry();
+  const indicator = useGetIndicatorsId(indicatorId, locale, country);
   const cardRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
 
@@ -112,7 +119,11 @@ function ReportResultsIndicatorContent({
         <CardHeader className="h-auto px-4 pt-2 pb-1.5">
           <CardTitle>{indicator?.name}</CardTitle>
           <CardControls data-export-exclude>
-            {!isWebshot && !isPdf && <CardInfo ids={[indicator.id]} />}
+            {!isWebshot && !isPdf && <CardInfo ids={[indicator.id]} country={country} />}
+
+            {!isWebshot && !isPdf && editable && topicId !== undefined && (
+              <IndicatorScopeToggle indicatorId={indicator.id} topicId={topicId} type={type} />
+            )}
 
             {editable && (
               <CardPopover

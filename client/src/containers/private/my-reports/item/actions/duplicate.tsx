@@ -44,6 +44,7 @@ export const DuplicateAction = ({ report }: ReportActionsProps) => {
       description: report.description || null,
       topics: report.topics as TopicView[],
       location: report.location,
+      country: report.country ?? null,
       locale,
       status: report._status,
     };

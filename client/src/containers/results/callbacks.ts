@@ -81,6 +81,7 @@ export const useDuplicateReportCallback = (callback?: (newReportId: string) => v
           description: reportData?.description || null,
           topics: topics || (reportData?.topics as TopicView[]) || [],
           location: location || reportData?.location || null,
+          country: reportData?.country ?? null,
           status: "published",
         },
         {

@@ -13,8 +13,8 @@ import { useIndicator } from "@/containers/indicators/provider";
 
 import { DataRowProps } from "./types";
 
-export default function ImageryDataRow({ id, locale, location }: DataRowProps) {
-  const indicator = useGetIndicatorsId(id, locale);
+export default function ImageryDataRow({ id, locale, location, country }: DataRowProps) {
+  const indicator = useGetIndicatorsId(id, locale, country);
   const GEOMETRY = useLocationGeometry(location);
 
   const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();
