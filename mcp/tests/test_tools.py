@@ -11,6 +11,8 @@ from mcp_server.measurement.call_log import CallLog
 from mcp_server.server import create_mcp_server
 from tests.test_handlers import TENA, FakeClient
 
+pytestmark = pytest.mark.usefixtures("fixed_catalogue")
+
 
 def server(tmp_path: Path) -> Any:
     return create_mcp_server(
@@ -38,7 +40,7 @@ async def test_list_indicators_by_subtopic(tmp_path: Path) -> None:
         result = await client.call_tool("list_indicators", {"subtopic_id": 1})
     assert result.structured_content is not None
     ids = {i["id"] for i in result.structured_content["indicators"]}
-    assert ids == {209, 211, 222}
+    assert ids == {211}
 
 
 @pytest.mark.anyio
@@ -109,3 +111,26 @@ async def test_pathological_failures_are_logged_too(
     assert record["ok"] is False
     assert record["error"] == "RuntimeError: boom"
     assert isinstance(record["elapsed_ms"], int)
+
+
+@pytest.mark.anyio
+async def test_describe_indicator_shows_the_count_mismatch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from mcp_server import catalogue
+    from tests.test_models import indicator
+
+    mismatched = indicator(
+        documented_count=7,
+        sync={
+            "sync_status": "ok",
+            "queryable_fields": ["Ecosistema"],
+            "published_count": 3,
+        },
+    )
+    monkeypatch.setattr(catalogue, "_catalogue", lambda: {210: mismatched})
+    async with Client(server(tmp_path)) as client:
+        result = await client.call_tool("describe_indicator", {"indicator_id": 210})
+    assert result.structured_content is not None
+    [issue] = result.structured_content["known_issues"]
+    assert "7 records" in issue

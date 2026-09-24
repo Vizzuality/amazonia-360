@@ -1,4 +1,9 @@
-"""The indicator shape the MCP consumes, as the CMS will serve it with ``?locale=en``.
+"""The indicator the MCP takes in: what the CMS sends it when an editor publishes.
+
+This is not Payload's REST response. The CMS maps its document to this shape in the
+publish callback (see the MCP design, "Catalogue intake"): one resource object instead
+of a one-item blocks list, integer ids, caveats as plain ``{text}`` rows, and locale
+``en`` only.
 
 Field names and vocabularies follow the contract on
 ``feat/cms-indicator-metadata-contract`` (``client/src/cms/fields/metadata.ts`` and
@@ -11,7 +16,7 @@ Fields marked as a proposal in their description are not in the contract yet.
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, computed_field
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, computed_field
 
 ValueType = Literal[
     "count",
@@ -30,6 +35,8 @@ UpdateCadence = Literal[
 ]
 SyncStatus = Literal["ok", "error", "item_inaccessible"]
 AdminLevel = Literal["0", "1", "2"]
+# From COUNTRIES in client/src/lib/country/index.ts.
+CountryCode = Literal["ECU", "BOL", "BRA", "COL", "GUF", "GUY", "PER", "SUR", "VEN"]
 Operation = Literal["presence", "count", "area"]
 
 # Only the value types this phase has tools for; any other type allows nothing.
@@ -50,14 +57,14 @@ class Layer(_Model):
     """What the ArcGIS client needs to query one layer. Derived, never stored."""
 
     service_url: str
-    layer_id: int
+    layer_id: StrictInt
     category_field: str
 
 
 class Resource(_Model):
     type: Literal["feature"]
     url: str
-    layer_id: int
+    layer_id: StrictInt
 
 
 class Caveat(_Model):
@@ -82,25 +89,29 @@ class Sync(_Model):
     item_modified: datetime | None = None
     synced_at: datetime | None = None
     sync_status: SyncStatus | None = None
-    published_count: int | None = Field(
+    published_count: StrictInt | None = Field(
         default=None,
         description=f"Records in the published layer, read by the sync. {_PROPOSAL}",
     )
 
 
 class CuratedIndicator(_Model):
-    """Everything a person decides. The sync group is written by a job, never here."""
+    """Everything a person decides. The sync group is written by a job, never here.
 
-    id: int
+    Only identity is required, as in the contract: an incomplete indicator loads and
+    reports why it is unavailable instead of stopping the whole catalogue.
+    """
+
+    id: StrictInt
     name: str
-    unit: str | None
-    subtopic: int
-    country: str
-    resource: Resource | None
-    value_type: ValueType
-    aggregation: Aggregation
-    decimals: int | None = None
-    spatial_coverage: list[str] = []
+    subtopic: StrictInt
+    unit: str | None = None
+    country: CountryCode | None = None
+    resource: Resource | None = None
+    value_type: ValueType | None = None
+    aggregation: Aggregation | None = None
+    decimals: StrictInt | None = Field(default=None, ge=0, le=6)
+    spatial_coverage: list[CountryCode] = []
     collected_at_level: AdminLevel | None = None
     sensitivity: Sensitivity | None = None
     ai_answerable: bool = False
@@ -110,14 +121,16 @@ class CuratedIndicator(_Model):
         default=None,
         description=(
             "The attribute that holds each feature's class, used to list and group "
-            f"by class. {_PROPOSAL}"
+            "by class. Belongs in Payload's feature resource block, next to "
+            f"layer_id. {_PROPOSAL}"
         ),
     )
-    documented_count: int | None = Field(
+    documented_count: StrictInt | None = Field(
         default=None,
         description=(
             "Records the source documentation says the layer has. Compared with "
-            f"sync.published_count to warn about a mismatch. {_PROPOSAL}"
+            "sync.published_count to warn about a mismatch. Belongs in Payload's "
+            f"provenance group. {_PROPOSAL}"
         ),
     )
 
@@ -128,9 +141,24 @@ class IndicatorMetadata(CuratedIndicator):
     @computed_field
     @property
     def available(self) -> bool:
-        return self.resource is not None and self.sync.sync_status == "ok"
+        return self.unavailable_reason() is None
+
+    def unavailable_reason(self) -> str | None:
+        if self.resource is None:
+            return "no published resource"
+        if self.sync.sync_status is None:
+            return "not synced"
+        if self.sync.sync_status != "ok":
+            return f"sync status is {self.sync.sync_status}"
+        if self.value_type is None:
+            return "no value_type"
+        if self.category_field is None:
+            return "no category_field"
+        return None
 
     def allows(self, operation: Operation) -> bool:
+        if self.value_type is None:
+            return False
         return operation in ALLOWED_OPERATIONS.get(self.value_type, frozenset())
 
     def query_layer(self) -> Layer | None:

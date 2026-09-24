@@ -12,6 +12,8 @@ from mcp_server.handlers.area import AreaHandlers
 from mcp_server.handlers.errors import HandlerError
 from tests.test_models import indicator
 
+pytestmark = pytest.mark.usefixtures("fixed_catalogue")
+
 TENA: dict[str, Any] = {
     "type": "Polygon",
     "coordinates": [
@@ -114,7 +116,7 @@ async def test_an_unavailable_layer_is_refused_before_any_network_call(
 ) -> None:
     serve(monkeypatch, indicator(sync={"sync_status": "error"}))
     client = FakeClient()
-    with pytest.raises(HandlerError, match="not available"):
+    with pytest.raises(HandlerError, match="not available: sync status is error"):
         await handlers(client).categories_in_area(210, TENA)
     assert client.calls == []
 

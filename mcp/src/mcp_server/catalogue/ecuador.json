@@ -46,7 +46,7 @@
         "layer_id": 0
       },
       "value_type": "categorical",
-      "aggregation": "sum",
+      "aggregation": "none",
       "decimals": null,
       "spatial_coverage": [
         "ECU"
@@ -79,7 +79,7 @@
         "layer_id": 0
       },
       "value_type": "categorical",
-      "aggregation": "sum",
+      "aggregation": "none",
       "decimals": null,
       "spatial_coverage": [
         "ECU"
@@ -112,7 +112,7 @@
         "layer_id": 0
       },
       "value_type": "categorical",
-      "aggregation": "sum",
+      "aggregation": "none",
       "decimals": null,
       "spatial_coverage": [
         "ECU"
@@ -149,7 +149,7 @@
         "layer_id": 0
       },
       "value_type": "categorical",
-      "aggregation": "sum",
+      "aggregation": "none",
       "decimals": null,
       "spatial_coverage": [
         "ECU"
@@ -182,7 +182,7 @@
         "layer_id": 0
       },
       "value_type": "categorical",
-      "aggregation": "sum",
+      "aggregation": "none",
       "decimals": null,
       "spatial_coverage": [
         "ECU"
@@ -215,7 +215,7 @@
         "layer_id": 0
       },
       "value_type": "categorical",
-      "aggregation": "sum",
+      "aggregation": "none",
       "decimals": null,
       "spatial_coverage": [
         "ECU"
@@ -248,7 +248,7 @@
         "layer_id": 0
       },
       "value_type": "categorical",
-      "aggregation": "sum",
+      "aggregation": "none",
       "decimals": null,
       "spatial_coverage": [
         "ECU"
@@ -281,7 +281,7 @@
         "layer_id": 0
       },
       "value_type": "categorical",
-      "aggregation": "sum",
+      "aggregation": "none",
       "decimals": null,
       "spatial_coverage": [
         "ECU"
@@ -314,7 +314,7 @@
         "layer_id": 0
       },
       "value_type": "categorical",
-      "aggregation": "sum",
+      "aggregation": "none",
       "decimals": null,
       "spatial_coverage": [
         "ECU"
@@ -347,7 +347,7 @@
         "layer_id": 0
       },
       "value_type": "categorical",
-      "aggregation": "sum",
+      "aggregation": "none",
       "decimals": null,
       "spatial_coverage": [
         "ECU"
@@ -380,7 +380,7 @@
         "layer_id": 0
       },
       "value_type": "categorical",
-      "aggregation": "sum",
+      "aggregation": "none",
       "decimals": null,
       "spatial_coverage": [
         "ECU"
@@ -413,7 +413,7 @@
         "layer_id": 0
       },
       "value_type": "categorical",
-      "aggregation": "sum",
+      "aggregation": "none",
       "decimals": null,
       "spatial_coverage": [
         "ECU"

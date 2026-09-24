@@ -24,12 +24,14 @@ class CatalogueError(Exception):
 def build_catalogue(
     curated: dict[str, Any], snapshot: dict[str, Any]
 ) -> tuple[IndicatorMetadata, ...]:
+    _require_keys("curated catalogue", curated, {"locale", "indicators"})
+    _require_keys("snapshot", snapshot, {"generated_at", "indicators"})
     if curated.get("locale") != LOCALE:
         raise CatalogueError(
             f"The curated catalogue must be in locale {LOCALE!r}, "
             f"got {curated.get('locale')!r}."
         )
-    syncs: dict[str, Any] = snapshot.get("indicators", {})
+    syncs: dict[str, Any] = snapshot["indicators"]
     seen: set[int] = set()
     indicators = []
     for raw in curated["indicators"]:
@@ -46,6 +48,15 @@ def build_catalogue(
             f"The snapshot has entries for unknown indicators: {sorted(orphans)}."
         )
     return tuple(indicators)
+
+
+def _require_keys(what: str, document: dict[str, Any], keys: set[str]) -> None:
+    # A renamed or truncated file would otherwise load as an empty catalogue.
+    if set(document) != keys:
+        raise CatalogueError(
+            f"The {what} must have exactly the keys {sorted(keys)}, "
+            f"got {sorted(document)}."
+        )
 
 
 def load_curated() -> dict[str, Any]:

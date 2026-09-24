@@ -50,6 +50,16 @@ class TestBuildCatalogue:
         with pytest.raises(CatalogueError, match="999"):
             build_catalogue(document(curated()), snapshot(**{"999": {}}))
 
+    def test_rejects_unknown_top_level_keys(self) -> None:
+        with pytest.raises(CatalogueError, match="indicatorz"):
+            build_catalogue({**document(curated()), "indicatorz": []}, snapshot())
+        with pytest.raises(CatalogueError, match="extra"):
+            build_catalogue(document(curated()), {**snapshot(), "extra": 1})
+
+    def test_rejects_a_snapshot_without_its_indicators(self) -> None:
+        with pytest.raises(CatalogueError, match="indicators"):
+            build_catalogue(document(curated()), {"generated_at": "x"})
+
     def test_names_the_indicator_that_fails_validation(self) -> None:
         with pytest.raises(ValidationError, match="value_type"):
             build_catalogue(
@@ -90,6 +100,14 @@ class TestRepositoryData:
             if not ok
         ]
         assert missing == []
+
+    @pytest.mark.parametrize("indicator", list_indicators(), ids=lambda i: str(i.id))
+    def test_categorical_layers_do_not_aggregate(
+        self, indicator: IndicatorMetadata
+    ) -> None:
+        # The contract's vocabulary names it "None (categorical)": a class has no total.
+        if indicator.value_type == "categorical":
+            assert indicator.aggregation == "none"
 
     @pytest.mark.parametrize(
         "indicator",

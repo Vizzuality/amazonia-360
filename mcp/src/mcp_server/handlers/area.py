@@ -76,11 +76,12 @@ class AreaHandlers:
         if indicator is None:
             raise HandlerError(f"Unknown indicator {indicator_id}.")
         layer = indicator.query_layer()
-        if not indicator.available or layer is None:
-            raise HandlerError(
-                f"Indicator {indicator_id} is not available "
-                f"(sync status: {indicator.sync.sync_status})."
+        reason = indicator.unavailable_reason()
+        if reason is not None or layer is None:
+            detail = " ".join(
+                [reason or "no query layer"] + [c.text for c in indicator.caveats]
             )
+            raise HandlerError(f"Indicator {indicator_id} is not available: {detail}")
         if not indicator.ai_answerable:
             raise HandlerError(f"Indicator {indicator_id} is not cleared for answers.")
         if not indicator.allows(operation):
