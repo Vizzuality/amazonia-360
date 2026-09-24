@@ -51,7 +51,6 @@ from the place names.
   without a class are "most likely" towns, pasture and crops, marked as unconfirmed. The layer's
   description says areas without a polygon are not a category and that land use must be read from
   a land cover layer.
-
 - **An empty answer the model could not interpret.** Answer 5 got no features and said it could
   not tell "the layer does not reach Puyo" from "the service is broken". Checked by hand: it is the
   first. Layer 214 maps floodable zones only, not the whole module; the Puyo box has no polygon and
