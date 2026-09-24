@@ -134,15 +134,25 @@ rejected as a monthly cost with nothing to show for it over a second database.
 ## Catalogue
 
 `catalogue/` exposes `get_indicator_metadata(indicator_id)` and `list_indicators(...)`. In this
-phase they read a Python module. When the CMS serves the contract, only the source behind those two
-functions changes.
+phase they read two JSON files: `ecuador.json`, curated by hand, and `ecuador.snapshot.json`, the
+contract's `sync` group written by `amazonia360-mcp-catalogue sync` from ArcGIS. When the CMS
+feeds the catalogue, only the source behind those two functions changes.
+
+*Changed on 24 September 2026:* the first cut kept the catalogue as a Python literal, with the
+published record counts typed into caveat text. That text went stale the moment a layer was
+republished, and Carbon had in fact been published while the file still said it was not.
 
 Field names and vocabularies follow the contract on `feat/cms-indicator-metadata-contract`
 (`client/src/cms/fields/metadata.ts` and `metadata-vocabularies.ts`): `value_type`, `aggregation`,
 `decimals`, `spatial_coverage`, `ai_answerable`, `caveats`, the `provenance` group (`source_org`,
 `source_url`, `license`, `source_citation`, `data_vintage`, `update_cadence`, `method_url`) and the
-`sync` group (`arcgis_item_id`, `queryable_fields`). Those files are referenced, not copied: a copy
-becomes a second source of truth.
+`sync` group (`arcgis_item_id`, `queryable_fields`, the edit dates, `sync_status`). The TypeScript
+files are not copied; their vocabulary values are repeated in `catalogue/models.py` as `Literal`
+types, because this service shares no code with the client, and have to be kept in step by hand.
+
+Three fields are ours and marked as proposals in the schema: `category_field`, `documented_count`
+and `sync.published_count`. The record-count warning is computed from the last two at answer time,
+never stored in `caveats`, which the contract reserves for text a person wrote.
 
 Two things to hold on to from the contract:
 
@@ -171,11 +181,35 @@ assignment: every layer under Nature, plus Territory / Physical Geography. Twelv
 | 219 | Biogeographic Units | Natural Ecosystems |
 | 222 | Water Recharge Zone | Physical Geography |
 
-The thirteenth, Carbon, returns HTTP 403 on its item and has no service. It is listed in the
-catalogue as unavailable, so the tools can say so instead of acting as if it did not exist.
+The thirteenth, Carbon by forest stratum (206), was found published on 24 September 2026: its item
+has been public since 15 September, with 5 strata in field `Estrato` and a mean density
+`Carbono_t_ha`. It is available, with a caveat that total carbon for an area is not computed.
 
 `value_type`, `aggregation` and the category field of each layer are not in `indicators.ECU.json`
 and have to be curated per layer. That is content work, and it is part of phase 1.
+
+### Catalogue intake from the CMS (phase 2)
+
+Decision 5 of the 16 September note stands: the MCP does not read Payload. Payload calls the MCP
+when an editor publishes, and the MCP keeps its own copy. `indicator.schema.json` is the format of
+that call, not Payload's REST response; the CMS maps its document to it (table in `mcp/README.md`).
+
+A callback alone can drift, so the design covers the four ways it does:
+
+| Drift | Cover |
+|---|---|
+| The MCP is down when an editor publishes. `afterChange` runs after Payload has committed, so the publish cannot be undone | The editor sees the failure and the indicator is marked pending; a reconciliation job resends it |
+| Two publishes arrive out of order | Every call carries `updated_at`; the MCP applies it only if newer than what it holds, so a replay is harmless |
+| Unpublish or delete | Hooks on `afterDelete` and on `_status` changes send `{"event": "delete"}` |
+| A change that bypasses the editor (seed, migration) | The same reconciliation: the MCP exposes the `updated_at` it holds per indicator and the CMS job resends what differs |
+
+The envelope, separate from the indicator schema:
+
+```json
+{ "event": "upsert", "updated_at": "2026-09-24T14:48:33Z", "indicator": { } }
+```
+
+The endpoint, the reconciliation and storage in the MCP's database are phase 2.
 
 ## Tools
 
@@ -372,11 +406,10 @@ mcp/
    consultant that are still unanswered.
 4. Whether sending user questions to Jev is acceptable to the IDB.
 5. Whether Laya needs fine-tuning, and on how many questions. Decided from the first zero-shot run.
-6. Phase 1 shipped a shorter catalogue shape than this spec asks for: `decimals`,
-   `spatial_coverage`, `update_cadence`, `method_url` and the `sync` group (with
-   `queryable_fields`) are missing, `arcgis_item_id` sits at the top level, and every
-   `provenance` field is null. Filling provenance means reading the AGOL items. Needed
-   before any demo that shows `describe_indicator`.
+6. Every `provenance` field is null. Filling it means reading the AGOL items, where the
+   provenance lives (`accessInformation`, `licenseInfo`). Needed before any demo that shows
+   `describe_indicator`. *The catalogue shape itself was brought in line with the contract on
+   24 September 2026.*
 7. Handler tests use hand-written ArcGIS payloads, not recorded ones. Record one live
    response each for `distinct`, `count` and a paginated `geojson` page (layer 210 over
    the Tena test area) and replay them through `httpx.MockTransport`.
