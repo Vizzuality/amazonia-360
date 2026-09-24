@@ -41,11 +41,11 @@ export function IndicatorsFilterTabs({
   value,
   onValueChange,
   counts,
-}: {
+}: Readonly<{
   value: IndicatorScopeFilter;
   onValueChange: (value: IndicatorScopeFilter) => void;
   counts: Record<IndicatorScopeFilter, number>;
-}) {
+}>) {
   const t = useTranslations();
 
   return (

@@ -58,7 +58,7 @@ export const NumericImageryIndicators = ({
       )}
       <CardWidgetNumber
         value={VALUE ?? "n.d."}
-        unit={!!VALUE ? unit : undefined}
+        unit={VALUE ? unit : undefined}
         className={cn({ "grow-0": isPdf })}
       />
     </CardLoader>

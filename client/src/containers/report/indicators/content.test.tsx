@@ -2,6 +2,8 @@ import { render, screen } from "@testing-library/react";
 import { atom } from "jotai";
 import { vi } from "vitest";
 
+import { CATALOGUE } from "@/containers/indicators/catalogue.fixture";
+
 import ReportIndicatorsContent from "./content";
 
 const mockUseGetDefaultIndicators = vi.fn();
@@ -41,11 +43,6 @@ vi.mock("@/containers/report/indicators/topics", () => ({
 vi.mock("@/containers/report/indicators/footer", () => ({
   default: () => <div data-testid="footer" />,
 }));
-
-const CATALOGUE = [
-  ...Array.from({ length: 164 }, (_, i) => ({ id: i, country: null })),
-  ...Array.from({ length: 21 }, (_, i) => ({ id: 1000 + i, country: "ECU" })),
-];
 
 describe("ReportIndicatorsContent", () => {
   beforeEach(() => {

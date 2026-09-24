@@ -15,10 +15,10 @@ export function getIndicatorScopeBadgeKey(country: Indicator["country"]): string
 export function IndicatorScopeBadge({
   country,
   className,
-}: {
+}: Readonly<{
   country: Indicator["country"];
   className?: string;
-}) {
+}>) {
   const t = useTranslations();
 
   return (
