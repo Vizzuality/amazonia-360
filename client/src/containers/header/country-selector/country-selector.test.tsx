@@ -44,6 +44,10 @@ beforeEach(() => {
   mockCountry.mockReturnValue(null);
 });
 
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
+
 async function openPicker() {
   render(<CountrySelector />);
   await userEvent.click(screen.getByRole("button", { name: /country-module-selector-label/ }));
@@ -126,6 +130,14 @@ describe("CountrySelector (desktop)", () => {
 
     expect(container).toBeEmptyDOMElement();
   });
+
+  test("it is hidden when the build did not enable the country-module flag", () => {
+    vi.stubEnv("NEXT_PUBLIC_FEATURE_FLAGS", "");
+
+    const { container } = render(<CountrySelector />);
+
+    expect(container).toBeEmptyDOMElement();
+  });
 });
 
 describe("MobileCountrySelector", () => {
@@ -140,6 +152,14 @@ describe("MobileCountrySelector", () => {
 
   test("it is hidden on routes that carry no module", () => {
     mockPathname.mockReturnValue("/private/my-reports");
+
+    const { container } = render(<MobileCountrySelector onSelected={vi.fn()} />);
+
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  test("it is hidden when the build did not enable the country-module flag", () => {
+    vi.stubEnv("NEXT_PUBLIC_FEATURE_FLAGS", "");
 
     const { container } = render(<MobileCountrySelector onSelected={vi.fn()} />);
 

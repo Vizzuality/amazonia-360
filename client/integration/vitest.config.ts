@@ -23,6 +23,7 @@ export default defineConfig({
       NEXT_PUBLIC_API_URL: "http://localhost:8000",
       NEXT_PUBLIC_API_KEY: "integration-test-api-key",
       NEXT_PUBLIC_ARCGIS_API_KEY: "integration-test-arcgis-key",
+      NEXT_PUBLIC_FEATURE_FLAGS: "country-module",
     },
     setupFiles: ["./integration/setup.ts"],
     testTimeout: 15_000,
