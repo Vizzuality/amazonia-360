@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+import shapely
 from pyproj import Geod
 from shapely.geometry.base import BaseGeometry
 from shapely.validation import make_valid
@@ -13,14 +14,20 @@ def geodesic_area_ha(geom: BaseGeometry) -> float:
 
     Uses WGS84 ellipsoid for accurate Earth-based measurements.
 
+    pyproj signs each ring's area by its orientation and sums the signed areas, so a
+    MultiPolygon whose parts are drawn in opposite directions can measure close to
+    zero, and a hole drawn with the same orientation as its shell overcounts instead
+    of subtracting. Normalising orientation first (shells CCW, holes CW) makes the
+    signed sum equal the true area regardless of how the source drew the rings.
+
     Args:
         geom: A Shapely geometry object.
 
     Returns:
         Area in hectares.
     """
-    area_m2, _ = _GEOD.geometry_area_perimeter(geom)
-    # pyproj signs the area by ring orientation; only the magnitude matters here.
+    oriented = shapely.orient_polygons(geom)
+    area_m2, _ = _GEOD.geometry_area_perimeter(oriented)
     return abs(area_m2) / _M2_PER_HA
 
 
