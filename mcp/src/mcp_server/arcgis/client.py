@@ -140,6 +140,11 @@ class ArcGISClient:
         except ValueError as exc:
             raise ArcGISError(f"Invalid response from {url}: not valid JSON") from exc
         if "error" in body:
-            error_message = body["error"].get("message")
-            raise ArcGISError(f"ArcGIS returned an error: {error_message}")
+            # ArcGIS often sends an empty message with the useful part in details.
+            error = body["error"]
+            raise ArcGISError(
+                f"ArcGIS returned error {error.get('code')} "
+                f"{error.get('message') or ''} {error.get('details') or ''} "
+                f"from {url}"
+            )
         return body
