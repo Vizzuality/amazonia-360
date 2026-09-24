@@ -19,8 +19,8 @@ vi.mock("@/app/(frontend)/store", () => ({
 vi.mock("@/i18n/navigation", () => ({ usePathname: vi.fn(() => mockUsePathname()) }));
 vi.mock("@/i18n/use-country", () => ({ useCountry: vi.fn(() => mockUseCountry()) }));
 
-vi.mock("@/lib/country-coverage", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("@/lib/country-coverage")>()),
+vi.mock("@/lib/country/coverage", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/country/coverage")>()),
   useGetCountryAmazoniaBoundary: vi.fn(() => ({ data: mockBoundary() })),
   getCountryCoverageRatio: vi.fn(() => mockRatio()),
 }));

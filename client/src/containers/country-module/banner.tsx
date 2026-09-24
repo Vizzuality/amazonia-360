@@ -7,7 +7,7 @@ import {
   getCountryCoveragePercent,
   getCountryCoverageRatio,
   useGetCountryAmazoniaBoundary,
-} from "@/lib/country-coverage";
+} from "@/lib/country/coverage";
 import { useLocationGeometry } from "@/lib/location";
 import useIsMounted from "@/lib/mounted";
 

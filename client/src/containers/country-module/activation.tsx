@@ -9,7 +9,7 @@ import {
   getCountryCoverageRatio,
   isCountryCoverageDominant,
   useGetLiveCountryBoundaries,
-} from "@/lib/country-coverage";
+} from "@/lib/country/coverage";
 import { useLocationGeometry } from "@/lib/location";
 
 import { Location } from "@/app/(frontend)/parsers";

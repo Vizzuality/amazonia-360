@@ -40,7 +40,7 @@ vi.mock("@/i18n/use-country", () => ({
   useCountry: vi.fn(() => mockUseCountry()),
 }));
 
-vi.mock("@/lib/country-coverage", () => ({
+vi.mock("@/lib/country/coverage", () => ({
   useGetLiveCountryBoundaries: vi.fn(() => ({ data: mockBoundaries() })),
   getCountryCoverageRatio: vi.fn(
     (_geometry: unknown, boundary: { ratio: number }) => boundary.ratio,
