@@ -80,7 +80,9 @@ Adopt on the Tech Radar: FastAPI, PostgreSQL, uv, Ruff, Pyright.
 
 Not on the radar, approved for this project on 24 September 2026:
 
-- `mcp`, the official Python SDK, including `FastMCP`. Same SDK VizzHub uses.
+- `mcp` 2.x, the official Python SDK. In 2.x the `FastMCP` class VizzHub uses is renamed
+  `MCPServer` (`from mcp.server.mcpserver import MCPServer`), so code ported from VizzHub needs
+  that change.
 - SQLAlchemy with Alembic, for the phase 2 database.
 - `httpx`, as the async HTTP client for ArcGIS.
 - Jev, Laya, and the `anthropic` SDK for the Haiku control, for the gatekeeper evaluation.
@@ -101,8 +103,8 @@ permission resolver.
 
 Two known traps for phase 2, both from the VizzHub implementation:
 
-- `FastMCP` defaults `streamable_http_path` to `/mcp`. Behind a `/mcp/` location that yields
-  `/mcp/mcp`. Pass `streamable_http_path="/"`.
+- `MCPServer.streamable_http_app()` still defaults `streamable_http_path` to `/mcp`. Behind a
+  `/mcp/` location that yields `/mcp/mcp`. Pass `streamable_http_path="/"`.
 - Behind the load balancer the `Host` header is the public domain. The transport security settings
   need the public hostnames in `allowed_hosts`, or requests are rejected with an error that looks
   like a routing fault.
