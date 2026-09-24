@@ -75,9 +75,12 @@ class AreaHandlers:
         indicator = get_indicator_metadata(indicator_id)
         if indicator is None:
             raise HandlerError(f"Unknown indicator {indicator_id}.")
-        if not indicator.available or indicator.layer is None:
-            reason = " ".join(indicator.caveats)
-            raise HandlerError(f"Indicator {indicator_id} is not available. {reason}")
+        layer = indicator.query_layer()
+        if not indicator.available or layer is None:
+            raise HandlerError(
+                f"Indicator {indicator_id} is not available "
+                f"(sync status: {indicator.sync.sync_status})."
+            )
         if not indicator.ai_answerable:
             raise HandlerError(f"Indicator {indicator_id} is not cleared for answers.")
         if not indicator.allows(operation):
@@ -92,7 +95,10 @@ class AreaHandlers:
         coverage = module_coverage(aoi)
         if coverage.status == "outside":
             raise HandlerError("The area is outside the Ecuador module.")
-        caveats = list(indicator.caveats)
+        caveats = [c.text for c in indicator.caveats]
+        mismatch = indicator.count_mismatch()
+        if mismatch is not None:
+            caveats.append(mismatch)
         if coverage.status == "partial":
             caveats.append(
                 "The area is partly outside the Ecuador module; only the part inside "
@@ -105,7 +111,7 @@ class AreaHandlers:
                 "The module boundary used for this check is a provisional bounding "
                 "box; an area can fall outside the module and still be accepted."
             )
-        return _Prepared(indicator, indicator.layer, aoi, coverage, caveats, watch)
+        return _Prepared(indicator, layer, aoi, coverage, caveats, watch)
 
     @staticmethod
     async def _call[T](awaitable: Awaitable[T]) -> T:

@@ -9,7 +9,7 @@ from mcp_server import catalogue
 
 _READ_ONLY = ToolAnnotations(read_only_hint=True, open_world_hint=False)
 
-_LIST_FIELDS = {"id", "name_en", "name_es", "subtopic_id", "value_type", "available"}
+_LIST_FIELDS = {"id", "name", "subtopic", "value_type", "available"}
 
 
 def register_catalogue_tools(server: MCPServer) -> None:
@@ -35,4 +35,4 @@ def register_catalogue_tools(server: MCPServer) -> None:
         indicator = catalogue.get_indicator_metadata(indicator_id)
         if indicator is None:
             raise ToolError(f"Unknown indicator {indicator_id}.")
-        return indicator.model_dump(exclude={"layer"})
+        return indicator.model_dump(mode="json")

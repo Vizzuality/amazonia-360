@@ -13,6 +13,7 @@ dependencies = [
 
 [project.scripts]
 amazonia360-mcp = "mcp_server.__main__:main"
+amazonia360-mcp-catalogue = "mcp_server.catalogue.cli:main"
 
 [build-system]
 requires = ["hatchling"]

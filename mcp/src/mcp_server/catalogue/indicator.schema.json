@@ -1,0 +1,455 @@
+{
+  "$defs": {
+    "Caveat": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "Caveat",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "source_org": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Org"
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Url"
+        },
+        "license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License"
+        },
+        "source_citation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Citation"
+        },
+        "data_vintage": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Data Vintage"
+        },
+        "update_cadence": {
+          "anyOf": [
+            {
+              "enum": [
+                "monthly",
+                "quarterly",
+                "biannual",
+                "annual",
+                "irregular",
+                "one_off",
+                "unknown"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Update Cadence"
+        },
+        "method_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Method Url"
+        }
+      },
+      "title": "Provenance",
+      "type": "object"
+    },
+    "Resource": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "feature",
+          "title": "Type",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "layer_id": {
+          "title": "Layer Id",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "type",
+        "url",
+        "layer_id"
+      ],
+      "title": "Resource",
+      "type": "object"
+    },
+    "Sync": {
+      "additionalProperties": false,
+      "properties": {
+        "arcgis_item_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Arcgis Item Id"
+        },
+        "queryable_fields": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Queryable Fields"
+        },
+        "layer_last_edit": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Layer Last Edit"
+        },
+        "schema_last_edit": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Schema Last Edit"
+        },
+        "item_modified": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Item Modified"
+        },
+        "synced_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Synced At"
+        },
+        "sync_status": {
+          "anyOf": [
+            {
+              "enum": [
+                "ok",
+                "error",
+                "item_inaccessible"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sync Status"
+        },
+        "published_count": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Records in the published layer, read by the sync. Proposal: not in the CMS contract yet.",
+          "title": "Published Count"
+        }
+      },
+      "title": "Sync",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "integer"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "unit": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Unit"
+    },
+    "subtopic": {
+      "title": "Subtopic",
+      "type": "integer"
+    },
+    "country": {
+      "title": "Country",
+      "type": "string"
+    },
+    "resource": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Resource"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "value_type": {
+      "enum": [
+        "count",
+        "area",
+        "length",
+        "distance",
+        "ratio",
+        "index",
+        "density",
+        "categorical"
+      ],
+      "title": "Value Type",
+      "type": "string"
+    },
+    "aggregation": {
+      "enum": [
+        "sum",
+        "mean",
+        "area_weighted_mean",
+        "min",
+        "none"
+      ],
+      "title": "Aggregation",
+      "type": "string"
+    },
+    "decimals": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Decimals"
+    },
+    "spatial_coverage": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Spatial Coverage",
+      "type": "array"
+    },
+    "collected_at_level": {
+      "anyOf": [
+        {
+          "enum": [
+            "0",
+            "1",
+            "2"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Collected At Level"
+    },
+    "sensitivity": {
+      "anyOf": [
+        {
+          "enum": [
+            "public",
+            "restricted",
+            "restricted_review",
+            "indigenous_data"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Sensitivity"
+    },
+    "ai_answerable": {
+      "default": false,
+      "title": "Ai Answerable",
+      "type": "boolean"
+    },
+    "caveats": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Caveat"
+      },
+      "title": "Caveats",
+      "type": "array"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance",
+      "default": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      }
+    },
+    "category_field": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The attribute that holds each feature's class, used to list and group by class. Proposal: not in the CMS contract yet.",
+      "title": "Category Field"
+    },
+    "documented_count": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Records the source documentation says the layer has. Compared with sync.published_count to warn about a mismatch. Proposal: not in the CMS contract yet.",
+      "title": "Documented Count"
+    },
+    "sync": {
+      "$ref": "#/$defs/Sync",
+      "default": {
+        "arcgis_item_id": null,
+        "queryable_fields": null,
+        "layer_last_edit": null,
+        "schema_last_edit": null,
+        "item_modified": null,
+        "synced_at": null,
+        "sync_status": null,
+        "published_count": null
+      }
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "unit",
+    "subtopic",
+    "country",
+    "resource",
+    "value_type",
+    "aggregation"
+  ],
+  "title": "Amazonia 360 indicator, as consumed by the MCP (locale=en)",
+  "type": "object"
+}

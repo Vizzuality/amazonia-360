@@ -32,6 +32,26 @@ In `claude_desktop_config.json`, with the absolute path to this directory:
 }
 ```
 
+## Catalogue
+
+The indicators live in three files in `src/mcp_server/catalogue/`, in the shape the CMS
+will serve them with `?locale=en`:
+
+| File | What it holds | Who writes it |
+|---|---|---|
+| `ecuador.json` | Everything a person decides: value type, `ai_answerable`, caveats, provenance | By hand |
+| `ecuador.snapshot.json` | The contract's `sync` group, read from ArcGIS | `amazonia360-mcp-catalogue sync` |
+| `indicator.schema.json` | JSON Schema of one indicator after the two are joined | `amazonia360-mcp-catalogue schema` |
+
+```bash
+uv run amazonia360-mcp-catalogue sync     # re-read ArcGIS; a failing layer becomes unavailable
+uv run amazonia360-mcp-catalogue schema   # after changing catalogue/models.py
+uv run amazonia360-mcp-catalogue export   # the joined catalogue, for the CMS team to compare
+```
+
+Fields whose schema description starts with "Proposal" are not in the CMS contract yet.
+The live suite fails when the snapshot is behind ArcGIS.
+
 ## Settings
 
 | Variable | Default | Meaning |

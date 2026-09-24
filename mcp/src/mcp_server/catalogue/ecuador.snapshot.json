@@ -1,0 +1,244 @@
+{
+  "generated_at": "2026-09-24T12:03:26.497868Z",
+  "indicators": {
+    "202": {
+      "arcgis_item_id": "356deac90503414f9ad6d600e352d808",
+      "queryable_fields": [
+        "FID",
+        "Codigo_obj",
+        "Cod_conven",
+        "Ejecutor",
+        "Cod_benef",
+        "Modalidad",
+        "Practica",
+        "Financia",
+        "Anio_inter",
+        "Area_ha",
+        "Descrip",
+        "Shape__Area",
+        "Shape__Length"
+      ],
+      "layer_last_edit": "2026-09-14T07:40:50.737000Z",
+      "schema_last_edit": "2026-09-14T07:40:50.737000Z",
+      "item_modified": "2026-09-14T21:39:25Z",
+      "synced_at": "2026-09-24T12:03:26.497868Z",
+      "sync_status": "ok",
+      "published_count": 5082
+    },
+    "203": {
+      "arcgis_item_id": "6f8055ee6abe4e2495f5f5d457597a4e",
+      "queryable_fields": [
+        "FID",
+        "Prioridad",
+        "Area_ha",
+        "Area_km2",
+        "Descrip",
+        "Shape__Area",
+        "Shape__Length"
+      ],
+      "layer_last_edit": "2026-08-19T09:52:23.390000Z",
+      "schema_last_edit": "2026-08-19T09:54:55.805000Z",
+      "item_modified": "2026-09-14T21:41:43Z",
+      "synced_at": "2026-09-24T12:03:26.497868Z",
+      "sync_status": "ok",
+      "published_count": 4
+    },
+    "204": {
+      "arcgis_item_id": "4cb214dd5e834c29a1a3d8dd7dc239bf",
+      "queryable_fields": [
+        "FID",
+        "Bioclima",
+        "Area_ha",
+        "Shape__Area",
+        "Shape__Length"
+      ],
+      "layer_last_edit": "2026-08-19T09:53:03.161000Z",
+      "schema_last_edit": "2026-08-19T09:53:03.161000Z",
+      "item_modified": "2026-09-14T21:50:34Z",
+      "synced_at": "2026-09-24T12:03:26.497868Z",
+      "sync_status": "ok",
+      "published_count": 3
+    },
+    "206": {
+      "arcgis_item_id": "20e987e39350434e992f66f7ec745dba",
+      "queryable_fields": [
+        "fid",
+        "Codigo_estrato",
+        "Estrato",
+        "Carbono_t_ha",
+        "Area_ha",
+        "Area_km2",
+        "Shape__Area",
+        "Shape__Length"
+      ],
+      "layer_last_edit": "2026-08-19T09:54:44.541000Z",
+      "schema_last_edit": "2026-08-19T09:56:03.037000Z",
+      "item_modified": "2026-09-15T06:07:49Z",
+      "synced_at": "2026-09-24T12:03:26.497868Z",
+      "sync_status": "ok",
+      "published_count": 5
+    },
+    "208": {
+      "arcgis_item_id": "9ba21668575c4ded909816b18703841b",
+      "queryable_fields": [
+        "FID",
+        "Periodo",
+        "Transicion",
+        "Area_ha",
+        "Shape__Area",
+        "Shape__Length"
+      ],
+      "layer_last_edit": "2026-08-19T09:56:04.731000Z",
+      "schema_last_edit": "2026-08-19T09:56:45.559000Z",
+      "item_modified": "2026-09-14T21:53:34Z",
+      "synced_at": "2026-09-24T12:03:26.497868Z",
+      "sync_status": "ok",
+      "published_count": 8
+    },
+    "209": {
+      "arcgis_item_id": "4e1cf951ff284164b3875c25fe03e9c9",
+      "queryable_fields": [
+        "FID",
+        "Nombre",
+        "Area_ha",
+        "Shape__Area",
+        "Shape__Length"
+      ],
+      "layer_last_edit": "2026-08-19T09:56:46.777000Z",
+      "schema_last_edit": "2026-08-19T09:56:46.777000Z",
+      "item_modified": "2026-09-14T22:24:46Z",
+      "synced_at": "2026-09-24T12:03:26.497868Z",
+      "sync_status": "ok",
+      "published_count": 3
+    },
+    "210": {
+      "arcgis_item_id": "1108a9956a9b4076931c5a35e9decf3a",
+      "queryable_fields": [
+        "fid",
+        "Codigo_ecosistema",
+        "Ecosistema",
+        "Tipo_ecosistema",
+        "Fisonomia",
+        "Fragilidad",
+        "Amenaza",
+        "Vulnerabilidad",
+        "Fragmentacion",
+        "Conectividad",
+        "Area_ha",
+        "Area_km2",
+        "Shape__Area",
+        "Shape__Length"
+      ],
+      "layer_last_edit": "2026-08-19T09:57:43.622000Z",
+      "schema_last_edit": "2026-08-19T09:57:43.622000Z",
+      "item_modified": "2026-09-14T21:55:27Z",
+      "synced_at": "2026-09-24T12:03:26.497868Z",
+      "sync_status": "ok",
+      "published_count": 51
+    },
+    "211": {
+      "arcgis_item_id": "6612307cd48f47efb455e567a1a7d289",
+      "queryable_fields": [
+        "FID",
+        "Relieve",
+        "Macrorel",
+        "Mesorrel",
+        "Area_ha",
+        "Shape__Area",
+        "Shape__Length"
+      ],
+      "layer_last_edit": "2026-08-19T09:58:25.668000Z",
+      "schema_last_edit": "2026-08-19T09:58:25.668000Z",
+      "item_modified": "2026-09-14T22:27:23Z",
+      "synced_at": "2026-09-24T12:03:26.497868Z",
+      "sync_status": "ok",
+      "published_count": 53
+    },
+    "214": {
+      "arcgis_item_id": "c692c9533c3844dcb06b81721d3ad4d7",
+      "queryable_fields": [
+        "FID",
+        "Regimen",
+        "Origen",
+        "Area_ha",
+        "Shape__Area",
+        "Shape__Length"
+      ],
+      "layer_last_edit": "2026-08-19T10:00:45.539000Z",
+      "schema_last_edit": "2026-08-19T10:00:45.539000Z",
+      "item_modified": "2026-09-14T21:57:34Z",
+      "synced_at": "2026-09-24T12:03:26.497868Z",
+      "sync_status": "ok",
+      "published_count": 14137
+    },
+    "217": {
+      "arcgis_item_id": "56bdc6d89df345f2b5ffffa5959068e9",
+      "queryable_fields": [
+        "FID",
+        "Termotipo",
+        "Area_ha",
+        "Shape__Area",
+        "Shape__Length"
+      ],
+      "layer_last_edit": "2026-08-19T10:03:04.802000Z",
+      "schema_last_edit": "2026-08-19T10:03:04.802000Z",
+      "item_modified": "2026-09-14T21:59:54Z",
+      "synced_at": "2026-09-24T12:03:26.497868Z",
+      "sync_status": "ok",
+      "published_count": 11
+    },
+    "218": {
+      "arcgis_item_id": "1cb06063ec0c4e65b73ee2e57b302a65",
+      "queryable_fields": [
+        "FID",
+        "COD_CLIMA",
+        "TIPO_CLIMA",
+        "AREA_HA",
+        "Shape__Area",
+        "Shape__Length"
+      ],
+      "layer_last_edit": "2026-08-19T10:03:39.526000Z",
+      "schema_last_edit": "2026-08-19T10:03:39.526000Z",
+      "item_modified": "2026-09-14T22:02:25Z",
+      "synced_at": "2026-09-24T12:03:26.497868Z",
+      "sync_status": "ok",
+      "published_count": 6
+    },
+    "219": {
+      "arcgis_item_id": "7f30afe4c9524140b6a06540955acc70",
+      "queryable_fields": [
+        "FID",
+        "Region",
+        "Provincia_",
+        "Sector_bio",
+        "Area_ha",
+        "Shape__Area",
+        "Shape__Length"
+      ],
+      "layer_last_edit": "2026-08-19T10:04:25.638000Z",
+      "schema_last_edit": "2026-08-19T10:04:25.638000Z",
+      "item_modified": "2026-09-14T22:03:46Z",
+      "synced_at": "2026-09-24T12:03:26.497868Z",
+      "sync_status": "ok",
+      "published_count": 11
+    },
+    "222": {
+      "arcgis_item_id": "86b76ac2a4c345569d1e08466792f67e",
+      "queryable_fields": [
+        "FID",
+        "Nombre",
+        "Area_ha",
+        "Area_km2",
+        "Descrip",
+        "Shape__Area",
+        "Shape__Length"
+      ],
+      "layer_last_edit": "2026-08-19T10:06:36.192000Z",
+      "schema_last_edit": "2026-08-19T10:06:36.192000Z",
+      "item_modified": "2026-09-14T22:36:27Z",
+      "synced_at": "2026-09-24T12:03:26.497868Z",
+      "sync_status": "ok",
+      "published_count": 1
+    }
+  }
+}
