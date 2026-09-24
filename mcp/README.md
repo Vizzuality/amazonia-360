@@ -19,13 +19,14 @@ claude mcp add amazonia360 -- uv --directory "$(pwd)" run amazonia360-mcp
 
 ### From Claude Desktop
 
-In `claude_desktop_config.json`, with the absolute path to this directory:
+In `claude_desktop_config.json`, with the absolute path to this directory. Claude Desktop does
+not inherit your shell's `PATH`, so give `uv` as an absolute path too (`which uv`):
 
 ```json
 {
   "mcpServers": {
     "amazonia360": {
-      "command": "uv",
+      "command": "/absolute/path/to/uv",
       "args": ["--directory", "/absolute/path/to/mcp", "run", "amazonia360-mcp"]
     }
   }
