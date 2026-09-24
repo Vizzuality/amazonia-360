@@ -78,7 +78,7 @@ class AreaHandlers:
         layer = indicator.query_layer()
         reason = indicator.unavailable_reason()
         if reason is not None or layer is None:
-            detail = " ".join(
+            detail = ". ".join(
                 [reason or "no query layer"] + [c.text for c in indicator.caveats]
             )
             raise HandlerError(f"Indicator {indicator_id} is not available: {detail}")
