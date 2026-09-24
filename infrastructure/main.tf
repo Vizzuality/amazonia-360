@@ -169,10 +169,11 @@ module "dev" {
     TF_API_GRID_TILES_PATH = var.dev.api.grid_tiles_path
 
     # Client
-    TF_CLIENT_NEXT_PUBLIC_URL     = var.dev.client.next_public_url
-    TF_CLIENT_NEXT_PUBLIC_API_URL = var.dev.client.next_public_api_url
-    TF_CLIENT_NEXT_PUBLIC_GTM_ID  = var.dev.client.next_public_gtm_id
-    TF_CLIENT_BASIC_AUTH_ENABLED  = var.dev.client.basic_auth_enabled
+    TF_CLIENT_NEXT_PUBLIC_URL           = var.dev.client.next_public_url
+    TF_CLIENT_NEXT_PUBLIC_API_URL       = var.dev.client.next_public_api_url
+    TF_CLIENT_NEXT_PUBLIC_GTM_ID        = var.dev.client.next_public_gtm_id
+    TF_CLIENT_NEXT_PUBLIC_FEATURE_FLAGS = var.dev.client.next_public_feature_flags
+    TF_CLIENT_BASIC_AUTH_ENABLED        = var.dev.client.basic_auth_enabled
   }
   github_additional_environment_secrets = {
     # SES
@@ -239,10 +240,11 @@ module "staging" {
     TF_API_GRID_TILES_PATH = var.staging.api.grid_tiles_path
 
     # Client
-    TF_CLIENT_NEXT_PUBLIC_URL     = var.staging.client.next_public_url
-    TF_CLIENT_NEXT_PUBLIC_API_URL = var.staging.client.next_public_api_url
-    TF_CLIENT_NEXT_PUBLIC_GTM_ID  = var.staging.client.next_public_gtm_id
-    TF_CLIENT_BASIC_AUTH_ENABLED  = var.staging.client.basic_auth_enabled
+    TF_CLIENT_NEXT_PUBLIC_URL           = var.staging.client.next_public_url
+    TF_CLIENT_NEXT_PUBLIC_API_URL       = var.staging.client.next_public_api_url
+    TF_CLIENT_NEXT_PUBLIC_GTM_ID        = var.staging.client.next_public_gtm_id
+    TF_CLIENT_NEXT_PUBLIC_FEATURE_FLAGS = var.staging.client.next_public_feature_flags
+    TF_CLIENT_BASIC_AUTH_ENABLED        = var.staging.client.basic_auth_enabled
   }
   github_additional_environment_secrets = {
     # SES
@@ -310,10 +312,11 @@ module "prod" {
     TF_API_GRID_TILES_PATH = var.prod.api.grid_tiles_path
 
     # Client
-    TF_CLIENT_NEXT_PUBLIC_URL     = var.prod.client.next_public_url
-    TF_CLIENT_NEXT_PUBLIC_API_URL = var.prod.client.next_public_api_url
-    TF_CLIENT_NEXT_PUBLIC_GTM_ID  = var.prod.client.next_public_gtm_id
-    TF_CLIENT_BASIC_AUTH_ENABLED  = var.prod.client.basic_auth_enabled
+    TF_CLIENT_NEXT_PUBLIC_URL           = var.prod.client.next_public_url
+    TF_CLIENT_NEXT_PUBLIC_API_URL       = var.prod.client.next_public_api_url
+    TF_CLIENT_NEXT_PUBLIC_GTM_ID        = var.prod.client.next_public_gtm_id
+    TF_CLIENT_NEXT_PUBLIC_FEATURE_FLAGS = var.prod.client.next_public_feature_flags
+    TF_CLIENT_BASIC_AUTH_ENABLED        = var.prod.client.basic_auth_enabled
   }
   github_additional_environment_secrets = {
     # SES

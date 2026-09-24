@@ -31,6 +31,7 @@ dev = {
     next_public_api_key        = ""
     next_public_arcgis_api_key = ""
     next_public_gtm_id         = ""
+    next_public_feature_flags  = "country-module"
     basic_auth_enabled         = ""
     basic_auth_user            = ""
     basic_auth_password        = ""

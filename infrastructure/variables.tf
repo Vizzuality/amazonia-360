@@ -78,6 +78,7 @@ variable "dev" {
       next_public_api_key        = string
       next_public_arcgis_api_key = string
       next_public_gtm_id         = string
+      next_public_feature_flags  = optional(string, "")
       basic_auth_enabled         = string
       basic_auth_user            = string
       basic_auth_password        = string
@@ -104,6 +105,7 @@ variable "staging" {
       next_public_api_key        = string
       next_public_arcgis_api_key = string
       next_public_gtm_id         = string
+      next_public_feature_flags  = optional(string, "")
       basic_auth_enabled         = string
       basic_auth_user            = string
       basic_auth_password        = string
@@ -130,6 +132,7 @@ variable "prod" {
       next_public_api_key        = string
       next_public_arcgis_api_key = string
       next_public_gtm_id         = string
+      next_public_feature_flags  = optional(string, "")
       basic_auth_enabled         = string
       basic_auth_user            = string
       basic_auth_password        = string
