@@ -10,7 +10,7 @@ case "$NODE_ENV" in
   production)
     echo "Running migrations..."
     export COREPACK_HOME=$(mktemp -d)
-    pnpm payload migrate
+    pnpm db:migrate
     echo "Running in production mode..."
     exec env HOSTNAME=0.0.0.0 node server.js
     ;;

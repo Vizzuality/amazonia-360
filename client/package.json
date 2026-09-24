@@ -19,7 +19,9 @@
     "test:e2e:report": "playwright show-report e2e/playwright-report",
     "test:integration": "vitest run --config integration/vitest.config.ts",
     "payload": "payload",
-    "ci": "payload migrate && pnpm build",
+    "ci": "pnpm db:migrate && pnpm build",
+    "db:migrate": "node scripts/payload-step.mjs migrate",
+    "db:seed": "node scripts/payload-step.mjs seed",
     "seed:data": "payload run src/cms/seed/seed-data.ts"
   },
   "dependencies": {
