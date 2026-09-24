@@ -29,8 +29,9 @@ LIMA: dict[str, Any] = {
 
 
 class FakeClient:
-    def __init__(self, *, fail: bool = False) -> None:
+    def __init__(self, *, fail: bool = False, empty: bool = False) -> None:
         self.fail = fail
+        self.empty = empty
         self.calls: list[str] = []
 
     async def count(self, layer: Layer, aoi: BaseGeometry) -> int:
@@ -41,13 +42,13 @@ class FakeClient:
         self.calls.append("distinct")
         if self.fail:
             raise ArcGISError("ArcGIS did not respond in time: x")
-        return ["Bosque", "Páramo"]
+        return [] if self.empty else ["Bosque", "Páramo"]
 
     async def features(
         self, layer: Layer, aoi: BaseGeometry, max_allowable_offset: float
     ) -> list[Feature]:
         self.calls.append("features")
-        return [("Bosque", box(-79.0, -2.0, -77.0, 0.0))]
+        return [] if self.empty else [("Bosque", box(-79.0, -2.0, -77.0, 0.0))]
 
 
 def handlers(client: FakeClient | None = None) -> AreaHandlers:
@@ -185,3 +186,46 @@ async def test_ai_answerable_false_is_a_refusal(
     with pytest.raises(HandlerError, match="not cleared"):
         await handlers(client).categories_in_area(210, TENA)
     assert client.calls == []
+
+
+def _with(monkeypatch: pytest.MonkeyPatch, **overrides: Any) -> None:
+    layer = indicator(**overrides)
+    monkeypatch.setattr(area_handlers_module, "get_indicator_metadata", lambda _: layer)
+
+
+@pytest.mark.anyio
+async def test_empty_on_a_partial_layer_says_nothing_is_mapped_here(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _with(monkeypatch, covers_module=False)
+    result = await handlers(FakeClient(empty=True)).categories_in_area(210, TENA)
+    assert result.value == []
+    assert any("nothing of this layer is mapped" in c for c in result.caveats)
+
+
+@pytest.mark.anyio
+async def test_empty_on_a_layer_that_covers_the_module_is_flagged_as_unexpected(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _with(monkeypatch, covers_module=True)
+    result = await handlers(FakeClient(empty=True)).area_by_category(210, TENA)
+    assert result.value == {}
+    assert any("unexpected" in c for c in result.caveats)
+
+
+@pytest.mark.anyio
+async def test_area_on_a_partial_layer_says_unclassified_hectares_are_no_class(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _with(monkeypatch, covers_module=False)
+    result = await handlers().area_by_category(210, TENA)
+    assert any("not a class of their own" in c for c in result.caveats)
+
+
+@pytest.mark.anyio
+async def test_no_coverage_caveat_when_the_catalogue_does_not_say(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _with(monkeypatch)
+    result = await handlers(FakeClient(empty=True)).categories_in_area(210, TENA)
+    assert not any("mapped" in c or "unexpected" in c for c in result.caveats)

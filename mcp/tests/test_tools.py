@@ -139,6 +139,10 @@ async def test_pathological_failures_are_logged_too(
             "categories_in_area", {"indicator_id": 210, "area": TENA}
         )
     assert result.is_error
+    content = result.content[0]
+    assert isinstance(content, TextContent)
+    # The model gets the cause, not a bare "Error executing tool".
+    assert "RuntimeError: boom" in content.text
     [line] = (tmp_path / "calls.jsonl").read_text().splitlines()
     record = json.loads(line)
     assert record["ok"] is False

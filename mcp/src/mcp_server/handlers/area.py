@@ -20,6 +20,32 @@ from mcp_server.handlers.result import ComputedOver, Result, Timing
 from mcp_server.measurement.stopwatch import Stopwatch
 
 
+def _coverage_caveats(
+    indicator: IndicatorMetadata, value: list[str] | int | dict[str, float]
+) -> list[str]:
+    # Without these the model read an empty answer as "maybe the service is broken"
+    # and unclassified hectares as "probably towns and pasture".
+    covers = indicator.covers_module
+    if covers is None:
+        return []
+    if not value:
+        if covers:
+            return [
+                "This layer covers the whole module, so an empty result is "
+                "unexpected: the area may fall outside the real module boundary."
+            ]
+        return [
+            "This layer covers only part of the module: nothing of this layer is "
+            "mapped in this area, which is not the same as missing data."
+        ]
+    if isinstance(value, dict) and not covers:
+        return [
+            "This layer covers only part of the module: hectares of the area without "
+            "a class are not mapped by it and are not a class of their own."
+        ]
+    return []
+
+
 @dataclass
 class _Prepared:
     indicator: IndicatorMetadata
@@ -138,7 +164,7 @@ class AreaHandlers:
             computed_over=computed_over,
             coverage=p.coverage,
             provenance=p.indicator.provenance.model_dump(),
-            caveats=p.caveats,
+            caveats=p.caveats + _coverage_caveats(p.indicator, value),
             aoi_ha=round(geodesic_area_ha(p.aoi), 2),
             timing=Timing(
                 total_ms=p.watch.total_ms(),

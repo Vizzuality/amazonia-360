@@ -35,6 +35,7 @@
         "method_url": null
       },
       "category_field": "Practica",
+      "covers_module": false,
       "documented_count": null,
       "sync": {
         "arcgis_item_id": "356deac90503414f9ad6d600e352d808",
@@ -94,6 +95,7 @@
         "method_url": null
       },
       "category_field": "Prioridad",
+      "covers_module": false,
       "documented_count": null,
       "sync": {
         "arcgis_item_id": "6f8055ee6abe4e2495f5f5d457597a4e",
@@ -147,7 +149,8 @@
         "method_url": null
       },
       "category_field": "Bioclima",
-      "documented_count": 7,
+      "covers_module": true,
+      "documented_count": null,
       "sync": {
         "arcgis_item_id": "4cb214dd5e834c29a1a3d8dd7dc239bf",
         "queryable_fields": [
@@ -202,6 +205,7 @@
         "method_url": null
       },
       "category_field": "Estrato",
+      "covers_module": false,
       "documented_count": null,
       "sync": {
         "arcgis_item_id": "20e987e39350434e992f66f7ec745dba",
@@ -256,7 +260,8 @@
         "method_url": null
       },
       "category_field": "Transicion",
-      "documented_count": 7,
+      "covers_module": false,
+      "documented_count": null,
       "sync": {
         "arcgis_item_id": "9ba21668575c4ded909816b18703841b",
         "queryable_fields": [
@@ -308,6 +313,7 @@
         "method_url": null
       },
       "category_field": "Nombre",
+      "covers_module": true,
       "documented_count": null,
       "sync": {
         "arcgis_item_id": "4e1cf951ff284164b3875c25fe03e9c9",
@@ -359,6 +365,7 @@
         "method_url": null
       },
       "category_field": "Ecosistema",
+      "covers_module": false,
       "documented_count": null,
       "sync": {
         "arcgis_item_id": "1108a9956a9b4076931c5a35e9decf3a",
@@ -419,6 +426,7 @@
         "method_url": null
       },
       "category_field": "Relieve",
+      "covers_module": true,
       "documented_count": null,
       "sync": {
         "arcgis_item_id": "6612307cd48f47efb455e567a1a7d289",
@@ -472,7 +480,8 @@
         "method_url": null
       },
       "category_field": "Regimen",
-      "documented_count": 7,
+      "covers_module": false,
+      "documented_count": null,
       "sync": {
         "arcgis_item_id": "c692c9533c3844dcb06b81721d3ad4d7",
         "queryable_fields": [
@@ -524,7 +533,8 @@
         "method_url": null
       },
       "category_field": "Termotipo",
-      "documented_count": 7,
+      "covers_module": true,
+      "documented_count": null,
       "sync": {
         "arcgis_item_id": "56bdc6d89df345f2b5ffffa5959068e9",
         "queryable_fields": [
@@ -575,6 +585,7 @@
         "method_url": null
       },
       "category_field": "TIPO_CLIMA",
+      "covers_module": true,
       "documented_count": null,
       "sync": {
         "arcgis_item_id": "1cb06063ec0c4e65b73ee2e57b302a65",
@@ -627,7 +638,8 @@
         "method_url": null
       },
       "category_field": "Sector_bio",
-      "documented_count": 7,
+      "covers_module": true,
+      "documented_count": null,
       "sync": {
         "arcgis_item_id": "7f30afe4c9524140b6a06540955acc70",
         "queryable_fields": [
@@ -680,6 +692,7 @@
         "method_url": null
       },
       "category_field": "Nombre",
+      "covers_module": false,
       "documented_count": null,
       "sync": {
         "arcgis_item_id": "86b76ac2a4c345569d1e08466792f67e",

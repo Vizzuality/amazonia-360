@@ -34,6 +34,7 @@
         "method_url": null
       },
       "category_field": "Practica",
+      "covers_module": false,
       "documented_count": null
     },
     {
@@ -69,6 +70,7 @@
         "method_url": null
       },
       "category_field": "Prioridad",
+      "covers_module": false,
       "documented_count": null
     },
     {
@@ -104,7 +106,8 @@
         "method_url": null
       },
       "category_field": "Bioclima",
-      "documented_count": 7
+      "covers_module": true,
+      "documented_count": null
     },
     {
       "id": 206,
@@ -143,6 +146,7 @@
         "method_url": null
       },
       "category_field": "Estrato",
+      "covers_module": false,
       "documented_count": null
     },
     {
@@ -178,7 +182,8 @@
         "method_url": null
       },
       "category_field": "Transicion",
-      "documented_count": 7
+      "covers_module": false,
+      "documented_count": null
     },
     {
       "id": 209,
@@ -213,6 +218,7 @@
         "method_url": null
       },
       "category_field": "Nombre",
+      "covers_module": true,
       "documented_count": null
     },
     {
@@ -248,6 +254,7 @@
         "method_url": null
       },
       "category_field": "Ecosistema",
+      "covers_module": false,
       "documented_count": null
     },
     {
@@ -283,6 +290,7 @@
         "method_url": null
       },
       "category_field": "Relieve",
+      "covers_module": true,
       "documented_count": null
     },
     {
@@ -318,7 +326,8 @@
         "method_url": null
       },
       "category_field": "Regimen",
-      "documented_count": 7
+      "covers_module": false,
+      "documented_count": null
     },
     {
       "id": 217,
@@ -353,7 +362,8 @@
         "method_url": null
       },
       "category_field": "Termotipo",
-      "documented_count": 7
+      "covers_module": true,
+      "documented_count": null
     },
     {
       "id": 218,
@@ -388,6 +398,7 @@
         "method_url": null
       },
       "category_field": "TIPO_CLIMA",
+      "covers_module": true,
       "documented_count": null
     },
     {
@@ -423,7 +434,8 @@
         "method_url": null
       },
       "category_field": "Sector_bio",
-      "documented_count": 7
+      "covers_module": true,
+      "documented_count": null
     },
     {
       "id": 222,
@@ -458,6 +470,7 @@
         "method_url": null
       },
       "category_field": "Nombre",
+      "covers_module": false,
       "documented_count": null
     }
   ]

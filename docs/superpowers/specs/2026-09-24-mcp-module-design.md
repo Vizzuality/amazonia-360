@@ -155,9 +155,14 @@ descriptions are null until the CMS holds them. The TypeScript
 files are not copied; their vocabulary values are repeated in `catalogue/models.py` as `Literal`
 types, because this service shares no code with the client, and have to be kept in step by hand.
 
-Three fields are ours and marked as proposals in the schema: `category_field`, `documented_count`
-and `sync.published_count`. The record-count warning is computed from the last two at answer time,
-never stored in `caveats`, which the contract reserves for text a person wrote.
+Four fields are ours and marked as proposals in the schema: `category_field`, `covers_module`,
+`documented_count` and `sync.published_count`. The record-count warning is computed from the last
+two at answer time, never stored in `caveats`, which the contract reserves for text a person wrote.
+The same goes for the coverage caveats computed from `covers_module`: an empty result on a layer
+that maps only part of the module says nothing is mapped there, and on a layer that covers the
+module says the result is unexpected. `covers_module` was set on 24 September 2026 by summing each
+layer's area against Geomorphology's 13.19 million ha: 204, 209, 211, 217, 218 and 219 cover the
+module; 214 covers 18 %, 210 82 %, the rest far less.
 
 Two things to hold on to from the contract:
 
@@ -428,8 +433,11 @@ mcp/
 
 1. How large the VizzHub OAuth port is. It gates phase 2.
 2. The vertex limit on the input area, to be set from the first measurements.
-3. How the five miscounted layers are resolved. It depends on a request to the consultant that
-   is still unanswered. (Carbon, the other half of this question, was published on 15 September.)
+3. How the five miscounted layers are resolved. *Resolved on our side on 24 September 2026:* the
+   AGOL item descriptions of all five agree with the published service (3, 8, 14,137, 11 and 11),
+   so the documented 7 is the error, and `documented_count` was cleared on them. The request to the
+   consultant to correct the documentation still stands. (Carbon, the other half of this question,
+   was published on 15 September.)
 4. Whether sending user questions to Jev is acceptable to the IDB.
 5. Whether Laya needs fine-tuning, and on how many questions. Decided from the first zero-shot run.
 6. Every `provenance` field is null. Filling it is data curation, and it belongs to whoever curates
