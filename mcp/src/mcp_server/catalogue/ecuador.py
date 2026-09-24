@@ -90,7 +90,9 @@ INDICATORS: tuple[IndicatorMetadata, ...] = (
         unit="ha",
         ai_answerable=True,
         available=True,
-        layer=_layer("l_09_deforestacion_2020_2022_del_modulo_ecuatoriano", "Transicion"),  # noqa: E501
+        layer=_layer(
+            "l_09_deforestacion_2020_2022_del_modulo_ecuatoriano", "Transicion"
+        ),
         arcgis_item_id="9ba21668575c4ded909816b18703841b",
         caveats=(_miscount(7, 8),),
     ),
@@ -104,7 +106,9 @@ INDICATORS: tuple[IndicatorMetadata, ...] = (
         unit="ha",
         ai_answerable=True,
         available=True,
-        layer=_layer("l_10_demarcaciones_hidrograficas_del_modulo_ecuatoriano", "Nombre"),  # noqa: E501
+        layer=_layer(
+            "l_10_demarcaciones_hidrograficas_del_modulo_ecuatoriano", "Nombre"
+        ),
         arcgis_item_id="4e1cf951ff284164b3875c25fe03e9c9",
     ),
     IndicatorMetadata(
@@ -184,7 +188,9 @@ INDICATORS: tuple[IndicatorMetadata, ...] = (
         unit="ha",
         ai_answerable=True,
         available=True,
-        layer=_layer("l_20_unidades_biogeograficas_del_modulo_ecuatoriano", "Sector_bio"),  # noqa: E501
+        layer=_layer(
+            "l_20_unidades_biogeograficas_del_modulo_ecuatoriano", "Sector_bio"
+        ),
         arcgis_item_id="7f30afe4c9524140b6a06540955acc70",
         caveats=(_miscount(7, 11),),
     ),
