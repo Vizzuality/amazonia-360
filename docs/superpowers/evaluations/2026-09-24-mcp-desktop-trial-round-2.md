@@ -13,6 +13,14 @@ Status: in progress.
 
 | # | Question | Tool, indicator | Result | Time | Vertices received | Round 1 time |
 |---|---|---|---|---|---|---|
+| 1 | What data is there on the physical and natural environment? | `list_indicators` | 13 layers, grouped | not logged | – | not logged |
+
+## Findings
+
+- **Q1, no regression.** Same tool, all 13 layers, descriptions taken from `description_short`,
+  202 correctly given as the only count layer. Carbon named without a description, as before. The
+  grouping differs (forest now its own group, offered "if you count it as natural environment"),
+  which is the model's wording, not a change in the catalogue.
 
 ## What each question checks this time
 
