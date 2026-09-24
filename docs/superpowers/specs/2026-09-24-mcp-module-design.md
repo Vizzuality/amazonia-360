@@ -196,7 +196,7 @@ catalogue to the MCP, and the MCP keeps its own copy.
 *Changed on 24 September 2026:* the first version of this section sent one indicator per
 publish, wrapped in an envelope with `event` and `updated_at`, and needed separate hooks for
 delete and unpublish plus a reconciliation job. The user chose instead to send **the whole
-published catalogue on every change**. It costs a larger payload (about 12 KB for the 13
+published catalogue on every change**. It costs a larger payload (about 20 KB for the 13
 Ecuador layers, a few hundred KB for the whole regional catalogue, sent only when something
 changes) and removes most of the ways a callback drifts:
 

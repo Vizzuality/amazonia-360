@@ -78,6 +78,7 @@ This is not Payload's REST response. The CMS maps each document:
 | `resource[0].url` | `resource.url` |
 | `resource[0].layer_id` (text) | `resource.layer_id`, integer |
 | `caveats[].text` (row `id` dropped) | `caveats[].text` |
+| `sync` group, written by the CMS's ArcGIS sync job | `sync`, same fields |
 | `name`, `unit`, contract fields | same names |
 | `description`, `order`, visualization fields, `_status`, timestamps | not sent |
 

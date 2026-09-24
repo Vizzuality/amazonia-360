@@ -12,6 +12,7 @@ from mcp_server.catalogue.cli import (
     catalogue_schema,
     exported_catalogue,
 )
+from tests.test_catalogue import IN_SCOPE_IDS
 from tests.test_models import curated
 
 EXAMPLE = Path(__file__).parents[1] / "examples" / "catalogue.json"
@@ -62,7 +63,7 @@ def test_the_committed_example_is_the_current_export() -> None:
 
 def test_the_example_loads_as_the_cms_export_will() -> None:
     document = load_document(json.loads(EXAMPLE.read_text("utf-8")))
-    assert len(document.indicators) == 13
+    assert {i.id for i in document.indicators} == IN_SCOPE_IDS
 
 
 def test_a_document_with_duplicate_ids_is_rejected() -> None:
@@ -79,3 +80,8 @@ def test_a_document_in_another_locale_is_rejected() -> None:
     raw = {"locale": "es", "generated_at": "2026-09-24T00:00:00Z", "indicators": []}
     with pytest.raises(ValidationError, match="locale"):
         load_document(raw)
+
+
+def test_the_sync_group_is_documented_as_the_cms_job_output() -> None:
+    sync = catalogue_schema()["$defs"]["IndicatorMetadata"]["properties"]["sync"]
+    assert "CMS's ArcGIS sync job" in sync["description"]
