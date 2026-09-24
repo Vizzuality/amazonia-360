@@ -1,6 +1,7 @@
 # MCP module design
 
-Status: approved on 24 September 2026, not yet implemented. Branch `feat/mcp-module`, cut from
+Status: approved on 24 September 2026. Phase 1 implemented; phase 2 and the gatekeeper
+evaluation not started. Branch `feat/mcp-module`, cut from
 `develop` at `d92944d9`.
 
 This spec supersedes decisions 1 and 5 of the internal architecture note
