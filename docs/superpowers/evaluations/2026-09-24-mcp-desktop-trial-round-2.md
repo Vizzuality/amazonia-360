@@ -14,6 +14,7 @@ Status: in progress.
 | # | Question | Tool, indicator | Result | Time | Vertices received | Round 1 time |
 |---|---|---|---|---|---|---|
 | 1 | What data is there on the physical and natural environment? | `list_indicators` | 13 layers, grouped | not logged | – | not logged |
+| 2 | Climate types around Tena | `categories_in_area`, 218 | 3 classes | 0.52 s | – | 0.78 s |
 
 ## Findings
 
@@ -21,6 +22,13 @@ Status: in progress.
   202 correctly given as the only count layer. Carbon named without a description, as before. The
   grouping differs (forest now its own group, offered "if you count it as natural environment"),
   which is the model's wording, not a change in the catalogue.
+
+- **Q2, caveat still softened: the instruction change did not fix it.** The answer again adds
+  "although Tena is clearly inside" to the provisional-boundary caveat, word for word the round 1
+  habit, despite the new instruction to quote caveats without reassurance. The box is also
+  different: about 15 km around Tena, 89,720 ha against 39,876 in round 1, so the third class
+  (Ecuatorial mesotérmico semihúmedo) is a larger area, not a change in the data. New and good:
+  it said unprompted that the tool gives presence only and that hectares need the slower tool.
 
 ## What each question checks this time
 
