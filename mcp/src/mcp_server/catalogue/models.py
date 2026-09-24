@@ -103,7 +103,10 @@ class Sync(_Model):
 
 
 class CuratedIndicator(_Model):
-    """Everything a person decides. The sync group is written by a job, never here.
+    """Everything a person decides, as written in ``ecuador.json``.
+
+    The sync group is left out because a job writes it, never a person: in the CMS
+    its ArcGIS sync job, locally ``amazonia360-mcp-catalogue sync``.
 
     Only identity is required, as in the contract: an incomplete indicator loads and
     reports why it is unavailable instead of stopping the whole catalogue.
@@ -143,7 +146,14 @@ class CuratedIndicator(_Model):
 
 
 class IndicatorMetadata(CuratedIndicator):
-    sync: Sync = Sync()
+    sync: Sync = Field(
+        default=Sync(),
+        description=(
+            "The contract's sync group (SyncFields in metadata.ts), written by the "
+            "CMS's ArcGIS sync job and sent with the rest of the indicator. Until that "
+            "job exists the MCP fills it locally."
+        ),
+    )
 
     @computed_field
     @property
@@ -203,6 +213,8 @@ class CatalogueDocument(_Model):
         description="Every published indicator, drafts excluded."
     )
 
+    # build_document checks this too, earlier and with a CatalogueError, for the
+    # local files; this is the check the CMS export goes through.
     @model_validator(mode="after")
     def _unique_ids(self) -> "CatalogueDocument":
         seen: set[int] = set()

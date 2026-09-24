@@ -247,7 +247,8 @@
             "synced_at": null,
             "sync_status": null,
             "published_count": null
-          }
+          },
+          "description": "The contract's sync group (SyncFields in metadata.ts), written by the CMS's ArcGIS sync job and sent with the rest of the indicator. Until that job exists the MCP fills it locally."
         }
       },
       "required": [

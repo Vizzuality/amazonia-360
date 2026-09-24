@@ -71,6 +71,8 @@ def build_catalogue(
     return tuple(build_document(curated, snapshot).indicators)
 
 
+# Cached and lazy, so the sync command can import this package before any snapshot
+# exists.
 @cache
 def local_document() -> CatalogueDocument:
     return build_document(load_curated(), _read(SNAPSHOT_FILE))
@@ -93,8 +95,7 @@ def _read(name: str) -> dict[str, Any]:
     return json.loads(files(__package__).joinpath(name).read_text(encoding="utf-8"))
 
 
-# Lazy, so the sync command can import this package before any snapshot exists.
-@cache
+# Not cached itself: local_document is the one cache, so clearing it is enough.
 def _catalogue() -> dict[int, IndicatorMetadata]:
     return {i.id: i for i in local_document().indicators}
 
