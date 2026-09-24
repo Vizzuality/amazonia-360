@@ -15,6 +15,13 @@ class ArcGISError(Exception):
     pass
 
 
+def _exceeded_transfer_limit(body: dict[str, Any]) -> bool:
+    return bool(
+        body.get("exceededTransferLimit")
+        or body.get("properties", {}).get("exceededTransferLimit")
+    )
+
+
 def _esri_polygon(aoi: BaseGeometry) -> str:
     polygons = list(aoi.geoms) if isinstance(aoi, MultiPolygon) else [aoi]
     rings: list[list[list[float]]] = []
@@ -52,11 +59,15 @@ class ArcGISClient:
                 "f": "json",
             },
         )
+        url = f"{layer.service_url}/{layer.layer_id}/query"
+        if _exceeded_transfer_limit(body):
+            raise ArcGISError(
+                f"Invalid response from {url}: the list of classes was truncated"
+            )
         try:
             values = {f["attributes"][layer.category_field] for f in body["features"]}
             return sorted(str(v) for v in values if v is not None)
         except (KeyError, TypeError) as exc:
-            url = f"{layer.service_url}/{layer.layer_id}/query"
             raise ArcGISError(
                 f"Invalid response from {url}: missing features or attributes"
             ) from exc
@@ -84,12 +95,18 @@ class ArcGISClient:
                 for f in page:
                     if f.get("geometry") is None:
                         continue
-                    category = str(f["properties"][layer.category_field])
-                    collected.append((category, shape(f["geometry"])))
-                exceeded = body.get("exceededTransferLimit") or body.get(
-                    "properties", {}
-                ).get("exceededTransferLimit")
-                if not exceeded or not page:
+                    category = f["properties"][layer.category_field]
+                    if category is None:
+                        continue
+                    collected.append((str(category), shape(f["geometry"])))
+                exceeded = _exceeded_transfer_limit(body)
+                if exceeded and not page:
+                    url = f"{layer.service_url}/{layer.layer_id}/query"
+                    raise ArcGISError(
+                        f"Invalid response from {url}: the page was truncated but "
+                        "returned no features"
+                    )
+                if not exceeded:
                     return collected
                 offset += len(page)
             except (KeyError, TypeError) as exc:

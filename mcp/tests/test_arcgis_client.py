@@ -71,6 +71,65 @@ async def test_distinct_returns_sorted_values() -> None:
 
 
 @pytest.mark.anyio
+async def test_distinct_raises_when_the_list_of_classes_is_truncated() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            json={
+                "features": [{"attributes": {"Ecosistema": "Bosque"}}],
+                "exceededTransferLimit": True,
+            },
+        )
+
+    with pytest.raises(ArcGISError, match="truncated"):
+        await client_with(handler).distinct(LAYER, AOI)
+
+
+@pytest.mark.anyio
+async def test_distinct_raises_when_truncated_under_properties() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            json={
+                "features": [{"attributes": {"Ecosistema": "Bosque"}}],
+                "properties": {"exceededTransferLimit": True},
+            },
+        )
+
+    with pytest.raises(ArcGISError, match="truncated"):
+        await client_with(handler).distinct(LAYER, AOI)
+
+
+@pytest.mark.anyio
+async def test_features_raises_when_a_page_is_truncated_with_no_features() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            json={
+                "type": "FeatureCollection",
+                "features": [],
+                "properties": {"exceededTransferLimit": True},
+            },
+        )
+
+    with pytest.raises(ArcGISError, match="truncated"):
+        await client_with(handler).features(LAYER, AOI, 0.001)
+
+
+@pytest.mark.anyio
+async def test_features_skips_null_category_features() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        feature = square_feature("A", -77.9)
+        feature["properties"]["Ecosistema"] = None
+        return httpx.Response(
+            200, json={"type": "FeatureCollection", "features": [feature]}
+        )
+
+    features = await client_with(handler).features(LAYER, AOI, 0.001)
+    assert features == []
+
+
+@pytest.mark.anyio
 async def test_features_follow_pagination() -> None:
     pages = {
         "0": {

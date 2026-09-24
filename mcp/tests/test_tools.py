@@ -89,3 +89,23 @@ async def test_refusals_reach_the_client_with_their_reason_and_are_logged(
     assert record["ok"] is False
     assert "does not support count" in record["error"]
     assert isinstance(record["elapsed_ms"], int)
+
+
+@pytest.mark.anyio
+async def test_pathological_failures_are_logged_too(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    async def boom(indicator_id: int, area: dict[str, Any]) -> Any:
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(AreaHandlers, "categories_in_area", staticmethod(boom))
+    async with Client(server(tmp_path)) as client:
+        result = await client.call_tool(
+            "categories_in_area", {"indicator_id": 210, "area": TENA}
+        )
+    assert result.is_error
+    [line] = (tmp_path / "calls.jsonl").read_text().splitlines()
+    record = json.loads(line)
+    assert record["ok"] is False
+    assert record["error"] == "RuntimeError: boom"
+    assert isinstance(record["elapsed_ms"], int)
