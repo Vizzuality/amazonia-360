@@ -26,3 +26,9 @@ def test_computed_fields_are_not_asked_of_the_cms() -> None:
     schema = indicator_schema()
     assert "available" not in schema["properties"]
     assert schema["additionalProperties"] is False
+
+
+def test_the_schema_declares_its_draft_and_what_it_describes() -> None:
+    schema = indicator_schema()
+    assert schema["$schema"] == "https://json-schema.org/draft/2020-12/schema"
+    assert "publish" in schema["description"]

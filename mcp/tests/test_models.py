@@ -19,7 +19,7 @@ def curated(**overrides: Any) -> dict[str, Any]:
             "layer_id": 0,
         },
         "value_type": "categorical",
-        "aggregation": "sum",
+        "aggregation": "none",
         "ai_answerable": True,
         "category_field": "Ecosistema",
     }
@@ -61,6 +61,55 @@ def test_available_needs_a_resource_and_a_clean_sync() -> None:
     assert indicator(resource=None).available is False
     assert indicator(sync={"sync_status": "error"}).available is False
     assert indicator(sync={}).available is False
+
+
+def test_nothing_beyond_identity_is_required_as_in_the_contract() -> None:
+    minimal = CuratedIndicator.model_validate(
+        {"id": 210, "name": "Ecosystems", "subtopic": 5}
+    )
+    assert minimal.value_type is None
+    assert minimal.resource is None
+
+
+@pytest.mark.parametrize(
+    ("overrides", "sync", "reason"),
+    [
+        ({"resource": None}, None, "no published resource"),
+        ({}, {}, "not synced"),
+        ({}, {"sync_status": "error"}, "sync status is error"),
+        ({"value_type": None}, None, "no value_type"),
+        ({"category_field": None}, None, "no category_field"),
+    ],
+)
+def test_an_incomplete_indicator_says_why_it_is_unavailable(
+    overrides: dict[str, Any], sync: dict[str, Any] | None, reason: str
+) -> None:
+    incomplete = indicator(sync=sync, **overrides)
+    assert incomplete.available is False
+    assert incomplete.unavailable_reason() == reason
+    assert indicator().unavailable_reason() is None
+
+
+def test_integer_ids_are_not_coerced_from_strings() -> None:
+    with pytest.raises(ValidationError, match="id"):
+        CuratedIndicator.model_validate(curated(id="210"))
+    with pytest.raises(ValidationError, match="layer_id"):
+        CuratedIndicator.model_validate(
+            curated(resource={"type": "feature", "url": "https://x", "layer_id": "0"})
+        )
+
+
+def test_country_codes_follow_the_client_list() -> None:
+    assert CuratedIndicator.model_validate(curated(country=None)).country is None
+    with pytest.raises(ValidationError, match="country"):
+        CuratedIndicator.model_validate(curated(country="Ecuador"))
+    with pytest.raises(ValidationError, match="spatial_coverage"):
+        CuratedIndicator.model_validate(curated(spatial_coverage=["XXX"]))
+
+
+def test_decimals_are_bounded_as_in_the_contract() -> None:
+    with pytest.raises(ValidationError, match="decimals"):
+        CuratedIndicator.model_validate(curated(decimals=7))
 
 
 def test_operations_follow_the_value_type() -> None:

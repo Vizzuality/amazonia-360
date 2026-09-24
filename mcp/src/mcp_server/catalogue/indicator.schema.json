@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
     "Caveat": {
       "additionalProperties": false,
@@ -266,6 +267,10 @@
       "title": "Name",
       "type": "string"
     },
+    "subtopic": {
+      "title": "Subtopic",
+      "type": "integer"
+    },
     "unit": {
       "anyOf": [
         {
@@ -275,15 +280,31 @@
           "type": "null"
         }
       ],
+      "default": null,
       "title": "Unit"
     },
-    "subtopic": {
-      "title": "Subtopic",
-      "type": "integer"
-    },
     "country": {
-      "title": "Country",
-      "type": "string"
+      "anyOf": [
+        {
+          "enum": [
+            "ECU",
+            "BOL",
+            "BRA",
+            "COL",
+            "GUF",
+            "GUY",
+            "PER",
+            "SUR",
+            "VEN"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Country"
     },
     "resource": {
       "anyOf": [
@@ -293,36 +314,55 @@
         {
           "type": "null"
         }
-      ]
+      ],
+      "default": null
     },
     "value_type": {
-      "enum": [
-        "count",
-        "area",
-        "length",
-        "distance",
-        "ratio",
-        "index",
-        "density",
-        "categorical"
+      "anyOf": [
+        {
+          "enum": [
+            "count",
+            "area",
+            "length",
+            "distance",
+            "ratio",
+            "index",
+            "density",
+            "categorical"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
       ],
-      "title": "Value Type",
-      "type": "string"
+      "default": null,
+      "title": "Value Type"
     },
     "aggregation": {
-      "enum": [
-        "sum",
-        "mean",
-        "area_weighted_mean",
-        "min",
-        "none"
+      "anyOf": [
+        {
+          "enum": [
+            "sum",
+            "mean",
+            "area_weighted_mean",
+            "min",
+            "none"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
       ],
-      "title": "Aggregation",
-      "type": "string"
+      "default": null,
+      "title": "Aggregation"
     },
     "decimals": {
       "anyOf": [
         {
+          "maximum": 6,
+          "minimum": 0,
           "type": "integer"
         },
         {
@@ -335,6 +375,17 @@
     "spatial_coverage": {
       "default": [],
       "items": {
+        "enum": [
+          "ECU",
+          "BOL",
+          "BRA",
+          "COL",
+          "GUF",
+          "GUY",
+          "PER",
+          "SUR",
+          "VEN"
+        ],
         "type": "string"
       },
       "title": "Spatial Coverage",
@@ -410,7 +461,7 @@
         }
       ],
       "default": null,
-      "description": "The attribute that holds each feature's class, used to list and group by class. Proposal: not in the CMS contract yet.",
+      "description": "The attribute that holds each feature's class, used to list and group by class. Belongs in Payload's feature resource block, next to layer_id. Proposal: not in the CMS contract yet.",
       "title": "Category Field"
     },
     "documented_count": {
@@ -423,7 +474,7 @@
         }
       ],
       "default": null,
-      "description": "Records the source documentation says the layer has. Compared with sync.published_count to warn about a mismatch. Proposal: not in the CMS contract yet.",
+      "description": "Records the source documentation says the layer has. Compared with sync.published_count to warn about a mismatch. Belongs in Payload's provenance group. Proposal: not in the CMS contract yet.",
       "title": "Documented Count"
     },
     "sync": {
@@ -443,13 +494,9 @@
   "required": [
     "id",
     "name",
-    "unit",
-    "subtopic",
-    "country",
-    "resource",
-    "value_type",
-    "aggregation"
+    "subtopic"
   ],
-  "title": "Amazonia 360 indicator, as consumed by the MCP (locale=en)",
-  "type": "object"
+  "title": "Amazonia 360 indicator, as the MCP takes it in",
+  "type": "object",
+  "description": "One indicator as the CMS sends it to the MCP when an editor publishes, mapped from the Payload document, in locale en. Not Payload's REST response: see the mapping table in the MCP README."
 }

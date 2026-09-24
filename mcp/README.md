@@ -34,8 +34,7 @@ In `claude_desktop_config.json`, with the absolute path to this directory:
 
 ## Catalogue
 
-The indicators live in three files in `src/mcp_server/catalogue/`, in the shape the CMS
-will serve them with `?locale=en`:
+The indicators live in three files in `src/mcp_server/catalogue/`:
 
 | File | What it holds | Who writes it |
 |---|---|---|
@@ -49,8 +48,32 @@ uv run amazonia360-mcp-catalogue schema   # after changing catalogue/models.py
 uv run amazonia360-mcp-catalogue export   # the joined catalogue, for the CMS team to compare
 ```
 
-Fields whose schema description starts with "Proposal" are not in the CMS contract yet.
-The live suite fails when the snapshot is behind ArcGIS.
+`sync` and `schema` write into the source tree, so run them from a checkout, not from an
+installed package. The live suite fails when the snapshot is behind ArcGIS.
+
+`ecuador.json` spells out every field, nulls included, on purpose: it is the image of what
+the CMS will send, so a missing field there means a field nobody has decided about yet.
+
+### What the CMS sends
+
+The schema is the MCP's intake format: what the CMS posts to the MCP when an editor
+publishes an indicator, in locale `en`. It is not Payload's REST response. The CMS maps its
+document to it:
+
+| Payload document (`?locale=en&depth=0`) | MCP intake |
+|---|---|
+| `id` (text, e.g. `"210"`) | `id`, integer |
+| `subtopic` (relationship id) | `subtopic`, integer |
+| `resource[0]` (one-item blocks list) | `resource`, one object |
+| `resource[0].blockType` | `resource.type` |
+| `resource[0].url` | `resource.url` |
+| `resource[0].layer_id` (text) | `resource.layer_id`, integer |
+| `caveats[].text` (row `id` dropped) | `caveats[].text` |
+| `name`, `unit`, contract fields | same names |
+| `description`, `order`, visualization fields, `_status`, timestamps | not sent |
+
+Fields whose schema description starts with "Proposal" are not in the CMS contract yet;
+each description says where it would go in Payload.
 
 ## Settings
 

@@ -69,10 +69,39 @@ async def test_reads_the_layer_the_count_and_the_item() -> None:
 
 
 @pytest.mark.anyio
-async def test_an_indicator_without_a_resource_is_inaccessible() -> None:
+async def test_an_indicator_without_a_resource_has_nothing_to_read() -> None:
+    # Nothing upstream is not the same as an upstream that could not be read.
     sync = await run(ecosystems(resource=None))
-    assert sync.sync_status == "item_inaccessible"
+    assert sync.sync_status is None
     assert sync.synced_at == NOW
+
+
+@pytest.mark.anyio
+async def test_a_null_editing_info_is_read_as_no_dates() -> None:
+    sync = await run(ecosystems(), layer={**LAYER_META, "editingInfo": None})
+    assert sync.sync_status == "ok"
+    assert sync.layer_last_edit is None
+
+
+@pytest.mark.anyio
+async def test_a_malformed_timestamp_is_an_error_not_a_crash() -> None:
+    layer = {**LAYER_META, "editingInfo": {"dataLastEditDate": "yesterday"}}
+    sync = await run(ecosystems(), layer=layer)
+    assert sync.sync_status == "error"
+
+
+@pytest.mark.anyio
+async def test_a_malformed_url_is_an_error_not_a_crash() -> None:
+    raw = curated()
+    raw["resource"]["url"] = "http://[bad"
+    sync = await run(CuratedIndicator.model_validate(raw))
+    assert sync.sync_status == "error"
+
+
+@pytest.mark.anyio
+async def test_no_category_field_skips_the_field_check() -> None:
+    sync = await run(ecosystems(category_field=None))
+    assert sync.sync_status == "ok"
 
 
 @pytest.mark.anyio

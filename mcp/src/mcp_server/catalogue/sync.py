@@ -12,7 +12,7 @@ from typing import Any
 
 import httpx
 
-from mcp_server.catalogue.models import CuratedIndicator, Sync
+from mcp_server.catalogue.models import CuratedIndicator, Resource, Sync
 
 ITEM_URL = "https://www.arcgis.com/sharing/rest/content/items/{item_id}"
 
@@ -42,46 +42,50 @@ async def sync_indicator(
     http: httpx.AsyncClient, indicator: CuratedIndicator, now: datetime
 ) -> Sync:
     if indicator.resource is None:
-        # No published service means there is nothing to reach.
-        return Sync(synced_at=now, sync_status="item_inaccessible")
-    layer_url = f"{indicator.resource.url}/{indicator.resource.layer_id}"
+        return Sync(synced_at=now)
     try:
-        meta = await _get_json(http, layer_url)
-        count = await _get_json(
-            http,
-            f"{layer_url}/query",
-            {"where": "1=1", "returnCountOnly": "true"},
-        )
-        fields = [f["name"] for f in meta["fields"]]
-        editing = meta.get("editingInfo", {})
-        item_id = meta["serviceItemId"]
-        published = int(count["count"])
-    except (_SyncError, httpx.HTTPError, KeyError, TypeError, ValueError) as exc:
+        return await _read_layer(http, indicator, indicator.resource, now)
+    except Exception as exc:
+        # The docstring's promise: one bad layer never stops the run.
         log.warning("%s: layer unreadable: %r", indicator.id, exc)
         return Sync(synced_at=now, sync_status="error")
 
-    readings: dict[str, Any] = {
-        "arcgis_item_id": item_id,
-        "queryable_fields": fields,
-        "layer_last_edit": _from_ms(editing.get("dataLastEditDate")),
-        "schema_last_edit": _from_ms(editing.get("schemaLastEditDate")),
-        "published_count": published,
-        "synced_at": now,
-    }
-    if indicator.category_field not in fields:
+
+async def _read_layer(
+    http: httpx.AsyncClient,
+    indicator: CuratedIndicator,
+    resource: Resource,
+    now: datetime,
+) -> Sync:
+    layer_url = f"{resource.url}/{resource.layer_id}"
+    meta = await _get_json(http, layer_url)
+    count = await _get_json(
+        http, f"{layer_url}/query", {"where": "1=1", "returnCountOnly": "true"}
+    )
+    fields = [f["name"] for f in meta["fields"]]
+    editing = meta.get("editingInfo") or {}
+    readings = Sync(
+        arcgis_item_id=meta["serviceItemId"],
+        queryable_fields=fields,
+        layer_last_edit=_from_ms(editing.get("dataLastEditDate")),
+        schema_last_edit=_from_ms(editing.get("schemaLastEditDate")),
+        published_count=int(count["count"]),
+        synced_at=now,
+    )
+    if indicator.category_field is not None and indicator.category_field not in fields:
         log.warning(
             "%s: category field %r not in the layer",
             indicator.id,
             indicator.category_field,
         )
-        return Sync(**readings, sync_status="error")
+        return readings.model_copy(update={"sync_status": "error"})
     try:
-        item = await _get_json(http, ITEM_URL.format(item_id=item_id))
+        item = await _get_json(http, ITEM_URL.format(item_id=readings.arcgis_item_id))
     except (_SyncError, httpx.HTTPError, ValueError) as exc:
         log.warning("%s: item unreadable: %r", indicator.id, exc)
-        return Sync(**readings, sync_status="item_inaccessible")
-    return Sync(
-        **readings, item_modified=_from_ms(item.get("modified")), sync_status="ok"
+        return readings.model_copy(update={"sync_status": "item_inaccessible"})
+    return readings.model_copy(
+        update={"item_modified": _from_ms(item.get("modified")), "sync_status": "ok"}
     )
 
 
@@ -99,6 +103,8 @@ async def _get_json(
 def _from_ms(value: Any) -> datetime | None:
     if value is None:
         return None
+    if not isinstance(value, int | float):
+        raise _SyncError(f"not an epoch in milliseconds: {value!r}")
     return datetime.fromtimestamp(value / 1000, UTC)
 
 

@@ -27,8 +27,16 @@ def indicator_schema() -> dict[str, Any]:
     # Validation mode describes what the CMS sends; computed fields such as
     # `available` are the MCP's own and stay out.
     schema = IndicatorMetadata.model_json_schema(mode="validation")
-    schema["title"] = "Amazonia 360 indicator, as consumed by the MCP (locale=en)"
-    return schema
+    return {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        **schema,
+        "title": "Amazonia 360 indicator, as the MCP takes it in",
+        "description": (
+            "One indicator as the CMS sends it to the MCP when an editor publishes, "
+            "mapped from the Payload document, in locale en. Not Payload's REST "
+            "response: see the mapping table in the MCP README."
+        ),
+    }
 
 
 def write_json(path: Path, data: dict[str, Any]) -> None:
@@ -37,7 +45,9 @@ def write_json(path: Path, data: dict[str, Any]) -> None:
 
 async def _sync(timeout_s: float) -> dict[str, Any]:
     async with httpx.AsyncClient(timeout=timeout_s) as http:
-        return await sync_catalogue(http, load_curated(), datetime.now(UTC))
+        # Whole seconds, so a re-sync with no real change is a small diff.
+        now = datetime.now(UTC).replace(microsecond=0)
+        return await sync_catalogue(http, load_curated(), now)
 
 
 def main() -> None:
