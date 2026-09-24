@@ -27,6 +27,7 @@ virtualenv's entry point directly works; the README says how.
 | 6 | Hectares of each flooding regime around Nuevo Rocafuerte | `area_by_category`, 214 (three tries, two box sizes), then `categories_in_area`, 214 | **failed**; the classes only | 0.9–2.1 s to the failure | – |
 | 7 | Question 6 again, after the fix | `area_by_category`, 214 | 3 classes, 24,254 ha (61 %) | 1.38 s | 10,663 |
 | 8 | Hectares of each climate type around Puyo | `area_by_category`, 218 | 2 classes, 39,868 ha (100 %) | 0.70 s | 1,875 |
+| 9 | Hectares of each forest stratum around Puyo | `area_by_category`, 206 | 2 strata, 11,810 ha (30 %) | 6.66 s | 333,834 |
 
 The areas were boxes of about 20 × 20 km (39,876 and 39,868 ha, 5 vertices) that Desktop drew itself
 from the place names.
@@ -108,6 +109,11 @@ slightly elsewhere; same size, 39,876 ha.
   "inside". The model said the unclassified 15,600 ha could be dry land or the part of the box
   outside Ecuador. That is the case the provisional caveat exists for, and the model reached it,
   but the MCP could not tell it the box was partial.
+- **Carbon caveat respected** (question 9). The model said the layer gives a mean t/ha per
+  stratum and that the tool neither returns it nor computes total carbon; it did not multiply.
+  It also checked the strata total (11,810 ha) against the ecosystems total in the same box
+  (11,078 ha) and called them consistent. They are 7 % apart, from two different products;
+  "consistent" is generous but not wrong.
 - **The fixed bug read as "intermittent".** The model said the earlier failures seemed
   intermittent. It had no way to know they were a bug fixed between calls; the generic error
   message gave it nothing to reason with.
@@ -115,36 +121,40 @@ slightly elsewhere; same size, 39,876 ha.
 
 ## Time
 
-`area_by_category` on ecosystems took 60.7 s for a 40,000 ha box: 58.8 s in ArcGIS, 1.9 s clipping,
-76,071 vertices received for three features.
+| Call | Layer | Features | Vertices received | ArcGIS | Clip | Total |
+|---|---|---|---|---|---|---|
+| Q3, Desktop | 210 Ecosystems | 3 | 76,071 | 58.8 s | 1.9 s | 60.7 s |
+| Rerun by hand, twice | 210 Ecosystems | 3 | 76,071 | 2.9 s, 3.1 s | 0.5 s | 3.4 s, 3.5 s |
+| Q7 | 214 Flooding, undissolved | 507 | 10,663 | 1.3 s | 0.06 s | 1.4 s |
+| Q8 | 218 Climate types | 2 | 1,875 | 0.7 s | 0.00 s | 0.7 s |
+| Q9 | 206 Carbon | 2 | 333,834 | 4.5 s | 2.2 s | 6.7 s |
+| Rerun by hand | 206 Carbon | 2 | 333,834 | 4.9 s | 2.2 s | 7.1 s |
 
-Probable cause, not yet verified: layer 210 is dissolved, one multipart feature per class across
-the whole module. A feature service query does not clip, so any box that touches a class receives
-all of that class's parts. The cost then follows the complexity of the classes touched, not the size
-of the area asked about. If so, undissolved layers (214, 219, 209) should be much cheaper for the
-same box, and the 0.001 degree `maxAllowableOffset` does not help the server read time.
+**The 60 s call was an outlier on the ArcGIS side, and both hypotheses built on it were wrong.**
+The same query on layer 210, returning the same 76,071 vertices, took 2.9 and 3.1 s in ArcGIS
+when rerun. Two explanations were tried first and discarded:
 
-Question 6 supports the hypothesis. On layer 214, undissolved, a box of the same size returned
-544 features and 10,987 vertices in 1.6 s; without any simplification, 331,563 vertices in 4.1 s.
-Layer 210 returned 3 features and 76,071 vertices in 58.8 s.
+- *Dissolved layers are slow.* Layer 218 is dissolved and took 0.7 s (question 8).
+- *Cost follows the vertices of the features touched.* Carbon returned four times as many
+  vertices as Ecosystems and took 4.5 s in ArcGIS (question 9).
 
-Question 8 rules out "dissolved" as the cause on its own. Layer 218 is dissolved too, one feature
-per climate type across the country, and the same Puyo box took 0.70 s: 2 features, 1,875
-vertices. The two classes cover the box exactly (38,033 + 1,835 = 39,868 ha = `aoi_ha`).
+The cause of the minute is not known. It was the first query on layer 210 of the session, so a
+cold start of the hosted service is plausible, but Carbon was also queried for the first time and
+was not slow. The earlier live suite saw the same thing: a 59 s count on layer 202 that did not
+repeat. What can be said is that ArcGIS Online sometimes takes a minute on a query that normally
+takes three seconds, which is enough to hit the 60 s timeout.
 
-Revised hypothesis: the cost follows how many vertices the stored features touched by the box hold,
-which the server has to read and generalise whatever the box. Climate types are few and simple.
-Ecosystems were dissolved into 68 multipart features from about 3.4 million vertices, so each one
-is huge. Carbon (206) should be the worst case: 5 features holding 1,042,267 vertices.
-
-The call came close to the 60 s ArcGIS timeout (`ARCGIS_TIMEOUT_S`). It did not fail because httpx
-applies the timeout between bytes, not to the whole request.
+Once the outlier is set aside, time does follow vertices received, at a moderate rate: about
+0.7 s for 2,000 vertices, 3 s for 76,000, 4.5–5 s for 334,000 in ArcGIS, with the local clip adding
+about 2 s per 300,000 vertices. The 0.001 degree simplification is what keeps these numbers low:
+layer 214 without it returned 331,563 vertices instead of 10,987 for the same box.
 
 The two fast tools were 0.49 and 0.78 s, above the 0.19–0.37 s measured earlier; the first call of
 a session probably includes connection setup.
 
 ## To check
 
-- The vertex hypothesis on Carbon (206), expected to be the slowest layer.
+- How often ArcGIS takes a minute, and whether it is tied to the first query on a service. Needs
+  repeated timed runs over hours, not one session.
 - Whether server read time changes with `maxAllowableOffset`.
 - Whether Desktop warned before the slow call; the tool's description says it is slow.
