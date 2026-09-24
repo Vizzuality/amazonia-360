@@ -1,6 +1,6 @@
 import { useLocale } from "next-intl";
 
-import { useGetIndicatorDescription } from "@/lib/indicators";
+import { useGetIndicatorById } from "@/lib/indicators";
 
 import { Indicator } from "@/types/indicator";
 
@@ -20,11 +20,11 @@ const InfoItemSkeleton = () => (
 
 const InfoItem = ({ id }: { id: Indicator["id"] }) => {
   const locale = useLocale();
-  const { data: description, isPending } = useGetIndicatorDescription(id, locale);
+  const { data: indicator, isPending } = useGetIndicatorById(id, locale);
 
   if (isPending) return <InfoItemSkeleton />;
 
-  return <Markdown>{description}</Markdown>;
+  return <Markdown>{indicator?.description}</Markdown>;
 };
 
 export default function Info({ ids }: { ids: Indicator["id"][] }) {

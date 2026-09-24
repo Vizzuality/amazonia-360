@@ -2,15 +2,21 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 
-vi.mock("@/lib/cms-content", () => ({ fetchIndicatorDescription: vi.fn() }));
+import { Indicator } from "@/types/indicator";
 
-const { fetchIndicatorDescription } = await import("@/lib/cms-content");
+vi.mock("@/lib/cms-content", () => ({ fetchIndicatorById: vi.fn() }));
+
+const { fetchIndicatorById } = await import("@/lib/cms-content");
 const { default: Info } = await import("./index");
 
 const DESCRIPTIONS: Record<number, string> = {
   1: "Regional description",
   2: "Ecuador description",
 };
+
+function getIndicator(description: string): Indicator {
+  return { description } as Indicator;
+}
 
 function renderInfo(ids: number[]) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -22,14 +28,16 @@ function renderInfo(ids: number[]) {
 }
 
 beforeEach(() => {
-  vi.mocked(fetchIndicatorDescription).mockImplementation(async ({ id }) => DESCRIPTIONS[id]);
+  vi.mocked(fetchIndicatorById).mockImplementation(async ({ id }) =>
+    getIndicator(DESCRIPTIONS[id]),
+  );
 });
 
 describe("Info", () => {
   it("shows a skeleton while the description is in flight", async () => {
-    let release: (value: string) => void = () => {};
-    vi.mocked(fetchIndicatorDescription).mockReturnValueOnce(
-      new Promise<string>((resolve) => {
+    let release: (value: Indicator) => void = () => {};
+    vi.mocked(fetchIndicatorById).mockReturnValueOnce(
+      new Promise<Indicator>((resolve) => {
         release = resolve;
       }),
     );
@@ -39,7 +47,7 @@ describe("Info", () => {
     await waitFor(() => expect(container.querySelector(".animate-pulse")).toBeInTheDocument());
     expect(screen.queryByText("Regional description")).not.toBeInTheDocument();
 
-    release("Regional description");
+    release(getIndicator("Regional description"));
 
     await waitFor(() => expect(screen.getByText("Regional description")).toBeInTheDocument());
     expect(container.querySelector(".animate-pulse")).not.toBeInTheDocument();
@@ -56,6 +64,6 @@ describe("Info", () => {
     renderInfo([2]);
 
     await waitFor(() => expect(screen.getByText("Ecuador description")).toBeInTheDocument());
-    expect(vi.mocked(fetchIndicatorDescription)).toHaveBeenCalledWith({ id: 2, locale: "en" });
+    expect(vi.mocked(fetchIndicatorById)).toHaveBeenCalledWith({ id: 2, locale: "en" });
   });
 });
