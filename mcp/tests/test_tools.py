@@ -88,3 +88,4 @@ async def test_refusals_reach_the_client_with_their_reason_and_are_logged(
     record = json.loads((tmp_path / "calls.jsonl").read_text())
     assert record["ok"] is False
     assert "does not support count" in record["error"]
+    assert isinstance(record["elapsed_ms"], int)

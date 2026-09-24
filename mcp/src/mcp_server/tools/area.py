@@ -10,6 +10,7 @@ from mcp_server.handlers.area import AreaHandlers
 from mcp_server.handlers.errors import HandlerError
 from mcp_server.handlers.result import Result
 from mcp_server.measurement.call_log import CallLog
+from mcp_server.measurement.stopwatch import Stopwatch
 
 _QUERY = ToolAnnotations(read_only_hint=True, open_world_hint=True)
 
@@ -29,6 +30,7 @@ def register_area_tools(
         call: Callable[[int, dict[str, Any]], Awaitable[Result]],
         area: dict[str, Any],
     ) -> dict[str, Any]:
+        watch = Stopwatch()
         try:
             result = await call(indicator_id, area)
         except HandlerError as exc:
@@ -38,6 +40,7 @@ def register_area_tools(
                     "indicator_id": indicator_id,
                     "ok": False,
                     "error": str(exc),
+                    "elapsed_ms": watch.total_ms(),
                 }
             )
             raise ToolError(str(exc)) from exc
