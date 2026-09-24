@@ -1,7 +1,7 @@
 from typing import Any, Literal
 
 import shapely
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from shapely.errors import ShapelyError
 from shapely.geometry import MultiPolygon, Polygon, box, shape
 from shapely.geometry.base import BaseGeometry
@@ -20,8 +20,18 @@ class AOIError(Exception):
 
 
 class Coverage(BaseModel):
-    status: Literal["inside", "partial", "outside"]
-    provisional: bool
+    status: Literal["inside", "partial", "outside"] = Field(
+        description=(
+            "Where the area falls against the module. partial: only the part inside "
+            "has data."
+        )
+    )
+    provisional: bool = Field(
+        description=(
+            "True while the module boundary is a bounding box: an area reported as "
+            "inside can still fall partly outside the module."
+        )
+    )
 
 
 def vertex_count(geom: BaseGeometry) -> int:

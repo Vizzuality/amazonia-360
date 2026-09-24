@@ -157,10 +157,8 @@ types, because this service shares no code with the client, and have to be kept 
 
 Four fields are ours and marked as proposals in the schema: `category_field`, `covers_module`,
 `documented_count` and `sync.published_count`. The record-count warning is computed from the last
-two at answer time, never stored in `caveats`, which the contract reserves for text a person wrote.
-The same goes for the coverage caveats computed from `covers_module`: an empty result on a layer
-that maps only part of the module says nothing is mapped there, and on a layer that covers the
-module says the result is unexpected. `covers_module` was set on 24 September 2026 by summing each
+two at answer time and returned as its own field, `record_counts`. `covers_module` drives
+`layer.empty_result` in the response (see "What caveats are for"). It was set on 24 September 2026 by summing each
 layer's area against Geomorphology's 13.19 million ha: 204, 209, 211, 217, 218 and 219 cover the
 module; 214 covers 18 %, 210 82 %, the rest far less.
 
@@ -265,15 +263,49 @@ Every handler returns the same envelope. The values below are illustrative:
     "type": "clipped_polygons", "features": 5, "categories": 1, "simplification": 0.001
   },
   "coverage": { "status": "inside", "provisional": true },
+  "layer": { "covers_module": false, "empty_result": null },
   "provenance": { "source_org": "...", "source_url": "...", "data_vintage": "..." },
-  "caveats": ["The module boundary used for this check is a provisional bounding box; ..."],
+  "caveats": [],
+  "record_counts": null,
   "aoi_ha": 151804.2,
+  "classified_ha": 77293,
+  "unclassified_ha": 74511.2,
   "timing": {
     "total_ms": 16700, "arcgis_ms": 9100, "clip_ms": 7300,
     "vertices_sent": 38, "vertices_received": 412000
   }
 }
 ```
+
+The area tools declare this envelope as their output schema, so each field's description reaches
+the model with the tool list. That is where the meaning of a computed fact lives: what
+`unclassified_ha` is, what `coverage.provisional` implies, what an `empty_result` means.
+
+### What caveats are for
+
+A caveat is a known defect of a dataset, written by a person in the CMS and carried into the answer
+unchanged. The contract says so ("One known defect per row, written by a person and carried into the
+answer unchanged — never composed by the model"), and the MCP keeps to it: `caveats` in a response
+holds the CMS rows and nothing else. The MCP carries them; it never writes one.
+
+The Desktop trial of 24 September 2026 put four different things under that one name. Each now has
+its own place:
+
+| Kind | Example | Governed by | Where it goes |
+|---|---|---|---|
+| A known defect of the data | the municipality layer stores 0 km² for 143 Peruvian municipalities | the CMS, a person | `caveats`, verbatim |
+| What the data means | a layer maps part of the module; Carbon is a mean density, not a total | the CMS, as structured metadata | catalogue fields: `covers_module`, `value_type`, `aggregation` |
+| What the MCP computed | the boundary is provisional; the area is partly outside; hectares in no class | the MCP | response fields: `coverage`, `layer`, `classified_ha`, `unclassified_ha`, `record_counts`, `computed_over` |
+| How to answer | do not combine indicators; do not soften a warning | whoever writes the system prompt | the front end's prompt, not the data |
+
+Two reasons for the split. The trial showed that rules sent as text are not reliably followed:
+server instructions had no visible effect in Claude Desktop, and caveats written by the server
+changed what the model stated as fact but not the guess that followed it. And caveat governance is
+not ours: a caveat the MCP composes looks like one the CMS curated, and nobody in the CMS can
+review or correct it.
+
+`covers_module` and `documented_count` are proposals the CMS team has to accept; until then the
+values in `ecuador.json` were measured by us, not curated.
 
 `computed_over` is the one-plane rule of the 16 September note: the answer says which geometry it
 used, so the text can say it and the map can draw the same thing. In this phase every answer is in
@@ -293,14 +325,14 @@ No plausible number is returned without a signal.
 
 - **Area outside the module, or partly outside.** The response says so. Until
   `ECU_MOD_POLIG_LIMITE_WGS84` is delivered, the check uses a provisional envelope and the response
-  declares that it is provisional. In a partial result `aoi_ha` still counts the whole area, and
-  the caveat says so; once the real boundary arrives the result should also carry the hectares
+  declares that it is provisional (`coverage.provisional`). In a partial result `aoi_ha` still
+  counts the whole area, as its field description says; once the real boundary arrives the result should also carry the hectares
   inside the module (`aoi_inside_ha`), which a bounding box cannot give honestly.
 - **Layers with known defects.** Where the record count in the consultant's documentation
-  (`documented_count`) differs from the published layer (`sync.published_count`), the warning is
-  computed at answer time and attached to every result and to `describe_indicator`. On 24
-  September 2026 that is five layers: 204, 208, 214, 217 and 219. Defects a person has written
-  up go in `caveats` and travel the same way. A layer that does not respond is an explicit error.
+  (`documented_count`) differs from the published layer (`sync.published_count`), both figures are
+  returned as `record_counts` on every result and on `describe_indicator`. The five layers that had
+  one were cleared on 24 September 2026 (open question 3). Defects a person has written up go in
+  `caveats`. A layer that does not respond is an explicit error.
 - **Layers that are not available.** No resource, no clean sync, or a missing `value_type` or
   `category_field`: the refusal names which, before any network call.
 - **ArcGIS slow or down.** Every call has a timeout. A timeout returns an error, never a partial

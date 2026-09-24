@@ -77,6 +77,21 @@ async def test_list_indicators_names_the_tools_each_one_takes(
 
 
 @pytest.mark.anyio
+async def test_area_tools_publish_an_output_schema_with_field_meanings(
+    tmp_path: Path,
+) -> None:
+    # Field descriptions are how the model learns what a number means, since caveats
+    # are reserved for what a person wrote.
+    async with Client(server(tmp_path)) as client:
+        tools = {t.name: t for t in (await client.list_tools()).tools}
+    schema = tools["area_by_category"].output_schema
+    assert schema is not None
+    text = json.dumps(schema)
+    assert "not a class" in text
+    assert "written by a person" in text
+
+
+@pytest.mark.anyio
 async def test_describe_unknown_indicator_is_a_tool_error(tmp_path: Path) -> None:
     async with Client(server(tmp_path)) as client:
         result = await client.call_tool("describe_indicator", {"indicator_id": 999})
@@ -99,6 +114,7 @@ async def test_area_tool_returns_the_envelope_and_logs_the_call(
     body = result.structured_content
     assert body["computed_over"]["type"] == "clipped_polygons"
     assert "total_ms" in body["timing"]
+    assert "unclassified_ha" in body
 
     [line] = (tmp_path / "calls.jsonl").read_text().splitlines()
     record = json.loads(line)
@@ -169,5 +185,7 @@ async def test_describe_indicator_shows_the_count_mismatch(
     async with Client(server(tmp_path)) as client:
         result = await client.call_tool("describe_indicator", {"indicator_id": 210})
     assert result.structured_content is not None
-    [issue] = result.structured_content["known_issues"]
-    assert "7 records" in issue
+    assert result.structured_content["record_counts"] == {
+        "documented": 7,
+        "published": 3,
+    }

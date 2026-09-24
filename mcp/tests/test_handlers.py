@@ -109,8 +109,10 @@ async def test_known_defects_travel_with_the_result(
         ),
     )
     result = await handlers().categories_in_area(210, TENA)
-    assert "Written by a person." in result.caveats
-    assert any("7 records" in c and "has 3" in c for c in result.caveats)
+    # Caveats carry only what a person wrote; the count check is its own field.
+    assert result.caveats == ["Written by a person."]
+    assert result.record_counts is not None
+    assert (result.record_counts.documented, result.record_counts.published) == (7, 3)
 
 
 @pytest.mark.anyio
@@ -125,14 +127,16 @@ async def test_an_unavailable_layer_is_refused_before_any_network_call(
 
 
 @pytest.mark.anyio
-async def test_provisional_boundary_caveat_travels_even_when_inside() -> None:
+async def test_computed_facts_are_fields_not_caveats() -> None:
     result = await handlers().categories_in_area(210, TENA)
     assert result.coverage.status == "inside"
-    assert any("provisional" in c for c in result.caveats)
+    assert result.coverage.provisional is True
+    assert result.caveats == []
+    assert result.record_counts is None
 
 
 @pytest.mark.anyio
-async def test_partial_coverage_adds_a_caveat() -> None:
+async def test_partial_coverage_is_reported_in_the_coverage_field() -> None:
     straddling = {
         "type": "Polygon",
         "coordinates": [
@@ -141,9 +145,7 @@ async def test_partial_coverage_adds_a_caveat() -> None:
     }
     result = await handlers().categories_in_area(210, straddling)
     assert result.coverage.status == "partial"
-    assert any("partly outside" in c for c in result.caveats)
-    assert any("aoi_ha counts the whole area" in c for c in result.caveats)
-    assert any("provisional" in c for c in result.caveats)
+    assert result.caveats == []
 
 
 @pytest.mark.anyio
@@ -194,38 +196,60 @@ def _with(monkeypatch: pytest.MonkeyPatch, **overrides: Any) -> None:
 
 
 @pytest.mark.anyio
-async def test_empty_on_a_partial_layer_says_nothing_is_mapped_here(
+async def test_empty_on_a_partial_layer_means_nothing_is_mapped_here(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     _with(monkeypatch, covers_module=False)
     result = await handlers(FakeClient(empty=True)).categories_in_area(210, TENA)
     assert result.value == []
-    assert any("nothing of this layer is mapped" in c for c in result.caveats)
+    assert result.layer.covers_module is False
+    assert result.layer.empty_result == "not_mapped_here"
+    assert result.caveats == []
 
 
 @pytest.mark.anyio
-async def test_empty_on_a_layer_that_covers_the_module_is_flagged_as_unexpected(
+async def test_empty_on_a_layer_that_covers_the_module_is_unexpected(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     _with(monkeypatch, covers_module=True)
     result = await handlers(FakeClient(empty=True)).area_by_category(210, TENA)
     assert result.value == {}
-    assert any("unexpected" in c for c in result.caveats)
+    assert result.layer.empty_result == "unexpected"
 
 
 @pytest.mark.anyio
-async def test_area_on_a_partial_layer_says_unclassified_hectares_are_no_class(
+async def test_area_results_give_unclassified_hectares_as_a_number(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     _with(monkeypatch, covers_module=False)
-    result = await handlers().area_by_category(210, TENA)
-    assert any("not a class of their own" in c for c in result.caveats)
+    result = await handlers(FakeClient(empty=True)).area_by_category(210, TENA)
+    assert result.classified_ha == 0
+    assert result.unclassified_ha == result.aoi_ha
 
 
 @pytest.mark.anyio
-async def test_no_coverage_caveat_when_the_catalogue_does_not_say(
+async def test_classified_and_unclassified_add_up_to_the_area() -> None:
+    result = await handlers().area_by_category(210, TENA)
+    assert result.classified_ha is not None
+    assert result.unclassified_ha is not None
+    assert result.classified_ha + result.unclassified_ha == pytest.approx(
+        result.aoi_ha, abs=0.02
+    )
+    assert result.layer.empty_result is None
+
+
+@pytest.mark.anyio
+async def test_nothing_is_said_about_emptiness_when_the_catalogue_does_not_know(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     _with(monkeypatch)
     result = await handlers(FakeClient(empty=True)).categories_in_area(210, TENA)
-    assert not any("mapped" in c or "unexpected" in c for c in result.caveats)
+    assert result.layer.covers_module is None
+    assert result.layer.empty_result is None
+
+
+@pytest.mark.anyio
+async def test_presence_and_count_results_carry_no_hectare_split() -> None:
+    result = await handlers().categories_in_area(210, TENA)
+    assert result.classified_ha is None
+    assert result.unclassified_ha is None

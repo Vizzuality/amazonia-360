@@ -29,7 +29,7 @@ def register_area_tools(
         indicator_id: int,
         call: Callable[[int, dict[str, Any]], Awaitable[Result]],
         area: dict[str, Any],
-    ) -> dict[str, Any]:
+    ) -> Result:
         watch = Stopwatch()
         try:
             result = await call(indicator_id, area)
@@ -70,24 +70,22 @@ def register_area_tools(
                 "timing": result.timing.model_dump(),
             }
         )
-        return result.model_dump()
+        return result
 
     @server.tool(annotations=_QUERY)
-    async def categories_in_area(
-        indicator_id: IndicatorId, area: Area
-    ) -> dict[str, Any]:
+    async def categories_in_area(indicator_id: IndicatorId, area: Area) -> Result:
         """Which classes of a categorical layer are present in the area. Fast."""
         return await run(
             "categories_in_area", indicator_id, handlers.categories_in_area, area
         )
 
     @server.tool(annotations=_QUERY)
-    async def count_in_area(indicator_id: IndicatorId, area: Area) -> dict[str, Any]:
+    async def count_in_area(indicator_id: IndicatorId, area: Area) -> Result:
         """How many discrete features of a count layer fall in the area. Fast."""
         return await run("count_in_area", indicator_id, handlers.count_in_area, area)
 
     @server.tool(annotations=_QUERY)
-    async def area_by_category(indicator_id: IndicatorId, area: Area) -> dict[str, Any]:
+    async def area_by_category(indicator_id: IndicatorId, area: Area) -> Result:
         """Hectares of each class inside the area, clipped to it.
 
         Slow: several seconds to tens of seconds per call. Ask for one indicator at a
