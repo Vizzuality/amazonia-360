@@ -4,7 +4,55 @@ A first hands-on run of the phase 1 server: questions asked in Spanish from Clau
 checked against `mcp/var/calls.jsonl` and the catalogue. Branch `feat/mcp-module` at `edd37303`.
 One question at a time, each chosen after reading the previous answer.
 
-Status: in progress. Findings are recorded as they come; conclusions wait for the end of the round.
+Status: round finished. Eleven questions, one bug found and fixed in the session, five changes
+proposed and not yet made.
+
+## Conclusions
+
+**The model side works better than expected.** In eleven questions the model always picked the
+right tool and the right layer, read the `tools` field instead of guessing, took descriptions
+from the catalogue instead of inventing them, reused an area across turns, respected the Carbon
+caveat, refused a cross-indicator sum and explained a refusal outside the module without looking
+for the data elsewhere. None of the problems found is a wrong number given as right.
+
+**Where it goes wrong, it is because the MCP gave it too little to reason with.** Every nuance
+below traces back to the server: an empty result with no meaning attached, an error with no
+message, a warning that does not say which figure to believe, a module boundary that cannot say
+"partial". The model filled those gaps with guesses, marked as guesses, and some were wrong
+("the earlier failures seemed intermittent").
+
+**Latency is acceptable, with one exception that is not ours.** Area over a 40,000 ha box takes
+0.7 to 10 s depending on the vertices the layer returns. The one minute-long call was an ArcGIS
+Online outlier that did not repeat. For the aggregation decision this phase exists to inform, the
+measurements so far do not argue for a grid or precomputation on latency alone; they argue for
+handling ArcGIS outliers.
+
+**The trial found a real bug** that tests had not: simplification collapses small rings and the
+default repair raised on them. Fixed in `2a6e9cb4`. A live question on an undissolved layer was
+enough to hit it.
+
+## Proposed changes
+
+In order of what the trial showed to matter most. None is made yet.
+
+1. **Unexpected errors reach the model with their message.** Today only `HandlerError` does;
+   anything else arrives as "Error executing tool". Wrap them in the tool layer, keeping the
+   message and dropping the traceback.
+2. **An empty result says what empty means.** For a layer that does not cover the module wall to
+   wall (214, 210), zero features means "nothing mapped here", not "no data" and not "absent".
+   Needs a flag in the catalogue per layer, and a caveat added to empty results.
+3. **The count-mismatch warning on 214 and the four other layers.** Either say which figure is
+   believed (the AGOL item agrees with the service) or leave the warning out until the consultant
+   corrects the documentation, which is open question 3 of the spec.
+4. **Caveats quoted, not weighed, and a rule on derived figures.** Strengthen the server
+   instructions against softening a caveat, and decide whether a range built from two indicators
+   (question 11) counts as combining them.
+5. **ArcGIS outliers.** A query that normally takes 3 s once took a minute, near the 60 s
+   timeout. Options: one retry on timeout, a longer timeout for `area_by_category`, or a result
+   that says the source was slow. Needs the repeated measurements listed under "To check" first.
+
+Not proposed, because they wait for the module polygon (`ECU_MOD_POLIG_LIMITE_WGS84`): a real
+"partial" status near the border, and `aoi_inside_ha`.
 
 ## Setup
 
@@ -94,7 +142,6 @@ from the place names.
   documentation (open question 3 in the spec): the AGOL item's own description says 14,137
   polygons intersect the module. The warning does not say which figure is believed, so the model
   took it as a sign the service might be faulty.
-
 - **A derived range from two indicators.** Question 11 went on to bound the union: between
   32,320 ha (all floodable land is forest) and 39,876 ha (the whole box). The arithmetic is right
   and the answer is useful, but it is a figure built from two indicators, which is what the server
@@ -127,7 +174,7 @@ Two things the failure showed:
   box gives 5,507, 5,904 and 12,888 ha: the simplified figures are 0.1 %, 2.0 % and 0.8 % low.
   Zonas Inundadas, made of small patches, loses most.
 
-## After the fix
+## Questions 7 to 9
 
 Question 7 repeated question 6 after restarting Desktop: 507 features, 1.38 s, three classes. The
 figures differ from the check made by hand (12,791 / 5,784 / 5,499 ha) because Desktop drew its box
@@ -158,6 +205,7 @@ slightly elsewhere; same size, 39,876 ha.
 | Q8 | 218 Climate types | 2 | 1,875 | 0.7 s | 0.00 s | 0.7 s |
 | Q9 | 206 Carbon | 2 | 333,834 | 4.5 s | 2.2 s | 6.7 s |
 | Rerun by hand | 206 Carbon | 2 | 333,834 | 4.9 s | 2.2 s | 7.1 s |
+| Q11 | 206 Carbon, Nuevo Rocafuerte | 2 | 543,521 | – | – | 10.3 s |
 
 **The 60 s call was an outlier on the ArcGIS side, and both hypotheses built on it were wrong.**
 The same query on layer 210, returning the same 76,071 vertices, took 2.9 and 3.1 s in ArcGIS
@@ -186,4 +234,6 @@ a session probably includes connection setup.
 - How often ArcGIS takes a minute, and whether it is tied to the first query on a service. Needs
   repeated timed runs over hours, not one session.
 - Whether server read time changes with `maxAllowableOffset`.
-- Whether Desktop warned before the slow call; the tool's description says it is slow.
+- Whether Desktop warned before the slow call; the tool's description says it is slow. Not seen in
+  the answers passed on, which do not show the intermediate messages.
+- The accuracy cost of the 0.001 degree simplification across more layers than 214.
