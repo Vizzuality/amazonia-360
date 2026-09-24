@@ -10,7 +10,5 @@ def get_indicator_metadata(indicator_id: int) -> IndicatorMetadata | None:
 
 def list_indicators(subtopic_id: int | None = None) -> list[IndicatorMetadata]:
     return [
-        i
-        for i in INDICATORS
-        if subtopic_id is None or i.subtopic_id == subtopic_id
+        i for i in INDICATORS if subtopic_id is None or i.subtopic_id == subtopic_id
     ]
