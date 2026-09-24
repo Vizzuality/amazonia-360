@@ -425,10 +425,13 @@ mcp/
    is still unanswered. (Carbon, the other half of this question, was published on 15 September.)
 4. Whether sending user questions to Jev is acceptable to the IDB.
 5. Whether Laya needs fine-tuning, and on how many questions. Decided from the first zero-shot run.
-6. Every `provenance` field is null. Filling it means reading the AGOL items, where the
-   provenance lives (`accessInformation`, `licenseInfo`). Needed before any demo that shows
-   `describe_indicator`. *The catalogue shape itself was brought in line with the contract on
-   24 September 2026.*
+6. Every `provenance` field is null. Filling it is data curation, and it belongs to whoever curates
+   the catalogue in the CMS, not to this branch (decided 24 September 2026). The AGOL items hold
+   most of it (`accessInformation`, `licenseInfo`, and the description for `data_vintage`). Two
+   things the curator will meet: layer 218 (Tipos de clima) credits the environment ministry but
+   its description names MAGAP–SIGAGRO as the source, and no item carries a formal citation.
+   Needed before any demo that shows `describe_indicator`. *The catalogue shape itself was
+   brought in line with the contract on 24 September 2026.*
 7. Handler tests use hand-written ArcGIS payloads, not recorded ones. Record one live
    response each for `distinct`, `count` and a paginated `geojson` page (layer 210 over
    the Tena test area) and replay them through `httpx.MockTransport`.
