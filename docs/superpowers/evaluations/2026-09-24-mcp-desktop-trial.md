@@ -23,6 +23,7 @@ virtualenv's entry point directly works; the README says how.
 | 2 | Climate types around Tena | `categories_in_area`, 218 | 2 classes | 0.78 s | – |
 | 3 | Hectares of each ecosystem around Puyo | `area_by_category`, 210 | 3 classes, 11,078 ha | **60.7 s** | **76,071** |
 | 4 | Restoration actions in the same area | `count_in_area`, 202 | 291 records | 0.49 s | – |
+| 5 | Hectares of each flooding regime in the same area | `area_by_category`, 214, then `categories_in_area`, 214 | empty, 0 features | 0.96 s, 0.38 s | 0 |
 
 The areas were boxes of about 20 × 20 km (39,876 and 39,868 ha, 5 vertices) that Desktop drew itself
 from the place names.
@@ -51,6 +52,22 @@ from the place names.
   description says areas without a polygon are not a category and that land use must be read from
   a land cover layer.
 
+- **An empty answer the model could not interpret.** Answer 5 got no features and said it could
+  not tell "the layer does not reach Puyo" from "the service is broken". Checked by hand: it is the
+  first. Layer 214 maps floodable zones only, not the whole module; the Puyo box has no polygon and
+  the nearest five start about 30 km east. Nothing in the result says so, and the answer could as
+  easily have been read as "no flood risk in Puyo". An empty result needs a signal that tells
+  "nothing mapped here" from "no data".
+- **Two layers that look contradictory and are not.** The model flagged that Ecosystems gave
+  343 ha of "floodable forest of the alluvial plain" in the same box. They are different products:
+  a vegetation type mapped at 1:100,000 and generalised to 90 m, against a floodability layer
+  (GE005) with its own delineation. The model was right to mention it and had no way to explain it.
+- **The count-mismatch warning misleads on 214.** It reads "the source documentation lists 7
+  records; the published service has 14,137". The 7 is the known error in the consultant's
+  documentation (open question 3 in the spec): the AGOL item's own description says 14,137
+  polygons intersect the module. The warning does not say which figure is believed, so the model
+  took it as a sign the service might be faulty.
+
 ## Time
 
 `area_by_category` on ecosystems took 60.7 s for a 40,000 ha box: 58.8 s in ArcGIS, 1.9 s clipping,
@@ -70,6 +87,7 @@ a session probably includes connection setup.
 
 ## To check
 
-- The same box against an undissolved layer, to test the dissolve hypothesis.
+- The same box against an undissolved layer, to test the dissolve hypothesis. Question 5 could not
+  test it: 214 has no features in the Puyo box. The next try uses a box where it does.
 - Whether server read time changes with `maxAllowableOffset`.
 - Whether Desktop warned before the slow call; the tool's description says it is slow.
