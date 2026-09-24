@@ -133,20 +133,18 @@ def test_query_layer_comes_from_resource_and_category_field() -> None:
     assert indicator(category_field=None).query_layer() is None
 
 
-def test_count_mismatch_compares_documented_and_published() -> None:
+def test_record_counts_only_when_documented_and_published_differ() -> None:
     mismatched = indicator(
         documented_count=7, sync={"sync_status": "ok", "published_count": 14137}
     )
-    warning = mismatched.count_mismatch()
-    assert warning is not None
-    assert "computed from the published service" in warning
-    assert "7" in warning
-    assert "14137" in warning
+    counts = mismatched.record_counts()
+    assert counts is not None
+    assert (counts.documented, counts.published) == (7, 14137)
     matching = indicator(
         documented_count=7, sync={"sync_status": "ok", "published_count": 7}
     )
-    assert matching.count_mismatch() is None
-    assert indicator(sync={"sync_status": "ok"}).count_mismatch() is None
+    assert matching.record_counts() is None
+    assert indicator(sync={"sync_status": "ok"}).record_counts() is None
 
 
 def test_available_is_serialised_for_tools() -> None:

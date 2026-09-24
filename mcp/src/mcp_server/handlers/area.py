@@ -1,6 +1,6 @@
 from collections.abc import Awaitable
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Literal
 
 from shapely.geometry import MultiPolygon, Polygon
 
@@ -16,34 +16,18 @@ from mcp_server.geometry.aoi import (
 )
 from mcp_server.geometry.area import clip_area_by_category, geodesic_area_ha
 from mcp_server.handlers.errors import HandlerError
-from mcp_server.handlers.result import ComputedOver, Result, Timing
+from mcp_server.handlers.result import ComputedOver, LayerFacts, Result, Timing
 from mcp_server.measurement.stopwatch import Stopwatch
 
 
-def _coverage_caveats(
+def _layer_facts(
     indicator: IndicatorMetadata, value: list[str] | int | dict[str, float]
-) -> list[str]:
-    # Without these the model read an empty answer as "maybe the service is broken"
-    # and unclassified hectares as "probably towns and pasture".
+) -> LayerFacts:
     covers = indicator.covers_module
-    if covers is None:
-        return []
-    if not value:
-        if covers:
-            return [
-                "This layer covers the whole module, so an empty result is "
-                "unexpected: the area may fall outside the real module boundary."
-            ]
-        return [
-            "This layer covers only part of the module: nothing of this layer is "
-            "mapped in this area, which is not the same as missing data."
-        ]
-    if isinstance(value, dict) and not covers:
-        return [
-            "This layer covers only part of the module: hectares of the area without "
-            "a class are not mapped by it and are not a class of their own."
-        ]
-    return []
+    empty: Literal["not_mapped_here", "unexpected"] | None = None
+    if not value and covers is not None:
+        empty = "unexpected" if covers else "not_mapped_here"
+    return LayerFacts(covers_module=covers, empty_result=empty)
 
 
 @dataclass
@@ -52,7 +36,6 @@ class _Prepared:
     layer: Layer
     aoi: Polygon | MultiPolygon
     coverage: Coverage
-    caveats: list[str]
     watch: Stopwatch
 
 
@@ -123,24 +106,7 @@ class AreaHandlers:
         coverage = module_coverage(aoi)
         if coverage.status == "outside":
             raise HandlerError("The area is outside the Ecuador module.")
-        caveats = [c.text for c in indicator.caveats]
-        mismatch = indicator.count_mismatch()
-        if mismatch is not None:
-            caveats.append(mismatch)
-        if coverage.status == "partial":
-            caveats.append(
-                "The area is partly outside the Ecuador module; only the part inside "
-                "has data, and aoi_ha counts the whole area, including the part "
-                "outside."
-            )
-        if coverage.provisional:
-            # The envelope is a bounding box, not the real module outline, so an area
-            # can read as "inside" while actually falling outside the module.
-            caveats.append(
-                "The module boundary used for this check is a provisional bounding "
-                "box; an area can fall outside the module and still be accepted."
-            )
-        return _Prepared(indicator, layer, aoi, coverage, caveats, watch)
+        return _Prepared(indicator, layer, aoi, coverage, watch)
 
     @staticmethod
     async def _call[T](awaitable: Awaitable[T]) -> T:
@@ -157,6 +123,12 @@ class AreaHandlers:
         computed_over: ComputedOver,
         vertices_received: int = 0,
     ) -> Result:
+        aoi_ha = round(geodesic_area_ha(p.aoi), 2)
+        classified = unclassified = None
+        if isinstance(value, dict):
+            classified = round(sum(value.values()), 2)
+            # Clamped: the clip can exceed the AOI by rounding, never by real area.
+            unclassified = round(max(aoi_ha - classified, 0.0), 2)
         return Result(
             indicator_id=p.indicator.id,
             value=value,
@@ -164,8 +136,12 @@ class AreaHandlers:
             computed_over=computed_over,
             coverage=p.coverage,
             provenance=p.indicator.provenance.model_dump(),
-            caveats=p.caveats + _coverage_caveats(p.indicator, value),
-            aoi_ha=round(geodesic_area_ha(p.aoi), 2),
+            layer=_layer_facts(p.indicator, value),
+            caveats=[c.text for c in p.indicator.caveats],
+            record_counts=p.indicator.record_counts(),
+            aoi_ha=aoi_ha,
+            classified_ha=classified,
+            unclassified_ha=unclassified,
             timing=Timing(
                 total_ms=p.watch.total_ms(),
                 arcgis_ms=p.watch.ms("arcgis"),

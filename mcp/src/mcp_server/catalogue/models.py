@@ -199,15 +199,20 @@ class IndicatorMetadata(CuratedIndicator):
             category_field=self.category_field,
         )
 
-    def count_mismatch(self) -> str | None:
+    def record_counts(self) -> "RecordCounts | None":
         documented, published = self.documented_count, self.sync.published_count
         if documented is None or published is None or documented == published:
             return None
-        return (
-            f"The source documentation lists {documented} records for this layer; "
-            f"the published service has {published}. Answers are computed from the "
-            "published service."
-        )
+        return RecordCounts(documented=documented, published=published)
+
+
+class RecordCounts(_Model):
+    """A disagreement between the source documentation and the published service."""
+
+    documented: int = Field(description="Records the source documentation lists.")
+    published: int = Field(
+        description="Records in the published service, which answers are computed from."
+    )
 
 
 class CatalogueDocument(_Model):

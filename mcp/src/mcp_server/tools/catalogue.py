@@ -58,9 +58,9 @@ def register_catalogue_tools(server: MCPServer) -> None:
         indicator = catalogue.get_indicator_metadata(indicator_id)
         if indicator is None:
             raise ToolError(f"Unknown indicator {indicator_id}.")
-        mismatch = indicator.count_mismatch()
+        counts = indicator.record_counts()
         return {
             **indicator.model_dump(mode="json"),
             # Computed, not stored, so it has to be added here for the model to see it.
-            "known_issues": [mismatch] if mismatch else [],
+            "record_counts": counts.model_dump() if counts else None,
         }
