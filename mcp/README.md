@@ -33,6 +33,18 @@ not inherit your shell's `PATH`, so give `uv` as an absolute path too (`which uv
 }
 ```
 
+If the repository is on a volume other than the boot disk and macOS has not given Claude
+Desktop access to it, `uv` exits with "Current directory does not exist": the process may enter
+the directory but not list it, and uv needs to. Launching the virtualenv's entry point directly
+avoids uv (run `uv sync` first so `.venv` exists):
+
+```json
+"amazonia360": {
+  "command": "/bin/sh",
+  "args": ["-c", "cd /absolute/path/to/mcp && exec .venv/bin/amazonia360-mcp"]
+}
+```
+
 ## Catalogue
 
 The indicators live in three files in `src/mcp_server/catalogue/`:
