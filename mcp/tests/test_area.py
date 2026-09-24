@@ -22,6 +22,7 @@ def test_sums_features_of_the_same_category() -> None:
     left = box(-1, 0, 0.5, 1)
     right = box(0.5, 0, 2, 1)
     result = clip_area_by_category(aoi, [("A", left), ("A", right)])
+    # Geodesic edges: splitting at x=0.5 does not partition the exact same surface.
     assert result["A"] == pytest.approx(geodesic_area_ha(aoi), rel=1e-4)
 
 
@@ -32,6 +33,7 @@ def test_keeps_categories_apart_and_drops_non_overlapping_ones() -> None:
         [("A", box(0, 0, 0.5, 1)), ("B", box(0.5, 0, 1, 1)), ("C", box(5, 5, 6, 6))],
     )
     assert set(result) == {"A", "B"}
+    # Geodesic edges: splitting at x=0.5 does not partition the exact same surface.
     assert result["A"] + result["B"] == pytest.approx(geodesic_area_ha(aoi), rel=1e-4)
 
 
