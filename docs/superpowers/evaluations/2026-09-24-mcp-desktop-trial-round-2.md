@@ -19,6 +19,8 @@ Status: in progress.
 | 4 | Restoration actions in the same area | `count_in_area`, 202 | 536 records | 0.55 s | – | 0.49 s |
 | 5 | Hectares of each flooding regime in the same area | `area_by_category`, 214 | empty, with the new caveat | 0.55 s | 0 | 0.96 s, 0.38 s |
 | 6 | Hectares of each flooding regime around Nuevo Rocafuerte | `area_by_category`, 214 | 3 classes, 52,642 ha (59 %), first try | 3.04 s | 15,902 | failed 3 times |
+| 7 | Skipped: question 6 already answered first time | – | – | – | – | 1.38 s |
+| 8 | Hectares of each climate type around Puyo | `area_by_category`, 218 | 2 classes, 89,704 ha (100 %) | 0.63 s | 1,875 | 0.70 s |
 
 ## Findings
 
@@ -58,6 +60,10 @@ Status: in progress.
   "inside" on the provisional envelope, so the claim is the model's own. It is probably true of a
   box centred on a border town, but nothing the server returned supports it, and the caveat that
   should have qualified it is gone from the answer.
+
+- **Q8, as expected.** The two classes cover the box (77,798 + 11,906 = 89,704 ha). The model
+  contrasted this layer, which covers the whole box, with the partial ones; it inferred that from
+  the numbers, since no caveat is added for a layer that covers the module.
 
 ## What each question checks this time
 
