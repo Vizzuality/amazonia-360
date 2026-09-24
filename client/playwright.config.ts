@@ -55,7 +55,7 @@ export default defineConfig({
       // database serves an empty one and every indicator assertion fails.
       command: isCI
         ? "pnpm build && pnpm start"
-        : "pnpm payload migrate && pnpm seed:data && pnpm build && pnpm start",
+        : "pnpm db:migrate && pnpm db:seed && pnpm build && pnpm start",
       url: "http://localhost:3000",
       reuseExistingServer: !isCI,
       // migrate, seed (~900 sequential Local API writes), build, start.

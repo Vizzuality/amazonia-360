@@ -30,7 +30,7 @@ async function main() {
     payload.count({ collection: "subtopics" }),
     payload.count({ collection: "indicators" }),
   ]);
-  // Exiting 0 on a short seed leaves `migrate && seed:data && build && start` to serve an
+  // Exiting 0 on a short seed leaves `db:migrate && db:seed && build && start` to serve an
   // incomplete catalogue, and the failure surfaces much later as unrelated e2e specs.
   const counted = [
     ["topics", seededTopics.totalDocs, topics.length],

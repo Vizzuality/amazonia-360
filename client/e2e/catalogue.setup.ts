@@ -6,10 +6,14 @@ import SUBTOPICS from "../datum/subtopics.json" with { type: "json" };
 import TOPICS from "../datum/topics.json" with { type: "json" };
 
 /**
- * Every other project depends on this one. `pnpm seed:data` has exited 0 without writing a
- * row, and the webServer chain — `migrate && seed:data && build && start` — then builds and
- * starts happily on an empty database. The suite spends twelve minutes failing fifteen specs
- * that each read as a product bug. Failing here instead costs seconds and names the cause.
+ * Every other project depends on this one. Seeding has exited 0 without writing a row, and
+ * the webServer chain — `db:migrate && db:seed && build && start` — then builds and starts
+ * happily on an empty database. The suite spends twelve minutes failing fifteen specs that
+ * each read as a product bug. Failing here instead costs seconds and names the cause.
+ *
+ * `db:seed` makes the seeder prove it ran, so a silent no-op should not reach here. This
+ * still earns its place by reading what the CMS serves rather than what the CLI printed:
+ * it is the only check that also catches rows seeded in a state the app cannot see.
  *
  * Counted off `datum/*.json` rather than written down, so retiring a row is one edit.
  */
