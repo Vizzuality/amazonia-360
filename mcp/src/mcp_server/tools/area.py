@@ -64,6 +64,7 @@ def register_area_tools(
                 "ok": True,
                 "aoi_ha": result.aoi_ha,
                 "features": result.computed_over.features,
+                "categories": result.computed_over.categories,
                 "timing": result.timing.model_dump(),
             }
         )

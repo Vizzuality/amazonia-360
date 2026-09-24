@@ -7,7 +7,9 @@ from mcp_server.geometry.aoi import Coverage
 
 class ComputedOver(BaseModel):
     type: Literal["feature_attributes", "feature_count", "clipped_polygons"]
-    features: int
+    # None when the query does not say how many polygons it read.
+    features: int | None = None
+    categories: int | None = None
     simplification: float | None = None
 
 

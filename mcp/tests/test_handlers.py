@@ -59,7 +59,9 @@ async def test_categories_in_area() -> None:
     result = await handlers().categories_in_area(210, TENA)
     assert result.value == ["Bosque", "Páramo"]
     assert result.computed_over.type == "feature_attributes"
-    assert result.computed_over.features == 2
+    # A distinct-values query does not say how many polygons it read.
+    assert result.computed_over.features is None
+    assert result.computed_over.categories == 2
     assert result.coverage.status == "inside"
     assert result.timing.vertices_sent == 5
 
@@ -139,6 +141,7 @@ async def test_partial_coverage_adds_a_caveat() -> None:
     result = await handlers().categories_in_area(210, straddling)
     assert result.coverage.status == "partial"
     assert any("partly outside" in c for c in result.caveats)
+    assert any("aoi_ha counts the whole area" in c for c in result.caveats)
     assert any("provisional" in c for c in result.caveats)
 
 
