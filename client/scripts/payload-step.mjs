@@ -44,7 +44,10 @@ const STEPS = {
     // seed-data.ts's last line before it exits 0. A short seed logs "Seed incomplete" and
     // exits 1 instead, which is a real failure and not ours to retry.
     provesItRan: /Seeded \d+ topics/,
-    timeoutMs: 5 * 60_000,
+    // 185 indicators, each re-updated under "es" and "pt" by updateLocales(). Against a
+    // freshly migrated database on a 1 vCPU container this runs well past five minutes,
+    // which is how long this used to allow.
+    timeoutMs: 15 * 60_000,
     // `payload run` does not set this, so seeding connects as a dev server would and
     // pushes the schema -- which writes the batch -1 row that makes the *next* migrate
     // stop on "data loss will occur, proceed?" and wait on stdin forever. migrate has
@@ -68,6 +71,7 @@ function runOnce({ args, env, timeoutMs }) {
 
     let output = "";
     let timedOut = false;
+    let lastOutputAt = Date.now();
 
     const timer = setTimeout(() => {
       timedOut = true;
@@ -80,6 +84,7 @@ function runOnce({ args, env, timeoutMs }) {
     ]) {
       stream.on("data", (chunk) => {
         output += chunk;
+        lastOutputAt = Date.now();
         sink.write(chunk);
       });
     }
@@ -91,7 +96,7 @@ function runOnce({ args, env, timeoutMs }) {
 
     child.on("close", (code) => {
       clearTimeout(timer);
-      resolve({ code, output, timedOut });
+      resolve({ code, output, timedOut, silentForMs: Date.now() - lastOutputAt });
     });
   });
 }
@@ -115,13 +120,22 @@ async function main() {
   }
 
   for (let attempt = 1; attempt <= ATTEMPTS; attempt++) {
-    const { code, output, timedOut } = await runOnce(step);
+    const { code, output, timedOut, silentForMs } = await runOnce(step);
 
     if (timedOut) {
+      // Two very different causes look identical from the exit code, so say which one the
+      // output points at rather than guessing. A run still writing when the axe fell was
+      // working, not blocked.
+      const cause =
+        silentForMs > 30_000
+          ? `It produced nothing for the last ${Math.round(silentForMs / 1000)}s, so it is most likely waiting on ` +
+            `the dev-push confirmation prompt, which happens when payload_migrations holds a batch -1 row ` +
+            `written by a dev server.`
+          : `It was still writing output ${Math.round(silentForMs / 1000)}s before the timeout, so it was most ` +
+            `likely just slow rather than blocked. Raise timeoutMs for this step.`;
+
       console.error(
-        `\npayload ${step.args.join(" ")} produced no exit after ${step.timeoutMs / 60_000}m and was killed. ` +
-          `It is most likely waiting on the dev-push confirmation prompt, which happens when ` +
-          `payload_migrations holds a batch -1 row written by a dev server.`,
+        `\npayload ${step.args.join(" ")} produced no exit after ${step.timeoutMs / 60_000}m and was killed. ${cause}`,
       );
       process.exit(1);
     }
