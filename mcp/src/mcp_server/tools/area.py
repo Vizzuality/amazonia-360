@@ -46,17 +46,19 @@ def register_area_tools(
             raise ToolError(str(exc)) from exc
         except Exception as exc:
             # The measurement log must capture pathological failures too, not only
-            # the expected refusals raised as HandlerError.
+            # the expected refusals raised as HandlerError. The model gets the cause
+            # as well: a bare "Error executing tool" left it guessing in the trial.
+            error = f"{type(exc).__name__}: {exc}"
             call_log.write(
                 {
                     "tool": tool,
                     "indicator_id": indicator_id,
                     "ok": False,
-                    "error": f"{type(exc).__name__}: {exc}",
+                    "error": error,
                     "elapsed_ms": watch.total_ms(),
                 }
             )
-            raise
+            raise ToolError(f"Unexpected error in {tool}: {error}") from exc
         call_log.write(
             {
                 "tool": tool,

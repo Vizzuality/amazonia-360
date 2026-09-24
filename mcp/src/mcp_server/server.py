@@ -17,8 +17,13 @@ Start with list_indicators. Use categories_in_area and count_in_area first; they
 fast. area_by_category is slow and should be called for one indicator at a time.
 
 Every answer says what it was computed over (computed_over) and carries caveats. Quote
-the caveats when you use the number, and never combine figures from different
-indicators into one total.
+the caveats when you use the number, as they are: do not soften them, weigh them against
+what you know, or add reassurance of your own. Where a caveat or a description says an
+absence or an unclassified area means nothing, do not guess what it is.
+
+Never combine figures from different indicators: no totals, no shares of one in another,
+and no ranges or bounds built from two of them. Give each indicator's figure on its own
+and, if the layers can overlap, say so.
 """
 
 

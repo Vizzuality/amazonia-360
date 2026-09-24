@@ -42,7 +42,7 @@ def test_the_schema_describes_the_whole_catalogue_export() -> None:
 def test_proposals_are_marked_for_the_cms_team() -> None:
     defs = catalogue_schema()["$defs"]
     indicator = defs["IndicatorMetadata"]["properties"]
-    for field in ("category_field", "documented_count"):
+    for field in ("category_field", "covers_module", "documented_count"):
         assert "Proposal" in indicator[field]["description"]
     assert "Proposal" in defs["Sync"]["properties"]["published_count"]["description"]
 

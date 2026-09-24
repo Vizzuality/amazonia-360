@@ -139,6 +139,7 @@ def test_count_mismatch_compares_documented_and_published() -> None:
     )
     warning = mismatched.count_mismatch()
     assert warning is not None
+    assert "computed from the published service" in warning
     assert "7" in warning
     assert "14137" in warning
     matching = indicator(

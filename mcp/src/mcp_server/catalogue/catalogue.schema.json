@@ -248,6 +248,19 @@
           "description": "The attribute that holds each feature's class, used to list and group by class. Belongs in Payload's feature resource block, next to layer_id. Proposal: not in the CMS contract yet.",
           "title": "Category Field"
         },
+        "covers_module": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the layer's features cover the whole module, so that every point falls in some class. Tells an empty answer that means 'nothing mapped here' from one that should not happen. Would sit next to spatial_coverage. Proposal: not in the CMS contract yet.",
+          "title": "Covers Module"
+        },
         "documented_count": {
           "anyOf": [
             {

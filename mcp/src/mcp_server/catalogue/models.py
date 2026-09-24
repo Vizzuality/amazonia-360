@@ -138,6 +138,15 @@ class CuratedIndicator(_Model):
             f"layer_id. {_PROPOSAL}"
         ),
     )
+    covers_module: bool | None = Field(
+        default=None,
+        description=(
+            "Whether the layer's features cover the whole module, so that every point "
+            "falls in some class. Tells an empty answer that means 'nothing mapped "
+            "here' from one that should not happen. Would sit next to "
+            f"spatial_coverage. {_PROPOSAL}"
+        ),
+    )
     documented_count: StrictInt | None = Field(
         default=None,
         description=(
@@ -196,7 +205,8 @@ class IndicatorMetadata(CuratedIndicator):
             return None
         return (
             f"The source documentation lists {documented} records for this layer; "
-            f"the published service has {published}."
+            f"the published service has {published}. Answers are computed from the "
+            "published service."
         )
 
 

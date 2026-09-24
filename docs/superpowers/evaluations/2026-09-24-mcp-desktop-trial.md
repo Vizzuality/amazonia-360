@@ -5,7 +5,7 @@ checked against `mcp/var/calls.jsonl` and the catalogue. Branch `feat/mcp-module
 One question at a time, each chosen after reading the previous answer.
 
 Status: round finished. Eleven questions, one bug found and fixed in the session, five changes
-proposed and not yet made.
+proposed; the first four made the same day, the fifth waits for a second round.
 
 ## Conclusions
 
@@ -33,20 +33,29 @@ enough to hit it.
 
 ## Proposed changes
 
-In order of what the trial showed to matter most. None is made yet.
+In order of what the trial showed to matter most. Changes 1 to 4 were made on 24 September 2026;
+the questions are to be repeated to see their effect and to measure for change 5.
 
 1. **Unexpected errors reach the model with their message.** Today only `HandlerError` does;
    anything else arrives as "Error executing tool". Wrap them in the tool layer, keeping the
-   message and dropping the traceback.
+   message and dropping the traceback. *Done:* the model now gets "Unexpected error in <tool>:
+   <type>: <message>".
 2. **An empty result says what empty means.** For a layer that does not cover the module wall to
    wall (214, 210), zero features means "nothing mapped here", not "no data" and not "absent".
-   Needs a flag in the catalogue per layer, and a caveat added to empty results.
+   Needs a flag in the catalogue per layer, and a caveat added to empty results. *Done:* a
+   proposed field `covers_module`, measured per layer, and two caveats: on an empty result, and
+   on area results of a partial layer, saying unclassified hectares are not a class.
 3. **The count-mismatch warning on 214 and the four other layers.** Either say which figure is
    believed (the AGOL item agrees with the service) or leave the warning out until the consultant
-   corrects the documentation, which is open question 3 of the spec.
+   corrects the documentation, which is open question 3 of the spec. *Done:* the AGOL items of
+   all five agree with the service, so `documented_count` was cleared on them; the warning, where
+   it still applies, now says answers are computed from the published service.
 4. **Caveats quoted, not weighed, and a rule on derived figures.** Strengthen the server
    instructions against softening a caveat, and decide whether a range built from two indicators
-   (question 11) counts as combining them.
+   (question 11) counts as combining them. *Done:* the instructions now ask to quote caveats as
+   they are and not to guess what an absence means. Ruled that ranges and bounds built from two
+   indicators count as combining them and are ruled out, like totals and shares; each figure is
+   given on its own, with a note when layers can overlap.
 5. **ArcGIS outliers.** A query that normally takes 3 s once took a minute, near the 60 s
    timeout. Options: one retry on timeout, a longer timeout for `area_by_category`, or a result
    that says the source was slow. Needs the repeated measurements listed under "To check" first.
