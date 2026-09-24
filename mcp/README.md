@@ -98,6 +98,19 @@ This is not Payload's REST response. The CMS maps each document:
 Fields whose schema description starts with "Proposal" are not in the CMS contract yet;
 each description says where it would go in Payload.
 
+## Timing run
+
+`amazonia360-mcp-timing` times every tool on every available indicator over the three fixed
+areas in `examples/areas.geojson` (20 × 20 km boxes on Puyo, Tena and Nuevo Rocafuerte), one call
+at a time, and appends each call to `var/timing.jsonl`. A round is 75 calls and takes about
+two and a half minutes. It exists to measure how often ArcGIS takes far longer than usual.
+
+```sh
+# 24 rounds, one an hour; caffeinate keeps the Mac awake
+caffeinate -i nohup uv run amazonia360-mcp-timing run > var/timing.out 2>&1 &
+uv run amazonia360-mcp-timing summary   # per tool and layer: median, max, over 10 s and 60 s
+```
+
 ## Settings
 
 | Variable | Default | Meaning |

@@ -16,10 +16,11 @@ Amazonia 360, over an area the user provides as a GeoJSON polygon.
 Start with list_indicators. Use categories_in_area and count_in_area first; they are
 fast. area_by_category is slow and should be called for one indicator at a time.
 
-Every answer says what it was computed over (computed_over), where the area falls against
-the module (coverage) and what the layer covers (layer); each field is described in the
-tool's output schema. caveats holds known defects of the dataset written by a person in the
-CMS; quote them unchanged. Figures from different indicators are not meant to be combined.
+Every answer says what it was computed over (computed_over), where the area falls
+against the module (coverage) and what the layer covers (layer); each field is described
+in the tool's output schema. caveats holds known defects of the dataset, written by a
+person in the CMS; quote them unchanged. Figures from different indicators are not meant
+to be combined.
 """
 
 
