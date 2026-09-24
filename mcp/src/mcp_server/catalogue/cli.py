@@ -1,8 +1,8 @@
-"""``amazonia360-mcp-catalogue``: keep the catalogue files beside this module current.
+"""``amazonia360-mcp-catalogue``: keep the catalogue files current.
 
-- ``sync`` reads ArcGIS and rewrites ``ecuador.snapshot.json``.
-- ``schema`` rewrites ``indicator.schema.json`` from the pydantic model.
-- ``export`` prints the joined catalogue, the output the CMS is expected to match.
+- ``sync`` reads ArcGIS and rewrites ``ecuador.snapshot.json`` and the example export.
+- ``schema`` rewrites ``catalogue.schema.json`` from the pydantic model.
+- ``export`` writes the joined catalogue: the document the CMS is expected to send.
 """
 
 import argparse
@@ -15,28 +15,36 @@ from typing import Any
 
 import httpx
 
-from mcp_server.catalogue import SNAPSHOT_FILE, list_indicators, load_curated
-from mcp_server.catalogue.models import IndicatorMetadata
+from mcp_server.catalogue import SNAPSHOT_FILE, load_curated, local_document
+from mcp_server.catalogue.models import CatalogueDocument
 from mcp_server.catalogue.sync import sync_catalogue
 
 HERE = Path(__file__).parent
-SCHEMA_FILE = "indicator.schema.json"
+SCHEMA_FILE = "catalogue.schema.json"
+EXAMPLE_FILE = HERE.parents[2] / "examples" / "catalogue.json"
 
 
-def indicator_schema() -> dict[str, Any]:
+def catalogue_schema() -> dict[str, Any]:
     # Validation mode describes what the CMS sends; computed fields such as
     # `available` are the MCP's own and stay out.
-    schema = IndicatorMetadata.model_json_schema(mode="validation")
+    schema = CatalogueDocument.model_json_schema(mode="validation")
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         **schema,
-        "title": "Amazonia 360 indicator, as the MCP takes it in",
+        "title": "Amazonia 360 catalogue, as the MCP takes it in",
         "description": (
-            "One indicator as the CMS sends it to the MCP when an editor publishes, "
-            "mapped from the Payload document, in locale en. Not Payload's REST "
-            "response: see the mapping table in the MCP README."
+            "The whole published catalogue, which the CMS exports to the MCP on every "
+            "change: create, edit, publish, unpublish, delete, and each ArcGIS sync. "
+            "Locale en. Not Payload's REST response: see the mapping table in the "
+            "MCP README."
         ),
     }
+
+
+def exported_catalogue() -> dict[str, Any]:
+    return local_document().model_dump(
+        mode="json", exclude={"indicators": {"__all__": {"available"}}}
+    )
 
 
 def write_json(path: Path, data: dict[str, Any]) -> None:
@@ -56,26 +64,24 @@ def main() -> None:
     sync = commands.add_parser("sync", help="read ArcGIS, rewrite the snapshot")
     sync.add_argument("--timeout", type=float, default=60.0)
     commands.add_parser("schema", help="rewrite the JSON Schema")
-    commands.add_parser("export", help="print the joined catalogue")
+    export = commands.add_parser("export", help="write the joined catalogue")
+    export.add_argument("--out", type=Path, help="file to write; stdout if omitted")
     args = parser.parse_args()
     logging.basicConfig(level=logging.WARNING, format="%(message)s")
 
     if args.command == "sync":
         snapshot = asyncio.run(_sync(args.timeout))
         write_json(HERE / SNAPSHOT_FILE, snapshot)
+        local_document.cache_clear()
+        write_json(EXAMPLE_FILE, exported_catalogue())
         for indicator_id, sync_entry in snapshot["indicators"].items():
             print(f"{indicator_id}: {sync_entry['sync_status']}")
     elif args.command == "schema":
-        write_json(HERE / SCHEMA_FILE, indicator_schema())
+        write_json(HERE / SCHEMA_FILE, catalogue_schema())
+    elif args.out:
+        write_json(args.out, exported_catalogue())
     else:
-        exported = {
-            "locale": "en",
-            "indicators": [
-                i.model_dump(mode="json", exclude={"available"})
-                for i in list_indicators()
-            ],
-        }
-        print(json.dumps(exported, indent=2, ensure_ascii=False))
+        print(json.dumps(exported_catalogue(), indent=2, ensure_ascii=False))
 
 
 if __name__ == "__main__":

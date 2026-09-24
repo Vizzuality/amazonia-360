@@ -16,7 +16,14 @@ Fields marked as a proposal in their description are not in the contract yet.
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, computed_field
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StrictInt,
+    computed_field,
+    model_validator,
+)
 
 ValueType = Literal[
     "count",
@@ -178,3 +185,29 @@ class IndicatorMetadata(CuratedIndicator):
             f"The source documentation lists {documented} records for this layer; "
             f"the published service has {published}."
         )
+
+
+class CatalogueDocument(_Model):
+    """The whole published catalogue, as the CMS exports it on every change.
+
+    Sending everything each time is what keeps the MCP from drifting: a missed or
+    out-of-order export is corrected by the next one, and an indicator that is
+    deleted or unpublished simply stops appearing.
+    """
+
+    locale: Literal["en"]
+    generated_at: datetime = Field(
+        description="When the export was built. The MCP keeps the newest it has seen."
+    )
+    indicators: list[IndicatorMetadata] = Field(
+        description="Every published indicator, drafts excluded."
+    )
+
+    @model_validator(mode="after")
+    def _unique_ids(self) -> "CatalogueDocument":
+        seen: set[int] = set()
+        for indicator in self.indicators:
+            if indicator.id in seen:
+                raise ValueError(f"Indicator {indicator.id} appears twice.")
+            seen.add(indicator.id)
+        return self
