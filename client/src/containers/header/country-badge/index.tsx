@@ -15,6 +15,7 @@ import {
   isUnscopedPathname,
   stripCountry,
 } from "@/lib/country";
+import { cn } from "@/lib/utils";
 
 import { Badge } from "@/components/ui/badge";
 
@@ -44,7 +45,10 @@ export default function CountryBadge({ onExit }: Readonly<{ onExit?: () => void 
       variant="secondary"
       data-testid="country-badge"
       data-country={country ?? "REGIONAL"}
-      className="w-fit gap-2 py-1 pr-1 pl-2 text-blue-900"
+      className={cn(
+        "w-fit gap-2 py-1 pr-1 pl-2 text-blue-900",
+        country === null && "hover:bg-secondary",
+      )}
     >
       {country === null ? (
         <Globe className="h-5 w-5 shrink-0 text-blue-500" aria-hidden />
