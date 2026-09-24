@@ -22,6 +22,7 @@ Status: in progress.
 | 7 | Skipped: question 6 already answered first time | – | – | – | – | 1.38 s |
 | 8 | Hectares of each climate type around Puyo | `area_by_category`, 218 | 2 classes, 89,704 ha (100 %) | 0.63 s | 1,875 | 0.70 s |
 | 9 | Hectares of each forest stratum around Puyo | `area_by_category`, 206 | 2 strata, 41,323 ha (46 %) | 5.09 s (2.87 in ArcGIS) | 333,834 | 6.66 s |
+| 10 | Ecosystems around Iquitos (Peru) | `categories_in_area`, 210 | refused: outside the module | 0 ms, no ArcGIS call | – | 0 ms |
 
 ## Findings
 
@@ -73,6 +74,8 @@ Status: in progress.
   from two indicators, and a meaning given to unclassified hectares that the partial-layer caveat
   says are not a class. The conclusion happens to be right for Carbon, whose source excluded the
   NO BOSQUE class, but the model could not know that from what the MCP returned.
+
+- **Q10, no regression.** Refused before ArcGIS, explained plainly, no search elsewhere.
 
 ## What each question checks this time
 
