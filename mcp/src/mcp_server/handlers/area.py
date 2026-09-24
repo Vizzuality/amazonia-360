@@ -41,7 +41,7 @@ class AreaHandlers:
         p = self._prepare(indicator_id, area, "presence")
         with p.watch.lap("arcgis"):
             values = await self._call(self._client.distinct(p.layer, p.aoi))
-        computed_over = ComputedOver(type="feature_attributes", features=len(values))
+        computed_over = ComputedOver(type="feature_attributes", categories=len(values))
         return self._result(p, values, None, computed_over)
 
     async def count_in_area(self, indicator_id: int, area: dict[str, Any]) -> Result:
@@ -64,6 +64,7 @@ class AreaHandlers:
         computed_over = ComputedOver(
             type="clipped_polygons",
             features=len(features),
+            categories=len(hectares),
             simplification=self._simplification,
         )
         return self._result(p, hectares, "ha", computed_over, received)
@@ -103,7 +104,8 @@ class AreaHandlers:
         if coverage.status == "partial":
             caveats.append(
                 "The area is partly outside the Ecuador module; only the part inside "
-                "has data."
+                "has data, and aoi_ha counts the whole area, including the part "
+                "outside."
             )
         if coverage.provisional:
             # The envelope is a bounding box, not the real module outline, so an area

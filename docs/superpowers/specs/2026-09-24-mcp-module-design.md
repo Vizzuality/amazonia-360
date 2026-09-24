@@ -253,7 +253,9 @@ Every handler returns the same envelope. The values below are illustrative:
   "indicator_id": 210,
   "value": { "Bosque siempreverde de tierras bajas": 77293 },
   "unit": "ha",
-  "computed_over": { "type": "clipped_polygons", "features": 5, "simplification": 0.001 },
+  "computed_over": {
+    "type": "clipped_polygons", "features": 5, "categories": 1, "simplification": 0.001
+  },
   "coverage": { "status": "inside", "provisional": true },
   "provenance": { "source_org": "...", "source_url": "...", "data_vintage": "..." },
   "caveats": ["The module boundary used for this check is a provisional bounding box; ..."],
@@ -283,7 +285,9 @@ No plausible number is returned without a signal.
 
 - **Area outside the module, or partly outside.** The response says so. Until
   `ECU_MOD_POLIG_LIMITE_WGS84` is delivered, the check uses a provisional envelope and the response
-  declares that it is provisional.
+  declares that it is provisional. In a partial result `aoi_ha` still counts the whole area, and
+  the caveat says so; once the real boundary arrives the result should also carry the hectares
+  inside the module (`aoi_inside_ha`), which a bounding box cannot give honestly.
 - **Layers with known defects.** Where the record count in the consultant's documentation
   (`documented_count`) differs from the published layer (`sync.published_count`), the warning is
   computed at answer time and attached to every result and to `describe_indicator`. On 24
