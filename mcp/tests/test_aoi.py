@@ -43,6 +43,22 @@ def test_rejects_malformed_geojson() -> None:
         parse_aoi({"type": "Polygon", "coordinates": "nope"})
 
 
+def test_rejects_an_unknown_geometry_type() -> None:
+    with pytest.raises(AOIError, match="not valid GeoJSON"):
+        parse_aoi({"type": "Blob", "coordinates": []})
+
+
+def test_rejects_an_empty_polygon() -> None:
+    with pytest.raises(AOIError, match="empty"):
+        parse_aoi({"type": "Polygon", "coordinates": []})
+
+
+def test_rejects_projected_coordinates() -> None:
+    utm = square(800_000, 9_800_000, 10_000)
+    with pytest.raises(AOIError, match="longitude and latitude"):
+        parse_aoi(utm)
+
+
 def test_rejects_a_self_intersecting_polygon() -> None:
     bowtie = {
         "type": "Polygon",
