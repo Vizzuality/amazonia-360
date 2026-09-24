@@ -1,6 +1,6 @@
 # MCP module design
 
-Status: agreed on 24 September 2026, not yet implemented. Branch `feat/mcp-module`, cut from
+Status: approved on 24 September 2026, not yet implemented. Branch `feat/mcp-module`, cut from
 `develop` at `d92944d9`.
 
 This spec supersedes decisions 1 and 5 of the internal architecture note
@@ -83,9 +83,7 @@ Not on the radar, approved for this project on 24 September 2026:
 - `mcp`, the official Python SDK, including `FastMCP`. Same SDK VizzHub uses.
 - SQLAlchemy with Alembic, for the phase 2 database.
 - `httpx`, as the async HTTP client for ArcGIS.
-
-Not on the radar, and not yet approved; they are evaluated in the gatekeeper section and need a
-decision before any of them ships: Jev, Laya, and the `anthropic` SDK for the Haiku control.
+- Jev, Laya, and the `anthropic` SDK for the Haiku control, for the gatekeeper evaluation.
 
 ## Transport and the two phases
 
