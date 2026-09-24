@@ -66,6 +66,12 @@ export default defineRailway(() => {
     env: {
       DATABASE_URL: db.env.DATABASE_URL,
 
+      // The Dockerfile sets PORT=3000 and the generated domain forwards to 3000,
+      // but Railway injects its own PORT into the container and 8080 wins over an
+      // image's ENV. Left unset the app listens on 8080 and every request to the
+      // preview is a 502, so pin it to the port the rest of the repo uses.
+      PORT: "3000",
+
       // Resolves per environment, so a PR preview gets its own domain.
       NEXT_PUBLIC_URL: "https://${{RAILWAY_PUBLIC_DOMAIN}}",
 
