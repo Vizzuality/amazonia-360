@@ -4,6 +4,8 @@
     {
       "id": 202,
       "name": "Areas under restoration actions (Ecuador module)",
+      "description_short": "Government inventory of areas under restoration actions inside the Ecuadorian Amazon module, with modality, practice, implementer, funding and year.",
+      "description": "### Areas under restoration actions\n\nGovernment inventory of areas where restoration activities are implemented to recover conditions favouring natural processes and the maintenance of environmental services. It is an inventory of interventions, not a wall-to-wall classification of the territory.\n\n### Data source & methodology\n\nMinistry of Environment and Energy, IDE Ambiente geoportal, Environmental Management / Forest Restoration. Source object TB002, geographic information dated December 2025. Redundant Z dimension removed, 17 invalid geometries repaired, clipped by intersection with ECU_MOD, reprojected to WGS 84 (EPSG:4326). No simplification. Area_ha recalculated after clipping.\n\n### Specific content of the layer\n\nObject and agreement codes, beneficiary code, implementer, restoration modality and practice, funding origin, year of intervention, recalculated area and an added short thematic description.\n\n### Technical details\n\n5,831 source records, 5,082 inside ECU_MOD, 17,404.305 ha (174.043 km²). By modality: 3,686 active restoration (72.53%) and 1,396 passive (27.47%). Extent W -79.306573, S -4.710554, E -76.612927, N 0.116707.\n\n### References & access links\n\nIDE Ambiente geoportal; official dictionary TB002.",
       "unit": "restoration actions",
       "subtopic": 4,
       "country": "ECU",
@@ -37,6 +39,8 @@
     {
       "id": 203,
       "name": "Restoration priority areas (Ecuador module)",
+      "description_short": "Very high, High, Medium and Low priority classes for forest restoration inside the Ecuadorian Amazon module.",
+      "description": "### Restoration priority areas\n\nDerived from the official \"Área prioritaria de restauración\" product. The source describes these as suitable, potential or optimal zones meeting the natural and social characteristics needed for forest restoration interventions.\n\n### Data source & methodology\n\nMinistry of Environment and Energy, IDE Ambiente geoportal. Thematic code TB001, geographic information dated 2016. Spatial selection by ECU_MOD, dissolve by priority class, exact clip, area calculation and reprojection to WGS 84 (EPSG:4326). Empty source fields were removed; priority values normalised to sentence case.\n\n### Specific content of the layer\n\nFour multipart geometries, one per priority class, with recalculated area in hectares and square kilometres and a short per-class description. The class descriptions express only the relative hierarchy of the source attribute: the public ficha defines the set of priority areas but gives no separate textual definition or threshold per level.\n\n### Technical details\n\n268,864 source polygons reduced to 4 records by dissolve, without thematic reclassification. Total 1,495,775.770 ha (14,957.758 km²): Very high 369,274.691 ha, High 744,165.351 ha, Medium 169,210.929 ha, Low 213,124.799 ha.\n\n### References & access links\n\nIDE Ambiente geoportal; National Forest Monitoring System; REDD+ Ecuador, Forest Conservation and Restoration.",
       "unit": "ha",
       "subtopic": 4,
       "country": "ECU",
@@ -70,6 +74,8 @@
     {
       "id": 204,
       "name": "Bioclimates (Ecuador module)",
+      "description_short": "Bioclimatic classes present in the Ecuadorian Amazon module, classified by temperature and precipitation.",
+      "description": "### Bioclimates\n\nBioclimatic classification of the Ecuadorian Amazon module according to temperature and precipitation. It is one of the factors underlying the national ecosystem cartography, alongside thermotypes, geomorphology and biogeographic units.\n\n### Data source & methodology\n\nMinistry of Environment and Energy, IDE Ambiente geoportal, source component GE003. Dissolve by bioclimate followed by clipping to ECU_MOD. Internal code, source area and associated text removed. Final CRS WGS 84 (EPSG:4326).\n\n### Specific content of the layer\n\nBioclimate class and the recalculated area in hectares.\n\n### Technical details\n\n800 source polygons, 3 final classes inside ECU_MOD.\n\n### References & access links\n\nIDE Ambiente geoportal; official dictionary GE003_BIOCLIMA.",
       "unit": "ha",
       "subtopic": 8,
       "country": "ECU",
@@ -103,6 +109,8 @@
     {
       "id": 206,
       "name": "Carbon by forest stratum (Ecuador module)",
+      "description_short": null,
+      "description": null,
       "unit": "ha",
       "subtopic": 4,
       "country": "ECU",
@@ -140,6 +148,8 @@
     {
       "id": 208,
       "name": "Deforestation 2020-2022 (Ecuador module)",
+      "description_short": "Gross deforestation 2020-2022 in the Ecuadorian Amazon module, as land cover transition trajectories from forest to other covers.",
+      "description": "### Deforestation 2020-2022\n\nComponent FC010 of the IDE Ambiente geoportal. It represents gross deforestation through land cover change trajectories, from forest towards other covers, for the 2020-2022 period.\n\n### Data source & methodology\n\nMinistry of Environment and Energy, IDE Ambiente geoportal, source FC010. National dissolve by Period + Transition, followed by clipping to ECU_MOD. Code, source area and associated text removed; Area_ha recalculated after clipping. Final CRS WGS 84 (EPSG:4326).\n\n### Specific content of the layer\n\nPeriod, transition class and recalculated area. Because the dissolve is by Period + Transition, each record is a multipart geometry aggregating all patches of one transition class, not an individual deforestation event.\n\n### Technical details\n\n50,424 source polygons reduced to 8 final classes, confirmed against the live service.\n\n### References & access links\n\nIDE Ambiente geoportal, https://ide.ambiente.gob.ec/mapainteractivo/ and the documentation supplied with the delivery.",
       "unit": "ha",
       "subtopic": 4,
       "country": "ECU",
@@ -173,6 +183,8 @@
     {
       "id": 209,
       "name": "Hydrographic Demarcations (Ecuador module)",
+      "description_short": "The three Hydrographic Demarcations of Ecuador that intersect the Amazon module: administrative territorial units for water management.",
+      "description": "### Hydrographic Demarcations\n\nAdministrative territorial divisions for water management corresponding to Ecuador's Hydrographic Demarcations that intersect the Amazon module. They are administrative units built on watersheds, not the watersheds themselves.\n\n### Data source & methodology\n\nMinistry of Environment and Energy, IDE Ambiente geoportal, source HB003, an institutional water planning reference. Only the demarcation name and the clipped area are retained. The fcode and ralt attributes were discarded: the first is an internal code and the second has no documented definition in the received package, so it is not exposed to users. No dissolve or simplification.\n\n### Specific content of the layer\n\nDemarcation name and recalculated area in hectares.\n\n### Technical details\n\n10 national polygons in the source; 3 intersect ECU_MOD, confirmed by querying the live service. Note that the aggregated project metadata previously stated eight demarcations; that figure was wrong.\n\n### References & access links\n\nIDE Ambiente geoportal, https://ide.ambiente.gob.ec/mapainteractivo/ ; Sistema Único de Información Ambiental.",
       "unit": "ha",
       "subtopic": 1,
       "country": "ECU",
@@ -206,6 +218,8 @@
     {
       "id": 210,
       "name": "Ecosystems (Ecuador module)",
+      "description_short": "The 51 ecosystem classes present in the Ecuadorian Amazon module, from the Ecosystem Map of Continental Ecuador (characterised for 2012).",
+      "description": "### Ecosystems\n\nVector component derived from the official Ecosystem cartography of Continental Ecuador. The source characterises ecosystems as of 2012 and was published as geographic information in 2013, at 1:100,000 scale, using biophysical modelling, interpretation of 2010-2012 satellite imagery and field validation.\n\nThis layer is not a wall-to-wall land cover and use map. Areas without a polygon are not a category called \"non-ecosystem\" and are not equivalent to \"non-forest\"; transformed surfaces or anthropic uses must be read from a dedicated land cover component.\n\n### Data source & methodology\n\nMinistry of Environment and Energy, IDE Ambiente / Interactive Map. 790 invalid geometries in the ECU_MOD calculation extent were repaired, precision was reduced to a common 90 m grid (three steps of the original 30 m grid), and patches were dissolved by ecosystem code. Thematic attributes are constant per ecosystem code, so the dissolve removes record fragmentation without removing thematic variation. Exact clip by ECU_MOD, reprojection to WGS 84 (EPSG:4326), geodesic area recalculated last.\n\n### Specific content of the layer\n\nEcosystem code and name, ecosystem type, physiognomy, fragility, threat, vulnerability, fragmentation, connectivity, and area in hectares and square kilometres. Fragility, threat, vulnerability, fragmentation and connectivity are source attributes; the processing does not recalculate or update them.\n\n### Technical details\n\n91,347 source polygons, 87 ecosystem codes, EPSG:32717. Inside ECU_MOD: 51 classes (36 forest, 6 shrubland, 9 herbaceous physiognomy; 48 terrestrial, 3 aquatic types), 10,767,901.75 ha / 107,679.02 km², 2,533,992 vertices, 0 invalid geometries. Area variation from the generalisation step was about -0.00108%. For patch boundaries at source resolution, use the original ZIP.\n\n### References & access links\n\nOfficial dictionary GE000_ECOSISTEMA; IDE Ambiente Interactive Map, https://ide.ambiente.gob.ec/mapainteractivo/",
       "unit": "ha",
       "subtopic": 5,
       "country": "ECU",
@@ -239,6 +253,8 @@
     {
       "id": 211,
       "name": "Geomorphology (Ecuador module)",
+      "description_short": "The 53 geomorphological units of the Ecuadorian Amazon module, with the hierarchy Relief – Macrorelief – Mesorelief.",
+      "description": "### Geomorphology\n\nHierarchical classification of landforms in the Ecuadorian Amazon module. It is one of the factors underlying the national ecosystem cartography, alongside bioclimates, thermotypes and biogeographic units.\n\n### Data source & methodology\n\nMinistry of Environment and Energy, IDE Ambiente geoportal, source GE004. The Relief–Macrorelief–Mesorelief hierarchy is preserved and a dissolve by thematic combination is applied, yielding multipart units. Empty name, internal code, source area and associated text are excluded. Final CRS WGS 84 (EPSG:4326).\n\n### Specific content of the layer\n\nRelief, macrorelief, mesorelief and recalculated area in hectares.\n\n### Technical details\n\n23,374 source polygons; 995 intersect ECU_MOD; 53 multipart units after the dissolve, confirmed against the live service.\n\n### References & access links\n\nIDE Ambiente geoportal and the official documentation supplied with the delivery.",
       "unit": "ha",
       "subtopic": 1,
       "country": "ECU",
@@ -272,6 +288,8 @@
     {
       "id": 214,
       "name": "Flooding Regime (Ecuador module)",
+      "description_short": "Floodability zones and water origin in the Ecuadorian Amazon module. Floodability is a vegetation descriptor, not a hazard assessment.",
+      "description": "### Flooding Regime\n\nThe official GE005 dictionary defines floodability as the capacity for saturation and permanence of water sufficient to influence the structure and composition of vegetation.\n\n### Interpretation note\n\nThis is an ecological descriptor of vegetation cover, not a model of flood hazard or risk. It must not be presented or queried as a hazard layer.\n\n### Data source & methodology\n\nMinistry of Environment and Energy, IDE Ambiente geoportal, source GE005. Attributes were cleaned and geometries clipped exactly to ECU_MOD. No dissolve was applied in this version because the cover has a complex topology and merging by class is not stable without altering the geometry; spatial fidelity was prioritised. Final CRS WGS 84 (EPSG:4326).\n\n### Specific content of the layer\n\nFlooding regime, water origin and recalculated area in hectares.\n\n### Technical details\n\n15,034 source polygons; 14,137 intersect ECU_MOD, confirmed against the live service. This is the highest feature count in the Ecuador module after layer 03, so the absence of a dissolve is a deliberate performance-versus-fidelity trade-off.\n\n### References & access links\n\nIDE Ambiente geoportal and the documentation supplied with the delivery.",
       "unit": "ha",
       "subtopic": 5,
       "country": "ECU",
@@ -305,6 +323,8 @@
     {
       "id": 217,
       "name": "Thermotypes (Ecuador module)",
+      "description_short": "The 11 thermotypic classes present in the Ecuadorian Amazon module, related to annual maximum, minimum and mean temperatures.",
+      "description": "### Thermotypes\n\nThermotypic classification related to annual maximum, minimum and mean temperatures. It is one of the factors underlying the national ecosystem cartography, alongside bioclimates, geomorphology and biogeographic units.\n\n### Data source & methodology\n\nMinistry of Environment and Energy, IDE Ambiente geoportal, source GE002. Dissolve by thermotype before clipping to ECU_MOD. Internal code, source area and associated text removed. Final CRS WGS 84 (EPSG:4326).\n\n### Specific content of the layer\n\nThermotype class and recalculated area in hectares.\n\n### Technical details\n\n3,585 source polygons, 11 classes present in ECU_MOD, confirmed against the live service.\n\n### References & access links\n\nIDE Ambiente geoportal, https://ide.ambiente.gob.ec/mapainteractivo/",
       "unit": "ha",
       "subtopic": 8,
       "country": "ECU",
@@ -338,6 +358,8 @@
     {
       "id": 218,
       "name": "Climate Types (Ecuador module)",
+      "description_short": "The six climate types present in the Ecuadorian Amazon module, from the national climate classification.",
+      "description": "### Climate Types\n\nPolygon vector component representing the climate types present in the Ecuadorian Amazon module. It is the national-resolution counterpart of the regional Climate Zones indicator.\n\n### Data source & methodology\n\nHistorical provenance MAGAP–SIGAGRO, via the agriculture geoportal. The operational source is the tipos_clima shapefile preserved in the delivery; the exact WFS URL, typeName and download date were not recorded and are unavailable. Original CRS EPSG:32717. Attribute text normalised to sentence case with correct accents, climate codes preserved, national dissolve by climate class, reprojection to WGS 84 (EPSG:4326), clip by ECU_MOD, a further dissolve after clipping and geodesic recalculation of AREA_HA.\n\n### Specific content of the layer\n\nClimate code, climate type and recalculated area. Note that this layer's field names are upper-case (COD_CLIMA, TIPO_CLIMA, AREA_HA), unlike every other layer in the Ecuador module.\n\n### Technical details\n\n6 classes inside ECU_MOD, confirmed against the live service: Af megathermal rainy 78,994.97 km²; Aw tropical megathermal humid 19,450.61 km²; Cb equatorial mesothermal dry 1,134.15 km²; Ch equatorial mesothermal semi-humid 16,248.82 km²; N nival 1,073.06 km²; Pf equatorial high mountain 14,485.57 km². This layer has the weakest provenance of the module: the WFS trail is lost and no source date is recorded.\n\n### References & access links\n\nHistorical portal https://geoportal.agricultura.gob.ec/ ; exact WFS endpoint not available.",
       "unit": "ha",
       "subtopic": 8,
       "country": "ECU",
@@ -371,6 +393,8 @@
     {
       "id": 219,
       "name": "Biogeographic Units (Ecuador module)",
+      "description_short": "The 11 biogeographic units intersecting the Ecuadorian Amazon module, organised as region, biogeographic province and sector.",
+      "description": "### Biogeographic Units\n\nComponent that organises the territory into biogeographic regions, provinces and sectors. It is the national-resolution counterpart of the regional Biome Types indicator and places the module's ecosystems in their regional biogeographic context.\n\n### Data source & methodology\n\nMinistry of Environment and Energy, IDE Ambiente geoportal, source GE006. Region, biogeographic province and biogeographic sector are preserved; internal code and associated text removed. No dissolve. Final CRS WGS 84 (EPSG:4326).\n\n### Specific content of the layer\n\nRegion, biogeographic province, biogeographic sector and recalculated area in hectares. The province field name is truncated to Provincia_ by the Shapefile 10-character field limit.\n\n### Technical details\n\n19 units in the source; 11 intersect ECU_MOD, confirmed against the live service.\n\n### References & access links\n\nIDE Ambiente geoportal and the official documentation supplied with the delivery.",
       "unit": "ha",
       "subtopic": 5,
       "country": "ECU",
@@ -404,6 +428,8 @@
     {
       "id": 222,
       "name": "Water Recharge Zone (Ecuador module)",
+      "description_short": "Water recharge zone clipped to the Ecuadorian Amazon module: territory able to retain, store and provide water resources.",
+      "description": "### Water Recharge Zone\n\nPolygon component representing the Water Recharge Zone distributed by Ecuador's IDE Ambiente geoportal. The official ficha describes these zones as territories that, by their intrinsic characteristics, location and environmental conditions, are able to retain, store and provide water resources.\n\n### Data source & methodology\n\nGeoportal IDE Ambiente of the Ministry of Environment of Ecuador, component \"Zona de Recarga Hídrica\", geographic information dated November 2021. The ECU_MOD polygon was temporarily transformed to the original CRS so the intersection could be computed in projected coordinates; spatial clip by intersection, without generalisation or simplification; reprojection to WGS 84 (EPSG:4326); attribute table normalised to readable Spanish; the original value \"ZRH Cuenca\" expanded to \"Zona de recarga hídrica de cuenca\"; area recalculated in hectares and square kilometres; a short Descrip field added from the geoportal ficha.\n\n### Specific content of the layer\n\nNormalised zone name, area in hectares and square kilometres, and a short conceptual description. The component is monothematic and can be drawn with a single polygon symbol.\n\n### Technical details\n\nOne valid multipart geometry. Source area 191,937.563 ha (1,919.376 km²); final area after clipping 151,295.043 ha (1,512.950 km²). Extent W -79.364167, S -3.172773, E -78.888517, N -2.600304. Feature count of 1 confirmed against the live service, so any per-feature aggregation returns a single value.\n\n### References & access links\n\nIDE Ambiente geoportal, https://ide.ambiente.gob.ec/mapainteractivo/ ; derived ECU_MOD product prepared August 2026.",
       "unit": "ha",
       "subtopic": 1,
       "country": "ECU",

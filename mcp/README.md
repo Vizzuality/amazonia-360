@@ -79,8 +79,8 @@ This is not Payload's REST response. The CMS maps each document:
 | `resource[0].layer_id` (text) | `resource.layer_id`, integer |
 | `caveats[].text` (row `id` dropped) | `caveats[].text` |
 | `sync` group, written by the CMS's ArcGIS sync job | `sync`, same fields |
-| `name`, `unit`, contract fields | same names |
-| `description`, `order`, visualization fields, `_status`, timestamps | not sent |
+| `name`, `description_short`, `description`, `unit`, contract fields | same names |
+| `order`, visualization fields, `_status`, timestamps | not sent |
 
 Fields whose schema description starts with "Proposal" are not in the CMS contract yet;
 each description says where it would go in Payload.

@@ -44,6 +44,39 @@ async def test_list_indicators_by_subtopic(tmp_path: Path) -> None:
 
 
 @pytest.mark.anyio
+async def test_list_indicators_names_the_tools_each_one_takes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from mcp_server import catalogue
+    from tests.test_models import indicator
+
+    listed = {
+        210: indicator(description_short="Ecosystem classes."),
+        202: indicator(
+            id=202,
+            value_type="count",
+            aggregation="sum",
+            category_field="Practica",
+            sync={"sync_status": "ok", "queryable_fields": ["Practica"]},
+        ),
+        211: indicator(id=211, ai_answerable=False),
+        218: indicator(id=218, resource=None),
+    }
+    monkeypatch.setattr(catalogue, "_catalogue", lambda: listed)
+    async with Client(server(tmp_path)) as client:
+        result = await client.call_tool("list_indicators", {})
+    assert result.structured_content is not None
+    by_id = {i["id"]: i for i in result.structured_content["indicators"]}
+    assert by_id[210]["tools"] == ["categories_in_area", "area_by_category"]
+    assert by_id[210]["description_short"] == "Ecosystem classes."
+    assert by_id[202]["tools"] == ["count_in_area"]
+    # Listed but refused: the model can say the data exists and is not cleared.
+    assert by_id[211]["tools"] == []
+    assert by_id[211]["ai_answerable"] is False
+    assert by_id[218]["tools"] == []
+
+
+@pytest.mark.anyio
 async def test_describe_unknown_indicator_is_a_tool_error(tmp_path: Path) -> None:
     async with Client(server(tmp_path)) as client:
         result = await client.call_tool("describe_indicator", {"indicator_id": 999})
