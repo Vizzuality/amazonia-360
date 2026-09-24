@@ -16,6 +16,7 @@ Status: in progress.
 | 1 | What data is there on the physical and natural environment? | `list_indicators` | 13 layers, grouped | not logged | – | not logged |
 | 2 | Climate types around Tena | `categories_in_area`, 218 | 3 classes | 0.52 s | – | 0.78 s |
 | 3 | Hectares of each ecosystem around Puyo | `area_by_category`, 210 | 5 classes, 41,129 ha (46 %) | 4.08 s (3.51 in ArcGIS) | 89,411 | 60.7 s |
+| 4 | Restoration actions in the same area | `count_in_area`, 202 | 536 records | 0.55 s | – | 0.49 s |
 
 ## Findings
 
@@ -37,6 +38,9 @@ Status: in progress.
   in this layer and are not a category of their own) and then still adds "most likely intervened
   areas, pasture, crops or the town, but the layer does not confirm it". The caveat changed what it
   states as fact, not the guess after it.
+
+- **Q4, no regression.** Same box reused, right tool and layer, and the same unprompted limits:
+  records, not restored area, no breakdown. 536 against 291 in round 1 because the box is larger.
 
 ## What each question checks this time
 
