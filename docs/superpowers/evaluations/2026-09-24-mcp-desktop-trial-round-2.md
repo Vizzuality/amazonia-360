@@ -44,6 +44,16 @@ returns whole features, so the cost is set by which features the box touches.
 round (39,876 ha, then 89,704 ha), from the same place names. A repeatable evaluation needs fixed
 areas passed as GeoJSON, not place names.
 
+## First timing round
+
+A first round of the timing run (75 calls, fixed 20 × 20 km boxes, 2 min 34 s) found a layer the
+trial never asked about: **Restoration priority areas (203) takes 33 s on every box it touches**,
+17 s in ArcGIS and 16 s clipping, receiving 1,996,225 vertices whatever the box. It was dissolved
+from 268,864 polygons into four multipart features, one per priority class, so any box that
+touches a class receives the whole class. This is not an outlier: the time is the same on Puyo
+and Tena, and it is the whole-feature cost at its worst. Everything else was under 10.4 s, and
+`categories_in_area` and `count_in_area` stayed under 1.6 s on every layer.
+
 ## Proposed next steps
 
 1. Move the cross-indicator rule and the "quote, do not weigh" rule into the results as caveats,

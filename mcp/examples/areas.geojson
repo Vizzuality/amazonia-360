@@ -1,0 +1,107 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "puyo",
+        "note": "20 x 20 km box centred on the town"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.0899,
+              -1.5799
+            ],
+            [
+              -77.9101,
+              -1.5799
+            ],
+            [
+              -77.9101,
+              -1.4001
+            ],
+            [
+              -78.0899,
+              -1.4001
+            ],
+            [
+              -78.0899,
+              -1.5799
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "tena",
+        "note": "20 x 20 km box centred on the town"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -77.8999,
+              -1.0799
+            ],
+            [
+              -77.7201,
+              -1.0799
+            ],
+            [
+              -77.7201,
+              -0.9001
+            ],
+            [
+              -77.8999,
+              -0.9001
+            ],
+            [
+              -77.8999,
+              -1.0799
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "nuevo-rocafuerte",
+        "note": "20 x 20 km box centred on the town"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -75.4899,
+              -1.0099
+            ],
+            [
+              -75.3101,
+              -1.0099
+            ],
+            [
+              -75.3101,
+              -0.8301
+            ],
+            [
+              -75.4899,
+              -0.8301
+            ],
+            [
+              -75.4899,
+              -1.0099
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
