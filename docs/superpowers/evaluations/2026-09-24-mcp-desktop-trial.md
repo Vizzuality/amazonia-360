@@ -26,6 +26,7 @@ virtualenv's entry point directly works; the README says how.
 | 5 | Hectares of each flooding regime in the same area | `area_by_category`, 214, then `categories_in_area`, 214 | empty, 0 features | 0.96 s, 0.38 s | 0 |
 | 6 | Hectares of each flooding regime around Nuevo Rocafuerte | `area_by_category`, 214 (three tries, two box sizes), then `categories_in_area`, 214 | **failed**; the classes only | 0.9–2.1 s to the failure | – |
 | 7 | Question 6 again, after the fix | `area_by_category`, 214 | 3 classes, 24,254 ha (61 %) | 1.38 s | 10,663 |
+| 8 | Hectares of each climate type around Puyo | `area_by_category`, 218 | 2 classes, 39,868 ha (100 %) | 0.70 s | 1,875 |
 
 The areas were boxes of about 20 × 20 km (39,876 and 39,868 ha, 5 vertices) that Desktop drew itself
 from the place names.
@@ -125,9 +126,16 @@ same box, and the 0.001 degree `maxAllowableOffset` does not help the server rea
 
 Question 6 supports the hypothesis. On layer 214, undissolved, a box of the same size returned
 544 features and 10,987 vertices in 1.6 s; without any simplification, 331,563 vertices in 4.1 s.
-Layer 210 returned 3 features and 76,071 vertices in 58.8 s. The time is not in the vertices
-transferred but in the server reading very large multipart features. Not yet checked on a second
-dissolved layer.
+Layer 210 returned 3 features and 76,071 vertices in 58.8 s.
+
+Question 8 rules out "dissolved" as the cause on its own. Layer 218 is dissolved too, one feature
+per climate type across the country, and the same Puyo box took 0.70 s: 2 features, 1,875
+vertices. The two classes cover the box exactly (38,033 + 1,835 = 39,868 ha = `aoi_ha`).
+
+Revised hypothesis: the cost follows how many vertices the stored features touched by the box hold,
+which the server has to read and generalise whatever the box. Climate types are few and simple.
+Ecosystems were dissolved into 68 multipart features from about 3.4 million vertices, so each one
+is huge. Carbon (206) should be the worst case: 5 features holding 1,042,267 vertices.
 
 The call came close to the 60 s ArcGIS timeout (`ARCGIS_TIMEOUT_S`). It did not fail because httpx
 applies the timeout between bytes, not to the whole request.
@@ -137,6 +145,6 @@ a session probably includes connection setup.
 
 ## To check
 
-- The dissolve hypothesis on a second dissolved layer (204, 217 or 218) with the same box.
+- The vertex hypothesis on Carbon (206), expected to be the slowest layer.
 - Whether server read time changes with `maxAllowableOffset`.
 - Whether Desktop warned before the slow call; the tool's description says it is slow.
