@@ -8,6 +8,7 @@ import { Provider as JotaiProvider } from "jotai";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
+import CountryModule from "@/containers/country-module";
 import Header from "@/containers/header";
 import ThirdParty from "@/containers/third-party";
 
@@ -59,6 +60,7 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
     <JotaiProvider>
       <Suspense fallback={null}>
         <Header />
+        <CountryModule />
         {children}
         <ThirdParty />
       </Suspense>

@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
-import MobileCountrySelector from "@/containers/header/country-selector/mobile";
+import CountryBadge from "@/containers/header/country-badge";
 import MobileLanguageSelector from "@/containers/header/language-selector/mobile";
 
 import {
@@ -119,7 +119,7 @@ export default function MobileNavigation() {
               {t("header-hub")}
             </Link> */}
 
-            <MobileCountrySelector onSelected={() => setIsOpen(false)} />
+            <CountryBadge onExit={() => setIsOpen(false)} />
 
             <MobileLanguageSelector />
           </nav>

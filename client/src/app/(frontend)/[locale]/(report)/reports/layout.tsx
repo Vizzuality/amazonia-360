@@ -5,6 +5,7 @@ import { Locale } from "next-intl";
 
 import { requireUser } from "@/lib/auth/require-user";
 
+import CountryModule from "@/containers/country-module";
 import Header from "@/containers/header";
 import FeedbackButton from "@/containers/report/feedback";
 import ReportMap from "@/containers/report/map";
@@ -25,6 +26,7 @@ export default async function ReportNewLayout({
     <JotaiProvider>
       <Suspense fallback={null}>
         <Header />
+        <CountryModule />
         <FeedbackButton />
         <main className="relative flex min-h-[calc(100svh-calc(var(--spacing)*16))] flex-col">
           {children}
