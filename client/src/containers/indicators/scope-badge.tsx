@@ -24,6 +24,10 @@ export function IndicatorScopeBadge({
   return (
     <Badge
       variant="outline"
+      // The badge sits inside the row's button, so without this the control's accessible name
+      // becomes "REG Altitude range". The scope is not lost: module indicators carry it in
+      // their own name, and the list has explicit scope tabs.
+      aria-hidden
       className={cn(
         "text-2xs h-4 w-8 shrink-0 justify-center rounded border-transparent px-0 py-0 font-semibold",
         country ? "text-foreground bg-cyan-200" : "bg-muted text-foreground",

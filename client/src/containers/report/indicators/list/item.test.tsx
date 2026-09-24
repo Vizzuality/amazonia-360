@@ -42,4 +42,16 @@ describe("IndicatorsItem", () => {
 
     expect(screen.getByText("country-module-ECU-badge")).toBeInTheDocument();
   });
+
+  // The badge renders inside the row's button. Left in the accessibility tree it makes the
+  // control's name "REG Demarcaciones hidrográficas", which is how an existing e2e caught it.
+  it("names the row button after the indicator, not the badge", () => {
+    render(
+      <TooltipProvider>
+        <IndicatorsItem {...indicator({ id: 3, country: "ECU" })} />
+      </TooltipProvider>,
+    );
+
+    expect(screen.getByRole("button", { name: "Demarcaciones hidrográficas" })).toBeInTheDocument();
+  });
 });
