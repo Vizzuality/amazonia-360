@@ -41,9 +41,7 @@ class AreaHandlers:
         p = self._prepare(indicator_id, area, "presence")
         with p.watch.lap("arcgis"):
             values = await self._call(self._client.distinct(p.layer, p.aoi))
-        computed_over = ComputedOver(
-            type="feature_attributes", features=len(values)
-        )
+        computed_over = ComputedOver(type="feature_attributes", features=len(values))
         return self._result(p, values, None, computed_over)
 
     async def count_in_area(self, indicator_id: int, area: dict[str, Any]) -> Result:

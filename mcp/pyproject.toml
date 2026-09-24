@@ -44,3 +44,4 @@ pythonVersion = "3.12"
 testpaths = ["tests"]
 addopts = "-ra -m 'not live'"
 markers = ["live: calls the published ArcGIS services; run with -m live"]
+pythonpath = ["."]
