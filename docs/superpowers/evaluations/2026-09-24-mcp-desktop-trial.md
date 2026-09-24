@@ -25,6 +25,7 @@ virtualenv's entry point directly works; the README says how.
 | 4 | Restoration actions in the same area | `count_in_area`, 202 | 291 records | 0.49 s | – |
 | 5 | Hectares of each flooding regime in the same area | `area_by_category`, 214, then `categories_in_area`, 214 | empty, 0 features | 0.96 s, 0.38 s | 0 |
 | 6 | Hectares of each flooding regime around Nuevo Rocafuerte | `area_by_category`, 214 (three tries, two box sizes), then `categories_in_area`, 214 | **failed**; the classes only | 0.9–2.1 s to the failure | – |
+| 7 | Question 6 again, after the fix | `area_by_category`, 214 | 3 classes, 24,254 ha (61 %) | 1.38 s | 10,663 |
 
 The areas were boxes of about 20 × 20 km (39,876 and 39,868 ha, 5 vertices) that Desktop drew itself
 from the place names.
@@ -94,6 +95,22 @@ Two things the failure showed:
 - **Simplification costs accuracy on small polygons.** Against the unsimplified geometry the same
   box gives 5,507, 5,904 and 12,888 ha: the simplified figures are 0.1 %, 2.0 % and 0.8 % low.
   Zonas Inundadas, made of small patches, loses most.
+
+## After the fix
+
+Question 7 repeated question 6 after restarting Desktop: 507 features, 1.38 s, three classes. The
+figures differ from the check made by hand (12,791 / 5,784 / 5,499 ha) because Desktop drew its box
+slightly elsewhere; same size, 39,876 ha.
+
+- **Border caveat handled well, for the wrong reason.** The box is centred on a border town, so
+  part of it very likely falls in Peru; the provisional envelope reaches -75.189 and reports
+  "inside". The model said the unclassified 15,600 ha could be dry land or the part of the box
+  outside Ecuador. That is the case the provisional caveat exists for, and the model reached it,
+  but the MCP could not tell it the box was partial.
+- **The fixed bug read as "intermittent".** The model said the earlier failures seemed
+  intermittent. It had no way to know they were a bug fixed between calls; the generic error
+  message gave it nothing to reason with.
+- **The floodability nuance carried through** ("describes vegetation, not flood risk").
 
 ## Time
 
