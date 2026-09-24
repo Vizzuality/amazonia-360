@@ -56,11 +56,13 @@ mcp/
 ├── Dockerfile
 ├── alembic.ini           phase 2
 ├── README.md
+├── examples/
+│   └── catalogue.json    the document the CMS sends, committed and kept current by tests
 ├── src/mcp_server/
 │   ├── server.py         create_mcp_server(): stdio or Streamable HTTP, same tool registrations
 │   ├── tools/            MCP surface only: schemas, annotations, permission decorators
 │   ├── handlers/         the real work; knows nothing about MCP
-│   ├── catalogue/        indicator metadata in code, shaped like the CMS contract
+│   ├── catalogue/        ecuador.json, the ArcGIS snapshot, the schema, the loader and the sync
 │   ├── arcgis/           async client for the published feature services
 │   ├── geometry/         area-of-interest validation and local clipping
 │   ├── measurement/      per-call timing and the JSON-lines log
@@ -252,9 +254,14 @@ Every handler returns the same envelope. The values below are illustrative:
   "value": { "Bosque siempreverde de tierras bajas": 77293 },
   "unit": "ha",
   "computed_over": { "type": "clipped_polygons", "features": 5, "simplification": 0.001 },
+  "coverage": { "status": "inside", "provisional": true },
   "provenance": { "source_org": "...", "source_url": "...", "data_vintage": "..." },
-  "caveats": [],
-  "timing": { "total_ms": 16700, "arcgis_ms": 9100, "clip_ms": 7300, "vertices": 412000 }
+  "caveats": ["The module boundary used for this check is a provisional bounding box; ..."],
+  "aoi_ha": 151804.2,
+  "timing": {
+    "total_ms": 16700, "arcgis_ms": 9100, "clip_ms": 7300,
+    "vertices_sent": 38, "vertices_received": 412000
+  }
 }
 ```
 
@@ -277,10 +284,13 @@ No plausible number is returned without a signal.
 - **Area outside the module, or partly outside.** The response says so. Until
   `ECU_MOD_POLIG_LIMITE_WGS84` is delivered, the check uses a provisional envelope and the response
   declares that it is provisional.
-- **Layers with known defects.** The five in-scope layers whose final record count in the
-  consultant's file is wrong (204, 208, 214, 217, 219; measured values in
-  `discovery/ecuador-live-check.json`), and Carbon, carry the defect as a caveat in the catalogue. Queries on them return the
-  result with the caveat attached, or an explicit error when the layer does not respond.
+- **Layers with known defects.** Where the record count in the consultant's documentation
+  (`documented_count`) differs from the published layer (`sync.published_count`), the warning is
+  computed at answer time and attached to every result and to `describe_indicator`. On 24
+  September 2026 that is five layers: 204, 208, 214, 217 and 219. Defects a person has written
+  up go in `caveats` and travel the same way. A layer that does not respond is an explicit error.
+- **Layers that are not available.** No resource, no clean sync, or a missing `value_type` or
+  `category_field`: the refusal names which, before any network call.
 - **ArcGIS slow or down.** Every call has a timeout. A timeout returns an error, never a partial
   result shaped like a complete one.
 - **Invalid geometry.** Self-intersecting or oversized input is rejected before any network call,
@@ -295,7 +305,10 @@ proves insufficient.
 
 ## Testing
 
-- Unit tests for handlers against recorded ArcGIS responses stored as fixtures.
+- Unit tests for the ArcGIS client against hand-written payloads in the shape of the live ones,
+  and for handlers and tools against a fixed catalogue, so re-syncing the committed snapshot
+  cannot break them. Recorded responses are still to do (open question 7).
+- Tests that fail when `catalogue.schema.json` or `examples/catalogue.json` is stale.
 - A clipping test with synthetic geometries whose clipped area is known, so that returning full
   polygon areas instead of clipped ones fails a test.
 - A catalogue completeness test that names the indicator and the field that is missing.
@@ -329,7 +342,7 @@ the classifier changes between candidates.
 class Classification(TypedDict):
     on_topic: bool                  # physical and natural environment of Ecuador
     subtopic_id: int | None
-    indicator_id: int | None        # one of the 12 in-scope layers, or None
+    indicator_id: int | None        # one of the 13 in-scope layers, or None
     operation: Literal["presence", "count", "area", "other"] | None
     confidence: dict[str, float]    # per field, as returned by the model
 ```
@@ -364,7 +377,7 @@ application has all three locales. Four groups:
 | Group | Example | Expected |
 |---|---|---|
 | On topic, covered | ¿Qué ecosistemas hay en esta zona? | on topic, indicator 210, presence |
-| On topic, not covered | ¿Cuánto carbono almacena este bosque? | on topic, no indicator (Carbon is unavailable) |
+| On topic, not covered | ¿Cuántas toneladas de carbono hay en esta zona? | on topic, indicator 206, operation other: the layer holds a mean density per stratum and total carbon is not computed |
 | Off topic | ¿Cuánta gente vive aquí? | off topic for this proof of concept |
 | Ambiguous | ¿Cómo está el bosque? | low confidence, clarifying question |
 
@@ -408,8 +421,8 @@ mcp/
 
 1. How large the VizzHub OAuth port is. It gates phase 2.
 2. The vertex limit on the input area, to be set from the first measurements.
-3. How the five miscounted layers and Carbon are resolved. Both depend on requests to the
-   consultant that are still unanswered.
+3. How the five miscounted layers are resolved. It depends on a request to the consultant that
+   is still unanswered. (Carbon, the other half of this question, was published on 15 September.)
 4. Whether sending user questions to Jev is acceptable to the IDB.
 5. Whether Laya needs fine-tuning, and on how many questions. Decided from the first zero-shot run.
 6. Every `provenance` field is null. Filling it means reading the AGOL items, where the
