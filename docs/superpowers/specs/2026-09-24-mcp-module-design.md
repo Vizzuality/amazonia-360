@@ -1,0 +1,274 @@
+# MCP module design
+
+Status: agreed on 24 September 2026, not yet implemented. Branch `feat/mcp-module`, cut from
+`develop` at `d92944d9`.
+
+This spec supersedes decisions 1 and 5 of the internal architecture note
+(`discovery/mcp-architecture.md`, 16 September 2026) and settles decision 6 for this phase. The
+other decisions in that note (consumers, transport, authentication, the one-plane rule) stand.
+Files under `discovery/` are local exploration notes and are not in the repository; everything this
+spec needs from them is restated here.
+
+## Purpose of this phase
+
+Expose the physical and natural environment layers of the Ecuador module as MCP tools, and measure
+what answering over an arbitrary area actually costs. The measurements are the deliverable as much
+as the tools: they are what the aggregation decision (grid, precomputation or on-the-fly) will be
+taken against.
+
+The service is expected to run in staging only. Whether it ever reaches production is not decided,
+and nothing in this design depends on that answer.
+
+## Decisions
+
+| # | Decision | Outcome | Change from the 16 September note |
+|---|---|---|---|
+| 1 | Where the server runs | A separate service in a top-level `mcp/` directory, deployed as a fourth container in the existing Elastic Beanstalk environment | Was a package inside `api/` |
+| 2 | Database | A second database on the shared RDS instance, owned by the MCP service. Phase 2 | Same rule, new location |
+| 3 | Catalogue | Metadata built in code, in the shape of the CMS contract, behind one function | Was a Postgres table fed by Payload |
+| 4 | Aggregation over an area | Cheap tools for presence and counts; area tools accept the latency and report it | Was open |
+| 5 | H3 grid | Not used. The MCP has no dependency on `api/` in this phase | Was the reason for decision 1 |
+
+### Why a separate service
+
+The reason to live inside `api/` was reuse of the H3 engine. The Ecuador layers are all published
+feature services and none of them is in the grid, so this phase has nothing to reuse. What the two
+would share is third-party dependencies (`shapely`, `polars`), and those go in a second
+`pyproject.toml` without duplicating code.
+
+Separation also keeps the MCP out of a service that ships to production, so staying in staging is a
+deployment choice instead of a feature flag inside `api/`, and it avoids inheriting `api/`'s static
+token auth and its `--root-path /api/` wiring.
+
+If the product-level catalogue later needs grid indicators, the MCP calls `http://api:8000/grid/...`
+over the internal Docker network. That is a cleaner boundary than importing `api/`'s repository.
+
+The cost is small because deployment already generates a Docker Compose file with three containers
+(`api`, `client`, `nginx`) on one instance, in `.github/workflows/cicd.yml`. A fourth container does
+not need a new Beanstalk environment.
+
+## Repository layout
+
+```
+mcp/
+├── pyproject.toml        uv, Python 3.12, Ruff, Pyright
+├── Dockerfile
+├── alembic.ini           phase 2
+├── README.md
+├── src/mcp_server/
+│   ├── server.py         create_mcp_server(): stdio or Streamable HTTP, same tool registrations
+│   ├── tools/            MCP surface only: schemas, annotations, permission decorators
+│   ├── handlers/         the real work; knows nothing about MCP
+│   ├── catalogue/        indicator metadata in code, shaped like the CMS contract
+│   ├── arcgis/           async client for the published feature services
+│   ├── geometry/         area-of-interest validation and local clipping
+│   ├── measurement/      per-call timing and the JSON-lines log
+│   ├── auth/             phase 2: OAuth provider ported from VizzHub
+│   └── db/               phase 2: SQLAlchemy models and Alembic migrations
+└── tests/
+```
+
+`handlers/` is the interface the rest of the system depends on. Each handler takes an area of
+interest and an indicator and returns a result with its provenance, its caveats, the geometry it was
+computed over and its timing. `tools/` is a thin wrapper that adapts a handler to MCP. The front end
+will reach the same handlers through a REST router, which is a second thin wrapper and is not built
+in this phase. If logic ends up in a tool function, that router has to duplicate it.
+
+### Dependencies
+
+Adopt on the Tech Radar: FastAPI, PostgreSQL, uv, Ruff, Pyright.
+
+Not on the radar, approved for this project on 24 September 2026:
+
+- `mcp`, the official Python SDK, including `FastMCP`. Same SDK VizzHub uses.
+- SQLAlchemy with Alembic, for the phase 2 database.
+- `httpx`, as the async HTTP client for ArcGIS.
+
+## Transport and the two phases
+
+`create_mcp_server()` returns a stdio server when called without auth arguments, and a Streamable
+HTTP server when called with them, from the same tool registrations. That lets auth arrive later
+without rewriting the tools.
+
+**Phase 1, development over stdio.** Catalogue, ArcGIS client, handlers, tools, measurement. Run
+locally from Claude Code or Claude Desktop. No database, no auth, no deployment.
+
+**Phase 2, remote in staging.** OAuth provider and token verifier ported from VizzHub, the database,
+Streamable HTTP mounted behind nginx at `/mcp/`, and the deployment below. The size of the VizzHub
+port is still unscoped: `provider.py` is about 15 KB and depends on VizzHub's own models and
+permission resolver.
+
+Two known traps for phase 2, both from the VizzHub implementation:
+
+- `FastMCP` defaults `streamable_http_path` to `/mcp`. Behind a `/mcp/` location that yields
+  `/mcp/mcp`. Pass `streamable_http_path="/"`.
+- Behind the load balancer the `Host` header is the public domain. The transport security settings
+  need the public hostnames in `allowed_hosts`, or requests are rejected with an error that looks
+  like a routing fault.
+
+## Deployment (phase 2)
+
+- **Image.** A new ECR repository through the existing `modules/ecr` Terraform module, and a
+  `build_mcp` job in `cicd.yml` copied from `build_api`.
+- **Container.** Added to the generated `docker-compose.yml` for staging only.
+- **Proxy.** `infrastructure/source_bundle/proxy/conf.d/application.conf` is shared by every
+  environment. An `upstream mcp` block that points to a container absent in production stops nginx
+  from starting, because nginx resolves upstream hosts at startup. The `/mcp/` location has to be
+  generated per environment in the deploy step, the same way the Compose file is.
+- **Database.** A second database on the shared RDS instance, for example `amazonia360-staging-mcp`
+  with its own user. `.ebextensions/database-provisioning.config` creates exactly one database and
+  one user per environment from fixed `TF_DB_*` variables. It needs either a second set of variables
+  or a loop over a list, and `modules/env/database.tf` needs a second generated password, for
+  staging only.
+- **Local.** The `database` service in the root `docker-compose.yml` gets the second database
+  through an init script.
+
+A schema inside the existing staging database was rejected: it shares a user with Payload, so a
+permissions mistake or a stray migration on one side reaches the other. A new RDS instance was
+rejected as a monthly cost with nothing to show for it over a second database.
+
+## Catalogue
+
+`catalogue/` exposes `get_indicator_metadata(indicator_id)` and `list_indicators(...)`. In this
+phase they read a Python module. When the CMS serves the contract, only the source behind those two
+functions changes.
+
+Field names and vocabularies follow the contract on `feat/cms-indicator-metadata-contract`
+(`client/src/cms/fields/metadata.ts` and `metadata-vocabularies.ts`): `value_type`, `aggregation`,
+`decimals`, `spatial_coverage`, `ai_answerable`, `caveats`, the `provenance` group (`source_org`,
+`source_url`, `license`, `source_citation`, `data_vintage`, `update_cadence`, `method_url`) and the
+`sync` group (`arcgis_item_id`, `queryable_fields`). Those files are referenced, not copied: a copy
+becomes a second source of truth.
+
+Two things to hold on to from the contract:
+
+- `ai_answerable` defaults to false. Every layer exposed by the demo has to set it explicitly.
+- Nothing is required. Completeness is checked by a test over the catalogue module, which can name
+  the indicator and the field that is missing.
+
+### Scope: the physical and natural environment
+
+Thirteen of the consultant's twenty-three layers, by the consultant's own topic and subtopic
+assignment: every layer under Nature, plus Territory / Physical Geography. Twelve are in
+`client/datum/indicators.ECU.json`:
+
+| id | Layer | Subtopic |
+|---|---|---|
+| 202 | Areas under restoration actions | Forest Dynamics and Carbon |
+| 203 | Restoration priority areas | Forest Dynamics and Carbon |
+| 204 | Bioclimates | Climate Patterns |
+| 208 | Deforestation 2020–2022 | Forest Dynamics and Carbon |
+| 209 | Hydrographic Demarcations | Physical Geography |
+| 210 | Ecosystems | Natural Ecosystems |
+| 211 | Geomorphology | Physical Geography |
+| 214 | Flooding Regime | Natural Ecosystems |
+| 217 | Thermotypes | Climate Patterns |
+| 218 | Climate Types | Climate Patterns |
+| 219 | Biogeographic Units | Natural Ecosystems |
+| 222 | Water Recharge Zone | Physical Geography |
+
+The thirteenth, Carbon, returns HTTP 403 on its item and has no service. It is listed in the
+catalogue as unavailable, so the tools can say so instead of acting as if it did not exist.
+
+`value_type`, `aggregation` and the category field of each layer are not in `indicators.ECU.json`
+and have to be curated per layer. That is content work, and it is part of phase 1.
+
+## Tools
+
+| Tool | Answers | Measured cost |
+|---|---|---|
+| `list_indicators` | What exists, filterable by topic and subtopic | No network call |
+| `describe_indicator` | Unit, provenance, dates, caveats, value type | No network call |
+| `categories_in_area` | Which classes of a categorical layer are present | 0.19–0.37 s |
+| `count_in_area` | How many discrete features fall inside | 0.19–0.37 s |
+| `area_by_category` | How many hectares of each class fall inside | 4.6–16.7 s per layer |
+
+A tool refuses an operation that the layer's `value_type` does not support before calling ArcGIS,
+for example `area_by_category` on a count layer.
+
+### Why area is expensive, and what the tool does about it
+
+Asking ArcGIS for the sum of `Area_ha` over intersecting features returns the full area of every
+polygon that touches the area of interest, not the part inside it. On a canton of 151,804 ha that
+overestimates Geomorphology by ×36 and Ecosystems by ×42, in 0.2 s and with nothing in the response
+to show it. That query is never used.
+
+`area_by_category` fetches the geometries with server-side simplification (`maxAllowableOffset`
+0.001, which introduced at most 0.02% error in the September measurements) and clips them locally
+with shapely. One layer per call. The latency is accepted in this phase and reported in every
+response, so the aggregation decision can be taken on real usage.
+
+## Response shape
+
+Every handler returns the same envelope. The values below are illustrative:
+
+```json
+{
+  "indicator_id": 210,
+  "value": { "Bosque siempreverde de tierras bajas": 77293 },
+  "unit": "ha",
+  "computed_over": { "type": "clipped_polygons", "features": 5, "simplification": 0.001 },
+  "provenance": { "source_org": "...", "source_url": "...", "data_vintage": "..." },
+  "caveats": [],
+  "timing": { "total_ms": 16700, "arcgis_ms": 9100, "clip_ms": 7300, "vertices": 412000 }
+}
+```
+
+`computed_over` is the one-plane rule of the 16 September note: the answer says which geometry it
+used, so the text can say it and the map can draw the same thing. In this phase every answer is in
+the ArcGIS plane, so the rule holds by construction.
+
+## Inputs
+
+The area of interest is a GeoJSON Polygon or MultiPolygon in WGS84, with a vertex limit so that a
+client cannot send a province at full resolution. The limit is set from the first measurements.
+
+Lookup by administrative unit name is out of scope: it needs a boundaries layer, and the module
+polygon is still pending.
+
+## Errors
+
+No plausible number is returned without a signal.
+
+- **Area outside the module, or partly outside.** The response says so. Until
+  `ECU_MOD_POLIG_LIMITE_WGS84` is delivered, the check uses a provisional envelope and the response
+  declares that it is provisional.
+- **Layers with known defects.** The five in-scope layers whose final record count in the
+  consultant's file is wrong (204, 208, 214, 217, 219; measured values in
+  `discovery/ecuador-live-check.json`), and Carbon, carry the defect as a caveat in the catalogue. Queries on them return the
+  result with the caveat attached, or an explicit error when the layer does not respond.
+- **ArcGIS slow or down.** Every call has a timeout. A timeout returns an error, never a partial
+  result shaped like a complete one.
+- **Invalid geometry.** Self-intersecting or oversized input is rejected before any network call,
+  with the reason.
+
+## Measurement
+
+Each response carries `timing`, and each call appends one JSON line to a local log: tool,
+indicator, area of the input in hectares, vertices sent, vertices received, and the timing
+breakdown. Phase 1 writes to a file. In phase 2 the same records can go to the database if the file
+proves insufficient.
+
+## Testing
+
+- Unit tests for handlers against recorded ArcGIS responses stored as fixtures.
+- A clipping test with synthetic geometries whose clipped area is known, so that returning full
+  polygon areas instead of clipped ones fails a test.
+- A catalogue completeness test that names the indicator and the field that is missing.
+- A smoke suite against the live services, marked separately and not run in CI.
+
+## Out of scope for this phase
+
+- The REST router for the front end, and the map phase.
+- Any use of the H3 grid.
+- Precomputing the Ecuador layers, against administrative units or against the grid.
+- Reading the catalogue from Payload.
+- The 80 further layers the consultant has announced, mostly census data.
+- Production deployment.
+
+## Open questions
+
+1. How large the VizzHub OAuth port is. It gates phase 2.
+2. The vertex limit on the input area, to be set from the first measurements.
+3. How the five miscounted layers and Carbon are resolved. Both depend on requests to the
+   consultant that are still unanswered.
