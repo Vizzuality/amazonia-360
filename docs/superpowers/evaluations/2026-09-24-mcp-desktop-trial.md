@@ -29,6 +29,23 @@ virtualenv's entry point directly works; the README says how.
 | 8 | Hectares of each climate type around Puyo | `area_by_category`, 218 | 2 classes, 39,868 ha (100 %) | 0.70 s | 1,875 |
 | 9 | Hectares of each forest stratum around Puyo | `area_by_category`, 206 | 2 strata, 11,810 ha (30 %) | 6.66 s | 333,834 |
 | 10 | Ecosystems around Iquitos (Peru) | `categories_in_area`, 210 | refused: outside the module | 0 ms, no ArcGIS call | – |
+| 11 | Total hectares of forest and floodable zones around Nuevo Rocafuerte | `area_by_category`, 206; 214 reused from question 7 | declined to sum; gave a range | 10.3 s | 543,521 |
+
+## What each question was for
+
+| # | Intent | What was watched |
+|---|---|---|
+| 1 | Discovery with no area and no network | Whether it calls `list_indicators` unprompted, lists all 13 layers, uses `description_short` instead of inventing, and what it says of Carbon, which has no description |
+| 2 | First area, fast tool | How it turns "around Tena" into coordinates, whether it picks 218 over Bioclimates and Thermotypes, whether it relays the provisional-boundary caveat |
+| 3 | The slow tool, the one this phase exists to measure | Whether it warns that the call is slow, real time and vertices received, whether the hectares add up to the box, whether it invents a total or share the MCP did not give |
+| 4 | Context from the previous turn, count tool | Whether it reuses the Puyo box, picks `count_in_area` on 202, relays a count-mismatch warning if there is one |
+| 5 | Dissolve hypothesis: the same box on an undissolved layer | Time against question 3 |
+| 6 | The same test where layer 214 has features, on a border town | Time; whether the border caveat is softened again; whether it warns about the slow call |
+| 7 | Question 6 again, after fixing the failure | That it answers, the time, the border caveat |
+| 8 | Dissolve hypothesis on a second dissolved layer | Time on the same Puyo box as question 3 |
+| 9 | Vertex hypothesis on the layer expected to be slowest; a caveat that forbids a derived figure | Time; whether it multiplies hectares by t C/ha against the Carbon caveat |
+| 10 | Refusal outside the module | How it explains the refusal, whether it looks for the data elsewhere |
+| 11 | A sum across two overlapping indicators, which the instructions forbid | Whether it sums, refuses, or explains the overlap |
 
 The areas were boxes of about 20 × 20 km (39,876 and 39,868 ha, 5 vertices) that Desktop drew itself
 from the place names.
@@ -47,6 +64,9 @@ from the place names.
 - **Refusal outside the module** (question 10). The server refused before calling ArcGIS, and the
   model told the user plainly that Iquitos is in Peru and the module covers the Ecuadorian Amazon
   only. It chose the cheap tool for the attempt and did not look for the data elsewhere.
+- **No sum across indicators** (question 11). It refused the total, said the two layers overlap
+  and the tool computes no intersection, and noted that the two figures together exceed the box.
+  It reused the flooding figures from question 7 instead of calling again, and called only Carbon.
 - **Arithmetic within one indicator only.** Answer 3 summed the classes of one layer and gave the
   share of the box, which is valid because the box was fully inside the module.
 
@@ -74,6 +94,11 @@ from the place names.
   documentation (open question 3 in the spec): the AGOL item's own description says 14,137
   polygons intersect the module. The warning does not say which figure is believed, so the model
   took it as a sign the service might be faulty.
+
+- **A derived range from two indicators.** Question 11 went on to bound the union: between
+  32,320 ha (all floodable land is forest) and 39,876 ha (the whole box). The arithmetic is right
+  and the answer is useful, but it is a figure built from two indicators, which is what the server
+  instructions rule out. Whether a bound counts as a combination is a rule to decide, not a bug.
 
 ## Failure: invalid features that the repair could not repair
 
