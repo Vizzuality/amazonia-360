@@ -273,3 +273,62 @@ describe("resources", () => {
     expect(offenders).toEqual([]);
   });
 });
+
+/** Module rows that stand in for a regional one: see `lib/indicators/substitution.ts`. */
+const replacements = indicators
+  .filter(({ replaces }) => replaces != null)
+  .map((replacement) => ({
+    replacement,
+    regional: indicators.find(({ id, country }) => id === replacement.replaces && !country),
+  }));
+
+describe("replacements", () => {
+  test("every replacement names a regional indicator in the catalogue", () => {
+    const offenders = replacements
+      .filter(({ regional }) => !regional)
+      .map(({ replacement }) => `indicator ${replacement.id} replaces ${replacement.replaces}`);
+
+    expect(offenders).toEqual([]);
+  });
+
+  /**
+   * A report swaps the widget's indicator and keeps its visualization type. A type the
+   * replacement does not offer renders an empty chart or a "0", so the replacement has to cover
+   * every type the regional indicator offers. The app refuses an incompatible swap anyway; this
+   * keeps the refusal from being the everyday path.
+   */
+  test("offers every visualization type its regional indicator does", () => {
+    const offenders = replacements.flatMap(({ replacement, regional }) =>
+      ((regional?.visualization_types ?? []) as string[])
+        .filter((type) => !(replacement.visualization_types as string[]).includes(type))
+        .map((type) => `indicator ${replacement.id} lacks ${type} (from ${regional!.id})`),
+    );
+
+    expect(offenders).toEqual([]);
+  });
+
+  test("a numeric or chart it offers has a query to run", () => {
+    const offenders = replacements.flatMap(({ replacement }) =>
+      (replacement.visualization_types as string[])
+        .filter((type) => type === "numeric" || type === "chart")
+        .filter((type) => isEmptyValue(replacement.resource[`query_${type}`]))
+        .map((type) => `indicator ${replacement.id} has no query_${type}`),
+    );
+
+    expect(offenders).toEqual([]);
+  });
+
+  /**
+   * The source put "hectares" on these rows because their tables carry an `Area_ha` column. The
+   * unit labels the indicator's numeric, which is a feature count, so it would read "3 hectares".
+   */
+  test("carries no unit, in any locale", () => {
+    const offenders = replacements.flatMap(({ replacement }) =>
+      LOCALES.filter((locale) => !isEmptyValue(replacement[`unit_${locale}`])).map(
+        (locale) => `indicator ${replacement.id} [unit_${locale}]`,
+      ),
+    );
+
+    expect(offenders).toEqual([]);
+  });
+});
