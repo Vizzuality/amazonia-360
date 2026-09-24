@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 import { COUNTRIES, countryFlagSrc, getCountryCodes } from "@/lib/country";
-import { useReportCountry } from "@/lib/use-report-country";
+import { useReportCountry } from "@/lib/report/use-report-country";
 
 export default function ModuleReport() {
   const t = useTranslations();

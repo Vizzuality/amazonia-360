@@ -16,11 +16,11 @@ import { z } from "zod";
 
 import { getCountryCodes } from "@/lib/country";
 import { useGetIndicators } from "@/lib/indicators";
-import { useSaveReport } from "@/lib/report";
 import {
   getIndicatorSubstitutionMap,
   getSubstitutedIndicatorId,
-} from "@/lib/report-indicator-substitution";
+} from "@/lib/indicators/substitution";
+import { useSaveReport } from "@/lib/report";
 import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
 

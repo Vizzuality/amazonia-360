@@ -22,7 +22,7 @@ vi.mock("@/lib/indicators", () => ({
   useGetIndicators: () => ({ data: mockIndicators() }),
 }));
 
-vi.mock("@/lib/use-report-country", () => ({
+vi.mock("@/lib/report/use-report-country", () => ({
   useReportCountry: () => ["ECU"],
 }));
 

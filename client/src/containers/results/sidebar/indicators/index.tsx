@@ -7,7 +7,7 @@ import ReactMarkdown from "react-markdown";
 import { useLocale, useTranslations } from "next-intl";
 
 import { useGetDefaultIndicators } from "@/lib/indicators";
-import { useReportCountry } from "@/lib/use-report-country";
+import { useReportCountry } from "@/lib/report/use-report-country";
 
 import { useSyncIndicatorsScopeFilter } from "@/app/(frontend)/store";
 

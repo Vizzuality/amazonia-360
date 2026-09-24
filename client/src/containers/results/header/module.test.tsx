@@ -8,7 +8,7 @@ const { mockCountry, normaliseCodes } = vi.hoisted(() => ({
   normaliseCodes: vi.fn(),
 }));
 
-vi.mock("@/lib/use-report-country", () => ({ useReportCountry: () => mockCountry() }));
+vi.mock("@/lib/report/use-report-country", () => ({ useReportCountry: () => mockCountry() }));
 
 vi.mock("@/lib/country", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/lib/country")>();

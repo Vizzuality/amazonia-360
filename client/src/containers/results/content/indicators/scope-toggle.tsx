@@ -7,8 +7,8 @@ import { useLocale, useTranslations } from "next-intl";
 import { LuArrowLeftRight } from "react-icons/lu";
 
 import { useGetIndicators } from "@/lib/indicators";
-import { getIndicatorCounterpartMap } from "@/lib/report-indicator-substitution";
-import { useReportCountry } from "@/lib/use-report-country";
+import { getIndicatorCounterpartMap } from "@/lib/indicators/substitution";
+import { useReportCountry } from "@/lib/report/use-report-country";
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 import { Topic } from "@/types/topic";

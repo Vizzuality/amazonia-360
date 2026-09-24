@@ -3,7 +3,7 @@
 import { useLocale } from "next-intl";
 
 import { useGetDefaultIndicators } from "@/lib/indicators";
-import { useReportCountry } from "@/lib/use-report-country";
+import { useReportCountry } from "@/lib/report/use-report-country";
 
 import { Subtopic } from "@/types/topic";
 

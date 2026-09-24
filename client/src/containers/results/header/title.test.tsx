@@ -14,7 +14,7 @@ vi.mock("@/app/(frontend)/store", () => ({
   })),
 }));
 
-vi.mock("@/lib/use-report-country", () => ({ useReportCountry: () => null }));
+vi.mock("@/lib/report/use-report-country", () => ({ useReportCountry: () => null }));
 
 /**
  * Override the global next-intl mock so that `field-character-count` interpolates

@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { toast, useSonner } from "sonner";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
-import { useReportCountry } from "@/lib/use-report-country";
+import { useReportCountry } from "@/lib/report/use-report-country";
 import { cn } from "@/lib/utils";
 import { exportToPng } from "@/lib/webshot";
 

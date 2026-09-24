@@ -4,7 +4,7 @@ import { useAtomValue } from "jotai";
 import { useLocale } from "next-intl";
 
 import { useGetIndicatorsLayerId } from "@/lib/indicators";
-import { useReportCountry } from "@/lib/use-report-country";
+import { useReportCountry } from "@/lib/report/use-report-country";
 
 import {
   ResourceFeature,

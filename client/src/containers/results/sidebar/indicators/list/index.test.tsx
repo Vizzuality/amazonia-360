@@ -11,7 +11,7 @@ vi.mock("@/lib/indicators", () => ({
   useGetDefaultIndicators: (...args: unknown[]) => mockUseGetDefaultIndicators(...args),
 }));
 
-vi.mock("@/lib/use-report-country", () => ({
+vi.mock("@/lib/report/use-report-country", () => ({
   useReportCountry: () => mockUseCountry(),
 }));
 
