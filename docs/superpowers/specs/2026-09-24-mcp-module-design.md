@@ -371,3 +371,14 @@ mcp/
    consultant that are still unanswered.
 4. Whether sending user questions to Jev is acceptable to the IDB.
 5. Whether Laya needs fine-tuning, and on how many questions. Decided from the first zero-shot run.
+6. Phase 1 shipped a shorter catalogue shape than this spec asks for: `decimals`,
+   `spatial_coverage`, `update_cadence`, `method_url` and the `sync` group (with
+   `queryable_fields`) are missing, `arcgis_item_id` sits at the top level, and every
+   `provenance` field is null. Filling provenance means reading the AGOL items. Needed
+   before any demo that shows `describe_indicator`.
+7. Handler tests use hand-written ArcGIS payloads, not recorded ones. Record one live
+   response each for `distinct`, `count` and a paginated `geojson` page (layer 210 over
+   the Tena test area) and replay them through `httpx.MockTransport`.
+8. Before phase 2 over HTTP: move local clipping off the event loop, put a ceiling on the
+   whole call rather than per request, and close the `httpx.AsyncClient` in the server
+   lifespan.
