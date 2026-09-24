@@ -128,6 +128,12 @@ ENV AUTH_URL $AUTH_URL
 
 ENV COREPACK_INTEGRITY_KEYS 0
 
+# `adduser --system` gives nextjs /nonexistent as a home, so corepack cannot
+# write the pnpm it downloads and any `pnpm` call dies with EACCES. entrypoint.sh
+# works around it with a mktemp COREPACK_HOME, but a pre-deploy command runs the
+# image without its entrypoint, so the fix has to live here.
+ENV COREPACK_HOME=/tmp/corepack
+
 ENV NODE_ENV=production
 
 RUN addgroup --system --gid 1001 nodejs

@@ -54,6 +54,11 @@ export default defineRailway(() => {
       // Resolves per environment, so a PR preview gets its own domain.
       NEXT_PUBLIC_URL: "https://${{RAILWAY_PUBLIC_DOMAIN}}",
 
+      // Must be set even though env.mjs marks it optional. The Dockerfile
+      // turns every build ARG into an ENV, so an unset AUTH_URL reaches zod as
+      // "" rather than undefined, and z.url() rejects the empty string.
+      AUTH_URL: "https://${{RAILWAY_PUBLIC_DOMAIN}}",
+
       // The API is not deployed here. Previews read tiles and metadata from
       // the Beanstalk dev API, which serves allow_origins=["*"], so the
       // cross-origin call needs no change on that side.
