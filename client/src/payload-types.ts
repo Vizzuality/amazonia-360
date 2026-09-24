@@ -266,6 +266,10 @@ export interface Report {
     relationTo: 'users';
     value: string | User;
   } | null;
+  /**
+   * The country modules active when this report was created. Empty is the Amazon Region — reports created before country modules existed.
+   */
+  country?: ('ECU' | 'BOL' | 'BRA' | 'COL' | 'GUF' | 'GUY' | 'PER' | 'SUR' | 'VEN')[] | null;
   location:
     | {
         type: 'search';
@@ -1028,6 +1032,7 @@ export interface ReportsSelect<T extends boolean = true> {
   title?: T;
   description?: T;
   user?: T;
+  country?: T;
   location?: T;
   topics?:
     | T

@@ -28,8 +28,21 @@ const LIVE_CODES: ReadonlySet<string> = new Set(
 
 const UNSCOPED_ROOTS: ReadonlySet<string> = new Set(["auth", "private", "webshot"]);
 
-export function isCountryCode(value: string | undefined): boolean {
+export type CountryCode = (typeof COUNTRIES)[number]["code"];
+
+export function isCountryCode(value: string | undefined): value is CountryCode {
   return !!value && LIVE_CODES.has(value);
+}
+
+// Deduped and sorted so the same set of modules always produces the same query key,
+// whatever order the caller holds them in.
+export function getCountryCodes(
+  value: string | readonly (string | null)[] | null | undefined,
+): CountryCode[] {
+  const values = typeof value === "string" ? [value] : (value ?? []);
+  return [
+    ...new Set(values.filter((entry): entry is CountryCode => isCountryCode(entry ?? undefined))),
+  ].sort((a, b) => a.localeCompare(b));
 }
 
 export function countryFlagSrc(code: string): string {
@@ -43,6 +56,15 @@ function segmentsOf(pathname: string): string[] {
 export function isUnscopedPathname(pathname: string): boolean {
   const first = segmentsOf(pathname)[0];
   return !!first && UNSCOPED_ROOTS.has(first);
+}
+
+// A saved report carries its own `country`, so on its page the URL's module says nothing:
+// the report tool's routes are the ones still steered by it.
+const REPORT_TOOL_SEGMENTS: ReadonlySet<string> = new Set(["grid", "indicators"]);
+
+export function isSavedReportPathname(pathname: string): boolean {
+  const [first, second, ...rest] = segmentsOf(pathname);
+  return first === "reports" && !!second && rest.length === 0 && !REPORT_TOOL_SEGMENTS.has(second);
 }
 
 // Idempotent on purpose: `Link` applies this to every href it is given, including hrefs
@@ -77,7 +99,10 @@ export function stripCountry(pathname: string): string {
 
 // Reads the URL, not the route param: the param does not exist, because `proxy.ts`
 // rewrites the code away before Next routes the request.
-export function countryFromPathname(pathname: string, locales: readonly string[]): string | null {
+export function countryFromPathname(
+  pathname: string,
+  locales: readonly string[],
+): CountryCode | null {
   const segments = segmentsOf(pathname);
   const first = locales.includes(segments[0]) ? segments[1] : segments[0];
   return isCountryCode(first) ? first : null;

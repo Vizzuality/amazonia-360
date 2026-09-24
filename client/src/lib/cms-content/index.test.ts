@@ -7,12 +7,18 @@ import {
 } from "@/payload-types";
 
 const mockFind = vi.fn();
+const mockFindByID = vi.fn();
 
 vi.mock("@/services/sdk", () => ({
-  sdk: { find: (...args: unknown[]) => mockFind(...args) },
+  sdk: {
+    find: (...args: unknown[]) => mockFind(...args),
+    findByID: (...args: unknown[]) => mockFindByID(...args),
+  },
 }));
 
-const { fetchIndicators, fetchSubtopics, fetchTopics } = await import("./index");
+const { fetchIndicatorById, fetchIndicators, fetchSubtopics, fetchTopics } = await import(
+  "./index"
+);
 
 /**
  * Records are built, not recorded, and typed as the collection they stand for: add a required
@@ -144,7 +150,7 @@ describe("the catalogue reads", () => {
   test("reach an indicator's Topic through its Subtopic, trimming what they drag along", async () => {
     const args = returning(INDICATORS);
 
-    await fetchIndicators({ locale: "en" });
+    await fetchIndicators({ locale: "en", countries: [] });
 
     expect(args()).toMatchObject({
       depth: 2,
@@ -155,14 +161,32 @@ describe("the catalogue reads", () => {
     });
   });
 
-  // Temporary, and the reason it is asserted: the country rows are seeded and published, so
-  // this `where` is the only thing keeping them off the screen until there is a module UI.
-  test("withhold country-scoped indicators, leaving the regional catalogue alone", async () => {
+  test("outside a module, serve the regional catalogue only", async () => {
     const args = returning(INDICATORS);
 
-    await fetchIndicators({ locale: "en" });
+    await fetchIndicators({ locale: "en", countries: [] });
 
     expect(args()).toMatchObject({ where: { country: { exists: false } } });
+  });
+
+  test("with several modules, add every module's rows to the regional catalogue", async () => {
+    const args = returning(INDICATORS);
+
+    await fetchIndicators({ locale: "en", countries: ["ECU", "PER"] });
+
+    expect(args()).toMatchObject({
+      where: { or: [{ country: { exists: false } }, { country: { in: ["ECU", "PER"] } }] },
+    });
+  });
+
+  test("inside a module, add that module's own rows to the regional catalogue", async () => {
+    const args = returning(INDICATORS);
+
+    await fetchIndicators({ locale: "en", countries: ["ECU"] });
+
+    expect(args()).toMatchObject({
+      where: { or: [{ country: { exists: false } }, { country: { in: ["ECU"] } }] },
+    });
   });
 });
 
@@ -215,7 +239,9 @@ describe("the depth each read asks for", () => {
   test("is checked, because no Payload type narrows it", async () => {
     returning([indicator({ id: "0", subtopic: "3" })]);
 
-    await expect(fetchIndicators({ locale: "en" })).rejects.toThrow(/lost its depth/);
+    await expect(fetchIndicators({ locale: "en", countries: [] })).rejects.toThrow(
+      /lost its depth/,
+    );
   });
 
   test("is checked in the other direction too, on the flat reads", async () => {
@@ -229,7 +255,7 @@ describe("indicators", () => {
   test("hold the Topic beside the Subtopic, where the app expects the two as siblings", async () => {
     returning(INDICATORS);
 
-    const [first] = await fetchIndicators({ locale: "en" });
+    const [first] = await fetchIndicators({ locale: "en", countries: [] });
 
     expect(first.topic).toEqual({ id: 0, name: "Geographic context" });
     expect(first.subtopic).toMatchObject({ id: 0, topic_id: 0, name: "ACU" });
@@ -238,7 +264,7 @@ describe("indicators", () => {
   test("carry the one resource unwrapped from the block array", async () => {
     returning(INDICATORS);
 
-    const [first] = await fetchIndicators({ locale: "en" });
+    const [first] = await fetchIndicators({ locale: "en", countries: [] });
 
     expect(first.resource.type).toBe("component");
     expect(Array.isArray(first.resource)).toBe(false);
@@ -247,19 +273,49 @@ describe("indicators", () => {
   test("refuse a row with no resource, which has nothing to draw or measure", async () => {
     returning([indicator({ id: "0", resource: [] })]);
 
-    await expect(fetchIndicators({ locale: "en" })).rejects.toThrow(/has no resource/);
+    await expect(fetchIndicators({ locale: "en", countries: [] })).rejects.toThrow(
+      /has no resource/,
+    );
   });
 
   test("default an absent visualization_types to empty rather than null", async () => {
     returning([indicator({ id: "0", visualization_types: null })]);
 
-    expect((await fetchIndicators({ locale: "en" }))[0].visualization_types).toEqual([]);
+    expect((await fetchIndicators({ locale: "en", countries: [] }))[0].visualization_types).toEqual(
+      [],
+    );
+  });
+});
+
+describe("an indicator by id", () => {
+  test("reads at the catalogue's depth, with no module filter", async () => {
+    mockFindByID.mockReset();
+    mockFindByID.mockResolvedValue(INDICATORS[2]);
+
+    const found = await fetchIndicatorById({ id: 5, locale: "es" });
+
+    expect(mockFindByID.mock.calls[0]?.[0]).toMatchObject({
+      collection: "indicators",
+      id: "5",
+      locale: "es",
+      fallbackLocale: "en",
+      depth: 2,
+      populate: { subtopics: { name: true, topic: true }, topics: { name: true } },
+    });
+    expect(mockFindByID.mock.calls[0]?.[0]).not.toHaveProperty("where");
+    expect(found).toMatchObject({
+      id: 5,
+      name: "States",
+      topic: { id: 0, name: "Geographic context" },
+      resource: { type: "feature" },
+    });
   });
 });
 
 describe("a feature's popup", () => {
   const popupOf = async (id: number) =>
-    (await fetchIndicators({ locale: "en" })).find((found) => found.id === id)?.resource;
+    (await fetchIndicators({ locale: "en", countries: [] })).find((found) => found.id === id)
+      ?.resource;
 
   test("is rebuilt as the ArcGIS `content` shape, dropping Payload's row ids", async () => {
     returning(INDICATORS);

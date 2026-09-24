@@ -3,10 +3,12 @@ import { describe, expect, it } from "vitest";
 import {
   canonicalCountryPathname,
   countryFromPathname,
+  getCountryCodes,
+  isSavedReportPathname,
   routedPathname,
   stripCountry,
   withCountry,
-} from "./country";
+} from "./index";
 
 const LOCALES = ["en", "es", "pt"] as const;
 
@@ -99,5 +101,52 @@ describe("routedPathname", () => {
   it("leaves a code that is not live in the path", () => {
     expect(routedPathname("/en/SUR/reports", LOCALES)).toBeNull();
     expect(routedPathname("/en/XYZ", LOCALES)).toBeNull();
+  });
+});
+
+describe("isSavedReportPathname", () => {
+  it.each(["/reports/7c98f0a6-b1bc-442a-8dcf-9facdad36408", "/reports/anything"])(
+    "recognises %s as a saved report",
+    (pathname) => {
+      expect(isSavedReportPathname(pathname)).toBe(true);
+    },
+  );
+
+  it.each([
+    "/reports",
+    "/reports/grid",
+    "/reports/indicators",
+    "/reports/7c98f0a6/edit",
+    "/",
+    "/private/my-reports",
+  ])("leaves %s to the report tool", (pathname) => {
+    expect(isSavedReportPathname(pathname)).toBe(false);
+  });
+});
+
+describe("getCountryCodes", () => {
+  it("treats every shape of 'no module' the same", () => {
+    expect(getCountryCodes(null)).toEqual([]);
+    expect(getCountryCodes(undefined)).toEqual([]);
+    expect(getCountryCodes([])).toEqual([]);
+    expect(getCountryCodes([null])).toEqual([]);
+  });
+
+  it("accepts a single code as well as a set", () => {
+    expect(getCountryCodes("ECU")).toEqual(["ECU"]);
+    expect(getCountryCodes(["ECU"])).toEqual(["ECU"]);
+  });
+
+  it("sorts and dedupes, so the same set never produces two cache keys", () => {
+    expect(getCountryCodes(["PER", "ECU"])).toEqual(getCountryCodes(["ECU", "PER"]));
+    expect(getCountryCodes(["ECU", "ECU"])).toEqual(["ECU"]);
+  });
+
+  it("drops anything that is not a live module code", () => {
+    expect(getCountryCodes(["XYZ", "ECU", "ecu"])).toEqual(["ECU"]);
+  });
+
+  it("drops a country that exists but is not available yet", () => {
+    expect(getCountryCodes(["BOL"])).toEqual([]);
   });
 });

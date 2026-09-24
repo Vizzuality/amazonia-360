@@ -1,3 +1,5 @@
+import { Where } from "payload";
+
 import { Locale } from "next-intl";
 
 import { Indicator, ResourceFeature } from "@/types/indicator";
@@ -154,6 +156,14 @@ const toSubtopic = (subtopic: CmsSubtopic): Subtopic => ({
   topic_id: toNumericId(asId(subtopic.topic, `Subtopic ${subtopic.id}'s Topic`)),
 });
 
+const INDICATOR_DEPTH = {
+  depth: 2,
+  populate: {
+    subtopics: { name: true, topic: true },
+    topics: { name: true },
+  },
+} as const;
+
 const toIndicator = (indicator: CmsIndicator): Indicator => {
   const subtopic = asRecord(indicator.subtopic, `Indicator ${indicator.id}'s Subtopic`);
   const topic = asRecord(subtopic.topic, `Indicator ${indicator.id}'s Topic`);
@@ -179,6 +189,24 @@ const toIndicator = (indicator: CmsIndicator): Indicator => {
     visualization_types: indicator.visualization_types ?? [],
     resource: toResource(resource),
   };
+};
+
+export const fetchIndicatorById = async ({
+  id,
+  locale,
+}: {
+  id: number;
+  locale: string;
+}): Promise<Indicator> => {
+  const indicator = await sdk.findByID({
+    collection: "indicators",
+    id: `${id}`,
+    locale: locale as Locale,
+    fallbackLocale: "en",
+    ...INDICATOR_DEPTH,
+  });
+
+  return toIndicator(indicator);
 };
 
 // `joins: false` keeps Topics.subtopics and Subtopics.indicators — admin-only fields — out of
@@ -207,21 +235,23 @@ export const fetchSubtopics = async ({ locale }: { locale: string }): Promise<Su
   return byId(docs.map(toSubtopic));
 };
 
-// `depth: 2` reaches the Topic through the Subtopic; `populate` stops all 164 rows dragging a
-// whole Topic along with it. Depth is always explicit — the config default would make the two
-// flat reads expensive.
-export const fetchIndicators = async ({ locale }: { locale: string }): Promise<Indicator[]> => {
+const getIndicatorsWhere = (countries: readonly string[]): Where =>
+  countries.length > 0
+    ? { or: [{ country: { exists: false } }, { country: { in: [...countries] } }] }
+    : { country: { exists: false } };
+
+export const fetchIndicators = async ({
+  locale,
+  countries,
+}: {
+  locale: string;
+  countries: readonly string[];
+}): Promise<Indicator[]> => {
   const { docs } = await sdk.find({
     collection: "indicators",
     ...read(locale),
-    // Country-scoped indicators are seeded but withheld until there is a module UI to put them
-    // behind. Delete this first when that work starts — nothing else keeps them off the screen.
-    where: { country: { exists: false } },
-    depth: 2,
-    populate: {
-      subtopics: { name: true, topic: true },
-      topics: { name: true },
-    },
+    where: getIndicatorsWhere(countries),
+    ...INDICATOR_DEPTH,
   });
 
   return docs.map(toIndicator);
