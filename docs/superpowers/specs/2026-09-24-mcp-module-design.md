@@ -84,6 +84,9 @@ Not on the radar, approved for this project on 24 September 2026:
 - SQLAlchemy with Alembic, for the phase 2 database.
 - `httpx`, as the async HTTP client for ArcGIS.
 
+Not on the radar, and not yet approved; they are evaluated in the gatekeeper section and need a
+decision before any of them ships: Jev, Laya, and the `anthropic` SDK for the Haiku control.
+
 ## Transport and the two phases
 
 `create_mcp_server()` returns a stdio server when called without auth arguments, and a Streamable
@@ -257,8 +260,102 @@ proves insufficient.
 - A catalogue completeness test that names the indicator and the field that is missing.
 - A smoke suite against the live services, marked separately and not run in CI.
 
+## Question gatekeeper (evaluation)
+
+In the front-end path, a user's question reaches our backend before any handler runs. The
+gatekeeper decides there whether the question is on topic and whether the Ecuador proof of concept
+can answer it. In this phase it is built and evaluated only. It is wired to the front end in the
+map phase.
+
+It is not an MCP tool. A remote MCP server never sees the user's question, only the tool calls the
+host model chooses to make, so there is no "before the MCP" in Claude Desktop. There, coverage is
+enforced inside each tool, as described under Tools and Errors.
+
+### Two steps, and only the first uses a model
+
+1. **Classify.** A decision model turns the question into typed fields. It reads the question and
+   never writes an answer, so it has to understand Spanish, Portuguese and English but does not
+   have to produce any of them.
+2. **Check coverage.** Deterministic code checks the typed fields against the catalogue: the
+   indicator exists, `ai_answerable` is true, the operation is allowed by the layer's `value_type`,
+   the area falls inside the module, and whether the layer carries a known defect. The area comes
+   from the map, not from the text, so nothing is extracted from the question.
+
+Whether the data covers a question is therefore answered by the catalogue and can be audited. Only
+the classifier changes between candidates.
+
+```python
+class Classification(TypedDict):
+    on_topic: bool                  # physical and natural environment of Ecuador
+    subtopic_id: int | None
+    indicator_id: int | None        # one of the 12 in-scope layers, or None
+    operation: Literal["presence", "count", "area", "other"] | None
+    confidence: dict[str, float]    # per field, as returned by the model
+```
+
+A confidence below a per-field threshold leads to a clarifying question instead of an answer. The
+thresholds are set from the evaluation, not in advance.
+
+### Candidates
+
+| Candidate | What it is | Why it is in the comparison |
+|---|---|---|
+| Jev | TypeSafe AI, proprietary, API, released 15 September 2026 | First candidate |
+| Laya | Convai Innovations, Apache 2.0, 421M parameters, self-hosted, same week | Second candidate; runs inside the `mcp/` container |
+| Keyword baseline | Names, aliases and subtopics from the catalogue | Floor: a model that does not beat this is not earning its cost |
+| Small LLM with structured output | Claude Haiku 4.5 | Control: tells us whether a decision model beats the obvious alternative |
+
+Things to hold on to:
+
+- Laya's published comparison against Jev comes from its own author. Zero-shot it scores 0.362 on
+  its own typed-decisions benchmark against a random baseline of 0.318, so it probably needs
+  fine-tuning on our questions. Its accuracy degrades past about 20 options per choice question;
+  twelve indicators are within that.
+- With Jev the question leaves our infrastructure to a third party. That has to be acceptable to
+  the IDB before real user questions go through it.
+- Laya's memory footprint has to fit the Beanstalk instance alongside the other four containers.
+
+### The evaluation set
+
+Built by us, 150 to 200 questions, mostly Spanish with a share in Portuguese and English, since the
+application has all three locales. Four groups:
+
+| Group | Example | Expected |
+|---|---|---|
+| On topic, covered | ¿Qué ecosistemas hay en esta zona? | on topic, indicator 210, presence |
+| On topic, not covered | ¿Cuánto carbono almacena este bosque? | on topic, no indicator (Carbon is unavailable) |
+| Off topic | ¿Cuánta gente vive aquí? | off topic for this proof of concept |
+| Ambiguous | ¿Cómo está el bosque? | low confidence, clarifying question |
+
+Each question is labelled with every field of `Classification`. The set is split into a
+development part and a held-out test part from the first commit, so that fine-tuning Laya or tuning
+thresholds never sees the questions it is scored on.
+
+### What is measured
+
+- Accuracy per field, and for the whole classification.
+- Calibration: whether a confidence of 0.8 is right about 80% of the time.
+- Coverage at threshold: the share of questions answered rather than sent back, against the error
+  rate among the ones answered.
+- Latency, p50 and p95.
+- The same metrics broken down by language.
+
+### Layout
+
+```
+mcp/
+├── src/mcp_server/gatekeeper/
+│   ├── classify.py        Classification, the Classifier protocol, one adapter per candidate
+│   └── coverage.py        the deterministic check against the catalogue
+└── eval/
+    ├── questions.dev.jsonl
+    ├── questions.test.jsonl
+    └── run.py             runs every candidate over a split and writes a report
+```
+
 ## Out of scope for this phase
 
+- Wiring the gatekeeper into the front end.
 - The REST router for the front end, and the map phase.
 - Any use of the H3 grid.
 - Precomputing the Ecuador layers, against administrative units or against the grid.
@@ -272,3 +369,5 @@ proves insufficient.
 2. The vertex limit on the input area, to be set from the first measurements.
 3. How the five miscounted layers and Carbon are resolved. Both depend on requests to the
    consultant that are still unanswered.
+4. Whether sending user questions to Jev is acceptable to the IDB.
+5. Whether Laya needs fine-tuning, and on how many questions. Decided from the first zero-shot run.
