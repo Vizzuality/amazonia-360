@@ -187,3 +187,14 @@ async def test_unexpected_response_shape_raises_arcgis_error() -> None:
 
     with pytest.raises(ArcGISError, match="Invalid response"):
         await client_with(handler).count(LAYER, AOI)
+
+
+@pytest.mark.anyio
+async def test_an_error_body_without_a_message_still_names_code_and_url() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200, json={"error": {"code": 500, "message": "", "details": ["busy"]}}
+        )
+
+    with pytest.raises(ArcGISError, match=r"500.*busy.*example\.test"):
+        await client_with(handler).count(LAYER, AOI)
