@@ -106,7 +106,8 @@ at a time, and appends each call to `var/timing.jsonl`. A round is 75 calls and 
 two and a half minutes. It exists to measure how often ArcGIS takes far longer than usual.
 
 ```sh
-# 24 rounds, one an hour; caffeinate keeps the Mac awake
+# From mcp/, where var/ lives. 24 rounds, one an hour; caffeinate keeps the Mac awake
+mkdir -p var
 caffeinate -i nohup uv run amazonia360-mcp-timing run > var/timing.out 2>&1 &
 uv run amazonia360-mcp-timing summary   # per tool and layer: median, max, over 10 s and 60 s
 ```
