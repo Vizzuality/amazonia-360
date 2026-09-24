@@ -28,6 +28,7 @@ virtualenv's entry point directly works; the README says how.
 | 7 | Question 6 again, after the fix | `area_by_category`, 214 | 3 classes, 24,254 ha (61 %) | 1.38 s | 10,663 |
 | 8 | Hectares of each climate type around Puyo | `area_by_category`, 218 | 2 classes, 39,868 ha (100 %) | 0.70 s | 1,875 |
 | 9 | Hectares of each forest stratum around Puyo | `area_by_category`, 206 | 2 strata, 11,810 ha (30 %) | 6.66 s | 333,834 |
+| 10 | Ecosystems around Iquitos (Peru) | `categories_in_area`, 210 | refused: outside the module | 0 ms, no ArcGIS call | – |
 
 The areas were boxes of about 20 × 20 km (39,876 and 39,868 ha, 5 vertices) that Desktop drew itself
 from the place names.
@@ -43,6 +44,9 @@ from the place names.
 - **Context carried over.** Question 4 said "the same area" and the model reused the Puyo box.
 - **Limits stated unprompted.** Answer 4 said the count is of records, not area, and that the tool
   gives no breakdown by modality, practice or year.
+- **Refusal outside the module** (question 10). The server refused before calling ArcGIS, and the
+  model told the user plainly that Iquitos is in Peru and the module covers the Ecuadorian Amazon
+  only. It chose the cheap tool for the attempt and did not look for the data elsewhere.
 - **Arithmetic within one indicator only.** Answer 3 summed the classes of one layer and gave the
   share of the box, which is valid because the box was fully inside the module.
 
