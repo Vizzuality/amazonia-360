@@ -14,8 +14,15 @@ import { defineRailway, github, postgres, preserve, project, service } from "rai
  * not be written into source.
  */
 
-// Railway defaults new services to us-west; the people reading these previews
-// are in Europe, so the browser round trip is what matters here.
+// The client has to sit in the database's region, and that is not a
+// preference. `pnpm db:seed` is strictly sequential, so its runtime is one
+// round trip times however many it makes. Measured from a container in each
+// region against this database, 200 sequential `SELECT 1` took 30.1s from sfo
+// and 0.40s from europe-west4: 150ms a round trip against 2ms. That is what
+// made a single indicator write take 4-5s and left the seed at 61 of 185
+// indicators when the pre-deploy was killed at fifteen minutes, where CI
+// seeds all 185 against localhost in 23s. europe-west4 rather than sfo
+// because the people reading these previews are in Europe.
 const REGION = "europe-west4";
 
 const GB = 1_000_000_000;
@@ -34,6 +41,14 @@ export default defineRailway(() => {
   const client = service("client", {
     source: github("Vizzuality/amazonia-360", { branch: "develop" }),
     rootDirectory: "client",
+
+    // KNOWN DRIFT, like the postgres limits above, and a costlier one. Railway
+    // does not reconcile service placement from this file: with the service
+    // sitting in sfo and this line naming europe-west4, `railway config plan`
+    // reported no change at all. So this declares the intent and enforces
+    // nothing, and the region is set out of band through serviceInstanceUpdate's
+    // multiRegionConfig. Set it on production, which is the environment every
+    // preview forks, or each new preview is born in the wrong one.
     replicas: { [REGION]: 1 },
 
     // Runs before the deployment goes live, in a separate container, and a

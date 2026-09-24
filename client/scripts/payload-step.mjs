@@ -38,15 +38,21 @@ const STEPS = {
     // was nothing left to apply.
     provesItRan: /Done\./,
     timeoutMs: 3 * 60_000,
+    // The one step here that really can block on stdin.
+    onTimeout:
+      "A batch -1 row in payload_migrations, written by a dev server pushing the schema, makes " +
+      'migrate stop on "data loss will occur, proceed?" and wait on stdin forever. Check that ' +
+      "table first.",
   },
   seed: {
     args: ["run", "src/cms/seed/seed-data.ts"],
     // seed-data.ts's last line before it exits 0. A short seed logs "Seed incomplete" and
     // exits 1 instead, which is a real failure and not ours to retry.
     provesItRan: /Seeded \d+ topics/,
-    // 185 indicators, each re-updated under "es" and "pt" by updateLocales(). Against a
-    // freshly migrated database on a 1 vCPU container this runs well past five minutes,
-    // which is how long this used to allow.
+    // 185 indicators, each re-updated under "es" and "pt" by updateLocales(). Co-located
+    // with its database that is about a minute, and CI does it in 23s; the headroom is
+    // for a cold container, not for a slow one. Nothing this step does gets faster by
+    // waiting longer, so raising this again is the wrong move -- see the timeout message.
     timeoutMs: 15 * 60_000,
     // `payload run` does not set this, so seeding connects as a dev server would and
     // pushes the schema -- which writes the batch -1 row that makes the *next* migrate
@@ -54,6 +60,11 @@ const STEPS = {
     // already built the schema by the time we get here, so there is nothing to push.
     // The flag's only consumer is that push gate in db-postgres' connect().
     env: { PAYLOAD_MIGRATING: "true" },
+    onTimeout:
+      "The seeder cannot be waiting on the dev-push prompt -- PAYLOAD_MIGRATING disables the only " +
+      "gate that asks -- so it was writing, just slowly. Read the rate in the progress lines above: " +
+      "seconds per row rather than milliseconds means every query is crossing a region boundary, and " +
+      "no timeout is long enough to fix that.",
   },
 };
 
@@ -123,19 +134,13 @@ async function main() {
     const { code, output, timedOut, silentForMs } = await runOnce(step);
 
     if (timedOut) {
-      // Two very different causes look identical from the exit code, so say which one the
-      // output points at rather than guessing. A run still writing when the axe fell was
-      // working, not blocked.
-      const cause =
-        silentForMs > 30_000
-          ? `It produced nothing for the last ${Math.round(silentForMs / 1000)}s, so it is most likely waiting on ` +
-            `the dev-push confirmation prompt, which happens when payload_migrations holds a batch -1 row ` +
-            `written by a dev server.`
-          : `It was still writing output ${Math.round(silentForMs / 1000)}s before the timeout, so it was most ` +
-            `likely just slow rather than blocked. Raise timeoutMs for this step.`;
-
+      // This used to infer the cause from how long the child had been quiet, and inferred
+      // it wrong: a seed that was writing steadily over a transatlantic link was reported
+      // as blocked on a stdin prompt it cannot reach. Report the gap as the fact it is and
+      // let each step say what its own timeout tends to mean.
       console.error(
-        `\npayload ${step.args.join(" ")} produced no exit after ${step.timeoutMs / 60_000}m and was killed. ${cause}`,
+        `\npayload ${step.args.join(" ")} produced no exit after ${step.timeoutMs / 60_000}m and was killed. ` +
+          `Its last output was ${Math.round(silentForMs / 1000)}s before that. ${step.onTimeout}`,
       );
       process.exit(1);
     }

@@ -20,9 +20,16 @@ async function main() {
   const subtopics = SUBTOPICS as RawSubtopic[];
   const indicators = [...INDICATORS, ...INDICATORS_ECU] as RawIndicator[];
 
+  payload.logger.info(`Seeding ${topics.length} topics.`);
   await seedTopics(payload, topics);
+
+  payload.logger.info(`Seeding ${subtopics.length} subtopics.`);
   await seedSubtopics(payload, subtopics);
+
+  payload.logger.info(`Seeding ${indicators.length} indicators.`);
   await seedIndicators(payload, indicators);
+
+  payload.logger.info("Seeding default visualizations.");
   await seedDefaultVisualizations(payload, topics);
 
   const [seededTopics, seededSubtopics, seededIndicators] = await Promise.all([
