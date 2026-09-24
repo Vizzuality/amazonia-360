@@ -24,6 +24,7 @@ virtualenv's entry point directly works; the README says how.
 | 3 | Hectares of each ecosystem around Puyo | `area_by_category`, 210 | 3 classes, 11,078 ha | **60.7 s** | **76,071** |
 | 4 | Restoration actions in the same area | `count_in_area`, 202 | 291 records | 0.49 s | – |
 | 5 | Hectares of each flooding regime in the same area | `area_by_category`, 214, then `categories_in_area`, 214 | empty, 0 features | 0.96 s, 0.38 s | 0 |
+| 6 | Hectares of each flooding regime around Nuevo Rocafuerte | `area_by_category`, 214 (three tries, two box sizes), then `categories_in_area`, 214 | **failed**; the classes only | 0.9–2.1 s to the failure | – |
 
 The areas were boxes of about 20 × 20 km (39,876 and 39,868 ha, 5 vertices) that Desktop drew itself
 from the place names.
@@ -67,6 +68,33 @@ from the place names.
   polygons intersect the module. The warning does not say which figure is believed, so the model
   took it as a sign the service might be faulty.
 
+## Failure: invalid features that the repair could not repair
+
+Question 6 failed three times in `area_by_category` with `GEOSException: IllegalArgumentException:
+Overlay input is mixed-dimension`. The model received only "Error executing tool
+area_by_category" and guessed the density of the layer; it did fall back to `categories_in_area`
+and said plainly that it had the classes and not the hectares.
+
+Cause: 97 of the 544 features ArcGIS returned for the box were invalid, almost all because the
+0.001 degree `maxAllowableOffset` collapsed small rings below four points (one part came back as a
+single point repeated four times). With the full geometry only 8 are invalid. `make_valid` in its
+default "linework" mode raises on those collapsed rings under GEOS 3.13. It had never been hit
+because the dissolved layers tried so far had no such rings.
+
+Fixed in the branch: invalid features are repaired with `make_valid(method="structure",
+keep_collapsed=False)`, which drops collapsed parts and returns polygons only. A regression test
+uses the exact geometry from layer 214. The same box now answers in 1.7 s: Zonas Susceptibles
+12,791 ha, Zonas Inundadas 5,784 ha, Zonas Inundables 5,499 ha.
+
+Two things the failure showed:
+
+- **An unexpected error reaches the model as a bare "Error executing tool".** The real message
+  was only in the call log and the Desktop log. Refusals raised as `HandlerError` reach the model
+  in full; everything else does not.
+- **Simplification costs accuracy on small polygons.** Against the unsimplified geometry the same
+  box gives 5,507, 5,904 and 12,888 ha: the simplified figures are 0.1 %, 2.0 % and 0.8 % low.
+  Zonas Inundadas, made of small patches, loses most.
+
 ## Time
 
 `area_by_category` on ecosystems took 60.7 s for a 40,000 ha box: 58.8 s in ArcGIS, 1.9 s clipping,
@@ -78,6 +106,12 @@ all of that class's parts. The cost then follows the complexity of the classes t
 of the area asked about. If so, undissolved layers (214, 219, 209) should be much cheaper for the
 same box, and the 0.001 degree `maxAllowableOffset` does not help the server read time.
 
+Question 6 supports the hypothesis. On layer 214, undissolved, a box of the same size returned
+544 features and 10,987 vertices in 1.6 s; without any simplification, 331,563 vertices in 4.1 s.
+Layer 210 returned 3 features and 76,071 vertices in 58.8 s. The time is not in the vertices
+transferred but in the server reading very large multipart features. Not yet checked on a second
+dissolved layer.
+
 The call came close to the 60 s ArcGIS timeout (`ARCGIS_TIMEOUT_S`). It did not fail because httpx
 applies the timeout between bytes, not to the whole request.
 
@@ -86,7 +120,6 @@ a session probably includes connection setup.
 
 ## To check
 
-- The same box against an undissolved layer, to test the dissolve hypothesis. Question 5 could not
-  test it: 214 has no features in the Puyo box. The next try uses a box where it does.
+- The dissolve hypothesis on a second dissolved layer (204, 217 or 218) with the same box.
 - Whether server read time changes with `maxAllowableOffset`.
 - Whether Desktop warned before the slow call; the tool's description says it is slow.
