@@ -143,6 +143,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./tsconfig.json
 COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
 
+# db:seed reads the catalogue through `@/../datum/*.json`, so the seeder needs
+# these on disk at runtime, not just at build time.
+COPY --from=builder --chown=nextjs:nodejs /app/datum ./datum
+
 COPY entrypoint.sh ./
 
 USER nextjs
