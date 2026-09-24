@@ -114,6 +114,9 @@ class CuratedIndicator(_Model):
 
     id: StrictInt
     name: str
+    # Collection fields in Payload (Indicators.ts), not part of the metadata contract.
+    description_short: str | None = None
+    description: str | None = Field(default=None, description="Markdown.")
     subtopic: StrictInt
     unit: str | None = None
     country: CountryCode | None = None

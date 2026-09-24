@@ -6,10 +6,32 @@ from mcp.types import ToolAnnotations
 from pydantic import Field
 
 from mcp_server import catalogue
+from mcp_server.catalogue.models import IndicatorMetadata, Operation
 
 _READ_ONLY = ToolAnnotations(read_only_hint=True, open_world_hint=False)
 
-_LIST_FIELDS = {"id", "name", "subtopic", "value_type", "available"}
+_LIST_FIELDS = {
+    "id",
+    "name",
+    "description_short",
+    "subtopic",
+    "value_type",
+    "available",
+    "ai_answerable",
+}
+
+_TOOL_FOR: dict[Operation, str] = {
+    "presence": "categories_in_area",
+    "count": "count_in_area",
+    "area": "area_by_category",
+}
+
+
+def _tools(indicator: IndicatorMetadata) -> list[str]:
+    # The same checks the handlers make, so the model is not sent to a refusal.
+    if not (indicator.available and indicator.ai_answerable):
+        return []
+    return [tool for op, tool in _TOOL_FOR.items() if indicator.allows(op)]
 
 
 def register_catalogue_tools(server: MCPServer) -> None:
@@ -19,10 +41,11 @@ def register_catalogue_tools(server: MCPServer) -> None:
             int | None, Field(description="Only indicators in this subtopic.")
         ] = None,
     ) -> dict[str, Any]:
-        """List the Ecuador module indicators this server can answer about."""
+        """List the Ecuador module indicators, with the tools each one can be asked
+        through. An indicator with no tools cannot be answered about."""
         return {
             "indicators": [
-                i.model_dump(include=_LIST_FIELDS)
+                {**i.model_dump(include=_LIST_FIELDS), "tools": _tools(i)}
                 for i in catalogue.list_indicators(subtopic_id)
             ]
         }

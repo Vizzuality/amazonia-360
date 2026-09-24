@@ -26,6 +26,31 @@
           "title": "Name",
           "type": "string"
         },
+        "description_short": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description Short"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Markdown.",
+          "title": "Description"
+        },
         "subtopic": {
           "title": "Subtopic",
           "type": "integer"

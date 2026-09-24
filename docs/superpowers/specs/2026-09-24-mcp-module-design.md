@@ -148,7 +148,10 @@ Field names and vocabularies follow the contract on `feat/cms-indicator-metadata
 (`client/src/cms/fields/metadata.ts` and `metadata-vocabularies.ts`): `value_type`, `aggregation`,
 `decimals`, `spatial_coverage`, `ai_answerable`, `caveats`, the `provenance` group (`source_org`,
 `source_url`, `license`, `source_citation`, `data_vintage`, `update_cadence`, `method_url`) and the
-`sync` group (`arcgis_item_id`, `queryable_fields`, the edit dates, `sync_status`). The TypeScript
+`sync` group (`arcgis_item_id`, `queryable_fields`, the edit dates, `sync_status`). `name`,
+`description_short` and `description` are the collection's own fields (`Indicators.ts`); the English
+texts come from `client/datum/indicators.ECU.json`, which has no entry for Carbon (206), so its
+descriptions are null until the CMS holds them. The TypeScript
 files are not copied; their vocabulary values are repeated in `catalogue/models.py` as `Literal`
 types, because this service shares no code with the client, and have to be kept in step by hand.
 
@@ -223,8 +226,8 @@ endpoint and storage in the MCP's database are phase 2.
 
 | Tool | Answers | Measured cost |
 |---|---|---|
-| `list_indicators` | What exists, filterable by topic and subtopic | No network call |
-| `describe_indicator` | Unit, provenance, dates, caveats, value type | No network call |
+| `list_indicators` | What exists, filterable by subtopic, with a short description and the tools each indicator takes (none when it is unavailable or not cleared) | No network call |
+| `describe_indicator` | Description, unit, provenance, dates, caveats, value type | No network call |
 | `categories_in_area` | Which classes of a categorical layer are present | 0.19–0.37 s |
 | `count_in_area` | How many discrete features fall inside | 0.19–0.37 s |
 | `area_by_category` | How many hectares of each class fall inside | 4.6–16.7 s per layer |
