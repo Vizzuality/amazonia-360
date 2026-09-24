@@ -89,17 +89,15 @@ export const seedIndicators = async (
     const data = {
       order: raw.order,
       subtopic,
-      // Written even when empty, like `default_visualization_type` below: a re-seed has to
-      // clear a scope or a replacement the source data dropped.
+      // Optional fields are written even when empty: a re-seed has to clear a value the source
+      // data dropped, and an omitted key would leave the old one standing.
       country,
       replaces,
       name: name.en,
-      ...(isEmptyValue(unit.en) ? {} : { unit: unit.en }),
+      unit: isEmptyValue(unit.en) ? null : unit.en,
       description_short: descriptionShort.en,
-      ...(isEmptyValue(description.en) ? {} : { description: description.en }),
+      description: isEmptyValue(description.en) ? null : description.en,
       visualization_types: raw.visualization_types,
-      // Written even when null, unlike the optional fields above: a re-seed has to clear a
-      // default the source data dropped, and an omitted key would leave the old one standing.
       default_visualization_type: raw.default_visualization_type,
       resource: [mapResource(raw.resource)],
       _status: "published" as const,
@@ -119,11 +117,12 @@ export const seedIndicators = async (
 
     if (!country) seededRegionalIds.add(id);
 
-    await updateLocales(payload, "indicators", id, {
-      name,
-      unit,
-      description_short: descriptionShort,
-      description,
-    });
+    await updateLocales(
+      payload,
+      "indicators",
+      id,
+      { name, unit, description_short: descriptionShort, description },
+      ["unit", "description"],
+    );
   }
 };

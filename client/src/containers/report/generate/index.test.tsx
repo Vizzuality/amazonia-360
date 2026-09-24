@@ -101,7 +101,9 @@ beforeEach(() => {
 describe("ReportGenerate", () => {
   it("substitutes a regional indicator with the active module's own indicator", async () => {
     mockUseCountry.mockReturnValue("ECU");
-    mockUseGetIndicators.mockReturnValue({ data: [buildIndicator({ id: 216, replaces: "11" })] });
+    mockUseGetIndicators.mockReturnValue({
+      data: [buildIndicator({ id: 216, replaces: "11", visualization_types: ["map", "numeric"] })],
+    });
 
     const data = await submitReport();
     const indicators = data.topics[0].indicators;
@@ -113,6 +115,17 @@ describe("ReportGenerate", () => {
     expect(substituted?.id.replace("row-a-", "")).toMatch(UUID_RE);
     expect(untouched?.indicator_id).toBe(99);
     expect(data.country).toEqual(["ECU"]);
+  });
+
+  it("keeps the regional indicator when its replacement cannot render the widget's type", async () => {
+    mockUseCountry.mockReturnValue("ECU");
+    mockUseGetIndicators.mockReturnValue({
+      data: [buildIndicator({ id: 216, replaces: "11", visualization_types: ["map", "table"] })],
+    });
+
+    const data = await submitReport();
+
+    expect(data.topics[0].indicators.find((i) => i.id.startsWith("row-a-"))?.indicator_id).toBe(11);
   });
 
   it("leaves every indicator id untouched outside a module", async () => {

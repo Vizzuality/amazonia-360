@@ -40,10 +40,12 @@ const row = (over: Partial<RawIndicator> & Pick<RawIndicator, "id">): RawIndicat
 });
 
 type Written = { id: string; data: Record<string, unknown> };
+type Updated = Written & { locale?: string };
 
 const fakePayload = () => {
   const written: Written[] = [];
   const existing = new Set<string>();
+  const updated: Updated[] = [];
   const warnings: string[] = [];
 
   const payload = {
@@ -55,10 +57,13 @@ const fakePayload = () => {
       written.push({ id: data.id as string, data });
       return data;
     },
-    update: async () => ({}),
+    update: async (args: Updated) => {
+      updated.push({ id: args.id, locale: args.locale, data: args.data });
+      return {};
+    },
   } as unknown as Payload;
 
-  return { payload, written, warnings };
+  return { payload, written, updated, warnings };
 };
 
 const dataFor = (written: Written[], id: number) =>
@@ -127,5 +132,43 @@ describe("seedIndicators", () => {
     await seedIndicators(payload, [row({ id: 216, country: "ECU" })]);
 
     expect(dataFor(written, 216)).toMatchObject({ replaces: null });
+  });
+
+  test("writes an empty unit and description, so a re-seed clears the ones the source dropped", async () => {
+    const { payload, written } = fakePayload();
+
+    await seedIndicators(payload, [row({ id: 216, country: "ECU" })]);
+
+    expect(dataFor(written, 216)).toMatchObject({ unit: null, description: null });
+  });
+
+  test("clears an empty unit and description in the other locales too", async () => {
+    const { payload, updated } = fakePayload();
+
+    await seedIndicators(payload, [row({ id: 216, country: "ECU" })]);
+
+    for (const locale of ["es", "pt"]) {
+      expect(updated.find((entry) => entry.locale === locale)?.data).toEqual({
+        unit: null,
+        description: null,
+      });
+    }
+  });
+
+  test("writes a translated unit, and leaves a missing name translation to fall back", async () => {
+    const { payload, updated } = fakePayload();
+
+    await seedIndicators(payload, [
+      row({ id: 11, unit_en: "km²", unit_es: "km² es", name_es: "Áreas protegidas" }),
+    ]);
+
+    expect(updated.find((entry) => entry.locale === "es")?.data).toMatchObject({
+      name: "Áreas protegidas",
+      unit: "km² es",
+    });
+    expect(updated.find((entry) => entry.locale === "pt")?.data).toEqual({
+      unit: null,
+      description: null,
+    });
   });
 });

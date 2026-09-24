@@ -551,9 +551,9 @@
     "name_en": "Deforestation 2020-2022 (Ecuador module)",
     "name_es": "Deforestación 2020-2022 del módulo ecuatoriano",
     "name_pt": "Desmatamento 2020-2022 do módulo equatoriano",
-    "unit_en": "hectares",
-    "unit_es": "hectáreas",
-    "unit_pt": "hectares",
+    "unit_en": "",
+    "unit_es": "",
+    "unit_pt": "",
     "description_en": "### Deforestation 2020-2022\n\nComponent FC010 of the IDE Ambiente geoportal. It represents gross deforestation through land cover change trajectories, from forest towards other covers, for the 2020-2022 period.\n\n### Data source & methodology\n\nMinistry of Environment and Energy, IDE Ambiente geoportal, source FC010. National dissolve by Period + Transition, followed by clipping to ECU_MOD. Code, source area and associated text removed; Area_ha recalculated after clipping. Final CRS WGS 84 (EPSG:4326).\n\n### Specific content of the layer\n\nPeriod, transition class and recalculated area. Because the dissolve is by Period + Transition, each record is a multipart geometry aggregating all patches of one transition class, not an individual deforestation event.\n\n### Technical details\n\n50,424 source polygons reduced to 8 final classes, confirmed against the live service.\n\n### References & access links\n\nIDE Ambiente geoportal, https://ide.ambiente.gob.ec/mapainteractivo/ and the documentation supplied with the delivery.",
     "description_es": "### Deforestación 2020-2022\n\nComponente FC010 del Geoportal IDE Ambiente. Representa la deforestación bruta mediante trayectorias de cambio de cobertura, de bosque hacia otras coberturas, para el periodo 2020-2022.\n\n### Fuente de datos y metodología\n\nMinisterio del Ambiente y Energía, Geoportal IDE Ambiente, fuente FC010. Dissolve nacional por Periodo + Transicion, seguido de recorte a ECU_MOD. Código, área fuente y texto asociado eliminados; Area_ha recalculada tras el recorte. CRS final WGS 84 (EPSG:4326).\n\n### Contenido específico de la capa\n\nPeriodo, clase de transición y superficie recalculada. Como el dissolve es por Periodo + Transicion, cada registro es una geometría multiparte que agrega todos los parches de una clase de transición, no un evento individual de deforestación.\n\n### Detalles técnicos\n\n50.424 polígonos fuente reducidos a 8 clases finales, verificado contra el servicio en línea.\n\n### Referencias y enlaces de acceso\n\nGeoportal IDE Ambiente, https://ide.ambiente.gob.ec/mapainteractivo/ y la documentación incluida en la entrega.",
     "description_pt": "### Desmatamento 2020-2022\n\nComponente FC010 do Geoportal IDE Ambiente. Representa o desmatamento bruto por meio de trajetórias de mudança de cobertura, de floresta para outras coberturas, no período 2020-2022.\n\n### Fonte de dados e metodologia\n\nMinistério do Ambiente e Energia, Geoportal IDE Ambiente, fonte FC010. Dissolve nacional por Período + Transição, seguido de recorte para ECU_MOD. Area_ha recalculada após o recorte. CRS final WGS 84 (EPSG:4326).\n\n### Conteúdo específico da camada\n\nPeríodo, classe de transição e superfície recalculada. Como o dissolve é por Período + Transição, cada registro é uma geometria multiparte que agrega todas as manchas de uma classe, não um evento individual de desmatamento.\n\n### Detalhes técnicos\n\n50.424 polígonos fonte reduzidos a 8 classes finais, verificado contra o serviço on-line.\n\n### Referências e links de acesso\n\nGeoportal IDE Ambiente, https://ide.ambiente.gob.ec/mapainteractivo/ e a documentação incluída na entrega.",
@@ -624,9 +624,9 @@
     "name_en": "Hydrographic Demarcations (Ecuador module)",
     "name_es": "Demarcaciones Hidrográficas del módulo ecuatoriano",
     "name_pt": "Demarcações Hidrográficas do módulo equatoriano",
-    "unit_en": "hectares",
-    "unit_es": "hectáreas",
-    "unit_pt": "hectares",
+    "unit_en": "",
+    "unit_es": "",
+    "unit_pt": "",
     "description_en": "### Hydrographic Demarcations\n\nAdministrative territorial divisions for water management corresponding to Ecuador's Hydrographic Demarcations that intersect the Amazon module. They are administrative units built on watersheds, not the watersheds themselves.\n\n### Data source & methodology\n\nMinistry of Environment and Energy, IDE Ambiente geoportal, source HB003, an institutional water planning reference. Only the demarcation name and the clipped area are retained. The fcode and ralt attributes were discarded: the first is an internal code and the second has no documented definition in the received package, so it is not exposed to users. No dissolve or simplification.\n\n### Specific content of the layer\n\nDemarcation name and recalculated area in hectares.\n\n### Technical details\n\n10 national polygons in the source; 3 intersect ECU_MOD, confirmed by querying the live service. Note that the aggregated project metadata previously stated eight demarcations; that figure was wrong.\n\n### References & access links\n\nIDE Ambiente geoportal, https://ide.ambiente.gob.ec/mapainteractivo/ ; Sistema Único de Información Ambiental.",
     "description_es": "### Demarcaciones Hidrográficas\n\nDivisiones territoriales de gestión hídrica correspondientes a las Demarcaciones Hidrográficas del Ecuador que intersectan el módulo amazónico. Son unidades administrativas construidas sobre cuencas, no las cuencas mismas.\n\n### Fuente de datos y metodología\n\nMinisterio del Ambiente y Energía, Geoportal IDE Ambiente, fuente HB003, referencia institucional de planificación hídrica. Se conserva solamente el nombre de la demarcación y el área recortada. Se descartan fcode y ralt: el primero es código interno y el segundo carece de definición documental en el paquete recibido, por lo que no se expone al usuario. Sin dissolve ni simplificación.\n\n### Contenido específico de la capa\n\nNombre de la demarcación y superficie recalculada en hectáreas.\n\n### Detalles técnicos\n\n10 polígonos nacionales en la fuente; 3 intersectan ECU_MOD, verificado consultando el servicio en línea. Los metadatos agregados del proyecto indicaban antes ocho demarcaciones; esa cifra era incorrecta.\n\n### Referencias y enlaces de acceso\n\nGeoportal IDE Ambiente, https://ide.ambiente.gob.ec/mapainteractivo/ ; Sistema Único de Información Ambiental.",
     "description_pt": "### Demarcações Hidrográficas\n\nDivisões territoriais de gestão hídrica correspondentes às Demarcações Hidrográficas do Equador que cruzam o módulo amazônico. São unidades administrativas construídas sobre bacias, não as bacias em si.\n\n### Fonte de dados e metodologia\n\nMinistério do Ambiente e Energia, Geoportal IDE Ambiente, fonte HB003. Conserva-se apenas o nome da demarcação e a área recortada. Os atributos fcode e ralt foram descartados: o primeiro é código interno e o segundo carece de definição documental no pacote recebido. Sem dissolve nem simplificação.\n\n### Conteúdo específico da camada\n\nNome da demarcação e superfície recalculada em hectares.\n\n### Detalhes técnicos\n\n10 polígonos nacionais na fonte; 3 cruzam ECU_MOD, verificado consultando o serviço on-line. Os metadados agregados do projeto indicavam antes oito demarcações; essa cifra estava incorreta.\n\n### Referências e links de acesso\n\nGeoportal IDE Ambiente; Sistema Único de Información Ambiental.",
@@ -691,9 +691,9 @@
     "name_en": "Ecosystems (Ecuador module)",
     "name_es": "Ecosistemas del módulo Ecuador",
     "name_pt": "Ecossistemas do módulo Equador",
-    "unit_en": "hectares",
-    "unit_es": "hectáreas",
-    "unit_pt": "hectares",
+    "unit_en": "",
+    "unit_es": "",
+    "unit_pt": "",
     "description_en": "### Ecosystems\n\nVector component derived from the official Ecosystem cartography of Continental Ecuador. The source characterises ecosystems as of 2012 and was published as geographic information in 2013, at 1:100,000 scale, using biophysical modelling, interpretation of 2010-2012 satellite imagery and field validation.\n\nThis layer is not a wall-to-wall land cover and use map. Areas without a polygon are not a category called \"non-ecosystem\" and are not equivalent to \"non-forest\"; transformed surfaces or anthropic uses must be read from a dedicated land cover component.\n\n### Data source & methodology\n\nMinistry of Environment and Energy, IDE Ambiente / Interactive Map. 790 invalid geometries in the ECU_MOD calculation extent were repaired, precision was reduced to a common 90 m grid (three steps of the original 30 m grid), and patches were dissolved by ecosystem code. Thematic attributes are constant per ecosystem code, so the dissolve removes record fragmentation without removing thematic variation. Exact clip by ECU_MOD, reprojection to WGS 84 (EPSG:4326), geodesic area recalculated last.\n\n### Specific content of the layer\n\nEcosystem code and name, ecosystem type, physiognomy, fragility, threat, vulnerability, fragmentation, connectivity, and area in hectares and square kilometres. Fragility, threat, vulnerability, fragmentation and connectivity are source attributes; the processing does not recalculate or update them.\n\n### Technical details\n\n91,347 source polygons, 87 ecosystem codes, EPSG:32717. Inside ECU_MOD: 51 classes (36 forest, 6 shrubland, 9 herbaceous physiognomy; 48 terrestrial, 3 aquatic types), 10,767,901.75 ha / 107,679.02 km², 2,533,992 vertices, 0 invalid geometries. Area variation from the generalisation step was about -0.00108%. For patch boundaries at source resolution, use the original ZIP.\n\n### References & access links\n\nOfficial dictionary GE000_ECOSISTEMA; IDE Ambiente Interactive Map, https://ide.ambiente.gob.ec/mapainteractivo/",
     "description_es": "### Ecosistemas\n\nComponente vectorial derivado de la cartografía oficial de Ecosistemas del Ecuador Continental. La fuente caracteriza los ecosistemas al año 2012 y fue publicada como información geográfica en 2013, a escala 1:100.000, mediante modelamientos biofísicos, interpretación de imágenes satelitales de 2010-2012 y validación de campo.\n\nEsta capa no es un mapa de cobertura y uso del suelo de pared a pared. Las áreas sin polígono no constituyen una categoría denominada «No ecosistema» ni equivalen a «No bosque»; para interpretar superficies transformadas o usos antrópicos debe consultarse un componente específico de cobertura y uso de la tierra.\n\n### Fuente de datos y metodología\n\nMinisterio del Ambiente y Energía, IDE Ambiente / Mapa Interactivo. Se repararon 790 geometrías inválidas de la extensión de cálculo de ECU_MOD, se redujo la precisión a una malla común de 90 m (tres pasos de la malla original de 30 m) y se disolvieron los parches por código de ecosistema. Los atributos temáticos son constantes para cada código, por lo que el dissolve elimina fragmentación de registro sin eliminar variación temática. Recorte exacto por ECU_MOD, reproyección a WGS 84 (EPSG:4326) y recálculo geodésico de superficie al final.\n\n### Contenido específico de la capa\n\nCódigo y nombre del ecosistema, tipo de ecosistema, fisonomía, fragilidad, amenaza, vulnerabilidad, fragmentación, conectividad y superficie en hectáreas y kilómetros cuadrados. Fragilidad, amenaza, vulnerabilidad, fragmentación y conectividad son atributos de la fuente; el procesamiento no los recalcula ni actualiza.\n\n### Detalles técnicos\n\n91.347 polígonos fuente, 87 códigos de ecosistema, EPSG:32717. Dentro de ECU_MOD: 51 clases (36 de fisonomía Bosque, 6 Arbustal, 9 Herbazal; 48 terrestres, 3 acuáticas), 10.767.901,75 ha / 107.679,02 km², 2.533.992 vértices, 0 geometrías inválidas. La variación de superficie por la generalización fue de aproximadamente -0,00108 %. Para los bordes de cada parche a la resolución de la fuente debe usarse el ZIP original.\n\n### Referencias y enlaces de acceso\n\nDiccionario oficial GE000_ECOSISTEMA; Mapa Interactivo IDE Ambiente, https://ide.ambiente.gob.ec/mapainteractivo/",
     "description_pt": "### Ecossistemas\n\nComponente vetorial derivado da cartografia oficial de Ecossistemas do Equador Continental. A fonte caracteriza os ecossistemas em 2012 e foi publicada como informação geográfica em 2013, na escala 1:100.000, mediante modelagem biofísica, interpretação de imagens de satélite de 2010-2012 e validação de campo.\n\nEsta camada não é um mapa de cobertura e uso do solo contínuo. Áreas sem polígono não constituem uma categoria «não ecossistema» nem equivalem a «não floresta».\n\n### Fonte de dados e metodologia\n\nMinistério do Ambiente e Energia, IDE Ambiente / Mapa Interativo. Repararam-se 790 geometrias inválidas, reduziu-se a precisão a uma malha comum de 90 m e dissolveram-se as manchas por código de ecossistema. Os atributos temáticos são constantes por código, portanto o dissolve elimina fragmentação de registro sem eliminar variação temática. Recorte exato por ECU_MOD e reprojeção para WGS 84 (EPSG:4326).\n\n### Conteúdo específico da camada\n\nCódigo e nome do ecossistema, tipo, fisionomia, fragilidade, ameaça, vulnerabilidade, fragmentação, conectividade e superfície em hectares e quilômetros quadrados. Os atributos de fragilidade, ameaça, vulnerabilidade, fragmentação e conectividade são da fonte e não foram recalculados.\n\n### Detalhes técnicos\n\n91.347 polígonos fonte, 87 códigos de ecossistema, EPSG:32717. Dentro de ECU_MOD: 51 classes (36 Floresta, 6 Arbustal, 9 Herbáceo; 48 terrestres, 3 aquáticas), 10.767.901,75 ha / 107.679,02 km², 2.533.992 vértices, 0 geometrias inválidas.\n\n### Referências e links de acesso\n\nDicionário oficial GE000_ECOSISTEMA; Mapa Interativo IDE Ambiente.",
@@ -702,7 +702,8 @@
     "description_short_pt": "As 51 classes de ecossistema presentes no módulo amazônico do Equador, derivadas do Mapa de Ecossistemas do Equador Continental (caracterização de 2012).",
     "visualization_types": [
       "map",
-      "table"
+      "table",
+      "numeric"
     ],
     "default_visualization_type": "map",
     "resource": {
@@ -713,7 +714,16 @@
       "rasterFunction": "",
       "legend": "",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_11_ecosistemas_del_modulo_ecuador/FeatureServer",
-      "query_numeric": "",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "fid",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      },
       "query_table": {
         "where": "1=1",
         "outFields": [
@@ -1158,9 +1168,9 @@
     "name_en": "National System of Protected Areas (Ecuador module)",
     "name_es": "Sistema Nacional de Áreas Protegidas del módulo ecuatoriano",
     "name_pt": "Sistema Nacional de Áreas Protegidas do módulo equatoriano",
-    "unit_en": "hectares",
-    "unit_es": "hectáreas",
-    "unit_pt": "hectares",
+    "unit_en": "",
+    "unit_es": "",
+    "unit_pt": "",
     "description_en": "### National System of Protected Areas\n\nEcuador's official protected areas inside the Amazon module, with their management category, subsystem, landscape and delimitation status. This is the framework conservation layer for the Ecuador module and the national-resolution counterpart of the regional Protected Areas indicator.\n\n### Data source & methodology\n\nMinistry of Environment and Energy, IDE Ambiente geoportal, source FA210. No dissolve: each area has its own identity, category and creation document. Internal codes, scale and associated text were removed; Area_ha was recalculated after clipping. Final CRS WGS 84 (EPSG:4326).\n\n### Specific content of the layer\n\nName, management category, landscape, subsystem, status, creation document and recalculated area in hectares.\n\n### Technical details\n\n81 protected areas in the national source; 40 intersect ECU_MOD, confirmed against the live service.\n\n### References & access links\n\nIDE Ambiente geoportal and the official documentation supplied with the delivery.",
     "description_es": "### Sistema Nacional de Áreas Protegidas\n\nÁreas protegidas oficiales del Ecuador dentro del módulo amazónico, con su categoría de manejo, subsistema, paisaje y estado de delimitación. Es la capa marco de conservación del módulo ecuatoriano y la contraparte de resolución nacional del indicador regional de áreas protegidas.\n\n### Fuente de datos y metodología\n\nMinisterio del Ambiente y Energía, Geoportal IDE Ambiente, fuente FA210. Sin dissolve: cada área posee identidad, categoría y documento de creación propios. Se eliminaron códigos internos, escala y texto asociado; Area_ha se recalculó tras el recorte. CRS final WGS 84 (EPSG:4326).\n\n### Contenido específico de la capa\n\nNombre, categoría de manejo, paisaje, subsistema, estado, documento de creación y superficie recalculada en hectáreas.\n\n### Detalles técnicos\n\n81 áreas protegidas en la fuente nacional; 40 intersectan ECU_MOD, verificado contra el servicio en línea.\n\n### Referencias y enlaces de acceso\n\nGeoportal IDE Ambiente y la documentación oficial incluida en la entrega.",
     "description_pt": "### Sistema Nacional de Áreas Protegidas\n\nÁreas protegidas oficiais do Equador dentro do módulo amazônico, com sua categoria de manejo, subsistema, paisagem e situação de delimitação. É a camada-marco de conservação do módulo equatoriano e a contraparte de resolução nacional do indicador regional de áreas protegidas.\n\n### Fonte de dados e metodologia\n\nMinistério do Ambiente e Energia, Geoportal IDE Ambiente, fonte FA210. Sem dissolve: cada área possui identidade, categoria e documento de criação próprios. Area_ha recalculada após o recorte. CRS final WGS 84 (EPSG:4326).\n\n### Conteúdo específico da camada\n\nNome, categoria de manejo, paisagem, subsistema, situação, documento de criação e superfície recalculada em hectares.\n\n### Detalhes técnicos\n\n81 áreas protegidas na fonte nacional; 40 cruzam ECU_MOD, verificado contra o serviço on-line.\n\n### Referências e links de acesso\n\nGeoportal IDE Ambiente e a documentação oficial incluída na entrega.",
@@ -1169,7 +1179,9 @@
     "description_short_pt": "As 40 áreas do SNAP que cruzam o módulo equatoriano, com categoria de manejo, subsistema e situação de delimitação.",
     "visualization_types": [
       "map",
-      "table"
+      "table",
+      "numeric",
+      "chart"
     ],
     "default_visualization_type": "map",
     "resource": {
@@ -1180,7 +1192,16 @@
       "rasterFunction": "",
       "legend": "",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
-      "query_numeric": "",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      },
       "query_table": {
         "where": "1=1",
         "outFields": [
@@ -1190,7 +1211,15 @@
         ],
         "returnGeometry": false
       },
-      "query_chart": "",
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": true,
+        "returnIntersections": true,
+        "outFields": [
+          "Categoria",
+          "Categoria as label"
+        ]
+      },
       "query_ai": {
         "where": "1=1",
         "returnGeometry": false,
@@ -1308,9 +1337,9 @@
     "name_en": "Climate Types (Ecuador module)",
     "name_es": "Tipos de clima del módulo ecuatoriano",
     "name_pt": "Tipos de clima do módulo equatoriano",
-    "unit_en": "hectares",
-    "unit_es": "hectáreas",
-    "unit_pt": "hectares",
+    "unit_en": "",
+    "unit_es": "",
+    "unit_pt": "",
     "description_en": "### Climate Types\n\nPolygon vector component representing the climate types present in the Ecuadorian Amazon module. It is the national-resolution counterpart of the regional Climate Zones indicator.\n\n### Data source & methodology\n\nHistorical provenance MAGAP–SIGAGRO, via the agriculture geoportal. The operational source is the tipos_clima shapefile preserved in the delivery; the exact WFS URL, typeName and download date were not recorded and are unavailable. Original CRS EPSG:32717. Attribute text normalised to sentence case with correct accents, climate codes preserved, national dissolve by climate class, reprojection to WGS 84 (EPSG:4326), clip by ECU_MOD, a further dissolve after clipping and geodesic recalculation of AREA_HA.\n\n### Specific content of the layer\n\nClimate code, climate type and recalculated area. Note that this layer's field names are upper-case (COD_CLIMA, TIPO_CLIMA, AREA_HA), unlike every other layer in the Ecuador module.\n\n### Technical details\n\n6 classes inside ECU_MOD, confirmed against the live service: Af megathermal rainy 78,994.97 km²; Aw tropical megathermal humid 19,450.61 km²; Cb equatorial mesothermal dry 1,134.15 km²; Ch equatorial mesothermal semi-humid 16,248.82 km²; N nival 1,073.06 km²; Pf equatorial high mountain 14,485.57 km². This layer has the weakest provenance of the module: the WFS trail is lost and no source date is recorded.\n\n### References & access links\n\nHistorical portal https://geoportal.agricultura.gob.ec/ ; exact WFS endpoint not available.",
     "description_es": "### Tipos de clima\n\nComponente vectorial poligonal que representa los tipos de clima presentes en el módulo ecuatoriano. Es la contraparte de resolución nacional del indicador regional de zonas climáticas.\n\n### Fuente de datos y metodología\n\nProcedencia histórica MAGAP–SIGAGRO, vía el geoportal de agricultura. La fuente operativa es el shapefile tipos_clima preservado en la entrega; la URL WFS exacta, el typeName y la fecha de descarga no se registraron y no están disponibles. CRS de origen EPSG:32717. Normalización del texto atributivo a mayúsculas y minúsculas con tildes correctas, conservación de los códigos climáticos, dissolve nacional por clase climática, reproyección a WGS 84 (EPSG:4326), recorte por ECU_MOD, dissolve posterior al recorte y recálculo geodésico de AREA_HA.\n\n### Contenido específico de la capa\n\nCódigo climático, tipo de clima y superficie recalculada. Los nombres de campo de esta capa están en MAYÚSCULAS (COD_CLIMA, TIPO_CLIMA, AREA_HA), a diferencia de todas las demás capas del módulo ecuatoriano.\n\n### Detalles técnicos\n\n6 clases dentro de ECU_MOD, verificado contra el servicio en línea: Af megatérmico lluvioso 78.994,97 km²; Aw tropical megatérmico húmedo 19.450,61 km²; Cb ecuatorial mesotérmico seco 1.134,15 km²; Ch ecuatorial mesotérmico semihúmedo 16.248,82 km²; N nival 1.073,06 km²; Pf ecuatorial de alta montaña 14.485,57 km². Es la capa con la trazabilidad más débil del módulo: el rastro WFS se perdió y no consta fecha de la fuente.\n\n### Referencias y enlaces de acceso\n\nPortal histórico https://geoportal.agricultura.gob.ec/ ; endpoint WFS exacto no disponible.",
     "description_pt": "### Tipos de clima\n\nComponente vetorial poligonal que representa os tipos de clima presentes no módulo equatoriano. É a contraparte de resolução nacional do indicador regional de zonas climáticas.\n\n### Fonte de dados e metodologia\n\nProcedência histórica MAGAP–SIGAGRO, via geoportal da agricultura. A fonte operacional é o shapefile tipos_clima preservado na entrega; a URL WFS exata, o typeName e a data de download não foram registrados e não estão disponíveis. CRS de origem EPSG:32717. Dissolve nacional por classe climática, reprojeção para WGS 84 (EPSG:4326), recorte por ECU_MOD e recálculo geodésico de AREA_HA.\n\n### Conteúdo específico da camada\n\nCódigo climático, tipo de clima e superfície recalculada. Os nomes de campo desta camada estão em MAIÚSCULAS, diferentemente de todas as demais camadas do módulo.\n\n### Detalhes técnicos\n\n6 classes dentro de ECU_MOD, verificado contra o serviço on-line: Af megatérmico chuvoso 78.994,97 km²; Aw tropical megatérmico úmido 19.450,61 km²; Cb equatorial mesotérmico seco 1.134,15 km²; Ch equatorial mesotérmico semiúmido 16.248,82 km²; N nival 1.073,06 km²; Pf equatorial de alta montanha 14.485,57 km². É a camada com a rastreabilidade mais fraca do módulo.\n\n### Referências e links de acesso\n\nPortal histórico https://geoportal.agricultura.gob.ec/ ; endpoint WFS exato não disponível.",
@@ -1319,7 +1348,8 @@
     "description_short_pt": "Os seis tipos de clima presentes no módulo equatoriano, segundo a classificação climática nacional.",
     "visualization_types": [
       "map",
-      "table"
+      "table",
+      "chart"
     ],
     "default_visualization_type": "map",
     "resource": {
@@ -1340,7 +1370,15 @@
         ],
         "returnGeometry": false
       },
-      "query_chart": "",
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": true,
+        "returnIntersections": true,
+        "outFields": [
+          "COD_CLIMA",
+          "TIPO_CLIMA as label"
+        ]
+      },
       "query_ai": {
         "where": "1=1",
         "returnGeometry": false,
@@ -1381,9 +1419,9 @@
     "name_en": "Biogeographic Units (Ecuador module)",
     "name_es": "Unidades Biogeográficas del módulo ecuatoriano",
     "name_pt": "Unidades Biogeográficas do módulo equatoriano",
-    "unit_en": "hectares",
-    "unit_es": "hectáreas",
-    "unit_pt": "hectares",
+    "unit_en": "",
+    "unit_es": "",
+    "unit_pt": "",
     "description_en": "### Biogeographic Units\n\nComponent that organises the territory into biogeographic regions, provinces and sectors. It is the national-resolution counterpart of the regional Biome Types indicator and places the module's ecosystems in their regional biogeographic context.\n\n### Data source & methodology\n\nMinistry of Environment and Energy, IDE Ambiente geoportal, source GE006. Region, biogeographic province and biogeographic sector are preserved; internal code and associated text removed. No dissolve. Final CRS WGS 84 (EPSG:4326).\n\n### Specific content of the layer\n\nRegion, biogeographic province, biogeographic sector and recalculated area in hectares. The province field name is truncated to Provincia_ by the Shapefile 10-character field limit.\n\n### Technical details\n\n19 units in the source; 11 intersect ECU_MOD, confirmed against the live service.\n\n### References & access links\n\nIDE Ambiente geoportal and the official documentation supplied with the delivery.",
     "description_es": "### Unidades Biogeográficas\n\nComponente que organiza el territorio en regiones, provincias y sectores biogeográficos. Es la contraparte de resolución nacional del indicador regional de tipos de bioma y sitúa los ecosistemas del módulo en su contexto biogeográfico regional.\n\n### Fuente de datos y metodología\n\nMinisterio del Ambiente y Energía, Geoportal IDE Ambiente, fuente GE006. Se preservan Región, Provincia biogeográfica y Sector biogeográfico; se elimina código interno y texto asociado. Sin dissolve. CRS final WGS 84 (EPSG:4326).\n\n### Contenido específico de la capa\n\nRegión, provincia biogeográfica, sector biogeográfico y superficie recalculada en hectáreas. El nombre del campo de provincia aparece truncado como Provincia_ por el límite de 10 caracteres del formato Shapefile.\n\n### Detalles técnicos\n\n19 unidades en la fuente; 11 intersectan ECU_MOD, verificado contra el servicio en línea.\n\n### Referencias y enlaces de acceso\n\nGeoportal IDE Ambiente y la documentación oficial incluida en la entrega.",
     "description_pt": "### Unidades Biogeográficas\n\nComponente que organiza o território em regiões, províncias e setores biogeográficos. É a contraparte de resolução nacional do indicador regional de tipos de bioma.\n\n### Fonte de dados e metodologia\n\nMinistério do Ambiente e Energia, Geoportal IDE Ambiente, fonte GE006. Preservam-se Região, Província biogeográfica e Setor biogeográfico; removem-se código interno e texto associado. Sem dissolve. CRS final WGS 84 (EPSG:4326).\n\n### Conteúdo específico da camada\n\nRegião, província biogeográfica, setor biogeográfico e superfície recalculada em hectares. O nome do campo de província aparece truncado como Provincia_ pelo limite de 10 caracteres do Shapefile.\n\n### Detalhes técnicos\n\n19 unidades na fonte; 11 cruzam ECU_MOD, verificado contra o serviço on-line.\n\n### Referências e links de acesso\n\nGeoportal IDE Ambiente e a documentação oficial incluída na entrega.",
@@ -1392,7 +1430,9 @@
     "description_short_pt": "As 11 unidades biogeográficas que cruzam ECU_MOD, organizadas em região, província biogeográfica e setor.",
     "visualization_types": [
       "map",
-      "table"
+      "table",
+      "numeric",
+      "chart"
     ],
     "default_visualization_type": "map",
     "resource": {
@@ -1403,7 +1443,16 @@
       "rasterFunction": "",
       "legend": "",
       "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_20_unidades_biogeograficas_del_modulo_ecuatoriano/FeatureServer",
-      "query_numeric": "",
+      "query_numeric": {
+        "where": "1=1",
+        "outStatistics": [
+          {
+            "onStatisticField": "FID",
+            "outStatisticFieldName": "value",
+            "statisticType": "count"
+          }
+        ]
+      },
       "query_table": {
         "where": "1=1",
         "outFields": [
@@ -1413,7 +1462,15 @@
         ],
         "returnGeometry": false
       },
-      "query_chart": "",
+      "query_chart": {
+        "where": "1=1",
+        "returnGeometry": true,
+        "returnIntersections": true,
+        "outFields": [
+          "Region",
+          "Region as label"
+        ]
+      },
       "query_ai": {
         "where": "1=1",
         "returnGeometry": false,

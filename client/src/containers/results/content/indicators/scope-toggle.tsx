@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { LuArrowLeftRight } from "react-icons/lu";
 
 import { useGetIndicators } from "@/lib/indicators";
-import { getIndicatorCounterpartMap } from "@/lib/indicators/substitution";
+import { getIndicatorCounterpart, getIndicatorCounterpartMap } from "@/lib/indicators/substitution";
 import { useReportCountry } from "@/lib/report/use-report-country";
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
@@ -48,15 +48,14 @@ export default function IndicatorScopeToggle({
 
   const { data: indicators } = useGetIndicators(locale, undefined, country);
 
-  const counterpartId = useMemo(
-    () => getIndicatorCounterpartMap(indicators ?? []).get(indicatorId) ?? null,
-    [indicators, indicatorId],
+  const counterpart = useMemo(
+    () => getIndicatorCounterpart(indicatorId, type, getIndicatorCounterpartMap(indicators ?? [])),
+    [indicators, indicatorId, type],
   );
 
-  if (counterpartId === null) return null;
+  if (!counterpart) return null;
 
-  const counterpart = indicators?.find((indicator) => indicator.id === counterpartId);
-  const name = counterpart?.name ?? "";
+  const { id: counterpartId, name } = counterpart;
 
   // The grid keys every widget on indicator id + type, so two widgets sharing that pair in one
   // topic collide: `results/content/item/index.tsx:83`.
