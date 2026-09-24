@@ -5,12 +5,12 @@ from shapely.geometry import box
 from shapely.geometry.base import BaseGeometry
 
 from mcp_server.arcgis.client import ArcGISError, Feature
-from mcp_server.catalogue import get_indicator_metadata
-from mcp_server.catalogue.models import Layer
+from mcp_server.catalogue.models import IndicatorMetadata, Layer
 from mcp_server.geometry.area import geodesic_area_ha
 from mcp_server.handlers import area as area_handlers_module
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.handlers.errors import HandlerError
+from tests.test_models import indicator
 
 TENA: dict[str, Any] = {
     "type": "Polygon",
@@ -81,10 +81,42 @@ async def test_area_by_category_is_clipped_not_whole_polygons() -> None:
     assert result.timing.vertices_received > 0
 
 
+def serve(monkeypatch: pytest.MonkeyPatch, indicator: IndicatorMetadata) -> None:
+    monkeypatch.setattr(
+        area_handlers_module, "get_indicator_metadata", lambda _id: indicator
+    )
+
+
 @pytest.mark.anyio
-async def test_known_defects_travel_with_the_result() -> None:
-    result = await handlers().categories_in_area(204, TENA)
-    assert any("records" in c for c in result.caveats)
+async def test_known_defects_travel_with_the_result(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    serve(
+        monkeypatch,
+        indicator(
+            caveats=[{"text": "Written by a person."}],
+            documented_count=7,
+            sync={
+                "sync_status": "ok",
+                "queryable_fields": ["Ecosistema"],
+                "published_count": 3,
+            },
+        ),
+    )
+    result = await handlers().categories_in_area(210, TENA)
+    assert "Written by a person." in result.caveats
+    assert any("7 records" in c and "has 3" in c for c in result.caveats)
+
+
+@pytest.mark.anyio
+async def test_an_unavailable_layer_is_refused_before_any_network_call(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    serve(monkeypatch, indicator(sync={"sync_status": "error"}))
+    client = FakeClient()
+    with pytest.raises(HandlerError, match="not available"):
+        await handlers(client).categories_in_area(210, TENA)
+    assert client.calls == []
 
 
 @pytest.mark.anyio
@@ -113,7 +145,6 @@ async def test_partial_coverage_adds_a_caveat() -> None:
     ("call", "indicator_id", "area", "message"),
     [
         ("categories_in_area", 999, TENA, "Unknown indicator"),
-        ("categories_in_area", 206, TENA, "not available"),
         ("area_by_category", 202, TENA, "does not support area"),
         ("count_in_area", 210, TENA, "does not support count"),
         ("categories_in_area", 210, LIMA, "outside the Ecuador module"),
@@ -144,12 +175,7 @@ async def test_an_arcgis_failure_is_an_error_not_an_empty_result() -> None:
 async def test_ai_answerable_false_is_a_refusal(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    not_answerable = get_indicator_metadata(210).model_copy(  # type: ignore[union-attr]
-        update={"ai_answerable": False}
-    )
-    monkeypatch.setattr(
-        area_handlers_module, "get_indicator_metadata", lambda _id: not_answerable
-    )
+    serve(monkeypatch, indicator(ai_answerable=False))
     client = FakeClient()
     with pytest.raises(HandlerError, match="not cleared"):
         await handlers(client).categories_in_area(210, TENA)

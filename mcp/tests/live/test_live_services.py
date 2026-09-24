@@ -1,9 +1,12 @@
+from datetime import UTC, datetime
+
 import httpx
 import pytest
 
 from mcp_server.arcgis.client import ArcGISClient
 from mcp_server.catalogue import list_indicators
 from mcp_server.catalogue.models import IndicatorMetadata
+from mcp_server.catalogue.sync import sync_indicator
 from mcp_server.handlers.area import AreaHandlers
 from tests.test_handlers import TENA
 
@@ -32,3 +35,15 @@ async def test_ecosystems_area_is_clipped(handlers: AreaHandlers) -> None:
     result = await handlers.area_by_category(210, TENA)
     assert isinstance(result.value, dict)
     assert sum(result.value.values()) <= result.aoi_ha * 1.001
+
+
+@pytest.mark.parametrize("indicator", AVAILABLE, ids=lambda i: str(i.id))
+async def test_the_snapshot_is_current(indicator: IndicatorMetadata) -> None:
+    async with httpx.AsyncClient(timeout=120) as http:
+        live = await sync_indicator(http, indicator, datetime.now(UTC))
+    stale = {
+        field: (getattr(indicator.sync, field), getattr(live, field))
+        for field in ("published_count", "layer_last_edit", "schema_last_edit")
+        if getattr(indicator.sync, field) != getattr(live, field)
+    }
+    assert stale == {}, "run `uv run amazonia360-mcp-catalogue sync`"

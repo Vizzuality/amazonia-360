@@ -1,0 +1,438 @@
+{
+  "locale": "en",
+  "indicators": [
+    {
+      "id": 202,
+      "name": "Areas under restoration actions (Ecuador module)",
+      "unit": "restoration actions",
+      "subtopic": 4,
+      "country": "ECU",
+      "resource": {
+        "type": "feature",
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/03_%C3%81rea_Bajo_Acciones_de_Restauraci%C3%B3n_del_m%C3%B3dulo_ecuatoriano/FeatureServer",
+        "layer_id": 0
+      },
+      "value_type": "count",
+      "aggregation": "sum",
+      "decimals": null,
+      "spatial_coverage": [
+        "ECU"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": "Practica",
+      "documented_count": null
+    },
+    {
+      "id": 203,
+      "name": "Restoration priority areas (Ecuador module)",
+      "unit": "ha",
+      "subtopic": 4,
+      "country": "ECU",
+      "resource": {
+        "type": "feature",
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_04_area_prioritaria_de_restauracion_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0
+      },
+      "value_type": "categorical",
+      "aggregation": "sum",
+      "decimals": null,
+      "spatial_coverage": [
+        "ECU"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": "Prioridad",
+      "documented_count": null
+    },
+    {
+      "id": 204,
+      "name": "Bioclimates (Ecuador module)",
+      "unit": "ha",
+      "subtopic": 8,
+      "country": "ECU",
+      "resource": {
+        "type": "feature",
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_05_bioclimas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0
+      },
+      "value_type": "categorical",
+      "aggregation": "sum",
+      "decimals": null,
+      "spatial_coverage": [
+        "ECU"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": "Bioclima",
+      "documented_count": 7
+    },
+    {
+      "id": 206,
+      "name": "Carbon by forest stratum (Ecuador module)",
+      "unit": "ha",
+      "subtopic": 4,
+      "country": "ECU",
+      "resource": {
+        "type": "feature",
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_07_carbono_por_estrato_de_bosque_ecu_mod/FeatureServer",
+        "layer_id": 0
+      },
+      "value_type": "categorical",
+      "aggregation": "sum",
+      "decimals": null,
+      "spatial_coverage": [
+        "ECU"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [
+        {
+          "text": "Carbono_t_ha is the mean carbon stock of each forest stratum in tonnes per hectare, not a measurement per polygon. Total carbon for an area is not computed by this service."
+        }
+      ],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": "Estrato",
+      "documented_count": null
+    },
+    {
+      "id": 208,
+      "name": "Deforestation 2020-2022 (Ecuador module)",
+      "unit": "ha",
+      "subtopic": 4,
+      "country": "ECU",
+      "resource": {
+        "type": "feature",
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_09_deforestacion_2020_2022_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0
+      },
+      "value_type": "categorical",
+      "aggregation": "sum",
+      "decimals": null,
+      "spatial_coverage": [
+        "ECU"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": "Transicion",
+      "documented_count": 7
+    },
+    {
+      "id": 209,
+      "name": "Hydrographic Demarcations (Ecuador module)",
+      "unit": "ha",
+      "subtopic": 1,
+      "country": "ECU",
+      "resource": {
+        "type": "feature",
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_10_demarcaciones_hidrograficas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0
+      },
+      "value_type": "categorical",
+      "aggregation": "sum",
+      "decimals": null,
+      "spatial_coverage": [
+        "ECU"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": "Nombre",
+      "documented_count": null
+    },
+    {
+      "id": 210,
+      "name": "Ecosystems (Ecuador module)",
+      "unit": "ha",
+      "subtopic": 5,
+      "country": "ECU",
+      "resource": {
+        "type": "feature",
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_11_ecosistemas_del_modulo_ecuador/FeatureServer",
+        "layer_id": 0
+      },
+      "value_type": "categorical",
+      "aggregation": "sum",
+      "decimals": null,
+      "spatial_coverage": [
+        "ECU"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": "Ecosistema",
+      "documented_count": null
+    },
+    {
+      "id": 211,
+      "name": "Geomorphology (Ecuador module)",
+      "unit": "ha",
+      "subtopic": 1,
+      "country": "ECU",
+      "resource": {
+        "type": "feature",
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_12_geomorfologia_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0
+      },
+      "value_type": "categorical",
+      "aggregation": "sum",
+      "decimals": null,
+      "spatial_coverage": [
+        "ECU"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": "Relieve",
+      "documented_count": null
+    },
+    {
+      "id": 214,
+      "name": "Flooding Regime (Ecuador module)",
+      "unit": "ha",
+      "subtopic": 5,
+      "country": "ECU",
+      "resource": {
+        "type": "feature",
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_15_regimen_de_inundacion_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0
+      },
+      "value_type": "categorical",
+      "aggregation": "sum",
+      "decimals": null,
+      "spatial_coverage": [
+        "ECU"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": "Regimen",
+      "documented_count": 7
+    },
+    {
+      "id": 217,
+      "name": "Thermotypes (Ecuador module)",
+      "unit": "ha",
+      "subtopic": 8,
+      "country": "ECU",
+      "resource": {
+        "type": "feature",
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_18_termotipos_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0
+      },
+      "value_type": "categorical",
+      "aggregation": "sum",
+      "decimals": null,
+      "spatial_coverage": [
+        "ECU"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": "Termotipo",
+      "documented_count": 7
+    },
+    {
+      "id": 218,
+      "name": "Climate Types (Ecuador module)",
+      "unit": "ha",
+      "subtopic": 8,
+      "country": "ECU",
+      "resource": {
+        "type": "feature",
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_19_ecu_mod_tipos_de_clima/FeatureServer",
+        "layer_id": 0
+      },
+      "value_type": "categorical",
+      "aggregation": "sum",
+      "decimals": null,
+      "spatial_coverage": [
+        "ECU"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": "TIPO_CLIMA",
+      "documented_count": null
+    },
+    {
+      "id": 219,
+      "name": "Biogeographic Units (Ecuador module)",
+      "unit": "ha",
+      "subtopic": 5,
+      "country": "ECU",
+      "resource": {
+        "type": "feature",
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_20_unidades_biogeograficas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0
+      },
+      "value_type": "categorical",
+      "aggregation": "sum",
+      "decimals": null,
+      "spatial_coverage": [
+        "ECU"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": "Sector_bio",
+      "documented_count": 7
+    },
+    {
+      "id": 222,
+      "name": "Water Recharge Zone (Ecuador module)",
+      "unit": "ha",
+      "subtopic": 1,
+      "country": "ECU",
+      "resource": {
+        "type": "feature",
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_23_zona_de_recarga_hidrica_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0
+      },
+      "value_type": "categorical",
+      "aggregation": "sum",
+      "decimals": null,
+      "spatial_coverage": [
+        "ECU"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": "Nombre",
+      "documented_count": null
+    }
+  ]
+}
