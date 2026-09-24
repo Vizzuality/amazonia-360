@@ -20,7 +20,7 @@ resource "github_repository_environment" "environment" {
 }
 
 resource "github_actions_environment_variable" "environment_variable" {
-  for_each      = var.environment_variable_map
+  for_each      = { for k, v in var.environment_variable_map : k => v if v != "" }
   environment   = var.github_environment
   repository    = var.repo_name
   variable_name = each.key
