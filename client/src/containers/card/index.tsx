@@ -13,7 +13,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { LuInfo, LuPen, LuDownload } from "react-icons/lu";
 
 import { formatNumber } from "@/lib/formats";
-import { useGetIndicatorsId } from "@/lib/indicators";
+import { CountryModules, useGetIndicatorsId } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
 import { Indicator } from "@/types/indicator";
@@ -202,9 +202,17 @@ export function CardControls({
   );
 }
 
-export function CardInfo({ ids, className }: { ids: Indicator["id"][]; className?: string }) {
+export function CardInfo({
+  ids,
+  className,
+  country,
+}: {
+  ids: Indicator["id"][];
+  className?: string;
+  country?: CountryModules;
+}) {
   const locale = useLocale();
-  const indicator = useGetIndicatorsId(ids[0], locale);
+  const indicator = useGetIndicatorsId(ids[0], locale, country);
 
   if (!indicator) return null;
 

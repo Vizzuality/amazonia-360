@@ -1,9 +1,7 @@
 import { useMemo } from "react";
 
-import { useLocale } from "next-intl";
-
 import { getImageryScalar } from "@/lib/imagery";
-import { useGetIndicatorsId, useQueryImageryTileId } from "@/lib/indicators";
+import { useQueryImageryTileId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 import { cn } from "@/lib/utils";
 
@@ -22,17 +20,15 @@ export interface NumericImageryTileIndicatorsProps extends Indicator {
 
 export const NumericImageryTileIndicators = ({
   id,
+  unit,
   location,
   resource,
   description_short,
   isPdf,
 }: NumericImageryTileIndicatorsProps) => {
-  const locale = useLocale();
   const GEOMETRY = useLocationGeometry(location);
 
   const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();
-
-  const indicator = useGetIndicatorsId(id, locale);
 
   const query = useQueryImageryTileId({ id, resource, type: "numeric", geometry: GEOMETRY });
 
@@ -59,7 +55,7 @@ export const NumericImageryTileIndicators = ({
       )}
       <CardWidgetNumber
         value={VALUE ?? "n.d."}
-        unit={!!VALUE ? indicator?.unit : undefined}
+        unit={VALUE ? unit : undefined}
         className={cn({ "grow-0": isPdf })}
       />
     </CardLoader>

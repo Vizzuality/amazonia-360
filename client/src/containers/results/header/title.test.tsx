@@ -14,6 +14,8 @@ vi.mock("@/app/(frontend)/store", () => ({
   })),
 }));
 
+vi.mock("@/lib/report/use-report-country", () => ({ useReportCountry: () => null }));
+
 /**
  * Override the global next-intl mock so that `field-character-count` interpolates
  * its `current` and `max` params, allowing us to verify the rendered count text.

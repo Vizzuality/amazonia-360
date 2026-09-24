@@ -9,6 +9,7 @@ import { Topic } from "@/types/topic";
 
 import { useFormTopics } from "@/app/(frontend)/store";
 
+import { IndicatorScopeBadge } from "@/containers/indicators/scope-badge";
 import Info from "@/containers/info";
 import { VisualizationType } from "@/containers/results/sidebar/indicators/list/visualization-types";
 
@@ -49,8 +50,9 @@ export function IndicatorsItem({
             <Button
               variant="ghost"
               aria-label={indicator.name}
-              className="h-auto w-full justify-start py-1 pr-14 pl-2 font-medium"
+              className="h-auto w-full items-start justify-start gap-1.5 py-1 pr-14 pl-2 font-medium"
             >
+              <IndicatorScopeBadge country={indicator.country} className="mt-0.5" />
               <span className="text-left text-wrap">{indicator.name}</span>
             </Button>
           </PopoverTrigger>
@@ -113,8 +115,10 @@ export function IndicatorsItem({
           </div>
         </div>
 
+        {/* The elbow lines up with the indicator name, not the scope badge: the name sits at
+            the button's 1px border + pl-2 + the badge's w-8 + gap-1.5. */}
         {!!selectedIndicator && (
-          <div className="flex items-center space-x-2 pl-2.5">
+          <div className="flex items-center space-x-2 pl-[47px]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="7"

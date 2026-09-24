@@ -64,12 +64,13 @@ export const ReportResultsContentIndicatorItem = ({
         key={`${topic.id}-${indicator_id}-${type}`}
         id={id}
         indicatorId={indicator_id}
+        topicId={topic.topic_id}
         type={type}
         editable={editable}
         basemapId={type === "map" ? indicatorView.basemapId : undefined}
       />
     );
-  }, [id, topic.id, indicator_id, type, editable, indicatorBasemap]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [id, topic.id, topic.topic_id, indicator_id, type, editable, indicatorBasemap]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div

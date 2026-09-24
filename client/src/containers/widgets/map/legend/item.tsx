@@ -1,9 +1,5 @@
 import { useMemo } from "react";
 
-import { useLocale } from "next-intl";
-
-import { useGetIndicatorsId } from "@/lib/indicators";
-
 import {
   Indicator,
   ResourceFeature,
@@ -17,10 +13,13 @@ import InfoControl from "@/components/map/legend/controls/info";
 import { FeatureLegend } from "@/components/map/legend/types/feature";
 import { ImageryLegend } from "@/components/map/legend/types/imagery";
 
-export const LegendItem = ({ id, interactive }: { id: Indicator["id"]; interactive?: boolean }) => {
-  const locale = useLocale();
-  const indicator = useGetIndicatorsId(id, locale);
-
+export const LegendItem = ({
+  indicator,
+  interactive,
+}: {
+  indicator?: Indicator;
+  interactive?: boolean;
+}) => {
   const LEGEND = useMemo(() => {
     if (!indicator) return null;
     switch (indicator.resource.type) {

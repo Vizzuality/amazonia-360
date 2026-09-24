@@ -1,8 +1,6 @@
 import { useMemo } from "react";
 
-import { useLocale } from "next-intl";
-
-import { useGetIndicatorsId, useQueryFeatureId } from "@/lib/indicators";
+import { useQueryFeatureId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 import { cn } from "@/lib/utils";
 
@@ -21,17 +19,15 @@ export interface NumericIndicatorsProps extends Indicator {
 
 export const NumericIndicatorsFeature = ({
   id,
+  unit,
   location,
   resource,
   description_short,
   isPdf,
 }: NumericIndicatorsProps) => {
-  const locale = useLocale();
   const GEOMETRY = useLocationGeometry(location);
 
   const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();
-
-  const indicator = useGetIndicatorsId(id, locale);
 
   const query = useQueryFeatureId({ id, resource, type: "numeric", geometry: GEOMETRY });
 
@@ -62,7 +58,7 @@ export const NumericIndicatorsFeature = ({
       {isPdf && !!description_short && (
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{description_short}</p>
       )}
-      <CardWidgetNumber value={VALUE} unit={indicator?.unit} className={cn({ "grow-0": isPdf })} />
+      <CardWidgetNumber value={VALUE} unit={unit} className={cn({ "grow-0": isPdf })} />
     </CardLoader>
   );
 };

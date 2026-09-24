@@ -1,9 +1,11 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { useForm } from "react-hook-form";
 import ReactMarkdown from "react-markdown";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSetAtom } from "jotai";
@@ -12,6 +14,12 @@ import { LuArrowLeft } from "react-icons/lu";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { getCountryCodes } from "@/lib/country";
+import { useGetIndicators } from "@/lib/indicators";
+import {
+  getIndicatorSubstitutionMap,
+  getSubstitutedIndicatorId,
+} from "@/lib/indicators/substitution";
 import { useSaveReport } from "@/lib/report";
 import { useGetDefaultTopics } from "@/lib/topics";
 import { cn } from "@/lib/utils";
@@ -24,7 +32,9 @@ import Topics from "@/containers/report/generate/topics";
 import { Form } from "@/components/ui/form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
+import { getPathname } from "@/i18n/navigation-client";
+import { useCountry } from "@/i18n/use-country";
 
 export type TopicsFormValues = {
   id: number;
@@ -38,6 +48,7 @@ export const formSchema = z.object({
 export default function ReportGenerate({ heading = "create" }: { heading?: "select" | "create" }) {
   const t = useTranslations();
   const locale = useLocale();
+  const country = useCountry();
 
   const [location] = useSyncLocation();
 
@@ -45,8 +56,14 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
   const setReportPanel = useSetAtom(reportPanelAtom);
 
   const { data: topicsData } = useGetDefaultTopics({ locale });
+  const { data: indicatorsData } = useGetIndicators(locale, undefined, country);
 
   const router = useRouter();
+
+  const substitutionMap = useMemo(
+    () => getIndicatorSubstitutionMap(indicatorsData ?? []),
+    [indicatorsData],
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,6 +73,8 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
   });
 
   const saveMutation = useSaveReport();
+
+  const countries = getCountryCodes(country);
 
   function generateReportData(values: z.infer<typeof formSchema>) {
     const topics = values.topics
@@ -68,6 +87,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
             return {
               ...indicator,
               id: `${indicator.id}-${crypto.randomUUID()}`,
+              indicator_id: getSubstitutedIndicatorId(indicator.indicator_id, substitutionMap),
             };
           }),
       }))
@@ -78,6 +98,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
       description: null,
       topics: topics || [],
       location: location,
+      country: countries.length > 0 ? countries : null,
     };
   }
 
@@ -87,7 +108,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
     toast.promise(
       saveMutation.mutateAsync(data, {
         onSuccess: (report) => {
-          router.push(`/reports/${report.id}`);
+          router.push(getPathname({ href: `/reports/${report.id}`, locale }));
         },
       }),
       {

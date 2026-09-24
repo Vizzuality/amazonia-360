@@ -28,6 +28,7 @@ export default function PfdGeographicContext() {
 
   const { id: reportId } = useParams();
   const { data: reportData } = useReport({ id: `${reportId}` });
+  const country = reportData?.country ?? null;
 
   const DATA = useMemo(() => {
     if (!data) return null;
@@ -39,7 +40,7 @@ export default function PfdGeographicContext() {
   );
 
   const map = data?.[0].default_visualization.find((topic) => topic.type === "map");
-  const mapIndicator = useGetIndicatorsId(map?.indicator_id || -1, locale);
+  const mapIndicator = useGetIndicatorsId(map?.indicator_id || -1, locale, country);
 
   if (!data) return null;
 
@@ -56,6 +57,7 @@ export default function PfdGeographicContext() {
                 locale={locale}
                 id={indicator.indicator_id}
                 location={reportData.location}
+                country={country}
               />
             ))}
         </div>

@@ -16,10 +16,11 @@ import ImageryDataRow from "./imagery-data-row";
 import { DataRowProps } from "./types";
 
 export default function DataRow({ id, locale }: DataRowProps) {
-  const indicator = useGetIndicatorsId(id, locale);
-
   const { id: reportId } = useParams();
   const { data: reportData } = useReport({ id: `${reportId}` });
+  const country = reportData?.country ?? null;
+
+  const indicator = useGetIndicatorsId(id, locale, country);
 
   const { onReady } = useLoad();
 
@@ -32,13 +33,18 @@ export default function DataRow({ id, locale }: DataRowProps) {
   return (
     <IndicatorProvider onLoad={handleLoad}>
       {indicator.resource.type === "component" && reportData?.location && (
-        <ComponentDataRow id={id} locale={locale} location={reportData.location} />
+        <ComponentDataRow
+          id={id}
+          locale={locale}
+          location={reportData.location}
+          country={country}
+        />
       )}
       {indicator.resource.type === "imagery" && reportData?.location && (
-        <ImageryDataRow id={id} locale={locale} location={reportData.location} />
+        <ImageryDataRow id={id} locale={locale} location={reportData.location} country={country} />
       )}
       {indicator.resource.type === "feature" && reportData?.location && (
-        <FeatureDataRow id={id} locale={locale} location={reportData.location} />
+        <FeatureDataRow id={id} locale={locale} location={reportData.location} country={country} />
       )}
     </IndicatorProvider>
   );

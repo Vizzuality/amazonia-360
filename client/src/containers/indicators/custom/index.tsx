@@ -3,6 +3,7 @@ import React, { createElement, useCallback } from "react";
 import { useLocale } from "next-intl";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
+import { useReportCountry } from "@/lib/report/use-report-country";
 
 import { Indicator } from "@/types/indicator";
 
@@ -22,7 +23,8 @@ type COMPONENT_INDICATORS_KEYS = keyof typeof COMPONENT_INDICATORS;
 
 export const CustomIndicators = ({ id }: { id: Indicator["id"] }) => {
   const locale = useLocale();
-  const indicator = useGetIndicatorsId(id, locale);
+  const country = useReportCountry();
+  const indicator = useGetIndicatorsId(id, locale, country);
 
   const { location } = useFormLocation();
 

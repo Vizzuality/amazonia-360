@@ -1,11 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 
 import ReactMarkdown from "react-markdown";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
+import { useGetDefaultIndicators } from "@/lib/indicators";
+import { useReportCountry } from "@/lib/report/use-report-country";
+
+import { useSyncIndicatorsScopeFilter } from "@/app/(frontend)/store";
+
+import { getIndicatorScopeCounts, IndicatorsFilterTabs } from "@/containers/indicators/filter-tabs";
 import SidebarIndicatorsFooter from "@/containers/results/sidebar/indicators/footer";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -15,6 +21,16 @@ import TopicsList from "./topics";
 
 export default function IndicatorsSidebarContent() {
   const t = useTranslations();
+  const locale = useLocale();
+  const country = useReportCountry();
+  const [scopeFilter, setScopeFilter] = useSyncIndicatorsScopeFilter();
+
+  const { data: indicatorsData } = useGetDefaultIndicators({ locale, country });
+  const scopeCounts = useMemo(
+    () => getIndicatorScopeCounts(indicatorsData ?? []),
+    [indicatorsData],
+  );
+
   return (
     <div className="relative flex grow flex-col overflow-hidden">
       <div className="space-y-4 px-6">
@@ -22,6 +38,13 @@ export default function IndicatorsSidebarContent() {
           <ReactMarkdown>{t("report-results-sidebar-indicators-description")}</ReactMarkdown>
         </div>
         <Search />
+        {!!country && !!indicatorsData?.length && (
+          <IndicatorsFilterTabs
+            value={scopeFilter}
+            onValueChange={setScopeFilter}
+            counts={scopeCounts}
+          />
+        )}
       </div>
 
       <div className="relative flex grow flex-col overflow-hidden">

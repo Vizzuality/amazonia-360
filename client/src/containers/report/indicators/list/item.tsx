@@ -9,6 +9,7 @@ import { Indicator } from "@/types/indicator";
 
 import { useSyncIndicators, useSyncIndicatorsSettings } from "@/app/(frontend)/store";
 
+import { IndicatorScopeBadge } from "@/containers/indicators/scope-badge";
 import Info from "@/containers/info";
 
 import {
@@ -23,7 +24,12 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/compone
 
 type IndicatorsItemProps = Indicator;
 
-export default function IndicatorsItem({ id, name, description_short }: IndicatorsItemProps) {
+export default function IndicatorsItem({
+  id,
+  name,
+  description_short,
+  country,
+}: IndicatorsItemProps) {
   const [indicators, setIndicators] = useSyncIndicators();
   const [, setIndicatorsSettings] = useSyncIndicatorsSettings();
 
@@ -57,11 +63,12 @@ export default function IndicatorsItem({ id, name, description_short }: Indicato
       <button
         type="button"
         className={cn(
-          "flex grow space-x-2.5 rounded-xs p-1 px-2 text-left text-sm font-medium text-gray-400 transition-colors duration-300 ease-in-out hover:bg-blue-50",
+          "flex grow items-center space-x-2.5 rounded-xs p-1 px-2 text-left text-sm font-medium text-gray-400 transition-colors duration-300 ease-in-out hover:bg-blue-50",
         )}
         onClick={() => handleChangeIndicator(!indicators?.includes(id))}
       >
-        {name}
+        <IndicatorScopeBadge country={country} />
+        <span>{name}</span>
       </button>
       <div className="flex items-center gap-1">
         <Tooltip delayDuration={100}>

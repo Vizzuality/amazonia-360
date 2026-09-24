@@ -1,11 +1,18 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { useLocale, useTranslations } from "next-intl";
 
 import { useGetDefaultIndicators } from "@/lib/indicators";
+import { useReportCountry } from "@/lib/report/use-report-country";
 import { cn } from "@/lib/utils";
 
 import { Subtopic, Topic } from "@/types/topic";
+
+import { useSyncIndicatorsScopeFilter } from "@/app/(frontend)/store";
+
+import { getFilteredIndicators } from "@/containers/indicators/filter-tabs";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -20,6 +27,8 @@ export const IndicatorsList = ({
 }) => {
   const locale = useLocale();
   const t = useTranslations();
+  const country = useReportCountry();
+  const [scopeFilter] = useSyncIndicatorsScopeFilter();
 
   const {
     data: indicatorsData,
@@ -28,7 +37,13 @@ export const IndicatorsList = ({
   } = useGetDefaultIndicators({
     subtopicId: subtopicId,
     locale,
+    country,
   });
+
+  const filteredIndicators = useMemo(
+    () => getFilteredIndicators(indicatorsData ?? [], country ? scopeFilter : "all"),
+    [indicatorsData, scopeFilter, country],
+  );
 
   return (
     <ul
@@ -46,7 +61,7 @@ export const IndicatorsList = ({
         </>
       )}
 
-      {!isFetching && isFetched && !indicatorsData?.length && (
+      {!isFetching && isFetched && !filteredIndicators.length && (
         <p className="text-muted-foreground p-2 text-sm font-medium">
           {t("grid-sidebar-grid-filters-no-indicators-available")}
         </p>
@@ -54,8 +69,8 @@ export const IndicatorsList = ({
 
       {!isFetching &&
         isFetched &&
-        !!indicatorsData?.length &&
-        indicatorsData?.map((indicator) => {
+        !!filteredIndicators.length &&
+        filteredIndicators.map((indicator) => {
           return (
             <li key={`${indicator.id}-${subtopicId}`}>
               <IndicatorsItem topicId={topicId} indicator={indicator} />
