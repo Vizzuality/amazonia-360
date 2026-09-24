@@ -7,7 +7,50 @@ they were meant to, and take a second set of timings for change 5, the ArcGIS ou
 Same setup as round 1: Claude Desktop, questions in Spanish, answers checked against
 `mcp/var/calls.jsonl` (round 2 starts at line 15) and the catalogue.
 
-Status: in progress.
+Status: round finished.
+
+## Conclusions
+
+**What was changed in the data the MCP returns worked; what was changed only in its instructions
+did not.**
+
+| Change | Where it acts | Effect in round 2 |
+|---|---|---|
+| 1. Unexpected errors with their message | Tool result | Not exercised: no call failed |
+| 2. Meaning of empty and unclassified results | Caveat in each result | Fixed the empty case (Q5). Unclassified hectares are now stated as "not a class", but a guess still follows (Q3, Q9) |
+| 3. Count-mismatch warning | Catalogue data | No warning shown, none expected |
+| 4a. Quote caveats without reassurance | Server instructions | No effect: "Tena is clearly inside" again, word for word (Q2); the provisional-boundary caveat dropped in favour of "part falls in Peru" (Q6, Q11) |
+| 4b. No totals or bounds across indicators | Server instructions | No effect: direct sum and ranges again (Q11); a cross-layer conclusion (Q9) |
+
+The server `instructions` field is text the client may or may not put in front of the model, and
+how much weight it gets is up to the client. Claude Desktop's behaviour here is indistinguishable
+from not having read it. A caveat inside the result is read every time, and it did change what the
+model stated. The rules that matter should travel in the results, not only in the instructions:
+for example a caveat on every area result saying the figure must not be added to or bounded with
+another indicator's. For the front end, where Amazonia 360 writes the system prompt itself, the
+instructions will be ours to place and this matters less.
+
+**No ArcGIS outlier in round 2.** Every call finished in under 9 s, on boxes more than twice the
+size of round 1's. Across both rounds and the reruns, 12 successful `area_by_category` calls from
+Desktop: one took a minute (round 1, Q3), one took 10.3 s, the rest under 9 s. One outlier in
+about twenty area queries counting the reruns by hand is not enough to size a retry or a timeout
+for change 5; it needs the repeated timed runs listed in round 1.
+
+**Area size matters less than the classes touched.** Doubling the box raised the ecosystems time
+from about 3.4 s (rerun) to 4.1 s and left the climate types vertices unchanged at 1,875: ArcGIS
+returns whole features, so the cost is set by which features the box touches.
+
+**Answers across rounds cannot be compared number by number.** Desktop drew a different box each
+round (39,876 ha, then 89,704 ha), from the same place names. A repeatable evaluation needs fixed
+areas passed as GeoJSON, not place names.
+
+## Proposed next steps
+
+1. Move the cross-indicator rule and the "quote, do not weigh" rule into the results as caveats,
+   and repeat Q2, Q6, Q9 and Q11 to see whether that holds where the instructions did not.
+2. For change 5, a scheduled timing run: the same fixed boxes against each layer every hour for a
+   day, to measure how often ArcGIS takes a minute.
+3. For the gatekeeper and any later evaluation, fixed GeoJSON areas instead of place names.
 
 ## Calls
 
@@ -23,6 +66,7 @@ Status: in progress.
 | 8 | Hectares of each climate type around Puyo | `area_by_category`, 218 | 2 classes, 89,704 ha (100 %) | 0.63 s | 1,875 | 0.70 s |
 | 9 | Hectares of each forest stratum around Puyo | `area_by_category`, 206 | 2 strata, 41,323 ha (46 %) | 5.09 s (2.87 in ArcGIS) | 333,834 | 6.66 s |
 | 10 | Ecosystems around Iquitos (Peru) | `categories_in_area`, 210 | refused: outside the module | 0 ms, no ArcGIS call | – | 0 ms |
+| 11 | Total hectares of forest and floodable zones around Nuevo Rocafuerte | `area_by_category`, 206; 214 reused from question 6 | a direct sum shown, then two ranges | 8.93 s (5.05 in ArcGIS) | 543,521 | 10.3 s |
 
 ## Findings
 
@@ -76,6 +120,12 @@ Status: in progress.
   NO BOSQUE class, but the model could not know that from what the MCP returned.
 
 - **Q10, no regression.** Refused before ArcGIS, explained plainly, no search elsewhere.
+
+- **Q11, the new rule did not hold.** The model again declined "just adding them" and explained
+  the overlap, with a good reason (moretales are flooded palm swamps). But it put a direct sum in
+  the table (130,382 ha), gave the same kind of bounds as round 1 (77,740 ha to the size of the box,
+  and 77,740 to 87,285 ha for one class), and repeated that part of the box is in Peru. The
+  instruction ruling out totals and bounds built from two indicators had no visible effect.
 
 ## What each question checks this time
 
