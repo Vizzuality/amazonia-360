@@ -8,7 +8,7 @@ import {
   routedPathname,
   stripCountry,
   withCountry,
-} from "./country";
+} from "./index";
 
 const LOCALES = ["en", "es", "pt"] as const;
 

@@ -17,7 +17,7 @@ const {
   getCountryCoverageRatio,
   getCountryCoveragePercent,
   isCountryCoverageDominant,
-} = await import("@/lib/country-coverage");
+} = await import("@/lib/country/coverage");
 
 const getFeaturesMock = vi.mocked(getFeatures);
 const geodeticAreaExecute = vi.mocked(geodeticAreaOperator.execute);

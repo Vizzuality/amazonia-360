@@ -2,7 +2,7 @@ import {
   getIndicatorCounterpartMap,
   getIndicatorSubstitutionMap,
   getSubstitutedIndicatorId,
-} from "@/lib/report-indicator-substitution";
+} from "@/lib/indicators/substitution";
 
 import { Indicator } from "@/types/indicator";
 

@@ -10,7 +10,7 @@ import { Report } from "@/payload-types";
 vi.mock("next/navigation", () => ({ useParams: vi.fn() }));
 vi.mock("@/services/sdk", () => ({ sdk: { findByID: vi.fn() } }));
 
-const { useReportCountry } = await import("@/lib/use-report-country");
+const { useReportCountry } = await import("@/lib/report/use-report-country");
 const { sdk } = await import("@/services/sdk");
 
 const useParamsMock = vi.mocked(useParams);
