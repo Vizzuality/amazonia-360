@@ -1,0 +1,2 @@
+class HandlerError(Exception):
+    pass
