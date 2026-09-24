@@ -190,26 +190,32 @@ and have to be curated per layer. That is content work, and it is part of phase 
 
 ### Catalogue intake from the CMS (phase 2)
 
-Decision 5 of the 16 September note stands: the MCP does not read Payload. Payload calls the MCP
-when an editor publishes, and the MCP keeps its own copy. `indicator.schema.json` is the format of
-that call, not Payload's REST response; the CMS maps its document to it (table in `mcp/README.md`).
+Decision 5 of the 16 September note stands: the MCP does not read Payload. The CMS sends the
+catalogue to the MCP, and the MCP keeps its own copy.
 
-A callback alone can drift, so the design covers the four ways it does:
+*Changed on 24 September 2026:* the first version of this section sent one indicator per
+publish, wrapped in an envelope with `event` and `updated_at`, and needed separate hooks for
+delete and unpublish plus a reconciliation job. The user chose instead to send **the whole
+published catalogue on every change**. It costs a larger payload (about 12 KB for the 13
+Ecuador layers, a few hundred KB for the whole regional catalogue, sent only when something
+changes) and removes most of the ways a callback drifts:
 
-| Drift | Cover |
+| Drift | With the whole catalogue |
 |---|---|
-| The MCP is down when an editor publishes. `afterChange` runs after Payload has committed, so the publish cannot be undone | The editor sees the failure and the indicator is marked pending; a reconciliation job resends it |
-| Two publishes arrive out of order | Every call carries `updated_at`; the MCP applies it only if newer than what it holds, so a replay is harmless |
-| Unpublish or delete | Hooks on `afterDelete` and on `_status` changes send `{"event": "delete"}` |
-| A change that bypasses the editor (seed, migration) | The same reconciliation: the MCP exposes the `updated_at` it holds per indicator and the CMS job resends what differs |
+| Two changes arrive out of order | Each export carries `generated_at`; the MCP keeps the newest. Nothing is merged, so versions never mix |
+| Delete or unpublish | No event needed: the indicator stops appearing |
+| The MCP is down during a change | The next export carries the full state and corrects it |
+| A change that bypasses the editor (seed, migration) | A scheduled export, for example daily, as the safety net |
 
-The envelope, separate from the indicator schema:
+The document is `examples/catalogue.json`, validated by `catalogue.schema.json`: `locale`,
+`generated_at` and `indicators`, published only. It is not Payload's REST response; the CMS maps
+each document to it (table in `mcp/README.md`). The CMS's ArcGIS sync job must trigger an export
+too, not only the editor. The CMS side should test its export against the schema, since that is
+what catches a drifting mapping.
 
-```json
-{ "event": "upsert", "updated_at": "2026-09-24T14:48:33Z", "indicator": { } }
-```
-
-The endpoint, the reconciliation and storage in the MCP's database are phase 2.
+On the MCP side the local files already go through the same path: they are joined into one
+catalogue document and validated by `load_document`, which is what the endpoint will call. The
+endpoint and storage in the MCP's database are phase 2.
 
 ## Tools
 

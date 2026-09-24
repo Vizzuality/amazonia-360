@@ -1,8 +1,9 @@
 """The catalogue seam: the only code that knows where indicator metadata comes from.
 
-Today it reads two files beside this module: ``ecuador.json``, curated by hand, and
-``ecuador.snapshot.json``, written by ``amazonia360-mcp-catalogue sync``. When the CMS
-serves the contract, only the loading below changes.
+Today it joins two files beside this module into one catalogue document:
+``ecuador.json``, curated by hand, and ``ecuador.snapshot.json``, written by
+``amazonia360-mcp-catalogue sync``. When the CMS exports the catalogue, the same
+document arrives whole and goes through ``load_document`` unchanged.
 """
 
 import json
@@ -10,7 +11,11 @@ from functools import cache
 from importlib.resources import files
 from typing import Any
 
-from mcp_server.catalogue.models import CuratedIndicator, IndicatorMetadata
+from mcp_server.catalogue.models import (
+    CatalogueDocument,
+    CuratedIndicator,
+    IndicatorMetadata,
+)
 
 CURATED_FILE = "ecuador.json"
 SNAPSHOT_FILE = "ecuador.snapshot.json"
@@ -21,9 +26,14 @@ class CatalogueError(Exception):
     pass
 
 
-def build_catalogue(
+def load_document(document: dict[str, Any]) -> CatalogueDocument:
+    """Validate a whole catalogue document: the CMS export, or the local join."""
+    return CatalogueDocument.model_validate(document)
+
+
+def build_document(
     curated: dict[str, Any], snapshot: dict[str, Any]
-) -> tuple[IndicatorMetadata, ...]:
+) -> CatalogueDocument:
     _require_keys("curated catalogue", curated, {"locale", "indicators"})
     _require_keys("snapshot", snapshot, {"generated_at", "indicators"})
     if curated.get("locale") != LOCALE:
@@ -32,22 +42,38 @@ def build_catalogue(
             f"got {curated.get('locale')!r}."
         )
     syncs: dict[str, Any] = snapshot["indicators"]
-    seen: set[int] = set()
-    indicators = []
+    ids: set[str] = set()
+    joined = []
     for raw in curated["indicators"]:
         # Validated alone first so that a hand-written sync group is rejected.
-        indicator_id = CuratedIndicator.model_validate(raw).id
-        if indicator_id in seen:
+        indicator_id = str(CuratedIndicator.model_validate(raw).id)
+        if indicator_id in ids:
             raise CatalogueError(f"Indicator {indicator_id} appears twice.")
-        seen.add(indicator_id)
-        sync = syncs.get(str(indicator_id), {})
-        indicators.append(IndicatorMetadata.model_validate({**raw, "sync": sync}))
-    orphans = set(syncs) - {str(i) for i in seen}
+        ids.add(indicator_id)
+        joined.append({**raw, "sync": syncs.get(indicator_id, {})})
+    orphans = set(syncs) - ids
     if orphans:
         raise CatalogueError(
             f"The snapshot has entries for unknown indicators: {sorted(orphans)}."
         )
-    return tuple(indicators)
+    return load_document(
+        {
+            "locale": curated["locale"],
+            "generated_at": snapshot["generated_at"],
+            "indicators": joined,
+        }
+    )
+
+
+def build_catalogue(
+    curated: dict[str, Any], snapshot: dict[str, Any]
+) -> tuple[IndicatorMetadata, ...]:
+    return tuple(build_document(curated, snapshot).indicators)
+
+
+@cache
+def local_document() -> CatalogueDocument:
+    return build_document(load_curated(), _read(SNAPSHOT_FILE))
 
 
 def _require_keys(what: str, document: dict[str, Any], keys: set[str]) -> None:
@@ -70,7 +96,7 @@ def _read(name: str) -> dict[str, Any]:
 # Lazy, so the sync command can import this package before any snapshot exists.
 @cache
 def _catalogue() -> dict[int, IndicatorMetadata]:
-    return {i.id: i for i in build_catalogue(load_curated(), _read(SNAPSHOT_FILE))}
+    return {i.id: i for i in local_document().indicators}
 
 
 def get_indicator_metadata(indicator_id: int) -> IndicatorMetadata | None:

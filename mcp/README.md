@@ -40,27 +40,36 @@ The indicators live in three files in `src/mcp_server/catalogue/`:
 |---|---|---|
 | `ecuador.json` | Everything a person decides: value type, `ai_answerable`, caveats, provenance | By hand |
 | `ecuador.snapshot.json` | The contract's `sync` group, read from ArcGIS | `amazonia360-mcp-catalogue sync` |
-| `indicator.schema.json` | JSON Schema of one indicator after the two are joined | `amazonia360-mcp-catalogue schema` |
+| `catalogue.schema.json` | JSON Schema of the whole catalogue document | `amazonia360-mcp-catalogue schema` |
+
+The server joins the first two into one catalogue document. `examples/catalogue.json` is
+that document, committed: it is what the CMS will send.
 
 ```bash
-uv run amazonia360-mcp-catalogue sync     # re-read ArcGIS; a failing layer becomes unavailable
-uv run amazonia360-mcp-catalogue schema   # after changing catalogue/models.py
-uv run amazonia360-mcp-catalogue export   # the joined catalogue, for the CMS team to compare
+uv run amazonia360-mcp-catalogue sync               # re-read ArcGIS; also rewrites the example
+uv run amazonia360-mcp-catalogue schema             # after changing catalogue/models.py
+uv run amazonia360-mcp-catalogue export --out examples/catalogue.json   # after editing ecuador.json
 ```
 
 `sync` and `schema` write into the source tree, so run them from a checkout, not from an
-installed package. The live suite fails when the snapshot is behind ArcGIS.
+installed package. Tests fail when the schema or the example is stale; the live suite fails
+when the snapshot is behind ArcGIS.
 
-`ecuador.json` spells out every field, nulls included, on purpose: it is the image of what
-the CMS will send, so a missing field there means a field nobody has decided about yet.
+`ecuador.json` spells out every field, nulls included, on purpose: a null there is a field
+nobody has decided about yet. Today every `provenance` field is null for that reason; the
+CMS is expected to fill them.
 
 ### What the CMS sends
 
-The schema is the MCP's intake format: what the CMS posts to the MCP when an editor
-publishes an indicator, in locale `en`. It is not Payload's REST response. The CMS maps its
-document to it:
+On every change to the catalogue (create, edit, publish, unpublish, delete, and each ArcGIS
+sync) the CMS sends the whole published catalogue, drafts excluded, in locale `en`, shaped as
+`examples/catalogue.json` and validated by `catalogue.schema.json`. Sending everything each
+time is what keeps the two from drifting: a missed or out-of-order export is corrected by the
+next one, and a deleted indicator simply stops appearing.
 
-| Payload document (`?locale=en&depth=0`) | MCP intake |
+This is not Payload's REST response. The CMS maps each document:
+
+| Payload document (`?locale=en&depth=0`) | MCP catalogue |
 |---|---|
 | `id` (text, e.g. `"210"`) | `id`, integer |
 | `subtopic` (relationship id) | `subtopic`, integer |
