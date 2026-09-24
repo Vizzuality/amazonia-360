@@ -110,3 +110,21 @@ async def test_a_timeout_raises_instead_of_returning_partial_results() -> None:
 
     with pytest.raises(ArcGISError, match="did not respond"):
         await client_with(handler).features(LAYER, AOI, 0.001)
+
+
+@pytest.mark.anyio
+async def test_non_json_200_response_raises_arcgis_error() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, text="<html>oops</html>")
+
+    with pytest.raises(ArcGISError, match="Invalid response"):
+        await client_with(handler).count(LAYER, AOI)
+
+
+@pytest.mark.anyio
+async def test_unexpected_response_shape_raises_arcgis_error() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json={"unexpected": "shape"})
+
+    with pytest.raises(ArcGISError, match="Invalid response"):
+        await client_with(handler).count(LAYER, AOI)

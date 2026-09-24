@@ -33,7 +33,13 @@ class ArcGISClient:
 
     async def count(self, layer: Layer, aoi: BaseGeometry) -> int:
         body = await self._query(layer, aoi, {"returnCountOnly": "true", "f": "json"})
-        return int(body["count"])
+        try:
+            return int(body["count"])
+        except (KeyError, TypeError, ValueError) as exc:
+            url = f"{layer.service_url}/{layer.layer_id}/query"
+            raise ArcGISError(
+                f"Invalid response from {url}: missing or invalid count"
+            ) from exc
 
     async def distinct(self, layer: Layer, aoi: BaseGeometry) -> list[str]:
         body = await self._query(
@@ -46,8 +52,14 @@ class ArcGISClient:
                 "f": "json",
             },
         )
-        values = {f["attributes"][layer.category_field] for f in body["features"]}
-        return sorted(str(v) for v in values if v is not None)
+        try:
+            values = {f["attributes"][layer.category_field] for f in body["features"]}
+            return sorted(str(v) for v in values if v is not None)
+        except (KeyError, TypeError) as exc:
+            url = f"{layer.service_url}/{layer.layer_id}/query"
+            raise ArcGISError(
+                f"Invalid response from {url}: missing features or attributes"
+            ) from exc
 
     async def features(
         self, layer: Layer, aoi: BaseGeometry, max_allowable_offset: float
@@ -67,18 +79,24 @@ class ArcGISClient:
                     "f": "geojson",
                 },
             )
-            page = body.get("features", [])
-            for f in page:
-                if f.get("geometry") is None:
-                    continue
-                category = str(f["properties"][layer.category_field])
-                collected.append((category, shape(f["geometry"])))
-            exceeded = body.get("exceededTransferLimit") or body.get(
-                "properties", {}
-            ).get("exceededTransferLimit")
-            if not exceeded or not page:
-                return collected
-            offset += len(page)
+            try:
+                page = body.get("features", [])
+                for f in page:
+                    if f.get("geometry") is None:
+                        continue
+                    category = str(f["properties"][layer.category_field])
+                    collected.append((category, shape(f["geometry"])))
+                exceeded = body.get("exceededTransferLimit") or body.get(
+                    "properties", {}
+                ).get("exceededTransferLimit")
+                if not exceeded or not page:
+                    return collected
+                offset += len(page)
+            except (KeyError, TypeError) as exc:
+                url = f"{layer.service_url}/{layer.layer_id}/query"
+                raise ArcGISError(
+                    f"Invalid response from {url}: missing properties or geometry"
+                ) from exc
 
     async def _query(
         self, layer: Layer, aoi: BaseGeometry, extra: dict[str, str]
@@ -100,7 +118,10 @@ class ArcGISClient:
             raise ArcGISError(f"ArcGIS did not respond in time: {url}") from exc
         except httpx.HTTPError as exc:
             raise ArcGISError(f"ArcGIS request failed: {exc}") from exc
-        body = response.json()
+        try:
+            body = response.json()
+        except ValueError as exc:
+            raise ArcGISError(f"Invalid response from {url}: not valid JSON") from exc
         if "error" in body:
             error_message = body["error"].get("message")
             raise ArcGISError(f"ArcGIS returned an error: {error_message}")
