@@ -485,3 +485,11 @@ mcp/
 8. Before phase 2 over HTTP: move local clipping off the event loop, put a ceiling on the
    whole call rather than per request, and close the `httpx.AsyncClient` in the server
    lifespan.
+9. Whether the MCP can return a map as HTML, so that a client shows the area and the classes it
+   was computed over next to the answer. Raised on 24 September 2026, to try later; a larger
+   task than it looks. What to find out first: which clients render HTML from an MCP server
+   (the MCP Apps extension serves UI as `ui://` resources in a sandboxed frame) and whether the
+   `mcp` 2.x Python SDK supports it; whether a map library can load inside that sandbox; and how
+   the geometry reaches the page without resending hundreds of thousands of vertices. It would
+   also be the most direct test of the one-plane rule: the map draws `computed_over`, the same
+   geometry the number came from.
