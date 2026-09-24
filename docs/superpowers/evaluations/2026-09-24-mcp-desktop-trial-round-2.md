@@ -21,6 +21,7 @@ Status: in progress.
 | 6 | Hectares of each flooding regime around Nuevo Rocafuerte | `area_by_category`, 214 | 3 classes, 52,642 ha (59 %), first try | 3.04 s | 15,902 | failed 3 times |
 | 7 | Skipped: question 6 already answered first time | – | – | – | – | 1.38 s |
 | 8 | Hectares of each climate type around Puyo | `area_by_category`, 218 | 2 classes, 89,704 ha (100 %) | 0.63 s | 1,875 | 0.70 s |
+| 9 | Hectares of each forest stratum around Puyo | `area_by_category`, 206 | 2 strata, 41,323 ha (46 %) | 5.09 s (2.87 in ArcGIS) | 333,834 | 6.66 s |
 
 ## Findings
 
@@ -64,6 +65,14 @@ Status: in progress.
 - **Q8, as expected.** The two classes cover the box (77,798 + 11,906 = 89,704 ha). The model
   contrasted this layer, which covers the whole box, with the partial ones; it inferred that from
   the numbers, since no caveat is added for a layer that covers the module.
+
+- **Q9, Carbon caveat respected again**: it says the layer holds a mean t/ha per stratum and that
+  the tool neither returns it nor computes total carbon. Then it compares the strata total with the
+  ecosystems total from question 3 (41,323 against 41,129 ha), calls them consistent and concludes
+  "the rest would be non-forest". Two things against the round 2 instructions: a conclusion drawn
+  from two indicators, and a meaning given to unclassified hectares that the partial-layer caveat
+  says are not a class. The conclusion happens to be right for Carbon, whose source excluded the
+  NO BOSQUE class, but the model could not know that from what the MCP returned.
 
 ## What each question checks this time
 
