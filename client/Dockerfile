@@ -13,8 +13,11 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json pnpm-lock.yaml* .npmrc* ./
-RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
-    corepack enable pnpm && \
+# No BuildKit cache mount here: Railway requires the mount id to be
+# `s/<service id>-<target>`, which would bake a Railway UUID into an image the
+# AWS pipeline also builds. Layer caching already covers the common case — this
+# RUN is only re-executed when package.json or the lockfile change.
+RUN corepack enable pnpm && \
     pnpm install --frozen-lockfile
 
 # Rebuild the source code only when needed
