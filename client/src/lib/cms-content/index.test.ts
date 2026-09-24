@@ -7,12 +7,18 @@ import {
 } from "@/payload-types";
 
 const mockFind = vi.fn();
+const mockFindByID = vi.fn();
 
 vi.mock("@/services/sdk", () => ({
-  sdk: { find: (...args: unknown[]) => mockFind(...args) },
+  sdk: {
+    find: (...args: unknown[]) => mockFind(...args),
+    findByID: (...args: unknown[]) => mockFindByID(...args),
+  },
 }));
 
-const { fetchIndicators, fetchSubtopics, fetchTopics } = await import("./index");
+const { fetchIndicatorById, fetchIndicators, fetchSubtopics, fetchTopics } = await import(
+  "./index"
+);
 
 /**
  * Records are built, not recorded, and typed as the collection they stand for: add a required
@@ -278,6 +284,31 @@ describe("indicators", () => {
     expect((await fetchIndicators({ locale: "en", countries: [] }))[0].visualization_types).toEqual(
       [],
     );
+  });
+});
+
+describe("an indicator by id", () => {
+  test("reads at the catalogue's depth, with no module filter", async () => {
+    mockFindByID.mockReset();
+    mockFindByID.mockResolvedValue(INDICATORS[2]);
+
+    const found = await fetchIndicatorById({ id: 5, locale: "es" });
+
+    expect(mockFindByID.mock.calls[0]?.[0]).toMatchObject({
+      collection: "indicators",
+      id: "5",
+      locale: "es",
+      fallbackLocale: "en",
+      depth: 2,
+      populate: { subtopics: { name: true, topic: true }, topics: { name: true } },
+    });
+    expect(mockFindByID.mock.calls[0]?.[0]).not.toHaveProperty("where");
+    expect(found).toMatchObject({
+      id: 5,
+      name: "States",
+      topic: { id: 0, name: "Geographic context" },
+      resource: { type: "feature" },
+    });
   });
 });
 

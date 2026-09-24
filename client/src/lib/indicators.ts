@@ -7,7 +7,7 @@ import * as intersectionOperator from "@arcgis/core/geometry/operators/intersect
 import { QueryFunction, UseQueryOptions, useQuery, useQueries } from "@tanstack/react-query";
 import axios from "axios";
 
-import { fetchIndicatorDescription, fetchIndicators } from "@/lib/cms-content";
+import { fetchIndicatorById, fetchIndicators } from "@/lib/cms-content";
 import { getCountryCodes } from "@/lib/country";
 
 import {
@@ -171,20 +171,16 @@ export const useGetH3Indicators = ({
   return query;
 };
 
-export const getIndicatorDescriptionKey = (id: Indicator["id"], locale: string) => [
-  "indicator-description",
+export const getIndicatorByIdKey = (id: Indicator["id"], locale: string) => [
+  "indicator",
   id,
   locale,
 ];
 
-/**
- * Its own query, by id: the description is the one thing a dialog needs and the only lookup here
- * that no module scopes, so it does not have to be told which catalogue the indicator lives in.
- */
-export const useGetIndicatorDescription = (id: Indicator["id"], locale: string) =>
+export const useGetIndicatorById = (id: Indicator["id"], locale: string) =>
   useQuery({
-    queryKey: getIndicatorDescriptionKey(id, locale),
-    queryFn: () => fetchIndicatorDescription({ id, locale }),
+    queryKey: getIndicatorByIdKey(id, locale),
+    queryFn: () => fetchIndicatorById({ id, locale }),
     staleTime: Infinity,
   });
 

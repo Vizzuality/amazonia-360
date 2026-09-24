@@ -156,6 +156,14 @@ const toSubtopic = (subtopic: CmsSubtopic): Subtopic => ({
   topic_id: toNumericId(asId(subtopic.topic, `Subtopic ${subtopic.id}'s Topic`)),
 });
 
+const INDICATOR_DEPTH = {
+  depth: 2,
+  populate: {
+    subtopics: { name: true, topic: true },
+    topics: { name: true },
+  },
+} as const;
+
 const toIndicator = (indicator: CmsIndicator): Indicator => {
   const subtopic = asRecord(indicator.subtopic, `Indicator ${indicator.id}'s Subtopic`);
   const topic = asRecord(subtopic.topic, `Indicator ${indicator.id}'s Topic`);
@@ -183,27 +191,22 @@ const toIndicator = (indicator: CmsIndicator): Indicator => {
   };
 };
 
-/**
- * By id, so the lookup needs no country: `findByID` reaches an indicator whatever module it
- * belongs to, where the catalogue only ever holds the modules its `where` asked for.
- */
-export const fetchIndicatorDescription = async ({
+export const fetchIndicatorById = async ({
   id,
   locale,
 }: {
   id: number;
   locale: string;
-}): Promise<string | undefined> => {
+}): Promise<Indicator> => {
   const indicator = await sdk.findByID({
     collection: "indicators",
     id: `${id}`,
     locale: locale as Locale,
     fallbackLocale: "en",
-    depth: 0,
-    select: { description: true },
+    ...INDICATOR_DEPTH,
   });
 
-  return text(indicator.description);
+  return toIndicator(indicator);
 };
 
 // `joins: false` keeps Topics.subtopics and Subtopics.indicators — admin-only fields — out of
@@ -237,9 +240,6 @@ const getIndicatorsWhere = (countries: readonly string[]): Where =>
     ? { or: [{ country: { exists: false } }, { country: { in: [...countries] } }] }
     : { country: { exists: false } };
 
-// `depth: 2` reaches the Topic through the Subtopic; `populate` stops all 164 rows dragging a
-// whole Topic along with it. Depth is always explicit — the config default would make the two
-// flat reads expensive.
 export const fetchIndicators = async ({
   locale,
   countries,
@@ -251,11 +251,7 @@ export const fetchIndicators = async ({
     collection: "indicators",
     ...read(locale),
     where: getIndicatorsWhere(countries),
-    depth: 2,
-    populate: {
-      subtopics: { name: true, topic: true },
-      topics: { name: true },
-    },
+    ...INDICATOR_DEPTH,
   });
 
   return docs.map(toIndicator);
