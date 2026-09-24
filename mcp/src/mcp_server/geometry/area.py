@@ -3,7 +3,6 @@ from collections import defaultdict
 import shapely
 from pyproj import Geod
 from shapely.geometry.base import BaseGeometry
-from shapely.validation import make_valid
 
 _GEOD = Geod(ellps="WGS84")
 _M2_PER_HA = 10_000
@@ -36,10 +35,12 @@ def clip_area_by_category(
     """
     totals: dict[str, float] = defaultdict(float)
     for category, geom in features:
-        # The consultant's dissolved polygons are not always valid, and an invalid
-        # geometry makes intersection raise or return garbage.
+        # Features arrive invalid, mostly rings that maxAllowableOffset collapsed
+        # below four points (97 of 544 on layer 214 near Nuevo Rocafuerte). The
+        # default "linework" repair raises on those; "structure" drops them and
+        # returns polygons only, which is all an area needs.
         if not geom.is_valid:
-            geom = make_valid(geom)
+            geom = shapely.make_valid(geom, method="structure", keep_collapsed=False)
         inside = geom.intersection(aoi)
         if inside.is_empty:
             continue

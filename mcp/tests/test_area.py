@@ -1,5 +1,5 @@
 import pytest
-from shapely.geometry import MultiPolygon, Polygon, box
+from shapely.geometry import MultiPolygon, Polygon, box, shape
 from shapely.geometry.polygon import orient
 
 from mcp_server.geometry.area import clip_area_by_category, geodesic_area_ha
@@ -65,3 +65,28 @@ def test_repairs_an_invalid_feature_instead_of_failing() -> None:
     bowtie = Polygon([(0, 0), (1, 1), (1, 0), (0, 1), (0, 0)])
     result = clip_area_by_category(box(0, 0, 1, 1), [("A", bowtie)])
     assert result["A"] > 0
+
+
+def test_drops_a_ring_that_simplification_collapsed_to_a_point() -> None:
+    # Layer 214 near Nuevo Rocafuerte, as ArcGIS returns it with maxAllowableOffset
+    # 0.001: the first part collapsed to one repeated point. The default make_valid
+    # fails on it with "Overlay input is mixed-dimension".
+    collapsed = shape(
+        {
+            "type": "MultiPolygon",
+            "coordinates": [
+                [[[-75.3638, -0.9242]] * 4],
+                [
+                    [
+                        [-75.3653, -0.9233],
+                        [-75.3643, -0.9236],
+                        [-75.3639, -0.9241],
+                        [-75.3653, -0.9233],
+                    ]
+                ],
+            ],
+        }
+    )
+    kept = Polygon([(-75.3653, -0.9233), (-75.3643, -0.9236), (-75.3639, -0.9241)])
+    result = clip_area_by_category(box(-75.5, -1.01, -75.32, -0.83), [("x", collapsed)])
+    assert result["x"] == pytest.approx(geodesic_area_ha(kept))
