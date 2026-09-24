@@ -6,7 +6,7 @@ import { isEmptyValue } from "@/cms/test-utils/find-field";
 import type { Indicator } from "@/payload-types";
 
 import { localizeValue, mapResource } from "./utils/normalize-data";
-import { updateLocales } from "./utils/seed-helpers";
+import { createProgressLogger, updateLocales } from "./utils/seed-helpers";
 import type { RawIndicator } from "./utils/types";
 
 type CountryModule = NonNullable<Indicator["country"]>;
@@ -32,7 +32,11 @@ export const seedIndicators = async (
     ...indicators.filter(({ country }) => country),
   ];
 
-  for (const raw of ordered) {
+  const reportProgress = createProgressLogger(payload, "indicators", ordered.length);
+
+  for (const [index, raw] of ordered.entries()) {
+    reportProgress(index);
+
     if (seenIds.has(raw.id)) {
       payload.logger.warn(`indicators: duplicate id ${raw.id}, skipped`);
       continue;
@@ -125,4 +129,6 @@ export const seedIndicators = async (
       ["unit", "description"],
     );
   }
+
+  reportProgress(ordered.length);
 };
