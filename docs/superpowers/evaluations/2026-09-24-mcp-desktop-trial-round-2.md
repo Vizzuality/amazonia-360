@@ -18,6 +18,7 @@ Status: in progress.
 | 3 | Hectares of each ecosystem around Puyo | `area_by_category`, 210 | 5 classes, 41,129 ha (46 %) | 4.08 s (3.51 in ArcGIS) | 89,411 | 60.7 s |
 | 4 | Restoration actions in the same area | `count_in_area`, 202 | 536 records | 0.55 s | – | 0.49 s |
 | 5 | Hectares of each flooding regime in the same area | `area_by_category`, 214 | empty, with the new caveat | 0.55 s | 0 | 0.96 s, 0.38 s |
+| 6 | Hectares of each flooding regime around Nuevo Rocafuerte | `area_by_category`, 214 | 3 classes, 52,642 ha (59 %), first try | 3.04 s | 15,902 | failed 3 times |
 
 ## Findings
 
@@ -49,6 +50,14 @@ Status: in progress.
   coverage. That is reasonable from where it stands; the catalogue has nothing to say that the two
   are different products with different delineations. A caveat on 214 written by a person would
   be the place for it, and that is curation for the CMS.
+
+- **Q6, answers first time**, 898 features in 3.04 s. The partial-layer caveat reached the answer
+  ("the rest has no class in this layer"). The border went the other way from round 1: the model
+  now states as fact that "part of that unclassified area falls in Peru, where the layer does not
+  reach", and does not mention that the boundary check is provisional. The MCP reported the box as
+  "inside" on the provisional envelope, so the claim is the model's own. It is probably true of a
+  box centred on a border town, but nothing the server returned supports it, and the caveat that
+  should have qualified it is gone from the answer.
 
 ## What each question checks this time
 
