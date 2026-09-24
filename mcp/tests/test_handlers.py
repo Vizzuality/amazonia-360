@@ -5,8 +5,10 @@ from shapely.geometry import box
 from shapely.geometry.base import BaseGeometry
 
 from mcp_server.arcgis.client import ArcGISError, Feature
+from mcp_server.catalogue import get_indicator_metadata
 from mcp_server.catalogue.models import Layer
 from mcp_server.geometry.area import geodesic_area_ha
+from mcp_server.handlers import area as area_handlers_module
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.handlers.errors import HandlerError
 
@@ -86,6 +88,13 @@ async def test_known_defects_travel_with_the_result() -> None:
 
 
 @pytest.mark.anyio
+async def test_provisional_boundary_caveat_travels_even_when_inside() -> None:
+    result = await handlers().categories_in_area(210, TENA)
+    assert result.coverage.status == "inside"
+    assert any("provisional" in c for c in result.caveats)
+
+
+@pytest.mark.anyio
 async def test_partial_coverage_adds_a_caveat() -> None:
     straddling = {
         "type": "Polygon",
@@ -129,3 +138,19 @@ async def test_refusals_happen_before_any_network_call(
 async def test_an_arcgis_failure_is_an_error_not_an_empty_result() -> None:
     with pytest.raises(HandlerError, match="did not respond"):
         await handlers(FakeClient(fail=True)).categories_in_area(210, TENA)
+
+
+@pytest.mark.anyio
+async def test_ai_answerable_false_is_a_refusal(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    not_answerable = get_indicator_metadata(210).model_copy(  # type: ignore[union-attr]
+        update={"ai_answerable": False}
+    )
+    monkeypatch.setattr(
+        area_handlers_module, "get_indicator_metadata", lambda _id: not_answerable
+    )
+    client = FakeClient()
+    with pytest.raises(HandlerError, match="not cleared"):
+        await handlers(client).categories_in_area(210, TENA)
+    assert client.calls == []

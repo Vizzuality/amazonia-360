@@ -98,9 +98,12 @@ class AreaHandlers:
                 "The area is partly outside the Ecuador module; only the part inside "
                 "has data."
             )
-        if coverage.provisional and coverage.status != "inside":
+        if coverage.provisional:
+            # The envelope is a bounding box, not the real module outline, so an area
+            # can read as "inside" while actually falling outside the module.
             caveats.append(
-                "The module boundary used for this check is a provisional envelope."
+                "The module boundary used for this check is a provisional bounding "
+                "box; an area can fall outside the module and still be accepted."
             )
         return _Prepared(indicator, indicator.layer, aoi, coverage, caveats, watch)
 
