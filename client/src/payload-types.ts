@@ -269,7 +269,7 @@ export interface Report {
   /**
    * The country modules active when this report was created. Empty is the Amazon Region — reports created before country modules existed.
    */
-  country?: ('ECU' | 'BOL' | 'BRA' | 'COL' | 'GUF' | 'GUY' | 'PER' | 'SUR' | 'VEN')[] | null;
+  country?: ('ECU' | 'BOL' | 'BRA' | 'COL' | 'GUY' | 'PER' | 'SUR' | 'VEN')[] | null;
   location:
     | {
         type: 'search';
@@ -412,7 +412,7 @@ export interface Indicator {
   /**
    * The country module this indicator belongs to. Empty is the Amazon Region — the regional scope, not every country.
    */
-  country?: ('ECU' | 'BOL' | 'BRA' | 'COL' | 'GUF' | 'GUY' | 'PER' | 'SUR' | 'VEN') | null;
+  country?: ('ECU' | 'BOL' | 'BRA' | 'COL' | 'GUY' | 'PER' | 'SUR' | 'VEN') | null;
   /**
    * The regional indicator this one stands in for inside its module. Only regional indicators can be named.
    */

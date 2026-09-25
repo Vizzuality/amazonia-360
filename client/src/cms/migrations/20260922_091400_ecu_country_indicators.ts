@@ -2,8 +2,8 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
-   CREATE TYPE "public"."enum_indicators_country" AS ENUM('ECU', 'BOL', 'BRA', 'COL', 'GUF', 'GUY', 'PER', 'SUR', 'VEN');
-  CREATE TYPE "public"."enum__indicators_v_version_country" AS ENUM('ECU', 'BOL', 'BRA', 'COL', 'GUF', 'GUY', 'PER', 'SUR', 'VEN');
+   CREATE TYPE "public"."enum_indicators_country" AS ENUM('ECU', 'BOL', 'BRA', 'COL', 'GUY', 'PER', 'SUR', 'VEN');
+  CREATE TYPE "public"."enum__indicators_v_version_country" AS ENUM('ECU', 'BOL', 'BRA', 'COL', 'GUY', 'PER', 'SUR', 'VEN');
   ALTER TABLE "indicators" ADD COLUMN "country" "enum_indicators_country";
   ALTER TABLE "indicators" ADD COLUMN "replaces_id" varchar;
   ALTER TABLE "_indicators_v" ADD COLUMN "version_country" "enum__indicators_v_version_country";

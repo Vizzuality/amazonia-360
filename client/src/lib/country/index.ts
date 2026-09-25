@@ -12,7 +12,6 @@ export const COUNTRIES = [
   { code: "BOL", available: false, nameKey: "country-module-BOL-name" },
   { code: "BRA", available: false, nameKey: "country-module-BRA-name" },
   { code: "COL", available: false, nameKey: "country-module-COL-name" },
-  { code: "GUF", available: false, nameKey: "country-module-GUF-name" },
   { code: "GUY", available: false, nameKey: "country-module-GUY-name" },
   { code: "PER", available: false, nameKey: "country-module-PER-name" },
   { code: "SUR", available: false, nameKey: "country-module-SUR-name" },
