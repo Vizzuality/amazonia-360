@@ -46,16 +46,6 @@ export const COUNTRIES = [
     name: "Suriname",
     nameKey: "country-module-SUR-name",
   },
-  {
-    iso3: "GUF",
-    name: "French Guiana",
-    nameKey: "country-module-GUF-name",
-  },
-  {
-    iso3: "PRY",
-    name: "Paraguay",
-    nameKey: "country-module-PRY-name",
-  },
 ] as const satisfies readonly Country[];
 
 export type CountryCode = (typeof COUNTRIES)[number]["iso3"];

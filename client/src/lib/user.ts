@@ -1,5 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { CountryCode } from "@/constants/countries";
+
 import { User } from "@/payload-types";
 
 import { sdk } from "@/services/sdk";
@@ -12,15 +14,23 @@ export const useUser = (id: User["id"] | undefined) => {
   });
 };
 
-export const useUpdateUserCommunityOptIn = () => {
+export const useUpdateUserCommunications = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, communityOptIn }: { id: User["id"]; communityOptIn: boolean }) => {
+    mutationFn: ({
+      id,
+      communityOptIn,
+      countriesOfInterest,
+    }: {
+      id: User["id"];
+      communityOptIn: boolean;
+      countriesOfInterest: CountryCode[];
+    }) => {
       return sdk.update({
         collection: "users",
         id,
-        data: { communityOptIn },
+        data: { communityOptIn, countriesOfInterest },
       });
     },
     onSuccess: (_data, { id }) => {

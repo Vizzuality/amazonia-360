@@ -6,15 +6,26 @@ import { COUNTRIES } from "@/constants/countries";
 
 import { CountriesField } from "./countries-field";
 
-const ORDERED_ISO3 = ["BOL", "BRA", "COL", "ECU", "GUF", "GUY", "PER", "PRY", "SUR", "VEN"];
+const ORDERED_ISO3 = ["BOL", "BRA", "COL", "ECU", "GUY", "PER", "SUR", "VEN"];
 
 describe("CountriesField", () => {
-  it("renders exactly 10 chips, all unpressed when value is empty", () => {
+  it("renders exactly 8 chips, all unpressed when value is empty", () => {
     render(<CountriesField value={[]} onChange={vi.fn()} />);
 
     const chips = screen.getAllByRole("button");
-    expect(chips).toHaveLength(10);
+    expect(chips).toHaveLength(8);
     chips.forEach((chip) => expect(chip).toHaveAttribute("aria-pressed", "false"));
+  });
+
+  it("excludes French Guiana and Paraguay chips", () => {
+    render(<CountriesField value={[]} onChange={vi.fn()} />);
+
+    expect(
+      screen.queryByRole("button", { name: "country-module-GUF-name" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "country-module-PRY-name" }),
+    ).not.toBeInTheDocument();
   });
 
   it("renders chips in alphabetical order by label", () => {
