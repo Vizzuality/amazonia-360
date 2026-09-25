@@ -8759,7 +8759,9 @@
         "ECU",
         "BOL",
         "GUY",
-        "SUR"
+        "SUR",
+        "GUF",
+        "PRY"
       ]
     },
     "public.enum_reports_country": {
@@ -8770,6 +8772,7 @@
         "BOL",
         "BRA",
         "COL",
+        "GUF",
         "GUY",
         "PER",
         "SUR",
@@ -8818,6 +8821,7 @@
         "BOL",
         "BRA",
         "COL",
+        "GUF",
         "GUY",
         "PER",
         "SUR",
@@ -9010,6 +9014,7 @@
         "BOL",
         "BRA",
         "COL",
+        "GUF",
         "GUY",
         "PER",
         "SUR",
@@ -9075,6 +9080,7 @@
         "BOL",
         "BRA",
         "COL",
+        "GUF",
         "GUY",
         "PER",
         "SUR",

@@ -2,7 +2,7 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
-   CREATE TYPE "public"."enum_users_countries_of_interest" AS ENUM('BRA', 'COL', 'PER', 'VEN', 'ECU', 'BOL', 'GUY', 'SUR');
+   CREATE TYPE "public"."enum_users_countries_of_interest" AS ENUM('BRA', 'COL', 'PER', 'VEN', 'ECU', 'BOL', 'GUY', 'SUR', 'GUF', 'PRY');
   CREATE TABLE "users_countries_of_interest" (
   	"order" integer NOT NULL,
   	"parent_id" uuid NOT NULL,

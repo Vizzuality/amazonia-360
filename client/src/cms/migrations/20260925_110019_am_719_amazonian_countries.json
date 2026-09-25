@@ -836,6 +836,90 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.reports_country": {
+      "name": "reports_country",
+      "schema": "",
+      "columns": {
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "enum_reports_country",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        }
+      },
+      "indexes": {
+        "reports_country_order_idx": {
+          "name": "reports_country_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "reports_country_parent_idx": {
+          "name": "reports_country_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "reports_country_parent_fk": {
+          "name": "reports_country_parent_fk",
+          "tableFrom": "reports_country",
+          "tableTo": "reports",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.reports_topics_indicators": {
       "name": "reports_topics_indicators",
       "schema": "",
@@ -1411,6 +1495,90 @@
           "tableTo": "users",
           "columnsFrom": [
             "users_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._reports_v_version_country": {
+      "name": "_reports_v_version_country",
+      "schema": "",
+      "columns": {
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "enum__reports_v_version_country",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        }
+      },
+      "indexes": {
+        "_reports_v_version_country_order_idx": {
+          "name": "_reports_v_version_country_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_reports_v_version_country_parent_idx": {
+          "name": "_reports_v_version_country_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_reports_v_version_country_parent_fk": {
+          "name": "_reports_v_version_country_parent_fk",
+          "tableFrom": "_reports_v_version_country",
+          "tableTo": "_reports_v",
+          "columnsFrom": [
+            "parent_id"
           ],
           "columnsTo": [
             "id"
@@ -4863,6 +5031,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "country": {
+          "name": "country",
+          "type": "enum_indicators_country",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "replaces_id": {
+          "name": "replaces_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "default_visualization_type": {
           "name": "default_visualization_type",
           "type": "enum_indicators_default_visualization_type",
@@ -4899,6 +5080,21 @@
           "columns": [
             {
               "expression": "subtopic_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "indicators_replaces_idx": {
+          "name": "indicators_replaces_idx",
+          "columns": [
+            {
+              "expression": "replaces_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -4962,6 +5158,19 @@
           "tableTo": "subtopics",
           "columnsFrom": [
             "subtopic_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "indicators_replaces_id_indicators_id_fk": {
+          "name": "indicators_replaces_id_indicators_id_fk",
+          "tableFrom": "indicators",
+          "tableTo": "indicators",
+          "columnsFrom": [
+            "replaces_id"
           ],
           "columnsTo": [
             "id"
@@ -6480,6 +6689,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "version_country": {
+          "name": "version_country",
+          "type": "enum__indicators_v_version_country",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_replaces_id": {
+          "name": "version_replaces_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "version_default_visualization_type": {
           "name": "version_default_visualization_type",
           "type": "enum__indicators_v_version_default_visualization_type",
@@ -6562,6 +6784,21 @@
           "columns": [
             {
               "expression": "version_subtopic_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_indicators_v_version_version_replaces_idx": {
+          "name": "_indicators_v_version_version_replaces_idx",
+          "columns": [
+            {
+              "expression": "version_replaces_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -6713,6 +6950,19 @@
           "tableTo": "subtopics",
           "columnsFrom": [
             "version_subtopic_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_indicators_v_version_replaces_id_indicators_id_fk": {
+          "name": "_indicators_v_version_replaces_id_indicators_id_fk",
+          "tableFrom": "_indicators_v",
+          "tableTo": "indicators",
+          "columnsFrom": [
+            "version_replaces_id"
           ],
           "columnsTo": [
             "id"
@@ -8509,9 +8759,21 @@
         "ECU",
         "BOL",
         "GUY",
+        "SUR"
+      ]
+    },
+    "public.enum_reports_country": {
+      "name": "enum_reports_country",
+      "schema": "public",
+      "values": [
+        "ECU",
+        "BOL",
+        "BRA",
+        "COL",
+        "GUY",
+        "PER",
         "SUR",
-        "GUF",
-        "PRY"
+        "VEN"
       ]
     },
     "public.enum_reports_topics_indicators_type": {
@@ -8546,6 +8808,20 @@
       "values": [
         "draft",
         "published"
+      ]
+    },
+    "public.enum__reports_v_version_country": {
+      "name": "enum__reports_v_version_country",
+      "schema": "public",
+      "values": [
+        "ECU",
+        "BOL",
+        "BRA",
+        "COL",
+        "GUY",
+        "PER",
+        "SUR",
+        "VEN"
       ]
     },
     "public.enum__reports_v_version_topics_indicators_type": {
@@ -8726,6 +9002,20 @@
         "basic"
       ]
     },
+    "public.enum_indicators_country": {
+      "name": "enum_indicators_country",
+      "schema": "public",
+      "values": [
+        "ECU",
+        "BOL",
+        "BRA",
+        "COL",
+        "GUY",
+        "PER",
+        "SUR",
+        "VEN"
+      ]
+    },
     "public.enum_indicators_default_visualization_type": {
       "name": "enum_indicators_default_visualization_type",
       "schema": "public",
@@ -8775,6 +9065,20 @@
       "schema": "public",
       "values": [
         "basic"
+      ]
+    },
+    "public.enum__indicators_v_version_country": {
+      "name": "enum__indicators_v_version_country",
+      "schema": "public",
+      "values": [
+        "ECU",
+        "BOL",
+        "BRA",
+        "COL",
+        "GUY",
+        "PER",
+        "SUR",
+        "VEN"
       ]
     },
     "public.enum__indicators_v_version_default_visualization_type": {
@@ -8894,6 +9198,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "02de6fc9-e664-4220-b60f-1308b2acc82a",
+  "id": "e99541e2-8ed5-47dc-b24f-a196d9c963e8",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }
