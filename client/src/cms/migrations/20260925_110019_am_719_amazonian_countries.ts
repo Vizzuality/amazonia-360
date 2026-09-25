@@ -3,10 +3,6 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
    DELETE FROM "users_countries_of_interest" WHERE "value"::text IN ('GUF', 'PRY');
-  DELETE FROM "reports_country" WHERE "value"::text = 'GUF';
-  DELETE FROM "_reports_v_version_country" WHERE "value"::text = 'GUF';
-  UPDATE "indicators" SET "country" = NULL WHERE "country"::text = 'GUF';
-  UPDATE "_indicators_v" SET "version_country" = NULL WHERE "version_country"::text = 'GUF';
   ALTER TABLE "users_countries_of_interest" ALTER COLUMN "value" SET DATA TYPE text;
   DROP TYPE "public"."enum_users_countries_of_interest";
   CREATE TYPE "public"."enum_users_countries_of_interest" AS ENUM('BRA', 'COL', 'PER', 'VEN', 'ECU', 'BOL', 'GUY', 'SUR');
