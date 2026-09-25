@@ -7,7 +7,11 @@ import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import { useUpdateUserCommunityOptIn, useUser } from "@/lib/user";
+import { useUpdateUserCommunications, useUser } from "@/lib/user";
+
+import { CountryCode } from "@/constants/countries";
+
+import { CountriesField } from "@/containers/auth/countries-field";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -19,22 +23,28 @@ import { User } from "@/payload-types";
 function CommunicationsFields({
   userId,
   communityOptIn,
+  countriesOfInterest,
 }: Readonly<{
   userId: User["id"];
   communityOptIn: boolean;
+  countriesOfInterest: CountryCode[];
 }>) {
   const t = useTranslations();
-  const updateMutation = useUpdateUserCommunityOptIn();
+  const updateMutation = useUpdateUserCommunications();
 
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const form = useForm({
-    defaultValues: { communityOptIn },
+    defaultValues: { communityOptIn, countriesOfInterest },
     onSubmit: async ({ value }) => {
       setSubmitError(null);
 
       try {
-        await updateMutation.mutateAsync({ id: userId, communityOptIn: value.communityOptIn });
+        await updateMutation.mutateAsync({
+          id: userId,
+          communityOptIn: value.communityOptIn,
+          countriesOfInterest: value.countriesOfInterest,
+        });
         toast.success(t("profile-communications-toast-success"), { duration: 2000 });
       } catch (error) {
         const message = error instanceof Error && error.message ? error.message : null;
@@ -51,6 +61,15 @@ function CommunicationsFields({
       }}
     >
       <FieldGroup>
+        <form.Field name="countriesOfInterest">
+          {(field) => (
+            <CountriesField
+              value={field.state.value}
+              onChange={(next) => field.handleChange(next)}
+            />
+          )}
+        </form.Field>
+
         <form.Field name="communityOptIn">
           {(field) => {
             return (
@@ -107,7 +126,13 @@ export function CommunicationsForm() {
 
       {isError && <FieldError>{t("profile-communications-load-error")}</FieldError>}
 
-      {!!user && <CommunicationsFields userId={user.id} communityOptIn={!!user.communityOptIn} />}
+      {!!user && (
+        <CommunicationsFields
+          userId={user.id}
+          communityOptIn={!!user.communityOptIn}
+          countriesOfInterest={user.countriesOfInterest ?? []}
+        />
+      )}
     </div>
   );
 }

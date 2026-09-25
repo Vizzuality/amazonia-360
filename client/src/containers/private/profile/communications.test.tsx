@@ -18,7 +18,7 @@ vi.mock("sonner", () => ({
 
 vi.mock("@/lib/user", () => ({
   useUser: () => mockUseUser(),
-  useUpdateUserCommunityOptIn: () => ({
+  useUpdateUserCommunications: () => ({
     mutateAsync: mockMutateAsync,
     isPending: false,
   }),
@@ -30,7 +30,9 @@ describe("CommunicationsForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockMutateAsync.mockResolvedValue({ id: "user-1" });
-    mockUseUser.mockReturnValue({ data: { id: "user-1", communityOptIn: false } });
+    mockUseUser.mockReturnValue({
+      data: { id: "user-1", communityOptIn: false, countriesOfInterest: [] },
+    });
   });
 
   it("reflects an opted-out user", async () => {
@@ -74,8 +76,67 @@ describe("CommunicationsForm", () => {
     await user.click(screen.getByRole("button", { name: "profile-button-update-communications" }));
 
     await waitFor(() => {
-      expect(mockMutateAsync).toHaveBeenCalledWith({ id: "user-1", communityOptIn: true });
+      expect(mockMutateAsync).toHaveBeenCalledWith({
+        id: "user-1",
+        communityOptIn: true,
+        countriesOfInterest: [],
+      });
     });
+  });
+
+  it("renders the saved countries as pressed chips and the rest as unpressed", async () => {
+    mockUseUser.mockReturnValue({
+      data: { id: "user-1", communityOptIn: false, countriesOfInterest: ["BRA", "PER"] },
+    });
+    render(<CommunicationsForm />);
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "country-module-BRA-name" })).toHaveAttribute(
+        "aria-pressed",
+        "true",
+      );
+    });
+    expect(screen.getByRole("button", { name: "country-module-PER-name" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: "country-module-COL-name" })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+  });
+
+  it("saves a toggled country alongside the opt-in", async () => {
+    const user = userEvent.setup();
+    render(<CommunicationsForm />);
+
+    await user.click(screen.getByRole("button", { name: "country-module-BRA-name" }));
+    await user.click(screen.getByRole("button", { name: "profile-button-update-communications" }));
+
+    await waitFor(() => {
+      expect(mockMutateAsync).toHaveBeenCalledWith({
+        id: "user-1",
+        communityOptIn: false,
+        countriesOfInterest: ["BRA"],
+      });
+    });
+  });
+
+  it("keeps the toggled country pressed after a failed save", async () => {
+    mockMutateAsync.mockRejectedValue(new Error("Forbidden"));
+    const user = userEvent.setup();
+    render(<CommunicationsForm />);
+
+    await user.click(screen.getByRole("button", { name: "country-module-BRA-name" }));
+    await user.click(screen.getByRole("button", { name: "profile-button-update-communications" }));
+
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveTextContent("Forbidden");
+    });
+    expect(screen.getByRole("button", { name: "country-module-BRA-name" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
   });
 
   it("adopts a newer server value instead of the value captured on mount", async () => {
@@ -96,7 +157,11 @@ describe("CommunicationsForm", () => {
     await user.click(screen.getByRole("button", { name: "profile-button-update-communications" }));
 
     await waitFor(() => {
-      expect(mockMutateAsync).toHaveBeenCalledWith({ id: "user-1", communityOptIn: true });
+      expect(mockMutateAsync).toHaveBeenCalledWith({
+        id: "user-1",
+        communityOptIn: true,
+        countriesOfInterest: [],
+      });
     });
   });
 
@@ -117,7 +182,9 @@ describe("CommunicationsForm", () => {
   });
 
   it("saves an opt-out", async () => {
-    mockUseUser.mockReturnValue({ data: { id: "user-1", communityOptIn: true } });
+    mockUseUser.mockReturnValue({
+      data: { id: "user-1", communityOptIn: true, countriesOfInterest: [] },
+    });
     const user = userEvent.setup();
     render(<CommunicationsForm />);
 
@@ -129,7 +196,11 @@ describe("CommunicationsForm", () => {
     await user.click(screen.getByRole("button", { name: "profile-button-update-communications" }));
 
     await waitFor(() => {
-      expect(mockMutateAsync).toHaveBeenCalledWith({ id: "user-1", communityOptIn: false });
+      expect(mockMutateAsync).toHaveBeenCalledWith({
+        id: "user-1",
+        communityOptIn: false,
+        countriesOfInterest: [],
+      });
     });
   });
 });
