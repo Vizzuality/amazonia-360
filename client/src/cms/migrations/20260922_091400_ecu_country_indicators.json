@@ -8591,9 +8591,7 @@
         "ECU",
         "BOL",
         "GUY",
-        "SUR",
-        "GUF",
-        "PRY"
+        "SUR"
       ]
     },
     "public.enum_reports_topics_indicators_type": {

@@ -142,7 +142,7 @@ describe("Users countriesOfInterest", () => {
 
   test("offers exactly the countries constant as options", () => {
     const options = (countriesOfInterest as { options?: { value: string }[] })?.options;
-    expect(options).toHaveLength(10);
+    expect(options).toHaveLength(8);
     expect(options?.map((option) => option.value)).toEqual(COUNTRIES.map(({ iso3 }) => iso3));
   });
 

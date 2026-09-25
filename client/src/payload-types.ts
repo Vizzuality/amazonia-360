@@ -207,7 +207,7 @@ export interface User {
   image?: string | null;
   emailVerified?: string | null;
   communityOptIn?: boolean | null;
-  countriesOfInterest?: ('BRA' | 'COL' | 'PER' | 'VEN' | 'ECU' | 'BOL' | 'GUY' | 'SUR' | 'GUF' | 'PRY')[] | null;
+  countriesOfInterest?: ('BRA' | 'COL' | 'PER' | 'VEN' | 'ECU' | 'BOL' | 'GUY' | 'SUR')[] | null;
   accounts?: {
     docs?: (string | Account)[];
     hasNextPage?: boolean;
