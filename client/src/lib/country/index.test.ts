@@ -4,6 +4,7 @@ import {
   canonicalCountryPathname,
   countryFromPathname,
   getCountryCodes,
+  getRegionalPathname,
   isSavedReportPathname,
   routedPathname,
   stripCountry,
@@ -101,6 +102,12 @@ describe("routedPathname", () => {
   it("leaves a code that is not live in the path", () => {
     expect(routedPathname("/en/SUR/reports", LOCALES)).toBeNull();
     expect(routedPathname("/en/XYZ", LOCALES)).toBeNull();
+  });
+});
+
+describe("getRegionalPathname", () => {
+  it("drops a live code typed in lowercase in one step", () => {
+    expect(getRegionalPathname("/en/ecu/reports", LOCALES)).toBe("/en/reports");
   });
 });
 
