@@ -339,6 +339,11 @@ instructions stay, for third-party clients, without being relied on. A tool for 
 first candidate if the cross-indicator question recurs in the gatekeeper evaluation. A check on
 the written answer is not planned.
 
+The [map spike](../evaluations/2026-09-28-mcp-map-spike.md) tried the fifth lever from the MCP
+side: a page next to the answer that shows the hectares, the unclassified land and the boundary
+note from the result. In Claude Desktop the page showed all three while the model's text dropped
+the boundary note and, once, guessed at the unclassified land.
+
 ## Inputs
 
 The area of interest is a GeoJSON Polygon or MultiPolygon in WGS84, with a vertex limit so that a
@@ -530,3 +535,8 @@ mcp/
    the geometry reaches the page without resending hundreds of thousands of vertices. It would
    also be the most direct test of the one-plane rule: the map draws `computed_over`, the same
    geometry the number came from.
+   *Tried on 28 September 2026* ([map spike](../evaluations/2026-09-28-mcp-map-spike.md)): it
+   works in Claude Desktop with MapLibre and OpenStreetMap tiles, and not with the ArcGIS Maps
+   SDK. The page asks the server for the shapes clipped to the area, so no vertex reaches the
+   model, and draws the same polygons the hectares come from. Kept behind `MCP_MAP_SPIKE=1`.
+   Not decided whether it goes further; the evaluation lists what production would need.
