@@ -97,15 +97,38 @@ retest. The page does not stop either; it puts the correct statement next to the
 In a first conversation the model did not find the tool; in a new one it found it after a tool
 search. The cause was not looked into.
 
+## The front end's look, and interaction
+
+Added the same day (`a0f263cb`) and tried again in Desktop on 214 over Nuevo Rocafuerte:
+
+- Montserrat embedded in the page, the front end's tokens copied from
+  `client/src/styles/globals.css` with a test that fails when they drift, the legend in the
+  front end's card style, and the area in its cyan.
+- Class colours from the layer's ArcGIS renderer, the source the front end's legend reads. The
+  renderer does not always colour by the field the MCP reports classes by: it matches by value
+  (214, 203…), by label (210, 218), through a coarser field read per class (219), or not at all
+  (211, whose renderer splits each relief class; the page says so and uses a palette).
+- An OpenFreeMap light grey basemap, close to the front end's Esri `gray-vector` and without a
+  key, in place of OpenStreetMap tiles.
+- Clicking a legend row hides or shows the class, clicking a polygon shows its hectares and share
+  of the area, and a full screen button appears when the host offers that mode. Desktop offers it.
+
+In Desktop the map was complete 1.7 s after the tool input reached the page (6.1 s after the
+frame opened, 4.4 s of which the host took to deliver the input). Styles cost 0.17 s on 214. The
+model's text this time gave the classified share without guessing, and again left out the
+boundary note the page showed.
+
+Layer 210's symbols have an alpha of 2 of 255. Drawn as the renderer says, its map shows
+outlines only; the front end's legend drops alpha, so the legend shows solid colours.
+
 ## What staging needs first
 
 - **One fetch per map.** The page's shapes should come from the query the figures came from,
   not from a second one.
 - **The shapes from the handler itself**, not through its private methods as the spike does.
-- **A basemap fit for use.** The OpenStreetMap tile servers' usage policy does not cover an
-  application's traffic; a tile provider, or tiles of the project's own, would.
-- **Class colours and names from the catalogue**, and the page's notes in the user's language.
-  The spike uses a fixed palette and English notes.
+- **A decision on the basemap provider.** OpenFreeMap is free and keyless, and a third-party
+  service all the same.
+- **The page's notes in the user's language.** They are in English.
 - **A fallback for hosts that do not render MCP Apps.** The tool result is unchanged, so they
   still get the figures.
 
