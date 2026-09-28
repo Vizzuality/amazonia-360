@@ -119,7 +119,8 @@ model's text this time gave the classified share without guessing, and again lef
 boundary note the page showed.
 
 Layer 210's symbols have an alpha of 2 of 255. Drawn as the renderer says, its map shows
-outlines only; the front end's legend drops alpha, so the legend shows solid colours.
+outlines only; the front end's legend drops alpha, so the legend shows solid colours. Filed as
+AM-729, and 211's class field against its renderer as AM-730.
 
 ## What staging needs first
 
