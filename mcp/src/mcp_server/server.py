@@ -1,4 +1,8 @@
+from typing import Any
+
 import httpx
+from mcp.server.auth.provider import OAuthAuthorizationServerProvider
+from mcp.server.auth.settings import AuthSettings
 from mcp.server.mcpserver import MCPServer
 
 from mcp_server import __version__
@@ -37,6 +41,9 @@ def create_mcp_server(
     handlers: AreaHandlers | None = None,
     call_log: CallLog | None = None,
     settings: Settings | None = None,
+    *,
+    auth: AuthSettings | None = None,
+    auth_server_provider: OAuthAuthorizationServerProvider[Any, Any, Any] | None = None,
 ) -> MCPServer:
     settings = settings or Settings.from_env()
     if handlers is None:
@@ -49,6 +56,8 @@ def create_mcp_server(
         title="Amazonia 360 — Ecuador module",
         instructions=INSTRUCTIONS,
         version=__version__,
+        auth=auth,
+        auth_server_provider=auth_server_provider,
     )
     register_catalogue_tools(server)
     register_area_tools(server, handlers, call_log)
