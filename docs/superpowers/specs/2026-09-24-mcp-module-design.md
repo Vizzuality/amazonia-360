@@ -542,4 +542,14 @@ mcp/
    SDK. The page asks the server for the shapes clipped to the area, so no vertex reaches the
    model, and draws the same polygons the hectares come from.
    *Decided on 28 September 2026:* the maps go to staging with the rest of the MCP, with no
-   flag of their own. The evaluation lists what they need first.
+   flag of their own. The evaluation lists what they need first. They were rebuilt for staging the same day
+   (`mcp/src/mcp_server/maps/`): the shapes now come with the result, from the query the figures
+   come from, and the basemap stays OpenFreeMap rather than Esri's, which needs a key in the page.
+10. Rasters of the regional platform. *Decided on 28 September 2026:* they are in scope. The
+   spike tried one, canopy height, listed by hand in `mcp/src/mcp_server/arcgis/raster.py`. The
+   front end's indicator file has 27 image services, each with its classification and legend.
+   Still open: which of them the MCP answers over, and with what figure. A share of pixels per
+   class fits the classed ones (slope, land cover, forest cover, canopy height, grassland). It
+   does not fit counts or amounts per pixel (population, crop production, GDP), which call for a
+   sum or a mean over the area. Where their metadata lives is the same question as for the
+   layers: the catalogue, and in time the CMS.
