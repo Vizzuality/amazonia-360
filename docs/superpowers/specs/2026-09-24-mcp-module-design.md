@@ -17,8 +17,7 @@ what answering over an arbitrary area actually costs. The measurements are the d
 as the tools: they are what the aggregation decision (grid, precomputation or on-the-fly) will be
 taken against.
 
-The service is expected to run in staging only. Whether it ever reaches production is not decided,
-and nothing in this design depends on that answer.
+The service runs in staging only; it does not go to production (decided 28 September 2026).
 
 ## Decisions
 
@@ -539,4 +538,5 @@ mcp/
    works in Claude Desktop with MapLibre and OpenStreetMap tiles, and not with the ArcGIS Maps
    SDK. The page asks the server for the shapes clipped to the area, so no vertex reaches the
    model, and draws the same polygons the hectares come from. Kept behind `MCP_MAP_SPIKE=1`.
-   Not decided whether it goes further; the evaluation lists what production would need.
+   *Decided on 28 September 2026:* the maps go to staging with the rest of the MCP, behind a
+   feature flag added when the branch is merged. The evaluation lists what they need first.

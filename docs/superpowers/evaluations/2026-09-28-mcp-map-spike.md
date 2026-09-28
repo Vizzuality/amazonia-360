@@ -5,8 +5,9 @@ that a client shows next to the answer, drawing the area and the classes a figur
 over? Tried in Claude Desktop through the MCP Apps extension, which serves a page as a `ui://`
 resource that the host renders in a sandboxed frame.
 
-Status: spike finished. The code is kept behind `MCP_MAP_SPIKE=1` so the test can be repeated;
-it is not production code.
+Status: spike finished. The code is kept behind `MCP_MAP_SPIKE=1` so the test can be repeated.
+Decided afterwards: the maps go to staging with the rest of the MCP, which does not go to
+production, behind a feature flag added when the branch is merged.
 
 ## Conclusions
 
@@ -97,7 +98,7 @@ retest. The page does not stop either; it puts the correct statement next to the
 In a first conversation the model did not find the tool; in a new one it found it after a tool
 search. The cause was not looked into.
 
-## What production would need
+## What staging needs first
 
 - **One fetch per map.** The page's shapes should come from the query the figures came from,
   not from a second one.
