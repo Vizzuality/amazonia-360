@@ -28,9 +28,10 @@ hectares, and did not suggest a fault.
 layer ("la capa es provisional", "la capa está marcada como cobertura provisional"), although the
 field's description says the module boundary is a bounding box. The warning that matters near the
 border, that the area may fall partly outside the module, never reached the user. The name does not
-say what is provisional, and `coverage` sits next to `layer` in the response. Proposed fix: say it
-in the name (for example `coverage.boundary: "bounding_box"`), and repeat it in the description of
-`status`.
+say what is provisional, and `coverage` sits next to `layer` in the response. *Done after the
+round:* the flag became `coverage.boundary: "bounding_box"`, whose description says it is about the
+module boundary and not the layer, and the description of `status` repeats that `inside` does not
+rule out an area partly outside. Not yet retested.
 
 **The Peru claim did not come back** (Q3). Nor did a guess about unclassified land on that question.
 With one run each, this is as likely to be variance as the effect of a field.

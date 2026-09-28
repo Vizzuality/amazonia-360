@@ -269,7 +269,7 @@ Every handler returns the same envelope. The values below are illustrative:
   "computed_over": {
     "type": "clipped_polygons", "features": 5, "categories": 1, "simplification": 0.001
   },
-  "coverage": { "status": "inside", "provisional": true },
+  "coverage": { "status": "inside", "boundary": "bounding_box" },
   "layer": { "covers_module": false, "empty_result": null },
   "provenance": { "source_org": "...", "source_url": "...", "data_vintage": "..." },
   "caveats": [],
@@ -286,7 +286,7 @@ Every handler returns the same envelope. The values below are illustrative:
 
 The area tools declare this envelope as their output schema, so each field's description reaches
 the model with the tool list. That is where the meaning of a computed fact lives: what
-`unclassified_ha` is, what `coverage.provisional` implies, what an `empty_result` means.
+`unclassified_ha` is, what `coverage.boundary` implies, what an `empty_result` means.
 
 ### What caveats are for
 
@@ -353,7 +353,9 @@ No plausible number is returned without a signal.
 
 - **Area outside the module, or partly outside.** The response says so. Until
   `ECU_MOD_POLIG_LIMITE_WGS84` is delivered, the check uses a provisional envelope and the response
-  declares that it is provisional (`coverage.provisional`). In a partial result `aoi_ha` still
+  declares what it checked against (`coverage.boundary: "bounding_box"`). *Changed on 28 September
+  2026:* this was a flag, `coverage.provisional`, which the model read twice as "the layer is
+  provisional" in round 3 of the Desktop trial. In a partial result `aoi_ha` still
   counts the whole area, as its field description says; once the real boundary arrives the result should also carry the hectares
   inside the module (`aoi_inside_ha`), which a bounding box cannot give honestly.
 - **Layers with known defects.** Where the record count in the consultant's documentation

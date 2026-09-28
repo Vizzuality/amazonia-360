@@ -12,7 +12,7 @@ MAX_VERTICES = 5000
 # Extent of the Geomorfología layer, which covers the whole module. Replace with
 # ECU_MOD_POLIG_LIMITE_WGS84 once it is delivered.
 MODULE_ENVELOPE = box(-79.428, -5.016, -75.189, 0.729)
-MODULE_BOUNDARY_IS_PROVISIONAL = True
+MODULE_BOUNDARY: Literal["bounding_box", "module_polygon"] = "bounding_box"
 
 
 class AOIError(Exception):
@@ -22,14 +22,20 @@ class AOIError(Exception):
 class Coverage(BaseModel):
     status: Literal["inside", "partial", "outside"] = Field(
         description=(
-            "Where the area falls against the module. partial: only the part inside "
-            "has data."
+            "Where the area falls against the module boundary named in boundary. "
+            "partial: only the part inside has data. With a bounding_box boundary, "
+            "inside does not rule out that part of the area is outside the module."
         )
     )
-    provisional: bool = Field(
+    # A bare "provisional" flag was read as "the layer is provisional" in the
+    # Desktop trial, so the field names what it describes.
+    boundary: Literal["bounding_box", "module_polygon"] = Field(
         description=(
-            "True while the module boundary is a bounding box: an area reported as "
-            "inside can still fall partly outside the module."
+            "What the area was checked against. This describes the module boundary, "
+            "not the layer. bounding_box: a rectangle standing in until the module "
+            "polygon is delivered; an area near the edge of the module, such as the "
+            "border with Peru, may fall partly outside it although status says "
+            "inside, and hectares outside the module then count as unclassified."
         )
     )
 
@@ -74,4 +80,4 @@ def module_coverage(aoi: Polygon | MultiPolygon) -> Coverage:
         status = "partial"
     else:
         status = "outside"
-    return Coverage(status=status, provisional=MODULE_BOUNDARY_IS_PROVISIONAL)
+    return Coverage(status=status, boundary=MODULE_BOUNDARY)

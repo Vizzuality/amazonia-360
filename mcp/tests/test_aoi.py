@@ -79,7 +79,7 @@ def test_rejects_too_many_vertices() -> None:
 def test_coverage_inside() -> None:
     coverage = module_coverage(parse_aoi(TENA))
     assert coverage.status == "inside"
-    assert coverage.provisional is True
+    assert coverage.boundary == "bounding_box"
 
 
 def test_coverage_partial() -> None:

@@ -89,6 +89,7 @@ async def test_area_tools_publish_an_output_schema_with_field_meanings(
     text = json.dumps(schema)
     assert "not a class" in text
     assert "written by a person" in text
+    assert "module boundary, not the layer" in text
 
 
 @pytest.mark.anyio

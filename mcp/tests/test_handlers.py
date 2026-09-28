@@ -130,7 +130,7 @@ async def test_an_unavailable_layer_is_refused_before_any_network_call(
 async def test_computed_facts_are_fields_not_caveats() -> None:
     result = await handlers().categories_in_area(210, TENA)
     assert result.coverage.status == "inside"
-    assert result.coverage.provisional is True
+    assert result.coverage.boundary == "bounding_box"
     assert result.caveats == []
     assert result.record_counts is None
 
