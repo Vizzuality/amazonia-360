@@ -1,5 +1,5 @@
 /* The front end's look, copied from client/src/styles/globals.css (tokens) and
-   client/src/constants/map.ts (the area symbol). tests/test_spike_theme.py fails when
+   client/src/constants/map.ts (the area symbol). tests/test_map_theme.py fails when
    a copied value no longer matches. Montserrat is embedded (SIL OFL, fonts/OFL.txt). */
 /*FONTS*/
 :root {

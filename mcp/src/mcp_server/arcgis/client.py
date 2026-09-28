@@ -31,7 +31,7 @@ def _exceeded_transfer_limit(body: dict[str, Any]) -> bool:
     )
 
 
-def _esri_polygon(aoi: BaseGeometry) -> str:
+def esri_polygon(aoi: BaseGeometry) -> str:
     polygons = list(aoi.geoms) if isinstance(aoi, MultiPolygon) else [aoi]
     rings: list[list[list[float]]] = []
     for polygon in polygons:
@@ -167,7 +167,7 @@ class ArcGISClient:
         url = f"{layer.service_url}/{layer.layer_id}/query"
         params = {
             "where": "1=1",
-            "geometry": _esri_polygon(aoi),
+            "geometry": esri_polygon(aoi),
             "geometryType": "esriGeometryPolygon",
             "inSR": "4326",
             "spatialRel": "esriSpatialRelIntersects",

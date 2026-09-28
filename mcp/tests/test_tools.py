@@ -31,13 +31,8 @@ async def test_exposes_the_tools(tmp_path: Path) -> None:
         "categories_in_area",
         "count_in_area",
         "area_by_category",
-        "show_area_map_maplibre",
-        "show_area_map_arcgis",
-        "show_area_by_category_map",
-        "category_shapes",
-        "show_raster_map",
-        "raster_image",
-        "report_map_diagnostics",
+        "map_area_by_category",
+        "map_raster",
     }
 
 

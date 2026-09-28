@@ -6,7 +6,8 @@ over? Tried in Claude Desktop through the MCP Apps extension, which serves a pag
 resource that the host renders in a sandboxed frame.
 
 Status: spike finished. Decided afterwards: the maps go to staging with the rest of the MCP,
-which does not go to production, with no flag of their own.
+which does not go to production, with no flag of their own. The staging version replaced the
+spike's code the same day; see "From spike to staging" at the end.
 
 ## Conclusions
 
@@ -27,7 +28,7 @@ which does not go to production, with no flag of their own.
 
 ## Setup
 
-- Three tools, in `mcp/src/mcp_server/spike_maps/`:
+- Three tools, in `mcp/src/mcp_server/spike_maps/` (removed since; see the last section):
   - `show_area_map_maplibre` and `show_area_map_arcgis` draw the area only.
   - `show_area_by_category_map` returns the same result as `area_by_category`, and its page draws
     the classes.
@@ -148,16 +149,31 @@ Tried the same day with canopy height (indicator 129 of the regional platform, a
 - The layer is served at about 1 km pixels (400 over the 20 km box); its description says
   250 m. Filed as AM-731.
 
-## What staging needs first
+## From spike to staging
 
-- **One fetch per map.** The page's shapes should come from the query the figures came from,
-  not from a second one.
-- **The shapes from the handler itself**, not through its private methods as the spike does.
-- **A decision on the basemap provider.** OpenFreeMap is free and keyless, and a third-party
-  service all the same.
-- **The page's notes in the user's language.** They are in English.
-- **A fallback for hosts that do not render MCP Apps.** The tool result is unchanged, so they
-  still get the figures.
+The spike's code is gone. The maps now live in `mcp/src/mcp_server/maps/` as two tools,
+`map_area_by_category` and `map_raster`. The ArcGIS variant, the area-only maps, the diagnostics
+and the tools only the page could call were dropped. What the spike left for staging, and where
+each item stands:
+
+- **One fetch per map: done.** The tool answers with the figures and puts the clipped shapes and
+  their colours in the result's `_meta`, which the host hands to the page and not to the model.
+  The layer's renderer is fetched alongside the query and kept for later calls. The one extra
+  query left is for layers coloured by a field other than their class (219), where each class's
+  value has to be read.
+- **The shapes from the handler: done.** `AreaHandlers.area_by_category_map` clips once and
+  returns the same `Result` as `area_by_category` along with the map. The clipped polygons are
+  now dissolved per class, so the payload is smaller: 82 KB against 147 KB for 214 over the
+  same box.
+- **The page's notes in the user's language: done, English and Spanish.** The page takes the
+  host's locale, then the browser's. Class names and CMS caveats stay in the language the data
+  is in.
+- **A fallback for hosts that do not render MCP Apps: done.** The tools return what the plain
+  tools return, as the same text, so such a host gets the figures without the map.
+- **The basemap provider: open.** Still OpenFreeMap, one constant in `maps/__init__.py`.
+- **Not retried in Desktop yet.** Whether Desktop hands `_meta` to the page is what the staging
+  version depends on; the extension's specification says it does. If it did not, the page would
+  show the figures and a note that the shapes did not arrive.
 
 ## Not tried
 

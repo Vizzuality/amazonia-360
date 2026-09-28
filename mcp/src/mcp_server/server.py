@@ -5,8 +5,8 @@ from mcp_server import __version__
 from mcp_server.arcgis.client import ArcGISClient
 from mcp_server.config import Settings
 from mcp_server.handlers.area import AreaHandlers
+from mcp_server.maps import register_map_tools
 from mcp_server.measurement.call_log import CallLog
-from mcp_server.spike_maps import register_map_spike
 from mcp_server.tools.area import register_area_tools
 from mcp_server.tools.catalogue import register_catalogue_tools
 
@@ -22,6 +22,10 @@ against the module (coverage) and what the layer covers (layer); each field is d
 in the tool's output schema. caveats holds known defects of the dataset, written by a
 person in the CMS; quote them unchanged. Figures from different indicators are not meant
 to be combined.
+
+When the user asks to see a result on a map, map_area_by_category returns the same
+figures as area_by_category and draws them for the user; map_raster does the same for a
+regional raster. The map shows the figures and their notes; the answer still needs them.
 """
 
 
@@ -44,6 +48,6 @@ def create_mcp_server(
     )
     register_catalogue_tools(server)
     register_area_tools(server, handlers, call_log)
-    log_path = settings.call_log_path.parent / "map-diagnostics.jsonl"
-    register_map_spike(server, handlers, log_path)
+    raster_http = httpx.AsyncClient(timeout=settings.arcgis_timeout_s)
+    register_map_tools(server, handlers, call_log, raster_http)
     return server

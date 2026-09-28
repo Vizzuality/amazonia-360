@@ -3,9 +3,9 @@ from pathlib import Path
 
 import pytest
 
-from mcp_server import spike_maps
+from mcp_server import maps
 
-THEME = Path(spike_maps.__file__).parent / "theme.css"
+THEME = Path(maps.__file__).parent / "theme.css"
 FRONT = Path(__file__).parents[2] / "client" / "src" / "styles" / "globals.css"
 # Composed differently on the front end (var(--montserrat) from next/font).
 NOT_COPIED = {"--font-sans"}

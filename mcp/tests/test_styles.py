@@ -1,6 +1,6 @@
 from typing import Any
 
-from mcp_server.spike_maps.styles import PALETTE, category_styles, join_field
+from mcp_server.arcgis.styles import PALETTE, category_styles, join_field
 
 
 def symbol(r: int, g: int, b: int) -> dict[str, Any]:

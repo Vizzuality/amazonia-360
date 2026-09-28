@@ -3,7 +3,7 @@ import pytest
 from shapely.geometry import box
 
 from mcp_server.arcgis.client import ArcGISError
-from mcp_server.spike_maps.raster import RASTERS, class_function, class_pixels, to_rest
+from mcp_server.arcgis.raster import RASTERS, class_function, class_pixels, to_rest
 
 CANOPY = RASTERS["canopy_height"]
 

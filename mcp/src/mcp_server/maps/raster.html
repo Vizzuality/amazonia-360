@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Raster over the area</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@6.11.2/dist/maplibre-gl.css">
+  <style>/*THEME*/</style>
+  <style>
+    #map { height: 440px; }
+    #legend {
+      margin: 8px; padding: 8px 16px; background: #fff;
+      border: 1px solid var(--color-blue-100); border-radius: var(--radius);
+    }
+    #legend h2 { font-size: 12px; font-weight: 700; margin: 0 0 4px; }
+    .row { display: flex; align-items: baseline; gap: 6px; font-size: 12px; padding: 2px 0; }
+    .row .name { flex: 1; }
+    .row .share { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .swatch { width: 8px; height: 8px; flex: none; border-radius: 2px; box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25); }
+    .note { font-size: 11px; font-weight: 500; color: hsl(var(--muted-foreground)); margin: 6px 0 0; }
+  </style>
+  <script>/*COMMON*/</script>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="legend"></div>
+  <script type="module">
+    const { translator, esc, number, bounds } = window.map360;
+    const t = translator({
+      en: {
+        waiting: "Waiting for the figures…",
+        title: "{raster}: share of the area",
+        pixels: "Shares of the image server's pixels counted inside the area, about 1 km each; an area of a few km has only a few pixels. Pixels counted: {pixels}.",
+        source: "Classes and colours as on Amazonia 360. Outside the area the raster is dimmed; the shares count only the pixels inside.",
+        noImage: "The host did not pass the image to the map; the shares above are complete.",
+        failed: "The map could not load: {message}",
+      },
+      es: {
+        waiting: "Esperando las cifras…",
+        title: "{raster}: proporción del área",
+        pixels: "Proporción de los píxeles del servidor de imágenes contados dentro del área, de alrededor de 1 km cada uno; un área de pocos km tiene pocos píxeles. Píxeles contados: {pixels}.",
+        source: "Clases y colores como en Amazonia 360. Fuera del área el ráster se atenúa; las proporciones cuentan solo los píxeles de dentro.",
+        noImage: "El host no pasó la imagen al mapa; las proporciones de arriba están completas.",
+        failed: "No se pudo cargar el mapa: {message}",
+      },
+    });
+    const pct = (n) => number(n, { style: "percent", maximumFractionDigits: 1 });
+    const legend = document.getElementById("legend");
+    legend.textContent = t("waiting");
+
+    const library = import("https://cdn.jsdelivr.net/npm/maplibre-gl@6.11.2/dist/maplibre-gl.mjs");
+    const state = { map: null, area: null };
+    let resolveMap;
+    const mapReady = new Promise((r) => { resolveMap = r; });
+
+    // Everything outside the area, so the raster there is dimmed and not hidden.
+    function mask(area) {
+      const outers = area.type === "Polygon" ? [area.coordinates[0]] : area.coordinates.map((p) => p[0]);
+      const world = [[-180, -85], [180, -85], [180, 85], [-180, 85], [-180, -85]];
+      return { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [world, ...outers.map((r) => [...r].reverse())] } };
+    }
+
+    async function draw(area) {
+      const maplibregl = await library;
+      const map = new maplibregl.Map({
+        container: "map",
+        style: "https://tiles.openfreemap.org/styles/positron",
+        bounds: bounds(area),
+        fitBoundsOptions: { padding: 60 },
+        attributionControl: { compact: true },
+      });
+      state.map = map;
+      state.area = area;
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
+      map.once("load", resolveMap);
+    }
+
+    async function addImage({ image, corners }) {
+      await mapReady;
+      const map = state.map;
+      // Under water, rivers, roads, boundaries and names, so the map stays readable.
+      const under = map.getStyle().layers.find((l) => l.id === "water")?.id;
+      map.addSource("raster", { type: "image", url: image, coordinates: corners });
+      map.addLayer({ id: "raster", type: "raster", source: "raster", paint: { "raster-resampling": "nearest", "raster-opacity": 0.85 } }, under);
+      map.addSource("mask", { type: "geojson", data: mask(state.area) });
+      map.addLayer({ id: "mask", type: "fill", source: "mask", paint: { "fill-color": "#ffffff", "fill-opacity": 0.55 } }, under);
+    }
+
+    window.view = {
+      input(args) {
+        if (args.area) draw(args.area).catch((e) => window.view.fail(String(e?.message || e)));
+      },
+      result(result) {
+        if (result.isError) {
+          legend.innerHTML = `<p class="note">${esc(result.content?.[0]?.text || "")}</p>`;
+          return;
+        }
+        const r = result.structuredContent;
+        if (!r) return;
+        const image = result._meta?.map;
+        legend.innerHTML = `
+          <h2>${esc(t("title", { raster: r.raster }))}</h2>
+          ${r.classes.map((c) => `<div class="row"><span class="swatch" style="background:${esc(c.color)}"></span><span class="name">${esc(c.label)}</span><span class="share">${pct(c.share)}</span></div>`).join("")}
+          <p class="note">${esc(t("pixels", { pixels: number(r.pixels) }))}</p>
+          <p class="note">${esc(t(image?.image ? "source" : "noImage"))}</p>`;
+        if (image?.image) addImage(image).catch((e) => window.view.fail(String(e?.message || e)));
+      },
+      fail(message) {
+        legend.insertAdjacentHTML("beforeend", `<p class="note">${esc(t("failed", { message }))}</p>`);
+      },
+    };
+  </script>
+  <script type="module">/*BRIDGE*/</script>
+</body>
+</html>

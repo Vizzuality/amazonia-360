@@ -1,8 +1,9 @@
-"""Spike: a raster of the regional platform drawn in the map view.
+"""Rasters of the regional platform: class shares over an area, and an image of it.
 
-atlas.iadb.org sends CORS headers only to the front end's own origins, so the page
+atlas.iadb.org sends CORS headers only to the front end's own origins, so a map page
 cannot load its images; the server asks for one image of the area and hands it over.
 The rendering and legend are the front end's, copied from client/datum/indicators.json.
+The catalogue has no rasters yet, so the one raster here is listed by hand.
 """
 
 import base64
@@ -13,10 +14,7 @@ from typing import Any
 import httpx
 from shapely.geometry.base import BaseGeometry
 
-from mcp_server.arcgis.client import (  # pyright: ignore[reportPrivateUsage]
-    ArcGISError,
-    _esri_polygon,
-)
+from mcp_server.arcgis.client import ArcGISError, esri_polygon
 
 # Indicator 129 of the front end, read on 28 September 2026.
 RASTERS: dict[str, dict[str, Any]] = {
@@ -116,7 +114,7 @@ async def class_pixels(
         http,
         f"{raster['url']}/computeHistograms",
         {
-            "geometry": _esri_polygon(aoi),
+            "geometry": esri_polygon(aoi),
             "geometryType": "esriGeometryPolygon",
             "renderingRule": json.dumps(
                 to_rest(class_function(raster["raster_function"]))

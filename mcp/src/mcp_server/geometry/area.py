@@ -1,7 +1,9 @@
 from collections import defaultdict
+from typing import Any
 
 import shapely
 from pyproj import Geod
+from shapely.geometry import mapping
 from shapely.geometry.base import BaseGeometry
 
 _GEOD = Geod(ellps="WGS84")
@@ -22,18 +24,11 @@ def geodesic_area_ha(geom: BaseGeometry) -> float:
     return abs(area_m2) / _M2_PER_HA
 
 
-def clip_area_by_category(
+def clip_by_category(
     aoi: BaseGeometry, features: list[tuple[str, BaseGeometry]]
-) -> dict[str, float]:
-    """Hectares of each category inside the AOI, leaving out categories with none.
-
-    Features of one category are summed, not unioned, so this assumes the layer has no
-    overlaps within a category. Measured on layer 214, delivered undissolved, over a
-    0.6 by 0.6 degree AOI with 485 features: the sum exceeds the union by at most
-    0.03 %, from the 0.001 degree simplification. A layer with real overlaps, such as
-    an inventory where two actions cover the same ground, needs a union per category.
-    """
-    totals: dict[str, float] = defaultdict(float)
+) -> dict[str, list[BaseGeometry]]:
+    """Each feature's part inside the AOI, by category, leaving out empty ones."""
+    pieces: dict[str, list[BaseGeometry]] = defaultdict(list)
     for category, geom in features:
         # Features arrive invalid, mostly rings that maxAllowableOffset collapsed
         # below four points (97 of 544 on layer 214 near Nuevo Rocafuerte). The
@@ -42,7 +37,57 @@ def clip_area_by_category(
         if not geom.is_valid:
             geom = shapely.make_valid(geom, method="structure", keep_collapsed=False)
         inside = geom.intersection(aoi)
-        if inside.is_empty:
-            continue
-        totals[category] += geodesic_area_ha(inside)
+        if not inside.is_empty:
+            pieces[category].append(inside)
+    return dict(pieces)
+
+
+def area_by_category(pieces: dict[str, list[BaseGeometry]]) -> dict[str, float]:
+    """Hectares of each category, leaving out categories with none.
+
+    Features of one category are summed, not unioned, so this assumes the layer has no
+    overlaps within a category. Measured on layer 214, delivered undissolved, over a
+    0.6 by 0.6 degree AOI with 485 features: the sum exceeds the union by at most
+    0.03 %, from the 0.001 degree simplification. A layer with real overlaps, such as
+    an inventory where two actions cover the same ground, needs a union per category.
+    """
+    totals = {c: sum(geodesic_area_ha(g) for g in gs) for c, gs in pieces.items()}
     return {c: a for c, a in totals.items() if a > 0}
+
+
+def clip_area_by_category(
+    aoi: BaseGeometry, features: list[tuple[str, BaseGeometry]]
+) -> dict[str, float]:
+    """Hectares of each category inside the AOI, leaving out categories with none."""
+    return area_by_category(clip_by_category(aoi, features))
+
+
+def category_shapes(
+    pieces: dict[str, list[BaseGeometry]],
+) -> list[dict[str, Any]]:
+    """One GeoJSON feature per category, for a map: the pieces' polygons dissolved.
+
+    Rounded to 1e-6 degrees (about 10 cm), which is below what the map can show and
+    keeps the payload small.
+    """
+    shapes: list[dict[str, Any]] = []
+    for category, geoms in pieces.items():
+        polygons = [
+            g
+            for geom in geoms
+            for g in shapely.get_parts(geom)
+            if g.geom_type in ("Polygon", "MultiPolygon")
+        ]
+        if not polygons:
+            continue
+        shape = shapely.set_precision(shapely.union_all(polygons), 1e-6)
+        if shape.is_empty:
+            continue
+        shapes.append(
+            {
+                "type": "Feature",
+                "properties": {"category": category},
+                "geometry": mapping(shape),
+            }
+        )
+    return shapes

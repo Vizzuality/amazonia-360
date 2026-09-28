@@ -1,9 +1,8 @@
 <!doctype html>
-<html lang="en" data-library="maplibre-categories">
+<html>
 <head>
   <meta charset="utf-8">
   <title>Area by category</title>
-  <script>/*DIAGNOSTICS*/</script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@6.11.2/dist/maplibre-gl.css">
   <style>/*THEME*/</style>
   <style>
@@ -47,32 +46,66 @@
       border-radius: var(--radius); padding: 8px 12px; font-size: 12px;
     }
     .maplibregl-popup-content strong { display: block; font-weight: 700; }
-    #diag { white-space: pre; padding: 4px 8px; background: hsl(var(--muted)); font-size: 10px; font-weight: 500; }
   </style>
+  <script>/*COMMON*/</script>
 </head>
 <body>
   <div id="wrap">
     <div id="map"></div>
     <div id="tools"></div>
   </div>
-  <div id="legend">Waiting for the figures…</div>
-  <div id="diag"></div>
+  <div id="legend"></div>
   <script type="module">
-    const { mark, report } = window.diag;
+    const { translator, esc, number, bounds } = window.map360;
+    const t = translator({
+      en: {
+        waiting: "Waiting for the figures…",
+        title: "Hectares by class",
+        area: "Area",
+        toggle: "Show or hide on the map",
+        ha: "{ha} ha",
+        popup: "{ha} ha in the area",
+        popupShare: "{ha} ha in the area · {share} of the area",
+        unclassified: "{ha} ha of the area have no class in this layer. They are not a class of their own.",
+        notMapped: "This layer does not map this part of the module.",
+        boundingBox: "The module boundary is still a bounding box; part of an area near its edge may fall outside the module.",
+        palette: "Some colours are not the layer's own: its style does not give one colour per class.",
+        noShapes: "The host did not pass the shapes to the map; the figures above are complete.",
+        failed: "The map could not load: {message}",
+        fullscreen: "Full screen",
+        exitFullscreen: "Exit full screen",
+      },
+      es: {
+        waiting: "Esperando las cifras…",
+        title: "Hectáreas por clase",
+        area: "Área",
+        toggle: "Mostrar u ocultar en el mapa",
+        ha: "{ha} ha",
+        popup: "{ha} ha en el área",
+        popupShare: "{ha} ha en el área · {share} del área",
+        unclassified: "{ha} ha del área no tienen clase en esta capa. No son una clase propia.",
+        notMapped: "Esta capa no cartografía esta parte del módulo.",
+        boundingBox: "El límite del módulo es todavía un rectángulo envolvente; parte de un área cerca de su borde puede quedar fuera del módulo.",
+        palette: "Algunos colores no son los de la capa: su estilo no da un color por clase.",
+        noShapes: "El host no pasó los polígonos al mapa; las cifras de arriba están completas.",
+        failed: "No se pudo cargar el mapa: {message}",
+        fullscreen: "Pantalla completa",
+        exitFullscreen: "Salir de pantalla completa",
+      },
+    });
     const BASEMAP = "https://tiles.openfreemap.org/styles/positron";
     const AREA = "#009ade"; // The front end's POLYGON_SYMBOL.
     const HOVER = "#009aff"; // The front end's highlight colour.
-    const fmt = new Intl.NumberFormat("en", { maximumFractionDigits: 0 });
-    const pct = new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 });
-    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+    const ha = (n) => number(n, { maximumFractionDigits: 0 });
+    const pct = (n) => number(n, { style: "percent", maximumFractionDigits: 1 });
+    const legend = document.getElementById("legend");
+    legend.textContent = t("waiting");
 
-    const library = import("https://cdn.jsdelivr.net/npm/maplibre-gl@6.11.2/dist/maplibre-gl.mjs").then(
-      (m) => { mark("library_loaded"); return m; },
-      (e) => { mark("library_failed", { message: String(e) }); window.diag.done(); return null; },
-    );
+    const library = import("https://cdn.jsdelivr.net/npm/maplibre-gl@6.11.2/dist/maplibre-gl.mjs");
 
-    // Three things arrive in any order: the map, the figures and the shapes.
-    const state = { map: null, result: null, shapes: null, styles: null, hidden: new Set() };
+    // The area comes with the tool's input; the figures, shapes and colours with its
+    // result. Either may arrive first.
+    const state = { map: null, result: null, shapes: null, styles: null, hidden: new Set(), error: null };
     let resolveMap;
     const mapReady = new Promise((r) => { resolveMap = r; });
 
@@ -93,10 +126,13 @@
       map.setPaintProperty("shapes-fill", "fill-color", byCategory("fill", "#999"));
       map.setPaintProperty("shapes-line", "line-color", byCategory("outline", "rgba(0,0,0,0.25)"));
       map.setPaintProperty("shapes-line", "line-width", byCategory("outline_width", 0.5));
-      map.once("idle", () => { mark("shapes_drawn"); window.diag.done(); });
     }
 
     function renderLegend() {
+      if (state.error) {
+        legend.innerHTML = `<p class="note">${esc(state.error)}</p>`;
+        return;
+      }
       const r = state.result;
       if (!r) return;
       const rows = Object.entries(r.value).sort((a, b) => b[1] - a[1]);
@@ -105,16 +141,17 @@
         return `<span class="swatch" style="background:${s?.swatch || "hsl(var(--muted))"}"></span>`;
       };
       const notes = [];
-      if (r.unclassified_ha > 0) notes.push(`${fmt.format(r.unclassified_ha)} ha of the area have no class in this layer. They are not a class of their own.`);
-      if (r.layer?.empty_result === "not_mapped_here") notes.push("This layer does not map this part of the module.");
-      if (r.coverage?.boundary === "bounding_box") notes.push("The module boundary is still a bounding box; part of an area near its edge may fall outside the module.");
-      if (state.styles && Object.values(state.styles).some((s) => !s.from_layer)) notes.push("Some colours are not the layer's own: its style does not give one colour per class.");
+      if (r.unclassified_ha > 0) notes.push(t("unclassified", { ha: ha(r.unclassified_ha) }));
+      if (r.layer?.empty_result === "not_mapped_here") notes.push(t("notMapped"));
+      if (r.coverage?.boundary === "bounding_box") notes.push(t("boundingBox"));
+      if (state.styles && Object.values(state.styles).some((s) => !s.from_layer)) notes.push(t("palette"));
+      if (!state.shapes) notes.push(t("noShapes"));
+      // Written by a person in the CMS, in the language they wrote it in.
       for (const c of r.caveats || []) notes.push(c);
-      const legend = document.getElementById("legend");
       legend.innerHTML = `
-        <h2>Hectares by class</h2>
-        ${rows.map(([c, ha]) => `<button class="row${state.hidden.has(c) ? " hidden" : ""}" data-category="${esc(c)}" title="Show or hide on the map">${swatch(c)}<span class="name">${esc(c)}</span><span class="ha">${fmt.format(ha)} ha</span></button>`).join("")}
-        <div class="row total"><span class="swatch" style="background:none;box-shadow:inset 0 0 0 1.5px ${AREA}"></span><span class="name">Area</span><span class="ha">${fmt.format(r.aoi_ha)} ha</span></div>
+        <h2>${esc(t("title"))}</h2>
+        ${rows.map(([c, n]) => `<button class="row${state.hidden.has(c) ? " hidden" : ""}" data-category="${esc(c)}" title="${esc(t("toggle"))}">${swatch(c)}<span class="name">${esc(c)}</span><span class="ha">${esc(t("ha", { ha: ha(n) }))}</span></button>`).join("")}
+        <div class="row total"><span class="swatch" style="background:none;box-shadow:inset 0 0 0 1.5px ${AREA}"></span><span class="name">${esc(t("area"))}</span><span class="ha">${esc(t("ha", { ha: ha(r.aoi_ha) }))}</span></div>
         ${notes.map((n) => `<p class="note">${esc(n)}</p>`).join("")}`;
       legend.querySelectorAll("button.row").forEach((row) => row.addEventListener("click", () => {
         const c = row.dataset.category;
@@ -124,22 +161,14 @@
       }));
     }
 
-    // Figures come from the tool result the model also receives; the page shows
-    // them itself, so the notes reach the user whatever the model writes.
-    window.onResult = (result) => {
-      mark("result_received");
-      state.result = result.structuredContent || null;
-      renderLegend();
-    };
-
-    function addFullscreen(maplibregl) {
+    function addFullscreen() {
       const app = window.app;
       const modes = app?.getHostContext?.()?.availableDisplayModes || [];
       if (!modes.includes("fullscreen")) return;
       const button = document.createElement("button");
       const sync = (mode) => {
         document.body.classList.toggle("fullscreen", mode === "fullscreen");
-        button.textContent = mode === "fullscreen" ? "Exit full screen" : "Full screen";
+        button.textContent = t(mode === "fullscreen" ? "exitFullscreen" : "fullscreen");
         state.map?.resize();
       };
       button.addEventListener("click", async () => {
@@ -170,33 +199,29 @@
         const c = e.features[0]?.properties?.category;
         const r = state.result;
         if (!c) return;
-        const ha = r?.value?.[c];
-        const share = ha != null && r?.aoi_ha ? ` · ${pct.format(ha / r.aoi_ha)} of the area` : "";
+        const n = r?.value?.[c];
+        const text = n == null ? "" : r?.aoi_ha
+          ? t("popupShare", { ha: ha(n), share: pct(n / r.aoi_ha) })
+          : t("popup", { ha: ha(n) });
         new maplibregl.Popup({ closeButton: false, maxWidth: "280px" })
           .setLngLat(e.lngLat)
-          .setHTML(`<strong>${esc(c)}</strong>${ha != null ? `${fmt.format(ha)} ha in the area${share}` : ""}`)
+          .setHTML(`<strong>${esc(c)}</strong>${esc(text)}`)
           .addTo(map);
       });
     }
 
-    window.drawArea = async (area, indicatorId) => {
+    async function draw(area) {
       const maplibregl = await library;
-      if (!maplibregl) return;
-      const ring = area.type === "Polygon" ? area.coordinates[0] : area.coordinates[0][0];
-      const xs = ring.map((p) => p[0]);
-      const ys = ring.map((p) => p[1]);
       const map = new maplibregl.Map({
         container: "map",
         style: BASEMAP,
-        bounds: [[Math.min(...xs), Math.min(...ys)], [Math.max(...xs), Math.max(...ys)]],
+        bounds: bounds(area),
         fitBoundsOptions: { padding: 30 },
         attributionControl: { compact: true },
       });
       state.map = map;
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
-      map.on("error", (e) => mark("map_error", { message: String(e.error?.message || e.error) }));
       map.once("load", () => {
-        mark("map_load");
         map.addSource("area", { type: "geojson", data: { type: "Feature", geometry: area, properties: {} } });
         map.addSource("shapes", { type: "geojson", data: { type: "FeatureCollection", features: [] }, generateId: true });
         map.addLayer({ id: "area-fill", type: "fill", source: "area", paint: { "fill-color": AREA, "fill-opacity": 0.13 } });
@@ -208,30 +233,32 @@
         });
         map.addLayer({ id: "area-line", type: "line", source: "area", paint: { "line-color": AREA, "line-width": 1.5 } });
         addInteraction(maplibregl, map);
-        addFullscreen(maplibregl);
+        addFullscreen();
         resolveMap();
       });
+    }
 
-      if (indicatorId == null || !window.app) return;
-      const t = performance.now();
-      try {
-        const res = await window.app.callServerTool({
-          name: "category_shapes",
-          arguments: { indicator_id: indicatorId, area },
-        });
-        const s = res.structuredContent;
-        if (res.isError || !s) throw new Error(res.content?.[0]?.text || "no shapes");
-        report.shapes = { ...s.timing, features: s.shapes.features.length, round_trip_ms: Math.round(performance.now() - t) };
-        mark("shapes_received", report.shapes);
-        state.shapes = s.shapes;
-        state.styles = s.styles;
+    window.view = {
+      input(args) {
+        if (args.area) draw(args.area).catch((e) => window.view.fail(String(e?.message || e)));
+      },
+      async result(result) {
+        if (result.isError) {
+          state.error = result.content?.[0]?.text || t("failed", { message: "" });
+          renderLegend();
+          return;
+        }
+        state.result = result.structuredContent || null;
+        state.shapes = result._meta?.map?.shapes || null;
+        state.styles = result._meta?.map?.styles || null;
         renderLegend();
         await mapReady;
         paintShapes();
-      } catch (e) {
-        mark("shapes_failed", { message: String(e) });
-        window.diag.done();
-      }
+      },
+      fail(message) {
+        state.error = t("failed", { message });
+        renderLegend();
+      },
     };
   </script>
   <script type="module">/*BRIDGE*/</script>

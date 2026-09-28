@@ -98,6 +98,15 @@ This is not Payload's REST response. The CMS maps each document:
 Fields whose schema description starts with "Proposal" are not in the CMS contract yet;
 each description says where it would go in Payload.
 
+## Maps
+
+`map_area_by_category` and `map_raster` return the same figures as their plain counterparts
+and ask the host to show a map next to the answer, as an
+[MCP Apps](https://github.com/modelcontextprotocol/ext-apps) view. The pages, in `src/mcp_server/maps/`,
+use MapLibre from jsDelivr and OpenFreeMap tiles, and the front end's tokens and Montserrat. What
+only the page needs (clipped shapes, a raster image) travels in the result's `_meta`, not in the
+text the model reads. Hosts without MCP Apps get the figures alone.
+
 ## Timing run
 
 `amazonia360-mcp-timing` times every tool on every available indicator over the three fixed

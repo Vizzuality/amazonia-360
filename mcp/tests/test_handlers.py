@@ -53,6 +53,28 @@ class FakeClient:
         self.calls.append("features")
         return [] if self.empty else [("Bosque", box(-79.0, -2.0, -77.0, 0.0))]
 
+    async def renderer(self, layer: Layer) -> dict[str, Any] | None:
+        self.calls.append("renderer")
+        if self.fail:
+            raise ArcGISError("ArcGIS did not respond in time: x")
+        return {
+            "type": "uniqueValue",
+            "field1": layer.category_field,
+            "uniqueValueInfos": [
+                {
+                    "value": "Bosque",
+                    "label": "Bosque",
+                    "symbol": {"color": [0, 100, 0, 255]},
+                }
+            ],
+        }
+
+    async def value_pairs(
+        self, layer: Layer, aoi: BaseGeometry, field: str
+    ) -> dict[str, set[str]]:
+        self.calls.append("value_pairs")
+        return {}
+
 
 def handlers(client: FakeClient | None = None) -> AreaHandlers:
     return AreaHandlers(client or FakeClient())  # type: ignore[arg-type]
@@ -74,11 +96,13 @@ async def test_categories_in_area() -> None:
 async def test_clipping_does_not_block_other_calls(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    def slow_clip(aoi: BaseGeometry, features: list[Feature]) -> dict[str, float]:
+    def slow_clip(
+        aoi: BaseGeometry, features: list[Feature]
+    ) -> dict[str, list[BaseGeometry]]:
         time.sleep(0.3)
-        return {"Bosque": 1.0}
+        return {"Bosque": [box(-77.9, -1.1, -77.8, -1.0)]}
 
-    monkeypatch.setattr(area_handlers_module, "clip_area_by_category", slow_clip)
+    monkeypatch.setattr(area_handlers_module, "clip_by_category", slow_clip)
     stamps: list[float] = []
 
     async def tick() -> None:
@@ -281,3 +305,31 @@ async def test_presence_and_count_results_carry_no_hectare_split() -> None:
     result = await handlers().categories_in_area(210, TENA)
     assert result.classified_ha is None
     assert result.unclassified_ha is None
+
+
+@pytest.mark.anyio
+async def test_the_map_comes_from_the_same_query_as_the_figures() -> None:
+    client = FakeClient()
+    h = handlers(client)
+    result, drawn = await h.area_by_category_map(210, TENA)
+    plain = await h.area_by_category(210, TENA)
+    assert result.value == plain.value
+    assert client.calls.count("features") == 2
+    # Fetched once, then kept: renderers change with a republish, not between calls.
+    assert client.calls.count("renderer") == 1
+    (shape,) = drawn.shapes["features"]
+    assert shape["properties"] == {"category": "Bosque"}
+    assert shape["geometry"]["type"] == "Polygon"
+    assert drawn.styles["Bosque"]["swatch"] == "#006400"
+    assert drawn.styles["Bosque"]["from_layer"] is True
+
+
+@pytest.mark.anyio
+async def test_a_map_without_the_renderer_falls_back_to_the_palette() -> None:
+    class NoRenderer(FakeClient):
+        async def renderer(self, layer: Layer) -> dict[str, Any] | None:
+            raise ArcGISError("ArcGIS did not respond in time: x")
+
+    result, drawn = await handlers(NoRenderer()).area_by_category_map(210, TENA)
+    assert result.value
+    assert drawn.styles["Bosque"]["from_layer"] is False

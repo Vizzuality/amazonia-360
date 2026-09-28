@@ -1,8 +1,14 @@
 import pytest
 from shapely.geometry import MultiPolygon, Polygon, box, shape
+from shapely.geometry.base import BaseGeometry
 from shapely.geometry.polygon import orient
 
-from mcp_server.geometry.area import clip_area_by_category, geodesic_area_ha
+from mcp_server.geometry.area import (
+    category_shapes,
+    clip_area_by_category,
+    clip_by_category,
+    geodesic_area_ha,
+)
 
 
 def test_one_degree_square_at_the_equator() -> None:
@@ -90,3 +96,16 @@ def test_drops_a_ring_that_simplification_collapsed_to_a_point() -> None:
     kept = Polygon([(-75.3653, -0.9233), (-75.3643, -0.9236), (-75.3639, -0.9241)])
     result = clip_area_by_category(box(-75.5, -1.01, -75.32, -0.83), [("x", collapsed)])
     assert result["x"] == pytest.approx(geodesic_area_ha(kept))
+
+
+def test_the_map_shapes_dissolve_each_category_and_drop_lines() -> None:
+    aoi = box(0, 0, 1, 1)
+    features: list[tuple[str, BaseGeometry]] = [
+        ("A", box(-1, 0, 0.5, 1)),
+        ("A", box(0.5, 0, 2, 1)),
+        # Touches the AOI along its edge only: a line, not an area.
+        ("B", box(1, 0, 2, 1)),
+    ]
+    (a,) = category_shapes(clip_by_category(aoi, features))
+    assert a["properties"] == {"category": "A"}
+    assert shape(a["geometry"]).equals(aoi)
