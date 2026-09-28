@@ -1272,7 +1272,7 @@
         "method_url": null
       },
       "category_field": null,
-      "covers_module": true,
+      "covers_module": false,
       "documented_count": null,
       "sync": {
         "arcgis_item_id": "420104122f344d78b5f9fa66deaeb70f",

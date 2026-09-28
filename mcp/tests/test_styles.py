@@ -1,5 +1,7 @@
 from typing import Any
 
+import pytest
+
 from mcp_server.arcgis.styles import PALETTE, category_styles, join_field
 
 
@@ -89,3 +91,27 @@ def test_the_legend_colour_drops_alpha_as_the_front_end_does() -> None:
     styles = category_styles(renderer, "Ecosistema", ["Bosque"])
     assert styles["Bosque"]["fill"] == "rgba(209,108,196,0.008)"
     assert styles["Bosque"]["swatch"] == "#d16cc4"
+
+
+@pytest.mark.parametrize(
+    "symbol",
+    [
+        {"color": [None, 0, 0]},
+        {"color": [float("nan"), 0, 0, 255]},
+        {"color": ["12", 0, 0]},
+        {"color": [300, 0, 0]},
+        {"color": [0, 100, 0], "outline": [1]},
+        {"color": [0, 100, 0], "outline": {"width": "x", "color": "red"}},
+        {"color": {"r": 1}},
+    ],
+)
+def test_a_malformed_renderer_symbol_never_breaks_the_map(symbol: Any) -> None:
+    # The renderer is a third party's JSON; each of these used to raise.
+    renderer = {
+        "type": "uniqueValue",
+        "field1": "Clase",
+        "uniqueValueInfos": [{"value": "A", "label": "A", "symbol": symbol}],
+    }
+    style = category_styles(renderer, "Clase", ["A"])["A"]
+    assert style["fill"].startswith(("rgba(", "#"))
+    assert style["swatch"] is None or len(style["swatch"]) == 7

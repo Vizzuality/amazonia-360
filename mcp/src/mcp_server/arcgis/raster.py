@@ -52,7 +52,7 @@ def class_rule(raster: Raster) -> dict[str, Any]:
     ranges are whole numbers because on integer pixels the service truncates them:
     [1.5, 2.5) read as [1, 2), and every class came out one too high.
     """
-    inner = raster.raster_function["functionArguments"]["raster"]
+    inner = raster.classified
     if isinstance(inner, dict):
         return to_rest({**inner, "outputPixelType": "U8"})
     ranges = [bound for v in raster.values for bound in (v, v + 1)]
@@ -69,6 +69,8 @@ def class_rule(raster: Raster) -> dict[str, Any]:
 
 def class_counts(histogram: dict[str, Any], values: list[int]) -> list[int]:
     """Pixels of each class, from a histogram of class_rule's output."""
+    if not histogram["counts"]:
+        return [0] * len(values)
     width = (histogram["max"] - histogram["min"]) / histogram["size"]
     if abs(width - 1) > 1e-6:
         raise ArcGISError("Expected one histogram bin per class")

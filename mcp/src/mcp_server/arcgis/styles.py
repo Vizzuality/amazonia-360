@@ -17,6 +17,7 @@ as the front end does (its legend calls Color.toHex(), which drops alpha). On 21
 alpha is 2 of 255, so its map shows outlines and its legend shows colours.
 """
 
+import math
 from typing import Any
 
 Style = dict[str, Any]
@@ -30,29 +31,53 @@ PALETTE = [
 _PT_TO_PX = 4 / 3
 
 
-def _rgba(color: Any) -> str | None:
-    if not isinstance(color, list) or len(color) < 3:
+def _channels(color: Any) -> list[int] | None:
+    # The renderer is a third party's JSON: anything but 3 or 4 numbers from 0 to 255
+    # is treated as no colour, so the class falls back to the palette.
+    if not isinstance(color, list) or len(color) not in (3, 4):
         return None
-    r, g, b = (int(c) for c in color[:3])
-    a = int(color[3]) / 255 if len(color) > 3 else 1.0
+    channels = []
+    for c in color:
+        if isinstance(c, bool) or not isinstance(c, int | float):
+            return None
+        if not math.isfinite(c) or not 0 <= c <= 255:
+            return None
+        channels.append(int(c))
+    return channels
+
+
+def _rgba(color: Any) -> str | None:
+    channels = _channels(color)
+    if channels is None:
+        return None
+    r, g, b = channels[:3]
+    a = channels[3] / 255 if len(channels) > 3 else 1.0
     return f"rgba({r},{g},{b},{a:.3f})"
 
 
 def _hex(color: Any) -> str | None:
-    if not isinstance(color, list) or len(color) < 3:
+    channels = _channels(color)
+    if channels is None:
         return None
-    return "#" + "".join(f"{int(c):02x}" for c in color[:3])
+    return "#" + "".join(f"{c:02x}" for c in channels[:3])
+
+
+def _width(value: Any) -> float:
+    if isinstance(value, bool) or not isinstance(value, int | float):
+        return 0.0
+    return round(float(value) * _PT_TO_PX, 2) if math.isfinite(value) else 0.0
 
 
 def _symbol_style(symbol: Any) -> Style | None:
     if not isinstance(symbol, dict):
         return None
-    outline = symbol.get("outline") or {}
+    outline = symbol.get("outline")
+    outline = outline if isinstance(outline, dict) else {}
     return {
         "fill": _rgba(symbol.get("color")) or "rgba(0,0,0,0)",
         "swatch": _hex(symbol.get("color")),
         "outline": _rgba(outline.get("color")) or "rgba(0,0,0,0)",
-        "outline_width": round(float(outline.get("width") or 0) * _PT_TO_PX, 2),
+        "outline_width": _width(outline.get("width")),
         "from_layer": True,
     }
 

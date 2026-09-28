@@ -90,3 +90,25 @@ def test_coverage_partial() -> None:
 def test_coverage_outside() -> None:
     lima = parse_aoi(square(-77.1, -12.1, 0.2))
     assert module_coverage(lima).status == "outside"
+
+
+def test_rejects_an_area_that_reaches_far_beyond_the_module() -> None:
+    # The globe used to pass as "partial", pull every feature of a layer and
+    # measure as 0 ha.
+    world = {
+        "type": "Polygon",
+        "coordinates": [[[-180, -90], [180, -90], [180, 90], [-180, 90], [-180, -90]]],
+    }
+    with pytest.raises(AOIError, match="beyond the Ecuador module"):
+        parse_aoi(world)
+
+
+def test_accepts_an_area_drawn_across_the_border() -> None:
+    # Half a degree into Peru from the module's eastern edge (-75.189).
+    across = {
+        "type": "Polygon",
+        "coordinates": [
+            [[-75.4, -1.1], [-74.7, -1.1], [-74.7, -0.9], [-75.4, -0.9], [-75.4, -1.1]]
+        ],
+    }
+    assert module_coverage(parse_aoi(across)).status == "partial"

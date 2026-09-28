@@ -71,6 +71,7 @@
         boundingBox: "The module boundary is still a bounding box; part of an area near its edge may fall outside the module.",
         palette: "Some colours are not the layer's own: its style does not give one colour per class.",
         noShapes: "The host did not pass the shapes to the map; the figures above are complete.",
+        tooLarge: "The shapes are too large to draw here ({size} MB); the figures above are complete. A smaller area draws.",
         failed: "The map could not load: {message}",
         fullscreen: "Full screen",
         exitFullscreen: "Exit full screen",
@@ -88,6 +89,7 @@
         boundingBox: "El límite del módulo es todavía un rectángulo envolvente; parte de un área cerca de su borde puede quedar fuera del módulo.",
         palette: "Algunos colores no son los de la capa: su estilo no da un color por clase.",
         noShapes: "El host no pasó los polígonos al mapa; las cifras de arriba están completas.",
+        tooLarge: "Los polígonos son demasiado grandes para dibujarlos aquí ({size} MB); las cifras de arriba están completas. Un área más pequeña sí se dibuja.",
         failed: "No se pudo cargar el mapa: {message}",
         fullscreen: "Pantalla completa",
         exitFullscreen: "Salir de pantalla completa",
@@ -105,7 +107,7 @@
 
     // The area comes with the tool's input; the figures, shapes and colours with its
     // result. Either may arrive first.
-    const state = { map: null, result: null, shapes: null, styles: null, hidden: new Set(), error: null };
+    const state = { map: null, result: null, shapes: null, styles: null, omitted: null, hidden: new Set(), error: null };
     let resolveMap;
     const mapReady = new Promise((r) => { resolveMap = r; });
 
@@ -138,14 +140,15 @@
       const rows = Object.entries(r.value).sort((a, b) => b[1] - a[1]);
       const swatch = (c) => {
         const s = state.styles?.[c];
-        return `<span class="swatch" style="background:${s?.swatch || "hsl(var(--muted))"}"></span>`;
+        return `<span class="swatch" style="background:${esc(s?.swatch || "hsl(var(--muted))")}"></span>`;
       };
       const notes = [];
       if (r.unclassified_ha > 0) notes.push(t("unclassified", { ha: ha(r.unclassified_ha) }));
       if (r.layer?.empty_result === "not_mapped_here") notes.push(t("notMapped"));
       if (r.coverage?.boundary === "bounding_box") notes.push(t("boundingBox"));
       if (state.styles && Object.values(state.styles).some((s) => !s.from_layer)) notes.push(t("palette"));
-      if (!state.shapes) notes.push(t("noShapes"));
+      if (state.omitted) notes.push(t("tooLarge", { size: number(state.omitted / 1e6, { maximumFractionDigits: 1 }) }));
+      else if (!state.shapes) notes.push(t("noShapes"));
       // Written by a person in the CMS, in the language they wrote it in.
       for (const c of r.caveats || []) notes.push(c);
       legend.innerHTML = `
@@ -251,6 +254,7 @@
         state.result = result.structuredContent || null;
         state.shapes = result._meta?.map?.shapes || null;
         state.styles = result._meta?.map?.styles || null;
+        state.omitted = result._meta?.map?.shapes_omitted_bytes || null;
         renderLegend();
         await mapReady;
         paintShapes();

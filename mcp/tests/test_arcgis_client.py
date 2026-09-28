@@ -261,3 +261,65 @@ async def test_value_pairs_group_the_other_field_by_class() -> None:
 
     pairs = await client_with(handler).value_pairs(LAYER, AOI, "Region")
     assert pairs == {"Bosque": {"Andes", "Llanura"}, "Pajonal": {"Andes"}}
+
+
+def test_esri_rings_are_clockwise_shells_and_counterclockwise_holes() -> None:
+    from shapely.geometry import MultiPolygon, Polygon
+    from shapely.geometry.polygon import LinearRing
+
+    from mcp_server.arcgis.client import esri_polygon
+
+    shell = [(0, 0), (0, 2), (2, 2), (2, 0), (0, 0)]
+    hole = [(0.5, 0.5), (0.5, 1.5), (1.5, 1.5), (1.5, 0.5), (0.5, 0.5)]
+    other = [(3, 0), (4, 0), (4, 1), (3, 1), (3, 0)]
+    geom = MultiPolygon([Polygon(shell, [hole]), Polygon(other)])
+    rings = json.loads(esri_polygon(geom))["rings"]
+    assert len(rings) == 3
+    # Esri reads a clockwise ring as a shell and a counterclockwise one as a hole.
+    assert [LinearRing(r).is_ccw for r in rings] == [False, True, False]
+
+
+@pytest.mark.anyio
+async def test_features_stop_when_the_service_repeats_a_page() -> None:
+    # A layer that ignores resultOffset sends its first page forever.
+    def handler(request: httpx.Request) -> httpx.Response:
+        page = {**square_feature("Bosque", -77.9), "id": 1}
+        return httpx.Response(
+            200, json={"features": [page], "exceededTransferLimit": True}
+        )
+
+    with pytest.raises(ArcGISError, match="repeats a page"):
+        await client_with(handler).features(LAYER, AOI, 0.001)
+
+
+@pytest.mark.anyio
+async def test_features_stop_after_the_page_limit(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from mcp_server.arcgis import client as client_module
+
+    monkeypatch.setattr(client_module, "MAX_PAGES", 3)
+    served: list[int] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        served.append(1)
+        page = {**square_feature("Bosque", -77.9), "id": len(served)}
+        return httpx.Response(
+            200, json={"features": [page], "exceededTransferLimit": True}
+        )
+
+    with pytest.raises(ArcGISError, match="more than 3 pages"):
+        await client_with(handler).features(LAYER, AOI, 0.001)
+    assert len(served) == 3
+
+
+@pytest.mark.anyio
+async def test_a_histogram_over_no_pixel_is_empty_not_invalid() -> None:
+    # What atlas.iadb.org answered for a 0.001 degree box on slope, 28 Sep 2026.
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json={"histograms": []})
+
+    histogram = await client_with(handler).histogram(
+        "https://example.test/image/rest/services/Slope/ImageServer", AOI, None
+    )
+    assert histogram["counts"] == []

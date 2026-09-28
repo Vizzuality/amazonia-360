@@ -986,7 +986,7 @@
         "method_url": null
       },
       "category_field": null,
-      "covers_module": true,
+      "covers_module": false,
       "documented_count": null
     },
     {

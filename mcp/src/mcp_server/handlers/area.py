@@ -192,8 +192,19 @@ class AreaHandlers:
             raise HandlerError(f"{exc} from {raster.url}") from exc
         classified = sum(counts)
         total = max(sum(stored["counts"]), classified)
+        pixel = p.indicator.sync.pixel_size_deg
+        if total == 0 and pixel is not None:
+            x0, y0, x1, y1 = p.aoi.bounds
+            if min(x1 - x0, y1 - y0) < pixel:
+                raise HandlerError(
+                    f"The area is smaller than one pixel of this raster "
+                    f"({pixel:.4f} degrees, about {pixel * 111.32:.1f} km), so no "
+                    "pixel falls in it. Draw a larger area."
+                )
+        # Not rounded: a class of a few pixels in a large area would read as 0.0,
+        # present and absent at once.
         shares = {
-            item.label: round(n / total, 4)
+            item.label: n / total
             for item, n in zip(raster.legend, counts, strict=True)
             if n > 0
         }
@@ -205,7 +216,7 @@ class AreaHandlers:
         )
         result = self._result(p, shares, "share of pixels", computed_over)
         if total:
-            result.unclassified_share = round((total - classified) / total, 4)
+            result.unclassified_share = (total - classified) / total
             # Pixels with data and no class: the raster says what is there, and it
             # is none of its classes. Not the empty result of a layer that misses.
             result.layer.empty_result = None

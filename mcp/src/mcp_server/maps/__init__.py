@@ -30,6 +30,9 @@ RASTER_URI = "ui://amazonia360/maps/raster.html"
 # Chosen over Esri's own style, which needs a key in the page; see the evaluation.
 _OPENFREEMAP = "https://tiles.openfreemap.org"
 _JSDELIVR = "https://cdn.jsdelivr.net"
+# About 50 times a 20 km box on the densest layer tried (82 KB on 214). Past it the
+# page shows the figures and says the shapes were left out.
+MAX_SHAPES_BYTES = 4_000_000
 CSP = {
     "resourceDomains": [_JSDELIVR, _OPENFREEMAP],
     "connectDomains": [_JSDELIVR, _OPENFREEMAP],
@@ -110,7 +113,14 @@ def register_map_tools(
             handlers.area_by_category_map(indicator_id, area),
             lambda out: out[0],
         )
-        return _tool_result(result, {"shapes": drawn.shapes, "styles": drawn.styles})
+        size = len(pydantic_core.to_json(drawn.shapes))
+        # The colours stay either way: the legend needs them.
+        meta: dict[str, Any] = {"styles": drawn.styles}
+        if size > MAX_SHAPES_BYTES:
+            meta["shapes_omitted_bytes"] = size
+        else:
+            meta["shapes"] = drawn.shapes
+        return _tool_result(result, meta)
 
     server.add_tool(
         map_area_by_category,
@@ -134,7 +144,7 @@ def register_map_tools(
             handlers.class_shares_map(indicator_id, area),
             lambda out: out[0],
         )
-        meta = {
+        meta: dict[str, Any] = {
             "name": drawn.name,
             "image": drawn.image,
             "corners": drawn.corners,

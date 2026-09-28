@@ -7,6 +7,7 @@ indicator unavailable, so a broken service cannot crash the whole run.
 
 import asyncio
 import logging
+import re
 from datetime import UTC, datetime
 from typing import Any
 
@@ -20,6 +21,7 @@ from mcp_server.catalogue.models import (
 )
 
 ARCGIS_ONLINE = "https://www.arcgis.com"
+_ITEM_ID = re.compile(r"[0-9a-f]{32}")
 ITEM_PATH = "/sharing/rest/content/items/{item_id}"
 
 # The contract has no field for the reason, so it goes to whoever runs the sync.
@@ -128,8 +130,14 @@ async def _with_item(
     readings: Sync,
     portal: str = ARCGIS_ONLINE,
 ) -> Sync:
-    if readings.arcgis_item_id is None:
-        log.warning("%s: the service names no item", what)
+    # Both come from the service's own JSON and go into a URL.
+    if readings.arcgis_item_id is None or not _ITEM_ID.fullmatch(
+        readings.arcgis_item_id
+    ):
+        log.warning("%s: no usable item id: %r", what, readings.arcgis_item_id)
+        return readings.model_copy(update={"sync_status": "item_inaccessible"})
+    if not portal.startswith("https://"):
+        log.warning("%s: the portal is not https: %r", what, portal)
         return readings.model_copy(update={"sync_status": "item_inaccessible"})
     try:
         url = portal + ITEM_PATH.format(item_id=readings.arcgis_item_id)

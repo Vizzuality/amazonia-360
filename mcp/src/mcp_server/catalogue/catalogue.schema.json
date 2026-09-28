@@ -42,7 +42,7 @@
     },
     "ImageryResource": {
       "additionalProperties": false,
-      "description": "An image service, as Payload's imagery block holds it.\n\nraster_function is the front end's, in the JS SDK's form. When it is a Colormap,\nits entries are the classes, in the legend's order.",
+      "description": "An image service, as Payload's imagery block holds it.\n\nraster_function is the front end's, in the JS SDK's form. When it is a Colormap,\nits entries are the classes, in the legend's order. A function the MCP cannot\nread by class still loads: raster_problem() says why, and the indicator reports\nitself unavailable instead of stopping the whole catalogue.",
       "properties": {
         "type": {
           "const": "imagery",

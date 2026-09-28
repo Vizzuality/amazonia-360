@@ -328,7 +328,9 @@ async def test_the_map_comes_from_the_same_query_as_the_figures() -> None:
     result, drawn = await h.area_by_category_map(210, TENA)
     plain = await h.area_by_category(210, TENA)
     assert result.value == plain.value
+    # One query per answer: the map comes from the query the figures come from.
     assert client.calls.count("features") == 2
+    await h.area_by_category_map(210, TENA)
     # Fetched once, then kept: renderers change with a republish, not between calls.
     assert client.calls.count("renderer") == 1
     (shape,) = drawn.shapes["features"]
@@ -391,3 +393,91 @@ async def test_a_raster_with_data_but_no_class_is_not_an_unexpected_empty() -> N
     assert result.value == {}
     assert result.unclassified_share == 1.0
     assert result.layer.empty_result is None
+
+
+class ByRegion(FakeClient):
+    """A layer coloured by a coarser field than its classes, as 219 is."""
+
+    def __init__(self, *, pairs_fail: bool = False) -> None:
+        super().__init__()
+        self.pairs_fail = pairs_fail
+
+    async def renderer(self, layer: Layer) -> dict[str, Any] | None:
+        self.calls.append("renderer")
+        return {
+            "type": "uniqueValue",
+            "field1": "Region",
+            "uniqueValueInfos": [
+                {"value": "Norte", "label": "North", "symbol": {"color": [1, 2, 3]}}
+            ],
+        }
+
+    async def value_pairs(
+        self, layer: Layer, aoi: BaseGeometry, field: str
+    ) -> dict[str, set[str]]:
+        self.calls.append("value_pairs")
+        if self.pairs_fail:
+            raise ArcGISError("ArcGIS did not respond in time: x")
+        assert field == "Region"
+        return {"Bosque": {"Norte"}}
+
+
+@pytest.mark.anyio
+async def test_a_class_takes_the_colour_of_its_region_read_from_the_layer() -> None:
+    client = ByRegion()
+    _, drawn = await handlers(client).area_by_category_map(210, TENA)
+    assert "value_pairs" in client.calls
+    assert drawn.styles["Bosque"]["swatch"] == "#010203"
+
+
+@pytest.mark.anyio
+async def test_the_map_survives_the_region_query_failing() -> None:
+    _, drawn = await handlers(ByRegion(pairs_fail=True)).area_by_category_map(210, TENA)
+    assert drawn.styles["Bosque"]["from_layer"] is False
+
+
+class Pixels(FakeClient):
+    """Histograms given by the test: pixels per class value, and all pixels."""
+
+    def __init__(self, by_value: dict[int, int], stored: int) -> None:
+        super().__init__()
+        self.by_value = by_value
+        self.stored = stored
+
+    async def histogram(
+        self, url: str, aoi: BaseGeometry, rendering_rule: dict[str, Any] | None
+    ) -> dict[str, Any]:
+        if not self.stored:
+            return {"min": 0.0, "max": 0.0, "size": 0, "counts": []}
+        if rendering_rule is None:
+            return {"size": 1, "min": 0.0, "max": 1.0, "counts": [self.stored]}
+        counts = [self.by_value.get(v, 0) for v in range(6)]
+        return {"size": 6, "min": -0.5, "max": 5.5, "counts": counts}
+
+
+@pytest.mark.anyio
+async def test_a_class_of_a_few_pixels_is_not_rounded_away() -> None:
+    result = await handlers(Pixels({1: 2_000_000, 5: 50}, 2_000_050)).class_shares(
+        129, TENA
+    )
+    assert isinstance(result.value, dict)
+    assert result.value["Very High"] > 0
+
+
+@pytest.mark.anyio
+async def test_an_area_smaller_than_a_pixel_says_so() -> None:
+    # 0.001 degrees against the fixture's 0.009 degree pixels.
+    tiny = {
+        "type": "Polygon",
+        "coordinates": [
+            [
+                [-77.9, -1.1],
+                [-77.899, -1.1],
+                [-77.899, -1.099],
+                [-77.9, -1.099],
+                [-77.9, -1.1],
+            ]
+        ],
+    }
+    with pytest.raises(HandlerError, match="smaller than one pixel"):
+        await handlers(Pixels({}, 0)).class_shares(129, tiny)

@@ -119,7 +119,9 @@ async def test_area_tool_returns_the_envelope_and_logs_the_call(
     body = result.structured_content
     assert body["computed_over"]["type"] == "clipped_polygons"
     assert "total_ms" in body["timing"]
-    assert "unclassified_ha" in body
+    # FakeClient's one feature covers the whole box, so nothing is left unclassified.
+    assert body["unclassified_ha"] == 0
+    assert body["classified_ha"] == body["aoi_ha"]
 
     [line] = (tmp_path / "calls.jsonl").read_text().splitlines()
     record = json.loads(line)

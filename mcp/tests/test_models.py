@@ -226,15 +226,100 @@ def test_a_feature_layer_does_not_allow_class_shares() -> None:
     assert not indicator().allows("class_share")
 
 
-def test_a_legend_that_does_not_match_the_colormap_is_rejected() -> None:
+def _canopy_resource(**changes: Any) -> dict[str, Any]:
     resource = raster_indicator().model_dump()["resource"]
-    resource["legend"]["items"].pop()
-    with pytest.raises(ValidationError, match="colormap has 5 classes"):
-        CuratedIndicator.model_validate(curated(resource=resource, category_field=None))
+    return {**resource, **changes}
 
 
-def test_a_raster_without_a_colormap_is_unavailable() -> None:
-    resource = raster_indicator().model_dump()["resource"]
-    resource["raster_function"] = {"functionName": "Stretch", "functionArguments": {}}
+@pytest.mark.parametrize(
+    ("change", "reason"),
+    [
+        (
+            lambda r: r["legend"]["items"].pop(),
+            "the colormap has 5 classes and the legend 4 items",
+        ),
+        (
+            lambda r: r["raster_function"]["functionArguments"]["colormap"][
+                1
+            ].__setitem__(0, 1),
+            "the colormap repeats a pixel value",
+        ),
+        (
+            lambda r: r["legend"]["items"][1].__setitem__("label", "Low"),
+            "the legend repeats a label",
+        ),
+        (
+            # A named colormap, valid in the JS SDK, has no entries to count.
+            lambda r: r["raster_function"]["functionArguments"].update(
+                colormap=None, colormapName="Random"
+            ),
+            "the raster function is not a Colormap with explicit entries",
+        ),
+        (
+            lambda r: r["raster_function"].update(functionArguments=None),
+            "the raster function is not a Colormap with explicit entries",
+        ),
+        (
+            lambda r: r["raster_function"]["functionArguments"].update(
+                colormap=[{"value": 1}]
+            ),
+            "the raster function is not a Colormap with explicit entries",
+        ),
+        (
+            lambda r: r["raster_function"].update(functionName="Stretch"),
+            "the raster function is not a Colormap with explicit entries",
+        ),
+    ],
+)
+def test_a_raster_the_mcp_cannot_read_by_class_loads_as_unavailable(
+    change: Any, reason: str
+) -> None:
+    # Duplicates would count one bin twice or drop a class from the shares; a named
+    # colormap or a malformed one used to stop the whole catalogue from loading.
+    resource = _canopy_resource()
+    change(resource)
     canopy = raster_indicator(resource=resource)
-    assert canopy.unavailable_reason() == "the raster function is not a Colormap"
+    assert canopy.unavailable_reason() == reason
+    assert canopy.raster() is None
+
+
+def test_an_empty_colormap_and_legend_is_unavailable() -> None:
+    resource = _canopy_resource()
+    resource["raster_function"]["functionArguments"]["colormap"] = []
+    resource["legend"]["items"] = []
+    assert raster_indicator(resource=resource).unavailable_reason() == (
+        "the colormap lists no classes"
+    )
+
+
+def test_a_colormap_without_a_raster_reads_the_stored_values() -> None:
+    resource = _canopy_resource()
+    del resource["raster_function"]["functionArguments"]["raster"]
+    raster = raster_indicator(resource=resource).raster()
+    assert raster is not None
+    assert raster.classified == "$$"
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "http://example.test/arcgis/rest/services/eco/FeatureServer",
+        "https://example.test/x?token=1",
+        "http://169.254.169.254/latest/meta-data#",
+        "https://user:pw@example.test/x",
+        "https://[bad",
+    ],
+)
+def test_a_service_url_must_be_plain_https(url: str) -> None:
+    raw = curated()
+    raw["resource"]["url"] = url
+    with pytest.raises(ValidationError):
+        CuratedIndicator.model_validate(raw)
+
+
+@pytest.mark.parametrize("colour", ["red", "#12345", "#gggggg", "red;position:fixed"])
+def test_a_legend_colour_must_be_hex(colour: str) -> None:
+    resource = _canopy_resource()
+    resource["legend"]["items"][0]["color"] = colour
+    with pytest.raises(ValidationError, match="#rrggbb"):
+        raster_indicator(resource=resource)

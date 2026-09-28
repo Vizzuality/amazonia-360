@@ -13,10 +13,13 @@ this service does not share code with the client; keep them in step by hand.
 Fields marked as a proposal in their description are not in the contract yet.
 """
 
+import math
 from datetime import datetime
 from typing import Annotated, Any, Literal
+from urllib.parse import urlsplit
 
 from pydantic import (
+    AfterValidator,
     BaseModel,
     ConfigDict,
     Field,
@@ -62,6 +65,33 @@ class _Model(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
 
+def _service_url(url: str) -> str:
+    # A catalogue record picks the host the server fetches from. https only, which
+    # rules out the plain-http metadata endpoints of a cloud host, and no query or
+    # fragment: a fragment would drop the path the client appends to the URL.
+    parts = urlsplit(url)
+    if parts.scheme != "https" or not parts.hostname:
+        raise ValueError(f"A service URL must be https with a host, got {url!r}.")
+    if parts.query or parts.fragment or parts.username or parts.password:
+        raise ValueError(f"A service URL takes no query, fragment or user: {url!r}.")
+    return url
+
+
+def _hex_colour(colour: str) -> str:
+    # It goes into a style attribute on the map page, so nothing but a colour.
+    digits = colour[1:]
+    if (
+        len(colour) != 7
+        or colour[0] != "#"
+        or not all(c in "0123456789abcdefABCDEF" for c in digits)
+    ):
+        raise ValueError(f"A legend colour must be #rrggbb, got {colour!r}.")
+    return colour
+
+
+ServiceUrl = Annotated[str, AfterValidator(_service_url)]
+
+
 class Layer(_Model):
     """What the ArcGIS client needs to query one layer. Derived, never stored."""
 
@@ -72,13 +102,13 @@ class Layer(_Model):
 
 class FeatureResource(_Model):
     type: Literal["feature"]
-    url: str
+    url: ServiceUrl
     layer_id: StrictInt
 
 
 class LegendItem(_Model):
     label: str
-    color: str
+    color: Annotated[str, AfterValidator(_hex_colour)]
 
 
 class Legend(_Model):
@@ -90,32 +120,56 @@ class ImageryResource(_Model):
     """An image service, as Payload's imagery block holds it.
 
     raster_function is the front end's, in the JS SDK's form. When it is a Colormap,
-    its entries are the classes, in the legend's order.
+    its entries are the classes, in the legend's order. A function the MCP cannot
+    read by class still loads: raster_problem() says why, and the indicator reports
+    itself unavailable instead of stopping the whole catalogue.
     """
 
     type: Literal["imagery"]
-    url: str
+    url: ServiceUrl
     raster_function: dict[str, Any]
     legend: Legend
     aggregation: Literal["sum", "mean", "none"] | None = None
 
-    @model_validator(mode="after")
-    def _one_legend_item_per_class(self) -> "ImageryResource":
+    def raster_problem(self) -> str | None:
         values = colormap_values(self.raster_function)
-        if values is not None and len(values) != len(self.legend.items):
-            raise ValueError(
-                f"The colormap has {len(values)} classes and the legend "
-                f"{len(self.legend.items)} items."
+        labels = [item.label for item in self.legend.items]
+        if values is None:
+            return "the raster function is not a Colormap with explicit entries"
+        if not values:
+            return "the colormap lists no classes"
+        if len(values) != len(labels):
+            return (
+                f"the colormap has {len(values)} classes and the legend "
+                f"{len(labels)} items"
             )
-        return self
+        if len(set(values)) != len(values):
+            return "the colormap repeats a pixel value"
+        if len(set(labels)) != len(labels):
+            return "the legend repeats a label"
+        return None
 
 
 def colormap_values(raster_function: dict[str, Any]) -> list[int] | None:
-    """The pixel value of each class, when the function is a Colormap."""
+    """The pixel value of each class, when the function is a Colormap with explicit
+    entries. None for anything else, a named colormap included; never raises."""
     if raster_function.get("functionName") != "Colormap":
         return None
-    entries = raster_function.get("functionArguments", {}).get("colormap") or []
-    return [int(entry[0]) for entry in entries]
+    arguments = raster_function.get("functionArguments")
+    entries = arguments.get("colormap") if isinstance(arguments, dict) else None
+    if not isinstance(entries, list):
+        return None
+    values = []
+    for entry in entries:
+        if not isinstance(entry, list) or not entry:
+            return None
+        value = entry[0]
+        if isinstance(value, bool) or not isinstance(value, int | float):
+            return None
+        if not math.isfinite(value) or value != int(value):
+            return None
+        values.append(int(value))
+    return values
 
 
 Resource = Annotated[FeatureResource | ImageryResource, Field(discriminator="type")]
@@ -128,6 +182,12 @@ class Raster(_Model):
     raster_function: dict[str, Any]
     values: list[int]
     legend: list[LegendItem]
+
+    @property
+    def classified(self) -> Any:
+        """What the colormap reads: a function to classify with, or "$$" for the
+        stored values. In the JS SDK a missing argument means the stored values."""
+        return self.raster_function["functionArguments"].get("raster", "$$")
 
 
 class Caveat(_Model):
@@ -247,8 +307,8 @@ class IndicatorMetadata(CuratedIndicator):
             return "no value_type"
         if self.resource.type == "feature" and self.category_field is None:
             return "no category_field"
-        if self.resource.type == "imagery" and self.raster() is None:
-            return "the raster function is not a Colormap"
+        if isinstance(self.resource, ImageryResource):
+            return self.resource.raster_problem()
         return None
 
     def allows(self, operation: Operation) -> bool:
@@ -260,9 +320,10 @@ class IndicatorMetadata(CuratedIndicator):
     def raster(self) -> Raster | None:
         if not isinstance(self.resource, ImageryResource):
             return None
-        values = colormap_values(self.resource.raster_function)
-        if values is None:
+        if self.resource.raster_problem() is not None:
             return None
+        values = colormap_values(self.resource.raster_function)
+        assert values is not None
         return Raster(
             url=self.resource.url,
             raster_function=self.resource.raster_function,

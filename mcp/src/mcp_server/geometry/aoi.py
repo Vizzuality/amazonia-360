@@ -13,6 +13,10 @@ MAX_VERTICES = 5000
 # ECU_MOD_POLIG_LIMITE_WGS84 once it is delivered.
 MODULE_ENVELOPE = box(-79.428, -5.016, -75.189, 0.729)
 MODULE_BOUNDARY: Literal["bounding_box", "module_polygon"] = "bounding_box"
+# How far past the module envelope an area may reach. Enough for an area drawn across
+# the border; a country or the globe would pull every feature of a layer, and one
+# 180 degrees wide or more measures as 0 ha (pyproj takes the short way round).
+MAX_REACH_DEG = 1.0
 
 
 class AOIError(Exception):
@@ -62,14 +66,21 @@ def parse_aoi(geojson: dict[str, Any]) -> Polygon | MultiPolygon:
             "The area's coordinates are out of range for longitude and latitude; "
             "send it in WGS 84 (EPSG:4326)."
         )
-    if not geom.is_valid:
-        raise AOIError(f"The area is not a valid polygon: {explain_validity(geom)}.")
+    # Counted before the validity check, which is the costly one.
     vertices = vertex_count(geom)
     if vertices > MAX_VERTICES:
         raise AOIError(
             f"The area has {vertices} vertices; the limit is {MAX_VERTICES}. "
             "Simplify it before sending."
         )
+    reach = MODULE_ENVELOPE.buffer(MAX_REACH_DEG, join_style="mitre")
+    if not reach.contains(geom) and reach.intersects(geom):
+        raise AOIError(
+            f"The area reaches more than {MAX_REACH_DEG:g} degree beyond the Ecuador "
+            "module. Draw it over the module; the tools have no data outside it."
+        )
+    if not geom.is_valid:
+        raise AOIError(f"The area is not a valid polygon: {explain_validity(geom)}.")
     return geom
 
 

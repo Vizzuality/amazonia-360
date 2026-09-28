@@ -97,14 +97,6 @@ async def test_a_malformed_timestamp_is_an_error_not_a_crash() -> None:
 
 
 @pytest.mark.anyio
-async def test_a_malformed_url_is_an_error_not_a_crash() -> None:
-    raw = curated()
-    raw["resource"]["url"] = "http://[bad"
-    sync = await run(CuratedIndicator.model_validate(raw))
-    assert sync.sync_status == "error"
-
-
-@pytest.mark.anyio
 async def test_no_category_field_skips_the_field_check() -> None:
     sync = await run(ecosystems(category_field=None))
     assert sync.sync_status == "ok"
@@ -214,3 +206,85 @@ async def test_an_image_service_gives_its_pixel_size_and_its_portal_item() -> No
     assert sync.pixel_size_deg == 0.008983
     assert sync.published_count is None
     assert sync.item_modified is not None
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize(
+    ("meta", "info", "expected"),
+    [
+        # Web Mercator: the pixel size is in metres, not degrees.
+        (
+            {
+                "serviceItemId": ITEM_ID,
+                "pixelSizeX": 250,
+                "spatialReference": {"wkid": 3857},
+            },
+            {"owningSystemUrl": "https://example.test/portal"},
+            ("ok", None),
+        ),
+        # An id that is not an item id goes nowhere near a URL.
+        (
+            {
+                "serviceItemId": "../x?y",
+                "pixelSizeX": 0.01,
+                "spatialReference": {"wkid": 4326},
+            },
+            {"owningSystemUrl": "https://example.test/portal"},
+            ("item_inaccessible", 0.01),
+        ),
+        (
+            {
+                "serviceItemId": ITEM_ID,
+                "pixelSizeX": 0.01,
+                "spatialReference": {"wkid": 4326},
+            },
+            {"owningSystemUrl": "http://example.test/portal"},
+            ("item_inaccessible", 0.01),
+        ),
+    ],
+)
+async def test_an_image_service_is_read_with_care(
+    meta: dict[str, Any], info: dict[str, Any], expected: tuple[str, float | None]
+) -> None:
+    from tests.test_models import raster_indicator
+
+    canopy = raster_indicator()
+    assert canopy.resource is not None
+    image_url = canopy.resource.url
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        url = str(request.url).split("?")[0]
+        if url == image_url:
+            return httpx.Response(200, json=meta)
+        if url.endswith("/rest/info"):
+            return httpx.Response(200, json=info)
+        if "/sharing/rest/content/items/" in url:
+            return httpx.Response(200, json={"modified": 1789422927000})
+        return httpx.Response(404)
+
+    curated_canopy = CuratedIndicator.model_validate(
+        canopy.model_dump(exclude={"sync", "available"})
+    )
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as http:
+        sync = await sync_indicator(http, curated_canopy, NOW)
+    assert (sync.sync_status, sync.pixel_size_deg) == expected
+
+
+def test_the_cli_keeps_the_snapshot_when_no_layer_was_read(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Any
+) -> None:
+    import sys
+
+    from mcp_server.catalogue import cli
+
+    async def outage(timeout_s: float) -> dict[str, Any]:
+        return {"generated_at": "x", "indicators": {"210": {"sync_status": "error"}}}
+
+    written: list[Any] = []
+    monkeypatch.setattr(cli, "_sync", outage)
+    monkeypatch.setattr(cli, "write_json", lambda path, data: written.append(path))
+    monkeypatch.setattr(sys, "argv", ["amazonia360-mcp-catalogue", "sync"])
+    with pytest.raises(SystemExit, match="snapshot was left as it was"):
+        cli.main()
+    # A network outage would otherwise mark every indicator unavailable.
+    assert written == []

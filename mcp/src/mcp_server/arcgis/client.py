@@ -10,6 +10,10 @@ from mcp_server.catalogue.models import Layer
 
 Feature = tuple[str, BaseGeometry]
 
+# 100,000 features at the services' 2,000 a page. The whole module on the densest
+# indexed layer (214) is 14,137.
+MAX_PAGES = 50
+
 
 class ArcGISError(Exception):
     pass
@@ -86,7 +90,8 @@ class ArcGISClient:
     ) -> list[Feature]:
         collected: list[Feature] = []
         offset = 0
-        while True:
+        first_ids: set[Any] = set()
+        for _ in range(MAX_PAGES):
             body = await self._query(
                 layer,
                 aoi,
@@ -109,20 +114,32 @@ class ArcGISClient:
                         continue
                     collected.append((str(category), shape(f["geometry"])))
                 exceeded = _exceeded_transfer_limit(body)
+                url = f"{layer.service_url}/{layer.layer_id}/query"
                 if exceeded and not page:
-                    url = f"{layer.service_url}/{layer.layer_id}/query"
                     raise ArcGISError(
                         f"Invalid response from {url}: the page was truncated but "
                         "returned no features"
                     )
                 if not exceeded:
                     return collected
+                # A service that ignores resultOffset sends the first page forever.
+                first = page[0].get("id", json.dumps(page[0], sort_keys=True))
+                if first in first_ids:
+                    raise ArcGISError(
+                        f"Invalid response from {url}: the service repeats a page, "
+                        "so it does not page"
+                    )
+                first_ids.add(first)
                 offset += len(page)
             except (KeyError, TypeError) as exc:
                 url = f"{layer.service_url}/{layer.layer_id}/query"
                 raise ArcGISError(
                     f"Invalid response from {url}: missing properties or geometry"
                 ) from exc
+        raise ArcGISError(
+            f"The area holds more than {MAX_PAGES} pages of features of this layer; "
+            "draw a smaller area."
+        )
 
     async def renderer(self, layer: Layer) -> dict[str, Any] | None:
         """The layer's renderer, where the front end takes its colours from."""
@@ -189,6 +206,9 @@ class ArcGISClient:
         if rendering_rule is not None:
             params["renderingRule"] = json.dumps(rendering_rule)
         body = await self._send("POST", f"{url}/computeHistograms", data=params)
+        if body.get("histograms") == []:
+            # What the service answers when no pixel centre falls in the area.
+            return {"min": 0.0, "max": 0.0, "size": 0, "counts": []}
         try:
             histogram = body["histograms"][0]
             for key in ("min", "max", "size", "counts"):

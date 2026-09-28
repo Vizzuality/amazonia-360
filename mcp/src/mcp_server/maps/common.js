@@ -11,7 +11,7 @@ window.map360 = (() => {
     const text = messages[language()]?.[key] ?? messages.en[key] ?? key;
     return text.replace(/\{(\w+)\}/g, (_, name) => vars[name] ?? "");
   };
-  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
   const number = (n, options = {}) => new Intl.NumberFormat(locale(), options).format(n);
   const bounds = (area) => {
     const rings = area.type === "Polygon" ? [area.coordinates[0]] : area.coordinates.map((p) => p[0]);

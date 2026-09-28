@@ -91,3 +91,22 @@ async def test_the_raster_map_answers_what_class_shares_in_area_answers(
     assert base64.b64decode(drawn["image"].split(",", 1)[1]) == b"\x89PNG"
     assert drawn["name"] == "Canopy height"
     assert "image" not in mapped.content[0].text  # type: ignore[union-attr]
+
+
+@pytest.mark.anyio
+async def test_shapes_too_large_for_the_page_are_left_out_with_their_size(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from mcp_server import maps
+
+    monkeypatch.setattr(maps, "MAX_SHAPES_BYTES", 10)
+    async with Client(server(tmp_path)) as client:
+        mapped = await client.call_tool(
+            "map_area_by_category", {"indicator_id": 210, "area": TENA}
+        )
+    assert mapped.meta is not None
+    drawn = mapped.meta["map"]
+    assert "shapes" not in drawn
+    assert drawn["shapes_omitted_bytes"] > 10
+    # The legend still has its colours.
+    assert set(drawn["styles"]) == {"Bosque"}
