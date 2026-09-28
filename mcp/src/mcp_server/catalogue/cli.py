@@ -9,6 +9,7 @@ import argparse
 import asyncio
 import json
 import logging
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -17,7 +18,7 @@ import httpx
 
 from mcp_server.catalogue import SNAPSHOT_FILE, load_curated, local_document
 from mcp_server.catalogue.models import CatalogueDocument
-from mcp_server.catalogue.sync import sync_catalogue
+from mcp_server.catalogue.sync import nothing_read, sync_catalogue
 
 HERE = Path(__file__).parent
 SCHEMA_FILE = "catalogue.schema.json"
@@ -71,6 +72,9 @@ def main() -> None:
 
     if args.command == "sync":
         snapshot = asyncio.run(_sync(args.timeout))
+        # Writing it would mark every indicator unavailable over a network outage.
+        if nothing_read(snapshot):
+            sys.exit("No layer could be read; the snapshot was left as it was.")
         write_json(HERE / SNAPSHOT_FILE, snapshot)
         local_document.cache_clear()
         write_json(EXAMPLE_FILE, exported_catalogue())

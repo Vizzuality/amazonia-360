@@ -38,6 +38,16 @@ async def sync_catalogue(
     }
 
 
+def nothing_read(snapshot: dict[str, Any]) -> bool:
+    """True when every layer failed, which points at the network, not the layers."""
+    statuses = [
+        entry["sync_status"]
+        for entry in snapshot["indicators"].values()
+        if entry["sync_status"] is not None
+    ]
+    return bool(statuses) and all(status == "error" for status in statuses)
+
+
 async def sync_indicator(
     http: httpx.AsyncClient, indicator: CuratedIndicator, now: datetime
 ) -> Sync:
@@ -81,12 +91,11 @@ async def _read_layer(
         return readings.model_copy(update={"sync_status": "error"})
     try:
         item = await _get_json(http, ITEM_URL.format(item_id=readings.arcgis_item_id))
+        modified = _from_ms(item.get("modified"))
     except (_SyncError, httpx.HTTPError, ValueError) as exc:
         log.warning("%s: item unreadable: %r", indicator.id, exc)
         return readings.model_copy(update={"sync_status": "item_inaccessible"})
-    return readings.model_copy(
-        update={"item_modified": _from_ms(item.get("modified")), "sync_status": "ok"}
-    )
+    return readings.model_copy(update={"item_modified": modified, "sync_status": "ok"})
 
 
 async def _get_json(

@@ -20,6 +20,7 @@ import httpx
 from mcp_server.arcgis.client import ArcGISClient
 from mcp_server.catalogue import list_indicators
 from mcp_server.catalogue.models import Operation
+from mcp_server.config import Settings
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.handlers.result import Result
 from mcp_server.measurement.call_log import CallLog
@@ -116,7 +117,9 @@ def main() -> None:
     run = commands.add_parser("run", help="time every tool on the fixed areas")
     run.add_argument("--rounds", type=int, default=24)
     run.add_argument("--every", type=float, default=3600.0, help="seconds")
-    run.add_argument("--timeout", type=float, default=120.0)
+    run.add_argument(
+        "--timeout", type=float, default=Settings.from_env().arcgis_timeout_s
+    )
     run.add_argument("--log", type=Path, default=TIMING_LOG)
     summary = commands.add_parser("summary", help="summarise the timing log")
     summary.add_argument("--log", type=Path, default=TIMING_LOG)

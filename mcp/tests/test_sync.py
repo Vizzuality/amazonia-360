@@ -5,7 +5,12 @@ import httpx
 import pytest
 
 from mcp_server.catalogue.models import CuratedIndicator
-from mcp_server.catalogue.sync import ITEM_URL, sync_catalogue, sync_indicator
+from mcp_server.catalogue.sync import (
+    ITEM_URL,
+    nothing_read,
+    sync_catalogue,
+    sync_indicator,
+)
 from tests.test_models import curated
 
 NOW = datetime(2026, 9, 24, 10, 0, tzinfo=UTC)
@@ -130,6 +135,36 @@ async def test_an_inaccessible_item_keeps_the_layer_readings() -> None:
     assert sync.sync_status == "item_inaccessible"
     assert sync.published_count == 51
     assert sync.item_modified is None
+
+
+@pytest.mark.anyio
+async def test_a_malformed_item_date_is_an_inaccessible_item() -> None:
+    sync = await run(ecosystems(), item={"modified": "yesterday"})
+    assert sync.sync_status == "item_inaccessible"
+    assert sync.published_count == 51
+
+
+@pytest.mark.anyio
+async def test_a_run_without_network_reads_nothing() -> None:
+    document = {"locale": "en", "indicators": [curated(), curated(id=211)]}
+    async with httpx.AsyncClient(transport=transport(fail=True)) as http:
+        snapshot = await sync_catalogue(http, document, NOW)
+    assert nothing_read(snapshot)
+
+
+def test_one_readable_layer_is_enough_to_keep_the_run() -> None:
+    snapshot = {
+        "indicators": {
+            "210": {"sync_status": "error"},
+            "211": {"sync_status": "item_inaccessible"},
+            "206": {"sync_status": None},
+        }
+    }
+    assert not nothing_read(snapshot)
+
+
+def test_a_catalogue_without_resources_is_not_a_failed_run() -> None:
+    assert not nothing_read({"indicators": {"206": {"sync_status": None}}})
 
 
 @pytest.mark.anyio
