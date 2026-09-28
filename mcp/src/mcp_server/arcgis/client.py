@@ -35,6 +35,14 @@ def _exceeded_transfer_limit(body: dict[str, Any]) -> bool:
     )
 
 
+def _layer_url(layer: Layer) -> str:
+    return f"{layer.service_url}/{layer.layer_id}"
+
+
+def _invalid(url: str, what: str) -> ArcGISError:
+    return ArcGISError(f"Invalid response from {url}: {what}")
+
+
 def esri_polygon(aoi: BaseGeometry) -> str:
     polygons = list(aoi.geoms) if isinstance(aoi, MultiPolygon) else [aoi]
     rings: list[list[list[float]]] = []
@@ -56,38 +64,20 @@ class ArcGISClient:
         try:
             return int(body["count"])
         except (KeyError, TypeError, ValueError) as exc:
-            url = f"{layer.service_url}/{layer.layer_id}/query"
-            raise ArcGISError(
-                f"Invalid response from {url}: missing or invalid count"
-            ) from exc
+            url = f"{_layer_url(layer)}/query"
+            raise _invalid(url, "missing or invalid count") from exc
 
     async def distinct(self, layer: Layer, aoi: BaseGeometry) -> list[str]:
-        body = await self._query(
-            layer,
-            aoi,
-            {
-                "outFields": layer.category_field,
-                "returnDistinctValues": "true",
-                "returnGeometry": "false",
-                "f": "json",
-            },
+        rows = await self._distinct_rows(
+            layer, aoi, [layer.category_field], "the list of classes was truncated"
         )
-        url = f"{layer.service_url}/{layer.layer_id}/query"
-        if _exceeded_transfer_limit(body):
-            raise ArcGISError(
-                f"Invalid response from {url}: the list of classes was truncated"
-            )
-        try:
-            values = {f["attributes"][layer.category_field] for f in body["features"]}
-            return sorted(str(v) for v in values if v is not None)
-        except (KeyError, TypeError) as exc:
-            raise ArcGISError(
-                f"Invalid response from {url}: missing features or attributes"
-            ) from exc
+        values = {row[layer.category_field] for row in rows}
+        return sorted(str(v) for v in values if v is not None)
 
     async def features(
         self, layer: Layer, aoi: BaseGeometry, max_allowable_offset: float
     ) -> list[Feature]:
+        url = f"{_layer_url(layer)}/query"
         collected: list[Feature] = []
         offset = 0
         first_ids: set[Any] = set()
@@ -114,28 +104,22 @@ class ArcGISClient:
                         continue
                     collected.append((str(category), shape(f["geometry"])))
                 exceeded = _exceeded_transfer_limit(body)
-                url = f"{layer.service_url}/{layer.layer_id}/query"
                 if exceeded and not page:
-                    raise ArcGISError(
-                        f"Invalid response from {url}: the page was truncated but "
-                        "returned no features"
+                    raise _invalid(
+                        url, "the page was truncated but returned no features"
                     )
                 if not exceeded:
                     return collected
                 # A service that ignores resultOffset sends the first page forever.
                 first = page[0].get("id", json.dumps(page[0], sort_keys=True))
                 if first in first_ids:
-                    raise ArcGISError(
-                        f"Invalid response from {url}: the service repeats a page, "
-                        "so it does not page"
+                    raise _invalid(
+                        url, "the service repeats a page, so it does not page"
                     )
                 first_ids.add(first)
                 offset += len(page)
             except (KeyError, TypeError) as exc:
-                url = f"{layer.service_url}/{layer.layer_id}/query"
-                raise ArcGISError(
-                    f"Invalid response from {url}: missing properties or geometry"
-                ) from exc
+                raise _invalid(url, "missing properties or geometry") from exc
         raise ArcGISError(
             f"The area holds more than {MAX_PAGES} pages of features of this layer; "
             "draw a smaller area."
@@ -143,8 +127,7 @@ class ArcGISClient:
 
     async def renderer(self, layer: Layer) -> dict[str, Any] | None:
         """The layer's renderer, where the front end takes its colours from."""
-        url = f"{layer.service_url}/{layer.layer_id}"
-        body = await self._send("GET", url, params={"f": "json"})
+        body = await self._send("GET", _layer_url(layer), params={"f": "json"})
         renderer = (body.get("drawingInfo") or {}).get("renderer")
         return renderer if isinstance(renderer, dict) else None
 
@@ -152,36 +135,45 @@ class ArcGISClient:
         self, layer: Layer, aoi: BaseGeometry, field: str
     ) -> dict[str, set[str]]:
         """For each class in the area, the values another field takes on it."""
+        rows = await self._distinct_rows(
+            layer, aoi, [layer.category_field, field], "the pairs were truncated"
+        )
+        pairs: dict[str, set[str]] = {}
+        for row in rows:
+            category, value = row[layer.category_field], row[field]
+            if category is not None and value is not None:
+                pairs.setdefault(str(category), set()).add(str(value))
+        return pairs
+
+    async def _distinct_rows(
+        self, layer: Layer, aoi: BaseGeometry, fields: list[str], truncated: str
+    ) -> list[dict[str, Any]]:
+        """The distinct combinations of the fields in the area, one dict per row."""
         body = await self._query(
             layer,
             aoi,
             {
-                "outFields": f"{layer.category_field},{field}",
+                "outFields": ",".join(fields),
                 "returnDistinctValues": "true",
                 "returnGeometry": "false",
                 "f": "json",
             },
         )
-        url = f"{layer.service_url}/{layer.layer_id}/query"
+        url = f"{_layer_url(layer)}/query"
         if _exceeded_transfer_limit(body):
-            raise ArcGISError(f"Invalid response from {url}: the pairs were truncated")
-        pairs: dict[str, set[str]] = {}
+            raise _invalid(url, truncated)
         try:
-            for f in body["features"]:
-                category = f["attributes"][layer.category_field]
-                value = f["attributes"][field]
-                if category is not None and value is not None:
-                    pairs.setdefault(str(category), set()).add(str(value))
+            return [
+                {name: f["attributes"][name] for name in fields}
+                for f in body["features"]
+            ]
         except (KeyError, TypeError) as exc:
-            raise ArcGISError(
-                f"Invalid response from {url}: missing features or attributes"
-            ) from exc
-        return pairs
+            raise _invalid(url, "missing features or attributes") from exc
 
     async def _query(
         self, layer: Layer, aoi: BaseGeometry, extra: dict[str, str]
     ) -> dict[str, Any]:
-        url = f"{layer.service_url}/{layer.layer_id}/query"
+        url = f"{_layer_url(layer)}/query"
         params = {
             "where": "1=1",
             "geometry": esri_polygon(aoi),
@@ -214,9 +206,7 @@ class ArcGISClient:
             for key in ("min", "max", "size", "counts"):
                 histogram[key]
         except (KeyError, IndexError, TypeError) as exc:
-            raise ArcGISError(
-                f"Invalid response from {url}/computeHistograms: no histogram"
-            ) from exc
+            raise _invalid(f"{url}/computeHistograms", "no histogram") from exc
         return histogram
 
     async def export_image(self, url: str, params: dict[str, str]) -> bytes:
@@ -244,7 +234,7 @@ class ArcGISClient:
         try:
             body = response.json()
         except ValueError as exc:
-            raise ArcGISError(f"Invalid response from {url}: not valid JSON") from exc
+            raise _invalid(url, "not valid JSON") from exc
         if "error" in body:
             # ArcGIS often sends an empty message with the useful part in details.
             error = body["error"]

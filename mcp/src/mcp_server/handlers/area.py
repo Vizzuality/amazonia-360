@@ -212,7 +212,7 @@ class AreaHandlers:
             type="raster_pixels",
             categories=len(shares),
             pixels=total,
-            pixel_size_deg=p.indicator.sync.pixel_size_deg,
+            pixel_size_deg=pixel,
         )
         result = self._result(p, shares, "share of pixels", computed_over)
         if total:

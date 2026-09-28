@@ -1,0 +1,12 @@
+/* The legend under the map, the same on every map page. */
+#legend {
+  margin: 8px; padding: 8px 16px; background: #fff;
+  border: 1px solid var(--color-blue-100); border-radius: var(--radius);
+}
+#legend h2 { font-size: 12px; font-weight: 700; margin: 0 0 4px; }
+.row .name { flex: 1; }
+.swatch {
+  width: 8px; height: 8px; flex: none; border-radius: 2px;
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+.note { font-size: 11px; font-weight: 500; color: hsl(var(--muted-foreground)); margin: 6px 0 0; }

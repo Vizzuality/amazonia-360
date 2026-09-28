@@ -5,18 +5,11 @@
   <title>Raster over the area</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@6.11.2/dist/maplibre-gl.css">
   <style>/*THEME*/</style>
+  <style>/*LEGEND*/</style>
   <style>
     #map { height: 440px; }
-    #legend {
-      margin: 8px; padding: 8px 16px; background: #fff;
-      border: 1px solid var(--color-blue-100); border-radius: var(--radius);
-    }
-    #legend h2 { font-size: 12px; font-weight: 700; margin: 0 0 4px; }
     .row { display: flex; align-items: baseline; gap: 6px; font-size: 12px; padding: 2px 0; }
-    .row .name { flex: 1; }
     .row .share { font-variant-numeric: tabular-nums; white-space: nowrap; }
-    .swatch { width: 8px; height: 8px; flex: none; border-radius: 2px; box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25); }
-    .note { font-size: 11px; font-weight: 500; color: hsl(var(--muted-foreground)); margin: 6px 0 0; }
   </style>
   <script>/*COMMON*/</script>
 </head>
@@ -24,7 +17,7 @@
   <div id="map"></div>
   <div id="legend"></div>
   <script type="module">
-    const { translator, esc, number, bounds } = window.map360;
+    const { translator, esc, number, bounds, outerRings } = window.map360;
     const t = translator({
       en: {
         waiting: "Waiting for the figures…",
@@ -64,9 +57,8 @@
 
     // Everything outside the area, so the raster there is dimmed and not hidden.
     function mask(area) {
-      const outers = area.type === "Polygon" ? [area.coordinates[0]] : area.coordinates.map((p) => p[0]);
       const world = [[-180, -85], [180, -85], [180, 85], [-180, 85], [-180, -85]];
-      return { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [world, ...outers.map((r) => [...r].reverse())] } };
+      return { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [world, ...outerRings(area).map((r) => [...r].reverse())] } };
     }
 
     async function draw(area) {

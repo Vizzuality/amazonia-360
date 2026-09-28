@@ -49,7 +49,13 @@ async def test_each_view_is_a_complete_page_with_its_csp(tmp_path: Path) -> None
             assert content.meta is not None
             domains = content.meta["ui"]["csp"]["resourceDomains"]
             assert "https://tiles.openfreemap.org" in domains
-            for marker in ("/*THEME*/", "/*COMMON*/", "/*BRIDGE*/", "/*FONTS*/"):
+            for marker in (
+                "/*THEME*/",
+                "/*LEGEND*/",
+                "/*COMMON*/",
+                "/*BRIDGE*/",
+                "/*FONTS*/",
+            ):
                 assert marker not in content.text
 
 

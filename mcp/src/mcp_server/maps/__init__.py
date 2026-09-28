@@ -9,6 +9,7 @@ docs/superpowers/evaluations/2026-09-28-mcp-map-spike.md.
 
 import base64
 from collections.abc import Callable
+from dataclasses import asdict
 from pathlib import Path
 from typing import Annotated, Any
 
@@ -60,6 +61,7 @@ def page(name: str) -> str:
     html = (_HERE / f"{name}.html").read_text()
     parts = {
         "/*THEME*/": theme,
+        "/*LEGEND*/": (_HERE / "legend.css").read_text(),
         "/*COMMON*/": (_HERE / "common.js").read_text(),
         "/*BRIDGE*/": (_HERE / "bridge.js").read_text(),
     }
@@ -144,13 +146,7 @@ def register_map_tools(
             handlers.class_shares_map(indicator_id, area),
             lambda out: out[0],
         )
-        meta: dict[str, Any] = {
-            "name": drawn.name,
-            "image": drawn.image,
-            "corners": drawn.corners,
-            "classes": drawn.classes,
-        }
-        return _tool_result(result, meta)
+        return _tool_result(result, asdict(drawn))
 
     server.add_tool(
         map_class_shares_in_area,
