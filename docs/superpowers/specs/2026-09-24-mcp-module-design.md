@@ -553,5 +553,5 @@ mcp/
    pixels with data in each class, and the share in none. The sync reads each one's pixel
    size, 250 m to 1.2 km, which every answer carries. Still open: the other 22, which are
    counts or amounts per pixel (population, crop production, GDP) and call for a sum or a mean
-   over the area, a tool of their own. Areas are still limited to the module, like every other
+   over the area, a tool of their own (AM-732). Areas are still limited to the module, like every other
    tool, although the rasters cover the whole region.
