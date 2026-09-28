@@ -6,7 +6,7 @@ from typing import Literal, cast
 
 from mcp.server.auth.provider import AuthorizationParams
 from mcp.shared.auth import OAuthClientInformationFull
-from sqlalchemy import CursorResult, delete, select, update
+from sqlalchemy import CursorResult, delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from mcp_server.auth.crypto import digest, new_secret
@@ -169,11 +169,15 @@ class AuthStore:
                 )
             )
 
-    async def take_code(self, code: str) -> Code | None:
+    async def take_code(self, client_id: str, code: str) -> Code | None:
         async with self._sessions() as session:
             row = await session.scalar(
                 delete(Code)
-                .where(Code.code_hash == digest(code), Code.expires_at > self._clock())
+                .where(
+                    Code.code_hash == digest(code),
+                    Code.client_id == client_id,
+                    Code.expires_at > self._clock(),
+                )
                 .returning(Code)
                 .execution_options(**_NO_SYNC)
             )
@@ -182,38 +186,66 @@ class AuthStore:
 
     async def issue(self, grant: Grant, family: str | None = None) -> IssuedTokens:
         family = family or uuid.uuid4().hex
-        access, refresh = new_secret(), new_secret()
         now = self._clock()
-        common = {
-            "family": family,
-            "client_id": grant.client_id,
-            "email": grant.email,
-            "scopes": grant.scopes,
-            "resource": grant.resource,
-        }
         async with self._sessions() as session:
-            session.add_all(
-                [
-                    Token(
-                        token_hash=digest(access),
-                        kind="access",
-                        expires_at=now + ACCESS_TTL,
-                        **common,
-                    ),
-                    Token(
-                        token_hash=digest(refresh),
-                        kind="refresh",
-                        expires_at=now + REFRESH_TTL,
-                        **common,
-                    ),
-                ]
+            issued = self._new_pair(
+                session,
+                family=family,
+                client_id=grant.client_id,
+                email=grant.email,
+                scopes=grant.scopes,
+                resource=grant.resource,
+                now=now,
             )
             await session.commit()
+        return issued
+
+    def _new_pair(
+        self,
+        session: AsyncSession,
+        *,
+        family: str,
+        client_id: str,
+        email: str,
+        scopes: list[str],
+        resource: str | None,
+        now: datetime,
+    ) -> IssuedTokens:
+        """Adds a fresh access/refresh pair to `session`, in `family`; the caller
+        commits. Shared by `issue` and `rotate_refresh` so a family's tokens are
+        always built the same way."""
+        access, refresh = new_secret(), new_secret()
+        common = {
+            "family": family,
+            "client_id": client_id,
+            "email": email,
+            "scopes": scopes,
+            "resource": resource,
+        }
+        session.add_all(
+            [
+                Token(
+                    token_hash=digest(access),
+                    kind="access",
+                    expires_at=now + ACCESS_TTL,
+                    **common,
+                ),
+                Token(
+                    token_hash=digest(refresh),
+                    kind="refresh",
+                    expires_at=now + REFRESH_TTL,
+                    **common,
+                ),
+            ]
+        )
         return IssuedTokens(access_token=access, refresh_token=refresh, family=family)
 
     async def get_token(
         self, token: str, kind: Literal["access", "refresh"]
     ) -> Token | None:
+        """Looks up an unexpired token by its hash. A refresh token already spent
+        by `rotate_refresh` is still returned here (its `used_at` is set); callers
+        must check `used_at` themselves to tell a live token from a used one."""
         async with self._sessions() as session:
             return await session.scalar(
                 select(Token).where(
@@ -223,15 +255,36 @@ class AuthStore:
                 )
             )
 
-    async def use_refresh(self, token: str) -> Token | None:
-        """Marks a refresh token used and returns it; None if it was already used."""
+    async def rotate_refresh(
+        self, client_id: str, token: str, scopes: list[str] | None
+    ) -> tuple[Token, IssuedTokens] | None:
+        """Rotates a refresh token: marks it used and issues a fresh pair in the
+        same family, in one transaction. The family is locked with a Postgres
+        advisory lock for the length of that transaction, so a concurrent
+        `revoke_family` on the same family serialises with this: whichever of the
+        two commits first is the outcome the other one sees, and a revoke that
+        wins can never be undone by a rotation that inserts into the family
+        afterwards."""
         now = self._clock()
         async with self._sessions() as session:
-            row = await session.scalar(
+            family = await session.scalar(
+                select(Token.family).where(
+                    Token.token_hash == digest(token),
+                    Token.kind == "refresh",
+                    Token.client_id == client_id,
+                )
+            )
+            if family is None:
+                return None
+            await session.execute(
+                select(func.pg_advisory_xact_lock(func.hashtextextended(family, 0)))
+            )
+            used = await session.scalar(
                 update(Token)
                 .where(
                     Token.token_hash == digest(token),
                     Token.kind == "refresh",
+                    Token.client_id == client_id,
                     Token.used_at.is_(None),
                     Token.expires_at > now,
                 )
@@ -239,11 +292,28 @@ class AuthStore:
                 .returning(Token)
                 .execution_options(**_NO_SYNC)
             )
+            if used is None:
+                await session.commit()
+                return None
+            issued = self._new_pair(
+                session,
+                family=family,
+                client_id=used.client_id,
+                email=used.email,
+                scopes=scopes or used.scopes,
+                resource=used.resource,
+                now=now,
+            )
             await session.commit()
-        return row
+        return used, issued
 
     async def revoke_family(self, family: str) -> None:
         async with self._sessions() as session:
+            # Locking before the DELETE serialises with rotate_refresh on the same
+            # family: whichever of the two commits first is what the other sees.
+            await session.execute(
+                select(func.pg_advisory_xact_lock(func.hashtextextended(family, 0)))
+            )
             await session.execute(delete(Token).where(Token.family == family))
             await session.commit()
 
