@@ -117,7 +117,7 @@ uv run amazonia360-mcp-timing summary   # per tool and layer: median, max, over 
 | Variable | Default | Meaning |
 |---|---|---|
 | `MCP_CALL_LOG` | `var/calls.jsonl` | One JSON line per tool call, with timing |
-| `ARCGIS_TIMEOUT_S` | `60` | Per-request timeout against ArcGIS |
+| `ARCGIS_TIMEOUT_S` | `65` | Per-request timeout against ArcGIS; just above ArcGIS Online's own cut at about 59 s |
 
 ## Test
 

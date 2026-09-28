@@ -15,6 +15,15 @@ class ArcGISError(Exception):
     pass
 
 
+# Measured over 1,800 calls on 24-25 September 2026: ArcGIS Online answers 504
+# after about 59 s, and slow hours come and go, so the message says so instead
+# of handing the model a URL to guess from.
+_GAVE_UP = (
+    "ArcGIS Online gave up after about 60 s. This usually means the service is "
+    "busy, which comes and goes by the hour; trying again later may work."
+)
+
+
 def _exceeded_transfer_limit(body: dict[str, Any]) -> bool:
     return bool(
         body.get("exceededTransferLimit")
@@ -132,7 +141,11 @@ class ArcGISClient:
             response = await self._http.post(url, data=params)
             response.raise_for_status()
         except httpx.TimeoutException as exc:
-            raise ArcGISError(f"ArcGIS did not respond in time: {url}") from exc
+            raise ArcGISError(_GAVE_UP) from exc
+        except httpx.HTTPStatusError as exc:
+            if exc.response.status_code == 504:
+                raise ArcGISError(_GAVE_UP) from exc
+            raise ArcGISError(f"ArcGIS request failed: {exc}") from exc
         except httpx.HTTPError as exc:
             raise ArcGISError(f"ArcGIS request failed: {exc}") from exc
         try:

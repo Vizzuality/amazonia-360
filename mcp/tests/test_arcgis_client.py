@@ -167,8 +167,39 @@ async def test_a_timeout_raises_instead_of_returning_partial_results() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         raise httpx.ReadTimeout("slow", request=request)
 
-    with pytest.raises(ArcGISError, match="did not respond"):
+    with pytest.raises(ArcGISError, match="gave up"):
         await client_with(handler).features(LAYER, AOI, 0.001)
+
+
+@pytest.mark.anyio
+async def test_a_gateway_timeout_says_the_service_gave_up_without_the_url() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(504, text="Gateway Timeout")
+
+    with pytest.raises(ArcGISError) as error:
+        await client_with(handler).count(LAYER, AOI)
+    message = str(error.value)
+    assert "gave up after about 60 s" in message
+    assert "busy" in message
+    assert "example.test" not in message
+
+
+@pytest.mark.anyio
+async def test_our_own_timeout_says_the_same_as_the_gateway_timeout() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        raise httpx.ReadTimeout("slow", request=request)
+
+    with pytest.raises(ArcGISError, match="busy"):
+        await client_with(handler).count(LAYER, AOI)
+
+
+@pytest.mark.anyio
+async def test_other_http_errors_keep_their_status() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(503, text="Service Unavailable")
+
+    with pytest.raises(ArcGISError, match="503"):
+        await client_with(handler).count(LAYER, AOI)
 
 
 @pytest.mark.anyio

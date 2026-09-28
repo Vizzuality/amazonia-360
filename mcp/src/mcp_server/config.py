@@ -12,5 +12,6 @@ class Settings:
     def from_env(cls) -> "Settings":
         return cls(
             call_log_path=Path(os.environ.get("MCP_CALL_LOG", "var/calls.jsonl")),
-            arcgis_timeout_s=float(os.environ.get("ARCGIS_TIMEOUT_S", "60")),
+            # Just above ArcGIS Online's own ~59 s cut, so its 504 arrives first.
+            arcgis_timeout_s=float(os.environ.get("ARCGIS_TIMEOUT_S", "65")),
         )
