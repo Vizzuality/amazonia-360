@@ -59,10 +59,17 @@ Claude ──POST──────▶ /mcp/token                PKCE checked by
    `register_client` raises `RegistrationError` (`invalid_redirect_uri`) unless every redirect URI
    is on the redirect allowlist:
    - `https://claude.ai/api/mcp/auth_callback` and `https://claude.com/api/mcp/auth_callback`;
-   - `http://localhost` and `http://127.0.0.1` on any port and path, for Claude Desktop and
-     Claude Code.
+   - `https://chatgpt.com/connector_platform_oauth_redirect`, ChatGPT's stable redirect. ChatGPT
+     only uses it when the server identifies itself in the authorization response (RFC 9207, see
+     step 4); otherwise it asks for a per-connection `https://chatgpt.com/connector/oauth/{id}`,
+     which is not allowed;
+   - `http://localhost` and `http://127.0.0.1` on any port and path, for Claude Desktop, Claude
+     Code and the Gemini CLI.
 
-   The list is configuration, so another client can be added without a release.
+   The list is configuration, so another client can be added without a release. Gemini is left
+   for later: the Gemini CLI already fits the loopback entries, but Gemini Enterprise registers
+   no client dynamically and needs one created by hand, which the provider does not support
+   yet.
 2. **Authorize.** The provider stores a *pending authorization* (client, redirect URI, PKCE
    challenge, scopes, resource, the client's `state`), valid for 10 minutes, and redirects to
    Google with `state` set to its id, `scope=openid email`, and `prompt=select_account`. The same
@@ -81,7 +88,11 @@ Claude ──POST──────▶ /mcp/token                PKCE checked by
    'none'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'` and
    `X-Frame-Options: DENY`. "Allow" posts the CSRF token; the handler checks it and the cookie,
    deletes the pending authorization with `DELETE … RETURNING`, issues a code valid for 60
-   seconds, and redirects to the client. "Cancel" redirects with `error=access_denied`.
+   seconds, and redirects to the client. "Cancel" redirects with `error=access_denied`. Both
+   redirects carry `iss` set to the issuer, exactly as in the metadata (RFC 9207), and the
+   metadata declares `authorization_response_iss_parameter_supported: true`. The SDK's own error
+   redirects from `/mcp/authorize` (an unknown scope, for instance) do not carry `iss`; only the
+   error case is affected.
 5. **Token.** The SDK checks the client, the redirect URI and PKCE (S256). The provider exchanges
    the code with `DELETE … RETURNING`, so a code works once even under concurrent requests.
 
@@ -191,6 +202,7 @@ Ported from VizzHub where they apply (provider, transport), plus one test per de
 - an email removed from the allowlist loses access on the next request;
 - a token cannot use a session another token created;
 - a token issued for another resource is refused.
+- the consent redirects, Allow and Cancel, carry `iss` equal to the metadata's `issuer`.
 
 Database tests run against a real PostgreSQL (the local Compose database). Google is faked at the
 HTTP level.
