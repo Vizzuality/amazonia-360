@@ -45,7 +45,7 @@
         <h2>${esc(r.raster)}: share of the area</h2>
         ${r.classes.map((c) => `<div class="row"><span class="swatch" style="background:${c.color}"></span><span class="name">${esc(c.label)}</span><span class="share">${pct.format(c.share)}</span></div>`).join("")}
         <p class="note">${esc(r.note)} Pixels counted: ${r.pixels}.</p>
-        <p class="note">Classes and colours as on Amazonia 360. Where the image reaches beyond the area, it is dimmed.</p>`;
+        <p class="note">Classes and colours as on Amazonia 360. Outside the area the raster is dimmed; the shares count only the pixels inside.</p>`;
     };
 
     // Everything outside the area, so the raster there is dimmed and not hidden.
@@ -65,7 +65,7 @@
         container: "map",
         style: "https://tiles.openfreemap.org/styles/positron",
         bounds: [[Math.min(...xs), Math.min(...ys)], [Math.max(...xs), Math.max(...ys)]],
-        fitBoundsOptions: { padding: 30 },
+        fitBoundsOptions: { padding: 60 },
         attributionControl: { compact: true },
       });
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
@@ -81,10 +81,12 @@
         report.raster = { ...s.timing, bytes: s.bytes, size: s.size, round_trip_ms: Math.round(performance.now() - t) };
         mark("image_received", report.raster);
         await loaded;
+        // Under water, rivers, roads, boundaries and names, so the map stays readable.
+        const under = map.getStyle().layers.find((l) => l.id === "water")?.id;
         map.addSource("raster", { type: "image", url: s.image, coordinates: s.corners });
-        map.addLayer({ id: "raster", type: "raster", source: "raster", paint: { "raster-resampling": "nearest", "raster-opacity": 0.9 } });
+        map.addLayer({ id: "raster", type: "raster", source: "raster", paint: { "raster-resampling": "nearest", "raster-opacity": 0.85 } }, under);
         map.addSource("mask", { type: "geojson", data: mask(area) });
-        map.addLayer({ id: "mask", type: "fill", source: "mask", paint: { "fill-color": "#ffffff", "fill-opacity": 0.7 } });
+        map.addLayer({ id: "mask", type: "fill", source: "mask", paint: { "fill-color": "#ffffff", "fill-opacity": 0.55 } }, under);
         map.addSource("area", { type: "geojson", data: { type: "Feature", geometry: area, properties: {} } });
         map.addLayer({ id: "area-line", type: "line", source: "area", paint: { "line-color": AREA, "line-width": 1.5 } });
         map.once("idle", () => { mark("raster_drawn"); window.diag.done(); });

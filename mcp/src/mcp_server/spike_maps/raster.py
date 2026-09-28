@@ -55,7 +55,10 @@ RASTERS: dict[str, dict[str, Any]] = {
 }
 
 _R = 6378137.0
-_LONGEST_SIDE_PX = 512
+_LONGEST_SIDE_PX = 1024
+# The image covers the area and as much again on each side: cut at the area's edge, the
+# raster read as a square of pixels on a basemap rather than as a map.
+_MARGIN = 1.5
 
 
 def to_rest(function: Any) -> Any:
@@ -139,8 +142,11 @@ async def class_pixels(
 async def area_image(
     http: httpx.AsyncClient, raster: dict[str, Any], aoi: BaseGeometry
 ) -> dict[str, Any]:
-    """One PNG of the area's bounding box, in the front end's colours."""
-    x0, y0, x1, y1 = aoi.bounds
+    """One PNG of the area and its surroundings, in the front end's colours."""
+    ax0, ay0, ax1, ay1 = aoi.bounds
+    dx, dy = (ax1 - ax0) * _MARGIN, (ay1 - ay0) * _MARGIN
+    x0, y0 = max(ax0 - dx, -180.0), max(ay0 - dy, -85.0)
+    x1, y1 = min(ax1 + dx, 180.0), min(ay1 + dy, 85.0)
     mx0, my0 = _mercator(x0, y0)
     mx1, my1 = _mercator(x1, y1)
     scale = _LONGEST_SIDE_PX / max(mx1 - mx0, my1 - my0)
