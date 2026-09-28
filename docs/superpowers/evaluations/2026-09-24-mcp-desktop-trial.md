@@ -216,6 +216,9 @@ slightly elsewhere; same size, 39,876 ha.
 | Rerun by hand | 206 Carbon | 2 | 333,834 | 4.9 s | 2.2 s | 7.1 s |
 | Q11 | 206 Carbon, Nuevo Rocafuerte | 2 | 543,521 | – | – | 10.3 s |
 
+> Corrected by the [timing run](2026-09-25-mcp-timing-run.md): a cold start is not supported, and
+> slow calls come in spells of hours on the ArcGIS side, cut by ArcGIS Online at about 59 s.
+
 **The 60 s call was an outlier on the ArcGIS side, and both hypotheses built on it were wrong.**
 The same query on layer 210, returning the same 76,071 vertices, took 2.9 and 3.1 s in ArcGIS
 when rerun. Two explanations were tried first and discarded:

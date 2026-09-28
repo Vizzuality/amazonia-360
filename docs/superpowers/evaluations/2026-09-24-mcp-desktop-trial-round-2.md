@@ -59,7 +59,7 @@ and Tena, and it is the whole-feature cost at its worst. Everything else was und
 1. Move the cross-indicator rule and the "quote, do not weigh" rule into the results as caveats,
    and repeat Q2, Q6, Q9 and Q11 to see whether that holds where the instructions did not.
 2. For change 5, a scheduled timing run: the same fixed boxes against each layer every hour for a
-   day, to measure how often ArcGIS takes a minute.
+   day, to measure how often ArcGIS takes a minute. *Done:* see the [timing run](2026-09-25-mcp-timing-run.md).
 3. For the gatekeeper and any later evaluation, fixed GeoJSON areas instead of place names.
 
 ## Calls
