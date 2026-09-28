@@ -170,7 +170,9 @@ each item stands:
   is in.
 - **A fallback for hosts that do not render MCP Apps: done.** The tools return what the plain
   tools return, as the same text, so such a host gets the figures without the map.
-- **The basemap provider: open.** Still OpenFreeMap, one constant in `maps/__init__.py`.
+- **The basemap provider: decided, OpenFreeMap.** Its Positron style is close to the front end's
+  Esri gray-vector and needs no key. Esri's own style would put an API key in the page, spend the
+  account's quota on every view, and tie an open-source release to ArcGIS.
 - **Not retried in Desktop yet.** Whether Desktop hands `_meta` to the page is what the staging
   version depends on; the extension's specification says it does. If it did not, the page would
   show the figures and a note that the shapes did not arrive.

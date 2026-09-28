@@ -34,7 +34,7 @@ MIME = "text/html;profile=mcp-app"
 CATEGORIES_URI = "ui://amazonia360/maps/categories.html"
 RASTER_URI = "ui://amazonia360/maps/raster.html"
 # A light grey vector basemap with no key, close to the front end's Esri gray-vector.
-# A third-party service: see "What staging needs first" in the evaluation.
+# Chosen over Esri's own style, which needs a key in the page; see the evaluation.
 _OPENFREEMAP = "https://tiles.openfreemap.org"
 _JSDELIVR = "https://cdn.jsdelivr.net"
 CSP = {
