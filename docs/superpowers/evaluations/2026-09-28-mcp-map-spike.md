@@ -130,6 +130,24 @@ Layer 210's symbols have an alpha of 2 of 255. Drawn as the renderer says, its m
 outlines only; the front end's legend drops alpha, so the legend shows solid colours. Filed as
 AM-729, and 211's class field against its renderer as AM-730.
 
+## A raster
+
+Tried the same day with canopy height (indicator 129 of the regional platform, an ImageServer on
+`atlas.iadb.org`), over the Puyo box and a star-shaped area:
+
+- The image server answers CORS only for the front end's own origins
+  (`amazoniaforever360.org` and its staging), so the page cannot load its images. The server
+  asks for one `exportImage` of the area and its surroundings and hands the PNG to the page,
+  which draws it under the basemap's water, roads and names and dims it outside the area.
+- The figures are shares of the area's pixels per class, from `computeHistograms` with the
+  front end's classification. The rendering and legend are the front end's.
+- Two traps. The front end stores its raster function in the JS SDK's form; sent as is, the
+  REST service ignores it without an error and returns greyscale. And the classification has
+  to be asked for as integers, or the histogram comes in 256 float bins that misread the classes.
+- Fast: 0.45 s for the histogram and 0.15 to 0.46 s for the image, 3 to 9 KB.
+- The layer is served at about 1 km pixels (400 over the 20 km box); its description says
+  250 m. Filed as AM-731.
+
 ## What staging needs first
 
 - **One fetch per map.** The page's shapes should come from the query the figures came from,
