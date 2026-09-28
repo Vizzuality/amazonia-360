@@ -179,7 +179,8 @@ each item stands:
   `map_class_shares_in_area` on land cover (13) drew the raster image with the outside dimmed.
   Neither page showed the note that the shapes or the image did not arrive. On 210 the map
   shows outlines only, because its renderer fills at alpha 2 of 255, the same as the front end.
-  Whether the model also sees `_meta` was not checked.
+  The model does not see it: asked in the same chat, it reported only the summary figures
+  and the computation metadata, with no coordinates and no image or service URL.
 
 ## Not tried
 
