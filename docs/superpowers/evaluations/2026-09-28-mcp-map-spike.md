@@ -174,9 +174,12 @@ each item stands:
 - **The basemap provider: decided, OpenFreeMap.** Its Positron style is close to the front end's
   Esri gray-vector and needs no key. Esri's own style would put an API key in the page, spend the
   account's quota on every view, and tie an open-source release to ArcGIS.
-- **Not retried in Desktop yet.** Whether Desktop hands `_meta` to the page is what the staging
-  version depends on; the extension's specification says it does. If it did not, the page would
-  show the figures and a note that the shapes did not arrive.
+- **Retried in Desktop (2026-09-28): Desktop hands `_meta` to the page.** Over the Tena box,
+  `map_area_by_category` on ecosystems (210) drew the class's shapes, and
+  `map_class_shares_in_area` on land cover (13) drew the raster image with the outside dimmed.
+  Neither page showed the note that the shapes or the image did not arrive. On 210 the map
+  shows outlines only, because its renderer fills at alpha 2 of 255, the same as the front end.
+  Whether the model also sees `_meta` was not checked.
 
 ## Not tried
 
