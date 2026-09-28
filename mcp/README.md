@@ -45,6 +45,22 @@ avoids uv (run `uv sync` first so `.venv` exists):
 }
 ```
 
+### Over HTTP, with OAuth
+
+```bash
+uv run amazonia360-mcp-db upgrade   # the database first
+uv run amazonia360-mcp-http
+```
+
+This needs the variables in the `MCP_PUBLIC_URL`, `MCP_DATABASE_URL`, `MCP_GOOGLE_CLIENT_ID`,
+`MCP_GOOGLE_CLIENT_SECRET`, `MCP_ALLOWED_EMAILS` and `MCP_ALLOWED_REDIRECT_URIS` rows of the
+settings table below; the server refuses to start over HTTP when any of them is missing.
+For local use, `MCP_PUBLIC_URL=http://localhost:8000/mcp` works with a Google OAuth client
+whose redirect is `http://localhost:8000/mcp/oauth/callback`.
+
+Behind a reverse proxy, the proxy must forward the original `Host` header (`proxy_set_header
+Host $host;` in nginx): the server only accepts requests for the host in `MCP_PUBLIC_URL`.
+
 ## Catalogue
 
 The indicators live in three files in `src/mcp_server/catalogue/`:
@@ -137,6 +153,13 @@ uv run amazonia360-mcp-timing summary   # per tool and layer: median, max, over 
 |---|---|---|
 | `MCP_CALL_LOG` | `var/calls.jsonl` | One JSON line per tool call, with timing |
 | `ARCGIS_TIMEOUT_S` | `65` | Per-request timeout against ArcGIS; just above ArcGIS Online's own cut at about 59 s |
+| `MCP_PUBLIC_URL` | *(required over HTTP)* | The server's public URL, e.g. `https://staging.amazoniaforever360.org/mcp` |
+| `MCP_DATABASE_URL` | *(required over HTTP)* | The `mcp` role's connection string |
+| `MCP_GOOGLE_CLIENT_ID` | *(required over HTTP)* | A Google OAuth client of its own, with redirect `…/mcp/oauth/callback` |
+| `MCP_GOOGLE_CLIENT_SECRET` | *(required over HTTP)* | Its secret |
+| `MCP_ALLOWED_EMAILS` | *(required over HTTP)* | Comma-separated, compared lowercased |
+| `MCP_ALLOWED_REDIRECT_URIS` | Claude, ChatGPT and any loopback address | The redirect allowlist, with the defaults above |
+| `MCP_PORT` | `8000` | The port `amazonia360-mcp-http` listens on |
 
 ## Test
 
@@ -144,3 +167,15 @@ uv run amazonia360-mcp-timing summary   # per tool and layer: median, max, over 
 uv run pytest            # unit tests, no network
 uv run pytest -m live    # against the published services
 ```
+
+The OAuth and storage tests need a local PostgreSQL database, no Docker:
+
+```bash
+createdb amazonia360_mcp_test
+export MCP_TEST_DATABASE_URL=postgresql://<user>@localhost:5432/amazonia360_mcp_test
+uv run pytest
+```
+
+The default selection (`-m 'not live'`) includes the database tests; without
+`MCP_TEST_DATABASE_URL` they are skipped. The fixture drops the `mcp` schema before each run and
+refuses any database whose name does not end in `_test`.

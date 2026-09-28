@@ -11,7 +11,7 @@ import pytest
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.http_app import create_http_app
 from mcp_server.measurement.call_log import CallLog
-from tests.auth_helpers import CLAUDE, PUBLIC_URL, FakeGoogle, http_settings, pkce
+from tests.auth_helpers import ANA, CLAUDE, PUBLIC_URL, FakeGoogle, http_settings, pkce
 from tests.test_handlers import TENA, FakeClient
 
 pytestmark = [
@@ -216,6 +216,22 @@ async def test_a_token_cannot_use_another_tokens_session(
     session = await open_session(http, first["access_token"])
     response = await call(http, second["access_token"], session, "list_indicators", {})
     assert response.status_code == 404
+
+
+async def test_the_call_log_names_the_caller(
+    http: httpx.AsyncClient, tmp_path: Path
+) -> None:
+    tokens = await sign_in(http)
+    session = await open_session(http, tokens["access_token"])
+    await call(
+        http,
+        tokens["access_token"],
+        session,
+        "area_by_category",
+        {"indicator_id": 210, "area": TENA},
+    )
+    [line] = (tmp_path / "calls.jsonl").read_text().splitlines()
+    assert json.loads(line)["user"] == ANA
 
 
 async def test_a_wrong_host_is_refused(http: httpx.AsyncClient) -> None:

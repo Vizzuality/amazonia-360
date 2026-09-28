@@ -24,8 +24,9 @@ one is listed under "Defects not carried over".
 The module spec rejected a schema because it shared Payload's user. With a role of its own the
 objection goes away. Payload's user owns the database, but owning a database gives no access to
 the objects in a schema another role owns, and the RDS master user is not a superuser. Payload's
-Drizzle migrations only read and write `public`. The MCP role loses its privileges on `public`,
-so neither side can read or change the other's tables.
+Drizzle migrations only read and write `public`. In PostgreSQL 18 (the RDS version) `PUBLIC`
+holds only `USAGE` on `public`: the MCP role can see the names of Payload's tables but not read
+or change them, and Payload's role has no privilege on `mcp`.
 
 The infrastructure cost is about the same as a second database (a second generated password, the
 role's variables in Beanstalk), with one database to back up. The cost accepted: restoring or
@@ -72,9 +73,11 @@ Claude ──POST──────▶ /mcp/token                PKCE checked by
    yet.
 2. **Authorize.** The provider stores a *pending authorization* (client, redirect URI, PKCE
    challenge, scopes, resource, the client's `state`), valid for 10 minutes, and redirects to
-   Google with `state` set to its id, `scope=openid email`, and `prompt=select_account`. The same
-   id, hashed, goes in a cookie (`__Host-mcp_auth`, `HttpOnly`, `Secure`, `SameSite=Lax`, path
-   `/`), so the callback only completes in the browser that started the flow.
+   Google with `state` set to its id, `scope=openid email`, and `prompt=select_account`. The SDK
+   can only answer `/authorize` with a redirect, so it sends the browser to `/mcp/oauth/start`,
+   which sets the cookie (`__Host-mcp_auth`, the id's hash, `HttpOnly`, `Secure`, `SameSite=Lax`,
+   path `/`) and redirects to Google. The callback then only completes in the browser that
+   started the flow.
 3. **Callback.** Checks, in this order, each failing with a plain error page and no redirect:
    - the pending authorization exists, has not expired, and matches the cookie;
    - Google's code exchanges successfully;
@@ -137,7 +140,6 @@ Staging provisioning, idempotent, from `.ebextensions/database-provisioning.conf
 ```sql
 CREATE ROLE mcp LOGIN PASSWORD '…';
 CREATE SCHEMA IF NOT EXISTS mcp AUTHORIZATION mcp;
-REVOKE ALL ON SCHEMA public FROM mcp;
 ALTER ROLE mcp SET search_path = mcp;
 ```
 

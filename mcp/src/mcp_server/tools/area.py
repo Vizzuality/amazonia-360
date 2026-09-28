@@ -1,6 +1,7 @@
 from collections.abc import Awaitable, Callable
 from typing import Annotated, Any
 
+from mcp.server.auth.middleware.auth_context import get_access_token
 from mcp.server.mcpserver import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
 from mcp.types import ToolAnnotations
@@ -21,6 +22,13 @@ Area = Annotated[
 ]
 
 
+def _caller() -> str | None:
+    """The signed-in email over HTTP; None on stdio. The SDK binds each session to
+    the token that opened it, so this cannot be another user's."""
+    token = get_access_token()
+    return token.subject if token else None
+
+
 async def logged_call[T](
     call_log: CallLog,
     tool: str,
@@ -37,6 +45,7 @@ async def logged_call[T](
         call_log.write(
             {
                 "tool": tool,
+                "user": _caller(),
                 "indicator_id": indicator_id,
                 "ok": False,
                 "error": str(exc),
@@ -52,6 +61,7 @@ async def logged_call[T](
         call_log.write(
             {
                 "tool": tool,
+                "user": _caller(),
                 "indicator_id": indicator_id,
                 "ok": False,
                 "error": error,
@@ -63,6 +73,7 @@ async def logged_call[T](
     call_log.write(
         {
             "tool": tool,
+            "user": _caller(),
             "indicator_id": indicator_id,
             "ok": True,
             "aoi_ha": result.aoi_ha,

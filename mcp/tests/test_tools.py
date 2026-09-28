@@ -128,6 +128,7 @@ async def test_area_tool_returns_the_envelope_and_logs_the_call(
     assert record["tool"] == "area_by_category"
     assert record["indicator_id"] == 210
     assert record["ok"] is True
+    assert record["user"] is None  # stdio has no caller
     assert record["timing"]["vertices_sent"] == 5
 
 
