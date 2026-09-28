@@ -24,7 +24,7 @@ The service runs in staging only; it does not go to production (decided 28 Septe
 | # | Decision | Outcome | Change from the 16 September note |
 |---|---|---|---|
 | 1 | Where the server runs | A separate service in a top-level `mcp/` directory, deployed as a fourth container in the existing Elastic Beanstalk environment | Was a package inside `api/` |
-| 2 | Database | A second database on the shared RDS instance, owned by the MCP service. Phase 2 | Same rule, new location |
+| 2 | Database | A schema `mcp` with its own role inside the staging database (changed 28 September 2026; see the [OAuth spec](2026-09-28-mcp-oauth-design.md)). Phase 2 | Same rule, new location |
 | 3 | Catalogue | Metadata built in code, in the shape of the CMS contract, behind one function | Was a Postgres table fed by Payload |
 | 4 | Aggregation over an area | Cheap tools for presence and counts; area tools accept the latency and report it | Was open |
 | 5 | H3 grid | Not used. The MCP has no dependency on `api/` in this phase | Was the reason for decision 1 |
@@ -85,7 +85,8 @@ Not on the radar, approved for this project on 24 September 2026:
 - `mcp` 2.x, the official Python SDK. In 2.x the `FastMCP` class VizzHub uses is renamed
   `MCPServer` (`from mcp.server.mcpserver import MCPServer`), so code ported from VizzHub needs
   that change.
-- SQLAlchemy with Alembic, for the phase 2 database.
+- SQLAlchemy with Alembic, for the phase 2 database, and asyncpg as its driver (28 September
+  2026).
 - `httpx`, as the async HTTP client for ArcGIS.
 - Jev, Laya, and the `anthropic` SDK for the Haiku control, for the gatekeeper evaluation.
 
@@ -98,10 +99,9 @@ without rewriting the tools.
 **Phase 1, development over stdio.** Catalogue, ArcGIS client, handlers, tools, measurement. Run
 locally from Claude Code or Claude Desktop. No database, no auth, no deployment.
 
-**Phase 2, remote in staging.** OAuth provider and token verifier ported from VizzHub, the database,
-Streamable HTTP mounted behind nginx at `/mcp/`, and the deployment below. The size of the VizzHub
-port is still unscoped: `provider.py` is about 15 KB and depends on VizzHub's own models and
-permission resolver.
+**Phase 2, remote in staging.** OAuth provider ported from VizzHub, the database, Streamable HTTP
+mounted behind nginx at `/mcp/`, and the deployment below. Authentication, authorization and
+storage are designed in the [OAuth spec](2026-09-28-mcp-oauth-design.md).
 
 Two known traps for phase 2, both from the VizzHub implementation:
 
@@ -120,17 +120,12 @@ Two known traps for phase 2, both from the VizzHub implementation:
   environment. An `upstream mcp` block that points to a container absent in production stops nginx
   from starting, because nginx resolves upstream hosts at startup. The `/mcp/` location has to be
   generated per environment in the deploy step, the same way the Compose file is.
-- **Database.** A second database on the shared RDS instance, for example `amazonia360-staging-mcp`
-  with its own user. `.ebextensions/database-provisioning.config` creates exactly one database and
-  one user per environment from fixed `TF_DB_*` variables. It needs either a second set of variables
-  or a loop over a list, and `modules/env/database.tf` needs a second generated password, for
-  staging only.
-- **Local.** The `database` service in the root `docker-compose.yml` gets the second database
+- **Database.** A schema `mcp` owned by its own role in the staging database, provisioned by
+  `.ebextensions/database-provisioning.config` from a second set of `TF_DB_*`-style variables,
+  with a second generated password in `modules/env/database.tf`, for staging only. The SQL and
+  the reasons are in the [OAuth spec](2026-09-28-mcp-oauth-design.md).
+- **Local.** The `database` service in the root `docker-compose.yml` gets the role and schema
   through an init script.
-
-A schema inside the existing staging database was rejected: it shares a user with Payload, so a
-permissions mistake or a stray migration on one side reaches the other. A new RDS instance was
-rejected as a monthly cost with nothing to show for it over a second database.
 
 ## Catalogue
 
@@ -504,7 +499,8 @@ mcp/
 
 ## Open questions
 
-1. How large the VizzHub OAuth port is. It gates phase 2.
+1. How large the VizzHub OAuth port is. *Resolved on 28 September 2026:* scoped and designed in
+   the [OAuth spec](2026-09-28-mcp-oauth-design.md).
 2. The vertex limit on the input area, to be set from the first measurements.
 3. How the five miscounted layers are resolved. *Resolved on our side on 24 September 2026:* the
    AGOL item descriptions of all five agree with the published service (3, 8, 14,137, 11 and 11),
