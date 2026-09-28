@@ -44,7 +44,6 @@ def create_mcp_server(
     )
     register_catalogue_tools(server)
     register_area_tools(server, handlers, call_log)
-    if settings.map_spike:
-        log_path = settings.call_log_path.parent / "map-diagnostics.jsonl"
-        register_map_spike(server, handlers, log_path)
+    log_path = settings.call_log_path.parent / "map-diagnostics.jsonl"
+    register_map_spike(server, handlers, log_path)
     return server

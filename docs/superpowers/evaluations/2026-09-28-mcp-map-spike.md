@@ -5,9 +5,8 @@ that a client shows next to the answer, drawing the area and the classes a figur
 over? Tried in Claude Desktop through the MCP Apps extension, which serves a page as a `ui://`
 resource that the host renders in a sandboxed frame.
 
-Status: spike finished. The code is kept behind `MCP_MAP_SPIKE=1` so the test can be repeated.
-Decided afterwards: the maps go to staging with the rest of the MCP, which does not go to
-production, behind a feature flag added when the branch is merged.
+Status: spike finished. Decided afterwards: the maps go to staging with the rest of the MCP,
+which does not go to production, with no flag of their own.
 
 ## Conclusions
 
@@ -28,7 +27,7 @@ production, behind a feature flag added when the branch is merged.
 
 ## Setup
 
-- Three tools, registered with `MCP_MAP_SPIKE=1` (`mcp/src/mcp_server/spike_maps/`):
+- Three tools, in `mcp/src/mcp_server/spike_maps/`:
   - `show_area_map_maplibre` and `show_area_map_arcgis` draw the area only.
   - `show_area_by_category_map` returns the same result as `area_by_category`, and its page draws
     the classes.

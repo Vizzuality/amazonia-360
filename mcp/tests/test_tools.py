@@ -22,7 +22,7 @@ def server(tmp_path: Path) -> Any:
 
 
 @pytest.mark.anyio
-async def test_exposes_the_five_tools(tmp_path: Path) -> None:
+async def test_exposes_the_tools(tmp_path: Path) -> None:
     async with Client(server(tmp_path)) as client:
         names = {t.name for t in (await client.list_tools()).tools}
     assert names == {
@@ -31,6 +31,11 @@ async def test_exposes_the_five_tools(tmp_path: Path) -> None:
         "categories_in_area",
         "count_in_area",
         "area_by_category",
+        "show_area_map_maplibre",
+        "show_area_map_arcgis",
+        "show_area_by_category_map",
+        "category_shapes",
+        "report_map_diagnostics",
     }
 
 

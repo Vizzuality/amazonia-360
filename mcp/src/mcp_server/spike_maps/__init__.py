@@ -1,8 +1,8 @@
 """Spike, kept to repeat it: can an MCP Apps view draw results on a map in Desktop?
 
-Registered only with MCP_MAP_SPIKE=1. Three views: the area on MapLibre, the same on
-the ArcGIS Maps SDK, and area_by_category's classes on MapLibre. Each reports what the
-host's sandbox let it load to var/map-diagnostics.jsonl. Findings are in
+Three views: the area on MapLibre, the same on the ArcGIS Maps SDK, and
+area_by_category's classes on MapLibre. Each reports what the host's sandbox let it load
+to var/map-diagnostics.jsonl. Findings are in
 docs/superpowers/evaluations/2026-09-28-mcp-map-spike.md; this is not production code
 (it reaches into AreaHandlers and queries ArcGIS twice per map).
 """

@@ -537,6 +537,6 @@ mcp/
    *Tried on 28 September 2026* ([map spike](../evaluations/2026-09-28-mcp-map-spike.md)): it
    works in Claude Desktop with MapLibre and OpenStreetMap tiles, and not with the ArcGIS Maps
    SDK. The page asks the server for the shapes clipped to the area, so no vertex reaches the
-   model, and draws the same polygons the hectares come from. Kept behind `MCP_MAP_SPIKE=1`.
-   *Decided on 28 September 2026:* the maps go to staging with the rest of the MCP, behind a
-   feature flag added when the branch is merged. The evaluation lists what they need first.
+   model, and draws the same polygons the hectares come from.
+   *Decided on 28 September 2026:* the maps go to staging with the rest of the MCP, with no
+   flag of their own. The evaluation lists what they need first.
