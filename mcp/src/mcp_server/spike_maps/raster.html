@@ -27,7 +27,6 @@
   <div id="diag"></div>
   <script type="module">
     const { mark, report } = window.diag;
-    const AREA = "#009ade"; // The front end's POLYGON_SYMBOL.
     const pct = new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 });
     const esc = (s) => String(s).replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
 
@@ -87,8 +86,6 @@
         map.addLayer({ id: "raster", type: "raster", source: "raster", paint: { "raster-resampling": "nearest", "raster-opacity": 0.85 } }, under);
         map.addSource("mask", { type: "geojson", data: mask(area) });
         map.addLayer({ id: "mask", type: "fill", source: "mask", paint: { "fill-color": "#ffffff", "fill-opacity": 0.55 } }, under);
-        map.addSource("area", { type: "geojson", data: { type: "Feature", geometry: area, properties: {} } });
-        map.addLayer({ id: "area-line", type: "line", source: "area", paint: { "line-color": AREA, "line-width": 1.5 } });
         map.once("idle", () => { mark("raster_drawn"); window.diag.done(); });
       } catch (e) {
         mark("image_failed", { message: String(e) });
