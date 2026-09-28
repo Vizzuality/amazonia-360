@@ -7,6 +7,7 @@ from pathlib import Path
 class Settings:
     call_log_path: Path
     arcgis_timeout_s: float
+    map_spike: bool = False
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -14,4 +15,5 @@ class Settings:
             call_log_path=Path(os.environ.get("MCP_CALL_LOG", "var/calls.jsonl")),
             # Just above ArcGIS Online's own ~59 s cut, so its 504 arrives first.
             arcgis_timeout_s=float(os.environ.get("ARCGIS_TIMEOUT_S", "65")),
+            map_spike=os.environ.get("MCP_MAP_SPIKE") == "1",
         )

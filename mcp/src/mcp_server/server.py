@@ -6,6 +6,7 @@ from mcp_server.arcgis.client import ArcGISClient
 from mcp_server.config import Settings
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.measurement.call_log import CallLog
+from mcp_server.spike_maps import register_map_spike
 from mcp_server.tools.area import register_area_tools
 from mcp_server.tools.catalogue import register_catalogue_tools
 
@@ -43,4 +44,7 @@ def create_mcp_server(
     )
     register_catalogue_tools(server)
     register_area_tools(server, handlers, call_log)
+    if settings.map_spike:
+        log_path = settings.call_log_path.parent / "map-diagnostics.jsonl"
+        register_map_spike(server, handlers, log_path)
     return server

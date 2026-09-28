@@ -118,6 +118,7 @@ uv run amazonia360-mcp-timing summary   # per tool and layer: median, max, over 
 |---|---|---|
 | `MCP_CALL_LOG` | `var/calls.jsonl` | One JSON line per tool call, with timing |
 | `ARCGIS_TIMEOUT_S` | `65` | Per-request timeout against ArcGIS; just above ArcGIS Online's own cut at about 59 s |
+| `MCP_MAP_SPIKE` | unset | `1` adds the map spike's tools, which draw results on a MapLibre map in hosts that support MCP Apps; see the [map spike](../docs/superpowers/evaluations/2026-09-28-mcp-map-spike.md) |
 
 ## Test
 

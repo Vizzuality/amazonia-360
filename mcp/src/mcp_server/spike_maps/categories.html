@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en" data-library="maplibre-categories">
+<head>
+  <meta charset="utf-8">
+  <title>Area by category, MapLibre</title>
+  <script>/*DIAGNOSTICS*/</script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@6.11.2/dist/maplibre-gl.css">
+  <style>
+    html, body { margin: 0; font: 13px system-ui, sans-serif; color: #222; background: #fff; }
+    #map { height: 440px; }
+    #legend { padding: 8px 10px; }
+    #legend table { border-collapse: collapse; }
+    #legend td { padding: 2px 8px 2px 0; }
+    #legend td.ha { text-align: right; font-variant-numeric: tabular-nums; }
+    .swatch { display: inline-block; width: 12px; height: 12px; border: 1px solid #0003; vertical-align: -2px; }
+    .note { color: #555; margin: 6px 0 0; max-width: 70ch; }
+    #diag { white-space: pre; padding: 6px 8px; background: #f4f4f4; color: #333; font-size: 11px; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="legend">Waiting for the figures…</div>
+  <div id="diag"></div>
+  <script type="module">
+    const { mark, report } = window.diag;
+    const PALETTE = ["#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02",
+      "#a6761d", "#1f78b4", "#b2df8a", "#fb9a99", "#cab2d6", "#ffff99"];
+    const fmt = new Intl.NumberFormat("en", { maximumFractionDigits: 0 });
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+
+    const library = import("https://cdn.jsdelivr.net/npm/maplibre-gl@6.11.2/dist/maplibre-gl.mjs").then(
+      (m) => { mark("library_loaded"); return m; },
+      (e) => { mark("library_failed", { message: String(e) }); window.diag.done(); return null; },
+    );
+
+    let map = null;
+    let colours = null;
+    let shapes = null;
+    let resolveMap;
+    const mapReady = new Promise((r) => { resolveMap = r; });
+
+    const colourExpression = () => {
+      const pairs = Object.entries(colours).flat();
+      return pairs.length ? ["match", ["get", "category"], ...pairs, "#999"] : "#999";
+    };
+
+    function paintShapes() {
+      if (!map || !shapes || !colours) return;
+      map.getSource("shapes").setData(shapes);
+      map.setPaintProperty("shapes-fill", "fill-color", colourExpression());
+      map.once("idle", () => { mark("shapes_drawn"); window.diag.done(); });
+    }
+
+    // Figures come from the tool result the model also receives; the page shows
+    // them itself, so the caveats reach the user whatever the model writes.
+    window.onResult = (result) => {
+      mark("result_received");
+      const r = result.structuredContent;
+      if (!r) return;
+      const rows = Object.entries(r.value).sort((a, b) => b[1] - a[1]);
+      colours = Object.fromEntries(rows.map(([c], i) => [c, PALETTE[i % PALETTE.length]]));
+      const notes = [];
+      if (r.unclassified_ha > 0) notes.push(`${fmt.format(r.unclassified_ha)} ha of the area have no class in this layer. They are not a class of their own.`);
+      if (r.layer?.empty_result === "not_mapped_here") notes.push("This layer does not map this part of the module.");
+      if (r.coverage?.boundary === "bounding_box") notes.push("The module boundary is still a bounding box; part of an area near its edge may fall outside the module.");
+      for (const c of r.caveats || []) notes.push(c);
+      document.getElementById("legend").innerHTML = `
+        <table>${rows.map(([c, ha]) => `<tr><td><span class="swatch" style="background:${colours[c]}"></span></td><td>${esc(c)}</td><td class="ha">${fmt.format(ha)} ha</td></tr>`).join("")}
+        <tr><td></td><td>Area</td><td class="ha">${fmt.format(r.aoi_ha)} ha</td></tr></table>
+        ${notes.map((n) => `<p class="note">${esc(n)}</p>`).join("")}`;
+      paintShapes();
+    };
+
+    window.drawArea = async (area, indicatorId) => {
+      const maplibregl = await library;
+      if (!maplibregl) return;
+      const ring = area.type === "Polygon" ? area.coordinates[0] : area.coordinates[0][0];
+      const xs = ring.map((p) => p[0]);
+      const ys = ring.map((p) => p[1]);
+      map = new maplibregl.Map({
+        container: "map",
+        style: {
+          version: 8,
+          sources: {
+            osm: {
+              type: "raster",
+              tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+              tileSize: 256,
+              attribution: "© OpenStreetMap contributors",
+            },
+            area: { type: "geojson", data: { type: "Feature", geometry: area, properties: {} } },
+            shapes: { type: "geojson", data: { type: "FeatureCollection", features: [] } },
+          },
+          layers: [
+            { id: "osm", type: "raster", source: "osm", paint: { "raster-saturation": -0.6 } },
+            { id: "shapes-fill", type: "fill", source: "shapes", paint: { "fill-color": "#999", "fill-opacity": 0.6 } },
+            { id: "area-line", type: "line", source: "area", paint: { "line-color": "#222", "line-width": 2 } },
+          ],
+        },
+        bounds: [[Math.min(...xs), Math.min(...ys)], [Math.max(...xs), Math.max(...ys)]],
+        fitBoundsOptions: { padding: 30 },
+      });
+      map.on("error", (e) => mark("map_error", { message: String(e.error?.message || e.error) }));
+      map.once("load", () => { mark("map_load"); resolveMap(); });
+
+      if (indicatorId == null || !window.app) return;
+      const t = performance.now();
+      try {
+        const res = await window.app.callServerTool({
+          name: "category_shapes",
+          arguments: { indicator_id: indicatorId, area },
+        });
+        const s = res.structuredContent;
+        if (res.isError || !s) throw new Error(res.content?.[0]?.text || "no shapes");
+        report.shapes = { ...s.timing, features: s.shapes.features.length, round_trip_ms: Math.round(performance.now() - t) };
+        mark("shapes_received", report.shapes);
+        shapes = s.shapes;
+        await mapReady;
+        paintShapes();
+      } catch (e) {
+        mark("shapes_failed", { message: String(e) });
+        window.diag.done();
+      }
+    };
+  </script>
+  <script type="module">/*BRIDGE*/</script>
+</body>
+</html>
