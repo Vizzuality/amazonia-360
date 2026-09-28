@@ -118,19 +118,17 @@ async def _consent(
 def oauth_routes(provider: AmazoniaOAuthProvider, google: GoogleSignIn) -> list[Route]:
     store = provider.store
     settings = provider.settings
-    # settings.mount_path is where this server is exposed (eg behind a shared
-    # reverse proxy at "/mcp"). Routes must live under it, since the SDK and Google
-    # both redirect back to public_url + "/oauth/...".
-    prefix = settings.mount_path
+    # Relative to wherever this server is mounted (eg "/mcp"): Task 8 registers
+    # these paths on the MCP app itself, which is mounted at that prefix.
     return [
-        Route(f"{prefix}/oauth/start", partial(_start, store, google), methods=["GET"]),
+        Route("/oauth/start", partial(_start, store, google), methods=["GET"]),
         Route(
-            f"{prefix}/oauth/callback",
+            "/oauth/callback",
             partial(_callback, store, settings, provider, google),
             methods=["GET"],
         ),
         Route(
-            f"{prefix}/oauth/consent",
+            "/oauth/consent",
             partial(_consent, store, settings),
             methods=["POST"],
         ),

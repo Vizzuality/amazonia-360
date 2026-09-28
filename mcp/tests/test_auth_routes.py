@@ -9,6 +9,7 @@ from mcp.shared.auth import OAuthClientInformationFull
 from pydantic import AnyUrl
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from starlette.applications import Starlette
+from starlette.routing import Mount
 
 from mcp_server.auth.google import GoogleError
 from mcp_server.auth.provider import AmazoniaOAuthProvider
@@ -34,7 +35,11 @@ async def provider(sessions: async_sessionmaker[AsyncSession]) -> AmazoniaOAuthP
 
 
 def app_for(provider: AmazoniaOAuthProvider, google: FakeGoogle) -> httpx.AsyncClient:
-    app = Starlette(routes=oauth_routes(provider, google))
+    app = Starlette(
+        routes=[
+            Mount(provider.settings.mount_path, routes=oauth_routes(provider, google))
+        ]
+    )
     return httpx.AsyncClient(
         transport=httpx.ASGITransport(app=app), base_url="https://staging.test/mcp"
     )
