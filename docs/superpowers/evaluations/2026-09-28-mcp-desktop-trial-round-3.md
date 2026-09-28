@@ -31,7 +31,14 @@ border, that the area may fall partly outside the module, never reached the user
 say what is provisional, and `coverage` sits next to `layer` in the response. *Done after the
 round:* the flag became `coverage.boundary: "bounding_box"`, whose description says it is about the
 module boundary and not the layer, and the description of `status` repeats that `inside` does not
-rule out an area partly outside. Not yet retested.
+rule out an area partly outside.
+
+*Retested the same day* (Q3 again, Desktop restarted on `9c8ebb1d`, same figures, 1.89 s). The
+misreading is gone: nothing about the layer being provisional. The warning is gone too: no mention
+of the boundary or of the area possibly falling outside the module. The field went from misread to
+unread. The unclassified 15,584 ha became "either non-floodable zones or zones without data",
+which draws correctly on `covers_module: false` and then gives "non-floodable" a meaning the layer
+does not support. Naming the field fixed the error, and did not make the warning arrive.
 
 **The Peru claim did not come back** (Q3). Nor did a guess about unclassified land on that question.
 With one run each, this is as likely to be variance as the effect of a field.
