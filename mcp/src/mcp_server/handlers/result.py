@@ -48,7 +48,15 @@ class Result(BaseModel):
     computed_over: ComputedOver
     coverage: Coverage
     layer: LayerFacts
-    provenance: dict[str, str | None]
+    # Left undescribed, all-null provenance was reported in the Desktop trial as a
+    # defect of the layer ("no provenance metadata"), which reads as doubt about it.
+    provenance: dict[str, str | None] = Field(
+        description=(
+            "Where the data comes from, as curated in the CMS: source organisation, "
+            "licence, citation, the date the data describes. A null field has not "
+            "been curated yet; it says nothing about the quality of the data."
+        )
+    )
     caveats: list[str] = Field(
         description=(
             "Known defects of this dataset, written by a person in the CMS. Only "

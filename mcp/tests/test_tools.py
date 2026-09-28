@@ -95,6 +95,7 @@ async def test_area_tools_publish_an_output_schema_with_field_meanings(
     assert "not a class" in text
     assert "written by a person" in text
     assert "module boundary, not the layer" in text
+    assert "has not been curated yet" in text
 
 
 @pytest.mark.anyio

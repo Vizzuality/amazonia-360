@@ -519,7 +519,10 @@ mcp/
    things the curator will meet: layer 218 (Tipos de clima) credits the environment ministry but
    its description names MAGAP–SIGAGRO as the source, and no item carries a formal citation.
    Needed before any demo that shows `describe_indicator`. *The catalogue shape itself was
-   brought in line with the contract on 24 September 2026.*
+   brought in line with the contract on 24 September 2026.* *On 28 September 2026* the curation
+   went to Jira as AM-728, and `provenance` got a description in the output schema: a null field
+   has not been curated yet and says nothing about the quality of the data. In the map spike the
+   model had reported the empty fields as a defect of each layer.
 7. Handler tests use hand-written ArcGIS payloads, not recorded ones. Record one live
    response each for `distinct`, `count` and a paginated `geojson` page (layer 210 over
    the Tena test area) and replay them through `httpx.MockTransport`.
