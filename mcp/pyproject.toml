@@ -9,12 +9,18 @@ dependencies = [
     "httpx>=0.28",
     "shapely>=2.1",
     "pyproj>=3.8",
+    "sqlalchemy[asyncio]>=2.0.40",
+    "asyncpg>=0.30",
+    "alembic>=1.16",
+    "uvicorn>=0.35",
 ]
 
 [project.scripts]
 amazonia360-mcp = "mcp_server.__main__:main"
 amazonia360-mcp-catalogue = "mcp_server.catalogue.cli:main"
 amazonia360-mcp-timing = "mcp_server.measurement.timing_run:main"
+amazonia360-mcp-http = "mcp_server.__main__:http"
+amazonia360-mcp-db = "mcp_server.db.migrate:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -45,5 +51,8 @@ pythonVersion = "3.12"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra -m 'not live'"
-markers = ["live: calls the published ArcGIS services; run with -m live"]
+markers = [
+    "live: calls the published ArcGIS services; run with -m live",
+    "db: needs MCP_TEST_DATABASE_URL, a PostgreSQL database whose name ends in _test",
+]
 pythonpath = ["."]
