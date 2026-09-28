@@ -3,11 +3,13 @@ from html import escape
 from starlette.responses import HTMLResponse
 
 _HEADERS = {
-    # The consent page must never be framed (clickjacking) or cached, and its form
-    # posts only back to this server.
+    # The consent page must never be framed (clickjacking) or cached. No form-action:
+    # Chromium applies it to the redirect that follows the form POST too, so it would
+    # block the 303 back to the client after consent. The page runs no script
+    # (default-src 'none') and every value on it is escaped, so the omission is safe.
     "Content-Security-Policy": (
-        "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; "
-        "frame-ancestors 'none'; base-uri 'none'"
+        "default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'; "
+        "base-uri 'none'"
     ),
     "X-Frame-Options": "DENY",
     "Cache-Control": "no-store",

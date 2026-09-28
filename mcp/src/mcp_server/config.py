@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import urlsplit
 
+from pydantic import AnyHttpUrl
+
 
 @dataclass(frozen=True)
 class Settings:
@@ -35,6 +37,13 @@ class ConfigError(Exception):
     pass
 
 
+def issuer_url(public_url: str) -> AnyHttpUrl:
+    """The one place `public_url` becomes an issuer: the metadata's `issuer` (via
+    pydantic) and the consent redirect's `iss` must be the same string byte for byte
+    (RFC 9207), so both are built from this."""
+    return AnyHttpUrl(public_url)
+
+
 def _list(value: str) -> list[str]:
     return [item.strip() for item in value.split(",") if item.strip()]
 
@@ -56,6 +65,10 @@ class HttpSettings:
     @property
     def mount_path(self) -> str:
         return urlsplit(self.public_url).path
+
+    @property
+    def issuer(self) -> str:
+        return str(issuer_url(self.public_url))
 
     @classmethod
     def from_env(cls, env: Mapping[str, str] | None = None) -> "HttpSettings":

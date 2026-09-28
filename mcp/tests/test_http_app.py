@@ -7,7 +7,10 @@ from urllib.parse import parse_qs, urlsplit
 
 import httpx
 import pytest
+from sqlalchemy import text
 
+from mcp_server.auth.crypto import digest
+from mcp_server.db import create_engine
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.http_app import create_http_app
 from mcp_server.measurement.call_log import CallLog
@@ -164,6 +167,9 @@ async def test_discovery_documents_at_the_domain_root(http: httpx.AsyncClient) -
     assert server["registration_endpoint"] == f"{PUBLIC_URL}/register"
     assert server["authorization_response_iss_parameter_supported"] is True
     assert "S256" in server["code_challenge_methods_supported"]
+    # Claude and ChatGPT register as public PKCE clients (token_endpoint_auth_method
+    # "none").
+    assert "none" in server["token_endpoint_auth_methods_supported"]
     resource = (await http.get("/.well-known/oauth-protected-resource/mcp")).json()
     assert resource["resource"] == PUBLIC_URL
     assert resource["authorization_servers"] == [PUBLIC_URL]
@@ -246,6 +252,28 @@ async def test_a_wrong_host_is_refused(http: httpx.AsyncClient) -> None:
         json={},
     )
     assert response.status_code == 421
+
+
+async def test_a_token_issued_for_another_resource_is_refused(
+    http: httpx.AsyncClient, clean_database: str
+) -> None:
+    tokens = await sign_in(http)
+    engine = create_engine(clean_database)
+    async with engine.begin() as connection:
+        await connection.execute(
+            text("UPDATE mcp.tokens SET resource = :resource WHERE token_hash = :hash"),
+            {
+                "resource": "https://other.test/mcp",
+                "hash": digest(tokens["access_token"]),
+            },
+        )
+    await engine.dispose()
+    response = await http.post(
+        "/mcp/",
+        headers={**MCP, "Authorization": f"Bearer {tokens['access_token']}"},
+        json={},
+    )
+    assert response.status_code == 401
 
 
 async def test_a_foreign_origin_is_refused(http: httpx.AsyncClient) -> None:

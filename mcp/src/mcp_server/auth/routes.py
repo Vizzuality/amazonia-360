@@ -107,7 +107,9 @@ async def _consent(
         params["code"] = code
     else:
         params["error"] = "access_denied"
-    params["iss"] = settings.public_url
+    # Same string the metadata calls `issuer` (HttpSettings.issuer), so a byte-for-byte
+    # comparison on the client's side (RFC 9207) succeeds.
+    params["iss"] = settings.issuer
     response = RedirectResponse(
         construct_redirect_uri(pending.redirect_uri, **params), 303
     )

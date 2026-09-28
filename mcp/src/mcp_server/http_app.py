@@ -16,7 +16,6 @@ from mcp.server.auth.settings import (
     RevocationOptions,
 )
 from mcp.server.transport_security import TransportSecuritySettings
-from pydantic import AnyHttpUrl
 from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
@@ -27,7 +26,7 @@ from mcp_server.auth.google import Google, GoogleSignIn
 from mcp_server.auth.provider import SCOPE, AmazoniaOAuthProvider
 from mcp_server.auth.routes import oauth_routes
 from mcp_server.auth.store import AuthStore
-from mcp_server.config import HttpSettings
+from mcp_server.config import HttpSettings, issuer_url
 from mcp_server.db import create_engine, session_maker
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.measurement.call_log import CallLog
@@ -84,7 +83,9 @@ def create_http_app(
         enabled=True, valid_scopes=[SCOPE], default_scopes=[SCOPE]
     )
     revocation = RevocationOptions(enabled=True)
-    issuer = AnyHttpUrl(settings.public_url)
+    # One issuer string for the whole server: the metadata's `issuer` below and the
+    # consent redirect's `iss` (HttpSettings.issuer) both come from this helper.
+    issuer = issuer_url(settings.public_url)
     server = create_mcp_server(
         handlers,
         call_log,
@@ -113,6 +114,12 @@ def create_http_app(
     metadata = build_metadata(issuer, None, registration, revocation)
     # RFC 9207; the SDK has the field but does not set it.
     metadata.authorization_response_iss_parameter_supported = True
+    # Claude and ChatGPT register as public PKCE clients (token_endpoint_auth_method
+    # "none"); the SDK only lists the confidential methods here.
+    metadata.token_endpoint_auth_methods_supported = [
+        "none",
+        *(metadata.token_endpoint_auth_methods_supported or []),
+    ]
     metadata_json = metadata.model_dump(mode="json", exclude_none=True)
 
     async def authorization_server(request: Request) -> Response:

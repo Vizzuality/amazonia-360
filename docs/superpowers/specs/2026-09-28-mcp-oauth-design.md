@@ -88,8 +88,11 @@ Claude ──POST──────▶ /mcp/token                PKCE checked by
    consent.
 4. **Consent.** The page names the client (`client_name`, escaped) and the host it will send the
    user back to, and shows the email. It is served with `Content-Security-Policy: default-src
-   'none'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'` and
-   `X-Frame-Options: DENY`. "Allow" posts the CSRF token; the handler checks it and the cookie,
+   'none'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'` and
+   `X-Frame-Options: DENY`. There is no `form-action`: Chromium applies it to the redirect that
+   follows the form POST as well, which would block the 303 back to the client after consent; the
+   page runs no script (`default-src 'none'`) and every value on it is escaped, so the omission is
+   safe. "Allow" posts the CSRF token; the handler checks it and the cookie,
    deletes the pending authorization with `DELETE … RETURNING`, issues a code valid for 60
    seconds, and redirects to the client. "Cancel" redirects with `error=access_denied`. Both
    redirects carry `iss` set to the issuer, exactly as in the metadata (RFC 9207), and the

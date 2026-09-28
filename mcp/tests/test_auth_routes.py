@@ -106,7 +106,12 @@ async def test_the_full_flow_redirects_with_code_state_and_issuer(
     assert page.status_code == 200
     assert "Claude &lt;b&gt;" in page.text  # the client name is escaped
     assert "claude.ai" in page.text and ANA in page.text
-    assert "frame-ancestors 'none'" in page.headers["content-security-policy"]
+    csp = page.headers["content-security-policy"]
+    assert csp == (
+        "default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'; "
+        "base-uri 'none'"
+    )
+    assert "form-action" not in csp
     assert page.headers["x-frame-options"] == "DENY"
     assert page.headers["cache-control"] == "no-store"
     answer = await browser.post(
