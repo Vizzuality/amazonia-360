@@ -15,6 +15,7 @@ import {
   isUnscopedPathname,
   stripCountry,
 } from "@/lib/country";
+import { isFeatureEnabled } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
 
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +37,7 @@ export default function CountryBadge({ onExit }: Readonly<{ onExit?: () => void 
 
   const query = useMemo(() => Object.fromEntries(searchParams?.entries() ?? []), [searchParams]);
 
+  if (!isFeatureEnabled("country-module")) return null;
   if (isUnscopedPathname(pathname) || isSavedReportPathname(pathname)) return null;
 
   const name = getCountryName(country, t);

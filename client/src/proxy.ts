@@ -6,7 +6,8 @@ import createMiddleware from "next-intl/middleware";
 
 import { env } from "@/env.mjs";
 
-import { canonicalCountryPathname, routedPathname } from "@/lib/country";
+import { canonicalCountryPathname, getRegionalPathname, routedPathname } from "@/lib/country";
+import { isFeatureEnabled } from "@/lib/feature-flags";
 
 import { routing } from "@/i18n/routing";
 
@@ -46,6 +47,15 @@ export default async function proxy(req: NextRequest) {
 
   if (isAdminPath(pathname)) {
     return NextResponse.next({ request: { headers: requestHeaders } });
+  }
+
+  const regional = isFeatureEnabled("country-module")
+    ? null
+    : getRegionalPathname(pathname, routing.locales);
+  if (regional) {
+    const url = req.nextUrl.clone();
+    url.pathname = regional;
+    return NextResponse.redirect(url, 307);
   }
 
   // 307 and not 308: report URL semantics may change once reports gain a country of

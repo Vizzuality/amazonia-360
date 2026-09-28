@@ -31,6 +31,22 @@ Then, create a `.env.local` file from the template `.env.default` at the root of
 | `DATABASE_PASSWORD`           | Database connection password                                                         | `""` (empty by default)                  |
 | `APP_KEY`                     | Application key                                                                      | `""` (empty by default)                  |
 | `AUTH_SECRET`                 | Secret key for authentication                                                        | `""` (empty by default)                  |
+| `NEXT_PUBLIC_FEATURE_FLAGS`   | Comma-separated features to switch on (see [Feature flags](#feature-flags))          | `""` (empty by default)                  |
+
+## Feature flags
+
+Work that ships in the build but is not ready to be seen sits behind a flag registered in `src/lib/feature-flags.ts`. A flag is on only when its name is listed in `NEXT_PUBLIC_FEATURE_FLAGS`; unset or empty means every flag is off.
+
+| Flag             | Gates                                                                                                      |
+| ---------------- | ---------------------------------------------------------------------------------------------------------- |
+| `country-module` | Country modules: `/{locale}/ECU/...` routes, activation, dialog, banner, header badge, national indicators |
+
+The value is inlined into the bundle at build time, so switching a flag always needs a rebuild:
+
+- **Local (`pnpm dev`)**: set `NEXT_PUBLIC_FEATURE_FLAGS=country-module` in `client/.env.local` and restart the dev server.
+- **Local (Docker Compose)**: set `CLIENT__NEXT_PUBLIC_FEATURE_FLAGS=country-module` in the root `.env` and run `docker compose up --build client`.
+- **Tests**: unit, integration and e2e configs already switch `country-module` on; tests for the off state stub `NEXT_PUBLIC_FEATURE_FLAGS` to `""`.
+- **Deployed environments**: Terraform owns the value. Set `next_public_feature_flags` for that environment in the TF Cloud workspace (or `infrastructure/vars/terraform.tfvars`) and apply; that writes the `TF_CLIENT_NEXT_PUBLIC_FEATURE_FLAGS` GitHub Environment variable, which `.github/workflows/cicd.yml` passes as a build arg. Then redeploy. Editing the GitHub variable by hand is overwritten by the next apply.
 
 ## Development
 

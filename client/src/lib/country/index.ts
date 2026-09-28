@@ -136,3 +136,7 @@ export function routedPathname(pathname: string, locales: readonly string[]): st
 
   return `/${[locale, ...tail].join("/")}`;
 }
+
+export function getRegionalPathname(pathname: string, locales: readonly string[]): string | null {
+  return routedPathname(canonicalCountryPathname(pathname, locales) ?? pathname, locales);
+}

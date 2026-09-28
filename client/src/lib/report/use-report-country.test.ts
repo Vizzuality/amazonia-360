@@ -3,7 +3,7 @@ import { createElement, Suspense, type ReactNode } from "react";
 import { useParams } from "next/navigation";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 
 import { Report } from "@/payload-types";
 
@@ -32,6 +32,8 @@ beforeEach(() => {
   useParamsMock.mockReturnValue({ id: "report-1" });
 });
 
+afterEach(() => vi.unstubAllEnvs());
+
 describe("useReportCountry", () => {
   it("reads the report's stored module, not the URL's", async () => {
     findByIDMock.mockResolvedValue({ country: ["ECU"] } as Report);
@@ -47,5 +49,19 @@ describe("useReportCountry", () => {
     const { result } = renderHook(() => useReportCountry(), { wrapper: getWrapper() });
 
     await waitFor(() => expect(result.current).toBeNull());
+  });
+
+  it("ignores the stored module when the flag is off", async () => {
+    vi.stubEnv("NEXT_PUBLIC_FEATURE_FLAGS", "");
+    const reportPromise = Promise.resolve({ country: ["ECU"] } as Report);
+    findByIDMock.mockReturnValue(reportPromise);
+
+    const { result } = renderHook(() => useReportCountry(), { wrapper: getWrapper() });
+
+    await act(async () => {
+      await reportPromise;
+    });
+
+    expect(result.current).toBeNull();
   });
 });

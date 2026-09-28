@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { vi } from "vitest";
+import { afterEach, vi } from "vitest";
 
 import CountryBadge from "./index";
 
@@ -35,6 +35,8 @@ beforeEach(() => {
   mockPathname.mockReturnValue("/ECU/reports");
   mockCountry.mockReturnValue("ECU");
 });
+
+afterEach(() => vi.unstubAllEnvs());
 
 describe("CountryBadge", () => {
   test("names the active module and offers an exit", () => {
@@ -83,6 +85,14 @@ describe("CountryBadge", () => {
   test("renders nothing on an unscoped path", () => {
     mockPathname.mockReturnValue("/private/my-reports");
     mockCountry.mockReturnValue(null);
+
+    const { container } = render(<CountryBadge />);
+
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  test("renders nothing when the country-module flag is off", () => {
+    vi.stubEnv("NEXT_PUBLIC_FEATURE_FLAGS", "");
 
     const { container } = render(<CountryBadge />);
 

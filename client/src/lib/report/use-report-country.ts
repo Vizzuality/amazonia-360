@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 
+import { isFeatureEnabled } from "@/lib/feature-flags";
 import { useReport } from "@/lib/report";
 
 import { Report } from "@/payload-types";
@@ -11,5 +12,6 @@ import { Report } from "@/payload-types";
 export const useReportCountry = (): Report["country"] => {
   const { id } = useParams();
   const { data } = useReport({ id: `${id}` });
+  if (!isFeatureEnabled("country-module")) return null;
   return data?.country ?? null;
 };
