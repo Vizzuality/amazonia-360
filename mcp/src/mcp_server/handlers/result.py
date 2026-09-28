@@ -7,11 +7,27 @@ from mcp_server.geometry.aoi import Coverage
 
 
 class ComputedOver(BaseModel):
-    type: Literal["feature_attributes", "feature_count", "clipped_polygons"]
+    type: Literal[
+        "feature_attributes", "feature_count", "clipped_polygons", "raster_pixels"
+    ]
     # None when the query does not say how many polygons it read.
     features: int | None = None
     categories: int | None = None
     simplification: float | None = None
+    pixels: int | None = Field(
+        default=None,
+        description=(
+            "raster_pixels only: pixels with data inside the area, the shares' "
+            "denominator. A few dozen make a coarse share."
+        ),
+    )
+    pixel_size_deg: float | None = Field(
+        default=None,
+        description=(
+            "raster_pixels only: pixel width in degrees, as the image service "
+            "reports it; 0.009 is about 1 km. None: not read yet."
+        ),
+    )
 
 
 class Timing(BaseModel):
@@ -80,6 +96,13 @@ class Result(BaseModel):
             "area_by_category only: aoi_ha minus classified_ha. Hectares in no class "
             "of this layer; they are not a class and the layer says nothing about "
             "them. Includes any part of the area outside the module."
+        ),
+    )
+    unclassified_share: float | None = Field(
+        default=None,
+        description=(
+            "class_shares_in_area only: share of the area's pixels with data but in "
+            "no class of the legend. Like unclassified_ha, not a class."
         ),
     )
     timing: Timing

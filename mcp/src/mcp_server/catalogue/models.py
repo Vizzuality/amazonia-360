@@ -14,7 +14,7 @@ Fields marked as a proposal in their description are not in the contract yet.
 """
 
 from datetime import datetime
-from typing import Literal
+from typing import Annotated, Any, Literal
 
 from pydantic import (
     BaseModel,
@@ -44,12 +44,14 @@ SyncStatus = Literal["ok", "error", "item_inaccessible"]
 AdminLevel = Literal["0", "1", "2"]
 # From COUNTRIES in client/src/lib/country/index.ts.
 CountryCode = Literal["ECU", "BOL", "BRA", "COL", "GUF", "GUY", "PER", "SUR", "VEN"]
-Operation = Literal["presence", "count", "area"]
+Operation = Literal["presence", "count", "area", "class_share"]
+ResourceType = Literal["feature", "imagery"]
 
-# Only the value types this phase has tools for; any other type allows nothing.
-ALLOWED_OPERATIONS: dict[str, frozenset[Operation]] = {
-    "categorical": frozenset({"presence", "area"}),
-    "count": frozenset({"count"}),
+# Only the value types this phase has tools for; any other pair allows nothing.
+ALLOWED_OPERATIONS: dict[tuple[ResourceType, str], frozenset[Operation]] = {
+    ("feature", "categorical"): frozenset({"presence", "area"}),
+    ("feature", "count"): frozenset({"count"}),
+    ("imagery", "categorical"): frozenset({"class_share"}),
 }
 
 _PROPOSAL = "Proposal: not in the CMS contract yet."
@@ -68,10 +70,64 @@ class Layer(_Model):
     category_field: str
 
 
-class Resource(_Model):
+class FeatureResource(_Model):
     type: Literal["feature"]
     url: str
     layer_id: StrictInt
+
+
+class LegendItem(_Model):
+    label: str
+    color: str
+
+
+class Legend(_Model):
+    type: Literal["basic"]
+    items: list[LegendItem]
+
+
+class ImageryResource(_Model):
+    """An image service, as Payload's imagery block holds it.
+
+    raster_function is the front end's, in the JS SDK's form. When it is a Colormap,
+    its entries are the classes, in the legend's order.
+    """
+
+    type: Literal["imagery"]
+    url: str
+    raster_function: dict[str, Any]
+    legend: Legend
+    aggregation: Literal["sum", "mean", "none"] | None = None
+
+    @model_validator(mode="after")
+    def _one_legend_item_per_class(self) -> "ImageryResource":
+        values = colormap_values(self.raster_function)
+        if values is not None and len(values) != len(self.legend.items):
+            raise ValueError(
+                f"The colormap has {len(values)} classes and the legend "
+                f"{len(self.legend.items)} items."
+            )
+        return self
+
+
+def colormap_values(raster_function: dict[str, Any]) -> list[int] | None:
+    """The pixel value of each class, when the function is a Colormap."""
+    if raster_function.get("functionName") != "Colormap":
+        return None
+    entries = raster_function.get("functionArguments", {}).get("colormap") or []
+    return [int(entry[0]) for entry in entries]
+
+
+Resource = Annotated[FeatureResource | ImageryResource, Field(discriminator="type")]
+
+
+class Raster(_Model):
+    """What reading one raster by class needs. Derived, never stored."""
+
+    url: str
+    raster_function: dict[str, Any]
+    values: list[int]
+    legend: list[LegendItem]
 
 
 class Caveat(_Model):
@@ -99,6 +155,14 @@ class Sync(_Model):
     published_count: StrictInt | None = Field(
         default=None,
         description=f"Records in the published layer, read by the sync. {_PROPOSAL}",
+    )
+    pixel_size_deg: float | None = Field(
+        default=None,
+        description=(
+            "Image services only: the pixel width in degrees, as the service reports "
+            "it. What a share of pixels over a small area rests on, and not always "
+            f"what the documentation says. {_PROPOSAL}"
+        ),
     )
 
 
@@ -181,17 +245,36 @@ class IndicatorMetadata(CuratedIndicator):
             return f"sync status is {self.sync.sync_status}"
         if self.value_type is None:
             return "no value_type"
-        if self.category_field is None:
+        if self.resource.type == "feature" and self.category_field is None:
             return "no category_field"
+        if self.resource.type == "imagery" and self.raster() is None:
+            return "the raster function is not a Colormap"
         return None
 
     def allows(self, operation: Operation) -> bool:
-        if self.value_type is None:
+        if self.value_type is None or self.resource is None:
             return False
-        return operation in ALLOWED_OPERATIONS.get(self.value_type, frozenset())
+        key = (self.resource.type, self.value_type)
+        return operation in ALLOWED_OPERATIONS.get(key, frozenset())
+
+    def raster(self) -> Raster | None:
+        if not isinstance(self.resource, ImageryResource):
+            return None
+        values = colormap_values(self.resource.raster_function)
+        if values is None:
+            return None
+        return Raster(
+            url=self.resource.url,
+            raster_function=self.resource.raster_function,
+            values=values,
+            legend=self.resource.legend.items,
+        )
 
     def query_layer(self) -> Layer | None:
-        if self.resource is None or self.category_field is None:
+        if (
+            not isinstance(self.resource, FeatureResource)
+            or self.category_field is None
+        ):
             return None
         return Layer(
             service_url=self.resource.url,

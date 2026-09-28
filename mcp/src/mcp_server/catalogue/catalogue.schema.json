@@ -15,6 +15,79 @@
       "title": "Caveat",
       "type": "object"
     },
+    "FeatureResource": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "feature",
+          "title": "Type",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "layer_id": {
+          "title": "Layer Id",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "type",
+        "url",
+        "layer_id"
+      ],
+      "title": "FeatureResource",
+      "type": "object"
+    },
+    "ImageryResource": {
+      "additionalProperties": false,
+      "description": "An image service, as Payload's imagery block holds it.\n\nraster_function is the front end's, in the JS SDK's form. When it is a Colormap,\nits entries are the classes, in the legend's order.",
+      "properties": {
+        "type": {
+          "const": "imagery",
+          "title": "Type",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "raster_function": {
+          "additionalProperties": true,
+          "title": "Raster Function",
+          "type": "object"
+        },
+        "legend": {
+          "$ref": "#/$defs/Legend"
+        },
+        "aggregation": {
+          "anyOf": [
+            {
+              "enum": [
+                "sum",
+                "mean",
+                "none"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Aggregation"
+        }
+      },
+      "required": [
+        "type",
+        "url",
+        "raster_function",
+        "legend"
+      ],
+      "title": "ImageryResource",
+      "type": "object"
+    },
     "IndicatorMetadata": {
       "additionalProperties": false,
       "properties": {
@@ -93,13 +166,28 @@
         "resource": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Resource"
+              "discriminator": {
+                "mapping": {
+                  "feature": "#/$defs/FeatureResource",
+                  "imagery": "#/$defs/ImageryResource"
+                },
+                "propertyName": "type"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/FeatureResource"
+                },
+                {
+                  "$ref": "#/$defs/ImageryResource"
+                }
+              ]
             },
             {
               "type": "null"
             }
           ],
-          "default": null
+          "default": null,
+          "title": "Resource"
         },
         "value_type": {
           "anyOf": [
@@ -284,7 +372,8 @@
             "item_modified": null,
             "synced_at": null,
             "sync_status": null,
-            "published_count": null
+            "published_count": null,
+            "pixel_size_deg": null
           },
           "description": "The contract's sync group (SyncFields in metadata.ts), written by the CMS's ArcGIS sync job and sent with the rest of the indicator. Until that job exists the MCP fills it locally."
         }
@@ -295,6 +384,48 @@
         "subtopic"
       ],
       "title": "IndicatorMetadata",
+      "type": "object"
+    },
+    "Legend": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "basic",
+          "title": "Type",
+          "type": "string"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/LegendItem"
+          },
+          "title": "Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "type",
+        "items"
+      ],
+      "title": "Legend",
+      "type": "object"
+    },
+    "LegendItem": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "color": {
+          "title": "Color",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "color"
+      ],
+      "title": "LegendItem",
       "type": "object"
     },
     "Provenance": {
@@ -395,31 +526,6 @@
         }
       },
       "title": "Provenance",
-      "type": "object"
-    },
-    "Resource": {
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "const": "feature",
-          "title": "Type",
-          "type": "string"
-        },
-        "url": {
-          "title": "Url",
-          "type": "string"
-        },
-        "layer_id": {
-          "title": "Layer Id",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "type",
-        "url",
-        "layer_id"
-      ],
-      "title": "Resource",
       "type": "object"
     },
     "Sync": {
@@ -533,6 +639,19 @@
           "default": null,
           "description": "Records in the published layer, read by the sync. Proposal: not in the CMS contract yet.",
           "title": "Published Count"
+        },
+        "pixel_size_deg": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Image services only: the pixel width in degrees, as the service reports it. What a share of pixels over a small area rests on, and not always what the documentation says. Proposal: not in the CMS contract yet.",
+          "title": "Pixel Size Deg"
         }
       },
       "title": "Sync",

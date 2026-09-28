@@ -68,6 +68,12 @@ uv run amazonia360-mcp-catalogue export --out examples/catalogue.json   # after 
 installed package. Tests fail when the schema or the example is stale; the live suite fails
 when the snapshot is behind ArcGIS.
 
+Besides the module's 13 layers, `ecuador.json` holds five classed rasters of the regional
+platform (slope, land cover, forest cover, canopy height, grassland), with the front end's
+ids, raster functions and legends copied from `client/datum/indicators.json`. They are
+answered by `class_shares_in_area`: the share of the area's pixels in each class. Their
+items live on the IDB portal, which the sync finds through each server's `/rest/info`.
+
 `ecuador.json` spells out every field, nulls included, on purpose: a null there is a field
 nobody has decided about yet. Today every `provenance` field is null for that reason; the
 CMS is expected to fill them.
@@ -89,7 +95,10 @@ This is not Payload's REST response. The CMS maps each document:
 | `resource[0]` (one-item blocks list) | `resource`, one object |
 | `resource[0].blockType` | `resource.type` |
 | `resource[0].url` | `resource.url` |
-| `resource[0].layer_id` (text) | `resource.layer_id`, integer |
+| `resource[0].layer_id` (text) | `resource.layer_id`, integer (feature only) |
+| `resource[0].rasterFunction` (JSON, imagery) | `resource.raster_function`, unchanged |
+| `resource[0].legend` (group, imagery) | `resource.legend`, `{type, items: [{label, color}]}` |
+| `resource[0].aggregation` (imagery) | `resource.aggregation` |
 | `caveats[].text` (row `id` dropped) | `caveats[].text` |
 | `sync` group, written by the CMS's ArcGIS sync job | `sync`, same fields |
 | `name`, `description_short`, `description`, `unit`, contract fields | same names |
@@ -100,7 +109,8 @@ each description says where it would go in Payload.
 
 ## Maps
 
-`map_area_by_category` and `map_raster` return the same figures as their plain counterparts
+`map_area_by_category` and `map_class_shares_in_area` return the same figures as their plain
+counterparts
 and ask the host to show a map next to the answer, as an
 [MCP Apps](https://github.com/modelcontextprotocol/ext-apps) view. The pages, in `src/mcp_server/maps/`,
 use MapLibre from jsDelivr and OpenFreeMap tiles, and the front end's tokens and Montserrat. What

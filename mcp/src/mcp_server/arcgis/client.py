@@ -176,7 +176,36 @@ class ArcGISClient:
         # POST, because an area near the vertex limit does not fit in a URL.
         return await self._send("POST", url, data=params)
 
-    async def _send(self, method: str, url: str, **kwargs: Any) -> dict[str, Any]:
+    async def histogram(
+        self, url: str, aoi: BaseGeometry, rendering_rule: dict[str, Any] | None
+    ) -> dict[str, Any]:
+        """The first band's histogram of the pixels inside the area. No rule: the
+        stored values, which is what counts every pixel with data."""
+        params = {
+            "geometry": esri_polygon(aoi),
+            "geometryType": "esriGeometryPolygon",
+            "f": "json",
+        }
+        if rendering_rule is not None:
+            params["renderingRule"] = json.dumps(rendering_rule)
+        body = await self._send("POST", f"{url}/computeHistograms", data=params)
+        try:
+            histogram = body["histograms"][0]
+            for key in ("min", "max", "size", "counts"):
+                histogram[key]
+        except (KeyError, IndexError, TypeError) as exc:
+            raise ArcGISError(
+                f"Invalid response from {url}/computeHistograms: no histogram"
+            ) from exc
+        return histogram
+
+    async def export_image(self, url: str, params: dict[str, str]) -> bytes:
+        response = await self._request("POST", f"{url}/exportImage", data=params)
+        if not response.headers.get("content-type", "").startswith("image/"):
+            raise ArcGISError(f"No image from {url}/exportImage: {response.text[:200]}")
+        return response.content
+
+    async def _request(self, method: str, url: str, **kwargs: Any) -> httpx.Response:
         try:
             response = await self._http.request(method, url, **kwargs)
             response.raise_for_status()
@@ -188,6 +217,10 @@ class ArcGISClient:
             raise ArcGISError(f"ArcGIS request failed: {exc}") from exc
         except httpx.HTTPError as exc:
             raise ArcGISError(f"ArcGIS request failed: {exc}") from exc
+        return response
+
+    async def _send(self, method: str, url: str, **kwargs: Any) -> dict[str, Any]:
+        response = await self._request(method, url, **kwargs)
         try:
             body = response.json()
         except ValueError as exc:

@@ -1,56 +1,19 @@
-"""Rasters of the regional platform: class shares over an area, and an image of it.
+"""Classed rasters of the regional platform: what to ask the image service, and how to
+read its answer.
 
+The classes and colours are the front end's, from the catalogue's imagery resource.
 atlas.iadb.org sends CORS headers only to the front end's own origins, so a map page
 cannot load its images; the server asks for one image of the area and hands it over.
-The rendering and legend are the front end's, copied from client/datum/indicators.json.
-The catalogue has no rasters yet, so the one raster here is listed by hand.
 """
 
-import base64
 import json
 import math
 from typing import Any
 
-import httpx
 from shapely.geometry.base import BaseGeometry
 
-from mcp_server.arcgis.client import ArcGISError, esri_polygon
-
-# Indicator 129 of the front end, read on 28 September 2026.
-RASTERS: dict[str, dict[str, Any]] = {
-    "canopy_height": {
-        "name": "Canopy height",
-        "url": "https://atlas.iadb.org/image/rest/services/Imagery/Canopy_height/ImageServer",
-        "raster_function": {
-            "functionName": "Colormap",
-            "functionArguments": {
-                "colormap": [
-                    [1, 237, 248, 233],
-                    [2, 186, 228, 179],
-                    [3, 116, 196, 118],
-                    [4, 49, 163, 84],
-                    [5, 0, 109, 44],
-                ],
-                "raster": {
-                    "functionName": "Remap",
-                    "functionArguments": {
-                        "inputRanges": [0, 5, 5, 15, 15, 30, 30, 45, 45, 100],
-                        "outputValues": [1, 2, 3, 4, 5],
-                        "raster": "$$",
-                    },
-                },
-            },
-            "outputPixelType": "U8",
-        },
-        "legend": [
-            {"label": "Low", "color": "#EDF8E9"},
-            {"label": "Medium", "color": "#BAE4B3"},
-            {"label": "Medium-High", "color": "#74C476"},
-            {"label": "High", "color": "#31A354"},
-            {"label": "Very High", "color": "#006D2C"},
-        ],
-    }
-}
+from mcp_server.arcgis.client import ArcGISError
+from mcp_server.catalogue.models import Raster
 
 _R = 6378137.0
 _LONGEST_SIDE_PX = 1024
@@ -79,13 +42,42 @@ def to_rest(function: Any) -> Any:
     return rest
 
 
-def class_function(function: dict[str, Any]) -> dict[str, Any]:
-    """The classification under the colormap, so pixels are counted per class.
+def class_rule(raster: Raster) -> dict[str, Any]:
+    """The classification under the colormap, as integers, so pixels count per class.
 
-    As integers: left as floats, the histogram comes in 256 bins between the lowest
-    and highest class, and the classes land on bins that are hard to tell apart.
+    Left as floats, or as the stored 16-bit integers (slope), the histogram comes in
+    256 bins between the lowest and highest value, and the classes are hard to tell
+    apart. Where the colormap reads the stored values directly, an identity Remap is
+    what makes the service return integers: outputPixelType alone is ignored. Its
+    ranges are whole numbers because on integer pixels the service truncates them:
+    [1.5, 2.5) read as [1, 2), and every class came out one too high.
     """
-    return {**function["functionArguments"]["raster"], "outputPixelType": "U8"}
+    inner = raster.raster_function["functionArguments"]["raster"]
+    if isinstance(inner, dict):
+        return to_rest({**inner, "outputPixelType": "U8"})
+    ranges = [bound for v in raster.values for bound in (v, v + 1)]
+    return {
+        "rasterFunction": "Remap",
+        "rasterFunctionArguments": {
+            "InputRanges": ranges,
+            "OutputValues": raster.values,
+            "Raster": "$$",
+        },
+        "outputPixelType": "U8",
+    }
+
+
+def class_counts(histogram: dict[str, Any], values: list[int]) -> list[int]:
+    """Pixels of each class, from a histogram of class_rule's output."""
+    width = (histogram["max"] - histogram["min"]) / histogram["size"]
+    if abs(width - 1) > 1e-6:
+        raise ArcGISError("Expected one histogram bin per class")
+    counts = histogram["counts"]
+    out = []
+    for value in values:
+        index = math.floor(value - histogram["min"])
+        out.append(counts[index] if 0 <= index < len(counts) else 0)
+    return out
 
 
 def _mercator(lon: float, lat: float) -> tuple[float, float]:
@@ -95,52 +87,11 @@ def _mercator(lon: float, lat: float) -> tuple[float, float]:
     )
 
 
-async def _post(
-    http: httpx.AsyncClient, url: str, data: dict[str, str]
-) -> httpx.Response:
-    try:
-        response = await http.post(url, data=data)
-        response.raise_for_status()
-    except httpx.HTTPError as exc:
-        raise ArcGISError(f"ArcGIS request failed: {exc}") from exc
-    return response
-
-
-async def class_pixels(
-    http: httpx.AsyncClient, raster: dict[str, Any], aoi: BaseGeometry
-) -> list[int]:
-    """Pixels of each class inside the area, as the image server counts them."""
-    response = await _post(
-        http,
-        f"{raster['url']}/computeHistograms",
-        {
-            "geometry": esri_polygon(aoi),
-            "geometryType": "esriGeometryPolygon",
-            "renderingRule": json.dumps(
-                to_rest(class_function(raster["raster_function"]))
-            ),
-            "f": "json",
-        },
-    )
-    body = response.json()
-    if "error" in body or not body.get("histograms"):
-        raise ArcGISError(f"No histogram from {raster['url']}: {body.get('error')}")
-    histogram = body["histograms"][0]
-    width = (histogram["max"] - histogram["min"]) / histogram["size"]
-    if abs(width - 1) > 1e-6:
-        raise ArcGISError(f"Expected one bin per class from {raster['url']}")
-    counts = histogram["counts"]
-    pixels = []
-    for value in range(1, len(raster["legend"]) + 1):
-        index = math.floor(value - histogram["min"])
-        pixels.append(counts[index] if 0 <= index < len(counts) else 0)
-    return pixels
-
-
-async def area_image(
-    http: httpx.AsyncClient, raster: dict[str, Any], aoi: BaseGeometry
-) -> dict[str, Any]:
-    """One PNG of the area and its surroundings, in the front end's colours."""
+def image_request(
+    raster: Raster, aoi: BaseGeometry
+) -> tuple[dict[str, str], list[list[float]]]:
+    """exportImage parameters for the area and its surroundings, and the image's
+    corners: top left, top right, bottom right, bottom left, as MapLibre wants them."""
     ax0, ay0, ax1, ay1 = aoi.bounds
     dx, dy = (ax1 - ax0) * _MARGIN, (ay1 - ay0) * _MARGIN
     x0, y0 = max(ax0 - dx, -180.0), max(ay0 - dy, -85.0)
@@ -150,28 +101,16 @@ async def area_image(
     scale = _LONGEST_SIDE_PX / max(mx1 - mx0, my1 - my0)
     width = max(1, round((mx1 - mx0) * scale))
     height = max(1, round((my1 - my0) * scale))
-    response = await _post(
-        http,
-        f"{raster['url']}/exportImage",
-        {
-            "bbox": f"{mx0},{my0},{mx1},{my1}",
-            "bboxSR": "3857",
-            "imageSR": "3857",
-            "size": f"{width},{height}",
-            "format": "png32",
-            "transparent": "true",
-            # The pixels are about 1 km; smoothing them would invent detail.
-            "interpolation": "RSP_NearestNeighbor",
-            "renderingRule": json.dumps(to_rest(raster["raster_function"])),
-            "f": "image",
-        },
-    )
-    if not response.headers.get("content-type", "").startswith("image/"):
-        raise ArcGISError(f"No image from {raster['url']}: {response.text[:200]}")
-    return {
-        "image": "data:image/png;base64," + base64.b64encode(response.content).decode(),
-        # Top left, top right, bottom right, bottom left, as MapLibre wants them.
-        "corners": [[x0, y1], [x1, y1], [x1, y0], [x0, y0]],
-        "bytes": len(response.content),
-        "size": [width, height],
+    params = {
+        "bbox": f"{mx0},{my0},{mx1},{my1}",
+        "bboxSR": "3857",
+        "imageSR": "3857",
+        "size": f"{width},{height}",
+        "format": "png32",
+        "transparent": "true",
+        # The pixels are 250 m to 1 km; smoothing them would invent detail.
+        "interpolation": "RSP_NearestNeighbor",
+        "renderingRule": json.dumps(to_rest(raster.raster_function)),
+        "f": "image",
     }
+    return params, [[x0, y1], [x1, y1], [x1, y0], [x0, y0]]

@@ -26,6 +26,60 @@ def curated(**overrides: Any) -> dict[str, Any]:
     return {**base, **overrides}
 
 
+CANOPY_FUNCTION: dict[str, Any] = {
+    "functionName": "Colormap",
+    "functionArguments": {
+        "colormap": [
+            [1, 237, 248, 233],
+            [2, 186, 228, 179],
+            [3, 116, 196, 118],
+            [4, 49, 163, 84],
+            [5, 0, 109, 44],
+        ],
+        "raster": {
+            "functionName": "Remap",
+            "functionArguments": {
+                "inputRanges": [0, 5, 5, 15, 15, 30, 30, 45, 45, 100],
+                "outputValues": [1, 2, 3, 4, 5],
+                "raster": "$$",
+            },
+        },
+    },
+    "outputPixelType": "U8",
+}
+CANOPY_LEGEND = ["Low", "Medium", "Medium-High", "High", "Very High"]
+
+
+def raster_indicator(**overrides: Any) -> IndicatorMetadata:
+    """Canopy height as the front end classes it (indicator 129)."""
+    colours = ["#EDF8E9", "#BAE4B3", "#74C476", "#31A354", "#006D2C"]
+    return indicator(
+        **{
+            "id": 129,
+            "name": "Canopy height",
+            "unit": "m",
+            "subtopic": 4,
+            "country": None,
+            "resource": {
+                "type": "imagery",
+                "url": "https://example.test/image/rest/services/Canopy/ImageServer",
+                "raster_function": CANOPY_FUNCTION,
+                "legend": {
+                    "type": "basic",
+                    "items": [
+                        {"label": label, "color": colour}
+                        for label, colour in zip(CANOPY_LEGEND, colours, strict=True)
+                    ],
+                },
+            },
+            "category_field": None,
+            "covers_module": True,
+            **overrides,
+        },
+        sync={"sync_status": "ok", "pixel_size_deg": 0.009},
+    )
+
+
 def indicator(
     sync: dict[str, Any] | None = None, **overrides: Any
 ) -> IndicatorMetadata:
@@ -155,3 +209,32 @@ def test_sync_dates_parse_from_iso_strings() -> None:
     sync = Sync.model_validate({"layer_last_edit": "2026-08-18T12:37:43.622000Z"})
     assert sync.layer_last_edit is not None
     assert sync.layer_last_edit.year == 2026
+
+
+def test_a_classed_raster_needs_no_category_field_and_allows_class_shares() -> None:
+    canopy = raster_indicator()
+    assert canopy.available
+    assert canopy.allows("class_share")
+    assert not canopy.allows("area")
+    raster = canopy.raster()
+    assert raster is not None
+    assert raster.values == [1, 2, 3, 4, 5]
+    assert canopy.query_layer() is None
+
+
+def test_a_feature_layer_does_not_allow_class_shares() -> None:
+    assert not indicator().allows("class_share")
+
+
+def test_a_legend_that_does_not_match_the_colormap_is_rejected() -> None:
+    resource = raster_indicator().model_dump()["resource"]
+    resource["legend"]["items"].pop()
+    with pytest.raises(ValidationError, match="colormap has 5 classes"):
+        CuratedIndicator.model_validate(curated(resource=resource, category_field=None))
+
+
+def test_a_raster_without_a_colormap_is_unavailable() -> None:
+    resource = raster_indicator().model_dump()["resource"]
+    resource["raster_function"] = {"functionName": "Stretch", "functionArguments": {}}
+    canopy = raster_indicator(resource=resource)
+    assert canopy.unavailable_reason() == "the raster function is not a Colormap"

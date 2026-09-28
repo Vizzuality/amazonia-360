@@ -12,9 +12,15 @@ from typing import Any
 
 import httpx
 
-from mcp_server.catalogue.models import CuratedIndicator, Resource, Sync
+from mcp_server.catalogue.models import (
+    CuratedIndicator,
+    FeatureResource,
+    ImageryResource,
+    Sync,
+)
 
-ITEM_URL = "https://www.arcgis.com/sharing/rest/content/items/{item_id}"
+ARCGIS_ONLINE = "https://www.arcgis.com"
+ITEM_PATH = "/sharing/rest/content/items/{item_id}"
 
 # The contract has no field for the reason, so it goes to whoever runs the sync.
 log = logging.getLogger(__name__)
@@ -54,6 +60,8 @@ async def sync_indicator(
     if indicator.resource is None:
         return Sync(synced_at=now)
     try:
+        if isinstance(indicator.resource, ImageryResource):
+            return await _read_image(http, indicator.resource, now)
         return await _read_layer(http, indicator, indicator.resource, now)
     except Exception as exc:
         # The docstring's promise: one bad layer never stops the run.
@@ -64,7 +72,7 @@ async def sync_indicator(
 async def _read_layer(
     http: httpx.AsyncClient,
     indicator: CuratedIndicator,
-    resource: Resource,
+    resource: FeatureResource,
     now: datetime,
 ) -> Sync:
     layer_url = f"{resource.url}/{resource.layer_id}"
@@ -89,11 +97,46 @@ async def _read_layer(
             indicator.category_field,
         )
         return readings.model_copy(update={"sync_status": "error"})
+    return await _with_item(http, indicator.id, readings)
+
+
+async def _read_image(
+    http: httpx.AsyncClient, resource: ImageryResource, now: datetime
+) -> Sync:
+    meta = await _get_json(http, resource.url)
+    wkid = (meta.get("spatialReference") or {}).get("latestWkid") or (
+        meta.get("spatialReference") or {}
+    ).get("wkid")
+    # In any other reference the pixel size is not in degrees.
+    pixel = float(meta["pixelSizeX"]) if wkid == 4326 else None
+    readings = Sync(
+        arcgis_item_id=meta.get("serviceItemId"),
+        pixel_size_deg=pixel,
+        synced_at=now,
+    )
+    # The regional rasters' items live on the IDB's own portal, not on ArcGIS
+    # Online; the server names its portal in its info.
+    root = resource.url.split("/rest/services/")[0]
+    info = await _get_json(http, f"{root}/rest/info")
+    portal = info.get("owningSystemUrl") or ARCGIS_ONLINE
+    return await _with_item(http, resource.url, readings, portal)
+
+
+async def _with_item(
+    http: httpx.AsyncClient,
+    what: object,
+    readings: Sync,
+    portal: str = ARCGIS_ONLINE,
+) -> Sync:
+    if readings.arcgis_item_id is None:
+        log.warning("%s: the service names no item", what)
+        return readings.model_copy(update={"sync_status": "item_inaccessible"})
     try:
-        item = await _get_json(http, ITEM_URL.format(item_id=readings.arcgis_item_id))
+        url = portal + ITEM_PATH.format(item_id=readings.arcgis_item_id)
+        item = await _get_json(http, url)
         modified = _from_ms(item.get("modified"))
     except (_SyncError, httpx.HTTPError, ValueError) as exc:
-        log.warning("%s: item unreadable: %r", indicator.id, exc)
+        log.warning("%s: item unreadable: %r", what, exc)
         return readings.model_copy(update={"sync_status": "item_inaccessible"})
     return readings.model_copy(update={"item_modified": modified, "sync_status": "ok"})
 

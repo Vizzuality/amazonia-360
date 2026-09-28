@@ -12,7 +12,7 @@ def anyio_backend() -> str:
 
 
 def _fixed_indicators() -> dict[int, IndicatorMetadata]:
-    from tests.test_models import indicator
+    from tests.test_models import indicator, raster_indicator
 
     return {
         i.id: i
@@ -33,6 +33,7 @@ def _fixed_indicators() -> dict[int, IndicatorMetadata]:
                 category_field="Relieve",
                 sync={"sync_status": "ok", "queryable_fields": ["Relieve"]},
             ),
+            raster_indicator(),
         )
     }
 

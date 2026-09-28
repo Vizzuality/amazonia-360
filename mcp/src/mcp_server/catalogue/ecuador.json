@@ -472,6 +472,658 @@
       "category_field": "Nombre",
       "covers_module": false,
       "documented_count": null
+    },
+    {
+      "id": 7,
+      "name": "Slope",
+      "description_short": "Slope ranges (degrees) Copernicus DEM",
+      "description": "### Slope Classes Indicator\n\nThis raster layer has been developed to represent **terrain slope indicators** based on the **Copernicus DEM GLO-30** digital elevation model, providing a detailed classification of the topographic characteristics of the Earth's surface.\n\n### Data source & methodology\n\nThe data comes from **Copernicus DEM**, managed by the **European Space Agency (ESA)** as part of the European Union's Copernicus program. Specifically, the **GLO-30** product was used, which offers global coverage altimetry with a **spatial resolution of 30 meters**. Processing was performed to generate a categorical slope classification based on degree inclination ranges.\n\n### Applications & benefits\n\n-   **Territorial planning:** Identification of areas suitable for urban development and infrastructure\n-   **Risk analysis:** Assessment of susceptibility to landslides and erosion\n-   **Environmental conservation:** Identification of protection areas and ecological corridors\n-   **Agriculture:** Determination of areas suitable for crops according to slope\n-   **Forest management:** Planning of forest activities and accessibility\n\n### Specific content of the layer\n\nThe layer classifies slope into **7 main categories:**\n\n-   **0° - 1°:** Flat, plains, floodplains\n-   **1° - 5°:** Undulating, gently sloping\n-   **5° - 15°:** Very undulating, steeply sloping\n-   **15° - 30°:** Strongly undulating, steep\n-   **30° - 45°:** Very steep, inaccessible on foot\n-   **45° - 60°:** Steep, abrupt\n-   **60° - 90°:** Very steep, rocky walls\n\n### Technical details\n\n**Spatial resolution:** 30 meters\\\n**Geographic coverage:** Global\\\n**Data type:** Categorical raster\\\n**Base source:** Copernicus DEM GLO-30\\\n**Classification method:** Slope degree ranges\n\n### References & access links\n\n**Data access:** European Space Agency (ESA). (2023). Copernicus Contributing Missions: Collections Description. Copernicus Contributing Missions Portal. Available at: <https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM>\n\n**Methodological reference:** Fahrland, E., Iavarone, M., & Borla, M. (2022). Evolution of the Copernicus DEM: going beyond today's elevation data. VH-RODA 2022. Available at: <https://earth.esa.int/eogateway/documents/20142/4139742/2.16_VH-RODA%202022%20-%20CopernicusDEM%20Evolution-%20EFahrland.pdf>",
+      "unit": null,
+      "subtopic": 1,
+      "country": null,
+      "resource": {
+        "type": "imagery",
+        "url": "https://atlas.iadb.org/image/rest/services/Imagery/Slope_classes/ImageServer",
+        "raster_function": {
+          "functionName": "Colormap",
+          "functionArguments": {
+            "colormap": [
+              [
+                1,
+                238,
+                240,
+                186
+              ],
+              [
+                2,
+                218,
+                214,
+                164
+              ],
+              [
+                3,
+                198,
+                188,
+                143
+              ],
+              [
+                4,
+                178,
+                163,
+                122
+              ],
+              [
+                5,
+                158,
+                138,
+                102
+              ],
+              [
+                6,
+                139,
+                114,
+                82
+              ],
+              [
+                7,
+                120,
+                90,
+                62
+              ]
+            ],
+            "raster": "$$"
+          },
+          "outputPixelType": "U8"
+        },
+        "legend": {
+          "type": "basic",
+          "items": [
+            {
+              "label": "Flat, plains, floodplains.",
+              "color": "#EEF0BA"
+            },
+            {
+              "label": "Undulating, gently sloping.",
+              "color": "#DAD6A4"
+            },
+            {
+              "label": "Very undulating, steeply sloping.",
+              "color": "#C6BC8F"
+            },
+            {
+              "label": "Strongly undulating, steep.",
+              "color": "#B2A37A"
+            },
+            {
+              "label": "Very steep, inaccessible on foot.",
+              "color": "#9E8A66"
+            },
+            {
+              "label": "Steep, abrupt.",
+              "color": "#8B7252"
+            },
+            {
+              "label": "Very steep, rocky walls.",
+              "color": "#785A3E"
+            }
+          ]
+        },
+        "aggregation": "none"
+      },
+      "value_type": "categorical",
+      "aggregation": "none",
+      "decimals": null,
+      "spatial_coverage": [
+        "BOL",
+        "BRA",
+        "COL",
+        "ECU",
+        "GUF",
+        "GUY",
+        "PER",
+        "SUR",
+        "VEN"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": null,
+      "covers_module": true,
+      "documented_count": null
+    },
+    {
+      "id": 13,
+      "name": "Land cover",
+      "description_short": "Land cover (WorldCover 2021)",
+      "description": "### **Land Cover Classes in the Amazon**\n\nThis layer is a custom compilation by *AmazoniaForever360+*, based on data from the *ESA WorldCover* project. This product consists of a global land cover dataset with a **10-meter spatial resolution for the year 2021**. The original data was generated using images from the **Sentinel-1 and Sentinel-2 satellites**, combining optical and radar data.\n\n-   **Sentinel-1** provides **synthetic aperture radar (SAR) data**, which is independent of weather conditions.\n-   **Sentinel-2** offers **high-resolution multispectral imagery**, enabling precise and detailed land cover classification.\n\nThe project was developed by a consortium of European research institutions and service providers, led by **VITO (Vlaamse Instelling voor Technologisch Onderzoek)**, with contributions from **Brockmann Consult, CS Group, GAMMA Remote Sensing, the International Institute for Applied Systems Analysis (IIASA), and Wageningen University (WUR).**\n\n### **Applications & Benefits**\n\nThis dataset serves as a **baseline reference** for land cover types such as forests, wetlands, and human-altered areas. It helps:\n\n-   **Assess land-use changes**\n-   **Identify critical biodiversity areas**\n-   **Support environmental planning & sustainable resource management**\n\nIts high resolution and accuracy facilitate **informed decision-making** for **conservation initiatives, climate change mitigation, and balanced socio-economic development**.\n\n### **Land Cover Classes**\n\nThis layer includes **11 land cover categories**:\n\n1.  Tree Cover\n2.  Shrubland\n3.  Grassland\n4.  Cropland\n5.  Built-up Areas\n6.  Bare/Sparse Vegetation\n7.  Snow & Ice\n8.  Permanent Water Bodies\n9.  Herbaceous Wetlands\n10. Mangroves\n11. Moss & Lichens\n\nThe **global accuracy of the 2021 map is 76.7%**, independently validated. The original data was downloaded as **10°x10° tiles** and compiled into a thematic raster mosaic covering the **Inter-American Development Bank (IDB) area of operations**. To enhance visualization, the data was **resampled to a 250-meter resolution**.\n\n### **WorldCover Project**\n\nThe *WorldCover* project is led by the **Earth Observation Department of the European Space Agency (ESA)** and is part of the **ESA Climate Change Initiative**. The dataset was published in **2021** and is backed by a rigorous scientific methodology detailed in multiple sources.\n\n### **Access to Data & Documentation**\n\n-   **WorldCover Data Download:**\\\n    <https://worldcover2021.esa.int/>\n\n-   **WorldCover Viewer:**\\\n    <https://viewer.esa-worldcover.org/worldcover/>\n\n-   **User Manual & Documentation:**\\\n    <https://worldcover2021.esa.int/documents>\n\n-   **Main Reference on Methodology:**\\\n    **Zanaga, D., et al. (2021). ESA WorldCover 10 m 2020 V100, European Space Agency.**\\\n    DOI: <https://doi.org/10.5281/zenodo.5571936>",
+      "unit": null,
+      "subtopic": 3,
+      "country": null,
+      "resource": {
+        "type": "imagery",
+        "url": "https://atlas.iadb.org/image/rest/services/Imagery/Land_Cover_Classes_in_the_Amazon/ImageServer",
+        "raster_function": {
+          "functionName": "Colormap",
+          "functionArguments": {
+            "colormap": [
+              [
+                10,
+                6,
+                100,
+                3
+              ],
+              [
+                20,
+                255,
+                187,
+                34
+              ],
+              [
+                30,
+                255,
+                255,
+                76
+              ],
+              [
+                40,
+                240,
+                150,
+                255
+              ],
+              [
+                50,
+                250,
+                0,
+                0
+              ],
+              [
+                60,
+                180,
+                180,
+                180
+              ],
+              [
+                70,
+                240,
+                240,
+                240
+              ],
+              [
+                80,
+                0,
+                100,
+                200
+              ],
+              [
+                90,
+                0,
+                150,
+                160
+              ],
+              [
+                95,
+                0,
+                207,
+                117
+              ],
+              [
+                100,
+                250,
+                230,
+                160
+              ]
+            ],
+            "raster": "$$"
+          },
+          "outputPixelType": "U8"
+        },
+        "legend": {
+          "type": "basic",
+          "items": [
+            {
+              "label": "Tree Cover",
+              "color": "#066403"
+            },
+            {
+              "label": "Shrubland",
+              "color": "#FFBB22"
+            },
+            {
+              "label": "Grassland",
+              "color": "#FFFF4C"
+            },
+            {
+              "label": "Cropland",
+              "color": "#F096FF"
+            },
+            {
+              "label": "Built-up Areas",
+              "color": "#FA0000"
+            },
+            {
+              "label": "Bare/Sparse Vegetation",
+              "color": "#B4B4B4"
+            },
+            {
+              "label": "Snow & Ice",
+              "color": "#F0F0F0"
+            },
+            {
+              "label": "Permanent Water Bodies",
+              "color": "#0064C8"
+            },
+            {
+              "label": "Herbaceous Wetlands",
+              "color": "#0096A0"
+            },
+            {
+              "label": "Mangroves",
+              "color": "#00CF75"
+            },
+            {
+              "label": "Moss & Lichens",
+              "color": "#FAE6A0"
+            }
+          ]
+        },
+        "aggregation": "none"
+      },
+      "value_type": "categorical",
+      "aggregation": "none",
+      "decimals": null,
+      "spatial_coverage": [
+        "BOL",
+        "BRA",
+        "COL",
+        "ECU",
+        "GUF",
+        "GUY",
+        "PER",
+        "SUR",
+        "VEN"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": null,
+      "covers_module": true,
+      "documented_count": null
+    },
+    {
+      "id": 119,
+      "name": "Forest Cover",
+      "description_short": "Forest cover analysis, percentage per 1km² grid cell (GLAD 2024)",
+      "description": "## **AMAZONIA FOREST COVER 2024**\nAmazonian forest cover map for 2024 derived from Hansen/UMD (GLAD) global forest change data.\n\n### **Data Source & Methodology**\n\n-   **Source:** *UMD/hansen/global_forest_change_2024_v1_12* (GLAD, University of Maryland).\n\n-   **Platform:** Google Earth Engine (GEE).\n\n-   **Spatial resolution:** 30 m (original) → 1 km (aggregated).\n\n-   **Processing steps:**\n\n    1.  Computed tree cover fraction for year 2000 as baseline.\n\n    2.  Applied forest loss and gain (2000--2024) layers.\n\n    3.  Followed Hansen's suggested methodology:\n\n        -   **All deforestation** events between 2000 and 2024 were considered.\n\n        -   **Reforestation** was only counted when detected in 30 m pixels showing *continuous regrowth* without any previous or subsequent deforestation.\n\n        -   Hansen emphasizes that reforestation is a long-term process (> 20 years) and cannot yet be easily or reliably identified from optical imagery alone.\n\n    4.  Computations were performed at 30 m resolution and then **upscaled to 1 km** by aggregating the percentage of forested 30 m pixels within each 1 km cell.\n\n    5.  Final map expresses **forest cover (%) in 2024** per 1 km grid cell.\n\n### **Google Earth Engine (GEE) Methodology**\n\nAll operations were conducted using a custom GEE script:\n\n-   Data imported directly from the Hansen GLAD catalog.\n\n-   Boolean masks and temporal filters applied for gain/loss analysis.\n\n-   Aggregation and export steps implemented with GEE reducers (`ee.Reducer.mean()` and `ee.Image.reduceResolution()`).\n\n-   Outputs validated visually and through area comparison with reference datasets.\n\n### **Data Sources & Limitations**\n\n-   Based on optical Landsat imagery; cloud cover and temporal gaps may affect some areas.\n\n-   Hansen dataset provides consistent annual updates but lacks precise timing for reforestation events.\n\n-   The 30 m to 1 km aggregation reduces spatial detail but allows regional comparison and integration with climatic or socio-economic data.\n\n### **Applications & Benefits**\n\n-   Monitoring deforestation and regrowth dynamics.\n\n-   Supporting conservation and territorial planning.\n\n-   Estimating carbon and biodiversity changes.\n\n### **Specific Content of the Layer**\n\n-   **forest_in_2024_P:** Forest cover 2024 (%).\n\n### **References & Access Links**\n\n-   Dataset: `UMD/hansen/global_forest_change_2024_v1_12`\n\n-   Documentation: <https://glad.umd.edu/dataset/global-forest-change>",
+      "unit": "%",
+      "subtopic": 4,
+      "country": null,
+      "resource": {
+        "type": "imagery",
+        "url": "https://atlas.iadb.org/image/rest/services/Imagery/Forest_Cover/ImageServer",
+        "raster_function": {
+          "functionName": "Colormap",
+          "functionArguments": {
+            "colormap": [
+              [
+                1,
+                237,
+                248,
+                233
+              ],
+              [
+                2,
+                186,
+                228,
+                179
+              ],
+              [
+                3,
+                116,
+                196,
+                118
+              ],
+              [
+                4,
+                49,
+                163,
+                84
+              ],
+              [
+                5,
+                0,
+                109,
+                44
+              ]
+            ],
+            "raster": {
+              "functionName": "Remap",
+              "functionArguments": {
+                "inputRanges": [
+                  0,
+                  30,
+                  30,
+                  50,
+                  50,
+                  75,
+                  75,
+                  90,
+                  90,
+                  110
+                ],
+                "outputValues": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "raster": "$$"
+              }
+            }
+          },
+          "outputPixelType": "U8"
+        },
+        "legend": {
+          "type": "basic",
+          "items": [
+            {
+              "label": "Very Low",
+              "color": "#EDF8E9"
+            },
+            {
+              "label": "Low",
+              "color": "#BAE4B3"
+            },
+            {
+              "label": "Medium",
+              "color": "#74C476"
+            },
+            {
+              "label": "High",
+              "color": "#31A354"
+            },
+            {
+              "label": "Very High",
+              "color": "#006D2C"
+            }
+          ]
+        },
+        "aggregation": "none"
+      },
+      "value_type": "categorical",
+      "aggregation": "none",
+      "decimals": null,
+      "spatial_coverage": [
+        "BOL",
+        "BRA",
+        "COL",
+        "ECU",
+        "GUF",
+        "GUY",
+        "PER",
+        "SUR",
+        "VEN"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": null,
+      "covers_module": true,
+      "documented_count": null
+    },
+    {
+      "id": 128,
+      "name": "Grassland Coverage Classes",
+      "description_short": "Grassland cover classes, GPW 2024 model",
+      "description": "## Grassland Coverage Classes Layer\n\nThematic raster layer representing the extent of different grassland classes from the Global Pasture Watch (GPW) model. Grasslands are ecosystems dominated by perennial and annual herbaceous plants, mainly grasses, with little or no tree cover. They include savannas, temperate prairies, steppes, and natural grasslands, depending on the region and climate.\n\nIn the Amazonian and South American context, they encompass both natural grasslands (such as the Llanos de Moxos or the Roraima savanna) and semi-natural areas derived from livestock use or periodic burning. Grasslands store large amounts of carbon in soil and underground biomass; their degradation or conversion releases that carbon into the atmosphere. They host high diversity of herbaceous species, birds, and pollinators, including endemic and migratory species, and constitute crucial habitats for savanna and steppe fauna. They support traditional systems of extensive livestock farming, grazing, and family agriculture, essential for food security and rural culture. Well-conserved grasslands reduce erosion and increase water infiltration, promoting resilience to droughts and preventing desertification.\n\n### Data Source and Processing\n\nThis layer is a proprietary compilation by AmazoniaForever360+, 2024, based on the Global Pasture Watch – Annual Grassland Class and Extent Maps (2000–2024). The source file `gpw_grassland_rf.med.filt.bthr_c_30m_AMAZ_v2.tif` was generalized by aggregation to 250m using the majority value per pixel criterion.\n\n### Classification\n\nThe attribute table includes four classes:\n\n- **0 – Other land cover**: surfaces that do not correspond to grasslands (forests, water bodies, urban areas, etc.)\n- **1 – Cultivated grassland**: planted or intensively managed grasslands for livestock or agricultural production\n- **2 – Natural/Semi-natural grassland**: prairies and savannas of natural or semi-natural origin, with dominant herbaceous vegetation\n- **3 – Open shrubland**: areas of open scrubland or transitional between grassland and low woody vegetation\n\n### About Global Pasture Watch\n\nThe Global Pasture Watch – Annual Grassland Class and Extent Maps (2000–2024) is a global dataset showing the distribution and annual changes in the extent of natural, semi-natural, and cultivated grasslands worldwide between 2000 and 2024, with a spatial resolution of 30 meters. It was developed by Liu et al. (2024) through time-series analysis of Landsat and Sentinel-2 imagery, processed with deep learning models capable of distinguishing herbaceous vegetation-dominated areas from other land covers.\n\nThe dataset allows evaluation of the spatio-temporal dynamics of grasslands, including their conversion to agricultural uses or recovery, and serves as a key input for biodiversity studies, carbon balance, sustainable livestock management, and open ecosystem restoration.\n\n### Data Access\n\n- Public data available through Zenodo (GeoTIFF format, global coverage): https://zenodo.org/records/15648751\n- Accessible in Google Earth Engine as 'Global Pasture Watch' with annual maps of dominant grassland classes at 30m\n- Additional grassland and non-forest vegetation data: https://developers.google.com/earth-engine/datasets/publisher/global-pasture-watch\n\n### References\n\n- Parente, L., Liu, Y., & Gong, P. (2024). Annual 30-m maps of global grassland class and extent. *Scientific Data* (Nature Publishing Group). DOI: https://doi.org/10.1038/s41597-024-04139-6\n- Lu, Y., Liu, S., Zhang, H., & Wang, J. (2022). Review of Remote Sensing Applications in Grassland Monitoring. *Remote Sensing*, 14(12), 2903. DOI: https://doi.org/10.3390/rs14122903",
+      "unit": null,
+      "subtopic": 6,
+      "country": null,
+      "resource": {
+        "type": "imagery",
+        "url": "https://atlas.iadb.org/image/rest/services/Imagery/Grassland_Coverage_Classes/ImageServer",
+        "raster_function": {
+          "functionName": "Colormap",
+          "functionArguments": {
+            "colormap": [
+              [
+                1,
+                240,
+                150,
+                255
+              ],
+              [
+                2,
+                255,
+                255,
+                76
+              ],
+              [
+                3,
+                255,
+                187,
+                34
+              ]
+            ],
+            "raster": "$$"
+          },
+          "outputPixelType": "U8"
+        },
+        "legend": {
+          "type": "basic",
+          "items": [
+            {
+              "label": "Cultivated grasslands",
+              "color": "#F096FF"
+            },
+            {
+              "label": "Natural or SemiNatural",
+              "color": "#FFFF4C"
+            },
+            {
+              "label": "Open shrublands",
+              "color": "#FFBB22"
+            }
+          ]
+        },
+        "aggregation": "none"
+      },
+      "value_type": "categorical",
+      "aggregation": "none",
+      "decimals": null,
+      "spatial_coverage": [
+        "BOL",
+        "BRA",
+        "COL",
+        "ECU",
+        "GUF",
+        "GUY",
+        "PER",
+        "SUR",
+        "VEN"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": null,
+      "covers_module": true,
+      "documented_count": null
+    },
+    {
+      "id": 129,
+      "name": "Canopy height",
+      "description_short": "Estimated tree canopy height, m (Ctrees, 2024)",
+      "description": "## Amazon Canopy Height Layer (2020–2024)\n\nRaster layer representing an estimate of canopy height, which is the upper layer of trees, sampled at 250m pixels. Tree crowns intercept most sunlight and regulate the exchange of energy, water, and gases between the ecosystem and the atmosphere. Their structure, height, density, and composition reflect the ecological maturity of the forest and its capacity to store carbon.\n\nIn the context of sustainable development planning and management, canopy height is a key indicator of ecological integrity and biological productivity. Forests with tall, closed canopies tend to have greater aboveground biomass, meaning plant material (foliage, branches), making them critical carbon reservoirs and essential elements for climate change mitigation. Additionally, the canopy creates a stable microclimate that sustains high species diversity, protects soils from erosion, and maintains regional water flows.\n\n### Data Source and Processing\n\nThis layer is a proprietary compilation by AmazoniaForever360+, 2024, based on the Amazon Canopy Height Dataset (2020-2024) published by CTrees organization. This extremely detailed raster model provides 22,063 tiles, each representing the average height of tree crowns in the Amazon rainforest, with a spatial resolution of 4.78 meters. The tiles, each covered by a .tif file, were downloaded and hosted in a virtual mosaic in ArcGIS Pro, from which a simplified clustering generalization tool was used to average canopy heights into 250m pixels.\n\n### About CTrees\n\nCTrees is an international scientific initiative dedicated to forest monitoring through satellite observations and advanced modeling techniques. Its objective is to estimate, with high resolution and methodological transparency, the amount of carbon stored in forest biomass and the changes it experiences over time.\n\nCTrees data primarily come from LiDAR measurements obtained by the GEDI (Global Ecosystem Dynamics Investigation) and ICESat-2 missions, complemented with optical and radar information and processed through machine learning algorithms that allow extrapolation of tree canopy height at global scale.\n\nThe Global Canopy Height Dataset (2020–2024) offers maps of average canopy height expressed in meters above ground. In CTrees classification, tree canopy is considered to be any vegetation with a minimum approximate height of 5 meters, so values below that threshold typically correspond to shrublands, savannas, or open areas without significant forest cover.\n\n### Data Access\n\n- Original data in GeoTIFF format and WGS84 projection (EPSG:4326) publicly available through AWS Open Data program: https://registry.opendata.aws/ctrees/\n\n### References\n\n- Amazon Web Services (AWS). (2023). CTrees uses AWS to track carbon in every living tree on Earth. *Amazon Web Services Public Sector Blog*. Available at: https://aws.amazon.com/blogs/publicsector/ctrees-uses-aws-to-track-carbon-in-every-living-tree-on-earth/\n- Lang, N., Schindler, K., Wegner, J. D., et al. (2023). A high-resolution canopy height model of the Earth. *Nature Ecology & Evolution*, 7, 1403–1412. DOI: https://doi.org/10.1038/s41559-023-02206-6\n- Fayad, I., Fayad, D., Lotte, P., et al. (2023). Vision Transformers, a new approach for high-resolution and large-scale mapping of canopy heights. Available at: https://arxiv.org/abs/2304.11487\n- Castro, T., Chen, S., & Venier, L. (2024). A Deep Learning Approach to Estimate Canopy Height and Uncertainty by Integrating Seasonal Optical, SAR and Limited GEDI LiDAR Data over Northern Forests. arXiv preprint. Available at: https://arxiv.org/abs/2410.18108\n- CTrees. (2024). CTrees Products and Methodology. Official CTrees organization site. Available at: https://ctrees.org/products/tree-level",
+      "unit": "m",
+      "subtopic": 4,
+      "country": null,
+      "resource": {
+        "type": "imagery",
+        "url": "https://atlas.iadb.org/image/rest/services/Imagery/Canopy_height/ImageServer",
+        "raster_function": {
+          "functionName": "Colormap",
+          "functionArguments": {
+            "colormap": [
+              [
+                1,
+                237,
+                248,
+                233
+              ],
+              [
+                2,
+                186,
+                228,
+                179
+              ],
+              [
+                3,
+                116,
+                196,
+                118
+              ],
+              [
+                4,
+                49,
+                163,
+                84
+              ],
+              [
+                5,
+                0,
+                109,
+                44
+              ]
+            ],
+            "raster": {
+              "functionName": "Remap",
+              "functionArguments": {
+                "inputRanges": [
+                  0,
+                  5,
+                  5,
+                  15,
+                  15,
+                  30,
+                  30,
+                  45,
+                  45,
+                  100
+                ],
+                "outputValues": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "raster": "$$"
+              }
+            }
+          },
+          "outputPixelType": "U8"
+        },
+        "legend": {
+          "type": "basic",
+          "items": [
+            {
+              "label": "Low",
+              "color": "#EDF8E9"
+            },
+            {
+              "label": "Medium",
+              "color": "#BAE4B3"
+            },
+            {
+              "label": "Medium-High",
+              "color": "#74C476"
+            },
+            {
+              "label": "High",
+              "color": "#31A354"
+            },
+            {
+              "label": "Very High",
+              "color": "#006D2C"
+            }
+          ]
+        },
+        "aggregation": "none"
+      },
+      "value_type": "categorical",
+      "aggregation": "none",
+      "decimals": null,
+      "spatial_coverage": [
+        "BOL",
+        "BRA",
+        "COL",
+        "ECU",
+        "GUF",
+        "GUY",
+        "PER",
+        "SUR",
+        "VEN"
+      ],
+      "collected_at_level": null,
+      "sensitivity": "public",
+      "ai_answerable": true,
+      "caveats": [
+        {
+          "text": "The description gives 250 m pixels; the image service serves them at about 1 km (0.009 degrees), so shares over a small area rest on few pixels."
+        }
+      ],
+      "provenance": {
+        "source_org": null,
+        "source_url": null,
+        "license": null,
+        "source_citation": null,
+        "data_vintage": null,
+        "update_cadence": null,
+        "method_url": null
+      },
+      "category_field": null,
+      "covers_module": true,
+      "documented_count": null
     }
   ]
 }

@@ -109,3 +109,14 @@ def register_area_tools(
         return await run(
             "area_by_category", indicator_id, handlers.area_by_category, area
         )
+
+    @server.tool(annotations=QUERY)
+    async def class_shares_in_area(indicator_id: IndicatorId, area: Area) -> Result:
+        """Share of the area's pixels in each class of a classed raster. Fast.
+
+        A share of pixels, not of hectares: see computed_over for how many pixels
+        and how large.
+        """
+        return await run(
+            "class_shares_in_area", indicator_id, handlers.class_shares, area
+        )

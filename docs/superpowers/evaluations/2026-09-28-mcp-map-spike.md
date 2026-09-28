@@ -152,7 +152,8 @@ Tried the same day with canopy height (indicator 129 of the regional platform, a
 ## From spike to staging
 
 The spike's code is gone. The maps now live in `mcp/src/mcp_server/maps/` as two tools,
-`map_area_by_category` and `map_raster`. The ArcGIS variant, the area-only maps, the diagnostics
+`map_area_by_category` and `map_class_shares_in_area`, the second over the five classed rasters
+now in the catalogue. The ArcGIS variant, the area-only maps, the diagnostics
 and the tools only the page could call were dropped. What the spike left for staging, and where
 each item stands:
 

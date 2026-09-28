@@ -1,4 +1,5 @@
 import asyncio
+import base64
 from collections.abc import Awaitable
 from dataclasses import dataclass
 from typing import Any, Literal
@@ -6,9 +7,10 @@ from typing import Any, Literal
 from shapely.geometry import MultiPolygon, Polygon
 
 from mcp_server.arcgis.client import ArcGISClient, ArcGISError, Feature
+from mcp_server.arcgis.raster import class_counts, class_rule, image_request
 from mcp_server.arcgis.styles import Style, category_styles, join_field
 from mcp_server.catalogue import get_indicator_metadata
-from mcp_server.catalogue.models import IndicatorMetadata, Layer, Operation
+from mcp_server.catalogue.models import IndicatorMetadata, Layer, Operation, Raster
 from mcp_server.geometry.aoi import (
     AOIError,
     Coverage,
@@ -45,6 +47,17 @@ class CategoryMap:
     styles: dict[str, Style]
 
 
+@dataclass
+class RasterMap:
+    """What a map of class_shares_in_area draws: an image of the area and its
+    surroundings, where it goes, and the classes in the legend's order."""
+
+    name: str
+    image: str
+    corners: list[list[float]]
+    classes: list[dict[str, str]]
+
+
 def _measure(
     aoi: Polygon | MultiPolygon, features: list[Feature], with_shapes: bool
 ) -> tuple[dict[str, float], list[dict[str, Any]]]:
@@ -56,10 +69,22 @@ def _measure(
 @dataclass
 class _Prepared:
     indicator: IndicatorMetadata
-    layer: Layer
     aoi: Polygon | MultiPolygon
     coverage: Coverage
     watch: Stopwatch
+
+    # allows() has checked the resource type, so these hold for the operation asked.
+    @property
+    def layer(self) -> Layer:
+        layer = self.indicator.query_layer()
+        assert layer is not None
+        return layer
+
+    @property
+    def raster(self) -> Raster:
+        raster = self.indicator.raster()
+        assert raster is not None
+        return raster
 
 
 class AreaHandlers:
@@ -132,6 +157,67 @@ class AreaHandlers:
         collection = {"type": "FeatureCollection", "features": shapes}
         return result, CategoryMap(shapes=collection, styles=styles)
 
+    async def class_shares(self, indicator_id: int, area: dict[str, Any]) -> Result:
+        result, _ = await self._class_shares(indicator_id, area, with_map=False)
+        return result
+
+    async def class_shares_map(
+        self, indicator_id: int, area: dict[str, Any]
+    ) -> tuple[Result, RasterMap]:
+        """The same result as class_shares, and an image of the area to draw."""
+        result, drawn = await self._class_shares(indicator_id, area, with_map=True)
+        assert drawn is not None
+        return result, drawn
+
+    async def _class_shares(
+        self, indicator_id: int, area: dict[str, Any], *, with_map: bool
+    ) -> tuple[Result, RasterMap | None]:
+        p = self._prepare(indicator_id, area, "class_share")
+        raster = p.raster
+        params, corners = image_request(raster, p.aoi)
+        with p.watch.lap("arcgis"):
+            by_class, stored, image = await self._call(
+                asyncio.gather(
+                    self._client.histogram(raster.url, p.aoi, class_rule(raster)),
+                    # Every pixel with data, in a class or not: the denominator.
+                    self._client.histogram(raster.url, p.aoi, None),
+                    self._client.export_image(raster.url, params)
+                    if with_map
+                    else asyncio.sleep(0, b""),
+                )
+            )
+        try:
+            counts = class_counts(by_class, raster.values)
+        except ArcGISError as exc:
+            raise HandlerError(f"{exc} from {raster.url}") from exc
+        classified = sum(counts)
+        total = max(sum(stored["counts"]), classified)
+        shares = {
+            item.label: round(n / total, 4)
+            for item, n in zip(raster.legend, counts, strict=True)
+            if n > 0
+        }
+        computed_over = ComputedOver(
+            type="raster_pixels",
+            categories=len(shares),
+            pixels=total,
+            pixel_size_deg=p.indicator.sync.pixel_size_deg,
+        )
+        result = self._result(p, shares, "share of pixels", computed_over)
+        if total:
+            result.unclassified_share = round((total - classified) / total, 4)
+            # Pixels with data and no class: the raster says what is there, and it
+            # is none of its classes. Not the empty result of a layer that misses.
+            result.layer.empty_result = None
+        if not with_map:
+            return result, None
+        return result, RasterMap(
+            name=p.indicator.name,
+            image="data:image/png;base64," + base64.b64encode(image).decode(),
+            corners=corners,
+            classes=[i.model_dump() for i in raster.legend],
+        )
+
     async def _renderer(self, layer: Layer) -> dict[str, Any] | None:
         key = f"{layer.service_url}/{layer.layer_id}"
         if key not in self._renderers:
@@ -164,12 +250,9 @@ class AreaHandlers:
         indicator = get_indicator_metadata(indicator_id)
         if indicator is None:
             raise HandlerError(f"Unknown indicator {indicator_id}.")
-        layer = indicator.query_layer()
         reason = indicator.unavailable_reason()
-        if reason is not None or layer is None:
-            detail = ". ".join(
-                [reason or "no query layer"] + [c.text for c in indicator.caveats]
-            )
+        if reason is not None:
+            detail = ". ".join([reason] + [c.text for c in indicator.caveats])
             raise HandlerError(f"Indicator {indicator_id} is not available: {detail}")
         if not indicator.ai_answerable:
             raise HandlerError(f"Indicator {indicator_id} is not cleared for answers.")
@@ -185,7 +268,7 @@ class AreaHandlers:
         coverage = module_coverage(aoi)
         if coverage.status == "outside":
             raise HandlerError("The area is outside the Ecuador module.")
-        return _Prepared(indicator, layer, aoi, coverage, watch)
+        return _Prepared(indicator, aoi, coverage, watch)
 
     @staticmethod
     async def _call[T](awaitable: Awaitable[T]) -> T:
@@ -204,7 +287,7 @@ class AreaHandlers:
     ) -> Result:
         aoi_ha = round(geodesic_area_ha(p.aoi), 2)
         classified = unclassified = None
-        if isinstance(value, dict):
+        if isinstance(value, dict) and unit == "ha":
             classified = round(sum(value.values()), 2)
             # Clamped: the clip can exceed the AOI by rounding, never by real area.
             unclassified = round(max(aoi_ha - classified, 0.0), 2)

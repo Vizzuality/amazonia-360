@@ -24,6 +24,7 @@ _TOOL_FOR: dict[Operation, str] = {
     "presence": "categories_in_area",
     "count": "count_in_area",
     "area": "area_by_category",
+    "class_share": "class_shares_in_area",
 }
 
 

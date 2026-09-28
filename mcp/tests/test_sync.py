@@ -6,7 +6,8 @@ import pytest
 
 from mcp_server.catalogue.models import CuratedIndicator
 from mcp_server.catalogue.sync import (
-    ITEM_URL,
+    ARCGIS_ONLINE,
+    ITEM_PATH,
     nothing_read,
     sync_catalogue,
     sync_indicator,
@@ -42,7 +43,7 @@ def transport(
             return httpx.Response(200, json=layer or LAYER_META)
         if url == f"{LAYER_URL}/query":
             return httpx.Response(200, json=count or {"count": 51})
-        if url == ITEM_URL.format(item_id=ITEM_ID):
+        if url == ARCGIS_ONLINE + ITEM_PATH.format(item_id=ITEM_ID):
             return httpx.Response(200, json=item or {"modified": 1789422927000})
         return httpx.Response(404)
 
@@ -176,3 +177,40 @@ async def test_sync_catalogue_writes_one_entry_per_indicator() -> None:
     assert result["generated_at"] == "2026-09-24T10:00:00Z"
     assert result["indicators"]["210"]["sync_status"] == "ok"
     assert result["indicators"]["210"]["published_count"] == 51
+
+
+@pytest.mark.anyio
+async def test_an_image_service_gives_its_pixel_size_and_its_portal_item() -> None:
+    from tests.test_models import raster_indicator
+
+    canopy = raster_indicator()
+    assert canopy.resource is not None
+    image_url = canopy.resource.url
+    portal = "https://example.test/portal"
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        url = str(request.url).split("?")[0]
+        if url == image_url:
+            return httpx.Response(
+                200,
+                json={
+                    "serviceItemId": ITEM_ID,
+                    "pixelSizeX": 0.008983,
+                    "spatialReference": {"wkid": 4326},
+                },
+            )
+        if url == "https://example.test/image/rest/info":
+            return httpx.Response(200, json={"owningSystemUrl": portal})
+        if url == portal + ITEM_PATH.format(item_id=ITEM_ID):
+            return httpx.Response(200, json={"modified": 1789422927000})
+        return httpx.Response(404)
+
+    curated_canopy = CuratedIndicator.model_validate(
+        canopy.model_dump(exclude={"sync", "available"})
+    )
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as http:
+        sync = await sync_indicator(http, curated_canopy, NOW)
+    assert sync.sync_status == "ok"
+    assert sync.pixel_size_deg == 0.008983
+    assert sync.published_count is None
+    assert sync.item_modified is not None

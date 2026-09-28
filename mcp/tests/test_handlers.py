@@ -75,6 +75,20 @@ class FakeClient:
         self.calls.append("value_pairs")
         return {}
 
+    async def histogram(
+        self, url: str, aoi: BaseGeometry, rendering_rule: dict[str, Any] | None
+    ) -> dict[str, Any]:
+        self.calls.append("histogram")
+        if rendering_rule is None:
+            # The stored values: 400 pixels with data, 20 of them in no class.
+            return {"size": 256, "min": 0.0, "max": 60.0, "counts": [400] + [0] * 255}
+        counts = [0, 0, 0, 0, 0, 0] if self.empty else [0, 0, 80, 100, 200, 0]
+        return {"size": 6, "min": -0.5, "max": 5.5, "counts": counts}
+
+    async def export_image(self, url: str, params: dict[str, str]) -> bytes:
+        self.calls.append("export_image")
+        return b"\x89PNG"
+
 
 def handlers(client: FakeClient | None = None) -> AreaHandlers:
     return AreaHandlers(client or FakeClient())  # type: ignore[arg-type]
@@ -333,3 +347,47 @@ async def test_a_map_without_the_renderer_falls_back_to_the_palette() -> None:
     result, drawn = await handlers(NoRenderer()).area_by_category_map(210, TENA)
     assert result.value
     assert drawn.styles["Bosque"]["from_layer"] is False
+
+
+@pytest.mark.anyio
+async def test_class_shares_count_every_pixel_with_data() -> None:
+    client = FakeClient()
+    result = await handlers(client).class_shares(129, TENA)
+    assert result.value == {"Medium": 0.2, "Medium-High": 0.25, "High": 0.5}
+    assert result.unclassified_share == 0.05
+    assert result.unit == "share of pixels"
+    assert result.classified_ha is None
+    assert result.computed_over.type == "raster_pixels"
+    assert result.computed_over.pixels == 400
+    assert result.computed_over.pixel_size_deg == 0.009
+    assert "export_image" not in client.calls
+
+
+@pytest.mark.anyio
+async def test_the_raster_map_comes_with_its_image_and_legend() -> None:
+    result, drawn = await handlers().class_shares_map(129, TENA)
+    assert isinstance(result.value, dict) and result.value["High"] == 0.5
+    assert drawn.name == "Canopy height"
+    assert drawn.image.startswith("data:image/png;base64,")
+    assert drawn.classes[0]["label"] == "Low"
+    assert len(drawn.corners) == 4
+
+
+@pytest.mark.anyio
+async def test_a_feature_layer_is_not_asked_for_class_shares() -> None:
+    with pytest.raises(HandlerError, match="does not support class_share"):
+        await handlers().class_shares(210, TENA)
+
+
+@pytest.mark.anyio
+async def test_a_raster_is_not_asked_for_hectares() -> None:
+    with pytest.raises(HandlerError, match="does not support area"):
+        await handlers().area_by_category(129, TENA)
+
+
+@pytest.mark.anyio
+async def test_a_raster_with_data_but_no_class_is_not_an_unexpected_empty() -> None:
+    result = await handlers(FakeClient(empty=True)).class_shares(129, TENA)
+    assert result.value == {}
+    assert result.unclassified_share == 1.0
+    assert result.layer.empty_result is None

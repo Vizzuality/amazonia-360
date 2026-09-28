@@ -12,7 +12,7 @@ from mcp_server.catalogue.cli import (
     catalogue_schema,
     exported_catalogue,
 )
-from tests.test_catalogue import IN_SCOPE_IDS
+from tests.test_catalogue import IN_SCOPE_IDS, RASTER_IDS
 from tests.test_models import curated
 
 EXAMPLE = Path(__file__).parents[1] / "examples" / "catalogue.json"
@@ -63,7 +63,7 @@ def test_the_committed_example_is_the_current_export() -> None:
 
 def test_the_example_loads_as_the_cms_export_will() -> None:
     document = load_document(json.loads(EXAMPLE.read_text("utf-8")))
-    assert {i.id for i in document.indicators} == IN_SCOPE_IDS
+    assert {i.id for i in document.indicators} == IN_SCOPE_IDS | RASTER_IDS
 
 
 def test_a_document_with_duplicate_ids_is_rejected() -> None:

@@ -546,10 +546,12 @@ mcp/
    (`mcp/src/mcp_server/maps/`): the shapes now come with the result, from the query the figures
    come from, and the basemap stays OpenFreeMap rather than Esri's, which needs a key in the page.
 10. Rasters of the regional platform. *Decided on 28 September 2026:* they are in scope. The
-   spike tried one, canopy height, listed by hand in `mcp/src/mcp_server/arcgis/raster.py`. The
    front end's indicator file has 27 image services, each with its classification and legend.
-   Still open: which of them the MCP answers over, and with what figure. A share of pixels per
-   class fits the classed ones (slope, land cover, forest cover, canopy height, grassland). It
-   does not fit counts or amounts per pixel (population, crop production, GDP), which call for a
-   sum or a mean over the area. Where their metadata lives is the same question as for the
-   layers: the catalogue, and in time the CMS.
+   The five classed ones (slope 7, land cover 13, forest cover 119, grassland 128, canopy
+   height 129) are in the catalogue the same day, as `imagery` resources shaped like
+   Payload's imagery block, and answered by `class_shares_in_area`: the share of the area's
+   pixels with data in each class, and the share in none. The sync reads each one's pixel
+   size, 250 m to 1.2 km, which every answer carries. Still open: the other 22, which are
+   counts or amounts per pixel (population, crop production, GDP) and call for a sum or a mean
+   over the area, a tool of their own. Areas are still limited to the module, like every other
+   tool, although the rasters cover the whole region.

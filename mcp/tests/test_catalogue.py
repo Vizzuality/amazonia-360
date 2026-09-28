@@ -15,6 +15,8 @@ from mcp_server.catalogue.models import IndicatorMetadata
 from tests.test_models import curated
 
 IN_SCOPE_IDS = {202, 203, 204, 206, 208, 209, 210, 211, 214, 217, 218, 219, 222}
+# Classed rasters of the regional platform, with the front end's ids.
+RASTER_IDS = {7, 13, 119, 128, 129}
 
 
 def document(*indicators: dict[str, Any]) -> dict[str, Any]:
@@ -70,11 +72,11 @@ class TestBuildCatalogue:
 class TestRepositoryData:
     """The committed ecuador.json and snapshot, as the server loads them."""
 
-    def test_lists_the_thirteen_in_scope_layers(self) -> None:
-        assert {i.id for i in list_indicators()} == IN_SCOPE_IDS
+    def test_lists_the_thirteen_layers_and_the_five_classed_rasters(self) -> None:
+        assert {i.id for i in list_indicators()} == IN_SCOPE_IDS | RASTER_IDS
 
     def test_filters_by_subtopic(self) -> None:
-        assert {i.id for i in list_indicators(subtopic_id=1)} == {209, 211, 222}
+        assert {i.id for i in list_indicators(subtopic_id=1)} == {7, 209, 211, 222}
 
     def test_unknown_indicator_is_none(self) -> None:
         assert get_indicator_metadata(999) is None
@@ -83,19 +85,22 @@ class TestRepositoryData:
         raw = json.loads(
             files("mcp_server.catalogue").joinpath("ecuador.snapshot.json").read_text()
         )
-        assert set(raw["indicators"]) == {str(i) for i in IN_SCOPE_IDS}
+        assert set(raw["indicators"]) == {str(i) for i in IN_SCOPE_IDS | RASTER_IDS}
 
     @pytest.mark.parametrize("indicator", list_indicators(), ids=lambda i: str(i.id))
     def test_every_indicator_is_complete_for_its_tools(
         self, indicator: IndicatorMetadata
     ) -> None:
+        # A raster answers in shares of pixels, so its unit is not what it reports.
+        is_raster = indicator.id in RASTER_IDS
         missing = [
             field
             for field, ok in [
                 ("resource", indicator.resource is not None),
-                ("unit", bool(indicator.unit)),
+                ("unit", is_raster or bool(indicator.unit)),
                 ("ai_answerable", indicator.ai_answerable),
-                ("category_field", indicator.category_field is not None),
+                ("category_field", is_raster or indicator.category_field is not None),
+                ("raster", not is_raster or indicator.raster() is not None),
             ]
             if not ok
         ]
@@ -111,7 +116,7 @@ class TestRepositoryData:
 
     @pytest.mark.parametrize(
         "indicator",
-        [i for i in list_indicators() if i.available],
+        [i for i in list_indicators() if i.available and i.id not in RASTER_IDS],
         ids=lambda i: str(i.id),
     )
     def test_the_category_field_exists_in_the_published_layer(
@@ -119,3 +124,14 @@ class TestRepositoryData:
     ) -> None:
         assert indicator.sync.queryable_fields is not None
         assert indicator.category_field in indicator.sync.queryable_fields
+
+    @pytest.mark.parametrize(
+        "indicator",
+        [i for i in list_indicators() if i.id in RASTER_IDS],
+        ids=lambda i: str(i.id),
+    )
+    def test_every_raster_has_its_pixel_size(
+        self, indicator: IndicatorMetadata
+    ) -> None:
+        assert indicator.available
+        assert indicator.sync.pixel_size_deg is not None

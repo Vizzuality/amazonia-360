@@ -12,10 +12,13 @@ from mcp_server.tools.catalogue import register_catalogue_tools
 
 INSTRUCTIONS = """\
 Answers questions about the physical and natural environment of the Ecuador module of
-Amazonia 360, over an area the user provides as a GeoJSON polygon.
+Amazonia 360, over an area the user provides as a GeoJSON polygon. The module's own
+layers, and a few classed rasters of the regional platform (slope, land cover, forest
+cover, canopy height, grassland), both over areas in the module.
 
-Start with list_indicators. Use categories_in_area and count_in_area first; they are
-fast. area_by_category is slow and should be called for one indicator at a time.
+Start with list_indicators. Use categories_in_area, count_in_area and
+class_shares_in_area first; they are fast. area_by_category is slow and should be
+called for one indicator at a time.
 
 Every answer says what it was computed over (computed_over), where the area falls
 against the module (coverage) and what the layer covers (layer); each field is described
@@ -24,8 +27,9 @@ person in the CMS; quote them unchanged. Figures from different indicators are n
 to be combined.
 
 When the user asks to see a result on a map, map_area_by_category returns the same
-figures as area_by_category and draws them for the user; map_raster does the same for a
-regional raster. The map shows the figures and their notes; the answer still needs them.
+figures as area_by_category and draws them for the user; map_class_shares_in_area does
+the same for class_shares_in_area. The map shows the figures and their notes; the
+answer still needs them.
 """
 
 
@@ -48,6 +52,5 @@ def create_mcp_server(
     )
     register_catalogue_tools(server)
     register_area_tools(server, handlers, call_log)
-    raster_http = httpx.AsyncClient(timeout=settings.arcgis_timeout_s)
-    register_map_tools(server, handlers, call_log, raster_http)
+    register_map_tools(server, handlers, call_log)
     return server

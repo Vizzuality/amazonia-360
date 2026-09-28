@@ -2,21 +2,22 @@ import base64
 from pathlib import Path
 from typing import Any
 
-import httpx
 import pytest
 from mcp import Client
-from mcp.server.mcpserver import MCPServer
 from mcp.types import TextResourceContents
 
 from mcp_server.handlers.area import AreaHandlers
-from mcp_server.maps import CATEGORIES_URI, RASTER_URI, register_map_tools
+from mcp_server.maps import CATEGORIES_URI, RASTER_URI
 from mcp_server.measurement.call_log import CallLog
 from mcp_server.server import create_mcp_server
 from tests.test_handlers import TENA, FakeClient
 
 pytestmark = pytest.mark.usefixtures("fixed_catalogue")
 
-VIEWS = {"map_area_by_category": CATEGORIES_URI, "map_raster": RASTER_URI}
+VIEWS = {
+    "map_area_by_category": CATEGORIES_URI,
+    "map_class_shares_in_area": RASTER_URI,
+}
 
 
 def server(tmp_path: Path) -> Any:
@@ -75,35 +76,18 @@ async def test_the_map_tool_answers_what_area_by_category_answers(
 
 
 @pytest.mark.anyio
-async def test_the_raster_map_counts_and_draws_from_one_call(tmp_path: Path) -> None:
-    png = b"\x89PNG\r\n\x1a\n"
-
-    def handler(request: httpx.Request) -> httpx.Response:
-        if request.url.path.endswith("/computeHistograms"):
-            histogram = {
-                "size": 6,
-                "min": -0.5,
-                "max": 5.5,
-                "counts": [0, 1, 1, 2, 0, 0],
-            }
-            return httpx.Response(200, json={"histograms": [histogram]})
-        return httpx.Response(200, content=png, headers={"content-type": "image/png"})
-
-    mcp_server = MCPServer(name="t")
-    register_map_tools(
-        mcp_server,
-        AreaHandlers(FakeClient()),  # type: ignore[arg-type]
-        CallLog(tmp_path / "calls.jsonl"),
-        httpx.AsyncClient(transport=httpx.MockTransport(handler)),
-    )
-    async with Client(mcp_server) as client:
-        result = await client.call_tool(
-            "map_raster", {"raster": "canopy_height", "area": TENA}
-        )
-    assert result.structured_content is not None
-    shares = [c["share"] for c in result.structured_content["classes"]]
-    assert shares == [0.25, 0.25, 0.5, 0, 0]
-    assert result.meta is not None
-    image = result.meta["map"]["image"]
-    assert base64.b64decode(image.split(",", 1)[1]) == png
-    assert len(result.meta["map"]["corners"]) == 4
+async def test_the_raster_map_answers_what_class_shares_in_area_answers(
+    tmp_path: Path,
+) -> None:
+    async with Client(server(tmp_path)) as client:
+        args = {"indicator_id": 129, "area": TENA}
+        plain = await client.call_tool("class_shares_in_area", args)
+        mapped = await client.call_tool("map_class_shares_in_area", args)
+    assert plain.structured_content is not None
+    assert mapped.structured_content is not None
+    assert mapped.structured_content["value"] == plain.structured_content["value"]
+    assert mapped.meta is not None
+    drawn = mapped.meta["map"]
+    assert base64.b64decode(drawn["image"].split(",", 1)[1]) == b"\x89PNG"
+    assert drawn["name"] == "Canopy height"
+    assert "image" not in mapped.content[0].text  # type: ignore[union-attr]

@@ -31,8 +31,9 @@ async def test_exposes_the_tools(tmp_path: Path) -> None:
         "categories_in_area",
         "count_in_area",
         "area_by_category",
+        "class_shares_in_area",
         "map_area_by_category",
-        "map_raster",
+        "map_class_shares_in_area",
     }
 
 

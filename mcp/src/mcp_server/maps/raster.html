@@ -29,7 +29,10 @@
       en: {
         waiting: "Waiting for the figures…",
         title: "{raster}: share of the area",
-        pixels: "Shares of the image server's pixels counted inside the area, about 1 km each; an area of a few km has only a few pixels. Pixels counted: {pixels}.",
+        unclassified: "Unclassified",
+        pixels: "Shares of the {pixels} pixels with data inside the area, about {size} each. Over a small area a share rests on few pixels.",
+        unclassifiedNote: "Unclassified pixels have data but fall in no class of the legend. They are not a class of their own.",
+        boundingBox: "The module boundary is still a bounding box; part of an area near its edge may fall outside the module.",
         source: "Classes and colours as on Amazonia 360. Outside the area the raster is dimmed; the shares count only the pixels inside.",
         noImage: "The host did not pass the image to the map; the shares above are complete.",
         failed: "The map could not load: {message}",
@@ -37,12 +40,19 @@
       es: {
         waiting: "Esperando las cifras…",
         title: "{raster}: proporción del área",
-        pixels: "Proporción de los píxeles del servidor de imágenes contados dentro del área, de alrededor de 1 km cada uno; un área de pocos km tiene pocos píxeles. Píxeles contados: {pixels}.",
+        unclassified: "Sin clase",
+        pixels: "Proporción de los {pixels} píxeles con datos dentro del área, de unos {size} cada uno. En un área pequeña, una proporción se apoya en pocos píxeles.",
+        unclassifiedNote: "Los píxeles sin clase tienen datos pero no caen en ninguna clase de la leyenda. No son una clase propia.",
+        boundingBox: "El límite del módulo es todavía un rectángulo envolvente; parte de un área cerca de su borde puede quedar fuera del módulo.",
         source: "Clases y colores como en Amazonia 360. Fuera del área el ráster se atenúa; las proporciones cuentan solo los píxeles de dentro.",
         noImage: "El host no pasó la imagen al mapa; las proporciones de arriba están completas.",
         failed: "No se pudo cargar el mapa: {message}",
       },
     });
+    // 111.32 km per degree at the equator, which the module sits on.
+    const size = (deg) => deg >= 0.009 * 0.9
+      ? `${number(deg * 111.32, { maximumFractionDigits: 1 })} km`
+      : `${number(Math.round(deg * 111320 / 10) * 10)} m`;
     const pct = (n) => number(n, { style: "percent", maximumFractionDigits: 1 });
     const legend = document.getElementById("legend");
     legend.textContent = t("waiting");
@@ -96,13 +106,31 @@
         }
         const r = result.structuredContent;
         if (!r) return;
-        const image = result._meta?.map;
+        const drawn = result._meta?.map;
+        const colour = Object.fromEntries((drawn?.classes || []).map((c) => [c.label, c.color]));
+        const order = (drawn?.classes || []).map((c) => c.label);
+        const rows = Object.entries(r.value).sort((a, b) =>
+          order.length ? order.indexOf(a[0]) - order.indexOf(b[0]) : b[1] - a[1]);
+        if (r.unclassified_share > 0) rows.push([t("unclassified"), r.unclassified_share, true]);
+        const over = r.computed_over || {};
+        const notes = [];
+        if (over.pixels != null) notes.push(t("pixels", {
+          pixels: number(over.pixels),
+          size: over.pixel_size_deg ? size(over.pixel_size_deg) : "?",
+        }));
+        if (r.unclassified_share > 0) notes.push(t("unclassifiedNote"));
+        if (r.coverage?.boundary === "bounding_box") notes.push(t("boundingBox"));
+        // Written by a person in the CMS, in the language they wrote it in.
+        for (const c of r.caveats || []) notes.push(c);
+        notes.push(t(drawn?.image ? "source" : "noImage"));
+        const swatch = (label, none) => none
+          ? `<span class="swatch" style="background:none;box-shadow:inset 0 0 0 1px hsl(var(--muted-foreground))"></span>`
+          : `<span class="swatch" style="background:${esc(colour[label] || "hsl(var(--muted))")}"></span>`;
         legend.innerHTML = `
-          <h2>${esc(t("title", { raster: r.raster }))}</h2>
-          ${r.classes.map((c) => `<div class="row"><span class="swatch" style="background:${esc(c.color)}"></span><span class="name">${esc(c.label)}</span><span class="share">${pct(c.share)}</span></div>`).join("")}
-          <p class="note">${esc(t("pixels", { pixels: number(r.pixels) }))}</p>
-          <p class="note">${esc(t(image?.image ? "source" : "noImage"))}</p>`;
-        if (image?.image) addImage(image).catch((e) => window.view.fail(String(e?.message || e)));
+          <h2>${esc(t("title", { raster: drawn?.name || "" }))}</h2>
+          ${rows.map(([label, share, none]) => `<div class="row">${swatch(label, none)}<span class="name">${esc(label)}</span><span class="share">${pct(share)}</span></div>`).join("")}
+          ${notes.map((n) => `<p class="note">${esc(n)}</p>`).join("")}`;
+        if (drawn?.image) addImage(drawn).catch((e) => window.view.fail(String(e?.message || e)));
       },
       fail(message) {
         legend.insertAdjacentHTML("beforeend", `<p class="note">${esc(t("failed", { message }))}</p>`);
