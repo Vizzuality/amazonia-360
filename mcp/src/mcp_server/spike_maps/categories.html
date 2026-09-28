@@ -2,30 +2,68 @@
 <html lang="en" data-library="maplibre-categories">
 <head>
   <meta charset="utf-8">
-  <title>Area by category, MapLibre</title>
+  <title>Area by category</title>
   <script>/*DIAGNOSTICS*/</script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@6.11.2/dist/maplibre-gl.css">
+  <style>/*THEME*/</style>
   <style>
-    html, body { margin: 0; font: 13px system-ui, sans-serif; color: #222; background: #fff; }
+    body { display: flex; flex-direction: column; }
+    #wrap { position: relative; }
     #map { height: 440px; }
-    #legend { padding: 8px 10px; }
-    #legend table { border-collapse: collapse; }
-    #legend td { padding: 2px 8px 2px 0; }
-    #legend td.ha { text-align: right; font-variant-numeric: tabular-nums; }
-    .swatch { display: inline-block; width: 12px; height: 12px; border: 1px solid #0003; vertical-align: -2px; }
-    .note { color: #555; margin: 6px 0 0; max-width: 70ch; }
-    #diag { white-space: pre; padding: 6px 8px; background: #f4f4f4; color: #333; font-size: 11px; }
+    body.fullscreen { height: 100vh; }
+    body.fullscreen #wrap { flex: 1; }
+    body.fullscreen #map { height: 100%; }
+    body.fullscreen #legend { max-height: 40vh; overflow: auto; }
+    #tools { position: absolute; top: 10px; right: 10px; z-index: 2; }
+    #tools button {
+      font: inherit; font-size: 12px; color: hsl(var(--foreground)); cursor: pointer;
+      background: hsl(var(--background)); border: 1px solid var(--color-blue-100);
+      border-radius: var(--radius); padding: 4px 10px;
+    }
+    #tools button:hover { background: hsl(var(--muted)); }
+    #legend {
+      margin: 8px; padding: 8px 16px; background: #fff;
+      border: 1px solid var(--color-blue-100); border-radius: var(--radius);
+    }
+    #legend h2 { font-size: 12px; font-weight: 700; margin: 0 0 4px; }
+    .row {
+      display: flex; align-items: baseline; gap: 6px; width: 100%; padding: 2px 0;
+      font: inherit; font-size: 12px; color: inherit; text-align: left;
+      background: none; border: 0; cursor: pointer;
+    }
+    .row:hover .name { text-decoration: underline; }
+    .row.hidden { opacity: 0.4; }
+    .row .name { flex: 1; }
+    .row .ha { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .total { cursor: default; font-weight: 700; }
+    .total:hover .name { text-decoration: none; }
+    .swatch {
+      width: 8px; height: 8px; flex: none; border-radius: 2px;
+      box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
+    }
+    .note { font-size: 11px; font-weight: 500; color: hsl(var(--muted-foreground)); margin: 6px 0 0; }
+    .maplibregl-popup-content {
+      font-family: var(--font-sans); color: hsl(var(--popover-foreground));
+      border-radius: var(--radius); padding: 8px 12px; font-size: 12px;
+    }
+    .maplibregl-popup-content strong { display: block; font-weight: 700; }
+    #diag { white-space: pre; padding: 4px 8px; background: hsl(var(--muted)); font-size: 10px; font-weight: 500; }
   </style>
 </head>
 <body>
-  <div id="map"></div>
+  <div id="wrap">
+    <div id="map"></div>
+    <div id="tools"></div>
+  </div>
   <div id="legend">Waiting for the figures…</div>
   <div id="diag"></div>
   <script type="module">
     const { mark, report } = window.diag;
-    const PALETTE = ["#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02",
-      "#a6761d", "#1f78b4", "#b2df8a", "#fb9a99", "#cab2d6", "#ffff99"];
+    const BASEMAP = "https://tiles.openfreemap.org/styles/positron";
+    const AREA = "#009ade"; // The front end's POLYGON_SYMBOL.
+    const HOVER = "#009aff"; // The front end's highlight colour.
     const fmt = new Intl.NumberFormat("en", { maximumFractionDigits: 0 });
+    const pct = new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 });
     const esc = (s) => String(s).replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
 
     const library = import("https://cdn.jsdelivr.net/npm/maplibre-gl@6.11.2/dist/maplibre-gl.mjs").then(
@@ -33,43 +71,113 @@
       (e) => { mark("library_failed", { message: String(e) }); window.diag.done(); return null; },
     );
 
-    let map = null;
-    let colours = null;
-    let shapes = null;
+    // Three things arrive in any order: the map, the figures and the shapes.
+    const state = { map: null, result: null, shapes: null, styles: null, hidden: new Set() };
     let resolveMap;
     const mapReady = new Promise((r) => { resolveMap = r; });
 
-    const colourExpression = () => {
-      const pairs = Object.entries(colours).flat();
-      return pairs.length ? ["match", ["get", "category"], ...pairs, "#999"] : "#999";
+    const byCategory = (key, fallback) => {
+      const pairs = Object.entries(state.styles || {}).flatMap(([c, s]) => [c, s[key]]);
+      return pairs.length ? ["match", ["get", "category"], ...pairs, fallback] : fallback;
     };
 
+    function applyFilter() {
+      const visible = ["!", ["in", ["get", "category"], ["literal", [...state.hidden]]]];
+      for (const id of ["shapes-fill", "shapes-line", "shapes-hover"]) state.map.setFilter(id, visible);
+    }
+
     function paintShapes() {
-      if (!map || !shapes || !colours) return;
+      const { map, shapes, styles } = state;
+      if (!map || !shapes || !styles) return;
       map.getSource("shapes").setData(shapes);
-      map.setPaintProperty("shapes-fill", "fill-color", colourExpression());
+      map.setPaintProperty("shapes-fill", "fill-color", byCategory("fill", "#999"));
+      map.setPaintProperty("shapes-line", "line-color", byCategory("outline", "rgba(0,0,0,0.25)"));
+      map.setPaintProperty("shapes-line", "line-width", byCategory("outline_width", 0.5));
       map.once("idle", () => { mark("shapes_drawn"); window.diag.done(); });
     }
 
-    // Figures come from the tool result the model also receives; the page shows
-    // them itself, so the caveats reach the user whatever the model writes.
-    window.onResult = (result) => {
-      mark("result_received");
-      const r = result.structuredContent;
+    function renderLegend() {
+      const r = state.result;
       if (!r) return;
       const rows = Object.entries(r.value).sort((a, b) => b[1] - a[1]);
-      colours = Object.fromEntries(rows.map(([c], i) => [c, PALETTE[i % PALETTE.length]]));
+      const swatch = (c) => {
+        const s = state.styles?.[c];
+        return `<span class="swatch" style="background:${s?.swatch || "hsl(var(--muted))"}"></span>`;
+      };
       const notes = [];
       if (r.unclassified_ha > 0) notes.push(`${fmt.format(r.unclassified_ha)} ha of the area have no class in this layer. They are not a class of their own.`);
       if (r.layer?.empty_result === "not_mapped_here") notes.push("This layer does not map this part of the module.");
       if (r.coverage?.boundary === "bounding_box") notes.push("The module boundary is still a bounding box; part of an area near its edge may fall outside the module.");
+      if (state.styles && Object.values(state.styles).some((s) => !s.from_layer)) notes.push("Some colours are not the layer's own: its style does not give one colour per class.");
       for (const c of r.caveats || []) notes.push(c);
-      document.getElementById("legend").innerHTML = `
-        <table>${rows.map(([c, ha]) => `<tr><td><span class="swatch" style="background:${colours[c]}"></span></td><td>${esc(c)}</td><td class="ha">${fmt.format(ha)} ha</td></tr>`).join("")}
-        <tr><td></td><td>Area</td><td class="ha">${fmt.format(r.aoi_ha)} ha</td></tr></table>
+      const legend = document.getElementById("legend");
+      legend.innerHTML = `
+        <h2>Hectares by class</h2>
+        ${rows.map(([c, ha]) => `<button class="row${state.hidden.has(c) ? " hidden" : ""}" data-category="${esc(c)}" title="Show or hide on the map">${swatch(c)}<span class="name">${esc(c)}</span><span class="ha">${fmt.format(ha)} ha</span></button>`).join("")}
+        <div class="row total"><span class="swatch" style="background:none;box-shadow:inset 0 0 0 1.5px ${AREA}"></span><span class="name">Area</span><span class="ha">${fmt.format(r.aoi_ha)} ha</span></div>
         ${notes.map((n) => `<p class="note">${esc(n)}</p>`).join("")}`;
-      paintShapes();
+      legend.querySelectorAll("button.row").forEach((row) => row.addEventListener("click", () => {
+        const c = row.dataset.category;
+        state.hidden.has(c) ? state.hidden.delete(c) : state.hidden.add(c);
+        row.classList.toggle("hidden");
+        if (state.map) applyFilter();
+      }));
+    }
+
+    // Figures come from the tool result the model also receives; the page shows
+    // them itself, so the notes reach the user whatever the model writes.
+    window.onResult = (result) => {
+      mark("result_received");
+      state.result = result.structuredContent || null;
+      renderLegend();
     };
+
+    function addFullscreen(maplibregl) {
+      const app = window.app;
+      const modes = app?.getHostContext?.()?.availableDisplayModes || [];
+      if (!modes.includes("fullscreen")) return;
+      const button = document.createElement("button");
+      const sync = (mode) => {
+        document.body.classList.toggle("fullscreen", mode === "fullscreen");
+        button.textContent = mode === "fullscreen" ? "Exit full screen" : "Full screen";
+        state.map?.resize();
+      };
+      button.addEventListener("click", async () => {
+        const next = document.body.classList.contains("fullscreen") ? "inline" : "fullscreen";
+        const { mode } = await app.requestDisplayMode({ mode: next });
+        sync(mode);
+      });
+      app.onhostcontextchanged = (ctx) => { if (ctx.displayMode) sync(ctx.displayMode); };
+      sync(app.getHostContext()?.displayMode || "inline");
+      document.getElementById("tools").appendChild(button);
+    }
+
+    function addInteraction(maplibregl, map) {
+      let hovered = null;
+      map.on("mousemove", "shapes-fill", (e) => {
+        map.getCanvas().style.cursor = "pointer";
+        const id = e.features[0]?.id;
+        if (hovered !== null && hovered !== id) map.setFeatureState({ source: "shapes", id: hovered }, { hover: false });
+        hovered = id ?? null;
+        if (hovered !== null) map.setFeatureState({ source: "shapes", id: hovered }, { hover: true });
+      });
+      map.on("mouseleave", "shapes-fill", () => {
+        map.getCanvas().style.cursor = "";
+        if (hovered !== null) map.setFeatureState({ source: "shapes", id: hovered }, { hover: false });
+        hovered = null;
+      });
+      map.on("click", "shapes-fill", (e) => {
+        const c = e.features[0]?.properties?.category;
+        const r = state.result;
+        if (!c) return;
+        const ha = r?.value?.[c];
+        const share = ha != null && r?.aoi_ha ? ` · ${pct.format(ha / r.aoi_ha)} of the area` : "";
+        new maplibregl.Popup({ closeButton: false, maxWidth: "280px" })
+          .setLngLat(e.lngLat)
+          .setHTML(`<strong>${esc(c)}</strong>${ha != null ? `${fmt.format(ha)} ha in the area${share}` : ""}`)
+          .addTo(map);
+      });
+    }
 
     window.drawArea = async (area, indicatorId) => {
       const maplibregl = await library;
@@ -77,31 +185,32 @@
       const ring = area.type === "Polygon" ? area.coordinates[0] : area.coordinates[0][0];
       const xs = ring.map((p) => p[0]);
       const ys = ring.map((p) => p[1]);
-      map = new maplibregl.Map({
+      const map = new maplibregl.Map({
         container: "map",
-        style: {
-          version: 8,
-          sources: {
-            osm: {
-              type: "raster",
-              tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-              tileSize: 256,
-              attribution: "© OpenStreetMap contributors",
-            },
-            area: { type: "geojson", data: { type: "Feature", geometry: area, properties: {} } },
-            shapes: { type: "geojson", data: { type: "FeatureCollection", features: [] } },
-          },
-          layers: [
-            { id: "osm", type: "raster", source: "osm", paint: { "raster-saturation": -0.6 } },
-            { id: "shapes-fill", type: "fill", source: "shapes", paint: { "fill-color": "#999", "fill-opacity": 0.6 } },
-            { id: "area-line", type: "line", source: "area", paint: { "line-color": "#222", "line-width": 2 } },
-          ],
-        },
+        style: BASEMAP,
         bounds: [[Math.min(...xs), Math.min(...ys)], [Math.max(...xs), Math.max(...ys)]],
         fitBoundsOptions: { padding: 30 },
+        attributionControl: { compact: true },
       });
+      state.map = map;
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
       map.on("error", (e) => mark("map_error", { message: String(e.error?.message || e.error) }));
-      map.once("load", () => { mark("map_load"); resolveMap(); });
+      map.once("load", () => {
+        mark("map_load");
+        map.addSource("area", { type: "geojson", data: { type: "Feature", geometry: area, properties: {} } });
+        map.addSource("shapes", { type: "geojson", data: { type: "FeatureCollection", features: [] }, generateId: true });
+        map.addLayer({ id: "area-fill", type: "fill", source: "area", paint: { "fill-color": AREA, "fill-opacity": 0.13 } });
+        map.addLayer({ id: "shapes-fill", type: "fill", source: "shapes", paint: { "fill-color": "#999" } });
+        map.addLayer({ id: "shapes-line", type: "line", source: "shapes", paint: {} });
+        map.addLayer({
+          id: "shapes-hover", type: "line", source: "shapes",
+          paint: { "line-color": HOVER, "line-width": ["case", ["boolean", ["feature-state", "hover"], false], 2.5, 0] },
+        });
+        map.addLayer({ id: "area-line", type: "line", source: "area", paint: { "line-color": AREA, "line-width": 1.5 } });
+        addInteraction(maplibregl, map);
+        addFullscreen(maplibregl);
+        resolveMap();
+      });
 
       if (indicatorId == null || !window.app) return;
       const t = performance.now();
@@ -114,7 +223,9 @@
         if (res.isError || !s) throw new Error(res.content?.[0]?.text || "no shapes");
         report.shapes = { ...s.timing, features: s.shapes.features.length, round_trip_ms: Math.round(performance.now() - t) };
         mark("shapes_received", report.shapes);
-        shapes = s.shapes;
+        state.shapes = s.shapes;
+        state.styles = s.styles;
+        renderLegend();
         await mapReady;
         paintShapes();
       } catch (e) {

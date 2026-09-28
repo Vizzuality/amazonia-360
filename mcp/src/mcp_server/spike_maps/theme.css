@@ -1,0 +1,29 @@
+/* The front end's look, copied from client/src/styles/globals.css (tokens) and
+   client/src/constants/map.ts (the area symbol). tests/test_spike_theme.py fails when
+   a copied value no longer matches. Montserrat is embedded (SIL OFL, fonts/OFL.txt). */
+/*FONTS*/
+:root {
+  --background: 0 0 100%;
+  --border: 201 24% 84%;
+  --foreground: 198 100% 11%;
+  --muted: 200 25% 95%;
+  --muted-foreground: 51 4% 36%;
+  --popover: 0 0 100%;
+  --popover-foreground: 0 0 12%;
+  --primary: 198 100% 22%;
+  --primary-foreground: 200 25% 95%;
+  --radius: 0.5rem;
+  --color-blue-100: #cbd8df;
+  --color-cyan-500: #009ade;
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+}
+
+html, body {
+  margin: 0;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans);
+  font-weight: 600;
+  line-height: 1.625;
+  -webkit-font-smoothing: antialiased;
+}

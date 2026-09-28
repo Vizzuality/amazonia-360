@@ -8,6 +8,7 @@ docs/superpowers/evaluations/2026-09-28-mcp-map-spike.md; this is not production
 """
 
 import asyncio
+import base64
 import json
 from collections.abc import Callable
 from pathlib import Path
@@ -19,22 +20,26 @@ from mcp.server.mcpserver.exceptions import ToolError
 from shapely.geometry import mapping
 from shapely.geometry.base import BaseGeometry
 
+from mcp_server.arcgis.client import ArcGISError
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.handlers.errors import HandlerError
 from mcp_server.handlers.result import Result
 from mcp_server.measurement.call_log import CallLog
 from mcp_server.measurement.stopwatch import Stopwatch
+from mcp_server.spike_maps.styles import category_styles, join_field
 from mcp_server.tools.area import Area, IndicatorId
 
 _HERE = Path(__file__).parent
 _MIME = "text/html;profile=mcp-app"
 _OSM = "https://tile.openstreetmap.org"
+# A light grey vector basemap with no key, close to the front end's Esri gray-vector.
+_OPENFREEMAP = "https://tiles.openfreemap.org"
 _JSDELIVR = "https://cdn.jsdelivr.net"
 
 _VIEWS: dict[str, dict[str, Any]] = {
     "maplibre": {
-        "resourceDomains": [_JSDELIVR, _OSM],
-        "connectDomains": [_JSDELIVR, _OSM],
+        "resourceDomains": [_JSDELIVR, _OPENFREEMAP],
+        "connectDomains": [_JSDELIVR, _OPENFREEMAP],
     },
     "arcgis": {
         "resourceDomains": ["https://js.arcgis.com", _JSDELIVR, _OSM],
@@ -48,11 +53,33 @@ _VIEWS: dict[str, dict[str, Any]] = {
 }
 
 
+def _fonts() -> str:
+    # Embedded, so the page needs no font domain in its CSP.
+    faces = []
+    for weight in (500, 600, 700):
+        data = (
+            _HERE / "fonts" / f"montserrat-latin-{weight}-normal.woff2"
+        ).read_bytes()
+        faces.append(
+            "@font-face { font-family: 'Montserrat'; font-style: normal; "
+            f"font-weight: {weight}; font-display: swap; src: url("
+            f"data:font/woff2;base64,{base64.b64encode(data).decode()}) "
+            "format('woff2'); }"
+        )
+    return "\n".join(faces)
+
+
 def _page(library: str) -> str:
+    theme = (_HERE / "theme.css").read_text().replace("/*FONTS*/", _fonts())
+    parts = {
+        "/*THEME*/": theme,
+        "/*DIAGNOSTICS*/": (_HERE / "diagnostics.js").read_text(),
+        "/*BRIDGE*/": (_HERE / "bridge.js").read_text(),
+    }
     html = (_HERE / f"{library}.html").read_text()
-    return html.replace(
-        "/*DIAGNOSTICS*/", (_HERE / "diagnostics.js").read_text()
-    ).replace("/*BRIDGE*/", (_HERE / "bridge.js").read_text())
+    for marker, text in parts.items():
+        html = html.replace(marker, text)
+    return html
 
 
 def _view(library: str) -> Callable[[], str]:
@@ -96,6 +123,7 @@ def register_map_spike(
     server: MCPServer, handlers: AreaHandlers, log_path: Path
 ) -> None:
     log = CallLog(log_path)
+    renderers: dict[int, dict[str, Any] | None] = {}
 
     for library, csp in _VIEWS.items():
         uri = f"ui://amazonia360/spike/{library}.html"
@@ -159,12 +187,33 @@ def register_map_spike(
             raise ToolError(str(exc)) from exc
         with watch.lap("clip"):
             shapes, vertices = await asyncio.to_thread(_clipped_shapes, p.aoi, features)
+        categories = sorted({f["properties"]["category"] for f in shapes})
+        with watch.lap("styles"):
+            try:
+                # Renderers change with a republish, not between calls.
+                if indicator_id not in renderers:
+                    renderers[indicator_id] = await handlers._client.renderer(p.layer)  # pyright: ignore[reportPrivateUsage]
+                renderer = renderers[indicator_id]
+                field = join_field(renderer, p.layer.category_field, categories)
+                pairs = (
+                    await handlers._client.value_pairs(p.layer, p.aoi, field)  # pyright: ignore[reportPrivateUsage]
+                    if field
+                    else None
+                )
+            except ArcGISError:
+                # Colours are not worth failing the map over.
+                renderer, pairs = None, None
+            styles = category_styles(
+                renderer, p.layer.category_field, categories, pairs
+            )
         collection = {"type": "FeatureCollection", "features": shapes}
         return {
             "shapes": collection,
+            "styles": styles,
             "timing": {
                 "arcgis_ms": watch.ms("arcgis"),
                 "clip_ms": watch.ms("clip"),
+                "styles_ms": watch.ms("styles"),
                 "bytes": len(json.dumps(collection)),
                 "vertices": vertices,
             },

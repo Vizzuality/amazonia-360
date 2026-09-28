@@ -44,9 +44,12 @@ async def test_each_view_is_a_complete_page_with_its_csp(tmp_path: Path) -> None
             assert isinstance(content, TextResourceContents)
             assert content.mime_type == "text/html;profile=mcp-app"
             assert content.meta is not None
-            assert (
+            basemap = (
                 "https://tile.openstreetmap.org"
-                in (content.meta["ui"]["csp"]["resourceDomains"])
+                if "arcgis" in uri
+                else "https://tiles.openfreemap.org"
             )
+            assert basemap in content.meta["ui"]["csp"]["resourceDomains"]
             assert "/*DIAGNOSTICS*/" not in content.text
             assert "/*BRIDGE*/" not in content.text
+            assert "/*THEME*/" not in content.text

@@ -229,3 +229,35 @@ async def test_an_error_body_without_a_message_still_names_code_and_url() -> Non
 
     with pytest.raises(ArcGISError, match=r"500.*busy.*example\.test"):
         await client_with(handler).count(LAYER, AOI)
+
+
+@pytest.mark.anyio
+async def test_the_renderer_comes_from_the_layer_description() -> None:
+    renderer = {"type": "uniqueValue", "field1": "Ecosistema", "uniqueValueInfos": []}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.method == "GET"
+        assert request.url.path.endswith("/FeatureServer/0")
+        return httpx.Response(200, json={"drawingInfo": {"renderer": renderer}})
+
+    assert await client_with(handler).renderer(LAYER) == renderer
+
+
+@pytest.mark.anyio
+async def test_a_layer_without_a_renderer_has_none() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json={"name": "eco"})
+
+    assert await client_with(handler).renderer(LAYER) is None
+
+
+@pytest.mark.anyio
+async def test_value_pairs_group_the_other_field_by_class() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert params(request)["outFields"] == "Ecosistema,Region"
+        rows = [("Bosque", "Andes"), ("Bosque", "Llanura"), ("Pajonal", "Andes")]
+        features = [{"attributes": {"Ecosistema": c, "Region": r}} for c, r in rows]
+        return httpx.Response(200, json={"features": features})
+
+    pairs = await client_with(handler).value_pairs(LAYER, AOI, "Region")
+    assert pairs == {"Bosque": {"Andes", "Llanura"}, "Pajonal": {"Andes"}}

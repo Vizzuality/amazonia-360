@@ -124,6 +124,43 @@ class ArcGISClient:
                     f"Invalid response from {url}: missing properties or geometry"
                 ) from exc
 
+    async def renderer(self, layer: Layer) -> dict[str, Any] | None:
+        """The layer's renderer, where the front end takes its colours from."""
+        url = f"{layer.service_url}/{layer.layer_id}"
+        body = await self._send("GET", url, params={"f": "json"})
+        renderer = (body.get("drawingInfo") or {}).get("renderer")
+        return renderer if isinstance(renderer, dict) else None
+
+    async def value_pairs(
+        self, layer: Layer, aoi: BaseGeometry, field: str
+    ) -> dict[str, set[str]]:
+        """For each class in the area, the values another field takes on it."""
+        body = await self._query(
+            layer,
+            aoi,
+            {
+                "outFields": f"{layer.category_field},{field}",
+                "returnDistinctValues": "true",
+                "returnGeometry": "false",
+                "f": "json",
+            },
+        )
+        url = f"{layer.service_url}/{layer.layer_id}/query"
+        if _exceeded_transfer_limit(body):
+            raise ArcGISError(f"Invalid response from {url}: the pairs were truncated")
+        pairs: dict[str, set[str]] = {}
+        try:
+            for f in body["features"]:
+                category = f["attributes"][layer.category_field]
+                value = f["attributes"][field]
+                if category is not None and value is not None:
+                    pairs.setdefault(str(category), set()).add(str(value))
+        except (KeyError, TypeError) as exc:
+            raise ArcGISError(
+                f"Invalid response from {url}: missing features or attributes"
+            ) from exc
+        return pairs
+
     async def _query(
         self, layer: Layer, aoi: BaseGeometry, extra: dict[str, str]
     ) -> dict[str, Any]:
@@ -136,9 +173,12 @@ class ArcGISClient:
             "spatialRel": "esriSpatialRelIntersects",
             **extra,
         }
+        # POST, because an area near the vertex limit does not fit in a URL.
+        return await self._send("POST", url, data=params)
+
+    async def _send(self, method: str, url: str, **kwargs: Any) -> dict[str, Any]:
         try:
-            # POST, because an area near the vertex limit does not fit in a URL.
-            response = await self._http.post(url, data=params)
+            response = await self._http.request(method, url, **kwargs)
             response.raise_for_status()
         except httpx.TimeoutException as exc:
             raise ArcGISError(_GAVE_UP) from exc
