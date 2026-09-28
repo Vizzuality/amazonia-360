@@ -231,9 +231,15 @@ endpoint and storage in the MCP's database are phase 2.
 |---|---|---|
 | `list_indicators` | What exists, filterable by subtopic, with a short description and the tools each indicator takes (none when it is unavailable or not cleared) | No network call |
 | `describe_indicator` | Description, unit, provenance, dates, caveats, value type | No network call |
-| `categories_in_area` | Which classes of a categorical layer are present | 0.19–0.37 s |
-| `count_in_area` | How many discrete features fall inside | 0.19–0.37 s |
-| `area_by_category` | How many hectares of each class fall inside | 4.6–16.7 s per layer |
+| `categories_in_area` | Which classes of a categorical layer are present | Median 0.23 s, 99th percentile 3.0 s |
+| `count_in_area` | How many discrete features fall inside | Median 0.23 s, 99th percentile 3.0 s |
+| `area_by_category` | How many hectares of each class fall inside | Median 1.0 s, 90th percentile 5.2 s; 29–59 s on layer 203 |
+
+*Changed on 28 September 2026:* the costs are from the 24-hour timing run
+(`docs/superpowers/evaluations/2026-09-25-mcp-timing-run.md`) over 20 × 20 km areas, replacing the
+first September measurements over one canton. The area figure leaves out a slow spell of ArcGIS
+Online and layer 203, which is dissolved into four features and receives about two million
+vertices whatever the area.
 
 A tool refuses an operation that the layer's `value_type` does not support before calling ArcGIS,
 for example `area_by_category` on a count layer.
@@ -246,8 +252,9 @@ overestimates Geomorphology by ×36 and Ecosystems by ×42, in 0.2 s and with no
 to show it. That query is never used.
 
 `area_by_category` fetches the geometries with server-side simplification (`maxAllowableOffset`
-0.001, which introduced at most 0.02% error in the September measurements) and clips them locally
-with shapely. One layer per call. The latency is accepted in this phase and reported in every
+0.001) and clips them locally with shapely. The simplification introduced at most 0.02 % error on
+the large polygons of the September measurements, and up to 2 % on a class made of small patches
+(Zonas Inundadas, layer 214, measured in the Desktop trial against full resolution). One layer per call. The latency is accepted in this phase and reported in every
 response, so the aggregation decision can be taken on real usage.
 
 ## Response shape
@@ -311,6 +318,27 @@ values in `ecuador.json` were measured by us, not curated.
 used, so the text can say it and the map can draw the same thing. In this phase every answer is in
 the ArcGIS plane, so the rule holds by construction.
 
+### Steering the model's wording
+
+The Desktop trials found no wrong figure. What went wrong was the text around correct ones: a
+warning softened, a guess about unclassified hectares, a claim that part of an area is in Peru,
+and a sum and bounds built from two indicators. Five places can hold a rule against that:
+
+| Lever | What it can enforce | Where it falls short |
+|---|---|---|
+| Server `instructions` | Any MCP client receives them | The client decides whether the model sees them; in Claude Desktop they had no visible effect |
+| The front end's system prompt | Amazonia 360 writes it, and the model reads it on every turn | Still advice to the model; drift is likely to be smaller than with server instructions, and has not been measured |
+| A tool for what the model improvises | The overlap of two layers answered by the MCP, so no bound is needed | Covers only questions known in advance; one more tool and one more clip per case |
+| A check on the written answer | Every number in the text traced to a tool result, so a sum or a bound nobody computed is caught | Parsing figures out of prose in three languages; it cannot catch a softened warning |
+| Figures that bypass the model's text | The front end draws values, classes and hectares from the result itself; the model writes the commentary | The commentary can still soften or guess; the figures cannot change |
+
+Recommended on 28 September 2026, not yet decided: in the front end, figures that bypass the
+model's text, with the rules in the system prompt. The number the user reads then comes from the
+execution, the same rule as every field of the response, and the prompt handles wording. Server
+instructions stay, for third-party clients, without being relied on. A tool for overlaps is the
+first candidate if the cross-indicator question recurs in the gatekeeper evaluation. A check on
+the written answer is not planned.
+
 ## Inputs
 
 The area of interest is a GeoJSON Polygon or MultiPolygon in WGS84, with a vertex limit so that a
@@ -336,7 +364,10 @@ No plausible number is returned without a signal.
 - **Layers that are not available.** No resource, no clean sync, or a missing `value_type` or
   `category_field`: the refusal names which, before any network call.
 - **ArcGIS slow or down.** Every call has a timeout. A timeout returns an error, never a partial
-  result shaped like a complete one.
+  result shaped like a complete one. ArcGIS Online itself cuts a query at about 59 s with a 504;
+  the timeout is 65 s so that answer arrives first. A 504 and a timeout reach the model as the same
+  plain message (the service gave up, it is usually busy, trying later may work), with no retry: a
+  504 comes after 59 s of waiting, and the timing run saw slow spells last hours.
 - **Invalid geometry.** Self-intersecting or oversized input is rejected before any network call,
   with the reason.
 
@@ -346,6 +377,10 @@ Each response carries `timing`, and each call appends one JSON line to a local l
 indicator, area of the input in hectares, vertices sent, vertices received, and the timing
 breakdown. Phase 1 writes to a file. In phase 2 the same records can go to the database if the file
 proves insufficient.
+
+`amazonia360-mcp-timing` repeats the same calls on the fixed areas of `examples/areas.geojson` at a
+fixed interval, calling the handlers directly, and summarises them per tool and layer. The first
+run, 24 rounds over 24 hours, is written up in `docs/superpowers/evaluations/`.
 
 ## Testing
 
