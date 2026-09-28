@@ -118,6 +118,14 @@ frame opened, 4.4 s of which the host took to deliver the input). Styles cost 0.
 model's text this time gave the classified share without guessing, and again left out the
 boundary note the page showed.
 
+Tried once more after `provenance` got a description in the output schema (`4a014fc3`), Desktop
+restarted on that code. The first call gave up after 60.3 s with the ArcGIS Online message; the
+model called again 4 s later and got the answer in 1.3 s. The timing run saw slowness come in
+spells of hours, so an immediate retry that works is new; it is one case. This time the model's
+text mentioned the bounding box, the first time in any round, still wrote the raw field name
+`covers_module: false`, and said "provenance comes empty" without the reading the description
+gives, that it is not curated yet.
+
 Layer 210's symbols have an alpha of 2 of 255. Drawn as the renderer says, its map shows
 outlines only; the front end's legend drops alpha, so the legend shows solid colours. Filed as
 AM-729, and 211's class field against its renderer as AM-730.
