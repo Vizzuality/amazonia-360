@@ -26,6 +26,9 @@ async def test_every_available_layer_answers_its_cheap_question(
 ) -> None:
     if indicator.allows("presence"):
         result = await handlers.categories_in_area(indicator.id, TENA)
+    elif indicator.allows("class_share"):
+        result = await handlers.class_shares(indicator.id, TENA)
+        assert result.computed_over.pixels
     else:
         result = await handlers.count_in_area(indicator.id, TENA)
     assert result.timing.arcgis_ms > 0
@@ -43,7 +46,12 @@ async def test_the_snapshot_is_current(indicator: IndicatorMetadata) -> None:
         live = await sync_indicator(http, indicator, datetime.now(UTC))
     stale = {
         field: (getattr(indicator.sync, field), getattr(live, field))
-        for field in ("published_count", "layer_last_edit", "schema_last_edit")
+        for field in (
+            "published_count",
+            "layer_last_edit",
+            "schema_last_edit",
+            "pixel_size_deg",
+        )
         if getattr(indicator.sync, field) != getattr(live, field)
     }
     assert stale == {}, "run `uv run amazonia360-mcp-catalogue sync`"
