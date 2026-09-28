@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" data-library="maplibre-raster">
+<head>
+  <meta charset="utf-8">
+  <title>Raster over the area</title>
+  <script>/*DIAGNOSTICS*/</script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@6.11.2/dist/maplibre-gl.css">
+  <style>/*THEME*/</style>
+  <style>
+    #map { height: 440px; }
+    #legend {
+      margin: 8px; padding: 8px 16px; background: #fff;
+      border: 1px solid var(--color-blue-100); border-radius: var(--radius);
+    }
+    #legend h2 { font-size: 12px; font-weight: 700; margin: 0 0 4px; }
+    .row { display: flex; align-items: baseline; gap: 6px; font-size: 12px; padding: 2px 0; }
+    .row .name { flex: 1; }
+    .row .share { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .swatch { width: 8px; height: 8px; flex: none; border-radius: 2px; box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25); }
+    .note { font-size: 11px; font-weight: 500; color: hsl(var(--muted-foreground)); margin: 6px 0 0; }
+    #diag { white-space: pre; padding: 4px 8px; background: hsl(var(--muted)); font-size: 10px; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="legend">Waiting for the figures…</div>
+  <div id="diag"></div>
+  <script type="module">
+    const { mark, report } = window.diag;
+    const AREA = "#009ade"; // The front end's POLYGON_SYMBOL.
+    const pct = new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 });
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+
+    const library = import("https://cdn.jsdelivr.net/npm/maplibre-gl@6.11.2/dist/maplibre-gl.mjs").then(
+      (m) => { mark("library_loaded"); return m; },
+      (e) => { mark("library_failed", { message: String(e) }); window.diag.done(); return null; },
+    );
+
+    // Figures come from the tool result the model also receives.
+    window.onResult = (result) => {
+      mark("result_received");
+      const r = result.structuredContent;
+      if (!r) return;
+      document.getElementById("legend").innerHTML = `
+        <h2>${esc(r.raster)}: share of the area</h2>
+        ${r.classes.map((c) => `<div class="row"><span class="swatch" style="background:${c.color}"></span><span class="name">${esc(c.label)}</span><span class="share">${pct.format(c.share)}</span></div>`).join("")}
+        <p class="note">${esc(r.note)} Pixels counted: ${r.pixels}.</p>
+        <p class="note">Classes and colours as on Amazonia 360. Where the image reaches beyond the area, it is dimmed.</p>`;
+    };
+
+    // Everything outside the area, so the raster there is dimmed and not hidden.
+    function mask(area) {
+      const outers = area.type === "Polygon" ? [area.coordinates[0]] : area.coordinates.map((p) => p[0]);
+      const world = [[-180, -85], [180, -85], [180, 85], [-180, 85], [-180, -85]];
+      return { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [world, ...outers.map((r) => [...r].reverse())] } };
+    }
+
+    window.drawArea = async (area, _indicatorId, args = {}) => {
+      const maplibregl = await library;
+      if (!maplibregl) return;
+      const ring = area.type === "Polygon" ? area.coordinates[0] : area.coordinates[0][0];
+      const xs = ring.map((p) => p[0]);
+      const ys = ring.map((p) => p[1]);
+      const map = new maplibregl.Map({
+        container: "map",
+        style: "https://tiles.openfreemap.org/styles/positron",
+        bounds: [[Math.min(...xs), Math.min(...ys)], [Math.max(...xs), Math.max(...ys)]],
+        fitBoundsOptions: { padding: 30 },
+        attributionControl: { compact: true },
+      });
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
+      map.on("error", (e) => mark("map_error", { message: String(e.error?.message || e.error) }));
+      const loaded = new Promise((r) => map.once("load", () => { mark("map_load"); r(); }));
+
+      if (!window.app || !args.raster) return;
+      const t = performance.now();
+      try {
+        const res = await window.app.callServerTool({ name: "raster_image", arguments: { raster: args.raster, area } });
+        const s = res.structuredContent;
+        if (res.isError || !s) throw new Error(res.content?.[0]?.text || "no image");
+        report.raster = { ...s.timing, bytes: s.bytes, size: s.size, round_trip_ms: Math.round(performance.now() - t) };
+        mark("image_received", report.raster);
+        await loaded;
+        map.addSource("raster", { type: "image", url: s.image, coordinates: s.corners });
+        map.addLayer({ id: "raster", type: "raster", source: "raster", paint: { "raster-resampling": "nearest", "raster-opacity": 0.9 } });
+        map.addSource("mask", { type: "geojson", data: mask(area) });
+        map.addLayer({ id: "mask", type: "fill", source: "mask", paint: { "fill-color": "#ffffff", "fill-opacity": 0.7 } });
+        map.addSource("area", { type: "geojson", data: { type: "Feature", geometry: area, properties: {} } });
+        map.addLayer({ id: "area-line", type: "line", source: "area", paint: { "line-color": AREA, "line-width": 1.5 } });
+        map.once("idle", () => { mark("raster_drawn"); window.diag.done(); });
+      } catch (e) {
+        mark("image_failed", { message: String(e) });
+        window.diag.done();
+      }
+    };
+  </script>
+  <script type="module">/*BRIDGE*/</script>
+</body>
+</html>

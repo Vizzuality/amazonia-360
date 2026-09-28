@@ -16,6 +16,7 @@ VIEWS = {
     "show_area_map_maplibre": "ui://amazonia360/spike/maplibre.html",
     "show_area_map_arcgis": "ui://amazonia360/spike/arcgis.html",
     "show_area_by_category_map": "ui://amazonia360/spike/categories.html",
+    "show_raster_map": "ui://amazonia360/spike/raster.html",
 }
 
 
@@ -32,7 +33,7 @@ async def test_each_map_tool_points_at_its_view(tmp_path: Path) -> None:
         tools = {t.name: t for t in (await client.list_tools()).tools}
     for name, uri in VIEWS.items():
         assert tools[name].meta == {"ui": {"resourceUri": uri}}
-    for name in ("category_shapes", "report_map_diagnostics"):
+    for name in ("category_shapes", "raster_image", "report_map_diagnostics"):
         assert tools[name].meta == {"ui": {"visibility": ["app"]}}
 
 

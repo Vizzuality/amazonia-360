@@ -28,7 +28,7 @@ try {
   window.app = app;
   app.ontoolinput = (params) => {
     mark("tool_input");
-    window.drawArea(params.arguments.area, params.arguments.indicator_id);
+    window.drawArea(params.arguments.area, params.arguments.indicator_id, params.arguments);
   };
   app.ontoolresult = (result) => window.onResult?.(result);
   const connected = app.connect().then(() => "host");

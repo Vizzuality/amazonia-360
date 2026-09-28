@@ -12,8 +12,9 @@ import base64
 import json
 from collections.abc import Callable
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
+import httpx
 import shapely
 from mcp.server.mcpserver import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
@@ -21,11 +22,13 @@ from shapely.geometry import mapping
 from shapely.geometry.base import BaseGeometry
 
 from mcp_server.arcgis.client import ArcGISError
+from mcp_server.geometry.aoi import AOIError, parse_aoi
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.handlers.errors import HandlerError
 from mcp_server.handlers.result import Result
 from mcp_server.measurement.call_log import CallLog
 from mcp_server.measurement.stopwatch import Stopwatch
+from mcp_server.spike_maps.raster import RASTERS, area_image, class_pixels
 from mcp_server.spike_maps.styles import category_styles, join_field
 from mcp_server.tools.area import Area, IndicatorId
 
@@ -225,6 +228,8 @@ def register_map_spike(
         meta={"ui": {"visibility": ["app"]}},
     )
 
+    _register_raster(server)
+
     async def report_map_diagnostics(report: dict[str, Any]) -> str:
         log.write(report)
         return "recorded"
@@ -232,5 +237,83 @@ def register_map_spike(
     server.add_tool(
         report_map_diagnostics,
         description="Spike: called by the map view to record what loaded.",
+        meta={"ui": {"visibility": ["app"]}},
+    )
+
+
+def _register_raster(server: MCPServer) -> None:
+    raster_uri = "ui://amazonia360/spike/raster.html"
+    server.resource(
+        raster_uri,
+        name="map-spike-raster",
+        mime_type=_MIME,
+        meta={"ui": {"csp": _VIEWS["maplibre"]}},
+    )(_view("raster"))
+    raster_http = httpx.AsyncClient(timeout=65)
+
+    def _raster_aoi(area: dict[str, Any]) -> BaseGeometry:
+        try:
+            return parse_aoi(area)
+        except AOIError as exc:
+            raise ToolError(str(exc)) from exc
+
+    async def show_raster_map(
+        raster: Literal["canopy_height"], area: Area
+    ) -> dict[str, Any]:
+        """Spike: share of the area's pixels in each class of a regional raster."""
+        spec = RASTERS[raster]
+        aoi = _raster_aoi(area)
+        watch = Stopwatch()
+        try:
+            with watch.lap("arcgis"):
+                pixels = await class_pixels(raster_http, spec, aoi)
+        except ArcGISError as exc:
+            raise ToolError(str(exc)) from exc
+        total = sum(pixels)
+        return {
+            "raster": spec["name"],
+            "classes": [
+                {
+                    "label": item["label"],
+                    "color": item["color"],
+                    "pixels": n,
+                    "share": round(n / total, 4) if total else 0,
+                }
+                for item, n in zip(spec["legend"], pixels, strict=True)
+            ],
+            "pixels": total,
+            "note": (
+                "Shares of the image server's pixels counted inside the area, about 1 "
+                "km each; an area of a few km has only a few pixels."
+            ),
+            "timing": {"arcgis_ms": watch.ms("arcgis")},
+        }
+
+    server.add_tool(
+        show_raster_map,
+        description=(
+            "Spike: draws a regional raster over the area on a map shown to the user, "
+            "with the share of the area's pixels in each class. Use only when the user "
+            "asks for this map."
+        ),
+        meta={"ui": {"resourceUri": raster_uri}},
+    )
+
+    async def raster_image(
+        raster: Literal["canopy_height"], area: Area
+    ) -> dict[str, Any]:
+        spec = RASTERS[raster]
+        aoi = _raster_aoi(area)
+        watch = Stopwatch()
+        try:
+            with watch.lap("arcgis"):
+                image = await area_image(raster_http, spec, aoi)
+        except ArcGISError as exc:
+            raise ToolError(str(exc)) from exc
+        return {**image, "timing": {"arcgis_ms": watch.ms("arcgis")}}
+
+    server.add_tool(
+        raster_image,
+        description="Spike: called by the map view for the raster image it draws.",
         meta={"ui": {"visibility": ["app"]}},
     )
