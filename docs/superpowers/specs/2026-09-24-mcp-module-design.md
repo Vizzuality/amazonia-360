@@ -519,9 +519,9 @@ mcp/
 7. Handler tests use hand-written ArcGIS payloads, not recorded ones. Record one live
    response each for `distinct`, `count` and a paginated `geojson` page (layer 210 over
    the Tena test area) and replay them through `httpx.MockTransport`.
-8. Before phase 2 over HTTP: move local clipping off the event loop, put a ceiling on the
-   whole call rather than per request, and close the `httpx.AsyncClient` in the server
-   lifespan.
+8. Before phase 2 over HTTP: put a ceiling on the whole call rather than per request, and
+   close the `httpx.AsyncClient` in the server lifespan. *Local clipping moved off the event
+   loop on 28 September 2026* (`asyncio.to_thread`; shapely releases the GIL in GEOS).
 9. Whether the MCP can return a map as HTML, so that a client shows the area and the classes it
    was computed over next to the answer. Raised on 24 September 2026, to try later; a larger
    task than it looks. What to find out first: which clients render HTML from an MCP server

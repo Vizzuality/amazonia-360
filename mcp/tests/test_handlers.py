@@ -1,3 +1,6 @@
+import asyncio
+import time
+from itertools import pairwise
 from typing import Any
 
 import pytest
@@ -65,6 +68,31 @@ async def test_categories_in_area() -> None:
     assert result.computed_over.categories == 2
     assert result.coverage.status == "inside"
     assert result.timing.vertices_sent == 5
+
+
+@pytest.mark.anyio
+async def test_clipping_does_not_block_other_calls(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def slow_clip(aoi: BaseGeometry, features: list[Feature]) -> dict[str, float]:
+        time.sleep(0.3)
+        return {"Bosque": 1.0}
+
+    monkeypatch.setattr(area_handlers_module, "clip_area_by_category", slow_clip)
+    stamps: list[float] = []
+
+    async def tick() -> None:
+        for _ in range(50):
+            stamps.append(time.perf_counter())
+            await asyncio.sleep(0.01)
+
+    ticker = asyncio.create_task(tick())
+    await asyncio.sleep(0.02)
+    result = await handlers().area_by_category(210, TENA)
+    await ticker
+    gaps = [b - a for a, b in pairwise(stamps)]
+    assert max(gaps) < 0.15
+    assert result.timing.clip_ms >= 300
 
 
 @pytest.mark.anyio

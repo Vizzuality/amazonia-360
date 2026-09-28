@@ -1,3 +1,4 @@
+import asyncio
 from collections.abc import Awaitable
 from dataclasses import dataclass
 from typing import Any, Literal
@@ -68,7 +69,8 @@ class AreaHandlers:
                 self._client.features(p.layer, p.aoi, self._simplification)
             )
         with p.watch.lap("clip"):
-            hectares = clip_area_by_category(p.aoi, features)
+            # Seconds of GEOS work; on the event loop it would stall every other call.
+            hectares = await asyncio.to_thread(clip_area_by_category, p.aoi, features)
         received = sum(vertex_count(g) for _, g in features)
         computed_over = ComputedOver(
             type="clipped_polygons",
