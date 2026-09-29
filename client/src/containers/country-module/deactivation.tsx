@@ -30,7 +30,8 @@ export default function CountryModuleDeactivation() {
 
   const queryString = searchParams?.toString() ?? "";
   const entry = COUNTRIES.find((candidate) => candidate.code === deactivated);
-  const moduleName = entry ? t(entry.nameKey) : "";
+  const moduleName = entry ? t(entry.moduleNameKey) : "";
+  const countryName = entry ? t(entry.nameKey) : "";
 
   const exitedGeometry = useRef<typeof geometry>(null);
 
@@ -72,7 +73,7 @@ export default function CountryModuleDeactivation() {
           </div>
 
           <DialogDescription className="text-muted-foreground mt-2 text-sm">
-            {t("country-module-deactivated-body", { name: moduleName })}
+            {t("country-module-deactivated-body", { name: countryName })}
           </DialogDescription>
 
           <div className="mt-4 flex justify-end">

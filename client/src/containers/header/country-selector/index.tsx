@@ -1,15 +1,21 @@
 "use client";
 
-import { useId, useState } from "react";
+import { Suspense, useId, useState } from "react";
 
 import Image from "next/image";
 
 import { ChevronDown, Globe } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { isSavedReportPathname } from "@/lib/country";
+import { isFeatureEnabled } from "@/lib/feature-flags";
+
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
+import { usePathname } from "@/i18n/navigation";
+
+import LockedCountrySelector, { LockedCountrySelectorSkeleton } from "./locked";
 import ModuleList from "./module-list";
 import { CountryOption, useCountryOptions } from "./options";
 
@@ -35,7 +41,16 @@ export default function CountrySelector() {
   const t = useTranslations();
   const options = useCountryOptions();
   const titleId = useId();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  if (isFeatureEnabled("country-module") && isSavedReportPathname(pathname)) {
+    return (
+      <Suspense fallback={<LockedCountrySelectorSkeleton />}>
+        <LockedCountrySelector />
+      </Suspense>
+    );
+  }
 
   if (!options) return null;
 

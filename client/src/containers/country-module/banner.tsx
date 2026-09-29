@@ -52,6 +52,7 @@ export default function CountryModuleBanner() {
   if (!isVisible || !entry) return null;
 
   const name = t(entry.nameKey);
+  const moduleName = t(entry.moduleNameKey);
   const outside = 100 - getCountryCoveragePercent(ratio);
   const showWarning = status === "inside" && outside > 0 && outside < 100;
   const query = Object.fromEntries(searchParams?.entries() ?? []);
@@ -64,7 +65,9 @@ export default function CountryModuleBanner() {
     >
       <div className="container flex min-h-[31px] items-start justify-between gap-2 md:mx-auto">
         <p className="text-foreground min-w-0 py-[7.5px] text-xs leading-4">
-          <span className="font-bold">{t("country-module-active-label", { name })}</span>{" "}
+          <span className="font-bold">
+            {t("country-module-active-label", { name: moduleName })}
+          </span>{" "}
           <span className="text-muted-foreground font-semibold">
             {t("country-module-active-description")}
           </span>

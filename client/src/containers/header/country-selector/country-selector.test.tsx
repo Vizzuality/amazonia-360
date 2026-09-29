@@ -72,8 +72,15 @@ vi.mock("@/lib/country/coverage", () => ({
   }),
 }));
 
+const mockReportModules = vi.fn<() => unknown>(() => null);
+
+vi.mock("@/lib/report/use-report-modules", () => ({
+  useReportModules: () => mockReportModules(),
+}));
+
 vi.mock("next-intl", () => ({
   useLocale: () => "en",
+  useFormatter: () => ({ list: (items: string[]) => items.join(", ") }),
   useTranslations: () => (key: string, values?: Record<string, unknown>) =>
     values ? `${key}:${JSON.stringify(values)}` : key,
 }));
@@ -325,12 +332,32 @@ describe("CountrySelector (desktop)", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  test("renders nothing on a saved report", () => {
+  test("on a saved report shows the report's module locked instead of the dropdown", () => {
     mockPathname.mockReturnValue("/reports/some-saved-id");
+    mockReportModules.mockReturnValue([
+      { code: "ECU", name: "Ecuador Amazonia", flagSrc: "/images/flags/ECU.png" },
+    ]);
     const { wrapper } = setup();
-    const { container } = render(<CountrySelector />, { wrapper });
+    render(<CountrySelector />, { wrapper });
+    const locked = screen.getByTestId("country-selector-locked");
 
-    expect(container).toBeEmptyDOMElement();
+    expect(locked).toHaveAttribute("data-country", "ECU");
+    expect(locked).toHaveTextContent("Ecuador Amazonia");
+    expect(locked).toHaveTextContent("country-module-selector-locked");
+    expect(within(locked).queryByRole("button")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("country-selector-trigger")).not.toBeInTheDocument();
+  });
+
+  test("a regional saved report is locked to the Amazon Region", () => {
+    mockPathname.mockReturnValue("/reports/some-saved-id");
+    mockReportModules.mockReturnValue([{ code: null, name: "Amazon Region" }]);
+    const { wrapper } = setup();
+    render(<CountrySelector />, { wrapper });
+
+    expect(screen.getByTestId("country-selector-locked")).toHaveAttribute(
+      "data-country",
+      "REGIONAL",
+    );
   });
 
   test("renders nothing when the country-module flag is off", () => {

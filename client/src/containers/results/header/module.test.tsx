@@ -3,50 +3,56 @@ import { vi } from "vitest";
 
 import ModuleReport from "./module";
 
-const { mockCountry, normaliseCodes } = vi.hoisted(() => ({
-  mockCountry: vi.fn(),
-  normaliseCodes: vi.fn(),
-}));
+const { mockModules } = vi.hoisted(() => ({ mockModules: vi.fn() }));
 
-vi.mock("@/lib/report/use-report-country", () => ({ useReportCountry: () => mockCountry() }));
+vi.mock("@/lib/report/use-report-modules", () => ({ useReportModules: () => mockModules() }));
 
-vi.mock("@/lib/country", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/lib/country")>();
-  return { ...actual, getCountryCodes: (value: unknown) => normaliseCodes(value) };
-});
-
-beforeEach(async () => {
-  const actual = await vi.importActual<typeof import("@/lib/country")>("@/lib/country");
-  normaliseCodes.mockImplementation(actual.getCountryCodes);
-  mockCountry.mockReturnValue(null);
+vi.mock("next-intl", () => {
+  const t = (key: string) => key;
+  t.rich = (
+    key: string,
+    values: { names: string; count: number; b: (chunks: string) => React.ReactNode },
+  ) => (
+    <>
+      {key}:{values.count}:{values.b(values.names)}
+    </>
+  );
+  return {
+    useTranslations: () => t,
+    useFormatter: () => ({ list: (items: string[]) => items.join(" & ") }),
+  };
 });
 
 describe("ModuleReport", () => {
-  it("renders the module name for a report saved inside a module", () => {
-    mockCountry.mockReturnValue(["ECU"]);
+  it("names the module the report was made with, in bold", () => {
+    mockModules.mockReturnValue([{ code: "ECU", name: "Ecuador Amazonia" }]);
 
     render(<ModuleReport />);
 
-    expect(screen.getByText("country-module-ECU-name")).toBeInTheDocument();
+    expect(screen.getByTestId("report-module-note")).toHaveTextContent(
+      "country-module-report-note:1:Ecuador Amazonia",
+    );
+    expect(screen.getByText("Ecuador Amazonia")).toHaveClass("font-semibold");
   });
 
-  it("renders nothing for a report saved before country modules existed", () => {
-    mockCountry.mockReturnValue(null);
+  it("names every module a report was built in", () => {
+    mockModules.mockReturnValue([
+      { code: "ECU", name: "Ecuador Amazonia" },
+      { code: "PER", name: "Peru Amazonia" },
+    ]);
+
+    render(<ModuleReport />);
+
+    expect(screen.getByTestId("report-module-note")).toHaveTextContent(
+      "country-module-report-note:2:Ecuador Amazonia & Peru Amazonia",
+    );
+  });
+
+  it("renders nothing with the country-module flag off", () => {
+    mockModules.mockReturnValue(null);
 
     const { container } = render(<ModuleReport />);
 
     expect(container).toBeEmptyDOMElement();
-  });
-
-  // `getCountryCodes` drops codes that are not live yet, so a second module cannot be
-  // exercised through it while ECU is the only available one.
-  test("renders one badge per module a report was built in", () => {
-    normaliseCodes.mockImplementation((value: string[]) => value);
-    mockCountry.mockReturnValue(["ECU", "PER"]);
-
-    render(<ModuleReport />);
-
-    expect(screen.getByText("country-module-ECU-name")).toBeInTheDocument();
-    expect(screen.getByText("country-module-PER-name")).toBeInTheDocument();
   });
 });

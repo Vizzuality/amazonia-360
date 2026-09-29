@@ -92,7 +92,7 @@ export function useCountryOptions(): CountryOption[] | null {
     const countries = COUNTRIES.filter((entry) => entry.available).map(
       (entry): CountryOption => ({
         code: entry.code,
-        name: t(entry.nameKey),
+        name: t(entry.moduleNameKey),
         description: indicators
           ? t("country-module-country-description", {
               count: indicators.filter((indicator) => indicator.country === entry.code).length,

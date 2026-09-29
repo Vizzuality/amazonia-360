@@ -22,12 +22,10 @@ export default function ReportResultsHeaderMobile() {
         <div className="relative flex h-full justify-between">
           {/* Name */}
           <div className="flex w-full flex-col">
-            <div className="flex items-center gap-2">
-              <h1 className="text-foreground tall:xl:text-4xl text-2xl font-medium lg:text-3xl">
-                {reportData?.title ?? t("selected-area")}
-              </h1>
-              <ModuleReport />
-            </div>
+            <h1 className="text-foreground tall:xl:text-4xl text-2xl font-medium lg:text-3xl">
+              {reportData?.title ?? t("selected-area")}
+            </h1>
+            <ModuleReport />
 
             <div className="flex w-full items-center justify-between space-x-2 py-2 print:hidden">
               <NewReport />

@@ -1,37 +1,27 @@
 "use client";
 
-import Image from "next/image";
+import { useFormatter, useTranslations } from "next-intl";
 
-import { useTranslations } from "next-intl";
+import { useReportModules } from "@/lib/report/use-report-modules";
+import { cn } from "@/lib/utils";
 
-import { COUNTRIES, countryFlagSrc, getCountryCodes } from "@/lib/country";
-import { useReportCountry } from "@/lib/report/use-report-country";
-
-export default function ModuleReport() {
+export default function ModuleReport({ className }: Readonly<{ className?: string }>) {
   const t = useTranslations();
-  const codes = getCountryCodes(useReportCountry());
+  const format = useFormatter();
+  const modules = useReportModules();
 
-  const entries = COUNTRIES.filter((entry) => codes.includes(entry.code));
-
-  if (entries.length === 0) return null;
+  if (!modules) return null;
 
   return (
-    <>
-      {entries.map((entry) => (
-        <span
-          key={entry.code}
-          className="border-border text-muted-foreground inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs font-medium"
-        >
-          <Image
-            src={countryFlagSrc(entry.code)}
-            alt=""
-            width={14}
-            height={14}
-            className="shrink-0 rounded-full object-cover"
-          />
-          {t(entry.nameKey)}
-        </span>
-      ))}
-    </>
+    <p
+      data-testid="report-module-note"
+      className={cn("text-muted-foreground text-sm leading-5 font-normal italic", className)}
+    >
+      {t.rich("country-module-report-note", {
+        names: format.list(modules.map((module) => module.name)),
+        count: modules.length,
+        b: (chunks) => <span className="font-semibold">{chunks}</span>,
+      })}
+    </p>
   );
 }
