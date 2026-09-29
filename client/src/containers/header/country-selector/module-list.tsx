@@ -157,8 +157,7 @@ export default function ModuleList({
       )}
 
       {unavailable.length > 0 && (
-        <div
-          role="group"
+        <fieldset
           aria-labelledby={unavailableLabelId}
           aria-describedby={unavailableDescriptionId}
           data-testid="country-selector-unavailable"
@@ -180,7 +179,7 @@ export default function ModuleList({
               <ModuleRow key={option.code} option={option} onClick={handleClick} />
             ))}
           </div>
-        </div>
+        </fieldset>
       )}
     </div>
   );

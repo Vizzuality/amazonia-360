@@ -138,8 +138,7 @@ export default function IndicatorScopeToggle({
   };
 
   return (
-    <div
-      role="group"
+    <fieldset
       aria-label={t("indicator-scope-toggle")}
       data-testid="indicator-scope-switch"
       className="border-border mr-1 flex h-5 shrink-0 items-center rounded border p-px"
@@ -158,6 +157,6 @@ export default function IndicatorScopeToggle({
         tooltip={tooltip}
         onSelect={handleSwap}
       />
-    </div>
+    </fieldset>
   );
 }
