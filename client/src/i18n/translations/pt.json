@@ -522,6 +522,8 @@
   "make-a-copy": "Fazer uma cópia",
   "edit-location-confirm-dialog-title": "Continuar com a nova área?",
   "edit-location-confirm-dialog-description": "Você mudou sua área de interesse. Por favor, note:\n\n- Quaisquer textos gerados por IA que você já criou podem não refletir totalmente essa nova área. Você ainda pode editá-los se necessário.\n- Alguns indicadores podem não ter dados para essa seleção.",
+  "edit-location-confirm-dialog-module-outside": "Sua nova área está fora de {name}, portanto os indicadores nacionais deste relatório não terão dados para ela.",
+  "edit-location-confirm-dialog-module-partial": "{percent}% da sua nova área está fora de {name}. Os indicadores nacionais cobrem apenas a parte dentro.",
   "upload-geometry-dialog-title": "Carregar arquivo",
   "upload-geometry-dialog-description": "Selecione um ou vários arquivos de geometria.",
   "upload-geometry-supported-formats": "**Tipos de arquivo aceitos:**\n\n- **Shapefile**: 4 arquivos obrigatórios (.shp, .shx, .dbf, .prj) e 1 arquivo opcional (.cpg)\n- **KML**: 1 arquivo .kml\n- **KMZ**: 1 arquivo .kmz\n- **GeoJSON**: 1 arquivo .geojson ou .json",

@@ -521,6 +521,8 @@
   "make-a-copy": "Make a copy",
   "edit-location-confirm-dialog-title": "Continue with new area?",
   "edit-location-confirm-dialog-description": "You've changed your area of interest. Please note:\n\n- Any AI-generated texts you've already created may not fully reflect this new area. You can still edit them if needed.\n- Some indicators might not have data for this selection.",
+  "edit-location-confirm-dialog-module-outside": "Your new area is outside {name}, so the national indicators in this report won't have data for it.",
+  "edit-location-confirm-dialog-module-partial": "{percent}% of your new area is outside {name}. National indicators only cover the part inside.",
   "upload-geometry-dialog-title": "Upload area file",
   "upload-geometry-dialog-description": "Select one or multiple geometries files.",
   "upload-geometry-supported-formats": "**Accepted file types:**\n\n- **Shapefile**: 4 mandatory files (.shp, .shx, .dbf, .prj) and 1 optional file (.cpg)\n- **KML**: 1 .kml file\n- **KMZ**: 1 .kmz file\n- **GeoJSON**: 1 .geojson or .json file",
