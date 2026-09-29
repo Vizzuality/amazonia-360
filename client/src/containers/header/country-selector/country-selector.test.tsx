@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, renderHook, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, renderHook, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider, createStore } from "jotai";
 import { vi } from "vitest";
@@ -11,7 +11,6 @@ import { tmpBboxAtom } from "@/app/(frontend)/store";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 import MobileCountrySelector from "./mobile";
-import { getTooltipPlacement } from "./module-list";
 import { useCountryOptions } from "./options";
 
 import CountrySelector from "./index";
@@ -374,25 +373,6 @@ function arrangeArea({ ratio, resolved = true }: { ratio: number; resolved?: boo
   mockRatio.mockReturnValue(ratio);
 }
 
-describe("getTooltipPlacement", () => {
-  test("sits to the right of the row without a pointer", () => {
-    expect(getTooltipPlacement(null)).toEqual({ side: "right" });
-  });
-
-  test("anchors 12px right of and 16px below the cursor", () => {
-    expect(getTooltipPlacement({ x: 30, y: 20, rowHeight: 56 })).toEqual({
-      side: "bottom",
-      align: "start",
-      alignOffset: 42,
-      sideOffset: -20,
-    });
-  });
-});
-
-function getAnimationName(element: Element): string {
-  return element.getAttribute("data-state") === "closed" ? "fade-out" : "none";
-}
-
 describe("country row availability", () => {
   test("is disabled only when a resolved area has nothing inside the resolved boundary", () => {
     arrangeArea({ ratio: 0 });
@@ -400,9 +380,6 @@ describe("country row availability", () => {
     const { result } = renderHook(() => useCountryOptions(), { wrapper });
 
     expect(result.current?.map((option) => option.disabled)).toEqual([false, true]);
-    expect(result.current?.[1].disabledReason).toBe(
-      `country-module-selector-outside:${JSON.stringify({ name: "country-module-ECU-name" })}`,
-    );
   });
 
   test.each([
@@ -509,111 +486,47 @@ describe("country row availability", () => {
     expect(screen.getAllByTestId("country-selector-option")[1]).toHaveAttribute("href");
   });
 
-  test("the mobile list shows the reason in place of the subtitle", () => {
+  test.each([
+    [
+      "desktop",
+      async () => {
+        render(<CountrySelector />, { wrapper: setup().wrapper });
+        await userEvent.click(screen.getByTestId("country-selector-trigger"));
+      },
+    ],
+    [
+      "mobile",
+      async () => {
+        render(<MobileCountrySelector onSelect={vi.fn()} />, { wrapper: setup().wrapper });
+      },
+    ],
+  ])("the %s list groups unavailable modules under one shared reason", async (_name, mount) => {
     arrangeArea({ ratio: 0 });
+    await mount();
+    const group = screen.getByRole("group", {
+      name: "country-module-selector-unavailable-label",
+    });
+
+    expect(group).toHaveAccessibleDescription(
+      `country-module-selector-unavailable-description:${JSON.stringify({ count: 1 })}`,
+    );
+    expect(within(group).getByTestId("country-selector-option")).toHaveAttribute(
+      "data-country",
+      "ECU",
+    );
+    expect(within(group).getByTestId("country-selector-option")).toHaveTextContent(
+      "country-module-country-description",
+    );
+    expect(screen.queryByText("country-module-selector-section-label")).not.toBeInTheDocument();
+    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+  });
+
+  test("available modules stay under the country section with no unavailable group", () => {
+    arrangeArea({ ratio: 0.3 });
     const { wrapper } = setup();
     render(<MobileCountrySelector onSelect={vi.fn()} />, { wrapper });
-    const row = screen.getAllByTestId("country-selector-option")[1];
 
-    expect(row).toHaveTextContent("country-module-selector-outside");
-    expect(row).not.toHaveTextContent("country-module-country-description");
-  });
-
-  test("the desktop row keeps the subtitle and reveals the reason in a tooltip on hover", async () => {
-    arrangeArea({ ratio: 0 });
-    const { wrapper } = setup();
-    render(<CountrySelector />, { wrapper });
-    await userEvent.click(screen.getByTestId("country-selector-trigger"));
-    const row = screen.getAllByTestId("country-selector-option")[1];
-
-    expect(row).toHaveTextContent("country-module-country-description");
-    expect(row).toHaveAttribute("tabindex", "0");
-    expect(row).toHaveAttribute("role", "link");
-    expect(row).toHaveAccessibleDescription(
-      `country-module-selector-outside:${JSON.stringify({ name: "country-module-ECU-name" })}`,
-    );
-
-    await userEvent.hover(row);
-
-    expect(await screen.findByRole("tooltip")).toHaveTextContent("country-module-selector-outside");
-  });
-
-  test("the desktop tooltip follows the pointer below and right of the cursor", async () => {
-    arrangeArea({ ratio: 0 });
-    const { wrapper } = setup();
-    render(<CountrySelector />, { wrapper });
-    await userEvent.click(screen.getByTestId("country-selector-trigger"));
-    const row = screen.getAllByTestId("country-selector-option")[1];
-
-    await userEvent.pointer({ target: row, coords: { clientX: 30, clientY: 20 } });
-
-    await screen.findByRole("tooltip");
-    const content = document.querySelector('[data-slot="tooltip-content"]');
-    expect(content).toHaveAttribute("data-side", "bottom");
-    expect(content).toHaveAttribute("data-align", "start");
-  });
-
-  test("the tooltip keeps its pointer placement while it closes", async () => {
-    const realGetComputedStyle = window.getComputedStyle.bind(window);
-    vi.spyOn(window, "getComputedStyle").mockImplementation((element, pseudo) => {
-      const style = realGetComputedStyle(element, pseudo);
-      return new Proxy(style, {
-        get: (target, property) =>
-          property === "animationName"
-            ? getAnimationName(element)
-            : Reflect.get(target, property, target),
-      });
-    });
-    arrangeArea({ ratio: 0 });
-    const { wrapper } = setup();
-    render(<CountrySelector />, { wrapper });
-    await userEvent.click(screen.getByTestId("country-selector-trigger"));
-    const row = screen.getAllByTestId("country-selector-option")[1];
-
-    await userEvent.pointer({ target: row, coords: { clientX: 30, clientY: 20 } });
-    await screen.findByRole("tooltip");
-    await userEvent.unhover(row);
-    await userEvent.pointer({ target: document.body, coords: { clientX: 900, clientY: 900 } });
-
-    const closing = document.querySelector('[data-slot="tooltip-content"]');
-    await waitFor(() => expect(closing).toHaveAttribute("data-state", "closed"));
-    expect(closing).toHaveAttribute("data-side", "bottom");
-
-    vi.restoreAllMocks();
-  });
-
-  test("the tooltip opens on keyboard focus to the right of the row", async () => {
-    arrangeArea({ ratio: 0 });
-    const { wrapper } = setup();
-    render(<CountrySelector />, { wrapper });
-    await userEvent.click(screen.getByTestId("country-selector-trigger"));
-
-    screen.getAllByTestId("country-selector-option")[1].focus();
-
-    expect(await screen.findByRole("tooltip")).toHaveTextContent("country-module-selector-outside");
-    expect(document.querySelector('[data-slot="tooltip-content"]')).toHaveAttribute(
-      "data-side",
-      "right",
-    );
-  });
-
-  test("keyboard focus after the pointer has left drops the stale pointer placement", async () => {
-    arrangeArea({ ratio: 0 });
-    const { wrapper } = setup();
-    render(<CountrySelector />, { wrapper });
-    await userEvent.click(screen.getByTestId("country-selector-trigger"));
-    const row = screen.getAllByTestId("country-selector-option")[1];
-
-    await userEvent.pointer({ target: row, coords: { clientX: 30, clientY: 20 } });
-    await userEvent.unhover(row);
-    await userEvent.pointer({ target: document.body, coords: { clientX: 900, clientY: 900 } });
-    await userEvent.tab();
-    await userEvent.tab({ shift: true });
-
-    await screen.findByRole("tooltip");
-    expect(document.querySelector('[data-slot="tooltip-content"]')).toHaveAttribute(
-      "data-side",
-      "right",
-    );
+    expect(screen.getByText("country-module-selector-section-label")).toBeInTheDocument();
+    expect(screen.queryByTestId("country-selector-unavailable")).not.toBeInTheDocument();
   });
 });

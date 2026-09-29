@@ -37,7 +37,6 @@ export type CountryOption = {
   active: boolean;
   isDescriptionLoading: boolean;
   disabled: boolean;
-  disabledReason: string;
   flagSrc?: string;
   href: { pathname: string; query: Record<string, string> };
 };
@@ -87,7 +86,6 @@ export function useCountryOptions(): CountryOption[] | null {
       active: country === null,
       isDescriptionLoading: false,
       disabled: false,
-      disabledReason: "",
       href: { pathname, query },
     };
 
@@ -104,7 +102,6 @@ export function useCountryOptions(): CountryOption[] | null {
         active: entry.code === country,
         isDescriptionLoading: !indicators,
         disabled: isAreaOutsideCountry(settledGeometry, boundaries, entry.code),
-        disabledReason: t("country-module-selector-outside", { name: t(entry.nameKey) }),
         flagSrc: countryFlagSrc(entry.code),
         href: { pathname: withCountry(pathname, entry.code), query },
       }),

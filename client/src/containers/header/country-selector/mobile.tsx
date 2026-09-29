@@ -8,7 +8,5 @@ export default function MobileCountrySelector({ onSelect }: Readonly<{ onSelect:
 
   if (!options) return null;
 
-  return (
-    <ModuleList options={options} onSelect={onSelect} variant="inline" className="px-6 py-4" />
-  );
+  return <ModuleList options={options} onSelect={onSelect} className="px-6 py-4" />;
 }
