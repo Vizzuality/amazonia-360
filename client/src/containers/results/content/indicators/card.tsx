@@ -119,11 +119,11 @@ function ReportResultsIndicatorContent({
         <CardHeader className="h-auto px-4 pt-2 pb-1.5">
           <CardTitle>{indicator?.name}</CardTitle>
           <CardControls data-export-exclude>
-            {!isWebshot && !isPdf && <CardInfo ids={[indicator.id]} country={country} />}
-
             {!isWebshot && !isPdf && editable && topicId !== undefined && (
               <IndicatorScopeToggle indicatorId={indicator.id} topicId={topicId} type={type} />
             )}
+
+            {!isWebshot && !isPdf && <CardInfo ids={[indicator.id]} country={country} />}
 
             {editable && (
               <CardPopover
