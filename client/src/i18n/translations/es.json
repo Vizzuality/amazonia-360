@@ -33,7 +33,7 @@
   "country-module-SUR-module-name": "Amazonía Surinamesa",
   "country-module-VEN-name": "Venezuela",
   "country-module-VEN-module-name": "Amazonía Venezolana",
-  "country-module-coverage-banner": "El {percent}% del área dibujada queda fuera de {name}. Ciertos indicadores no contemplan zonas fuera del país.",
+  "country-module-coverage-inside": "El área está un {percent}% dentro de {name}.",
   "country-module-exit": "Salir del módulo de país",
   "country-module-active-label": "{name} activo:",
   "country-module-active-description": "Dibuja o busca un área dentro de la región amazónica del país.",

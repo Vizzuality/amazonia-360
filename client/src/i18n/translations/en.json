@@ -33,7 +33,7 @@
   "country-module-SUR-module-name": "Suriname Amazonia",
   "country-module-VEN-name": "Venezuela",
   "country-module-VEN-module-name": "Venezuela Amazonia",
-  "country-module-coverage-banner": "{percent}% of the drawn area falls outside {name}. Certain indicators do not cover areas outside the country.",
+  "country-module-coverage-inside": "Area is {percent}% within {name}.",
   "country-module-exit": "Exit country module",
   "country-module-active-label": "{name} active:",
   "country-module-active-description": "Draw or search an area within the country's Amazonia region.",

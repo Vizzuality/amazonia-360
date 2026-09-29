@@ -53,38 +53,42 @@ beforeEach(() => {
 });
 
 describe("CountryModuleBanner", () => {
-  it("shows the active strip with no area and no warning", () => {
+  it("with no area shows the tip to draw one", () => {
     render(<CountryModuleBanner />);
 
     expect(screen.getByText(/country-module-active-label/)).toBeInTheDocument();
     expect(screen.getByText(/country-module-active-description/)).toBeInTheDocument();
     expect(screen.getByTestId("country-module-exit")).toBeInTheDocument();
-    expect(screen.queryByTestId("country-module-coverage-banner")).not.toBeInTheDocument();
-  });
-
-  it("appends the coverage warning when 30% of the area is outside", () => {
-    mockCoverage.mockReturnValue({ status: "inside", ratio: 0.7, geometry: {} });
-
-    render(<CountryModuleBanner />);
-
-    expect(screen.getByTestId("country-module-banner")).toBeInTheDocument();
-    expect(screen.getByTestId("country-module-coverage-banner")).toHaveTextContent(
-      /country-module-coverage-banner.*"percent":30/,
-    );
+    expect(screen.queryByTestId("country-module-coverage")).not.toBeInTheDocument();
   });
 
   it.each([
-    ["fully inside", { status: "inside", ratio: 1, geometry: {} }],
-    ["rounding to fully outside", { status: "inside", ratio: 0.003, geometry: {} }],
-    ["fully outside", { status: "outside", ratio: 0, geometry: {} }],
+    ["fully inside", 1, 100],
+    ["70% inside", 0.7, 70],
+    ["almost fully inside", 0.996, 99],
+    ["barely inside", 0.003, 1],
+  ])("with an area %s shows only the inside percentage", (_label, ratio, percent) => {
+    mockCoverage.mockReturnValue({ status: "inside", ratio, geometry: {} });
+
+    render(<CountryModuleBanner />);
+
+    expect(screen.getByTestId("country-module-coverage")).toHaveTextContent(
+      `country-module-coverage-inside ${JSON.stringify({ percent, name: "country-module-ECU-name" })}`,
+    );
+    expect(screen.queryByText(/country-module-active-description/)).not.toBeInTheDocument();
+  });
+
+  it.each([
     ["pending", { status: "pending", ratio: 0, geometry: {} }],
-  ])("shows no warning when %s", (_label, coverage) => {
+    ["fully outside", { status: "outside", ratio: 0, geometry: {} }],
+  ])("while %s shows neither the tip nor a percentage", (_label, coverage) => {
     mockCoverage.mockReturnValue(coverage);
 
     render(<CountryModuleBanner />);
 
     expect(screen.getByTestId("country-module-exit")).toBeInTheDocument();
-    expect(screen.queryByTestId("country-module-coverage-banner")).not.toBeInTheDocument();
+    expect(screen.queryByText(/country-module-active-description/)).not.toBeInTheDocument();
+    expect(screen.queryByTestId("country-module-coverage")).not.toBeInTheDocument();
   });
 
   it.each([

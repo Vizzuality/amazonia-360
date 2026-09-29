@@ -18,6 +18,11 @@ import { useCountryModuleCoverage } from "./use-coverage";
 
 const STRIP_HEIGHT_VAR = "--country-module-strip-h";
 
+export function getInsidePercent(ratio: number): number {
+  if (ratio >= 1) return 100;
+  return Math.min(Math.max(getCountryCoveragePercent(ratio), 1), 99);
+}
+
 export default function CountryModuleBanner() {
   const t = useTranslations();
   const isMounted = useIsMounted();
@@ -53,8 +58,6 @@ export default function CountryModuleBanner() {
 
   const name = t(entry.nameKey);
   const moduleName = t(entry.moduleNameKey);
-  const outside = 100 - getCountryCoveragePercent(ratio);
-  const showWarning = status === "inside" && outside > 0 && outside < 100;
   const query = Object.fromEntries(searchParams?.entries() ?? []);
 
   return (
@@ -68,16 +71,17 @@ export default function CountryModuleBanner() {
           <span className="font-bold">
             {t("country-module-active-label", { name: moduleName })}
           </span>{" "}
-          <span className="text-muted-foreground font-semibold">
-            {t("country-module-active-description")}
-          </span>
-          {showWarning && (
+          {status === "no-area" && (
+            <span className="text-muted-foreground font-semibold">
+              {t("country-module-active-description")}
+            </span>
+          )}
+          {status === "inside" && (
             <span
-              data-testid="country-module-coverage-banner"
+              data-testid="country-module-coverage"
               className="text-muted-foreground font-semibold"
             >
-              {" "}
-              {t("country-module-coverage-banner", { percent: outside, name })}
+              {t("country-module-coverage-inside", { percent: getInsidePercent(ratio), name })}
             </span>
           )}
         </p>
