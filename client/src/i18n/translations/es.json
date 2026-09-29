@@ -24,6 +24,8 @@
   "country-module-VEN-name": "Venezuela",
   "country-module-coverage-banner": "El {percent}% del área dibujada queda fuera de {name}. Ciertos indicadores no contemplan zonas fuera del país.",
   "country-module-exit": "Salir del módulo de país",
+  "country-module-active-label": "{name} activo:",
+  "country-module-active-description": "Dibuja o busca un área dentro de la región amazónica del país.",
   "country-module-badge-regional": "REG",
   "country-module-ECU-badge": "ECU",
   "country-module-filter-all": "Todos ({count})",
