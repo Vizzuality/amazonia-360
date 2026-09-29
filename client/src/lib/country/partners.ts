@@ -14,7 +14,7 @@ export function getCountryModulePartnerLogos(code: string | null): CountryModule
   return code ? (COUNTRY_MODULE_PARTNER_LOGOS[code] ?? []) : [];
 }
 
-const ATCO_LOCALES = ["en", "es", "pt"];
+const ATCO_LOCALES: ReadonlySet<string> = new Set(["en", "es", "pt"]);
 
 const STATIC_REGIONAL_PARTNER_LOGOS: CountryModulePartnerLogo[] = [
   { src: "/partners/ddp.avif", alt: "Development Data Partnership" },
@@ -25,7 +25,7 @@ const STATIC_REGIONAL_PARTNER_LOGOS: CountryModulePartnerLogo[] = [
 ];
 
 function getAtcoLocale(locale: string): string {
-  return ATCO_LOCALES.includes(locale) ? locale : "en";
+  return ATCO_LOCALES.has(locale) ? locale : "en";
 }
 
 function getAtcoLogo(locale: string): CountryModulePartnerLogo {

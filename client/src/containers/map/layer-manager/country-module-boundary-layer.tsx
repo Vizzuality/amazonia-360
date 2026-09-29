@@ -15,7 +15,7 @@ import { useCountry } from "@/i18n/use-country";
 
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
-export default function CountryModuleBoundaryLayer({ index }: { index: number }) {
+export default function CountryModuleBoundaryLayer({ index }: Readonly<{ index: number }>) {
   const country = useCountry();
   const { data: boundary } = useGetCountryAmazoniaBoundary(country ?? "");
 
