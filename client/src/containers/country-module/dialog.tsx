@@ -8,7 +8,13 @@ import Image from "next/image";
 
 import { useLocale, useTranslations } from "next-intl";
 
-import { COUNTRIES, CountryCode, countryFlagSrc, isUnscopedPathname } from "@/lib/country";
+import {
+  COUNTRIES,
+  CountryCode,
+  countryFlagSrc,
+  isSavedReportPathname,
+  isUnscopedPathname,
+} from "@/lib/country";
 import { getCountryModulePartnerLogos } from "@/lib/country/partners";
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import useIsMounted from "@/lib/mounted";
@@ -27,8 +33,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { usePathname } from "@/i18n/navigation";
 import { useCountry } from "@/i18n/use-country";
 
+import { CountryModuleCoverageStatus, useCountryModuleCoverage } from "./use-coverage";
+
 function getCountryModuleDialogCookieName(code: string): string {
   return `country-module-dialog-${code}`;
+}
+
+function getBodyMessageKey(
+  status: CountryModuleCoverageStatus,
+): "country-module-modal-body" | "country-module-modal-body-no-area" {
+  return status === "no-area" ? "country-module-modal-body-no-area" : "country-module-modal-body";
 }
 
 function LayerCount({ count }: Readonly<{ count: number | undefined }>) {
@@ -52,6 +66,7 @@ function CountryModuleDialogContent({ country }: Readonly<{ country: CountryCode
   const isMounted = useIsMounted();
   const pathname = usePathname();
   const { data: indicators } = useGetDefaultIndicators({ locale });
+  const { status: coverageStatus } = useCountryModuleCoverage();
 
   const [dismissed, setDismissed] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(false);
@@ -82,8 +97,9 @@ function CountryModuleDialogContent({ country }: Readonly<{ country: CountryCode
 
   if (!activeModule) return null;
 
-  const isScoped = isMounted() && !isUnscopedPathname(pathname);
-  const isOpen = isScoped && dismissedCookie !== "true" && !dismissed;
+  const isScoped = isMounted() && !isUnscopedPathname(pathname) && !isSavedReportPathname(pathname);
+  const isCoverageKnownInside = coverageStatus === "no-area" || coverageStatus === "inside";
+  const isOpen = isScoped && isCoverageKnownInside && dismissedCookie !== "true" && !dismissed;
 
   return (
     <>
@@ -112,7 +128,7 @@ function CountryModuleDialogContent({ country }: Readonly<{ country: CountryCode
               </DialogTitle>
             </div>
             <DialogDescription className="text-base leading-6 font-medium text-blue-50">
-              {t("country-module-modal-body", { name: moduleName })}
+              {t(getBodyMessageKey(coverageStatus), { name: moduleName })}
             </DialogDescription>
             <DialogClose className="text-primary-foreground focus:ring-ring absolute top-4 right-4 rounded-xs opacity-80 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none" />
           </div>

@@ -13,9 +13,17 @@ import {
   isUnscopedPathname,
   withCountry,
 } from "@/lib/country";
+import {
+  CountryBoundary,
+  getCountryCoverageRatio,
+  useGetLiveCountryBoundaries,
+} from "@/lib/country/coverage";
 import { getCountryModulePartnerLogos } from "@/lib/country/partners";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 import { useGetDefaultIndicators } from "@/lib/indicators";
+import { useLocationGeometryWithStatus } from "@/lib/location";
+
+import { useSyncLocation } from "@/app/(frontend)/store";
 
 import { usePathname } from "@/i18n/navigation";
 import { useCountry } from "@/i18n/use-country";
@@ -28,9 +36,24 @@ export type CountryOption = {
   description: string;
   active: boolean;
   isDescriptionLoading: boolean;
+  disabled: boolean;
+  disabledReason: string;
   flagSrc?: string;
   href: { pathname: string; query: Record<string, string> };
 };
+
+// Only a resolved geometry against a resolved boundary can prove the area is empty there:
+// anything unresolved reads as a ratio of 0 too.
+function isAreaOutsideCountry(
+  geometry: __esri.GeometryUnion | null,
+  boundaries: CountryBoundary[] | undefined,
+  code: string,
+): boolean {
+  const boundary = boundaries?.find((entry) => entry.code === code);
+  if (!geometry || !boundary) return false;
+
+  return getCountryCoverageRatio(geometry, boundary.geometry) === 0;
+}
 
 export function useCountryOptions(): CountryOption[] | null {
   const t = useTranslations();
@@ -39,6 +62,17 @@ export function useCountryOptions(): CountryOption[] | null {
   const searchParams = useSearchParams();
   const country = useCountry();
   const { data: indicators } = useGetDefaultIndicators({ locale, country: LIVE_COUNTRY_CODES });
+
+  const [location] = useSyncLocation();
+  const { geometry, isCalculating } = useLocationGeometryWithStatus(location);
+
+  const canCheckCoverage =
+    country === null &&
+    !isUnscopedPathname(pathname) &&
+    !isSavedReportPathname(pathname) &&
+    !!location;
+  const { data: boundaries } = useGetLiveCountryBoundaries({ enabled: canCheckCoverage });
+  const settledGeometry = canCheckCoverage && !isCalculating ? geometry : null;
 
   const query = useMemo(() => Object.fromEntries(searchParams?.entries() ?? []), [searchParams]);
 
@@ -52,6 +86,8 @@ export function useCountryOptions(): CountryOption[] | null {
       description: t("country-module-amazon-region-description"),
       active: country === null,
       isDescriptionLoading: false,
+      disabled: false,
+      disabledReason: "",
       href: { pathname, query },
     };
 
@@ -67,11 +103,13 @@ export function useCountryOptions(): CountryOption[] | null {
           : "",
         active: entry.code === country,
         isDescriptionLoading: !indicators,
+        disabled: isAreaOutsideCountry(settledGeometry, boundaries, entry.code),
+        disabledReason: t("country-module-selector-outside", { name: t(entry.nameKey) }),
         flagSrc: countryFlagSrc(entry.code),
         href: { pathname: withCountry(pathname, entry.code), query },
       }),
     );
 
     return [amazonRegion, ...countries];
-  }, [t, pathname, query, country, indicators]);
+  }, [t, pathname, query, country, indicators, settledGeometry, boundaries]);
 }

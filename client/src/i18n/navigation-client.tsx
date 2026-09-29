@@ -35,6 +35,10 @@ export const Link = forwardRef<HTMLAnchorElement, IntlLinkProps>(function Countr
 // module you are *in*, which is wrong for the Amazon Region, whose path names none.
 export const LocaleLink = IntlLink;
 
+// The router counterpart of `LocaleLink`: `useRouter` re-applies the active module to every
+// href, so it cannot navigate out of one.
+export const useLocaleRouter = useIntlRouter;
+
 export function usePathname() {
   const pathname = useIntlPathname();
   return useMemo(() => stripCountry(pathname), [pathname]);

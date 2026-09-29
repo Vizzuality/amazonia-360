@@ -71,7 +71,7 @@ export default function CountrySelector() {
             </p>
           </div>
 
-          <ModuleList options={options} onSelect={() => setOpen(false)} />
+          <ModuleList options={options} onSelect={() => setOpen(false)} variant="popover" />
         </div>
 
         <div className="border-border flex items-center justify-between gap-6 border-t bg-blue-50 p-5">

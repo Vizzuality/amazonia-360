@@ -8,7 +8,10 @@ import { vi } from "vitest";
 
 import { tmpBboxAtom } from "@/app/(frontend)/store";
 
+import { TooltipProvider } from "@/components/ui/tooltip";
+
 import MobileCountrySelector from "./mobile";
+import { getTooltipPlacement } from "./module-list";
 import { useCountryOptions } from "./options";
 
 import CountrySelector from "./index";
@@ -17,11 +20,31 @@ const mockPathname = vi.fn<() => string>(() => "/reports/grid");
 const mockSearchParams = vi.fn(() => new URLSearchParams());
 const mockCountry = vi.fn<() => string | null>(() => null);
 const mockBoundary = vi.fn<() => Promise<{ extent: { id: string } } | null>>();
+const mockLocation = vi.fn<() => unknown>(() => null);
+const mockGeometry = vi.fn<() => unknown>(() => null);
+const mockLiveBoundaries = vi.fn<() => unknown>(() => undefined);
+const mockCalculating = vi.fn<() => boolean>(() => false);
+const mockLiveOptions = vi.fn();
+const mockRatio = vi.fn<() => number>(() => 1);
+
+const AREA = { type: "polygon" };
+const AREA_GEOMETRY = { id: "area-geometry" };
+const LIVE_BOUNDARIES = [{ code: "ECU", geometry: { id: "ecu-boundary" } }];
 
 vi.mock("@/app/(frontend)/store", async () => {
   const { atom } = await import("jotai");
-  return { tmpBboxAtom: atom<unknown>(undefined) };
+  return {
+    tmpBboxAtom: atom<unknown>(undefined),
+    useSyncLocation: () => [mockLocation(), vi.fn()],
+  };
 });
+
+vi.mock("@/lib/location", () => ({
+  useLocationGeometryWithStatus: () => ({
+    geometry: mockGeometry(),
+    isCalculating: mockCalculating(),
+  }),
+}));
 
 vi.mock("next/navigation", () => ({
   useSearchParams: () => mockSearchParams(),
@@ -39,6 +62,11 @@ vi.mock("@/lib/indicators", () => ({
 }));
 
 vi.mock("@/lib/country/coverage", () => ({
+  useGetLiveCountryBoundaries: (options: unknown) => {
+    mockLiveOptions(options);
+    return { data: mockLiveBoundaries() };
+  },
+  getCountryCoverageRatio: () => mockRatio(),
   getCountryAmazoniaBoundaryOptions: (code: string) => ({
     queryKey: ["boundary", code],
     queryFn: () => mockBoundary(),
@@ -79,7 +107,9 @@ function setup() {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={queryClient}>
-      <Provider store={store}>{children}</Provider>
+      <Provider store={store}>
+        <TooltipProvider>{children}</TooltipProvider>
+      </Provider>
     </QueryClientProvider>
   );
   return { store, wrapper };
@@ -87,9 +117,14 @@ function setup() {
 
 beforeEach(() => {
   mockPathname.mockReturnValue("/reports/grid");
-  mockSearchParams.mockReturnValue(new URLSearchParams("location=abc&x=1"));
+  mockSearchParams.mockReturnValue(new URLSearchParams("bbox=1,2,3,4&x=1"));
   mockCountry.mockReturnValue(null);
   mockBoundary.mockResolvedValue({ extent: { id: "ecu-extent" } });
+  mockLocation.mockReturnValue(null);
+  mockGeometry.mockReturnValue(null);
+  mockCalculating.mockReturnValue(false);
+  mockLiveBoundaries.mockReturnValue(undefined);
+  mockRatio.mockReturnValue(1);
   mockIndicators.mockReturnValue({
     data: [{ country: "ECU" }, { country: "ECU" }, { country: null }],
   });
@@ -114,11 +149,11 @@ describe("useCountryOptions", () => {
     expect(result.current?.map((option) => option.active)).toEqual([true, false]);
     expect(result.current?.[0].href).toEqual({
       pathname: "/reports/grid",
-      query: { location: "abc", x: "1" },
+      query: { bbox: "1,2,3,4", x: "1" },
     });
     expect(result.current?.[1].href).toEqual({
       pathname: "/ECU/reports/grid",
-      query: { location: "abc", x: "1" },
+      query: { bbox: "1,2,3,4", x: "1" },
     });
   });
 
@@ -329,5 +364,256 @@ describe("MobileCountrySelector", () => {
     const { container } = render(<MobileCountrySelector onSelect={vi.fn()} />, { wrapper });
 
     expect(container).toBeEmptyDOMElement();
+  });
+});
+
+function arrangeArea({ ratio, resolved = true }: { ratio: number; resolved?: boolean }) {
+  mockLocation.mockReturnValue(AREA);
+  mockGeometry.mockReturnValue(resolved ? AREA_GEOMETRY : null);
+  mockLiveBoundaries.mockReturnValue(LIVE_BOUNDARIES);
+  mockRatio.mockReturnValue(ratio);
+}
+
+describe("getTooltipPlacement", () => {
+  test("sits to the right of the row without a pointer", () => {
+    expect(getTooltipPlacement(null)).toEqual({ side: "right" });
+  });
+
+  test("anchors 12px right of and 16px below the cursor", () => {
+    expect(getTooltipPlacement({ x: 30, y: 20, rowHeight: 56 })).toEqual({
+      side: "bottom",
+      align: "start",
+      alignOffset: 42,
+      sideOffset: -20,
+    });
+  });
+});
+
+function getAnimationName(element: Element): string {
+  return element.getAttribute("data-state") === "closed" ? "fade-out" : "none";
+}
+
+describe("country row availability", () => {
+  test("is disabled only when a resolved area has nothing inside the resolved boundary", () => {
+    arrangeArea({ ratio: 0 });
+    const { wrapper } = setup();
+    const { result } = renderHook(() => useCountryOptions(), { wrapper });
+
+    expect(result.current?.map((option) => option.disabled)).toEqual([false, true]);
+    expect(result.current?.[1].disabledReason).toBe(
+      `country-module-selector-outside:${JSON.stringify({ name: "country-module-ECU-name" })}`,
+    );
+  });
+
+  test.each([
+    ["the area partly inside", () => arrangeArea({ ratio: 0.3 })],
+    ["the geometry pending", () => arrangeArea({ ratio: 0, resolved: false })],
+    [
+      "the boundaries pending",
+      () => {
+        arrangeArea({ ratio: 0 });
+        mockLiveBoundaries.mockReturnValue(undefined);
+      },
+    ],
+    [
+      "the new area still calculating",
+      () => {
+        arrangeArea({ ratio: 0 });
+        mockCalculating.mockReturnValue(true);
+      },
+    ],
+    [
+      "the location cleared while the geometry is stale",
+      () => {
+        arrangeArea({ ratio: 0 });
+        mockLocation.mockReturnValue(null);
+      },
+    ],
+    [
+      "the module already active",
+      () => {
+        arrangeArea({ ratio: 0 });
+        mockCountry.mockReturnValue("ECU");
+      },
+    ],
+    [
+      "no area",
+      () => {
+        arrangeArea({ ratio: 0 });
+        mockLocation.mockReturnValue(null);
+        mockGeometry.mockReturnValue(null);
+      },
+    ],
+  ])("stays enabled with %s", (_name, arrange) => {
+    arrange();
+    const { wrapper } = setup();
+    const { result } = renderHook(() => useCountryOptions(), { wrapper });
+
+    expect(result.current?.[1].disabled).toBe(false);
+  });
+
+  test("the live boundaries are only fetched once there is an area", () => {
+    const { wrapper } = setup();
+    renderHook(() => useCountryOptions(), { wrapper });
+    expect(mockLiveOptions).toHaveBeenLastCalledWith({ enabled: false });
+
+    arrangeArea({ ratio: 1 });
+    renderHook(() => useCountryOptions(), { wrapper });
+    expect(mockLiveOptions).toHaveBeenLastCalledWith({ enabled: true });
+  });
+
+  test("inside a module the live boundaries are not fetched", () => {
+    arrangeArea({ ratio: 0 });
+    mockCountry.mockReturnValue("ECU");
+    const { wrapper } = setup();
+    renderHook(() => useCountryOptions(), { wrapper });
+
+    expect(mockLiveOptions).toHaveBeenLastCalledWith({ enabled: false });
+  });
+
+  test("the region row is never disabled", () => {
+    arrangeArea({ ratio: 0 });
+    const { wrapper } = setup();
+    const { result } = renderHook(() => useCountryOptions(), { wrapper });
+
+    expect(result.current?.[0].disabled).toBe(false);
+  });
+
+  test("a disabled row is not a link and does nothing when activated", async () => {
+    arrangeArea({ ratio: 0 });
+    const onSelect = vi.fn();
+    const { wrapper, store } = setup();
+    render(<MobileCountrySelector onSelect={onSelect} />, { wrapper });
+    const row = screen.getAllByTestId("country-selector-option")[1];
+
+    await userEvent.click(row);
+    await userEvent.type(row, "{Enter}");
+
+    expect(row.tagName).not.toBe("A");
+    expect(row).not.toHaveAttribute("href");
+    expect(row).not.toHaveAttribute("role");
+    expect(row).not.toHaveAttribute("tabindex");
+    expect(row).toHaveAttribute("aria-disabled", "true");
+    expect(row).toHaveAttribute("data-disabled");
+    expect(row).toHaveAttribute("data-country", "ECU");
+    expect(onSelect).not.toHaveBeenCalled();
+    expect(mockBoundary).not.toHaveBeenCalled();
+    expect(store.get(tmpBboxAtom)).toBeUndefined();
+  });
+
+  test("an enabled row stays a link", () => {
+    arrangeArea({ ratio: 0.3 });
+    const { wrapper } = setup();
+    render(<MobileCountrySelector onSelect={vi.fn()} />, { wrapper });
+
+    expect(screen.getAllByTestId("country-selector-option")[1]).toHaveAttribute("href");
+  });
+
+  test("the mobile list shows the reason in place of the subtitle", () => {
+    arrangeArea({ ratio: 0 });
+    const { wrapper } = setup();
+    render(<MobileCountrySelector onSelect={vi.fn()} />, { wrapper });
+    const row = screen.getAllByTestId("country-selector-option")[1];
+
+    expect(row).toHaveTextContent("country-module-selector-outside");
+    expect(row).not.toHaveTextContent("country-module-country-description");
+  });
+
+  test("the desktop row keeps the subtitle and reveals the reason in a tooltip on hover", async () => {
+    arrangeArea({ ratio: 0 });
+    const { wrapper } = setup();
+    render(<CountrySelector />, { wrapper });
+    await userEvent.click(screen.getByTestId("country-selector-trigger"));
+    const row = screen.getAllByTestId("country-selector-option")[1];
+
+    expect(row).toHaveTextContent("country-module-country-description");
+    expect(row).toHaveAttribute("tabindex", "0");
+    expect(row).toHaveAttribute("role", "link");
+    expect(row).toHaveAccessibleDescription(
+      `country-module-selector-outside:${JSON.stringify({ name: "country-module-ECU-name" })}`,
+    );
+
+    await userEvent.hover(row);
+
+    expect(await screen.findByRole("tooltip")).toHaveTextContent("country-module-selector-outside");
+  });
+
+  test("the desktop tooltip follows the pointer below and right of the cursor", async () => {
+    arrangeArea({ ratio: 0 });
+    const { wrapper } = setup();
+    render(<CountrySelector />, { wrapper });
+    await userEvent.click(screen.getByTestId("country-selector-trigger"));
+    const row = screen.getAllByTestId("country-selector-option")[1];
+
+    await userEvent.pointer({ target: row, coords: { clientX: 30, clientY: 20 } });
+
+    await screen.findByRole("tooltip");
+    const content = document.querySelector('[data-slot="tooltip-content"]');
+    expect(content).toHaveAttribute("data-side", "bottom");
+    expect(content).toHaveAttribute("data-align", "start");
+  });
+
+  test("the tooltip keeps its pointer placement while it closes", async () => {
+    const realGetComputedStyle = window.getComputedStyle.bind(window);
+    vi.spyOn(window, "getComputedStyle").mockImplementation((element, pseudo) => {
+      const style = realGetComputedStyle(element, pseudo);
+      return new Proxy(style, {
+        get: (target, property) =>
+          property === "animationName"
+            ? getAnimationName(element)
+            : Reflect.get(target, property, target),
+      });
+    });
+    arrangeArea({ ratio: 0 });
+    const { wrapper } = setup();
+    render(<CountrySelector />, { wrapper });
+    await userEvent.click(screen.getByTestId("country-selector-trigger"));
+    const row = screen.getAllByTestId("country-selector-option")[1];
+
+    await userEvent.pointer({ target: row, coords: { clientX: 30, clientY: 20 } });
+    await screen.findByRole("tooltip");
+    await userEvent.unhover(row);
+    await userEvent.pointer({ target: document.body, coords: { clientX: 900, clientY: 900 } });
+
+    const closing = document.querySelector('[data-slot="tooltip-content"]');
+    await waitFor(() => expect(closing).toHaveAttribute("data-state", "closed"));
+    expect(closing).toHaveAttribute("data-side", "bottom");
+
+    vi.restoreAllMocks();
+  });
+
+  test("the tooltip opens on keyboard focus to the right of the row", async () => {
+    arrangeArea({ ratio: 0 });
+    const { wrapper } = setup();
+    render(<CountrySelector />, { wrapper });
+    await userEvent.click(screen.getByTestId("country-selector-trigger"));
+
+    screen.getAllByTestId("country-selector-option")[1].focus();
+
+    expect(await screen.findByRole("tooltip")).toHaveTextContent("country-module-selector-outside");
+    expect(document.querySelector('[data-slot="tooltip-content"]')).toHaveAttribute(
+      "data-side",
+      "right",
+    );
+  });
+
+  test("keyboard focus after the pointer has left drops the stale pointer placement", async () => {
+    arrangeArea({ ratio: 0 });
+    const { wrapper } = setup();
+    render(<CountrySelector />, { wrapper });
+    await userEvent.click(screen.getByTestId("country-selector-trigger"));
+    const row = screen.getAllByTestId("country-selector-option")[1];
+
+    await userEvent.pointer({ target: row, coords: { clientX: 30, clientY: 20 } });
+    await userEvent.unhover(row);
+    await userEvent.pointer({ target: document.body, coords: { clientX: 900, clientY: 900 } });
+    await userEvent.tab();
+    await userEvent.tab({ shift: true });
+
+    await screen.findByRole("tooltip");
+    expect(document.querySelector('[data-slot="tooltip-content"]')).toHaveAttribute(
+      "data-side",
+      "right",
+    );
   });
 });

@@ -2,6 +2,7 @@ import { render } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
 
 vi.mock("./activation", () => ({ default: () => <div data-testid="activation" /> }));
+vi.mock("./deactivation", () => ({ default: () => <div data-testid="deactivation" /> }));
 vi.mock("./dialog", () => ({ default: () => <div data-testid="dialog" /> }));
 vi.mock("./banner", () => ({ default: () => <div data-testid="banner" /> }));
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { MouseEvent } from "react";
+import { MouseEvent, PointerEvent, useId, useRef, useState } from "react";
 
 import Image from "next/image";
 
@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { tmpBboxAtom } from "@/app/(frontend)/store";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { LocaleLink } from "@/i18n/navigation";
 
@@ -42,13 +43,130 @@ function isModifiedClick(event: MouseEvent): boolean {
   return event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
 }
 
+export type ModuleListVariant = "popover" | "inline";
+
+function ModuleRowBody({
+  option,
+  subtitle,
+}: Readonly<{ option: CountryOption; subtitle?: string }>) {
+  const muted = option.disabled;
+
+  return (
+    <>
+      <ModuleIcon option={option} />
+      <span className="flex min-w-0 flex-1 flex-col text-left">
+        <span className={cn("text-foreground text-sm font-bold", muted && "text-muted-foreground")}>
+          {option.name}
+        </span>
+        {option.isDescriptionLoading ? (
+          <Skeleton className="h-4 w-40" aria-hidden />
+        ) : (
+          <span className="text-muted-foreground text-xs font-medium">
+            {subtitle ?? option.description}
+          </span>
+        )}
+      </span>
+      {option.active && <Check className="size-5 shrink-0 text-cyan-500" aria-hidden />}
+    </>
+  );
+}
+
+type TooltipPointer = { x: number; y: number; rowHeight: number };
+
+export function getTooltipPlacement(pointer: TooltipPointer | null) {
+  if (!pointer) return { side: "right" as const };
+
+  return {
+    side: "bottom" as const,
+    align: "start" as const,
+    alignOffset: pointer.x + 12,
+    sideOffset: pointer.y - pointer.rowHeight + 16,
+  };
+}
+
+function DisabledModuleRow({
+  option,
+  variant,
+}: Readonly<{ option: CountryOption; variant: ModuleListVariant }>) {
+  const isInline = variant === "inline";
+  const reasonId = useId();
+  const [pointer, setPointer] = useState<TooltipPointer | null>(null);
+
+  const isPointerInside = useRef(false);
+
+  const handleFocus = () => {
+    if (!isPointerInside.current) setPointer(null);
+  };
+
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    isPointerInside.current = true;
+    const rect = event.currentTarget.getBoundingClientRect();
+    setPointer({
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+      rowHeight: rect.height,
+    });
+  };
+
+  const row = (
+    <div
+      role={isInline ? undefined : "link"}
+      aria-disabled="true"
+      aria-current={option.active ? "page" : undefined}
+      aria-describedby={isInline ? undefined : reasonId}
+      tabIndex={isInline ? undefined : 0}
+      onPointerMove={isInline ? undefined : handlePointerMove}
+      onPointerLeave={
+        isInline
+          ? undefined
+          : () => {
+              isPointerInside.current = false;
+            }
+      }
+      onFocus={isInline ? undefined : handleFocus}
+      data-disabled
+      data-testid="country-selector-option"
+      data-country={option.code ?? "REGIONAL"}
+      className={cn(
+        "flex h-14 cursor-not-allowed items-center gap-2 rounded-lg border border-transparent py-2 pr-4 pl-2",
+        option.active && "border-border",
+      )}
+    >
+      <ModuleRowBody option={option} subtitle={isInline ? option.disabledReason : undefined} />
+      {!isInline && (
+        <span id={reasonId} className="sr-only">
+          {option.disabledReason}
+        </span>
+      )}
+    </div>
+  );
+
+  if (isInline) return row;
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{row}</TooltipTrigger>
+      <TooltipContent
+        className="data-[state=closed]:zoom-out-100 max-w-64"
+        {...getTooltipPlacement(pointer)}
+      >
+        {option.disabledReason}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
 function ModuleRow({
   option,
+  variant,
   onClick,
 }: Readonly<{
   option: CountryOption;
+  variant: ModuleListVariant;
   onClick: (option: CountryOption, event: MouseEvent) => void;
 }>) {
+  if (option.disabled) return <DisabledModuleRow option={option} variant={variant} />;
+
   return (
     <LocaleLink
       href={option.href}
@@ -62,16 +180,7 @@ function ModuleRow({
         option.active && "border-border",
       )}
     >
-      <ModuleIcon option={option} />
-      <span className="flex min-w-0 flex-1 flex-col text-left">
-        <span className="text-foreground text-sm font-bold">{option.name}</span>
-        {option.isDescriptionLoading ? (
-          <Skeleton className="h-4 w-40" aria-hidden />
-        ) : (
-          <span className="text-muted-foreground text-xs font-medium">{option.description}</span>
-        )}
-      </span>
-      {option.active && <Check className="size-5 shrink-0 text-cyan-500" aria-hidden />}
+      <ModuleRowBody option={option} />
     </LocaleLink>
   );
 }
@@ -79,8 +188,14 @@ function ModuleRow({
 export default function ModuleList({
   options,
   onSelect,
+  variant,
   className,
-}: Readonly<{ options: CountryOption[]; onSelect: () => void; className?: string }>) {
+}: Readonly<{
+  options: CountryOption[];
+  onSelect: () => void;
+  variant: ModuleListVariant;
+  className?: string;
+}>) {
   const t = useTranslations();
   const queryClient = useQueryClient();
   const setTmpBbox = useSetAtom(tmpBboxAtom);
@@ -107,7 +222,7 @@ export default function ModuleList({
     <div className={cn("flex flex-col gap-4", className)}>
       <div className="flex flex-col gap-0.5">
         {regional.map((option) => (
-          <ModuleRow key="regional" option={option} onClick={handleClick} />
+          <ModuleRow key="regional" option={option} variant={variant} onClick={handleClick} />
         ))}
       </div>
 
@@ -117,7 +232,7 @@ export default function ModuleList({
         </p>
         <div className="flex flex-col gap-0.5">
           {countries.map((option) => (
-            <ModuleRow key={option.code} option={option} onClick={handleClick} />
+            <ModuleRow key={option.code} option={option} variant={variant} onClick={handleClick} />
           ))}
         </div>
       </div>
