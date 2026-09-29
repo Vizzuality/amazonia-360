@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 
 import { COUNTRIES, CountryCode, countryFlagSrc, isUnscopedPathname } from "@/lib/country";
+import { getCountryModulePartnerLogos } from "@/lib/country/partners";
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import useIsMounted from "@/lib/mounted";
 
@@ -21,6 +22,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { usePathname } from "@/i18n/navigation";
 import { useCountry } from "@/i18n/use-country";
@@ -29,15 +31,11 @@ function getCountryModuleDialogCookieName(code: string): string {
   return `country-module-dialog-${code}`;
 }
 
-const MODULE_PARTNER_LOGOS: Record<string, { src: string; alt: string }[]> = {
-  ECU: [
-    { src: "/partners/ecu/gobierno-del-ecuador.avif", alt: "Gobierno del Ecuador" },
-    { src: "/partners/ecu/ministerio-del-ambiente.avif", alt: "Ministerio del Ambiente" },
-    { src: "/partners/ecu/instituto-geografico-militar.avif", alt: "Instituto Geográfico Militar" },
-    { src: "/partners/ecu/inabio.avif", alt: "INABIO" },
-    { src: "/partners/ecu/the-nature-conservancy.avif", alt: "The Nature Conservancy" },
-  ],
-};
+function LayerCount({ count }: Readonly<{ count: number | undefined }>) {
+  if (count === undefined) return <Skeleton className="h-8 w-10" aria-hidden />;
+
+  return <p className="text-2xl leading-8 font-bold">{count}</p>;
+}
 
 // `useCookie` reads `document.cookie` in a lazy `useState` initializer and never resyncs when
 // its key changes, so the module has to be a mount boundary or a dismissal would read the
@@ -66,14 +64,14 @@ function CountryModuleDialogContent({ country }: Readonly<{ country: CountryCode
   const activeModule = country ? COUNTRIES.find((entry) => entry.code === country) : undefined;
   const moduleName = activeModule ? t(activeModule.nameKey) : "";
 
-  const partnerLogos = country ? (MODULE_PARTNER_LOGOS[country] ?? []) : [];
+  const partnerLogos = getCountryModulePartnerLogos(country);
 
   const regionalLayersCount = useMemo(
-    () => indicators?.filter((indicator) => !indicator.country).length ?? 0,
+    () => indicators?.filter((indicator) => !indicator.country).length,
     [indicators],
   );
   const nationalLayersCount = useMemo(
-    () => indicators?.filter((indicator) => indicator.country === country).length ?? 0,
+    () => indicators?.filter((indicator) => indicator.country === country).length,
     [indicators, country],
   );
 
@@ -121,14 +119,20 @@ function CountryModuleDialogContent({ country }: Readonly<{ country: CountryCode
 
           <div className="flex flex-col gap-4 p-6">
             <div className="flex gap-2">
-              <div className="bg-muted flex flex-1 flex-col gap-1 rounded-md px-4 py-4">
-                <p className="text-2xl leading-8 font-bold">{regionalLayersCount}</p>
+              <div
+                className="bg-muted flex flex-1 flex-col gap-1 rounded-md px-4 py-4"
+                aria-busy={regionalLayersCount === undefined}
+              >
+                <LayerCount count={regionalLayersCount} />
                 <p className="text-sm leading-5 font-medium">
                   {t("country-module-modal-regional-layers")}
                 </p>
               </div>
-              <div className="bg-muted flex flex-1 flex-col gap-1 rounded-md px-4 py-4">
-                <p className="text-2xl leading-8 font-bold">{nationalLayersCount}</p>
+              <div
+                className="bg-muted flex flex-1 flex-col gap-1 rounded-md px-4 py-4"
+                aria-busy={nationalLayersCount === undefined}
+              >
+                <LayerCount count={nationalLayersCount} />
                 <p className="text-sm leading-5 font-medium">
                   {t("country-module-modal-national-layers")}
                 </p>

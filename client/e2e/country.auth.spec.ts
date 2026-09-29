@@ -7,7 +7,7 @@ import {
   leaveModule,
   leaveModuleInNewTab,
   suppressCountryModuleDialog,
-} from "./helpers/country-badge";
+} from "./helpers/country-selector";
 import { skipWithoutCredentials } from "./helpers/credentials";
 import { expectNodeKept, markNode } from "./helpers/node-identity";
 

@@ -130,6 +130,27 @@ describe("CountryModuleDialog", () => {
     expect(screen.getByText("2")).toBeInTheDocument();
   });
 
+  test("shows skeletons instead of counts while indicators load", () => {
+    mockIndicators.mockReturnValue({ data: undefined });
+
+    const { container } = render(<CountryModuleDialog />);
+
+    expect(container.ownerDocument.querySelectorAll('[aria-busy="true"]')).toHaveLength(2);
+    expect(container.ownerDocument.querySelectorAll(".animate-pulse")).toHaveLength(2);
+    expect(screen.queryByText("0")).not.toBeInTheDocument();
+  });
+
+  test("shows the numbers, no skeleton, once indicators load", () => {
+    mockIndicators.mockReturnValue({ data: [{ country: "ECU" }] });
+
+    const { container } = render(<CountryModuleDialog />);
+
+    expect(container.ownerDocument.querySelectorAll('[aria-busy="true"]')).toHaveLength(0);
+    expect(container.ownerDocument.querySelectorAll(".animate-pulse")).toHaveLength(0);
+    expect(screen.getByText("0")).toBeInTheDocument();
+    expect(screen.getByText("1")).toBeInTheDocument();
+  });
+
   test("renders the collaborators heading for a module that has partner logos", () => {
     render(<CountryModuleDialog />);
 
