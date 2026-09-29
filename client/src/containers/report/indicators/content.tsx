@@ -19,6 +19,7 @@ import {
 } from "@/app/(frontend)/store";
 
 import { getIndicatorScopeCounts, IndicatorsFilterTabs } from "@/containers/indicators/filter-tabs";
+import IndicatorsPartners from "@/containers/indicators/partners";
 import IndicatorsFooter from "@/containers/report/indicators/footer";
 import IndicatorsSearch from "@/containers/report/indicators/search";
 import IndicatorsTopicsList from "@/containers/report/indicators/topics";
@@ -120,6 +121,7 @@ export default function ReportIndicatorsContent() {
           <div className="px-6 py-2 xl:py-4">
             <IndicatorsTopicsList />
           </div>
+          <IndicatorsPartners country={country} />
         </ScrollArea>
         <div className="pointer-events-none absolute right-0 bottom-0 left-0 z-50 h-2 bg-linear-to-t from-white to-transparent xl:h-4" />
       </div>

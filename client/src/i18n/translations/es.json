@@ -149,6 +149,7 @@
   "grid-sidebar-grid-filters-ranking-set-up-button-apply": "Aplicar",
   "grid-sidebar-indicators-title": "Indicadores",
   "grid-sidebar-indicators-description": "Elija los indicadores que desea mostrar en el mapa para una comprensión más profunda del área. Puede crear un informe con estos indicadores seleccionados.",
+  "grid-sidebar-indicators-topic-selected-count": "{count} seleccionados",
   "grid-sketch-start-drawing": "Empezar a dibujar",
   "grid-sketch-finish-drawing": "Terminar de dibujar",
   "grid-sketch-tooltip-create-start-polygon": "Para empezar, **haga clic** en el mapa para añadir un punto. Pulsa **ESC** para cancelar.",

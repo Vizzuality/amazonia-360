@@ -12,6 +12,7 @@ import { useReportCountry } from "@/lib/report/use-report-country";
 import { useSyncIndicatorsScopeFilter } from "@/app/(frontend)/store";
 
 import { getIndicatorScopeCounts, IndicatorsFilterTabs } from "@/containers/indicators/filter-tabs";
+import IndicatorsPartners from "@/containers/indicators/partners";
 import SidebarIndicatorsFooter from "@/containers/results/sidebar/indicators/footer";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -49,8 +50,11 @@ export default function IndicatorsSidebarContent() {
 
       <div className="relative flex grow flex-col overflow-hidden">
         <div className="pointer-events-none absolute top-0 right-0 left-0 z-50 h-2 bg-linear-to-b from-white to-transparent" />
-        <ScrollArea className="flex grow flex-col px-6">
-          <TopicsList />
+        <ScrollArea className="flex grow flex-col">
+          <div className="px-6">
+            <TopicsList />
+          </div>
+          <IndicatorsPartners country={country?.[0] ?? null} />
         </ScrollArea>
         <div className="pointer-events-none absolute right-0 bottom-0 left-0 z-50 h-4 bg-linear-to-t from-white to-transparent" />
       </div>
