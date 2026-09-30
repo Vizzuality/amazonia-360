@@ -12,7 +12,6 @@
   "country-module-selector-description": "Select a data module. Select Amazon Region for regional data across the basin, or choose a country to add official national data.",
   "country-module-selector-section-label": "Country module",
   "country-module-selector-unavailable-label": "Not available for your area",
-  "country-module-selector-unavailable-description": "{count, plural, one {Your area is outside this country's Amazonia} other {Your area is outside these countries' Amazonia}}, so no national data is available for it.",
   "country-module-report-note": "This report was made with <b>{names}</b> {count, plural, one {module} other {modules}}.",
   "country-module-selector-locked": "Module locked to this report",
   "country-module-amazon-region-description": "Region • basin-wide data",

@@ -12,7 +12,6 @@
   "country-module-selector-description": "Selecione um módulo de dados. Escolha Região Amazônica para dados regionais de toda a bacia, ou escolha um país para adicionar dados nacionais oficiais.",
   "country-module-selector-section-label": "Módulo de país",
   "country-module-selector-unavailable-label": "Indisponível para sua área",
-  "country-module-selector-unavailable-description": "{count, plural, one {Sua área está fora da Amazônia deste país} other {Sua área está fora da Amazônia destes países}}, portanto não há dados nacionais disponíveis para ela.",
   "country-module-report-note": "Este relatório foi feito com {count, plural, one {o módulo} other {os módulos}} <b>{names}</b>.",
   "country-module-selector-locked": "Módulo bloqueado para este relatório",
   "country-module-amazon-region-description": "Região • dados de toda a bacia",

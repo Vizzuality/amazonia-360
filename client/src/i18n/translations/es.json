@@ -12,7 +12,6 @@
   "country-module-selector-description": "Selecciona un módulo de datos. Elige Región Amazónica para datos regionales de toda la cuenca, o elige un país para añadir datos nacionales oficiales.",
   "country-module-selector-section-label": "Módulo de país",
   "country-module-selector-unavailable-label": "No disponible para tu área",
-  "country-module-selector-unavailable-description": "{count, plural, one {Tu área está fuera de la Amazonía de este país} other {Tu área está fuera de la Amazonía de estos países}}, por lo que no hay datos nacionales disponibles para ella.",
   "country-module-report-note": "Este informe se hizo con {count, plural, one {el módulo} other {los módulos}} <b>{names}</b>.",
   "country-module-selector-locked": "Módulo bloqueado para este informe",
   "country-module-amazon-region-description": "Región • datos de toda la cuenca",
