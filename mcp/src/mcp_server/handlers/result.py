@@ -108,7 +108,10 @@ class Result(BaseModel):
         description="Set when the source documentation and the service disagree.",
     )
     aoi_ha: float = Field(
-        description="Area of the whole input area, including any part outside."
+        description=(
+            "Area of the whole input area, including any part outside the module "
+            "(coverage.outside_ha)."
+        )
     )
     classified_ha: float | None = Field(
         default=None,
@@ -117,9 +120,10 @@ class Result(BaseModel):
     unclassified_ha: float | None = Field(
         default=None,
         description=(
-            "area_by_category only: aoi_ha minus classified_ha. Hectares in no class "
-            "of this layer; they are not a class and the layer says nothing about "
-            "them. Includes any part of the area outside the module."
+            "area_by_category only: aoi_ha minus coverage.outside_ha minus "
+            "classified_ha. Hectares inside the module in no class of this layer; "
+            "they are not a class and the layer says nothing about them. The part "
+            "of the area outside the module is not among them."
         ),
     )
     overlap_ha: float | None = Field(

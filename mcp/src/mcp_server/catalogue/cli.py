@@ -1,7 +1,7 @@
 """``amazonia360-mcp-catalogue``: keep the catalogue files current.
 
-- ``sync`` reads ArcGIS and rewrites ``ecuador.snapshot.json``, the example export and
-  ``places/places.snapshot.json``.
+- ``sync`` reads ArcGIS and rewrites ``ecuador.snapshot.json``, the example export,
+  ``places/places.snapshot.json`` and the module's outline, ``geometry/module.geojson``.
 - ``schema`` rewrites ``catalogue.schema.json`` from the pydantic model.
 - ``export`` writes the joined catalogue: the document the CMS is expected to send.
 """
@@ -18,9 +18,21 @@ from typing import Any
 import httpx
 
 from mcp_server import places
-from mcp_server.catalogue import SNAPSHOT_FILE, load_curated, local_document
+from mcp_server.catalogue import (
+    SNAPSHOT_FILE,
+    get_indicator_metadata,
+    load_curated,
+    local_document,
+)
 from mcp_server.catalogue.models import CatalogueDocument
 from mcp_server.catalogue.sync import nothing_read, sync_catalogue
+from mcp_server.geometry import aoi
+from mcp_server.geometry.module_sync import (
+    MODULE_SOURCE_INDICATOR,
+    ModuleSyncError,
+    dump_outline,
+    sync_module,
+)
 from mcp_server.places.sync import PlacesSyncError, sync_places
 
 HERE = Path(__file__).parent
@@ -68,6 +80,16 @@ async def _sync_places(timeout_s: float) -> dict[str, Any]:
         return await sync_places(http, now)
 
 
+async def _sync_module(timeout_s: float) -> dict[str, Any]:
+    source = get_indicator_metadata(MODULE_SOURCE_INDICATOR)
+    layer = source.query_layer() if source is not None else None
+    if layer is None:
+        raise ModuleSyncError(f"indicator {MODULE_SOURCE_INDICATOR} has no layer")
+    async with httpx.AsyncClient(timeout=timeout_s) as http:
+        now = datetime.now(UTC).replace(microsecond=0)
+        return await sync_module(http, layer, now)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(prog="amazonia360-mcp-catalogue")
     commands = parser.add_subparsers(dest="command", required=True)
@@ -99,6 +121,17 @@ def main() -> None:
             )
             places.load_places.cache_clear()
             print(f"places: {len(places_snapshot['places'])}")
+        try:
+            outline = asyncio.run(_sync_module(args.timeout))
+        except ModuleSyncError as exc:
+            print(
+                f"Module outline not read ({exc}); "
+                f"{aoi.MODULE_FILE.name} left as it was."
+            )
+        else:
+            aoi.MODULE_FILE.write_text(dump_outline(outline), "utf-8")
+            aoi.module_outline.cache_clear()
+            print(f"module outline: {outline['properties']['area_ha']} ha")
     elif args.command == "schema":
         write_json(HERE / SCHEMA_FILE, catalogue_schema())
     elif args.out:

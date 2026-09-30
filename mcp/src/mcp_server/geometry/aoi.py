@@ -1,3 +1,6 @@
+import json
+from functools import cache
+from pathlib import Path
 from typing import Any, Literal
 
 import shapely
@@ -7,12 +10,20 @@ from shapely.geometry import MultiPolygon, Polygon, box, shape
 from shapely.geometry.base import BaseGeometry
 from shapely.validation import explain_validity
 
+from mcp_server.geometry.area import geodesic_area_ha
+
 MAX_VERTICES = 5000
 
-# Extent of the Geomorfología layer, which covers the whole module. Replace with
-# ECU_MOD_POLIG_LIMITE_WGS84 once it is delivered.
+Boundary = Literal["bounding_box", "derived_polygon", "module_polygon"]
+
+# Extent of the Geomorfología layer, which covers the whole module. Only a cheap
+# guard on how far a client's area may reach; coverage uses the outline.
 MODULE_ENVELOPE = box(-79.428, -5.016, -75.189, 0.729)
-MODULE_BOUNDARY: Literal["bounding_box", "module_polygon"] = "bounding_box"
+# Written by `amazonia360-mcp-catalogue sync` (geometry/module_sync.py). Replace with
+# ECU_MOD_POLIG_LIMITE_WGS84 once it is delivered, and the boundary with
+# module_polygon.
+MODULE_FILE = Path(__file__).with_name("module.geojson")
+MODULE_BOUNDARY: Boundary = "derived_polygon"
 # How far past the module envelope an area may reach. Enough for an area drawn across
 # the border; a country or the globe would pull every feature of a layer, and one
 # 180 degrees wide or more measures as 0 ha (pyproj takes the short way round).
@@ -26,22 +37,42 @@ class AOIError(Exception):
 class Coverage(BaseModel):
     status: Literal["inside", "partial", "outside"] = Field(
         description=(
-            "Where the area falls against the module boundary named in boundary. "
-            "partial: only the part inside has data. With a bounding_box boundary, "
-            "inside does not rule out that part of the area is outside the module."
+            "Where the area falls against the module's outline. inside: the whole "
+            "area is in the module. partial: part of it is outside the module and "
+            "has no data; outside_ha says how much."
+        )
+    )
+    outside_ha: float = Field(
+        description=(
+            "Hectares of the area outside the module. The module's layers have no "
+            "data there: report them as outside the module, never as a class or as "
+            "unclassified land of the layer. 0 when status is inside."
         )
     )
     # A bare "provisional" flag was read as "the layer is provisional" in the
     # Desktop trial, so the field names what it describes.
-    boundary: Literal["bounding_box", "module_polygon"] = Field(
+    boundary: Boundary = Field(
         description=(
-            "What the area was checked against. This describes the module boundary, "
-            "not the layer. bounding_box: a rectangle standing in until the module "
-            "polygon is delivered; an area near the edge of the module, such as the "
-            "border with Peru, may fall partly outside it although status says "
-            "inside, and hectares outside the module then count as unclassified."
+            "Where the module's outline comes from. This describes the module "
+            "boundary, not the layer, and not the area the figures were computed "
+            "over. derived_polygon: the server derived the outline from a layer "
+            "that covers the whole module, accurate to about 50 m, until the "
+            "official module polygon arrives. module_polygon: the official polygon. "
+            "bounding_box: a rectangle around the module."
         )
     )
+
+
+@cache
+def module_outline() -> Polygon | MultiPolygon:
+    feature = json.loads(MODULE_FILE.read_text(encoding="utf-8"))
+    outline = shape(feature["geometry"])
+    if not isinstance(outline, Polygon | MultiPolygon) or not outline.is_valid:
+        raise ValueError(f"{MODULE_FILE.name} does not hold a valid polygon.")
+    # Every call tests an area against it; prepared, contains and intersects are
+    # indexed instead of scanning its thousands of vertices.
+    shapely.prepare(outline)
+    return outline
 
 
 def vertex_count(geom: BaseGeometry) -> int:
@@ -97,10 +128,17 @@ def check_aoi(
 
 
 def module_coverage(aoi: Polygon | MultiPolygon) -> Coverage:
-    if MODULE_ENVELOPE.contains(aoi):
-        status = "inside"
-    elif MODULE_ENVELOPE.intersects(aoi):
-        status = "partial"
+    outline = module_outline()
+    if outline.contains(aoi):
+        outside_ha = 0.0
+    elif outline.intersects(aoi):
+        outside_ha = round(geodesic_area_ha(aoi.difference(outline)), 2)
     else:
-        status = "outside"
-    return Coverage(status=status, boundary=MODULE_BOUNDARY)
+        return Coverage(
+            status="outside",
+            outside_ha=round(geodesic_area_ha(aoi), 2),
+            boundary=MODULE_BOUNDARY,
+        )
+    # Rounded first, so that partial never comes with 0.0 ha outside.
+    status = "partial" if outside_ha > 0 else "inside"
+    return Coverage(status=status, outside_ha=outside_ha, boundary=MODULE_BOUNDARY)

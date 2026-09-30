@@ -15,7 +15,7 @@ from mcp_server.handlers.area import AreaHandlers
 from mcp_server.handlers.errors import HandlerError
 from tests.test_models import indicator
 
-pytestmark = pytest.mark.usefixtures("fixed_catalogue")
+pytestmark = pytest.mark.usefixtures("fixed_catalogue", "stand_in_module")
 
 TENA: dict[str, Any] = {
     "type": "Polygon",
@@ -200,7 +200,7 @@ async def test_an_unavailable_layer_is_refused_before_any_network_call(
 async def test_computed_facts_are_fields_not_caveats() -> None:
     result = await handlers().categories_in_area(210, TENA)
     assert result.coverage.status == "inside"
-    assert result.coverage.boundary == "bounding_box"
+    assert result.coverage.boundary == "derived_polygon"
     assert result.caveats == []
     assert result.record_counts is None
 
@@ -306,6 +306,52 @@ async def test_classified_and_unclassified_add_up_to_the_area() -> None:
         result.aoi_ha, abs=0.02
     )
     assert result.layer.empty_result is None
+
+
+# West of the stand-in outline's edge at -79.428 by 0.172 of its 0.4 degrees.
+STRADDLING: dict[str, Any] = {
+    "type": "Polygon",
+    "coordinates": [
+        [[-79.6, -1.0], [-79.2, -1.0], [-79.2, -0.6], [-79.6, -0.6], [-79.6, -1.0]]
+    ],
+}
+
+
+class WallToWall(FakeClient):
+    async def features(
+        self, layer: Layer, aoi: BaseGeometry, max_allowable_offset: float
+    ) -> list[Feature]:
+        return [("Bosque", box(-79.428, -5.016, -75.189, 0.729))]
+
+
+@pytest.mark.anyio
+async def test_unclassified_hectares_leave_out_the_part_outside_the_module() -> None:
+    result = await handlers(WallToWall()).area_by_category(210, STRADDLING)
+    assert result.coverage.status == "partial"
+    outside = result.coverage.outside_ha
+    assert outside == pytest.approx(
+        geodesic_area_ha(box(-79.6, -1.0, -79.428, -0.6)), abs=0.01
+    )
+    # The layer covers every hectare inside the module, so none is unclassified.
+    # Geodesic areas of the pieces add up to the whole to within a few millionths:
+    # splitting a long edge moves it slightly.
+    assert result.classified_ha == pytest.approx(result.aoi_ha - outside, rel=1e-5)
+    assert result.unclassified_ha == pytest.approx(0, abs=1)
+
+
+@pytest.mark.anyio
+async def test_unclassified_hectares_are_the_part_inside_in_no_class(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _with(monkeypatch, covers_module=False)
+    result = await handlers(FakeClient(empty=True)).area_by_category(210, STRADDLING)
+    assert result.classified_ha == 0
+    unclassified = result.unclassified_ha
+    assert unclassified is not None
+    assert unclassified == pytest.approx(
+        result.aoi_ha - result.coverage.outside_ha, abs=0.02
+    )
+    assert 0 < unclassified < result.aoi_ha
 
 
 @pytest.mark.anyio

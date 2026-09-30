@@ -411,7 +411,8 @@ class AreaHandlers:
         classified = unclassified = overlap = None
         if isinstance(value, dict) and unit == "ha":
             classified = round(sum(value.values()), 2)
-            unclassified = round(max(aoi_ha - classified, 0.0), 2)
+            inside_ha = aoi_ha - p.coverage.outside_ha
+            unclassified = round(max(inside_ha - classified, 0.0), 2)
             excess = classified - aoi_ha
             # The simplification alone adds up to 0.03 % (layer 214); more than the
             # threshold means ground counted in two classes.

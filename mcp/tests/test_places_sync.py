@@ -7,6 +7,7 @@ import pytest
 
 from mcp_server import places
 from mcp_server.catalogue import cli
+from mcp_server.geometry.module_sync import ModuleSyncError
 from mcp_server.places.models import PlacesSnapshot
 from mcp_server.places.sync import (
     SOURCES,
@@ -190,6 +191,9 @@ def test_a_places_sync_that_fails_leaves_the_snapshot_as_it_was(
     async def failing(timeout_s: float) -> dict[str, Any]:
         raise PlacesSyncError("canton: truncated")
 
+    async def no_module(timeout_s: float) -> dict[str, Any]:
+        raise ModuleSyncError("not read in this test")
+
     monkeypatch.setattr(cli, "HERE", tmp_path)
     monkeypatch.setattr(cli, "EXAMPLE_FILE", tmp_path / "catalogue.json")
     monkeypatch.setattr(cli, "_sync", lambda timeout_s: catalogue())
@@ -198,6 +202,7 @@ def test_a_places_sync_that_fails_leaves_the_snapshot_as_it_was(
     monkeypatch.setattr(cli.local_document, "cache_clear", lambda: None, raising=False)
     monkeypatch.setattr(cli, "exported_catalogue", lambda: {})
     monkeypatch.setattr(cli, "_sync_places", failing)
+    monkeypatch.setattr(cli, "_sync_module", no_module)
     monkeypatch.setattr(places, "__file__", str(tmp_path / "__init__.py"))
     monkeypatch.setattr("sys.argv", ["amazonia360-mcp-catalogue", "sync"])
 

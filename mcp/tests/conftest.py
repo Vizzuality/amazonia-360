@@ -88,3 +88,13 @@ def fixed_catalogue(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     """A catalogue that does not move when the committed snapshot is re-synced."""
     monkeypatch.setattr(catalogue, "_catalogue", _fixed_indicators)
     yield
+
+
+@pytest.fixture
+def stand_in_module(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
+    """The rectangle around the module as its outline, so the handler tests keep the
+    geometry they were written against and do not move with a re-sync."""
+    from mcp_server.geometry import aoi
+
+    monkeypatch.setattr(aoi, "module_outline", lambda: aoi.MODULE_ENVELOPE)
+    yield
