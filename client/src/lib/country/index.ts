@@ -66,7 +66,7 @@ const LIVE_CODES: ReadonlySet<string> = new Set(
   COUNTRIES.filter((c) => c.available).map((c) => c.code),
 );
 
-const UNSCOPED_ROOTS: ReadonlySet<string> = new Set(["auth", "private", "webshot"]);
+const UNSCOPED_ROOTS: ReadonlySet<string> = new Set(["auth", "partners", "private", "webshot"]);
 
 export type CountryCode = (typeof COUNTRIES)[number]["code"];
 
