@@ -344,7 +344,9 @@ The area of interest is a GeoJSON Polygon or MultiPolygon in WGS84, with a verte
 client cannot send a province at full resolution. The limit is set from the first measurements.
 
 Lookup by administrative unit name is out of scope: it needs a boundaries layer, and the module
-polygon is still pending.
+polygon is still pending. *Proposed for phase 3 on 30 September 2026* in the
+[places spec](2026-09-30-mcp-places-and-methodology-design.md), over the front end's
+administrative layers and the protected areas.
 
 ## Errors
 
