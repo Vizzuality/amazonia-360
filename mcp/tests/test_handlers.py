@@ -53,6 +53,10 @@ class FakeClient:
         self.calls.append("features")
         return [] if self.empty else [("Bosque", box(-79.0, -2.0, -77.0, 0.0))]
 
+    async def boundary(self, url: str, layer_id: int, where: str) -> list[BaseGeometry]:
+        self.calls.append("boundary")
+        return [] if self.empty else [box(-77.9, -1.1, -77.8, -1.0)]
+
     async def renderer(self, layer: Layer) -> dict[str, Any] | None:
         self.calls.append("renderer")
         if self.fail:
@@ -481,3 +485,84 @@ async def test_an_area_smaller_than_a_pixel_says_so() -> None:
     }
     with pytest.raises(HandlerError, match="smaller than one pixel"):
         await handlers(Pixels({}, 0)).class_shares(129, tiny)
+
+
+from mcp_server.places import Places  # noqa: E402
+from tests.test_places import SNAPSHOT  # noqa: E402
+
+
+def with_places(client: FakeClient | None = None) -> AreaHandlers:
+    return AreaHandlers(client or FakeClient(), places=Places(SNAPSHOT))  # type: ignore[arg-type]
+
+
+@pytest.mark.anyio
+async def test_a_place_gives_the_same_hectares_as_its_polygon() -> None:
+    handlers = with_places()
+    by_area = await handlers.area_by_category(210, TENA)
+    by_place = await handlers.area_by_category(210, place_id="canton:Napo/Tena")
+    assert by_place.value == by_area.value
+    assert by_place.aoi_ha == by_area.aoi_ha
+    assert by_place.place is not None
+    assert by_place.place.id == "canton:Napo/Tena"
+    assert by_place.place.kind == "canton"
+    assert by_area.place is None
+
+
+@pytest.mark.anyio
+async def test_every_handler_takes_a_place() -> None:
+    handlers = with_places()
+    place = "canton:Napo/Tena"
+    assert (await handlers.categories_in_area(210, place_id=place)).place is not None
+    assert (await handlers.count_in_area(202, place_id=place)).place is not None
+    assert (await handlers.class_shares(129, place_id=place)).place is not None
+    result, drawn = await handlers.area_by_category_map(210, place_id=place)
+    assert result.place is not None and drawn.area["type"] == "Polygon"
+    result, raster = await handlers.class_shares_map(129, place_id=place)
+    assert result.place is not None and raster.area["type"] == "Polygon"
+
+
+@pytest.mark.anyio
+async def test_the_map_carries_the_area_it_was_computed_over() -> None:
+    _, drawn = await with_places().area_by_category_map(210, TENA)
+    assert drawn.area["type"] == "Polygon"
+
+
+@pytest.mark.anyio
+async def test_both_area_and_place_are_refused() -> None:
+    with pytest.raises(HandlerError, match="not both"):
+        await with_places().area_by_category(210, TENA, place_id="canton:Napo/Tena")
+
+
+@pytest.mark.anyio
+async def test_neither_area_nor_place_is_refused() -> None:
+    with pytest.raises(HandlerError, match="find_places"):
+        await with_places().area_by_category(210)
+
+
+@pytest.mark.anyio
+async def test_an_unknown_place_says_to_search_again() -> None:
+    with pytest.raises(HandlerError, match="find_places"):
+        await with_places().area_by_category(210, place_id="canton:Napo/Nowhere")
+
+
+@pytest.mark.anyio
+async def test_a_place_that_left_its_layer_says_to_search_again() -> None:
+    handlers = with_places(FakeClient(empty=True))
+    with pytest.raises(HandlerError, match="find_places"):
+        await handlers.categories_in_area(210, place_id="canton:Napo/Tena")
+
+
+@pytest.mark.anyio
+async def test_a_place_is_not_held_to_the_client_vertex_limit() -> None:
+    from shapely.geometry import Point
+
+    dense = Point(-77.85, -1.05).buffer(0.04, quad_segs=2000)
+
+    class Dense(FakeClient):
+        async def boundary(
+            self, url: str, layer_id: int, where: str
+        ) -> list[BaseGeometry]:
+            return [dense]
+
+    result = await with_places(Dense()).count_in_area(202, place_id="canton:Napo/Tena")
+    assert result.timing.vertices_sent > 5000

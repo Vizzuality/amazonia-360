@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 
 from mcp_server.catalogue.models import RecordCounts
 from mcp_server.geometry.aoi import Coverage
+from mcp_server.places.models import PlaceKind
 
 
 class ComputedOver(BaseModel):
@@ -34,6 +35,7 @@ class Timing(BaseModel):
     total_ms: int
     arcgis_ms: int
     clip_ms: int = 0
+    place_ms: int = 0
     vertices_sent: int
     vertices_received: int = 0
 
@@ -57,12 +59,26 @@ class LayerFacts(BaseModel):
     )
 
 
+class PlaceInfo(BaseModel):
+    id: str
+    name: str
+    kind: PlaceKind
+    source: str = Field(description="The layer the boundary was read from.")
+
+
 class Result(BaseModel):
     indicator_id: int
     value: list[str] | int | dict[str, float]
     unit: str | None
     computed_over: ComputedOver
     coverage: Coverage
+    place: PlaceInfo | None = Field(
+        default=None,
+        description=(
+            "Set when the area was named with place_id: the place whose boundary "
+            "the figures were computed over."
+        ),
+    )
     layer: LayerFacts
     # Left undescribed, all-null provenance was reported in the Desktop trial as a
     # defect of the layer ("no provenance metadata"), which reads as doubt about it.

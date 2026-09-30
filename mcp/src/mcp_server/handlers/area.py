@@ -4,7 +4,7 @@ from collections.abc import Awaitable
 from dataclasses import dataclass
 from typing import Any, Literal
 
-from shapely.geometry import MultiPolygon, Polygon
+from shapely.geometry import MultiPolygon, Polygon, mapping
 
 from mcp_server.arcgis.client import ArcGISClient, ArcGISError, Feature
 from mcp_server.arcgis.raster import class_counts, class_rule, image_request
@@ -14,6 +14,7 @@ from mcp_server.catalogue.models import IndicatorMetadata, Layer, Operation, Ras
 from mcp_server.geometry.aoi import (
     AOIError,
     Coverage,
+    check_aoi,
     module_coverage,
     parse_aoi,
     vertex_count,
@@ -25,8 +26,17 @@ from mcp_server.geometry.area import (
     geodesic_area_ha,
 )
 from mcp_server.handlers.errors import HandlerError
-from mcp_server.handlers.result import ComputedOver, LayerFacts, Result, Timing
+from mcp_server.handlers.result import (
+    ComputedOver,
+    LayerFacts,
+    PlaceInfo,
+    Result,
+    Timing,
+)
 from mcp_server.measurement.stopwatch import Stopwatch
+from mcp_server.places import Places, load_places
+from mcp_server.places.geometry import PlaceGeometries
+from mcp_server.places.models import Place
 
 
 def _layer_facts(
@@ -41,8 +51,10 @@ def _layer_facts(
 
 @dataclass
 class CategoryMap:
-    """What a map of area_by_category draws: the clipped classes and their colours."""
+    """What a map of area_by_category draws: the clipped classes and their colours.
+    The area as GeoJSON, since a place id in the input carries no geometry."""
 
+    area: dict[str, Any]
     shapes: dict[str, Any]
     styles: dict[str, Style]
 
@@ -50,8 +62,10 @@ class CategoryMap:
 @dataclass
 class RasterMap:
     """What a map of class_shares_in_area draws: an image of the area and its
-    surroundings, where it goes, and the classes in the legend's order."""
+    surroundings, where it goes, and the classes in the legend's order.
+    The area as GeoJSON, since a place id in the input carries no geometry."""
 
+    area: dict[str, Any]
     name: str
     image: str
     corners: list[list[float]]
@@ -71,6 +85,7 @@ class _Prepared:
     indicator: IndicatorMetadata
     aoi: Polygon | MultiPolygon
     coverage: Coverage
+    place: Place | None
     watch: Stopwatch
 
     # allows() has checked the resource type, so these hold for the operation asked.
@@ -88,45 +103,81 @@ class _Prepared:
 
 
 class AreaHandlers:
-    def __init__(self, client: ArcGISClient, simplification: float = 0.001) -> None:
+    def __init__(
+        self,
+        client: ArcGISClient,
+        simplification: float = 0.001,
+        places: Places | None = None,
+    ) -> None:
         self._client = client
         self._simplification = simplification
+        self._places = places if places is not None else load_places()
+        self._geometries = PlaceGeometries(client)
         # Renderers change with a republish of the service, not between calls.
         self._renderers: dict[str, dict[str, Any] | None] = {}
 
     async def categories_in_area(
-        self, indicator_id: int, area: dict[str, Any]
+        self,
+        indicator_id: int,
+        area: dict[str, Any] | None = None,
+        *,
+        place_id: str | None = None,
     ) -> Result:
-        p = self._prepare(indicator_id, area, "presence")
+        p = await self._prepare(indicator_id, area, place_id, "presence")
         with p.watch.lap("arcgis"):
             values = await self._call(self._client.distinct(p.layer, p.aoi))
         computed_over = ComputedOver(type="feature_attributes", categories=len(values))
         return self._result(p, values, None, computed_over)
 
-    async def count_in_area(self, indicator_id: int, area: dict[str, Any]) -> Result:
-        p = self._prepare(indicator_id, area, "count")
+    async def count_in_area(
+        self,
+        indicator_id: int,
+        area: dict[str, Any] | None = None,
+        *,
+        place_id: str | None = None,
+    ) -> Result:
+        p = await self._prepare(indicator_id, area, place_id, "count")
         with p.watch.lap("arcgis"):
             n = await self._call(self._client.count(p.layer, p.aoi))
         return self._result(
             p, n, p.indicator.unit, ComputedOver(type="feature_count", features=n)
         )
 
-    async def area_by_category(self, indicator_id: int, area: dict[str, Any]) -> Result:
-        result, _ = await self._area_by_category(indicator_id, area, with_map=False)
+    async def area_by_category(
+        self,
+        indicator_id: int,
+        area: dict[str, Any] | None = None,
+        *,
+        place_id: str | None = None,
+    ) -> Result:
+        result, _ = await self._area_by_category(
+            indicator_id, area, place_id, with_map=False
+        )
         return result
 
     async def area_by_category_map(
-        self, indicator_id: int, area: dict[str, Any]
+        self,
+        indicator_id: int,
+        area: dict[str, Any] | None = None,
+        *,
+        place_id: str | None = None,
     ) -> tuple[Result, CategoryMap]:
         """The same result as area_by_category, from the same query, and its map."""
-        result, drawn = await self._area_by_category(indicator_id, area, with_map=True)
+        result, drawn = await self._area_by_category(
+            indicator_id, area, place_id, with_map=True
+        )
         assert drawn is not None
         return result, drawn
 
     async def _area_by_category(
-        self, indicator_id: int, area: dict[str, Any], *, with_map: bool
+        self,
+        indicator_id: int,
+        area: dict[str, Any] | None,
+        place_id: str | None,
+        *,
+        with_map: bool,
     ) -> tuple[Result, CategoryMap | None]:
-        p = self._prepare(indicator_id, area, "area")
+        p = await self._prepare(indicator_id, area, place_id, "area")
         with p.watch.lap("arcgis"):
             query = self._call(
                 self._client.features(p.layer, p.aoi, self._simplification)
@@ -155,24 +206,45 @@ class AreaHandlers:
         categories = sorted({f["properties"]["category"] for f in shapes})
         styles = await self._styles(p, renderer, categories)
         collection = {"type": "FeatureCollection", "features": shapes}
-        return result, CategoryMap(shapes=collection, styles=styles)
+        return result, CategoryMap(
+            area=mapping(p.aoi), shapes=collection, styles=styles
+        )
 
-    async def class_shares(self, indicator_id: int, area: dict[str, Any]) -> Result:
-        result, _ = await self._class_shares(indicator_id, area, with_map=False)
+    async def class_shares(
+        self,
+        indicator_id: int,
+        area: dict[str, Any] | None = None,
+        *,
+        place_id: str | None = None,
+    ) -> Result:
+        result, _ = await self._class_shares(
+            indicator_id, area, place_id, with_map=False
+        )
         return result
 
     async def class_shares_map(
-        self, indicator_id: int, area: dict[str, Any]
+        self,
+        indicator_id: int,
+        area: dict[str, Any] | None = None,
+        *,
+        place_id: str | None = None,
     ) -> tuple[Result, RasterMap]:
         """The same result as class_shares, and an image of the area to draw."""
-        result, drawn = await self._class_shares(indicator_id, area, with_map=True)
+        result, drawn = await self._class_shares(
+            indicator_id, area, place_id, with_map=True
+        )
         assert drawn is not None
         return result, drawn
 
     async def _class_shares(
-        self, indicator_id: int, area: dict[str, Any], *, with_map: bool
+        self,
+        indicator_id: int,
+        area: dict[str, Any] | None,
+        place_id: str | None,
+        *,
+        with_map: bool,
     ) -> tuple[Result, RasterMap | None]:
-        p = self._prepare(indicator_id, area, "class_share")
+        p = await self._prepare(indicator_id, area, place_id, "class_share")
         raster = p.raster
         params, corners = image_request(raster, p.aoi)
         with p.watch.lap("arcgis"):
@@ -223,6 +295,7 @@ class AreaHandlers:
         if not with_map:
             return result, None
         return result, RasterMap(
+            area=mapping(p.aoi),
             name=p.indicator.name,
             image="data:image/png;base64," + base64.b64encode(image).decode(),
             corners=corners,
@@ -254,8 +327,12 @@ class AreaHandlers:
                 pass
         return category_styles(renderer, p.layer.category_field, categories, pairs)
 
-    def _prepare(
-        self, indicator_id: int, area: dict[str, Any], operation: Operation
+    async def _prepare(
+        self,
+        indicator_id: int,
+        area: dict[str, Any] | None,
+        place_id: str | None,
+        operation: Operation,
     ) -> _Prepared:
         watch = Stopwatch()
         indicator = get_indicator_metadata(indicator_id)
@@ -272,14 +349,37 @@ class AreaHandlers:
                 f"Indicator {indicator_id} is {indicator.value_type} and does not "
                 f"support {operation}."
             )
-        try:
-            aoi = parse_aoi(area)
-        except AOIError as exc:
-            raise HandlerError(str(exc)) from exc
+        with watch.lap("place"):
+            aoi, place = await self._area(area, place_id)
         coverage = module_coverage(aoi)
         if coverage.status == "outside":
             raise HandlerError("The area is outside the Ecuador module.")
-        return _Prepared(indicator, aoi, coverage, watch)
+        return _Prepared(indicator, aoi, coverage, place, watch)
+
+    async def _area(
+        self, area: dict[str, Any] | None, place_id: str | None
+    ) -> tuple[Polygon | MultiPolygon, Place | None]:
+        if area is not None and place_id is not None:
+            raise HandlerError("Give an area or a place_id, not both.")
+        if place_id is None:
+            if area is None:
+                raise HandlerError(
+                    "Give an area as GeoJSON, or a place_id from find_places."
+                )
+            try:
+                return parse_aoi(area), None
+            except AOIError as exc:
+                raise HandlerError(str(exc)) from exc
+        place = self._places.get(place_id)
+        if place is None:
+            raise HandlerError(
+                f"Unknown place {place_id!r}. Call find_places for its current id."
+            )
+        geom = await self._call(self._geometries.geometry(place))
+        try:
+            return check_aoi(geom, max_vertices=None), place
+        except AOIError as exc:
+            raise HandlerError(f"The boundary of {place.id}: {exc}") from exc
 
     @staticmethod
     async def _call[T](awaitable: Awaitable[T]) -> T:
@@ -308,6 +408,14 @@ class AreaHandlers:
             unit=unit,
             computed_over=computed_over,
             coverage=p.coverage,
+            place=PlaceInfo(
+                id=p.place.id,
+                name=p.place.name,
+                kind=p.place.kind,
+                source=f"{p.place.source.url}/{p.place.source.layer_id}",
+            )
+            if p.place
+            else None,
             provenance=p.indicator.provenance.model_dump(),
             layer=_layer_facts(p.indicator, value),
             caveats=[c.text for c in p.indicator.caveats],
@@ -319,6 +427,7 @@ class AreaHandlers:
                 total_ms=p.watch.total_ms(),
                 arcgis_ms=p.watch.ms("arcgis"),
                 clip_ms=p.watch.ms("clip"),
+                place_ms=p.watch.ms("place"),
                 vertices_sent=vertex_count(p.aoi),
                 vertices_received=vertices_received,
             ),
