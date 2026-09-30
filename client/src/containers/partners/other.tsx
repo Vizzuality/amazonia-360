@@ -3,7 +3,12 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 
 import { getOtherPartnerLogoRows } from "@/lib/country/partners";
+import { isFeatureEnabled } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
+
+function getTitleKey(): "partners-other-title" | "partners-regional-title" {
+  return isFeatureEnabled("country-module") ? "partners-other-title" : "partners-regional-title";
+}
 
 export default function OtherPartners() {
   const t = useTranslations();
@@ -15,7 +20,7 @@ export default function OtherPartners() {
       <div className="container flex flex-col items-center gap-8 lg:flex-row lg:justify-center">
         <div className="flex flex-col gap-2">
           <h2 className="text-foreground text-2xl leading-[normal] font-bold">
-            {t("partners-other-title")}
+            {t(getTitleKey())}
           </h2>
           <p className="text-muted-foreground text-sm leading-[normal] font-medium">
             {t("partners-other-description")}
