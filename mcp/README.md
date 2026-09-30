@@ -57,7 +57,8 @@ This needs the variables in the `MCP_PUBLIC_URL`, `MCP_DATABASE_URL`, `MCP_GOOGL
 `MCP_GOOGLE_CLIENT_SECRET` and `MCP_ALLOWED_REDIRECT_URIS` rows of the settings table below; the
 server refuses to start over HTTP when any of the required ones is missing.
 For local use, `MCP_PUBLIC_URL=http://localhost:8000/mcp` works with a Google OAuth client
-whose redirect is `http://localhost:8000/mcp/oauth/callback`.
+whose redirect is `http://localhost:8000/mcp/oauth/callback`. `.env.staging.default` lists what
+staging needs, without values, and where each value comes from.
 
 The emails that can sign in are in the `mcp.allowed_emails` table, managed with the same
 CLI, which reads `MCP_DATABASE_URL`:
