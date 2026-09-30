@@ -332,6 +332,14 @@ describe("CountrySelector (desktop)", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
+  test("renders nothing on the home page", () => {
+    mockPathname.mockReturnValue("/");
+    const { wrapper } = setup();
+    const { container } = render(<CountrySelector />, { wrapper });
+
+    expect(container).toBeEmptyDOMElement();
+  });
+
   test("on a saved report shows the report's module locked instead of the dropdown", () => {
     mockPathname.mockReturnValue("/reports/some-saved-id");
     mockReportModules.mockReturnValue([
