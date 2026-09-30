@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 
 import Footer from "@/containers/footer";
 import About from "@/containers/home/about";
+import CountryModules from "@/containers/home/country-modules";
 import Glance from "@/containers/home/glance";
 import Help from "@/containers/home/help";
 import Hero from "@/containers/home/hero";
@@ -34,6 +35,7 @@ export default function HomePage() {
       <KeyFeaturesReport />
       <KeyFeaturesGrid />
       <InformationOn />
+      <CountryModules />
       <Glance />
       <Partners />
       <Hub />
