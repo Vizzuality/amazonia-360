@@ -61,6 +61,11 @@ whose redirect is `http://localhost:8000/mcp/oauth/callback`.
 Behind a reverse proxy, the proxy must forward the original `Host` header (`proxy_set_header
 Host $host;` in nginx): the server only accepts requests for the host in `MCP_PUBLIC_URL`.
 
+## Places
+
+`find_places` returns provinces, cantons and protected areas by name; every area tool takes the
+`place_id` it returns instead of `area`.
+
 ## Catalogue
 
 The indicators live in three files in `src/mcp_server/catalogue/`:
@@ -132,6 +137,20 @@ and ask the host to show a map next to the answer, as an
 use MapLibre from jsDelivr and OpenFreeMap tiles, and the front end's tokens and Montserrat. What
 only the page needs (clipped shapes, a raster image) travels in the result's `_meta`, not in the
 text the model reads. Hosts without MCP Apps get the figures alone.
+
+## Skill
+
+`skills/amazonia360/SKILL.md` tells the model how to use the tools: the order of calls, what to
+do when a place name matches several places, which indicators answer an ambiguous word, and how
+to read a result. It is installed by hand:
+
+- Claude Desktop and claude.ai: zip the folder (`cd skills && zip -r amazonia360.zip amazonia360`)
+  and upload it under Settings → Capabilities → Skills.
+- Claude Code: copy `skills/amazonia360` into `.claude/skills/` of the project, or
+  `~/.claude/skills/`.
+
+`tests/test_skill.py` fails when a tool is missing from the skill, or when the skill names an
+indicator that cannot be answered.
 
 ## Timing run
 
