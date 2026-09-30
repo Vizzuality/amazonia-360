@@ -55,3 +55,15 @@ async def test_the_snapshot_is_current(indicator: IndicatorMetadata) -> None:
         if getattr(indicator.sync, field) != getattr(live, field)
     }
     assert stale == {}, "run `uv run amazonia360-mcp-catalogue sync`"
+
+
+async def test_a_canton_by_name_answers() -> None:
+    from mcp_server.places import load_places
+
+    places = load_places()
+    [tena] = places.find("Tena").places
+    async with httpx.AsyncClient(timeout=65) as http:
+        by_name = AreaHandlers(ArcGISClient(http), places=places)
+        result = await by_name.categories_in_area(210, place_id=tena.id)
+    assert result.value
+    assert result.place is not None and result.place.id == "canton:Napo/Tena"

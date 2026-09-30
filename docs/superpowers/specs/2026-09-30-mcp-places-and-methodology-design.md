@@ -74,7 +74,7 @@ word inside the name, so "Sumaco" finds "Sumaco Napo-Galeras". With no match, it
 list and a note that names the three kinds covered.
 
 The candidate list comes from a snapshot written by the catalogue sync
-(`catalogue/places.snapshot.json`: ids, names, kinds, areas, bboxes; no geometry). That keeps
+(`places/places.snapshot.json`: ids, names, kinds, areas, bboxes; no geometry). That keeps
 `find_places` offline and fast. The geometry is fetched from ArcGIS when an area tool uses the id,
 and kept in an in-process cache for 24 hours.
 
@@ -145,6 +145,8 @@ better. Whether it does is measured (Testing).
 
 1. The clip time over large protected areas at full resolution (Yasuní, 23,369 vertices). If it is
    too slow, the server generalises the boundary and `computed_over` says by how much.
+   Measured on 30 September 2026 at full resolution: `area_by_category` over Yasuní took 15.0 s
+   (12.3 s ArcGIS, 2.8 s clip), against 14.3 s over Tena. Nothing to generalise for now.
 2. Official boundaries. The administrative layers come from the regional platform and have the
    name defects listed above. The consultant could supply the official ones (INEC or CONALI),
    parishes included. Until then, the defects could go to Jira with the `data-quality` label.

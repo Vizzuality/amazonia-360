@@ -36,6 +36,9 @@ Status on 30 September 2026. The service runs in staging only. Designs are in
 
    Local work, independent of the deployment.
 
+   Implemented. Left: the Desktop check of the maps by place name, and the with/without skill
+   round from the spec's Testing section.
+
 ## Next
 
 3. **Quantity rasters** (AM-732). The 22 image services that call for a sum or a mean over the
