@@ -12,7 +12,9 @@ from mcp_server.catalogue.models import IndicatorMetadata
 from mcp_server.db import create_engine, session_maker
 from mcp_server.db.migrate import upgrade
 
-TABLES = "mcp.tokens, mcp.codes, mcp.pending_authorizations, mcp.clients"
+TABLES = (
+    "mcp.allowed_emails, mcp.tokens, mcp.codes, mcp.pending_authorizations, mcp.clients"
+)
 
 
 @pytest.fixture

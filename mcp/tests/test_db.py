@@ -47,4 +47,4 @@ async def test_the_version_table_is_in_the_mcp_schema(
         version = await session.scalar(
             text("SELECT version_num FROM mcp.alembic_version")
         )
-    assert version == "0001"
+    assert version == "0002"

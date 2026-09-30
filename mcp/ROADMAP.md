@@ -14,14 +14,16 @@ Status on 30 September 2026. The service runs in staging only. Designs are in
   - `map_area_by_category` and `map_class_shares_in_area` with MapLibre, as MCP Apps;
   - five classed rasters of the regional platform.
 - **Phase 2:**
-  - Streamable HTTP behind OAuth, with Google sign-in and an email allowlist;
+  - Streamable HTTP behind OAuth, with Google sign-in and an email allowlist in the `mcp` schema,
+    managed with `amazonia360-mcp-db allow` and `revoke`;
   - state in the `mcp` schema;
   - tested end to end from Claude Code.
 
 ## Now
 
 1. **Staging deployment.** A fourth container in the Beanstalk environment. The migration runs
-   before the server, as the `mcp` role. One instance and one worker. nginx needs:
+   before the server, as the `mcp` role; after the first one, `amazonia360-mcp-db allow` adds
+   the first emails. One instance and one worker. nginx needs:
    - `proxy_buffering off` and a read timeout above 65 s;
    - the Host header forwarded;
    - the root `.well-known` routes;

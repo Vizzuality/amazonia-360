@@ -1,5 +1,3 @@
-from dataclasses import replace
-
 import pytest
 from mcp.server.auth.provider import (
     AccessToken,
@@ -13,10 +11,12 @@ from mcp.server.auth.provider import (
 )
 from mcp.shared.auth import OAuthClientInformationFull
 from pydantic import AnyUrl
+from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from mcp_server.auth.provider import SCOPE, AmazoniaOAuthProvider
 from mcp_server.auth.store import AuthStore
+from mcp_server.db.models import AllowedEmail
 from tests.auth_helpers import ANA, CLAUDE, PUBLIC_URL, Clock, http_settings
 
 pytestmark = [pytest.mark.db, pytest.mark.anyio]
@@ -54,6 +54,7 @@ def params(**overrides: object) -> AuthorizationParams:
 async def provider(sessions: async_sessionmaker[AsyncSession]) -> AmazoniaOAuthProvider:
     p = AmazoniaOAuthProvider(AuthStore(sessions, clock=Clock()), http_settings())
     await p.register_client(info())
+    await p.store.allow(ANA)
     return p
 
 
@@ -179,15 +180,49 @@ async def test_a_refresh_token_belongs_to_its_client(
     assert await provider.load_refresh_token(other, refresh) is None
 
 
-async def test_an_email_off_the_allowlist_loses_access_at_once(
+async def test_a_revoked_email_loses_access_at_once(
     provider: AmazoniaOAuthProvider,
 ) -> None:
     client = await provider.get_client("client-1")
     assert client is not None
     access, refresh = await tokens(provider)
-    provider.settings = replace(provider.settings, allowed_emails=frozenset())
+    revoked = await provider.store.revoke(ANA)
+    assert revoked.tokens == 2
     assert await provider.load_access_token(access) is None
     assert await provider.load_refresh_token(client, refresh) is None
+    assert await provider.store.get_token(access, "access") is None
+
+
+async def test_an_email_off_the_table_loses_access_even_with_its_tokens_kept(
+    provider: AmazoniaOAuthProvider, sessions: async_sessionmaker[AsyncSession]
+) -> None:
+    """The per-request check alone, for a row deleted by hand in SQL."""
+    client = await provider.get_client("client-1")
+    assert client is not None
+    access, refresh = await tokens(provider)
+    async with sessions() as session:
+        await session.execute(delete(AllowedEmail))
+        await session.commit()
+    assert await provider.store.get_token(access, "access") is not None
+    assert await provider.load_access_token(access) is None
+    assert await provider.load_refresh_token(client, refresh) is None
+
+
+async def test_a_code_for_a_revoked_email_is_not_exchanged(
+    provider: AmazoniaOAuthProvider, sessions: async_sessionmaker[AsyncSession]
+) -> None:
+    client = await provider.get_client("client-1")
+    assert client is not None
+    code = await provider.load_authorization_code(
+        client, await signed_in_code(provider)
+    )
+    assert code is not None
+    async with sessions() as session:
+        await session.execute(delete(AllowedEmail))
+        await session.commit()
+    with pytest.raises(TokenError) as exc:
+        await provider.exchange_authorization_code(client, code)
+    assert exc.value.error == "invalid_grant"
 
 
 async def test_revoking_an_access_token_revokes_its_refresh_token(

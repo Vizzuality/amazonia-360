@@ -7,10 +7,17 @@ from typing import Literal, cast
 from mcp.server.auth.provider import AuthorizationParams
 from mcp.shared.auth import OAuthClientInformationFull
 from sqlalchemy import CursorResult, delete, func, select, update
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from mcp_server.auth.crypto import digest, new_secret
-from mcp_server.db.models import Client, Code, PendingAuthorization, Token
+from mcp_server.db.models import (
+    AllowedEmail,
+    Client,
+    Code,
+    PendingAuthorization,
+    Token,
+)
 
 ACCESS_TTL = timedelta(hours=1)
 REFRESH_TTL = timedelta(days=30)
@@ -30,6 +37,24 @@ async def _lock_family(session: AsyncSession, family: str) -> None:
     await session.execute(
         select(func.pg_advisory_xact_lock(func.hashtextextended(family, 0)))
     )
+
+
+def normalise_email(raw: str) -> str:
+    """The form the allowlist stores. Only the shape is checked (one @, a dot in
+    the domain); Google decides whether the address exists."""
+    email = raw.strip().lower()
+    local, at, domain = email.partition("@")
+    name, dot, tld = domain.rpartition(".")
+    if not (local and at and "@" not in domain and name and dot and tld):
+        raise ValueError(f"{raw!r} is not an email address")
+    return email
+
+
+@dataclass(frozen=True)
+class Revoked:
+    listed: bool
+    tokens: int
+    codes: int
 
 
 @dataclass(frozen=True)
@@ -233,19 +258,25 @@ class AuthStore:
         return IssuedTokens(access_token=access, refresh_token=refresh, family=family)
 
     async def get_token(
-        self, token: str, kind: Literal["access", "refresh"]
+        self,
+        token: str,
+        kind: Literal["access", "refresh"],
+        *,
+        allowed: bool = False,
     ) -> Token | None:
-        """Looks up an unexpired token by its hash. A refresh token already spent
+        """Looks up an unexpired token by its hash; with `allowed`, only while its
+        email is on the allowlist, in the same query. A refresh token already spent
         by `rotate_refresh` is still returned here (its `used_at` is set); callers
         must check `used_at` themselves to tell a live token from a used one."""
+        query = select(Token).where(
+            Token.token_hash == digest(token),
+            Token.kind == kind,
+            Token.expires_at > self._clock(),
+        )
+        if allowed:
+            query = query.join(AllowedEmail, AllowedEmail.email == Token.email)
         async with self._sessions() as session:
-            return await session.scalar(
-                select(Token).where(
-                    Token.token_hash == digest(token),
-                    Token.kind == kind,
-                    Token.expires_at > self._clock(),
-                )
-            )
+            return await session.scalar(query)
 
     async def rotate_refresh(
         self, client_id: str, token: str, scopes: list[str] | None
@@ -299,6 +330,52 @@ class AuthStore:
             await _lock_family(session, family)
             await session.execute(delete(Token).where(Token.family == family))
             await session.commit()
+
+    async def is_allowed(self, email: str) -> bool:
+        async with self._sessions() as session:
+            found = await session.scalar(
+                select(AllowedEmail.email).where(AllowedEmail.email == email)
+            )
+        return found is not None
+
+    async def allow(self, email: str, added_by: str | None = None) -> bool:
+        """Puts `email` on the allowlist; False when it was already there."""
+        async with self._sessions() as session:
+            added = await session.scalar(
+                insert(AllowedEmail)
+                .values(email=normalise_email(email), added_by=added_by)
+                .on_conflict_do_nothing()
+                .returning(AllowedEmail.email)
+            )
+            await session.commit()
+        return added is not None
+
+    async def revoke(self, email: str) -> Revoked:
+        """Takes `email` off the allowlist and deletes its codes and tokens, so
+        access ends even for a request that skipped the allowlist check."""
+        email = normalise_email(email)
+        async with self._sessions() as session:
+            listed = await session.scalar(
+                delete(AllowedEmail)
+                .where(AllowedEmail.email == email)
+                .returning(AllowedEmail.email)
+                .execution_options(**_NO_SYNC)
+            )
+            codes = await session.execute(delete(Code).where(Code.email == email))
+            tokens = await session.execute(delete(Token).where(Token.email == email))
+            await session.commit()
+        return Revoked(
+            listed=listed is not None,
+            tokens=cast(CursorResult, tokens).rowcount,
+            codes=cast(CursorResult, codes).rowcount,
+        )
+
+    async def allowed_emails(self) -> list[AllowedEmail]:
+        async with self._sessions() as session:
+            rows = await session.scalars(
+                select(AllowedEmail).order_by(AllowedEmail.email)
+            )
+            return list(rows)
 
     async def delete_expired(self) -> int:
         now = self._clock()

@@ -76,3 +76,20 @@ class Token(Base):
     resource: Mapped[str | None] = mapped_column(Text)
     used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+
+
+class AllowedEmail(Base):
+    __tablename__ = "allowed_emails"
+    # Tokens are matched to this table by exact email, so a row typed by hand in
+    # SQL must be in the same form as the ones the CLI writes.
+    __table_args__ = (
+        CheckConstraint(
+            "email = lower(btrim(email))", name="allowed_emails_normalised"
+        ),
+    )
+
+    email: Mapped[str] = mapped_column(Text, primary_key=True)
+    added_by: Mapped[str | None] = mapped_column(Text)
+    added_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )

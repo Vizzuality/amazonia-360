@@ -12,7 +12,7 @@ one is listed under "Defects not carried over".
 
 | # | Decision | Outcome |
 |---|---|---|
-| 1 | Who can connect | Anyone with a Google account whose verified email is on an allowlist in configuration. No domain restriction, so partners such as the IDB reviewers can connect |
+| 1 | Who can connect | Anyone with a Google account whose verified email is on an allowlist: the table `mcp.allowed_emails`, managed with `amazonia360-mcp-db allow`, `revoke` and `list`. A change takes effect on the next request, without a restart. No domain restriction, so partners such as the IDB reviewers can connect. Until 30 September 2026 the allowlist was the `MCP_ALLOWED_EMAILS` variable, and each change needed a redeploy |
 | 2 | Database | A schema `mcp` owned by its own role, inside the existing staging database. Replaces "a second database" in the module spec |
 | 3 | Identity provider | Google, through a server-side authorization code exchange |
 | 4 | Tokens | Opaque random tokens, stored as SHA-256 hashes. No JWT |
@@ -36,7 +36,7 @@ users reconnect Claude.
 ### Why no JWT and no Google library
 
 An access token that is a database row can be revoked, and the allowlist can be checked on every
-request against the current configuration. The traffic of a staging MCP makes the lookup per
+request against the current allowlist. The traffic of a staging MCP makes the lookup per
 request irrelevant. With no JWT there is no signing key to manage and no JWT library to add.
 
 Google's ID token is not needed either. The server exchanges Google's code at Google's token
@@ -112,8 +112,10 @@ Claude ──POST──────▶ /mcp/token                PKCE checked by
   stays to recognise a second use until it expires.
 - **Storage:** only the SHA-256 of each token and code is stored; a token is looked up by its hash.
 - **Verification**, on every request: the hash exists, the token has not expired or been revoked,
-  and its email is still on the allowlist. Removing an email and redeploying ends that user's
-  access at once. The same allowlist check runs on every refresh.
+  and its email is still on the allowlist, checked in the same query as the token lookup (a join
+  on `mcp.allowed_emails`), with no cache. The same check runs on every refresh and at the
+  callback. `amazonia360-mcp-db revoke` removes the email and deletes its tokens and codes, so
+  access ends at once.
 - **`AccessToken`:** `subject` is the email and `resource` is the MCP's public URL, with
   `validate_token_resource=True`, so the SDK refuses a token issued for another resource. The SDK
   binds each HTTP session to the `client_id` and `subject` that created it.
@@ -126,7 +128,7 @@ Claude ──POST──────▶ /mcp/token                PKCE checked by
 
 ## Storage
 
-Schema `mcp`, one Alembic migration, `version_table_schema="mcp"`:
+Schema `mcp`, Alembic migrations, `version_table_schema="mcp"`:
 
 | Table | Holds | Expires |
 |---|---|---|
@@ -134,6 +136,7 @@ Schema `mcp`, one Alembic migration, `version_table_schema="mcp"`:
 | `pending_authorizations` | id hash, client, redirect URI, PKCE challenge, scopes, resource, client state, email and CSRF token once Google returns | 10 minutes |
 | `codes` | code hash, client, redirect URI, PKCE challenge, scopes, resource, email | 60 seconds |
 | `tokens` | token hash, kind (access or refresh), family, client, email, scopes, resource, `used_at`, `expires_at` | 1 hour or 30 days |
+| `allowed_emails` | email (primary key, stripped and lowercased), `added_by`, `added_at` | never; `amazonia360-mcp-db revoke` |
 
 A background task started in the server's lifespan deletes expired rows every hour. No table
 refers to Payload's tables.
@@ -170,13 +173,15 @@ script.
 | `MCP_PUBLIC_URL` | `https://staging.amazoniaforever360.org/mcp` |
 | `MCP_DATABASE_URL` | the `mcp` role's connection string |
 | `MCP_GOOGLE_CLIENT_ID`, `MCP_GOOGLE_CLIENT_SECRET` | a Google OAuth client of its own, with redirect `…/mcp/oauth/callback` |
-| `MCP_ALLOWED_EMAILS` | comma-separated, compared lowercased |
 | `MCP_ALLOWED_REDIRECT_URIS` | the redirect allowlist, with the defaults above |
 
-The server refuses to start over HTTP when any of these is missing.
+The server refuses to start over HTTP when any of these is missing, except
+`MCP_ALLOWED_REDIRECT_URIS`, which has defaults. The email allowlist is not configuration: it is
+the `mcp.allowed_emails` table. With the table empty the server still starts, and logs that
+nobody can sign in. A leftover `MCP_ALLOWED_EMAILS` is ignored, with a warning at startup.
 
 Needed from outside the repository: the Google OAuth client, in a Vizzuality Google Cloud project,
-and the first list of emails.
+and the first emails, added with `amazonia360-mcp-db allow` after the migration.
 
 ## Defects not carried over
 
@@ -204,7 +209,8 @@ Ported from VizzHub where they apply (provider, transport), plus one test per de
 - a consent post without the CSRF token is refused;
 - a code works once, also under two concurrent exchanges;
 - a reused refresh token revokes its family;
-- an email removed from the allowlist loses access on the next request;
+- an email removed from the allowlist loses access on the next request and on refresh, and
+  `revoke` deletes its tokens;
 - a token cannot use a session another token created;
 - a token issued for another resource is refused.
 - the consent redirects, Allow and Cancel, carry `iss` equal to the metadata's `issuer`.

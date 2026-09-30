@@ -7,7 +7,6 @@ ENV = {
     "MCP_DATABASE_URL": "postgresql://mcp:secret@db:5432/amazonia360",
     "MCP_GOOGLE_CLIENT_ID": "client-id",
     "MCP_GOOGLE_CLIENT_SECRET": "client-secret",
-    "MCP_ALLOWED_EMAILS": " Ana@Example.org, luis@example.org ,",
 }
 
 
@@ -16,7 +15,6 @@ def test_reads_the_environment() -> None:
     assert s.public_url == "https://staging.amazoniaforever360.org/mcp"
     assert s.public_host == "staging.amazoniaforever360.org"
     assert s.mount_path == "/mcp"
-    assert s.allowed_emails == frozenset({"ana@example.org", "luis@example.org"})
     assert s.allowed_redirect_uris == DEFAULT_REDIRECT_URIS
     assert s.port == 8000
 
@@ -35,14 +33,23 @@ def test_names_every_missing_variable() -> None:
         "MCP_DATABASE_URL",
         "MCP_GOOGLE_CLIENT_ID",
         "MCP_GOOGLE_CLIENT_SECRET",
-        "MCP_ALLOWED_EMAILS",
     ):
         assert name in str(exc.value)
 
 
-def test_an_empty_email_list_is_missing() -> None:
-    with pytest.raises(ConfigError, match="MCP_ALLOWED_EMAILS"):
-        HttpSettings.from_env({**ENV, "MCP_ALLOWED_EMAILS": " , "})
+def test_the_allowlist_is_not_configuration(capsys: pytest.CaptureFixture) -> None:
+    s = HttpSettings.from_env(ENV)
+    assert not hasattr(s, "allowed_emails")
+    assert capsys.readouterr().err == ""
+
+
+def test_a_stale_email_list_is_ignored_with_a_warning(
+    capsys: pytest.CaptureFixture,
+) -> None:
+    HttpSettings.from_env({**ENV, "MCP_ALLOWED_EMAILS": "ana@example.org"})
+    [line] = capsys.readouterr().err.splitlines()
+    assert "MCP_ALLOWED_EMAILS" in line and "ignored" in line
+    assert "amazonia360-mcp-db allow" in line
 
 
 @pytest.mark.parametrize(

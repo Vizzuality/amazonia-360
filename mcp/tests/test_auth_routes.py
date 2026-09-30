@@ -31,6 +31,7 @@ async def provider(sessions: async_sessionmaker[AsyncSession]) -> AmazoniaOAuthP
             token_endpoint_auth_method="none",
         )
     )
+    await p.store.allow(ANA)
     return p
 
 

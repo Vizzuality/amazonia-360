@@ -8,7 +8,9 @@ from typing import Any
 from urllib.parse import urlencode
 
 from mcp_server.auth.google import GoogleError
+from mcp_server.auth.store import AuthStore
 from mcp_server.config import DEFAULT_REDIRECT_URIS, HttpSettings
+from mcp_server.db import create_engine, session_maker
 
 PUBLIC_URL = "https://staging.test/mcp"
 ANA = "ana@example.org"
@@ -21,11 +23,19 @@ def http_settings(**overrides: Any) -> HttpSettings:
         database_url=os.environ.get("MCP_TEST_DATABASE_URL", ""),
         google_client_id="google-client",
         google_client_secret="google-secret",
-        allowed_emails=frozenset({ANA}),
         allowed_redirect_uris=DEFAULT_REDIRECT_URIS,
         port=8000,
     )
     return replace(base, **overrides)
+
+
+async def allow_emails(database_url: str, *emails: str) -> None:
+    """Puts `emails` on the allowlist table, as `amazonia360-mcp-db allow` does."""
+    engine = create_engine(database_url)
+    store = AuthStore(session_maker(engine))
+    for email in emails:
+        await store.allow(email)
+    await engine.dispose()
 
 
 class Clock:

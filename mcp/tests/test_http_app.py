@@ -8,13 +8,23 @@ from urllib.parse import parse_qs, urlsplit
 import httpx
 import pytest
 from sqlalchemy import text
+from starlette.applications import Starlette
 
 from mcp_server.auth.crypto import digest
-from mcp_server.db import create_engine
+from mcp_server.auth.store import AuthStore
+from mcp_server.db import create_engine, session_maker
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.http_app import create_http_app
 from mcp_server.measurement.call_log import CallLog
-from tests.auth_helpers import ANA, CLAUDE, PUBLIC_URL, FakeGoogle, http_settings, pkce
+from tests.auth_helpers import (
+    ANA,
+    CLAUDE,
+    PUBLIC_URL,
+    FakeGoogle,
+    allow_emails,
+    http_settings,
+    pkce,
+)
 from tests.test_handlers import TENA, FakeClient
 
 pytestmark = [
@@ -30,14 +40,19 @@ MCP = {
 LEGACY = "2025-06-18"
 
 
-@pytest.fixture
-async def http(clean_database: str, tmp_path: Path) -> AsyncIterator[httpx.AsyncClient]:
-    app = create_http_app(
-        http_settings(database_url=clean_database),
+def app_for(database_url: str, tmp_path: Path) -> Starlette:
+    return create_http_app(
+        http_settings(database_url=database_url),
         google=FakeGoogle(),
         handlers=AreaHandlers(FakeClient()),  # type: ignore[arg-type]
         call_log=CallLog(tmp_path / "calls.jsonl"),
     )
+
+
+@pytest.fixture
+async def http(clean_database: str, tmp_path: Path) -> AsyncIterator[httpx.AsyncClient]:
+    await allow_emails(clean_database, ANA)
+    app = app_for(clean_database, tmp_path)
     async with app.router.lifespan_context(app):
         async with httpx.AsyncClient(
             transport=httpx.ASGITransport(app=app), base_url="https://staging.test"
@@ -288,3 +303,47 @@ async def test_a_foreign_origin_is_refused(http: httpx.AsyncClient) -> None:
         json={},
     )
     assert response.status_code == 403
+
+
+async def test_a_revoked_email_is_refused_on_its_next_request_and_refresh(
+    http: httpx.AsyncClient, clean_database: str
+) -> None:
+    tokens = await sign_in(http)
+    session = await open_session(http, tokens["access_token"])
+    engine = create_engine(clean_database)
+    await AuthStore(session_maker(engine)).revoke(ANA)
+    await engine.dispose()
+    response = await call(http, tokens["access_token"], session, "list_indicators", {})
+    assert response.status_code == 401
+    refresh = await http.post(
+        "/mcp/token",
+        data={
+            "grant_type": "refresh_token",
+            "refresh_token": tokens["refresh_token"],
+            "client_id": tokens["client_id"],
+        },
+    )
+    assert refresh.status_code == 400
+    assert refresh.json()["error"] == "invalid_grant"
+
+
+async def test_startup_says_when_nobody_can_sign_in(
+    clean_database: str, tmp_path: Path, capsys: pytest.CaptureFixture
+) -> None:
+    app = app_for(clean_database, tmp_path)
+    async with app.router.lifespan_context(app):
+        pass
+    [line] = [
+        line for line in capsys.readouterr().err.splitlines() if "allowlist" in line
+    ]
+    assert "nobody can sign in" in line and "amazonia360-mcp-db allow" in line
+
+
+async def test_startup_is_quiet_when_someone_is_allowed(
+    clean_database: str, tmp_path: Path, capsys: pytest.CaptureFixture
+) -> None:
+    await allow_emails(clean_database, ANA)
+    app = app_for(clean_database, tmp_path)
+    async with app.router.lifespan_context(app):
+        pass
+    assert "allowlist" not in capsys.readouterr().err

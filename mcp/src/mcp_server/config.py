@@ -1,4 +1,5 @@
 import os
+import sys
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -54,7 +55,6 @@ class HttpSettings:
     database_url: str
     google_client_id: str
     google_client_secret: str
-    allowed_emails: frozenset[str]
     allowed_redirect_uris: tuple[str, ...]
     port: int
 
@@ -73,7 +73,12 @@ class HttpSettings:
     @classmethod
     def from_env(cls, env: Mapping[str, str] | None = None) -> "HttpSettings":
         env = os.environ if env is None else env
-        emails = frozenset(e.lower() for e in _list(env.get("MCP_ALLOWED_EMAILS", "")))
+        if env.get("MCP_ALLOWED_EMAILS", "").strip():
+            print(
+                "MCP_ALLOWED_EMAILS is ignored: the allowlist is a table in the "
+                "database now. Add emails with `amazonia360-mcp-db allow <email>`.",
+                file=sys.stderr,
+            )
         values = {
             "MCP_PUBLIC_URL": env.get("MCP_PUBLIC_URL", "").strip().rstrip("/"),
             "MCP_DATABASE_URL": env.get("MCP_DATABASE_URL", "").strip(),
@@ -81,8 +86,6 @@ class HttpSettings:
             "MCP_GOOGLE_CLIENT_SECRET": env.get("MCP_GOOGLE_CLIENT_SECRET", "").strip(),
         }
         missing = [name for name, value in values.items() if not value]
-        if not emails:
-            missing.append("MCP_ALLOWED_EMAILS")
         if missing:
             raise ConfigError(f"Missing settings for HTTP: {', '.join(missing)}")
         url = urlsplit(values["MCP_PUBLIC_URL"])
@@ -98,7 +101,6 @@ class HttpSettings:
             database_url=values["MCP_DATABASE_URL"],
             google_client_id=values["MCP_GOOGLE_CLIENT_ID"],
             google_client_secret=values["MCP_GOOGLE_CLIENT_SECRET"],
-            allowed_emails=emails,
             allowed_redirect_uris=tuple(redirects) or DEFAULT_REDIRECT_URIS,
             port=int(env.get("MCP_PORT", "8000")),
         )

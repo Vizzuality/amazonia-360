@@ -56,10 +56,25 @@ class _BarePath:
 async def _sweep(store: AuthStore) -> None:
     while True:
         try:
-            await store.delete_expired()
+            # A delete cancelled mid-query at shutdown leaves its connection out of
+            # the pool; letting it finish takes milliseconds.
+            with anyio.CancelScope(shield=True):
+                await store.delete_expired()
         except Exception as exc:  # the sweep must outlive a database hiccup
             print(f"expired OAuth rows not deleted: {exc}", file=sys.stderr)
         await anyio.sleep(SWEEP_EVERY_S)
+
+
+async def _report_empty_allowlist(store: AuthStore) -> None:
+    try:
+        if not await store.allowed_emails():
+            print(
+                "The allowlist is empty: nobody can sign in until an email is added "
+                "with `amazonia360-mcp-db allow <email>`.",
+                file=sys.stderr,
+            )
+    except Exception as exc:  # startup must not depend on the database
+        print(f"allowlist not read at startup: {exc}", file=sys.stderr)
 
 
 def create_http_app(
@@ -145,6 +160,7 @@ def create_http_app(
     @asynccontextmanager
     async def lifespan(app: Starlette) -> AsyncIterator[None]:
         # A mounted app's lifespan does not run, so the session manager runs here.
+        await _report_empty_allowlist(store)
         async with server.session_manager.run():
             async with anyio.create_task_group() as tasks:
                 tasks.start_soon(_sweep, store)

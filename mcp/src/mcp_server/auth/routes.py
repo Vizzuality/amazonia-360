@@ -47,7 +47,6 @@ async def _start(store: AuthStore, google: GoogleSignIn, request: Request) -> Re
 async def _callback(
     store: AuthStore,
     settings: HttpSettings,
-    provider: AmazoniaOAuthProvider,
     google: GoogleSignIn,
     request: Request,
 ) -> Response:
@@ -66,7 +65,7 @@ async def _callback(
         email = await google.verified_email(code)
     except GoogleError as exc:
         return error_page(str(exc))
-    if not provider.allowed(email):
+    if not await store.is_allowed(email):
         return error_page(
             f"{email} is not allowed to use the Amazonia 360 MCP. Ask the Amazonia "
             "360 team for access.",
@@ -126,7 +125,7 @@ def oauth_routes(provider: AmazoniaOAuthProvider, google: GoogleSignIn) -> list[
         Route("/oauth/start", partial(_start, store, google), methods=["GET"]),
         Route(
             "/oauth/callback",
-            partial(_callback, store, settings, provider, google),
+            partial(_callback, store, settings, google),
             methods=["GET"],
         ),
         Route(

@@ -7,8 +7,13 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from mcp_server.auth.crypto import digest
-from mcp_server.auth.store import AuthStore, Grant, IssuedTokens
-from mcp_server.db.models import Token
+from mcp_server.auth.store import (
+    AuthStore,
+    Grant,
+    IssuedTokens,
+    normalise_email,
+)
+from mcp_server.db.models import Code, Token
 from tests.auth_helpers import ANA, CLAUDE, Clock
 
 pytestmark = [pytest.mark.db, pytest.mark.anyio]
@@ -253,3 +258,82 @@ async def test_delete_expired_leaves_live_rows(
     assert await store.delete_expired() == 2
     async with sessions() as session:
         assert await session.scalar(select(func.count()).select_from(Token)) == 1
+
+
+@pytest.mark.parametrize(
+    ("raw", "email"),
+    [(" Ana@Example.ORG ", "ana@example.org"), ("a.b@c.d.e", "a.b@c.d.e")],
+)
+def test_emails_are_stripped_and_lowercased(raw: str, email: str) -> None:
+    assert normalise_email(raw) == email
+
+
+@pytest.mark.parametrize(
+    "raw", ["", "ana", "ana@example", "a@b@example.org", "@example.org", "ana@.org"]
+)
+def test_what_is_not_an_email_address_is_refused(raw: str) -> None:
+    with pytest.raises(ValueError, match="not an email address"):
+        normalise_email(raw)
+
+
+async def test_allow_normalises_and_is_idempotent(store: AuthStore) -> None:
+    assert not await store.is_allowed(ANA)
+    assert await store.allow(" Ana@Example.org", added_by="miguel")
+    assert not await store.allow("ana@example.org", added_by="someone else")
+    assert await store.is_allowed(ANA)
+    [row] = await store.allowed_emails()
+    assert (row.email, row.added_by) == (ANA, "miguel")
+    assert row.added_at is not None
+
+
+async def test_the_allowlist_is_listed_by_email(store: AuthStore) -> None:
+    await store.allow("luis@example.org")
+    await store.allow(ANA)
+    assert [r.email for r in await store.allowed_emails()] == [
+        ANA,
+        "luis@example.org",
+    ]
+
+
+async def test_revoke_removes_the_email_and_its_tokens_and_codes(
+    store: AuthStore, sessions: async_sessionmaker[AsyncSession]
+) -> None:
+    await store.allow(ANA)
+    await store.allow("luis@example.org")
+    await store.issue(Grant("client-1", ANA, ["mcp"], None))
+    await store.issue(Grant("client-1", ANA, ["mcp"], None))
+    kept = await store.issue(Grant("client-1", "luis@example.org", ["mcp"], None))
+    await store.create_pending("p1", "client-1", params(), ["mcp"])
+    await store.record_login("p1", ANA, "csrf")
+    pending = await store.take_pending("p1", "csrf")
+    assert pending is not None
+    await store.create_code("the-code", pending)
+
+    revoked = await store.revoke(" ANA@example.org ")
+    assert (revoked.listed, revoked.tokens, revoked.codes) == (True, 4, 1)
+    assert not await store.is_allowed(ANA)
+    async with sessions() as session:
+        assert (
+            await session.scalar(
+                select(func.count()).select_from(Token).where(Token.email == ANA)
+            )
+            == 0
+        )
+        assert await session.scalar(select(func.count()).select_from(Code)) == 0
+    assert await store.get_token(kept.access_token, "access") is not None
+    assert await store.is_allowed("luis@example.org")
+
+
+async def test_revoking_an_email_off_the_list_says_so(store: AuthStore) -> None:
+    revoked = await store.revoke(ANA)
+    assert (revoked.listed, revoked.tokens, revoked.codes) == (False, 0, 0)
+
+
+async def test_a_token_can_be_looked_up_only_while_its_email_is_allowed(
+    store: AuthStore,
+) -> None:
+    issued = await store.issue(Grant("client-1", ANA, ["mcp"], None))
+    assert await store.get_token(issued.access_token, "access") is not None
+    assert await store.get_token(issued.access_token, "access", allowed=True) is None
+    await store.allow(ANA)
+    assert await store.get_token(issued.access_token, "access", allowed=True)

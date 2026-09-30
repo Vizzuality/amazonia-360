@@ -48,15 +48,32 @@ avoids uv (run `uv sync` first so `.venv` exists):
 ### Over HTTP, with OAuth
 
 ```bash
-uv run amazonia360-mcp-db upgrade   # the database first
+uv run amazonia360-mcp-db upgrade              # the database first
+uv run amazonia360-mcp-db allow you@example.org
 uv run amazonia360-mcp-http
 ```
 
 This needs the variables in the `MCP_PUBLIC_URL`, `MCP_DATABASE_URL`, `MCP_GOOGLE_CLIENT_ID`,
-`MCP_GOOGLE_CLIENT_SECRET`, `MCP_ALLOWED_EMAILS` and `MCP_ALLOWED_REDIRECT_URIS` rows of the
-settings table below; the server refuses to start over HTTP when any of them is missing.
+`MCP_GOOGLE_CLIENT_SECRET` and `MCP_ALLOWED_REDIRECT_URIS` rows of the settings table below; the
+server refuses to start over HTTP when any of the required ones is missing.
 For local use, `MCP_PUBLIC_URL=http://localhost:8000/mcp` works with a Google OAuth client
 whose redirect is `http://localhost:8000/mcp/oauth/callback`.
+
+The emails that can sign in are in the `mcp.allowed_emails` table, managed with the same
+CLI, which reads `MCP_DATABASE_URL`:
+
+```bash
+uv run amazonia360-mcp-db allow ana@example.org [--by NAME]   # --by defaults to the OS user
+uv run amazonia360-mcp-db revoke ana@example.org
+uv run amazonia360-mcp-db list                                # email, added by, added at
+```
+
+Emails are stored stripped and lowercased. The server reads the table on every sign-in,
+request and refresh, with no cache, so a change applies to the next request without a restart.
+`revoke` also deletes the email's tokens and codes, so access ends at once. With the table
+empty the server starts, logs that nobody can sign in, and refuses every account.
+`MCP_ALLOWED_EMAILS` is no longer read; if it is still set, the server logs a warning at
+startup.
 
 Behind a reverse proxy, the proxy must forward the original `Host` header (`proxy_set_header
 Host $host;` in nginx): the server only accepts requests for the host in `MCP_PUBLIC_URL`.
@@ -176,7 +193,6 @@ uv run amazonia360-mcp-timing summary   # per tool and layer: median, max, over 
 | `MCP_DATABASE_URL` | *(required over HTTP)* | The `mcp` role's connection string |
 | `MCP_GOOGLE_CLIENT_ID` | *(required over HTTP)* | A Google OAuth client of its own, with redirect `…/mcp/oauth/callback` |
 | `MCP_GOOGLE_CLIENT_SECRET` | *(required over HTTP)* | Its secret |
-| `MCP_ALLOWED_EMAILS` | *(required over HTTP)* | Comma-separated, compared lowercased |
 | `MCP_ALLOWED_REDIRECT_URIS` | Claude, ChatGPT and any loopback address | The redirect allowlist, with the defaults above |
 | `MCP_PORT` | `8000` | The port `amazonia360-mcp-http` listens on |
 

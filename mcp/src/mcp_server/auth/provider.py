@@ -23,14 +23,13 @@ SCOPE = "mcp"
 
 class AmazoniaOAuthProvider:
     """The SDK's authorization server provider over AuthStore. Google signs the user
-    in (routes.py); this class decides who may hold a token and for how long."""
+    in (routes.py); this class decides who may hold a token and for how long. The
+    allowlist is read from the database on every check, with no cache, so a change
+    made with `amazonia360-mcp-db` applies to the next request."""
 
     def __init__(self, store: AuthStore, settings: HttpSettings) -> None:
         self.store = store
         self.settings = settings
-
-    def allowed(self, email: str) -> bool:
-        return email in self.settings.allowed_emails
 
     async def get_client(self, client_id: str) -> OAuthClientInformationFull | None:
         return await self.store.get_client(client_id)
@@ -86,7 +85,7 @@ class AmazoniaOAuthProvider:
             raise TokenError(
                 "invalid_grant", "The code has expired or was already used."
             )
-        if not self.allowed(row.email):
+        if not await self.store.is_allowed(row.email):
             raise TokenError("invalid_grant", "This account is no longer allowed.")
         issued = await self.store.issue(
             Grant(client.client_id, row.email, row.scopes, self.settings.public_url)
@@ -96,14 +95,12 @@ class AmazoniaOAuthProvider:
     async def load_refresh_token(
         self, client: OAuthClientInformationFull, refresh_token: str
     ) -> RefreshToken | None:
-        row = await self.store.get_token(refresh_token, "refresh")
+        row = await self.store.get_token(refresh_token, "refresh", allowed=True)
         if row is None or row.client_id != client.client_id:
             return None
         if row.used_at is not None:
             # Only a copy is presented twice: whoever holds the family loses it.
             await self.store.revoke_family(row.family)
-            return None
-        if not self.allowed(row.email):
             return None
         return RefreshToken(
             token=refresh_token,
@@ -133,8 +130,8 @@ class AmazoniaOAuthProvider:
         return _oauth_token(issued, scopes or row.scopes)
 
     async def load_access_token(self, token: str) -> AccessToken | None:
-        row = await self.store.get_token(token, "access")
-        if row is None or not self.allowed(row.email):
+        row = await self.store.get_token(token, "access", allowed=True)
+        if row is None:
             return None
         return AccessToken(
             token=token,
