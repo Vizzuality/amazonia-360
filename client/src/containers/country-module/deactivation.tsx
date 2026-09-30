@@ -2,16 +2,21 @@
 
 import { useEffect, useRef } from "react";
 
-import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 
 import { useAtom } from "jotai";
 import { useTranslations } from "next-intl";
 
-import { COUNTRIES, countryFlagSrc, stripCountry } from "@/lib/country";
+import { COUNTRIES, stripCountry } from "@/lib/country";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 import { useLocaleRouter, usePathname } from "@/i18n/navigation";
 import { useCountry } from "@/i18n/use-country";
@@ -31,7 +36,6 @@ export default function CountryModuleDeactivation() {
   const queryString = searchParams?.toString() ?? "";
   const entry = COUNTRIES.find((candidate) => candidate.code === deactivated);
   const moduleName = entry ? t(entry.moduleNameKey) : "";
-  const countryName = entry ? t(entry.nameKey) : "";
 
   const exitedGeometry = useRef<typeof geometry>(null);
 
@@ -57,31 +61,26 @@ export default function CountryModuleDeactivation() {
 
   return (
     <Dialog open onOpenChange={handleClose}>
-      <DialogContent className="max-w-md" overlay data-testid="country-module-deactivated-dialog">
-        <div>
-          <div className="flex items-center gap-2">
-            <Image
-              src={countryFlagSrc(entry.code)}
-              alt=""
-              width={24}
-              height={20}
-              className="h-5 w-6 shrink-0 rounded-[2px] object-cover"
-            />
-            <DialogTitle className="text-lg">
-              {t("country-module-deactivated-title", { name: moduleName })}
-            </DialogTitle>
-          </div>
+      <DialogContent
+        className="max-w-lg gap-0 rounded-md"
+        overlay
+        data-testid="country-module-deactivated-dialog"
+      >
+        <DialogTitle className="pr-8 text-lg leading-6 font-bold">
+          {t("country-module-deactivated-title", { name: moduleName })}
+        </DialogTitle>
 
-          <DialogDescription className="text-muted-foreground mt-2 text-sm">
-            {t("country-module-deactivated-body", { name: countryName })}
-          </DialogDescription>
+        <DialogDescription className="text-muted-foreground mt-2 text-sm leading-5 font-medium">
+          {t("country-module-deactivated-body", { name: moduleName })}
+        </DialogDescription>
 
-          <div className="mt-4 flex justify-end">
-            <Button type="button" onClick={handleClose}>
-              {t("got-it-alert-button")}
-            </Button>
-          </div>
+        <div className="mt-6 flex justify-end">
+          <Button type="button" className="h-9" onClick={handleClose}>
+            {t("got-it-alert-button")}
+          </Button>
         </div>
+
+        <DialogClose className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-[15px] right-[15px] rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none" />
       </DialogContent>
     </Dialog>
   );

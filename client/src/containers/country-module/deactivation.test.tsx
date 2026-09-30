@@ -194,6 +194,15 @@ describe("CountryModuleDeactivation", () => {
     expect(screen.queryByTestId("country-module-deactivated-dialog")).not.toBeInTheDocument();
   });
 
+  test("the close button closes the modal and clears the atom", async () => {
+    render(<CountryModuleDeactivation />);
+
+    await userEvent.click(screen.getByRole("button", { name: "Close" }));
+
+    expect(store.get(countryModuleDeactivatedAtom)).toBeNull();
+    expect(screen.queryByTestId("country-module-deactivated-dialog")).not.toBeInTheDocument();
+  });
+
   test("the modal survives the route change back to the regional path", () => {
     const { rerender } = render(<CountryModuleDeactivation />);
 
