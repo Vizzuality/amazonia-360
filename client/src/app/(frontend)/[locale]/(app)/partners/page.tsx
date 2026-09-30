@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 
 import Footer from "@/containers/footer";
 import CountryModulePartnerships from "@/containers/partners/country-modules";
+import PartnersHero from "@/containers/partners/hero";
 import OtherPartners from "@/containers/partners/other";
 
 type Params = Promise<{ locale: Locale }>;
@@ -22,6 +23,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default function PartnersPage() {
   return (
     <main className="relative flex min-h-[calc(100svh-calc(var(--spacing)*16))] flex-col">
+      <PartnersHero />
       <CountryModulePartnerships />
       <OtherPartners />
       <Footer />

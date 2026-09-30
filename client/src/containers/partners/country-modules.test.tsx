@@ -40,7 +40,7 @@ describe("CountryModulePartnerships", () => {
       "aria-selected",
       "true",
     );
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "partners-country-modules-title",
     );
   });

@@ -74,9 +74,9 @@ export default function CountryModulePartnerships() {
     <section data-testid="partners-country-modules" className="bg-blue-50 py-24">
       <div className="container flex flex-col items-center gap-14">
         <header className="flex max-w-[800px] flex-col items-center gap-4 text-center">
-          <h1 className="text-foreground text-[36px] leading-11 font-bold">
+          <h2 className="text-foreground text-[36px] leading-11 font-bold">
             {t("partners-country-modules-title")}
-          </h1>
+          </h2>
           <p className="text-muted-foreground text-base leading-5 font-medium">
             {t("partners-country-modules-description")}
           </p>
