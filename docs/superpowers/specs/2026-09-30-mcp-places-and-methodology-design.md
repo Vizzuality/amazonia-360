@@ -1,12 +1,12 @@
-# MCP places by name and methodology prompt, phase 3
+# MCP places by name and methodology skill, phase 3
 
 Phase 3 of the [MCP module](2026-09-24-mcp-module-design.md): the user names a province, a canton
-or a protected area instead of pasting a GeoJSON polygon, and any MCP client can load the method
-the server expects the model to follow.
+or a protected area instead of pasting a GeoJSON polygon, and a skill tells the model the method
+the server expects it to follow.
 
 Proposed on 30 September 2026. Three ideas come from the consultant's prototype (AiMF360): a
-gazetteer, area handles that keep polygons out of the model, and the method served over MCP as a
-prompt. Each is adapted to this server below; the handles are replaced by stateless place ids.
+gazetteer, area handles that keep polygons out of the model, and the method written as a skill.
+Each is adapted to this server below; the handles are replaced by stateless place ids.
 
 ## Decisions
 
@@ -16,7 +16,7 @@ prompt. Each is adapted to this server below; the handles are replaced by statel
 | 2 | Place ids | Stateless and derived from the place's name. No table and no stored handle |
 | 3 | Boundary sources | The administrative layers the front end already uses (provinces and cantons) and the National System of Protected Areas (216) |
 | 4 | Matching | Accent- and case-insensitive. Every match comes back; the server never picks one |
-| 5 | Method | An MCP prompt `amazonia360` and a resource with the same text. The server `instructions` stay short |
+| 5 | Method | A skill `amazonia360`, installed by hand for the proof of concept. The server `instructions` stay short |
 
 Parishes, free-text geocoding and user-drawn areas saved by name are out of scope.
 
@@ -98,14 +98,15 @@ tools take exactly one of `area` and `place_id`. With `place_id`:
 - the map tools put the place's geometry in the result's `_meta`, because the tool input no longer
   holds it. The pages read the area from `_meta` when the input has none.
 
-## Methodology prompt
+## Methodology skill
 
-The prompt is `amazonia360`, with an optional `question` argument. In Claude it shows up as
-`/amazonia360`. Its text is also served as the resource `amazonia360://methodology`.
+The method is a skill, `mcp/skills/amazonia360/SKILL.md`. Its description tells the client when
+to load it: questions about the physical and natural environment of the Ecuador module. The body
+covers:
 
-Contents:
-- the call order: `list_indicators`, then the fast tools, then the area tools;
-- how to find a place, and what to do with several candidates: ask;
+- the call order: `find_places` or a polygon, then `list_indicators`, then the fast tools, then the
+  area tools;
+- what to do with several candidate places: ask;
 - figures from different indicators are not combined;
 - caveats are quoted unchanged;
 - the rules for maps.
@@ -114,10 +115,14 @@ It also covers ambiguous terms. "Biodiversity", for example, could be answered b
 biogeographic units (219) or the flooding regime (214). The model names the candidates, says how
 they differ, and picks the one that matches the intent, or asks.
 
-The server `instructions` keep what every client needs and point to the prompt. In the Desktop
-trials, rules that lived only in `instructions` had no visible effect. The prompt differs because
-the user loads it into the conversation. Whether that changes the model's wording is measured
-(Testing).
+For this proof of concept the skill is installed by hand: uploaded as a zip in Claude Desktop and
+claude.ai, or copied into `.claude/skills/` in Claude Code. A plugin that bundles the skill with
+the server is left for later.
+
+The server `instructions` keep what every client needs, including clients without skills. In the
+Desktop trials, rules that lived only in `instructions` had no visible effect. A skill is loaded
+into the conversation as instructions the model reads when the task matches, which may hold
+better. Whether it does is measured (Testing).
 
 ## Testing
 
@@ -133,8 +138,8 @@ the user loads it into the conversation. Whether that changes the model's wordin
 - The sync writes the places snapshot; without network it leaves the previous one in place, as the
   catalogue snapshot does.
 - The map pages draw an area taken from `_meta`.
-- A Desktop round with the demo questions rewritten by place name, run once with the prompt and
-  once without it, to see whether the prompt changes the wording.
+- A Desktop round with the demo questions rewritten by place name, run once with the skill and
+  once without it, to see whether the skill changes the wording.
 
 ## Open questions
 
