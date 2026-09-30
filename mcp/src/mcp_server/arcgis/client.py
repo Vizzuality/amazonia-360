@@ -2,6 +2,7 @@ import json
 from typing import Any
 
 import httpx
+from shapely.errors import ShapelyError
 from shapely.geometry import MultiPolygon, Polygon, mapping, shape
 from shapely.geometry.base import BaseGeometry
 from shapely.geometry.polygon import orient
@@ -144,7 +145,7 @@ class ArcGISClient:
                 for f in body["features"]
                 if f.get("geometry") is not None
             ]
-        except (KeyError, TypeError) as exc:
+        except (AttributeError, KeyError, ShapelyError, TypeError, ValueError) as exc:
             raise _invalid(query, "missing features or geometry") from exc
 
     async def renderer(self, layer: Layer) -> dict[str, Any] | None:

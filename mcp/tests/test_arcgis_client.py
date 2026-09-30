@@ -323,3 +323,55 @@ async def test_a_histogram_over_no_pixel_is_empty_not_invalid() -> None:
         "https://example.test/image/rest/services/Slope/ImageServer", AOI, None
     )
     assert histogram["counts"] == []
+
+
+BOUNDARY_URL = "https://example.test/arcgis/rest/services/limits/FeatureServer"
+
+
+@pytest.mark.anyio
+async def test_boundary_queries_the_layer_and_skips_null_geometries() -> None:
+    seen: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(request)
+        return httpx.Response(
+            200,
+            json={
+                "features": [
+                    square_feature("a", -78.0),
+                    {"type": "Feature", "geometry": None, "properties": {}},
+                    square_feature("b", -77.0),
+                ]
+            },
+        )
+
+    shapes = await client_with(handler).boundary(BOUNDARY_URL, 6, "DPA='15'")
+    request = seen[0]
+    assert request.method == "POST"
+    assert str(request.url) == f"{BOUNDARY_URL}/6/query"
+    sent = params(request)
+    assert sent["where"] == "DPA='15'"
+    assert sent["returnGeometry"] == "true"
+    assert sent["outSR"] == "4326"
+    assert sent["f"] == "geojson"
+    assert len(shapes) == 2
+    assert all(s.geom_type == "Polygon" for s in shapes)
+
+
+@pytest.mark.anyio
+async def test_boundary_without_features_raises_arcgis_error() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json={"type": "FeatureCollection"})
+
+    with pytest.raises(ArcGISError, match="Invalid response"):
+        await client_with(handler).boundary(BOUNDARY_URL, 6, "1=1")
+
+
+@pytest.mark.anyio
+async def test_boundary_with_a_malformed_geometry_raises_arcgis_error() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        bad = {"type": "Polygon", "coordinates": "x"}
+        return httpx.Response(200, json={"features": [{"geometry": bad}]})
+
+    with pytest.raises(ArcGISError, match="Invalid response"):
+        await client_with(handler).boundary(BOUNDARY_URL, 6, "1=1")
