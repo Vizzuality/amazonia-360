@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import NavigationLinks from "./navigation-links";
@@ -35,6 +35,15 @@ describe("NavigationLinks", () => {
       );
     },
   );
+
+  it("renders the links inside a navigation landmark", () => {
+    mockPathname.mockReturnValue("/");
+    render(<NavigationLinks />);
+
+    const nav = screen.getByRole("navigation", { name: "header-nav-label" });
+    expect(within(nav).getByRole("link", { name: "header-report-tool" })).toBeInTheDocument();
+    expect(within(nav).getByRole("link", { name: "header-partners" })).toBeInTheDocument();
+  });
 
   it("marks Our partners as the current page on the partners page", () => {
     mockPathname.mockReturnValue("/partners");

@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import MobileNavigation from "./mobile-navigation";
@@ -19,11 +20,19 @@ vi.mock("./logo", () => ({ default: () => null }));
 describe("MobileNavigation", () => {
   it("links to the partners page", async () => {
     render(<MobileNavigation />);
-    screen.getByRole("button", { name: "header-menu-label" }).click();
+    await userEvent.click(screen.getByRole("button", { name: "header-menu-label" }));
 
     expect(await screen.findByRole("link", { name: "header-partners" })).toHaveAttribute(
       "href",
       "/partners",
     );
+  });
+
+  it("keeps the trigger fixed by default and in flow when inline", () => {
+    const { rerender } = render(<MobileNavigation />);
+    expect(screen.getByRole("button", { name: "header-menu-label" })).toHaveClass("fixed");
+
+    rerender(<MobileNavigation inline />);
+    expect(screen.getByRole("button", { name: "header-menu-label" })).not.toHaveClass("fixed");
   });
 });

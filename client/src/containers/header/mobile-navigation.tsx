@@ -22,7 +22,14 @@ import { usePathname, Link, LocaleLink } from "@/i18n/navigation";
 
 import Logo from "./logo";
 
-export default function MobileNavigation() {
+function getTriggerClassName(inline: boolean): string {
+  return cn(
+    "z-110 flex h-6 w-6 cursor-pointer flex-col flex-wrap justify-around",
+    inline ? "relative shrink-0" : "fixed top-1/2 right-5 -translate-y-1/2 transform",
+  );
+}
+
+export default function MobileNavigation({ inline = false }: { inline?: boolean }) {
   const t = useTranslations();
   const pathname = usePathname();
 
@@ -36,7 +43,7 @@ export default function MobileNavigation() {
           type="button"
           aria-label={menuLabel}
           onClick={() => setIsOpen(!isOpen)}
-          className="fixed top-1/2 right-5 z-110 flex h-6 w-6 -translate-y-1/2 transform cursor-pointer flex-col flex-wrap justify-around"
+          className={getTriggerClassName(inline)}
         >
           <div
             className={`block h-0.5 w-6 origin-[1px] rounded-full bg-blue-600 transition-all ${

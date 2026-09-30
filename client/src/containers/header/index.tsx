@@ -30,13 +30,10 @@ import NavigationLinks from "./navigation-links";
 function getRoutes(pathname: string, params: Params) {
   const { id } = params;
   const r = pathname.match(/^(?:\/[a-z]{2})?\/reports(?:\/(grid|indicators))?\/?$/);
-  // I want to know if I'm in home page /, /reports or /reports/[id]]
-  const isHome = pathname === "/";
   const isReport = pathname.startsWith("/reports");
   const isReportResults = !!id;
 
   return {
-    isHome,
     isReport,
     isReportResults,
     isReportRoot: !!r && !r[1],
@@ -58,7 +55,7 @@ export default function Header() {
 
     return (
       <>
-        <Media greaterThanOrEqual="xl" className="flex items-center space-x-4">
+        <Media greaterThanOrEqual="xl">
           <NavigationLinks />
         </Media>
         {!location && isReportSub && <DesktopDrawingTools />}
@@ -95,7 +92,7 @@ export default function Header() {
           </div>
         </Media>
 
-        <Media greaterThanOrEqual="md" className="flex items-center space-x-4">
+        <Media greaterThanOrEqual="md" className="flex items-center gap-4">
           {DYNAMIC_HEADER}
 
           <div className="flex items-center space-x-1">
@@ -104,7 +101,7 @@ export default function Header() {
           </div>
 
           <Media between={["md", "xl"]}>
-            <MobileNavigation />
+            <MobileNavigation inline />
           </Media>
         </Media>
 
