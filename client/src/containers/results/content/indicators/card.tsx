@@ -87,7 +87,7 @@ function ReportResultsIndicatorContent({
   }, [toggleSidebar, setReportEditionMode, reportEditionMode]);
 
   const handleDownload = useCallback(
-    async (format: string) => {
+    (format: string) => {
       if (toasts.find((t) => t.id === `indicator-${indicatorId}-${type}`)) return;
       if (!cardRef.current) return;
 

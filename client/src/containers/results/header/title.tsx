@@ -37,7 +37,7 @@ export default function TitleReport() {
     validators: {
       onSubmit: renameSchema,
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: ({ value }) => {
       setTitle(value.title);
       setEditMode(false);
     },
