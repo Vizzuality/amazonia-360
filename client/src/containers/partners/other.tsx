@@ -14,8 +14,10 @@ export default function OtherPartners() {
     <section data-testid="partners-other" className="bg-white py-20">
       <div className="container flex flex-col items-center gap-8 lg:flex-row lg:justify-center">
         <div className="flex flex-col gap-2">
-          <h2 className="text-foreground text-2xl font-bold">{t("partners-other-title")}</h2>
-          <p className="text-muted-foreground text-sm font-medium">
+          <h2 className="text-foreground text-2xl leading-[normal] font-bold">
+            {t("partners-other-title")}
+          </h2>
+          <p className="text-muted-foreground text-sm leading-[normal] font-medium">
             {t("partners-other-description")}
           </p>
         </div>
