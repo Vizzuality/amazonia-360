@@ -1,5 +1,6 @@
 from datetime import UTC, datetime
 from typing import Any
+from urllib.parse import parse_qs
 
 import httpx
 import pytest
@@ -17,37 +18,41 @@ from mcp_server.places.sync import (
 NOW = datetime(2026, 9, 30, 10, 0, tzinfo=UTC)
 
 
+def ring(x: float, y: float, size: float) -> list[list[float]]:
+    # Clockwise: an outer ring in Esri JSON.
+    return [[x, y], [x, y + size], [x + size, y + size], [x + size, y], [x, y]]
+
+
 def square(x: float, y: float, size: float = 0.1) -> dict[str, Any]:
-    ring = [[x, y], [x + size, y], [x + size, y + size], [x, y + size], [x, y]]
-    return {"type": "Polygon", "coordinates": [ring]}
+    return {"rings": [ring(x, y, size)]}
 
 
 FEATURES: dict[str, list[dict[str, Any]]] = {
     "province": [
-        {"properties": {"NAME_1": "Napo"}, "geometry": square(-78.0, -1.0)},
+        {"attributes": {"NAME_1": "Napo"}, "geometry": square(-78.0, -1.0)},
     ],
     "canton": [
         {
-            "properties": {"NAME_1": "Napo", "NAME_2": "Tena"},
+            "attributes": {"NAME_1": "Napo", "NAME_2": "Tena"},
             "geometry": square(-78.0, -1.0),
         },
         {
-            "properties": {"NAME_1": "Pastaza", "NAME_2": "Mejía"},
+            "attributes": {"NAME_1": "Pastaza", "NAME_2": "Mejía"},
             "geometry": square(-77.0, -2.0),
         },
         {
-            "properties": {"NAME_1": "Pichincha", "NAME_2": "Mejía"},
+            "attributes": {"NAME_1": "Pichincha", "NAME_2": "Mejía"},
             "geometry": square(-78.6, -0.5),
         },
     ],
     "protected_area": [
         # Two features with one name become one place.
         {
-            "properties": {"Nombre": "Yasuní", "Categoria": "Parque Nacional"},
+            "attributes": {"Nombre": "Yasuní", "Categoria": "Parque Nacional"},
             "geometry": square(-76.0, -1.0),
         },
         {
-            "properties": {"Nombre": "Yasuní", "Categoria": "Parque Nacional"},
+            "attributes": {"Nombre": "Yasuní", "Categoria": "Parque Nacional"},
             "geometry": square(-75.9, -1.0),
         },
     ],
@@ -67,12 +72,10 @@ def transport(
             return httpx.Response(404)
         if kind == fail:
             return httpx.Response(200, json={"error": {"code": 400, "message": "x"}})
-        body: dict[str, Any] = {
-            "type": "FeatureCollection",
-            "features": FEATURES[kind],
-        }
+        assert parse_qs(request.content.decode())["f"] == ["json"]
+        body: dict[str, Any] = {"features": FEATURES[kind]}
         if malformed is not None and kind == "canton":
-            feature = {"properties": {"NAME_1": "Napo", "NAME_2": "Archidona"}}
+            feature = {"attributes": {"NAME_1": "Napo", "NAME_2": "Archidona"}}
             body["features"] = [*FEATURES[kind], {**feature, "geometry": malformed}]
         if kind == truncate:
             body["exceededTransferLimit"] = True
@@ -127,6 +130,19 @@ async def test_features_with_one_name_are_one_place_with_the_joint_area() -> Non
 
 
 @pytest.mark.anyio
+async def test_an_enclave_is_left_out_of_the_area() -> None:
+    enclave = list(reversed(ring(-77.97, -0.97, 0.04)))
+    FEATURES["canton"][0]["geometry"]["rings"].append(enclave)
+    try:
+        snapshot = PlacesSnapshot.model_validate(await run())
+    finally:
+        FEATURES["canton"][0]["geometry"]["rings"].pop()
+    tena = next(p for p in snapshot.places if p.id == "canton:Napo/Tena")
+    napo = next(p for p in snapshot.places if p.kind == "province")
+    assert tena.area_ha == pytest.approx(napo.area_ha * (1 - 0.16), rel=0.01)
+
+
+@pytest.mark.anyio
 async def test_a_source_that_fails_fails_the_sync() -> None:
     with pytest.raises(PlacesSyncError):
         await run(fail="canton")
@@ -136,10 +152,12 @@ async def test_a_source_that_fails_fails_the_sync() -> None:
 @pytest.mark.parametrize(
     "geometry",
     [
-        {"type": "Polygon"},
-        {"type": "Polygon", "coordinates": 5},
-        {"type": "Polygon", "coordinates": [[[0, 0], [1, 1]]]},
-        {"coordinates": []},
+        {},
+        {"rings": 5},
+        {"rings": [[[0, 0], [1, 1]]]},
+        # Only a hole, which Esri draws as nothing.
+        {"rings": [list(reversed(ring(0, 0, 1)))]},
+        {"paths": []},
         "not a geometry",
     ],
 )

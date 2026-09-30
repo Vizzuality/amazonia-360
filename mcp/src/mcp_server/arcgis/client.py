@@ -3,10 +3,11 @@ from typing import Any
 
 import httpx
 from shapely.errors import ShapelyError
-from shapely.geometry import MultiPolygon, Polygon, mapping, shape
+from shapely.geometry import MultiPolygon, Polygon, mapping
 from shapely.geometry.base import BaseGeometry
 from shapely.geometry.polygon import orient
 
+from mcp_server.arcgis.esri_json import polygon_from_rings
 from mcp_server.catalogue.models import Layer
 
 Feature = tuple[str, BaseGeometry]
@@ -92,7 +93,8 @@ class ArcGISClient:
                     "outSR": "4326",
                     "maxAllowableOffset": str(max_allowable_offset),
                     "resultOffset": str(offset),
-                    "f": "geojson",
+                    # Not geojson: ArcGIS Online's GeoJSON turns holes into shells.
+                    "f": "json",
                 },
             )
             try:
@@ -100,10 +102,11 @@ class ArcGISClient:
                 for f in page:
                     if f.get("geometry") is None:
                         continue
-                    category = f["properties"][layer.category_field]
+                    category = f["attributes"][layer.category_field]
                     if category is None:
                         continue
-                    collected.append((str(category), shape(f["geometry"])))
+                    geom = polygon_from_rings(f["geometry"]["rings"])
+                    collected.append((str(category), geom))
                 exceeded = _exceeded_transfer_limit(body)
                 if exceeded and not page:
                     raise _invalid(
@@ -112,15 +115,16 @@ class ArcGISClient:
                 if not exceeded:
                     return collected
                 # A service that ignores resultOffset sends the first page forever.
-                first = page[0].get("id", json.dumps(page[0], sort_keys=True))
+                oid = page[0]["attributes"].get(body.get("objectIdFieldName"))
+                first = oid if oid is not None else json.dumps(page[0], sort_keys=True)
                 if first in first_ids:
                     raise _invalid(
                         url, "the service repeats a page, so it does not page"
                     )
                 first_ids.add(first)
                 offset += len(page)
-            except (KeyError, TypeError) as exc:
-                raise _invalid(url, "missing properties or geometry") from exc
+            except (KeyError, ShapelyError, TypeError, ValueError) as exc:
+                raise _invalid(url, "missing attributes or geometry") from exc
         raise ArcGISError(
             f"The area holds more than {MAX_PAGES} pages of features of this layer; "
             "draw a smaller area."
@@ -136,12 +140,12 @@ class ArcGISClient:
                 "where": where,
                 "returnGeometry": "true",
                 "outSR": "4326",
-                "f": "geojson",
+                "f": "json",
             },
         )
         try:
             return [
-                shape(f["geometry"])
+                polygon_from_rings(f["geometry"]["rings"])
                 for f in body["features"]
                 if f.get("geometry") is not None
             ]

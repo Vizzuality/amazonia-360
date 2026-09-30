@@ -4,7 +4,7 @@ from urllib.parse import parse_qs
 
 import httpx
 import pytest
-from shapely.geometry import box
+from shapely.geometry import Polygon, box
 
 from mcp_server.arcgis.client import ArcGISClient, ArcGISError
 from mcp_server.catalogue.models import Layer
@@ -28,12 +28,12 @@ def params(request: httpx.Request) -> dict[str, str]:
     return {k: v[0] for k, v in parse_qs(request.content.decode()).items()}
 
 
-def square_feature(category: str, x: float) -> dict:
-    ring = [[x, -1.0], [x + 0.1, -1.0], [x + 0.1, -0.9], [x, -0.9], [x, -1.0]]
+def square_feature(category: str, x: float, oid: int = 1) -> dict:
+    # Esri JSON: a clockwise ring is an outer ring.
+    ring = [[x, -1.0], [x, -0.9], [x + 0.1, -0.9], [x + 0.1, -1.0], [x, -1.0]]
     return {
-        "type": "Feature",
-        "geometry": {"type": "Polygon", "coordinates": [ring]},
-        "properties": {"Ecosistema": category},
+        "geometry": {"rings": [ring]},
+        "attributes": {"Ecosistema": category, "FID": oid},
     }
 
 
@@ -105,11 +105,7 @@ async def test_features_raises_when_a_page_is_truncated_with_no_features() -> No
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(
             200,
-            json={
-                "type": "FeatureCollection",
-                "features": [],
-                "properties": {"exceededTransferLimit": True},
-            },
+            json={"features": [], "exceededTransferLimit": True},
         )
 
     with pytest.raises(ArcGISError, match="truncated"):
@@ -120,10 +116,8 @@ async def test_features_raises_when_a_page_is_truncated_with_no_features() -> No
 async def test_features_skips_null_category_features() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         feature = square_feature("A", -77.9)
-        feature["properties"]["Ecosistema"] = None
-        return httpx.Response(
-            200, json={"type": "FeatureCollection", "features": [feature]}
-        )
+        feature["attributes"]["Ecosistema"] = None
+        return httpx.Response(200, json={"features": [feature]})
 
     features = await client_with(handler).features(LAYER, AOI, 0.001)
     assert features == []
@@ -133,16 +127,16 @@ async def test_features_skips_null_category_features() -> None:
 async def test_features_follow_pagination() -> None:
     pages = {
         "0": {
-            "type": "FeatureCollection",
-            "features": [square_feature("A", -77.9)],
-            "properties": {"exceededTransferLimit": True},
+            "objectIdFieldName": "FID",
+            "features": [square_feature("A", -77.9, 1)],
+            "exceededTransferLimit": True,
         },
-        "1": {"type": "FeatureCollection", "features": [square_feature("B", -77.8)]},
+        "1": {"objectIdFieldName": "FID", "features": [square_feature("B", -77.8, 2)]},
     }
 
     def handler(request: httpx.Request) -> httpx.Response:
         sent = params(request)
-        assert sent["f"] == "geojson"
+        assert sent["f"] == "json"
         assert sent["maxAllowableOffset"] == "0.001"
         return httpx.Response(200, json=pages[sent["resultOffset"]])
 
@@ -283,7 +277,7 @@ def test_esri_rings_are_clockwise_shells_and_counterclockwise_holes() -> None:
 async def test_features_stop_when_the_service_repeats_a_page() -> None:
     # A layer that ignores resultOffset sends its first page forever.
     def handler(request: httpx.Request) -> httpx.Response:
-        page = {**square_feature("Bosque", -77.9), "id": 1}
+        page = square_feature("Bosque", -77.9)
         return httpx.Response(
             200, json={"features": [page], "exceededTransferLimit": True}
         )
@@ -303,10 +297,13 @@ async def test_features_stop_after_the_page_limit(
 
     def handler(request: httpx.Request) -> httpx.Response:
         served.append(1)
-        page = {**square_feature("Bosque", -77.9), "id": len(served)}
-        return httpx.Response(
-            200, json={"features": [page], "exceededTransferLimit": True}
-        )
+        page = square_feature("Bosque", -77.9, len(served))
+        body = {
+            "objectIdFieldName": "FID",
+            "features": [page],
+            "exceededTransferLimit": True,
+        }
+        return httpx.Response(200, json=body)
 
     with pytest.raises(ArcGISError, match="more than 3 pages"):
         await client_with(handler).features(LAYER, AOI, 0.001)
@@ -339,7 +336,7 @@ async def test_boundary_queries_the_layer_and_skips_null_geometries() -> None:
             json={
                 "features": [
                     square_feature("a", -78.0),
-                    {"type": "Feature", "geometry": None, "properties": {}},
+                    {"geometry": None, "attributes": {}},
                     square_feature("b", -77.0),
                 ]
             },
@@ -353,7 +350,7 @@ async def test_boundary_queries_the_layer_and_skips_null_geometries() -> None:
     assert sent["where"] == "DPA='15'"
     assert sent["returnGeometry"] == "true"
     assert sent["outSR"] == "4326"
-    assert sent["f"] == "geojson"
+    assert sent["f"] == "json"
     assert len(shapes) == 2
     assert all(s.geom_type == "Polygon" for s in shapes)
 
@@ -361,7 +358,7 @@ async def test_boundary_queries_the_layer_and_skips_null_geometries() -> None:
 @pytest.mark.anyio
 async def test_boundary_without_features_raises_arcgis_error() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
-        return httpx.Response(200, json={"type": "FeatureCollection"})
+        return httpx.Response(200, json={"objectIdFieldName": "FID"})
 
     with pytest.raises(ArcGISError, match="Invalid response"):
         await client_with(handler).boundary(BOUNDARY_URL, 6, "1=1")
@@ -370,8 +367,43 @@ async def test_boundary_without_features_raises_arcgis_error() -> None:
 @pytest.mark.anyio
 async def test_boundary_with_a_malformed_geometry_raises_arcgis_error() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
-        bad = {"type": "Polygon", "coordinates": "x"}
+        bad = {"rings": "x"}
         return httpx.Response(200, json={"features": [{"geometry": bad}]})
 
     with pytest.raises(ArcGISError, match="Invalid response"):
         await client_with(handler).boundary(BOUNDARY_URL, 6, "1=1")
+
+
+@pytest.mark.anyio
+async def test_features_keep_holes_that_geojson_drops() -> None:
+    # Layer 219, FID 8: counter-clockwise rings are holes; f=geojson returned them
+    # as polygons of their own.
+    shell = [[-77.9, -1.1], [-77.9, -0.9], [-77.7, -0.9], [-77.7, -1.1], [-77.9, -1.1]]
+    hole = [[-77.85, -1.05], [-77.75, -1.05], [-77.75, -0.95], [-77.85, -0.95]]
+    hole.append(hole[0])
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        feature = {
+            "attributes": {"Ecosistema": "A"},
+            "geometry": {"rings": [shell, hole]},
+        }
+        return httpx.Response(200, json={"features": [feature]})
+
+    ((_, geom),) = await client_with(handler).features(LAYER, AOI, 0.001)
+    assert isinstance(geom, Polygon)
+    assert geom.is_valid
+    assert len(geom.interiors) == 1
+    assert geom.area == pytest.approx(0.04 - 0.01)
+
+
+@pytest.mark.anyio
+async def test_boundary_keeps_an_enclave_as_a_hole() -> None:
+    shell = [[0, 0], [0, 4], [4, 4], [4, 0], [0, 0]]
+    hole = [[1, 1], [3, 1], [3, 3], [1, 3], [1, 1]]
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        feature = {"attributes": {}, "geometry": {"rings": [shell, hole]}}
+        return httpx.Response(200, json={"features": [feature]})
+
+    (geom,) = await client_with(handler).boundary(BOUNDARY_URL, 6, "1=1")
+    assert geom.area == pytest.approx(12)

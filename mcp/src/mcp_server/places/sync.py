@@ -11,8 +11,8 @@ from typing import Any
 import httpx
 import shapely
 from shapely.errors import ShapelyError
-from shapely.geometry import shape
 
+from mcp_server.arcgis.esri_json import polygon_from_rings
 from mcp_server.geometry.area import geodesic_area_ha
 from mcp_server.places.models import PlaceKind
 
@@ -94,7 +94,8 @@ async def _features(
             "outFields": ",".join(f for f in fields if f),
             "returnGeometry": "true",
             "outSR": "4326",
-            "f": "geojson",
+            # Not geojson: ArcGIS Online's GeoJSON turns enclaves into shells.
+            "f": "json",
         },
     )
     response.raise_for_status()
@@ -113,7 +114,7 @@ async def _places(
 ) -> list[dict[str, Any]]:
     grouped: dict[str, dict[str, Any]] = {}
     for feature in await _features(http, source):
-        props = feature.get("properties") or {}
+        props = feature.get("attributes") or {}
         name = props.get(source.name_field)
         if not name or feature.get("geometry") is None:
             continue
@@ -137,7 +138,10 @@ async def _places(
                 },
             },
         )
-        entry["shapes"].append(shape(feature["geometry"]))
+        geom = polygon_from_rings(feature["geometry"]["rings"])
+        if geom.is_empty:
+            raise PlacesSyncError(f"{place_id}: a feature with no area")
+        entry["shapes"].append(geom)
     places = []
     for entry in grouped.values():
         geom = shapely.make_valid(shapely.union_all(entry.pop("shapes")))
