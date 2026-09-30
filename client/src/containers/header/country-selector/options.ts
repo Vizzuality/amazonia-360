@@ -77,6 +77,7 @@ export function useCountryOptions(): CountryOption[] | null {
 
   return useMemo(() => {
     if (!isFeatureEnabled("country-module")) return null;
+    if (pathname === "/") return null;
     if (isUnscopedPathname(pathname) || isSavedReportPathname(pathname)) return null;
 
     const amazonRegion: CountryOption = {

@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 
+import { Globe } from "lucide-react";
 import { Locale, useLocale, useTranslations } from "next-intl";
 
 import { LOCALES, localeLabelsShort, localeLabelsLong } from "@/lib/locales";
@@ -33,9 +34,11 @@ const LanguageSelector = () => {
     <Select value={locale} onValueChange={onSelectLocale}>
       <SelectTrigger
         aria-label={t("language-selector-label")}
-        className="hover:bg-secondary w-fit rounded-xs border-none shadow-none outline-hidden focus:ring-0"
+        hasArrow={false}
+        className="hover:bg-secondary h-8 w-fit justify-start gap-2 space-x-0 rounded-md border-none px-2 py-0 text-xs leading-4 font-semibold shadow-none outline-hidden focus:ring-0"
       >
-        <SelectValue className="flex text-sm">{localeLabelsShort[locale]}</SelectValue>
+        <Globe aria-hidden className="size-4 shrink-0" />
+        <SelectValue className="flex">{localeLabelsShort[locale]}</SelectValue>
       </SelectTrigger>
       <SelectContent className="no-scrollbar max-h-96 overflow-y-auto border-none shadow-md">
         {LOCALES.map((l) => (

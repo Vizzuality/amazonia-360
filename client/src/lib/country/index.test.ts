@@ -6,6 +6,7 @@ import {
   getCountryCodes,
   getRegionalPathname,
   isSavedReportPathname,
+  isUnscopedPathname,
   routedPathname,
   stripCountry,
   withCountry,
@@ -46,6 +47,11 @@ describe("withCountry", () => {
   it("leaves unscoped roots alone", () => {
     expect(withCountry("/auth/sign-in", "ECU")).toBe("/auth/sign-in");
     expect(withCountry("/private/my-reports", "ECU")).toBe("/private/my-reports");
+  });
+
+  it("treats the partners page as unscoped", () => {
+    expect(isUnscopedPathname("/partners")).toBe(true);
+    expect(withCountry("/partners", "ECU")).toBe("/partners");
   });
 
   it("is idempotent", () => {

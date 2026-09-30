@@ -7,7 +7,6 @@ import { useParams } from "next/navigation";
 
 import { Separator } from "@radix-ui/react-select";
 import { useSetAtom } from "jotai";
-import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
@@ -20,23 +19,21 @@ import { Media } from "@/containers/media";
 
 import { useSidebar } from "@/components/ui/sidebar";
 
-import { Link, usePathname } from "@/i18n/navigation";
+import { usePathname } from "@/i18n/navigation";
 
 import ConfirmLocation from "./confirm/desktop";
 import DesktopDrawingTools from "./drawing-tools/desktop";
 import Logo from "./logo";
 import MobileNavigation from "./mobile-navigation";
+import NavigationLinks from "./navigation-links";
 
 function getRoutes(pathname: string, params: Params) {
   const { id } = params;
   const r = pathname.match(/^(?:\/[a-z]{2})?\/reports(?:\/(grid|indicators))?\/?$/);
-  // I want to know if I'm in home page /, /reports or /reports/[id]]
-  const isHome = pathname === "/";
   const isReport = pathname.startsWith("/reports");
   const isReportResults = !!id;
 
   return {
-    isHome,
     isReport,
     isReportResults,
     isReportRoot: !!r && !r[1],
@@ -48,31 +45,25 @@ export default function Header() {
   const params = useParams();
   const pathname = usePathname();
 
-  const t = useTranslations();
-
   const [location] = useSyncLocation();
   const setEditionMode = useSetAtom(reportEditionModeAtom);
 
   const { setOpen } = useSidebar();
 
   const DYNAMIC_HEADER = useMemo(() => {
-    const { isHome, isReportSub } = getRoutes(pathname, params);
+    const { isReportSub } = getRoutes(pathname, params);
 
     return (
       <>
-        {isHome && (
-          <>
-            <Link href="/reports" className="text-foreground text-sm hover:text-cyan-500">
-              {t("header-report-tool")}
-            </Link>
-          </>
-        )}
+        <Media greaterThanOrEqual="xl">
+          <NavigationLinks />
+        </Media>
         {!location && isReportSub && <DesktopDrawingTools />}
         {location && isReportSub && <ConfirmLocation />}
         {isReportSub && <Separator className="bg-border h-4 w-px" />}
       </>
     );
-  }, [pathname, params, location, t]);
+  }, [pathname, params, location]);
 
   useEffect(() => {
     // Hide sidebar when navigating away from report
@@ -101,13 +92,17 @@ export default function Header() {
           </div>
         </Media>
 
-        <Media greaterThanOrEqual="md" className="flex items-center space-x-4">
+        <Media greaterThanOrEqual="md" className="flex items-center gap-4">
           {DYNAMIC_HEADER}
 
           <div className="flex items-center space-x-1">
             <LanguageSelector />
             <AuthHeader />
           </div>
+
+          <Media between={["md", "xl"]}>
+            <MobileNavigation inline />
+          </Media>
         </Media>
 
         <Media lessThan="md">

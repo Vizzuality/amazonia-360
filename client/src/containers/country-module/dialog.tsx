@@ -15,7 +15,7 @@ import {
   isSavedReportPathname,
   isUnscopedPathname,
 } from "@/lib/country";
-import { getCountryModulePartnerLogos } from "@/lib/country/partners";
+import { getCountryModulePartnerLogos, getPartnersHref } from "@/lib/country/partners";
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import useIsMounted from "@/lib/mounted";
 
@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { usePathname } from "@/i18n/navigation";
+import { LocaleLink, usePathname } from "@/i18n/navigation";
 import { useCountry } from "@/i18n/use-country";
 
 import { CountryModuleCoverageStatus, useCountryModuleCoverage } from "./use-coverage";
@@ -195,8 +195,14 @@ function CountryModuleDialogContent({ country }: Readonly<{ country: CountryCode
                 </label>
               </div>
               <div className="flex items-center gap-2">
-                <Button type="button" variant="outline" size="sm" disabled>
-                  {t("country-module-partnerships-cta")}
+                <Button asChild variant="outline" size="sm">
+                  <LocaleLink
+                    href={getPartnersHref(country)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {t("country-module-partnerships-cta")}
+                  </LocaleLink>
                 </Button>
                 <Button type="button" size="sm" onClick={handleGotIt}>
                   {t("got-it-alert-button")}

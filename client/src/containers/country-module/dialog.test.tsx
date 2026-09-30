@@ -22,6 +22,22 @@ vi.mock("@/i18n/use-country", () => ({
 
 vi.mock("@/i18n/navigation", () => ({
   usePathname: () => mockPathname(),
+  LocaleLink: ({
+    href,
+    children,
+    ...props
+  }: {
+    href: string | { pathname: string; query?: Record<string, string> };
+    children: React.ReactNode;
+  }) => {
+    const search = typeof href === "string" ? "" : new URLSearchParams(href.query).toString();
+    const path = typeof href === "string" ? href : href.pathname;
+    return (
+      <a href={search ? `${path}?${search}` : path} {...props}>
+        {children}
+      </a>
+    );
+  },
 }));
 
 vi.mock("./use-coverage", () => ({
@@ -225,9 +241,23 @@ describe("CountryModuleDialog", () => {
     expect(screen.queryByRole("heading", { level: 3 })).not.toBeInTheDocument();
   });
 
-  test("the Learn more button is disabled", () => {
+  test("the Learn more link opens the partners page for the module in a new tab", () => {
     render(<CountryModuleDialog />);
 
-    expect(screen.getByRole("button", { name: "country-module-partnerships-cta" })).toBeDisabled();
+    const link = screen.getByRole("link", { name: "country-module-partnerships-cta" });
+    expect(link).toHaveAttribute("href", "/partners?country=ECU");
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
+  test("the Learn more link falls back to the plain partners page for a module without partners", () => {
+    mockCountry.mockReturnValue("BOL");
+
+    render(<CountryModuleDialog />);
+
+    expect(screen.getByRole("link", { name: "country-module-partnerships-cta" })).toHaveAttribute(
+      "href",
+      "/partners",
+    );
   });
 });
