@@ -26,7 +26,7 @@ export default function PartnersPage() {
       <PartnersHero />
       <CountryModulePartnerships />
       <OtherPartners />
-      <Footer />
+      <Footer showDisclaimer={false} />
     </main>
   );
 }

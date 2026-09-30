@@ -4,19 +4,21 @@ import Image from "next/image";
 
 import { useLocale, useTranslations } from "next-intl";
 
+import { cn } from "@/lib/utils";
+
 import DataDisclaimer from "@/containers/disclaimers/data";
 
 import { Button } from "@/components/ui/button";
 
-export default function Footer() {
+export default function Footer({ showDisclaimer = true }: Readonly<{ showDisclaimer?: boolean }>) {
   const locale = useLocale();
   const t = useTranslations();
 
   return (
-    <section className="bg-blue-900 pt-4 text-white print:hidden">
+    <section className={cn("bg-blue-900 text-white print:hidden", { "pt-4": showDisclaimer })}>
       <div className="container">
         <div className="divide-primary divide-y">
-          <DataDisclaimer />
+          {showDisclaimer && <DataDisclaimer />}
 
           <div className="flex w-full flex-col items-center justify-between py-4 md:flex-row md:items-center">
             <div className="flex h-full w-full flex-col items-start space-y-10 pb-6 sm:flex-row md:items-center md:space-y-0 md:space-x-10 md:pb-0">
