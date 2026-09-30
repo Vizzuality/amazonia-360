@@ -16,20 +16,17 @@ vi.mock("@/i18n/navigation", () => ({
     children,
     ...props
   }: {
-    href: string | { pathname: string; query?: { country: string } };
+    href: string | { pathname: string; query?: Record<string, string> };
     children: React.ReactNode;
-  }) => (
-    <a
-      href={
-        typeof href === "string"
-          ? href
-          : `${href.pathname}${href.query ? `?country=${href.query.country}` : ""}`
-      }
-      {...props}
-    >
-      {children}
-    </a>
-  ),
+  }) => {
+    const search = typeof href === "string" ? "" : new URLSearchParams(href.query).toString();
+    const path = typeof href === "string" ? href : href.pathname;
+    return (
+      <a href={search ? `${path}?${search}` : path} {...props}>
+        {children}
+      </a>
+    );
+  },
 }));
 
 describe("IndicatorsPartners", () => {

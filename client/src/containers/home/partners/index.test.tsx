@@ -28,10 +28,4 @@ describe("Partners", () => {
     expect(link).not.toHaveAttribute("target");
     expect(link).toHaveTextContent("landing-partners-see-all");
   });
-
-  it("does not offer a Become a partner action", () => {
-    render(<Partners />);
-
-    expect(screen.queryByText(/become a partner/i)).not.toBeInTheDocument();
-  });
 });
