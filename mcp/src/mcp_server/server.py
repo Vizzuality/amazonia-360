@@ -11,8 +11,10 @@ from mcp_server.config import Settings
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.maps import register_map_tools
 from mcp_server.measurement.call_log import CallLog
+from mcp_server.places import Places, load_places
 from mcp_server.tools.area import register_area_tools
 from mcp_server.tools.catalogue import register_catalogue_tools
+from mcp_server.tools.places import register_place_tools
 
 INSTRUCTIONS = """\
 Answers questions about the physical and natural environment of the Ecuador module of
@@ -23,6 +25,10 @@ cover, canopy height, grassland), both over areas in the module.
 Start with list_indicators. Use categories_in_area, count_in_area and
 class_shares_in_area first; they are fast. area_by_category is slow and should be
 called for one indicator at a time.
+
+A province, canton or protected area of the module can be named instead of drawn:
+find_places returns the places with that name, each with a place_id that every area
+tool takes instead of area. When several places match, ask the user which one.
 
 Every answer says what it was computed over (computed_over), where the area falls
 against the module (coverage) and what the layer covers (layer); each field is described
@@ -43,13 +49,15 @@ def create_mcp_server(
     call_log: CallLog | None = None,
     settings: Settings | None = None,
     *,
+    places: Places | None = None,
     auth: AuthSettings | None = None,
     auth_server_provider: OAuthAuthorizationServerProvider[Any, Any, Any] | None = None,
 ) -> MCPServer:
     settings = settings or Settings.from_env()
+    places = places or load_places()
     if handlers is None:
         http = httpx.AsyncClient(timeout=settings.arcgis_timeout_s)
-        handlers = AreaHandlers(ArcGISClient(http))
+        handlers = AreaHandlers(ArcGISClient(http), places=places)
     call_log = call_log or CallLog(settings.call_log_path)
 
     server = MCPServer(
@@ -61,6 +69,7 @@ def create_mcp_server(
         auth_server_provider=auth_server_provider,
     )
     register_catalogue_tools(server)
+    register_place_tools(server, places)
     register_area_tools(server, handlers, call_log)
     register_map_tools(server, handlers, call_log)
     return server

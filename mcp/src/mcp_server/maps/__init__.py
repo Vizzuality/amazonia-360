@@ -21,7 +21,7 @@ from pydantic import BaseModel
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.handlers.result import Result
 from mcp_server.measurement.call_log import CallLog
-from mcp_server.tools.area import QUERY, Area, IndicatorId, logged_call
+from mcp_server.tools.area import QUERY, Area, IndicatorId, PlaceId, logged_call
 
 _HERE = Path(__file__).parent
 MIME = "text/html;profile=mcp-app"
@@ -99,7 +99,7 @@ def register_map_tools(
         )(_view(name))
 
     async def map_area_by_category(
-        indicator_id: IndicatorId, area: Area
+        indicator_id: IndicatorId, area: Area = None, place_id: PlaceId = None
     ) -> Annotated[CallToolResult, Result]:
         """The same figures as area_by_category, from the same query, with the classes
         drawn on an interactive map shown to the user.
@@ -112,12 +112,13 @@ def register_map_tools(
             call_log,
             "map_area_by_category",
             indicator_id,
-            handlers.area_by_category_map(indicator_id, area),
+            handlers.area_by_category_map(indicator_id, area, place_id=place_id),
             lambda out: out[0],
+            place_id,
         )
         size = len(pydantic_core.to_json(drawn.shapes))
         # The colours stay either way: the legend needs them.
-        meta: dict[str, Any] = {"styles": drawn.styles}
+        meta: dict[str, Any] = {"area": drawn.area, "styles": drawn.styles}
         if size > MAX_SHAPES_BYTES:
             meta["shapes_omitted_bytes"] = size
         else:
@@ -131,7 +132,7 @@ def register_map_tools(
     )
 
     async def map_class_shares_in_area(
-        indicator_id: IndicatorId, area: Area
+        indicator_id: IndicatorId, area: Area = None, place_id: PlaceId = None
     ) -> Annotated[CallToolResult, Result]:
         """The same shares as class_shares_in_area, with the raster drawn over the
         area on a map shown to the user.
@@ -143,8 +144,9 @@ def register_map_tools(
             call_log,
             "map_class_shares_in_area",
             indicator_id,
-            handlers.class_shares_map(indicator_id, area),
+            handlers.class_shares_map(indicator_id, area, place_id=place_id),
             lambda out: out[0],
+            place_id,
         )
         return _tool_result(result, asdict(drawn))
 

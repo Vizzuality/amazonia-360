@@ -9,8 +9,10 @@ from mcp.types import TextResourceContents
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.maps import CATEGORIES_URI, RASTER_URI
 from mcp_server.measurement.call_log import CallLog
+from mcp_server.places import Places
 from mcp_server.server import create_mcp_server
 from tests.test_handlers import TENA, FakeClient
+from tests.test_places import SNAPSHOT
 
 pytestmark = pytest.mark.usefixtures("fixed_catalogue")
 
@@ -21,9 +23,11 @@ VIEWS = {
 
 
 def server(tmp_path: Path) -> Any:
+    places = Places(SNAPSHOT)
     return create_mcp_server(
-        handlers=AreaHandlers(FakeClient()),  # type: ignore[arg-type]
+        handlers=AreaHandlers(FakeClient(), places=places),  # type: ignore[arg-type]
         call_log=CallLog(tmp_path / "calls.jsonl"),
+        places=places,
     )
 
 
@@ -116,3 +120,15 @@ async def test_shapes_too_large_for_the_page_are_left_out_with_their_size(
     assert drawn["shapes_omitted_bytes"] > 10
     # The legend still has its colours.
     assert set(drawn["styles"]) == {"Bosque"}
+
+
+@pytest.mark.anyio
+async def test_the_map_gets_the_area_of_a_place(tmp_path: Path) -> None:
+    async with Client(server(tmp_path)) as client:
+        for tool in VIEWS:
+            indicator = 210 if tool == "map_area_by_category" else 129
+            result = await client.call_tool(
+                tool, {"indicator_id": indicator, "place_id": "canton:Napo/Tena"}
+            )
+            assert result.meta is not None
+            assert result.meta["map"]["area"]["type"] == "Polygon"

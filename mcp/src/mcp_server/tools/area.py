@@ -17,8 +17,17 @@ QUERY = ToolAnnotations(read_only_hint=True, open_world_hint=True)
 
 IndicatorId = Annotated[int, Field(description="Indicator id from list_indicators.")]
 Area = Annotated[
-    dict[str, Any],
-    Field(description="GeoJSON Polygon or MultiPolygon geometry in WGS84 (EPSG:4326)."),
+    dict[str, Any] | None,
+    Field(
+        description=(
+            "GeoJSON Polygon or MultiPolygon geometry in WGS84 (EPSG:4326). "
+            "Give this or place_id."
+        )
+    ),
+]
+PlaceId = Annotated[
+    str | None,
+    Field(description="A place id from find_places, instead of area."),
 ]
 
 
@@ -35,6 +44,7 @@ async def logged_call[T](
     indicator_id: int,
     call: Awaitable[T],
     result_of: Callable[[T], Result],
+    place_id: str | None = None,
 ) -> T:
     """Runs a handler call, logs it for the measurement run, and turns errors into
     ToolErrors whose text says the cause."""
@@ -47,6 +57,7 @@ async def logged_call[T](
                 "tool": tool,
                 "user": _caller(),
                 "indicator_id": indicator_id,
+                "place_id": place_id,
                 "ok": False,
                 "error": str(exc),
                 "elapsed_ms": watch.total_ms(),
@@ -63,6 +74,7 @@ async def logged_call[T](
                 "tool": tool,
                 "user": _caller(),
                 "indicator_id": indicator_id,
+                "place_id": place_id,
                 "ok": False,
                 "error": error,
                 "elapsed_ms": watch.total_ms(),
@@ -75,6 +87,7 @@ async def logged_call[T](
             "tool": tool,
             "user": _caller(),
             "indicator_id": indicator_id,
+            "place_id": place_id,
             "ok": True,
             "aoi_ha": result.aoi_ha,
             "features": result.computed_over.features,
@@ -91,43 +104,71 @@ def register_area_tools(
     async def run(
         tool: str,
         indicator_id: int,
-        call: Callable[[int, dict[str, Any]], Awaitable[Result]],
-        area: dict[str, Any],
+        call: Callable[..., Awaitable[Result]],
+        area: dict[str, Any] | None,
+        place_id: str | None,
     ) -> Result:
         return await logged_call(
-            call_log, tool, indicator_id, call(indicator_id, area), lambda r: r
+            call_log,
+            tool,
+            indicator_id,
+            call(indicator_id, area, place_id=place_id),
+            lambda r: r,
+            place_id,
         )
 
     @server.tool(annotations=QUERY)
-    async def categories_in_area(indicator_id: IndicatorId, area: Area) -> Result:
+    async def categories_in_area(
+        indicator_id: IndicatorId, area: Area = None, place_id: PlaceId = None
+    ) -> Result:
         """Which classes of a categorical layer are present in the area. Fast."""
         return await run(
-            "categories_in_area", indicator_id, handlers.categories_in_area, area
+            "categories_in_area",
+            indicator_id,
+            handlers.categories_in_area,
+            area,
+            place_id,
         )
 
     @server.tool(annotations=QUERY)
-    async def count_in_area(indicator_id: IndicatorId, area: Area) -> Result:
+    async def count_in_area(
+        indicator_id: IndicatorId, area: Area = None, place_id: PlaceId = None
+    ) -> Result:
         """How many discrete features of a count layer fall in the area. Fast."""
-        return await run("count_in_area", indicator_id, handlers.count_in_area, area)
+        return await run(
+            "count_in_area", indicator_id, handlers.count_in_area, area, place_id
+        )
 
     @server.tool(annotations=QUERY)
-    async def area_by_category(indicator_id: IndicatorId, area: Area) -> Result:
+    async def area_by_category(
+        indicator_id: IndicatorId, area: Area = None, place_id: PlaceId = None
+    ) -> Result:
         """Hectares of each class inside the area, clipped to it.
 
         Slow: several seconds to tens of seconds per call. Ask for one indicator at a
         time.
         """
         return await run(
-            "area_by_category", indicator_id, handlers.area_by_category, area
+            "area_by_category",
+            indicator_id,
+            handlers.area_by_category,
+            area,
+            place_id,
         )
 
     @server.tool(annotations=QUERY)
-    async def class_shares_in_area(indicator_id: IndicatorId, area: Area) -> Result:
+    async def class_shares_in_area(
+        indicator_id: IndicatorId, area: Area = None, place_id: PlaceId = None
+    ) -> Result:
         """Share of the area's pixels in each class of a classed raster. Fast.
 
         A share of pixels, not of hectares: see computed_over for how many pixels
         and how large.
         """
         return await run(
-            "class_shares_in_area", indicator_id, handlers.class_shares, area
+            "class_shares_in_area",
+            indicator_id,
+            handlers.class_shares,
+            area,
+            place_id,
         )

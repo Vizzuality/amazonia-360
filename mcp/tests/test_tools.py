@@ -8,16 +8,20 @@ from mcp.types import TextContent
 
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.measurement.call_log import CallLog
+from mcp_server.places import Places
 from mcp_server.server import create_mcp_server
 from tests.test_handlers import TENA, FakeClient
+from tests.test_places import SNAPSHOT
 
 pytestmark = pytest.mark.usefixtures("fixed_catalogue")
 
 
 def server(tmp_path: Path) -> Any:
+    places = Places(SNAPSHOT)
     return create_mcp_server(
-        handlers=AreaHandlers(FakeClient()),  # type: ignore[arg-type]
+        handlers=AreaHandlers(FakeClient(), places=places),  # type: ignore[arg-type]
         call_log=CallLog(tmp_path / "calls.jsonl"),
+        places=places,
     )
 
 
@@ -28,6 +32,7 @@ async def test_exposes_the_tools(tmp_path: Path) -> None:
     assert names == {
         "list_indicators",
         "describe_indicator",
+        "find_places",
         "categories_in_area",
         "count_in_area",
         "area_by_category",
@@ -154,7 +159,9 @@ async def test_refusals_reach_the_client_with_their_reason_and_are_logged(
 async def test_pathological_failures_are_logged_too(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    async def boom(indicator_id: int, area: dict[str, Any]) -> Any:
+    async def boom(
+        indicator_id: int, area: dict[str, Any], *, place_id: str | None = None
+    ) -> Any:
         raise RuntimeError("boom")
 
     monkeypatch.setattr(AreaHandlers, "categories_in_area", staticmethod(boom))
@@ -197,3 +204,37 @@ async def test_describe_indicator_shows_the_count_mismatch(
         "documented": 7,
         "published": 3,
     }
+
+
+@pytest.mark.anyio
+async def test_find_places(tmp_path: Path) -> None:
+    async with Client(server(tmp_path)) as client:
+        result = await client.call_tool("find_places", {"query": "Pastaza"})
+    assert result.structured_content is not None
+    found = result.structured_content["places"]
+    assert [p["id"] for p in found] == ["province:Pastaza", "canton:Pastaza/Pastaza"]
+    assert "ask the user" in result.structured_content["note"]
+
+
+@pytest.mark.anyio
+async def test_an_area_tool_takes_a_place_and_logs_it(tmp_path: Path) -> None:
+    async with Client(server(tmp_path)) as client:
+        result = await client.call_tool(
+            "area_by_category",
+            {"indicator_id": 210, "place_id": "canton:Napo/Tena"},
+        )
+    assert result.structured_content is not None
+    assert result.structured_content["place"]["id"] == "canton:Napo/Tena"
+    record = json.loads((tmp_path / "calls.jsonl").read_text().splitlines()[-1])
+    assert record["place_id"] == "canton:Napo/Tena"
+
+
+@pytest.mark.anyio
+async def test_an_area_tool_without_area_or_place_says_what_to_send(
+    tmp_path: Path,
+) -> None:
+    async with Client(server(tmp_path)) as client:
+        result = await client.call_tool("count_in_area", {"indicator_id": 202})
+    assert result.is_error
+    text = result.content[0]
+    assert isinstance(text, TextContent) and "find_places" in text.text
