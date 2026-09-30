@@ -4,6 +4,8 @@ from typing import Any
 import httpx
 import pytest
 
+from mcp_server import places
+from mcp_server.catalogue import cli
 from mcp_server.places.models import PlacesSnapshot
 from mcp_server.places.sync import (
     SOURCES,
@@ -52,7 +54,9 @@ FEATURES: dict[str, list[dict[str, Any]]] = {
 }
 
 
-def transport(fail: str | None = None) -> httpx.MockTransport:
+def transport(
+    fail: str | None = None, truncate: str | None = None
+) -> httpx.MockTransport:
     urls = {f"{s.url}/{s.layer_id}/query": s.kind for s in SOURCES}
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -61,15 +65,19 @@ def transport(fail: str | None = None) -> httpx.MockTransport:
             return httpx.Response(404)
         if kind == fail:
             return httpx.Response(200, json={"error": {"code": 400, "message": "x"}})
-        return httpx.Response(
-            200, json={"type": "FeatureCollection", "features": FEATURES[kind]}
-        )
+        body: dict[str, Any] = {
+            "type": "FeatureCollection",
+            "features": FEATURES[kind],
+        }
+        if kind == truncate:
+            body["exceededTransferLimit"] = True
+        return httpx.Response(200, json=body)
 
     return httpx.MockTransport(handler)
 
 
-async def run(fail: str | None = None) -> dict[str, Any]:
-    async with httpx.AsyncClient(transport=transport(fail)) as http:
+async def run(fail: str | None = None, truncate: str | None = None) -> dict[str, Any]:
+    async with httpx.AsyncClient(transport=transport(fail, truncate)) as http:
         return await sync_places(http, NOW)
 
 
@@ -116,3 +124,39 @@ async def test_a_source_that_fails_fails_the_sync() -> None:
 def test_where_doubles_quotes() -> None:
     assert quote("Vírgen del Rosario") == "'Vírgen del Rosario'"
     assert quote("O'Neil") == "'O''Neil'"
+
+
+@pytest.mark.anyio
+async def test_a_truncated_response_fails_the_sync() -> None:
+    with pytest.raises(PlacesSyncError, match="truncated"):
+        await run(truncate="canton")
+
+
+def test_a_places_sync_that_fails_leaves_the_snapshot_as_it_was(
+    tmp_path: Any, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    (tmp_path / "__init__.py").touch()
+    snapshot = tmp_path / places.SNAPSHOT_FILE
+    snapshot.write_text('{"previous": true}\n', "utf-8")
+
+    async def catalogue() -> dict[str, Any]:
+        return {"indicators": {}}
+
+    async def failing(timeout_s: float) -> dict[str, Any]:
+        raise PlacesSyncError("canton: truncated")
+
+    monkeypatch.setattr(cli, "HERE", tmp_path)
+    monkeypatch.setattr(cli, "EXAMPLE_FILE", tmp_path / "catalogue.json")
+    monkeypatch.setattr(cli, "_sync", lambda timeout_s: catalogue())
+    monkeypatch.setattr(cli, "nothing_read", lambda snapshot: False)
+    monkeypatch.setattr(cli, "local_document", lambda: None)
+    monkeypatch.setattr(cli.local_document, "cache_clear", lambda: None, raising=False)
+    monkeypatch.setattr(cli, "exported_catalogue", lambda: {})
+    monkeypatch.setattr(cli, "_sync_places", failing)
+    monkeypatch.setattr(places, "__file__", str(tmp_path / "__init__.py"))
+    monkeypatch.setattr("sys.argv", ["amazonia360-mcp-catalogue", "sync"])
+
+    cli.main()
+
+    assert snapshot.read_text("utf-8") == '{"previous": true}\n'
+    assert "left as it was" in capsys.readouterr().out
