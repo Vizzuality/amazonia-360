@@ -233,7 +233,7 @@ describe("CountrySelector (desktop)", () => {
     expect(screen.getByTestId("country-selector-trigger")).toHaveAttribute("data-country", "ECU");
   });
 
-  test("opens onto exactly two rows, a section label and a disabled Learn more", async () => {
+  test("opens onto exactly two rows, a section label and a Learn more link", async () => {
     const { wrapper } = setup();
     render(<CountrySelector />, { wrapper });
     await userEvent.click(screen.getByTestId("country-selector-trigger"));
@@ -243,7 +243,22 @@ describe("CountrySelector (desktop)", () => {
     expect(rows[0]).toHaveAttribute("aria-current", "page");
     expect(rows[1]).not.toHaveAttribute("aria-current");
     expect(screen.getByText("country-module-selector-section-label")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "country-module-partnerships-cta" })).toBeDisabled();
+    const learnMore = screen.getByTestId("country-selector-learn-more");
+    expect(learnMore).toHaveAttribute("href", "/partners");
+    expect(learnMore).toHaveAttribute("target", "_blank");
+    expect(learnMore).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
+  test("inside a module the Learn more link lands on that module's partners", async () => {
+    mockCountry.mockReturnValue("ECU");
+    const { wrapper } = setup();
+    render(<CountrySelector />, { wrapper });
+    await userEvent.click(screen.getByTestId("country-selector-trigger"));
+
+    expect(screen.getByTestId("country-selector-learn-more")).toHaveAttribute(
+      "href",
+      "/partners?country=ECU",
+    );
   });
 
   test("shows a skeleton instead of a count while indicators load, the number once loaded", async () => {

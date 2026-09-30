@@ -8,12 +8,13 @@ import { ChevronDown, Globe } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { isSavedReportPathname } from "@/lib/country";
+import { getPartnersHref } from "@/lib/country/partners";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-import { usePathname } from "@/i18n/navigation";
+import { LocaleLink, usePathname } from "@/i18n/navigation";
 
 import LockedCountrySelector, { LockedCountrySelectorSkeleton } from "./locked";
 import ModuleList from "./module-list";
@@ -98,8 +99,15 @@ export default function CountrySelector() {
               {t("country-module-selector-footer-text")}
             </p>
           </div>
-          <Button type="button" variant="outline" size="sm" className="shrink-0" disabled>
-            {t("country-module-partnerships-cta")}
+          <Button asChild variant="outline" size="sm" className="shrink-0">
+            <LocaleLink
+              href={getPartnersHref(active.code)}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="country-selector-learn-more"
+            >
+              {t("country-module-partnerships-cta")}
+            </LocaleLink>
           </Button>
         </div>
       </PopoverContent>
