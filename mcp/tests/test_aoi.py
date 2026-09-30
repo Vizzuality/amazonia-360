@@ -119,6 +119,17 @@ def test_an_area_that_sticks_out_by_less_than_a_hundredth_of_a_hectare_is_inside
 
 
 @pytest.mark.usefixtures("outline")
+def test_a_sliver_outside_counts_as_inside() -> None:
+    # 0.004 of a 0.4-degree width is 1 % of the area, under the threshold; 0.012
+    # is 3 %, over it.
+    sliver = parse_aoi(square(-78.004, -1.0, 0.4))
+    coverage = module_coverage(sliver)
+    assert (coverage.status, coverage.outside_ha) == ("inside", 0)
+    more = parse_aoi(square(-78.012, -1.0, 0.4))
+    assert module_coverage(more).status == "partial"
+
+
+@pytest.mark.usefixtures("outline")
 def test_coverage_outside_counts_the_whole_area() -> None:
     lima = parse_aoi(square(-77.1, -12.1, 0.2))
     coverage = module_coverage(lima)

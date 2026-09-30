@@ -28,6 +28,8 @@ MODULE_BOUNDARY: Boundary = "derived_polygon"
 # the border; a country or the globe would pull every feature of a layer, and one
 # 180 degrees wide or more measures as 0 ha (pyproj takes the short way round).
 MAX_REACH_DEG = 1.0
+# Less of the area than this outside the outline counts as inside.
+SLIVER_SHARE = 0.02
 
 
 class AOIError(Exception):
@@ -37,16 +39,19 @@ class AOIError(Exception):
 class Coverage(BaseModel):
     status: Literal["inside", "partial", "outside"] = Field(
         description=(
-            "Where the area falls against the module's outline. inside: the whole "
-            "area is in the module. partial: part of it is outside the module and "
-            "has no data; outside_ha says how much."
+            "Where the area falls against the module's outline. inside: the area "
+            "is in the module, or all but a sliver under 2 % that comes from "
+            "the outline and the area's boundary following different border "
+            "lines. partial: part of it is outside the module; outside_ha says how "
+            "much."
         )
     )
     outside_ha: float = Field(
         description=(
-            "Hectares of the area outside the module. The module's layers have no "
-            "data there: report them as outside the module, never as a class or as "
-            "unclassified land of the layer. 0 when status is inside."
+            "Hectares of the area outside the module. The module's own layers have "
+            "no data there: report them as outside the module, never as a class or "
+            "as unclassified land. The regional rasters (class_shares_in_area) do "
+            "cover it. 0 when status is inside."
         )
     )
     # A bare "provisional" flag was read as "the layer is provisional" in the
@@ -139,6 +144,11 @@ def module_coverage(aoi: Polygon | MultiPolygon) -> Coverage:
             outside_ha=round(geodesic_area_ha(aoi), 2),
             boundary=MODULE_BOUNDARY,
         )
+    # The outline and the place boundaries come from different border lines, so 99 of
+    # the 151 places stuck out by a sliver: Yasuní by 0.5 ha, and protected areas of
+    # the module's own layer 216 by up to 1.3 % (El Cóndor).
     # Rounded first, so that partial never comes with 0.0 ha outside.
+    if outside_ha <= geodesic_area_ha(aoi) * SLIVER_SHARE:
+        outside_ha = 0.0
     status = "partial" if outside_ha > 0 else "inside"
     return Coverage(status=status, outside_ha=outside_ha, boundary=MODULE_BOUNDARY)
