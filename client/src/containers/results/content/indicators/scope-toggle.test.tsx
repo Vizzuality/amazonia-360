@@ -34,17 +34,24 @@ const ECU_REPLACING_REGIONAL = [
   {
     id: 216,
     name: "Protected Areas (Ecuador module)",
+    country: "ECU",
     replaces: { id: "11" },
     visualization_types: ["map", "table", "numeric", "chart"],
   },
-  { id: 11, name: "Protected Areas", visualization_types: ["map", "table", "numeric", "chart"] },
+  {
+    id: 11,
+    name: "Protected Areas",
+    country: null,
+    visualization_types: ["map", "table", "numeric", "chart"],
+  },
   {
     id: 219,
     name: "Biogeographic Units (Ecuador module)",
+    country: "ECU",
     replaces: "17",
     visualization_types: ["map", "table", "numeric", "chart"],
   },
-  { id: 17, name: "Biome Types", visualization_types: ["map", "numeric", "chart"] },
+  { id: 17, name: "Biome Types", country: null, visualization_types: ["map", "numeric", "chart"] },
 ];
 
 const TOPIC_WITH_THE_ECU_WIDGET = [
@@ -57,12 +64,26 @@ beforeEach(() => {
   mockSetTopics.mockClear();
 });
 
+const getOption = (label: string) => screen.getByRole("button", { name: new RegExp(`^${label}`) });
+
 describe("IndicatorScopeToggle", () => {
-  test("offers the indicator its module replaced", () => {
+  test("marks the national side pressed on a module widget and offers the regional one", () => {
     renderToggle(<IndicatorScopeToggle indicatorId={216} topicId={1} type="map" />);
 
-    expect(screen.getByRole("button")).toHaveAccessibleName(/Protected Areas/);
-    expect(screen.getByRole("button")).toBeEnabled();
+    expect(screen.getByRole("group")).toHaveAccessibleName(/indicator-scope-toggle/);
+    expect(getOption("country-module-ECU-badge")).toHaveAttribute("aria-pressed", "true");
+    expect(getOption("country-module-badge-regional")).toHaveAttribute("aria-pressed", "false");
+    expect(getOption("country-module-badge-regional")).toHaveAccessibleName(/Protected Areas/);
+  });
+
+  test("marks the regional side pressed on a regional widget", () => {
+    mockTopics.mockReturnValue([{ topic_id: 1, indicators: [{ indicator_id: 11, type: "map" }] }]);
+
+    renderToggle(<IndicatorScopeToggle indicatorId={11} topicId={1} type="map" />);
+
+    expect(getOption("country-module-badge-regional")).toHaveAttribute("aria-pressed", "true");
+    expect(getOption("country-module-ECU-badge")).toHaveAttribute("aria-pressed", "false");
+    expect(getOption("country-module-ECU-badge")).toHaveAccessibleName(/Ecuador module/);
   });
 
   test("renders nothing for an indicator with no counterpart", () => {
@@ -83,26 +104,7 @@ describe("IndicatorScopeToggle", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  test.each(["chart", "numeric"] as const)(
-    "offers the swap both ways between 11 and 216 as a %s",
-    (type) => {
-      mockTopics.mockReturnValue([
-        { topic_id: 1, indicators: [{ indicator_id: 11, type }] },
-        { topic_id: 2, indicators: [{ indicator_id: 216, type }] },
-      ]);
-
-      renderToggle(<IndicatorScopeToggle indicatorId={11} topicId={1} type={type} />);
-      renderToggle(<IndicatorScopeToggle indicatorId={216} topicId={2} type={type} />);
-
-      const [toModule, toRegional] = screen.getAllByRole("button");
-      expect(toModule).toHaveAccessibleName(/Ecuador module/);
-      expect(toModule).toBeEnabled();
-      expect(toRegional).not.toHaveAccessibleName(/Ecuador module/);
-      expect(toRegional).toBeEnabled();
-    },
-  );
-
-  test("swapping rewrites only the matching widget's indicator id", async () => {
+  test("pressing the other side swaps only the matching widget's indicator id", async () => {
     mockTopics.mockReturnValue([
       {
         topic_id: 1,
@@ -115,7 +117,7 @@ describe("IndicatorScopeToggle", () => {
     ]);
 
     renderToggle(<IndicatorScopeToggle indicatorId={216} topicId={1} type="map" />);
-    await userEvent.click(screen.getByRole("button"));
+    await userEvent.click(getOption("country-module-badge-regional"));
 
     const next = mockSetTopics.mock.calls[0][0](mockTopics());
     expect(next[0].indicators).toEqual([
@@ -125,7 +127,14 @@ describe("IndicatorScopeToggle", () => {
     expect(next[1].indicators).toEqual([{ indicator_id: 216, type: "map" }]);
   });
 
-  test("is disabled when the counterpart already occupies that slot in the topic", () => {
+  test("pressing the side already selected does nothing", async () => {
+    renderToggle(<IndicatorScopeToggle indicatorId={216} topicId={1} type="map" />);
+    await userEvent.click(getOption("country-module-ECU-badge"));
+
+    expect(mockSetTopics).not.toHaveBeenCalled();
+  });
+
+  test("the other side is disabled when the counterpart already occupies that slot", async () => {
     mockTopics.mockReturnValue([
       {
         topic_id: 1,
@@ -137,8 +146,11 @@ describe("IndicatorScopeToggle", () => {
     ]);
 
     renderToggle(<IndicatorScopeToggle indicatorId={216} topicId={1} type="map" />);
+    const regional = getOption("country-module-badge-regional");
+    await userEvent.click(regional);
 
-    expect(screen.getByRole("button")).toBeDisabled();
-    expect(screen.getByRole("button")).toHaveAccessibleName(/scope-toggle-taken/);
+    expect(regional).toHaveAttribute("aria-disabled", "true");
+    expect(regional).toHaveAccessibleName(/scope-toggle-taken/);
+    expect(mockSetTopics).not.toHaveBeenCalled();
   });
 });

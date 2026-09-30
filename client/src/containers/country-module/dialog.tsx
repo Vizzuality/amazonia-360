@@ -8,7 +8,14 @@ import Image from "next/image";
 
 import { useLocale, useTranslations } from "next-intl";
 
-import { COUNTRIES, CountryCode, countryFlagSrc, isUnscopedPathname } from "@/lib/country";
+import {
+  COUNTRIES,
+  CountryCode,
+  countryFlagSrc,
+  isSavedReportPathname,
+  isUnscopedPathname,
+} from "@/lib/country";
+import { getCountryModulePartnerLogos } from "@/lib/country/partners";
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import useIsMounted from "@/lib/mounted";
 
@@ -21,23 +28,28 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { usePathname } from "@/i18n/navigation";
 import { useCountry } from "@/i18n/use-country";
+
+import { CountryModuleCoverageStatus, useCountryModuleCoverage } from "./use-coverage";
 
 function getCountryModuleDialogCookieName(code: string): string {
   return `country-module-dialog-${code}`;
 }
 
-const MODULE_PARTNER_LOGOS: Record<string, { src: string; alt: string }[]> = {
-  ECU: [
-    { src: "/partners/ecu/gobierno-del-ecuador.avif", alt: "Gobierno del Ecuador" },
-    { src: "/partners/ecu/ministerio-del-ambiente.avif", alt: "Ministerio del Ambiente" },
-    { src: "/partners/ecu/instituto-geografico-militar.avif", alt: "Instituto Geográfico Militar" },
-    { src: "/partners/ecu/inabio.avif", alt: "INABIO" },
-    { src: "/partners/ecu/the-nature-conservancy.avif", alt: "The Nature Conservancy" },
-  ],
-};
+function getBodyMessageKey(
+  status: CountryModuleCoverageStatus,
+): "country-module-modal-body" | "country-module-modal-body-no-area" {
+  return status === "no-area" ? "country-module-modal-body-no-area" : "country-module-modal-body";
+}
+
+function LayerCount({ count }: Readonly<{ count: number | undefined }>) {
+  if (count === undefined) return <Skeleton className="h-8 w-10" aria-hidden />;
+
+  return <p className="text-2xl leading-8 font-bold">{count}</p>;
+}
 
 // `useCookie` reads `document.cookie` in a lazy `useState` initializer and never resyncs when
 // its key changes, so the module has to be a mount boundary or a dismissal would read the
@@ -54,6 +66,7 @@ function CountryModuleDialogContent({ country }: Readonly<{ country: CountryCode
   const isMounted = useIsMounted();
   const pathname = usePathname();
   const { data: indicators } = useGetDefaultIndicators({ locale });
+  const { status: coverageStatus } = useCountryModuleCoverage();
 
   const [dismissed, setDismissed] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(false);
@@ -66,14 +79,14 @@ function CountryModuleDialogContent({ country }: Readonly<{ country: CountryCode
   const activeModule = country ? COUNTRIES.find((entry) => entry.code === country) : undefined;
   const moduleName = activeModule ? t(activeModule.nameKey) : "";
 
-  const partnerLogos = country ? (MODULE_PARTNER_LOGOS[country] ?? []) : [];
+  const partnerLogos = getCountryModulePartnerLogos(country);
 
   const regionalLayersCount = useMemo(
-    () => indicators?.filter((indicator) => !indicator.country).length ?? 0,
+    () => indicators?.filter((indicator) => !indicator.country).length,
     [indicators],
   );
   const nationalLayersCount = useMemo(
-    () => indicators?.filter((indicator) => indicator.country === country).length ?? 0,
+    () => indicators?.filter((indicator) => indicator.country === country).length,
     [indicators, country],
   );
 
@@ -84,8 +97,9 @@ function CountryModuleDialogContent({ country }: Readonly<{ country: CountryCode
 
   if (!activeModule) return null;
 
-  const isScoped = isMounted() && !isUnscopedPathname(pathname);
-  const isOpen = isScoped && dismissedCookie !== "true" && !dismissed;
+  const isScoped = isMounted() && !isUnscopedPathname(pathname) && !isSavedReportPathname(pathname);
+  const isCoverageKnownInside = coverageStatus === "no-area" || coverageStatus === "inside";
+  const isOpen = isScoped && isCoverageKnownInside && dismissedCookie !== "true" && !dismissed;
 
   return (
     <>
@@ -114,21 +128,27 @@ function CountryModuleDialogContent({ country }: Readonly<{ country: CountryCode
               </DialogTitle>
             </div>
             <DialogDescription className="text-base leading-6 font-medium text-blue-50">
-              {t("country-module-modal-body", { name: moduleName })}
+              {t(getBodyMessageKey(coverageStatus), { name: moduleName })}
             </DialogDescription>
             <DialogClose className="text-primary-foreground focus:ring-ring absolute top-4 right-4 rounded-xs opacity-80 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none" />
           </div>
 
           <div className="flex flex-col gap-4 p-6">
             <div className="flex gap-2">
-              <div className="bg-muted flex flex-1 flex-col gap-1 rounded-md px-4 py-4">
-                <p className="text-2xl leading-8 font-bold">{regionalLayersCount}</p>
+              <div
+                className="bg-muted flex flex-1 flex-col gap-1 rounded-md px-4 py-4"
+                aria-busy={regionalLayersCount === undefined}
+              >
+                <LayerCount count={regionalLayersCount} />
                 <p className="text-sm leading-5 font-medium">
                   {t("country-module-modal-regional-layers")}
                 </p>
               </div>
-              <div className="bg-muted flex flex-1 flex-col gap-1 rounded-md px-4 py-4">
-                <p className="text-2xl leading-8 font-bold">{nationalLayersCount}</p>
+              <div
+                className="bg-muted flex flex-1 flex-col gap-1 rounded-md px-4 py-4"
+                aria-busy={nationalLayersCount === undefined}
+              >
+                <LayerCount count={nationalLayersCount} />
                 <p className="text-sm leading-5 font-medium">
                   {t("country-module-modal-national-layers")}
                 </p>

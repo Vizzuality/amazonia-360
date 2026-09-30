@@ -8,19 +8,30 @@ import {
   useSyncIndicators,
 } from "@/app/(frontend)/store";
 
-import { DATASETS } from "@/constants/datasets";
-
+import { getAreaAfpLayer } from "@/containers/map/layer-manager/area-afp-layer";
+import CountryModuleBoundaryLayer from "@/containers/map/layer-manager/country-module-boundary-layer";
 import GridLayer from "@/containers/map/layer-manager/grid-layer";
 import LayerManagerItem from "@/containers/map/layer-manager/item";
 import PlaceholderGridLayer from "@/containers/map/layer-manager/placeholder-grid-layer";
 
-import { LayerProps } from "@/components/map/layers/types";
+import { useCountry } from "@/i18n/use-country";
 
 // import SelectedLayer from "@/containers/map/layer-manager/selected-layer";
 
 const Layer = dynamic(() => import("@/components/map/layers"), { ssr: false });
 
+export function getCountryModuleBoundaryIndex({
+  gridEnabled,
+  indicatorsCount,
+}: {
+  gridEnabled?: boolean;
+  indicatorsCount: number;
+}) {
+  return gridEnabled ? 1 : indicatorsCount + 1;
+}
+
 export default function LayerManager({ gridEnabled }: { gridEnabled?: boolean }) {
+  const country = useCountry();
   // const [location] = useSyncLocation();
   const [indicators] = useSyncIndicators();
   // const [indicatorsSettings, setIndicatorsSettings] = useSyncIndicatorsSettings();
@@ -55,7 +66,13 @@ export default function LayerManager({ gridEnabled }: { gridEnabled?: boolean })
 
   return (
     <>
-      <Layer index={0} layer={DATASETS.area_afp.layer as LayerProps} />
+      <Layer index={0} layer={getAreaAfpLayer(country)} />
+      <CountryModuleBoundaryLayer
+        index={getCountryModuleBoundaryIndex({
+          gridEnabled,
+          indicatorsCount: indicators?.length ?? 0,
+        })}
+      />
       {/* <SelectedLayer location={location} /> */}
 
       {!gridEnabled &&

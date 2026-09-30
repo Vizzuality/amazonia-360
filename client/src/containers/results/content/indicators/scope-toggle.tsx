@@ -4,17 +4,19 @@ import { useMemo } from "react";
 
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { useLocale, useTranslations } from "next-intl";
-import { LuArrowLeftRight } from "react-icons/lu";
 
 import { useGetIndicators } from "@/lib/indicators";
 import { getIndicatorCounterpart, getIndicatorCounterpartMap } from "@/lib/indicators/substitution";
 import { useReportCountry } from "@/lib/report/use-report-country";
+import { cn } from "@/lib/utils";
 
 import { Indicator, VisualizationTypes } from "@/types/indicator";
 import { Topic } from "@/types/topic";
 
 import { TopicView } from "@/app/(frontend)/parsers";
 import { useFormTopics } from "@/app/(frontend)/store";
+
+import { getIndicatorScopeBadgeKey } from "@/containers/indicators/scope-badge";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -30,6 +32,51 @@ function getScopeToggleLabel({
   if (!name) return t("indicator-scope-toggle");
   if (isTaken) return t("indicator-scope-toggle-taken", { name });
   return t("indicator-scope-toggle-to", { name });
+}
+
+function ScopeOption({
+  label,
+  checked,
+  disabled,
+  tooltip,
+  onSelect,
+}: Readonly<{
+  label: string;
+  checked: boolean;
+  disabled: boolean;
+  tooltip: string;
+  onSelect: () => void;
+}>) {
+  const option = (
+    <button
+      type="button"
+      aria-pressed={checked}
+      aria-disabled={disabled || undefined}
+      onClick={checked || disabled ? undefined : onSelect}
+      className={cn(
+        "h-4 w-[30px] rounded-[2px] text-center text-[10px] leading-4 font-semibold",
+        checked && "text-foreground bg-cyan-200",
+        !checked && "text-muted-foreground opacity-50 hover:opacity-100",
+        disabled && "cursor-not-allowed hover:opacity-50",
+      )}
+    >
+      {label}
+      {!checked && <span className="sr-only">{tooltip}</span>}
+    </button>
+  );
+
+  if (checked) return option;
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{option}</TooltipTrigger>
+      <TooltipPortal>
+        <TooltipContent sideOffset={4} className="max-w-72">
+          {tooltip}
+        </TooltipContent>
+      </TooltipPortal>
+    </Tooltip>
+  );
 }
 
 export default function IndicatorScopeToggle({
@@ -56,6 +103,10 @@ export default function IndicatorScopeToggle({
   if (!counterpart) return null;
 
   const { id: counterpartId, name } = counterpart;
+  const isNational = !counterpart.country;
+  const nationalCode = isNational
+    ? (indicators?.find((indicator) => indicator.id === indicatorId)?.country ?? null)
+    : counterpart.country;
 
   // The grid keys every widget on indicator id + type, so two widgets sharing that pair in one
   // topic collide: `results/content/item/index.tsx:83`.
@@ -67,7 +118,7 @@ export default function IndicatorScopeToggle({
       ),
   );
 
-  const label = getScopeToggleLabel({ isTaken, name, t });
+  const tooltip = getScopeToggleLabel({ isTaken, name, t });
 
   const handleSwap = () => {
     setTopics((prev: TopicView[]) =>
@@ -87,23 +138,25 @@ export default function IndicatorScopeToggle({
   };
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <button
-          type="button"
-          onClick={handleSwap}
-          disabled={isTaken}
-          aria-label={label}
-          className="flex h-8 w-8 items-center justify-center rounded-xs hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          <LuArrowLeftRight className="text-blue-600" />
-        </button>
-      </TooltipTrigger>
-      <TooltipPortal>
-        <TooltipContent sideOffset={0} className="max-w-72">
-          {label}
-        </TooltipContent>
-      </TooltipPortal>
-    </Tooltip>
+    <fieldset
+      aria-label={t("indicator-scope-toggle")}
+      data-testid="indicator-scope-switch"
+      className="border-border mr-1 flex h-5 shrink-0 items-center rounded border p-px"
+    >
+      <ScopeOption
+        label={t(getIndicatorScopeBadgeKey(nationalCode) as Parameters<typeof t>[0])}
+        checked={isNational}
+        disabled={isTaken}
+        tooltip={tooltip}
+        onSelect={handleSwap}
+      />
+      <ScopeOption
+        label={t(getIndicatorScopeBadgeKey(null) as Parameters<typeof t>[0])}
+        checked={!isNational}
+        disabled={isTaken}
+        tooltip={tooltip}
+        onSelect={handleSwap}
+      />
+    </fieldset>
   );
 }

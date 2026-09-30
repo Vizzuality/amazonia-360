@@ -5,4 +5,4 @@ import { routing } from "./routing";
 const { redirect } = createNavigation(routing);
 
 export { redirect };
-export { Link, LocaleLink, usePathname, useRouter } from "./navigation-client";
+export { Link, LocaleLink, useLocaleRouter, usePathname, useRouter } from "./navigation-client";

@@ -44,6 +44,12 @@ vi.mock("@/containers/report/indicators/footer", () => ({
   default: () => <div data-testid="footer" />,
 }));
 
+vi.mock("@/containers/indicators/partners", () => ({
+  default: ({ country }: { country: string | null }) => (
+    <div data-testid="partners" data-country={country ?? "REGIONAL"} />
+  ),
+}));
+
 describe("ReportIndicatorsContent", () => {
   beforeEach(() => {
     mockUseSyncIndicatorsScopeFilter.mockReturnValue(["all", vi.fn()]);
@@ -56,6 +62,15 @@ describe("ReportIndicatorsContent", () => {
     render(<ReportIndicatorsContent />);
 
     expect(screen.queryByRole("tablist")).not.toBeInTheDocument();
+  });
+
+  it("passes the URL module to the partners block", () => {
+    mockUseCountry.mockReturnValue("ECU");
+    mockUseGetDefaultIndicators.mockReturnValue({ data: CATALOGUE });
+
+    render(<ReportIndicatorsContent />);
+
+    expect(screen.getByTestId("partners")).toHaveAttribute("data-country", "ECU");
   });
 
   it("shows the catalogue-wide count per tab inside a module", () => {

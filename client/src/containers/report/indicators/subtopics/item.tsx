@@ -62,17 +62,19 @@ export default function SubtopicsItem({ id, topic_id, name }: Subtopic) {
       <Collapsible open={!!indicatorsExpand?.[topic_id]?.includes(id)} onOpenChange={handleClick}>
         <CollapsibleTrigger
           className={cn(
-            "flex w-full items-center justify-between space-x-2.5 p-1 transition-colors duration-300 ease-in-out hover:bg-blue-50",
+            "flex h-5 w-full items-center justify-between gap-2 px-1 transition-colors duration-300 ease-in-out hover:bg-blue-50",
           )}
         >
-          <div className={cn("flex items-center space-x-2.5")}>
+          <div className={cn("flex items-center gap-2")}>
             <LuChevronRight
-              className={cn("h-4 w-4 transition-transform duration-300", {
+              className={cn("h-4 w-4 text-blue-500 transition-transform duration-300", {
                 "rotate-90": !!indicatorsExpand?.[topic_id]?.includes(id),
               })}
             />
             <div className="flex flex-col items-start justify-start space-y-1">
-              <span className="text-sm font-medium transition-none">{name}</span>
+              <span className="text-muted-foreground text-xs leading-none font-bold tracking-[0.6px] uppercase transition-none">
+                {name}
+              </span>
             </div>
           </div>
           {!!SELECTED && (

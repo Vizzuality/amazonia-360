@@ -57,25 +57,25 @@ export default function IndicatorsItem({
     <div
       key={id}
       className={cn(
-        "flex h-full w-full grow cursor-pointer items-center justify-between space-x-2.5 overflow-hidden rounded-xs bg-white text-left",
+        "flex h-full w-full grow cursor-pointer items-center justify-between gap-0.5 overflow-hidden rounded-lg bg-white py-0.5 pr-2 pl-1 text-left transition-colors duration-300 ease-in-out hover:bg-blue-50",
       )}
     >
       <button
         type="button"
         className={cn(
-          "flex grow items-center space-x-2.5 rounded-xs p-1 px-2 text-left text-sm font-medium text-gray-400 transition-colors duration-300 ease-in-out hover:bg-blue-50",
+          "text-foreground flex grow items-center gap-2 rounded-xs text-left text-xs leading-4 font-medium",
         )}
         onClick={() => handleChangeIndicator(!indicators?.includes(id))}
       >
         <IndicatorScopeBadge country={country} />
         <span>{name}</span>
       </button>
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-0.5">
         <Tooltip delayDuration={100}>
           <Dialog>
             <TooltipTrigger asChild>
               <DialogTrigger
-                className={cn("flex cursor-pointer items-center justify-center p-0.5")}
+                className={cn("flex size-6 cursor-pointer items-center justify-center rounded")}
               >
                 <LuInfo className="text-foreground h-4 w-4" />
               </DialogTrigger>

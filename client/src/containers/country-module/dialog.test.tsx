@@ -7,6 +7,10 @@ import CountryModuleDialog from "./dialog";
 const mockPathname = vi.fn<() => string>(() => "/reports/grid");
 const mockCountry = vi.fn<() => string | null>(() => "ECU");
 const mockIndicators = vi.fn();
+const mockCoverage = vi.fn<() => { status: string; ratio: number }>(() => ({
+  status: "no-area",
+  ratio: 0,
+}));
 const mockSetCookie = vi.fn();
 const mockUseCookie = vi.fn<
   (key: string, initialValue?: string) => [string, typeof mockSetCookie, () => void]
@@ -20,6 +24,10 @@ vi.mock("@/i18n/navigation", () => ({
   usePathname: () => mockPathname(),
 }));
 
+vi.mock("./use-coverage", () => ({
+  useCountryModuleCoverage: () => mockCoverage(),
+}));
+
 vi.mock("@/lib/indicators", () => ({
   useGetDefaultIndicators: (...args: unknown[]) => mockIndicators(...args),
 }));
@@ -29,6 +37,7 @@ vi.mock("react-use-cookie", () => ({
 }));
 
 beforeEach(() => {
+  mockCoverage.mockReturnValue({ status: "no-area", ratio: 0 });
   mockPathname.mockReturnValue("/reports/grid");
   mockCountry.mockReturnValue("ECU");
   mockIndicators.mockReturnValue({ data: [] });
@@ -38,6 +47,48 @@ beforeEach(() => {
 describe("CountryModuleDialog", () => {
   test("opens when the cookie is unset and a module is active", () => {
     render(<CountryModuleDialog />);
+
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+  });
+
+  test.each([
+    ["pending", false],
+    ["outside", false],
+    ["inside", true],
+    ["no-area", true],
+  ])("with coverage %s the dialog open state is %s", (status, expected) => {
+    mockCoverage.mockReturnValue({ status, ratio: 0 });
+
+    render(<CountryModuleDialog />);
+
+    expect(!!screen.queryByRole("dialog")).toBe(expected);
+  });
+
+  test("explains how to get started when no area is drawn", () => {
+    mockCoverage.mockReturnValue({ status: "no-area", ratio: 0 });
+
+    render(<CountryModuleDialog />);
+
+    expect(screen.getByText("country-module-modal-body-no-area")).toBeInTheDocument();
+    expect(screen.queryByText("country-module-modal-body")).not.toBeInTheDocument();
+  });
+
+  test("keeps the area-inside message when the area is within the module", () => {
+    mockCoverage.mockReturnValue({ status: "inside", ratio: 0.4 });
+
+    render(<CountryModuleDialog />);
+
+    expect(screen.getByText("country-module-modal-body")).toBeInTheDocument();
+    expect(screen.queryByText("country-module-modal-body-no-area")).not.toBeInTheDocument();
+  });
+
+  test("opens once a pending area resolves inside the module", () => {
+    mockCoverage.mockReturnValue({ status: "pending", ratio: 0 });
+    const { rerender } = render(<CountryModuleDialog />);
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+    mockCoverage.mockReturnValue({ status: "inside", ratio: 0.4 });
+    rerender(<CountryModuleDialog />);
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
@@ -88,6 +139,14 @@ describe("CountryModuleDialog", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
+  test("stays shut on a saved report page even with an active module", () => {
+    mockPathname.mockReturnValue("/reports/abc");
+
+    render(<CountryModuleDialog />);
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
   test("keys the cookie by the active country code", () => {
     render(<CountryModuleDialog />);
 
@@ -128,6 +187,27 @@ describe("CountryModuleDialog", () => {
 
     expect(screen.getByText("3")).toBeInTheDocument();
     expect(screen.getByText("2")).toBeInTheDocument();
+  });
+
+  test("shows skeletons instead of counts while indicators load", () => {
+    mockIndicators.mockReturnValue({ data: undefined });
+
+    const { container } = render(<CountryModuleDialog />);
+
+    expect(container.ownerDocument.querySelectorAll('[aria-busy="true"]')).toHaveLength(2);
+    expect(container.ownerDocument.querySelectorAll(".animate-pulse")).toHaveLength(2);
+    expect(screen.queryByText("0")).not.toBeInTheDocument();
+  });
+
+  test("shows the numbers, no skeleton, once indicators load", () => {
+    mockIndicators.mockReturnValue({ data: [{ country: "ECU" }] });
+
+    const { container } = render(<CountryModuleDialog />);
+
+    expect(container.ownerDocument.querySelectorAll('[aria-busy="true"]')).toHaveLength(0);
+    expect(container.ownerDocument.querySelectorAll(".animate-pulse")).toHaveLength(0);
+    expect(screen.getByText("0")).toBeInTheDocument();
+    expect(screen.getByText("1")).toBeInTheDocument();
   });
 
   test("renders the collaborators heading for a module that has partner logos", () => {

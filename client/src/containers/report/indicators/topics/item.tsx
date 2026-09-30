@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import Image from "next/image";
 
 import { useAtom } from "jotai";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { useScrollOnExpand } from "@/lib/hooks";
 import { PLACEHOLDER } from "@/lib/images";
@@ -25,6 +25,7 @@ type TopicsItemProps = Topic;
 
 export default function TopicsItem({ id, name, image }: TopicsItemProps) {
   const locale = useLocale();
+  const t = useTranslations();
   const { data: indicatorsData } = useGetDefaultIndicators({
     topicId: id,
     locale,
@@ -69,7 +70,7 @@ export default function TopicsItem({ id, name, image }: TopicsItemProps) {
           )}
         >
           <div className={cn("flex items-center space-x-2.5")}>
-            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xs bg-cyan-100">
+            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded bg-cyan-100">
               <Image
                 src={image}
                 alt={`${name}`}
@@ -83,14 +84,15 @@ export default function TopicsItem({ id, name, image }: TopicsItemProps) {
               />
             </div>
             <div className="flex flex-col items-start justify-start space-y-1">
-              <span className="text-sm font-bold transition-none">{name}</span>
+              <span className="text-sm leading-4 font-bold transition-none">{name}</span>
             </div>
           </div>
-          {!!SELECTED && (
-            <Badge variant="secondary" className="rounded-full">
-              {SELECTED}
-            </Badge>
-          )}
+          <Badge variant="secondary" className="rounded-full">
+            <span aria-hidden>{SELECTED}</span>
+            <span className="sr-only">
+              {t("grid-sidebar-indicators-topic-selected-count", { count: SELECTED })}
+            </span>
+          </Badge>
         </CollapsibleTrigger>
         <CollapsibleContent className="pl-6">
           <SubtopicList topicId={id} />

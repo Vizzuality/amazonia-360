@@ -3,19 +3,60 @@ export type Country = {
   code: string;
   available: boolean;
   nameKey: string;
+  moduleNameKey: string;
 };
 
 // Also the source of the `enum_indicators_country` Postgres enums: a new code needs a Payload
 // migration before an indicator can be saved or seeded against it.
 export const COUNTRIES = [
-  { code: "ECU", available: true, nameKey: "country-module-ECU-name" },
-  { code: "BOL", available: false, nameKey: "country-module-BOL-name" },
-  { code: "BRA", available: false, nameKey: "country-module-BRA-name" },
-  { code: "COL", available: false, nameKey: "country-module-COL-name" },
-  { code: "GUY", available: false, nameKey: "country-module-GUY-name" },
-  { code: "PER", available: false, nameKey: "country-module-PER-name" },
-  { code: "SUR", available: false, nameKey: "country-module-SUR-name" },
-  { code: "VEN", available: false, nameKey: "country-module-VEN-name" },
+  {
+    code: "ECU",
+    available: true,
+    nameKey: "country-module-ECU-name",
+    moduleNameKey: "country-module-ECU-module-name",
+  },
+  {
+    code: "BOL",
+    available: false,
+    nameKey: "country-module-BOL-name",
+    moduleNameKey: "country-module-BOL-module-name",
+  },
+  {
+    code: "BRA",
+    available: false,
+    nameKey: "country-module-BRA-name",
+    moduleNameKey: "country-module-BRA-module-name",
+  },
+  {
+    code: "COL",
+    available: false,
+    nameKey: "country-module-COL-name",
+    moduleNameKey: "country-module-COL-module-name",
+  },
+  {
+    code: "GUY",
+    available: false,
+    nameKey: "country-module-GUY-name",
+    moduleNameKey: "country-module-GUY-module-name",
+  },
+  {
+    code: "PER",
+    available: false,
+    nameKey: "country-module-PER-name",
+    moduleNameKey: "country-module-PER-module-name",
+  },
+  {
+    code: "SUR",
+    available: false,
+    nameKey: "country-module-SUR-name",
+    moduleNameKey: "country-module-SUR-module-name",
+  },
+  {
+    code: "VEN",
+    available: false,
+    nameKey: "country-module-VEN-name",
+    moduleNameKey: "country-module-VEN-module-name",
+  },
 ] as const satisfies readonly Country[];
 
 // No code in this set may ever become the name of a first-level route: with the module

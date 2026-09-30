@@ -4,6 +4,7 @@ import { isFeatureEnabled } from "@/lib/feature-flags";
 
 import CountryModuleActivation from "./activation";
 import CountryModuleBanner from "./banner";
+import CountryModuleDeactivation from "./deactivation";
 import CountryModuleDialog from "./dialog";
 
 export default function CountryModule() {
@@ -12,6 +13,7 @@ export default function CountryModule() {
   return (
     <>
       <CountryModuleActivation />
+      <CountryModuleDeactivation />
       <CountryModuleDialog />
       <CountryModuleBanner />
     </>

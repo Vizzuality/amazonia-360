@@ -112,7 +112,7 @@ export default function MapContainer({
           onUpdateChange={handleUpdateChange}
         />
 
-        <Controls>
+        <Controls className="absolute top-4 right-4 lg:top-[calc(1rem+var(--country-module-strip-h,0px))]">
           <ZoomControl />
           <BasemapControl />
         </Controls>
@@ -124,7 +124,7 @@ export default function MapContainer({
 
       {gridSelectedDataset && gridEnabled && <GridLegend />}
 
-      <div className="animate-in fade-in-0 pointer-events-none absolute top-4 left-0 z-10 w-full duration-300 lg:top-10">
+      <div className="animate-in fade-in-0 pointer-events-none absolute top-4 left-0 z-10 w-full duration-300 lg:top-[calc(2.5rem+var(--country-module-strip-h,0px))]">
         <div className="container">
           <div className="grid grid-cols-12">
             <div className="col-span-10 lg:col-span-5 lg:col-start-8">

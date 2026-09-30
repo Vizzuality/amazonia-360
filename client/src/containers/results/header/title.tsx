@@ -37,7 +37,7 @@ export default function TitleReport() {
     validators: {
       onSubmit: renameSchema,
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: ({ value }) => {
       setTitle(value.title);
       setEditMode(false);
     },
@@ -53,23 +53,25 @@ export default function TitleReport() {
   };
 
   return (
-    <div className="relative -ml-1.5 flex h-20 w-full grow items-center justify-between">
+    <div className="relative -ml-1.5 flex min-h-20 w-full grow items-center justify-between">
       {!editMode && (
-        <header className="flex grow items-center space-x-4">
-          <h2 className="text-foreground tall:xl:text-4xl border-t-4 border-b-2 border-l border-transparent px-1 py-2 text-2xl font-medium lg:text-3xl">
-            {title ?? t("selected-area")}
-          </h2>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={startEdit}
-            aria-label={t("edit")}
-            className="shrink-0 rounded-full"
-          >
-            <LuPen className="text-secondary-foreground h-4 w-4" />
-          </Button>
-          <ModuleReport />
+        <header className="flex grow flex-col items-start gap-1 pb-4">
+          <div className="flex items-center space-x-4">
+            <h2 className="text-foreground tall:xl:text-4xl border-t-4 border-b-2 border-l border-transparent px-1 py-2 text-2xl font-medium lg:text-3xl">
+              {title ?? t("selected-area")}
+            </h2>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={startEdit}
+              aria-label={t("edit")}
+              className="shrink-0 rounded-full"
+            >
+              <LuPen className="text-secondary-foreground h-4 w-4" />
+            </Button>
+          </div>
+          <ModuleReport className="px-1" />
         </header>
       )}
 

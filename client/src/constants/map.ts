@@ -66,6 +66,15 @@ export const BUFFER_SYMBOL = new SimpleFillSymbol({
   },
 });
 
+export const COUNTRY_MODULE_BOUNDARY_SYMBOL = new SimpleFillSymbol({
+  color: "#004E700D",
+  style: "solid",
+  outline: {
+    width: 1.5,
+    color: "#235F7A",
+  },
+});
+
 export const SYMBOLS = {
   point: POINT_SYMBOL,
   polyline: POLYLINE_SYMBOL,

@@ -16,9 +16,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Markdown } from "@/components/ui/markdown";
 
+import { useModuleCoverageNote } from "./use-module-coverage-note";
+
 export const ConfirmDialog = ({ onConfirm }: { onConfirm: () => void }) => {
   const t = useTranslations();
   const sketch = useAtomValue(sketchAtom);
+  const note = useModuleCoverageNote();
+
+  const description = t("edit-location-confirm-dialog-description");
+  const markdown = note ? `${description}\n- ${t(note.key, note.values)}` : description;
 
   return (
     <AlertDialog>
@@ -36,7 +42,7 @@ export const ConfirmDialog = ({ onConfirm }: { onConfirm: () => void }) => {
         <AlertDialogHeader>
           <AlertDialogTitle>{t("edit-location-confirm-dialog-title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            <Markdown>{t("edit-location-confirm-dialog-description")}</Markdown>
+            <Markdown>{markdown}</Markdown>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
