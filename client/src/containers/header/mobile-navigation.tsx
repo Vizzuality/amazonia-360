@@ -18,7 +18,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 
-import { usePathname, Link } from "@/i18n/navigation";
+import { usePathname, Link, LocaleLink } from "@/i18n/navigation";
 
 import Logo from "./logo";
 
@@ -109,6 +109,15 @@ export default function MobileNavigation() {
             >
               {t("header-report-tool")}
             </Link>
+            <LocaleLink
+              className={cn({
+                "px-6 py-4 text-lg text-blue-900 hover:bg-blue-200 hover:text-blue-500": true,
+                "text-blue-500": pathname === "/partners",
+              })}
+              href="/partners"
+            >
+              {t("header-partners")}
+            </LocaleLink>
             {/* <Link
               className={cn({
                 "px-6 py-4 text-lg text-blue-900 hover:bg-blue-200 hover:text-blue-500": true,
