@@ -38,6 +38,25 @@ async def test_a_round_times_each_tool_each_indicator_takes(tmp_path: Path) -> N
     assert all(r["ok"] and isinstance(r["elapsed_ms"], int) for r in records)
 
 
+@pytest.mark.anyio
+async def test_a_failed_call_is_recorded_as_a_measurement(tmp_path: Path) -> None:
+    log_path = tmp_path / "timing.jsonl"
+    areas = {"tena": load_areas()["tena"]}
+    await run_round(
+        AreaHandlers(FakeClient(fail=True)),  # type: ignore[arg-type]
+        areas,
+        CallLog(log_path),
+        1,
+    )
+    records = [json.loads(line) for line in log_path.read_text().splitlines()]
+    failed = [r for r in records if r["tool"] == "categories_in_area"]
+    assert len(failed) == 2
+    assert all(not r["ok"] for r in failed)
+    assert all(r["error"].startswith("HandlerError: ArcGIS") for r in failed)
+    # The other tools still ran and were timed.
+    assert any(r["ok"] for r in records)
+
+
 def test_summary_counts_slow_calls_and_errors(tmp_path: Path) -> None:
     log_path = tmp_path / "timing.jsonl"
     rows = [
@@ -58,3 +77,4 @@ def test_summary_counts_slow_calls_and_errors(tmp_path: Path) -> None:
     assert row["over_10s"] == 1
     assert row["over_60s"] == 1
     assert row["max_ms"] == 61_000
+    assert row["median_ms"] == 3_250

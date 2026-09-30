@@ -104,25 +104,6 @@ async def test_the_raster_map_answers_what_class_shares_in_area_answers(
 
 
 @pytest.mark.anyio
-async def test_shapes_too_large_for_the_page_are_left_out_with_their_size(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    from mcp_server import maps
-
-    monkeypatch.setattr(maps, "MAX_SHAPES_BYTES", 10)
-    async with Client(server(tmp_path)) as client:
-        mapped = await client.call_tool(
-            "map_area_by_category", {"indicator_id": 210, "area": TENA}
-        )
-    assert mapped.meta is not None
-    drawn = mapped.meta["map"]
-    assert "shapes" not in drawn
-    assert drawn["shapes_omitted_bytes"] > 10
-    # The legend still has its colours.
-    assert set(drawn["styles"]) == {"Bosque"}
-
-
-@pytest.mark.anyio
 async def test_the_map_gets_the_area_of_a_place(tmp_path: Path) -> None:
     async with Client(server(tmp_path)) as client:
         for tool in VIEWS:
@@ -135,7 +116,7 @@ async def test_the_map_gets_the_area_of_a_place(tmp_path: Path) -> None:
 
 
 @pytest.mark.anyio
-async def test_the_area_counts_against_the_budget_for_the_page(
+async def test_shapes_are_left_out_when_they_and_the_area_pass_the_budget(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     import pydantic_core
@@ -151,4 +132,8 @@ async def test_the_area_counts_against_the_budget_for_the_page(
         monkeypatch.setattr(maps, "MAX_SHAPES_BYTES", shapes + 1)
         mapped = await client.call_tool("map_area_by_category", args)
     assert mapped.meta is not None
-    assert mapped.meta["map"]["shapes_omitted_bytes"] == shapes
+    drawn = mapped.meta["map"]
+    assert "shapes" not in drawn
+    assert drawn["shapes_omitted_bytes"] == shapes
+    # The legend still has its colours.
+    assert set(drawn["styles"]) == {"Bosque"}

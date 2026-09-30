@@ -85,6 +85,14 @@ async def test_refuses_what_google_does_not_vouch_for(
         await google(responder(token, userinfo)).verified_email("the-code")
 
 
+async def test_a_token_answer_that_is_not_json_is_refused() -> None:
+    def html(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, text="<html>maintenance</html>")
+
+    with pytest.raises(GoogleError, match="did not accept"):
+        await google(httpx.MockTransport(html)).verified_email("the-code")
+
+
 async def test_a_network_failure_is_a_google_error() -> None:
     def fail(request: httpx.Request) -> httpx.Response:
         raise httpx.ConnectError("down")

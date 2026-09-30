@@ -46,6 +46,7 @@ def test_allows_the_known_clients(uri: str) -> None:
         "http://user@localhost:1234/cb",
         "http://localhost:1234/cb#fragment",
         "http://[::1]:1234/cb",
+        "http://localhost:port/cb",
         "not a url",
     ],
 )

@@ -49,51 +49,38 @@ async def logged_call[T](
     """Runs a handler call, logs it for the measurement run, and turns errors into
     ToolErrors whose text says the cause."""
     watch = Stopwatch()
-    try:
-        out = await call
-    except HandlerError as exc:
+
+    def log(ok: bool, **fields: Any) -> None:
         call_log.write(
             {
                 "tool": tool,
                 "user": _caller(),
                 "indicator_id": indicator_id,
                 "place_id": place_id,
-                "ok": False,
-                "error": str(exc),
-                "elapsed_ms": watch.total_ms(),
+                "ok": ok,
+                **fields,
             }
         )
+
+    try:
+        out = await call
+    except HandlerError as exc:
+        log(False, error=str(exc), elapsed_ms=watch.total_ms())
         raise ToolError(str(exc)) from exc
     except Exception as exc:
         # The measurement log must capture pathological failures too, not only
         # the expected refusals raised as HandlerError. The model gets the cause
         # as well: a bare "Error executing tool" left it guessing in the trial.
         error = f"{type(exc).__name__}: {exc}"
-        call_log.write(
-            {
-                "tool": tool,
-                "user": _caller(),
-                "indicator_id": indicator_id,
-                "place_id": place_id,
-                "ok": False,
-                "error": error,
-                "elapsed_ms": watch.total_ms(),
-            }
-        )
+        log(False, error=error, elapsed_ms=watch.total_ms())
         raise ToolError(f"Unexpected error in {tool}: {error}") from exc
     result = result_of(out)
-    call_log.write(
-        {
-            "tool": tool,
-            "user": _caller(),
-            "indicator_id": indicator_id,
-            "place_id": place_id,
-            "ok": True,
-            "aoi_ha": result.aoi_ha,
-            "features": result.computed_over.features,
-            "categories": result.computed_over.categories,
-            "timing": result.timing.model_dump(),
-        }
+    log(
+        True,
+        aoi_ha=result.aoi_ha,
+        features=result.computed_over.features,
+        categories=result.computed_over.categories,
+        timing=result.timing.model_dump(),
     )
     return out
 

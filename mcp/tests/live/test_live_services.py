@@ -1,3 +1,4 @@
+from collections.abc import AsyncIterator
 from datetime import UTC, datetime
 
 import httpx
@@ -16,8 +17,9 @@ AVAILABLE = [i for i in list_indicators() if i.available]
 
 
 @pytest.fixture
-def handlers() -> AreaHandlers:
-    return AreaHandlers(ArcGISClient(httpx.AsyncClient(timeout=120)))
+async def handlers() -> AsyncIterator[AreaHandlers]:
+    async with httpx.AsyncClient(timeout=120) as http:
+        yield AreaHandlers(ArcGISClient(http))
 
 
 @pytest.mark.parametrize("indicator", AVAILABLE, ids=lambda i: str(i.id))

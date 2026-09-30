@@ -25,6 +25,13 @@ def utcnow() -> datetime:
     return datetime.now(UTC)
 
 
+async def _lock_family(session: AsyncSession, family: str) -> None:
+    """A Postgres advisory lock on the family, held until the transaction ends."""
+    await session.execute(
+        select(func.pg_advisory_xact_lock(func.hashtextextended(family, 0)))
+    )
+
+
 @dataclass(frozen=True)
 class Grant:
     """What a code or a token lets its holder do, and for whom."""
@@ -188,28 +195,13 @@ class AuthStore:
         family = family or uuid.uuid4().hex
         now = self._clock()
         async with self._sessions() as session:
-            issued = self._new_pair(
-                session,
-                family=family,
-                client_id=grant.client_id,
-                email=grant.email,
-                scopes=grant.scopes,
-                resource=grant.resource,
-                now=now,
-            )
+            issued = self._new_pair(session, family, grant, now)
             await session.commit()
         return issued
 
+    @staticmethod
     def _new_pair(
-        self,
-        session: AsyncSession,
-        *,
-        family: str,
-        client_id: str,
-        email: str,
-        scopes: list[str],
-        resource: str | None,
-        now: datetime,
+        session: AsyncSession, family: str, grant: Grant, now: datetime
     ) -> IssuedTokens:
         """Adds a fresh access/refresh pair to `session`, in `family`; the caller
         commits. Shared by `issue` and `rotate_refresh` so a family's tokens are
@@ -217,10 +209,10 @@ class AuthStore:
         access, refresh = new_secret(), new_secret()
         common = {
             "family": family,
-            "client_id": client_id,
-            "email": email,
-            "scopes": scopes,
-            "resource": resource,
+            "client_id": grant.client_id,
+            "email": grant.email,
+            "scopes": grant.scopes,
+            "resource": grant.resource,
         }
         session.add_all(
             [
@@ -276,9 +268,7 @@ class AuthStore:
             )
             if family is None:
                 return None
-            await session.execute(
-                select(func.pg_advisory_xact_lock(func.hashtextextended(family, 0)))
-            )
+            await _lock_family(session, family)
             used = await session.scalar(
                 update(Token)
                 .where(
@@ -295,15 +285,10 @@ class AuthStore:
             if used is None:
                 await session.commit()
                 return None
-            issued = self._new_pair(
-                session,
-                family=family,
-                client_id=used.client_id,
-                email=used.email,
-                scopes=scopes or used.scopes,
-                resource=used.resource,
-                now=now,
+            grant = Grant(
+                used.client_id, used.email, scopes or used.scopes, used.resource
             )
+            issued = self._new_pair(session, family, grant, now)
             await session.commit()
         return used, issued
 
@@ -311,9 +296,7 @@ class AuthStore:
         async with self._sessions() as session:
             # Locking before the DELETE serialises with rotate_refresh on the same
             # family: whichever of the two commits first is what the other sees.
-            await session.execute(
-                select(func.pg_advisory_xact_lock(func.hashtextextended(family, 0)))
-            )
+            await _lock_family(session, family)
             await session.execute(delete(Token).where(Token.family == family))
             await session.commit()
 

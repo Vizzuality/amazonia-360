@@ -5,14 +5,15 @@ cannot be read fails the whole run, and the previous snapshot stays.
 """
 
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import datetime
 from typing import Any
 
 import httpx
 import shapely
 from shapely.errors import ShapelyError
 
-from mcp_server.arcgis.esri_json import polygon_from_rings
+from mcp_server.arcgis.esri_json import exceeded_transfer_limit, polygon_from_rings
+from mcp_server.catalogue.sync import utc_timestamp
 from mcp_server.geometry.area import geodesic_area_ha
 from mcp_server.places.models import PlaceKind
 
@@ -102,9 +103,7 @@ async def _features(
     body = response.json()
     if "error" in body or "features" not in body:
         raise PlacesSyncError(f"{source.url}/{source.layer_id}: {body}")
-    if body.get("exceededTransferLimit") or body.get("properties", {}).get(
-        "exceededTransferLimit"
-    ):
+    if exceeded_transfer_limit(body):
         raise PlacesSyncError(f"{source.url}/{source.layer_id}: truncated")
     return body["features"]
 
@@ -164,5 +163,4 @@ async def sync_places(http: httpx.AsyncClient, now: datetime) -> dict[str, Any]:
         ValueError,
     ) as exc:
         raise PlacesSyncError(str(exc)) from exc
-    stamp = now.astimezone(UTC).isoformat().replace("+00:00", "Z")
-    return {"generated_at": stamp, "places": places}
+    return {"generated_at": utc_timestamp(now), "places": places}

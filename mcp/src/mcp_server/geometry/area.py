@@ -24,6 +24,16 @@ def geodesic_area_ha(geom: BaseGeometry) -> float:
     return abs(area_m2) / _M2_PER_HA
 
 
+def polygonal_parts(geom: BaseGeometry) -> list[BaseGeometry]:
+    """The Polygon and MultiPolygon parts of a geometry. make_valid, union and
+    intersection may return lines or points beside them; only area counts."""
+    return [
+        part
+        for part in shapely.get_parts(geom)
+        if part.geom_type in ("Polygon", "MultiPolygon")
+    ]
+
+
 def clip_by_category(
     aoi: BaseGeometry, features: list[tuple[str, BaseGeometry]]
 ) -> dict[str, list[BaseGeometry]]:
@@ -72,12 +82,7 @@ def category_shapes(
     """
     shapes: list[dict[str, Any]] = []
     for category, geoms in pieces.items():
-        polygons = [
-            g
-            for geom in geoms
-            for g in shapely.get_parts(geom)
-            if g.geom_type in ("Polygon", "MultiPolygon")
-        ]
+        polygons = [part for geom in geoms for part in polygonal_parts(geom)]
         if not polygons:
             continue
         shape = shapely.set_precision(shapely.union_all(polygons), 1e-6)

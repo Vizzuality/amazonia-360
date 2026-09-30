@@ -113,14 +113,26 @@ async def test_features_raises_when_a_page_is_truncated_with_no_features() -> No
 
 
 @pytest.mark.anyio
-async def test_features_skips_null_category_features() -> None:
+async def test_features_skip_those_with_no_class_or_no_geometry() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
-        feature = square_feature("A", -77.9)
-        feature["attributes"]["Ecosistema"] = None
-        return httpx.Response(200, json={"features": [feature]})
+        no_class = square_feature("A", -77.9)
+        no_class["attributes"]["Ecosistema"] = None
+        no_geometry = {**square_feature("B", -77.8), "geometry": None}
+        kept = square_feature("C", -77.7)
+        return httpx.Response(200, json={"features": [no_class, no_geometry, kept]})
 
     features = await client_with(handler).features(LAYER, AOI, 0.001)
-    assert features == []
+    assert [c for c, _ in features] == ["C"]
+
+
+@pytest.mark.anyio
+async def test_features_without_the_class_field_are_an_invalid_response() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        feature = {"geometry": square_feature("A", -77.9)["geometry"], "attributes": {}}
+        return httpx.Response(200, json={"features": [feature]})
+
+    with pytest.raises(ArcGISError, match="missing attributes or geometry"):
+        await client_with(handler).features(LAYER, AOI, 0.001)
 
 
 @pytest.mark.anyio
@@ -156,22 +168,22 @@ async def test_an_arcgis_error_body_raises() -> None:
         await client_with(handler).count(LAYER, AOI)
 
 
+def gateway_timeout(request: httpx.Request) -> httpx.Response:
+    return httpx.Response(504, text="Gateway Timeout")
+
+
+def read_timeout(request: httpx.Request) -> httpx.Response:
+    raise httpx.ReadTimeout("slow", request=request)
+
+
 @pytest.mark.anyio
-async def test_a_timeout_raises_instead_of_returning_partial_results() -> None:
-    def handler(request: httpx.Request) -> httpx.Response:
-        raise httpx.ReadTimeout("slow", request=request)
-
-    with pytest.raises(ArcGISError, match="gave up"):
-        await client_with(handler).features(LAYER, AOI, 0.001)
-
-
-@pytest.mark.anyio
-async def test_a_gateway_timeout_says_the_service_gave_up_without_the_url() -> None:
-    def handler(request: httpx.Request) -> httpx.Response:
-        return httpx.Response(504, text="Gateway Timeout")
-
+@pytest.mark.parametrize("handler", [gateway_timeout, read_timeout])
+async def test_a_timeout_says_the_service_gave_up_without_the_url(
+    handler: Handler,
+) -> None:
+    # Ours and the gateway's read the same, rather than as partial results.
     with pytest.raises(ArcGISError) as error:
-        await client_with(handler).count(LAYER, AOI)
+        await client_with(handler).features(LAYER, AOI, 0.001)
     message = str(error.value)
     assert "gave up after about 60 s" in message
     assert "busy" in message
@@ -179,11 +191,11 @@ async def test_a_gateway_timeout_says_the_service_gave_up_without_the_url() -> N
 
 
 @pytest.mark.anyio
-async def test_our_own_timeout_says_the_same_as_the_gateway_timeout() -> None:
+async def test_a_connection_failure_says_the_request_failed() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
-        raise httpx.ReadTimeout("slow", request=request)
+        raise httpx.ConnectError("refused", request=request)
 
-    with pytest.raises(ArcGISError, match="busy"):
+    with pytest.raises(ArcGISError, match="request failed: refused"):
         await client_with(handler).count(LAYER, AOI)
 
 
@@ -320,6 +332,61 @@ async def test_a_histogram_over_no_pixel_is_empty_not_invalid() -> None:
         "https://example.test/image/rest/services/Slope/ImageServer", AOI, None
     )
     assert histogram["counts"] == []
+
+
+IMAGE_URL = "https://example.test/image/rest/services/Slope/ImageServer"
+
+
+@pytest.mark.anyio
+async def test_a_histogram_is_read_through_the_rendering_rule() -> None:
+    seen: list[dict[str, str]] = []
+    histogram = {"size": 3, "min": 0.5, "max": 3.5, "counts": [4, 5, 6]}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert str(request.url) == f"{IMAGE_URL}/computeHistograms"
+        seen.append(params(request))
+        return httpx.Response(200, json={"histograms": [histogram]})
+
+    rule = {"rasterFunction": "Remap"}
+    assert await client_with(handler).histogram(IMAGE_URL, AOI, rule) == histogram
+    assert json.loads(seen[0]["renderingRule"]) == rule
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize(
+    "body", [{}, {"histograms": [{"size": 3, "min": 0}]}, {"histograms": "x"}]
+)
+async def test_a_histogram_without_its_fields_is_an_invalid_response(
+    body: dict[str, object],
+) -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json=body)
+
+    with pytest.raises(ArcGISError, match="no histogram"):
+        await client_with(handler).histogram(IMAGE_URL, AOI, None)
+
+
+@pytest.mark.anyio
+async def test_export_image_returns_the_png() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert str(request.url) == f"{IMAGE_URL}/exportImage"
+        assert params(request)["format"] == "png32"
+        return httpx.Response(
+            200, content=b"\x89PNG", headers={"content-type": "image/png"}
+        )
+
+    image = await client_with(handler).export_image(IMAGE_URL, {"format": "png32"})
+    assert image == b"\x89PNG"
+
+
+@pytest.mark.anyio
+async def test_export_image_refuses_an_answer_that_is_not_an_image() -> None:
+    # The service answers errors to f=image as JSON with status 200.
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json={"error": {"code": 400, "message": "bad"}})
+
+    with pytest.raises(ArcGISError, match=r"No image.*bad"):
+        await client_with(handler).export_image(IMAGE_URL, {})
 
 
 BOUNDARY_URL = "https://example.test/arcgis/rest/services/limits/FeatureServer"

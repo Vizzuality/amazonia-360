@@ -7,6 +7,7 @@ from shapely.geometry import GeometryCollection, MultiPolygon, Polygon
 from shapely.geometry.base import BaseGeometry
 
 from mcp_server.arcgis.client import ArcGISError
+from mcp_server.geometry.area import polygonal_parts
 from mcp_server.places.models import Place
 
 DAY_S = 86_400.0
@@ -19,10 +20,8 @@ class _Boundaries(Protocol):
 
 
 def _polygonal(geom: BaseGeometry) -> Polygon | MultiPolygon:
-    # make_valid may return lines or points beside the polygons; only area counts.
     if isinstance(geom, GeometryCollection):
-        parts = [g for g in geom.geoms if isinstance(g, Polygon | MultiPolygon)]
-        geom = shapely.union_all(parts)
+        geom = shapely.union_all(polygonal_parts(geom))
     if not isinstance(geom, Polygon | MultiPolygon) or geom.is_empty:
         raise ArcGISError("The place's boundary has no area.")
     return geom

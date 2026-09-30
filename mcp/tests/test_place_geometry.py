@@ -1,7 +1,7 @@
 from typing import Any
 
 import pytest
-from shapely.geometry import MultiPolygon, Polygon, box
+from shapely.geometry import LineString, MultiPolygon, Polygon, box
 from shapely.geometry.base import BaseGeometry
 
 from mcp_server.arcgis.client import ArcGISError
@@ -49,20 +49,14 @@ async def test_reads_the_source_and_joins_the_pieces() -> None:
 
 
 @pytest.mark.anyio
-async def test_second_use_comes_from_the_cache() -> None:
-    client = Boundaries([box(0, 0, 1, 1)])
-    geometries = PlaceGeometries(client)  # type: ignore[arg-type]
-    await geometries.geometry(TENA)
-    await geometries.geometry(TENA)
-    assert len(client.calls) == 1
-
-
-@pytest.mark.anyio
-async def test_cache_expires_after_a_day() -> None:
+async def test_a_boundary_is_kept_for_a_day() -> None:
     client = Boundaries([box(0, 0, 1, 1)])
     clock = Clock()
     geometries = PlaceGeometries(client, clock=clock)  # type: ignore[arg-type]
     await geometries.geometry(TENA)
+    clock.now = 86_399
+    await geometries.geometry(TENA)
+    assert len(client.calls) == 1
     clock.now = 86_401
     await geometries.geometry(TENA)
     assert len(client.calls) == 2
@@ -70,10 +64,25 @@ async def test_cache_expires_after_a_day() -> None:
 
 @pytest.mark.anyio
 async def test_invalid_boundary_is_repaired() -> None:
+    # Two triangles crossing at the centre, a quarter of the square each.
     bowtie = Polygon([(0, 0), (1, 1), (1, 0), (0, 1), (0, 0)])
-    assert not bowtie.is_valid
     geom = await PlaceGeometries(Boundaries([bowtie])).geometry(TENA)  # type: ignore[arg-type]
-    assert geom.is_valid and isinstance(geom, Polygon | MultiPolygon)
+    assert geom.is_valid
+    assert geom.area == pytest.approx(0.5)
+
+
+@pytest.mark.anyio
+async def test_only_the_area_of_a_boundary_is_kept() -> None:
+    shapes = [box(0, 0, 1, 1), LineString([(5, 5), (6, 6)])]
+    geom = await PlaceGeometries(Boundaries(shapes)).geometry(TENA)  # type: ignore[arg-type]
+    assert geom.equals(box(0, 0, 1, 1))
+
+
+@pytest.mark.anyio
+async def test_a_boundary_with_no_area_is_an_error() -> None:
+    geometries = PlaceGeometries(Boundaries([Polygon()]))  # type: ignore[arg-type]
+    with pytest.raises(ArcGISError, match="no area"):
+        await geometries.geometry(TENA)
 
 
 @pytest.mark.anyio

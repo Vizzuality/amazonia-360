@@ -66,11 +66,10 @@ def test_keeps_categories_apart_and_drops_non_overlapping_ones() -> None:
 
 
 def test_repairs_an_invalid_feature_instead_of_failing() -> None:
-    from shapely.geometry import Polygon
-
+    # Two triangles crossing at the centre: half the square between them.
     bowtie = Polygon([(0, 0), (1, 1), (1, 0), (0, 1), (0, 0)])
     result = clip_area_by_category(box(0, 0, 1, 1), [("A", bowtie)])
-    assert result["A"] > 0
+    assert result["A"] == pytest.approx(geodesic_area_ha(box(0, 0, 1, 1)) / 2, rel=1e-3)
 
 
 def test_drops_a_ring_that_simplification_collapsed_to_a_point() -> None:

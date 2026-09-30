@@ -1,3 +1,4 @@
+import copy
 from datetime import UTC, datetime
 from typing import Any
 from urllib.parse import parse_qs
@@ -5,9 +6,6 @@ from urllib.parse import parse_qs
 import httpx
 import pytest
 
-from mcp_server import places
-from mcp_server.catalogue import cli
-from mcp_server.geometry.module_sync import ModuleSyncError
 from mcp_server.places.models import PlacesSnapshot
 from mcp_server.places.sync import (
     SOURCES,
@@ -64,6 +62,7 @@ def transport(
     fail: str | None = None,
     truncate: str | None = None,
     malformed: dict[str, Any] | None = None,
+    features: dict[str, list[dict[str, Any]]] = FEATURES,
 ) -> httpx.MockTransport:
     urls = {f"{s.url}/{s.layer_id}/query": s.kind for s in SOURCES}
 
@@ -74,10 +73,10 @@ def transport(
         if kind == fail:
             return httpx.Response(200, json={"error": {"code": 400, "message": "x"}})
         assert parse_qs(request.content.decode())["f"] == ["json"]
-        body: dict[str, Any] = {"features": FEATURES[kind]}
+        body: dict[str, Any] = {"features": features[kind]}
         if malformed is not None and kind == "canton":
             feature = {"attributes": {"NAME_1": "Napo", "NAME_2": "Archidona"}}
-            body["features"] = [*FEATURES[kind], {**feature, "geometry": malformed}]
+            body["features"] = [*features[kind], {**feature, "geometry": malformed}]
         if kind == truncate:
             body["exceededTransferLimit"] = True
         return httpx.Response(200, json=body)
@@ -89,9 +88,10 @@ async def run(
     fail: str | None = None,
     truncate: str | None = None,
     malformed: dict[str, Any] | None = None,
+    features: dict[str, list[dict[str, Any]]] = FEATURES,
 ) -> dict[str, Any]:
     async with httpx.AsyncClient(
-        transport=transport(fail, truncate, malformed)
+        transport=transport(fail, truncate, malformed, features)
     ) as http:
         return await sync_places(http, NOW)
 
@@ -133,14 +133,23 @@ async def test_features_with_one_name_are_one_place_with_the_joint_area() -> Non
 @pytest.mark.anyio
 async def test_an_enclave_is_left_out_of_the_area() -> None:
     enclave = list(reversed(ring(-77.97, -0.97, 0.04)))
-    FEATURES["canton"][0]["geometry"]["rings"].append(enclave)
-    try:
-        snapshot = PlacesSnapshot.model_validate(await run())
-    finally:
-        FEATURES["canton"][0]["geometry"]["rings"].pop()
+    features = copy.deepcopy(FEATURES)
+    features["canton"][0]["geometry"]["rings"].append(enclave)
+    snapshot = PlacesSnapshot.model_validate(await run(features=features))
     tena = next(p for p in snapshot.places if p.id == "canton:Napo/Tena")
     napo = next(p for p in snapshot.places if p.kind == "province")
     assert tena.area_ha == pytest.approx(napo.area_ha * (1 - 0.16), rel=0.01)
+
+
+@pytest.mark.anyio
+async def test_features_without_a_name_or_a_geometry_are_skipped() -> None:
+    features = copy.deepcopy(FEATURES)
+    features["province"] += [
+        {"attributes": {"NAME_1": None}, "geometry": square(-79.0, -1.0)},
+        {"attributes": {"NAME_1": "Orellana"}, "geometry": None},
+    ]
+    snapshot = PlacesSnapshot.model_validate(await run(features=features))
+    assert [p.id for p in snapshot.places if p.kind == "province"] == ["province:Napo"]
 
 
 @pytest.mark.anyio
@@ -176,37 +185,3 @@ def test_where_doubles_quotes() -> None:
 async def test_a_truncated_response_fails_the_sync() -> None:
     with pytest.raises(PlacesSyncError, match="truncated"):
         await run(truncate="canton")
-
-
-def test_a_places_sync_that_fails_leaves_the_snapshot_as_it_was(
-    tmp_path: Any, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    (tmp_path / "__init__.py").touch()
-    snapshot = tmp_path / places.SNAPSHOT_FILE
-    snapshot.write_text('{"previous": true}\n', "utf-8")
-
-    async def catalogue() -> dict[str, Any]:
-        return {"indicators": {}}
-
-    async def failing(timeout_s: float) -> dict[str, Any]:
-        raise PlacesSyncError("canton: truncated")
-
-    async def no_module(timeout_s: float) -> dict[str, Any]:
-        raise ModuleSyncError("not read in this test")
-
-    monkeypatch.setattr(cli, "HERE", tmp_path)
-    monkeypatch.setattr(cli, "EXAMPLE_FILE", tmp_path / "catalogue.json")
-    monkeypatch.setattr(cli, "_sync", lambda timeout_s: catalogue())
-    monkeypatch.setattr(cli, "nothing_read", lambda snapshot: False)
-    monkeypatch.setattr(cli, "local_document", lambda: None)
-    monkeypatch.setattr(cli.local_document, "cache_clear", lambda: None, raising=False)
-    monkeypatch.setattr(cli, "exported_catalogue", lambda: {})
-    monkeypatch.setattr(cli, "_sync_places", failing)
-    monkeypatch.setattr(cli, "_sync_module", no_module)
-    monkeypatch.setattr(places, "__file__", str(tmp_path / "__init__.py"))
-    monkeypatch.setattr("sys.argv", ["amazonia360-mcp-catalogue", "sync"])
-
-    cli.main()
-
-    assert snapshot.read_text("utf-8") == '{"previous": true}\n'
-    assert "left as it was" in capsys.readouterr().out

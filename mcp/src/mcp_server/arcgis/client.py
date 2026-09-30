@@ -7,7 +7,11 @@ from shapely.geometry import MultiPolygon, Polygon, mapping
 from shapely.geometry.base import BaseGeometry
 from shapely.geometry.polygon import orient
 
-from mcp_server.arcgis.esri_json import polygon_from_rings
+from mcp_server.arcgis.esri_json import (
+    exceeded_transfer_limit,
+    page_key,
+    polygon_from_rings,
+)
 from mcp_server.catalogue.models import Layer
 
 Feature = tuple[str, BaseGeometry]
@@ -28,13 +32,6 @@ _GAVE_UP = (
     "ArcGIS Online gave up after about 60 s. This usually means the service is "
     "busy, which comes and goes by the hour; trying again later may work."
 )
-
-
-def _exceeded_transfer_limit(body: dict[str, Any]) -> bool:
-    return bool(
-        body.get("exceededTransferLimit")
-        or body.get("properties", {}).get("exceededTransferLimit")
-    )
 
 
 def _layer_url(layer: Layer) -> str:
@@ -107,7 +104,7 @@ class ArcGISClient:
                         continue
                     geom = polygon_from_rings(f["geometry"]["rings"])
                     collected.append((str(category), geom))
-                exceeded = _exceeded_transfer_limit(body)
+                exceeded = exceeded_transfer_limit(body)
                 if exceeded and not page:
                     raise _invalid(
                         url, "the page was truncated but returned no features"
@@ -115,8 +112,7 @@ class ArcGISClient:
                 if not exceeded:
                     return collected
                 # A service that ignores resultOffset sends the first page forever.
-                oid = page[0]["attributes"].get(body.get("objectIdFieldName"))
-                first = oid if oid is not None else json.dumps(page[0], sort_keys=True)
+                first = page_key(body, page)
                 if first in first_ids:
                     raise _invalid(
                         url, "the service repeats a page, so it does not page"
@@ -187,7 +183,7 @@ class ArcGISClient:
             },
         )
         url = f"{_layer_url(layer)}/query"
-        if _exceeded_transfer_limit(body):
+        if exceeded_transfer_limit(body):
             raise _invalid(url, truncated)
         try:
             return [

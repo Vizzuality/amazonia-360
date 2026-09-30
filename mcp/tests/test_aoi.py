@@ -1,3 +1,5 @@
+import json
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -109,12 +111,11 @@ def test_coverage_partial_says_how_much_is_outside() -> None:
 
 
 @pytest.mark.usefixtures("outline")
-def test_an_area_that_sticks_out_by_less_than_a_hundredth_of_a_hectare_is_inside() -> (
-    None
-):
-    # partial with outside_ha 0.0 would say both things at once.
-    barely = parse_aoi(square(-78.000000001, -1.0, 0.4))
-    coverage = module_coverage(barely)
+def test_a_tiny_area_never_comes_back_partial_with_nothing_outside() -> None:
+    # 30 % of a 0.01 ha square is outside: over the sliver share, but 0.0 ha once
+    # rounded, and partial with outside_ha 0.0 would say both things at once.
+    tiny = parse_aoi(square(-78.00003, -1.0, 0.0001))
+    coverage = module_coverage(tiny)
     assert (coverage.status, coverage.outside_ha) == ("inside", 0)
 
 
@@ -156,6 +157,17 @@ def test_the_committed_outline_is_the_module() -> None:
     assert module_coverage(parse_aoi(TENA)).status == "inside"
     quito = parse_aoi(square(-78.52, -0.24, 0.05))
     assert module_coverage(quito).status == "outside"
+
+
+def test_an_outline_file_that_holds_no_polygon_is_refused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    line = {"type": "Feature", "geometry": {"type": "LineString", "coordinates": []}}
+    path = tmp_path / "module.geojson"
+    path.write_text(json.dumps(line), "utf-8")
+    monkeypatch.setattr(aoi_module, "MODULE_FILE", path)
+    with pytest.raises(ValueError, match="does not hold a valid polygon"):
+        aoi_module.module_outline.__wrapped__()
 
 
 def test_rejects_an_area_that_reaches_far_beyond_the_module() -> None:

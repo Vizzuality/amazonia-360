@@ -78,6 +78,11 @@ def _width(value: Any) -> float:
 def _symbol_style(symbol: Any) -> Style | None:
     if not isinstance(symbol, dict):
         return None
+    color = symbol.get("color")
+    # A null colour is Esri's "no fill"; anything else that is not a colour falls
+    # back to the palette, so the class stays visible.
+    if color is not None and _channels(color) is None:
+        return None
     outline = symbol.get("outline")
     outline = outline if isinstance(outline, dict) else {}
     return {

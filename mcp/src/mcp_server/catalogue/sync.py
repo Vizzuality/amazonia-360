@@ -38,7 +38,7 @@ async def sync_catalogue(
     indicators = [CuratedIndicator.model_validate(i) for i in curated["indicators"]]
     syncs = await asyncio.gather(*(sync_indicator(http, i, now) for i in indicators))
     return {
-        "generated_at": _iso(now),
+        "generated_at": utc_timestamp(now),
         "indicators": {
             str(i.id): s.model_dump(mode="json")
             for i, s in zip(indicators, syncs, strict=True)
@@ -168,5 +168,6 @@ def _from_ms(value: Any) -> datetime | None:
     return datetime.fromtimestamp(value / 1000, UTC)
 
 
-def _iso(moment: datetime) -> str:
+def utc_timestamp(moment: datetime) -> str:
+    """ISO 8601 in UTC with a Z, as every snapshot's generated_at is written."""
     return moment.astimezone(UTC).isoformat().replace("+00:00", "Z")

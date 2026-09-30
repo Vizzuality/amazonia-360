@@ -74,7 +74,9 @@ def test_normalise() -> None:
 
 
 def test_one_canton(places: Places) -> None:
-    assert ids(places, "Tena") == ["canton:Napo/Tena"]
+    matches = places.find("Tena")
+    assert [p.id for p in matches.places] == ["canton:Napo/Tena"]
+    assert matches.note is None
 
 
 def test_a_province_and_a_canton_share_a_name(places: Places) -> None:
@@ -108,7 +110,10 @@ def test_a_canton_does_not_hide_the_province_that_contains_its_name(
     ]
 
 
-def test_kind_filter_applies_to_whole_word_matches(places: Places) -> None:
+def test_kind_filter_applies_to_whole_name_and_whole_word_matches(
+    places: Places,
+) -> None:
+    assert ids(places, "Pastaza", "canton") == ["canton:Pastaza/Pastaza"]
     assert ids(places, "zamora", "province") == ["province:Zamora Chinchipe"]
     assert ids(places, "napo", "protected_area") == [
         "protected_area:Sumaco Napo-Galeras"
@@ -128,10 +133,6 @@ def test_a_leading_kind_word_is_ignored(places: Places) -> None:
 
 def test_no_part_word_match(places: Places) -> None:
     assert ids(places, "ten") == []
-
-
-def test_kind_filter(places: Places) -> None:
-    assert ids(places, "Pastaza", "canton") == ["canton:Pastaza/Pastaza"]
 
 
 def test_several_matches_carry_a_note_to_ask(places: Places) -> None:

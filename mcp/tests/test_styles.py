@@ -100,25 +100,46 @@ def test_a_visible_fill_keeps_the_renderer_alpha() -> None:
     assert styles["Bosque"]["fill"] == "rgba(209,108,196,0.502)"
 
 
-@pytest.mark.parametrize(
-    "symbol",
-    [
-        {"color": [None, 0, 0]},
-        {"color": [float("nan"), 0, 0, 255]},
-        {"color": ["12", 0, 0]},
-        {"color": [300, 0, 0]},
-        {"color": [0, 100, 0], "outline": [1]},
-        {"color": [0, 100, 0], "outline": {"width": "x", "color": "red"}},
-        {"color": {"r": 1}},
-    ],
-)
-def test_a_malformed_renderer_symbol_never_breaks_the_map(symbol: Any) -> None:
-    # The renderer is a third party's JSON; each of these used to raise.
+def one_class(symbol: Any) -> dict[str, Any]:
     renderer = {
         "type": "uniqueValue",
         "field1": "Clase",
         "uniqueValueInfos": [{"value": "A", "label": "A", "symbol": symbol}],
     }
-    style = category_styles(renderer, "Clase", ["A"])["A"]
-    assert style["fill"].startswith(("rgba(", "#"))
-    assert style["swatch"] is None or len(style["swatch"]) == 7
+    return category_styles(renderer, "Clase", ["A"])["A"]
+
+
+@pytest.mark.parametrize(
+    "outline", [[1], {"width": "x", "color": "red"}, {"width": float("inf")}]
+)
+def test_a_malformed_outline_is_drawn_as_none(outline: Any) -> None:
+    # The renderer is a third party's JSON; each of these used to raise.
+    style = one_class({"color": [0, 100, 0], "outline": outline})
+    assert style["fill"] == "rgba(0,100,0,1.000)"
+    assert style["outline"] == "rgba(0,0,0,0)"
+    assert style["outline_width"] == 0.0
+
+
+@pytest.mark.parametrize("symbol", [None, "esriSFS", 5])
+def test_a_symbol_that_is_not_an_object_falls_back_to_the_palette(
+    symbol: Any,
+) -> None:
+    style = one_class(symbol)
+    assert (style["fill"], style["from_layer"]) == (PALETTE[0], False)
+
+
+@pytest.mark.parametrize(
+    "color",
+    [
+        [None, 0, 0],
+        [float("nan"), 0, 0, 255],
+        ["12", 0, 0],
+        [300, 0, 0],
+        {"r": 1},
+    ],
+)
+def test_a_malformed_colour_falls_back_to_the_palette(color: Any) -> None:
+    # What _channels promises: anything but 3 or 4 numbers from 0 to 255 is no
+    # colour, and the class takes a palette colour the map and the legend both show.
+    style = one_class({"color": color})
+    assert (style["fill"], style["from_layer"]) == (PALETTE[0], False)

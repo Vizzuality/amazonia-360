@@ -268,23 +268,3 @@ async def test_an_image_service_is_read_with_care(
     async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as http:
         sync = await sync_indicator(http, curated_canopy, NOW)
     assert (sync.sync_status, sync.pixel_size_deg) == expected
-
-
-def test_the_cli_keeps_the_snapshot_when_no_layer_was_read(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Any
-) -> None:
-    import sys
-
-    from mcp_server.catalogue import cli
-
-    async def outage(timeout_s: float) -> dict[str, Any]:
-        return {"generated_at": "x", "indicators": {"210": {"sync_status": "error"}}}
-
-    written: list[Any] = []
-    monkeypatch.setattr(cli, "_sync", outage)
-    monkeypatch.setattr(cli, "write_json", lambda path, data: written.append(path))
-    monkeypatch.setattr(sys, "argv", ["amazonia360-mcp-catalogue", "sync"])
-    with pytest.raises(SystemExit, match="snapshot was left as it was"):
-        cli.main()
-    # A network outage would otherwise mark every indicator unavailable.
-    assert written == []

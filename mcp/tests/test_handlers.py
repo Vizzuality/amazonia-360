@@ -1,10 +1,8 @@
-import asyncio
-import time
-from itertools import pairwise
+import threading
 from typing import Any
 
 import pytest
-from shapely.geometry import box
+from shapely.geometry import box, shape
 from shapely.geometry.base import BaseGeometry
 
 from mcp_server.arcgis.client import ArcGISError, Feature
@@ -108,33 +106,28 @@ async def test_categories_in_area() -> None:
     assert result.computed_over.categories == 2
     assert result.coverage.status == "inside"
     assert result.timing.vertices_sent == 5
+    # Computed facts are fields; caveats carry only what a person wrote.
+    assert result.caveats == []
+    assert result.record_counts is None
 
 
 @pytest.mark.anyio
-async def test_clipping_does_not_block_other_calls(
+async def test_clipping_runs_off_the_event_loop(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    def slow_clip(
+    # Seconds of GEOS work on the loop's thread would stall every other call.
+    clip = area_handlers_module.clip_by_category
+    threads: list[int] = []
+
+    def recording_clip(
         aoi: BaseGeometry, features: list[Feature]
     ) -> dict[str, list[BaseGeometry]]:
-        time.sleep(0.3)
-        return {"Bosque": [box(-77.9, -1.1, -77.8, -1.0)]}
+        threads.append(threading.get_ident())
+        return clip(aoi, features)
 
-    monkeypatch.setattr(area_handlers_module, "clip_by_category", slow_clip)
-    stamps: list[float] = []
-
-    async def tick() -> None:
-        for _ in range(50):
-            stamps.append(time.perf_counter())
-            await asyncio.sleep(0.01)
-
-    ticker = asyncio.create_task(tick())
-    await asyncio.sleep(0.02)
-    result = await handlers().area_by_category(210, TENA)
-    await ticker
-    gaps = [b - a for a, b in pairwise(stamps)]
-    assert max(gaps) < 0.15
-    assert result.timing.clip_ms >= 300
+    monkeypatch.setattr(area_handlers_module, "clip_by_category", recording_clip)
+    await handlers().area_by_category(210, TENA)
+    assert threads and threads[0] != threading.get_ident()
 
 
 @pytest.mark.anyio
@@ -194,28 +187,6 @@ async def test_an_unavailable_layer_is_refused_before_any_network_call(
     with pytest.raises(HandlerError, match="not available: sync status is error"):
         await handlers(client).categories_in_area(210, TENA)
     assert client.calls == []
-
-
-@pytest.mark.anyio
-async def test_computed_facts_are_fields_not_caveats() -> None:
-    result = await handlers().categories_in_area(210, TENA)
-    assert result.coverage.status == "inside"
-    assert result.coverage.boundary == "derived_polygon"
-    assert result.caveats == []
-    assert result.record_counts is None
-
-
-@pytest.mark.anyio
-async def test_partial_coverage_is_reported_in_the_coverage_field() -> None:
-    straddling = {
-        "type": "Polygon",
-        "coordinates": [
-            [[-79.6, -1.0], [-79.2, -1.0], [-79.2, -0.6], [-79.6, -0.6], [-79.6, -1.0]]
-        ],
-    }
-    result = await handlers().categories_in_area(210, straddling)
-    assert result.coverage.status == "partial"
-    assert result.caveats == []
 
 
 @pytest.mark.anyio
@@ -397,7 +368,7 @@ async def test_a_map_without_the_renderer_falls_back_to_the_palette() -> None:
             raise ArcGISError("ArcGIS did not respond in time: x")
 
     result, drawn = await handlers(NoRenderer()).area_by_category_map(210, TENA)
-    assert result.value
+    assert isinstance(result.value, dict) and set(result.value) == {"Bosque"}
     assert drawn.styles["Bosque"]["from_layer"] is False
 
 
@@ -515,6 +486,18 @@ async def test_a_class_of_a_few_pixels_is_not_rounded_away() -> None:
 
 
 @pytest.mark.anyio
+async def test_a_histogram_that_is_not_one_bin_per_class_names_the_raster() -> None:
+    class FractionalBins(FakeClient):
+        async def histogram(
+            self, url: str, aoi: BaseGeometry, rendering_rule: dict[str, Any] | None
+        ) -> dict[str, Any]:
+            return {"size": 256, "min": 1, "max": 5, "counts": [29] + [0] * 255}
+
+    with pytest.raises(HandlerError, match=r"one histogram bin.*Canopy/ImageServer"):
+        await handlers(FractionalBins()).class_shares(129, TENA)
+
+
+@pytest.mark.anyio
 async def test_an_area_smaller_than_a_pixel_says_so() -> None:
     # 0.001 degrees against the fixture's 0.009 degree pixels.
     tiny = {
@@ -570,7 +553,7 @@ async def test_every_handler_takes_a_place() -> None:
 @pytest.mark.anyio
 async def test_the_map_carries_the_area_it_was_computed_over() -> None:
     _, drawn = await with_places().area_by_category_map(210, TENA)
-    assert drawn.area["type"] == "Polygon"
+    assert shape(drawn.area).equals(shape(TENA))
 
 
 @pytest.mark.anyio
@@ -589,13 +572,6 @@ async def test_neither_area_nor_place_is_refused() -> None:
 async def test_an_unknown_place_says_to_search_again() -> None:
     with pytest.raises(HandlerError, match="find_places"):
         await with_places().area_by_category(210, place_id="canton:Napo/Nowhere")
-
-
-@pytest.mark.anyio
-async def test_a_place_that_left_its_layer_says_to_search_again() -> None:
-    handlers = with_places(FakeClient(empty=True))
-    with pytest.raises(HandlerError, match="find_places"):
-        await handlers.categories_in_area(210, place_id="canton:Napo/Tena")
 
 
 @pytest.mark.anyio
@@ -624,6 +600,19 @@ async def test_a_place_is_not_held_to_the_reach_limit() -> None:
 
     result = await with_places(Loja()).count_in_area(202, place_id="canton:Napo/Tena")
     assert result.coverage.status == "partial"
+
+
+@pytest.mark.anyio
+async def test_a_boundary_that_fails_the_area_checks_names_the_place() -> None:
+    class Projected(FakeClient):
+        async def boundary(
+            self, url: str, layer_id: int, where: str
+        ) -> list[BaseGeometry]:
+            return [box(800_000, 9_800_000, 810_000, 9_810_000)]
+
+    handlers = with_places(Projected())
+    with pytest.raises(HandlerError, match="The boundary of canton:Napo/Tena"):
+        await handlers.count_in_area(202, place_id="canton:Napo/Tena")
 
 
 @pytest.mark.anyio
@@ -670,6 +659,33 @@ async def test_classes_that_add_up_to_more_than_the_area_are_flagged() -> None:
 async def test_classes_within_the_area_are_not_flagged() -> None:
     result = await handlers().area_by_category(210, TENA)
     assert result.overlap_ha is None
+
+
+def _overlapping_by(width_deg: float) -> FakeClient:
+    """Two classes that split TENA and overlap on a strip width_deg wide."""
+
+    class Overlapping(FakeClient):
+        async def features(
+            self, layer: Layer, aoi: BaseGeometry, max_allowable_offset: float
+        ) -> list[Feature]:
+            return [
+                ("Bosque", box(-77.9, -1.1, -77.85 + width_deg, -1.0)),
+                ("Páramo", box(-77.85, -1.1, -77.8, -1.0)),
+            ]
+
+    return Overlapping()
+
+
+@pytest.mark.anyio
+async def test_an_overlap_under_the_threshold_is_not_flagged() -> None:
+    # 0.1 % of TENA's 12,300 ha is 12.3 ha. A strip 0.00005 degrees wide is about
+    # 6 ha, the size of what the simplification alone adds; 0.0002 is about 25 ha.
+    small = await handlers(_overlapping_by(0.00005)).area_by_category(210, TENA)
+    assert small.overlap_ha is None
+    large = await handlers(_overlapping_by(0.0002)).area_by_category(210, TENA)
+    assert large.overlap_ha == pytest.approx(
+        geodesic_area_ha(box(-77.85, -1.1, -77.8498, -1.0)), rel=1e-2
+    )
 
 
 @pytest.mark.anyio

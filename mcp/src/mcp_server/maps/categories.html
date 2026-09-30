@@ -22,14 +22,12 @@
     }
     #tools button:hover { background: hsl(var(--muted)); }
     .row {
-      display: flex; align-items: baseline; gap: 6px; width: 100%; padding: 2px 0;
-      font: inherit; font-size: 12px; color: inherit; text-align: left;
+      width: 100%; font: inherit; font-size: 12px; color: inherit; text-align: left;
       background: none; border: 0; cursor: pointer;
     }
     .row:hover .name { text-decoration: underline; }
     .row.hidden { opacity: 0.4; }
-    .row .ha { font-variant-numeric: tabular-nums; white-space: nowrap; }
-    .total { cursor: default; font-weight: 700; }
+        .total { cursor: default; font-weight: 700; }
     .total:hover .name { text-decoration: none; }
     .maplibregl-popup-content {
       font-family: var(--font-sans); color: hsl(var(--popover-foreground));
@@ -46,10 +44,10 @@
   </div>
   <div id="legend"></div>
   <script type="module">
-    const { translator, esc, number, bounds } = window.map360;
+    const { translator, esc, number, ha, pct, swatch, ringSwatch, notesHtml, createMap, drawOnce } =
+      window.map360;
     const t = translator({
       en: {
-        waiting: "Waiting for the figures…",
         title: "Hectares by class",
         area: "Area",
         toggle: "Show or hide on the map",
@@ -58,16 +56,13 @@
         popupShare: "{ha} ha in the area · {share} of the area",
         unclassified: "{ha} ha of the area inside the module have no class in this layer. They are not a class of their own.",
         notMapped: "This layer does not map this part of the module.",
-        outside: "{ha} ha of the area are outside the module. Its outline was derived from one of its layers, to about 50 m, until the official one arrives.",
         palette: "Some colours are not the layer's own: its style does not give one colour per class.",
         noShapes: "The host did not pass the shapes to the map; the figures above are complete.",
         tooLarge: "The shapes are too large to draw here ({size} MB); the figures above are complete. A smaller area draws.",
-        failed: "The map could not load: {message}",
         fullscreen: "Full screen",
         exitFullscreen: "Exit full screen",
       },
       es: {
-        waiting: "Esperando las cifras…",
         title: "Hectáreas por clase",
         area: "Área",
         toggle: "Mostrar u ocultar en el mapa",
@@ -76,28 +71,20 @@
         popupShare: "{ha} ha en el área · {share} del área",
         unclassified: "{ha} ha del área dentro del módulo no tienen clase en esta capa. No son una clase propia.",
         notMapped: "Esta capa no cartografía esta parte del módulo.",
-        outside: "{ha} ha del área quedan fuera del módulo. Su contorno se obtuvo de una de sus capas, con unos 50 m de precisión, hasta que llegue el oficial.",
         palette: "Algunos colores no son los de la capa: su estilo no da un color por clase.",
         noShapes: "El host no pasó los polígonos al mapa; las cifras de arriba están completas.",
         tooLarge: "Los polígonos son demasiado grandes para dibujarlos aquí ({size} MB); las cifras de arriba están completas. Un área más pequeña sí se dibuja.",
-        failed: "No se pudo cargar el mapa: {message}",
         fullscreen: "Pantalla completa",
         exitFullscreen: "Salir de pantalla completa",
       },
     });
-    const BASEMAP = "https://tiles.openfreemap.org/styles/positron";
     const AREA = "#009ade"; // The front end's POLYGON_SYMBOL.
     const HOVER = "#009aff"; // The front end's highlight colour.
-    // A class that is present never reads as 0.
-    const ha = (n) => (n > 0 && n < 0.5 ? `< ${number(1)}` : number(n, { maximumFractionDigits: 0 }));
-    const pct = (n) => (n > 0 && n < 0.0005 ? `< ${number(0.001, { style: "percent", maximumFractionDigits: 1 })}` : number(n, { style: "percent", maximumFractionDigits: 1 }));
     const legend = document.getElementById("legend");
     legend.textContent = t("waiting");
 
-    const library = import("https://cdn.jsdelivr.net/npm/maplibre-gl@6.11.2/dist/maplibre-gl.mjs");
-
-    // The area comes with the tool's input; the figures, shapes and colours with its
-    // result. Either may arrive first.
+    // The area comes with the tool's input or the result; the figures, shapes and colours
+    // with the result.
     const state = { map: null, result: null, shapes: null, styles: null, omitted: null, hidden: new Set(), error: null };
     let resolveMap;
     const mapReady = new Promise((r) => { resolveMap = r; });
@@ -129,10 +116,6 @@
       const r = state.result;
       if (!r) return;
       const rows = Object.entries(r.value).sort((a, b) => b[1] - a[1]);
-      const swatch = (c) => {
-        const s = state.styles?.[c];
-        return `<span class="swatch" style="background:${esc(s?.swatch || "hsl(var(--muted))")}"></span>`;
-      };
       const notes = [];
       if (r.unclassified_ha > 0) notes.push(t("unclassified", { ha: ha(r.unclassified_ha) }));
       if (r.layer?.empty_result === "not_mapped_here") notes.push(t("notMapped"));
@@ -144,9 +127,9 @@
       for (const c of r.caveats || []) notes.push(c);
       legend.innerHTML = `
         <h2>${esc(t("title"))}</h2>
-        ${rows.map(([c, n]) => `<button class="row${state.hidden.has(c) ? " hidden" : ""}" data-category="${esc(c)}" title="${esc(t("toggle"))}">${swatch(c)}<span class="name">${esc(c)}</span><span class="ha">${esc(t("ha", { ha: ha(n) }))}</span></button>`).join("")}
-        <div class="row total"><span class="swatch" style="background:none;box-shadow:inset 0 0 0 1.5px ${AREA}"></span><span class="name">${esc(t("area"))}</span><span class="ha">${esc(t("ha", { ha: ha(r.aoi_ha) }))}</span></div>
-        ${notes.map((n) => `<p class="note">${esc(n)}</p>`).join("")}`;
+        ${rows.map(([c, n]) => `<button class="row${state.hidden.has(c) ? " hidden" : ""}" data-category="${esc(c)}" title="${esc(t("toggle"))}">${swatch(state.styles?.[c]?.swatch)}<span class="name">${esc(c)}</span><span class="figure">${esc(t("ha", { ha: ha(n) }))}</span></button>`).join("")}
+        <div class="row total">${ringSwatch(AREA, 1.5)}<span class="name">${esc(t("area"))}</span><span class="figure">${esc(t("ha", { ha: ha(r.aoi_ha) }))}</span></div>
+        ${notesHtml(notes)}`;
       legend.querySelectorAll("button.row").forEach((row) => row.addEventListener("click", () => {
         const c = row.dataset.category;
         state.hidden.has(c) ? state.hidden.delete(c) : state.hidden.add(c);
@@ -205,16 +188,8 @@
     }
 
     async function draw(area) {
-      const maplibregl = await library;
-      const map = new maplibregl.Map({
-        container: "map",
-        style: BASEMAP,
-        bounds: bounds(area),
-        fitBoundsOptions: { padding: 30 },
-        attributionControl: { compact: true },
-      });
+      const { maplibregl, map } = await createMap(area, 30);
       state.map = map;
-      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
       map.once("load", () => {
         map.addSource("area", { type: "geojson", data: { type: "Feature", geometry: area, properties: {} } });
         map.addSource("shapes", { type: "geojson", data: { type: "FeatureCollection", features: [] }, generateId: true });
@@ -232,20 +207,14 @@
       });
     }
 
-    // With a place_id the input has no geometry; the result then carries the area.
-    let drawn = false;
-    function drawOnce(area) {
-      if (drawn || !area) return;
-      drawn = true;
-      draw(area).catch((e) => window.view.fail(String(e?.message || e)));
-    }
+    const drawArea = drawOnce(draw);
 
     window.view = {
       input(args) {
-        drawOnce(args.area);
+        drawArea(args.area);
       },
       async result(result) {
-        drawOnce(result._meta?.map?.area);
+        drawArea(result._meta?.map?.area);
         if (result.isError) {
           state.error = result.content?.[0]?.text || t("failed", { message: "" });
           renderLegend();

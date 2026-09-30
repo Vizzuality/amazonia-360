@@ -67,17 +67,19 @@ def write_json(path: Path, data: dict[str, Any]) -> None:
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", "utf-8")
 
 
+def _now() -> datetime:
+    # Whole seconds, so a re-sync with no real change is a small diff.
+    return datetime.now(UTC).replace(microsecond=0)
+
+
 async def _sync(timeout_s: float) -> dict[str, Any]:
     async with httpx.AsyncClient(timeout=timeout_s) as http:
-        # Whole seconds, so a re-sync with no real change is a small diff.
-        now = datetime.now(UTC).replace(microsecond=0)
-        return await sync_catalogue(http, load_curated(), now)
+        return await sync_catalogue(http, load_curated(), _now())
 
 
 async def _sync_places(timeout_s: float) -> dict[str, Any]:
     async with httpx.AsyncClient(timeout=timeout_s) as http:
-        now = datetime.now(UTC).replace(microsecond=0)
-        return await sync_places(http, now)
+        return await sync_places(http, _now())
 
 
 async def _sync_module(timeout_s: float) -> dict[str, Any]:
@@ -86,8 +88,7 @@ async def _sync_module(timeout_s: float) -> dict[str, Any]:
     if layer is None:
         raise ModuleSyncError(f"indicator {MODULE_SOURCE_INDICATOR} has no layer")
     async with httpx.AsyncClient(timeout=timeout_s) as http:
-        now = datetime.now(UTC).replace(microsecond=0)
-        return await sync_module(http, layer, now)
+        return await sync_module(http, layer, _now())
 
 
 def main() -> None:

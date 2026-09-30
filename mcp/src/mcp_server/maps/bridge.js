@@ -7,5 +7,5 @@ try {
   app.ontoolresult = (result) => window.view.result(result);
   await app.connect();
 } catch (e) {
-  window.view.fail(String(e?.message || e));
+  window.view.fail(window.map360.errorMessage(e));
 }

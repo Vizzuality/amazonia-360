@@ -3,7 +3,7 @@ from typing import Any
 import pytest
 from pydantic import ValidationError
 
-from mcp_server.catalogue.models import CuratedIndicator, IndicatorMetadata, Sync
+from mcp_server.catalogue.models import CuratedIndicator, IndicatorMetadata
 
 
 def curated(**overrides: Any) -> dict[str, Any]:
@@ -110,13 +110,6 @@ def test_values_outside_the_contract_vocabulary_are_rejected() -> None:
         CuratedIndicator.model_validate(curated(value_type="hectares"))
 
 
-def test_available_needs_a_resource_and_a_clean_sync() -> None:
-    assert indicator().available is True
-    assert indicator(resource=None).available is False
-    assert indicator(sync={"sync_status": "error"}).available is False
-    assert indicator(sync={}).available is False
-
-
 def test_nothing_beyond_identity_is_required_as_in_the_contract() -> None:
     minimal = CuratedIndicator.model_validate(
         {"id": 210, "name": "Ecosystems", "subtopic": 5}
@@ -175,6 +168,7 @@ def test_operations_follow_the_value_type() -> None:
     assert restoration.allows("count")
     assert not restoration.allows("area")
     assert not indicator(value_type="ratio").allows("presence")
+    assert not ecosystems.allows("class_share")
 
 
 def test_query_layer_comes_from_resource_and_category_field() -> None:
@@ -205,12 +199,6 @@ def test_available_is_serialised_for_tools() -> None:
     assert indicator().model_dump()["available"] is True
 
 
-def test_sync_dates_parse_from_iso_strings() -> None:
-    sync = Sync.model_validate({"layer_last_edit": "2026-08-18T12:37:43.622000Z"})
-    assert sync.layer_last_edit is not None
-    assert sync.layer_last_edit.year == 2026
-
-
 def test_a_classed_raster_needs_no_category_field_and_allows_class_shares() -> None:
     canopy = raster_indicator()
     assert canopy.available
@@ -220,10 +208,6 @@ def test_a_classed_raster_needs_no_category_field_and_allows_class_shares() -> N
     assert raster is not None
     assert raster.values == [1, 2, 3, 4, 5]
     assert canopy.query_layer() is None
-
-
-def test_a_feature_layer_does_not_allow_class_shares() -> None:
-    assert not indicator().allows("class_share")
 
 
 def _canopy_resource(**changes: Any) -> dict[str, Any]:

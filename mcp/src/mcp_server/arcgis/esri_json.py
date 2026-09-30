@@ -1,9 +1,12 @@
-"""Polygons from Esri JSON rings.
+"""Esri JSON as the query endpoints send it: polygons from rings, and paging.
 
 The server reads geometry as Esri JSON because ArcGIS Online's GeoJSON output drops
 holes: every ring comes back as its own polygon, so a hole is filled and the ground
 under it is counted twice (12 of 13 feature layers of the catalogue, 30 Sep 2026).
 """
+
+import json
+from typing import Any
 
 import shapely
 from shapely import STRtree
@@ -11,6 +14,21 @@ from shapely.geometry import LinearRing, MultiPolygon, Polygon
 from shapely.geometry.base import BaseGeometry
 
 Rings = list[list[list[float]]]
+
+
+def exceeded_transfer_limit(body: dict[str, Any]) -> bool:
+    """Whether the service left features out of the answer."""
+    return bool(
+        body.get("exceededTransferLimit")
+        or body.get("properties", {}).get("exceededTransferLimit")
+    )
+
+
+def page_key(body: dict[str, Any], page: list[dict[str, Any]]) -> Any:
+    """What tells a page from the others: its first feature's object id, or the whole
+    feature when the service names no object id field."""
+    oid = page[0]["attributes"].get(body.get("objectIdFieldName"))
+    return oid if oid is not None else json.dumps(page[0], sort_keys=True)
 
 
 def polygon_from_rings(rings: Rings) -> BaseGeometry:

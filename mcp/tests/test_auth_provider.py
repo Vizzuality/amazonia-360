@@ -22,16 +22,11 @@ from tests.auth_helpers import ANA, CLAUDE, PUBLIC_URL, Clock, http_settings
 pytestmark = [pytest.mark.db, pytest.mark.anyio]
 
 
-def test_satisfies_the_sdk_provider_protocol() -> None:
-    """Pyright-only: this fails type-checking if AmazoniaOAuthProvider drifts from
-    the SDK's OAuthAuthorizationServerProvider protocol. Never called at runtime."""
-
-    def _conforms(
-        p: AmazoniaOAuthProvider,
-    ) -> OAuthAuthorizationServerProvider[AuthorizationCode, RefreshToken, AccessToken]:
-        return p
-
-    assert _conforms is not None
+def _conforms(
+    p: AmazoniaOAuthProvider,
+) -> OAuthAuthorizationServerProvider[AuthorizationCode, RefreshToken, AccessToken]:
+    # Never called: pyright fails here if the provider drifts from the SDK protocol.
+    return p
 
 
 def info(*redirects: str) -> OAuthClientInformationFull:

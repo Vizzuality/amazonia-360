@@ -8,8 +8,6 @@
   <style>/*LEGEND*/</style>
   <style>
     #map { height: 440px; }
-    .row { display: flex; align-items: baseline; gap: 6px; font-size: 12px; padding: 2px 0; }
-    .row .share { font-variant-numeric: tabular-nums; white-space: nowrap; }
   </style>
   <script>/*COMMON*/</script>
 </head>
@@ -17,41 +15,33 @@
   <div id="map"></div>
   <div id="legend"></div>
   <script type="module">
-    const { translator, esc, number, bounds, outerRings } = window.map360;
+    const { translator, esc, number, ha, pct, swatch, ringSwatch, notesHtml, errorMessage, outerRings, createMap, drawOnce } =
+      window.map360;
     const t = translator({
       en: {
-        waiting: "Waiting for the figures…",
         title: "{raster}: share of the area",
         unclassified: "Unclassified",
         pixels: "Shares of the {pixels} pixels with data inside the area, about {size} each. Over a small area a share rests on few pixels.",
         unclassifiedNote: "Unclassified pixels have data but fall in no class of the legend. They are not a class of their own.",
-        outside: "{ha} ha of the area are outside the module. Its outline was derived from one of its layers, to about 50 m, until the official one arrives.",
         source: "Classes and colours as on Amazonia 360. Outside the area the raster is dimmed; the shares count only the pixels inside.",
         noImage: "The host did not pass the image to the map; the shares above are complete.",
-        failed: "The map could not load: {message}",
       },
       es: {
-        waiting: "Esperando las cifras…",
         title: "{raster}: proporción del área",
         unclassified: "Sin clase",
         pixels: "Proporción de los {pixels} píxeles con datos dentro del área, de unos {size} cada uno. En un área pequeña, una proporción se apoya en pocos píxeles.",
         unclassifiedNote: "Los píxeles sin clase tienen datos pero no caen en ninguna clase de la leyenda. No son una clase propia.",
-        outside: "{ha} ha del área quedan fuera del módulo. Su contorno se obtuvo de una de sus capas, con unos 50 m de precisión, hasta que llegue el oficial.",
         source: "Clases y colores como en Amazonia 360. Fuera del área el ráster se atenúa; las proporciones cuentan solo los píxeles de dentro.",
         noImage: "El host no pasó la imagen al mapa; las proporciones de arriba están completas.",
-        failed: "No se pudo cargar el mapa: {message}",
       },
     });
     // 111.32 km per degree at the equator, which the module sits on.
     const size = (deg) => deg >= 0.009 * 0.9
       ? `${number(deg * 111.32, { maximumFractionDigits: 1 })} km`
       : `${number(Math.round(deg * 111320 / 10) * 10)} m`;
-    // A class that is present never reads as 0.
-    const pct = (n) => (n > 0 && n < 0.0005 ? `< ${number(0.001, { style: "percent", maximumFractionDigits: 1 })}` : number(n, { style: "percent", maximumFractionDigits: 1 }));
     const legend = document.getElementById("legend");
     legend.textContent = t("waiting");
 
-    const library = import("https://cdn.jsdelivr.net/npm/maplibre-gl@6.11.2/dist/maplibre-gl.mjs");
     const state = { map: null, area: null };
     let resolveMap;
     const mapReady = new Promise((r) => { resolveMap = r; });
@@ -63,17 +53,9 @@
     }
 
     async function draw(area) {
-      const maplibregl = await library;
-      const map = new maplibregl.Map({
-        container: "map",
-        style: "https://tiles.openfreemap.org/styles/positron",
-        bounds: bounds(area),
-        fitBoundsOptions: { padding: 60 },
-        attributionControl: { compact: true },
-      });
+      const { map } = await createMap(area, 60);
       state.map = map;
       state.area = area;
-      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
       map.once("load", resolveMap);
     }
 
@@ -91,20 +73,14 @@
       if (layers.some((l) => l.id === "water")) map.moveLayer("water", under);
     }
 
-    // With a place_id the input has no geometry; the result then carries the area.
-    let drawStarted = false;
-    function drawOnce(area) {
-      if (drawStarted || !area) return;
-      drawStarted = true;
-      draw(area).catch((e) => window.view.fail(String(e?.message || e)));
-    }
+    const drawArea = drawOnce(draw);
 
     window.view = {
       input(args) {
-        drawOnce(args.area);
+        drawArea(args.area);
       },
       result(result) {
-        drawOnce(result._meta?.map?.area);
+        drawArea(result._meta?.map?.area);
         if (result.isError) {
           legend.innerHTML = `<p class="note">${esc(result.content?.[0]?.text || "")}</p>`;
           return;
@@ -112,8 +88,9 @@
         const r = result.structuredContent;
         if (!r) return;
         const drawn = result._meta?.map;
-        const colour = Object.fromEntries((drawn?.classes || []).map((c) => [c.label, c.color]));
-        const order = (drawn?.classes || []).map((c) => c.label);
+        const classes = drawn?.classes || [];
+        const colour = Object.fromEntries(classes.map((c) => [c.label, c.color]));
+        const order = classes.map((c) => c.label);
         const rows = Object.entries(r.value).sort((a, b) =>
           order.length ? order.indexOf(a[0]) - order.indexOf(b[0]) : b[1] - a[1]);
         if (r.unclassified_share > 0) rows.push([t("unclassified"), r.unclassified_share, true]);
@@ -124,18 +101,17 @@
           size: over.pixel_size_deg ? size(over.pixel_size_deg) : "?",
         }));
         if (r.unclassified_share > 0) notes.push(t("unclassifiedNote"));
-        if (r.coverage?.outside_ha > 0) notes.push(t("outside", { ha: number(r.coverage.outside_ha, { maximumFractionDigits: 0 }) }));
+        if (r.coverage?.outside_ha > 0) notes.push(t("outside", { ha: ha(r.coverage.outside_ha) }));
         // Written by a person in the CMS, in the language they wrote it in.
         for (const c of r.caveats || []) notes.push(c);
         notes.push(t(drawn?.image ? "source" : "noImage"));
-        const swatch = (label, none) => none
-          ? `<span class="swatch" style="background:none;box-shadow:inset 0 0 0 1px hsl(var(--muted-foreground))"></span>`
-          : `<span class="swatch" style="background:${esc(colour[label] || "hsl(var(--muted))")}"></span>`;
+        const rowSwatch = (label, none) =>
+          none ? ringSwatch("hsl(var(--muted-foreground))", 1) : swatch(colour[label]);
         legend.innerHTML = `
           <h2>${esc(t("title", { raster: drawn?.name || "" }))}</h2>
-          ${rows.map(([label, share, none]) => `<div class="row">${swatch(label, none)}<span class="name">${esc(label)}</span><span class="share">${pct(share)}</span></div>`).join("")}
-          ${notes.map((n) => `<p class="note">${esc(n)}</p>`).join("")}`;
-        if (drawn?.image) addImage(drawn).catch((e) => window.view.fail(String(e?.message || e)));
+          ${rows.map(([label, share, none]) => `<div class="row">${rowSwatch(label, none)}<span class="name">${esc(label)}</span><span class="figure">${esc(pct(share))}</span></div>`).join("")}
+          ${notesHtml(notes)}`;
+        if (drawn?.image) addImage(drawn).catch((e) => window.view.fail(errorMessage(e)));
       },
       fail(message) {
         legend.insertAdjacentHTML("beforeend", `<p class="note">${esc(t("failed", { message }))}</p>`);

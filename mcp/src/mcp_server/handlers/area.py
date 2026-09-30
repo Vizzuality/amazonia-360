@@ -59,6 +59,16 @@ def _layer_facts(
     return LayerFacts(covers_module=covers, empty_result=empty)
 
 
+def _place_info(place: Place) -> PlaceInfo:
+    source = place.source
+    return PlaceInfo(
+        id=place.id,
+        name=place.name,
+        kind=place.kind,
+        source=f"{source.url}/{source.layer_id}",
+    )
+
+
 @dataclass
 class CategoryMap:
     """What a map of area_by_category draws: the clipped classes and their colours.
@@ -424,14 +434,7 @@ class AreaHandlers:
             unit=unit,
             computed_over=computed_over,
             coverage=p.coverage,
-            place=PlaceInfo(
-                id=p.place.id,
-                name=p.place.name,
-                kind=p.place.kind,
-                source=f"{p.place.source.url}/{p.place.source.layer_id}",
-            )
-            if p.place
-            else None,
+            place=_place_info(p.place) if p.place else None,
             provenance=p.indicator.provenance.model_dump(),
             layer=_layer_facts(p.indicator, value),
             caveats=[c.text for c in p.indicator.caveats],

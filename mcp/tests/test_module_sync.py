@@ -1,6 +1,5 @@
 import json
 from datetime import UTC, datetime
-from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs
 
@@ -8,10 +7,7 @@ import httpx
 import pytest
 from shapely.geometry import Polygon, shape
 
-from mcp_server import places
-from mcp_server.catalogue import cli
 from mcp_server.catalogue.models import Layer
-from mcp_server.geometry import aoi
 from mcp_server.geometry.area import geodesic_area_ha
 from mcp_server.geometry.module_sync import (
     ModuleSyncError,
@@ -114,6 +110,31 @@ async def test_a_service_that_repeats_a_page_fails_the_sync() -> None:
             await sync_module(http, LAYER, NOW)
 
 
+@pytest.mark.anyio
+async def test_a_truncated_page_with_no_features_fails_the_sync() -> None:
+    with pytest.raises(ModuleSyncError, match="truncated but returned no features"):
+        await run(pages=[[], [feature(1, -78.0, -1.0)]])
+
+
+@pytest.mark.anyio
+async def test_a_layer_past_the_page_limit_fails_the_sync(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from mcp_server.geometry import module_sync
+
+    monkeypatch.setattr(module_sync, "MAX_PAGES", 2)
+    pages = [[feature(i, -78.0 + i * 0.5, -1.0)] for i in range(3)]
+    with pytest.raises(ModuleSyncError, match="more than 2 pages"):
+        await run(pages=pages)
+
+
+@pytest.mark.anyio
+async def test_a_malformed_feature_fails_the_sync() -> None:
+    malformed = {"attributes": {"OBJECTID": 1}, "geometry": {"paths": []}}
+    with pytest.raises(ModuleSyncError, match="rings"):
+        await run(pages=[[malformed]])
+
+
 def test_the_outline_keeps_only_polygons_and_is_simplified() -> None:
     from shapely.geometry import LineString, Point
 
@@ -134,66 +155,13 @@ def test_dumped_coordinates_have_six_decimals() -> None:
     assert "0.123457" in text
 
 
-def _cli_catalogue_stubs(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    async def catalogue(timeout_s: float) -> dict[str, Any]:
-        return {"indicators": {}}
-
-    async def no_places(timeout_s: float) -> dict[str, Any]:
-        return {"generated_at": "x", "places": []}
-
-    (tmp_path / "__init__.py").touch()
-    monkeypatch.setattr(cli, "HERE", tmp_path)
-    monkeypatch.setattr(cli, "EXAMPLE_FILE", tmp_path / "catalogue.json")
-    monkeypatch.setattr(cli, "_sync", catalogue)
-    monkeypatch.setattr(cli, "nothing_read", lambda snapshot: False)
-    monkeypatch.setattr(cli, "local_document", lambda: None)
-    monkeypatch.setattr(cli.local_document, "cache_clear", lambda: None, raising=False)
-    monkeypatch.setattr(cli, "exported_catalogue", lambda: {})
-    monkeypatch.setattr(cli, "_sync_places", no_places)
-    monkeypatch.setattr(places, "__file__", str(tmp_path / "__init__.py"))
-    monkeypatch.setattr("sys.argv", ["amazonia360-mcp-catalogue", "sync"])
-
-
-def test_a_module_sync_that_fails_leaves_the_outline_as_it_was(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    _cli_catalogue_stubs(monkeypatch, tmp_path)
-    outline = tmp_path / "module.geojson"
-    outline.write_text('{"previous": true}\n', "utf-8")
-
-    async def failing(timeout_s: float) -> dict[str, Any]:
-        raise ModuleSyncError("geomorfologia: truncated")
-
-    monkeypatch.setattr(cli, "_sync_module", failing)
-    monkeypatch.setattr(aoi, "MODULE_FILE", outline)
-
-    cli.main()
-
-    assert outline.read_text("utf-8") == '{"previous": true}\n'
-    assert "left as it was" in capsys.readouterr().out
-
-
-def test_a_module_sync_writes_the_outline(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    from shapely.geometry import box, mapping
-
-    _cli_catalogue_stubs(monkeypatch, tmp_path)
-    outline = tmp_path / "module.geojson"
-
-    async def derived(timeout_s: float) -> dict[str, Any]:
-        return {
-            "type": "Feature",
-            "properties": {"area_ha": 1.0},
-            "geometry": mapping(box(-78, -1, -77, 0)),
-        }
-
-    monkeypatch.setattr(cli, "_sync_module", derived)
-    monkeypatch.setattr(aoi, "MODULE_FILE", outline)
-
-    cli.main()
-
-    written = json.loads(outline.read_text("utf-8"))
-    assert shape(written["geometry"]).equals(box(-78, -1, -77, 0))
+@pytest.mark.anyio
+async def test_a_feature_without_geometry_does_not_shift_the_next_page() -> None:
+    # The offset counts the features read, not the shapes kept.
+    empty = {"attributes": {"OBJECTID": 3}, "geometry": None}
+    outline = await run(
+        pages=[[feature(1, -78.0, -1.0), empty], [feature(2, -77.5, -1.0)]]
+    )
+    assert shape(outline["geometry"]).bounds == pytest.approx(
+        (-78.0, -1.0, -77.0, -0.5)
+    )

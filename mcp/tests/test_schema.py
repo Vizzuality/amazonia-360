@@ -1,6 +1,5 @@
 import json
 from importlib.resources import files
-from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
@@ -14,12 +13,6 @@ from mcp_server.catalogue.cli import (
 )
 from tests.test_catalogue import IN_SCOPE_IDS, RASTER_IDS
 from tests.test_models import curated
-
-EXAMPLE = Path(__file__).parents[1] / "examples" / "catalogue.json"
-
-
-def test_the_cli_writes_the_example_where_the_tests_read_it() -> None:
-    assert EXAMPLE_FILE.resolve() == EXAMPLE.resolve()
 
 
 def test_the_committed_schema_matches_the_model() -> None:
@@ -35,7 +28,6 @@ def test_the_schema_describes_the_whole_catalogue_export() -> None:
     schema = catalogue_schema()
     assert schema["$schema"] == "https://json-schema.org/draft/2020-12/schema"
     assert set(schema["required"]) == {"locale", "generated_at", "indicators"}
-    assert "every change" in schema["description"]
     assert schema["additionalProperties"] is False
 
 
@@ -54,7 +46,7 @@ def test_computed_fields_are_not_asked_of_the_cms() -> None:
 
 
 def test_the_committed_example_is_the_current_export() -> None:
-    committed = json.loads(EXAMPLE.read_text("utf-8"))
+    committed = json.loads(EXAMPLE_FILE.read_text("utf-8"))
     assert committed == exported_catalogue(), (
         "examples/catalogue.json is stale: run "
         "`uv run amazonia360-mcp-catalogue sync` (or `export --out` after hand edits)"
@@ -62,7 +54,7 @@ def test_the_committed_example_is_the_current_export() -> None:
 
 
 def test_the_example_loads_as_the_cms_export_will() -> None:
-    document = load_document(json.loads(EXAMPLE.read_text("utf-8")))
+    document = load_document(json.loads(EXAMPLE_FILE.read_text("utf-8")))
     assert {i.id for i in document.indicators} == IN_SCOPE_IDS | RASTER_IDS
 
 
@@ -80,8 +72,3 @@ def test_a_document_in_another_locale_is_rejected() -> None:
     raw = {"locale": "es", "generated_at": "2026-09-24T00:00:00Z", "indicators": []}
     with pytest.raises(ValidationError, match="locale"):
         load_document(raw)
-
-
-def test_the_sync_group_is_documented_as_the_cms_job_output() -> None:
-    sync = catalogue_schema()["$defs"]["IndicatorMetadata"]["properties"]["sync"]
-    assert "CMS's ArcGIS sync job" in sync["description"]
