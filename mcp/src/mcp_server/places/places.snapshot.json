@@ -1,0 +1,8 @@
+{
+  "generated_at": "2026-09-30T00:00:00Z",
+  "places": [
+    {"id": "province:Napo", "name": "Napo", "kind": "province", "province": null, "category": null, "area_ha": 1251302.2, "bbox": [-78.4, -1.6, -76.9, -0.2], "source": {"url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer", "layer_id": 4, "where": "GID_0 = 'ECU' AND NAME_1 = 'Napo'"}},
+    {"id": "canton:Napo/Tena", "name": "Tena", "kind": "canton", "province": "Napo", "category": null, "area_ha": 389893.0, "bbox": [-78.2, -1.3, -77.4, -0.7], "source": {"url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer", "layer_id": 6, "where": "GID_0 = 'ECU' AND NAME_1 = 'Napo' AND NAME_2 = 'Tena'"}},
+    {"id": "protected_area:Yasuní", "name": "Yasuní", "kind": "protected_area", "province": null, "category": "Parque Nacional", "area_ha": 1029566.3, "bbox": [-76.6, -1.6, -75.4, -0.6], "source": {"url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer", "layer_id": 0, "where": "Nombre = 'Yasuní'"}}
+  ]
+}
