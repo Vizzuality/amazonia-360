@@ -73,7 +73,7 @@ describe("CountryModuleBanner", () => {
     render(<CountryModuleBanner />);
 
     expect(screen.getByTestId("country-module-coverage")).toHaveTextContent(
-      `country-module-coverage-inside ${JSON.stringify({ percent, name: "country-module-ECU-name" })}`,
+      `country-module-coverage-inside ${JSON.stringify({ percent, name: "country-module-ECU-module-name" })}`,
     );
     expect(screen.queryByText(/country-module-active-description/)).not.toBeInTheDocument();
   });
