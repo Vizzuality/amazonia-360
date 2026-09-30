@@ -1,8 +1,2874 @@
 {
-  "generated_at": "2026-09-30T00:00:00Z",
+  "generated_at": "2026-09-30T13:48:01Z",
   "places": [
-    {"id": "province:Napo", "name": "Napo", "kind": "province", "province": null, "category": null, "area_ha": 1251302.2, "bbox": [-78.4, -1.6, -76.9, -0.2], "source": {"url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer", "layer_id": 4, "where": "GID_0 = 'ECU' AND NAME_1 = 'Napo'"}},
-    {"id": "canton:Napo/Tena", "name": "Tena", "kind": "canton", "province": "Napo", "category": null, "area_ha": 389893.0, "bbox": [-78.2, -1.3, -77.4, -0.7], "source": {"url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer", "layer_id": 6, "where": "GID_0 = 'ECU' AND NAME_1 = 'Napo' AND NAME_2 = 'Tena'"}},
-    {"id": "protected_area:Yasuní", "name": "Yasuní", "kind": "protected_area", "province": null, "category": "Parque Nacional", "area_ha": 1029566.3, "bbox": [-76.6, -1.6, -75.4, -0.6], "source": {"url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer", "layer_id": 0, "where": "Nombre = 'Yasuní'"}}
+    {
+      "id": "province:Azuay",
+      "name": "Azuay",
+      "kind": "province",
+      "province": null,
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+        "layer_id": 4,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Azuay'"
+      },
+      "area_ha": 816081.2,
+      "bbox": [
+        -79.763,
+        -3.6271,
+        -78.4221,
+        -2.5169
+      ]
+    },
+    {
+      "id": "province:Bolivar",
+      "name": "Bolivar",
+      "kind": "province",
+      "province": null,
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+        "layer_id": 4,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Bolivar'"
+      },
+      "area_ha": 390053.7,
+      "bbox": [
+        -79.3921,
+        -2.155,
+        -78.8513,
+        -1.1518
+      ]
+    },
+    {
+      "id": "province:Carchi",
+      "name": "Carchi",
+      "kind": "province",
+      "province": null,
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+        "layer_id": 4,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Carchi'"
+      },
+      "area_ha": 379547.4,
+      "bbox": [
+        -78.5475,
+        0.3443,
+        -77.5398,
+        1.1979
+      ]
+    },
+    {
+      "id": "province:Cañar",
+      "name": "Cañar",
+      "kind": "province",
+      "province": null,
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+        "layer_id": 4,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Cañar'"
+      },
+      "area_ha": 332702.5,
+      "bbox": [
+        -79.5242,
+        -2.8378,
+        -78.569,
+        -2.2122
+      ]
+    },
+    {
+      "id": "province:Chimborazo",
+      "name": "Chimborazo",
+      "kind": "province",
+      "province": null,
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+        "layer_id": 4,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Chimborazo'"
+      },
+      "area_ha": 656577.8,
+      "bbox": [
+        -79.2495,
+        -2.6269,
+        -78.3574,
+        -1.4304
+      ]
+    },
+    {
+      "id": "province:Cotopaxi",
+      "name": "Cotopaxi",
+      "kind": "province",
+      "province": null,
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+        "layer_id": 4,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Cotopaxi'"
+      },
+      "area_ha": 617416.4,
+      "bbox": [
+        -79.3379,
+        -1.2199,
+        -78.3637,
+        -0.3315
+      ]
+    },
+    {
+      "id": "province:Imbabura",
+      "name": "Imbabura",
+      "kind": "province",
+      "province": null,
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+        "layer_id": 4,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Imbabura'"
+      },
+      "area_ha": 477231.3,
+      "bbox": [
+        -79.2741,
+        0.1237,
+        -77.811,
+        0.876
+      ]
+    },
+    {
+      "id": "province:Loja",
+      "name": "Loja",
+      "kind": "province",
+      "province": null,
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+        "layer_id": 4,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Loja'"
+      },
+      "area_ha": 1106169.7,
+      "bbox": [
+        -80.4864,
+        -4.7473,
+        -79.0951,
+        -3.3302
+      ]
+    },
+    {
+      "id": "province:Morona Santiago",
+      "name": "Morona Santiago",
+      "kind": "province",
+      "province": null,
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+        "layer_id": 4,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Morona Santiago'"
+      },
+      "area_ha": 2393417.3,
+      "bbox": [
+        -78.9538,
+        -3.5877,
+        -76.6921,
+        -1.4487
+      ]
+    },
+    {
+      "id": "province:Napo",
+      "name": "Napo",
+      "kind": "province",
+      "province": null,
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+        "layer_id": 4,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Napo'"
+      },
+      "area_ha": 1251386.8,
+      "bbox": [
+        -78.4299,
+        -1.2488,
+        -77.025,
+        0.0338
+      ]
+    },
+    {
+      "id": "province:Orellana",
+      "name": "Orellana",
+      "kind": "province",
+      "province": null,
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+        "layer_id": 4,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Orellana'"
+      },
+      "area_ha": 2159407.3,
+      "bbox": [
+        -77.6282,
+        -1.5497,
+        -75.1871,
+        -0.0454
+      ]
+    },
+    {
+      "id": "province:Pastaza",
+      "name": "Pastaza",
+      "kind": "province",
+      "province": null,
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+        "layer_id": 4,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Pastaza'"
+      },
+      "area_ha": 2946529.7,
+      "bbox": [
+        -78.1779,
+        -2.604,
+        -75.5854,
+        -1.0077
+      ]
+    },
+    {
+      "id": "province:Pichincha",
+      "name": "Pichincha",
+      "kind": "province",
+      "province": null,
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+        "layer_id": 4,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Pichincha'"
+      },
+      "area_ha": 945554.6,
+      "bbox": [
+        -79.3714,
+        -0.6767,
+        -77.8398,
+        0.3267
+      ]
+    },
+    {
+      "id": "province:Sucumbios",
+      "name": "Sucumbios",
+      "kind": "province",
+      "province": null,
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+        "layer_id": 4,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Sucumbios'"
+      },
+      "area_ha": 1795267.5,
+      "bbox": [
+        -77.9788,
+        -0.652,
+        -75.2255,
+        0.6625
+      ]
+    },
+    {
+      "id": "province:Tungurahua",
+      "name": "Tungurahua",
+      "kind": "province",
+      "province": null,
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+        "layer_id": 4,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Tungurahua'"
+      },
+      "area_ha": 338176.7,
+      "bbox": [
+        -78.9392,
+        -1.5235,
+        -78.1101,
+        -0.9945
+      ]
+    },
+    {
+      "id": "province:Zamora Chinchipe",
+      "name": "Zamora Chinchipe",
+      "kind": "province",
+      "province": null,
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_1/FeatureServer",
+        "layer_id": 4,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Zamora Chinchipe'"
+      },
+      "area_ha": 1054332.7,
+      "bbox": [
+        -79.4277,
+        -5.0158,
+        -78.3651,
+        -3.3434
+      ]
+    },
+    {
+      "id": "canton:Azuay/Chordeleg",
+      "name": "Chordeleg",
+      "kind": "canton",
+      "province": "Azuay",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Azuay' AND NAME_2 = 'Chordeleg'"
+      },
+      "area_ha": 10308.8,
+      "bbox": [
+        -78.7964,
+        -3.0606,
+        -78.6705,
+        -2.9061
+      ]
+    },
+    {
+      "id": "canton:Azuay/Cuenca",
+      "name": "Cuenca",
+      "kind": "canton",
+      "province": "Azuay",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Azuay' AND NAME_2 = 'Cuenca'"
+      },
+      "area_ha": 319905.8,
+      "bbox": [
+        -79.6703,
+        -3.1726,
+        -78.8473,
+        -2.5169
+      ]
+    },
+    {
+      "id": "canton:Azuay/El Pan",
+      "name": "El Pan",
+      "kind": "canton",
+      "province": "Azuay",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Azuay' AND NAME_2 = 'El Pan'"
+      },
+      "area_ha": 13672.9,
+      "bbox": [
+        -78.7012,
+        -2.978,
+        -78.5823,
+        -2.7387
+      ]
+    },
+    {
+      "id": "canton:Azuay/Girón",
+      "name": "Girón",
+      "kind": "canton",
+      "province": "Azuay",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Azuay' AND NAME_2 = 'Girón'"
+      },
+      "area_ha": 34503.0,
+      "bbox": [
+        -79.309,
+        -3.2869,
+        -79.0209,
+        -3.0648
+      ]
+    },
+    {
+      "id": "canton:Azuay/Guachapala",
+      "name": "Guachapala",
+      "kind": "canton",
+      "province": "Azuay",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Azuay' AND NAME_2 = 'Guachapala'"
+      },
+      "area_ha": 4113.4,
+      "bbox": [
+        -78.751,
+        -2.8111,
+        -78.6422,
+        -2.7217
+      ]
+    },
+    {
+      "id": "canton:Azuay/Gualaceo",
+      "name": "Gualaceo",
+      "kind": "canton",
+      "province": "Azuay",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Azuay' AND NAME_2 = 'Gualaceo'"
+      },
+      "area_ha": 34576.0,
+      "bbox": [
+        -78.916,
+        -3.0284,
+        -78.6366,
+        -2.8068
+      ]
+    },
+    {
+      "id": "canton:Azuay/Nabón",
+      "name": "Nabón",
+      "kind": "canton",
+      "province": "Azuay",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Azuay' AND NAME_2 = 'Nabón'"
+      },
+      "area_ha": 62982.9,
+      "bbox": [
+        -79.3087,
+        -3.4767,
+        -78.9339,
+        -3.1896
+      ]
+    },
+    {
+      "id": "canton:Azuay/Oña",
+      "name": "Oña",
+      "kind": "canton",
+      "province": "Azuay",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Azuay' AND NAME_2 = 'Oña'"
+      },
+      "area_ha": 29030.3,
+      "bbox": [
+        -79.2768,
+        -3.6261,
+        -79.043,
+        -3.3642
+      ]
+    },
+    {
+      "id": "canton:Azuay/Paute",
+      "name": "Paute",
+      "kind": "canton",
+      "province": "Azuay",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Azuay' AND NAME_2 = 'Paute'"
+      },
+      "area_ha": 26488.9,
+      "bbox": [
+        -78.8728,
+        -2.8623,
+        -78.6168,
+        -2.6275
+      ]
+    },
+    {
+      "id": "canton:Azuay/San Fernando",
+      "name": "San Fernando",
+      "kind": "canton",
+      "province": "Azuay",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Azuay' AND NAME_2 = 'San Fernando'"
+      },
+      "area_ha": 14076.9,
+      "bbox": [
+        -79.3308,
+        -3.23,
+        -79.2122,
+        -3.051
+      ]
+    },
+    {
+      "id": "canton:Azuay/Santa Isabel",
+      "name": "Santa Isabel",
+      "kind": "canton",
+      "province": "Azuay",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Azuay' AND NAME_2 = 'Santa Isabel'"
+      },
+      "area_ha": 82605.5,
+      "bbox": [
+        -79.6459,
+        -3.3724,
+        -79.22,
+        -2.9081
+      ]
+    },
+    {
+      "id": "canton:Azuay/Sevilla de Oro",
+      "name": "Sevilla de Oro",
+      "kind": "canton",
+      "province": "Azuay",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Azuay' AND NAME_2 = 'Sevilla de Oro'"
+      },
+      "area_ha": 31126.2,
+      "bbox": [
+        -78.6616,
+        -2.8558,
+        -78.4221,
+        -2.5581
+      ]
+    },
+    {
+      "id": "canton:Azuay/Sigsig",
+      "name": "Sigsig",
+      "kind": "canton",
+      "province": "Azuay",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Azuay' AND NAME_2 = 'Sigsig'"
+      },
+      "area_ha": 67676.7,
+      "bbox": [
+        -79.028,
+        -3.2888,
+        -78.6714,
+        -2.982
+      ]
+    },
+    {
+      "id": "canton:Bolivar/Guaranda",
+      "name": "Guaranda",
+      "kind": "canton",
+      "province": "Bolivar",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Bolivar' AND NAME_2 = 'Guaranda'"
+      },
+      "area_ha": 187038.9,
+      "bbox": [
+        -79.2908,
+        -1.7217,
+        -78.8513,
+        -1.1518
+      ]
+    },
+    {
+      "id": "canton:Carchi/Bolívar",
+      "name": "Bolívar",
+      "kind": "canton",
+      "province": "Carchi",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Carchi' AND NAME_2 = 'Bolívar'"
+      },
+      "area_ha": 35872.3,
+      "bbox": [
+        -78.074,
+        0.3443,
+        -77.7963,
+        0.5883
+      ]
+    },
+    {
+      "id": "canton:Carchi/Montúfar",
+      "name": "Montúfar",
+      "kind": "canton",
+      "province": "Carchi",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Carchi' AND NAME_2 = 'Montúfar'"
+      },
+      "area_ha": 37398.0,
+      "bbox": [
+        -77.9147,
+        0.4265,
+        -77.6635,
+        0.7031
+      ]
+    },
+    {
+      "id": "canton:Carchi/San Pedro de Huaca",
+      "name": "San Pedro de Huaca",
+      "kind": "canton",
+      "province": "Carchi",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Carchi' AND NAME_2 = 'San Pedro de Huaca'"
+      },
+      "area_ha": 7723.6,
+      "bbox": [
+        -77.7815,
+        0.5665,
+        -77.6558,
+        0.6862
+      ]
+    },
+    {
+      "id": "canton:Carchi/Tulcán",
+      "name": "Tulcán",
+      "kind": "canton",
+      "province": "Carchi",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Carchi' AND NAME_2 = 'Tulcán'"
+      },
+      "area_ha": 183000.7,
+      "bbox": [
+        -78.5494,
+        0.6035,
+        -77.5398,
+        1.1953
+      ]
+    },
+    {
+      "id": "canton:Cañar/Azogues",
+      "name": "Azogues",
+      "kind": "canton",
+      "province": "Cañar",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Cañar' AND NAME_2 = 'Azogues'"
+      },
+      "area_ha": 63712.7,
+      "bbox": [
+        -78.9177,
+        -2.8378,
+        -78.569,
+        -2.427
+      ]
+    },
+    {
+      "id": "canton:Cañar/Biblián",
+      "name": "Biblián",
+      "kind": "canton",
+      "province": "Cañar",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Cañar' AND NAME_2 = 'Biblián'"
+      },
+      "area_ha": 18507.6,
+      "bbox": [
+        -79.0544,
+        -2.7473,
+        -78.8708,
+        -2.5999
+      ]
+    },
+    {
+      "id": "canton:Cañar/Cañar",
+      "name": "Cañar",
+      "kind": "canton",
+      "province": "Cañar",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Cañar' AND NAME_2 = 'Cañar'"
+      },
+      "area_ha": 201768.8,
+      "bbox": [
+        -79.3884,
+        -2.745,
+        -78.7446,
+        -2.2122
+      ]
+    },
+    {
+      "id": "canton:Cañar/Déleg",
+      "name": "Déleg",
+      "kind": "canton",
+      "province": "Cañar",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Cañar' AND NAME_2 = 'Déleg'"
+      },
+      "area_ha": 7358.4,
+      "bbox": [
+        -78.9928,
+        -2.8348,
+        -78.9055,
+        -2.7072
+      ]
+    },
+    {
+      "id": "canton:Chimborazo/Alausí",
+      "name": "Alausí",
+      "kind": "canton",
+      "province": "Chimborazo",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Chimborazo' AND NAME_2 = 'Alausí'"
+      },
+      "area_ha": 170785.2,
+      "bbox": [
+        -79.0902,
+        -2.6269,
+        -78.4611,
+        -2.0828
+      ]
+    },
+    {
+      "id": "canton:Chimborazo/Chambo",
+      "name": "Chambo",
+      "kind": "canton",
+      "province": "Chimborazo",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Chimborazo' AND NAME_2 = 'Chambo'"
+      },
+      "area_ha": 16673.6,
+      "bbox": [
+        -78.633,
+        -1.8074,
+        -78.4439,
+        -1.6808
+      ]
+    },
+    {
+      "id": "canton:Chimborazo/Colta",
+      "name": "Colta",
+      "kind": "canton",
+      "province": "Chimborazo",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Chimborazo' AND NAME_2 = 'Colta'"
+      },
+      "area_ha": 81856.4,
+      "bbox": [
+        -79.0228,
+        -1.9499,
+        -78.6781,
+        -1.6517
+      ]
+    },
+    {
+      "id": "canton:Chimborazo/Guamote",
+      "name": "Guamote",
+      "kind": "canton",
+      "province": "Chimborazo",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Chimborazo' AND NAME_2 = 'Guamote'"
+      },
+      "area_ha": 119818.5,
+      "bbox": [
+        -78.8915,
+        -2.2465,
+        -78.4333,
+        -1.8487
+      ]
+    },
+    {
+      "id": "canton:Chimborazo/Guano",
+      "name": "Guano",
+      "kind": "canton",
+      "province": "Chimborazo",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Chimborazo' AND NAME_2 = 'Guano'"
+      },
+      "area_ha": 46525.9,
+      "bbox": [
+        -78.8525,
+        -1.6504,
+        -78.5132,
+        -1.4304
+      ]
+    },
+    {
+      "id": "canton:Chimborazo/Pallatanga",
+      "name": "Pallatanga",
+      "kind": "canton",
+      "province": "Chimborazo",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Chimborazo' AND NAME_2 = 'Pallatanga'"
+      },
+      "area_ha": 37892.5,
+      "bbox": [
+        -79.0376,
+        -2.1182,
+        -78.8148,
+        -1.917
+      ]
+    },
+    {
+      "id": "canton:Chimborazo/Penipe",
+      "name": "Penipe",
+      "kind": "canton",
+      "province": "Chimborazo",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Chimborazo' AND NAME_2 = 'Penipe'"
+      },
+      "area_ha": 36739.6,
+      "bbox": [
+        -78.547,
+        -1.6845,
+        -78.3574,
+        -1.4344
+      ]
+    },
+    {
+      "id": "canton:Chimborazo/Riobamba",
+      "name": "Riobamba",
+      "kind": "canton",
+      "province": "Chimborazo",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Chimborazo' AND NAME_2 = 'Riobamba'"
+      },
+      "area_ha": 99794.5,
+      "bbox": [
+        -78.8976,
+        -1.9519,
+        -78.3971,
+        -1.466
+      ]
+    },
+    {
+      "id": "canton:Cotopaxi/Latacunga",
+      "name": "Latacunga",
+      "kind": "canton",
+      "province": "Cotopaxi",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Cotopaxi' AND NAME_2 = 'Latacunga'"
+      },
+      "area_ha": 149622.0,
+      "bbox": [
+        -78.8358,
+        -1.0127,
+        -78.3637,
+        -0.5976
+      ]
+    },
+    {
+      "id": "canton:Cotopaxi/Pujilí",
+      "name": "Pujilí",
+      "kind": "canton",
+      "province": "Cotopaxi",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Cotopaxi' AND NAME_2 = 'Pujilí'"
+      },
+      "area_ha": 131810.8,
+      "bbox": [
+        -79.1914,
+        -1.1969,
+        -78.6251,
+        -0.8172
+      ]
+    },
+    {
+      "id": "canton:Cotopaxi/Salcedo",
+      "name": "Salcedo",
+      "kind": "canton",
+      "province": "Cotopaxi",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Cotopaxi' AND NAME_2 = 'Salcedo'"
+      },
+      "area_ha": 46727.3,
+      "bbox": [
+        -78.8447,
+        -1.1511,
+        -78.3955,
+        -0.9461
+      ]
+    },
+    {
+      "id": "canton:Cotopaxi/Saquisili",
+      "name": "Saquisili",
+      "kind": "canton",
+      "province": "Cotopaxi",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Cotopaxi' AND NAME_2 = 'Saquisili'"
+      },
+      "area_ha": 411.9,
+      "bbox": [
+        -78.6618,
+        -0.8731,
+        -78.6353,
+        -0.8367
+      ]
+    },
+    {
+      "id": "canton:Cotopaxi/Saquisilí",
+      "name": "Saquisilí",
+      "kind": "canton",
+      "province": "Cotopaxi",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Cotopaxi' AND NAME_2 = 'Saquisilí'"
+      },
+      "area_ha": 15069.4,
+      "bbox": [
+        -78.8141,
+        -0.8814,
+        -78.6487,
+        -0.7726
+      ]
+    },
+    {
+      "id": "canton:Cotopaxi/Sigchos",
+      "name": "Sigchos",
+      "kind": "canton",
+      "province": "Cotopaxi",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Cotopaxi' AND NAME_2 = 'Sigchos'"
+      },
+      "area_ha": 135516.7,
+      "bbox": [
+        -79.1174,
+        -0.8962,
+        -78.7204,
+        -0.3315
+      ]
+    },
+    {
+      "id": "canton:Imbabura/Pimampiro",
+      "name": "Pimampiro",
+      "kind": "canton",
+      "province": "Imbabura",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Imbabura' AND NAME_2 = 'Pimampiro'"
+      },
+      "area_ha": 44272.4,
+      "bbox": [
+        -78.0373,
+        0.1574,
+        -77.811,
+        0.4331
+      ]
+    },
+    {
+      "id": "canton:Loja/Catamayo",
+      "name": "Catamayo",
+      "kind": "canton",
+      "province": "Loja",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Loja' AND NAME_2 = 'Catamayo'"
+      },
+      "area_ha": 65527.5,
+      "bbox": [
+        -79.5831,
+        -4.186,
+        -79.2247,
+        -3.7986
+      ]
+    },
+    {
+      "id": "canton:Loja/Espíndola",
+      "name": "Espíndola",
+      "kind": "canton",
+      "province": "Loja",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Loja' AND NAME_2 = 'Espíndola'"
+      },
+      "area_ha": 51449.3,
+      "bbox": [
+        -79.514,
+        -4.7473,
+        -79.3038,
+        -4.4
+      ]
+    },
+    {
+      "id": "canton:Loja/Loja",
+      "name": "Loja",
+      "kind": "canton",
+      "province": "Loja",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Loja' AND NAME_2 = 'Loja'"
+      },
+      "area_ha": 189177.1,
+      "bbox": [
+        -79.5465,
+        -4.511,
+        -79.1008,
+        -3.6703
+      ]
+    },
+    {
+      "id": "canton:Loja/Saraguro",
+      "name": "Saraguro",
+      "kind": "canton",
+      "province": "Loja",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Loja' AND NAME_2 = 'Saraguro'"
+      },
+      "area_ha": 108062.4,
+      "bbox": [
+        -79.4986,
+        -3.7251,
+        -79.0951,
+        -3.3302
+      ]
+    },
+    {
+      "id": "canton:Morona Santiago/Gualaquiza",
+      "name": "Gualaquiza",
+      "kind": "canton",
+      "province": "Morona Santiago",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Morona Santiago' AND NAME_2 = 'Gualaquiza'"
+      },
+      "area_ha": 215390.8,
+      "bbox": [
+        -78.9538,
+        -3.5875,
+        -78.3433,
+        -3.1048
+      ]
+    },
+    {
+      "id": "canton:Morona Santiago/Huamboya",
+      "name": "Huamboya",
+      "kind": "canton",
+      "province": "Morona Santiago",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Morona Santiago' AND NAME_2 = 'Huamboya'"
+      },
+      "area_ha": 65650.2,
+      "bbox": [
+        -78.1967,
+        -2.1192,
+        -77.7766,
+        -1.8491
+      ]
+    },
+    {
+      "id": "canton:Morona Santiago/Limón Indanza",
+      "name": "Limón Indanza",
+      "kind": "canton",
+      "province": "Morona Santiago",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Morona Santiago' AND NAME_2 = 'Limón Indanza'"
+      },
+      "area_ha": 182430.6,
+      "bbox": [
+        -78.6774,
+        -3.311,
+        -78.0229,
+        -2.7949
+      ]
+    },
+    {
+      "id": "canton:Morona Santiago/Logroño",
+      "name": "Logroño",
+      "kind": "canton",
+      "province": "Morona Santiago",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Morona Santiago' AND NAME_2 = 'Logroño'"
+      },
+      "area_ha": 118465.8,
+      "bbox": [
+        -78.2516,
+        -2.9834,
+        -77.8851,
+        -2.5479
+      ]
+    },
+    {
+      "id": "canton:Morona Santiago/Morona",
+      "name": "Morona",
+      "kind": "canton",
+      "province": "Morona Santiago",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Morona Santiago' AND NAME_2 = 'Morona'"
+      },
+      "area_ha": 435663.1,
+      "bbox": [
+        -78.5872,
+        -2.8531,
+        -77.6447,
+        -2.0049
+      ]
+    },
+    {
+      "id": "canton:Morona Santiago/Pablo Sexto",
+      "name": "Pablo Sexto",
+      "kind": "canton",
+      "province": "Morona Santiago",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Morona Santiago' AND NAME_2 = 'Pablo Sexto'"
+      },
+      "area_ha": 138299.1,
+      "bbox": [
+        -78.4891,
+        -2.0485,
+        -77.9248,
+        -1.6337
+      ]
+    },
+    {
+      "id": "canton:Morona Santiago/Palora",
+      "name": "Palora",
+      "kind": "canton",
+      "province": "Morona Santiago",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Morona Santiago' AND NAME_2 = 'Palora'"
+      },
+      "area_ha": 144776.1,
+      "bbox": [
+        -78.3772,
+        -1.8782,
+        -77.8316,
+        -1.4487
+      ]
+    },
+    {
+      "id": "canton:Morona Santiago/San Juan Bosco",
+      "name": "San Juan Bosco",
+      "kind": "canton",
+      "province": "Morona Santiago",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Morona Santiago' AND NAME_2 = 'San Juan Bosco'"
+      },
+      "area_ha": 108753.2,
+      "bbox": [
+        -78.6884,
+        -3.5094,
+        -78.0867,
+        -3.0112
+      ]
+    },
+    {
+      "id": "canton:Morona Santiago/Santiago",
+      "name": "Santiago",
+      "kind": "canton",
+      "province": "Morona Santiago",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Morona Santiago' AND NAME_2 = 'Santiago'"
+      },
+      "area_ha": 137047.4,
+      "bbox": [
+        -78.6156,
+        -2.9827,
+        -78.1105,
+        -2.5142
+      ]
+    },
+    {
+      "id": "canton:Morona Santiago/Sucúa",
+      "name": "Sucúa",
+      "kind": "canton",
+      "province": "Morona Santiago",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Morona Santiago' AND NAME_2 = 'Sucúa'"
+      },
+      "area_ha": 119080.8,
+      "bbox": [
+        -78.5454,
+        -2.6293,
+        -77.9923,
+        -2.3236
+      ]
+    },
+    {
+      "id": "canton:Morona Santiago/Taisha",
+      "name": "Taisha",
+      "kind": "canton",
+      "province": "Morona Santiago",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Morona Santiago' AND NAME_2 = 'Taisha'"
+      },
+      "area_ha": 610707.3,
+      "bbox": [
+        -77.8228,
+        -2.9103,
+        -76.6921,
+        -1.9722
+      ]
+    },
+    {
+      "id": "canton:Morona Santiago/Tiwintza",
+      "name": "Tiwintza",
+      "kind": "canton",
+      "province": "Morona Santiago",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Morona Santiago' AND NAME_2 = 'Tiwintza'"
+      },
+      "area_ha": 117400.5,
+      "bbox": [
+        -78.2293,
+        -3.187,
+        -77.5815,
+        -2.7775
+      ]
+    },
+    {
+      "id": "canton:Napo/Archidona",
+      "name": "Archidona",
+      "kind": "canton",
+      "province": "Napo",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Napo' AND NAME_2 = 'Archidona'"
+      },
+      "area_ha": 304550.5,
+      "bbox": [
+        -78.4107,
+        -0.975,
+        -77.4969,
+        -0.456
+      ]
+    },
+    {
+      "id": "canton:Napo/Carlos Julio Arosemena Tola",
+      "name": "Carlos Julio Arosemena Tola",
+      "kind": "canton",
+      "province": "Napo",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Napo' AND NAME_2 = 'Carlos Julio Arosemena Tola'"
+      },
+      "area_ha": 50014.4,
+      "bbox": [
+        -78.1237,
+        -1.2488,
+        -77.7292,
+        -1.0843
+      ]
+    },
+    {
+      "id": "canton:Napo/El Chaco",
+      "name": "El Chaco",
+      "kind": "canton",
+      "province": "Napo",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Napo' AND NAME_2 = 'El Chaco'"
+      },
+      "area_ha": 348826.0,
+      "bbox": [
+        -78.1909,
+        -0.5214,
+        -77.2536,
+        0.0338
+      ]
+    },
+    {
+      "id": "canton:Napo/Quijos",
+      "name": "Quijos",
+      "kind": "canton",
+      "province": "Napo",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Napo' AND NAME_2 = 'Quijos'"
+      },
+      "area_ha": 158156.5,
+      "bbox": [
+        -78.2559,
+        -0.6643,
+        -77.5594,
+        -0.2402
+      ]
+    },
+    {
+      "id": "canton:Napo/Tena",
+      "name": "Tena",
+      "kind": "canton",
+      "province": "Napo",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Napo' AND NAME_2 = 'Tena'"
+      },
+      "area_ha": 390354.1,
+      "bbox": [
+        -78.4299,
+        -1.1886,
+        -77.025,
+        -0.6948
+      ]
+    },
+    {
+      "id": "canton:Orellana/Aguarico",
+      "name": "Aguarico",
+      "kind": "canton",
+      "province": "Orellana",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Orellana' AND NAME_2 = 'Aguarico'"
+      },
+      "area_ha": 1121747.3,
+      "bbox": [
+        -76.5833,
+        -1.5497,
+        -75.1871,
+        -0.4083
+      ]
+    },
+    {
+      "id": "canton:Orellana/La Joya de los Sachas",
+      "name": "La Joya de los Sachas",
+      "kind": "canton",
+      "province": "Orellana",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Orellana' AND NAME_2 = 'La Joya de los Sachas'"
+      },
+      "area_ha": 119270.5,
+      "bbox": [
+        -77.1624,
+        -0.4611,
+        -76.5983,
+        -0.0591
+      ]
+    },
+    {
+      "id": "canton:Orellana/Loreto",
+      "name": "Loreto",
+      "kind": "canton",
+      "province": "Orellana",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Orellana' AND NAME_2 = 'Loreto'"
+      },
+      "area_ha": 213695.2,
+      "bbox": [
+        -77.6266,
+        -0.9508,
+        -77.0707,
+        -0.3462
+      ]
+    },
+    {
+      "id": "canton:Orellana/Orellana",
+      "name": "Orellana",
+      "kind": "canton",
+      "province": "Orellana",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Orellana' AND NAME_2 = 'Orellana'"
+      },
+      "area_ha": 704361.5,
+      "bbox": [
+        -77.305,
+        -1.16,
+        -76.0,
+        -0.0455
+      ]
+    },
+    {
+      "id": "canton:Pastaza/Arajuno",
+      "name": "Arajuno",
+      "kind": "canton",
+      "province": "Pastaza",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Pastaza' AND NAME_2 = 'Arajuno'"
+      },
+      "area_ha": 880611.4,
+      "bbox": [
+        -77.8049,
+        -1.6979,
+        -75.5854,
+        -1.0083
+      ]
+    },
+    {
+      "id": "canton:Pastaza/Mejía",
+      "name": "Mejía",
+      "kind": "canton",
+      "province": "Pastaza",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Pastaza' AND NAME_2 = 'Mejía'"
+      },
+      "area_ha": 37094.5,
+      "bbox": [
+        -78.1779,
+        -1.4888,
+        -77.9602,
+        -1.2171
+      ]
+    },
+    {
+      "id": "canton:Pastaza/Mera",
+      "name": "Mera",
+      "kind": "canton",
+      "province": "Pastaza",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Pastaza' AND NAME_2 = 'Mera'"
+      },
+      "area_ha": 16094.3,
+      "bbox": [
+        -78.0959,
+        -1.6778,
+        -77.9217,
+        -1.4594
+      ]
+    },
+    {
+      "id": "canton:Pastaza/Pastaza",
+      "name": "Pastaza",
+      "kind": "canton",
+      "province": "Pastaza",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Pastaza' AND NAME_2 = 'Pastaza'"
+      },
+      "area_ha": 1981667.2,
+      "bbox": [
+        -78.049,
+        -2.604,
+        -75.617,
+        -1.2932
+      ]
+    },
+    {
+      "id": "canton:Pastaza/Santa Clara",
+      "name": "Santa Clara",
+      "kind": "canton",
+      "province": "Pastaza",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Pastaza' AND NAME_2 = 'Santa Clara'"
+      },
+      "area_ha": 31186.4,
+      "bbox": [
+        -77.9695,
+        -1.3645,
+        -77.7292,
+        -1.1596
+      ]
+    },
+    {
+      "id": "canton:Pichincha/Cayambe",
+      "name": "Cayambe",
+      "kind": "canton",
+      "province": "Pichincha",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Pichincha' AND NAME_2 = 'Cayambe'"
+      },
+      "area_ha": 119814.9,
+      "bbox": [
+        -78.3237,
+        -0.1955,
+        -77.8398,
+        0.1893
+      ]
+    },
+    {
+      "id": "canton:Pichincha/Mejía",
+      "name": "Mejía",
+      "kind": "canton",
+      "province": "Pichincha",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Pichincha' AND NAME_2 = 'Mejía'"
+      },
+      "area_ha": 141077.4,
+      "bbox": [
+        -78.9548,
+        -0.6767,
+        -78.3206,
+        -0.2774
+      ]
+    },
+    {
+      "id": "canton:Pichincha/Quito",
+      "name": "Quito",
+      "kind": "canton",
+      "province": "Pichincha",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Pichincha' AND NAME_2 = 'Quito'"
+      },
+      "area_ha": 421582.6,
+      "bbox": [
+        -78.9477,
+        -0.5906,
+        -78.1663,
+        0.2772
+      ]
+    },
+    {
+      "id": "canton:Sucumbios/Cascales",
+      "name": "Cascales",
+      "kind": "canton",
+      "province": "Sucumbios",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Sucumbios' AND NAME_2 = 'Cascales'"
+      },
+      "area_ha": 126225.1,
+      "bbox": [
+        -77.4279,
+        -0.1022,
+        -77.0411,
+        0.4009
+      ]
+    },
+    {
+      "id": "canton:Sucumbios/Cuyabeno",
+      "name": "Cuyabeno",
+      "kind": "canton",
+      "province": "Sucumbios",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Sucumbios' AND NAME_2 = 'Cuyabeno'"
+      },
+      "area_ha": 383205.1,
+      "bbox": [
+        -76.5191,
+        -0.652,
+        -75.2255,
+        -0.0127
+      ]
+    },
+    {
+      "id": "canton:Sucumbios/Gonzalo Pizarro",
+      "name": "Gonzalo Pizarro",
+      "kind": "canton",
+      "province": "Sucumbios",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Sucumbios' AND NAME_2 = 'Gonzalo Pizarro'"
+      },
+      "area_ha": 223858.8,
+      "bbox": [
+        -77.9788,
+        -0.1526,
+        -77.2538,
+        0.3752
+      ]
+    },
+    {
+      "id": "canton:Sucumbios/Lago Agrio",
+      "name": "Lago Agrio",
+      "kind": "canton",
+      "province": "Sucumbios",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Sucumbios' AND NAME_2 = 'Lago Agrio'"
+      },
+      "area_ha": 314119.4,
+      "bbox": [
+        -77.2321,
+        -0.1325,
+        -76.2514,
+        0.3898
+      ]
+    },
+    {
+      "id": "canton:Sucumbios/Putumayo",
+      "name": "Putumayo",
+      "kind": "canton",
+      "province": "Sucumbios",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Sucumbios' AND NAME_2 = 'Putumayo'"
+      },
+      "area_ha": 353194.8,
+      "bbox": [
+        -76.4341,
+        -0.1708,
+        -75.2565,
+        0.4362
+      ]
+    },
+    {
+      "id": "canton:Sucumbios/Shushufindi",
+      "name": "Shushufindi",
+      "kind": "canton",
+      "province": "Sucumbios",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Sucumbios' AND NAME_2 = 'Shushufindi'"
+      },
+      "area_ha": 249728.7,
+      "bbox": [
+        -76.9048,
+        -0.5681,
+        -75.8931,
+        -0.0073
+      ]
+    },
+    {
+      "id": "canton:Sucumbios/Sucumbíos",
+      "name": "Sucumbíos",
+      "kind": "canton",
+      "province": "Sucumbios",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Sucumbios' AND NAME_2 = 'Sucumbíos'"
+      },
+      "area_ha": 145832.4,
+      "bbox": [
+        -77.8317,
+        0.1321,
+        -77.3894,
+        0.6614
+      ]
+    },
+    {
+      "id": "canton:Tungurahua/Ambato",
+      "name": "Ambato",
+      "kind": "canton",
+      "province": "Tungurahua",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Tungurahua' AND NAME_2 = 'Ambato'"
+      },
+      "area_ha": 101974.8,
+      "bbox": [
+        -78.9392,
+        -1.4709,
+        -78.5375,
+        -1.1105
+      ]
+    },
+    {
+      "id": "canton:Tungurahua/Baños de Agua Santa",
+      "name": "Baños de Agua Santa",
+      "kind": "canton",
+      "province": "Tungurahua",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Tungurahua' AND NAME_2 = 'Baños de Agua Santa'"
+      },
+      "area_ha": 106180.4,
+      "bbox": [
+        -78.478,
+        -1.5235,
+        -78.1101,
+        -1.139
+      ]
+    },
+    {
+      "id": "canton:Tungurahua/Cevallos",
+      "name": "Cevallos",
+      "kind": "canton",
+      "province": "Tungurahua",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Tungurahua' AND NAME_2 = 'Cevallos'"
+      },
+      "area_ha": 1944.1,
+      "bbox": [
+        -78.6431,
+        -1.3746,
+        -78.5903,
+        -1.3247
+      ]
+    },
+    {
+      "id": "canton:Tungurahua/Mocha",
+      "name": "Mocha",
+      "kind": "canton",
+      "province": "Tungurahua",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Tungurahua' AND NAME_2 = 'Mocha'"
+      },
+      "area_ha": 8469.4,
+      "bbox": [
+        -78.7667,
+        -1.4711,
+        -78.612,
+        -1.3583
+      ]
+    },
+    {
+      "id": "canton:Tungurahua/Patate",
+      "name": "Patate",
+      "kind": "canton",
+      "province": "Tungurahua",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Tungurahua' AND NAME_2 = 'Patate'"
+      },
+      "area_ha": 29578.7,
+      "bbox": [
+        -78.5211,
+        -1.4047,
+        -78.3229,
+        -1.1738
+      ]
+    },
+    {
+      "id": "canton:Tungurahua/Quero",
+      "name": "Quero",
+      "kind": "canton",
+      "province": "Tungurahua",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Tungurahua' AND NAME_2 = 'Quero'"
+      },
+      "area_ha": 17218.5,
+      "bbox": [
+        -78.7219,
+        -1.5084,
+        -78.5376,
+        -1.3525
+      ]
+    },
+    {
+      "id": "canton:Tungurahua/San Pedro de Pelileo",
+      "name": "San Pedro de Pelileo",
+      "kind": "canton",
+      "province": "Tungurahua",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Tungurahua' AND NAME_2 = 'San Pedro de Pelileo'"
+      },
+      "area_ha": 20026.5,
+      "bbox": [
+        -78.5961,
+        -1.4742,
+        -78.4446,
+        -1.2335
+      ]
+    },
+    {
+      "id": "canton:Tungurahua/Santiago de Pillaro",
+      "name": "Santiago de Pillaro",
+      "kind": "canton",
+      "province": "Tungurahua",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Tungurahua' AND NAME_2 = 'Santiago de Pillaro'"
+      },
+      "area_ha": 46885.3,
+      "bbox": [
+        -78.5765,
+        -1.2446,
+        -78.3262,
+        -0.9945
+      ]
+    },
+    {
+      "id": "canton:Tungurahua/Tisaleo",
+      "name": "Tisaleo",
+      "kind": "canton",
+      "province": "Tungurahua",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Tungurahua' AND NAME_2 = 'Tisaleo'"
+      },
+      "area_ha": 5746.3,
+      "bbox": [
+        -78.7547,
+        -1.4019,
+        -78.6359,
+        -1.3196
+      ]
+    },
+    {
+      "id": "canton:Zamora Chinchipe/Centinela del Cóndor",
+      "name": "Centinela del Cóndor",
+      "kind": "canton",
+      "province": "Zamora Chinchipe",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Zamora Chinchipe' AND NAME_2 = 'Centinela del Cóndor'"
+      },
+      "area_ha": 26073.2,
+      "bbox": [
+        -78.8505,
+        -4.0631,
+        -78.6658,
+        -3.8319
+      ]
+    },
+    {
+      "id": "canton:Zamora Chinchipe/Chinchipe",
+      "name": "Chinchipe",
+      "kind": "canton",
+      "province": "Zamora Chinchipe",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Zamora Chinchipe' AND NAME_2 = 'Chinchipe'"
+      },
+      "area_ha": 108249.4,
+      "bbox": [
+        -79.4277,
+        -5.0158,
+        -78.8916,
+        -4.6933
+      ]
+    },
+    {
+      "id": "canton:Zamora Chinchipe/El Pangui",
+      "name": "El Pangui",
+      "kind": "canton",
+      "province": "Zamora Chinchipe",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Zamora Chinchipe' AND NAME_2 = 'El Pangui'"
+      },
+      "area_ha": 62637.3,
+      "bbox": [
+        -78.698,
+        -3.723,
+        -78.3651,
+        -3.5293
+      ]
+    },
+    {
+      "id": "canton:Zamora Chinchipe/Nangaritza",
+      "name": "Nangaritza",
+      "kind": "canton",
+      "province": "Zamora Chinchipe",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Zamora Chinchipe' AND NAME_2 = 'Nangaritza'"
+      },
+      "area_ha": 202054.7,
+      "bbox": [
+        -78.9561,
+        -4.6466,
+        -78.5415,
+        -3.99
+      ]
+    },
+    {
+      "id": "canton:Zamora Chinchipe/Palanda",
+      "name": "Palanda",
+      "kind": "canton",
+      "province": "Zamora Chinchipe",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Zamora Chinchipe' AND NAME_2 = 'Palanda'"
+      },
+      "area_ha": 204456.5,
+      "bbox": [
+        -79.3947,
+        -4.8115,
+        -78.8225,
+        -4.2289
+      ]
+    },
+    {
+      "id": "canton:Zamora Chinchipe/Paquisha",
+      "name": "Paquisha",
+      "kind": "canton",
+      "province": "Zamora Chinchipe",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Zamora Chinchipe' AND NAME_2 = 'Paquisha'"
+      },
+      "area_ha": 33787.9,
+      "bbox": [
+        -78.6878,
+        -4.076,
+        -78.4783,
+        -3.8446
+      ]
+    },
+    {
+      "id": "canton:Zamora Chinchipe/Yacuambi",
+      "name": "Yacuambi",
+      "kind": "canton",
+      "province": "Zamora Chinchipe",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Zamora Chinchipe' AND NAME_2 = 'Yacuambi'"
+      },
+      "area_ha": 125602.2,
+      "bbox": [
+        -79.1576,
+        -3.8328,
+        -78.8186,
+        -3.3434
+      ]
+    },
+    {
+      "id": "canton:Zamora Chinchipe/Yantzaza",
+      "name": "Yantzaza",
+      "kind": "canton",
+      "province": "Zamora Chinchipe",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Zamora Chinchipe' AND NAME_2 = 'Yantzaza'"
+      },
+      "area_ha": 101462.7,
+      "bbox": [
+        -78.8522,
+        -3.888,
+        -78.4061,
+        -3.5506
+      ]
+    },
+    {
+      "id": "canton:Zamora Chinchipe/Zamora",
+      "name": "Zamora",
+      "kind": "canton",
+      "province": "Zamora Chinchipe",
+      "category": null,
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Political_administrative_division_of_order_2/FeatureServer",
+        "layer_id": 6,
+        "where": "GID_0 = 'ECU' AND NAME_1 = 'Zamora Chinchipe' AND NAME_2 = 'Zamora'"
+      },
+      "area_ha": 189665.5,
+      "bbox": [
+        -79.1957,
+        -4.2995,
+        -78.763,
+        -3.702
+      ]
+    },
+    {
+      "id": "protected_area:Antisana",
+      "name": "Antisana",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Parque Nacional",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Antisana'"
+      },
+      "area_ha": 121954.2,
+      "bbox": [
+        -78.255,
+        -0.7781,
+        -77.8001,
+        -0.3325
+      ]
+    },
+    {
+      "id": "protected_area:Aph Ponce Paluguillo",
+      "name": "Aph Ponce Paluguillo",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Refugio de Vida Silvestre",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Aph Ponce Paluguillo'"
+      },
+      "area_ha": 3.1,
+      "bbox": [
+        -78.2267,
+        -0.3701,
+        -78.2019,
+        -0.3337
+      ]
+    },
+    {
+      "id": "protected_area:Cajas",
+      "name": "Cajas",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Parque Nacional",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Cajas'"
+      },
+      "area_ha": 19132.6,
+      "bbox": [
+        -79.2892,
+        -2.9509,
+        -79.1412,
+        -2.7516
+      ]
+    },
+    {
+      "id": "protected_area:Candelaria",
+      "name": "Candelaria",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Área Protegida Privada",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Candelaria'"
+      },
+      "area_ha": 2695.0,
+      "bbox": [
+        -78.3546,
+        -1.5031,
+        -78.2984,
+        -1.4271
+      ]
+    },
+    {
+      "id": "protected_area:Cayambe Coca",
+      "name": "Cayambe Coca",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Parque Nacional",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Cayambe Coca'"
+      },
+      "area_ha": 373504.9,
+      "bbox": [
+        -78.2025,
+        -0.4646,
+        -77.3764,
+        0.3245
+      ]
+    },
+    {
+      "id": "protected_area:Cerro Plateado",
+      "name": "Cerro Plateado",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Reserva Biológica",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Cerro Plateado'"
+      },
+      "area_ha": 30739.0,
+      "bbox": [
+        -78.8978,
+        -4.684,
+        -78.6531,
+        -4.4399
+      ]
+    },
+    {
+      "id": "protected_area:Chimborazo",
+      "name": "Chimborazo",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Reserva de Producción de Fauna",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Chimborazo'"
+      },
+      "area_ha": 38234.4,
+      "bbox": [
+        -78.9383,
+        -1.5399,
+        -78.6902,
+        -1.3373
+      ]
+    },
+    {
+      "id": "protected_area:Cofán Bermejo",
+      "name": "Cofán Bermejo",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Reserva Ecológica",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Cofán Bermejo'"
+      },
+      "area_ha": 54762.6,
+      "bbox": [
+        -77.5149,
+        0.2159,
+        -77.1131,
+        0.4239
+      ]
+    },
+    {
+      "id": "protected_area:Colonso Chalupas",
+      "name": "Colonso Chalupas",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Reserva Biológica",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Colonso Chalupas'"
+      },
+      "area_ha": 92941.3,
+      "bbox": [
+        -78.2494,
+        -1.0784,
+        -77.8748,
+        -0.7386
+      ]
+    },
+    {
+      "id": "protected_area:Cordillera Oriental del Carchi",
+      "name": "Cordillera Oriental del Carchi",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Área Protegida Autónoma Desentralizada",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Cordillera Oriental del Carchi'"
+      },
+      "area_ha": 3163.9,
+      "bbox": [
+        -77.8133,
+        0.3579,
+        -77.6039,
+        0.7169
+      ]
+    },
+    {
+      "id": "protected_area:Cotopaxi",
+      "name": "Cotopaxi",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Parque Nacional",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Cotopaxi'"
+      },
+      "area_ha": 16323.3,
+      "bbox": [
+        -78.5632,
+        -0.7373,
+        -78.3581,
+        -0.5933
+      ]
+    },
+    {
+      "id": "protected_area:Curiquingue Gallocantana",
+      "name": "Curiquingue Gallocantana",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Área Protegida Autónoma Desentralizada",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Curiquingue Gallocantana'"
+      },
+      "area_ha": 1223.3,
+      "bbox": [
+        -79.1497,
+        -2.8139,
+        -79.117,
+        -2.7659
+      ]
+    },
+    {
+      "id": "protected_area:Cuyabeno",
+      "name": "Cuyabeno",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Reserva de Producción de Fauna",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Cuyabeno'"
+      },
+      "area_ha": 590189.1,
+      "bbox": [
+        -76.5611,
+        -0.9343,
+        -75.2211,
+        0.1109
+      ]
+    },
+    {
+      "id": "protected_area:El Boliche",
+      "name": "El Boliche",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Área Nacional de Recreación",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'El Boliche'"
+      },
+      "area_ha": 252.2,
+      "bbox": [
+        -78.5757,
+        -0.6276,
+        -78.5572,
+        -0.6067
+      ]
+    },
+    {
+      "id": "protected_area:El Cóndor",
+      "name": "El Cóndor",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Reserva Biológica",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'El Cóndor'"
+      },
+      "area_ha": 2410.1,
+      "bbox": [
+        -78.2701,
+        -3.5089,
+        -78.2124,
+        -3.3877
+      ]
+    },
+    {
+      "id": "protected_area:El Quimi",
+      "name": "El Quimi",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Reserva Biológica",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'El Quimi'"
+      },
+      "area_ha": 9014.6,
+      "bbox": [
+        -78.4415,
+        -3.5101,
+        -78.3425,
+        -3.3921
+      ]
+    },
+    {
+      "id": "protected_area:El Zarza",
+      "name": "El Zarza",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Refugio de Vida Silvestre",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'El Zarza'"
+      },
+      "area_ha": 3692.4,
+      "bbox": [
+        -78.5733,
+        -3.8543,
+        -78.5009,
+        -3.7815
+      ]
+    },
+    {
+      "id": "protected_area:Ichubamba Yasepán",
+      "name": "Ichubamba Yasepán",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Refugio de Vida Silvestre",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Ichubamba Yasepán'"
+      },
+      "area_ha": 5681.2,
+      "bbox": [
+        -78.5088,
+        -2.1295,
+        -78.4362,
+        -2.0369
+      ]
+    },
+    {
+      "id": "protected_area:La Bonita",
+      "name": "La Bonita",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Área Ecológica de Conservación Municipal",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'La Bonita'"
+      },
+      "area_ha": 52848.4,
+      "bbox": [
+        -77.825,
+        0.3307,
+        -77.5057,
+        0.6355
+      ]
+    },
+    {
+      "id": "protected_area:Limoncocha",
+      "name": "Limoncocha",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Reserva Biológica",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Limoncocha'"
+      },
+      "area_ha": 3673.5,
+      "bbox": [
+        -76.6301,
+        -0.435,
+        -76.5525,
+        -0.3738
+      ]
+    },
+    {
+      "id": "protected_area:Llanganates",
+      "name": "Llanganates",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Parque Nacional",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Llanganates'"
+      },
+      "area_ha": 219834.3,
+      "bbox": [
+        -78.481,
+        -1.4277,
+        -77.9827,
+        -0.878
+      ]
+    },
+    {
+      "id": "protected_area:Los Ilinizas",
+      "name": "Los Ilinizas",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Reserva Ecológica",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Los Ilinizas'"
+      },
+      "area_ha": 4101.8,
+      "bbox": [
+        -78.7505,
+        -0.7348,
+        -78.6433,
+        -0.6583
+      ]
+    },
+    {
+      "id": "protected_area:Machay",
+      "name": "Machay",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Refugio de Vida Silvestre",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Machay'"
+      },
+      "area_ha": 1163.2,
+      "bbox": [
+        -78.3072,
+        -1.4075,
+        -78.2504,
+        -1.3642
+      ]
+    },
+    {
+      "id": "protected_area:Machángara - Tomebamba",
+      "name": "Machángara - Tomebamba",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Refugio de Vida Silvestre",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Machángara - Tomebamba'"
+      },
+      "area_ha": 28808.0,
+      "bbox": [
+        -79.2058,
+        -2.8298,
+        -78.9771,
+        -2.6003
+      ]
+    },
+    {
+      "id": "protected_area:Marcos Perez de Castilla",
+      "name": "Marcos Perez de Castilla",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Área Protegida Comunitaria",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Marcos Perez de Castilla'"
+      },
+      "area_ha": 75.4,
+      "bbox": [
+        -79.0825,
+        -3.6232,
+        -79.0449,
+        -3.5667
+      ]
+    },
+    {
+      "id": "protected_area:Mazán",
+      "name": "Mazán",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Área Protegida Autónoma Desentralizada",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Mazán'"
+      },
+      "area_ha": 2022.6,
+      "bbox": [
+        -79.151,
+        -2.9033,
+        -79.105,
+        -2.8453
+      ]
+    },
+    {
+      "id": "protected_area:Pimampiro",
+      "name": "Pimampiro",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Refugio de Vida Silvestre",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Pimampiro'"
+      },
+      "area_ha": 10.6,
+      "bbox": [
+        -77.85,
+        0.3066,
+        -77.8106,
+        0.354
+      ]
+    },
+    {
+      "id": "protected_area:Podocarpus",
+      "name": "Podocarpus",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Parque Nacional",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Podocarpus'"
+      },
+      "area_ha": 126195.1,
+      "bbox": [
+        -79.175,
+        -4.5419,
+        -78.7795,
+        -3.9772
+      ]
+    },
+    {
+      "id": "protected_area:Quimsacocha",
+      "name": "Quimsacocha",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Área Nacional de Recreación",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Quimsacocha'"
+      },
+      "area_ha": 3186.1,
+      "bbox": [
+        -79.2657,
+        -3.058,
+        -79.1757,
+        -2.9784
+      ]
+    },
+    {
+      "id": "protected_area:Río Negro Sopladora",
+      "name": "Río Negro Sopladora",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Parque Nacional",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Río Negro Sopladora'"
+      },
+      "area_ha": 65790.2,
+      "bbox": [
+        -78.6774,
+        -3.0739,
+        -78.416,
+        -2.6196
+      ]
+    },
+    {
+      "id": "protected_area:Río Zuñag",
+      "name": "Río Zuñag",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Refugio de Vida Silvestre",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Río Zuñag'"
+      },
+      "area_ha": 2062.3,
+      "bbox": [
+        -78.1906,
+        -1.4028,
+        -78.131,
+        -1.3234
+      ]
+    },
+    {
+      "id": "protected_area:Sangay",
+      "name": "Sangay",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Parque Nacional",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Sangay'"
+      },
+      "area_ha": 461063.8,
+      "bbox": [
+        -78.7992,
+        -2.6558,
+        -78.0617,
+        -1.4445
+      ]
+    },
+    {
+      "id": "protected_area:Siete Iglesias",
+      "name": "Siete Iglesias",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Área Ecológica de Conservación Municipal",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Siete Iglesias'"
+      },
+      "area_ha": 16013.6,
+      "bbox": [
+        -78.6904,
+        -3.1595,
+        -78.504,
+        -3.0111
+      ]
+    },
+    {
+      "id": "protected_area:Sumaco Napo-Galeras",
+      "name": "Sumaco Napo-Galeras",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Parque Nacional",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Sumaco Napo-Galeras'"
+      },
+      "area_ha": 213340.5,
+      "bbox": [
+        -77.84,
+        -0.95,
+        -77.2048,
+        -0.0421
+      ]
+    },
+    {
+      "id": "protected_area:Tambillo",
+      "name": "Tambillo",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Área Protegida Comunitaria",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Tambillo'"
+      },
+      "area_ha": 1953.5,
+      "bbox": [
+        -78.9053,
+        -3.302,
+        -78.8381,
+        -3.2546
+      ]
+    },
+    {
+      "id": "protected_area:Tiwi Nunka",
+      "name": "Tiwi Nunka",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Área Protegida Comunitaria",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Tiwi Nunka'"
+      },
+      "area_ha": 5495.4,
+      "bbox": [
+        -79.0305,
+        -3.8391,
+        -78.9393,
+        -3.7534
+      ]
+    },
+    {
+      "id": "protected_area:Vírgen del Rosario",
+      "name": "Vírgen del Rosario",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Refugio de Vida Silvestre",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Vírgen del Rosario'"
+      },
+      "area_ha": 2174.6,
+      "bbox": [
+        -78.895,
+        -3.2303,
+        -78.8272,
+        -3.1724
+      ]
+    },
+    {
+      "id": "protected_area:Yacuambi",
+      "name": "Yacuambi",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Área Protegida Autónoma Desentralizada",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Yacuambi'"
+      },
+      "area_ha": 26680.0,
+      "bbox": [
+        -79.1575,
+        -3.7868,
+        -78.9721,
+        -3.3989
+      ]
+    },
+    {
+      "id": "protected_area:Yacuri",
+      "name": "Yacuri",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Parque Nacional",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Yacuri'"
+      },
+      "area_ha": 41479.8,
+      "bbox": [
+        -79.4278,
+        -4.8415,
+        -79.1638,
+        -4.4731
+      ]
+    },
+    {
+      "id": "protected_area:Yasuní",
+      "name": "Yasuní",
+      "kind": "protected_area",
+      "province": null,
+      "category": "Parque Nacional",
+      "source": {
+        "url": "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/l_17_sistema_nacional_de_areas_protegidas_del_modulo_ecuatoriano/FeatureServer",
+        "layer_id": 0,
+        "where": "Nombre = 'Yasuní'"
+      },
+      "area_ha": 1022652.5,
+      "bbox": [
+        -76.7757,
+        -1.7034,
+        -75.4172,
+        -0.4422
+      ]
+    }
   ]
 }

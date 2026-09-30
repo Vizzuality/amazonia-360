@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-28T15:24:37Z",
+  "generated_at": "2026-09-30T13:48:00Z",
   "indicators": {
     "202": {
       "arcgis_item_id": "356deac90503414f9ad6d600e352d808",
@@ -21,7 +21,7 @@
       "layer_last_edit": "2026-09-14T07:40:50.737000Z",
       "schema_last_edit": "2026-09-14T07:40:50.737000Z",
       "item_modified": "2026-09-14T21:39:25Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": 5082,
       "pixel_size_deg": null
@@ -40,7 +40,7 @@
       "layer_last_edit": "2026-08-19T09:52:23.390000Z",
       "schema_last_edit": "2026-08-19T09:54:55.805000Z",
       "item_modified": "2026-09-14T21:41:43Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": 4,
       "pixel_size_deg": null
@@ -57,7 +57,7 @@
       "layer_last_edit": "2026-08-19T09:53:03.161000Z",
       "schema_last_edit": "2026-08-19T09:53:03.161000Z",
       "item_modified": "2026-09-14T21:50:34Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": 3,
       "pixel_size_deg": null
@@ -77,7 +77,7 @@
       "layer_last_edit": "2026-08-19T09:54:44.541000Z",
       "schema_last_edit": "2026-08-19T09:56:03.037000Z",
       "item_modified": "2026-09-15T06:07:49Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": 5,
       "pixel_size_deg": null
@@ -95,7 +95,7 @@
       "layer_last_edit": "2026-08-19T09:56:04.731000Z",
       "schema_last_edit": "2026-08-19T09:56:45.559000Z",
       "item_modified": "2026-09-14T21:53:34Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": 8,
       "pixel_size_deg": null
@@ -112,7 +112,7 @@
       "layer_last_edit": "2026-08-19T09:56:46.777000Z",
       "schema_last_edit": "2026-08-19T09:56:46.777000Z",
       "item_modified": "2026-09-14T22:24:46Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": 3,
       "pixel_size_deg": null
@@ -138,7 +138,7 @@
       "layer_last_edit": "2026-08-19T09:57:43.622000Z",
       "schema_last_edit": "2026-08-19T09:57:43.622000Z",
       "item_modified": "2026-09-14T21:55:27Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": 51,
       "pixel_size_deg": null
@@ -157,7 +157,7 @@
       "layer_last_edit": "2026-08-19T09:58:25.668000Z",
       "schema_last_edit": "2026-08-19T09:58:25.668000Z",
       "item_modified": "2026-09-14T22:27:23Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": 53,
       "pixel_size_deg": null
@@ -175,7 +175,7 @@
       "layer_last_edit": "2026-08-19T10:00:45.539000Z",
       "schema_last_edit": "2026-08-19T10:00:45.539000Z",
       "item_modified": "2026-09-14T21:57:34Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": 14137,
       "pixel_size_deg": null
@@ -192,7 +192,7 @@
       "layer_last_edit": "2026-08-19T10:03:04.802000Z",
       "schema_last_edit": "2026-08-19T10:03:04.802000Z",
       "item_modified": "2026-09-14T21:59:54Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": 11,
       "pixel_size_deg": null
@@ -210,7 +210,7 @@
       "layer_last_edit": "2026-08-19T10:03:39.526000Z",
       "schema_last_edit": "2026-08-19T10:03:39.526000Z",
       "item_modified": "2026-09-14T22:02:25Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": 6,
       "pixel_size_deg": null
@@ -229,7 +229,7 @@
       "layer_last_edit": "2026-08-19T10:04:25.638000Z",
       "schema_last_edit": "2026-08-19T10:04:25.638000Z",
       "item_modified": "2026-09-14T22:03:46Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": 11,
       "pixel_size_deg": null
@@ -248,7 +248,7 @@
       "layer_last_edit": "2026-08-19T10:06:36.192000Z",
       "schema_last_edit": "2026-08-19T10:06:36.192000Z",
       "item_modified": "2026-09-14T22:36:27Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": 1,
       "pixel_size_deg": null
@@ -259,7 +259,7 @@
       "layer_last_edit": null,
       "schema_last_edit": null,
       "item_modified": "2025-08-26T06:32:15.345000Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": null,
       "pixel_size_deg": 0.0108
@@ -270,7 +270,7 @@
       "layer_last_edit": null,
       "schema_last_edit": null,
       "item_modified": "2025-03-18T18:49:24.073000Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": null,
       "pixel_size_deg": 0.0022457882102988
@@ -281,7 +281,7 @@
       "layer_last_edit": null,
       "schema_last_edit": null,
       "item_modified": "2025-10-08T06:31:49.111000Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": null,
       "pixel_size_deg": 0.008983152841195215
@@ -292,7 +292,7 @@
       "layer_last_edit": null,
       "schema_last_edit": null,
       "item_modified": "2025-10-09T15:58:20.605000Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": null,
       "pixel_size_deg": 0.008983111749910169
@@ -303,7 +303,7 @@
       "layer_last_edit": null,
       "schema_last_edit": null,
       "item_modified": "2025-10-09T15:58:46.631000Z",
-      "synced_at": "2026-09-28T15:24:37Z",
+      "synced_at": "2026-09-30T13:48:00Z",
       "sync_status": "ok",
       "published_count": null,
       "pixel_size_deg": 0.008983111749910169

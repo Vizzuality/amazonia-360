@@ -1,6 +1,7 @@
 """``amazonia360-mcp-catalogue``: keep the catalogue files current.
 
-- ``sync`` reads ArcGIS and rewrites ``ecuador.snapshot.json`` and the example export.
+- ``sync`` reads ArcGIS and rewrites ``ecuador.snapshot.json``, the example export and
+  ``places/places.snapshot.json``.
 - ``schema`` rewrites ``catalogue.schema.json`` from the pydantic model.
 - ``export`` writes the joined catalogue: the document the CMS is expected to send.
 """
@@ -16,9 +17,11 @@ from typing import Any
 
 import httpx
 
+from mcp_server import places
 from mcp_server.catalogue import SNAPSHOT_FILE, load_curated, local_document
 from mcp_server.catalogue.models import CatalogueDocument
 from mcp_server.catalogue.sync import nothing_read, sync_catalogue
+from mcp_server.places.sync import PlacesSyncError, sync_places
 
 HERE = Path(__file__).parent
 SCHEMA_FILE = "catalogue.schema.json"
@@ -59,6 +62,12 @@ async def _sync(timeout_s: float) -> dict[str, Any]:
         return await sync_catalogue(http, load_curated(), now)
 
 
+async def _sync_places(timeout_s: float) -> dict[str, Any]:
+    async with httpx.AsyncClient(timeout=timeout_s) as http:
+        now = datetime.now(UTC).replace(microsecond=0)
+        return await sync_places(http, now)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(prog="amazonia360-mcp-catalogue")
     commands = parser.add_subparsers(dest="command", required=True)
@@ -80,6 +89,16 @@ def main() -> None:
         write_json(EXAMPLE_FILE, exported_catalogue())
         for indicator_id, sync_entry in snapshot["indicators"].items():
             print(f"{indicator_id}: {sync_entry['sync_status']}")
+        try:
+            places_snapshot = asyncio.run(_sync_places(args.timeout))
+        except PlacesSyncError as exc:
+            print(f"Places not read ({exc}); {places.SNAPSHOT_FILE} left as it was.")
+        else:
+            write_json(
+                Path(places.__file__).parent / places.SNAPSHOT_FILE, places_snapshot
+            )
+            places.load_places.cache_clear()
+            print(f"places: {len(places_snapshot['places'])}")
     elif args.command == "schema":
         write_json(HERE / SCHEMA_FILE, catalogue_schema())
     elif args.out:
