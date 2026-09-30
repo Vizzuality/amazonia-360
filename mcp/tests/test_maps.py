@@ -132,3 +132,23 @@ async def test_the_map_gets_the_area_of_a_place(tmp_path: Path) -> None:
             )
             assert result.meta is not None
             assert result.meta["map"]["area"]["type"] == "Polygon"
+
+
+@pytest.mark.anyio
+async def test_the_area_counts_against_the_budget_for_the_page(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import pydantic_core
+
+    from mcp_server import maps
+
+    args = {"indicator_id": 210, "area": TENA}
+    async with Client(server(tmp_path)) as client:
+        full = await client.call_tool("map_area_by_category", args)
+        assert full.meta is not None
+        shapes = len(pydantic_core.to_json(full.meta["map"]["shapes"]))
+        # Room for the shapes alone, not for the shapes and the area.
+        monkeypatch.setattr(maps, "MAX_SHAPES_BYTES", shapes + 1)
+        mapped = await client.call_tool("map_area_by_category", args)
+    assert mapped.meta is not None
+    assert mapped.meta["map"]["shapes_omitted_bytes"] == shapes

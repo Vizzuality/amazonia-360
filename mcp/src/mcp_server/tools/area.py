@@ -27,7 +27,7 @@ Area = Annotated[
 ]
 PlaceId = Annotated[
     str | None,
-    Field(description="A place id from find_places, instead of area."),
+    Field(max_length=200, description="A place id from find_places, instead of area."),
 ]
 
 

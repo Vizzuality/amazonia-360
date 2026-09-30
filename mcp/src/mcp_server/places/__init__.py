@@ -26,12 +26,30 @@ NO_MATCH = (
     "area as a GeoJSON polygon."
 )
 SEVERAL = "Several places match: ask the user which one before calling a tool."
+# Longest first, so "provincia de" goes before "provincia".
+_KIND_WORDS = ("provincia del ", "provincia de ", "provincia ", "canton de ", "canton ")
 
 
 def normalise(text: str) -> str:
     decomposed = unicodedata.normalize("NFKD", text)
     stripped = "".join(c for c in decomposed if not unicodedata.combining(c))
     return " ".join(stripped.casefold().split())
+
+
+def _without_kind_word(q: str) -> str:
+    for word in _KIND_WORDS:
+        if q.startswith(word) and len(q) > len(word):
+            return q[len(word) :]
+    return q
+
+
+def _names(place: Place) -> list[str]:
+    """The name, and with its category for a protected area ("Parque Nacional
+    Yasuní")."""
+    names = [normalise(place.name)]
+    if place.category:
+        names.append(normalise(f"{place.category} {place.name}"))
+    return names
 
 
 class Places:
@@ -43,17 +61,27 @@ class Places:
         return self._by_id.get(place_id)
 
     def find(self, query: str, kind: PlaceKind | None = None) -> PlaceMatches:
-        q = normalise(query)
+        q = _without_kind_word(normalise(query))
         pool = [p for p in self.snapshot.places if kind is None or p.kind == kind]
-        found = [p for p in pool if normalise(p.name) == q]
-        if not found and q:
+        whole = [p for p in pool if q in _names(p)]
+        words: list[Place] = []
+        if q:
             # A whole word, so "Sumaco" finds "Sumaco Napo-Galeras" and "ten" finds
-            # nothing.
+            # nothing. Always searched: a canton "Zamora" must not hide the province
+            # "Zamora Chinchipe".
             word = re.compile(rf"(?<!\w){re.escape(q)}(?!\w)")
-            found = [p for p in pool if word.search(normalise(p.name))]
-        found.sort(key=lambda p: (_KIND_ORDER[p.kind], p.province or "", p.name))
+            words = [
+                p
+                for p in pool
+                if p not in whole and any(word.search(n) for n in _names(p))
+            ]
+        found = sorted(whole, key=_order) + sorted(words, key=_order)
         note = NO_MATCH if not found else SEVERAL if len(found) > 1 else None
         return PlaceMatches(places=[p.summary() for p in found], note=note)
+
+
+def _order(place: Place) -> tuple[int, str, str]:
+    return (_KIND_ORDER[place.kind], place.province or "", place.name)
 
 
 @cache

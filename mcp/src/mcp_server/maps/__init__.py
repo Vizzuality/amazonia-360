@@ -117,9 +117,11 @@ def register_map_tools(
             place_id,
         )
         size = len(pydantic_core.to_json(drawn.shapes))
+        # The area always goes to the page, so it takes its share of the budget.
+        room = MAX_SHAPES_BYTES - len(pydantic_core.to_json(drawn.area))
         # The colours stay either way: the legend needs them.
         meta: dict[str, Any] = {"area": drawn.area, "styles": drawn.styles}
-        if size > MAX_SHAPES_BYTES:
+        if size > room:
             meta["shapes_omitted_bytes"] = size
         else:
             meta["shapes"] = drawn.shapes

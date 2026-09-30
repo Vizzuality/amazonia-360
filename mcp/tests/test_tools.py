@@ -217,6 +217,19 @@ async def test_find_places(tmp_path: Path) -> None:
 
 
 @pytest.mark.anyio
+async def test_an_over_long_query_or_place_id_is_refused(tmp_path: Path) -> None:
+    async with Client(server(tmp_path)) as client:
+        query = await client.call_tool("find_places", {"query": "x" * 201})
+        place = await client.call_tool(
+            "count_in_area", {"indicator_id": 202, "place_id": "x" * 201}
+        )
+    for result in (query, place):
+        assert result.is_error
+        text = result.content[0]
+        assert isinstance(text, TextContent) and "200" in text.text
+
+
+@pytest.mark.anyio
 async def test_an_area_tool_takes_a_place_and_logs_it(tmp_path: Path) -> None:
     async with Client(server(tmp_path)) as client:
         result = await client.call_tool(

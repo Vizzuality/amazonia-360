@@ -49,7 +49,9 @@ differ, and pick the one that fits the question, or ask.
 - **Separate indicators.** Figures from two indicators describe two layers. Do not add them,
   subtract them or give a range built from both.
 - **Coverage.** When `coverage.status` is `partial`, say that part of the area is outside the
-  module and has no data.
+  module and has no data. Provinces and cantons are whole administrative units and can extend
+  beyond the module even when `coverage` says `inside`, so a large unclassified part of a named
+  unit is most likely outside the module, not a class.
 
 ## Maps
 

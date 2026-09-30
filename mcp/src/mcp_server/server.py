@@ -18,17 +18,21 @@ from mcp_server.tools.places import register_place_tools
 
 INSTRUCTIONS = """\
 Answers questions about the physical and natural environment of the Ecuador module of
-Amazonia 360, over an area the user provides as a GeoJSON polygon. The module's own
-layers, and a few classed rasters of the regional platform (slope, land cover, forest
-cover, canopy height, grassland), both over areas in the module.
+Amazonia 360, over a province, canton or protected area the user names, or a GeoJSON
+polygon. The module's own layers, and a few classed rasters of the regional platform
+(slope, land cover, forest cover, canopy height, grassland), both over areas in the
+module.
 
-Start with list_indicators. Use categories_in_area, count_in_area and
-class_shares_in_area first; they are fast. area_by_category is slow and should be
-called for one indicator at a time.
+Settle the area first (find_places, or a polygon), then call list_indicators. Use
+categories_in_area, count_in_area and class_shares_in_area first; they are fast.
+area_by_category is slow and should be called for one indicator at a time.
 
 A province, canton or protected area of the module can be named instead of drawn:
 find_places returns the places with that name, each with a place_id that every area
 tool takes instead of area. When several places match, ask the user which one.
+Provinces and cantons are whole administrative units and can extend beyond the module,
+so a large unclassified part of a named unit is most likely outside the module, not a
+class.
 
 Every answer says what it was computed over (computed_over), where the area falls
 against the module (coverage) and what the layer covers (layer); each field is described

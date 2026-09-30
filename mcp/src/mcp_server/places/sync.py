@@ -10,6 +10,7 @@ from typing import Any
 
 import httpx
 import shapely
+from shapely.errors import ShapelyError
 from shapely.geometry import shape
 
 from mcp_server.geometry.area import geodesic_area_ha
@@ -150,7 +151,14 @@ async def _places(
 async def sync_places(http: httpx.AsyncClient, now: datetime) -> dict[str, Any]:
     try:
         places = [p for s in SOURCES for p in await _places(http, s)]
-    except (httpx.HTTPError, ValueError) as exc:
+    except (
+        httpx.HTTPError,
+        AttributeError,
+        KeyError,
+        ShapelyError,
+        TypeError,
+        ValueError,
+    ) as exc:
         raise PlacesSyncError(str(exc)) from exc
     stamp = now.astimezone(UTC).isoformat().replace("+00:00", "Z")
     return {"generated_at": stamp, "places": places}

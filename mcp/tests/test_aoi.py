@@ -1,7 +1,7 @@
 from typing import Any
 
 import pytest
-from shapely.geometry import Point
+from shapely.geometry import Point, box
 
 from mcp_server.geometry.aoi import (
     MAX_VERTICES,
@@ -123,3 +123,11 @@ def test_check_aoi_without_a_vertex_limit() -> None:
     with pytest.raises(AOIError, match="vertices"):
         check_aoi(dense)
     assert check_aoi(dense, max_vertices=None) is dense
+
+
+def test_check_aoi_without_the_reach_limit() -> None:
+    # A province like Loja reaches past the one-degree margin west of the module.
+    loja = box(-80.49, -4.5, -79.0, -3.5)
+    with pytest.raises(AOIError, match="beyond the Ecuador module"):
+        check_aoi(loja)
+    assert check_aoi(loja, reach=False) is loja

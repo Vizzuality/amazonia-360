@@ -38,6 +38,14 @@ from mcp_server.places import Places, load_places
 from mcp_server.places.geometry import PlaceGeometries
 from mcp_server.places.models import Place
 
+# About 50 m. The page only draws the outline, and Yasuní's full boundary is 941,856
+# bytes of JSON.
+MAP_OUTLINE_TOLERANCE_DEG = 0.0005
+
+
+def _outline(aoi: Polygon | MultiPolygon) -> dict[str, Any]:
+    return mapping(aoi.simplify(MAP_OUTLINE_TOLERANCE_DEG, preserve_topology=True))
+
 
 def _layer_facts(
     indicator: IndicatorMetadata, value: list[str] | int | dict[str, float]
@@ -207,7 +215,7 @@ class AreaHandlers:
         styles = await self._styles(p, renderer, categories)
         collection = {"type": "FeatureCollection", "features": shapes}
         return result, CategoryMap(
-            area=mapping(p.aoi), shapes=collection, styles=styles
+            area=_outline(p.aoi), shapes=collection, styles=styles
         )
 
     async def class_shares(
@@ -295,7 +303,7 @@ class AreaHandlers:
         if not with_map:
             return result, None
         return result, RasterMap(
-            area=mapping(p.aoi),
+            area=_outline(p.aoi),
             name=p.indicator.name,
             image="data:image/png;base64," + base64.b64encode(image).decode(),
             corners=corners,
@@ -377,7 +385,7 @@ class AreaHandlers:
             )
         geom = await self._call(self._geometries.geometry(place))
         try:
-            return check_aoi(geom, max_vertices=None), place
+            return check_aoi(geom, max_vertices=None, reach=False), place
         except AOIError as exc:
             raise HandlerError(f"The boundary of {place.id}: {exc}") from exc
 

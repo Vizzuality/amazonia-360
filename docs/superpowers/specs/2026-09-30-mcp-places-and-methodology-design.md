@@ -41,9 +41,10 @@ Checked against the live services on 30 September 2026:
 | `protected_area` | layer 216 of the Ecuador module | `Nombre`, with `Categoria` | 40 | 23,369 for Yasuní |
 
 Filtered with `GID_0 = 'ECU'`. The administrative layers hold whole units that touch the
-region, so Andean ones are included: the canton of Quito comes at its full 4,244 km². The
-existing `coverage` field already says how much of an area falls outside the module, so no filter
-is added.
+region, so Andean ones are included: the canton of Quito comes at its full 4,244 km². `coverage`
+is measured against the module's rectangle, so a whole Andean unit can read `inside`. Until the
+module polygon arrives, the skill and the server instructions warn that a large unclassified part
+of a named unit is most likely outside the module.
 
 The names have defects:
 - "Mejía" appears under both Pastaza and Pichincha;
@@ -69,8 +70,10 @@ Output: the matches, each with:
 - `area_ha`;
 - `bbox`.
 
-It matches the whole normalised name first. If nothing matches, it looks for the query as a whole
-word inside the name, so "Sumaco" finds "Sumaco Napo-Galeras". With no match, it returns an empty
+It returns the places whose whole normalised name matches, then those that hold the query as a
+whole word, so "Sumaco" finds "Sumaco Napo-Galeras" and "Zamora" finds the canton and then the
+province "Zamora Chinchipe". The category may prefix a protected area's name ("Parque Nacional
+Yasuní"), and a leading "provincia" or "cantón" is ignored. With no match, it returns an empty
 list and a note that names the three kinds covered.
 
 The candidate list comes from a snapshot written by the catalogue sync
@@ -95,6 +98,7 @@ tools take exactly one of `area` and `place_id`. With `place_id`:
 - the client's 5,000-vertex input limit does not apply. The limit exists to stop a client sending
   a province at full resolution, and a place does not travel through the request. The clip time on
   the largest protected areas is measured before this is settled (open question 1);
+- nor does the one-degree reach limit, since a whole province such as Loja reaches past it;
 - the map tools put the place's geometry in the result's `_meta`, because the tool input no longer
   holds it. The pages read the area from `_meta` when the input has none.
 

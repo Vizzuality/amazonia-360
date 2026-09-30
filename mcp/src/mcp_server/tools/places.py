@@ -15,7 +15,11 @@ def register_place_tools(server: MCPServer, places: Places) -> None:
     async def find_places(
         query: Annotated[
             str,
-            Field(min_length=1, description="A place name, e.g. 'Tena' or 'Yasuní'."),
+            Field(
+                min_length=1,
+                max_length=200,
+                description="A place name, e.g. 'Tena' or 'Yasuní'.",
+            ),
         ],
         kind: Annotated[
             PlaceKind | None, Field(description="Only places of this kind.")

@@ -57,10 +57,14 @@ def parse_aoi(geojson: dict[str, Any]) -> Polygon | MultiPolygon:
 
 
 def check_aoi(
-    geom: BaseGeometry, *, max_vertices: int | None = MAX_VERTICES
+    geom: BaseGeometry,
+    *,
+    max_vertices: int | None = MAX_VERTICES,
+    reach: bool = True,
 ) -> Polygon | MultiPolygon:
-    """The checks every area goes through. max_vertices=None for a place, whose
-    boundary the server reads itself instead of receiving it from the client."""
+    """The checks every area goes through. max_vertices=None and reach=False for a
+    place, whose boundary the server reads itself instead of receiving it from the
+    client; a whole province such as Loja reaches past the margin."""
     if not isinstance(geom, Polygon | MultiPolygon):
         raise AOIError(
             f"The area must be a Polygon or MultiPolygon, got {geom.geom_type}."
@@ -81,8 +85,8 @@ def check_aoi(
             f"The area has {vertices} vertices; the limit is {max_vertices}. "
             "Simplify it before sending."
         )
-    reach = MODULE_ENVELOPE.buffer(MAX_REACH_DEG, join_style="mitre")
-    if not reach.contains(geom) and reach.intersects(geom):
+    margin = MODULE_ENVELOPE.buffer(MAX_REACH_DEG, join_style="mitre")
+    if reach and not margin.contains(geom) and margin.intersects(geom):
         raise AOIError(
             f"The area reaches more than {MAX_REACH_DEG:g} degree beyond the Ecuador "
             "module. Draw it over the module; the tools have no data outside it."

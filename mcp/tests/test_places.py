@@ -36,6 +36,13 @@ SNAPSHOT = PlacesSnapshot.model_validate(
             place("canton:Pastaza/Pastaza", "Pastaza", "canton", "Pastaza"),
             place("canton:Pastaza/Mejía", "Mejía", "canton", "Pastaza"),
             place("canton:Pichincha/Mejía", "Mejía", "canton", "Pichincha"),
+            place("province:Zamora Chinchipe", "Zamora Chinchipe", "province"),
+            place(
+                "canton:Zamora Chinchipe/Zamora",
+                "Zamora",
+                "canton",
+                "Zamora Chinchipe",
+            ),
             place(
                 "protected_area:Yasuní",
                 "Yasuní",
@@ -83,10 +90,40 @@ def test_match_ignores_case_accents_and_spaces(places: Places) -> None:
     assert ids(places, "yasuni") == ["protected_area:Yasuní"]
 
 
-def test_whole_word_match_when_no_whole_name_matches(places: Places) -> None:
+def test_whole_word_matches_come_after_whole_name_matches(places: Places) -> None:
     assert ids(places, "sumaco") == ["protected_area:Sumaco Napo-Galeras"]
-    # "Napo" is a whole name, so the protected area that contains it is not listed.
-    assert ids(places, "napo") == ["province:Napo"]
+    assert ids(places, "napo") == [
+        "province:Napo",
+        "protected_area:Sumaco Napo-Galeras",
+    ]
+
+
+def test_a_canton_does_not_hide_the_province_that_contains_its_name(
+    places: Places,
+) -> None:
+    # The canton is the whole name, so it comes first.
+    assert ids(places, "Zamora") == [
+        "canton:Zamora Chinchipe/Zamora",
+        "province:Zamora Chinchipe",
+    ]
+
+
+def test_kind_filter_applies_to_whole_word_matches(places: Places) -> None:
+    assert ids(places, "zamora", "province") == ["province:Zamora Chinchipe"]
+    assert ids(places, "napo", "protected_area") == [
+        "protected_area:Sumaco Napo-Galeras"
+    ]
+
+
+def test_a_protected_area_named_with_its_category(places: Places) -> None:
+    assert ids(places, "Parque Nacional Yasuni") == ["protected_area:Yasuní"]
+
+
+def test_a_leading_kind_word_is_ignored(places: Places) -> None:
+    assert ids(places, "Provincia de Napo")[0] == "province:Napo"
+    assert ids(places, "Canton Tena") == ["canton:Napo/Tena"]
+    assert ids(places, "Cantón Tena") == ["canton:Napo/Tena"]
+    assert ids(places, "provincia del Pastaza")[0] == "province:Pastaza"
 
 
 def test_no_part_word_match(places: Places) -> None:

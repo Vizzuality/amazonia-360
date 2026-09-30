@@ -55,7 +55,9 @@ FEATURES: dict[str, list[dict[str, Any]]] = {
 
 
 def transport(
-    fail: str | None = None, truncate: str | None = None
+    fail: str | None = None,
+    truncate: str | None = None,
+    malformed: dict[str, Any] | None = None,
 ) -> httpx.MockTransport:
     urls = {f"{s.url}/{s.layer_id}/query": s.kind for s in SOURCES}
 
@@ -69,6 +71,9 @@ def transport(
             "type": "FeatureCollection",
             "features": FEATURES[kind],
         }
+        if malformed is not None and kind == "canton":
+            feature = {"properties": {"NAME_1": "Napo", "NAME_2": "Archidona"}}
+            body["features"] = [*FEATURES[kind], {**feature, "geometry": malformed}]
         if kind == truncate:
             body["exceededTransferLimit"] = True
         return httpx.Response(200, json=body)
@@ -76,8 +81,14 @@ def transport(
     return httpx.MockTransport(handler)
 
 
-async def run(fail: str | None = None, truncate: str | None = None) -> dict[str, Any]:
-    async with httpx.AsyncClient(transport=transport(fail, truncate)) as http:
+async def run(
+    fail: str | None = None,
+    truncate: str | None = None,
+    malformed: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    async with httpx.AsyncClient(
+        transport=transport(fail, truncate, malformed)
+    ) as http:
         return await sync_places(http, NOW)
 
 
@@ -119,6 +130,22 @@ async def test_features_with_one_name_are_one_place_with_the_joint_area() -> Non
 async def test_a_source_that_fails_fails_the_sync() -> None:
     with pytest.raises(PlacesSyncError):
         await run(fail="canton")
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize(
+    "geometry",
+    [
+        {"type": "Polygon"},
+        {"type": "Polygon", "coordinates": 5},
+        {"type": "Polygon", "coordinates": [[[0, 0], [1, 1]]]},
+        {"coordinates": []},
+        "not a geometry",
+    ],
+)
+async def test_a_malformed_geometry_fails_the_sync(geometry: Any) -> None:
+    with pytest.raises(PlacesSyncError):
+        await run(malformed=geometry)
 
 
 def test_where_doubles_quotes() -> None:

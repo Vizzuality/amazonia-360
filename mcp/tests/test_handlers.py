@@ -566,3 +566,39 @@ async def test_a_place_is_not_held_to_the_client_vertex_limit() -> None:
 
     result = await with_places(Dense()).count_in_area(202, place_id="canton:Napo/Tena")
     assert result.timing.vertices_sent > 5000
+
+
+@pytest.mark.anyio
+async def test_a_place_is_not_held_to_the_reach_limit() -> None:
+    class Loja(FakeClient):
+        async def boundary(
+            self, url: str, layer_id: int, where: str
+        ) -> list[BaseGeometry]:
+            return [box(-80.49, -4.5, -79.0, -3.5)]
+
+    result = await with_places(Loja()).count_in_area(202, place_id="canton:Napo/Tena")
+    assert result.coverage.status == "partial"
+
+
+@pytest.mark.anyio
+async def test_the_map_outline_of_a_dense_place_is_simplified() -> None:
+    from shapely import get_num_coordinates
+    from shapely.geometry import Point, shape
+
+    dense = Point(-77.85, -1.05).buffer(0.04, quad_segs=2000)
+
+    class Dense(FakeClient):
+        async def boundary(
+            self, url: str, layer_id: int, where: str
+        ) -> list[BaseGeometry]:
+            return [dense]
+
+    handlers = with_places(Dense())
+    place = "canton:Napo/Tena"
+    result, drawn = await handlers.area_by_category_map(210, place_id=place)
+    _, raster = await handlers.class_shares_map(129, place_id=place)
+    for outline in (drawn.area, raster.area):
+        assert outline["type"] in ("Polygon", "MultiPolygon")
+        assert get_num_coordinates(shape(outline)) < result.timing.vertices_sent
+    # The figures are still computed over the full boundary.
+    assert result.timing.vertices_sent == get_num_coordinates(dense)
