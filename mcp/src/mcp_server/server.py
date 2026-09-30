@@ -33,7 +33,8 @@ to be combined.
 When the user asks to see a result on a map, map_area_by_category returns the same
 figures as area_by_category and draws them for the user; map_class_shares_in_area does
 the same for class_shares_in_area. The map shows the figures and their notes; the
-answer still needs them.
+answer still needs them. The user sees the map and you do not: do not say you cannot
+see it, and do not guess how it looks. Comment on the figures instead.
 """
 
 
