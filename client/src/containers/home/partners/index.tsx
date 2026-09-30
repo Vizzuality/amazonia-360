@@ -123,14 +123,10 @@ export default function Partners() {
               <ReactMarkdown>{t("landing-partners-description")}</ReactMarkdown>
             </div>
           </div>
-          <Button
-            asChild
-            variant="outline"
-            size="lg"
-            className="w-fit rounded-lg font-semibold text-blue-700"
-            data-testid="landing-partners-see-all"
-          >
-            <LocaleLink href="/partners">{t("landing-partners-see-all")}</LocaleLink>
+          <Button asChild variant="outline" size="lg" className="w-fit rounded-lg text-blue-700">
+            <LocaleLink href="/partners" data-testid="landing-partners-see-all">
+              {t("landing-partners-see-all")}
+            </LocaleLink>
           </Button>
           {/* <Button size="lg" className="flex max-w-[200px] px-8">
             Become a partner!
