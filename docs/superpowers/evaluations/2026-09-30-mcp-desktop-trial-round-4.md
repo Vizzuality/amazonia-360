@@ -57,12 +57,26 @@ ecosystems, but the only call in that conversation was to layer 219. The number 
 same session, so it most likely came from Desktop's memory of earlier chats. It is correct, but the
 model presented it as a result.
 
-**Layer 219 has invalid geometry (AM-734).** In Q8 the model noticed that the units add up to more
-than the canton, and guessed the cause was overlapping polygons. The actual cause is six Andean
-features with nested shells: an outer ring declared inside another outer ring of the same feature.
-Clipped as served, the nested part is counted twice (392,504 ha over a canton of 390,354 ha).
-Repaired, the units add up to the canton exactly. The server did not flag the excess, and reported
-`unclassified_ha: 0`.
+**The hectare figures of the round were too high wherever a feature has holes (AM-734).** In Q8 the model noticed that the
+219 units add up to more than the canton, and guessed the cause was overlapping polygons. The cause
+was the server. It read features from ArcGIS as GeoJSON, and ArcGIS Online's GeoJSON output drops
+holes: each ring comes back as its own polygon, so a hole is filled and the ground under it is
+counted twice. Twelve of the 13 feature layers have features with holes. Read as Esri JSON, with
+holes taken from ring orientation, the classes over Tena add up to the canton or less:
+
+| Layer | Read as GeoJSON | Read as Esri JSON |
+|---|---|---|
+| 219 Biogeographic Units | 392,504 ha | 390,349 ha |
+| 210 Ecosystems | 320,675 ha | 310,256 ha |
+| 211 Geomorphology | 396,217 ha | 390,329 ha |
+| 217 Thermotypes | 402,173 ha | 390,354 ha |
+| 218 Climate Types | 392,140 ha | 390,351 ha |
+
+The figures in this report are those the model received, before the fix (`b7fcdeca`). For Q1, the
+unclassified part of Tena is 80,099 ha, not 69,680. The server did not flag the excess, and
+reported `unclassified_ha: 0`; it now sets `overlap_ha` when classes add up to more than the area.
+Place boundaries were not affected, because they were already repaired with a method that turns
+nested rings back into holes.
 
 **Times are those of drawn areas of the same size.** Fetching the boundary adds 0.4 to 0.5 s on
 first use and nothing after. `area_by_category` over the full Yasuní boundary took 6.7 s (208);
@@ -134,11 +148,10 @@ indicator list.") leaked into the start of the answer.
 ## Changes
 
 Agreed after the round:
-1. The server repairs feature geometry before clipping, and any other layer with the same defect
-   is identified.
+1. The server reads features as Esri JSON, so holes stay holes (done, `b7fcdeca`).
 2. `class_shares_in_area` states in its result that shares are not hectares and must not be
    converted.
-3. A result says so explicitly when the classified hectares exceed the area.
+3. A result says so explicitly when the classified hectares exceed the area (`overlap_ha`).
 4. Map legends show "< 1 ha" and "< 0.1 %" instead of 0.
 5. The ecosystem map fills classes with their legend colour instead of the renderer's opacity.
 6. The skill's rules are rewritten in the imperative, and the model names the layer used and its
