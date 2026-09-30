@@ -125,6 +125,28 @@ class ArcGISClient:
             "draw a smaller area."
         )
 
+    async def boundary(self, url: str, layer_id: int, where: str) -> list[BaseGeometry]:
+        """Every polygon of a boundary layer that the where clause selects."""
+        query = f"{url}/{layer_id}/query"
+        body = await self._send(
+            "POST",
+            query,
+            data={
+                "where": where,
+                "returnGeometry": "true",
+                "outSR": "4326",
+                "f": "geojson",
+            },
+        )
+        try:
+            return [
+                shape(f["geometry"])
+                for f in body["features"]
+                if f.get("geometry") is not None
+            ]
+        except (KeyError, TypeError) as exc:
+            raise _invalid(query, "missing features or geometry") from exc
+
     async def renderer(self, layer: Layer) -> dict[str, Any] | None:
         """The layer's renderer, where the front end takes its colours from."""
         body = await self._send("GET", _layer_url(layer), params={"f": "json"})

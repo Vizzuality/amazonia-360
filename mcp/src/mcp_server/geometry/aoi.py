@@ -53,6 +53,14 @@ def parse_aoi(geojson: dict[str, Any]) -> Polygon | MultiPolygon:
         geom = shape(geojson)
     except (AttributeError, KeyError, ShapelyError, TypeError, ValueError) as exc:
         raise AOIError(f"The area is not valid GeoJSON: {exc}") from exc
+    return check_aoi(geom)
+
+
+def check_aoi(
+    geom: BaseGeometry, *, max_vertices: int | None = MAX_VERTICES
+) -> Polygon | MultiPolygon:
+    """The checks every area goes through. max_vertices=None for a place, whose
+    boundary the server reads itself instead of receiving it from the client."""
     if not isinstance(geom, Polygon | MultiPolygon):
         raise AOIError(
             f"The area must be a Polygon or MultiPolygon, got {geom.geom_type}."
@@ -68,9 +76,9 @@ def parse_aoi(geojson: dict[str, Any]) -> Polygon | MultiPolygon:
         )
     # Counted before the validity check, which is the costly one.
     vertices = vertex_count(geom)
-    if vertices > MAX_VERTICES:
+    if max_vertices is not None and vertices > max_vertices:
         raise AOIError(
-            f"The area has {vertices} vertices; the limit is {MAX_VERTICES}. "
+            f"The area has {vertices} vertices; the limit is {max_vertices}. "
             "Simplify it before sending."
         )
     reach = MODULE_ENVELOPE.buffer(MAX_REACH_DEG, join_style="mitre")

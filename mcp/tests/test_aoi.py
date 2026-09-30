@@ -1,10 +1,12 @@
 from typing import Any
 
 import pytest
+from shapely.geometry import Point
 
 from mcp_server.geometry.aoi import (
     MAX_VERTICES,
     AOIError,
+    check_aoi,
     module_coverage,
     parse_aoi,
     vertex_count,
@@ -112,3 +114,12 @@ def test_accepts_an_area_drawn_across_the_border() -> None:
         ],
     }
     assert module_coverage(parse_aoi(across)).status == "partial"
+
+
+def test_check_aoi_without_a_vertex_limit() -> None:
+    # A circle over Tena with more vertices than a client may send.
+    dense = Point(-77.8, -1.0).buffer(0.05, quad_segs=2000)
+    assert len(dense.exterior.coords) > MAX_VERTICES
+    with pytest.raises(AOIError, match="vertices"):
+        check_aoi(dense)
+    assert check_aoi(dense, max_vertices=None) is dense
