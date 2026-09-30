@@ -25,7 +25,7 @@
         unclassified: "Unclassified",
         pixels: "Shares of the {pixels} pixels with data inside the area, about {size} each. Over a small area a share rests on few pixels.",
         unclassifiedNote: "Unclassified pixels have data but fall in no class of the legend. They are not a class of their own.",
-        boundingBox: "The module boundary is still a bounding box; part of an area near its edge may fall outside the module.",
+        outside: "{ha} ha of the area are outside the module. Its outline was derived from one of its layers, to about 50 m, until the official one arrives.",
         source: "Classes and colours as on Amazonia 360. Outside the area the raster is dimmed; the shares count only the pixels inside.",
         noImage: "The host did not pass the image to the map; the shares above are complete.",
         failed: "The map could not load: {message}",
@@ -36,7 +36,7 @@
         unclassified: "Sin clase",
         pixels: "Proporción de los {pixels} píxeles con datos dentro del área, de unos {size} cada uno. En un área pequeña, una proporción se apoya en pocos píxeles.",
         unclassifiedNote: "Los píxeles sin clase tienen datos pero no caen en ninguna clase de la leyenda. No son una clase propia.",
-        boundingBox: "El límite del módulo es todavía un rectángulo envolvente; parte de un área cerca de su borde puede quedar fuera del módulo.",
+        outside: "{ha} ha del área quedan fuera del módulo. Su contorno se obtuvo de una de sus capas, con unos 50 m de precisión, hasta que llegue el oficial.",
         source: "Clases y colores como en Amazonia 360. Fuera del área el ráster se atenúa; las proporciones cuentan solo los píxeles de dentro.",
         noImage: "El host no pasó la imagen al mapa; las proporciones de arriba están completas.",
         failed: "No se pudo cargar el mapa: {message}",
@@ -124,7 +124,7 @@
           size: over.pixel_size_deg ? size(over.pixel_size_deg) : "?",
         }));
         if (r.unclassified_share > 0) notes.push(t("unclassifiedNote"));
-        if (r.coverage?.boundary === "bounding_box") notes.push(t("boundingBox"));
+        if (r.coverage?.outside_ha > 0) notes.push(t("outside", { ha: number(r.coverage.outside_ha, { maximumFractionDigits: 0 }) }));
         // Written by a person in the CMS, in the language they wrote it in.
         for (const c of r.caveats || []) notes.push(c);
         notes.push(t(drawn?.image ? "source" : "noImage"));

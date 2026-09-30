@@ -56,9 +56,9 @@
         ha: "{ha} ha",
         popup: "{ha} ha in the area",
         popupShare: "{ha} ha in the area · {share} of the area",
-        unclassified: "{ha} ha of the area have no class in this layer. They are not a class of their own.",
+        unclassified: "{ha} ha of the area inside the module have no class in this layer. They are not a class of their own.",
         notMapped: "This layer does not map this part of the module.",
-        boundingBox: "The module boundary is still a bounding box; part of an area near its edge may fall outside the module.",
+        outside: "{ha} ha of the area are outside the module. Its outline was derived from one of its layers, to about 50 m, until the official one arrives.",
         palette: "Some colours are not the layer's own: its style does not give one colour per class.",
         noShapes: "The host did not pass the shapes to the map; the figures above are complete.",
         tooLarge: "The shapes are too large to draw here ({size} MB); the figures above are complete. A smaller area draws.",
@@ -74,9 +74,9 @@
         ha: "{ha} ha",
         popup: "{ha} ha en el área",
         popupShare: "{ha} ha en el área · {share} del área",
-        unclassified: "{ha} ha del área no tienen clase en esta capa. No son una clase propia.",
+        unclassified: "{ha} ha del área dentro del módulo no tienen clase en esta capa. No son una clase propia.",
         notMapped: "Esta capa no cartografía esta parte del módulo.",
-        boundingBox: "El límite del módulo es todavía un rectángulo envolvente; parte de un área cerca de su borde puede quedar fuera del módulo.",
+        outside: "{ha} ha del área quedan fuera del módulo. Su contorno se obtuvo de una de sus capas, con unos 50 m de precisión, hasta que llegue el oficial.",
         palette: "Algunos colores no son los de la capa: su estilo no da un color por clase.",
         noShapes: "El host no pasó los polígonos al mapa; las cifras de arriba están completas.",
         tooLarge: "Los polígonos son demasiado grandes para dibujarlos aquí ({size} MB); las cifras de arriba están completas. Un área más pequeña sí se dibuja.",
@@ -136,7 +136,7 @@
       const notes = [];
       if (r.unclassified_ha > 0) notes.push(t("unclassified", { ha: ha(r.unclassified_ha) }));
       if (r.layer?.empty_result === "not_mapped_here") notes.push(t("notMapped"));
-      if (r.coverage?.boundary === "bounding_box") notes.push(t("boundingBox"));
+      if (r.coverage?.outside_ha > 0) notes.push(t("outside", { ha: ha(r.coverage.outside_ha) }));
       if (state.styles && Object.values(state.styles).some((s) => !s.from_layer)) notes.push(t("palette"));
       if (state.omitted) notes.push(t("tooLarge", { size: number(state.omitted / 1e6, { maximumFractionDigits: 1 }) }));
       else if (!state.shapes) notes.push(t("noShapes"));

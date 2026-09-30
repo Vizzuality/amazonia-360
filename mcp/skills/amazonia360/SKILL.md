@@ -62,16 +62,17 @@ Never report several of them one after the other without saying why each one is 
   where the area falls against the module, and `place` which boundary was used when the area
   was named.
 - **Unclassified land.** `unclassified_ha` and `unclassified_share` are the part of the area in
-  no class, not a class. Say how much there is. Never guess what it is.
+  no class, not a class. Say how much there is. Never guess what it is. `unclassified_ha` counts
+  only land inside the module.
 - **Pixel shares.** `class_shares_in_area` gives shares of pixels
   (`computed_over.to_hectares` is `do_not_convert`). Say how many pixels
   (`computed_over.pixels`) when there are few.
 - **Overlap.** When `overlap_ha` is set, the classes add up to more than the area. Tell the user
   that the layer counts some ground twice, and how many hectares.
 - **Coverage.** When `coverage.status` is `partial`, say that part of the area is outside the
-  module and has no data. Provinces and cantons are whole administrative units and can extend
-  beyond the module even when `coverage` says `inside`, so a large unclassified part of a named
-  unit is most likely outside the module, not a class.
+  module and has no data, and give `coverage.outside_ha`. Report those hectares as outside the
+  module, separately from unclassified land; never call them a class or unclassified. Provinces
+  and cantons are whole administrative units and often extend beyond the module.
 
 ## Maps
 

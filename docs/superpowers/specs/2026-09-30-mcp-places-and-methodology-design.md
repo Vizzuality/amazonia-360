@@ -42,9 +42,10 @@ Checked against the live services on 30 September 2026:
 
 Filtered with `GID_0 = 'ECU'`. The administrative layers hold whole units that touch the
 region, so Andean ones are included: the canton of Quito comes at its full 4,244 km². `coverage`
-is measured against the module's rectangle, so a whole Andean unit can read `inside`. Until the
-module polygon arrives, the skill and the server instructions warn that a large unclassified part
-of a named unit is most likely outside the module.
+is measured against an outline of the module that the sync derives from Geomorphology (211), a
+layer that covers the module wall to wall, accurate to about 50 m until the official polygon
+arrives; `coverage.outside_ha` gives the part of a named unit outside the module, and
+`unclassified_ha` leaves it out.
 
 The names have defects:
 - "Mejía" appears under both Pastaza and Pichincha;
