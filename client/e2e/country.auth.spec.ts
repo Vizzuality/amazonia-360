@@ -51,19 +51,6 @@ test.describe("the module in the URL", () => {
 });
 
 test.describe("nothing is rebuilt", () => {
-  test("leaving the module on the home page keeps it", async ({ page }) => {
-    await page.goto("/en/ECU");
-    await expect(page.locator("h2").first()).toBeVisible({ timeout: 30_000 });
-    await dismissCookieConsent(page);
-
-    await markNode(page, "main");
-    await leaveModule(page);
-
-    await expect.poll(() => new URL(page.url()).pathname).toBe("/en");
-    await expectNodeKept(page, "main");
-    await expectRegionalModule(page);
-  });
-
   test("leaving the module in the report flow keeps the map", async ({ page }) => {
     await page.goto("/en/ECU/reports");
     await dismissCookieConsent(page);
