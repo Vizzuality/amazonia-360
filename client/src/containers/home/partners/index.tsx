@@ -9,7 +9,9 @@ import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
-// import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+
+import { LocaleLink } from "@/i18n/navigation";
 
 const Partner = ({
   href,
@@ -121,6 +123,15 @@ export default function Partners() {
               <ReactMarkdown>{t("landing-partners-description")}</ReactMarkdown>
             </div>
           </div>
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="w-fit rounded-lg font-semibold text-blue-700"
+            data-testid="landing-partners-see-all"
+          >
+            <LocaleLink href="/partners">{t("landing-partners-see-all")}</LocaleLink>
+          </Button>
           {/* <Button size="lg" className="flex max-w-[200px] px-8">
             Become a partner!
           </Button> */}

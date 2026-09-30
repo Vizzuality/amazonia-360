@@ -10,6 +10,28 @@ vi.mock("next-intl", () => ({
   useLocale: () => mockUseLocale(),
 }));
 
+vi.mock("@/i18n/navigation", () => ({
+  LocaleLink: ({
+    href,
+    children,
+    ...props
+  }: {
+    href: string | { pathname: string; query?: { country: string } };
+    children: React.ReactNode;
+  }) => (
+    <a
+      href={
+        typeof href === "string"
+          ? href
+          : `${href.pathname}${href.query ? `?country=${href.query.country}` : ""}`
+      }
+      {...props}
+    >
+      {children}
+    </a>
+  ),
+}));
+
 describe("IndicatorsPartners", () => {
   beforeEach(() => {
     mockUseLocale.mockReturnValue("en");
@@ -56,12 +78,23 @@ describe("IndicatorsPartners", () => {
     expect(screen.queryByTestId("indicators-partners")).not.toBeInTheDocument();
   });
 
-  it("shows the title and a disabled Learn more control", () => {
+  it("shows the title and a Learn more link to the plain partners page when regional", () => {
     render(<IndicatorsPartners country={null} />);
 
     expect(screen.getByText("country-module-modal-collaboration-title")).toBeInTheDocument();
     const cta = screen.getByTestId("indicators-partners-learn-more");
-    expect(cta).toBeDisabled();
+    expect(cta).toHaveAttribute("href", "/partners");
+    expect(cta).toHaveAttribute("target", "_blank");
+    expect(cta).toHaveAttribute("rel", "noopener noreferrer");
     expect(cta).toHaveTextContent("country-module-partnerships-cta");
+  });
+
+  it("links Learn more to the partners page filtered by the active module", () => {
+    render(<IndicatorsPartners country="ECU" />);
+
+    expect(screen.getByTestId("indicators-partners-learn-more")).toHaveAttribute(
+      "href",
+      "/partners?country=ECU",
+    );
   });
 });

@@ -10,7 +10,9 @@ describe("IndicatorsPartners", () => {
 
     await expect.element(screen.getByAltText("Vizzuality")).toBeVisible();
     await expect.element(screen.getByAltText("Gobierno del Ecuador")).not.toBeInTheDocument();
-    await expect.element(screen.getByTestId("indicators-partners-learn-more")).toBeDisabled();
+    const cta = screen.getByTestId("indicators-partners-learn-more");
+    await expect.element(cta).toHaveAttribute("href", expect.stringMatching(/\/partners$/));
+    await expect.element(cta).toHaveAttribute("target", "_blank");
     await expect(screen).toHaveNoA11yViolations();
   });
 

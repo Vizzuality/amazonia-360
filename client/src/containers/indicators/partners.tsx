@@ -6,9 +6,15 @@ import { SquareArrowOutUpRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import type { CountryCode } from "@/lib/country";
-import { getCountryModulePartnerLogos, getRegionalPartnerLogos } from "@/lib/country/partners";
+import {
+  getCountryModulePartnerLogos,
+  getPartnersHref,
+  getRegionalPartnerLogos,
+} from "@/lib/country/partners";
 
 import { Button } from "@/components/ui/button";
+
+import { LocaleLink } from "@/i18n/navigation";
 
 export default function IndicatorsPartners({ country }: Readonly<{ country: CountryCode | null }>) {
   const t = useTranslations();
@@ -23,16 +29,16 @@ export default function IndicatorsPartners({ country }: Readonly<{ country: Coun
         <h3 className="text-foreground text-xs font-bold tracking-[0.6px] uppercase">
           {t("country-module-modal-collaboration-title")}
         </h3>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          disabled
-          data-testid="indicators-partners-learn-more"
-          className="text-foreground cursor-default gap-2 px-2 disabled:opacity-100"
-        >
-          {t("country-module-partnerships-cta")}
-          <SquareArrowOutUpRight className="size-4" aria-hidden />
+        <Button asChild variant="ghost" size="sm" className="text-foreground gap-2 px-2">
+          <LocaleLink
+            href={getPartnersHref(country)}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid="indicators-partners-learn-more"
+          >
+            {t("country-module-partnerships-cta")}
+            <SquareArrowOutUpRight className="size-4" aria-hidden />
+          </LocaleLink>
         </Button>
       </div>
 
