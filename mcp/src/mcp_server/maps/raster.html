@@ -79,12 +79,15 @@
     async function addImage({ image, corners }) {
       await mapReady;
       const map = state.map;
-      // Under water, rivers, roads, boundaries and names, so the map stays readable.
-      const under = map.getStyle().layers.find((l) => l.id === "water")?.id;
+      // Above the basemap's fills (its wood and residential areas would hide the raster)
+      // and under its lines and names; water is lifted above the raster so rivers show.
+      const layers = map.getStyle().layers;
+      const under = layers.find((l) => l.type === "line" || l.type === "symbol")?.id;
       map.addSource("raster", { type: "image", url: image, coordinates: corners });
       map.addLayer({ id: "raster", type: "raster", source: "raster", paint: { "raster-resampling": "nearest", "raster-opacity": 0.85 } }, under);
       map.addSource("mask", { type: "geojson", data: mask(state.area) });
       map.addLayer({ id: "mask", type: "fill", source: "mask", paint: { "fill-color": "#ffffff", "fill-opacity": 0.55 } }, under);
+      if (layers.some((l) => l.id === "water")) map.moveLayer("water", under);
     }
 
     window.view = {
