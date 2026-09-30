@@ -30,7 +30,7 @@ export const FullscreenControl: FC<FullscreenControlProps> = ({
     if (!container) return;
 
     if (document.fullscreenElement === container) {
-      document.exitFullscreen();
+      document.exitFullscreen().catch(() => undefined);
     } else {
       container.requestFullscreen().catch(() => undefined);
     }

@@ -90,7 +90,7 @@ export function useLocationBuffer() {
   // cancel the pending debounce; reads pendingBufferRef (not the possibly-stale arg).
   const onValueCommit = () => {
     if (commitTimeoutRef.current) clearTimeout(commitTimeoutRef.current);
-    commitBuffer();
+    void commitBuffer();
   };
 
   return {
