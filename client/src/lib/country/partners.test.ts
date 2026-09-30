@@ -1,7 +1,8 @@
 import {
+  getCountryModuleDescriptionKey,
   getCountryModulePartnerLogos,
   getOtherPartnerLogoRows,
-  getPartnerCountryCodes,
+  getPartnerCountries,
   getPartnersHref,
   getRegionalPartnerLogos,
 } from "./partners";
@@ -16,6 +17,13 @@ describe("getRegionalPartnerLogos", () => {
       "Esri",
       "Vizzuality",
     ]);
+  });
+
+  it("only the Green Climate Fund logo carries a size override", () => {
+    const overrides = getRegionalPartnerLogos("en")
+      .filter((logo) => logo.className)
+      .map((logo) => [logo.alt, logo.className]);
+    expect(overrides).toEqual([["Green Climate Fund", "h-[72px]"]]);
   });
 
   it("uses the locale variant of the ACTO logo", () => {
@@ -44,9 +52,20 @@ describe("getCountryModulePartnerLogos", () => {
   });
 });
 
-describe("getPartnerCountryCodes", () => {
-  it("lists the countries that have partners", () => {
-    expect(getPartnerCountryCodes()).toEqual(["ECU"]);
+describe("getCountryModuleDescriptionKey", () => {
+  it("returns the description key stored with the country partners", () => {
+    expect(getCountryModuleDescriptionKey("ECU")).toBe("partners-country-module-ECU-description");
+  });
+
+  it("returns null without a country or partners", () => {
+    expect(getCountryModuleDescriptionKey(null)).toBeNull();
+    expect(getCountryModuleDescriptionKey("BOL")).toBeNull();
+  });
+});
+
+describe("getPartnerCountries", () => {
+  it("lists the country entries that have partners", () => {
+    expect(getPartnerCountries().map((entry) => entry.code)).toEqual(["ECU"]);
   });
 });
 

@@ -1,42 +1,59 @@
 import { COUNTRIES, type CountryCode } from "@/lib/country";
 
-export type CountryModulePartnerLogo = { src: string; alt: string };
+import type messages from "@/i18n/translations/en.json";
+
+export type CountryModulePartnerLogo = { src: string; alt: string; className?: string };
 export type CountryModulePartner = CountryModulePartnerLogo & { label: string };
 
-const COUNTRY_MODULE_PARTNER_LOGOS: Record<string, CountryModulePartner[]> = {
-  ECU: [
-    {
-      src: "/partners/ecu/gobierno-del-ecuador.avif",
-      alt: "Gobierno del Ecuador",
-      label: "Gobierno del Ecuador",
-    },
-    {
-      src: "/partners/ecu/ministerio-del-ambiente.avif",
-      alt: "Ministerio del Ambiente",
-      label: "MAE",
-    },
-    {
-      src: "/partners/ecu/instituto-geografico-militar.avif",
-      alt: "Instituto Geográfico Militar",
-      label: "IGM",
-    },
-    { src: "/partners/ecu/inabio.avif", alt: "INABIO", label: "INABIO" },
-    {
-      src: "/partners/ecu/the-nature-conservancy.avif",
-      alt: "The Nature Conservancy",
-      label: "TNC",
-    },
-  ],
+type CountryModulePartners = {
+  descriptionKey: keyof typeof messages;
+  partners: CountryModulePartner[];
 };
 
+const COUNTRY_MODULES_PARTNERS: Partial<Record<CountryCode, CountryModulePartners>> = {
+  ECU: {
+    descriptionKey: "partners-country-module-ECU-description",
+    partners: [
+      {
+        src: "/partners/ecu/gobierno-del-ecuador.avif",
+        alt: "Gobierno del Ecuador",
+        label: "Gobierno del Ecuador",
+      },
+      {
+        src: "/partners/ecu/ministerio-del-ambiente.avif",
+        alt: "Ministerio del Ambiente",
+        label: "MAE",
+      },
+      {
+        src: "/partners/ecu/instituto-geografico-militar.avif",
+        alt: "Instituto Geográfico Militar",
+        label: "IGM",
+      },
+      { src: "/partners/ecu/inabio.avif", alt: "INABIO", label: "INABIO" },
+      {
+        src: "/partners/ecu/the-nature-conservancy.avif",
+        alt: "The Nature Conservancy",
+        label: "TNC",
+      },
+    ],
+  },
+};
+
+const COUNTRY_MODULES_BY_CODE: Partial<Record<string, CountryModulePartners>> =
+  COUNTRY_MODULES_PARTNERS;
+
 export function getCountryModulePartnerLogos(code: string | null): CountryModulePartner[] {
-  return code ? (COUNTRY_MODULE_PARTNER_LOGOS[code] ?? []) : [];
+  return code ? (COUNTRY_MODULES_BY_CODE[code]?.partners ?? []) : [];
 }
 
-export function getPartnerCountryCodes(): CountryCode[] {
-  return COUNTRIES.map((c) => c.code).filter(
-    (code) => getCountryModulePartnerLogos(code).length > 0,
-  );
+export function getCountryModuleDescriptionKey(
+  code: string | null,
+): CountryModulePartners["descriptionKey"] | null {
+  return code ? (COUNTRY_MODULES_BY_CODE[code]?.descriptionKey ?? null) : null;
+}
+
+export function getPartnerCountries(): (typeof COUNTRIES)[number][] {
+  return COUNTRIES.filter((entry) => getCountryModulePartnerLogos(entry.code).length > 0);
 }
 
 export function getPartnersHref(country: string | null): {
@@ -60,6 +77,7 @@ const IDB_ATLAS_LOGO: CountryModulePartnerLogo = {
 const GREEN_CLIMATE_FUND_LOGO: CountryModulePartnerLogo = {
   src: "/partners/green-climate-fund.avif",
   alt: "Green Climate Fund",
+  className: "h-[72px]",
 };
 const ESRI_LOGO: CountryModulePartnerLogo = { src: "/partners/esri.avif", alt: "Esri" };
 const VIZZUALITY_LOGO: CountryModulePartnerLogo = {

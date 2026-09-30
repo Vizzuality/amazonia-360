@@ -2,6 +2,8 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { NuqsTestingAdapter, type OnUrlUpdateFunction } from "nuqs/adapters/testing";
 import { vi } from "vitest";
 
+import { COUNTRIES } from "@/lib/country";
+
 import CountryModulePartnerships from "./country-modules";
 
 vi.mock("next-intl", () => ({
@@ -10,7 +12,7 @@ vi.mock("next-intl", () => ({
 
 vi.mock("@/lib/country/partners", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/country/partners")>()),
-  getPartnerCountryCodes: () => ["ECU", "BOL"],
+  getPartnerCountries: () => COUNTRIES.filter((entry) => ["ECU", "BOL"].includes(entry.code)),
 }));
 
 describe("CountryModulePartnerships tab selection", () => {

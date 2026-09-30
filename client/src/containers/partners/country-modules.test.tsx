@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { NuqsTestingAdapter, type OnUrlUpdateFunction } from "nuqs/adapters/testing";
 import { vi } from "vitest";
 
-import { getPartnerCountryCodes } from "@/lib/country/partners";
+import { getPartnerCountries } from "@/lib/country/partners";
 
 import CountryModulePartnerships from "./country-modules";
 
@@ -34,7 +34,7 @@ describe("CountryModulePartnerships", () => {
   it("renders one tab per partner country with the first selected", () => {
     renderBlock();
 
-    const codes = getPartnerCountryCodes();
+    const codes = getPartnerCountries().map((entry) => entry.code);
     expect(screen.getAllByRole("tab")).toHaveLength(codes.length);
     expect(screen.getByTestId(`partners-country-tab-${codes[0]}`)).toHaveAttribute(
       "aria-selected",

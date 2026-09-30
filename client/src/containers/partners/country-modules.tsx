@@ -5,31 +5,26 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
 
-import { COUNTRIES, type CountryCode } from "@/lib/country";
-import { getCountryModulePartnerLogos, getPartnerCountryCodes } from "@/lib/country/partners";
+import type { CountryCode } from "@/lib/country";
+import {
+  getCountryModuleDescriptionKey,
+  getCountryModulePartnerLogos,
+  getPartnerCountries,
+} from "@/lib/country/partners";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const PARTNER_COUNTRY_CODES = getPartnerCountryCodes();
+const PARTNER_COUNTRIES = getPartnerCountries();
+const PARTNER_COUNTRY_CODES = PARTNER_COUNTRIES.map((entry) => entry.code);
 
 const countryParser = parseAsStringLiteral(PARTNER_COUNTRY_CODES)
   .withDefault(PARTNER_COUNTRY_CODES[0])
   .withOptions({ history: "replace", clearOnDefault: false });
 
-const DESCRIPTION_KEYS = {
-  ECU: "partners-country-module-ECU-description",
-} as const;
-
-function getDescriptionKey(code: CountryCode) {
-  return code in DESCRIPTION_KEYS ? DESCRIPTION_KEYS[code as keyof typeof DESCRIPTION_KEYS] : null;
-}
-
-const PARTNER_COUNTRIES = COUNTRIES.filter((entry) => PARTNER_COUNTRY_CODES.includes(entry.code));
-
 function CountryPartners({ code }: Readonly<{ code: CountryCode }>) {
   const t = useTranslations();
-  const descriptionKey = getDescriptionKey(code);
+  const descriptionKey = getCountryModuleDescriptionKey(code);
 
   return (
     <div className="flex flex-col items-center gap-14">
@@ -87,14 +82,14 @@ export default function CountryModulePartnerships() {
           onValueChange={(value) => setCountry(value as CountryCode)}
           className="flex w-full flex-col items-center gap-14"
         >
-          <TabsList className="bg-muted inline-flex space-x-0 rounded-md border border-blue-100 p-[3px]">
+          <TabsList className="max-w-full space-x-0 rounded-md border border-blue-100 p-[3px]">
             {PARTNER_COUNTRIES.map((entry) => (
               <TabsTrigger
                 key={entry.code}
                 value={entry.code}
                 variant="primary"
                 data-testid={`partners-country-tab-${entry.code}`}
-                className="w-[196px] rounded-sm px-3 py-1.5 text-sm leading-5 font-semibold text-blue-500 data-[state=active]:text-white data-[state=active]:shadow-xs"
+                className="w-[196px] max-w-full shrink rounded-sm px-3 py-1.5 text-sm leading-5 font-semibold text-blue-500 data-[state=active]:text-white data-[state=active]:shadow-xs"
               >
                 {t(entry.moduleNameKey)}
               </TabsTrigger>

@@ -36,9 +36,7 @@ export default function OtherPartners() {
                     alt={logo.alt}
                     width={400}
                     height={160}
-                    className={cn("h-20 w-auto object-contain", {
-                      "h-[72px]": logo.alt === "Green Climate Fund",
-                    })}
+                    className={cn("h-20 w-auto object-contain", logo.className)}
                   />
                 </li>
               ))}

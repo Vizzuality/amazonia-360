@@ -50,13 +50,11 @@ describe("OtherPartners", () => {
     ]);
   });
 
-  it("uses the locale variant of the ACTO logo", () => {
-    mockUseLocale.mockReturnValue("pt");
-
+  it("sizes the Green Climate Fund logo from its data and leaves the others at the default", () => {
     render(<OtherPartners />);
 
-    expect(decodeURIComponent(screen.getByAltText("ACTO ARO").getAttribute("src") ?? "")).toContain(
-      "atco-pt",
-    );
+    expect(screen.getByAltText("Green Climate Fund")).toHaveClass("h-[72px]");
+    expect(screen.getByAltText("Esri")).toHaveClass("h-20");
+    expect(screen.getByAltText("Esri")).not.toHaveClass("h-[72px]");
   });
 });
