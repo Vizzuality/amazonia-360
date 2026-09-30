@@ -602,3 +602,33 @@ async def test_the_map_outline_of_a_dense_place_is_simplified() -> None:
         assert get_num_coordinates(shape(outline)) < result.timing.vertices_sent
     # The figures are still computed over the full boundary.
     assert result.timing.vertices_sent == get_num_coordinates(dense)
+
+
+@pytest.mark.anyio
+async def test_classes_that_add_up_to_more_than_the_area_are_flagged() -> None:
+    class Overlapping(FakeClient):
+        async def features(
+            self, layer: Layer, aoi: BaseGeometry, max_allowable_offset: float
+        ) -> list[Feature]:
+            return [
+                ("Bosque", box(-79.0, -2.0, -77.0, 0.0)),
+                ("Páramo", box(-79.0, -2.0, -77.0, 0.0)),
+            ]
+
+    result = await handlers(Overlapping()).area_by_category(210, TENA)
+    assert result.overlap_ha == pytest.approx(result.aoi_ha, rel=1e-3)
+    assert result.unclassified_ha == 0
+
+
+@pytest.mark.anyio
+async def test_classes_within_the_area_are_not_flagged() -> None:
+    result = await handlers().area_by_category(210, TENA)
+    assert result.overlap_ha is None
+
+
+@pytest.mark.anyio
+async def test_pixel_shares_say_they_are_not_hectares() -> None:
+    result = await handlers().class_shares(129, TENA)
+    assert result.computed_over.to_hectares == "do_not_convert"
+    by_area = await handlers().area_by_category(210, TENA)
+    assert by_area.computed_over.to_hectares is None

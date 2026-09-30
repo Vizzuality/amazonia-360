@@ -12,9 +12,11 @@ Ecuador layers, as of 28 September 2026, it goes one of four ways:
 
 A simple renderer (206, 209) gives every class the same colour, as on the front end.
 
-The map draws the fill with the renderer's alpha and the legend with the colour alone,
-as the front end does (its legend calls Color.toHex(), which drops alpha). On 210 the
-alpha is 2 of 255, so its map shows outlines and its legend shows colours.
+The legend shows the colour alone, as the front end does (its legend calls
+Color.toHex(), which drops alpha). The map fills with the renderer's alpha, except where
+that alpha leaves the fill invisible: on 210 it is 2 of 255, and a legend with colours
+that the map does not show read as a fault in the trials (AM-729). Such a fill takes the
+legend colour at FAINT_FILL_ALPHA.
 """
 
 import math
@@ -29,6 +31,9 @@ PALETTE = [
 ]  # fmt: skip
 
 _PT_TO_PX = 4 / 3
+# Below this the fill cannot be seen over the basemap.
+MIN_FILL_ALPHA = 0.1
+FAINT_FILL_ALPHA = 0.6
 
 
 def _channels(color: Any) -> list[int] | None:
@@ -46,12 +51,14 @@ def _channels(color: Any) -> list[int] | None:
     return channels
 
 
-def _rgba(color: Any) -> str | None:
+def _rgba(color: Any, min_alpha: float = 0.0) -> str | None:
     channels = _channels(color)
     if channels is None:
         return None
     r, g, b = channels[:3]
     a = channels[3] / 255 if len(channels) > 3 else 1.0
+    if a < min_alpha:
+        a = FAINT_FILL_ALPHA
     return f"rgba({r},{g},{b},{a:.3f})"
 
 
@@ -74,7 +81,7 @@ def _symbol_style(symbol: Any) -> Style | None:
     outline = symbol.get("outline")
     outline = outline if isinstance(outline, dict) else {}
     return {
-        "fill": _rgba(symbol.get("color")) or "rgba(0,0,0,0)",
+        "fill": _rgba(symbol.get("color"), MIN_FILL_ALPHA) or "rgba(0,0,0,0)",
         "swatch": _hex(symbol.get("color")),
         "outline": _rgba(outline.get("color")) or "rgba(0,0,0,0)",
         "outline_width": _width(outline.get("width")),

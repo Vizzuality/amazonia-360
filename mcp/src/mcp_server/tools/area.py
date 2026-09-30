@@ -163,7 +163,7 @@ def register_area_tools(
         """Share of the area's pixels in each class of a classed raster. Fast.
 
         A share of pixels, not of hectares: see computed_over for how many pixels
-        and how large.
+        and how large. Never turn a share into hectares.
         """
         return await run(
             "class_shares_in_area",

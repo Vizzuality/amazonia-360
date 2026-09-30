@@ -41,6 +41,8 @@ from mcp_server.places.models import Place
 # About 50 m. The page only draws the outline, and Yasuní's full boundary is 941,856
 # bytes of JSON.
 MAP_OUTLINE_TOLERANCE_DEG = 0.0005
+OVERLAP_MIN_HA = 1.0
+OVERLAP_MIN_SHARE = 0.001
 
 
 def _outline(aoi: Polygon | MultiPolygon) -> dict[str, Any]:
@@ -290,6 +292,7 @@ class AreaHandlers:
         }
         computed_over = ComputedOver(
             type="raster_pixels",
+            to_hectares="do_not_convert",
             categories=len(shares),
             pixels=total,
             pixel_size_deg=pixel,
@@ -405,11 +408,15 @@ class AreaHandlers:
         vertices_received: int = 0,
     ) -> Result:
         aoi_ha = round(geodesic_area_ha(p.aoi), 2)
-        classified = unclassified = None
+        classified = unclassified = overlap = None
         if isinstance(value, dict) and unit == "ha":
             classified = round(sum(value.values()), 2)
-            # Clamped: the clip can exceed the AOI by rounding, never by real area.
             unclassified = round(max(aoi_ha - classified, 0.0), 2)
+            excess = classified - aoi_ha
+            # The simplification alone adds up to 0.03 % (layer 214); more than the
+            # threshold means ground counted in two classes.
+            if excess > max(OVERLAP_MIN_HA, aoi_ha * OVERLAP_MIN_SHARE):
+                overlap = round(excess, 2)
         return Result(
             indicator_id=p.indicator.id,
             value=value,
@@ -431,6 +438,7 @@ class AreaHandlers:
             aoi_ha=aoi_ha,
             classified_ha=classified,
             unclassified_ha=unclassified,
+            overlap_ha=overlap,
             timing=Timing(
                 total_ms=p.watch.total_ms(),
                 arcgis_ms=p.watch.ms("arcgis"),

@@ -22,6 +22,14 @@ class ComputedOver(BaseModel):
             "denominator. A few dozen make a coarse share."
         ),
     )
+    to_hectares: Literal["do_not_convert"] | None = Field(
+        default=None,
+        description=(
+            "raster_pixels only. The shares are of resampled pixels, not of the "
+            "area: never multiply them by aoi_ha to give hectares, not even as an "
+            "estimate. Report them as shares of pixels."
+        ),
+    )
     pixel_size_deg: float | None = Field(
         default=None,
         description=(
@@ -112,6 +120,15 @@ class Result(BaseModel):
             "area_by_category only: aoi_ha minus classified_ha. Hectares in no class "
             "of this layer; they are not a class and the layer says nothing about "
             "them. Includes any part of the area outside the module."
+        ),
+    )
+    overlap_ha: float | None = Field(
+        default=None,
+        description=(
+            "area_by_category only, set only when the classes add up to more than "
+            "the area: the hectares by which classified_ha exceeds aoi_ha. The "
+            "layer's polygons overlap, so some ground is counted in two classes and "
+            "the figures per class are too high. Tell the user."
         ),
     )
     unclassified_share: float | None = Field(

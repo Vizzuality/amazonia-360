@@ -84,13 +84,20 @@ def test_without_a_renderer_each_class_gets_its_own_palette_colour() -> None:
     assert [styles["a"]["fill"], styles["b"]["fill"]] == PALETTE[:2]
 
 
-def test_the_legend_colour_drops_alpha_as_the_front_end_does() -> None:
-    # Layer 210's symbols have an alpha of 2 of 255.
+def test_an_invisible_fill_takes_the_legend_colour() -> None:
+    # Layer 210's symbols have an alpha of 2 of 255 (AM-729).
     faint = {"type": "esriSFS", "color": [209, 108, 196, 2]}
     renderer = unique("Ecosistema", [("Bosque", "Bosque", faint)])
     styles = category_styles(renderer, "Ecosistema", ["Bosque"])
-    assert styles["Bosque"]["fill"] == "rgba(209,108,196,0.008)"
+    assert styles["Bosque"]["fill"] == "rgba(209,108,196,0.600)"
     assert styles["Bosque"]["swatch"] == "#d16cc4"
+
+
+def test_a_visible_fill_keeps_the_renderer_alpha() -> None:
+    half = {"type": "esriSFS", "color": [209, 108, 196, 128]}
+    renderer = unique("Ecosistema", [("Bosque", "Bosque", half)])
+    styles = category_styles(renderer, "Ecosistema", ["Bosque"])
+    assert styles["Bosque"]["fill"] == "rgba(209,108,196,0.502)"
 
 
 @pytest.mark.parametrize(

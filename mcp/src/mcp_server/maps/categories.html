@@ -88,8 +88,9 @@
     const BASEMAP = "https://tiles.openfreemap.org/styles/positron";
     const AREA = "#009ade"; // The front end's POLYGON_SYMBOL.
     const HOVER = "#009aff"; // The front end's highlight colour.
-    const ha = (n) => number(n, { maximumFractionDigits: 0 });
-    const pct = (n) => number(n, { style: "percent", maximumFractionDigits: 1 });
+    // A class that is present never reads as 0.
+    const ha = (n) => (n > 0 && n < 0.5 ? `< ${number(1)}` : number(n, { maximumFractionDigits: 0 }));
+    const pct = (n) => (n > 0 && n < 0.0005 ? `< ${number(0.001, { style: "percent", maximumFractionDigits: 1 })}` : number(n, { style: "percent", maximumFractionDigits: 1 }));
     const legend = document.getElementById("legend");
     legend.textContent = t("waiting");
 
