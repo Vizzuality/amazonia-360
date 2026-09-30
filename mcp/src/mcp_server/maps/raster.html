@@ -90,11 +90,20 @@
       if (layers.some((l) => l.id === "water")) map.moveLayer("water", under);
     }
 
+    // With a place_id the input has no geometry; the result then carries the area.
+    let drawStarted = false;
+    function drawOnce(area) {
+      if (drawStarted || !area) return;
+      drawStarted = true;
+      draw(area).catch((e) => window.view.fail(String(e?.message || e)));
+    }
+
     window.view = {
       input(args) {
-        if (args.area) draw(args.area).catch((e) => window.view.fail(String(e?.message || e)));
+        drawOnce(args.area);
       },
       result(result) {
+        drawOnce(result._meta?.map?.area);
         if (result.isError) {
           legend.innerHTML = `<p class="note">${esc(result.content?.[0]?.text || "")}</p>`;
           return;

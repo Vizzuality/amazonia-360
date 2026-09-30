@@ -231,11 +231,20 @@
       });
     }
 
+    // With a place_id the input has no geometry; the result then carries the area.
+    let drawn = false;
+    function drawOnce(area) {
+      if (drawn || !area) return;
+      drawn = true;
+      draw(area).catch((e) => window.view.fail(String(e?.message || e)));
+    }
+
     window.view = {
       input(args) {
-        if (args.area) draw(args.area).catch((e) => window.view.fail(String(e?.message || e)));
+        drawOnce(args.area);
       },
       async result(result) {
+        drawOnce(result._meta?.map?.area);
         if (result.isError) {
           state.error = result.content?.[0]?.text || t("failed", { message: "" });
           renderLegend();
