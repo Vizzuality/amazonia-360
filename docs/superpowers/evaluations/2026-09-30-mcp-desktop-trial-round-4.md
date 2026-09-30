@@ -156,3 +156,55 @@ Agreed after the round:
 5. The ecosystem map fills classes with their legend colour instead of the renderer's opacity.
 6. The skill's rules are rewritten in the imperative, and the model names the layer used and its
    alternatives before giving the figures.
+
+## Retest, same day
+
+Five questions asked again after the changes, on `4dd622f6`, with the rewritten skill for Q1 to
+Q3 and without it for Q4 and Q5. Calls between 16:17 and 16:32 UTC.
+
+| # | Question | Skill | Tool, indicator | Result | Time |
+|---|---|---|---|---|---|
+| 1 | Muéstrame en un mapa los ecosistemas del cantón Tena | Yes | `map_area_by_category`, 210 | 16 classes, 310,256 ha; 80,099 ha unclassified | 18.1 s |
+| 2 | ¿Cómo es la biodiversidad del cantón Tena? | Yes | none logged | The figures of Q1 | |
+| 3 | ¿Cuánto bosque hay en el cantón Tena? | Yes | `area_by_category`, 206 | 246,868 ha in four strata | 21.4 s |
+| 4 | Según la cobertura del suelo, ¿cuántas hectáreas de cubierta arbórea hay en el cantón Tena? | No | `class_shares_in_area`, 13 | 86.4 % of pixels; no hectares | 5.2 s |
+| 5 | ¿Cómo es la biodiversidad del cantón Tena? | No | `area_by_category`, 210; `class_shares_in_area`, 13; `area_by_category`, 208 | Ecosystems by altitude band, land cover, deforestation | 15.4, 0.6, 5.7 s |
+
+| Behaviour | Without the skill | With the skill |
+|---|---|---|
+| Names the layer before the figures | Sometimes | Always (Q1 to Q3) |
+| Lists the candidate layers and says why one was chosen | No (Q5) | Yes (Q2, Q3) |
+| Guesses what unclassified land is | Yes, "probablemente zonas intervenidas" (Q5) | No (Q1 to Q3) |
+| Turns shares of pixels into hectares | No, stopped by `to_hectares` (Q4) | No |
+| Quotes a caveat unchanged | Not tested | Yes (Q3, layer 206) |
+
+**The skill written as rules changes the answers.** With it, the model listed the candidate layers
+before any figure, said why it chose one, and for "¿cuánto bosque?" took Carbon by forest stratum
+because it is the only forest layer that gives hectares. It quoted the 206 caveat word for word,
+the caveat that was left out in round 3.
+
+**A rule in the result works without the skill.** Asked for hectares from land cover, the model
+without the skill refused and cited the tool: the shares must not be converted. In the first run it
+had given 337,000 ha.
+
+**The fixes show on the map.** Classes of 210 are filled in their legend colour, the tiny class
+reads "< 1 ha", and the figures are those of the Esri JSON reading. The model explained the 80,099
+unclassified hectares with the layer's own description (not a wall-to-wall map; read transformed
+land from a land cover layer).
+
+**`coverage.boundary` was misread again** (Q4). The model said the shares were computed over the
+canton's bounding box instead of its boundary. They were computed over the boundary: 62,902 pixels
+of about 250 m make about 392,000 ha, the canton's area, while its bounding box would hold about
+95,000. The field describes the module's boundary, a rectangle standing in until the official
+polygon arrives. It was misread in round 3 as well.
+
+**Q2 made no call.** No tool call was logged for it, and the figures are those of Q1. Either the
+question was asked in the conversation of Q1, which is fine, or the figures came from Desktop's
+memory of another conversation, which rule 1 of the skill forbids.
+
+**Times are higher than in the first run** (18.1 against 13.3 s for the Tena map). With one run
+each, this may be ArcGIS; back to back, `f=json` and `f=geojson` took about the same time.
+
+Done after the retest: the module's outline is derived from layer 211, which covers the module wall
+to wall, so `coverage` measures against the module instead of the rectangle. `coverage.boundary`
+stays, with a description that says what it is about.
