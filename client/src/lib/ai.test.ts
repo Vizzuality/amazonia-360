@@ -1,13 +1,24 @@
-import { getQueryFeatureId, getQueryImageryId } from "@/lib/indicators";
+import { createElement, ReactNode } from "react";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { renderHook } from "@testing-library/react";
+
+import { getIndicatorsOptions, getQueryFeatureId, getQueryImageryId } from "@/lib/indicators";
+import { useReportCountry } from "@/lib/report/use-report-country";
 
 import { ImageryAggregation, Indicator } from "@/types/indicator";
 
-import { getTopicEvidence, getFeatureEvidence } from "./ai";
+import { getTopicEvidence, getFeatureEvidence, useGetTopicSummary } from "./ai";
 
 vi.mock("@/lib/indicators", () => ({
   getIndicators: vi.fn(),
+  getIndicatorsOptions: vi.fn(() => ({ queryKey: ["indicators"] })),
   getQueryFeatureId: vi.fn(),
   getQueryImageryId: vi.fn(),
+}));
+
+vi.mock("@/lib/report/use-report-country", () => ({
+  useReportCountry: vi.fn(),
 }));
 
 vi.mock("@/types/generated/text-generation", () => ({
@@ -252,5 +263,28 @@ describe("getFeatureEvidence", () => {
     expect(evidence.classes_truncated).toBe(true);
     // Ranked by area, so the largest class survives the cap.
     expect(evidence.classes?.[0]).toMatchObject({ label: "Class 19", area_km2: 20 });
+  });
+});
+
+describe("useGetTopicSummary", () => {
+  const getWrapper = (queryClient: QueryClient) =>
+    function Wrapper({ children }: { children: ReactNode }) {
+      return createElement(QueryClientProvider, { client: queryClient }, children);
+    };
+
+  test.each([
+    [["ECU"], ["ECU"]],
+    [null, []],
+  ] as const)("loads the catalogue for the report's country %j", async (country, codes) => {
+    vi.mocked(useReportCountry).mockReturnValue(country && [...country]);
+    const queryClient = new QueryClient();
+    vi.spyOn(queryClient, "ensureQueryData").mockResolvedValue([]);
+
+    const { result } = renderHook(() => useGetTopicSummary(), {
+      wrapper: getWrapper(queryClient),
+    });
+    await result.current.mutateAsync({ options: {}, locale: "en", location: null });
+
+    expect(getIndicatorsOptions).toHaveBeenCalledWith("en", codes);
   });
 });
