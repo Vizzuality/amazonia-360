@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 import { Params } from "next/dist/server/request/params";
 import { useParams } from "next/navigation";
 
 import { Separator } from "@radix-ui/react-select";
 import { useSetAtom } from "jotai";
+import { useLocale } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
@@ -26,6 +27,7 @@ import DesktopDrawingTools from "./drawing-tools/desktop";
 import Logo from "./logo";
 import MobileNavigation from "./mobile-navigation";
 import NavigationLinks from "./navigation-links";
+import { useFitsInline } from "./use-fits-inline";
 
 function getRoutes(pathname: string, params: Params) {
   const { id } = params;
@@ -44,6 +46,11 @@ function getRoutes(pathname: string, params: Params) {
 export default function Header() {
   const params = useParams();
   const pathname = usePathname();
+  const locale = useLocale();
+  const rowRef = useRef<HTMLDivElement>(null);
+  const linksRef = useRef<HTMLElement>(null);
+  const fallbackRef = useRef<HTMLDivElement>(null);
+  const fitsInline = useFitsInline({ rowRef, linksRef, fallbackRef, resetKey: locale });
 
   const [location] = useSyncLocation();
   const setEditionMode = useSetAtom(reportEditionModeAtom);
@@ -55,15 +62,17 @@ export default function Header() {
 
     return (
       <>
-        <Media greaterThanOrEqual="xl">
-          <NavigationLinks />
-        </Media>
+        {fitsInline && (
+          <Media greaterThanOrEqual="xl">
+            <NavigationLinks ref={linksRef} />
+          </Media>
+        )}
         {!location && isReportSub && <DesktopDrawingTools />}
         {location && isReportSub && <ConfirmLocation />}
         {isReportSub && <Separator className="bg-border h-4 w-px" />}
       </>
     );
-  }, [pathname, params, location]);
+  }, [pathname, params, location, fitsInline]);
 
   useEffect(() => {
     // Hide sidebar when navigating away from report
@@ -82,7 +91,7 @@ export default function Header() {
         // "border-blue-100": isReport,
       })}
     >
-      <div className="container flex items-center justify-between md:mx-auto">
+      <div ref={rowRef} className="container flex items-center justify-between md:mx-auto">
         <Logo />
         <Media greaterThanOrEqual="md" className="flex grow items-center">
           {/* `@artsy/fresnel` ships `.fresnel-container { margin: 0; padding: 0 }`, which beats
@@ -103,6 +112,13 @@ export default function Header() {
           <Media between={["md", "xl"]}>
             <MobileNavigation inline />
           </Media>
+          {!fitsInline && (
+            <Media greaterThanOrEqual="xl">
+              <div ref={fallbackRef}>
+                <MobileNavigation inline />
+              </div>
+            </Media>
+          )}
         </Media>
 
         <Media lessThan="md">

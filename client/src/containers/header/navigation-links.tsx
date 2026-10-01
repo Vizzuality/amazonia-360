@@ -1,5 +1,7 @@
 "use client";
 
+import { Ref } from "react";
+
 import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
@@ -10,7 +12,7 @@ import { Link, LocaleLink, usePathname } from "@/i18n/navigation";
 
 function getItemClassName(active: boolean): string {
   return cn(
-    "text-foreground rounded-md px-3 py-1.5 text-sm leading-5 font-semibold hover:text-cyan-500",
+    "text-foreground rounded-md px-3 py-1.5 text-sm leading-5 font-semibold whitespace-nowrap hover:text-cyan-500",
     { "bg-blue-50 text-cyan-700 hover:text-cyan-700": active },
   );
 }
@@ -19,7 +21,7 @@ function getAriaCurrent(active: boolean): "page" | undefined {
   return active ? "page" : undefined;
 }
 
-export default function NavigationLinks() {
+export default function NavigationLinks({ ref }: { ref?: Ref<HTMLElement> }) {
   const t = useTranslations();
   const pathname = usePathname();
 
@@ -27,7 +29,7 @@ export default function NavigationLinks() {
   const isPartners = pathname === "/partners";
 
   return (
-    <nav aria-label={t("header-nav-label")} className="flex items-center space-x-4">
+    <nav ref={ref} aria-label={t("header-nav-label")} className="flex items-center space-x-4">
       <Link
         href="/reports"
         aria-current={getAriaCurrent(isReport)}
