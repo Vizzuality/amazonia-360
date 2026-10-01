@@ -1,7 +1,5 @@
 "use client";
 
-import { Ref } from "react";
-
 import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
@@ -21,7 +19,7 @@ function getAriaCurrent(active: boolean): "page" | undefined {
   return active ? "page" : undefined;
 }
 
-export default function NavigationLinks({ ref }: Readonly<{ ref?: Ref<HTMLElement> }>) {
+export default function NavigationLinks() {
   const t = useTranslations();
   const pathname = usePathname();
 
@@ -29,7 +27,7 @@ export default function NavigationLinks({ ref }: Readonly<{ ref?: Ref<HTMLElemen
   const isPartners = pathname === "/partners";
 
   return (
-    <nav ref={ref} aria-label={t("header-nav-label")} className="flex items-center space-x-4">
+    <nav aria-label={t("header-nav-label")} className="flex items-center space-x-4">
       <Link
         href="/reports"
         aria-current={getAriaCurrent(isReport)}

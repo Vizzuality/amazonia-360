@@ -48,9 +48,14 @@ export default function ConfirmLocation() {
   if (!location || !LOCATION) return null;
 
   return (
-    <div className="flex w-full items-center justify-between space-x-2 text-sm">
-      <div className="text-muted-foreground font-semibold uppercase">{TITLE}</div>
-      <div className="text-foreground text-xs font-bold">
+    <div className="flex w-full min-w-0 items-center justify-between space-x-2 text-sm">
+      <div
+        title={TITLE ?? undefined}
+        className="text-muted-foreground min-w-0 truncate font-semibold uppercase"
+      >
+        {TITLE}
+      </div>
+      <div className="text-foreground text-xs font-bold whitespace-nowrap">
         {formatNumber(AREA, {
           maximumFractionDigits: 0,
         })}{" "}
