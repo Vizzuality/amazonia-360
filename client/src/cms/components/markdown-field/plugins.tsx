@@ -11,8 +11,10 @@ import {
   Separator,
   UndoRedo,
   addExportVisitor$,
+  createRootEditorSubscription$,
   diffSourcePlugin,
   headingsPlugin,
+  lexical,
   linkDialogPlugin,
   linkPlugin,
   listsPlugin,
@@ -50,6 +52,28 @@ const hardBreakPlugin = realmPlugin({
   init: (realm) => realm.pub(addExportVisitor$, hardBreakVisitor),
 });
 
+// Formats with no CommonMark syntax: MDXEditor would write them as raw HTML (`<u>`, `<sup>`)
+// or as GFM the site does not render (`~~`). Hiding their buttons is not enough, since
+// Cmd+U and pasted rich text still apply them.
+const UNRENDERABLE_FORMATS = [
+  "underline",
+  "strikethrough",
+  "subscript",
+  "superscript",
+  "highlight",
+] as const satisfies lexical.TextFormatType[];
+
+const renderableFormatsPlugin = realmPlugin({
+  init: (realm) =>
+    realm.pub(createRootEditorSubscription$, (editor) =>
+      editor.registerNodeTransform(lexical.TextNode, (node) => {
+        for (const format of UNRENDERABLE_FORMATS) {
+          if (node.hasFormat(format)) node.toggleFormat(format);
+        }
+      }),
+    ),
+});
+
 /**
  * Everything the catalogue's Markdown editor can produce, and nothing the site cannot render.
  *
@@ -70,6 +94,7 @@ export const markdownFieldPlugins = (): RealmPlugin[] => [
   thematicBreakPlugin(),
   markdownShortcutPlugin(),
   hardBreakPlugin(),
+  renderableFormatsPlugin(),
   diffSourcePlugin({ viewMode: "rich-text" }),
   toolbarPlugin({
     toolbarContents: () => (

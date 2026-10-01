@@ -16,8 +16,6 @@ export type MarkdownEditorProps = Omit<
 const TO_MARKDOWN_OPTIONS = { bullet: "-", rule: "-" } as const;
 
 /**
- * MDXEditor configured for catalogue prose.
- *
  * `suppressHtmlProcessing` switches the parser from MDX back to CommonMark. Under MDX, every
  * `<https://…>` autolink is read as a JSX tag and the whole description fails to load.
  */
