@@ -112,9 +112,10 @@ export function isSavedReportPathname(pathname: string): boolean {
 export function withCountry(pathname: string, country: string | null): string {
   if (!pathname.startsWith("/")) return pathname;
   if (country === null) return pathname;
+  if (pathname === "/") return pathname;
   if (isUnscopedPathname(pathname)) return pathname;
   if (isCountryCode(segmentsOf(pathname)[0])) return pathname;
-  return `/${country}${pathname === "/" ? "" : pathname}`;
+  return `/${country}${pathname}`;
 }
 
 export function resolveCountryHref<Href>(href: Href, country: string | null): Href {
@@ -180,4 +181,12 @@ export function routedPathname(pathname: string, locales: readonly string[]): st
 
 export function getRegionalPathname(pathname: string, locales: readonly string[]): string | null {
   return routedPathname(canonicalCountryPathname(pathname, locales) ?? pathname, locales);
+}
+
+export function getRegionalHomePathname(
+  pathname: string,
+  locales: readonly string[],
+): string | null {
+  const regional = getRegionalPathname(pathname, locales);
+  return regional !== null && segmentsOf(regional).length === 1 ? regional : null;
 }

@@ -72,9 +72,7 @@ export default function SubtopicsItem({ id, topic_id, name }: Subtopic) {
               })}
             />
             <div className="flex flex-col items-start justify-start space-y-1">
-              <span className="text-muted-foreground text-xs leading-none font-bold tracking-[0.6px] uppercase transition-none">
-                {name}
-              </span>
+              <span className="text-sm font-medium transition-none">{name}</span>
             </div>
           </div>
           {!!SELECTED && (

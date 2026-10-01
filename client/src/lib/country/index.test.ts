@@ -4,6 +4,7 @@ import {
   canonicalCountryPathname,
   countryFromPathname,
   getCountryCodes,
+  getRegionalHomePathname,
   getRegionalPathname,
   isSavedReportPathname,
   isUnscopedPathname,
@@ -36,7 +37,10 @@ describe("countryFromPathname", () => {
 describe("withCountry", () => {
   it("prefixes a scoped path", () => {
     expect(withCountry("/reports/grid", "ECU")).toBe("/ECU/reports/grid");
-    expect(withCountry("/", "ECU")).toBe("/ECU");
+  });
+
+  it("leaves the home page out of the module", () => {
+    expect(withCountry("/", "ECU")).toBe("/");
   });
 
   it("leaves the path alone for the Amazon Region", () => {
@@ -114,6 +118,20 @@ describe("routedPathname", () => {
 describe("getRegionalPathname", () => {
   it("drops a live code typed in lowercase in one step", () => {
     expect(getRegionalPathname("/en/ecu/reports", LOCALES)).toBe("/en/reports");
+  });
+});
+
+describe("getRegionalHomePathname", () => {
+  it("sends a module's home page to the regional one", () => {
+    expect(getRegionalHomePathname("/en/ECU", LOCALES)).toBe("/en");
+    expect(getRegionalHomePathname("/es/ecu", LOCALES)).toBe("/es");
+  });
+
+  it("leaves every other path alone", () => {
+    expect(getRegionalHomePathname("/en/ECU/reports", LOCALES)).toBeNull();
+    expect(getRegionalHomePathname("/en", LOCALES)).toBeNull();
+    expect(getRegionalHomePathname("/en/reports", LOCALES)).toBeNull();
+    expect(getRegionalHomePathname("/en/BOL", LOCALES)).toBeNull();
   });
 });
 

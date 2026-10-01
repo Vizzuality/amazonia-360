@@ -41,64 +41,63 @@ const Partner = ({
         width={width}
         height={height}
         className={cn("h-full max-h-20 w-auto object-contain", {
-          "max-h-24": alt === "ACTO ARO",
+          "max-h-32": alt === "ACTO ARO",
         })}
       />
     </a>
   </li>
 );
 
-const PARTNER_ROWS = [
-  [
-    {
-      href: "https://oraotca.org/",
-      src: "/partners/atco-en.avif",
-      alt: "ACTO ARO",
-      width: 621,
-      height: 192,
-    },
-    {
-      href: "https://datapartnership.org/",
-      src: "/partners/ddp.avif",
-      alt: "Data Digital Partnership",
-      width: 420,
-      height: 192,
-    },
-  ],
-  [
-    {
-      href: "https://www.iadb.org",
-      src: "/partners/idb-atlas.avif",
-      alt: "IDB Atlas",
-      width: 701,
-      height: 192,
-    },
-    {
-      href: "https://www.greenclimate.fund/",
-      src: "/partners/green-climate-fund.avif",
-      alt: "Green Climate Fund",
-      width: 331,
-      height: 192,
-    },
-  ],
-  [
-    {
-      href: "https://www.esri.com/",
-      src: "/partners/esri.avif",
-      alt: "Esri",
-      width: 239,
-      height: 192,
-    },
-    {
-      href: "https://vizzuality.com",
-      src: "/partners/vizzuality.avif",
-      alt: "Vizzuality",
-      width: 500,
-      height: 192,
-    },
-  ],
+const PARTNERS = [
+  {
+    href: "https://oraotca.org/",
+    src: "/partners/atco-en.avif",
+    alt: "ACTO ARO",
+    className: "p-1 w-full",
+    width: 621,
+    height: 192,
+  },
+  {
+    href: "https://www.iadb.org",
+    src: "/partners/idb-atlas.avif",
+    alt: "IDB Atlas",
+    className: "p-1 -top-4",
+    width: 701,
+    height: 192,
+  },
+  {
+    href: "https://datapartnership.org/",
+    src: "/partners/ddp.avif",
+    alt: "Data Digital Partnership",
+    className: "p-1 -top-4",
+    width: 420,
+    height: 192,
+  },
+  {
+    href: "https://www.esri.com/",
+    src: "/partners/esri.avif",
+    alt: "Esri",
+    className: "p-1 -top-4",
+    width: 239,
+    height: 192,
+  },
+  {
+    href: "https://vizzuality.com",
+    src: "/partners/vizzuality.avif",
+    alt: "Vizzuality",
+    className: "p-1 -top-4",
+    width: 500,
+    height: 192,
+  },
 ];
 
+const GCF_PARTNER = {
+  href: "https://www.greenclimate.fund/",
+  src: "/partners/green-climate-fund.avif",
+  alt: "Green Climate Fund",
+  width: 331,
+  height: 192,
+};
 export default function Partners() {
   const t = useTranslations();
 
@@ -136,17 +135,30 @@ export default function Partners() {
         <div
           className={`mt-10 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${isSectionInView ? "md:animate-in md:fade-in-0 md:slide-in-from-right-20 overflow-hidden md:duration-700" : "opacity-0"}`}
         >
-          <div className="mx-auto flex flex-col items-center gap-10">
-            {PARTNER_ROWS.map((row) => (
-              <ul
-                key={row[0].alt}
-                className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4"
-              >
-                {row.map((partner) => (
-                  <Partner {...partner} key={partner.alt} className="p-1" />
-                ))}
-              </ul>
+          <ul className="mx-auto flex max-w-xl flex-wrap items-center justify-center gap-x-2 gap-y-4 xl:gap-x-4">
+            {PARTNERS.map((partner) => (
+              <Partner {...partner} key={partner.alt} />
             ))}
+          </ul>
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-blue-300 to-transparent" />
+          <div className="flex items-center justify-center gap-4 pt-6">
+            <p className="tracking-wide-lg text-sm font-semibold text-blue-400 uppercase">
+              {t("landing-partners-powered-by")}
+            </p>
+            <a
+              href={GCF_PARTNER.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center"
+            >
+              <Image
+                src={GCF_PARTNER.src}
+                alt={GCF_PARTNER.alt}
+                width={GCF_PARTNER.width}
+                height={GCF_PARTNER.height}
+                className="h-auto max-h-20 w-auto object-contain"
+              />
+            </a>
           </div>
         </div>
       </div>
