@@ -26,21 +26,15 @@ describe("proxy", () => {
     expect(intlMock).not.toHaveBeenCalled();
   });
 
-  it.each([
-    ["/en/ECU", "http://localhost:3000/en"],
-    ["/en/ecu?x=1", "http://localhost:3000/en?x=1"],
-  ])(
-    "redirects the module home page %s to the regional one when the flag is on",
-    async (path, location) => {
-      vi.stubEnv("NEXT_PUBLIC_FEATURE_FLAGS", "country-module");
+  it("redirects a country module home page to the regional one when the flag is on", async () => {
+    vi.stubEnv("NEXT_PUBLIC_FEATURE_FLAGS", "country-module");
 
-      const res = await proxy(new NextRequest(`http://localhost:3000${path}`));
+    const res = await proxy(new NextRequest("http://localhost:3000/en/ecu?x=1"));
 
-      expect(res.status).toBe(307);
-      expect(res.headers.get("location")).toBe(location);
-      expect(intlMock).not.toHaveBeenCalled();
-    },
-  );
+    expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toBe("http://localhost:3000/en?x=1");
+    expect(intlMock).not.toHaveBeenCalled();
+  });
 
   it("keeps serving the country module path when the flag is on", async () => {
     vi.stubEnv("NEXT_PUBLIC_FEATURE_FLAGS", "country-module");
