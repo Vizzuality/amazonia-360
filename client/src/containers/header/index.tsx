@@ -31,6 +31,10 @@ function getLinksBreakpoint(hasConfirmBar: boolean): "xl" | "2xl" {
   return hasConfirmBar ? "2xl" : "xl";
 }
 
+function getCountrySelectorBreakpoint(hasConfirmBar: boolean): "md" | "xl" {
+  return hasConfirmBar ? "xl" : "md";
+}
+
 function getRoutes(pathname: string, params: Params) {
   const { id } = params;
   const r = pathname.match(/^(?:\/[a-z]{2})?\/reports(?:\/(grid|indicators))?\/?$/);
@@ -55,6 +59,9 @@ export default function Header() {
   const { setOpen } = useSidebar();
 
   const linksBreakpoint = getLinksBreakpoint(!!location && getRoutes(pathname, params).isReportSub);
+  const countrySelectorBreakpoint = getCountrySelectorBreakpoint(
+    !!location && getRoutes(pathname, params).isReportSub,
+  );
 
   const DYNAMIC_HEADER = useMemo(() => {
     const { isReportSub } = getRoutes(pathname, params);
@@ -88,14 +95,10 @@ export default function Header() {
         // "border-blue-100": isReport,
       })}
     >
-      <div className="container flex items-center justify-between md:mx-auto">
+      <div className="container flex items-center justify-between gap-6 md:mx-auto">
         <Logo />
-        <Media greaterThanOrEqual="md" className="flex grow items-center">
-          {/* `@artsy/fresnel` ships `.fresnel-container { margin: 0; padding: 0 }`, which beats
-              Tailwind's spacing on the container itself, so the inset lives one level in. */}
-          <div className="pl-6">
-            <CountrySelector />
-          </div>
+        <Media greaterThanOrEqual={countrySelectorBreakpoint} className="flex grow items-center">
+          <CountrySelector />
         </Media>
 
         <Media greaterThanOrEqual="md" className="flex min-w-0 items-center gap-4">

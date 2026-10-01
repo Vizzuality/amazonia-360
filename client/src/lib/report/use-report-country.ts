@@ -13,5 +13,5 @@ export const useReportCountry = (): Report["country"] => {
   const { id } = useParams();
   const { data } = useReport({ id: `${id}` });
   if (!isFeatureEnabled("country-module")) return null;
-  return data?.country ?? null;
+  return data?.country?.length ? data.country : null;
 };

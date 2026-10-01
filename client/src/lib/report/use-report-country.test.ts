@@ -51,6 +51,19 @@ describe("useReportCountry", () => {
     await waitFor(() => expect(result.current).toBeNull());
   });
 
+  it("returns null for a regional report, which the CMS stores as an empty list", async () => {
+    const reportPromise = Promise.resolve({ country: [] as Report["country"] } as Report);
+    findByIDMock.mockReturnValue(reportPromise);
+
+    const { result } = renderHook(() => useReportCountry(), { wrapper: getWrapper() });
+
+    await act(async () => {
+      await reportPromise;
+    });
+
+    expect(result.current).toBeNull();
+  });
+
   it("ignores the stored module when the flag is off", async () => {
     vi.stubEnv("NEXT_PUBLIC_FEATURE_FLAGS", "");
     const reportPromise = Promise.resolve({ country: ["ECU"] } as Report);
