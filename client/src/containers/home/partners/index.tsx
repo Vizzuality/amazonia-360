@@ -136,8 +136,8 @@ export default function Partners() {
           className={`mt-10 flex w-full flex-col space-y-4 md:mt-0 md:w-1/2 ${isSectionInView ? "md:animate-in md:fade-in-0 md:slide-in-from-right-20 overflow-hidden md:duration-700" : "opacity-0"}`}
         >
           <ul className="mx-auto flex max-w-xl flex-wrap items-center justify-center gap-x-2 gap-y-4 xl:gap-x-4">
-            {PARTNERS.map((partner, index) => (
-              <Partner {...partner} key={`partner-${index}`} />
+            {PARTNERS.map((partner) => (
+              <Partner {...partner} key={partner.alt} />
             ))}
           </ul>
           <div className="h-px w-full bg-gradient-to-r from-transparent via-blue-300 to-transparent" />
