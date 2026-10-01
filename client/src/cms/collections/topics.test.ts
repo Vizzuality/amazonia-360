@@ -2,6 +2,7 @@ import type { CollectionConfig, JoinField, RelationshipField } from "payload";
 
 import SUBTOPICS from "@/../datum/subtopics.json";
 import TOPICS from "@/../datum/topics.json";
+import { catalogueCreateAccess } from "@/cms/access/catalogue";
 import { findFieldByName, isEmptyValue, namedFields } from "@/cms/test-utils/find-field";
 
 import { Indicators } from "./Indicators";
@@ -54,11 +55,15 @@ describe.each([
     });
     expect(collection.access?.read?.(admin)).toBe(true);
 
-    for (const operation of ["create", "update", "delete"] as const) {
+    for (const operation of ["update", "delete"] as const) {
       expect(collection.access?.[operation]?.(anonymous)).toBe(false);
       expect(collection.access?.[operation]?.(signedInUser)).toBe(false);
       expect(collection.access?.[operation]?.(admin)).toBe(true);
     }
+  });
+
+  test("is created only by import, never by hand", () => {
+    expect(collection.access?.create).toBe(catalogueCreateAccess);
   });
 
   test("groups under Catalogue in the admin UI", () => {

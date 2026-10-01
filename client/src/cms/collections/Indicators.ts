@@ -6,8 +6,8 @@ import { catalogueAccess } from "@/cms/access/catalogue";
 import { invalidDefaultMessage, isAllowedDefault } from "@/cms/fields/default-visualization-type";
 import { ResourceField } from "@/cms/fields/resource";
 import { sourceIdField } from "@/cms/fields/source-id";
-import { autoIncrementSourceId } from "@/cms/hooks/auto-increment-source-id";
 import { warnOnVisualizationMismatch } from "@/cms/hooks/indicator-visualization";
+import { rejectInvalidImportRow } from "@/cms/import-export/catalogue-import";
 
 export const Indicators: CollectionConfig = {
   slug: "indicators",
@@ -128,6 +128,6 @@ export const Indicators: CollectionConfig = {
   ],
   hooks: {
     beforeChange: [warnOnVisualizationMismatch],
-    beforeValidate: [autoIncrementSourceId],
+    beforeValidate: [rejectInvalidImportRow],
   },
 };

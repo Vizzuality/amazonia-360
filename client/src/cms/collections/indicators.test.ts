@@ -5,6 +5,7 @@ import { COUNTRIES } from "@/lib/country";
 import INDICATORS_ECU from "@/../datum/indicators.ECU.json";
 import INDICATORS from "@/../datum/indicators.json";
 import SUBTOPICS from "@/../datum/subtopics.json";
+import { catalogueCreateAccess } from "@/cms/access/catalogue";
 import { invalidDefaultMessage } from "@/cms/fields/default-visualization-type";
 import { warnOnVisualizationMismatch } from "@/cms/hooks/indicator-visualization";
 import { findFieldByName, isEmptyValue } from "@/cms/test-utils/find-field";
@@ -46,6 +47,10 @@ describe("Indicators", () => {
 
     expect(Indicators.access?.update?.(anonymous)).toBe(false);
     expect(Indicators.access?.update?.(admin)).toBe(true);
+  });
+
+  test("is created only by import, never by hand", () => {
+    expect(Indicators.access?.create).toBe(catalogueCreateAccess);
   });
 
   test("keeps id (the Content Code) required, read-only and immutable", () => {
