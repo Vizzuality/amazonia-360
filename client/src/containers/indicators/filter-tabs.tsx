@@ -50,12 +50,12 @@ export function IndicatorsFilterTabs({
 
   return (
     <Tabs value={value} onValueChange={(next) => onValueChange(next as IndicatorScopeFilter)}>
-      <TabsList className="gap-x-4 space-x-0 bg-transparent px-3">
+      <TabsList className="border-border flex w-full justify-start gap-x-4 space-x-0 border-b bg-transparent">
         {(Object.keys(FILTER_KEYS) as IndicatorScopeFilter[]).map((filter) => (
           <TabsTrigger
             key={filter}
             value={filter}
-            className="focus-visible:ring-offset-0 focus-visible:ring-inset"
+            className="-mb-px focus-visible:ring-offset-0 focus-visible:ring-inset"
           >
             {t(FILTER_KEYS[filter] as Parameters<typeof t>[0], { count: counts[filter] })}
           </TabsTrigger>
