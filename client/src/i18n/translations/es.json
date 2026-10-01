@@ -46,7 +46,7 @@
   "country-module-modal-body": "Tu área de interés se encuentra dentro de la {name}. El mapa ahora se enriquece con datos nacionales oficiales junto a la base regional.",
   "country-module-modal-body-no-area": "Ahora estás en el módulo de {name}. El mapa se enriquece con datos nacionales oficiales junto a la línea base regional. Dibuja o busca un área dentro de la Amazonía de {name} para empezar.",
   "country-module-deactivated-title": "Has salido del módulo {name}",
-  "country-module-deactivated-body": "Tu área está fuera de los límites de {name}. Se ha conservado, pero solo hay datos regionales disponibles.",
+  "country-module-deactivated-body": "Tu área está fuera de los límites de {name}. Solo hay datos regionales disponibles.",
   "country-module-modal-collaboration-title": "En colaboración con",
   "country-module-modal-dont-show-again": "No volver a mostrar este mensaje",
   "country-module-modal-national-layers": "Capas nacionales",
