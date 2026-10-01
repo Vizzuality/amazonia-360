@@ -6,7 +6,12 @@ import createMiddleware from "next-intl/middleware";
 
 import { env } from "@/env.mjs";
 
-import { canonicalCountryPathname, getRegionalPathname, routedPathname } from "@/lib/country";
+import {
+  canonicalCountryPathname,
+  getRegionalHomePathname,
+  getRegionalPathname,
+  routedPathname,
+} from "@/lib/country";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 
 import { routing } from "@/i18n/routing";
@@ -50,7 +55,7 @@ export default async function proxy(req: NextRequest) {
   }
 
   const regional = isFeatureEnabled("country-module")
-    ? null
+    ? getRegionalHomePathname(pathname, routing.locales)
     : getRegionalPathname(pathname, routing.locales);
   if (regional) {
     const url = req.nextUrl.clone();

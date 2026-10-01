@@ -182,3 +182,11 @@ export function routedPathname(pathname: string, locales: readonly string[]): st
 export function getRegionalPathname(pathname: string, locales: readonly string[]): string | null {
   return routedPathname(canonicalCountryPathname(pathname, locales) ?? pathname, locales);
 }
+
+export function getRegionalHomePathname(
+  pathname: string,
+  locales: readonly string[],
+): string | null {
+  const regional = getRegionalPathname(pathname, locales);
+  return regional !== null && segmentsOf(regional).length === 1 ? regional : null;
+}
