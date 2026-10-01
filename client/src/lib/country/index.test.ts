@@ -36,7 +36,10 @@ describe("countryFromPathname", () => {
 describe("withCountry", () => {
   it("prefixes a scoped path", () => {
     expect(withCountry("/reports/grid", "ECU")).toBe("/ECU/reports/grid");
-    expect(withCountry("/", "ECU")).toBe("/ECU");
+  });
+
+  it("leaves the home page out of the module", () => {
+    expect(withCountry("/", "ECU")).toBe("/");
   });
 
   it("leaves the path alone for the Amazon Region", () => {

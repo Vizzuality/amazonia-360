@@ -47,13 +47,22 @@ describe("useSignOut", () => {
     });
   });
 
-  test("keeps the destination inside the active country module", () => {
+  test("keeps a scoped destination inside the active country module", () => {
+    countryMock.mockReturnValue("bo");
+    const { result } = renderHook(() => useSignOut());
+
+    result.current("/reports");
+
+    expect(getPathnameMock).toHaveBeenCalledWith({ href: "/bo/reports", locale: "en" });
+  });
+
+  test("sends the user to the home page outside the country module", () => {
     countryMock.mockReturnValue("bo");
     const { result } = renderHook(() => useSignOut());
 
     result.current();
 
-    expect(getPathnameMock).toHaveBeenCalledWith({ href: "/bo", locale: "en" });
+    expect(getPathnameMock).toHaveBeenCalledWith({ href: "/", locale: "en" });
   });
 
   test("leaves the country off the paths that are never country-scoped", () => {
