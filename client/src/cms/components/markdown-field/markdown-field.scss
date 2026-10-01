@@ -48,6 +48,39 @@
     border-color: var(--theme-error-500);
   }
 
+  // The source view is CodeMirror with MDXEditor's hard-coded `basicLight` theme: white
+  // surfaces and a near-black caret, unreadable in Payload's dark mode. Its syntax colours
+  // are mid-tone Nord and read on both, so only the surfaces are themed.
+  .mdxeditor-source-editor .cm-editor {
+    background-color: var(--theme-input-bg);
+    color: var(--theme-text);
+
+    .cm-content {
+      caret-color: var(--theme-text);
+    }
+
+    .cm-cursor,
+    .cm-dropCursor {
+      border-left-color: var(--theme-text);
+    }
+
+    .cm-gutters {
+      background-color: var(--theme-elevation-50);
+      color: var(--theme-elevation-500);
+    }
+
+    .cm-activeLine,
+    .cm-activeLineGutter {
+      background-color: var(--theme-elevation-100);
+    }
+
+    &.cm-focused .cm-selectionBackground,
+    .cm-selectionBackground,
+    .cm-content ::selection {
+      background-color: var(--theme-elevation-200);
+    }
+  }
+
   [role="toolbar"] {
     border-radius: var(--style-radius-s) var(--style-radius-s) 0 0;
   }
