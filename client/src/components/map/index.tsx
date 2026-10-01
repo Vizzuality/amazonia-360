@@ -156,7 +156,7 @@ export function MapView({
       if (!isPdf) {
         const view = mapViewRef.current;
         // customElements.define runs at import time, so this stays dynamic to avoid breaking SSR
-        import("@arcgis/map-components/components/arcgis-scale-bar").then(() => {
+        void import("@arcgis/map-components/components/arcgis-scale-bar").then(() => {
           // Bail if a later effect run already replaced this view by the time the import resolves
           if (mapViewRef.current !== view) return;
           const scaleBar = document.createElement("arcgis-scale-bar") as ArcgisScaleBar;

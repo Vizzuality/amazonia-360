@@ -114,7 +114,6 @@ export default function ModuleList({
   const setTmpBbox = useSetAtom(tmpBboxAtom);
 
   const unavailableLabelId = useId();
-  const unavailableDescriptionId = useId();
 
   const regional = options.filter((option) => option.code === null);
   const available = options.filter((option) => option.code !== null && !option.disabled);
@@ -159,21 +158,15 @@ export default function ModuleList({
       {unavailable.length > 0 && (
         <fieldset
           aria-labelledby={unavailableLabelId}
-          aria-describedby={unavailableDescriptionId}
           data-testid="country-selector-unavailable"
           className="flex flex-col gap-2"
         >
-          <div className="flex flex-col gap-1">
-            <p
-              id={unavailableLabelId}
-              className="text-[11px] font-bold tracking-[0.55px] text-blue-400 uppercase"
-            >
-              {t("country-module-selector-unavailable-label")}
-            </p>
-            <p id={unavailableDescriptionId} className="text-muted-foreground text-xs font-medium">
-              {t("country-module-selector-unavailable-description", { count: unavailable.length })}
-            </p>
-          </div>
+          <p
+            id={unavailableLabelId}
+            className="text-[11px] font-bold tracking-[0.55px] text-blue-400 uppercase"
+          >
+            {t("country-module-selector-unavailable-label")}
+          </p>
           <div className="flex flex-col gap-0.5">
             {unavailable.map((option) => (
               <ModuleRow key={option.code} option={option} onClick={handleClick} />

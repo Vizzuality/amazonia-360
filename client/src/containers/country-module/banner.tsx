@@ -56,7 +56,6 @@ export default function CountryModuleBanner() {
 
   if (!isVisible || !entry) return null;
 
-  const name = t(entry.nameKey);
   const moduleName = t(entry.moduleNameKey);
   const query = Object.fromEntries(searchParams?.entries() ?? []);
 
@@ -81,7 +80,10 @@ export default function CountryModuleBanner() {
               data-testid="country-module-coverage"
               className="text-muted-foreground font-semibold"
             >
-              {t("country-module-coverage-inside", { percent: getInsidePercent(ratio), name })}
+              {t("country-module-coverage-inside", {
+                percent: getInsidePercent(ratio),
+                name: moduleName,
+              })}
             </span>
           )}
         </p>

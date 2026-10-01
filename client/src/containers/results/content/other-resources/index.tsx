@@ -64,13 +64,22 @@ export default function OtherResources() {
       <CardLoader query={[query]} className="h-80">
         <CardNoData query={[query]}>
           <Tabs defaultValue={tab} className="flex flex-col items-start space-y-4">
-            <TabsList className="flex-wrap justify-start gap-x-4 space-x-0 gap-y-1 print:hidden">
-              <TabsTrigger value="all" onClick={() => setTab("all")}>
+            <TabsList className="flex-wrap justify-start gap-x-4 space-x-0 gap-y-1 bg-transparent print:hidden">
+              <TabsTrigger
+                value="all"
+                className="focus-visible:ring-offset-0 focus-visible:ring-inset"
+                onClick={() => setTab("all")}
+              >
                 {t("all")} ({query.data?.length || 0})
               </TabsTrigger>
 
               {GROUPS.map((group) => (
-                <TabsTrigger key={group[0]} value={group[0]} onClick={() => setTab(group[0])}>
+                <TabsTrigger
+                  key={group[0]}
+                  value={group[0]}
+                  className="focus-visible:ring-offset-0 focus-visible:ring-inset"
+                  onClick={() => setTab(group[0])}
+                >
                   {t(
                     `other-resources-${group[0].toLowerCase()}` as `other-resources-${OtherResourcesKeys}`,
                   )}{" "}

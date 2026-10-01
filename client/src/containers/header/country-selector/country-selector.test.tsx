@@ -550,16 +550,14 @@ describe("country row availability", () => {
         render(<MobileCountrySelector onSelect={vi.fn()} />, { wrapper: setup().wrapper });
       },
     ],
-  ])("the %s list groups unavailable modules under one shared reason", async (_name, mount) => {
+  ])("the %s list groups unavailable modules under one title", async (_name, mount) => {
     arrangeArea({ ratio: 0 });
     await mount();
     const group = screen.getByRole("group", {
       name: "country-module-selector-unavailable-label",
     });
 
-    expect(group).toHaveAccessibleDescription(
-      `country-module-selector-unavailable-description:${JSON.stringify({ count: 1 })}`,
-    );
+    expect(group).not.toHaveAccessibleDescription();
     expect(within(group).getByTestId("country-selector-option")).toHaveAttribute(
       "data-country",
       "ECU",

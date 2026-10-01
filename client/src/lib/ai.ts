@@ -8,14 +8,13 @@ import {
   hasImageryCoverage,
 } from "@/lib/imagery";
 import { getIndicatorsOptions, getQueryFeatureId, getQueryImageryId } from "@/lib/indicators";
+import { useReportCountry } from "@/lib/report/use-report-country";
 import { roundTo } from "@/lib/utils";
 
 import { Context, ContextDescriptionType, ContextLanguage } from "@/types/generated/api.schemas";
 import { generateDescriptionTextAiPost } from "@/types/generated/text-generation";
 import { ImageryAggregation, Indicator, ResourceFeature, ResourceImagery } from "@/types/indicator";
 import { Topic } from "@/types/topic";
-
-import { useCountry } from "@/i18n/use-country";
 
 export type AISummaryOptions = {
   type?: ContextDescriptionType;
@@ -277,7 +276,7 @@ export const useGetTopicSummary = <
   options?: Omit<TopicSummaryMutationOptions<TData, TError>, "mutationFn">,
 ) => {
   const queryClient = useQueryClient();
-  const country = useCountry();
+  const country = useReportCountry();
 
   return useMutation({
     mutationFn: (params: TopicSummaryVariables) =>

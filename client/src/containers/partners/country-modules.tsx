@@ -33,7 +33,7 @@ function CountryPartners({ code }: Readonly<{ code: CountryCode }>) {
           {t(descriptionKey)}
         </p>
       )}
-      <ul className="grid w-full grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-5">
+      <ul className="mx-auto grid w-full max-w-[1232px] auto-rows-fr grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-5">
         {getCountryModulePartnerLogos(code).map((partner) => (
           <li
             key={partner.src}

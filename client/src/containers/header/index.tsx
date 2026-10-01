@@ -27,6 +27,10 @@ import Logo from "./logo";
 import MobileNavigation from "./mobile-navigation";
 import NavigationLinks from "./navigation-links";
 
+function getLinksBreakpoint(hasConfirmBar: boolean): "xl" | "2xl" {
+  return hasConfirmBar ? "2xl" : "xl";
+}
+
 function getRoutes(pathname: string, params: Params) {
   const { id } = params;
   const r = pathname.match(/^(?:\/[a-z]{2})?\/reports(?:\/(grid|indicators))?\/?$/);
@@ -50,12 +54,14 @@ export default function Header() {
 
   const { setOpen } = useSidebar();
 
+  const linksBreakpoint = getLinksBreakpoint(!!location && getRoutes(pathname, params).isReportSub);
+
   const DYNAMIC_HEADER = useMemo(() => {
     const { isReportSub } = getRoutes(pathname, params);
 
     return (
       <>
-        <Media greaterThanOrEqual="xl">
+        <Media greaterThanOrEqual={linksBreakpoint}>
           <NavigationLinks />
         </Media>
         {!location && isReportSub && <DesktopDrawingTools />}
@@ -63,7 +69,7 @@ export default function Header() {
         {isReportSub && <Separator className="bg-border h-4 w-px" />}
       </>
     );
-  }, [pathname, params, location]);
+  }, [pathname, params, location, linksBreakpoint]);
 
   useEffect(() => {
     // Hide sidebar when navigating away from report
@@ -92,7 +98,7 @@ export default function Header() {
           </div>
         </Media>
 
-        <Media greaterThanOrEqual="md" className="flex items-center gap-4">
+        <Media greaterThanOrEqual="md" className="flex min-w-0 items-center gap-4">
           {DYNAMIC_HEADER}
 
           <div className="flex items-center space-x-1">
@@ -100,7 +106,7 @@ export default function Header() {
             <AuthHeader />
           </div>
 
-          <Media between={["md", "xl"]}>
+          <Media between={["md", linksBreakpoint]}>
             <MobileNavigation inline />
           </Media>
         </Media>

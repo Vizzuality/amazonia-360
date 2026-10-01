@@ -10,7 +10,7 @@ import { Link, LocaleLink, usePathname } from "@/i18n/navigation";
 
 function getItemClassName(active: boolean): string {
   return cn(
-    "text-foreground rounded-md px-3 py-1.5 text-sm leading-5 font-semibold hover:text-cyan-500",
+    "text-foreground rounded-md px-3 py-1.5 text-sm leading-5 font-semibold whitespace-nowrap hover:text-cyan-500",
     { "bg-blue-50 text-cyan-700 hover:text-cyan-700": active },
   );
 }
