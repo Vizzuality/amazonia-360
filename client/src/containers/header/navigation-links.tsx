@@ -21,7 +21,7 @@ function getAriaCurrent(active: boolean): "page" | undefined {
   return active ? "page" : undefined;
 }
 
-export default function NavigationLinks({ ref }: { ref?: Ref<HTMLElement> }) {
+export default function NavigationLinks({ ref }: Readonly<{ ref?: Ref<HTMLElement> }>) {
   const t = useTranslations();
   const pathname = usePathname();
 
