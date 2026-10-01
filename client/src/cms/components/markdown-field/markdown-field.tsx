@@ -26,7 +26,9 @@ import "./markdown-field.scss";
 export const MarkdownField: TextareaFieldClientComponent = ({ field, path, readOnly }) => {
   const { label, localized, required, admin: { description } = {} } = field;
   const locale = useLocale();
-  const { disabled, setValue, showError, value } = useField<string>({ potentiallyStalePath: path });
+  const { disabled, initialValue, setValue, showError, value } = useField<string>({
+    potentiallyStalePath: path,
+  });
 
   return (
     <div
@@ -38,9 +40,10 @@ export const MarkdownField: TextareaFieldClientComponent = ({ field, path, readO
       <div className={`${fieldBaseClass}__wrap`}>
         <FieldError path={path} showError={showError} />
         <DynamicMarkdownEditor
-          // MDXEditor reads `markdown` only when it mounts. Another locale is another text, so
-          // it gets a fresh editor rather than an update the editor would ignore.
-          key={locale?.code}
+          // MDXEditor reads `markdown` only when it mounts. Switching locale, restoring a version
+          // or reverting to published replaces the form's initial value, so each of those gets a
+          // fresh editor rather than an update it would ignore. Typing leaves it alone.
+          key={`${locale?.code}:${initialValue ?? ""}`}
           className="markdown-field__editor"
           contentEditableClassName="markdown-field__content"
           markdown={value ?? ""}

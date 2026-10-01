@@ -7,12 +7,12 @@ export const MARKDOWN_FIELD_COMPONENT =
  * A localized Markdown description: stored and served as a plain string, edited in the admin
  * with a rich-text editor limited to what `components/ui/markdown.tsx` renders.
  */
-export const markdownDescriptionField = (description: string): TextareaField => ({
+export const markdownDescriptionField = (helpText: string): TextareaField => ({
   name: "description",
   type: "textarea",
   localized: true,
   admin: {
-    description,
+    description: helpText,
     components: { Field: MARKDOWN_FIELD_COMPONENT },
   },
 });

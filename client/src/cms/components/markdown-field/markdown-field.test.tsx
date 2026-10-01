@@ -5,14 +5,19 @@ import userEvent from "@testing-library/user-event";
 
 import { MarkdownField } from "./markdown-field";
 
-const form = { value: vi.fn(), setValue: vi.fn(), locale: vi.fn() };
+const form = { value: vi.fn(), initialValue: vi.fn(), setValue: vi.fn(), locale: vi.fn() };
 
 vi.mock("@payloadcms/ui", () => ({
   fieldBaseClass: "field-type",
   FieldLabel: ({ label }: { label?: string }) => <label>{label}</label>,
   FieldDescription: ({ description }: { description?: string }) => <p>{description}</p>,
   FieldError: () => null,
-  useField: () => ({ path: "description", value: form.value(), setValue: form.setValue }),
+  useField: () => ({
+    path: "description",
+    value: form.value(),
+    initialValue: form.initialValue(),
+    setValue: form.setValue,
+  }),
   useLocale: () => ({ code: form.locale() }),
 }));
 
@@ -52,6 +57,7 @@ const PROPS = {
 describe("MarkdownField", () => {
   beforeEach(() => {
     form.value.mockReturnValue("## Area\n\nSome text.");
+    form.initialValue.mockReturnValue("## Area\n\nSome text.");
     form.locale.mockReturnValue("en");
   });
 
@@ -83,10 +89,30 @@ describe("MarkdownField", () => {
     const { rerender } = render(<MarkdownField {...PROPS} />);
 
     form.value.mockReturnValue("## Área\n\nAlgo de texto.");
+    form.initialValue.mockReturnValue("## Área\n\nAlgo de texto.");
     form.locale.mockReturnValue("es");
     rerender(<MarkdownField {...PROPS} />);
 
     expect(screen.getByTestId("editor").textContent).toBe("## Área\n\nAlgo de texto.");
+  });
+
+  test("a form reset, such as restoring a version, loads the restored text", () => {
+    const { rerender } = render(<MarkdownField {...PROPS} />);
+
+    form.value.mockReturnValue("## Restored");
+    form.initialValue.mockReturnValue("## Restored");
+    rerender(<MarkdownField {...PROPS} />);
+
+    expect(screen.getByTestId("editor").textContent).toBe("## Restored");
+  });
+
+  test("typing does not reload the editor", () => {
+    const { rerender } = render(<MarkdownField {...PROPS} />);
+
+    form.value.mockReturnValue("## Area\n\nSome text, edited.");
+    rerender(<MarkdownField {...PROPS} />);
+
+    expect(screen.getByTestId("editor").textContent).toBe("## Area\n\nSome text.");
   });
 
   test("an empty field opens an empty editor", () => {
