@@ -4,7 +4,7 @@ import { catalogueAccess } from "@/cms/access/catalogue";
 import { DefaultVisualizationField } from "@/cms/fields/default-visualization";
 import { markdownDescriptionField } from "@/cms/fields/markdown";
 import { sourceIdField } from "@/cms/fields/source-id";
-import { autoIncrementSourceId } from "@/cms/hooks/auto-increment-source-id";
+import { rejectInvalidImportRow } from "@/cms/import-export/catalogue-import";
 
 export const Topics: CollectionConfig = {
   slug: "topics",
@@ -16,7 +16,7 @@ export const Topics: CollectionConfig = {
   access: catalogueAccess,
   versions: { drafts: true },
   hooks: {
-    beforeValidate: [autoIncrementSourceId],
+    beforeValidate: [rejectInvalidImportRow],
   },
   fields: [
     sourceIdField,
@@ -49,6 +49,7 @@ export const Topics: CollectionConfig = {
       on: "topic",
       defaultSort: "createdAt",
       defaultLimit: 50,
+      custom: { "plugin-import-export": { disabled: true } },
       admin: {
         defaultColumns: ["id", "name", "_status"],
         description: "Subtopics filed under this topic. Edited on the subtopic itself.",

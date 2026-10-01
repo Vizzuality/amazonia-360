@@ -1,5 +1,7 @@
 import type { Access } from "payload";
 
+import { isCatalogueImport } from "@/cms/import-export/catalogue-import";
+
 import { adminAccess } from "./admin";
 
 /**
@@ -20,9 +22,17 @@ export const publishedOrAdminAccess: Access = ({ req: { user } }) => {
   return { _status: { equals: "published" } };
 };
 
+/**
+ * Catalogue entries are born only by import, with their Content Code already written.
+ * Outside an import even an admin is refused, which is also what hides
+ * "Create New" in the admin: the UI computes its permissions through this function.
+ */
+export const catalogueCreateAccess: Access = (args) =>
+  adminAccess(args) === true && isCatalogueImport(args.req);
+
 export const catalogueAccess = {
   read: publishedOrAdminAccess,
-  create: adminAccess,
+  create: catalogueCreateAccess,
   update: adminAccess,
   delete: adminAccess,
 };

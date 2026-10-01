@@ -3,7 +3,7 @@ import type { CollectionConfig } from "payload";
 import { catalogueAccess } from "@/cms/access/catalogue";
 import { markdownDescriptionField } from "@/cms/fields/markdown";
 import { sourceIdField } from "@/cms/fields/source-id";
-import { autoIncrementSourceId } from "@/cms/hooks/auto-increment-source-id";
+import { rejectInvalidImportRow } from "@/cms/import-export/catalogue-import";
 
 export const Subtopics: CollectionConfig = {
   slug: "subtopics",
@@ -15,7 +15,7 @@ export const Subtopics: CollectionConfig = {
   access: catalogueAccess,
   versions: { drafts: true },
   hooks: {
-    beforeValidate: [autoIncrementSourceId],
+    beforeValidate: [rejectInvalidImportRow],
   },
   fields: [
     sourceIdField,
@@ -52,6 +52,7 @@ export const Subtopics: CollectionConfig = {
       on: "subtopic",
       defaultSort: "order",
       defaultLimit: 100,
+      custom: { "plugin-import-export": { disabled: true } },
       admin: {
         defaultColumns: ["id", "order", "name", "country", "_status"],
         description: "Indicators filed under this subtopic. Edited on the indicator itself.",

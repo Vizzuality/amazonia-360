@@ -24,11 +24,10 @@ import { Reports } from "@/cms/collections/Reports";
 import { Subtopics } from "@/cms/collections/Subtopics";
 import { Topics } from "@/cms/collections/Topics";
 import { Users } from "@/cms/collections/Users";
+import { importExportOptions } from "@/cms/import-export/plugin-options";
 import { routing } from "@/i18n/routing";
 
 import { getDatabaseUrlFromUrlAndPassword } from "./utils/database-url";
-
-const IMPORT_EXPORT_DOCUMENT_LIMIT = 10000;
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -90,27 +89,7 @@ export default buildConfig({
   sharp,
   plugins: [
     // storage-adapter-placeholder
-    importExportPlugin({
-      collections: [
-        {
-          slug: "users",
-          // The queue is disabled, so each run is serialised inside the request. The plugin
-          // defaults to no ceiling, which outlives the request timeout once the table is large
-          // enough; a set limit surfaces the plugin's limitExceeded notice in the admin instead.
-          // disableSave keeps exports download-only: no storage adapter is configured, so a saved
-          // file lands on container-local disk and its url 404s after the next task replacement.
-          export: {
-            disableJobsQueue: true,
-            disableSave: true,
-            limit: IMPORT_EXPORT_DOCUMENT_LIMIT,
-            // Without a before hook the plugin keeps its schema-derived columns, which for a
-            // hasMany field is an always-empty `<name>_0` that re-imports as a junk first entry.
-            hooks: { before: ({ data }) => data },
-          },
-          import: { disableJobsQueue: true, limit: IMPORT_EXPORT_DOCUMENT_LIMIT },
-        },
-      ],
-    }),
+    importExportPlugin(importExportOptions),
   ],
   routes: {
     api: "/v1/api",
