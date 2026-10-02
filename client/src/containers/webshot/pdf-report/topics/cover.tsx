@@ -26,7 +26,11 @@ export default function PdfTopicCover(topic: Topic) {
         <div className="flex h-full flex-col justify-end bg-linear-to-t from-black to-transparent">
           <div className="flex flex-col gap-2 px-14 pb-20 text-white">
             <h1 className="text-5xl">{name}</h1>
-            {description && <p className="ml-2">{description}</p>}
+            {description && (
+              <Markdown className="prose-invert prose-headings:text-white prose-p:my-0 prose-a:text-white prose-strong:text-white ml-2 max-w-none text-base text-white">
+                {description}
+              </Markdown>
+            )}
           </div>
         </div>
       </div>

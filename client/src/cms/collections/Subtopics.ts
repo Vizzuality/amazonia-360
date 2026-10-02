@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { catalogueAccess } from "@/cms/access/catalogue";
+import { markdownDescriptionField } from "@/cms/fields/markdown";
 import { sourceIdField } from "@/cms/fields/source-id";
 import { autoIncrementSourceId } from "@/cms/hooks/auto-increment-source-id";
 
@@ -32,12 +33,7 @@ export const Subtopics: CollectionConfig = {
           "English only in the source data. ES and PT translations are seeded in phase 2; reads fall back to en until then.",
       },
     },
-    {
-      name: "description",
-      type: "textarea",
-      localized: true,
-      admin: { description: "Markdown. Empty on every row in the source data." },
-    },
+    markdownDescriptionField("Markdown. Empty on every row in the source data."),
     /**
      * Virtual, same as Topics.subtopics: the relationship is stored on `indicators.subtopic`
      * and read back through the existing `indicators_subtopic_idx`. No column, no migration.

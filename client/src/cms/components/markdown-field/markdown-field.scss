@@ -1,0 +1,172 @@
+// MDXEditor draws itself from Radix-style colour variables. Mapping them onto Payload's
+// theme variables, which already flip under [data-theme="dark"], themes the editor in both
+// modes. MDXEditor also gives its popups (link dialog, block type menu) the editor's
+// className, which is why the variables live on that class rather than on the field.
+.markdown-field__editor {
+  --basePageBg: var(--theme-input-bg);
+  --baseBase: var(--theme-elevation-0);
+  --baseBgSubtle: var(--theme-elevation-50);
+  --baseBg: var(--theme-elevation-100);
+  --baseBgHover: var(--theme-elevation-150);
+  --baseBgActive: var(--theme-elevation-200);
+  --baseLine: var(--theme-elevation-150);
+  --baseBorder: var(--theme-elevation-150);
+  --baseBorderHover: var(--theme-elevation-250);
+  --baseSolid: var(--theme-elevation-500);
+  --baseSolidHover: var(--theme-elevation-600);
+  --baseText: var(--theme-elevation-800);
+  --baseTextContrast: var(--theme-text);
+
+  --accentBase: var(--theme-elevation-0);
+  --accentBgSubtle: var(--theme-elevation-50);
+  --accentBg: var(--theme-elevation-100);
+  --accentBgHover: var(--theme-elevation-150);
+  --accentBgActive: var(--theme-elevation-200);
+  --accentLine: var(--theme-elevation-200);
+  --accentBorder: var(--theme-elevation-300);
+  --accentBorderHover: var(--theme-elevation-400);
+  --accentSolid: var(--theme-text);
+  --accentSolidHover: var(--theme-elevation-800);
+  --accentText: var(--theme-text);
+  --accentTextContrast: var(--theme-elevation-0);
+
+  color: var(--theme-text);
+}
+
+.markdown-field {
+  .markdown-field__editor {
+    border: 1px solid var(--theme-elevation-150);
+    border-radius: var(--style-radius-s);
+    background: var(--theme-input-bg);
+
+    &:focus-within {
+      border-color: var(--theme-elevation-400);
+    }
+  }
+
+  &.error .markdown-field__editor {
+    border-color: var(--theme-error-500);
+  }
+
+  // The source view is CodeMirror with MDXEditor's hard-coded `basicLight` theme: white
+  // surfaces and a near-black caret, unreadable in Payload's dark mode. Its syntax colours
+  // are mid-tone Nord and read on both, so only the surfaces are themed.
+  .mdxeditor-source-editor .cm-editor {
+    background-color: var(--theme-input-bg);
+    color: var(--theme-text);
+
+    .cm-content {
+      caret-color: var(--theme-text);
+    }
+
+    .cm-cursor,
+    .cm-dropCursor {
+      border-left-color: var(--theme-text);
+    }
+
+    .cm-gutters {
+      background-color: var(--theme-elevation-50);
+      color: var(--theme-elevation-500);
+    }
+
+    .cm-activeLine,
+    .cm-activeLineGutter {
+      background-color: var(--theme-elevation-100);
+    }
+
+    &.cm-focused .cm-selectionBackground,
+    .cm-selectionBackground,
+    .cm-content ::selection {
+      background-color: var(--theme-elevation-200);
+    }
+  }
+
+  [role="toolbar"] {
+    border-radius: var(--style-radius-s) var(--style-radius-s) 0 0;
+  }
+
+  .markdown-field__content {
+    min-height: calc(var(--base) * 8);
+    padding: calc(var(--base) * 0.75);
+    font-size: 1rem;
+    line-height: 1.6;
+
+    > :first-child {
+      margin-top: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 1.25em 0 0.5em;
+      line-height: 1.25;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: 1.75em;
+    }
+
+    h2 {
+      font-size: 1.5em;
+    }
+
+    h3 {
+      font-size: 1.25em;
+    }
+
+    h4 {
+      font-size: 1.1em;
+    }
+
+    p,
+    ul,
+    ol,
+    blockquote {
+      margin: 0 0 0.75em;
+    }
+
+    ul,
+    ol {
+      padding-left: 1.5em;
+    }
+
+    ul {
+      list-style: disc;
+    }
+
+    ol {
+      list-style: decimal;
+    }
+
+    blockquote {
+      padding-left: 1em;
+      border-left: 3px solid var(--theme-elevation-200);
+      color: var(--theme-elevation-700);
+    }
+
+    code {
+      padding: 0.1em 0.3em;
+      border-radius: var(--style-radius-s);
+      background: var(--theme-elevation-100);
+      font-family: var(--font-mono, monospace);
+      font-size: 0.9em;
+    }
+
+    a {
+      color: var(--theme-success-600, var(--theme-text));
+      text-decoration: underline;
+    }
+
+    hr {
+      margin: 1.5em 0;
+      border: 0;
+      border-top: 1px solid var(--theme-elevation-150);
+    }
+  }
+}

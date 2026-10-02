@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 
 import { Topic } from "@/types/topic";
 
+import { Markdown } from "@/components/ui/markdown";
+
 export default function TopicsItem({ id, name, image, description }: Topic) {
   const descriptionRef = useRef<HTMLParagraphElement>(null);
 
@@ -52,7 +54,9 @@ export default function TopicsItem({ id, name, image, description }: Topic) {
                 "max-h-0 overflow-hidden text-xs font-semibold transition-all duration-300 ease-in-out",
               )}
             >
-              <p className="pt-2">{description}</p>
+              <Markdown className="prose-invert prose-headings:text-white prose-p:my-0 prose-a:text-white prose-strong:text-white max-w-none pt-2 text-xs font-semibold text-white">
+                {description}
+              </Markdown>
             </div>
           </div>
         </div>

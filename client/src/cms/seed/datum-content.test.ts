@@ -56,6 +56,17 @@ const descriptions = allRows.flatMap(({ collection, row }) =>
  */
 const BLOCK_START = /^\s*(?:[*+-]\s|1[.)]\s|#{1,6}\s|>|```|~~~)/;
 const HEADING = /^\s*#{1,6}\s/;
+const QUOTE_MARKER = /^\s*(?:>\s?)+/;
+
+/**
+ * Two consecutive blockquote lines are one paragraph inside the quote, so the `>` that opens
+ * the second is a continuation marker, not a new block. The break is judged on what follows
+ * the markers.
+ */
+const withinQuote = (line: string, next: string): [string, string] =>
+  QUOTE_MARKER.test(line) && QUOTE_MARKER.test(next)
+    ? [line.replace(QUOTE_MARKER, ""), next.replace(QUOTE_MARKER, "")]
+    : [line, next];
 
 /**
  * Trailing backslashes that CommonMark renders as a literal `\` rather than a line break.
@@ -79,11 +90,11 @@ const literalBackslashes = (text: string): string[] => {
     const run = /\\+[ \t]*$/.exec(line)?.[0];
     if (run === undefined) return [];
 
-    const next = lines[index + 1] ?? "";
+    const [content, next] = withinQuote(line, lines[index + 1] ?? "");
     const breaks =
       /\\$/.test(run) &&
       run.length % 2 === 1 &&
-      !HEADING.test(line) &&
+      !HEADING.test(content) &&
       next.trim() !== "" &&
       !BLOCK_START.test(next);
 

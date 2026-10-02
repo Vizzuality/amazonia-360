@@ -4,6 +4,7 @@ import { COUNTRIES } from "@/lib/country";
 
 import { catalogueAccess } from "@/cms/access/catalogue";
 import { invalidDefaultMessage, isAllowedDefault } from "@/cms/fields/default-visualization-type";
+import { markdownDescriptionField } from "@/cms/fields/markdown";
 import { ResourceField } from "@/cms/fields/resource";
 import { sourceIdField } from "@/cms/fields/source-id";
 import { autoIncrementSourceId } from "@/cms/hooks/auto-increment-source-id";
@@ -67,12 +68,7 @@ export const Indicators: CollectionConfig = {
       admin: { description: "e.g. km², m. Empty on 63 of 164 rows." },
     },
     { name: "description_short", type: "text", localized: true, required: true },
-    {
-      name: "description",
-      type: "textarea",
-      localized: true,
-      admin: { description: "Markdown. Rendered with react-markdown in containers/info." },
-    },
+    markdownDescriptionField("Markdown. Rendered with react-markdown in containers/info."),
     {
       name: "visualization_types",
       type: "select",
