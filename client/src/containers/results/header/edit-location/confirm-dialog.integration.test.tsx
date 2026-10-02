@@ -36,7 +36,7 @@ describe("ConfirmDialog", () => {
     await expect
       .element(screen.getByRole("listitem").nth(2))
       .toHaveTextContent(
-        "Your new area is outside Ecuador, so the national indicators in this report won't have data for it.",
+        "Your new area is outside Ecuador Amazonia, so the national indicators in this report won't have data for it.",
       );
     await expect({
       baseElement: screen.getByRole("alertdialog").element(),

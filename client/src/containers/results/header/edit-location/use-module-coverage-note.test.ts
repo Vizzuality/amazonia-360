@@ -60,7 +60,7 @@ describe("useModuleCoverageNote", () => {
 
     expect(result.current).toEqual({
       key: "edit-location-confirm-dialog-module-outside",
-      values: { name: "country-module-ECU-name" },
+      values: { name: "country-module-ECU-module-name" },
     });
     expect(mockQuery).toHaveBeenCalledWith("ECU", { enabled: true });
   });
@@ -70,7 +70,7 @@ describe("useModuleCoverageNote", () => {
 
     expect(renderHook(() => useModuleCoverageNote()).result.current).toEqual({
       key: "edit-location-confirm-dialog-module-partial",
-      values: { name: "country-module-ECU-name", percent: 30 },
+      values: { name: "country-module-ECU-module-name", percent: 30 },
     });
   });
 
@@ -83,7 +83,7 @@ describe("useModuleCoverageNote", () => {
 
     expect(renderHook(() => useModuleCoverageNote()).result.current).toEqual({
       key: "edit-location-confirm-dialog-module-partial",
-      values: { name: "country-module-ECU-name", percent: 99 },
+      values: { name: "country-module-ECU-module-name", percent: 99 },
     });
   });
 
