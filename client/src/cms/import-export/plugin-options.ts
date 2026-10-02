@@ -1,14 +1,11 @@
-import type { CollectionConfig } from "payload";
+import type { CollectionConfig, Field } from "payload";
 
 import type { importExportPlugin } from "@payloadcms/plugin-import-export";
 
 import { adminAccess } from "@/cms/access/admin";
 
-import {
-  CATALOGUE_SLUGS,
-  markCatalogueImport,
-  prepareCatalogueImportBatch,
-} from "./catalogue-import";
+import { markCatalogueImport, prepareCatalogueImportBatch } from "./catalogue-import";
+import { CATALOGUE_SLUGS } from "./catalogue-slugs";
 
 type ImportExportOptions = Parameters<typeof importExportPlugin>[0];
 
@@ -41,8 +38,33 @@ const adminsOnly = (collection: CollectionConfig): CollectionConfig => ({
   access: { ...collection.access, create: adminAccess, read: adminAccess, delete: adminAccess },
 });
 
+/**
+ * The plugin's picker preselects the list view's columns, so an untouched catalogue export
+ * left out the resource and the prose and could not be imported back whole.
+ */
+const withOurFieldsPicker = (fields: Field[]): Field[] =>
+  fields.map((field) => {
+    if ("name" in field && field.name === "fields" && field.type === "text") {
+      return {
+        ...field,
+        admin: {
+          ...field.admin,
+          components: { Field: "/cms/components/export-fields-field#ExportFieldsField" },
+        },
+      };
+    }
+    if ("fields" in field && field.type !== "array") {
+      return { ...field, fields: withOurFieldsPicker(field.fields) } as Field;
+    }
+    return field;
+  });
+
 export const importExportOptions = {
-  overrideExportCollection: ({ collection }) => adminsOnly(collection),
+  overrideExportCollection: ({ collection }) => {
+    const exports = adminsOnly(collection);
+
+    return { ...exports, fields: withOurFieldsPicker(exports.fields) };
+  },
   overrideImportCollection: ({ collection }) => {
     const imports = adminsOnly(collection);
 
