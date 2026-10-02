@@ -77,7 +77,7 @@ function CountryModuleDialogContent({ country }: Readonly<{ country: CountryCode
   );
 
   const activeModule = country ? COUNTRIES.find((entry) => entry.code === country) : undefined;
-  const moduleName = activeModule ? t(activeModule.nameKey) : "";
+  const moduleName = activeModule ? t(activeModule.moduleNameKey) : "";
 
   const partnerLogos = getCountryModulePartnerLogos(country);
 

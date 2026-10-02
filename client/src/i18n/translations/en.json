@@ -44,7 +44,7 @@
   "country-module-filter-national": "National ({count})",
   "country-module-filter-regional": "Regional ({count})",
   "country-module-modal-body": "Your area of interest sits within {name}. The map is now enriched with official national data alongside the regional baseline.",
-  "country-module-modal-body-no-area": "You're now in the {name} module. The map is enriched with official national data alongside the regional baseline. Draw or search an area within {name}'s Amazonia region to get started.",
+  "country-module-modal-body-no-area": "You're now in the {name} module. The map is enriched with official national data alongside the regional baseline. Draw or search an area within {name} to get started.",
   "country-module-deactivated-title": "You left the {name} module",
   "country-module-deactivated-body": "Your area is outside the boundaries of {name}. Only regional data is available.",
   "country-module-modal-collaboration-title": "In collaboration with",

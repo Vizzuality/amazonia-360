@@ -36,7 +36,7 @@ export function useModuleCoverageNote(): ModuleCoverageNote | null {
 
   if (!entry || isCalculating || !geometry || !boundary) return null;
 
-  const name = t(entry.nameKey);
+  const name = t(entry.moduleNameKey);
   const ratio = getCountryCoverageRatio(geometry, boundary);
 
   if (ratio === 0) return { key: "edit-location-confirm-dialog-module-outside", values: { name } };
