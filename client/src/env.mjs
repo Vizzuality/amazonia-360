@@ -1,6 +1,11 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+function getVercelBranchURL() {
+  const branchURL = process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL;
+  return branchURL ? `https://${branchURL}` : undefined;
+}
+
 export const env = createEnv({
   // Unit tests import modules that reach the Payload SDK, which reads this at module scope.
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
@@ -21,12 +26,7 @@ export const env = createEnv({
     NEXT_PUBLIC_URL: z
       .url()
       .optional()
-      .transform((val) => {
-        if (process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL) {
-          return `https://${process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL}`;
-        }
-        return val;
-      })
+      .transform((val) => val ?? getVercelBranchURL())
       .pipe(z.url()),
     NEXT_PUBLIC_API_URL: z.url(),
     NEXT_PUBLIC_API_KEY: z.string(),
