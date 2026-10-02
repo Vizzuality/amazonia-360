@@ -6,6 +6,7 @@ import type {
 } from "payload";
 import { APIError } from "payload";
 
+import { isCatalogueSlug } from "./catalogue-slugs";
 import { IMPORT_ROW_ERRORS, type ImportRow, prepareImportRows } from "./prepare-import-rows";
 
 /**
@@ -21,14 +22,9 @@ export const CATALOGUE_IMPORT_CONTEXT = "catalogueImport";
 export const isCatalogueImport = (req: Pick<PayloadRequest, "context">) =>
   req.context?.[CATALOGUE_IMPORT_CONTEXT] === true;
 
-export const CATALOGUE_SLUGS = ["topics", "subtopics", "indicators"] as const;
-
 /** On the `imports` collection: runs before the plugin's afterChange processes the file. */
 export const markCatalogueImport: CollectionBeforeChangeHook = ({ data, operation, req }) => {
-  if (
-    operation === "create" &&
-    (CATALOGUE_SLUGS as readonly string[]).includes(data?.collectionSlug)
-  ) {
+  if (operation === "create" && isCatalogueSlug(data?.collectionSlug)) {
     req.context[CATALOGUE_IMPORT_CONTEXT] = true;
   }
 

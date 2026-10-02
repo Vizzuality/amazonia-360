@@ -155,3 +155,36 @@ describe("a catalogue import batch", () => {
     expect(req.locale).toBe("es");
   });
 });
+
+describe("the export form", () => {
+  test("picks its fields through our picker, which selects every field of a catalogue entry", async () => {
+    const exports = (await importExportOptions.overrideExportCollection({
+      collection: {
+        slug: "exports",
+        fields: [
+          {
+            type: "collapsible",
+            label: "Export options",
+            fields: [
+              { name: "format", type: "select", options: ["json"] },
+              {
+                name: "fields",
+                type: "text",
+                hasMany: true,
+                admin: {
+                  components: { Field: "@payloadcms/plugin-import-export/rsc#FieldsToExport" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    })) as CollectionConfig;
+
+    const [, picker] = (exports.fields[0] as { fields: { admin?: unknown }[] }).fields;
+
+    expect((picker.admin as { components?: unknown }).components).toEqual({
+      Field: "/cms/components/export-fields-field#ExportFieldsField",
+    });
+  });
+});
