@@ -13,8 +13,11 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json pnpm-lock.yaml* .npmrc* ./
-RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
-    corepack enable pnpm && \
+# No BuildKit cache mount here: Railway requires the mount id to be
+# `s/<service id>-<target>`, which would bake a Railway UUID into an image the
+# AWS pipeline also builds. Layer caching already covers the common case — this
+# RUN is only re-executed when package.json or the lockfile change.
+RUN corepack enable pnpm && \
     pnpm install --frozen-lockfile
 
 # Rebuild the source code only when needed
@@ -125,6 +128,12 @@ ENV AUTH_URL $AUTH_URL
 
 ENV COREPACK_INTEGRITY_KEYS 0
 
+# `adduser --system` gives nextjs /nonexistent as a home, so corepack cannot
+# write the pnpm it downloads and any `pnpm` call dies with EACCES. entrypoint.sh
+# works around it with a mktemp COREPACK_HOME, but a pre-deploy command runs the
+# image without its entrypoint, so the fix has to live here.
+ENV COREPACK_HOME=/tmp/corepack
+
 ENV NODE_ENV=production
 
 RUN addgroup --system --gid 1001 nodejs
@@ -142,6 +151,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./tsconfig.json
 COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
+
+# db:seed reads the catalogue through `@/../datum/*.json`, so the seeder needs
+# these on disk at runtime, not just at build time.
+COPY --from=builder --chown=nextjs:nodejs /app/datum ./datum
 
 COPY entrypoint.sh ./
 

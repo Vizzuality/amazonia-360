@@ -21,7 +21,8 @@
     "payload": "payload",
     "ci": "pnpm db:migrate && pnpm build",
     "db:migrate": "node scripts/payload-step.mjs migrate",
-    "db:seed": "node scripts/payload-step.mjs seed"
+    "db:seed": "node scripts/payload-step.mjs seed",
+    "db:provision": "pnpm db:migrate && pnpm db:seed"
   },
   "dependencies": {
     "@arcgis/core": "4.34.8",

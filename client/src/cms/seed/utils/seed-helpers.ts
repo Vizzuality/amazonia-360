@@ -26,3 +26,29 @@ export async function updateLocales<K extends string>(
     }
   }
 }
+
+/**
+ * Silence is the only thing `scripts/payload-step.mjs` has to tell a slow run
+ * from a blocked one, and an uninstrumented seed gives it nothing but silence.
+ *
+ * The rate is the part worth reading: it is one database round trip times
+ * however many the row costs, so rows in seconds rather than milliseconds mean
+ * the container and the database are no longer in the same region.
+ */
+export function createProgressLogger(
+  payload: Payload,
+  label: string,
+  total: number,
+  every = 25,
+): (done: number) => void {
+  const startedAt = Date.now();
+
+  return (done) => {
+    if (done === 0 || (done % every !== 0 && done !== total)) return;
+
+    const elapsed = (Date.now() - startedAt) / 1000;
+    payload.logger.info(
+      `${label}: ${done}/${total} in ${elapsed.toFixed(0)}s (${(elapsed / done).toFixed(2)}s per row)`,
+    );
+  };
+}
