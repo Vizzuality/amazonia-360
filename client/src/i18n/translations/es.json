@@ -122,7 +122,7 @@
   "hub-reporting-tool": "Explorar la herramienta de informes",
   "grid-sidebar-report-tab": "Reporte",
   "grid-sidebar-report-title": "Obtenga información sobre su área de interés",
-  "grid-sidebar-report-description": "Usa la barra de búsqueda o dibuja en el mapa para seleccionar una región. Necesitas un área para generar un informe, pero aún puedes explorar el DataHub o ejecutar análisis de cuadrícula sin una.",
+  "grid-sidebar-report-description": "Usa la barra de búsqueda o dibuja en el mapa para seleccionar una región. Necesitas un área para generar un informe, pero aún puedes explorar el catálogo de indicadores o ejecutar análisis de cuadrícula sin una.",
   "grid-sidebar-report-location-filters-search": "Indicador de búsqueda",
   "grid-sidebar-report-location-filters-alert-maximum-selected": "Sólo puede seleccionar hasta 4 capas",
   "grid-sidebar-report-location-filters-alert-redefine-area-title": "Redefinir el área",

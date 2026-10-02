@@ -122,7 +122,7 @@
   "hub-reporting-tool": "Explore a ferramenta de elaboração de relatórios",
   "grid-sidebar-report-tab": "Relatório",
   "grid-sidebar-report-title": "Obter informações sobre a sua área de interesse",
-  "grid-sidebar-report-description": "Use a barra de pesquisa ou desenhe no mapa para selecionar uma região. Você precisará de uma área para gerar um relatório, mas ainda pode explorar o DataHub ou executar análises de grade sem uma.",
+  "grid-sidebar-report-description": "Use a barra de pesquisa ou desenhe no mapa para selecionar uma região. Você precisará de uma área para gerar um relatório, mas ainda pode explorar o catálogo de indicadores ou executar análises de grade sem uma.",
   "grid-sidebar-report-location-filters-search": "Indicador de pesquisa",
   "grid-sidebar-report-location-filters-alert-maximum-selected": "Só é possível selecionar até 4 camadas",
   "grid-sidebar-report-location-filters-alert-redefine-area-title": "Redefinir a área",

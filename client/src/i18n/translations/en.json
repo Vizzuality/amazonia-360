@@ -122,7 +122,7 @@
   "hub-reporting-tool": "Explore reporting tool",
   "grid-sidebar-report-tab": "Report",
   "grid-sidebar-report-title": "Get insights on your area of interest",
-  "grid-sidebar-report-description": "Use the search bar or draw on the map to select a region. You’ll need an area to generate a report, but you can still browse the DataHub or run grid analyses without one.",
+  "grid-sidebar-report-description": "Use the search bar or draw on the map to select a region. You’ll need an area to generate a report, but you can still browse the indicators catalog or run grid analyses without one.",
   "grid-sidebar-report-location-filters-search": "Search indicator",
   "grid-sidebar-report-location-filters-alert-maximum-selected": "You can only select up to 4 layers",
   "grid-sidebar-report-location-filters-alert-redefine-area-title": "Redefine area",
