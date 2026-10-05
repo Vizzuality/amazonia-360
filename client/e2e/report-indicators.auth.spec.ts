@@ -2,6 +2,7 @@ import { type Page, test, expect } from "@playwright/test";
 
 import { dismissCookieConsent } from "./helpers/cookie-consent";
 import { skipWithoutCredentials } from "./helpers/credentials";
+import { indicatorRow, infoButton } from "./helpers/indicators";
 
 // /reports/indicators is gated, so these run signed in, in `chromium-authenticated`.
 test.skip(skipWithoutCredentials, "E2E test user credentials not set");
@@ -55,20 +56,14 @@ test.describe("adding an indicator", () => {
     await panel.getByRole("button", { name: "Expand all" }).click();
     await expect(panel.getByRole("button", { name: "Collapse all" })).toBeVisible();
 
-    // Innermost element holding both the name button and the toggle, which is what
-    // separates an indicator row from the subtopic and topic rows wrapping it.
-    const row = panel
-      .locator("div")
-      .filter({ has: page.getByRole("button", { name: INDICATOR, exact: true }) })
-      .filter({ has: page.getByRole("switch") })
-      .last();
+    const row = indicatorRow(page, panel, INDICATOR);
 
     await row.scrollIntoViewIfNeeded();
     await row.getByRole("switch").click();
     await expect(row.getByRole("switch")).toBeChecked();
     await expect(panel.getByRole("button", { name: "Clear selection" })).toContainText("(1)");
 
-    await row.getByRole("button").nth(1).click();
+    await infoButton(row).click();
 
     const info = page.getByRole("dialog");
     await expect(info).toBeVisible();
