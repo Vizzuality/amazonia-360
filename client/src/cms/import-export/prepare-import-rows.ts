@@ -61,7 +61,9 @@ const isStructured = (field: NamedField) =>
 
 /** Each item of an array or blocks field, or the group itself, paired with its fields. */
 const children = (field: NamedField, value: unknown): [Record<string, unknown>, NamedField[]][] => {
-  const items = field.type === "group" ? [value] : Array.isArray(value) ? value : [];
+  let items: unknown[] = [];
+  if (field.type === "group") items = [value];
+  else if (Array.isArray(value)) items = value;
 
   return items
     .filter(isPlainObject)
@@ -171,6 +173,77 @@ const isBlank = (value: unknown) => value === undefined || value === null || val
 
 const isTextField = (field: NamedField) => field.type === "text" || field.type === "textarea";
 
+const isNonText = (value: unknown) => !isBlank(value) && typeof value !== "string";
+
+type WrittenLocales = Map<string, Record<string, unknown>>;
+
+function textErrors(
+  row: ImportRow,
+  fields: NamedField[],
+  written: WrittenLocales,
+  options: PrepareImportRowsOptions,
+) {
+  const topLevel = fields
+    .filter((field) => isTextField(field) && written.has(field.name))
+    .flatMap((field) =>
+      Object.entries(written.get(field.name) ?? {})
+        .filter(([, value]) => isNonText(value))
+        .map(([locale]) => `\`${field.name}\` in \`${locale}\` must be text.`),
+    );
+
+  const nested = fields
+    .filter((field) => isStructured(field) && field.name in row)
+    .flatMap((field) =>
+      nestedTranslations(row[field.name], field, options)
+        .filter((entry) => isTextField(entry.field) && isNonText(entry.value))
+        .map(
+          (entry) =>
+            `\`${field.name}\` has a \`${entry.field.name}\` in \`${entry.locale}\` that is not text.`,
+        ),
+    );
+
+  return [...topLevel, ...nested];
+}
+
+// Payload checks `required` against the locale it is writing, using what is stored for the
+// fields the row leaves out. A gap only shows once the plugin writes that locale on its own,
+// and the plugin logs that failure while counting the row as imported.
+function requiredErrors(
+  row: ImportRow,
+  fields: NamedField[],
+  written: WrittenLocales,
+  options: PrepareImportRowsOptions,
+) {
+  const code = normaliseId(row.id);
+  const stored = typeof code === "string" ? options.existing.get(code) : undefined;
+  const touched = new Set(
+    [...written.values()].flatMap((map) =>
+      Object.entries(map)
+        .filter(([, value]) => value !== undefined)
+        .map(([locale]) => locale),
+    ),
+  );
+  if (!stored) touched.add(options.defaultLocale);
+
+  const required = fields.filter((field) => isLocalized(field) && isRequired(field));
+
+  return options.locales
+    .filter((locale) => touched.has(locale))
+    .flatMap((locale) =>
+      required
+        .filter((field) => {
+          const fromRow = written.get(field.name)?.[locale];
+          const value =
+            fromRow !== undefined ? fromRow : toLocaleMap(stored?.[field.name], options)[locale];
+          return isBlank(value);
+        })
+        .map(
+          (field) =>
+            `\`${field.name}\` is required in \`${locale}\`, and this row leaves it empty.`,
+        ),
+    );
+}
+
 function rowErrors(row: ImportRow, fields: NamedField[], options: PrepareImportRowsOptions) {
   const errors: string[] = [];
 
@@ -181,55 +254,15 @@ function rowErrors(row: ImportRow, fields: NamedField[], options: PrepareImportR
     errors.push('`_status` is missing. Set "draft" or "published" on every row.');
   }
 
-  const localized = fields.filter((field) => isLocalized(field) && field.name in row);
-  const written = new Map(
-    localized.map((field) => [field.name, toLocaleMap(row[field.name], options)] as const),
+  const written: WrittenLocales = new Map(
+    fields
+      .filter((field) => isLocalized(field) && field.name in row)
+      .map((field) => [field.name, toLocaleMap(row[field.name], options)] as const),
   );
 
-  for (const field of localized.filter(isTextField)) {
-    for (const [locale, value] of Object.entries(written.get(field.name) ?? {})) {
-      if (!isBlank(value) && typeof value !== "string") {
-        errors.push(`\`${field.name}\` in \`${locale}\` must be text.`);
-      }
-    }
-  }
-
-  for (const field of fields.filter((f) => isStructured(f) && f.name in row)) {
-    for (const nested of nestedTranslations(row[field.name], field, options)) {
-      if (isTextField(nested.field) && !isBlank(nested.value) && typeof nested.value !== "string") {
-        errors.push(
-          `\`${field.name}\` has a \`${nested.field.name}\` in \`${nested.locale}\` that is not text.`,
-        );
-      }
-    }
-  }
-
-  // Payload checks `required` against the locale it is writing, using what is stored for the
-  // fields the row leaves out. A gap only shows once the plugin writes that locale on its own,
-  // and the plugin logs that failure while counting the row as imported.
-  const stored = isBlank(row.id) ? undefined : options.existing.get(String(row.id));
-  const touched = new Set(
-    [...written.values()].flatMap((map) =>
-      Object.entries(map)
-        .filter(([, value]) => value !== undefined)
-        .map(([locale]) => locale),
-    ),
-  );
-  if (!stored) touched.add(options.defaultLocale);
-
-  for (const locale of options.locales.filter((code) => touched.has(code))) {
-    for (const field of fields.filter((f) => isLocalized(f) && isRequired(f))) {
-      const fromRow = written.get(field.name)?.[locale];
-      const value =
-        fromRow !== undefined ? fromRow : toLocaleMap(stored?.[field.name], options)[locale];
-
-      if (isBlank(value)) {
-        errors.push(
-          `\`${field.name}\` is required in \`${locale}\`, and this row leaves it empty.`,
-        );
-      }
-    }
-  }
-
-  return errors;
+  return [
+    ...errors,
+    ...textErrors(row, fields, written, options),
+    ...requiredErrors(row, fields, written, options),
+  ];
 }
