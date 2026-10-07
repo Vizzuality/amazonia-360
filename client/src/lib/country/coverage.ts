@@ -4,26 +4,29 @@ import * as geodeticAreaOperator from "@arcgis/core/geometry/operators/geodeticA
 import * as intersectionOperator from "@arcgis/core/geometry/operators/intersectionOperator";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 
-import { COUNTRIES, CountryCode, isCountryCode } from "@/lib/country";
+import type { CountryModule } from "@/lib/country-modules";
 import { getFeatures } from "@/lib/query";
 import { omit } from "@/lib/utils";
 
+import { COUNTRIES } from "@/constants/countries";
 import { DATASETS } from "@/constants/datasets";
 
 export const COUNTRY_COVERAGE_ACTIVATION_THRESHOLD = 0.5;
 
-// The module boundary is admin0[GID_0=code] ∩ area_afp: delivered indicators are clipped
+const isCountryIso3 = (value: string): boolean => COUNTRIES.some((entry) => entry.iso3 === value);
+
+// The module boundary is admin0[GID_0=iso3] ∩ area_afp: delivered indicators are clipped
 // to that intersection, not to the country alone.
 export const getCountryAmazoniaBoundary = async (
-  code: string,
+  iso3: string,
 ): Promise<__esri.GeometryUnion | null> => {
-  if (!isCountryCode(code)) return null;
+  if (!isCountryIso3(iso3)) return null;
 
   const [country, amazonia] = await Promise.all([
     getFeatures({
       feature: DATASETS.admin0.layer,
       query: DATASETS.admin0.getFeatures({
-        where: `GID_0 = '${code}'`,
+        where: `GID_0 = '${iso3}'`,
         outFields: ["GID_0"],
         returnGeometry: true,
       }),
@@ -42,8 +45,8 @@ export const getCountryAmazoniaBoundary = async (
   return intersectionOperator.execute(countryGeometry, amazoniaGeometry) ?? null;
 };
 
-export const getCountryAmazoniaBoundaryKey = (code: string) =>
-  ["country-coverage", "boundary", code] as const;
+export const getCountryAmazoniaBoundaryKey = (iso3: string) =>
+  ["country-coverage", "boundary", iso3] as const;
 
 export type CountryAmazoniaBoundaryQueryOptions<TData, TError> = UseQueryOptions<
   Awaited<ReturnType<typeof getCountryAmazoniaBoundary>>,
@@ -55,17 +58,17 @@ export const getCountryAmazoniaBoundaryOptions = <
   TData = Awaited<ReturnType<typeof getCountryAmazoniaBoundary>>,
   TError = unknown,
 >(
-  code: string,
+  iso3: string,
   options?: Omit<CountryAmazoniaBoundaryQueryOptions<TData, TError>, "queryKey">,
 ) => {
-  const queryKey = getCountryAmazoniaBoundaryKey(code);
+  const queryKey = getCountryAmazoniaBoundaryKey(iso3);
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getCountryAmazoniaBoundary>>> = () =>
-    getCountryAmazoniaBoundary(code);
+    getCountryAmazoniaBoundary(iso3);
 
   return {
     queryKey,
     queryFn,
-    enabled: isCountryCode(code),
+    enabled: isCountryIso3(iso3),
     staleTime: Infinity,
     ...options,
   } as CountryAmazoniaBoundaryQueryOptions<TData, TError>;
@@ -75,11 +78,11 @@ export const useGetCountryAmazoniaBoundary = <
   TData = Awaited<ReturnType<typeof getCountryAmazoniaBoundary>>,
   TError = unknown,
 >(
-  code: string,
+  iso3: string,
   options?: Omit<CountryAmazoniaBoundaryQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const { queryKey, queryFn, enabled, staleTime } = getCountryAmazoniaBoundaryOptions(
-    code,
+    iso3,
     options,
   );
 
@@ -92,19 +95,25 @@ export const useGetCountryAmazoniaBoundary = <
   });
 };
 
-export type CountryBoundary = { code: CountryCode; geometry: __esri.GeometryUnion };
+export type CountryBoundary = {
+  slug: string;
+  country: string;
+  geometry: __esri.GeometryUnion;
+};
 
 // One round trip for every live module: `area_afp` is a single large polygon and fetching it
 // once per country would refetch it verbatim N times.
-export const getLiveCountryBoundaries = async (): Promise<CountryBoundary[]> => {
-  const codes = COUNTRIES.filter((entry) => entry.available).map((entry) => entry.code);
-  if (codes.length === 0) return [];
+export const getLiveCountryBoundaries = async (
+  modules: readonly CountryModule[],
+): Promise<CountryBoundary[]> => {
+  const countries = [...new Set(modules.map((module) => module.country))].filter(isCountryIso3);
+  if (countries.length === 0) return [];
 
-  const [countries, amazonia] = await Promise.all([
+  const [admin0, amazonia] = await Promise.all([
     getFeatures({
       feature: DATASETS.admin0.layer,
       query: DATASETS.admin0.getFeatures({
-        where: `GID_0 IN (${codes.map((code) => `'${code}'`).join(", ")})`,
+        where: `GID_0 IN (${countries.map((iso3) => `'${iso3}'`).join(", ")})`,
         outFields: ["GID_0"],
         returnGeometry: true,
       }),
@@ -118,23 +127,38 @@ export const getLiveCountryBoundaries = async (): Promise<CountryBoundary[]> => 
   const amazoniaGeometry = amazonia.features[0]?.geometry;
   if (!amazoniaGeometry) return [];
 
-  return countries.features.flatMap((feature) => {
-    const code = feature.attributes?.GID_0;
-    if (!isCountryCode(code) || !feature.geometry) return [];
+  const boundaryByCountry = new Map<string, __esri.GeometryUnion>();
+  for (const feature of admin0.features) {
+    const iso3 = feature.attributes?.GID_0;
+    if (typeof iso3 !== "string" || !feature.geometry) continue;
 
     const geometry = intersectionOperator.execute(feature.geometry, amazoniaGeometry);
-    return geometry ? [{ code, geometry }] : [];
+    if (geometry) boundaryByCountry.set(iso3, geometry);
+  }
+
+  return modules.flatMap(({ slug, country }) => {
+    const geometry = boundaryByCountry.get(country);
+    return geometry ? [{ slug, country, geometry }] : [];
   });
 };
 
-export const getLiveCountryBoundariesKey = () => ["country-coverage", "boundaries"] as const;
+export const getLiveCountryBoundariesKey = (modules: readonly CountryModule[]) =>
+  [
+    "country-coverage",
+    "boundaries",
+    modules.map(({ slug, country }) => `${slug}:${country}`),
+  ] as const;
 
-export const useGetLiveCountryBoundaries = (options?: { enabled?: boolean }) =>
+export const useGetLiveCountryBoundaries = (
+  modules: readonly CountryModule[],
+  options?: { enabled?: boolean },
+) =>
   useQuery({
-    queryKey: getLiveCountryBoundariesKey(),
-    queryFn: getLiveCountryBoundaries,
+    queryKey: getLiveCountryBoundariesKey(modules),
+    queryFn: () => getLiveCountryBoundaries(modules),
     staleTime: Infinity,
     ...options,
+    enabled: modules.length > 0 && (options?.enabled ?? true),
   });
 
 export const getCountryCoverageRatio = (

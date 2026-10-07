@@ -1,17 +1,17 @@
 import { isSavedReportPathname, isUnscopedPathname } from "@/lib/country";
 import { getCountryCoverageRatio, useGetCountryAmazoniaBoundary } from "@/lib/country/coverage";
+import { useGetCountryModule } from "@/lib/country-modules";
 import { useLocationGeometry } from "@/lib/location";
 
 import { useSyncLocation } from "@/app/(frontend)/store";
 
 import { usePathname } from "@/i18n/navigation";
-import { useCountry } from "@/i18n/use-country";
 
 export type CountryModuleCoverageStatus = "no-area" | "pending" | "outside" | "inside";
 
 export function useCountryModuleCoverage() {
   const pathname = usePathname();
-  const country = useCountry();
+  const country = useGetCountryModule()?.country ?? null;
   const [location] = useSyncLocation();
   const geometry = useLocationGeometry(location);
 

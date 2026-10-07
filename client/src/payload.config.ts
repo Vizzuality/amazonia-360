@@ -18,8 +18,10 @@ import { env } from "@/env.mjs";
 
 import { Accounts } from "@/cms/collections/Accounts";
 import { Admins } from "@/cms/collections/Admins";
+import { CountryModules } from "@/cms/collections/CountryModules";
 import { Indicators } from "@/cms/collections/Indicators";
 import { Media } from "@/cms/collections/Media";
+import { Partners } from "@/cms/collections/Partners";
 import { Reports } from "@/cms/collections/Reports";
 import { Subtopics } from "@/cms/collections/Subtopics";
 import { Topics } from "@/cms/collections/Topics";
@@ -60,7 +62,18 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Admins, Users, Accounts, Media, Reports, Topics, Subtopics, Indicators],
+  collections: [
+    Admins,
+    Users,
+    Accounts,
+    Media,
+    Reports,
+    Topics,
+    Subtopics,
+    CountryModules,
+    Partners,
+    Indicators,
+  ],
   db: postgresAdapter({
     idType: "uuid",
     pool: {

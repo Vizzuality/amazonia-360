@@ -3,23 +3,28 @@
 import Image from "next/image";
 
 import { SquareArrowOutUpRight } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
-import type { CountryCode } from "@/lib/country";
+import { getPartnersHref } from "@/lib/country/partners";
 import {
-  getCountryModulePartnerLogos,
-  getPartnersHref,
-  getRegionalPartnerLogos,
-} from "@/lib/country/partners";
+  getCountryModuleBySlug,
+  getModulePartners,
+  getRegionalPartners,
+  useGetCountryModules,
+  useGetPartners,
+} from "@/lib/country-modules";
 
 import { Button } from "@/components/ui/button";
 
 import { LocaleLink } from "@/i18n/navigation";
 
-export default function IndicatorsPartners({ country }: Readonly<{ country: CountryCode | null }>) {
+export default function IndicatorsPartners({ country }: Readonly<{ country: string | null }>) {
   const t = useTranslations();
-  const locale = useLocale();
-  const logos = country ? getCountryModulePartnerLogos(country) : getRegionalPartnerLogos(locale);
+  const countryModule = getCountryModuleBySlug(useGetCountryModules(), country);
+  const partners = useGetPartners();
+  const logos = countryModule
+    ? getModulePartners(partners, countryModule.id)
+    : getRegionalPartners(partners);
 
   if (!logos.length) return null;
 
@@ -31,7 +36,7 @@ export default function IndicatorsPartners({ country }: Readonly<{ country: Coun
         </h3>
         <Button asChild variant="ghost" size="sm" className="text-foreground gap-2 px-2">
           <LocaleLink
-            href={getPartnersHref(country)}
+            href={getPartnersHref(countryModule?.slug ?? null)}
             target="_blank"
             rel="noopener noreferrer"
             data-testid="indicators-partners-learn-more"
@@ -43,14 +48,14 @@ export default function IndicatorsPartners({ country }: Readonly<{ country: Coun
       </div>
 
       <ul className="grid grid-cols-3 gap-2">
-        {logos.map((logo) => (
+        {logos.map((partner) => (
           <li
-            key={logo.src}
+            key={partner.id}
             className="flex h-16 items-center justify-center rounded-lg bg-white px-3"
           >
             <Image
-              src={logo.src}
-              alt={logo.alt}
+              src={partner.logo}
+              alt={partner.name}
               width={200}
               height={80}
               className="h-10 w-auto max-w-full object-contain"

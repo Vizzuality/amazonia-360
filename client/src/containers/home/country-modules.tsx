@@ -4,8 +4,13 @@ import Image from "next/image";
 
 import { useLocale, useTranslations } from "next-intl";
 
-import { COUNTRIES, countryFlagSrc } from "@/lib/country";
-import { getCountryModulePartnerLogos } from "@/lib/country/partners";
+import { countryFlagSrc } from "@/lib/country";
+import {
+  getModulePartners,
+  useGetActiveModuleSlugs,
+  useGetCountryModules,
+  useGetPartners,
+} from "@/lib/country-modules";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 import { useGetDefaultIndicators } from "@/lib/indicators";
 
@@ -13,13 +18,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { LocaleLink } from "@/i18n/navigation";
 
-const LIVE_COUNTRY_CODES = COUNTRIES.filter((entry) => entry.available).map((entry) => entry.code);
-const ECUADOR_AMAZONIA_BBOX = [-9313915, -559071, -8369795, 81173];
-
 export default function CountryModules() {
   const t = useTranslations();
   const locale = useLocale();
-  const { data: indicators } = useGetDefaultIndicators({ locale, country: LIVE_COUNTRY_CODES });
+  const modules = useGetCountryModules();
+  const partners = useGetPartners();
+  const activeSlugs = useGetActiveModuleSlugs();
+  const { data: indicators } = useGetDefaultIndicators({ locale, country: activeSlugs });
 
   if (!isFeatureEnabled("country-module")) return null;
 
@@ -43,48 +48,53 @@ export default function CountryModules() {
         </div>
 
         <div className="grid grid-cols-2 gap-2 lg:flex-1">
-          <LocaleLink
-            href={{
-              pathname: "/ECU/reports",
-              query: { bbox: ECUADOR_AMAZONIA_BBOX.join(",") },
-            }}
-            data-testid="home-country-module-ECU"
-            className="group relative flex min-h-[159px] flex-col gap-12 rounded-md bg-white/5 p-4"
-          >
-            <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-[2px]">
-              <Image
-                src={countryFlagSrc("ECU")}
-                alt=""
-                width={33}
-                height={32}
-                className="h-8 w-[33px] rounded-[4px] object-cover"
-              />
-            </span>
-            <span className="flex flex-col gap-1">
-              <span className="text-primary-foreground text-base font-bold">
-                {t("country-module-ECU-module-name")}
-              </span>
-              {indicators ? (
-                <span className="text-muted text-xs font-medium">
-                  {t("country-module-country-description", {
-                    count: indicators.filter((indicator) => indicator.country === "ECU").length,
-                    partners: getCountryModulePartnerLogos("ECU").length,
-                  })}
-                </span>
-              ) : (
-                <Skeleton className="h-4 w-full max-w-40" aria-hidden />
-              )}
-            </span>
-            <span className="absolute top-4 right-4 rounded-[2px] bg-blue-50/10 px-1 py-0.5 text-[10px] font-bold tracking-[0.6px] text-cyan-600 uppercase transition-opacity group-hover:opacity-0 group-focus-visible:opacity-0">
-              {t("landing-country-modules-live")}
-            </span>
-            <span
-              aria-hidden
-              className="absolute top-[2px] right-[2px] flex items-center justify-center overflow-hidden rounded-bl-[4px] border-b border-l border-cyan-600 bg-white/10 p-2 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+          {modules.map((module) => (
+            <LocaleLink
+              key={module.slug}
+              href={{
+                pathname: `/${module.slug}/reports`,
+                query: module.bbox ? { bbox: module.bbox.join(",") } : undefined,
+              }}
+              data-testid={`home-country-module-${module.slug}`}
+              className="group relative flex min-h-[159px] flex-col gap-12 rounded-md bg-white/5 p-4"
             >
-              <Image src="/images/home/arrow-top-right.svg" alt="" width={20} height={20} />
-            </span>
-          </LocaleLink>
+              <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-[2px]">
+                <Image
+                  src={countryFlagSrc(module.country)}
+                  alt=""
+                  width={33}
+                  height={32}
+                  className="h-8 w-[33px] rounded-[4px] object-cover"
+                />
+              </span>
+              <span className="flex flex-col gap-1">
+                <span className="text-primary-foreground text-base font-bold">
+                  {module.moduleName}
+                </span>
+                {indicators ? (
+                  <span className="text-muted text-xs font-medium">
+                    {t("country-module-country-description", {
+                      count: indicators.filter(
+                        (indicator) => indicator.module?.slug === module.slug,
+                      ).length,
+                      partners: getModulePartners(partners, module.id).length,
+                    })}
+                  </span>
+                ) : (
+                  <Skeleton className="h-4 w-full max-w-40" aria-hidden />
+                )}
+              </span>
+              <span className="absolute top-4 right-4 rounded-[2px] bg-blue-50/10 px-1 py-0.5 text-[10px] font-bold tracking-[0.6px] text-cyan-600 uppercase transition-opacity group-hover:opacity-0 group-focus-visible:opacity-0">
+                {t("landing-country-modules-live")}
+              </span>
+              <span
+                aria-hidden
+                className="absolute top-[2px] right-[2px] flex items-center justify-center overflow-hidden rounded-bl-[4px] border-b border-l border-cyan-600 bg-white/10 p-2 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+              >
+                <Image src="/images/home/arrow-top-right.svg" alt="" width={20} height={20} />
+              </span>
+            </LocaleLink>
+          ))}
 
           <div className="border-accent-foreground flex min-h-[159px] flex-col justify-end rounded-md border p-4">
             <p className="text-primary-foreground text-base font-bold">

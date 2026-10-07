@@ -7,7 +7,6 @@ import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 
 import {
-  COUNTRIES,
   countryFlagSrc,
   isSavedReportPathname,
   isUnscopedPathname,
@@ -18,7 +17,12 @@ import {
   getCountryCoverageRatio,
   useGetLiveCountryBoundaries,
 } from "@/lib/country/coverage";
-import { getCountryModulePartnerLogos } from "@/lib/country/partners";
+import {
+  getModulePartners,
+  useGetActiveModuleSlugs,
+  useGetCountryModules,
+  useGetPartners,
+} from "@/lib/country-modules";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import { useLocationGeometryWithStatus } from "@/lib/location";
@@ -27,8 +31,6 @@ import { useSyncLocation } from "@/app/(frontend)/store";
 
 import { usePathname } from "@/i18n/navigation";
 import { useCountry } from "@/i18n/use-country";
-
-const LIVE_COUNTRY_CODES = COUNTRIES.filter((entry) => entry.available).map((entry) => entry.code);
 
 export type CountryOption = {
   code: string | null;
@@ -46,9 +48,9 @@ export type CountryOption = {
 function isAreaOutsideCountry(
   geometry: __esri.GeometryUnion | null,
   boundaries: CountryBoundary[] | undefined,
-  code: string,
+  slug: string,
 ): boolean {
-  const boundary = boundaries?.find((entry) => entry.code === code);
+  const boundary = boundaries?.find((entry) => entry.slug === slug);
   if (!geometry || !boundary) return false;
 
   return getCountryCoverageRatio(geometry, boundary.geometry) === 0;
@@ -60,7 +62,10 @@ export function useCountryOptions(): CountryOption[] | null {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const country = useCountry();
-  const { data: indicators } = useGetDefaultIndicators({ locale, country: LIVE_COUNTRY_CODES });
+  const modules = useGetCountryModules();
+  const partners = useGetPartners();
+  const liveSlugs = useGetActiveModuleSlugs();
+  const { data: indicators } = useGetDefaultIndicators({ locale, country: liveSlugs });
 
   const [location] = useSyncLocation();
   const { geometry, isCalculating } = useLocationGeometryWithStatus(location);
@@ -70,7 +75,7 @@ export function useCountryOptions(): CountryOption[] | null {
     !isUnscopedPathname(pathname) &&
     !isSavedReportPathname(pathname) &&
     !!location;
-  const { data: boundaries } = useGetLiveCountryBoundaries({ enabled: canCheckCoverage });
+  const { data: boundaries } = useGetLiveCountryBoundaries(modules, { enabled: canCheckCoverage });
   const settledGeometry = canCheckCoverage && !isCalculating ? geometry : null;
 
   const query = useMemo(() => Object.fromEntries(searchParams?.entries() ?? []), [searchParams]);
@@ -90,24 +95,36 @@ export function useCountryOptions(): CountryOption[] | null {
       href: { pathname, query },
     };
 
-    const countries = COUNTRIES.filter((entry) => entry.available).map(
-      (entry): CountryOption => ({
-        code: entry.code,
-        name: t(entry.moduleNameKey),
+    const countries = modules.map(
+      (module): CountryOption => ({
+        code: module.slug,
+        name: module.moduleName,
         description: indicators
           ? t("country-module-country-description", {
-              count: indicators.filter((indicator) => indicator.country === entry.code).length,
-              partners: getCountryModulePartnerLogos(entry.code).length,
+              count: indicators.filter((indicator) => indicator.module?.slug === module.slug)
+                .length,
+              partners: getModulePartners(partners, module.id).length,
             })
           : "",
-        active: entry.code === country,
+        active: module.slug === country,
         isDescriptionLoading: !indicators,
-        disabled: isAreaOutsideCountry(settledGeometry, boundaries, entry.code),
-        flagSrc: countryFlagSrc(entry.code),
-        href: { pathname: withCountry(pathname, entry.code), query },
+        disabled: isAreaOutsideCountry(settledGeometry, boundaries, module.slug),
+        flagSrc: countryFlagSrc(module.country),
+        href: { pathname: withCountry(pathname, module.slug, liveSlugs), query },
       }),
     );
 
     return [amazonRegion, ...countries];
-  }, [t, pathname, query, country, indicators, settledGeometry, boundaries]);
+  }, [
+    t,
+    pathname,
+    query,
+    country,
+    modules,
+    partners,
+    liveSlugs,
+    indicators,
+    settledGeometry,
+    boundaries,
+  ]);
 }

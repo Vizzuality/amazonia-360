@@ -1,6 +1,7 @@
 import { useMutation, UseMutationOptions, useQueryClient } from "@tanstack/react-query";
 
-import { getCountryCodes } from "@/lib/country";
+import { getModuleSlugs } from "@/lib/country";
+import { useGetActiveModuleSlugs } from "@/lib/country-modules";
 import {
   ClassShare,
   getClassDistribution,
@@ -276,14 +277,14 @@ export const useGetTopicSummary = <
   options?: Omit<TopicSummaryMutationOptions<TData, TError>, "mutationFn">,
 ) => {
   const queryClient = useQueryClient();
-  const country = useReportCountry();
+  const modules = getModuleSlugs(useReportCountry(), useGetActiveModuleSlugs());
 
   return useMutation({
     mutationFn: (params: TopicSummaryVariables) =>
       getTopicSummary({
         ...params,
         loadIndicators: (locale) =>
-          queryClient.ensureQueryData(getIndicatorsOptions(locale, getCountryCodes(country))),
+          queryClient.ensureQueryData(getIndicatorsOptions(locale, modules)),
       }),
     ...options,
   });

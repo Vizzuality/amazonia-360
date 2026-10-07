@@ -28,7 +28,7 @@ export default function IndicatorsItem({
   id,
   name,
   description_short,
-  country,
+  module: indicatorModule,
 }: IndicatorsItemProps) {
   const [indicators, setIndicators] = useSyncIndicators();
   const [, setIndicatorsSettings] = useSyncIndicatorsSettings();
@@ -67,7 +67,7 @@ export default function IndicatorsItem({
         )}
         onClick={() => handleChangeIndicator(!indicators?.includes(id))}
       >
-        <IndicatorScopeBadge country={country} />
+        <IndicatorScopeBadge module={indicatorModule} />
         <span>{name}</span>
       </button>
       <div className="flex items-center gap-0.5">

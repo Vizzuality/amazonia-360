@@ -1,7 +1,9 @@
 import { test as gate, expect } from "@playwright/test";
 
+import COUNTRY_MODULES from "../datum/country-modules.json" with { type: "json" };
 import INDICATORS_ECU from "../datum/indicators.ECU.json" with { type: "json" };
 import INDICATORS from "../datum/indicators.json" with { type: "json" };
+import PARTNERS from "../datum/partners.json" with { type: "json" };
 import SUBTOPICS from "../datum/subtopics.json" with { type: "json" };
 import TOPICS from "../datum/topics.json" with { type: "json" };
 
@@ -21,6 +23,8 @@ const CATALOGUE = [
   { collection: "topics", records: TOPICS.length },
   { collection: "subtopics", records: SUBTOPICS.length },
   { collection: "indicators", records: INDICATORS.length + INDICATORS_ECU.length },
+  { collection: "country-modules", records: COUNTRY_MODULES.length },
+  { collection: "partners", records: PARTNERS.length },
 ] as const;
 
 gate("the catalogue the CMS serves is seeded and complete", async ({ request }) => {

@@ -8,7 +8,8 @@ import { QueryFunction, UseQueryOptions, useQuery, useQueries } from "@tanstack/
 import axios from "axios";
 
 import { fetchIndicatorById, fetchIndicators } from "@/lib/cms-content";
-import { getCountryCodes } from "@/lib/country";
+import { getModuleSlugs } from "@/lib/country";
+import { useGetActiveModuleSlugs } from "@/lib/country-modules";
 
 import {
   Indicator,
@@ -27,7 +28,7 @@ import { useCountry } from "@/i18n/use-country";
 
 export type IndicatorsParams = unknown;
 
-/** A single code (the URL's own module), the set a report stores, or null for regional only. */
+/** A single slug (the URL's own module), the set a report stores, or null for regional only. */
 export type CountryModules = string | readonly (string | null)[] | null;
 
 export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
@@ -38,15 +39,15 @@ export type IndicatorsQueryOptions<TData, TError> = UseQueryOptions<
 
 export const getIndicators = async (
   locale: string,
-  countries: readonly string[],
+  modules: readonly string[],
 ): Promise<Indicator[]> => {
-  const indicators = await fetchIndicators({ locale, countries });
+  const indicators = await fetchIndicators({ locale, modules });
 
   return indicators.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 };
 
-export const getIndicatorsKey = (locale: string, countries: readonly string[]) => {
-  return ["indicators", locale, ...countries];
+export const getIndicatorsKey = (locale: string, modules: readonly string[]) => {
+  return ["indicators", locale, ...modules];
 };
 
 export const getIndicatorsOptions = <
@@ -54,12 +55,12 @@ export const getIndicatorsOptions = <
   TError = unknown,
 >(
   locale: string,
-  countries: readonly string[],
+  modules: readonly string[],
   options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
 ) => {
-  const queryKey = getIndicatorsKey(locale, countries);
+  const queryKey = getIndicatorsKey(locale, modules);
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getIndicators>>> = () =>
-    getIndicators(locale, countries);
+    getIndicators(locale, modules);
   // Editorial content, and the report flow is four routes: without this every navigation
   // refetches the whole catalogue once the provider's 60s staleTime has passed.
   return { queryKey, queryFn, staleTime: Infinity, ...options } as IndicatorsQueryOptions<
@@ -81,8 +82,9 @@ export const useGetIndicators = <
   country?: CountryModules,
 ) => {
   const urlCountry = useCountry();
-  const countries = getCountryCodes(country === undefined ? urlCountry : country);
-  const { queryKey, queryFn, staleTime } = getIndicatorsOptions(locale, countries, options);
+  const liveSlugs = useGetActiveModuleSlugs();
+  const modules = getModuleSlugs(country === undefined ? urlCountry : country, liveSlugs);
+  const { queryKey, queryFn, staleTime } = getIndicatorsOptions(locale, modules, options);
 
   return useQuery({
     queryKey,

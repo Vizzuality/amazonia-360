@@ -5,9 +5,10 @@ import { useSignOut } from "./use-sign-out";
 // `@/i18n/navigation-client` is stubbed because importing it for real drags next-intl's
 // `next/navigation` import into the module graph, which vitest cannot resolve. Locale
 // prefixing is next-intl's job; what is asserted here is the href handed to it.
-const { signOutMock, countryMock, getPathnameMock } = vi.hoisted(() => ({
+const { signOutMock, countryMock, liveSlugsMock, getPathnameMock } = vi.hoisted(() => ({
   signOutMock: vi.fn(),
   countryMock: vi.fn<() => string | null>(),
+  liveSlugsMock: vi.fn(() => ["ECU"]),
   getPathnameMock: vi.fn(({ href, locale }: { href: string; locale: string }) =>
     href === "/" ? `/${locale}` : `/${locale}${href}`,
   ),
@@ -16,10 +17,12 @@ const { signOutMock, countryMock, getPathnameMock } = vi.hoisted(() => ({
 vi.mock("next-auth/react", () => ({ signOut: signOutMock }));
 vi.mock("@/i18n/use-country", () => ({ useCountry: countryMock }));
 vi.mock("@/i18n/navigation-client", () => ({ getPathname: getPathnameMock }));
+vi.mock("@/lib/country-modules", () => ({ useGetActiveModuleSlugs: liveSlugsMock }));
 
 beforeEach(() => {
   vi.clearAllMocks();
   countryMock.mockReturnValue(null);
+  liveSlugsMock.mockReturnValue(["ECU"]);
 });
 
 describe("useSignOut", () => {
@@ -48,16 +51,16 @@ describe("useSignOut", () => {
   });
 
   test("keeps a scoped destination inside the active country module", () => {
-    countryMock.mockReturnValue("bo");
+    countryMock.mockReturnValue("ECU");
     const { result } = renderHook(() => useSignOut());
 
     result.current("/reports");
 
-    expect(getPathnameMock).toHaveBeenCalledWith({ href: "/bo/reports", locale: "en" });
+    expect(getPathnameMock).toHaveBeenCalledWith({ href: "/ECU/reports", locale: "en" });
   });
 
   test("sends the user to the home page outside the country module", () => {
-    countryMock.mockReturnValue("bo");
+    countryMock.mockReturnValue("ECU");
     const { result } = renderHook(() => useSignOut());
 
     result.current();
@@ -66,7 +69,7 @@ describe("useSignOut", () => {
   });
 
   test("leaves the country off the paths that are never country-scoped", () => {
-    countryMock.mockReturnValue("bo");
+    countryMock.mockReturnValue("ECU");
     const { result } = renderHook(() => useSignOut());
 
     result.current("/auth/sign-in");

@@ -9,6 +9,12 @@ import { useTranslations } from "next-intl";
 
 import { isSavedReportPathname } from "@/lib/country";
 import { getPartnersHref } from "@/lib/country/partners";
+import {
+  getCountryModuleBySlug,
+  getModulePartners,
+  useGetCountryModules,
+  useGetPartners,
+} from "@/lib/country-modules";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 
 import { Button } from "@/components/ui/button";
@@ -41,6 +47,8 @@ function TriggerIcon({ option }: Readonly<{ option: CountryOption }>) {
 export default function CountrySelector() {
   const t = useTranslations();
   const options = useCountryOptions();
+  const modules = useGetCountryModules();
+  const partners = useGetPartners();
   const titleId = useId();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -56,6 +64,8 @@ export default function CountrySelector() {
   if (!options) return null;
 
   const active = options.find((option) => option.active) ?? options[0];
+  const activeModule = getCountryModuleBySlug(modules, active.code);
+  const hasPartners = !!activeModule && getModulePartners(partners, activeModule.id).length > 0;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -101,7 +111,7 @@ export default function CountrySelector() {
           </div>
           <Button asChild variant="outline" size="sm" className="shrink-0">
             <LocaleLink
-              href={getPartnersHref(active.code)}
+              href={getPartnersHref(hasPartners ? active.code : null)}
               target="_blank"
               rel="noopener noreferrer"
               data-testid="country-selector-learn-more"

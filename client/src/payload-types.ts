@@ -75,6 +75,8 @@ export interface Config {
     reports: Report;
     topics: Topic;
     subtopics: Subtopic;
+    'country-modules': CountryModule;
+    partners: Partner;
     indicators: Indicator;
     exports: Export;
     imports: Import;
@@ -95,6 +97,10 @@ export interface Config {
     subtopics: {
       indicators: 'indicators';
     };
+    'country-modules': {
+      partners: 'partners';
+      indicators: 'indicators';
+    };
   };
   collectionsSelect: {
     admins: AdminsSelect<false> | AdminsSelect<true>;
@@ -104,6 +110,8 @@ export interface Config {
     reports: ReportsSelect<false> | ReportsSelect<true>;
     topics: TopicsSelect<false> | TopicsSelect<true>;
     subtopics: SubtopicsSelect<false> | SubtopicsSelect<true>;
+    'country-modules': CountryModulesSelect<false> | CountryModulesSelect<true>;
+    partners: PartnersSelect<false> | PartnersSelect<true>;
     indicators: IndicatorsSelect<false> | IndicatorsSelect<true>;
     exports: ExportsSelect<false> | ExportsSelect<true>;
     imports: ImportsSelect<false> | ImportsSelect<true>;
@@ -266,10 +274,11 @@ export interface Report {
     relationTo: 'users';
     value: string | User;
   } | null;
+  country?: ('ECU' | 'BOL' | 'BRA' | 'COL' | 'GUY' | 'PER' | 'SUR' | 'VEN')[] | null;
   /**
    * The country modules active when this report was created. Empty is the Amazon Region — reports created before country modules existed.
    */
-  country?: ('ECU' | 'BOL' | 'BRA' | 'COL' | 'GUY' | 'PER' | 'SUR' | 'VEN')[] | null;
+  modules?: (string | CountryModule)[] | null;
   location:
     | {
         type: 'search';
@@ -321,79 +330,89 @@ export interface Report {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
+ * via the `definition` "country-modules".
  */
-export interface Media {
+export interface CountryModule {
   id: string;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "topics".
- */
-export interface Topic {
   /**
-   * Custom ID in order to match the original datum JSON. Referenced by existing reports and code. Cannot be changed.
+   * The URL segment of this module, e.g. ECU in /en/ECU/reports. Letters, numbers and hyphens only. Must never equal a page path (reports, partners, auth…) or a locale.
    */
-  id: string;
+  slug: string;
+  /**
+   * The country used for the flag and the map boundary.
+   */
+  country: 'BRA' | 'COL' | 'PER' | 'VEN' | 'ECU' | 'BOL' | 'GUY' | 'SUR';
+  /**
+   * Inactive modules are hidden from the site and their URLs return 404.
+   */
+  active?: boolean | null;
   name: string;
+  moduleName: string;
   /**
-   * Markdown. Rendered with react-markdown.
+   * Shown on the partners page tab. Plain text; each line is a paragraph.
    */
-  description?: string | null;
+  partnersDescription?: string | null;
   /**
-   * Path under client/public, e.g. /images/topics/territory.webp
+   * Short badge, e.g. ECU.
    */
-  image?: string | null;
-  default_visualization?:
-    | {
-        indicator: string | Indicator;
-        /**
-         * The source data only uses map, numeric, chart and table; custom and ai exist to match Reports.
-         */
-        type: 'map' | 'chart' | 'table' | 'numeric' | 'custom' | 'ai';
-        x: number;
-        y: number;
-        w: number;
-        h: number;
-        basemapId?:
-          | (
-              | 'gray-vector'
-              | 'dark-gray-vector'
-              | 'satellite'
-              | 'streets'
-              | 'hybrid'
-              | 'osm'
-              | 'topo-vector'
-              | 'terrain'
-            )
-          | null;
-        opacity?: number | null;
-        id?: string | null;
-      }[]
-    | null;
+  tag: string;
   /**
-   * Subtopics filed under this topic. Edited on the subtopic itself.
+   * Initial map extent in Web Mercator (EPSG:3857). Optional.
    */
-  subtopics?: {
-    docs?: (string | Subtopic)[];
+  bbox?: {
+    xmin?: number | null;
+    ymin?: number | null;
+    xmax?: number | null;
+    ymax?: number | null;
+  };
+  order: number;
+  /**
+   * Partners of this module. Edited on the partner itself.
+   */
+  partners?: {
+    docs?: (string | Partner)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  /**
+   * Indicators of this module. Edited on the indicator itself.
+   */
+  indicators?: {
+    docs?: (string | Indicator)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners".
+ */
+export interface Partner {
+  id: string;
+  name: string;
+  /**
+   * Short name shown under the logo on the partners page, e.g. MAE. Leave empty to show no caption.
+   */
+  label?: string | null;
+  /**
+   * Up to 4 letters. Reserved for the badge next to indicators.
+   */
+  tag?: string | null;
+  /**
+   * Path under client/public, e.g. /partners/esri.avif
+   */
+  logo: string;
+  logoSize?: ('default' | 'large') | null;
+  /**
+   * Shown among the Amazon Region partners. Independent of modules: a partner can be regional and belong to modules too.
+   */
+  regional?: boolean | null;
+  modules?: (string | CountryModule)[] | null;
+  order: number;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -409,10 +428,15 @@ export interface Indicator {
    */
   order: number;
   subtopic: string | Subtopic;
+  country?: ('ECU' | 'BOL' | 'BRA' | 'COL' | 'GUY' | 'PER' | 'SUR' | 'VEN') | null;
   /**
    * The country module this indicator belongs to. Empty is the Amazon Region — the regional scope, not every country.
    */
-  country?: ('ECU' | 'BOL' | 'BRA' | 'COL' | 'GUY' | 'PER' | 'SUR' | 'VEN') | null;
+  module?: (string | null) | CountryModule;
+  /**
+   * Only partners of this indicator's module can be chosen.
+   */
+  partners?: (string | Partner)[] | null;
   /**
    * The regional indicator this one stands in for inside its module. Only regional indicators can be named.
    */
@@ -666,6 +690,82 @@ export interface Subtopic {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "topics".
+ */
+export interface Topic {
+  /**
+   * Custom ID in order to match the original datum JSON. Referenced by existing reports and code. Cannot be changed.
+   */
+  id: string;
+  name: string;
+  /**
+   * Markdown. Rendered with react-markdown.
+   */
+  description?: string | null;
+  /**
+   * Path under client/public, e.g. /images/topics/territory.webp
+   */
+  image?: string | null;
+  default_visualization?:
+    | {
+        indicator: string | Indicator;
+        /**
+         * The source data only uses map, numeric, chart and table; custom and ai exist to match Reports.
+         */
+        type: 'map' | 'chart' | 'table' | 'numeric' | 'custom' | 'ai';
+        x: number;
+        y: number;
+        w: number;
+        h: number;
+        basemapId?:
+          | (
+              | 'gray-vector'
+              | 'dark-gray-vector'
+              | 'satellite'
+              | 'streets'
+              | 'hybrid'
+              | 'osm'
+              | 'topo-vector'
+              | 'terrain'
+            )
+          | null;
+        opacity?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Subtopics filed under this topic. Edited on the subtopic itself.
+   */
+  subtopics?: {
+    docs?: (string | Subtopic)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: string;
+  alt: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "exports".
  */
 export interface Export {
@@ -884,6 +984,14 @@ export interface PayloadLockedDocument {
         value: string | Subtopic;
       } | null)
     | ({
+        relationTo: 'country-modules';
+        value: string | CountryModule;
+      } | null)
+    | ({
+        relationTo: 'partners';
+        value: string | Partner;
+      } | null)
+    | ({
         relationTo: 'indicators';
         value: string | Indicator;
       } | null);
@@ -1033,6 +1141,7 @@ export interface ReportsSelect<T extends boolean = true> {
   description?: T;
   user?: T;
   country?: T;
+  modules?: T;
   location?: T;
   topics?:
     | T
@@ -1101,6 +1210,48 @@ export interface SubtopicsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "country-modules_select".
+ */
+export interface CountryModulesSelect<T extends boolean = true> {
+  slug?: T;
+  country?: T;
+  active?: T;
+  name?: T;
+  moduleName?: T;
+  partnersDescription?: T;
+  tag?: T;
+  bbox?:
+    | T
+    | {
+        xmin?: T;
+        ymin?: T;
+        xmax?: T;
+        ymax?: T;
+      };
+  order?: T;
+  partners?: T;
+  indicators?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners_select".
+ */
+export interface PartnersSelect<T extends boolean = true> {
+  name?: T;
+  label?: T;
+  tag?: T;
+  logo?: T;
+  logoSize?: T;
+  regional?: T;
+  modules?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "indicators_select".
  */
 export interface IndicatorsSelect<T extends boolean = true> {
@@ -1108,6 +1259,8 @@ export interface IndicatorsSelect<T extends boolean = true> {
   order?: T;
   subtopic?: T;
   country?: T;
+  module?: T;
+  partners?: T;
   replaces?: T;
   name?: T;
   unit?: T;
@@ -1373,6 +1526,8 @@ export interface TaskCreateCollectionExport {
       | 'reports'
       | 'topics'
       | 'subtopics'
+      | 'country-modules'
+      | 'partners'
       | 'indicators'
       | 'exports'
       | 'imports';

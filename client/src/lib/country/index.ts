@@ -1,87 +1,23 @@
-export type Country = {
-  /** ISO 3166-1 alpha-3, uppercase. Matches GADM `GID_0`, so it compares to real data. */
-  code: string;
-  available: boolean;
-  nameKey: string;
-  moduleNameKey: string;
-};
-
-// Also the source of the `enum_indicators_country` Postgres enums: a new code needs a Payload
-// migration before an indicator can be saved or seeded against it.
-export const COUNTRIES = [
-  {
-    code: "ECU",
-    available: true,
-    nameKey: "country-module-ECU-name",
-    moduleNameKey: "country-module-ECU-module-name",
-  },
-  {
-    code: "BOL",
-    available: false,
-    nameKey: "country-module-BOL-name",
-    moduleNameKey: "country-module-BOL-module-name",
-  },
-  {
-    code: "BRA",
-    available: false,
-    nameKey: "country-module-BRA-name",
-    moduleNameKey: "country-module-BRA-module-name",
-  },
-  {
-    code: "COL",
-    available: false,
-    nameKey: "country-module-COL-name",
-    moduleNameKey: "country-module-COL-module-name",
-  },
-  {
-    code: "GUY",
-    available: false,
-    nameKey: "country-module-GUY-name",
-    moduleNameKey: "country-module-GUY-module-name",
-  },
-  {
-    code: "PER",
-    available: false,
-    nameKey: "country-module-PER-name",
-    moduleNameKey: "country-module-PER-module-name",
-  },
-  {
-    code: "SUR",
-    available: false,
-    nameKey: "country-module-SUR-name",
-    moduleNameKey: "country-module-SUR-module-name",
-  },
-  {
-    code: "VEN",
-    available: false,
-    nameKey: "country-module-VEN-name",
-    moduleNameKey: "country-module-VEN-module-name",
-  },
-] as const satisfies readonly Country[];
-
-// No code in this set may ever become the name of a first-level route: with the module
-// absent from the route tree, a three-letter first segment is the only thing that tells
-// `proxy.ts` a module was named.
-const LIVE_CODES: ReadonlySet<string> = new Set(
-  COUNTRIES.filter((c) => c.available).map((c) => c.code),
-);
-
 const UNSCOPED_ROOTS: ReadonlySet<string> = new Set(["auth", "partners", "private", "webshot"]);
 
-export type CountryCode = (typeof COUNTRIES)[number]["code"];
-
-export function isCountryCode(value: string | undefined): value is CountryCode {
-  return !!value && LIVE_CODES.has(value);
+// No live slug may ever become the name of a first-level route: with the module absent from
+// the route tree, a first segment matching one is the only thing that tells `proxy.ts` a
+// module was named. The CMS slug validation reserves those names.
+function isModuleSlug(value: string | undefined, liveSlugs: readonly string[]): boolean {
+  return !!value && liveSlugs.includes(value);
 }
 
 // Deduped and sorted so the same set of modules always produces the same query key,
 // whatever order the caller holds them in.
-export function getCountryCodes(
+export function getModuleSlugs(
   value: string | readonly (string | null)[] | null | undefined,
-): CountryCode[] {
+  liveSlugs: readonly string[],
+): string[] {
   const values = typeof value === "string" ? [value] : (value ?? []);
   return [
-    ...new Set(values.filter((entry): entry is CountryCode => isCountryCode(entry ?? undefined))),
+    ...new Set(
+      values.filter((entry): entry is string => isModuleSlug(entry ?? undefined, liveSlugs)),
+    ),
   ].sort((a, b) => a.localeCompare(b));
 }
 
@@ -109,84 +45,110 @@ export function isSavedReportPathname(pathname: string): boolean {
 
 // Idempotent on purpose: `Link` applies this to every href it is given, including hrefs
 // the picker has already resolved to another module.
-export function withCountry(pathname: string, country: string | null): string {
+export function withCountry(
+  pathname: string,
+  slug: string | null,
+  liveSlugs: readonly string[],
+): string {
   if (!pathname.startsWith("/")) return pathname;
-  if (country === null) return pathname;
+  if (slug === null) return pathname;
   if (pathname === "/") return pathname;
   if (isUnscopedPathname(pathname)) return pathname;
-  if (isCountryCode(segmentsOf(pathname)[0])) return pathname;
-  return `/${country}${pathname}`;
+  if (isModuleSlug(segmentsOf(pathname)[0], liveSlugs)) return pathname;
+  return `/${slug}${pathname}`;
 }
 
-export function resolveCountryHref<Href>(href: Href, country: string | null): Href {
+export function resolveCountryHref<Href>(
+  href: Href,
+  slug: string | null,
+  liveSlugs: readonly string[],
+): Href {
   if (typeof href === "string") {
-    return withCountry(href, country) as Href;
+    return withCountry(href, slug, liveSlugs) as Href;
   }
 
   if (href && typeof href === "object" && "pathname" in href) {
     const { pathname } = href as { pathname?: unknown };
     if (typeof pathname !== "string") return href;
-    return { ...href, pathname: withCountry(pathname, country) };
+    return { ...href, pathname: withCountry(pathname, slug, liveSlugs) };
   }
 
   return href;
 }
 
-export function stripCountry(pathname: string): string {
+export function stripCountry(pathname: string, liveSlugs: readonly string[]): string {
   const segments = segmentsOf(pathname);
-  if (!isCountryCode(segments[0])) return pathname;
+  if (!isModuleSlug(segments[0], liveSlugs)) return pathname;
   return `/${segments.slice(1).join("/")}`;
 }
 
 // Reads the URL, not the route param: the param does not exist, because `proxy.ts`
-// rewrites the code away before Next routes the request.
+// rewrites the slug away before Next routes the request.
 export function countryFromPathname(
   pathname: string,
   locales: readonly string[],
-): CountryCode | null {
+  liveSlugs: readonly string[],
+): string | null {
   const segments = segmentsOf(pathname);
   const first = locales.includes(segments[0]) ? segments[1] : segments[0];
-  return isCountryCode(first) ? first : null;
+  return isModuleSlug(first, liveSlugs) ? first : null;
+}
+
+function getStoredSlug(segment: string, liveSlugs: readonly string[]): string | undefined {
+  const lower = segment.toLowerCase();
+  return liveSlugs.find((slug) => slug.toLowerCase() === lower);
 }
 
 export function canonicalCountryPathname(
   pathname: string,
   locales: readonly string[],
+  liveSlugs: readonly string[],
 ): string | null {
   const segments = segmentsOf(pathname);
   const [locale, first, ...tail] = segments;
 
   if (!locales.includes(locale)) return null;
-  if (first === undefined || isCountryCode(first)) return null;
+  if (first === undefined || isModuleSlug(first, liveSlugs)) return null;
 
-  const upper = first.toUpperCase();
-  if (upper !== first && isCountryCode(upper)) {
-    return `/${[locale, upper, ...tail].join("/")}`;
-  }
+  const stored = getStoredSlug(first, liveSlugs);
+  if (stored === undefined) return null;
 
-  return null;
+  return `/${[locale, stored, ...tail].join("/")}`;
 }
 
-// A three-letter segment that is not a live code is left in place on purpose: it matches
-// no route and falls into the catch-all that 404s, with the typed code still in the bar.
-export function routedPathname(pathname: string, locales: readonly string[]): string | null {
+// A segment that is not a live slug is left in place on purpose: it matches no route and
+// falls into the catch-all that 404s, with the typed slug still in the bar.
+export function routedPathname(
+  pathname: string,
+  locales: readonly string[],
+  liveSlugs: readonly string[],
+): string | null {
   const segments = segmentsOf(pathname);
   const [locale, first, ...tail] = segments;
 
   if (!locales.includes(locale)) return null;
-  if (!isCountryCode(first)) return null;
+  if (!isModuleSlug(first, liveSlugs)) return null;
 
   return `/${[locale, ...tail].join("/")}`;
 }
 
-export function getRegionalPathname(pathname: string, locales: readonly string[]): string | null {
-  return routedPathname(canonicalCountryPathname(pathname, locales) ?? pathname, locales);
+export function getRegionalPathname(
+  pathname: string,
+  locales: readonly string[],
+  liveSlugs: readonly string[],
+): string | null {
+  return routedPathname(
+    canonicalCountryPathname(pathname, locales, liveSlugs) ?? pathname,
+    locales,
+    liveSlugs,
+  );
 }
 
 export function getRegionalHomePathname(
   pathname: string,
   locales: readonly string[],
+  liveSlugs: readonly string[],
 ): string | null {
-  const regional = getRegionalPathname(pathname, locales);
+  const regional = getRegionalPathname(pathname, locales, liveSlugs);
   return regional !== null && segmentsOf(regional).length === 1 ? regional : null;
 }

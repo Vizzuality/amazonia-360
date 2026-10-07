@@ -2,7 +2,9 @@ import { Where } from "payload";
 
 import { Locale } from "next-intl";
 
-import { Indicator, ResourceFeature } from "@/types/indicator";
+import type { CountryModule, Partner } from "@/lib/country-modules/types";
+
+import { Indicator, IndicatorModule, ResourceFeature } from "@/types/indicator";
 import { Subtopic, Topic } from "@/types/topic";
 
 import { IndicatorView } from "@/app/(frontend)/parsers";
@@ -10,7 +12,9 @@ import { IndicatorView } from "@/app/(frontend)/parsers";
 import { BasemapIds } from "@/constants/basemaps";
 
 import {
+  CountryModule as CmsCountryModule,
   Indicator as CmsIndicator,
+  Partner as CmsPartner,
   Subtopic as CmsSubtopic,
   Topic as CmsTopic,
 } from "@/payload-types";
@@ -161,8 +165,17 @@ const INDICATOR_DEPTH = {
   populate: {
     subtopics: { name: true, topic: true },
     topics: { name: true },
+    "country-modules": { slug: true, tag: true },
   },
+  select: { partners: false },
 } as const;
+
+// Public reads cannot populate an inactive module, and Payload then leaves its bare id.
+const getIndicatorModule = (value: CmsIndicator["module"]): IndicatorModule | null => {
+  if (!value || typeof value === "string") return null;
+
+  return { slug: value.slug, tag: value.tag };
+};
 
 const toIndicator = (indicator: CmsIndicator): Indicator => {
   const subtopic = asRecord(indicator.subtopic, `Indicator ${indicator.id}'s Subtopic`);
@@ -188,6 +201,7 @@ const toIndicator = (indicator: CmsIndicator): Indicator => {
     topic: { id: topicId, name: topic.name },
     visualization_types: indicator.visualization_types ?? [],
     resource: toResource(resource),
+    module: getIndicatorModule(indicator.module),
   };
 };
 
@@ -235,24 +249,87 @@ export const fetchSubtopics = async ({ locale }: { locale: string }): Promise<Su
   return byId(docs.map(toSubtopic));
 };
 
-const getIndicatorsWhere = (countries: readonly string[]): Where =>
-  countries.length > 0
-    ? { or: [{ country: { exists: false } }, { country: { in: [...countries] } }] }
-    : { country: { exists: false } };
+const getIndicatorsWhere = (modules: readonly string[]): Where =>
+  modules.length > 0
+    ? { or: [{ module: { exists: false } }, { "module.slug": { in: [...modules] } }] }
+    : { module: { exists: false } };
 
 export const fetchIndicators = async ({
   locale,
-  countries,
+  modules,
 }: {
   locale: string;
-  countries: readonly string[];
+  modules: readonly string[];
 }): Promise<Indicator[]> => {
   const { docs } = await sdk.find({
     collection: "indicators",
     ...read(locale),
-    where: getIndicatorsWhere(countries),
+    where: getIndicatorsWhere(modules),
     ...INDICATOR_DEPTH,
   });
 
   return docs.map(toIndicator);
+};
+
+const getCountryModuleBbox = ({ bbox }: CmsCountryModule): CountryModule["bbox"] => {
+  const { xmin, ymin, xmax, ymax } = bbox ?? {};
+
+  if (typeof xmin !== "number" || typeof ymin !== "number") return null;
+  if (typeof xmax !== "number" || typeof ymax !== "number") return null;
+
+  return [xmin, ymin, xmax, ymax];
+};
+
+export const getCountryModule = (module: CmsCountryModule): CountryModule => ({
+  id: module.id,
+  slug: module.slug,
+  country: module.country,
+  name: module.name,
+  moduleName: module.moduleName,
+  partnersDescription: module.partnersDescription ?? null,
+  bbox: getCountryModuleBbox(module),
+});
+
+export const getPartner = (partner: CmsPartner): Partner => ({
+  id: partner.id,
+  name: partner.name,
+  label: partner.label ?? null,
+  logo: partner.logo,
+  logoSize: partner.logoSize ?? "default",
+  regional: partner.regional ?? false,
+  moduleIds: (partner.modules ?? []).map((module) =>
+    asId(module, `Partner ${partner.id}'s module`),
+  ),
+});
+
+// The `where` is explicit because an admin's session cookie lifts the collection's access filter.
+export const getCountryModulesReadArgs = (locale: string) =>
+  ({
+    ...read(locale),
+    depth: 0,
+    joins: false,
+    sort: "order",
+    where: { active: { equals: true } },
+  }) as const;
+
+export const getPartnersReadArgs = (locale: string) =>
+  ({ ...read(locale), depth: 0, sort: "order" }) as const;
+
+export const fetchCountryModules = async ({
+  locale,
+}: {
+  locale: string;
+}): Promise<CountryModule[]> => {
+  const { docs } = await sdk.find({
+    collection: "country-modules",
+    ...getCountryModulesReadArgs(locale),
+  });
+
+  return docs.map(getCountryModule);
+};
+
+export const fetchPartners = async ({ locale }: { locale: string }): Promise<Partner[]> => {
+  const { docs } = await sdk.find({ collection: "partners", ...getPartnersReadArgs(locale) });
+
+  return docs.map(getPartner);
 };
