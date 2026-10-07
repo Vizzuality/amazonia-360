@@ -59,8 +59,10 @@ function getSlugValidation(
   return slugField.validate?.(value as never, options as never);
 }
 
-function getDeleteGuard({ published = 0, drafts = 0 } = {}) {
-  const count = vi.fn(async () => ({ totalDocs: published }));
+function getDeleteGuard({ published = 0, drafts = 0, reports = 0 } = {}) {
+  const count = vi.fn(async ({ collection }: { collection: string }) => ({
+    totalDocs: collection === "reports" ? reports : published,
+  }));
   const countVersions = vi.fn(async () => ({ totalDocs: drafts }));
   const req = { payload: { count, countVersions } };
   const run = () => CountryModules.hooks?.beforeDelete?.[0]?.({ id: "module-1", req } as never);
@@ -69,10 +71,10 @@ function getDeleteGuard({ published = 0, drafts = 0 } = {}) {
 }
 
 const BLOCKED_MESSAGE =
-  "This module still has indicators. Deactivate it, or move its indicators to another module, before deleting it.";
+  "This module is still used by indicators or saved reports. Deactivate it instead of deleting it.";
 
 describe("CountryModules", () => {
-  test("deletes a module that no indicator references, counting inside the request", async () => {
+  test("deletes a module that no indicator or report references, counting inside the request", async () => {
     const { count, countVersions, req, run } = getDeleteGuard();
 
     await expect(run()).resolves.toBeUndefined();
@@ -86,11 +88,17 @@ describe("CountryModules", () => {
       where: { and: [{ latest: { equals: true } }, { "version.module": { equals: "module-1" } }] },
       req,
     });
+    expect(count).toHaveBeenCalledWith({
+      collection: "reports",
+      where: { modules: { equals: "module-1" } },
+      req,
+    });
   });
 
   test.each([
     { case: "published indicators", counts: { published: 21 } },
     { case: "only draft versions", counts: { drafts: 2 } },
+    { case: "saved reports", counts: { reports: 3 } },
   ])("blocks deleting a module referenced by $case", async ({ counts }) => {
     const { run } = getDeleteGuard(counts);
 

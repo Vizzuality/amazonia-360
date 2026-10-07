@@ -60,19 +60,20 @@ const validateSlug: TextFieldSingleValidation = async (value, options) => {
   return text(value, options);
 };
 
-const preventDeleteWithIndicators: CollectionBeforeDeleteHook = async ({ id, req }) => {
-  const [published, drafts] = await Promise.all([
+const preventDeleteWhileReferenced: CollectionBeforeDeleteHook = async ({ id, req }) => {
+  const [published, drafts, reports] = await Promise.all([
     req.payload.count({ collection: "indicators", where: { module: { equals: id } }, req }),
     req.payload.countVersions({
       collection: "indicators",
       where: { and: [{ latest: { equals: true } }, { "version.module": { equals: id } }] },
       req,
     }),
+    req.payload.count({ collection: "reports", where: { modules: { equals: id } }, req }),
   ]);
 
-  if (published.totalDocs + drafts.totalDocs > 0) {
+  if (published.totalDocs + drafts.totalDocs + reports.totalDocs > 0) {
     throw new APIError(
-      "This module still has indicators. Deactivate it, or move its indicators to another module, before deleting it.",
+      "This module is still used by indicators or saved reports. Deactivate it instead of deleting it.",
       400,
       null,
       true,
@@ -88,7 +89,7 @@ export const CountryModules: CollectionConfig = {
     defaultColumns: ["slug", "moduleName", "country", "active", "order"],
   },
   hooks: {
-    beforeDelete: [preventDeleteWithIndicators],
+    beforeDelete: [preventDeleteWhileReferenced],
   },
   access: {
     read: activeOrAdminAccess,
