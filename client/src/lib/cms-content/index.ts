@@ -166,8 +166,8 @@ const INDICATOR_DEPTH = {
     subtopics: { name: true, topic: true },
     topics: { name: true },
     "country-modules": { slug: true, tag: true },
+    partners: { name: true },
   },
-  select: { partners: false },
 } as const;
 
 // Public reads cannot populate an inactive module, and Payload then leaves its bare id.
@@ -307,7 +307,7 @@ export const getCountryModulesReadArgs = (locale: string) =>
   ({
     ...read(locale),
     depth: 0,
-    joins: false,
+    joins: { indicators: false, partners: false },
     sort: "order",
     where: { active: { equals: true } },
   }) as const;

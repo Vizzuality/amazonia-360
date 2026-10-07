@@ -168,8 +168,8 @@ describe("the catalogue reads", () => {
         subtopics: { name: true, topic: true },
         topics: { name: true },
         "country-modules": { slug: true, tag: true },
+        partners: { name: true },
       },
-      select: { partners: false },
     });
   });
 
