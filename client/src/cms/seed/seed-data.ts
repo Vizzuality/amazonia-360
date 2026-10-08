@@ -9,9 +9,18 @@ import TOPICS from "@/../datum/topics.json";
 
 import { seedDefaultVisualizations } from "./seed-default-visualizations";
 import { seedIndicators } from "./seed-indicators";
+import { DEFAULT_PREVIEW_USERS_PASSWORD, seedPreviewUsers } from "./seed-preview-users";
 import { seedSubtopics } from "./seed-subtopics";
 import { seedTopics } from "./seed-topics";
 import type { RawIndicator, RawSubtopic, RawTopic } from "./utils/types";
+
+const PREVIEW_USER_EMAILS: readonly string[] = [
+  "miguel.barrenechea@vizzuality.com",
+  "laura.riera@vizzuality.com",
+  "miguel.toyas@vizzuality.com",
+];
+
+const PREVIEW = process.env.SEED_PREVIEW === "true";
 
 async function main() {
   const payload = await getPayload({ config });
@@ -48,8 +57,23 @@ async function main() {
     process.exit(1);
   }
 
+  let preview = "";
+  if (PREVIEW) {
+    if (!process.env.PREVIEW_USERS_PASSWORD) {
+      payload.logger.warn(
+        "PREVIEW_USERS_PASSWORD is not set. The preview accounts use the default password.",
+      );
+    }
+    await seedPreviewUsers(
+      payload,
+      PREVIEW_USER_EMAILS,
+      process.env.PREVIEW_USERS_PASSWORD || DEFAULT_PREVIEW_USERS_PASSWORD,
+    );
+    const count = PREVIEW_USER_EMAILS.length;
+    preview = ` and ${count} preview admins and ${count} preview users`;
+  }
   payload.logger.info(
-    `Seeded ${seededTopics.totalDocs} topics, ${seededSubtopics.totalDocs} subtopics, ${seededIndicators.totalDocs} indicators.`,
+    `Seeded ${seededTopics.totalDocs} topics, ${seededSubtopics.totalDocs} subtopics, ${seededIndicators.totalDocs} indicators${preview}.`,
   );
   process.exit(0);
 }

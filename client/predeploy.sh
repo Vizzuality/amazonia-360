@@ -6,4 +6,4 @@ set -e
 /bin/sh ./migrate.sh
 echo "Seeding the catalogue..."
 export COREPACK_HOME=$(mktemp -d)
-exec pnpm db:seed
+exec pnpm db:seed "$@"
