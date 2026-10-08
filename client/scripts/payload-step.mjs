@@ -19,7 +19,7 @@
  * Only the silent no-op is retried. A non-zero exit is a real failure and a step that
  * stops producing output is a different bug; both are reported as they happen.
  *
- * Usage: node scripts/payload-step.mjs <migrate|seed>
+ * Usage: node scripts/payload-step.mjs <migrate|seed> [--preview]
  */
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
@@ -50,7 +50,8 @@ const STEPS = {
     // stop on "data loss will occur, proceed?" and wait on stdin forever. migrate has
     // already built the schema by the time we get here, so there is nothing to push.
     // The flag's only consumer is that push gate in db-postgres' connect().
-    env: { PAYLOAD_MIGRATING: "true" },
+    env: { PAYLOAD_MIGRATING: "true", SEED_PREVIEW: "false" },
+    flags: { "--preview": { SEED_PREVIEW: "true" } },
   },
 };
 
@@ -107,6 +108,16 @@ async function main() {
     process.exit(1);
   }
 
+  const flagEnv = {};
+  for (const flag of process.argv.slice(3).filter((arg) => arg !== "--")) {
+    const env = step.flags?.[flag];
+    if (!env) {
+      console.error(`Unknown flag "${flag}" for step "${name}".`);
+      process.exit(1);
+    }
+    Object.assign(flagEnv, env);
+  }
+
   // The Dockerfile copies node_modules and scripts into the runner image separately, so
   // say which one is missing rather than failing on a spawn ENOENT.
   if (!existsSync(PAYLOAD_BIN)) {
@@ -115,7 +126,7 @@ async function main() {
   }
 
   for (let attempt = 1; attempt <= ATTEMPTS; attempt++) {
-    const { code, output, timedOut } = await runOnce(step);
+    const { code, output, timedOut } = await runOnce({ ...step, env: { ...step.env, ...flagEnv } });
 
     if (timedOut) {
       console.error(
