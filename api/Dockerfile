@@ -31,7 +31,7 @@ ENV PATH="/app/.venv/bin:$PATH"
 # Reset the entrypoint, don't invoke `uv`
 ENTRYPOINT []
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--root-path", "/api/"]
+CMD ["/bin/sh", "./entrypoint.sh"]
 
 FROM base AS development
 
