@@ -9,6 +9,7 @@ export const DEFAULT_MAP_VIEW_PROPERTIES: Partial<__esri.MapViewProperties> = {
     minZoom: 3, // The minimum allowed zoom level of the view.
     // maxZoom: 8, // The maximum allowed zoom level of the view.
     // maxScale: 1000000,
+    rotationEnabled: false, // Maps stay north-up. Also blocks middle/right-drag and two-finger rotation.
   },
   popup: {
     dockEnabled: true,
