@@ -1,6 +1,11 @@
 #!/bin/sh
 set -e
 
+# Run the given command instead of the app, e.g. a pre-deploy command
+if [ "$#" -gt 0 ]; then
+  exec "$@"
+fi
+
 # Default to development if NODE_ENV not set
 NODE_ENV=${NODE_ENV:-development}
 
@@ -8,9 +13,9 @@ echo "Starting application in ${NODE_ENV} mode..."
 
 case "$NODE_ENV" in
   production)
-    echo "Running migrations..."
-    export COREPACK_HOME=$(mktemp -d)
-    pnpm db:migrate
+    if [ "${RUN_MIGRATIONS_ON_START:-true}" = "true" ]; then
+      /bin/sh ./migrate.sh
+    fi
     echo "Running in production mode..."
     exec env HOSTNAME=0.0.0.0 node server.js
     ;;

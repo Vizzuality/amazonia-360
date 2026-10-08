@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS production
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS base
 
 # Requirement of fiona and gdal.
 RUN set -eux; \
@@ -15,7 +15,7 @@ ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
 
 # Install the project's dependencies using the lockfile and settings
-RUN --mount=type=cache,target=/root/.cache/uv \
+RUN --mount=type=cache,id=s/1269f585-fce1-4dd9-bf79-5521c4e88efa-/root/.cache/uv,target=/root/.cache/uv \
     --mount=type=bind,source=uv.lock,target=uv.lock \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
     uv sync --frozen --no-install-project --no-dev
@@ -23,7 +23,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # Then, add the rest of the project source code and install it
 # Installing separately from its dependencies allows optimal layer caching
 ADD . /app
-RUN --mount=type=cache,target=/root/.cache/uv \
+RUN --mount=type=cache,id=s/1269f585-fce1-4dd9-bf79-5521c4e88efa-/root/.cache/uv,target=/root/.cache/uv \
     uv sync --frozen --no-dev
 
 # Place executables in the environment at the front of the path
@@ -34,6 +34,9 @@ ENTRYPOINT []
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--root-path", "/api/"]
 
-FROM production AS development
+FROM base AS development
 
 RUN uv sync --frozen --dev
+
+# Keep production as the last stage so that builds without a target get it
+FROM base AS production

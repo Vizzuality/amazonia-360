@@ -13,7 +13,7 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json pnpm-lock.yaml* .npmrc* ./
-RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
+RUN --mount=type=cache,id=s/d2873ca6-1f48-43ff-8a3e-bb858dd87eeb-/root/.local/share/pnpm/store,target=/root/.local/share/pnpm/store \
     corepack enable pnpm && \
     pnpm install --frozen-lockfile
 
@@ -143,7 +143,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./tsconfig.json
 COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
 
-COPY entrypoint.sh ./
+COPY entrypoint.sh migrate.sh ./
 
 USER nextjs
 
