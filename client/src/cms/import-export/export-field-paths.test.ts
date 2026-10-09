@@ -12,6 +12,8 @@ describe("exportFieldPaths", () => {
       "order",
       "subtopic",
       "country",
+      "module",
+      "partners",
       "replaces",
       "name",
       "unit",
