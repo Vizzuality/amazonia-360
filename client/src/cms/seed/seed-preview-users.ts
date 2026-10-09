@@ -15,10 +15,9 @@ const upsertPreviewAccount = async (
     depth: 0,
   });
 
-  if (docs[0]) {
-    const data = collection === "users" ? { password, _verified: true } : { password };
-    await payload.update({ collection, id: docs[0].id, data });
-  } else if (collection === "users") {
+  if (docs[0]) return;
+
+  if (collection === "users") {
     await payload.create({
       collection,
       data: { email, password, _verified: true },
