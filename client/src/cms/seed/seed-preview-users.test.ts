@@ -56,41 +56,24 @@ describe("seedPreviewUsers", () => {
     }
   });
 
-  test("resets the password of a row that exists and does not create it again", async () => {
-    const { payload, created, updated } = fakePayload({ admins: ["a@example.test"] });
+  test("leaves a row that exists unchanged and does not create it again", async () => {
+    const { payload, created, updated } = fakePayload({
+      admins: ["a@example.test"],
+      users: ["b@example.test"],
+    });
 
     await seedPreviewUsers(payload, EMAILS, "new-secret");
 
-    expect(updated).toEqual([
-      expect.objectContaining({
-        collection: "admins",
-        id: "admins:a@example.test",
-        data: { password: "new-secret" },
-      }),
-    ]);
+    expect(updated).toHaveLength(0);
     expect(created.filter((call) => call.collection === "admins")).toHaveLength(2);
-  });
-
-  test("verifies an existing user again when it resets the password", async () => {
-    const { payload, updated } = fakePayload({ users: ["b@example.test"] });
-
-    await seedPreviewUsers(payload, EMAILS, "secret");
-
-    expect(updated).toEqual([
-      expect.objectContaining({
-        collection: "users",
-        id: "users:b@example.test",
-        data: { password: "secret", _verified: true },
-      }),
-    ]);
+    expect(created.filter((call) => call.collection === "users")).toHaveLength(2);
   });
 
   test("looks up emails in lower case", async () => {
-    const { payload, created, updated } = fakePayload({ admins: ["a@example.test"] });
+    const { payload, created } = fakePayload({ admins: ["a@example.test"] });
 
     await seedPreviewUsers(payload, ["A@Example.test"], "secret");
 
-    expect(updated).toHaveLength(1);
     expect(created.filter((call) => call.collection === "admins")).toHaveLength(0);
   });
 });
