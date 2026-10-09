@@ -2,16 +2,18 @@
 
 import { useParams } from "next/navigation";
 
+import { useGetCountryModules } from "@/lib/country-modules";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 import { useReport } from "@/lib/report";
+import { getReportModuleSlugs } from "@/lib/report/modules";
 
-import { Report } from "@/payload-types";
-
-// Reads the report's own stored module rather than the URL's: a report can be opened
+// Reads the report's own stored modules rather than the URL's: a report can be opened
 // unscoped (viewer, webshot) yet must still resolve indicators from the module it was saved in.
-export const useReportCountry = (): Report["country"] => {
+export const useReportCountry = (): readonly string[] | null => {
   const { id } = useParams();
   const { data } = useReport({ id: `${id}` });
+  const modules = useGetCountryModules();
   if (!isFeatureEnabled("country-module")) return null;
-  return data?.country?.length ? data.country : null;
+  const slugs = getReportModuleSlugs(data?.modules, modules);
+  return slugs.length ? slugs : null;
 };

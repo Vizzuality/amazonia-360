@@ -16,8 +16,6 @@ import { Topic } from "@/types/topic";
 import { TopicView } from "@/app/(frontend)/parsers";
 import { useFormTopics } from "@/app/(frontend)/store";
 
-import { getIndicatorScopeBadgeKey } from "@/containers/indicators/scope-badge";
-
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 function getScopeToggleLabel({
@@ -103,10 +101,10 @@ export default function IndicatorScopeToggle({
   if (!counterpart) return null;
 
   const { id: counterpartId, name } = counterpart;
-  const isNational = !counterpart.country;
-  const nationalCode = isNational
-    ? (indicators?.find((indicator) => indicator.id === indicatorId)?.country ?? null)
-    : counterpart.country;
+  const isNational = !counterpart.module;
+  const nationalIndicatorModule = isNational
+    ? (indicators?.find((indicator) => indicator.id === indicatorId)?.module ?? null)
+    : counterpart.module;
 
   // The grid keys every widget on indicator id + type, so two widgets sharing that pair in one
   // topic collide: `results/content/item/index.tsx:83`.
@@ -144,14 +142,14 @@ export default function IndicatorScopeToggle({
       className="border-border mr-1 flex h-5 shrink-0 items-center rounded border p-px"
     >
       <ScopeOption
-        label={t(getIndicatorScopeBadgeKey(nationalCode) as Parameters<typeof t>[0])}
+        label={nationalIndicatorModule?.tag ?? t("country-module-badge-regional")}
         checked={isNational}
         disabled={isTaken}
         tooltip={tooltip}
         onSelect={handleSwap}
       />
       <ScopeOption
-        label={t(getIndicatorScopeBadgeKey(null) as Parameters<typeof t>[0])}
+        label={t("country-module-badge-regional")}
         checked={!isNational}
         disabled={isTaken}
         tooltip={tooltip}

@@ -17,7 +17,7 @@ vi.mock("@/lib/location", async (importOriginal) => ({
 
 vi.mock("@/lib/country/coverage", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/country/coverage")>()),
-  useGetLiveCountryBoundaries: () => ({ data: [{ code: "ECU", geometry: { id: "ecu" } }] }),
+  useGetLiveCountryBoundaries: () => ({ data: [{ slug: "ECU", geometry: { id: "ecu" } }] }),
   getCountryCoverageRatio: () => 0,
 }));
 

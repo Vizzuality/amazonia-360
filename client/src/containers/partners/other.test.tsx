@@ -1,18 +1,36 @@
 import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
-import OtherPartners from "./other";
+import type { Partner } from "@/lib/country-modules";
 
-const mockUseLocale = vi.fn();
+import { getPartnerFixture } from "@integration/fixtures/country-modules";
+
+import OtherPartners from "./other";
 
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
-  useLocale: () => mockUseLocale(),
+}));
+
+const REGIONAL: Partner[] = [
+  getPartnerFixture({ regional: true, id: "acto", name: "ACTO ARO" }),
+  getPartnerFixture({ regional: true, id: "idb", name: "IDB Atlas" }),
+  getPartnerFixture({ regional: true, id: "ddp", name: "Development Data Partnership" }),
+  getPartnerFixture({ regional: true, id: "esri", name: "Esri" }),
+  getPartnerFixture({ regional: true, id: "vizz", name: "Vizzuality" }),
+  getPartnerFixture({ regional: true, id: "gcf", name: "Green Climate Fund", logoSize: "large" }),
+  getPartnerFixture({ id: "mae", name: "MAE", moduleIds: ["ecu"] }),
+];
+
+const mockPartners = vi.fn<() => Partner[]>();
+
+vi.mock("@/lib/country-modules", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/country-modules")>()),
+  useGetPartners: () => mockPartners(),
 }));
 
 describe("OtherPartners", () => {
   beforeEach(() => {
-    mockUseLocale.mockReturnValue("en");
+    mockPartners.mockReturnValue(REGIONAL);
   });
 
   afterEach(() => {
@@ -34,7 +52,7 @@ describe("OtherPartners", () => {
     expect(screen.getByText("partners-other-description")).toBeInTheDocument();
   });
 
-  it("renders the six logos in the four design rows", () => {
+  it("renders only the regional partners in 1-2-2-1 rows", () => {
     render(<OtherPartners />);
 
     const rows = screen
@@ -50,7 +68,15 @@ describe("OtherPartners", () => {
     ]);
   });
 
-  it("sizes the Green Climate Fund logo from its data and leaves the others at the default", () => {
+  it("renders nothing when there are no regional partners", () => {
+    mockPartners.mockReturnValue([getPartnerFixture({ id: "mae", moduleIds: ["ecu"] })]);
+
+    render(<OtherPartners />);
+
+    expect(screen.queryByTestId("partners-other")).toBeNull();
+  });
+
+  it("sizes large logos from their data and leaves the others at the default", () => {
     render(<OtherPartners />);
 
     expect(screen.getByAltText("Green Climate Fund")).toHaveClass("h-[72px]");

@@ -6,6 +6,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
+import { ECU_MODULE } from "@integration/fixtures/country-modules";
+
 vi.mock("@/lib/query", () => ({ getFeatures: vi.fn() }));
 
 const { getFeatures } = await import("@/lib/query");
@@ -14,6 +16,7 @@ const {
   getCountryAmazoniaBoundaryKey,
   getCountryAmazoniaBoundaryOptions,
   useGetCountryAmazoniaBoundary,
+  getLiveCountryBoundaries,
   getCountryCoverageRatio,
   getCountryCoveragePercent,
   isCountryCoverageDominant,
@@ -41,8 +44,8 @@ beforeEach(() => {
 });
 
 describe("getCountryAmazoniaBoundary", () => {
-  it("skips the fetch entirely for a country code that is not live", async () => {
-    await expect(getCountryAmazoniaBoundary("SUR")).resolves.toBeNull();
+  it("skips the fetch entirely for an iso3 that is not a known country", async () => {
+    await expect(getCountryAmazoniaBoundary("XXX")).resolves.toBeNull();
     expect(getFeaturesMock).not.toHaveBeenCalled();
   });
 
@@ -76,17 +79,17 @@ describe("getCountryAmazoniaBoundary", () => {
 });
 
 describe("getCountryAmazoniaBoundaryOptions", () => {
-  it("keys the query by country code and disables it for a code that is not live", () => {
+  it("keys the query by iso3 and disables it for an unknown iso3", () => {
     expect(getCountryAmazoniaBoundaryOptions("ECU").queryKey).toEqual(
       getCountryAmazoniaBoundaryKey("ECU"),
     );
     expect(getCountryAmazoniaBoundaryOptions("ECU").enabled).toBe(true);
-    expect(getCountryAmazoniaBoundaryOptions("SUR").enabled).toBe(false);
+    expect(getCountryAmazoniaBoundaryOptions("XXX").enabled).toBe(false);
   });
 });
 
 describe("useGetCountryAmazoniaBoundary", () => {
-  it("resolves the cached boundary for a live country code", async () => {
+  it("resolves the cached boundary for a live iso3", async () => {
     getFeaturesMock
       .mockResolvedValueOnce({ features: [{ geometry: COUNTRY_GEOMETRY }] } as never)
       .mockResolvedValueOnce({ features: [{ geometry: AMAZONIA_GEOMETRY }] } as never);
@@ -100,13 +103,64 @@ describe("useGetCountryAmazoniaBoundary", () => {
     expect(result.current.data).toBe(BOUNDARY_GEOMETRY);
   });
 
-  it("never fetches for a country code that is not live", () => {
-    const { result } = renderHook(() => useGetCountryAmazoniaBoundary("SUR"), {
+  it("never fetches for an iso3 that is not a known country", () => {
+    const { result } = renderHook(() => useGetCountryAmazoniaBoundary("XXX"), {
       wrapper: getWrapper(),
     });
 
     expect(result.current.fetchStatus).toBe("idle");
     expect(getFeaturesMock).not.toHaveBeenCalled();
+  });
+});
+
+describe("getLiveCountryBoundaries", () => {
+  const ECU_SECOND = { ...ECU_MODULE, id: "ecu-2", slug: "ECU-NORTH" };
+  const BOL_MODULE = { ...ECU_MODULE, id: "bol", slug: "BOL", country: "BOL" as const };
+
+  it("resolves nothing without modules and skips the fetch", async () => {
+    await expect(getLiveCountryBoundaries([])).resolves.toEqual([]);
+    expect(getFeaturesMock).not.toHaveBeenCalled();
+  });
+
+  it("queries each distinct country once and shares its boundary between modules of that country", async () => {
+    getFeaturesMock
+      .mockResolvedValueOnce({
+        features: [
+          { attributes: { GID_0: "ECU" }, geometry: COUNTRY_GEOMETRY },
+          { attributes: { GID_0: "BOL" }, geometry: COUNTRY_GEOMETRY },
+        ],
+      } as never)
+      .mockResolvedValueOnce({ features: [{ geometry: AMAZONIA_GEOMETRY }] } as never);
+    intersectionExecute.mockReturnValue(BOUNDARY_GEOMETRY);
+
+    const result = await getLiveCountryBoundaries([ECU_MODULE, ECU_SECOND, BOL_MODULE]);
+
+    expect(result).toEqual([
+      { slug: "ECU", country: "ECU", geometry: BOUNDARY_GEOMETRY },
+      { slug: "ECU-NORTH", country: "ECU", geometry: BOUNDARY_GEOMETRY },
+      { slug: "BOL", country: "BOL", geometry: BOUNDARY_GEOMETRY },
+    ]);
+    expect(JSON.stringify(getFeaturesMock.mock.calls[0])).toContain("GID_0 IN ('ECU', 'BOL')");
+  });
+
+  it("drops countries with no feature, no geometry or no overlap, and resolves nothing without the working area", async () => {
+    getFeaturesMock
+      .mockResolvedValueOnce({
+        features: [
+          { attributes: { GID_0: "ECU" }, geometry: COUNTRY_GEOMETRY },
+          { attributes: { GID_0: "BOL" }, geometry: null },
+        ],
+      } as never)
+      .mockResolvedValueOnce({ features: [{ geometry: AMAZONIA_GEOMETRY }] } as never);
+    intersectionExecute.mockReturnValue(null);
+
+    await expect(getLiveCountryBoundaries([ECU_MODULE, BOL_MODULE])).resolves.toEqual([]);
+
+    getFeaturesMock
+      .mockResolvedValueOnce({ features: [] } as never)
+      .mockResolvedValueOnce({ features: [] } as never);
+
+    await expect(getLiveCountryBoundaries([ECU_MODULE])).resolves.toEqual([]);
   });
 });
 

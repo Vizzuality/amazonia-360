@@ -1,0 +1,110 @@
+[
+  {
+    "name": "ACTO ARO",
+    "logo_en": "/partners/atco-en.avif",
+    "logo_es": "/partners/atco-es.avif",
+    "logo_pt": "/partners/atco-pt.avif",
+    "regional": true,
+    "modules": [],
+    "order": 1
+  },
+  {
+    "name": "IDB Atlas",
+    "logo_en": "/partners/idb-atlas.avif",
+    "logo_es": "/partners/idb-atlas.avif",
+    "logo_pt": "/partners/idb-atlas.avif",
+    "regional": true,
+    "modules": [],
+    "order": 2
+  },
+  {
+    "name": "Development Data Partnership",
+    "logo_en": "/partners/ddp.avif",
+    "logo_es": "/partners/ddp.avif",
+    "logo_pt": "/partners/ddp.avif",
+    "regional": true,
+    "modules": [],
+    "order": 3
+  },
+  {
+    "name": "Esri",
+    "logo_en": "/partners/esri.avif",
+    "logo_es": "/partners/esri.avif",
+    "logo_pt": "/partners/esri.avif",
+    "regional": true,
+    "modules": [],
+    "order": 4
+  },
+  {
+    "name": "Vizzuality",
+    "logo_en": "/partners/vizzuality.avif",
+    "logo_es": "/partners/vizzuality.avif",
+    "logo_pt": "/partners/vizzuality.avif",
+    "regional": true,
+    "modules": [],
+    "order": 5
+  },
+  {
+    "name": "Green Climate Fund",
+    "logo_en": "/partners/green-climate-fund.avif",
+    "logo_es": "/partners/green-climate-fund.avif",
+    "logo_pt": "/partners/green-climate-fund.avif",
+    "regional": true,
+    "modules": [],
+    "order": 6,
+    "logoSize": "large"
+  },
+  {
+    "name": "Gobierno del Ecuador",
+    "label": "Gobierno del Ecuador",
+    "logo_en": "/partners/ecu/gobierno-del-ecuador.avif",
+    "logo_es": "/partners/ecu/gobierno-del-ecuador.avif",
+    "logo_pt": "/partners/ecu/gobierno-del-ecuador.avif",
+    "regional": false,
+    "modules": ["ECU"],
+    "order": 1
+  },
+  {
+    "name": "Ministerio del Ambiente",
+    "label": "MAE",
+    "tag": "MAE",
+    "logo_en": "/partners/ecu/ministerio-del-ambiente.avif",
+    "logo_es": "/partners/ecu/ministerio-del-ambiente.avif",
+    "logo_pt": "/partners/ecu/ministerio-del-ambiente.avif",
+    "regional": false,
+    "modules": ["ECU"],
+    "order": 2
+  },
+  {
+    "name": "Instituto Geográfico Militar",
+    "label": "IGM",
+    "tag": "IGM",
+    "logo_en": "/partners/ecu/instituto-geografico-militar.avif",
+    "logo_es": "/partners/ecu/instituto-geografico-militar.avif",
+    "logo_pt": "/partners/ecu/instituto-geografico-militar.avif",
+    "regional": false,
+    "modules": ["ECU"],
+    "order": 3
+  },
+  {
+    "name": "INABIO",
+    "label": "INABIO",
+    "logo_en": "/partners/ecu/inabio.avif",
+    "logo_es": "/partners/ecu/inabio.avif",
+    "logo_pt": "/partners/ecu/inabio.avif",
+    "regional": false,
+    "modules": ["ECU"],
+    "order": 4
+  },
+  {
+    "name": "The Nature Conservancy",
+    "label": "TNC",
+    "tag": "TNC",
+    "logo_en": "/partners/ecu/the-nature-conservancy.avif",
+    "logo_es": "/partners/ecu/the-nature-conservancy.avif",
+    "logo_pt": "/partners/ecu/the-nature-conservancy.avif",
+    "regional": false,
+    "modules": ["ECU"],
+    "order": 5
+  }
+]

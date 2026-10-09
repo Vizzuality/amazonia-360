@@ -8,14 +8,14 @@ import Image from "next/image";
 
 import { useLocale, useTranslations } from "next-intl";
 
+import { countryFlagSrc, isSavedReportPathname, isUnscopedPathname } from "@/lib/country";
+import { getPartnersHref } from "@/lib/country/partners";
 import {
-  COUNTRIES,
-  CountryCode,
-  countryFlagSrc,
-  isSavedReportPathname,
-  isUnscopedPathname,
-} from "@/lib/country";
-import { getCountryModulePartnerLogos, getPartnersHref } from "@/lib/country/partners";
+  getCountryModuleBySlug,
+  getModulePartners,
+  useGetCountryModules,
+  useGetPartners,
+} from "@/lib/country-modules";
 import { useGetDefaultIndicators } from "@/lib/indicators";
 import useIsMounted from "@/lib/mounted";
 
@@ -60,11 +60,13 @@ export default function CountryModuleDialog() {
   return <CountryModuleDialogContent key={country ?? "none"} country={country} />;
 }
 
-function CountryModuleDialogContent({ country }: Readonly<{ country: CountryCode | null }>) {
+function CountryModuleDialogContent({ country }: Readonly<{ country: string | null }>) {
   const t = useTranslations();
   const locale = useLocale();
   const isMounted = useIsMounted();
   const pathname = usePathname();
+  const modules = useGetCountryModules();
+  const partners = useGetPartners();
   const { data: indicators } = useGetDefaultIndicators({ locale });
   const { status: coverageStatus } = useCountryModuleCoverage();
 
@@ -76,17 +78,17 @@ function CountryModuleDialogContent({ country }: Readonly<{ country: CountryCode
     undefined,
   );
 
-  const activeModule = country ? COUNTRIES.find((entry) => entry.code === country) : undefined;
-  const moduleName = activeModule ? t(activeModule.moduleNameKey) : "";
+  const activeModule = getCountryModuleBySlug(modules, country);
+  const moduleName = activeModule?.moduleName ?? "";
 
-  const partnerLogos = getCountryModulePartnerLogos(country);
+  const modulePartners = activeModule ? getModulePartners(partners, activeModule.id) : [];
 
   const regionalLayersCount = useMemo(
-    () => indicators?.filter((indicator) => !indicator.country).length,
+    () => indicators?.filter((indicator) => !indicator.module).length,
     [indicators],
   );
   const nationalLayersCount = useMemo(
-    () => indicators?.filter((indicator) => indicator.country === country).length,
+    () => indicators?.filter((indicator) => indicator.module?.slug === country).length,
     [indicators, country],
   );
 
@@ -116,7 +118,7 @@ function CountryModuleDialogContent({ country }: Readonly<{ country: CountryCode
             <div className="flex items-start gap-4">
               <div className="flex h-8 w-10 shrink-0 items-center justify-center overflow-hidden rounded bg-blue-50">
                 <Image
-                  src={countryFlagSrc(activeModule.code)}
+                  src={countryFlagSrc(activeModule.country)}
                   alt=""
                   width={40}
                   height={32}
@@ -155,21 +157,21 @@ function CountryModuleDialogContent({ country }: Readonly<{ country: CountryCode
               </div>
             </div>
 
-            {partnerLogos.length > 0 && (
+            {modulePartners.length > 0 && (
               <>
                 <h3 className="text-xs font-bold tracking-[0.6px] text-blue-700 uppercase">
                   {t("country-module-modal-collaboration-title")}
                 </h3>
 
                 <ul className="grid h-28 grid-cols-3 grid-rows-2 gap-2">
-                  {partnerLogos.map((logo) => (
+                  {modulePartners.map((partner) => (
                     <li
-                      key={logo.src}
+                      key={partner.id}
                       className="relative overflow-hidden rounded-lg bg-white px-3 py-2"
                     >
                       <Image
-                        src={logo.src}
-                        alt={logo.alt}
+                        src={partner.logo}
+                        alt={partner.name}
                         fill
                         sizes="139px"
                         className="object-contain p-2"
@@ -197,7 +199,7 @@ function CountryModuleDialogContent({ country }: Readonly<{ country: CountryCode
               <div className="flex items-center gap-2">
                 <Button asChild variant="outline" size="sm">
                   <LocaleLink
-                    href={getPartnersHref(country)}
+                    href={getPartnersHref(modulePartners.length > 0 ? country : null)}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

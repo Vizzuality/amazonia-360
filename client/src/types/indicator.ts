@@ -50,6 +50,8 @@ export type ResourceComponent = ResourceBlock<"component">;
  */
 export type ImageryAggregation = ResourceImagery["aggregation"];
 
+export type IndicatorModule = { slug: string; tag: string };
+
 /**
  * Restated over the generated Indicator: the numeric `id`, the Topic lifted out from under the
  * Subtopic, the single resource the CMS models as a one-entry block array, and the optional text
@@ -57,7 +59,16 @@ export type ImageryAggregation = ResourceImagery["aggregation"];
  */
 export type Indicator = Omit<
   CmsIndicator,
-  "description" | "id" | "resource" | "subtopic" | "unit" | "visualization_types" | CmsMeta
+  | "country"
+  | "description"
+  | "id"
+  | "module"
+  | "partners"
+  | "resource"
+  | "subtopic"
+  | "unit"
+  | "visualization_types"
+  | CmsMeta
 > & {
   id: number;
   description?: string;
@@ -72,6 +83,7 @@ export type Indicator = Omit<
     | ResourceImageryTile
     | ResourceH3
     | ResourceComponent;
+  module: IndicatorModule | null;
 };
 
 export type H3Indicator = Indicator & {

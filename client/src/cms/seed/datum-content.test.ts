@@ -1,5 +1,7 @@
+import COUNTRY_MODULES from "@/../datum/country-modules.json";
 import INDICATORS_ECU from "@/../datum/indicators.ECU.json";
 import INDICATORS from "@/../datum/indicators.json";
+import PARTNERS from "@/../datum/partners.json";
 import SUBTOPICS from "@/../datum/subtopics.json";
 import TOPICS from "@/../datum/topics.json";
 import { isEmptyValue } from "@/cms/test-utils/find-field";
@@ -341,5 +343,36 @@ describe("replacements", () => {
     );
 
     expect(offenders).toEqual([]);
+  });
+});
+
+describe("country modules and partners source", () => {
+  type Partner = { name: string; regional: boolean; modules: string[]; order: number };
+  const moduleSlugs = new Set((COUNTRY_MODULES as { slug: string }[]).map(({ slug }) => slug));
+  const partners = PARTNERS as Partner[];
+
+  test("every module slug a partner names exists in country-modules.json", () => {
+    const unknown = partners.flatMap(({ name, modules }) =>
+      modules.filter((slug) => !moduleSlugs.has(slug)).map((slug) => `${name} -> ${slug}`),
+    );
+
+    expect(unknown).toEqual([]);
+  });
+
+  test("partner order is unique within the regional group and within each module", () => {
+    const groups = new Map<string, number[]>();
+    for (const { regional, modules, order } of partners) {
+      const keys = [...(regional ? ["regional"] : []), ...modules];
+      for (const key of keys) groups.set(key, [...(groups.get(key) ?? []), order]);
+    }
+
+    for (const [key, orders] of groups) {
+      expect(new Set(orders).size, `duplicate order in ${key}`).toBe(orders.length);
+    }
+  });
+
+  test("partner names and module slugs are unique", () => {
+    expect(new Set(partners.map(({ name }) => name)).size).toBe(partners.length);
+    expect(moduleSlugs.size).toBe(COUNTRY_MODULES.length);
   });
 });

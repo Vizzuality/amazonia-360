@@ -1,28 +1,17 @@
 import type { Payload } from "payload";
 
-import { COUNTRIES } from "@/lib/country";
-
 import { isEmptyValue } from "@/cms/test-utils/find-field";
-import type { Indicator } from "@/payload-types";
 
+import { getModuleIdsBySlug } from "./seed-country-modules";
 import { localizeValue, mapResource } from "./utils/normalize-data";
 import { updateLocales } from "./utils/seed-helpers";
 import type { RawIndicator } from "./utils/types";
-
-type CountryModule = NonNullable<Indicator["country"]>;
-
-/**
- * Deliberately not `isCountryCode` from `lib/country`, which answers whether a module is live.
- * A row belongs to its module whether or not that module has been released, so the delivery
- * for a country that is still dark seeds normally.
- */
-const isCountryModule = (value: string): value is CountryModule =>
-  COUNTRIES.some(({ code }) => code === value);
 
 export const seedIndicators = async (
   payload: Payload,
   indicators: RawIndicator[],
 ): Promise<void> => {
+  const moduleIds = await getModuleIdsBySlug(payload);
   const seenIds = new Set<number>();
   // A country target is not dropped like other bad values: `filterOptions` rejects it, and the
   // seed aborts mid-write. So `replaces` resolves only against regional ids already written.
@@ -63,11 +52,10 @@ export const seedIndicators = async (
     );
     const description = localizeValue(raw.description_en, raw.description_es, raw.description_pt);
 
-    let country: CountryModule | null = null;
+    let moduleId: string | null = null;
     if (raw.country) {
-      if (isCountryModule(raw.country)) {
-        country = raw.country;
-      } else {
+      moduleId = moduleIds.get(raw.country) ?? null;
+      if (!moduleId) {
         payload.logger.warn(
           `indicators: id ${raw.id} names unknown country module ${raw.country}, left empty`,
         );
@@ -91,7 +79,7 @@ export const seedIndicators = async (
       subtopic,
       // Optional fields are written even when empty: a re-seed has to clear a value the source
       // data dropped, and an omitted key would leave the old one standing.
-      country,
+      module: moduleId,
       replaces,
       name: name.en,
       unit: isEmptyValue(unit.en) ? null : unit.en,
@@ -115,7 +103,7 @@ export const seedIndicators = async (
       await payload.create({ collection: "indicators", data: { id, ...data } });
     }
 
-    if (!country) seededRegionalIds.add(id);
+    if (!moduleId) seededRegionalIds.add(id);
 
     await updateLocales(
       payload,

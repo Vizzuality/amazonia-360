@@ -1,5 +1,7 @@
 import type { ImageryAggregation } from "@/types/indicator";
 
+import type { CountryModule } from "@/payload-types";
+
 export type LocalizedValue = { en: string; es?: string; pt?: string };
 
 export type RawPopupTemplate = {
@@ -109,7 +111,7 @@ export type RawIndicator = {
   id: number;
   subtopic_id: number;
   order: number;
-  /** ISO 3166-1 alpha-3 of the country module. Absent on the 164 regional rows. */
+  /** Slug of the country module the indicator belongs to. Absent on the 164 regional rows. */
   country?: string | null;
   /** Content Code of the regional indicator this one stands in for. See ADR 0004. */
   replaces?: number | null;
@@ -128,4 +130,36 @@ export type RawIndicator = {
   visualization_types: ("map" | "table" | "chart" | "numeric")[];
   default_visualization_type: "map" | "table" | "chart" | "numeric" | null;
   resource: RawResource;
+};
+
+export type RawCountryModule = {
+  slug: string;
+  country: CountryModule["country"];
+  active: boolean;
+  tag: string;
+  order: number;
+  bbox?: { xmin: number; ymin: number; xmax: number; ymax: number };
+  name_en: string;
+  name_es: string;
+  name_pt: string;
+  moduleName_en: string;
+  moduleName_es: string;
+  moduleName_pt: string;
+  partnersDescription_en: string;
+  partnersDescription_es: string;
+  partnersDescription_pt: string;
+};
+
+export type RawPartner = {
+  name: string;
+  label?: string;
+  tag?: string;
+  logo_en: string;
+  logo_es: string;
+  logo_pt: string;
+  logoSize?: "default" | "large";
+  regional: boolean;
+  /** Slugs of the country modules this partner belongs to. */
+  modules: string[];
+  order: number;
 };

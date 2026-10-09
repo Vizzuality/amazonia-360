@@ -1,6 +1,8 @@
 import { renderHook } from "@testing-library/react";
 import { vi } from "vitest";
 
+import { ECU_MODULE } from "@integration/fixtures/country-modules";
+
 import { useCountryModuleCoverage } from "./use-coverage";
 
 const {
@@ -11,6 +13,7 @@ const {
   mockBoundary,
   mockRatio,
   mockQuery,
+  mockModule,
 } = vi.hoisted(() => ({
   mockCountry: vi.fn(),
   mockPathname: vi.fn(),
@@ -19,10 +22,13 @@ const {
   mockBoundary: vi.fn(),
   mockRatio: vi.fn(),
   mockQuery: vi.fn(),
+  mockModule: vi.fn(),
 }));
 
 vi.mock("@/i18n/navigation", () => ({ usePathname: () => mockPathname() }));
-vi.mock("@/i18n/use-country", () => ({ useCountry: () => mockCountry() }));
+vi.mock("@/lib/country-modules", () => ({
+  useGetCountryModule: () => (mockCountry() ? mockModule() : null),
+}));
 vi.mock("@/app/(frontend)/store", () => ({ useSyncLocation: () => [mockLocation(), vi.fn()] }));
 vi.mock("@/lib/location", () => ({ useLocationGeometry: () => mockGeometry() }));
 vi.mock("@/lib/country/coverage", () => ({
@@ -37,6 +43,7 @@ const GEOMETRY = { type: "polygon" };
 const BOUNDARY = { type: "boundary" };
 
 beforeEach(() => {
+  mockModule.mockReturnValue(ECU_MODULE);
   mockCountry.mockReturnValue("ECU");
   mockPathname.mockReturnValue("/ECU/reports/grid");
   mockLocation.mockReturnValue({ type: "polygon" });
@@ -54,6 +61,14 @@ describe("useCountryModuleCoverage", () => {
 
     expect(result.current.status).toBe("no-area");
     expect(mockQuery).toHaveBeenCalledWith("ECU", { enabled: false });
+  });
+
+  test("keys the boundary by the module country, not its slug", () => {
+    mockModule.mockReturnValue({ ...ECU_MODULE, slug: "bra-para", country: "BRA" });
+
+    renderHook(() => useCountryModuleCoverage());
+
+    expect(mockQuery).toHaveBeenCalledWith("BRA", { enabled: true });
   });
 
   test.each([

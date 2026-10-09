@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { useDuplicateReport, useReport, useSaveReport } from "@/lib/report";
+import { getReportModuleIds } from "@/lib/report/modules";
 
 import { TopicView } from "@/app/(frontend)/parsers";
 import { useFormLocation, useFormTitle, useFormTopics } from "@/app/(frontend)/store";
@@ -81,7 +82,7 @@ export const useDuplicateReportCallback = (callback?: (newReportId: string) => v
           description: reportData?.description || null,
           topics: topics || (reportData?.topics as TopicView[]) || [],
           location: location || reportData?.location || null,
-          country: reportData?.country ?? null,
+          modules: getReportModuleIds(reportData?.modules),
           status: "published",
         },
         {

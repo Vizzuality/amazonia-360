@@ -14,12 +14,12 @@ const FILTER_KEYS: Record<IndicatorScopeFilter, string> = {
   national: "country-module-filter-national",
 };
 
-export function getIndicatorScope(indicator: Pick<Indicator, "country">): "regional" | "national" {
-  return indicator.country ? "national" : "regional";
+export function getIndicatorScope(indicator: Pick<Indicator, "module">): "regional" | "national" {
+  return indicator.module ? "national" : "regional";
 }
 
 export function getIndicatorScopeCounts(
-  indicators: Pick<Indicator, "country">[],
+  indicators: Pick<Indicator, "module">[],
 ): Record<IndicatorScopeFilter, number> {
   const national = indicators.filter(
     (indicator) => getIndicatorScope(indicator) === "national",
@@ -28,7 +28,7 @@ export function getIndicatorScopeCounts(
   return { all: indicators.length, regional: indicators.length - national, national };
 }
 
-export function getFilteredIndicators<T extends Pick<Indicator, "country">>(
+export function getFilteredIndicators<T extends Pick<Indicator, "module">>(
   indicators: T[],
   filter: IndicatorScopeFilter,
 ): T[] {

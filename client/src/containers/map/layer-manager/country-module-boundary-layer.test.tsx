@@ -14,6 +14,8 @@ type LayerStub = {
 
 const mocks = vi.hoisted(() => ({
   country: null as string | null,
+  iso3: "ECU",
+  boundarySpy: vi.fn(),
   boundary: undefined as unknown,
   layerSpy: vi.fn(),
   unmountSpy: vi.fn(),
@@ -31,10 +33,15 @@ vi.mock("next/dynamic", async () => {
   };
 });
 
-vi.mock("@/i18n/use-country", () => ({ useCountry: () => mocks.country }));
+vi.mock("@/lib/country-modules", () => ({
+  useGetCountryModule: () => (mocks.country ? { slug: mocks.country, country: mocks.iso3 } : null),
+}));
 
 vi.mock("@/lib/country/coverage", () => ({
-  useGetCountryAmazoniaBoundary: () => ({ data: mocks.boundary }),
+  useGetCountryAmazoniaBoundary: (iso3: string) => {
+    mocks.boundarySpy(iso3);
+    return { data: mocks.boundary };
+  },
 }));
 
 const geometryA = { type: "polygon", id: "a" };
@@ -49,7 +56,9 @@ const getLastLayerProps = () =>
 describe("CountryModuleBoundaryLayer", () => {
   beforeEach(() => {
     mocks.country = "ECU";
+    mocks.iso3 = "ECU";
     mocks.boundary = geometryA;
+    mocks.boundarySpy.mockClear();
     mocks.layerSpy.mockClear();
     mocks.unmountSpy.mockClear();
   });
@@ -58,6 +67,15 @@ describe("CountryModuleBoundaryLayer", () => {
     mocks.country = null;
     render(<CountryModuleBoundaryLayer index={1} />);
     expect(mocks.layerSpy).not.toHaveBeenCalled();
+  });
+
+  it("fetches the boundary by the module country, not its slug", () => {
+    mocks.country = "bra-para";
+    mocks.iso3 = "BRA";
+
+    render(<CountryModuleBoundaryLayer index={1} />);
+
+    expect(mocks.boundarySpy).toHaveBeenCalledWith("BRA");
   });
 
   it("renders nothing while the boundary is unresolved", () => {

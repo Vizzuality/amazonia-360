@@ -2,11 +2,16 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 
+import type { CountryModule } from "@/lib/country-modules";
+
+import { ECU_MODULE, getPartnerFixture } from "@integration/fixtures/country-modules";
+
 import CountryModuleDialog from "./dialog";
 
 const mockPathname = vi.fn<() => string>(() => "/reports/grid");
 const mockCountry = vi.fn<() => string | null>(() => "ECU");
 const mockIndicators = vi.fn();
+const mockModules = vi.fn<() => CountryModule[]>();
 const mockCoverage = vi.fn<() => { status: string; ratio: number }>(() => ({
   status: "no-area",
   ratio: 0,
@@ -16,8 +21,23 @@ const mockUseCookie = vi.fn<
   (key: string, initialValue?: string) => [string, typeof mockSetCookie, () => void]
 >(() => ["", mockSetCookie, vi.fn()]);
 
+const BOL_MODULE: CountryModule = { ...ECU_MODULE, id: "bol", slug: "BOL", country: "BOL" };
+const ECU_PARTNER = getPartnerFixture({
+  id: "partner-1",
+  name: "Gobierno del Ecuador",
+  label: "Gobierno",
+  logo: "/partners/ecu/gobierno-del-ecuador.avif",
+  moduleIds: [ECU_MODULE.id],
+});
+
 vi.mock("@/i18n/use-country", () => ({
   useCountry: () => mockCountry(),
+}));
+
+vi.mock("@/lib/country-modules", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/country-modules")>()),
+  useGetCountryModules: () => mockModules(),
+  useGetPartners: () => [ECU_PARTNER],
 }));
 
 vi.mock("@/i18n/navigation", () => ({
@@ -57,6 +77,7 @@ beforeEach(() => {
   mockPathname.mockReturnValue("/reports/grid");
   mockCountry.mockReturnValue("ECU");
   mockIndicators.mockReturnValue({ data: [] });
+  mockModules.mockReturnValue([ECU_MODULE, BOL_MODULE]);
   mockUseCookie.mockReturnValue(["", mockSetCookie, vi.fn()]);
 });
 
@@ -163,13 +184,13 @@ describe("CountryModuleDialog", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  test("keys the cookie by the active country code", () => {
+  test("keys the cookie by the active module slug", () => {
     render(<CountryModuleDialog />);
 
     expect(mockUseCookie).toHaveBeenCalledWith("country-module-dialog-ECU", undefined);
   });
 
-  test("ticking the checkbox then Got it writes a country-keyed cookie", async () => {
+  test("ticking the checkbox then Got it writes a slug-keyed cookie", async () => {
     render(<CountryModuleDialog />);
 
     await userEvent.click(screen.getByRole("checkbox"));
@@ -191,11 +212,11 @@ describe("CountryModuleDialog", () => {
   test("layer counts render from indicators data, not hardcoded", () => {
     mockIndicators.mockReturnValue({
       data: [
-        { country: undefined },
-        { country: undefined },
-        { country: undefined },
-        { country: "ECU" },
-        { country: "ECU" },
+        { module: null },
+        { module: null },
+        { module: null },
+        { module: { slug: "ECU" } },
+        { module: { slug: "ECU" } },
       ],
     });
 
@@ -216,7 +237,7 @@ describe("CountryModuleDialog", () => {
   });
 
   test("shows the numbers, no skeleton, once indicators load", () => {
-    mockIndicators.mockReturnValue({ data: [{ country: "ECU" }] });
+    mockIndicators.mockReturnValue({ data: [{ module: { slug: "ECU" } }] });
 
     const { container } = render(<CountryModuleDialog />);
 
@@ -230,6 +251,15 @@ describe("CountryModuleDialog", () => {
     render(<CountryModuleDialog />);
 
     expect(screen.getByRole("heading", { level: 3 })).toBeInTheDocument();
+  });
+
+  test("derives the flag from the module country, not its slug", () => {
+    mockCountry.mockReturnValue("bra-para");
+    mockModules.mockReturnValue([{ ...ECU_MODULE, slug: "bra-para", country: "BRA" }]);
+
+    render(<CountryModuleDialog />);
+
+    expect(document.body.querySelector('img[src*="BRA.png"]')).not.toBeNull();
   });
 
   test("hides the collaborators heading for a module with no partner logos", () => {

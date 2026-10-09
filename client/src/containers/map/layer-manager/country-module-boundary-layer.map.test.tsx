@@ -51,7 +51,10 @@ vi.mock("@/components/map/provider", () => ({
   useMap: () => ({ map: fakeMap }),
 }));
 
-vi.mock("@/i18n/use-country", () => ({ useCountry: () => mocks.country }));
+vi.mock("@/lib/country-modules", () => ({
+  useGetCountryModule: () =>
+    mocks.country ? { slug: mocks.country, country: mocks.country } : null,
+}));
 
 vi.mock("@/lib/country/coverage", () => ({
   useGetCountryAmazoniaBoundary: () => ({ data: { type: "polygon" } }),

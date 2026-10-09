@@ -16,6 +16,13 @@ import { NuqsTestingAdapter } from "nuqs/adapters/testing";
 import { vi } from "vitest";
 import { render } from "vitest-browser-react";
 
+import {
+  getCountryModulesQueryOptions,
+  getPartnersQueryOptions,
+  type CountryModule,
+  type Partner,
+} from "@/lib/country-modules";
+
 import { MediaContextProvider } from "@/containers/media";
 import { ArcGISProvider } from "@/containers/providers/arcgis";
 
@@ -27,6 +34,7 @@ import en from "@/i18n/translations/en.json";
 import es from "@/i18n/translations/es.json";
 import pt from "@/i18n/translations/pt.json";
 
+import { ECU_MODULE } from "../fixtures/country-modules";
 import type { TestSession } from "../fixtures/session";
 
 export type TestLocale = (typeof routing.locales)[number];
@@ -39,6 +47,8 @@ export interface RenderWithProvidersOptions {
   initialAtoms?: Array<[unknown, unknown]>;
   session?: TestSession | null;
   params?: Record<string, string | string[]>;
+  countryModules?: CountryModule[];
+  partners?: Partner[];
 }
 
 const MESSAGES: Record<TestLocale, Record<string, unknown>> = { en, es, pt };
@@ -95,7 +105,12 @@ export async function renderWithProviders(
     initialAtoms = [],
     session = null,
     params = {},
+    countryModules = [ECU_MODULE],
+    partners = [],
   } = options;
+
+  queryClient.setQueryData(getCountryModulesQueryOptions(locale).queryKey, countryModules);
+  queryClient.setQueryData(getPartnersQueryOptions(locale).queryKey, partners);
 
   const messages = MESSAGES[locale];
   const router = getTestRouter();

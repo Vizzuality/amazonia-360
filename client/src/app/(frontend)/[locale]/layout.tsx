@@ -3,11 +3,13 @@ import { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { notFound } from "next/navigation";
 
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Toaster } from "sonner";
 
 import { auth } from "@/lib/auth";
+import { prefetchCountryModules } from "@/lib/country-modules/prefetch";
 
 import RootHead from "@/app/(frontend)/head";
 import LayoutProviders from "@/app/(frontend)/layout-providers";
@@ -63,7 +65,8 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[lo
     notFound();
   }
 
-  const session = await auth();
+  const queryClient = new QueryClient();
+  const [session] = await Promise.all([auth(), prefetchCountryModules(queryClient, locale)]);
 
   return (
     <LayoutProviders locale={locale} session={session}>
@@ -73,7 +76,9 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[lo
         <body className={`${montserrat.className} w-full overflow-x-hidden`}>
           <Toaster position="top-center" richColors />
           <SidebarProvider>
-            <NextIntlClientProvider locale={locale}>{children}</NextIntlClientProvider>
+            <HydrationBoundary state={dehydrate(queryClient)}>
+              <NextIntlClientProvider locale={locale}>{children}</NextIntlClientProvider>
+            </HydrationBoundary>
           </SidebarProvider>
         </body>
       </html>

@@ -11,7 +11,7 @@ vi.mock("@/app/(frontend)/store", () => ({
   useFormTopics: () => ({ topics: [] }),
 }));
 
-const indicator = (over: Partial<Indicator> & Pick<Indicator, "id" | "country">): Indicator =>
+const indicator = (over: Partial<Indicator> & Pick<Indicator, "id" | "module">): Indicator =>
   ({
     name: "Demarcaciones hidrográficas",
     order: 0,
@@ -21,11 +21,13 @@ const indicator = (over: Partial<Indicator> & Pick<Indicator, "id" | "country">)
     ...over,
   }) as Indicator;
 
+const ECU_MODULE = { slug: "ECU", tag: "ECU" };
+
 describe("IndicatorsItem", () => {
   it("badges a regional indicator", () => {
     render(
       <TooltipProvider>
-        <IndicatorsItem topicId={1} indicator={indicator({ id: 1, country: null })} />
+        <IndicatorsItem topicId={1} indicator={indicator({ id: 1, module: null })} />
       </TooltipProvider>,
     );
 
@@ -35,10 +37,10 @@ describe("IndicatorsItem", () => {
   it("badges an Ecuador-scoped indicator", () => {
     render(
       <TooltipProvider>
-        <IndicatorsItem topicId={1} indicator={indicator({ id: 2, country: "ECU" })} />
+        <IndicatorsItem topicId={1} indicator={indicator({ id: 2, module: ECU_MODULE })} />
       </TooltipProvider>,
     );
 
-    expect(screen.getByText("country-module-ECU-badge")).toBeInTheDocument();
+    expect(screen.getByText("ECU")).toBeInTheDocument();
   });
 });

@@ -1,6 +1,8 @@
 import { renderHook } from "@testing-library/react";
 import { vi } from "vitest";
 
+import { ECU_MODULE } from "@integration/fixtures/country-modules";
+
 import { useModuleCoverageNote } from "./use-module-coverage-note";
 
 const { mockCountry, mockLocation, mockGeometry, mockBoundary, mockRatio, mockQuery } = vi.hoisted(
@@ -14,7 +16,10 @@ const { mockCountry, mockLocation, mockGeometry, mockBoundary, mockRatio, mockQu
   }),
 );
 
-vi.mock("next-intl", () => ({ useTranslations: () => (key: string) => key }));
+vi.mock("@/lib/country-modules", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/country-modules")>()),
+  useGetCountryModules: () => [ECU_MODULE, { ...ECU_MODULE, slug: "ECU-N", country: "PER" }],
+}));
 vi.mock("@/lib/report/use-report-country", () => ({ useReportCountry: () => mockCountry() }));
 vi.mock("@/app/(frontend)/store", () => ({ useSyncLocation: () => [mockLocation(), vi.fn()] }));
 vi.mock("@/lib/location", () => ({ useLocationGeometryWithStatus: () => mockGeometry() }));
@@ -60,9 +65,17 @@ describe("useModuleCoverageNote", () => {
 
     expect(result.current).toEqual({
       key: "edit-location-confirm-dialog-module-outside",
-      values: { name: "country-module-ECU-module-name" },
+      values: { name: "Ecuador Amazonia" },
     });
     expect(mockQuery).toHaveBeenCalledWith("ECU", { enabled: true });
+  });
+
+  it("queries the boundary by the module country, not its slug", () => {
+    mockCountry.mockReturnValue(["ECU-N"]);
+
+    renderHook(() => useModuleCoverageNote());
+
+    expect(mockQuery).toHaveBeenCalledWith("PER", { enabled: true });
   });
 
   it("returns the partial note with the outside percent", () => {
@@ -70,7 +83,7 @@ describe("useModuleCoverageNote", () => {
 
     expect(renderHook(() => useModuleCoverageNote()).result.current).toEqual({
       key: "edit-location-confirm-dialog-module-partial",
-      values: { name: "country-module-ECU-module-name", percent: 30 },
+      values: { name: "Ecuador Amazonia", percent: 30 },
     });
   });
 
@@ -83,7 +96,7 @@ describe("useModuleCoverageNote", () => {
 
     expect(renderHook(() => useModuleCoverageNote()).result.current).toEqual({
       key: "edit-location-confirm-dialog-module-partial",
-      values: { name: "country-module-ECU-module-name", percent: 99 },
+      values: { name: "Ecuador Amazonia", percent: 99 },
     });
   });
 

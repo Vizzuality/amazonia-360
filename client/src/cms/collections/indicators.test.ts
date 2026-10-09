@@ -1,7 +1,5 @@
 import type { RadioField, RelationshipField, SelectField } from "payload";
 
-import { COUNTRIES } from "@/lib/country";
-
 import INDICATORS_ECU from "@/../datum/indicators.ECU.json";
 import INDICATORS from "@/../datum/indicators.json";
 import SUBTOPICS from "@/../datum/subtopics.json";
@@ -214,13 +212,15 @@ describe("Indicators", () => {
     expect(Indicators.hooks?.beforeChange?.[0]).toBe(warnOnVisualizationMismatch);
   });
 
-  test("scopes an indicator to one country module, and treats no country as the region", () => {
-    const country = findFieldByName(Indicators.fields, "country") as SelectField;
+  test("scopes an indicator to at most one country module, and treats none as the region", () => {
+    const moduleField = findFieldByName(Indicators.fields, "module") as RelationshipField;
 
-    expect(country.type).toBe("select");
-    expect(country.required).toBeFalsy();
-    expect(country.hasMany).toBeFalsy();
-    expect(country.options).toEqual(COUNTRIES.map(({ code }) => ({ label: code, value: code })));
+    expect(moduleField).toMatchObject({ type: "relationship", relationTo: "country-modules" });
+    expect(moduleField.required).toBeFalsy();
+    expect(moduleField.hasMany).toBeFalsy();
+    expect(findFieldByName(Indicators.fields, "country")).toMatchObject({
+      admin: { hidden: true },
+    });
 
     // The source agrees: the regional rows name no module, and absence is what makes them
     // regional rather than a row that belongs to every country.
@@ -228,19 +228,102 @@ describe("Indicators", () => {
     expect(INDICATORS_ECU.every((row) => row.country === "ECU")).toBe(true);
   });
 
-  test("lets a country indicator name only a regional one as the indicator it replaces", () => {
+  test("lets a module indicator name only a regional one as the indicator it replaces", () => {
     const replaces = findFieldByName(Indicators.fields, "replaces") as RelationshipField;
 
     expect(replaces).toMatchObject({ type: "relationship", relationTo: "indicators" });
     expect(replaces.hasMany).toBeFalsy();
 
     const filterOptions = replaces.filterOptions as (args: never) => unknown;
-    expect(filterOptions({} as never)).toEqual({ country: { exists: false } });
+    expect(filterOptions({} as never)).toEqual({ module: { exists: false } });
 
     const condition = replaces.admin?.condition as (data: unknown) => boolean;
-    expect(condition({ country: "ECU" })).toBe(true);
-    expect(condition({ country: null })).toBe(false);
+    expect(condition({ module: "module-1" })).toBe(true);
+    expect(condition({ module: null })).toBe(false);
     expect(condition({})).toBe(false);
+  });
+
+  describe("replaces hook", () => {
+    const replaces = findFieldByName(Indicators.fields, "replaces") as RelationshipField;
+    const hook = replaces.hooks?.beforeChange?.[0] as (args: unknown) => unknown;
+
+    test.each([{ module: "module-1" }, { module: { id: "module-1" } }])(
+      "keeps the replaced indicator while the indicator has a module (%o)",
+      (siblingData) => {
+        expect(hook({ value: "12", siblingData })).toBe("12");
+      },
+    );
+
+    test.each([{ module: null }, {}])(
+      "clears the replaced indicator when the module is removed (%o)",
+      (siblingData) => {
+        expect(hook({ value: "12", siblingData })).toBeNull();
+      },
+    );
+  });
+
+  describe("partners", () => {
+    const partners = findFieldByName(Indicators.fields, "partners") as RelationshipField;
+    const filterOptions = partners.filterOptions as (args: { data: unknown }) => unknown;
+
+    test("relates to many partners, placed right after module", () => {
+      expect(partners).toMatchObject({
+        type: "relationship",
+        relationTo: "partners",
+        hasMany: true,
+      });
+      expect(partners.required).toBeFalsy();
+
+      const names = Indicators.fields.map((field) => ("name" in field ? field.name : null));
+      expect(names.indexOf("partners")).toBe(names.indexOf("module") + 1);
+    });
+
+    test("offers only the partners of the indicator's module, given its id", () => {
+      expect(filterOptions({ data: { module: "module-1" } })).toEqual({
+        modules: { equals: "module-1" },
+      });
+    });
+
+    test("offers only the partners of the indicator's module, given it populated", () => {
+      expect(filterOptions({ data: { module: { id: "module-1", slug: "ECU" } } })).toEqual({
+        modules: { equals: "module-1" },
+      });
+    });
+
+    test.each([{ module: null }, { module: undefined }, {}, undefined])(
+      "offers no partners without a module (%o)",
+      (data) => {
+        expect(filterOptions({ data })).toBe(false);
+      },
+    );
+
+    test("keeps the chosen partners while the indicator has a module", () => {
+      const hook = partners.hooks?.beforeChange?.[0] as (args: unknown) => unknown;
+
+      expect(hook({ value: ["partner-1"], siblingData: { module: "module-1" } })).toEqual([
+        "partner-1",
+      ]);
+      expect(hook({ value: ["partner-1"], siblingData: { module: { id: "module-1" } } })).toEqual([
+        "partner-1",
+      ]);
+    });
+
+    test.each([{ module: null }, {}])(
+      "clears partners when the module is removed (%o)",
+      (siblingData) => {
+        const hook = partners.hooks?.beforeChange?.[0] as (args: unknown) => unknown;
+
+        expect(hook({ value: ["partner-1"], siblingData })).toEqual([]);
+      },
+    );
+
+    test("is hidden until the indicator has a module", () => {
+      const condition = partners.admin?.condition as (data: unknown) => boolean;
+
+      expect(condition({ module: "module-1" })).toBe(true);
+      expect(condition({ module: null })).toBe(false);
+      expect(condition({})).toBe(false);
+    });
   });
 
   test("keeps every replacement in the source pointed at a regional Content Code", () => {
