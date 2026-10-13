@@ -109,11 +109,13 @@ export const getLiveCountryBoundaries = async (
   const countries = [...new Set(modules.map((module) => module.country))].filter(isCountryIso3);
   if (countries.length === 0) return [];
 
+  const quotedCountries = countries.map((iso3) => `'${iso3}'`).join(", ");
+
   const [admin0, amazonia] = await Promise.all([
     getFeatures({
       feature: DATASETS.admin0.layer,
       query: DATASETS.admin0.getFeatures({
-        where: `GID_0 IN (${countries.map((iso3) => `'${iso3}'`).join(", ")})`,
+        where: `GID_0 IN (${quotedCountries})`,
         outFields: ["GID_0"],
         returnGeometry: true,
       }),
