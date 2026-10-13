@@ -16,7 +16,7 @@ import { routing } from "@/i18n/routing";
 
 const SLUG_PATTERN = /^[A-Za-z0-9-]+$/;
 
-const RESERVED_SLUGS: readonly string[] = [
+const RESERVED_SLUGS: ReadonlySet<string> = new Set([
   ...routing.locales,
   "auth",
   "partners",
@@ -27,7 +27,7 @@ const RESERVED_SLUGS: readonly string[] = [
   "api",
   "v1",
   "local-api",
-];
+]);
 
 async function hasCaseInsensitiveDuplicate(
   slug: string,
@@ -49,7 +49,7 @@ async function hasCaseInsensitiveDuplicate(
 const validateSlug: TextFieldSingleValidation = async (value, options) => {
   if (typeof value === "string" && value !== "") {
     if (!SLUG_PATTERN.test(value)) return "Use only letters, numbers and hyphens.";
-    if (RESERVED_SLUGS.includes(value.toLowerCase())) {
+    if (RESERVED_SLUGS.has(value.toLowerCase())) {
       return `"${value}" is a reserved path and cannot be used as a slug.`;
     }
     if (await hasCaseInsensitiveDuplicate(value, options.id, options.req)) {
