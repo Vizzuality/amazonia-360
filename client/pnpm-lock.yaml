@@ -24,7 +24,6 @@ overrides:
   react-use>js-cookie: 3.0.8
   orval>js-yaml: 4.3.1
   '@mdxeditor/editor>js-yaml': 4.3.1
-  '@orval/core>esbuild': 0.28.1
   brace-expansion@1: 1.1.18
   brace-expansion@2: 2.1.4
   brace-expansion@5: 5.0.9
