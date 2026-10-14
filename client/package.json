@@ -228,7 +228,11 @@
       "brace-expansion@5": "5.0.9",
       "jsdom>undici": "7.29.1",
       "react-world-flags>svgo": "3.3.5",
-      "@eslint/eslintrc>js-yaml": "4.3.2"
+      "@eslint/eslintrc>js-yaml": "4.3.2",
+      "@tailwindcss/node>source-map-js": "1.2.2",
+      "postcss>source-map-js": "1.2.2",
+      "sass>source-map-js": "1.2.2",
+      "magicast>source-map-js": "1.2.2"
     }
   }
 }
