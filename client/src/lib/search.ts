@@ -14,74 +14,79 @@ import {
 import { omit } from "@/lib/utils";
 
 import { DATASETS } from "@/constants/datasets";
+import { LOCATION_TYPES, LocationType } from "@/constants/search";
 
 if (!projectOperator.isLoaded()) {
   await projectOperator.load();
 }
 
+const SOURCES: Record<
+  LocationType,
+  __esri.LayerSearchSourceProperties | __esri.LocatorSearchSourceProperties
+> = {
+  country: {
+    name: "Admin0",
+    layer: new FeatureLayer(omit(DATASETS.admin0.layer, ["type"])),
+    searchFields: ["NAME_0"],
+    displayField: "COMPNAME",
+    outFields: ["*"],
+    maxResults: 1,
+    maxSuggestions: 1,
+    suggestionsEnabled: true,
+    minSuggestCharacters: 2,
+  },
+  state: {
+    name: "Admin1",
+    layer: new FeatureLayer(omit(DATASETS.admin1.layer, ["type"])),
+    searchFields: ["NAME_0", "NAME_1"],
+    displayField: "COMPNAME",
+    outFields: ["*"],
+    maxResults: 1,
+    maxSuggestions: 2,
+    suggestionsEnabled: true,
+    minSuggestCharacters: 1,
+  },
+  municipality: {
+    name: "Admin2",
+    layer: new FeatureLayer(omit(DATASETS.admin2.layer, ["type"])),
+    searchFields: ["NAME_0", "NAME_1", "NAME_2"],
+    displayField: "COMPNAME",
+    outFields: ["*"],
+    maxResults: 1,
+    maxSuggestions: 2,
+    suggestionsEnabled: true,
+    minSuggestCharacters: 1,
+  },
+  capital: {
+    name: "Ciudades Capitales",
+    layer: new FeatureLayer(omit(DATASETS.ciudades_capitales.layer, ["type"])),
+    searchFields: ["NOMBCAP", "NAME_0", "NAME_1", "NAME_2"],
+    displayField: "COMPNAME",
+    outFields: ["*"],
+    maxResults: 1,
+    maxSuggestions: 2,
+    suggestionsEnabled: true,
+    minSuggestCharacters: 1,
+  },
+  city: {
+    name: "ArcGIS World Geocoding Service",
+    url: "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer",
+    singleLineFieldName: "SingleLine",
+    countryCode: ["BRA", "BOL", "COL", "ECU", "PER", "VEN"].join(","),
+    outFields: ["*"],
+    maxResults: 1,
+    maxSuggestions: 2,
+    suggestionsEnabled: true,
+    minSuggestCharacters: 1,
+    categories: ["City"],
+  },
+};
+
 const searchVM = new SearchVM({
   popupEnabled: false,
   autoSelect: false,
   includeDefaultSources: false,
-
-  sources: [
-    {
-      name: "Admin0",
-      layer: new FeatureLayer(omit(DATASETS.admin0.layer, ["type"])),
-      searchFields: ["NAME_0"],
-      displayField: "COMPNAME",
-      outFields: ["*"],
-      maxResults: 1,
-      maxSuggestions: 1,
-      suggestionsEnabled: true,
-      minSuggestCharacters: 2,
-    },
-    {
-      name: "Admin1",
-      layer: new FeatureLayer(omit(DATASETS.admin1.layer, ["type"])),
-      searchFields: ["NAME_0", "NAME_1"],
-      displayField: "COMPNAME",
-      outFields: ["*"],
-      maxResults: 1,
-      maxSuggestions: 2,
-      suggestionsEnabled: true,
-      minSuggestCharacters: 1,
-    },
-    {
-      name: "Admin2",
-      layer: new FeatureLayer(omit(DATASETS.admin2.layer, ["type"])),
-      searchFields: ["NAME_0", "NAME_1", "NAME_2"],
-      displayField: "COMPNAME",
-      outFields: ["*"],
-      maxResults: 1,
-      maxSuggestions: 2,
-      suggestionsEnabled: true,
-      minSuggestCharacters: 1,
-    },
-    {
-      name: "Ciudades Capitales",
-      layer: new FeatureLayer(omit(DATASETS.ciudades_capitales.layer, ["type"])),
-      searchFields: ["NOMBCAP", "NAME_0", "NAME_1", "NAME_2"],
-      displayField: "COMPNAME",
-      outFields: ["*"],
-      maxResults: 1,
-      maxSuggestions: 2,
-      suggestionsEnabled: true,
-      minSuggestCharacters: 1,
-    },
-    {
-      name: "ArcGIS World Geocoding Service",
-      url: "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer",
-      singleLineFieldName: "SingleLine",
-      countryCode: ["BRA", "BOL", "COL", "ECU", "PER", "VEN"].join(","),
-      outFields: ["*"],
-      maxResults: 1,
-      maxSuggestions: 2,
-      suggestionsEnabled: true,
-      minSuggestCharacters: 1,
-      categories: ["City"],
-    },
-  ],
+  sources: LOCATION_TYPES.map((type) => SOURCES[type]),
 });
 
 /**

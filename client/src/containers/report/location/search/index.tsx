@@ -11,6 +11,7 @@ import { useGetMutationSearch, useGetSuggestions } from "@/lib/search";
 import { tmpBboxAtom, useSyncLocation } from "@/app/(frontend)/store";
 
 import { BUFFERS } from "@/constants/map";
+import { LOCATION_TYPES } from "@/constants/search";
 
 import { Search } from "@/components/ui/search";
 
@@ -19,6 +20,10 @@ type Option = {
   value: string;
   key: string;
   sourceIndex: number;
+  group: {
+    id: number;
+    label: string;
+  };
 };
 
 export default function SearchC() {
@@ -104,6 +109,10 @@ export default function SearchC() {
                   value: r1.key,
                   key: r1.key,
                   sourceIndex: r.sourceIndex,
+                  group: {
+                    id: r.sourceIndex,
+                    label: t(`location-type-${LOCATION_TYPES[r.sourceIndex]}`),
+                  },
                 })),
               )
               .flat() as Option[]) || ([] as Option[])
