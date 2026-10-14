@@ -208,7 +208,7 @@
     "overrides": {
       "@aws-sdk/xml-builder>fast-xml-parser": "5.10.1",
       "payload>undici": "7.29.1",
-      "monaco-editor>dompurify": "3.4.13",
+      "monaco-editor>dompurify": "3.4.16",
       "@esbuild-kit/core-utils>esbuild": "0.25.0",
       "@loaders.gl/kml>@xmldom/xmldom": "0.8.15",
       "@loaders.gl/compression>fflate": "0.7.5",
