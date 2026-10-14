@@ -226,7 +226,8 @@
       "brace-expansion@1": "1.1.18",
       "brace-expansion@2": "2.1.4",
       "brace-expansion@5": "5.0.9",
-      "jsdom>undici": "7.29.1"
+      "jsdom>undici": "7.29.1",
+      "react-world-flags>svgo": "3.3.5"
     }
   }
 }
