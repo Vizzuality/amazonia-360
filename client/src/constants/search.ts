@@ -5,6 +5,14 @@
  * looked up again every time it is opened, so this order is a contract: append new
  * sources at the end, never reorder or remove one.
  */
-export const LOCATION_TYPES = ["country", "state", "municipality", "capital", "city"] as const;
+export const LOCATION_TYPES = [
+  "country",
+  "state",
+  "municipality",
+  "capital",
+  "city",
+  "protected-area",
+  "indigenous-territory",
+] as const;
 
 export type LocationType = (typeof LOCATION_TYPES)[number];

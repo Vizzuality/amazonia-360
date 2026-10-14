@@ -80,6 +80,29 @@ const SOURCES: Record<
     minSuggestCharacters: 1,
     categories: ["City"],
   },
+  "protected-area": {
+    name: "Protected areas",
+    layer: new FeatureLayer(omit(DATASETS.protected_areas.layer, ["type"])),
+    searchFields: ["NAME"],
+    displayField: "NAME",
+    outFields: ["*"],
+    maxResults: 1,
+    maxSuggestions: 2,
+    suggestionsEnabled: true,
+    minSuggestCharacters: 1,
+  },
+  "indigenous-territory": {
+    name: "Indigenous territories",
+    layer: new FeatureLayer(omit(DATASETS.indigenous_territories.layer, ["type"])),
+    searchFields: ["nombre"],
+    displayField: "nombre",
+    suggestionTemplate: "{nombre}, {pais}",
+    outFields: ["*"],
+    maxResults: 1,
+    maxSuggestions: 2,
+    suggestionsEnabled: true,
+    minSuggestCharacters: 1,
+  },
 };
 
 const searchVM = new SearchVM({

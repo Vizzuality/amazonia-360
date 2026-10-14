@@ -133,6 +133,8 @@
   "location-type-municipality": "Municipality",
   "location-type-capital": "Capital city",
   "location-type-city": "City",
+  "location-type-protected-area": "Protected area",
+  "location-type-indigenous-territory": "Indigenous territory",
   "grid-sidebar-report-sketch-point": "Point",
   "grid-sidebar-report-sketch-point-description": "Click on the map to select a single point and get a buffer radius of 30km²",
   "grid-sidebar-report-sketch-area": "Area",

@@ -133,6 +133,8 @@
   "location-type-municipality": "Municipio",
   "location-type-capital": "Ciudad capital",
   "location-type-city": "Ciudad",
+  "location-type-protected-area": "Área protegida",
+  "location-type-indigenous-territory": "Territorio indígena",
   "grid-sidebar-report-sketch-point": "Punto",
   "grid-sidebar-report-sketch-point-description": "Haz clic en el mapa para seleccionar un único punto y obtener un radio de amortiguación de 30 km².",
   "grid-sidebar-report-sketch-area": "Area",
