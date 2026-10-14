@@ -1,5 +1,3 @@
-import { CountryCode } from "@/lib/country";
-
 import { DATASETS } from "@/constants/datasets";
 
 import { LayerProps } from "@/components/map/layers/types";
@@ -18,7 +16,7 @@ const MODULE_AREA_AFP_RENDERER = {
   },
 };
 
-export function getAreaAfpLayer(country: CountryCode | null): LayerProps {
+export function getAreaAfpLayer(country: string | null): LayerProps {
   if (!country) return DATASETS.area_afp.layer as LayerProps;
 
   return {

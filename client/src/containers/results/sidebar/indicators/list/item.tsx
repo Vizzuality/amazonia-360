@@ -52,7 +52,7 @@ export function IndicatorsItem({
               aria-label={indicator.name}
               className="h-auto w-full items-start justify-start gap-1.5 py-1 pr-14 pl-2 font-medium"
             >
-              <IndicatorScopeBadge country={indicator.country} className="mt-0.5" />
+              <IndicatorScopeBadge module={indicator.module} className="mt-0.5" />
               <span className="text-left text-wrap">{indicator.name}</span>
             </Button>
           </PopoverTrigger>

@@ -1,7 +1,5 @@
 import type { CollectionConfig } from "payload";
 
-import { COUNTRIES } from "@/lib/country";
-
 import { authenticatedAccess } from "@/cms/access/authenticated";
 import { ownUserAccess } from "@/cms/access/owner";
 import { LocationField } from "@/cms/fields/location";
@@ -40,11 +38,19 @@ export const Reports: CollectionConfig = {
         readOnly: true,
       },
     },
+    // Deprecated by `modules`; kept so no environment loses data before the backfill seed has run there.
     {
       name: "country",
       type: "select",
       hasMany: true,
-      options: COUNTRIES.map(({ code }) => ({ label: code, value: code })),
+      options: ["ECU", "BOL", "BRA", "COL", "GUY", "PER", "SUR", "VEN"],
+      admin: { hidden: true },
+    },
+    {
+      name: "modules",
+      type: "relationship",
+      relationTo: "country-modules",
+      hasMany: true,
       admin: {
         readOnly: true,
         description:

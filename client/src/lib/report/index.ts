@@ -79,7 +79,7 @@ export type ReportDataBase = {
   description?: string | null;
   topics?: TopicView[];
   location?: Location | null;
-  country?: Report["country"];
+  modules?: string[] | null;
   status?: "published" | "draft" | null;
 };
 
@@ -102,7 +102,7 @@ export const useSaveReport = () => {
             title: data.title,
             description: data.description,
             location: data.location,
-            country: data.country ?? null,
+            modules: data.modules ?? null,
             topics: parseTopicViews(data.topics ?? []),
             _status: "published",
           },
@@ -147,7 +147,7 @@ export const useDuplicateReport = () => {
           title: data.title,
           description: data.description,
           location: data.location,
-          country: data.country ?? null,
+          modules: data.modules ?? null,
           topics: parseTopicViews(data.topics ?? []),
           _status: data.status ?? "published",
         },

@@ -8,6 +8,7 @@ import { Subtopic } from "@/types/topic";
 
 vi.mock("@/lib/cms-content", () => ({ fetchIndicators: vi.fn() }));
 vi.mock("@/i18n/use-country", () => ({ useCountry: vi.fn() }));
+vi.mock("@/lib/country-modules", () => ({ useGetActiveModuleSlugs: () => ["ECU", "PER"] }));
 
 const { fetchIndicators } = await import("@/lib/cms-content");
 const { useCountry } = await import("@/i18n/use-country");
@@ -60,7 +61,7 @@ describe("getIndicators", () => {
 
     const result = await getIndicators("en", ["ECU"]);
 
-    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", countries: ["ECU"] });
+    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", modules: ["ECU"] });
     expect(result.map((i) => i.name)).toEqual(["Biodiversity", "Rivers"]);
   });
 });
@@ -81,7 +82,7 @@ describe("getIndicatorsOptions", () => {
 
     expect(options.queryKey).toEqual(getIndicatorsKey("en", ["ECU"]));
     await (options.queryFn as () => Promise<unknown>)();
-    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", countries: ["ECU"] });
+    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", modules: ["ECU"] });
   });
 });
 
@@ -93,7 +94,7 @@ describe("useGetIndicators", () => {
     const { result } = renderHook(() => useGetIndicators("en"), { wrapper: getWrapper() });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", countries: ["ECU"] });
+    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", modules: ["ECU"] });
   });
 
   it("honours an explicit module over the URL's, for a report rendered outside its module", async () => {
@@ -105,7 +106,7 @@ describe("useGetIndicators", () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", countries: ["ECU"] });
+    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", modules: ["ECU"] });
   });
 
   it("honours an explicit regional scope over a URL that is inside a module", async () => {
@@ -117,7 +118,20 @@ describe("useGetIndicators", () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", countries: [] });
+    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", modules: [] });
+  });
+});
+
+describe("the modules a catalogue read carries", () => {
+  it("are only the live ones, sorted, whatever a saved report still holds", async () => {
+    fetchIndicatorsMock.mockResolvedValue([]);
+
+    const { result } = renderHook(() => useGetIndicators("en", undefined, ["PER", "SUR", "ECU"]), {
+      wrapper: getWrapper(),
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", modules: ["ECU", "PER"] });
   });
 });
 
@@ -131,7 +145,7 @@ describe("hooks built on useGetIndicators", () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", countries: ["ECU"] });
+    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", modules: ["ECU"] });
   });
 
   it("useGetH3Indicators forwards an explicit module past the URL", async () => {
@@ -143,7 +157,7 @@ describe("hooks built on useGetIndicators", () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", countries: ["ECU"] });
+    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", modules: ["ECU"] });
   });
 
   it("useGetIndicatorsId forwards an explicit module past the URL", async () => {
@@ -155,7 +169,7 @@ describe("hooks built on useGetIndicators", () => {
     });
 
     await waitFor(() => expect(fetchIndicatorsMock).toHaveBeenCalled());
-    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", countries: ["ECU"] });
+    expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", modules: ["ECU"] });
     await waitFor(() => expect(result.current?.name).toBe("Rivers"));
   });
 
@@ -216,7 +230,7 @@ describe("hooks built on useGetIndicators", () => {
     renderHook(() => useGetIndicatorsLayerId(1, "en", {}, "ECU"), { wrapper: getWrapper() });
 
     await waitFor(() =>
-      expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", countries: ["ECU"] }),
+      expect(fetchIndicatorsMock).toHaveBeenCalledWith({ locale: "en", modules: ["ECU"] }),
     );
   });
 });

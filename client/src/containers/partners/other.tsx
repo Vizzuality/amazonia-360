@@ -1,8 +1,11 @@
+"use client";
+
 import Image from "next/image";
 
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
-import { getOtherPartnerLogoRows } from "@/lib/country/partners";
+import { getPartnerRows } from "@/lib/country/partners";
+import { getRegionalPartners, useGetPartners } from "@/lib/country-modules";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
 
@@ -12,8 +15,10 @@ function getTitleKey(): "partners-other-title" | "partners-regional-title" {
 
 export default function OtherPartners() {
   const t = useTranslations();
-  const locale = useLocale();
-  const rows = getOtherPartnerLogoRows(locale);
+  const partners = useGetPartners();
+  const rows = getPartnerRows(getRegionalPartners(partners));
+
+  if (!rows.length) return null;
 
   return (
     <section data-testid="partners-other" className="bg-white py-20">
@@ -28,15 +33,18 @@ export default function OtherPartners() {
         </div>
         <div className="flex w-full flex-col items-center gap-10 lg:w-[606px]">
           {rows.map((row) => (
-            <ul key={row[0].src} className="flex flex-wrap items-center justify-center gap-10">
-              {row.map((logo) => (
-                <li key={logo.src} className="flex items-center">
+            <ul key={row[0].id} className="flex flex-wrap items-center justify-center gap-10">
+              {row.map((partner) => (
+                <li key={partner.id} className="flex items-center">
                   <Image
-                    src={logo.src}
-                    alt={logo.alt}
+                    src={partner.logo}
+                    alt={partner.name}
                     width={400}
                     height={160}
-                    className={cn("h-20 w-auto object-contain", logo.className)}
+                    className={cn(
+                      "h-20 w-auto object-contain",
+                      partner.logoSize === "large" && "h-[72px]",
+                    )}
                   />
                 </li>
               ))}

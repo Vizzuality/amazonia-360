@@ -1423,6 +1423,12 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
+        },
+        "country_modules_id": {
+          "name": "country_modules_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
@@ -1485,6 +1491,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "reports_rels_country_modules_id_idx": {
+          "name": "reports_rels_country_modules_id_idx",
+          "columns": [
+            {
+              "expression": "country_modules_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -1507,6 +1528,19 @@
           "tableTo": "users",
           "columnsFrom": [
             "users_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "reports_rels_country_modules_fk": {
+          "name": "reports_rels_country_modules_fk",
+          "tableFrom": "reports_rels",
+          "tableTo": "country_modules",
+          "columnsFrom": [
+            "country_modules_id"
           ],
           "columnsTo": [
             "id"
@@ -2251,6 +2285,12 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
+        },
+        "country_modules_id": {
+          "name": "country_modules_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
@@ -2313,6 +2353,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "_reports_v_rels_country_modules_id_idx": {
+          "name": "_reports_v_rels_country_modules_id_idx",
+          "columns": [
+            {
+              "expression": "country_modules_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -2335,6 +2390,19 @@
           "tableTo": "users",
           "columnsFrom": [
             "users_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "_reports_v_rels_country_modules_fk": {
+          "name": "_reports_v_rels_country_modules_fk",
+          "tableFrom": "_reports_v_rels",
+          "tableTo": "country_modules",
+          "columnsFrom": [
+            "country_modules_id"
           ],
           "columnsTo": [
             "id"
@@ -3701,6 +3769,539 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.country_modules": {
+      "name": "country_modules",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "country": {
+          "name": "country",
+          "type": "enum_country_modules_country",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "tag": {
+          "name": "tag",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bbox_xmin": {
+          "name": "bbox_xmin",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bbox_ymin": {
+          "name": "bbox_ymin",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bbox_xmax": {
+          "name": "bbox_xmax",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bbox_ymax": {
+          "name": "bbox_ymax",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "order": {
+          "name": "order",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "country_modules_slug_idx": {
+          "name": "country_modules_slug_idx",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "country_modules_updated_at_idx": {
+          "name": "country_modules_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "country_modules_created_at_idx": {
+          "name": "country_modules_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.country_modules_locales": {
+      "name": "country_modules_locales",
+      "schema": "",
+      "columns": {
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "module_name": {
+          "name": "module_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "partners_description": {
+          "name": "partners_description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "country_modules_locales_locale_parent_id_unique": {
+          "name": "country_modules_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "country_modules_locales_parent_id_fk": {
+          "name": "country_modules_locales_parent_id_fk",
+          "tableFrom": "country_modules_locales",
+          "tableTo": "country_modules",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.partners": {
+      "name": "partners",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tag": {
+          "name": "tag",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "logo_size": {
+          "name": "logo_size",
+          "type": "enum_partners_logo_size",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'default'"
+        },
+        "regional": {
+          "name": "regional",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "order": {
+          "name": "order",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "partners_updated_at_idx": {
+          "name": "partners_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "partners_created_at_idx": {
+          "name": "partners_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.partners_locales": {
+      "name": "partners_locales",
+      "schema": "",
+      "columns": {
+        "logo": {
+          "name": "logo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "partners_locales_locale_parent_id_unique": {
+          "name": "partners_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "partners_locales_parent_id_fk": {
+          "name": "partners_locales_parent_id_fk",
+          "tableFrom": "partners_locales",
+          "tableTo": "partners",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.partners_rels": {
+      "name": "partners_rels",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "path": {
+          "name": "path",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "country_modules_id": {
+          "name": "country_modules_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "partners_rels_order_idx": {
+          "name": "partners_rels_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "partners_rels_parent_idx": {
+          "name": "partners_rels_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "partners_rels_path_idx": {
+          "name": "partners_rels_path_idx",
+          "columns": [
+            {
+              "expression": "path",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "partners_rels_country_modules_id_idx": {
+          "name": "partners_rels_country_modules_id_idx",
+          "columns": [
+            {
+              "expression": "country_modules_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "partners_rels_parent_fk": {
+          "name": "partners_rels_parent_fk",
+          "tableFrom": "partners_rels",
+          "tableTo": "partners",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "partners_rels_country_modules_fk": {
+          "name": "partners_rels_country_modules_fk",
+          "tableFrom": "partners_rels",
+          "tableTo": "country_modules",
+          "columnsFrom": [
+            "country_modules_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.indicators_visualization_types": {
       "name": "indicators_visualization_types",
       "schema": "",
@@ -5050,6 +5651,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "module_id": {
+          "name": "module_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "replaces_id": {
           "name": "replaces_id",
           "type": "varchar",
@@ -5092,6 +5699,21 @@
           "columns": [
             {
               "expression": "subtopic_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "indicators_module_idx": {
+          "name": "indicators_module_idx",
+          "columns": [
+            {
+              "expression": "module_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -5170,6 +5792,19 @@
           "tableTo": "subtopics",
           "columnsFrom": [
             "subtopic_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "indicators_module_id_country_modules_id_fk": {
+          "name": "indicators_module_id_country_modules_id_fk",
+          "tableFrom": "indicators",
+          "tableTo": "country_modules",
+          "columnsFrom": [
+            "module_id"
           ],
           "columnsTo": [
             "id"
@@ -5275,6 +5910,137 @@
           "tableTo": "indicators",
           "columnsFrom": [
             "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.indicators_rels": {
+      "name": "indicators_rels",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "path": {
+          "name": "path",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "partners_id": {
+          "name": "partners_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "indicators_rels_order_idx": {
+          "name": "indicators_rels_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "indicators_rels_parent_idx": {
+          "name": "indicators_rels_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "indicators_rels_path_idx": {
+          "name": "indicators_rels_path_idx",
+          "columns": [
+            {
+              "expression": "path",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "indicators_rels_partners_id_idx": {
+          "name": "indicators_rels_partners_id_idx",
+          "columns": [
+            {
+              "expression": "partners_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "indicators_rels_parent_fk": {
+          "name": "indicators_rels_parent_fk",
+          "tableFrom": "indicators_rels",
+          "tableTo": "indicators",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "indicators_rels_partners_fk": {
+          "name": "indicators_rels_partners_fk",
+          "tableFrom": "indicators_rels",
+          "tableTo": "partners",
+          "columnsFrom": [
+            "partners_id"
           ],
           "columnsTo": [
             "id"
@@ -6708,6 +7474,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "version_module_id": {
+          "name": "version_module_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "version_replaces_id": {
           "name": "version_replaces_id",
           "type": "varchar",
@@ -6796,6 +7568,21 @@
           "columns": [
             {
               "expression": "version_subtopic_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_indicators_v_version_version_module_idx": {
+          "name": "_indicators_v_version_version_module_idx",
+          "columns": [
+            {
+              "expression": "version_module_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -6969,6 +7756,19 @@
           "onDelete": "set null",
           "onUpdate": "no action"
         },
+        "_indicators_v_version_module_id_country_modules_id_fk": {
+          "name": "_indicators_v_version_module_id_country_modules_id_fk",
+          "tableFrom": "_indicators_v",
+          "tableTo": "country_modules",
+          "columnsFrom": [
+            "version_module_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
         "_indicators_v_version_replaces_id_indicators_id_fk": {
           "name": "_indicators_v_version_replaces_id_indicators_id_fk",
           "tableFrom": "_indicators_v",
@@ -7067,6 +7867,137 @@
           "tableTo": "_indicators_v",
           "columnsFrom": [
             "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._indicators_v_rels": {
+      "name": "_indicators_v_rels",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "path": {
+          "name": "path",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "partners_id": {
+          "name": "partners_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_indicators_v_rels_order_idx": {
+          "name": "_indicators_v_rels_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_indicators_v_rels_parent_idx": {
+          "name": "_indicators_v_rels_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_indicators_v_rels_path_idx": {
+          "name": "_indicators_v_rels_path_idx",
+          "columns": [
+            {
+              "expression": "path",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_indicators_v_rels_partners_id_idx": {
+          "name": "_indicators_v_rels_partners_id_idx",
+          "columns": [
+            {
+              "expression": "partners_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_indicators_v_rels_parent_fk": {
+          "name": "_indicators_v_rels_parent_fk",
+          "tableFrom": "_indicators_v_rels",
+          "tableTo": "_indicators_v",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "_indicators_v_rels_partners_fk": {
+          "name": "_indicators_v_rels_partners_fk",
+          "tableFrom": "_indicators_v_rels",
+          "tableTo": "partners",
+          "columnsFrom": [
+            "partners_id"
           ],
           "columnsTo": [
             "id"
@@ -8116,6 +9047,18 @@
           "primaryKey": false,
           "notNull": false
         },
+        "country_modules_id": {
+          "name": "country_modules_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "partners_id": {
+          "name": "partners_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "indicators_id": {
           "name": "indicators_id",
           "type": "varchar",
@@ -8274,6 +9217,36 @@
           "method": "btree",
           "with": {}
         },
+        "payload_locked_documents_rels_country_modules_id_idx": {
+          "name": "payload_locked_documents_rels_country_modules_id_idx",
+          "columns": [
+            {
+              "expression": "country_modules_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "payload_locked_documents_rels_partners_id_idx": {
+          "name": "payload_locked_documents_rels_partners_id_idx",
+          "columns": [
+            {
+              "expression": "partners_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "payload_locked_documents_rels_indicators_id_idx": {
           "name": "payload_locked_documents_rels_indicators_id_idx",
           "columns": [
@@ -8388,6 +9361,32 @@
           "tableTo": "subtopics",
           "columnsFrom": [
             "subtopics_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_locked_documents_rels_country_modules_fk": {
+          "name": "payload_locked_documents_rels_country_modules_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "country_modules",
+          "columnsFrom": [
+            "country_modules_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_locked_documents_rels_partners_fk": {
+          "name": "payload_locked_documents_rels_partners_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "partners",
+          "columnsFrom": [
+            "partners_id"
           ],
           "columnsTo": [
             "id"
@@ -8979,6 +9978,28 @@
         "en",
         "es",
         "pt"
+      ]
+    },
+    "public.enum_country_modules_country": {
+      "name": "enum_country_modules_country",
+      "schema": "public",
+      "values": [
+        "BRA",
+        "COL",
+        "PER",
+        "VEN",
+        "ECU",
+        "BOL",
+        "GUY",
+        "SUR"
+      ]
+    },
+    "public.enum_partners_logo_size": {
+      "name": "enum_partners_logo_size",
+      "schema": "public",
+      "values": [
+        "default",
+        "large"
       ]
     },
     "public.enum_indicators_visualization_types": {

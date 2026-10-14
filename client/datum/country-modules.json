@@ -1,0 +1,24 @@
+[
+  {
+    "slug": "ECU",
+    "country": "ECU",
+    "active": true,
+    "tag": "ECU",
+    "order": 0,
+    "bbox": {
+      "xmin": -9313915,
+      "ymin": -559071,
+      "xmax": -8369795,
+      "ymax": 81173
+    },
+    "name_en": "Ecuador",
+    "name_es": "Ecuador",
+    "name_pt": "Equador",
+    "moduleName_en": "Ecuador Amazonia",
+    "moduleName_es": "Amazonía Ecuatoriana",
+    "moduleName_pt": "Amazônia Equatoriana",
+    "partnersDescription_en": "The Amazonia Module of Ecuador, now in development, is the first on the platform.\nPublic institutions, civil society organizations and data partners are adding national data on protected areas, biodiversity and population to the regional baseline of 140+ indicators, building a subnational view of the six Amazonian provinces to help manage their sustainable development.",
+    "partnersDescription_es": "El Módulo de Amazonia de Ecuador, actualmente en desarrollo, es el primero de la plataforma.\nInstituciones públicas, organizaciones de la sociedad civil y socios de datos están sumando datos nacionales sobre áreas protegidas, biodiversidad y población a la línea base regional de más de 140 indicadores, construyendo una visión subnacional de las seis provincias amazónicas para ayudar a gestionar su desarrollo sostenible.",
+    "partnersDescription_pt": "O Módulo da Amazônia do Equador, atualmente em desenvolvimento, é o primeiro da plataforma.\nInstituições públicas, organizações da sociedade civil e parceiros de dados estão adicionando dados nacionais sobre áreas protegidas, biodiversidade e população à linha de base regional de mais de 140 indicadores, construindo uma visão subnacional das seis províncias amazônicas para ajudar a gerir o seu desenvolvimento sustentável."
+  }
+]

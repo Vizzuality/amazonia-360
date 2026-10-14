@@ -10,6 +10,7 @@ import { Check, Globe } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { getCountryAmazoniaBoundaryOptions } from "@/lib/country/coverage";
+import { getCountryModuleBySlug, useGetCountryModules } from "@/lib/country-modules";
 import { cn } from "@/lib/utils";
 
 import { tmpBboxAtom } from "@/app/(frontend)/store";
@@ -111,6 +112,7 @@ export default function ModuleList({
 }>) {
   const t = useTranslations();
   const queryClient = useQueryClient();
+  const modules = useGetCountryModules();
   const setTmpBbox = useSetAtom(tmpBboxAtom);
 
   const unavailableLabelId = useId();
@@ -119,9 +121,12 @@ export default function ModuleList({
   const available = options.filter((option) => option.code !== null && !option.disabled);
   const unavailable = options.filter((option) => option.code !== null && option.disabled);
 
-  const panToModule = (code: string) => {
+  const panToModule = (slug: string) => {
+    const target = getCountryModuleBySlug(modules, slug);
+    if (!target) return;
+
     queryClient
-      .fetchQuery(getCountryAmazoniaBoundaryOptions(code))
+      .fetchQuery(getCountryAmazoniaBoundaryOptions(target.country))
       .then((boundary) => {
         if (boundary?.extent) setTmpBbox(boundary.extent);
       })

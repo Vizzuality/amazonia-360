@@ -7,7 +7,12 @@ import { useSearchParams } from "next/navigation";
 import { useAtom } from "jotai";
 import { useTranslations } from "next-intl";
 
-import { COUNTRIES, stripCountry } from "@/lib/country";
+import { stripCountry } from "@/lib/country";
+import {
+  getCountryModuleBySlug,
+  useGetActiveModuleSlugs,
+  useGetCountryModules,
+} from "@/lib/country-modules";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,12 +35,14 @@ export default function CountryModuleDeactivation() {
   const searchParams = useSearchParams();
   const router = useLocaleRouter();
   const country = useCountry();
+  const modules = useGetCountryModules();
+  const liveSlugs = useGetActiveModuleSlugs();
   const { status, geometry } = useCountryModuleCoverage();
   const [deactivated, setDeactivated] = useAtom(countryModuleDeactivatedAtom);
 
   const queryString = searchParams?.toString() ?? "";
-  const entry = COUNTRIES.find((candidate) => candidate.code === deactivated);
-  const moduleName = entry ? t(entry.moduleNameKey) : "";
+  const entry = getCountryModuleBySlug(modules, deactivated);
+  const moduleName = entry?.moduleName ?? "";
 
   const exitedGeometry = useRef<typeof geometry>(null);
 
@@ -54,8 +61,8 @@ export default function CountryModuleDeactivation() {
     exitedGeometry.current = geometry;
     setDeactivated(country);
     const query = Object.fromEntries(new URLSearchParams(queryString).entries());
-    router.replace({ pathname: stripCountry(pathname), query });
-  }, [status, geometry, country, pathname, queryString, router, setDeactivated]);
+    router.replace({ pathname: stripCountry(pathname, liveSlugs), query });
+  }, [status, geometry, country, pathname, queryString, router, setDeactivated, liveSlugs]);
 
   if (!entry) return null;
 

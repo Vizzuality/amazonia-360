@@ -5,6 +5,7 @@ import { forwardRef, useMemo } from "react";
 import { createNavigation } from "next-intl/navigation";
 
 import { resolveCountryHref, stripCountry } from "@/lib/country";
+import { useGetActiveModuleSlugs } from "@/lib/country-modules";
 
 import { routing } from "./routing";
 import { useCountry } from "./use-country";
@@ -27,8 +28,9 @@ export const Link = forwardRef<HTMLAnchorElement, IntlLinkProps>(function Countr
   ref,
 ) {
   const country = useCountry();
+  const liveSlugs = useGetActiveModuleSlugs();
 
-  return <IntlLink ref={ref} href={resolveCountryHref(href, country)} {...rest} />;
+  return <IntlLink ref={ref} href={resolveCountryHref(href, country, liveSlugs)} {...rest} />;
 });
 
 // For links to a module other than the active one. `Link` would prefix the href with the
@@ -41,23 +43,31 @@ export const useLocaleRouter = useIntlRouter;
 
 export function usePathname() {
   const pathname = useIntlPathname();
-  return useMemo(() => stripCountry(pathname), [pathname]);
+  const liveSlugs = useGetActiveModuleSlugs();
+  return useMemo(() => stripCountry(pathname, liveSlugs), [pathname, liveSlugs]);
 }
 
 export function useRouter() {
   const router = useIntlRouter();
   const country = useCountry();
+  const liveSlugs = useGetActiveModuleSlugs();
 
   return useMemo(
     () => ({
       ...router,
       push: ((href, options) =>
-        router.push(resolveCountryHref(href, country), options)) as typeof router.push,
+        router.push(resolveCountryHref(href, country, liveSlugs), options)) as typeof router.push,
       replace: ((href, options) =>
-        router.replace(resolveCountryHref(href, country), options)) as typeof router.replace,
+        router.replace(
+          resolveCountryHref(href, country, liveSlugs),
+          options,
+        )) as typeof router.replace,
       prefetch: ((href, options) =>
-        router.prefetch(resolveCountryHref(href, country), options)) as typeof router.prefetch,
+        router.prefetch(
+          resolveCountryHref(href, country, liveSlugs),
+          options,
+        )) as typeof router.prefetch,
     }),
-    [router, country],
+    [router, country, liveSlugs],
   );
 }

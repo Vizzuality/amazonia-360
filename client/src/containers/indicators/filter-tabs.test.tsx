@@ -16,12 +16,14 @@ vi.mock("next-intl", () => ({
   useLocale: () => "en",
 }));
 
+const ECU_MODULE = { id: "ecu-module", slug: "ECU", tag: "ECU" };
+
 describe("getIndicatorScopeCounts", () => {
   it("splits national from regional indicators", () => {
-    const indicators: Pick<Indicator, "country">[] = [
-      { country: null },
-      { country: "ECU" },
-      { country: null },
+    const indicators: Pick<Indicator, "module">[] = [
+      { module: null },
+      { module: ECU_MODULE },
+      { module: null },
     ];
 
     expect(getIndicatorScopeCounts(indicators)).toEqual({ all: 3, regional: 2, national: 1 });
@@ -29,9 +31,9 @@ describe("getIndicatorScopeCounts", () => {
 });
 
 describe("getFilteredIndicators", () => {
-  const indicators: Pick<Indicator, "country" | "id">[] = [
-    { country: null, id: 1 },
-    { country: "ECU", id: 2 },
+  const indicators: Pick<Indicator, "module" | "id">[] = [
+    { module: null, id: 1 },
+    { module: ECU_MODULE, id: 2 },
   ];
 
   it("returns everything for all", () => {

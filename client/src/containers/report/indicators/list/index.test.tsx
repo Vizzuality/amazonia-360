@@ -23,10 +23,12 @@ vi.mock("./item", () => ({
   default: ({ id }: { id: number }) => <div data-testid="item">{id}</div>,
 }));
 
+const ECU_MODULE = { id: "ecu-module", slug: "ECU", tag: "ECU" };
+
 const INDICATORS = [
-  { id: 1, country: null },
-  { id: 2, country: null },
-  { id: 3, country: "ECU" },
+  { id: 1, module: null },
+  { id: 2, module: null },
+  { id: 3, module: ECU_MODULE },
 ];
 
 describe("IndicatorsList", () => {

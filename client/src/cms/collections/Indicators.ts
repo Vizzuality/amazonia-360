@@ -1,6 +1,10 @@
-import type { CollectionConfig, RadioFieldValidation } from "payload";
-
-import { COUNTRIES } from "@/lib/country";
+import type {
+  CollectionConfig,
+  FieldHookArgs,
+  FilterOptionsProps,
+  RadioFieldValidation,
+  Where,
+} from "payload";
 
 import { catalogueAccess } from "@/cms/access/catalogue";
 import { invalidDefaultMessage, isAllowedDefault } from "@/cms/fields/default-visualization-type";
@@ -9,6 +13,33 @@ import { ResourceField } from "@/cms/fields/resource";
 import { sourceIdField } from "@/cms/fields/source-id";
 import { warnOnVisualizationMismatch } from "@/cms/hooks/indicator-visualization";
 import { rejectInvalidImportRow } from "@/cms/import-export/catalogue-import";
+
+type ModuleValue = string | { id: string } | null | undefined;
+
+function getModuleId(value: ModuleValue): string | undefined {
+  if (typeof value === "string") return value;
+
+  return value?.id;
+}
+
+function getModulePartnersFilter({ data }: FilterOptionsProps): Where | false {
+  const moduleId = getModuleId(data?.module);
+  if (!moduleId) return false;
+
+  return { modules: { equals: moduleId } };
+}
+
+function hasModule({ siblingData }: FieldHookArgs): boolean {
+  return !!getModuleId(siblingData.module);
+}
+
+function getPartnersForModule(args: FieldHookArgs) {
+  return hasModule(args) ? args.value : [];
+}
+
+function getReplacesForModule(args: FieldHookArgs) {
+  return hasModule(args) ? args.value : null;
+}
 
 export const Indicators: CollectionConfig = {
   slug: "indicators",
@@ -31,13 +62,34 @@ export const Indicators: CollectionConfig = {
       },
     },
     { name: "subtopic", type: "relationship", relationTo: "subtopics", required: true },
+    // Deprecated by `module`; kept so no environment loses data before the backfill seed has run there.
     {
       name: "country",
       type: "select",
-      options: COUNTRIES.map(({ code }) => ({ label: code, value: code })),
+      options: ["ECU", "BOL", "BRA", "COL", "GUY", "PER", "SUR", "VEN"],
+      admin: { hidden: true },
+    },
+    {
+      name: "module",
+      type: "relationship",
+      relationTo: "country-modules",
       admin: {
         description:
           "The country module this indicator belongs to. Empty is the Amazon Region — the regional scope, not every country.",
+      },
+    },
+    {
+      name: "partners",
+      type: "relationship",
+      relationTo: "partners",
+      hasMany: true,
+      filterOptions: getModulePartnersFilter,
+      hooks: {
+        beforeChange: [getPartnersForModule],
+      },
+      admin: {
+        condition: (data) => !!data?.module,
+        description: "Only partners of this indicator's module can be chosen.",
       },
     },
     /**
@@ -53,9 +105,12 @@ export const Indicators: CollectionConfig = {
       name: "replaces",
       type: "relationship",
       relationTo: "indicators",
-      filterOptions: () => ({ country: { exists: false } }),
+      filterOptions: () => ({ module: { exists: false } }),
+      hooks: {
+        beforeChange: [getReplacesForModule],
+      },
       admin: {
-        condition: (data) => !!data?.country,
+        condition: (data) => !!data?.module,
         description:
           "The regional indicator this one stands in for inside its module. Only regional indicators can be named.",
       },

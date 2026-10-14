@@ -6,6 +6,7 @@ import { signOut } from "next-auth/react";
 import { useLocale } from "next-intl";
 
 import { resolveCountryHref } from "@/lib/country";
+import { useGetActiveModuleSlugs } from "@/lib/country-modules";
 
 import { getPathname } from "@/i18n/navigation-client";
 import { useCountry } from "@/i18n/use-country";
@@ -27,13 +28,14 @@ import { useCountry } from "@/i18n/use-country";
 export function useSignOut() {
   const locale = useLocale();
   const country = useCountry();
+  const liveSlugs = useGetActiveModuleSlugs();
 
   return useCallback(
     (href: string = "/") =>
       signOut({
         redirect: true,
-        redirectTo: getPathname({ href: resolveCountryHref(href, country), locale }),
+        redirectTo: getPathname({ href: resolveCountryHref(href, country, liveSlugs), locale }),
       }),
-    [country, locale],
+    [country, liveSlugs, locale],
   );
 }

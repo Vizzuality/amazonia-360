@@ -1,13 +1,14 @@
 import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
-import IndicatorsPartners from "./partners";
+import type { CountryModule, Partner } from "@/lib/country-modules";
 
-const mockUseLocale = vi.fn();
+import { ECU_MODULE, getPartnerFixture } from "@integration/fixtures/country-modules";
+
+import IndicatorsPartners from "./partners";
 
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
-  useLocale: () => mockUseLocale(),
 }));
 
 vi.mock("@/i18n/navigation", () => ({
@@ -29,43 +30,46 @@ vi.mock("@/i18n/navigation", () => ({
   },
 }));
 
+const ECU: CountryModule = { ...ECU_MODULE, id: "ecu" };
+const BOL: CountryModule = { ...ECU_MODULE, id: "bol", slug: "BOL", country: "BOL" };
+
+const PARTNERS: Partner[] = [
+  getPartnerFixture({ id: "acto", name: "ACTO ARO", regional: true }),
+  getPartnerFixture({ id: "gcf", name: "Green Climate Fund", regional: true, logoSize: "large" }),
+  getPartnerFixture({ id: "mae", name: "Ministerio del Ambiente", moduleIds: ["ecu"] }),
+  getPartnerFixture({ id: "igm", name: "IGM", moduleIds: ["ecu"] }),
+];
+
+const mockModules = vi.fn<() => CountryModule[]>();
+const mockPartners = vi.fn<() => Partner[]>();
+
+vi.mock("@/lib/country-modules", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/country-modules")>()),
+  useGetCountryModules: () => mockModules(),
+  useGetPartners: () => mockPartners(),
+}));
+
 describe("IndicatorsPartners", () => {
   beforeEach(() => {
-    mockUseLocale.mockReturnValue("en");
+    mockModules.mockReturnValue([ECU, BOL]);
+    mockPartners.mockReturnValue(PARTNERS);
   });
 
-  it("renders the six regional logos when no module is active", () => {
+  it("renders the regional logos when no module is active", () => {
     render(<IndicatorsPartners country={null} />);
 
     expect(screen.getAllByRole("img").map((img) => img.getAttribute("alt"))).toEqual([
       "ACTO ARO",
-      "Development Data Partnership",
-      "IDB Atlas",
       "Green Climate Fund",
-      "Esri",
-      "Vizzuality",
     ]);
   });
 
-  it("uses the locale variant of the ACTO logo", () => {
-    mockUseLocale.mockReturnValue("es");
-
-    render(<IndicatorsPartners country={null} />);
-
-    expect(decodeURIComponent(screen.getByAltText("ACTO ARO").getAttribute("src") ?? "")).toContain(
-      "atco-es",
-    );
-  });
-
-  it("renders the five Ecuador logos in the ECU module", () => {
+  it("renders the module partners in the ECU module", () => {
     render(<IndicatorsPartners country="ECU" />);
 
     expect(screen.getAllByRole("img").map((img) => img.getAttribute("alt"))).toEqual([
-      "Gobierno del Ecuador",
       "Ministerio del Ambiente",
-      "Instituto Geográfico Militar",
-      "INABIO",
-      "The Nature Conservancy",
+      "IGM",
     ]);
   });
 
@@ -73,6 +77,16 @@ describe("IndicatorsPartners", () => {
     render(<IndicatorsPartners country="BOL" />);
 
     expect(screen.queryByTestId("indicators-partners")).not.toBeInTheDocument();
+  });
+
+  it("renders the regional partners for an unknown module slug", () => {
+    render(<IndicatorsPartners country="XXX" />);
+
+    expect(screen.getByAltText("ACTO ARO")).toBeInTheDocument();
+    expect(screen.getByTestId("indicators-partners-learn-more")).toHaveAttribute(
+      "href",
+      "/partners",
+    );
   });
 
   it("shows the title and a Learn more link to the plain partners page when regional", () => {

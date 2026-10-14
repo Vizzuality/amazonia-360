@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 
 import { useGetIndicatorsId } from "@/lib/indicators";
 import { useReport } from "@/lib/report";
+import { useReportCountry } from "@/lib/report/use-report-country";
 
 import { useLoad } from "@/containers/indicators/load-provider";
 import { IndicatorProvider } from "@/containers/indicators/provider";
@@ -18,9 +19,9 @@ import { DataRowProps } from "./types";
 export default function DataRow({ id, locale }: DataRowProps) {
   const { id: reportId } = useParams();
   const { data: reportData } = useReport({ id: `${reportId}` });
-  const country = reportData?.country ?? null;
+  const modules = useReportCountry();
 
-  const indicator = useGetIndicatorsId(id, locale, country);
+  const indicator = useGetIndicatorsId(id, locale, modules);
 
   const { onReady } = useLoad();
 
@@ -37,14 +38,14 @@ export default function DataRow({ id, locale }: DataRowProps) {
           id={id}
           locale={locale}
           location={reportData.location}
-          country={country}
+          modules={modules}
         />
       )}
       {indicator.resource.type === "imagery" && reportData?.location && (
-        <ImageryDataRow id={id} locale={locale} location={reportData.location} country={country} />
+        <ImageryDataRow id={id} locale={locale} location={reportData.location} modules={modules} />
       )}
       {indicator.resource.type === "feature" && reportData?.location && (
-        <FeatureDataRow id={id} locale={locale} location={reportData.location} country={country} />
+        <FeatureDataRow id={id} locale={locale} location={reportData.location} modules={modules} />
       )}
     </IndicatorProvider>
   );

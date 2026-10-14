@@ -54,7 +54,7 @@ export const Subtopics: CollectionConfig = {
       defaultLimit: 100,
       custom: { "plugin-import-export": { disabled: true } },
       admin: {
-        defaultColumns: ["id", "order", "name", "country", "_status"],
+        defaultColumns: ["id", "order", "name", "module", "_status"],
         description: "Indicators filed under this subtopic. Edited on the indicator itself.",
       },
     },

@@ -5,6 +5,7 @@ import { LuCopy } from "react-icons/lu";
 import { toast } from "sonner";
 
 import { useDuplicateReport } from "@/lib/report";
+import { getReportModuleIds } from "@/lib/report/modules";
 
 import { TopicView } from "@/app/(frontend)/parsers";
 
@@ -44,7 +45,7 @@ export const DuplicateAction = ({ report }: ReportActionsProps) => {
       description: report.description || null,
       topics: report.topics as TopicView[],
       location: report.location,
-      country: report.country ?? null,
+      modules: getReportModuleIds(report.modules),
       locale,
       status: report._status,
     };

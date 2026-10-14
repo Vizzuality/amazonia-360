@@ -9,6 +9,9 @@ import { Report } from "@/payload-types";
 
 vi.mock("next/navigation", () => ({ useParams: vi.fn() }));
 vi.mock("@/services/sdk", () => ({ sdk: { findByID: vi.fn() } }));
+vi.mock("@/lib/country-modules", () => ({
+  useGetCountryModules: () => [{ id: "mod-ecu", slug: "ECU" }],
+}));
 
 const { useReportCountry } = await import("@/lib/report/use-report-country");
 const { sdk } = await import("@/services/sdk");
@@ -36,15 +39,28 @@ afterEach(() => vi.unstubAllEnvs());
 
 describe("useReportCountry", () => {
   it("reads the report's stored module, not the URL's", async () => {
-    findByIDMock.mockResolvedValue({ country: ["ECU"] } as Report);
+    findByIDMock.mockResolvedValue({ modules: ["mod-ecu"] } as Report);
 
     const { result } = renderHook(() => useReportCountry(), { wrapper: getWrapper() });
 
     await waitFor(() => expect(result.current).toEqual(["ECU"]));
   });
 
+  it("drops a module the reader can't see", async () => {
+    const reportPromise = Promise.resolve({ modules: ["mod-inactive"] } as Report);
+    findByIDMock.mockReturnValue(reportPromise);
+
+    const { result } = renderHook(() => useReportCountry(), { wrapper: getWrapper() });
+
+    await act(async () => {
+      await reportPromise;
+    });
+
+    expect(result.current).toBeNull();
+  });
+
   it("returns null for a report saved before country modules existed", async () => {
-    findByIDMock.mockResolvedValue({ country: null } as Report);
+    findByIDMock.mockResolvedValue({ modules: null } as Report);
 
     const { result } = renderHook(() => useReportCountry(), { wrapper: getWrapper() });
 
@@ -52,7 +68,7 @@ describe("useReportCountry", () => {
   });
 
   it("returns null for a regional report, which the CMS stores as an empty list", async () => {
-    const reportPromise = Promise.resolve({ country: [] as Report["country"] } as Report);
+    const reportPromise = Promise.resolve({ modules: [] } as unknown as Report);
     findByIDMock.mockReturnValue(reportPromise);
 
     const { result } = renderHook(() => useReportCountry(), { wrapper: getWrapper() });
@@ -66,7 +82,7 @@ describe("useReportCountry", () => {
 
   it("ignores the stored module when the flag is off", async () => {
     vi.stubEnv("NEXT_PUBLIC_FEATURE_FLAGS", "");
-    const reportPromise = Promise.resolve({ country: ["ECU"] } as Report);
+    const reportPromise = Promise.resolve({ modules: ["mod-ecu"] } as Report);
     findByIDMock.mockReturnValue(reportPromise);
 
     const { result } = renderHook(() => useReportCountry(), { wrapper: getWrapper() });

@@ -12,6 +12,7 @@ import {
   getRegionalPathname,
   routedPathname,
 } from "@/lib/country";
+import { getActiveModuleSlugs } from "@/lib/country-modules/server";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 
 import { routing } from "@/i18n/routing";
@@ -54,9 +55,11 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.next({ request: { headers: requestHeaders } });
   }
 
+  const liveSlugs = await getActiveModuleSlugs();
+
   const regional = isFeatureEnabled("country-module")
-    ? getRegionalHomePathname(pathname, routing.locales)
-    : getRegionalPathname(pathname, routing.locales);
+    ? getRegionalHomePathname(pathname, routing.locales, liveSlugs)
+    : getRegionalPathname(pathname, routing.locales, liveSlugs);
   if (regional) {
     const url = req.nextUrl.clone();
     url.pathname = regional;
@@ -65,7 +68,7 @@ export default async function proxy(req: NextRequest) {
 
   // 307 and not 308: report URL semantics may change once reports gain a country of
   // their own, and a permanently-cached redirect cannot be withdrawn from browsers.
-  const canonical = canonicalCountryPathname(pathname, routing.locales);
+  const canonical = canonicalCountryPathname(pathname, routing.locales, liveSlugs);
   if (canonical && canonical !== pathname) {
     const url = req.nextUrl.clone();
     url.pathname = canonical;
@@ -78,7 +81,7 @@ export default async function proxy(req: NextRequest) {
   // `x-middleware-rewrite`: https://next-intl.dev/docs/routing/middleware#composing-other-middlewares
   if (response.ok) {
     const resolved = new URL(response.headers.get("x-middleware-rewrite") || req.url);
-    const routed = routedPathname(resolved.pathname, routing.locales);
+    const routed = routedPathname(resolved.pathname, routing.locales, liveSlugs);
 
     if (routed) {
       resolved.pathname = routed;

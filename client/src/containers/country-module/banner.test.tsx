@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
+import { ECU_MODULE } from "@integration/fixtures/country-modules";
+
 import CountryModuleBanner from "./banner";
 
 const { mockUseCountry, mockUsePathname, mockCoverage, mockSearch } = vi.hoisted(() => ({
@@ -29,7 +31,11 @@ vi.mock("@/i18n/navigation", () => ({
     </a>
   ),
 }));
-vi.mock("@/i18n/use-country", () => ({ useCountry: vi.fn(() => mockUseCountry()) }));
+vi.mock("@/lib/country-modules", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/country-modules")>()),
+  useGetActiveModuleSlugs: () => ["ECU"],
+  useGetCountryModule: () => (mockUseCountry() ? ECU_MODULE : null),
+}));
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string, values?: Record<string, unknown>) =>
     values ? `${key} ${JSON.stringify(values)}` : key,
@@ -73,7 +79,7 @@ describe("CountryModuleBanner", () => {
     render(<CountryModuleBanner />);
 
     expect(screen.getByTestId("country-module-coverage")).toHaveTextContent(
-      `country-module-coverage-inside ${JSON.stringify({ percent, name: "country-module-ECU-module-name" })}`,
+      `country-module-coverage-inside ${JSON.stringify({ percent, name: ECU_MODULE.moduleName })}`,
     );
     expect(screen.queryByText(/country-module-active-description/)).not.toBeInTheDocument();
   });

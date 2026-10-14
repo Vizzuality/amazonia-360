@@ -17,6 +17,10 @@ vi.mock("@/lib/indicators", () => ({
   getQueryImageryId: vi.fn(),
 }));
 
+vi.mock("@/lib/country-modules", () => ({
+  useGetActiveModuleSlugs: () => ["ECU"],
+}));
+
 vi.mock("@/lib/report/use-report-country", () => ({
   useReportCountry: vi.fn(),
 }));
@@ -275,7 +279,7 @@ describe("useGetTopicSummary", () => {
   test.each([
     [["ECU"], ["ECU"]],
     [null, []],
-  ] as const)("loads the catalogue for the report's country %j", async (country, codes) => {
+  ] as const)("loads the catalogue for the report's modules %j", async (country, codes) => {
     vi.mocked(useReportCountry).mockReturnValue(country && [...country]);
     const queryClient = new QueryClient();
     vi.spyOn(queryClient, "ensureQueryData").mockResolvedValue([]);

@@ -14,7 +14,7 @@ import { LuArrowLeft } from "react-icons/lu";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { getCountryCodes } from "@/lib/country";
+import { useGetCountryModule } from "@/lib/country-modules";
 import { useGetIndicators } from "@/lib/indicators";
 import {
   getIndicatorSubstitutionMap,
@@ -49,6 +49,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
   const t = useTranslations();
   const locale = useLocale();
   const country = useCountry();
+  const countryModule = useGetCountryModule();
 
   const [location] = useSyncLocation();
 
@@ -73,8 +74,6 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
   });
 
   const saveMutation = useSaveReport();
-
-  const countries = getCountryCodes(country);
 
   function generateReportData(values: z.infer<typeof formSchema>) {
     const topics = values.topics
@@ -102,7 +101,7 @@ export default function ReportGenerate({ heading = "create" }: { heading?: "sele
       description: null,
       topics: topics || [],
       location: location,
-      country: countries.length > 0 ? countries : null,
+      modules: countryModule ? [countryModule.id] : null,
     };
   }
 

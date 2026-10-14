@@ -12,7 +12,7 @@ vi.mock("@/app/(frontend)/store", () => ({
   useSyncIndicatorsSettings: () => [{}, vi.fn()],
 }));
 
-const indicator = (over: Partial<Indicator> & Pick<Indicator, "id" | "country">): Indicator =>
+const indicator = (over: Partial<Indicator> & Pick<Indicator, "id" | "module">): Indicator =>
   ({
     name: "Demarcaciones hidrográficas",
     order: 0,
@@ -22,11 +22,13 @@ const indicator = (over: Partial<Indicator> & Pick<Indicator, "id" | "country">)
     ...over,
   }) as Indicator;
 
+const ECU_MODULE = { slug: "ECU", tag: "ECU" };
+
 describe("IndicatorsItem", () => {
   it("badges a regional indicator", () => {
     render(
       <TooltipProvider>
-        <IndicatorsItem {...indicator({ id: 1, country: null })} />
+        <IndicatorsItem {...indicator({ id: 1, module: null })} />
       </TooltipProvider>,
     );
 
@@ -36,11 +38,11 @@ describe("IndicatorsItem", () => {
   it("badges an Ecuador-scoped indicator", () => {
     render(
       <TooltipProvider>
-        <IndicatorsItem {...indicator({ id: 2, country: "ECU" })} />
+        <IndicatorsItem {...indicator({ id: 2, module: ECU_MODULE })} />
       </TooltipProvider>,
     );
 
-    expect(screen.getByText("country-module-ECU-badge")).toBeInTheDocument();
+    expect(screen.getByText("ECU")).toBeInTheDocument();
   });
 
   // The badge renders inside the row's button. Left in the accessibility tree it makes the
@@ -48,7 +50,7 @@ describe("IndicatorsItem", () => {
   it("names the row button after the indicator, not the badge", () => {
     render(
       <TooltipProvider>
-        <IndicatorsItem {...indicator({ id: 3, country: "ECU" })} />
+        <IndicatorsItem {...indicator({ id: 3, module: ECU_MODULE })} />
       </TooltipProvider>,
     );
 

@@ -8,15 +8,11 @@ import { Indicator } from "@/types/indicator";
 
 import { Badge } from "@/components/ui/badge";
 
-export function getIndicatorScopeBadgeKey(country: Indicator["country"]): string {
-  return country ? `country-module-${country}-badge` : "country-module-badge-regional";
-}
-
 export function IndicatorScopeBadge({
-  country,
+  module: indicatorModule,
   className,
 }: Readonly<{
-  country: Indicator["country"];
+  module: Indicator["module"];
   className?: string;
 }>) {
   const t = useTranslations();
@@ -30,11 +26,11 @@ export function IndicatorScopeBadge({
       aria-hidden
       className={cn(
         "text-2xs h-4 w-8 shrink-0 justify-center rounded border-transparent px-0 py-0 font-semibold",
-        country ? "text-foreground bg-cyan-200" : "bg-muted text-foreground",
+        indicatorModule ? "text-foreground bg-cyan-200" : "bg-muted text-foreground",
         className,
       )}
     >
-      {t(getIndicatorScopeBadgeKey(country) as Parameters<typeof t>[0])}
+      {indicatorModule?.tag ?? t("country-module-badge-regional")}
     </Badge>
   );
 }

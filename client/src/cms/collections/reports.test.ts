@@ -2,6 +2,8 @@
  * @vitest-environment node
  */
 
+import type { RelationshipField } from "payload";
+
 import { vi } from "vitest";
 
 vi.mock("@/env.mjs", () => ({
@@ -30,6 +32,8 @@ vi.mock("@/cms/auth/authjs-strategy", () => ({
   })),
   logoutEndpoint: { path: "/logout", method: "post", handler: vi.fn() },
 }));
+
+import { findFieldByName } from "@/cms/test-utils/find-field";
 
 import { Reports } from "./Reports";
 
@@ -68,5 +72,17 @@ describe("Reports access", () => {
     };
 
     expect(user.relationTo).toEqual(["users"]);
+  });
+
+  test("records the active country modules as a read-only hasMany relationship", () => {
+    const modules = findFieldByName(Reports.fields, "modules") as RelationshipField;
+
+    expect(modules).toMatchObject({
+      type: "relationship",
+      relationTo: "country-modules",
+      hasMany: true,
+      admin: { readOnly: true },
+    });
+    expect(findFieldByName(Reports.fields, "country")).toMatchObject({ admin: { hidden: true } });
   });
 });

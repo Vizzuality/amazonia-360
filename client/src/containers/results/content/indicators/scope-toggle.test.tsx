@@ -30,28 +30,30 @@ vi.mock("@/app/(frontend)/store", () => ({
   useFormTopics: () => ({ topics: mockTopics(), setTopics: mockSetTopics }),
 }));
 
+const ECU_MODULE = { id: "ecu-module", slug: "ECU", tag: "ECU" };
+
 const ECU_REPLACING_REGIONAL = [
   {
     id: 216,
     name: "Protected Areas (Ecuador module)",
-    country: "ECU",
+    module: ECU_MODULE,
     replaces: { id: "11" },
     visualization_types: ["map", "table", "numeric", "chart"],
   },
   {
     id: 11,
     name: "Protected Areas",
-    country: null,
+    module: null,
     visualization_types: ["map", "table", "numeric", "chart"],
   },
   {
     id: 219,
     name: "Biogeographic Units (Ecuador module)",
-    country: "ECU",
+    module: ECU_MODULE,
     replaces: "17",
     visualization_types: ["map", "table", "numeric", "chart"],
   },
-  { id: 17, name: "Biome Types", country: null, visualization_types: ["map", "numeric", "chart"] },
+  { id: 17, name: "Biome Types", module: null, visualization_types: ["map", "numeric", "chart"] },
 ];
 
 const TOPIC_WITH_THE_ECU_WIDGET = [
@@ -71,7 +73,7 @@ describe("IndicatorScopeToggle", () => {
     renderToggle(<IndicatorScopeToggle indicatorId={216} topicId={1} type="map" />);
 
     expect(screen.getByRole("group")).toHaveAccessibleName(/indicator-scope-toggle/);
-    expect(getOption("country-module-ECU-badge")).toHaveAttribute("aria-pressed", "true");
+    expect(getOption("ECU")).toHaveAttribute("aria-pressed", "true");
     expect(getOption("country-module-badge-regional")).toHaveAttribute("aria-pressed", "false");
     expect(getOption("country-module-badge-regional")).toHaveAccessibleName(/Protected Areas/);
   });
@@ -82,8 +84,8 @@ describe("IndicatorScopeToggle", () => {
     renderToggle(<IndicatorScopeToggle indicatorId={11} topicId={1} type="map" />);
 
     expect(getOption("country-module-badge-regional")).toHaveAttribute("aria-pressed", "true");
-    expect(getOption("country-module-ECU-badge")).toHaveAttribute("aria-pressed", "false");
-    expect(getOption("country-module-ECU-badge")).toHaveAccessibleName(/Ecuador module/);
+    expect(getOption("ECU")).toHaveAttribute("aria-pressed", "false");
+    expect(getOption("ECU")).toHaveAccessibleName(/Ecuador module/);
   });
 
   test("renders nothing for an indicator with no counterpart", () => {
@@ -129,7 +131,7 @@ describe("IndicatorScopeToggle", () => {
 
   test("pressing the side already selected does nothing", async () => {
     renderToggle(<IndicatorScopeToggle indicatorId={216} topicId={1} type="map" />);
-    await userEvent.click(getOption("country-module-ECU-badge"));
+    await userEvent.click(getOption("ECU"));
 
     expect(mockSetTopics).not.toHaveBeenCalled();
   });

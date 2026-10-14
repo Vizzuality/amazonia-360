@@ -40,6 +40,9 @@ vi.mock("@/app/(frontend)/store", async (importOriginal) => {
   return { ...actual, useSyncLocation: () => [null, vi.fn()] };
 });
 vi.mock("@/i18n/use-country", () => ({ useCountry: () => mockUseCountry() }));
+vi.mock("@/lib/country-modules", () => ({
+  useGetCountryModule: () => (mockUseCountry() ? { id: "mod-ecu", slug: mockUseCountry() } : null),
+}));
 vi.mock("@/i18n/navigation", () => ({
   Link: ({ children }: { children: ReactNode }) => <>{children}</>,
 }));
@@ -83,7 +86,7 @@ async function submitReport() {
   const [data] = mockMutateAsync.mock.calls[0];
   return data as {
     topics: { indicators: { id: string; indicator_id: number }[] }[];
-    country: string | null;
+    modules: string[] | null;
   };
 }
 
@@ -114,7 +117,7 @@ describe("ReportGenerate", () => {
     expect(substituted?.indicator_id).toBe(216);
     expect(substituted?.id.replace("row-a-", "")).toMatch(UUID_RE);
     expect(untouched?.indicator_id).toBe(99);
-    expect(data.country).toEqual(["ECU"]);
+    expect(data.modules).toEqual(["mod-ecu"]);
   });
 
   it("keeps the regional indicator when its replacement cannot render the widget's type", async () => {
@@ -139,7 +142,7 @@ describe("ReportGenerate", () => {
 
     expect(indicators.find((i) => i.id.startsWith("row-a-"))?.indicator_id).toBe(11);
     expect(indicators.find((i) => i.id.startsWith("row-b-"))?.indicator_id).toBe(99);
-    expect(data.country).toBeNull();
+    expect(data.modules).toBeNull();
   });
 
   it("routes to the saved report without a module segment in the URL", async () => {

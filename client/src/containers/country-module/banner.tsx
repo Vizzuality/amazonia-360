@@ -7,12 +7,12 @@ import { useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { COUNTRIES, isSavedReportPathname, isUnscopedPathname, stripCountry } from "@/lib/country";
+import { isSavedReportPathname, isUnscopedPathname, stripCountry } from "@/lib/country";
 import { getCountryCoveragePercent } from "@/lib/country/coverage";
+import { useGetActiveModuleSlugs, useGetCountryModule } from "@/lib/country-modules";
 import useIsMounted from "@/lib/mounted";
 
 import { LocaleLink, usePathname } from "@/i18n/navigation";
-import { useCountry } from "@/i18n/use-country";
 
 import { useCountryModuleCoverage } from "./use-coverage";
 
@@ -28,10 +28,9 @@ export default function CountryModuleBanner() {
   const isMounted = useIsMounted();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const country = useCountry();
+  const entry = useGetCountryModule();
+  const liveSlugs = useGetActiveModuleSlugs();
   const { status, ratio } = useCountryModuleCoverage();
-
-  const entry = COUNTRIES.find((candidate) => candidate.code === country);
 
   const isVisible =
     isMounted() && !!entry && !isUnscopedPathname(pathname) && !isSavedReportPathname(pathname);
@@ -56,7 +55,7 @@ export default function CountryModuleBanner() {
 
   if (!isVisible || !entry) return null;
 
-  const moduleName = t(entry.moduleNameKey);
+  const { moduleName } = entry;
   const query = Object.fromEntries(searchParams?.entries() ?? []);
 
   return (
@@ -88,7 +87,7 @@ export default function CountryModuleBanner() {
           )}
         </p>
         <LocaleLink
-          href={{ pathname: stripCountry(pathname), query }}
+          href={{ pathname: stripCountry(pathname, liveSlugs), query }}
           data-testid="country-module-exit"
           className="text-foreground mt-[3.5px] flex h-6 shrink-0 items-center gap-2.5 rounded px-2 text-xs leading-4 font-semibold whitespace-nowrap"
         >

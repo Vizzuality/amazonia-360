@@ -6,9 +6,13 @@ import userEvent from "@testing-library/user-event";
 import { Provider, createStore } from "jotai";
 import { vi } from "vitest";
 
+import type { Partner } from "@/lib/country-modules";
+
 import { tmpBboxAtom } from "@/app/(frontend)/store";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
+
+import { ECU_MODULE, getPartnerFixture } from "@integration/fixtures/country-modules";
 
 import MobileCountrySelector from "./mobile";
 import { useCountryOptions } from "./options";
@@ -18,7 +22,8 @@ import CountrySelector from "./index";
 const mockPathname = vi.fn<() => string>(() => "/reports/grid");
 const mockSearchParams = vi.fn(() => new URLSearchParams());
 const mockCountry = vi.fn<() => string | null>(() => null);
-const mockBoundary = vi.fn<() => Promise<{ extent: { id: string } } | null>>();
+const mockBoundary = vi.fn<(code: string) => Promise<{ extent: { id: string } } | null>>();
+const mockModules = vi.fn<() => (typeof ECU_MODULE)[]>(() => [ECU_MODULE]);
 const mockLocation = vi.fn<() => unknown>(() => null);
 const mockGeometry = vi.fn<() => unknown>(() => null);
 const mockLiveBoundaries = vi.fn<() => unknown>(() => undefined);
@@ -28,7 +33,15 @@ const mockRatio = vi.fn<() => number>(() => 1);
 
 const AREA = { type: "polygon" };
 const AREA_GEOMETRY = { id: "area-geometry" };
-const LIVE_BOUNDARIES = [{ code: "ECU", geometry: { id: "ecu-boundary" } }];
+const LIVE_BOUNDARIES = [{ slug: "ECU", geometry: { id: "ecu-boundary" } }];
+const ECU_PARTNERS: Partner[] = Array.from({ length: 5 }, (_, order) =>
+  getPartnerFixture({
+    id: `partner-${order}`,
+    name: `Partner ${order}`,
+    logo: `/partners/${order}.avif`,
+    moduleIds: [ECU_MODULE.id],
+  }),
+);
 
 vi.mock("@/app/(frontend)/store", async () => {
   const { atom } = await import("jotai");
@@ -53,22 +66,29 @@ vi.mock("@/i18n/use-country", () => ({
   useCountry: () => mockCountry(),
 }));
 
+vi.mock("@/lib/country-modules", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/country-modules")>()),
+  useGetCountryModules: () => mockModules(),
+  useGetPartners: () => ECU_PARTNERS,
+  useGetActiveModuleSlugs: () => ["ECU"],
+}));
+
 const mockIndicators =
-  vi.fn<(args: unknown) => { data: { country: string | null }[] | undefined }>();
+  vi.fn<(args: unknown) => { data: { module: { slug: string } | null }[] | undefined }>();
 
 vi.mock("@/lib/indicators", () => ({
   useGetDefaultIndicators: (args: unknown) => mockIndicators(args),
 }));
 
 vi.mock("@/lib/country/coverage", () => ({
-  useGetLiveCountryBoundaries: (options: unknown) => {
+  useGetLiveCountryBoundaries: (_modules: unknown, options: unknown) => {
     mockLiveOptions(options);
     return { data: mockLiveBoundaries() };
   },
   getCountryCoverageRatio: () => mockRatio(),
   getCountryAmazoniaBoundaryOptions: (code: string) => ({
     queryKey: ["boundary", code],
-    queryFn: () => mockBoundary(),
+    queryFn: () => mockBoundary(code),
   }),
 }));
 
@@ -125,6 +145,7 @@ beforeEach(() => {
   mockPathname.mockReturnValue("/reports/grid");
   mockSearchParams.mockReturnValue(new URLSearchParams("bbox=1,2,3,4&x=1"));
   mockCountry.mockReturnValue(null);
+  mockModules.mockReturnValue([ECU_MODULE]);
   mockBoundary.mockResolvedValue({ extent: { id: "ecu-extent" } });
   mockLocation.mockReturnValue(null);
   mockGeometry.mockReturnValue(null);
@@ -132,7 +153,7 @@ beforeEach(() => {
   mockLiveBoundaries.mockReturnValue(undefined);
   mockRatio.mockReturnValue(1);
   mockIndicators.mockReturnValue({
-    data: [{ country: "ECU" }, { country: "ECU" }, { country: null }],
+    data: [{ module: { slug: "ECU" } }, { module: { slug: "ECU" } }, { module: null }],
   });
 });
 
@@ -271,7 +292,7 @@ describe("CountrySelector (desktop)", () => {
     expect(row.querySelector(".animate-pulse")).toBeInTheDocument();
     expect(row).not.toHaveTextContent("0");
 
-    mockIndicators.mockReturnValue({ data: [{ country: "ECU" }] });
+    mockIndicators.mockReturnValue({ data: [{ module: { slug: "ECU" } }] });
     rerender(<MobileCountrySelector onSelect={vi.fn()} />);
 
     const loaded = screen.getAllByTestId("country-selector-option")[1];
@@ -288,6 +309,16 @@ describe("CountrySelector (desktop)", () => {
 
     await waitFor(() => expect(store.get(tmpBboxAtom)).toEqual({ id: "ecu-extent" }));
     expect(screen.queryByTestId("country-selector-option")).not.toBeInTheDocument();
+  });
+
+  test("pans to the boundary of the module country, not its slug", async () => {
+    mockModules.mockReturnValue([{ ...ECU_MODULE, slug: "bra-para", country: "BRA" }]);
+    const { wrapper } = setup();
+    render(<CountrySelector />, { wrapper });
+    await userEvent.click(screen.getByTestId("country-selector-trigger"));
+    await userEvent.click(screen.getAllByTestId("country-selector-option")[1]);
+
+    await waitFor(() => expect(mockBoundary).toHaveBeenCalledWith("BRA"));
   });
 
   test("a modified click on Ecuador neither pans nor closes the panel", async () => {

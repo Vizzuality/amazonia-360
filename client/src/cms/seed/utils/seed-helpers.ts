@@ -10,7 +10,7 @@ import type { LocalizedValue } from "./types";
  */
 export async function updateLocales<K extends string>(
   payload: Payload,
-  collection: "topics" | "subtopics" | "indicators",
+  collection: "topics" | "subtopics" | "indicators" | "country-modules" | "partners",
   id: string,
   localizedFields: Record<K, LocalizedValue>,
   clearWhenEmpty: readonly NoInfer<K>[] = [],

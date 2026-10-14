@@ -1,6 +1,8 @@
 import { render } from "@testing-library/react";
 import { vi } from "vitest";
 
+import { ECU_MODULE } from "@integration/fixtures/country-modules";
+
 import CountryModuleActivation from "./activation";
 
 const {
@@ -40,6 +42,13 @@ vi.mock("@/i18n/use-country", () => ({
   useCountry: vi.fn(() => mockUseCountry()),
 }));
 
+vi.mock("@/lib/country-modules", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/country-modules")>()),
+  useGetCountryModules: () => [ECU_MODULE],
+  useGetActiveModuleSlugs: () => ["ECU"],
+  useGetCountryModule: () => (mockUseCountry() ? ECU_MODULE : null),
+}));
+
 vi.mock("@/lib/country/coverage", () => ({
   useGetLiveCountryBoundaries: vi.fn(() => ({ data: mockBoundaries() })),
   getCountryCoverageRatio: vi.fn(
@@ -49,7 +58,7 @@ vi.mock("@/lib/country/coverage", () => ({
 }));
 
 const DRAWN_AREA = { type: "polygon" };
-const ONE_LIVE_COUNTRY = [{ code: "ECU", geometry: { ratio: 0.9 } }];
+const ONE_LIVE_COUNTRY = [{ slug: "ECU", geometry: { ratio: 0.9 } }];
 
 describe("CountryModuleActivation", () => {
   beforeEach(() => {
@@ -110,8 +119,8 @@ describe("CountryModuleActivation", () => {
 
   test("picks the module the area covers most when several qualify", () => {
     mockBoundaries.mockReturnValue([
-      { code: "ECU", geometry: { ratio: 0.6 } },
-      { code: "PER", geometry: { ratio: 0.8 } },
+      { slug: "ECU", geometry: { ratio: 0.6 } },
+      { slug: "PER", geometry: { ratio: 0.8 } },
     ]);
     mockIsCountryCoverageDominant.mockImplementation((ratio: number) => ratio > 0.5);
 

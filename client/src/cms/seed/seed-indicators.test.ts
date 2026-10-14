@@ -50,6 +50,7 @@ const fakePayload = () => {
 
   const payload = {
     logger: { warn: (message: string) => warnings.push(message), info: () => {} },
+    find: async () => ({ docs: [{ id: "7", slug: "ECU" }] }),
     findByID: async ({ collection, id }: { collection: string; id: string }) =>
       collection === "subtopics" || existing.has(id) ? { id } : null,
     create: async ({ data }: { data: Record<string, unknown> }) => {
@@ -70,13 +71,22 @@ const dataFor = (written: Written[], id: number) =>
   written.find((entry) => entry.id === String(id))?.data;
 
 describe("seedIndicators", () => {
-  test("writes the country module, and writes it empty for a regional row", async () => {
+  test("writes the module id, and writes it empty for a regional row", async () => {
     const { payload, written } = fakePayload();
 
     await seedIndicators(payload, [row({ id: 11 }), row({ id: 216, country: "ECU" })]);
 
-    expect(dataFor(written, 11)).toMatchObject({ country: null });
-    expect(dataFor(written, 216)).toMatchObject({ country: "ECU" });
+    expect(dataFor(written, 11)).toMatchObject({ module: null });
+    expect(dataFor(written, 216)).toMatchObject({ module: "7" });
+  });
+
+  test("leaves an indicator regional and warns when its module slug is unknown", async () => {
+    const { payload, written, warnings } = fakePayload();
+
+    await seedIndicators(payload, [row({ id: 300, country: "XXX" })]);
+
+    expect(dataFor(written, 300)).toMatchObject({ module: null });
+    expect(warnings).toEqual(["indicators: id 300 names unknown country module XXX, left empty"]);
   });
 
   test("relates a replacement to the regional indicator it names", async () => {

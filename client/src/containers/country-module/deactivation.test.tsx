@@ -3,6 +3,8 @@ import userEvent from "@testing-library/user-event";
 import { getDefaultStore } from "jotai";
 import { vi } from "vitest";
 
+import { ECU_MODULE } from "@integration/fixtures/country-modules";
+
 import CountryModuleActivation from "./activation";
 import CountryModuleDeactivation from "./deactivation";
 import { countryModuleDeactivatedAtom } from "./store";
@@ -53,9 +55,16 @@ vi.mock("@/i18n/use-country", () => ({
   useCountry: vi.fn(() => mockUseCountry()),
 }));
 
+vi.mock("@/lib/country-modules", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/country-modules")>()),
+  useGetCountryModules: () => [ECU_MODULE],
+  useGetActiveModuleSlugs: () => ["ECU"],
+  useGetCountryModule: () => (mockUseCountry() ? ECU_MODULE : null),
+}));
+
 vi.mock("@/lib/country/coverage", () => ({
   useGetCountryAmazoniaBoundary: vi.fn(() => ({ data: mockBoundary() })),
-  useGetLiveCountryBoundaries: vi.fn(() => ({ data: [{ code: "ECU", geometry: {} }] })),
+  useGetLiveCountryBoundaries: vi.fn(() => ({ data: [{ slug: "ECU", geometry: {} }] })),
   getCountryCoverageRatio: vi.fn((geometry: unknown) => mockRatio(geometry)),
   isCountryCoverageDominant: vi.fn((ratio: number) => ratio > 0.5),
 }));
