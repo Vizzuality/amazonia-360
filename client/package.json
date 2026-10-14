@@ -233,7 +233,8 @@
       "postcss>source-map-js": "1.2.2",
       "sass>source-map-js": "1.2.2",
       "magicast>source-map-js": "1.2.2",
-      "pino-pretty>fast-copy": "3.1.0"
+      "pino-pretty>fast-copy": "3.1.0",
+      "ajv>fast-uri": "3.1.8"
     }
   }
 }
