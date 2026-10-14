@@ -14,6 +14,7 @@ import * as migration_20260922_091400_ecu_country_indicators from './20260922_09
 import * as migration_20260923_112441_reports_country from './20260923_112441_reports_country';
 import * as migration_20260925_110019_am_719_amazonian_countries from './20260925_110019_am_719_amazonian_countries';
 import * as migration_20261007_080235_am_740_country_modules_partners from './20261007_080235_am_740_country_modules_partners';
+import * as migration_20261014_134300_payload_3_90_upgrade from './20261014_134300_payload_3_90_upgrade';
 
 export const migrations = [
   {
@@ -94,6 +95,11 @@ export const migrations = [
   {
     up: migration_20261007_080235_am_740_country_modules_partners.up,
     down: migration_20261007_080235_am_740_country_modules_partners.down,
-    name: '20261007_080235_am_740_country_modules_partners'
+    name: '20261007_080235_am_740_country_modules_partners',
+  },
+  {
+    up: migration_20261014_134300_payload_3_90_upgrade.up,
+    down: migration_20261014_134300_payload_3_90_upgrade.down,
+    name: '20261014_134300_payload_3_90_upgrade'
   },
 ];
