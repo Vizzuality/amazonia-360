@@ -153,6 +153,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Detect changes in datum path
+        uses: dorny/paths-filter@0e4a8c6effa4802afeda77dc8d303f8176d7dfad # v3.0.4
+        id: changes
+        with:
+          filters: |
+            datum:
+              - 'client/datum/**'
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
@@ -231,6 +239,8 @@ jobs:
                 - amazonia360-network
               ports:
                 - 3000:3000
+              volumes:
+                - ./datum:/app/datum:ro
               environment:
                 - NODE_ENV=production
                 - AWS_SES_REGION=${AWS_SES_REGION}
@@ -255,6 +265,14 @@ jobs:
             amazonia360-network:
               driver: bridge
           EOF
+
+      - name: Copy datum and flag seed to run
+        if: steps.changes.outputs.datum == 'true'
+        working-directory: infrastructure/source_bundle
+        run: |
+          mkdir -p datum
+          cp ../../client/datum/*.json datum/
+          touch .run-seed
 
       - name: Generate zip file
         working-directory: infrastructure/source_bundle
