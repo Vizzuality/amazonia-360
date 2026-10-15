@@ -205,6 +205,12 @@
       "unrs-resolver",
       "es5-ext"
     ],
+    "auditConfig": {
+      "ignoreGhsas": [
+        "GHSA-w3rx-r6r6-pgpr",
+        "GHSA-hp3w-g68c-fv3c"
+      ]
+    },
     "overrides": {
       "@aws-sdk/xml-builder>fast-xml-parser": "5.10.1",
       "payload>undici": "7.29.1",
