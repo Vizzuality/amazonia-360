@@ -36,6 +36,7 @@ overrides:
   ajv>fast-uri: 3.1.8
   typedoc>markdown-it: 14.3.1
   '@payloadcms/email-nodemailer>nodemailer': 10.1.1
+  '@payloadcms/plugin-import-export>csv-parse': 7.0.3
 
 importers:
 
@@ -5854,8 +5855,8 @@ packages:
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
-  csv-parse@5.6.0:
-    resolution: {integrity: sha512-l3nz3euub2QMg5ouu5U09Ew9Wf6/wQ8I++ch1loQ0ljmzhmfZYrH9fflS22i/PQEvsPvxCwxgz5q7UB8K1JO4Q==}
+  csv-parse@7.0.3:
+    resolution: {integrity: sha512-YFd3QM/yo17vH91L1IOZuvl09zM0zEEtdfTcOCKWcMdM++MNaQSyp09slXyFCLaPXvHstQFx/xC8myiFHSMUvw==}
 
   csv-stringify@6.5.2:
     resolution: {integrity: sha512-RFPahj0sXcmUyjrObAK+DOWtMvMIFV328n4qZJhgX3x2RqkQgOTU2mCUmiFR0CzM6AzChlRSUErjiJeEt8BaQA==}
@@ -13009,7 +13010,7 @@ snapshots:
       '@faceless-ui/modal': 3.0.0(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@payloadcms/translations': 3.90.2
       '@payloadcms/ui': 3.90.2(@types/react@19.2.2)(monaco-editor@0.55.1)(next@16.3.8(@babel/core@7.29.7)(@playwright/test@1.58.2)(@types/node@20.19.23)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.77.4))(payload@3.90.2(graphql@16.11.0)(typescript@5.9.3))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(typescript@5.9.3)
-      csv-parse: 5.6.0
+      csv-parse: 7.0.3
       csv-stringify: 6.5.2
       payload: 3.90.2(graphql@16.11.0)(typescript@5.9.3)
       qs-esm: 8.0.1
@@ -17069,7 +17070,7 @@ snapshots:
 
   csstype@3.2.3: {}
 
-  csv-parse@5.6.0: {}
+  csv-parse@7.0.3: {}
 
   csv-stringify@6.5.2: {}
 
