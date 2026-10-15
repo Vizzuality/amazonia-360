@@ -55,6 +55,10 @@ describe("IndicatorsPartners", () => {
     mockPartners.mockReturnValue(PARTNERS);
   });
 
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("renders the regional logos when no module is active", () => {
     render(<IndicatorsPartners country={null} />);
 
@@ -107,5 +111,13 @@ describe("IndicatorsPartners", () => {
       "href",
       "/partners?country=ECU",
     );
+  });
+
+  it("keeps the logos but drops Learn more while the country-module flag is off", () => {
+    vi.stubEnv("NEXT_PUBLIC_FEATURE_FLAGS", "");
+    render(<IndicatorsPartners country={null} />);
+
+    expect(screen.getByAltText("ACTO ARO")).toBeInTheDocument();
+    expect(screen.queryByTestId("indicators-partners-learn-more")).not.toBeInTheDocument();
   });
 });

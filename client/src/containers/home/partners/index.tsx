@@ -7,6 +7,7 @@ import Image from "next/image";
 
 import { useTranslations } from "next-intl";
 
+import { isFeatureEnabled } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -123,11 +124,13 @@ export default function Partners() {
               <ReactMarkdown>{t("landing-partners-description")}</ReactMarkdown>
             </div>
           </div>
-          <Button asChild variant="outline" size="lg" className="w-fit rounded-lg text-blue-700">
-            <LocaleLink href="/partners" data-testid="landing-partners-see-all">
-              {t("landing-partners-see-all")}
-            </LocaleLink>
-          </Button>
+          {isFeatureEnabled("country-module") && (
+            <Button asChild variant="outline" size="lg" className="w-fit rounded-lg text-blue-700">
+              <LocaleLink href="/partners" data-testid="landing-partners-see-all">
+                {t("landing-partners-see-all")}
+              </LocaleLink>
+            </Button>
+          )}
           {/* <Button size="lg" className="flex max-w-[200px] px-8">
             Become a partner!
           </Button> */}

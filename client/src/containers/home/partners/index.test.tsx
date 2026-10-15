@@ -20,6 +20,10 @@ vi.mock("@/i18n/navigation", () => ({
 }));
 
 describe("Partners", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("links See all partners to the partners page in the same tab", () => {
     render(<Partners />);
 
@@ -27,5 +31,13 @@ describe("Partners", () => {
     expect(link).toHaveAttribute("href", "/partners");
     expect(link).not.toHaveAttribute("target");
     expect(link).toHaveTextContent("landing-partners-see-all");
+  });
+
+  it("hides See all partners while the country-module flag is off", () => {
+    vi.stubEnv("NEXT_PUBLIC_FEATURE_FLAGS", "");
+    render(<Partners />);
+
+    expect(screen.getByAltText("Esri")).toBeInTheDocument();
+    expect(screen.queryByTestId("landing-partners-see-all")).not.toBeInTheDocument();
   });
 });

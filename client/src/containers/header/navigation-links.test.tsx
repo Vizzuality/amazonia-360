@@ -1,5 +1,5 @@
 import { render, screen, within } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import NavigationLinks from "./navigation-links";
 
@@ -17,6 +17,19 @@ vi.mock("@/i18n/navigation", () => {
 describe("NavigationLinks", () => {
   beforeEach(() => {
     mockPathname.mockReset();
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("hides Our partners while the country-module flag is off", () => {
+    vi.stubEnv("NEXT_PUBLIC_FEATURE_FLAGS", "");
+    mockPathname.mockReturnValue("/");
+    render(<NavigationLinks />);
+
+    expect(screen.getByRole("link", { name: "header-report-tool" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "header-partners" })).toBeNull();
   });
 
   it.each(["/", "/partners", "/reports/grid", "/private/profile"])(

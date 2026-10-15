@@ -5,6 +5,7 @@ import { useState } from "react";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { useTranslations } from "next-intl";
 
+import { isFeatureEnabled } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
 
 import MobileCountrySelector from "@/containers/header/country-selector/mobile";
@@ -116,15 +117,17 @@ export default function MobileNavigation({ inline = false }: { inline?: boolean 
             >
               {t("header-report-tool")}
             </Link>
-            <LocaleLink
-              className={cn({
-                "px-6 py-4 text-lg text-blue-900 hover:bg-blue-200 hover:text-blue-500": true,
-                "text-blue-500": pathname === "/partners",
-              })}
-              href="/partners"
-            >
-              {t("header-partners")}
-            </LocaleLink>
+            {isFeatureEnabled("country-module") && (
+              <LocaleLink
+                className={cn({
+                  "px-6 py-4 text-lg text-blue-900 hover:bg-blue-200 hover:text-blue-500": true,
+                  "text-blue-500": pathname === "/partners",
+                })}
+                href="/partners"
+              >
+                {t("header-partners")}
+              </LocaleLink>
+            )}
             {/* <Link
               className={cn({
                 "px-6 py-4 text-lg text-blue-900 hover:bg-blue-200 hover:text-blue-500": true,
