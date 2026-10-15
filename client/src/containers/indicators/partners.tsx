@@ -13,6 +13,7 @@ import {
   useGetCountryModules,
   useGetPartners,
 } from "@/lib/country-modules";
+import { isFeatureEnabled } from "@/lib/feature-flags";
 
 import { Button } from "@/components/ui/button";
 
@@ -34,17 +35,19 @@ export default function IndicatorsPartners({ country }: Readonly<{ country: stri
         <h3 className="text-foreground text-xs font-bold tracking-[0.6px] uppercase">
           {t("country-module-modal-collaboration-title")}
         </h3>
-        <Button asChild variant="ghost" size="sm" className="text-foreground gap-2 px-2">
-          <LocaleLink
-            href={getPartnersHref(countryModule?.slug ?? null)}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-testid="indicators-partners-learn-more"
-          >
-            {t("country-module-partnerships-cta")}
-            <SquareArrowOutUpRight className="size-4" aria-hidden />
-          </LocaleLink>
-        </Button>
+        {isFeatureEnabled("country-module") && (
+          <Button asChild variant="ghost" size="sm" className="text-foreground gap-2 px-2">
+            <LocaleLink
+              href={getPartnersHref(countryModule?.slug ?? null)}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="indicators-partners-learn-more"
+            >
+              {t("country-module-partnerships-cta")}
+              <SquareArrowOutUpRight className="size-4" aria-hidden />
+            </LocaleLink>
+          </Button>
+        )}
       </div>
 
       <ul className="grid grid-cols-3 gap-2">

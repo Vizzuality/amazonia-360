@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
+import { isFeatureEnabled } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
 
 import { Separator } from "@/components/ui/separator";
@@ -35,13 +36,15 @@ export default function NavigationLinks() {
       >
         {t("header-report-tool")}
       </Link>
-      <LocaleLink
-        href="/partners"
-        aria-current={getAriaCurrent(isPartners)}
-        className={getItemClassName(isPartners)}
-      >
-        {t("header-partners")}
-      </LocaleLink>
+      {isFeatureEnabled("country-module") && (
+        <LocaleLink
+          href="/partners"
+          aria-current={getAriaCurrent(isPartners)}
+          className={getItemClassName(isPartners)}
+        >
+          {t("header-partners")}
+        </LocaleLink>
+      )}
       <Separator orientation="vertical" className="h-6" />
     </nav>
   );

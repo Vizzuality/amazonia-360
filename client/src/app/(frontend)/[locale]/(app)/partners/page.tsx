@@ -1,7 +1,11 @@
 import { Metadata } from "next";
 
+import { notFound } from "next/navigation";
+
 import { Locale } from "next-intl";
 import { getTranslations } from "next-intl/server";
+
+import { isFeatureEnabled } from "@/lib/feature-flags";
 
 import Footer from "@/containers/footer";
 import CountryModulePartnerships from "@/containers/partners/country-modules";
@@ -21,6 +25,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 }
 
 export default function PartnersPage() {
+  if (!isFeatureEnabled("country-module")) notFound();
+
   return (
     <main className="relative flex min-h-[calc(100svh-calc(var(--spacing)*16))] flex-col">
       <PartnersHero />

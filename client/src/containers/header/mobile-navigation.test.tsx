@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import MobileNavigation from "./mobile-navigation";
 
@@ -18,7 +18,11 @@ vi.mock("@/containers/header/language-selector/mobile", () => ({ default: () => 
 vi.mock("./logo", () => ({ default: () => null }));
 
 describe("MobileNavigation", () => {
-  it("links to the partners page", async () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("links to the partners page while the country-module flag is on", async () => {
     render(<MobileNavigation />);
     await userEvent.click(screen.getByRole("button", { name: "header-menu-label" }));
 
@@ -26,6 +30,15 @@ describe("MobileNavigation", () => {
       "href",
       "/partners",
     );
+  });
+
+  it("hides the partners link while the country-module flag is off", async () => {
+    vi.stubEnv("NEXT_PUBLIC_FEATURE_FLAGS", "");
+    render(<MobileNavigation />);
+    await userEvent.click(screen.getByRole("button", { name: "header-menu-label" }));
+
+    expect(await screen.findByRole("link", { name: "header-report-tool" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "header-partners" })).toBeNull();
   });
 
   it("keeps the trigger fixed by default and in flow when inline", () => {
