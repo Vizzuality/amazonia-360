@@ -108,6 +108,44 @@ export const DATASETS = {
       ...props,
     }),
   },
+  protected_areas: {
+    layer: {
+      id: "protected_areas",
+      title: "Protected areas",
+      type: "feature",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Protected_Areas/FeatureServer/26",
+    } satisfies LayerProps,
+    legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Protected_Areas/FeatureServer/info/metadata",
+      data: null,
+    },
+    getFeatures: (props?: __esri.QueryProperties) => ({
+      where: "FID is not null",
+      outFields: ["*"],
+      ...props,
+    }),
+  },
+  indigenous_territories: {
+    layer: {
+      id: "indigenous_territories",
+      title: "Indigenous territories",
+      type: "feature",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/arcgis/rest/services/Indigenous_territories/FeatureServer/27",
+    } satisfies LayerProps,
+    legend: null,
+    metadata: {
+      type: "arcgis",
+      url: "https://services6.arcgis.com/sROlVM0rATIYgC6a/ArcGIS/rest/services/Indigenous_territories/FeatureServer/info/metadata",
+      data: null,
+    },
+    getFeatures: (props?: __esri.QueryProperties) => ({
+      where: "FID is not null",
+      outFields: ["*"],
+      ...props,
+    }),
+  },
   acu_knowledge: {
     layer: {
       id: "acu_knowledge",
