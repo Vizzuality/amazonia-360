@@ -118,7 +118,7 @@
     "next-auth": "5.0.0-beta.32",
     "next-intl": "4.9.2",
     "next-navigation-guard": "0.2.0",
-    "nodemailer": "9.1.1",
+    "nodemailer": "10.1.1",
     "numeral": "2.0.6",
     "nuqs": "2.7.2",
     "payload": "3.90.2",
@@ -205,6 +205,12 @@
       "unrs-resolver",
       "es5-ext"
     ],
+    "auditConfig": {
+      "ignoreGhsas": [
+        "GHSA-w3rx-r6r6-pgpr",
+        "GHSA-hp3w-g68c-fv3c"
+      ]
+    },
     "overrides": {
       "@aws-sdk/xml-builder>fast-xml-parser": "5.10.1",
       "payload>undici": "7.29.1",
@@ -235,7 +241,10 @@
       "magicast>source-map-js": "1.2.2",
       "pino-pretty>fast-copy": "3.1.0",
       "ajv>fast-uri": "3.1.8",
-      "typedoc>markdown-it": "14.3.1"
+      "typedoc>markdown-it": "14.3.1",
+      "@payloadcms/email-nodemailer>nodemailer": "10.1.1",
+      "@payloadcms/plugin-import-export>csv-parse": "7.0.3",
+      "@tailwindcss/typography>postcss-selector-parser": "7.1.6"
     }
   }
 }
