@@ -13,12 +13,6 @@
     "splitenv": "node scripts/splitenv.mts .env API CLIENT DATABASE LOAD_TESTS",
     "test:splitenv": "vitest run scripts/splitenv.test.mts"
   },
-  "pnpm": {
-    "overrides": {
-      "brace-expansion@2": "2.1.4",
-      "brace-expansion@5": "5.0.9"
-    }
-  },
   "devDependencies": {
     "@types/node": "22.13.10",
     "@vitest/coverage-v8": "4.1.11",
