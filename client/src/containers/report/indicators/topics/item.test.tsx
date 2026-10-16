@@ -34,13 +34,15 @@ vi.mock("@/containers/report/indicators/subtopics", () => ({ default: () => null
 const topic = { id: 7, name: "Territory", image: "/x.png" } as Topic;
 
 describe("TopicsItem selected count", () => {
-  it("shows 0 when none of the topic's indicators are selected", () => {
+  it("hides the count when none of the topic's indicators are selected", () => {
     mockUseSyncIndicators.mockReturnValue([[99], vi.fn()]);
 
     render(<TopicsItem {...topic} />);
 
-    expect(screen.getByText("grid-sidebar-indicators-topic-selected-count:0")).toBeInTheDocument();
-    expect(screen.getByText("0")).toHaveAttribute("aria-hidden", "true");
+    expect(
+      screen.queryByText(/grid-sidebar-indicators-topic-selected-count/),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("0")).not.toBeInTheDocument();
   });
 
   it("counts only the selected indicators that belong to the topic", () => {
@@ -54,11 +56,13 @@ describe("TopicsItem selected count", () => {
     expect(screen.getByText("2")).toBeInTheDocument();
   });
 
-  it("shows 0 when no indicators are in the URL", () => {
+  it("hides the count when no indicators are in the URL", () => {
     mockUseSyncIndicators.mockReturnValue([null, vi.fn()]);
 
     render(<TopicsItem {...topic} />);
 
-    expect(screen.getByText("grid-sidebar-indicators-topic-selected-count:0")).toBeInTheDocument();
+    expect(
+      screen.queryByText(/grid-sidebar-indicators-topic-selected-count/),
+    ).not.toBeInTheDocument();
   });
 });
