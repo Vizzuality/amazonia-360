@@ -38,10 +38,12 @@ function getCountrySelectorBreakpoint(hasConfirmBar: boolean): "md" | "xl" {
 function getRoutes(pathname: string, params: Params) {
   const { id } = params;
   const r = pathname.match(/^(?:\/[a-z]{2})?\/reports(?:\/(grid|indicators))?\/?$/);
+  const isHome = pathname === "/";
   const isReport = pathname.startsWith("/reports");
   const isReportResults = !!id;
 
   return {
+    isHome,
     isReport,
     isReportResults,
     isReportRoot: !!r && !r[1],
@@ -64,13 +66,15 @@ export default function Header() {
   );
 
   const DYNAMIC_HEADER = useMemo(() => {
-    const { isReportSub } = getRoutes(pathname, params);
+    const { isHome, isReportSub } = getRoutes(pathname, params);
 
     return (
       <>
-        <Media greaterThanOrEqual={linksBreakpoint}>
-          <NavigationLinks />
-        </Media>
+        {isHome && (
+          <Media greaterThanOrEqual={linksBreakpoint}>
+            <NavigationLinks />
+          </Media>
+        )}
         {!location && isReportSub && <DesktopDrawingTools />}
         {location && isReportSub && <ConfirmLocation />}
         {isReportSub && <Separator className="bg-border h-4 w-px" />}
