@@ -87,12 +87,14 @@ export default function TopicsItem({ id, name, image }: TopicsItemProps) {
               <span className="text-sm leading-4 font-bold transition-none">{name}</span>
             </div>
           </div>
-          <Badge variant="secondary" className="rounded-full">
-            <span aria-hidden>{SELECTED}</span>
-            <span className="sr-only">
-              {t("grid-sidebar-indicators-topic-selected-count", { count: SELECTED })}
-            </span>
-          </Badge>
+          {!!SELECTED && (
+            <Badge variant="secondary" className="rounded-full">
+              <span aria-hidden>{SELECTED}</span>
+              <span className="sr-only">
+                {t("grid-sidebar-indicators-topic-selected-count", { count: SELECTED })}
+              </span>
+            </Badge>
+          )}
         </CollapsibleTrigger>
         <CollapsibleContent className="pl-6">
           <SubtopicList topicId={id} />
