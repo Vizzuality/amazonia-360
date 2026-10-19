@@ -75,15 +75,20 @@ class LayerStore:
                 ],
             )
             _write_json(staging / MANIFEST, manifest)
-            if target.exists():
-                shutil.rmtree(retired, ignore_errors=True)
+            shutil.rmtree(retired, ignore_errors=True)
+            had_previous = target.exists()
+            if had_previous:
                 os.rename(target, retired)
-            os.rename(staging, target)
+            try:
+                os.rename(staging, target)
+            except BaseException:
+                if had_previous:
+                    os.rename(retired, target)
+                raise
         except BaseException:
             shutil.rmtree(staging, ignore_errors=True)
             raise
-        finally:
-            shutil.rmtree(retired, ignore_errors=True)
+        shutil.rmtree(retired, ignore_errors=True)
         self._layers.pop(manifest.indicator_id, None)
 
     def manifest(self, indicator_id: int) -> LayerManifest | None:
@@ -112,6 +117,7 @@ class LayerStore:
     ) -> None:
         places = self._root / "places"
         places.mkdir(parents=True, exist_ok=True)
+        (places / MANIFEST).unlink(missing_ok=True)
         fd, tmp = tempfile.mkstemp(dir=places, suffix=".tmp")
         os.close(fd)
         _write_lines(

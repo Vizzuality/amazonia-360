@@ -1,6 +1,8 @@
+import os
 from datetime import UTC, datetime
 from pathlib import Path
 
+import pytest
 from shapely.geometry import box
 
 from mcp_server.store.files import LayerStore
@@ -87,3 +89,38 @@ def test_figures_read_back(tmp_path: Path) -> None:
 
     assert LayerStore(tmp_path).figures(208) == figures
     assert LayerStore(tmp_path).figures(1) is None
+
+
+def test_rewritten_boundaries_do_not_answer_for_the_old_snapshot(
+    tmp_path: Path,
+) -> None:
+    store = LayerStore(tmp_path)
+    store.write_boundaries("A", {"p1": box(0, 0, 1, 1)})
+    store.write_boundaries("B", {"p1": box(2, 2, 3, 3)})
+
+    fresh = LayerStore(tmp_path)
+    assert fresh.boundary("p1", "A") is None
+    found = fresh.boundary("p1", "B")
+    assert found is not None and found.equals(box(2, 2, 3, 3))
+
+
+def test_a_failed_swap_keeps_the_previous_layer(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    store = LayerStore(tmp_path)
+    store.write_layer(_manifest(1), [("old", box(0, 0, 1, 1))])
+    real_rename = os.rename
+
+    def failing(src: str | Path, dst: str | Path) -> None:
+        if Path(dst) == tmp_path / "layers" / "208" and "-new-" in str(src):
+            raise OSError("disk")
+        real_rename(src, dst)
+
+    monkeypatch.setattr(os, "rename", failing)
+    with pytest.raises(OSError):
+        store.write_layer(_manifest(1), [("new", box(5, 5, 6, 6))])
+    monkeypatch.undo()
+
+    copy = LayerStore(tmp_path).layer(208)
+    assert copy is not None
+    assert [c for c, _ in copy.pieces_in(box(-180, -90, 180, 90))] == ["old"]
