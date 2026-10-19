@@ -169,3 +169,15 @@ def test_a_places_failure_prints_a_places_line_and_exits_1(
     out = capsys.readouterr().out
     assert "places: 2 boundaries, 1 skipped" in out
     assert "skipped canton:Napo/Gone: gone" in out
+
+
+def test_rebuild_refuses_an_id_that_is_not_an_area_layer(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    called: list[object] = []
+    monkeypatch.setattr(cli, "_store_step", lambda *args: called.append(args) or True)
+    with pytest.raises(SystemExit) as exit_info:
+        run(monkeypatch, "store", "--store", str(tmp_path), "--rebuild", "999999")
+    assert exit_info.value.code not in (0, None)
+    assert "999999" in str(exit_info.value.code)
+    assert called == []

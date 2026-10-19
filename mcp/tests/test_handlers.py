@@ -35,6 +35,7 @@ class FakeClient:
         self.fail = fail
         self.empty = empty
         self.calls: list[str] = []
+        self.offset: float | str | None = "asked"
 
     async def count(self, layer: Layer, aoi: BaseGeometry) -> int:
         self.calls.append("count")
@@ -51,6 +52,13 @@ class FakeClient:
     ) -> list[Feature]:
         self.calls.append("features")
         return [] if self.empty else [("Bosque", box(-79.0, -2.0, -77.0, 0.0))]
+
+    async def features_with_offset(
+        self, layer: Layer, aoi: BaseGeometry, max_allowable_offset: float
+    ) -> tuple[list[Feature], float | None]:
+        features = await self.features(layer, aoi, max_allowable_offset)
+        offset = max_allowable_offset if self.offset == "asked" else self.offset
+        return features, offset  # type: ignore[return-value]
 
     async def boundary(self, url: str, layer_id: int, where: str) -> list[BaseGeometry]:
         self.calls.append("boundary")
@@ -148,6 +156,14 @@ async def test_area_by_category_is_clipped_not_whole_polygons() -> None:
     assert result.computed_over.type == "clipped_polygons"
     assert result.computed_over.simplification == 0.001
     assert result.timing.vertices_received > 0
+
+
+@pytest.mark.anyio
+async def test_simplification_is_that_of_the_geometry_measured() -> None:
+    client = FakeClient()
+    client.offset = None
+    result = await handlers(client).area_by_category(210, TENA)
+    assert result.computed_over.simplification is None
 
 
 def serve(monkeypatch: pytest.MonkeyPatch, indicator: IndicatorMetadata) -> None:
@@ -744,6 +760,8 @@ def _store(
                 indicator_id=210,
                 layer_last_edit=OCTOBER,
                 places_generated_at=generated_at,
+                copy_built_at=OCTOBER,
+                simplification=0.001,
                 hectares={"canton:Napo/Tena": {"Bosque": 12.5}},
             )
         )
@@ -785,6 +803,7 @@ async def test_area_by_category_answers_from_the_local_copy(
     assert "features" not in client.calls
     assert result.computed_over.source == "local_copy"
     assert result.computed_over.layer_version == OCTOBER
+    assert result.computed_over.simplification == 0.001
     assert isinstance(result.value, dict)
     assert result.value["Bosque"] == pytest.approx(geodesic_area_ha(TENA_BOX))
 

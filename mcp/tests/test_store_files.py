@@ -83,6 +83,8 @@ def test_figures_read_back(tmp_path: Path) -> None:
         indicator_id=208,
         layer_last_edit=None,
         places_generated_at="2026-10-19T10:00:00Z",
+        copy_built_at=datetime(2026, 10, 1, tzinfo=UTC),
+        simplification=0.001,
         hectares={"p1": {"a": 12.5}},
     )
     LayerStore(tmp_path).write_figures(figures)

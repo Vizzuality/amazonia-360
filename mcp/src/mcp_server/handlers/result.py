@@ -16,7 +16,13 @@ class ComputedOver(BaseModel):
     # None when the query does not say how many polygons it read.
     features: int | None = None
     categories: int | None = None
-    simplification: float | None = None
+    simplification: float | None = Field(
+        default=None,
+        description=(
+            "clipped_polygons only: the generalisation, in degrees, of the polygons "
+            "measured; null means full resolution."
+        ),
+    )
     source: SourceName | None = Field(
         default=None,
         description=(

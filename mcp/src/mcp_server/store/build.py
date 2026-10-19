@@ -162,6 +162,8 @@ def _figures(
         indicator_id=indicator_id,
         layer_last_edit=copy.manifest.layer_last_edit,
         places_generated_at=generated_at,
+        copy_built_at=copy.manifest.built_at,
+        simplification=copy.manifest.simplification,
         hectares=hectares,
     )
 

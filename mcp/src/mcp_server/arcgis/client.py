@@ -94,12 +94,19 @@ class ArcGISClient:
     async def features(
         self, layer: Layer, aoi: BaseGeometry, max_allowable_offset: float
     ) -> list[Feature]:
+        features, _ = await self.features_with_offset(layer, aoi, max_allowable_offset)
+        return features
+
+    async def features_with_offset(
+        self, layer: Layer, aoi: BaseGeometry, max_allowable_offset: float
+    ) -> tuple[list[Feature], float | None]:
+        """The features and the offset the geometry was actually generalised with;
+        None when the query was repeated without generalisation."""
         params = {
             **_aoi_filter(aoi),
             **self._feature_params(layer, max_allowable_offset),
         }
-        features, _ = await self._checked_features(layer, params)
-        return features
+        return await self._checked_features(layer, params)
 
     async def layer_features(
         self, layer: Layer, max_allowable_offset: float

@@ -222,7 +222,7 @@ class AreaHandlers:
             type="clipped_polygons",
             features=measurement.features,
             categories=len(measurement.hectares),
-            simplification=self._simplification,
+            simplification=measurement.simplification,
             source=measurement.source,
             layer_version=measurement.layer_version,
         )

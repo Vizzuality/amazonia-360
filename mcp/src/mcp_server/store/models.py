@@ -23,4 +23,8 @@ class PlaceFigures(BaseModel):
     indicator_id: int
     layer_last_edit: datetime | None
     places_generated_at: str
+    # The copy these figures were computed from; figures with no stamp never answer.
+    copy_built_at: datetime | None = None
+    # The offset that copy's geometry was downloaded with; None for full detail.
+    simplification: float | None = None
     hectares: dict[str, dict[str, float]]

@@ -28,10 +28,12 @@ class AreaRequest:
 class Measurement:
     hectares: dict[str, float]
     shapes: list[dict[str, Any]]
-    features: int
+    features: int | None
     vertices_received: int
     source: SourceName
     layer_version: datetime | None
+    # The generalisation of the geometry measured; None for full detail.
+    simplification: float | None
 
 
 class AreaSource(Protocol):
@@ -58,7 +60,7 @@ class ArcGISSource:
         self._simplification = simplification
 
     async def measure(self, request: AreaRequest) -> Measurement | None:
-        features = await self._client.features(
+        features, used = await self._client.features_with_offset(
             request.layer, request.aoi, self._simplification
         )
         # Seconds of GEOS work; on the event loop it would stall every other call.
@@ -72,6 +74,7 @@ class ArcGISSource:
             vertices_received=sum(vertex_count(g) for _, g in features),
             source="arcgis",
             layer_version=None,
+            simplification=used,
         )
 
 
@@ -99,6 +102,7 @@ class LocalCopySource:
             vertices_received=0,
             source="local_copy",
             layer_version=copy.manifest.layer_last_edit,
+            simplification=copy.manifest.simplification,
         )
 
 
@@ -115,9 +119,12 @@ class PrecomputedSource:
         figures = await asyncio.to_thread(self._store.figures, request.indicator.id)
         if figures is None:
             return None
+        manifest = await asyncio.to_thread(self._store.manifest, request.indicator.id)
         edited = request.indicator.sync.layer_last_edit
         if (
-            figures.layer_last_edit != edited
+            manifest is None
+            or figures.copy_built_at != manifest.built_at
+            or figures.layer_last_edit != edited
             or figures.places_generated_at != self._places_generated_at
         ):
             return None
@@ -127,10 +134,11 @@ class PrecomputedSource:
         return Measurement(
             hectares=dict(hectares),
             shapes=[],
-            features=0,
+            features=None,
             vertices_received=0,
             source="precomputed",
             layer_version=figures.layer_last_edit,
+            simplification=figures.simplification,
         )
 
 

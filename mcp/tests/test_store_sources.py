@@ -34,13 +34,14 @@ FEATURES: list[Feature] = [
 
 
 class FakeClient:
-    def __init__(self, features: list[Feature]) -> None:
+    def __init__(self, features: list[Feature], offset: float | None = 0.001) -> None:
         self._features = features
+        self._offset = offset
 
-    async def features(
+    async def features_with_offset(
         self, layer: Layer, aoi: BaseGeometry, max_allowable_offset: float
-    ) -> list[Feature]:
-        return self._features
+    ) -> tuple[list[Feature], float | None]:
+        return self._features, self._offset
 
 
 class Fixed:
@@ -66,28 +67,47 @@ def _request(
 
 
 def _answer(source: SourceName) -> Measurement:
-    return Measurement({"a": 1.0}, [], 0, 0, source, None)
+    return Measurement({"a": 1.0}, [], 0, 0, source, None, 0.001)
 
 
-def _manifest(edit: datetime | None, pieces: int = 1) -> LayerManifest:
+def _manifest(
+    edit: datetime | None,
+    pieces: int = 1,
+    simplification: float | None = 0.001,
+    built_at: datetime = OCTOBER,
+) -> LayerManifest:
     return LayerManifest(
         indicator_id=210,
         layer_last_edit=edit,
-        simplification=0.001,
+        simplification=simplification,
         cell_deg=0.1,
         features=pieces,
         pieces=pieces,
-        built_at=OCTOBER,
+        built_at=built_at,
     )
 
 
-def _figures(edit: datetime | None = OCTOBER, generated_at: str = "g1") -> PlaceFigures:
+def _figures(
+    edit: datetime | None = OCTOBER,
+    generated_at: str = "g1",
+    copy_built_at: datetime | None = OCTOBER,
+) -> PlaceFigures:
     return PlaceFigures(
         indicator_id=210,
         layer_last_edit=edit,
         places_generated_at=generated_at,
+        copy_built_at=copy_built_at,
+        simplification=0.001,
         hectares={"ec-1": {"Bosque": 12.5}},
     )
+
+
+def _store_with_copy(root: Path, built_at: datetime = OCTOBER) -> LayerStore:
+    store = LayerStore(root)
+    store.write_layer(
+        _manifest(OCTOBER, built_at=built_at), [("Bosque", box(-78, -2, -77, 0))]
+    )
+    return store
 
 
 async def test_selector_uses_the_first_source_that_answers() -> None:
@@ -172,7 +192,7 @@ async def test_local_copy_outside_every_piece_is_empty(tmp_path: Path) -> None:
 
 
 async def test_precomputed_needs_a_place_and_no_shapes(tmp_path: Path) -> None:
-    store = LayerStore(tmp_path)
+    store = _store_with_copy(tmp_path)
     store.write_figures(_figures())
     source = PrecomputedSource(store, "g1")
 
@@ -184,17 +204,15 @@ async def test_precomputed_needs_a_place_and_no_shapes(tmp_path: Path) -> None:
     assert measured is not None
     assert measured.hectares == {"Bosque": 12.5}
     assert measured.source == "precomputed"
-    assert (measured.features, measured.shapes, measured.vertices_received) == (
-        0,
-        [],
-        0,
-    )
+    assert measured.features is None
+    assert (measured.shapes, measured.vertices_received) == ([], 0)
+    assert measured.simplification == 0.001
 
 
 async def test_precomputed_steps_aside_on_a_new_places_snapshot(
     tmp_path: Path,
 ) -> None:
-    store = LayerStore(tmp_path)
+    store = _store_with_copy(tmp_path)
     store.write_figures(_figures())
     assert (
         await PrecomputedSource(store, "g2").measure(_request(place_id="ec-1")) is None
@@ -202,7 +220,7 @@ async def test_precomputed_steps_aside_on_a_new_places_snapshot(
 
 
 async def test_precomputed_steps_aside_on_a_new_layer_version(tmp_path: Path) -> None:
-    store = LayerStore(tmp_path)
+    store = _store_with_copy(tmp_path)
     store.write_figures(_figures(SEPTEMBER))
     assert (
         await PrecomputedSource(store, "g1").measure(_request(place_id="ec-1")) is None
@@ -213,3 +231,49 @@ async def test_precomputed_steps_aside_on_a_new_layer_version(tmp_path: Path) ->
         )
         is None
     )
+
+
+async def test_precomputed_steps_aside_when_the_copy_was_rebuilt(
+    tmp_path: Path,
+) -> None:
+    store = _store_with_copy(tmp_path, built_at=datetime(2026, 10, 2, tzinfo=UTC))
+    store.write_figures(_figures(copy_built_at=OCTOBER))
+    source = PrecomputedSource(store, "g1")
+    assert await source.measure(_request(place_id="ec-1")) is None
+
+
+async def test_precomputed_figures_without_a_copy_stamp_do_not_answer(
+    tmp_path: Path,
+) -> None:
+    store = _store_with_copy(tmp_path)
+    store.write_figures(_figures(copy_built_at=None))
+    assert (
+        await PrecomputedSource(store, "g1").measure(_request(place_id="ec-1")) is None
+    )
+
+
+async def test_precomputed_steps_aside_when_there_is_no_copy(tmp_path: Path) -> None:
+    store = LayerStore(tmp_path)
+    store.write_figures(_figures())
+    assert (
+        await PrecomputedSource(store, "g1").measure(_request(place_id="ec-1")) is None
+    )
+
+
+async def test_each_source_reports_the_simplification_it_measured(
+    tmp_path: Path,
+) -> None:
+    pieces = [("Bosque", box(-78, -2, -77, 0))]
+    store = LayerStore(tmp_path)
+    store.write_layer(_manifest(OCTOBER, simplification=None), pieces)
+
+    copy = await LocalCopySource(store).measure(_request())
+    generalised = await ArcGISSource(FakeClient(FEATURES), 0.001).measure(_request())
+    refetched = await ArcGISSource(FakeClient(FEATURES, None), 0.001).measure(
+        _request()
+    )
+
+    assert copy is not None and generalised is not None and refetched is not None
+    assert copy.simplification is None
+    assert generalised.simplification == 0.001
+    assert refetched.simplification is None

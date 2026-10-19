@@ -234,6 +234,24 @@ async def test_features_refetches_without_generalisation_when_a_page_is_in_metre
 
 
 @pytest.mark.anyio
+async def test_features_with_offset_says_which_generalisation_was_used() -> None:
+    def metres_first(request: httpx.Request) -> httpx.Response:
+        if "maxAllowableOffset" in params(request):
+            return httpx.Response(200, json={"features": [metres_feature("B", 2)]})
+        return httpx.Response(200, json={"features": [square_feature("B", -77.8, 2)]})
+
+    def degrees(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json={"features": [square_feature("A", -77.9)]})
+
+    _, refetched = await client_with(metres_first).features_with_offset(
+        LAYER, AOI, 0.001
+    )
+    _, generalised = await client_with(degrees).features_with_offset(LAYER, AOI, 0.001)
+    assert refetched is None
+    assert generalised == 0.001
+
+
+@pytest.mark.anyio
 async def test_features_raises_when_metres_persist() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(200, json={"features": [metres_feature("B", 2)]})

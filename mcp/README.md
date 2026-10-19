@@ -209,8 +209,9 @@ store (`docs/superpowers/evaluations/2026-10-19-mcp-layer-store-measurement.md`)
 | 208 Deforestation 2020-2022 | 5.5 s | 4 ms |
 | 210 Ecosystems | 3.6 s | 21 ms |
 
-A large protected area is still slow: Yasuni on layer 210 takes about 9 s from the copy and
-about 16 s from ArcGIS.
+A drawn area the size of Yasuni is still slow: on layer 210 it takes about 9 s from the copy
+and about 16 s from ArcGIS. Yasuni named by its place id is answered from precomputed figures
+and does not pay that cost.
 
 ## Timing run
 

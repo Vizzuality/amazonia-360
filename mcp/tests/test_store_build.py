@@ -207,6 +207,8 @@ async def test_build_places_writes_boundaries_and_figures(tmp_path: Path) -> Non
     assert figures.places_generated_at == "2026-10-19T00:00:00Z"
     copy = store.layer(1)
     assert copy is not None
+    assert figures.copy_built_at == copy.manifest.built_at
+    assert figures.simplification == copy.manifest.simplification
     expected = clip_area_by_category(boundary, copy.pieces_in(boundary))
     assert figures.hectares == {
         "canton:Napo/Tena": expected,

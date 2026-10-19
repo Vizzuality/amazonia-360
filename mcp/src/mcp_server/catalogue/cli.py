@@ -181,6 +181,13 @@ def _run_store(args: argparse.Namespace) -> None:
         if args.rebuild_all
         else args.rebuild
     )
+    valid = {i.id for i in area_capable(list_indicators())}
+    unknown = sorted(set(only or []) - valid)
+    if unknown:
+        sys.exit(
+            f"Not area-capable layers: {', '.join(map(str, unknown))}. "
+            f"Valid ids: {', '.join(map(str, sorted(valid)))}."
+        )
     if not _store_step(store_path, only, args.cell, args.timeout):
         sys.exit(1)
 
