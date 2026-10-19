@@ -3,7 +3,7 @@
 What the local layer copy changes for `area_by_category`, measured against live ArcGIS Online:
 whether it gives the same figures, which cell size to cut it with, and how much faster it is.
 
-Status: parity, cell size and timing done. Question 19 in Claude Desktop is still to be run.
+Status: parity, cell size, timing and question 19 in Claude Desktop done.
 
 ## Conclusions
 
@@ -176,4 +176,28 @@ seconds; the copy's 9.3 to 9.7 s is about 1 s above the 8.6 s of the cell-size t
 
 ## Question 19 in Claude Desktop
 
-To be run. Total time and number of areas checked, to compare with round 4 of the Desktop trial.
+Run on 19 October 2026 after the final fixes (9ca7299f), with the store rebuilt and Claude
+Desktop restarted. Figures from the call log (`var/calls.jsonl`).
+
+| | Round 4 (ArcGIS only) | With the store |
+|---|---|---|
+| Protected areas checked | 19 of 40 (Yasuní twice) | 36 of 40 |
+| `area_by_category` calls | 20 | 36, all answered by `precomputed` |
+| Tool time, area queries | 138 s | 0.55 s (2 to 118 ms per call) |
+| First call to last | 3 min 15 s | 1 min 38 s |
+
+The remaining 1 min 38 s is the model's own turns, about 2 s between calls, plus one live
+`categories_in_area` on Antisana (5.3 s), which stays on ArcGIS by design. The tool is no longer
+what limits the question; the number of model turns is.
+
+The figures are the same as round 4: Cuyabeno 717.80 ha, Cayambe Coca 714.96 ha. The answer:
+
+- names Cuyabeno and says Cayambe Coca is practically tied, which round 4 did not;
+- skipped four areas smaller than 717 ha, because they could not exceed the leader, and said so.
+  That is a valid cut, unlike round 4's, which left 21 areas unchecked;
+- lists 13 areas, mostly Andean, where the layer has no classes, and explains that this means
+  no records rather than a confirmed zero, but still shows the internal value `not_mapped_here`
+  to the user.
+
+A tool that ranks or compares places in one call (a non-goal of this build) would remove the
+model turns; precomputed figures make it cheap to add.
