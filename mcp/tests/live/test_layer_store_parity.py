@@ -48,14 +48,22 @@ def _place_ids() -> list[str]:
     return list(dict.fromkeys(ids))
 
 
+LIVE_ATTEMPTS = 3
+
+
 async def _live_measure(live: ArcGISSource, request: AreaRequest) -> Measurement:
     # ArcGIS Online drops a connection now and then; that says nothing about parity.
-    try:
-        measurement = await live.measure(request)
-    except ArcGISError:
-        measurement = await live.measure(request)
-    assert measurement is not None
-    return measurement
+    for attempt in range(LIVE_ATTEMPTS):
+        try:
+            measurement = await live.measure(request)
+        except ArcGISError:
+            if attempt == LIVE_ATTEMPTS - 1:
+                raise
+            await asyncio.sleep(2 * (attempt + 1))
+        else:
+            assert measurement is not None
+            return measurement
+    raise AssertionError("unreachable")
 
 
 @pytest.fixture(scope="module")

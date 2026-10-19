@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Protocol
 
-import shapely
 from shapely.geometry import MultiPolygon, Polygon
 from shapely.geometry.base import BaseGeometry
 
@@ -64,13 +63,6 @@ def _check_degrees(features: list[Feature]) -> None:
             )
 
 
-def _simplified(features: list[Feature], tolerance: float) -> list[Feature]:
-    return [
-        (category, shapely.simplify(geom, tolerance, preserve_topology=True))
-        for category, geom in features
-    ]
-
-
 async def _build_layer(
     client: _Client,
     store: LayerStore,
@@ -80,10 +72,7 @@ async def _build_layer(
     simplification: float,
     now: datetime,
 ) -> None:
-    # Downloaded as stored and simplified here: ArcGIS Online's own generalisation
-    # can answer in metres (AM-766) and differs from shapely's.
-    full = await client.layer_features(layer, 0)
-    features = await asyncio.to_thread(_simplified, full, simplification)
+    features = await client.layer_features(layer, simplification)
     _check_degrees(features)
     pieces = await asyncio.to_thread(split_by_grid, features, cell_deg)
     manifest = LayerManifest(
