@@ -60,6 +60,12 @@ Status on 30 September 2026. The service runs in staging only. Designs are in
   server so the model does not combine two results. It is the first candidate if the question
   recurs in the gatekeeper set. It needs a server-side clip and a class filter per layer.
 
+- **Layer geometry cache.** 10 of the 13 module layers hold one feature per class spread over
+  the whole module, so every area query downloads about 300,000 vertices whatever the area. A
+  question over 40 protected areas took 3 min 15 s for half of them (19 October). Download each
+  layer once and clip against it; refresh on catalogue sync. Precomputed figures per named place
+  are what scale to more countries. Details in the D6 question requirements.
+
 ## When needed
 
 - **Sensitive layers.** Before the intangible zones (220) or any indigenous layer become
