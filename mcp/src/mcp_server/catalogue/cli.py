@@ -40,7 +40,12 @@ from mcp_server.geometry.module_sync import (
 )
 from mcp_server.handlers.area import SIMPLIFICATION_DEG
 from mcp_server.places.sync import PlacesSyncError, sync_places
-from mcp_server.store.build import area_capable, build_layers, build_places
+from mcp_server.store.build import (
+    PlacesResult,
+    area_capable,
+    build_layers,
+    build_places,
+)
 from mcp_server.store.files import LayerStore
 from mcp_server.store.split import DEFAULT_CELL_DEG
 
@@ -102,7 +107,7 @@ async def _sync_module(timeout_s: float) -> dict[str, Any]:
 
 async def _refresh_store(
     store_path: Path, only: list[int] | None, cell_deg: float, timeout_s: float
-) -> dict[int, str]:
+) -> tuple[dict[int, str], PlacesResult]:
     """Builds the stale layer copies (or `only`), then the places' boundaries and
     the figures of every layer that has a copy."""
     store = LayerStore(store_path)
@@ -121,17 +126,19 @@ async def _refresh_store(
         with_copy = [
             i.id for i in area_capable(indicators) if store.manifest(i.id) is not None
         ]
-        await build_places(client, store, places.load_places(), with_copy)
-    return results
+        placed = await build_places(client, store, places.load_places(), with_copy)
+    return results, placed
 
 
 def _store_step(
     store_path: Path, only: list[int] | None, cell_deg: float, timeout_s: float
 ) -> bool:
-    results = asyncio.run(_refresh_store(store_path, only, cell_deg, timeout_s))
+    results, placed = asyncio.run(_refresh_store(store_path, only, cell_deg, timeout_s))
     for indicator_id, outcome in results.items():
         print(f"layer {indicator_id}: {outcome}")
-    return all(outcome in ("built", "current") for outcome in results.values())
+    print(f"places: {placed.summary()}")
+    layers_ok = all(outcome in ("built", "current") for outcome in results.values())
+    return layers_ok and placed.ok
 
 
 def _run_sync(args: argparse.Namespace) -> None:

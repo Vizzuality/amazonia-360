@@ -173,6 +173,12 @@ def _places() -> Places:
                     },
                     {
                         **place,
+                        "id": "canton:Napo/Archidona",
+                        "name": "Archidona",
+                        "source": {**source, "where": "archidona"},
+                    },
+                    {
+                        **place,
                         "id": "canton:Napo/Gone",
                         "name": "Gone",
                         "source": {**source, "where": "missing"},
@@ -187,7 +193,10 @@ async def test_build_places_writes_boundaries_and_figures(tmp_path: Path) -> Non
     store = LayerStore(tmp_path)
     await build(store, [make(1, OCTOBER)], FakeClient())
     result = await build_places(FakeClient(), store, _places(), [1])
-    assert result == {1: "built"}
+    assert result.figures == {1: "built"}
+    assert result.boundaries == 2
+    assert list(result.skipped) == ["canton:Napo/Gone"]
+    assert not result.ok
     boundary = store.boundary("canton:Napo/Tena", "2026-10-19T00:00:00Z")
     assert boundary is not None
     assert store.boundary("canton:Napo/Gone", "2026-10-19T00:00:00Z") is None
@@ -198,14 +207,17 @@ async def test_build_places_writes_boundaries_and_figures(tmp_path: Path) -> Non
     copy = store.layer(1)
     assert copy is not None
     expected = clip_area_by_category(boundary, copy.pieces_in(boundary))
-    assert figures.hectares == {"canton:Napo/Tena": expected}
+    assert figures.hectares == {
+        "canton:Napo/Tena": expected,
+        "canton:Napo/Archidona": expected,
+    }
     assert set(expected) == {"Bosque", "Páramo"}
 
 
 async def test_build_places_reports_a_layer_without_a_copy(tmp_path: Path) -> None:
     store = LayerStore(tmp_path)
     result = await build_places(FakeClient(), store, _places(), [9])
-    assert result == {9: "no copy"}
+    assert result.figures == {9: "no copy"}
 
 
 async def test_a_layer_with_projected_coordinates_fails_and_keeps_its_copy(
@@ -219,3 +231,45 @@ async def test_a_layer_with_projected_coordinates_fails_and_keeps_its_copy(
     manifest = store.manifest(1)
     assert manifest is not None
     assert manifest.layer_last_edit == SEPTEMBER
+
+
+class DownClient(FakeClient):
+    async def boundary(self, url: str, layer_id: int, where: str) -> list[BaseGeometry]:
+        raise ArcGISError("network down")
+
+
+async def test_all_boundaries_failing_keeps_the_previous_data(
+    tmp_path: Path,
+) -> None:
+    store = LayerStore(tmp_path)
+    await build(store, [make(1, OCTOBER)], FakeClient())
+    await build_places(FakeClient(), store, _places(), [1])
+    before = store.figures(1)
+    result = await build_places(DownClient(), store, _places(), [1])
+    assert not result.ok
+    assert result.boundaries == 0
+    assert len(result.skipped) == 3
+    assert result.figures == {1: "not built"}
+    assert store.figures(1) == before
+    assert store.boundary("canton:Napo/Tena", "2026-10-19T00:00:00Z") is not None
+
+
+async def test_a_place_that_fails_keeps_its_previous_boundary(tmp_path: Path) -> None:
+    store = LayerStore(tmp_path)
+    await build(store, [make(1, OCTOBER)], FakeClient())
+    await build_places(FakeClient(), store, _places(), [1])
+
+    class TenaDown(FakeClient):
+        async def boundary(
+            self, url: str, layer_id: int, where: str
+        ) -> list[BaseGeometry]:
+            if where == "tena":
+                raise ArcGISError("timeout")
+            return await super().boundary(url, layer_id, where)
+
+    result = await build_places(TenaDown(), store, _places(), [1])
+    assert list(result.skipped) == ["canton:Napo/Gone"]
+    assert store.boundary("canton:Napo/Tena", "2026-10-19T00:00:00Z") is not None
+    figures = store.figures(1)
+    assert figures is not None
+    assert "canton:Napo/Tena" in figures.hectares

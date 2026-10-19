@@ -150,3 +150,22 @@ def test_export_writes_the_joined_catalogue_to_a_file_or_stdout(
     capsys.readouterr()
     run(monkeypatch, "export")
     assert json.loads(capsys.readouterr().out) == cli.exported_catalogue()
+
+
+def test_a_places_failure_prints_a_places_line_and_exits_1(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from mcp_server.store.build import PlacesResult
+
+    async def refresh(*args: Any) -> Any:
+        return {204: "built"}, PlacesResult(
+            2, {"canton:Napo/Gone": "gone"}, {204: "built"}
+        )
+
+    monkeypatch.setattr(cli, "_refresh_store", refresh)
+    with pytest.raises(SystemExit) as exit_info:
+        run(monkeypatch, "store", "--store", str(tmp_path))
+    assert exit_info.value.code == 1
+    out = capsys.readouterr().out
+    assert "places: 2 boundaries, 1 skipped" in out
+    assert "skipped canton:Napo/Gone: gone" in out

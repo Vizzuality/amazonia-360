@@ -1,5 +1,5 @@
 import asyncio
-import logging
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Protocol
 
@@ -15,8 +15,6 @@ from mcp_server.places.geometry import PlaceGeometries
 from mcp_server.store.files import LayerStore
 from mcp_server.store.models import LayerManifest, PlaceFigures
 from mcp_server.store.split import split_by_grid
-
-logger = logging.getLogger(__name__)
 
 BOUNDARY_CONCURRENCY = 4
 
@@ -124,10 +122,11 @@ async def build_layers(
 
 async def _read_boundaries(
     client: _Client, places: Places
-) -> dict[str, Polygon | MultiPolygon]:
+) -> tuple[dict[str, Polygon | MultiPolygon], dict[str, str]]:
     geometries = PlaceGeometries(client)
     gate = asyncio.Semaphore(BOUNDARY_CONCURRENCY)
     boundaries: dict[str, Polygon | MultiPolygon] = {}
+    failures: dict[str, str] = {}
 
     async def read(place_id: str) -> None:
         place = places.get(place_id)
@@ -137,12 +136,13 @@ async def _read_boundaries(
                 geom = await geometries.geometry(place)
                 boundaries[place_id] = check_aoi(geom, max_vertices=None, reach=False)
             except (ArcGISError, AOIError) as exc:
-                logger.warning("place %s skipped: %s", place_id, exc)
+                failures[place_id] = str(exc)
 
     await asyncio.gather(*(read(p.id) for p in places.snapshot.places))
-    return {
+    ordered = {
         p.id: boundaries[p.id] for p in places.snapshot.places if p.id in boundaries
     }
+    return ordered, failures
 
 
 def _figures(
@@ -166,13 +166,42 @@ def _figures(
     )
 
 
+@dataclass
+class PlacesResult:
+    boundaries: int
+    skipped: dict[str, str]
+    figures: dict[int, str]
+
+    @property
+    def ok(self) -> bool:
+        return not self.skipped and all(v == "built" for v in self.figures.values())
+
+    def summary(self) -> str:
+        text = f"{self.boundaries} boundaries, {len(self.skipped)} skipped"
+        for place_id, reason in self.skipped.items():
+            text += f"\n  skipped {place_id}: {reason}"
+        for indicator_id, outcome in self.figures.items():
+            if outcome != "built":
+                text += f"\n  figures {indicator_id}: {outcome}"
+        return text
+
+
 async def build_places(
     client: _Client, store: LayerStore, places: Places, indicator_ids: list[int]
-) -> dict[int, str]:
+) -> PlacesResult:
     """Boundaries of every place once, then each layer's figures from its copy.
-    A place whose boundary cannot be read is left out and logged."""
+
+    A place that cannot be read keeps its previous boundary when the store has one
+    for the same snapshot; with nothing read, the store is left as it was."""
     generated_at = places.snapshot.generated_at
-    boundaries = await _read_boundaries(client, places)
+    boundaries, failures = await _read_boundaries(client, places)
+    if not boundaries and places.snapshot.places:
+        return PlacesResult(0, failures, dict.fromkeys(indicator_ids, "not built"))
+    for place_id in list(failures):
+        kept = await asyncio.to_thread(store.boundary, place_id, generated_at)
+        if kept is not None:
+            boundaries[place_id] = kept
+            del failures[place_id]
     await asyncio.to_thread(store.write_boundaries, generated_at, boundaries)
     results: dict[int, str] = {}
     for indicator_id in indicator_ids:
@@ -184,4 +213,4 @@ async def build_places(
             continue
         await asyncio.to_thread(store.write_figures, figures)
         results[indicator_id] = "built"
-    return results
+    return PlacesResult(len(boundaries), failures, results)
