@@ -401,7 +401,55 @@ git add mcp/tests/live mcp/src/mcp_server/measurement docs/superpowers/evaluatio
 git commit -m "test(mcp): layer store parity against live ArcGIS, and the before-and-after measurement"
 ```
 
-### Task 8: Documentation
+### Task 8: Layer 203, metres inside a degree response (AM-766)
+
+ArcGIS Online returns 3 of layer 203's 4 features in Web Mercator metres when the query carries `maxAllowableOffset`, while the response declares `wkid 4326`. Without `maxAllowableOffset` all four come back in degrees. Today the live `area_by_category` on 203 drops those three classes silently (Tena: only "Alta", 39,584 ha), and the store build refuses the layer.
+
+**Files:**
+- Modify: `mcp/src/mcp_server/arcgis/client.py` (`features`, `layer_features`)
+- Modify: `mcp/src/mcp_server/store/build.py` (download and simplify)
+- Test: `mcp/tests/test_arcgis_client.py`, `mcp/tests/test_store_build.py`
+
+**Interfaces:**
+- Produces: `ArcGISClient.layer_features(layer, max_allowable_offset)` keeps its signature; the build calls it with offset `0` (no generalisation) and simplifies locally with `shapely.simplify(geom, SIMPLIFICATION_DEG, preserve_topology=True)` before splitting. The live `features` call detects a page whose coordinates fall outside lon [-180, 180] / lat [-90, 90] and repeats that query without `maxAllowableOffset`; if the repeat still carries such coordinates it raises `ArcGISError` naming the layer, never returning features in metres.
+
+- [ ] **Step 1: Write the failing tests**
+
+```python
+async def test_features_refetches_without_generalisation_when_a_page_is_in_metres() -> None:
+    # MockTransport: the first request (with maxAllowableOffset) returns one feature
+    # in degrees and one at (-8818325, -548884); the second (without it) returns both
+    # in degrees. Assert 2 requests, the second without maxAllowableOffset, and both
+    # features returned in degrees.
+
+async def test_features_raises_when_metres_persist() -> None:
+    # Both requests return metres -> ArcGISError mentioning the layer url.
+
+async def test_build_downloads_full_resolution_and_simplifies_locally(tmp_path) -> None:
+    # FakeClient.layer_features records its max_allowable_offset; assert it was 0 and
+    # the manifest's simplification is SIMPLIFICATION_DEG.
+```
+
+- [ ] **Step 2: Run them to verify they fail**
+
+Run: `cd mcp && uv run pytest tests/test_arcgis_client.py tests/test_store_build.py -v`
+Expected: the new tests FAIL.
+
+- [ ] **Step 3: Implement** as in Interfaces. Keep `_check_degrees` in the build as the last guard.
+
+- [ ] **Step 4: Verify on the real layer**
+
+Run: `cd mcp && uv run amazonia360-mcp-catalogue store --rebuild 203`, then `area_by_category(203, place_id="canton:Napo/Tena")` with `MCP_AREA_SOURCES=arcgis` and with the default order.
+Expected: 203 builds; both paths return the four classes, within the parity tolerance of Task 7. Record the figures and times in the Task 7 evaluation.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add mcp/src mcp/tests docs/superpowers/evaluations
+git commit -m "fix(mcp): layer 203 keeps its four classes; refetch when ArcGIS answers in metres (AM-766)"
+```
+
+### Task 9: Documentation
 
 **Files:**
 - Modify: `mcp/README.md` (a "Layer store" section: what it is, `amazonia360-mcp-catalogue store`, `MCP_LAYER_STORE`, `MCP_AREA_SOURCES`, that the image build runs `store` and that a new layer version reaches staging with the next deployment)
