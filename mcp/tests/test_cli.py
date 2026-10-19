@@ -61,6 +61,7 @@ def files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Files:
     monkeypatch.setattr(cli, "_sync", returning(SNAPSHOT))
     monkeypatch.setattr(cli, "_sync_places", returning(PLACES))
     monkeypatch.setattr(cli, "_sync_module", returning(OUTLINE))
+    monkeypatch.setattr(cli, "_store_step", lambda *args: True)
     return Files(tmp_path)
 
 
