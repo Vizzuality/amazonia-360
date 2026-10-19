@@ -15,7 +15,6 @@ from mcp_server.arcgis.client import ArcGISClient, ArcGISError
 from mcp_server.catalogue import list_indicators
 from mcp_server.catalogue.models import IndicatorMetadata
 from mcp_server.config import Settings
-from mcp_server.handlers.area import SIMPLIFICATION_DEG
 from mcp_server.places import load_places
 from mcp_server.store.build import area_capable
 from mcp_server.store.files import LayerStore
@@ -85,9 +84,9 @@ def boundaries(store: LayerStore) -> dict[str, Polygon | MultiPolygon]:
 
 
 @pytest.fixture
-async def live() -> AsyncIterator[ArcGISSource]:
+async def arcgis() -> AsyncIterator[ArcGISClient]:
     async with httpx.AsyncClient(timeout=120) as http:
-        yield ArcGISSource(ArcGISClient(http), SIMPLIFICATION_DEG)
+        yield ArcGISClient(http)
 
 
 def test_the_places_to_compare_are_the_ones_the_brief_names() -> None:
@@ -102,12 +101,17 @@ async def test_the_copy_matches_arcgis(
     indicator: IndicatorMetadata,
     store: LayerStore,
     boundaries: dict[str, Polygon | MultiPolygon],
-    live: ArcGISSource,
+    arcgis: ArcGISClient,
 ) -> None:
     layer = indicator.query_layer()
     assert layer is not None
     if store.manifest(indicator.id) is None:
         pytest.skip(f"The store has no copy of layer {indicator.id}.")
+    manifest = store.manifest(indicator.id)
+    assert manifest is not None
+    # The copy is compared with live ArcGIS at the offset it was stored with; 0 sends
+    # no maxAllowableOffset, which is what a copy kept at full detail holds.
+    live = ArcGISSource(arcgis, manifest.simplification or 0)
     local = LocalCopySource(store)
     gate = asyncio.Semaphore(CONCURRENT_QUERIES)
 

@@ -572,3 +572,19 @@ async def test_boundary_keeps_an_enclave_as_a_hole() -> None:
 
     (geom,) = await client_with(handler).boundary(BOUNDARY_URL, 6, "1=1")
     assert geom.area == pytest.approx(12)
+
+
+@pytest.mark.anyio
+async def test_layer_download_reports_the_offset_it_ended_up_with() -> None:
+    def generalised(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json={"features": [square_feature("A", -77.9)]})
+
+    def in_metres(request: httpx.Request) -> httpx.Response:
+        if "maxAllowableOffset" in params(request):
+            return httpx.Response(200, json={"features": [metres_feature("A", 1)]})
+        return generalised(request)
+
+    _, kept = await client_with(generalised).layer_download(LAYER, 0.001)
+    _, refetched = await client_with(in_metres).layer_download(LAYER, 0.001)
+    assert kept == 0.001
+    assert refetched is None

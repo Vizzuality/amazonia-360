@@ -92,6 +92,12 @@ download does get metres, so the copy keeps the layer as stored (30.64 ha, which
 full resolution gives for Tambillo). The tolerance was not changed. Closing it would take
 either always downloading 203 without generalisation on the live path or a rule in the parity test.
 
+ArcGIS's answers for 203 alternate between metres and generalised degrees, so the copy keeps 203 at
+full resolution (its manifest records no offset), and live answers for 203 can differ from it on
+small classes (Tambillo / Alta 27.30 vs 30.64 ha). The parity test compares each layer with live
+ArcGIS at the offset its manifest records, so for 203 it queries without `maxAllowableOffset`;
+with that, 203 passes (4 min 29 s, all 48 places, Tena included).
+
 ### ArcGIS's generalisation against the layer as stored
 
 A property of today's live figures, independent of the store. Tena, hectares:

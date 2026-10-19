@@ -47,14 +47,15 @@ class FakeClient:
         self.features = features or FEATURES
         self.downloads: list[tuple[str, float]] = []
         self._failing = failing or set()
+        self.full_detail = False
 
-    async def layer_features(
+    async def layer_download(
         self, layer: Layer, max_allowable_offset: float
-    ) -> list[Feature]:
+    ) -> tuple[list[Feature], float | None]:
         self.downloads.append((layer.service_url, max_allowable_offset))
         if layer.layer_id in self._failing:
             raise ArcGISError("the service is down")
-        return self.features
+        return self.features, None if self.full_detail else max_allowable_offset
 
     async def boundary(self, url: str, layer_id: int, where: str) -> list[BaseGeometry]:
         if where == "missing":
@@ -228,6 +229,18 @@ async def test_build_downloads_with_the_live_simplification(tmp_path: Path) -> N
     manifest = store.manifest(1)
     assert manifest is not None
     assert manifest.simplification == 0.001
+
+
+async def test_manifest_records_no_offset_when_the_download_was_full_detail(
+    tmp_path: Path,
+) -> None:
+    store = LayerStore(tmp_path)
+    client = FakeClient()
+    client.full_detail = True
+    await build(store, [make(1, OCTOBER)], client)
+    manifest = store.manifest(1)
+    assert manifest is not None
+    assert manifest.simplification is None
 
 
 async def test_a_layer_with_projected_coordinates_fails_and_keeps_its_copy(

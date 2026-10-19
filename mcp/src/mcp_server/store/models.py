@@ -9,7 +9,8 @@ class LayerManifest(BaseModel):
 
     indicator_id: int
     layer_last_edit: datetime | None
-    simplification: float
+    # The maxAllowableOffset the geometry was downloaded with; None for full detail.
+    simplification: float | None
     cell_deg: float
     features: int
     pieces: int

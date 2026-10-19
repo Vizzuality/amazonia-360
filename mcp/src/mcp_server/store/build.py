@@ -20,9 +20,9 @@ BOUNDARY_CONCURRENCY = 4
 
 
 class _Client(Protocol):
-    async def layer_features(
+    async def layer_download(
         self, layer: Layer, max_allowable_offset: float
-    ) -> list[Feature]: ...
+    ) -> tuple[list[Feature], float | None]: ...
 
     async def boundary(
         self, url: str, layer_id: int, where: str
@@ -72,13 +72,13 @@ async def _build_layer(
     simplification: float,
     now: datetime,
 ) -> None:
-    features = await client.layer_features(layer, simplification)
+    features, used_offset = await client.layer_download(layer, simplification)
     _check_degrees(features)
     pieces = await asyncio.to_thread(split_by_grid, features, cell_deg)
     manifest = LayerManifest(
         indicator_id=indicator.id,
         layer_last_edit=indicator.sync.layer_last_edit,
-        simplification=simplification,
+        simplification=used_offset,
         cell_deg=cell_deg,
         features=len(features),
         pieces=len(pieces),
