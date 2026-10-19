@@ -54,6 +54,16 @@ def esri_polygon(aoi: BaseGeometry) -> str:
     return json.dumps({"rings": rings, "spatialReference": {"wkid": 4326}})
 
 
+def _aoi_filter(aoi: BaseGeometry) -> dict[str, str]:
+    return {
+        "where": "1=1",
+        "geometry": esri_polygon(aoi),
+        "geometryType": "esriGeometryPolygon",
+        "inSR": "4326",
+        "spatialRel": "esriSpatialRelIntersects",
+    }
+
+
 class ArcGISClient:
     def __init__(self, http: httpx.AsyncClient) -> None:
         self._http = http
@@ -76,23 +86,40 @@ class ArcGISClient:
     async def features(
         self, layer: Layer, aoi: BaseGeometry, max_allowable_offset: float
     ) -> list[Feature]:
+        params = {
+            **_aoi_filter(aoi),
+            **self._feature_params(layer, max_allowable_offset),
+        }
+        return await self._paged_features(layer, params)
+
+    async def layer_features(
+        self, layer: Layer, max_allowable_offset: float
+    ) -> list[Feature]:
+        """Every feature of the layer, with no geometry filter."""
+        params = {"where": "1=1", **self._feature_params(layer, max_allowable_offset)}
+        return await self._paged_features(layer, params)
+
+    @staticmethod
+    def _feature_params(layer: Layer, max_allowable_offset: float) -> dict[str, str]:
+        return {
+            "outFields": layer.category_field,
+            "returnGeometry": "true",
+            "outSR": "4326",
+            "maxAllowableOffset": str(max_allowable_offset),
+            # Not geojson: ArcGIS Online's GeoJSON turns holes into shells.
+            "f": "json",
+        }
+
+    async def _paged_features(
+        self, layer: Layer, params: dict[str, str]
+    ) -> list[Feature]:
         url = f"{_layer_url(layer)}/query"
         collected: list[Feature] = []
         offset = 0
         first_ids: set[Any] = set()
         for _ in range(MAX_PAGES):
-            body = await self._query(
-                layer,
-                aoi,
-                {
-                    "outFields": layer.category_field,
-                    "returnGeometry": "true",
-                    "outSR": "4326",
-                    "maxAllowableOffset": str(max_allowable_offset),
-                    "resultOffset": str(offset),
-                    # Not geojson: ArcGIS Online's GeoJSON turns holes into shells.
-                    "f": "json",
-                },
+            body = await self._send(
+                "POST", url, data={**params, "resultOffset": str(offset)}
             )
             try:
                 page = body.get("features", [])
@@ -197,16 +224,8 @@ class ArcGISClient:
         self, layer: Layer, aoi: BaseGeometry, extra: dict[str, str]
     ) -> dict[str, Any]:
         url = f"{_layer_url(layer)}/query"
-        params = {
-            "where": "1=1",
-            "geometry": esri_polygon(aoi),
-            "geometryType": "esriGeometryPolygon",
-            "inSR": "4326",
-            "spatialRel": "esriSpatialRelIntersects",
-            **extra,
-        }
         # POST, because an area near the vertex limit does not fit in a URL.
-        return await self._send("POST", url, data=params)
+        return await self._send("POST", url, data={**_aoi_filter(aoi), **extra})
 
     async def histogram(
         self, url: str, aoi: BaseGeometry, rendering_rule: dict[str, Any] | None

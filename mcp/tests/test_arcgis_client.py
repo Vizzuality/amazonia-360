@@ -158,6 +158,45 @@ async def test_features_follow_pagination() -> None:
 
 
 @pytest.mark.anyio
+async def test_layer_features_pages_without_a_geometry_filter() -> None:
+    pages = {
+        "0": {
+            "objectIdFieldName": "FID",
+            "features": [square_feature("A", -77.9, 1), square_feature("B", -77.8, 2)],
+            "exceededTransferLimit": True,
+        },
+        "2": {"objectIdFieldName": "FID", "features": [square_feature("C", -77.7, 3)]},
+    }
+    sent_requests: list[dict[str, str]] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        sent = params(request)
+        sent_requests.append(sent)
+        return httpx.Response(200, json=pages[sent["resultOffset"]])
+
+    features = await client_with(handler).layer_features(LAYER, 0.001)
+    assert [c for c, _ in features] == ["A", "B", "C"]
+    assert len(sent_requests) == 2
+    for sent in sent_requests:
+        assert "geometry" not in sent
+        assert sent["where"] == "1=1"
+        assert sent["maxAllowableOffset"] == "0.001"
+
+
+@pytest.mark.anyio
+async def test_layer_features_skips_null_classes_and_null_geometry() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        no_class = square_feature("A", -77.9)
+        no_class["attributes"]["Ecosistema"] = None
+        no_geometry = {**square_feature("B", -77.8), "geometry": None}
+        kept = square_feature("C", -77.7)
+        return httpx.Response(200, json={"features": [no_class, no_geometry, kept]})
+
+    features = await client_with(handler).layer_features(LAYER, 0.001)
+    assert [c for c, _ in features] == ["C"]
+
+
+@pytest.mark.anyio
 async def test_an_arcgis_error_body_raises() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(
