@@ -34,15 +34,15 @@ Status: parity, cell size and timing done. Question 19 in Claude Desktop is stil
 It reads the store at `MCP_LAYER_STORE` (default `var/layer-store`) and skips with a reason when
 there is none.
 
-- Layers: the 11 with a copy, 204, 206, 208, 209, 210, 211, 214, 217, 218, 219 and 222.
+- Layers: the 12 with a copy, 203, 204, 206, 208, 209, 210, 211, 214, 217, 218, 219 and 222.
 - Places, 48: Pastaza, Tena, the five cantons of Napo (Tena among them), Yasuní, and the 40
   protected areas (Yasuní is one of them, so the list is deduplicated). The area sent to both
   sources is the boundary kept in the store, so the two answer the same polygon.
-- `LocalCopySource` and `ArcGISSource` (simplification 0.001, as the server uses it) are asked
-  for each layer and place. The test requires the same set of classes, and per class
+- `LocalCopySource` and `ArcGISSource` are asked for each layer and place, the latter at the
+  simplification the layer's manifest records (0.001 as the server uses it, none for 203). The test requires the same set of classes, and per class
   `abs(copy - live) <= max(1.0, 0.005 * live)` hectares.
-- Result: 12 passed in 10 min 39 s (the 11 layers and a check on the place list). No class
-  missed the tolerance, so it was not changed.
+- Result: all 12 layers and the check on the place list pass. No class missed the tolerance, so
+  it was not changed. The first run, before 203 had a copy, covered 11 layers (10 min 39 s).
 
 The first run failed once, on layer 206, with `Server disconnected without sending a response` from
 ArcGIS Online. The test now repeats a live query once when ArcGIS errors; the second run was clean.
@@ -84,16 +84,8 @@ whole command. Layer 203 is large because the repeat without generalisation keep
 
 ### Parity with 203 included
 
-`uv run pytest -m live tests/live/test_layer_store_parity.py -v`: **12 passed, 1 failed** in
-22 min 33 s (the 12 layers plus the check on the place list). The live query is now repeated up to
-three times, with 2 and 4 s of wait, when ArcGIS fails; no layer failed on a network error. The
-failure is layer 203, one figure: `protected_area:Tambillo / Alta`, copy 30.64 ha, live 27.30 ha.
-
-The cause is that the repeat depends on the query. For the Tambillo area ArcGIS answers the
-generalised query in degrees, so live keeps the generalised geometry (27.30 ha); the whole-layer
-download does get metres, so the copy keeps the layer as stored (30.64 ha, which is also what
-full resolution gives for Tambillo). The tolerance was not changed. Closing it would take
-either always downloading 203 without generalisation on the live path or a rule in the parity test.
+A first run with 203 failed on one figure (Tambillo / Alta), before the test compared each layer
+at its manifest's simplification.
 
 ArcGIS's answers for 203 alternate between metres and generalised degrees, so the copy keeps 203 at
 full resolution (its manifest records no offset), and live answers for 203 can differ from it on

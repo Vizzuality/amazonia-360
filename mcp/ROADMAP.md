@@ -18,10 +18,9 @@ Status on 30 September 2026. The service runs in staging only. Designs are in
     managed with `amazonia360-mcp-db allow` and `revoke`;
   - state in the `mcp` schema;
   - tested end to end from Claude Code.
-
 - **Layer store:** a local copy of the vector layers and precomputed figures for named places,
-  chosen by a source selector; median `area_by_category` calls went from 3.6-7.2 s to 4-21 ms
-  ([spec](../docs/superpowers/specs/2026-10-19-mcp-layer-store-design.md)).
+  chosen by a source selector; on layers 206, 208 and 210, median `area_by_category` calls went
+  from 3.6-7.2 s to 4-21 ms ([spec](../docs/superpowers/specs/2026-10-19-mcp-layer-store-design.md)).
 
 ## Now
 
@@ -35,9 +34,6 @@ Status on 30 September 2026. The service runs in staging only. Designs are in
 
    Secrets follow the app's path (Terraform, then GitHub secrets). Decide how long the call log
    keeps emails.
-
-   The image build runs the sync and `store`, so the container starts with the layer store and
-   a new layer version reaches staging with the next deployment.
 2. **Phase 3, places and skill**
    ([spec](../docs/superpowers/specs/2026-09-30-mcp-places-and-methodology-design.md)):
    - `find_places` and `place_id` on every area tool;
@@ -58,7 +54,10 @@ Status on 30 September 2026. The service runs in staging only. Designs are in
    area: population, crop production, GDP.
 4. **Gatekeeper evaluation.** The question classifier for the front end, Jev first and Laya
    after, with its own evaluation set. Needs the IDB's view on sending user questions to Jev.
-5. **PostGIS store and update pipeline.** Replace the file copy with tables in the existing
+5. **Layer store in the image.** Decided plan, with the staging deployment: the container image
+   build runs the sync and `store`, and a new layer version reaches staging with the next
+   deployment. There is no `mcp/` Dockerfile yet.
+6. **PostGIS store and update pipeline.** Replace the file copy with tables in the existing
    PostgreSQL, and rebuild a layer on demand after it is uploaded
    (spec, "After the proof of concept"). PostGIS is not on the Tech Radar and needs the team's
    approval first.
