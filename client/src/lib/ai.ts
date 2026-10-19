@@ -1,7 +1,11 @@
 import { useMutation, UseMutationOptions, useQueryClient } from "@tanstack/react-query";
 
 import { getModuleSlugs } from "@/lib/country";
-import { useGetActiveModuleSlugs } from "@/lib/country-modules";
+import {
+  CountryModule,
+  getCountryModulesQueryOptions,
+  useGetActiveModuleSlugs,
+} from "@/lib/country-modules";
 import {
   ClassShare,
   getClassDistribution,
@@ -9,6 +13,7 @@ import {
   hasImageryCoverage,
 } from "@/lib/imagery";
 import { getIndicatorsOptions, getQueryFeatureId, getQueryImageryId } from "@/lib/indicators";
+import { getIndicatorCounterpartMap } from "@/lib/indicators/substitution";
 import { useReportCountry } from "@/lib/report/use-report-country";
 import { roundTo } from "@/lib/utils";
 
@@ -53,6 +58,8 @@ export type IndicatorEvidence = {
   id: number;
   name?: string;
   unit?: string;
+  scope: "regional" | "national";
+  country?: string;
   status: IndicatorEvidenceStatus;
   evidence?: FeatureEvidence | ImageryEvidence;
 };
@@ -176,9 +183,19 @@ const getImageryOutcome = async (
   };
 };
 
+const getCountryField = (
+  module: Indicator["module"],
+  countryNames: ReadonlyMap<string, string>,
+) => {
+  const country = module && countryNames.get(module.slug);
+
+  return country ? { country } : {};
+};
+
 export const getTopicEvidence = async (
   indicators: Indicator[],
   geometry: __esri.Polygon | null,
+  countryNames: ReadonlyMap<string, string> = new Map(),
 ): Promise<TopicEvidence> => {
   // Without an area there is nothing to measure, and an unfiltered `query_ai` would pull whole
   // layers down only for `getQueryFeatureId` to throw them away.
@@ -196,11 +213,18 @@ export const getTopicEvidence = async (
   );
 
   const collected = settled.map((result, index): IndicatorEvidence => {
-    const { id, name, unit } = indicators[index];
+    const { id, name, unit, module } = indicators[index];
     const outcome: EvidenceOutcome =
       result.status === "fulfilled" ? result.value : { status: "unavailable" };
 
-    return { id, name: name || undefined, unit: unit || undefined, ...outcome };
+    return {
+      id,
+      name: name || undefined,
+      unit: unit || undefined,
+      scope: module ? "national" : "regional",
+      ...getCountryField(module, countryNames),
+      ...outcome,
+    };
   });
 
   const supported = collected.filter(({ status }) => status !== "not_supported");
@@ -218,9 +242,28 @@ export const getAISummary = (params: GetAISummaryParams) => {
   return generateDescriptionTextAiPost(params);
 };
 
+/**
+ * With a module the catalogue holds each replaced indicator twice. The widget's own toggle decides
+ * which one the report shows; when neither is on screen the national one speaks for the pair.
+ */
+const getPairFilteredIndicators = (
+  indicators: Indicator[],
+  shown: ReadonlySet<Indicator["id"]>,
+) => {
+  const counterparts = getIndicatorCounterpartMap(indicators);
+
+  return indicators.filter((indicator) => {
+    const counterpart = counterparts.get(indicator.id);
+
+    if (!counterpart || shown.has(indicator.id)) return true;
+    return !shown.has(counterpart.id) && indicator.module !== null;
+  });
+};
+
 type TopicSummaryParams = {
   topic?: Topic;
   options: AISummaryOptions;
+  /** Ids the topic's widgets currently show, after any regional/national toggle. */
   activeIndicators?: Indicator["id"][];
   locale: string;
   location: __esri.Polygon | null;
@@ -229,21 +272,29 @@ type TopicSummaryParams = {
    * each of the nine topics reads one fetch rather than nine.
    */
   loadIndicators: (locale: string) => Promise<Indicator[]>;
+  loadCountryModules: (locale: string) => Promise<readonly CountryModule[]>;
 };
 
 export const getTopicSummary = async (params: TopicSummaryParams) => {
-  const { topic, options, locale, activeIndicators, location, loadIndicators } = params;
+  const { topic, options, locale, activeIndicators, location, loadIndicators, loadCountryModules } =
+    params;
   const only = options?.only_active ? activeIndicators : undefined;
 
-  const allIndicators = await loadIndicators(locale);
+  const [allIndicators, countryModules] = await Promise.all([
+    loadIndicators(locale),
+    loadCountryModules(locale),
+  ]);
 
-  const indicators = allIndicators.filter(
-    (indicator) =>
-      (!topic || indicator.subtopic.topic_id === topic.id) &&
-      (!only || only.includes(indicator.id)),
+  const topicIndicators = allIndicators.filter(
+    (indicator) => !topic || indicator.subtopic.topic_id === topic.id,
   );
 
-  const evidence = await getTopicEvidence(indicators, location);
+  const indicators = only
+    ? topicIndicators.filter((indicator) => only.includes(indicator.id))
+    : getPairFilteredIndicators(topicIndicators, new Set(activeIndicators));
+
+  const countryNames = new Map(countryModules.map(({ slug, name }) => [slug, name]));
+  const evidence = await getTopicEvidence(indicators, location, countryNames);
 
   // Formatting and tone rules live in the API's system prompt (api/src/app/openai_service.py),
   // not here: the client sends measurements, the service decides how to read them.
@@ -261,7 +312,7 @@ export const getTopicSummary = async (params: TopicSummaryParams) => {
   return { ...response, included: evidence.included, total: evidence.total };
 };
 
-type TopicSummaryVariables = Omit<TopicSummaryParams, "loadIndicators">;
+type TopicSummaryVariables = Omit<TopicSummaryParams, "loadIndicators" | "loadCountryModules">;
 
 export type TopicSummaryMutationOptions<TData, TError> = UseMutationOptions<
   Awaited<ReturnType<typeof getTopicSummary>>,
@@ -285,6 +336,8 @@ export const useGetTopicSummary = <
         ...params,
         loadIndicators: (locale) =>
           queryClient.ensureQueryData(getIndicatorsOptions(locale, modules)),
+        loadCountryModules: (locale) =>
+          queryClient.ensureQueryData(getCountryModulesQueryOptions(locale)),
       }),
     ...options,
   });

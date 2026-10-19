@@ -54,7 +54,6 @@ export const ReportTopicHeader = (props: Topic) => {
     onlyActiveIndicators: boolean;
   }) => {
     const activeIndicators = TOPIC_VIEW?.indicators?.map(({ indicator_id }) => indicator_id) || [];
-    const indicatorsToUse = values.onlyActiveIndicators ? activeIndicators : undefined;
 
     summaryMutation.mutate({
       topic: props,
@@ -64,7 +63,7 @@ export const ReportTopicHeader = (props: Topic) => {
         only_active: values.onlyActiveIndicators,
       },
       locale,
-      activeIndicators: indicatorsToUse,
+      activeIndicators,
       location: LOCATION,
     });
   };
