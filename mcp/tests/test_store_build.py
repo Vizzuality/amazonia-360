@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-from shapely.geometry import box
+from shapely.geometry import Polygon, box
 from shapely.geometry.base import BaseGeometry
 
 from mcp_server.arcgis.client import ArcGISError, Feature
@@ -123,7 +123,7 @@ async def test_build_layers_builds_stale_and_skips_current(tmp_path: Path) -> No
     assert manifest.simplification == 0.001
     assert manifest.features == 2
     assert len(client.downloads) == 1
-    assert client.downloads[0][1] == 0.001
+    assert client.downloads[0][1] == 0
 
 
 async def test_only_rebuilds_the_layers_asked_for_even_when_current(
@@ -218,6 +218,31 @@ async def test_build_places_reports_a_layer_without_a_copy(tmp_path: Path) -> No
     store = LayerStore(tmp_path)
     result = await build_places(FakeClient(), store, _places(), [9])
     assert result.figures == {9: "no copy"}
+
+
+async def test_build_downloads_full_resolution_and_simplifies_locally(
+    tmp_path: Path,
+) -> None:
+    store = LayerStore(tmp_path)
+    client = FakeClient()
+    await build(store, [make(1, OCTOBER)], client)
+    assert [offset for _, offset in client.downloads] == [0]
+    manifest = store.manifest(1)
+    assert manifest is not None
+    assert manifest.simplification == 0.001
+
+
+async def test_build_simplifies_the_downloaded_geometry(tmp_path: Path) -> None:
+    store = LayerStore(tmp_path)
+    wiggly = Polygon(
+        [(-77.95, -1.95), (-77.93, -1.9500001), (-77.91, -1.95), (-77.91, -1.91)]
+    )
+    await build(store, [make(1, OCTOBER)], FakeClient(features=[("A", wiggly)]))
+    copy = store.layer(1)
+    assert copy is not None
+    (_, piece), *rest = copy.pieces_in(box(-78, -2, -77.9, -1.9))
+    assert not rest
+    assert len(piece.exterior.coords) == 4
 
 
 async def test_a_layer_with_projected_coordinates_fails_and_keeps_its_copy(

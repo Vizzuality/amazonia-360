@@ -196,6 +196,65 @@ async def test_layer_features_skips_null_classes_and_null_geometry() -> None:
     assert [c for c, _ in features] == ["C"]
 
 
+def metres_feature(category: str, oid: int) -> dict:
+    ring = [
+        [-8818325.0, -548884.0],
+        [-8818325.0, -548784.0],
+        [-8818225.0, -548784.0],
+        [-8818225.0, -548884.0],
+        [-8818325.0, -548884.0],
+    ]
+    return {
+        "geometry": {"rings": [ring]},
+        "attributes": {"Ecosistema": category, "FID": oid},
+    }
+
+
+@pytest.mark.anyio
+async def test_features_refetches_without_generalisation_when_a_page_is_in_metres() -> (
+    None
+):
+    sent_requests: list[dict[str, str]] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        sent = params(request)
+        sent_requests.append(sent)
+        if "maxAllowableOffset" in sent:
+            features = [square_feature("A", -77.9, 1), metres_feature("B", 2)]
+        else:
+            features = [square_feature("A", -77.9, 1), square_feature("B", -77.8, 2)]
+        return httpx.Response(200, json={"features": features})
+
+    features = await client_with(handler).features(LAYER, AOI, 0.001)
+    assert len(sent_requests) == 2
+    assert "maxAllowableOffset" in sent_requests[0]
+    assert "maxAllowableOffset" not in sent_requests[1]
+    assert [c for c, _ in features] == ["A", "B"]
+    assert all(g.bounds[2] < 180 for _, g in features)
+
+
+@pytest.mark.anyio
+async def test_features_raises_when_metres_persist() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json={"features": [metres_feature("B", 2)]})
+
+    with pytest.raises(ArcGISError, match=LAYER.service_url):
+        await client_with(handler).features(LAYER, AOI, 0.001)
+
+
+@pytest.mark.anyio
+async def test_layer_features_with_no_offset_sends_no_generalisation() -> None:
+    sent_requests: list[dict[str, str]] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        sent_requests.append(params(request))
+        return httpx.Response(200, json={"features": [square_feature("A", -77.9)]})
+
+    await client_with(handler).layer_features(LAYER, 0)
+    assert len(sent_requests) == 1
+    assert "maxAllowableOffset" not in sent_requests[0]
+
+
 @pytest.mark.anyio
 async def test_an_arcgis_error_body_raises() -> None:
     def handler(request: httpx.Request) -> httpx.Response:

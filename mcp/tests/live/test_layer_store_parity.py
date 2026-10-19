@@ -28,9 +28,7 @@ from mcp_server.store.sources import (
 
 pytestmark = [pytest.mark.live, pytest.mark.anyio]
 
-# Layer 203 has no copy: ArcGIS serves 3 of its 4 features in Web Mercator metres
-# labelled 4326, and the build refuses it.
-INDICATORS = [i for i in area_capable(list_indicators()) if i.id != 203]
+INDICATORS = area_capable(list_indicators())
 CONCURRENT_QUERIES = 4
 
 

@@ -42,6 +42,14 @@ def _invalid(url: str, what: str) -> ArcGISError:
     return ArcGISError(f"Invalid response from {url}: {what}")
 
 
+def _in_degrees(features: list[Feature]) -> bool:
+    for _, geom in features:
+        min_x, min_y, max_x, max_y = geom.bounds
+        if min_x < -180 or max_x > 180 or min_y < -90 or max_y > 90:
+            return False
+    return True
+
+
 def esri_polygon(aoi: BaseGeometry) -> str:
     polygons = list(aoi.geoms) if isinstance(aoi, MultiPolygon) else [aoi]
     rings: list[list[list[float]]] = []
@@ -90,25 +98,49 @@ class ArcGISClient:
             **_aoi_filter(aoi),
             **self._feature_params(layer, max_allowable_offset),
         }
-        return await self._paged_features(layer, params)
+        return await self._checked_features(layer, params)
 
     async def layer_features(
         self, layer: Layer, max_allowable_offset: float
     ) -> list[Feature]:
-        """Every feature of the layer, with no geometry filter."""
+        """Every feature of the layer, with no geometry filter. An offset of 0 asks
+        for the geometry as stored."""
         params = {"where": "1=1", **self._feature_params(layer, max_allowable_offset)}
-        return await self._paged_features(layer, params)
+        return await self._checked_features(layer, params)
+
+    async def _checked_features(
+        self, layer: Layer, params: dict[str, str]
+    ) -> list[Feature]:
+        """ArcGIS Online can answer a generalised query in Web Mercator metres while
+        declaring 4326 (layer 203, AM-766); the same query without generalisation
+        answers in degrees."""
+        features = await self._paged_features(layer, params)
+        if _in_degrees(features):
+            return features
+        if "maxAllowableOffset" in params:
+            ungeneralised = {
+                k: v for k, v in params.items() if k != "maxAllowableOffset"
+            }
+            features = await self._paged_features(layer, ungeneralised)
+            if _in_degrees(features):
+                return features
+        raise _invalid(
+            f"{_layer_url(layer)}/query",
+            "coordinates outside longitude/latitude range although declared as 4326",
+        )
 
     @staticmethod
     def _feature_params(layer: Layer, max_allowable_offset: float) -> dict[str, str]:
-        return {
+        params = {
             "outFields": layer.category_field,
             "returnGeometry": "true",
             "outSR": "4326",
-            "maxAllowableOffset": str(max_allowable_offset),
             # Not geojson: ArcGIS Online's GeoJSON turns holes into shells.
             "f": "json",
         }
+        if max_allowable_offset > 0:
+            params["maxAllowableOffset"] = str(max_allowable_offset)
+        return params
 
     async def _paged_features(
         self, layer: Layer, params: dict[str, str]
