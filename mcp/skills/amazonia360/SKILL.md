@@ -52,7 +52,7 @@ Never report several of them one after the other without saying why each one is 
 | The user says | Candidates |
 |---|---|
 | biodiversity, nature | Ecosystems (210), Biogeographic Units (219), Flooding Regime (214) |
-| forest | Forest Cover (119) and Land cover (13) give shares of pixels; Carbon by forest stratum (206) gives hectares; Canopy height (129) gives height classes |
+| forest | Answer with Forest Cover (119, GLAD 2024): today's cover, in shares of pixels. Land cover (13) also gives shares. Carbon by forest stratum (206) gives hectares, but it is a carbon stratification without a date: name it as the layer with hectares, never answer "how much forest" with it alone. Canopy height (129) gives height classes |
 | deforestation, forest loss | Deforestation 2020-2022 (208): loss in those years, not today's cover |
 | climate | Climate Types (218), Bioclimates (204), Thermotypes (217) |
 | water | Hydrographic Demarcations (209), Water Recharge Zone (222), Flooding Regime (214) |
