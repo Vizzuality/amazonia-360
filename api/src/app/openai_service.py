@@ -34,6 +34,14 @@ SCALING_RULE = (
     "infer, estimate or invent a value, and never restate a value the data does not contain."
 )
 
+SCOPE_RULE = (
+    "Each indicator carries a `scope`. `regional` figures describe the selected area. `national` "
+    "figures come from a country's own data: attribute them explicitly to the country named in the "
+    "indicator's `country` field and never present them as regional figures. If a national "
+    "indicator has no `country`, call it national data and name no country. When a topic holds "
+    "both, keep them distinguishable in the prose. Indicators without a `scope` are regional."
+)
+
 FORMATTING_RULES = (
     "Write flowing prose. No headings, blockquotes, lists, tables, images, links, code blocks, "
     "horizontal rules or footnotes. Bold the key figures, names and classifications with "
@@ -50,8 +58,9 @@ def generate_description(context_data: dict, description_type: str, language: st
 
     Parameters:
         context_data (dict): Evidence for one topic — an `indicators` array where each entry
-            carries an `id`, `name`, `status` and, when measured, an `evidence` object, plus
-            `indicators_included` / `indicators_total`.
+            carries an `id`, `name`, `status`, `scope` (`regional` or `national`; national entries also
+            carry `country`) and, when measured, an `evidence` object, plus `indicators_included` /
+            `indicators_total`.
         description_type (str): The type of description to generate. Allowed values are:
             - "Short": A concise, executive-style description.
             - "Normal": A standard description.
@@ -68,6 +77,7 @@ def generate_description(context_data: dict, description_type: str, language: st
             f"analysis in the Amazonia region. The summary must be in {language}.\n\n"
             f"{STATUS_RULES}\n\n"
             f"{SCALING_RULE}\n\n"
+            f"{SCOPE_RULE}\n\n"
             f"Length: {LENGTHS.get(description_type, LENGTHS['Normal'])}\n\n"
             f"{FORMATTING_RULES}"
         ),

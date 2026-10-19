@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 from openai.types.chat import ChatCompletion, ChatCompletionMessage
 from openai.types.chat.chat_completion import Choice
 
-from app.openai_service import generate_description
+from app.openai_service import SCOPE_RULE, generate_description
 
 
 def completion(content: str) -> ChatCompletion:
@@ -78,6 +78,19 @@ def test_formatting_and_scaling_rules_live_in_the_prompt(mock_openai):
     assert "No headings, blockquotes, lists, tables" in prompt
     assert "Scale the summary to the evidence." in prompt
     assert "never infer, estimate or invent a value" in prompt
+
+
+@patch("app.openai_service.OpenAI")
+def test_scope_rule_lives_in_the_prompt(mock_openai):
+    client = mock_client(mock_openai)
+
+    generate_description({"indicators": []}, "Normal", "en")
+
+    prompt = system_prompt(client)
+
+    assert SCOPE_RULE in prompt
+    assert "attribute them explicitly to the country named in the indicator's `country` field" in prompt
+    assert "name no country" in prompt
 
 
 @patch("app.openai_service.OpenAI")
