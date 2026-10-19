@@ -118,17 +118,17 @@ class ArcGISClient:
         self, layer: Layer, max_allowable_offset: float
     ) -> tuple[list[Feature], float | None]:
         """Every feature of the layer, with no geometry filter, and the offset the
-        geometry was actually generalised with: None when ArcGIS answered in metres
-        and the query was repeated without generalisation."""
+        geometry was actually generalised with: None when ArcGIS answered in Web
+        Mercator coordinates and the query was repeated without generalisation."""
         params = {"where": "1=1", **self._feature_params(layer, max_allowable_offset)}
         return await self._checked_features(layer, params)
 
     async def _checked_features(
         self, layer: Layer, params: dict[str, str]
     ) -> tuple[list[Feature], float | None]:
-        """ArcGIS Online can answer a generalised query in Web Mercator metres while
-        declaring 4326 (layer 203, AM-766); the same query without generalisation
-        answers in degrees."""
+        """ArcGIS Online can answer a generalised query in Web Mercator coordinates
+        while declaring 4326 (layer 203, AM-766); the same query without
+        generalisation answers in degrees."""
         offset = (
             float(params["maxAllowableOffset"])
             if ("maxAllowableOffset" in params)

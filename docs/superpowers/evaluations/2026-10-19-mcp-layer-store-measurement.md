@@ -11,7 +11,7 @@ Status: parity, cell size, timing and question 19 in Claude Desktop done.
   compares each layer at the simplification its manifest records, and 203, stored at full
   resolution (simplification null), passes on all 48 places, Tambillo and Tena included. Live
   answers for 203 can still differ from the copy on small classes, because ArcGIS alternates
-  between metres and generalised degrees for it (Tambillo / Alta, 27.30 ha live against 30.64 ha
+  between Web Mercator coordinates and generalised WGS84 for it (Tambillo / Alta, 27.30 ha live against 30.64 ha
   in the copy). See "Layer 203".
 - **First run, 11 layers, 48 places:** the same classes in every case, and every class within
   `max(1 ha, 0.5 % of the live figure)`. The second run (below) gave the same for those 11.
@@ -48,12 +48,13 @@ The first run failed once, on layer 206, with `Server disconnected without sendi
 ArcGIS Online. The test now repeats a live query once when ArcGIS errors; the second run was clean.
 
 In that first run layer 203 was excluded: ArcGIS serves 3 of its 4 features in Web Mercator
-metres labelled 4326 when the query carries `maxAllowableOffset`, and the store build refused it.
+coordinates labelled 4326 when the query carries `maxAllowableOffset`, and the store build
+refused it.
 
 ## Layer 203
 
 Cause, checked with curl on 19 October: with `outSR=4326` alone all four features come back in
-degrees; with `outSR=4326&maxAllowableOffset=0.001` three come back in Web Mercator metres (first
+degrees; with `outSR=4326&maxAllowableOffset=0.001` three come back in Web Mercator coordinates (first
 vertex about -8818325, -548884) while the response declares wkid 4326.
 
 Change (AM-766): the live query (`ArcGISClient.features`) and the build's whole-layer download
@@ -87,7 +88,7 @@ whole command. Layer 203 is large because the repeat without generalisation keep
 A first run with 203 failed on one figure (Tambillo / Alta), before the test compared each layer
 at its manifest's simplification.
 
-ArcGIS's answers for 203 alternate between metres and generalised degrees, so the copy keeps 203 at
+ArcGIS's answers for 203 alternate between Web Mercator coordinates and generalised WGS84, so the copy keeps 203 at
 full resolution (its manifest records no offset), and live answers for 203 can differ from it on
 small classes (Tambillo / Alta 27.30 vs 30.64 ha). The parity test compares each layer with live
 ArcGIS at the offset its manifest records, so for 203 it queries without `maxAllowableOffset`;
