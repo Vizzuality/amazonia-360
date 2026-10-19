@@ -7,9 +7,12 @@ Status: parity, cell size and timing done. Question 19 in Claude Desktop is stil
 
 ## Conclusions
 
-- **After layer 203 (AM-766) the copy still gives ArcGIS's figures.** Rebuilt with the same
-  0.001 download as before, and the parity test run on all 12 layers: 11 pass and 203 misses by
-  one figure (Tambillo / Alta, copy 30.64 ha, live 27.30 ha). See "Layer 203".
+- **With layer 203 (AM-766) the copy gives ArcGIS's figures on all 12 layers.** The parity test
+  compares each layer at the simplification its manifest records, and 203, stored at full
+  resolution (simplification null), passes on all 48 places, Tambillo and Tena included. Live
+  answers for 203 can still differ from the copy on small classes, because ArcGIS alternates
+  between metres and generalised degrees for it (Tambillo / Alta, 27.30 ha live against 30.64 ha
+  in the copy). See "Layer 203".
 - **First run, 11 layers, 48 places:** the same classes in every case, and every class within
   `max(1 ha, 0.5 % of the live figure)`. The second run (below) gave the same for those 11.
 - **The ArcGIS-only median `area_by_category` call on the three trial boxes runs from 144 ms to

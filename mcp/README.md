@@ -171,6 +171,47 @@ to read a result. It is installed by hand:
 `tests/test_skill.py` fails when a tool is missing from the skill, or when the skill names an
 indicator that cannot be answered.
 
+## Layer store
+
+A local copy of each module vector layer, split into small pieces, and precomputed hectares
+for every named place. `area_by_category` reads them instead of asking ArcGIS, so an answer
+that took seconds takes milliseconds. The store is generated, never committed.
+
+```bash
+uv run amazonia360-mcp-catalogue store                  # build the layers that changed, then the places
+uv run amazonia360-mcp-catalogue store --rebuild 210    # rebuild one or more layers by id
+uv run amazonia360-mcp-catalogue store --rebuild-all    # rebuild every layer
+```
+
+`store` skips a layer whose copy already matches the catalogue's `layer_last_edit`.
+`--store PATH` overrides the location, and `sync` ends with the same step. A full rebuild takes
+about 5 minutes and the store is about 53 MB.
+
+`MCP_LAYER_STORE` sets where the server reads the store (default `var/layer-store`); it loads
+at start without a network call. `MCP_AREA_SOURCES` lists the sources in order, from
+`precomputed`, `local_copy` and `arcgis` (default: all three). Live ArcGIS always closes the
+list, so without a store, or for a layer with no current copy, the server answers from ArcGIS.
+A copy or a precomputed figure answers only when it was built from the layer version in the
+loaded catalogue.
+
+Every `area_by_category` result says its source and, for the first two, the layer version.
+`class_shares_in_area`, `categories_in_area` and `count_in_area` still ask ArcGIS.
+
+The decided staging plan: the container image build runs the sync and `store`, and a new layer
+version reaches staging with the next deployment.
+
+Measured medians of `area_by_category` over the three trial boxes, ArcGIS only against the
+store (`docs/superpowers/evaluations/2026-10-19-mcp-layer-store-measurement.md`):
+
+| Layer | ArcGIS only | With the store |
+|---|---|---|
+| 206 Carbon by forest stratum | 7.2 s | 11 ms |
+| 208 Deforestation 2020-2022 | 5.5 s | 4 ms |
+| 210 Ecosystems | 3.6 s | 21 ms |
+
+A large protected area is still slow: Yasuni on layer 210 takes about 9 s from the copy and
+about 16 s from ArcGIS.
+
 ## Timing run
 
 `amazonia360-mcp-timing` times every tool on every available indicator over the three fixed
@@ -191,6 +232,8 @@ uv run amazonia360-mcp-timing summary   # per tool and layer: median, max, over 
 |---|---|---|
 | `MCP_CALL_LOG` | `var/calls.jsonl` | One JSON line per tool call, with timing |
 | `ARCGIS_TIMEOUT_S` | `65` | Per-request timeout against ArcGIS; just above ArcGIS Online's own cut at about 59 s |
+| `MCP_LAYER_STORE` | `var/layer-store` | Where the server reads the layer store, and where `store` writes it |
+| `MCP_AREA_SOURCES` | `precomputed,local_copy,arcgis` | Order of the sources for `area_by_category`; `arcgis` always closes it |
 | `MCP_PUBLIC_URL` | *(required over HTTP)* | The server's public URL, e.g. `https://staging.amazoniaforever360.org/mcp` |
 | `MCP_DATABASE_URL` | *(required over HTTP)* | The `mcp` role's connection string |
 | `MCP_GOOGLE_CLIENT_ID` | *(required over HTTP)* | A Google OAuth client of its own, with redirect `…/mcp/oauth/callback` |

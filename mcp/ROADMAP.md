@@ -19,6 +19,10 @@ Status on 30 September 2026. The service runs in staging only. Designs are in
   - state in the `mcp` schema;
   - tested end to end from Claude Code.
 
+- **Layer store:** a local copy of the vector layers and precomputed figures for named places,
+  chosen by a source selector; median `area_by_category` calls went from 3.6-7.2 s to 4-21 ms
+  ([spec](../docs/superpowers/specs/2026-10-19-mcp-layer-store-design.md)).
+
 ## Now
 
 1. **Staging deployment.** A fourth container in the Beanstalk environment. The migration runs
@@ -31,6 +35,9 @@ Status on 30 September 2026. The service runs in staging only. Designs are in
 
    Secrets follow the app's path (Terraform, then GitHub secrets). Decide how long the call log
    keeps emails.
+
+   The image build runs the sync and `store`, so the container starts with the layer store and
+   a new layer version reaches staging with the next deployment.
 2. **Phase 3, places and skill**
    ([spec](../docs/superpowers/specs/2026-09-30-mcp-places-and-methodology-design.md)):
    - `find_places` and `place_id` on every area tool;
@@ -51,6 +58,10 @@ Status on 30 September 2026. The service runs in staging only. Designs are in
    area: population, crop production, GDP.
 4. **Gatekeeper evaluation.** The question classifier for the front end, Jev first and Laya
    after, with its own evaluation set. Needs the IDB's view on sending user questions to Jev.
+5. **PostGIS store and update pipeline.** Replace the file copy with tables in the existing
+   PostgreSQL, and rebuild a layer on demand after it is uploaded
+   (spec, "After the proof of concept"). PostGIS is not on the Tech Radar and needs the team's
+   approval first.
 
 ## To decide
 
@@ -59,12 +70,6 @@ Status on 30 September 2026. The service runs in staging only. Designs are in
 - **Overlap tool.** Questions such as "deforestation inside protected areas", answered by the
   server so the model does not combine two results. It is the first candidate if the question
   recurs in the gatekeeper set. It needs a server-side clip and a class filter per layer.
-
-- **Layer geometry cache.** 10 of the 13 module layers hold one feature per class spread over
-  the whole module, so every area query downloads about 300,000 vertices whatever the area. A
-  question over 40 protected areas took 3 min 15 s for half of them (19 October). Download each
-  layer once and clip against it; refresh on catalogue sync. Precomputed figures per named place
-  are what scale to more countries. Details in the D6 question requirements.
 
 ## When needed
 
