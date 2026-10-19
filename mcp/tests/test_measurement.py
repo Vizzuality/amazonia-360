@@ -62,3 +62,12 @@ def test_an_unwritable_call_log_does_not_raise(
     # A file where the log's directory should be: mkdir fails with an OSError.
     CallLog(blocked / "calls.jsonl").write({"tool": "x"})
     assert "call log not written" in capsys.readouterr().err
+
+
+def test_time_known_only_afterwards_goes_to_the_lap_named_then(clock: Clock) -> None:
+    watch = Stopwatch()
+    started = watch.mark()
+    clock.now += 0.2
+    watch.add_since("store", started)
+    assert watch.ms("store") == 200
+    assert watch.ms("arcgis") == 0

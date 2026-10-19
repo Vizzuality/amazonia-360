@@ -90,3 +90,20 @@ async def test_place_with_no_features_says_to_search_again() -> None:
     geometries = PlaceGeometries(Boundaries([]))  # type: ignore[arg-type]
     with pytest.raises(ArcGISError, match="find_places"):
         await geometries.geometry(TENA)
+
+
+@pytest.mark.anyio
+async def test_a_stored_boundary_is_used_before_any_network_call() -> None:
+    client = Boundaries([box(5, 5, 6, 6)])
+    stored = box(0, 0, 1, 1)
+    geometries = PlaceGeometries(client, stored=lambda _id: stored)  # type: ignore[arg-type]
+    assert (await geometries.geometry(TENA)).equals(stored)
+    assert client.calls == []
+
+
+@pytest.mark.anyio
+async def test_a_place_missing_from_the_store_is_read_from_its_source() -> None:
+    client = Boundaries([box(5, 5, 6, 6)])
+    geometries = PlaceGeometries(client, stored=lambda _id: None)  # type: ignore[arg-type]
+    assert (await geometries.geometry(TENA)).equals(box(5, 5, 6, 6))
+    assert len(client.calls) == 1

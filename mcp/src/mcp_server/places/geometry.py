@@ -1,3 +1,4 @@
+import asyncio
 import time
 from collections.abc import Callable
 from typing import Protocol
@@ -28,21 +29,29 @@ def _polygonal(geom: BaseGeometry) -> Polygon | MultiPolygon:
 
 
 class PlaceGeometries:
-    """Boundaries of places, read from ArcGIS on first use and kept for a day."""
+    """Boundaries of places: from the store when it has them, otherwise read from
+    ArcGIS on first use and kept for a day."""
 
     def __init__(
         self,
         client: _Boundaries,
         *,
+        stored: Callable[[str], Polygon | MultiPolygon | None] | None = None,
         ttl_s: float = DAY_S,
         clock: Callable[[], float] = time.monotonic,
     ) -> None:
         self._client = client
+        self._stored = stored
         self._ttl_s = ttl_s
         self._clock = clock
         self._cache: dict[str, tuple[float, Polygon | MultiPolygon]] = {}
 
     async def geometry(self, place: Place) -> Polygon | MultiPolygon:
+        if self._stored is not None:
+            # The first read decompresses every stored boundary.
+            stored = await asyncio.to_thread(self._stored, place.id)
+            if stored is not None:
+                return stored
         cached = self._cache.get(place.id)
         if cached is not None and self._clock() - cached[0] < self._ttl_s:
             return cached[1]

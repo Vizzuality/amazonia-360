@@ -1,6 +1,13 @@
+from pathlib import Path
+
 import pytest
 
-from mcp_server.config import DEFAULT_REDIRECT_URIS, ConfigError, HttpSettings
+from mcp_server.config import (
+    DEFAULT_REDIRECT_URIS,
+    ConfigError,
+    HttpSettings,
+    Settings,
+)
 
 ENV = {
     "MCP_PUBLIC_URL": "https://staging.amazoniaforever360.org/mcp/",
@@ -64,3 +71,25 @@ def test_refuses_a_public_url_that_is_not_https_with_a_path(url: str) -> None:
 def test_allows_plain_http_on_localhost() -> None:
     s = HttpSettings.from_env({**ENV, "MCP_PUBLIC_URL": "http://localhost:8000/mcp"})
     assert s.public_host == "localhost:8000"
+
+
+def test_settings_read_the_store_path_and_source_order(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("MCP_LAYER_STORE", raising=False)
+    monkeypatch.delenv("MCP_AREA_SOURCES", raising=False)
+    defaults = Settings.from_env()
+    assert defaults.layer_store_path == Path("var/layer-store")
+    assert defaults.area_sources == ("precomputed", "local_copy", "arcgis")
+
+    monkeypatch.setenv("MCP_LAYER_STORE", "/data/store")
+    monkeypatch.setenv("MCP_AREA_SOURCES", "local_copy")
+    s = Settings.from_env()
+    assert s.layer_store_path == Path("/data/store")
+    assert s.area_sources == ("local_copy", "arcgis")
+
+
+def test_an_unknown_area_source_is_refused(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("MCP_AREA_SOURCES", "local_copy, cache")
+    with pytest.raises(ConfigError, match="cache"):
+        Settings.from_env()

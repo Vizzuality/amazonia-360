@@ -3,22 +3,30 @@ import sys
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
+from typing import cast
 from urllib.parse import urlsplit
 
 from pydantic import AnyHttpUrl
+
+from mcp_server.store.sources import SOURCE_NAMES, SourceName
 
 
 @dataclass(frozen=True)
 class Settings:
     call_log_path: Path
     arcgis_timeout_s: float
+    layer_store_path: Path = Path("var/layer-store")
+    area_sources: tuple[SourceName, ...] = SOURCE_NAMES
 
     @classmethod
     def from_env(cls) -> "Settings":
+        sources = os.environ.get("MCP_AREA_SOURCES", "")
         return cls(
             call_log_path=Path(os.environ.get("MCP_CALL_LOG", "var/calls.jsonl")),
             # Just above ArcGIS Online's own ~59 s cut, so its 504 arrives first.
             arcgis_timeout_s=float(os.environ.get("ARCGIS_TIMEOUT_S", "65")),
+            layer_store_path=Path(os.environ.get("MCP_LAYER_STORE", "var/layer-store")),
+            area_sources=_area_sources(sources) if sources.strip() else SOURCE_NAMES,
         )
 
 
@@ -47,6 +55,21 @@ def issuer_url(public_url: str) -> AnyHttpUrl:
 
 def _list(value: str) -> list[str]:
     return [item.strip() for item in value.split(",") if item.strip()]
+
+
+def _area_sources(value: str) -> tuple[SourceName, ...]:
+    names: list[SourceName] = []
+    for item in _list(value):
+        if item not in SOURCE_NAMES:
+            raise ConfigError(
+                f"MCP_AREA_SOURCES: unknown source {item!r}; the sources are "
+                f"{', '.join(SOURCE_NAMES)}"
+            )
+        names.append(cast(SourceName, item))
+    # Live ArcGIS always answers, so it closes the list whatever is asked.
+    if "arcgis" not in names:
+        names.append("arcgis")
+    return tuple(names)
 
 
 @dataclass(frozen=True)

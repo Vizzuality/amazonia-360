@@ -71,7 +71,7 @@ class ArcGISSource:
             features=len(features),
             vertices_received=sum(vertex_count(g) for _, g in features),
             source="arcgis",
-            layer_version=request.indicator.sync.layer_last_edit,
+            layer_version=None,
         )
 
 

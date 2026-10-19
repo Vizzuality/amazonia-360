@@ -11,6 +11,7 @@ from mcp_server.geometry.area import geodesic_area_ha
 from mcp_server.handlers import area as area_handlers_module
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.handlers.errors import HandlerError
+from mcp_server.store import sources as sources_module
 from tests.test_models import indicator
 
 pytestmark = pytest.mark.usefixtures("fixed_catalogue", "stand_in_module")
@@ -116,7 +117,7 @@ async def test_clipping_runs_off_the_event_loop(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     # Seconds of GEOS work on the loop's thread would stall every other call.
-    clip = area_handlers_module.clip_by_category
+    clip = sources_module.clip_by_category
     threads: list[int] = []
 
     def recording_clip(
@@ -125,7 +126,7 @@ async def test_clipping_runs_off_the_event_loop(
         threads.append(threading.get_ident())
         return clip(aoi, features)
 
-    monkeypatch.setattr(area_handlers_module, "clip_by_category", recording_clip)
+    monkeypatch.setattr(sources_module, "clip_by_category", recording_clip)
     await handlers().area_by_category(210, TENA)
     assert threads and threads[0] != threading.get_ident()
 
@@ -694,3 +695,148 @@ async def test_pixel_shares_say_they_are_not_hectares() -> None:
     assert result.computed_over.to_hectares == "do_not_convert"
     by_area = await handlers().area_by_category(210, TENA)
     assert by_area.computed_over.to_hectares is None
+
+
+from datetime import UTC, datetime  # noqa: E402
+from pathlib import Path  # noqa: E402
+
+from mcp_server.store.files import LayerStore  # noqa: E402
+from mcp_server.store.models import LayerManifest, PlaceFigures  # noqa: E402
+from mcp_server.store.sources import (  # noqa: E402
+    ArcGISSource,
+    LocalCopySource,
+    PrecomputedSource,
+    SourceSelector,
+)
+
+OCTOBER = datetime(2026, 10, 1, tzinfo=UTC)
+TENA_BOX = box(-77.9, -1.1, -77.8, -1.0)
+
+
+def _edited(monkeypatch: pytest.MonkeyPatch) -> None:
+    sync = {
+        "sync_status": "ok",
+        "queryable_fields": ["Ecosistema"],
+        "layer_last_edit": OCTOBER,
+    }
+    serve(monkeypatch, indicator(sync))
+
+
+def _store(
+    root: Path, *, copy: bool = True, figures: bool = True, boundary: bool = True
+) -> LayerStore:
+    store = LayerStore(root)
+    generated_at = SNAPSHOT.generated_at
+    if copy:
+        manifest = LayerManifest(
+            indicator_id=210,
+            layer_last_edit=OCTOBER,
+            simplification=0.001,
+            cell_deg=0.1,
+            features=1,
+            pieces=1,
+            built_at=OCTOBER,
+        )
+        store.write_layer(manifest, [("Bosque", box(-79.0, -2.0, -77.0, 0.0))])
+    if figures:
+        store.write_figures(
+            PlaceFigures(
+                indicator_id=210,
+                layer_last_edit=OCTOBER,
+                places_generated_at=generated_at,
+                hectares={"canton:Napo/Tena": {"Bosque": 12.5}},
+            )
+        )
+    if boundary:
+        store.write_boundaries(generated_at, {"canton:Napo/Tena": TENA_BOX})
+    return store
+
+
+def from_store(client: FakeClient, store: LayerStore) -> AreaHandlers:
+    selector = SourceSelector(
+        [
+            PrecomputedSource(store, SNAPSHOT.generated_at),
+            LocalCopySource(store),
+            ArcGISSource(client, 0.001),  # type: ignore[arg-type]
+        ]
+    )
+    return AreaHandlers(
+        client,  # type: ignore[arg-type]
+        places=Places(SNAPSHOT),
+        selector=selector,
+        store=store,
+    )
+
+
+@pytest.mark.anyio
+async def test_area_by_category_reports_the_live_source_by_default() -> None:
+    result = await handlers().area_by_category(210, TENA)
+    assert result.computed_over.source == "arcgis"
+    assert result.computed_over.layer_version is None
+
+
+@pytest.mark.anyio
+async def test_area_by_category_answers_from_the_local_copy(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _edited(monkeypatch)
+    client = FakeClient()
+    result = await from_store(client, _store(tmp_path)).area_by_category(210, TENA)
+    assert "features" not in client.calls
+    assert result.computed_over.source == "local_copy"
+    assert result.computed_over.layer_version == OCTOBER
+    assert isinstance(result.value, dict)
+    assert result.value["Bosque"] == pytest.approx(geodesic_area_ha(TENA_BOX))
+
+
+@pytest.mark.anyio
+async def test_a_named_place_from_precomputed_figures_calls_no_arcgis(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _edited(monkeypatch)
+    client = FakeClient()
+    result = await from_store(client, _store(tmp_path)).area_by_category(
+        210, place_id="canton:Napo/Tena"
+    )
+    assert client.calls == []
+    assert result.computed_over.source == "precomputed"
+    assert result.computed_over.layer_version == OCTOBER
+    assert result.value == {"Bosque": 12.5}
+
+
+@pytest.mark.anyio
+async def test_a_stale_copy_leaves_the_answer_to_arcgis(tmp_path: Path) -> None:
+    # The catalogue's layer has no edit date; the stored copy and figures have one.
+    client = FakeClient()
+    result = await from_store(client, _store(tmp_path)).area_by_category(
+        210, place_id="canton:Napo/Tena"
+    )
+    assert "features" in client.calls
+    assert result.computed_over.source == "arcgis"
+
+
+@pytest.mark.anyio
+async def test_the_map_never_comes_from_precomputed_figures(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _edited(monkeypatch)
+    for copy in (True, False):
+        store = _store(tmp_path / str(copy), copy=copy)
+        handlers = from_store(FakeClient(), store)
+        result, drawn = await handlers.area_by_category_map(
+            210, place_id="canton:Napo/Tena"
+        )
+        assert result.computed_over.source == ("local_copy" if copy else "arcgis")
+        assert drawn.shapes["features"]
+
+
+@pytest.mark.anyio
+async def test_a_live_failure_through_the_selector_is_a_handler_error() -> None:
+    class Failing(FakeClient):
+        async def features(
+            self, layer: Layer, aoi: BaseGeometry, max_allowable_offset: float
+        ) -> list[Feature]:
+            raise ArcGISError("ArcGIS did not respond in time: x")
+
+    with pytest.raises(HandlerError, match="did not respond"):
+        await handlers(Failing()).area_by_category(210, TENA)

@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -5,6 +6,7 @@ from pydantic import BaseModel, Field
 from mcp_server.catalogue.models import RecordCounts
 from mcp_server.geometry.aoi import Coverage
 from mcp_server.places.models import PlaceKind
+from mcp_server.store.sources import SourceName
 
 
 class ComputedOver(BaseModel):
@@ -15,6 +17,23 @@ class ComputedOver(BaseModel):
     features: int | None = None
     categories: int | None = None
     simplification: float | None = None
+    source: SourceName | None = Field(
+        default=None,
+        description=(
+            "clipped_polygons only: where the hectares came from. precomputed: "
+            "figures computed for this place when the layer was copied. "
+            "local_copy: clipped from a copy of the layer kept by the server. "
+            "arcgis: clipped from the layer read live from ArcGIS."
+        ),
+    )
+    layer_version: datetime | None = Field(
+        default=None,
+        description=(
+            "precomputed and local_copy only: the date of the layer version the "
+            "copy was built from, its last edit in ArcGIS. None for arcgis, which "
+            "reads the layer as it is now."
+        ),
+    )
     pixels: int | None = Field(
         default=None,
         description=(
@@ -42,6 +61,7 @@ class ComputedOver(BaseModel):
 class Timing(BaseModel):
     total_ms: int
     arcgis_ms: int
+    store_ms: int = 0
     clip_ms: int = 0
     place_ms: int = 0
     vertices_sent: int

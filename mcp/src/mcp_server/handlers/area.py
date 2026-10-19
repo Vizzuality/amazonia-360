@@ -6,7 +6,7 @@ from typing import Any, Literal
 
 from shapely.geometry import MultiPolygon, Polygon, mapping
 
-from mcp_server.arcgis.client import ArcGISClient, ArcGISError, Feature
+from mcp_server.arcgis.client import ArcGISClient, ArcGISError
 from mcp_server.arcgis.raster import class_counts, class_rule, image_request
 from mcp_server.arcgis.styles import Style, category_styles, join_field
 from mcp_server.catalogue import get_indicator_metadata
@@ -19,12 +19,7 @@ from mcp_server.geometry.aoi import (
     parse_aoi,
     vertex_count,
 )
-from mcp_server.geometry.area import (
-    area_by_category,
-    category_shapes,
-    clip_by_category,
-    geodesic_area_ha,
-)
+from mcp_server.geometry.area import geodesic_area_ha
 from mcp_server.handlers.errors import HandlerError
 from mcp_server.handlers.result import (
     ComputedOver,
@@ -37,12 +32,15 @@ from mcp_server.measurement.stopwatch import Stopwatch
 from mcp_server.places import Places, load_places
 from mcp_server.places.geometry import PlaceGeometries
 from mcp_server.places.models import Place
+from mcp_server.store.files import LayerStore
+from mcp_server.store.sources import ArcGISSource, AreaRequest, SourceSelector
 
 # About 50 m. The page only draws the outline, and Yasuní's full boundary is 941,856
 # bytes of JSON.
 MAP_OUTLINE_TOLERANCE_DEG = 0.0005
 OVERLAP_MIN_HA = 1.0
 OVERLAP_MIN_SHARE = 0.001
+SIMPLIFICATION_DEG = 0.001
 
 
 def _outline(aoi: Polygon | MultiPolygon) -> dict[str, Any]:
@@ -92,14 +90,6 @@ class RasterMap:
     classes: list[dict[str, str]]
 
 
-def _measure(
-    aoi: Polygon | MultiPolygon, features: list[Feature], with_shapes: bool
-) -> tuple[dict[str, float], list[dict[str, Any]]]:
-    pieces = clip_by_category(aoi, features)
-    shapes = category_shapes(pieces) if with_shapes else []
-    return area_by_category(pieces), shapes
-
-
 @dataclass
 class _Prepared:
     indicator: IndicatorMetadata
@@ -126,13 +116,26 @@ class AreaHandlers:
     def __init__(
         self,
         client: ArcGISClient,
-        simplification: float = 0.001,
+        simplification: float = SIMPLIFICATION_DEG,
         places: Places | None = None,
+        selector: SourceSelector | None = None,
+        store: LayerStore | None = None,
     ) -> None:
         self._client = client
         self._simplification = simplification
         self._places = places if places is not None else load_places()
-        self._geometries = PlaceGeometries(client)
+        self._selector = selector or SourceSelector(
+            [ArcGISSource(client, simplification)]
+        )
+        generated_at = self._places.snapshot.generated_at
+        self._geometries = PlaceGeometries(
+            client,
+            stored=(
+                (lambda place_id: store.boundary(place_id, generated_at))
+                if store is not None
+                else None
+            ),
+        )
         # Renderers change with a republish of the service, not between calls.
         self._renderers: dict[str, dict[str, Any] | None] = {}
 
@@ -198,31 +201,37 @@ class AreaHandlers:
         with_map: bool,
     ) -> tuple[Result, CategoryMap | None]:
         p = await self._prepare(indicator_id, area, place_id, "area")
-        with p.watch.lap("arcgis"):
-            query = self._call(
-                self._client.features(p.layer, p.aoi, self._simplification)
-            )
-            if with_map:
-                features, renderer = await asyncio.gather(
-                    query, self._renderer(p.layer)
-                )
-            else:
-                features, renderer = await query, None
-        with p.watch.lap("clip"):
-            # Seconds of GEOS work; on the event loop it would stall every other call.
-            hectares, shapes = await asyncio.to_thread(
-                _measure, p.aoi, features, with_map
-            )
-        received = sum(vertex_count(g) for _, g in features)
+        request = AreaRequest(
+            indicator=p.indicator,
+            layer=p.layer,
+            aoi=p.aoi,
+            place_id=p.place.id if p.place else None,
+            with_shapes=with_map,
+        )
+        started = p.watch.mark()
+        query = self._call(self._selector.measure(request))
+        if with_map:
+            measurement, renderer = await asyncio.gather(query, self._renderer(p.layer))
+        else:
+            measurement, renderer = await query, None
+        # Which source answered is known only now.
+        p.watch.add_since(
+            "arcgis" if measurement.source == "arcgis" else "store", started
+        )
         computed_over = ComputedOver(
             type="clipped_polygons",
-            features=len(features),
-            categories=len(hectares),
+            features=measurement.features,
+            categories=len(measurement.hectares),
             simplification=self._simplification,
+            source=measurement.source,
+            layer_version=measurement.layer_version,
         )
-        result = self._result(p, hectares, "ha", computed_over, received)
+        result = self._result(
+            p, measurement.hectares, "ha", computed_over, measurement.vertices_received
+        )
         if not with_map:
             return result, None
+        shapes = measurement.shapes
         categories = sorted({f["properties"]["category"] for f in shapes})
         styles = await self._styles(p, renderer, categories)
         collection = {"type": "FeatureCollection", "features": shapes}
@@ -446,6 +455,7 @@ class AreaHandlers:
             timing=Timing(
                 total_ms=p.watch.total_ms(),
                 arcgis_ms=p.watch.ms("arcgis"),
+                store_ms=p.watch.ms("store"),
                 clip_ms=p.watch.ms("clip"),
                 place_ms=p.watch.ms("place"),
                 vertices_sent=vertex_count(p.aoi),

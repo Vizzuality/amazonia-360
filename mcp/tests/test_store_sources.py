@@ -147,6 +147,8 @@ async def test_local_copy_matches_the_live_path_on_the_same_features(
     assert copy.vertices_received == 0
     assert live.features == 2 and live.vertices_received > 0
     assert copy.layer_version == OCTOBER
+    # Only a copy has a version; the live layer is whatever ArcGIS holds now.
+    assert live.layer_version is None
 
 
 async def test_local_copy_can_return_shapes(tmp_path: Path) -> None:

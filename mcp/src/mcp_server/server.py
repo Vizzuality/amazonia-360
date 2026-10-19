@@ -8,10 +8,19 @@ from mcp.server.mcpserver import MCPServer
 from mcp_server import __version__
 from mcp_server.arcgis.client import ArcGISClient
 from mcp_server.config import Settings
-from mcp_server.handlers.area import AreaHandlers
+from mcp_server.handlers.area import SIMPLIFICATION_DEG, AreaHandlers
 from mcp_server.maps import register_map_tools
 from mcp_server.measurement.call_log import CallLog
 from mcp_server.places import Places, load_places
+from mcp_server.store.files import LayerStore
+from mcp_server.store.sources import (
+    ArcGISSource,
+    AreaSource,
+    LocalCopySource,
+    PrecomputedSource,
+    SourceName,
+    SourceSelector,
+)
 from mcp_server.tools.area import register_area_tools
 from mcp_server.tools.catalogue import register_catalogue_tools
 from mcp_server.tools.places import register_place_tools
@@ -51,6 +60,22 @@ see it, and do not guess how it looks. Comment on the figures instead.
 """
 
 
+def _selector(
+    names: tuple[SourceName, ...],
+    client: ArcGISClient,
+    store: LayerStore,
+    places: Places,
+) -> SourceSelector:
+    def source(name: SourceName) -> AreaSource:
+        if name == "precomputed":
+            return PrecomputedSource(store, places.snapshot.generated_at)
+        if name == "local_copy":
+            return LocalCopySource(store)
+        return ArcGISSource(client, SIMPLIFICATION_DEG)
+
+    return SourceSelector([source(name) for name in names])
+
+
 def create_mcp_server(
     handlers: AreaHandlers | None = None,
     call_log: CallLog | None = None,
@@ -64,7 +89,14 @@ def create_mcp_server(
     places = places or load_places()
     if handlers is None:
         http = httpx.AsyncClient(timeout=settings.arcgis_timeout_s)
-        handlers = AreaHandlers(ArcGISClient(http), places=places)
+        client = ArcGISClient(http)
+        store = LayerStore(settings.layer_store_path)
+        handlers = AreaHandlers(
+            client,
+            places=places,
+            selector=_selector(settings.area_sources, client, store, places),
+            store=store,
+        )
     call_log = call_log or CallLog(settings.call_log_path)
 
     server = MCPServer(

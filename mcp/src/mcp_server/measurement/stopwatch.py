@@ -14,7 +14,14 @@ class Stopwatch:
         try:
             yield
         finally:
-            self._laps[name] = self._laps.get(name, 0.0) + perf_counter() - started
+            self.add_since(name, started)
+
+    def mark(self) -> float:
+        return perf_counter()
+
+    def add_since(self, name: str, started: float) -> None:
+        """For time whose lap is known only once it has passed."""
+        self._laps[name] = self._laps.get(name, 0.0) + perf_counter() - started
 
     def ms(self, name: str) -> int:
         return round(self._laps.get(name, 0.0) * 1000)

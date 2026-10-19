@@ -136,6 +136,8 @@ async def test_area_tool_returns_the_envelope_and_logs_the_call(
     assert record["ok"] is True
     assert record["user"] is None  # stdio has no caller
     assert record["timing"]["vertices_sent"] == 5
+    assert record["source"] == "arcgis"
+    assert record["layer_version"] is None
 
 
 @pytest.mark.anyio

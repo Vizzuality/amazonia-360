@@ -75,11 +75,18 @@ async def logged_call[T](
         log(False, error=error, elapsed_ms=watch.total_ms())
         raise ToolError(f"Unexpected error in {tool}: {error}") from exc
     result = result_of(out)
+    computed_over = result.computed_over
     log(
         True,
         aoi_ha=result.aoi_ha,
-        features=result.computed_over.features,
-        categories=result.computed_over.categories,
+        features=computed_over.features,
+        categories=computed_over.categories,
+        source=computed_over.source,
+        layer_version=(
+            computed_over.layer_version.isoformat()
+            if computed_over.layer_version
+            else None
+        ),
         timing=result.timing.model_dump(),
     )
     return out
