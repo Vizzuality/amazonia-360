@@ -31,6 +31,8 @@ Follow these on every answer.
      the kind and the province of each. Never pick one yourself.
    - No match: say that only provinces, cantons and protected areas of the module can be named,
      and ask for the area drawn as GeoJSON.
+   - A question over several places, such as the cantons of a province or every protected area:
+     call `list_places` for the ids. Never supply place names from your own knowledge.
 2. **Choose the indicator.** Call `list_indicators` and choose by description.
    `describe_indicator` gives the unit, the provenance and the caveats of one.
 3. **Call the fast tools first.** `categories_in_area`, `count_in_area` and

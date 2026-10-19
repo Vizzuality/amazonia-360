@@ -33,6 +33,7 @@ async def test_exposes_the_tools(tmp_path: Path) -> None:
         "list_indicators",
         "describe_indicator",
         "find_places",
+        "list_places",
         "categories_in_area",
         "count_in_area",
         "area_by_category",
@@ -214,6 +215,17 @@ async def test_find_places(tmp_path: Path) -> None:
     found = result.structured_content["places"]
     assert [p["id"] for p in found] == ["province:Pastaza", "canton:Pastaza/Pastaza"]
     assert "ask the user" in result.structured_content["note"]
+
+
+@pytest.mark.anyio
+async def test_list_places(tmp_path: Path) -> None:
+    async with Client(server(tmp_path)) as client:
+        result = await client.call_tool(
+            "list_places", {"kind": "canton", "province": "Pastaza"}
+        )
+    assert result.structured_content is not None
+    found = result.structured_content["places"]
+    assert found and all(p["province"] == "Pastaza" for p in found)
 
 
 @pytest.mark.anyio

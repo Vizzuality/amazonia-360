@@ -30,6 +30,8 @@ area_by_category is slow and should be called for one indicator at a time.
 A province, canton or protected area of the module can be named instead of drawn:
 find_places returns the places with that name, each with a place_id that every area
 tool takes instead of area. When several places match, ask the user which one.
+list_places gives every place of a kind, or the cantons of one province, for questions
+over several places; take the names from it, never from your own knowledge.
 Provinces and cantons are whole administrative units and often extend beyond the
 module. coverage.outside_ha gives the hectares of the area outside the module: report
 them as outside the module, separately from unclassified land, which counts only land

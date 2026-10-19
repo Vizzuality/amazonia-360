@@ -29,3 +29,21 @@ def register_place_tools(server: MCPServer, places: Places) -> None:
         name. Each match has an id to pass as place_id to any area tool, instead of
         an area. Every match is returned; when there are several, ask the user."""
         return places.find(query, kind)
+
+    @server.tool(annotations=_READ_ONLY)
+    async def list_places(
+        kind: Annotated[PlaceKind, Field(description="The kind of place to list.")],
+        province: Annotated[
+            str | None,
+            Field(
+                min_length=1,
+                max_length=200,
+                description="With kind='canton': only the cantons of this province.",
+            ),
+        ] = None,
+    ) -> PlaceMatches:
+        """Every province, canton or protected area of the Ecuador module, or the
+        cantons of one province. For questions over several places, such as
+        comparing the cantons of a province or ranking the protected areas: call an
+        area tool once per place, with its id as place_id."""
+        return places.of_kind(kind, province)

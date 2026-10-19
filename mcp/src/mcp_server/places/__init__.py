@@ -26,6 +26,11 @@ NO_MATCH = (
     "area as a GeoJSON polygon."
 )
 SEVERAL = "Several places match: ask the user which one before calling a tool."
+NO_PROVINCE = (
+    "No province of the Ecuador module has that name. List the provinces with "
+    "kind='province' to see which ones there are."
+)
+PROVINCE_FILTERS_CANTONS = "province filters cantons only; leave it out for this kind."
 # Longest first, so "provincia de" goes before "provincia".
 _KIND_WORDS = ("provincia del ", "provincia de ", "provincia ", "canton de ", "canton ")
 
@@ -78,6 +83,19 @@ class Places:
         found = sorted(whole, key=_order) + sorted(words, key=_order)
         note = NO_MATCH if not found else SEVERAL if len(found) > 1 else None
         return PlaceMatches(places=[p.summary() for p in found], note=note)
+
+    def of_kind(self, kind: PlaceKind, province: str | None = None) -> PlaceMatches:
+        """Every place of a kind, so a question over all the cantons of a province
+        or all the protected areas does not depend on the model knowing the names."""
+        if province is not None and kind != "canton":
+            return PlaceMatches(places=[], note=PROVINCE_FILTERS_CANTONS)
+        pool = [p for p in self.snapshot.places if p.kind == kind]
+        if province is not None:
+            wanted = _without_kind_word(normalise(province))
+            pool = [p for p in pool if normalise(p.province or "") == wanted]
+            if not pool:
+                return PlaceMatches(places=[], note=NO_PROVINCE)
+        return PlaceMatches(places=[p.summary() for p in sorted(pool, key=_order)])
 
 
 def _order(place: Place) -> tuple[int, str, str]:

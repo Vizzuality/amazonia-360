@@ -82,7 +82,8 @@ Host $host;` in nginx): the server only accepts requests for the host in `MCP_PU
 ## Places
 
 `find_places` returns provinces, cantons and protected areas by name; every area tool takes the
-`place_id` it returns instead of `area`.
+`place_id` it returns instead of `area`. `list_places` returns every place of a kind, or the
+cantons of one province, for questions over several places.
 
 ## Catalogue
 

@@ -165,3 +165,32 @@ def test_the_committed_snapshot_loads_with_every_kind() -> None:
     loaded = load_places()
     kinds = {p.kind for p in loaded.snapshot.places}
     assert kinds == {"province", "canton", "protected_area"}
+
+
+def test_of_kind_lists_every_place_of_that_kind(places: Places) -> None:
+    listed = places.of_kind("protected_area")
+    assert [p.id for p in listed.places] == [
+        "protected_area:Sumaco Napo-Galeras",
+        "protected_area:Yasuní",
+    ]
+    assert listed.note is None
+
+
+def test_of_kind_filters_cantons_by_province(places: Places) -> None:
+    listed = places.of_kind("canton", "provincia de Pastaza")
+    assert [p.id for p in listed.places] == [
+        "canton:Pastaza/Mejía",
+        "canton:Pastaza/Pastaza",
+    ]
+
+
+def test_of_kind_with_an_unknown_province(places: Places) -> None:
+    listed = places.of_kind("canton", "Guayas")
+    assert listed.places == []
+    assert listed.note is not None and "kind='province'" in listed.note
+
+
+def test_of_kind_refuses_a_province_for_other_kinds(places: Places) -> None:
+    listed = places.of_kind("protected_area", "Napo")
+    assert listed.places == []
+    assert listed.note is not None and "cantons only" in listed.note
