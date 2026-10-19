@@ -60,7 +60,7 @@ see it, and do not guess how it looks. Comment on the figures instead.
 """
 
 
-def _selector(
+def build_selector(
     names: tuple[SourceName, ...],
     client: ArcGISClient,
     store: LayerStore,
@@ -94,7 +94,7 @@ def create_mcp_server(
         handlers = AreaHandlers(
             client,
             places=places,
-            selector=_selector(settings.area_sources, client, store, places),
+            selector=build_selector(settings.area_sources, client, store, places),
             store=store,
         )
     call_log = call_log or CallLog(settings.call_log_path)

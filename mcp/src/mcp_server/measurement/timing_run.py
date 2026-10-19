@@ -20,10 +20,14 @@ import httpx
 from mcp_server.arcgis.client import ArcGISClient
 from mcp_server.catalogue import list_indicators
 from mcp_server.catalogue.models import Operation
-from mcp_server.config import Settings
+from mcp_server.config import Settings, parse_area_sources
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.handlers.result import Result
 from mcp_server.measurement.call_log import CallLog
+from mcp_server.places import load_places
+from mcp_server.server import build_selector
+from mcp_server.store.files import LayerStore
+from mcp_server.store.sources import SOURCE_NAMES, SourceName
 
 AREAS_FILE = Path(__file__).parents[3] / "examples" / "areas.geojson"
 TIMING_LOG = Path("var/timing.jsonl")
@@ -98,11 +102,25 @@ def summarise(path: Path = TIMING_LOG) -> list[dict[str, Any]]:
     return rows
 
 
-async def _run(rounds: int, every_s: float, timeout_s: float, log_path: Path) -> None:
+async def _run(
+    rounds: int,
+    every_s: float,
+    timeout_s: float,
+    log_path: Path,
+    sources: tuple[SourceName, ...],
+) -> None:
     areas = load_areas()
     log = CallLog(log_path)
     async with httpx.AsyncClient(timeout=timeout_s) as http:
-        handlers = AreaHandlers(ArcGISClient(http))
+        client = ArcGISClient(http)
+        places = load_places()
+        store = LayerStore(Settings.from_env().layer_store_path)
+        handlers = AreaHandlers(
+            client,
+            places=places,
+            selector=build_selector(sources, client, store, places),
+            store=store,
+        )
         for round_no in range(1, rounds + 1):
             started = time.monotonic()
             await run_round(handlers, areas, log, round_no)
@@ -121,11 +139,21 @@ def main() -> None:
         "--timeout", type=float, default=Settings.from_env().arcgis_timeout_s
     )
     run.add_argument("--log", type=Path, default=TIMING_LOG)
+    run.add_argument(
+        "--sources",
+        default="",
+        help="comma-separated area sources in order, as MCP_AREA_SOURCES "
+        "(all three, in the server's order, if omitted); live ArcGIS always closes "
+        "the list",
+    )
     summary = commands.add_parser("summary", help="summarise the timing log")
     summary.add_argument("--log", type=Path, default=TIMING_LOG)
     args = parser.parse_args()
     if args.command == "run":
-        asyncio.run(_run(args.rounds, args.every, args.timeout, args.log))
+        sources = (
+            parse_area_sources(args.sources) if args.sources.strip() else SOURCE_NAMES
+        )
+        asyncio.run(_run(args.rounds, args.every, args.timeout, args.log, sources))
     else:
         for row in summarise(args.log):
             print(json.dumps(row))

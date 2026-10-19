@@ -26,7 +26,9 @@ class Settings:
             # Just above ArcGIS Online's own ~59 s cut, so its 504 arrives first.
             arcgis_timeout_s=float(os.environ.get("ARCGIS_TIMEOUT_S", "65")),
             layer_store_path=Path(os.environ.get("MCP_LAYER_STORE", "var/layer-store")),
-            area_sources=_area_sources(sources) if sources.strip() else SOURCE_NAMES,
+            area_sources=parse_area_sources(sources)
+            if sources.strip()
+            else SOURCE_NAMES,
         )
 
 
@@ -57,7 +59,7 @@ def _list(value: str) -> list[str]:
     return [item.strip() for item in value.split(",") if item.strip()]
 
 
-def _area_sources(value: str) -> tuple[SourceName, ...]:
+def parse_area_sources(value: str) -> tuple[SourceName, ...]:
     names: list[SourceName] = []
     for item in _list(value):
         if item not in SOURCE_NAMES:
