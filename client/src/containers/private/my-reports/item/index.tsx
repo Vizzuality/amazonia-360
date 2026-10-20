@@ -32,51 +32,51 @@ export const MyReportsItem = ({ report }: MyReportsItemProps) => {
     return t("my-reports-item-custom-area");
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString(locale, {
-      year: "numeric",
-      month: "long",
+  const getFormattedDate = (dateString: string) => {
+    const parts = new Intl.DateTimeFormat(locale, {
       day: "numeric",
-    });
+      month: "short",
+      year: "numeric",
+    }).formatToParts(new Date(dateString));
+    return ["day", "month", "year"]
+      .map((type) => parts.find((part) => part.type === type)?.value.replace(".", ""))
+      .join(" ");
   };
 
   return (
-    <Card className="group flex flex-col gap-1 overflow-hidden shadow-none">
+    <Card className="group after:border-border relative flex flex-col gap-1 overflow-hidden border-0 shadow-none after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:border">
       {/* Map Preview */}
-      <div className="flex grow flex-col space-y-3 px-5 pt-5 pb-2">
+      <div className="relative flex grow flex-col space-y-3 px-5 pt-5 pb-2">
         {/* Header */}
-        <header className="flex justify-between gap-2">
-          <div className="space-y-4">
-            <ModuleChips modules={report.modules} />
-            <div className="space-y-2">
-              <div className="flex items-start justify-between gap-2">
-                <h3 className="text-foreground line-clamp-2 text-lg leading-6 font-medium">
-                  {report.title || t("my-reports-item-untitled")}
-                </h3>
-              </div>
+        <header className="space-y-4 [&>:first-child]:pr-7">
+          <ModuleChips modules={report.modules} />
+          <div className="space-y-2">
+            <h3 className="text-foreground line-clamp-2 text-lg leading-6 font-medium">
+              {report.title || t("my-reports-item-untitled")}
+            </h3>
 
-              {report.description && (
-                <p className="text-muted-foreground line-clamp-3 text-sm leading-4 font-normal">
-                  {report.description}
-                </p>
-              )}
-            </div>
+            {report.description && (
+              <p className="text-muted-foreground line-clamp-3 text-sm leading-4 font-normal">
+                {report.description}
+              </p>
+            )}
           </div>
-
-          <ReportActions report={report} />
         </header>
 
+        <div className="absolute top-2 right-2">
+          <ReportActions report={report} />
+        </div>
+
         {/* Metadata */}
-        <div className="space-y-2">
-          <div className="text-muted-foreground flex items-center gap-2 text-sm">
+        <div className="text-muted-foreground flex items-center gap-3.5 text-xs leading-6 font-semibold">
+          <div className="flex min-w-0 items-center gap-1">
             <LuMapPin className="h-4 w-4 shrink-0" />
-            <span className="line-clamp-1">{getLocationLabel(report.location)}</span>
+            <span className="truncate">{getLocationLabel(report.location)}</span>
           </div>
 
-          <div className="text-muted-foreground flex items-center gap-2 text-sm">
+          <div className="flex shrink-0 items-center gap-1">
             <LuCalendar className="h-4 w-4 shrink-0" />
-            <span>{formatDate(report.createdAt)}</span>
+            <span>{getFormattedDate(report.createdAt)}</span>
           </div>
         </div>
       </div>
