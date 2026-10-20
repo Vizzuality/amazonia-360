@@ -11,6 +11,8 @@ from mcp import ClientSession
 from mcp.client.stdio import StdioServerParameters, stdio_client
 from mcp.types import CallToolResult, PaginatedRequestParams, TextContent, Tool
 
+from mcp_server.store.sources import SOURCE_NAMES
+
 MCP_DIR = Path(__file__).parents[4]
 # A tool call never needs longer than the question that makes it.
 CALL_TIMEOUT_SECONDS = 600.0
@@ -89,8 +91,14 @@ def system_prompt(instructions: str, skill_path: Path) -> str:
     return f"{instructions}\n\n{body.lstrip()}"
 
 
+def area_sources(store: bool) -> str:
+    # Set in both cases: a variable exported in the shell must not change a run.
+    return ",".join(SOURCE_NAMES) if store else "arcgis"
+
+
 def server_env(run_id: str, question: int, store: bool) -> dict[str, str]:
-    env = {"MCP_RUN_ID": run_id, "MCP_QUESTION": str(question)}
-    if not store:
-        env["MCP_AREA_SOURCES"] = "arcgis"
-    return env
+    return {
+        "MCP_RUN_ID": run_id,
+        "MCP_QUESTION": str(question),
+        "MCP_AREA_SOURCES": area_sources(store),
+    }

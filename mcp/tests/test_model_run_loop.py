@@ -1,3 +1,5 @@
+import json
+from dataclasses import asdict, replace
 from datetime import date
 from pathlib import Path
 
@@ -207,7 +209,8 @@ async def test_tool_error_goes_back_to_the_model():
 @pytest.mark.anyio
 async def test_model_exception_is_recorded():
     record = await run(raising("rate limit"))
-    assert record.ended == "error" and "rate limit" in record.error
+    assert record.ended == "error"
+    assert record.error is not None and "rate limit" in record.error
 
 
 def some_record(question: int) -> QuestionRecord:
@@ -233,7 +236,7 @@ def test_trace_round_trips(tmp_path: Path):
     path = tmp_path / "trace.jsonl"
     record = some_record(1)
     append_record(path, record)
-    assert read_records(path) == [record]
+    assert read_records(path) == ([record], 0)
 
 
 def test_trace_survives_a_truncated_last_line(tmp_path: Path):
@@ -241,7 +244,8 @@ def test_trace_survives_a_truncated_last_line(tmp_path: Path):
     append_record(path, some_record(question=1))
     with path.open("a") as f:
         f.write('{"run_id": "r", "mod')
-    assert [r.question for r in read_records(path)] == [1]
+    records, skipped = read_records(path)
+    assert [r.question for r in records] == [1] and skipped == 1
 
 
 def test_append_after_a_truncated_line_keeps_both_records(tmp_path: Path):
@@ -250,8 +254,39 @@ def test_append_after_a_truncated_line_keeps_both_records(tmp_path: Path):
     with path.open("a") as f:
         f.write('{"run_id": "r", "mod')
     append_record(path, some_record(question=2))
-    assert [r.question for r in read_records(path)] == [1, 2]
+    assert [r.question for r in read_records(path)[0]] == [1, 2]
 
 
 def test_read_records_of_a_missing_file_is_empty(tmp_path: Path):
-    assert read_records(tmp_path / "none.jsonl") == []
+    assert read_records(tmp_path / "none.jsonl") == ([], 0)
+
+
+def test_trace_round_trips_line_separators_in_an_answer(tmp_path: Path):
+    path = tmp_path / "trace.jsonl"
+    record = replace(some_record(1), answer="uno\u2028dos\u2029tres\x85cuatro")
+    append_record(path, record)
+    assert read_records(path) == ([record], 0)
+
+
+def test_trace_line_without_stop_reason_still_loads(tmp_path: Path):
+    path = tmp_path / "trace.jsonl"
+    raw = asdict(some_record(1))
+    for turn in raw["turns"]:
+        del turn["stop_reason"]
+    path.write_text(json.dumps(raw) + "\n", encoding="utf-8")
+    records, skipped = read_records(path)
+    assert skipped == 0 and records[0].turns[0].stop_reason is None
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize(
+    ("metadata", "expected"),
+    [
+        ({"stop_reason": "max_tokens"}, "max_tokens"),
+        ({"finish_reason": "length"}, "length"),
+    ],
+)
+async def test_turn_records_why_it_stopped(metadata: dict, expected: str):
+    reply = AIMessage(content="Corta", usage_metadata=USAGE, response_metadata=metadata)
+    record = await run(scripted([reply]))
+    assert record.turns[-1].stop_reason == expected

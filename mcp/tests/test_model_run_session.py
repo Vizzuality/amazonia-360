@@ -116,8 +116,11 @@ def test_system_prompt_drops_front_matter():
 
 def test_server_env_store_off():
     assert server_env("r", 1, store=False)["MCP_AREA_SOURCES"] == "arcgis"
-    assert "MCP_AREA_SOURCES" not in server_env("r", 1, store=True)
-    assert server_env("r", 7, store=True) == {"MCP_RUN_ID": "r", "MCP_QUESTION": "7"}
+    assert server_env("r", 7, store=True) == {
+        "MCP_RUN_ID": "r",
+        "MCP_QUESTION": "7",
+        "MCP_AREA_SOURCES": "precomputed,local_copy,arcgis",
+    }
 
 
 @pytest.mark.anyio

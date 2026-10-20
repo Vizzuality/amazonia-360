@@ -1,6 +1,7 @@
 import json
 import sys
 from contextlib import asynccontextmanager
+from dataclasses import replace
 from pathlib import Path
 from typing import ClassVar
 
@@ -140,7 +141,7 @@ def test_estimate_prints_per_model_and_total(fakes, capsys):
     main(["estimate", "--models", "sonnet,deepseek-mid", "--questions", "1,19"])
     out = capsys.readouterr().out
     assert "sonnet" in out and "deepseek-mid" in out and "total" in out
-    assert fakes["envs"] == [{}]
+    assert fakes["envs"] == [{"MCP_AREA_SOURCES": "precomputed,local_copy,arcgis"}]
     assert fakes["chats"] == []
 
 
@@ -164,7 +165,7 @@ def test_run_stops_at_the_cap_and_keeps_finished_questions(tmp_path, fakes, caps
             str(tmp_path),
         ]
     )
-    records = read_records(next(tmp_path.glob("*/trace.jsonl")))
+    records = read_records(next(tmp_path.glob("*/trace.jsonl")))[0]
     assert [r.ended for r in records] == ["answer", "spend_cap"]
     assert fakes["chats"] == ["sonnet", "sonnet"]  # question 3 never started
 
@@ -277,7 +278,7 @@ def test_run_records_a_crashed_server_and_goes_on(tmp_path, fakes, monkeypatch):
     )
     run_three(tmp_path)
     run_dir = next(tmp_path.iterdir())
-    records = read_records(run_dir / "trace.jsonl")
+    records = read_records(run_dir / "trace.jsonl")[0]
     assert [r.ended for r in records] == ["answer", "error", "answer"]
     assert "process exited" in (records[1].error or "")
     assert "usage lost; 0.6000 USD charged" in (records[1].error or "")
@@ -296,7 +297,7 @@ def test_run_keeps_the_spending_on_disk_when_interrupted(tmp_path, fakes, monkey
     with pytest.raises(SystemExit):
         run_three(tmp_path)
     run_dir = next(tmp_path.iterdir())
-    assert [r.ended for r in read_records(run_dir / "trace.jsonl")] == ["answer"]
+    assert [r.ended for r in read_records(run_dir / "trace.jsonl")[0]] == ["answer"]
     run = json.loads((run_dir / "run.json").read_text("utf-8"))
     assert run["ended"] == "interrupted"
     assert run["spent_usd"] == pytest.approx(1.2)
@@ -329,7 +330,7 @@ def test_run_keeps_the_answer_when_the_server_dies_on_exit(
             str(tmp_path),
         ]
     )
-    records = read_records(next(tmp_path.glob("*/trace.jsonl")))
+    records = read_records(next(tmp_path.glob("*/trace.jsonl")))[0]
     assert [r.ended for r in records] == ["answer"]
 
 
@@ -390,3 +391,61 @@ def test_summary_reads_an_interrupted_trace(tmp_path, capsys):
 def test_skill_path_resolves_from_the_package():
     assert cli.SKILL_PATH.is_file()
     assert Path(cli.QUESTIONS_PATH).is_file() and Path(cli.MODELS_PATH).is_file()
+
+
+PRICED_RUN = {
+    **RUN,
+    "caching": {"anthropic": "cache_control ephemeral", "openai": "automatic prefix"},
+    "effort": "provider default",
+    "models": [
+        {
+            "label": "sonnet",
+            "provider": "anthropic",
+            "model": "claude-sonnet-5-5",
+            "price": {
+                "input": 2.0,
+                "cached_input": 0.2,
+                "cache_write": 2.5,
+                "output": 10.0,
+                "read_on": "2026-10-01",
+                "source": "https://example.test/pricing",
+            },
+        }
+    ],
+}
+
+
+def test_summary_shows_caching_and_prices():
+    summary, _ = summarise(PRICED_RUN, [record("sonnet", 2)])
+    assert "Caching on: anthropic, cache_control ephemeral." in summary
+    assert (
+        "| sonnet | 2.0 | 0.2 | 2.5 | 10.0 | 2026-10-01 | https://example.test"
+        in summary
+    )
+    assert "Reasoning effort: provider default." in summary
+
+
+def test_summary_says_when_caching_is_not_recorded():
+    summary, _ = summarise(RUN, [record("sonnet", 2)])
+    assert "Caching: not recorded." in summary
+
+
+def test_summary_shows_answers_cut_short():
+    cut = record("sonnet", 2)
+    cut = replace(cut, turns=[replace(cut.turns[0], stop_reason="max_tokens")])
+    fine = record("sonnet", 19)
+    fine = replace(fine, turns=[replace(fine.turns[0], stop_reason="end_turn")])
+    summary, _ = summarise(RUN, [cut, fine])
+    row = next(line for line in summary.splitlines() if line.startswith("| sonnet |"))
+    assert row.endswith("| 2 (max_tokens) |")
+
+
+def test_summary_command_reports_skipped_lines(tmp_path, capsys):
+    run_dir = tmp_path / "run"
+    run_dir.mkdir()
+    (run_dir / "run.json").write_text(json.dumps(RUN), "utf-8")
+    append_record(run_dir / "trace.jsonl", record("sonnet", 2))
+    with (run_dir / "trace.jsonl").open("a") as f:
+        f.write("not json\n")
+    main(["summary", str(run_dir)])
+    assert "1 trace lines could not be read" in capsys.readouterr().out

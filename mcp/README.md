@@ -251,22 +251,28 @@ uv run amazonia360-mcp-measure run --models sonnet,openai-mid,deepseek-mid --max
 uv run amazonia360-mcp-measure summary var/model-runs/<run_id>
 ```
 
-`estimate` prices the run without caching, an upper bound. `run` prints the same estimate,
+`estimate` prices the run assuming each question's expected calls and no caching, so a model
+that makes more calls costs more than the estimate; the spending cap is the guard.
+`run` prints the same estimate,
 asks before going on (`--yes` skips the question), sends one short message to every model to
 check that it accepts the tool schemas, and only then starts the questions. `--max-spend` caps
-the whole run: once it is reached the run stops after the question that reached it.
+the whole run: when it is reached the current question stops mid-way (ended `spend_cap`) and
+the run ends.
 `--max-turns` (60) and `--max-seconds` (600) limit each question. `--sources arcgis` runs the
 server without the layer store. Ctrl-C stops the run and keeps the finished questions.
 
 Each run lands in `var/model-runs/<run_id>/`, the run id being the UTC start time:
 
 - `run.json`: the models with their prices, the questions, store on or off, the limits, how
-  each provider caches, and the server commit.
+  each provider caches, that reasoning effort was left at each provider's default, and the
+  server commit.
 - `trace.jsonl`: one line per question, with every turn's tokens, every tool call, the price,
   the time and the answer. The server's own lines in `var/calls.jsonl` carry the same run id
   and question number.
 - `summary.md`: per model, the price per question, the total, the median and longest time,
-  the tool calls and the questions not ended by an answer. These are the figures the D6 report
+  the tool calls, the questions not ended by an answer and the answers cut short (a stop reason
+  such as `max_tokens` or `refusal`), with whether caching was on and each model's prices, the date
+  read and the page. These are the figures the D6 report
   takes.
 - `answers.md`: per question, the text, the expected answer, and each model's answer with its
   price, time and calls, to grade by hand.

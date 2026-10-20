@@ -19,6 +19,7 @@ class TurnRecord:
     cache_write_tokens: int
     output_tokens: int
     model_ms: int
+    stop_reason: str | None = None
 
 
 @dataclass(frozen=True)
@@ -61,18 +62,21 @@ def append_record(path: Path, record: QuestionRecord) -> None:
         handle.flush()
 
 
-def read_records(path: Path) -> list[QuestionRecord]:
+def read_records(path: Path) -> tuple[list[QuestionRecord], int]:
+    """The records of a trace, and how many non-empty lines could not be read."""
     if not path.exists():
-        return []
+        return [], 0
     records: list[QuestionRecord] = []
-    for line in path.read_text(encoding="utf-8").splitlines():
+    skipped = 0
+    # Only "\n" ends a record: str.splitlines also splits on U+2028 inside answers.
+    for line in path.read_text(encoding="utf-8").split("\n"):
         if not line.strip():
             continue
         try:
             records.append(_record(json.loads(line)))
         except (json.JSONDecodeError, KeyError, TypeError):
-            continue
-    return records
+            skipped += 1
+    return records, skipped
 
 
 def _record(raw: dict) -> QuestionRecord:

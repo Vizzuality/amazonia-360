@@ -28,6 +28,7 @@ from mcp_server.measurement.model_run.config import (
 from mcp_server.measurement.model_run.pricing import Usage, estimate_question
 from mcp_server.measurement.model_run.session import (
     MCP_DIR,
+    area_sources,
     server_env,
     server_session,
     system_prompt,
@@ -66,7 +67,7 @@ def _measure_modules() -> tuple[ModuleType, ModuleType]:
 
 
 def _store_env(store: bool) -> dict[str, str]:
-    return {} if store else {"MCP_AREA_SOURCES": "arcgis"}
+    return {"MCP_AREA_SOURCES": area_sources(store)}
 
 
 async def _server_shape(store: bool) -> tuple[str, list[dict]]:
@@ -84,7 +85,9 @@ def _print_estimate(
 ) -> None:
     print(
         f"{len(questions)} questions, {fixed_tokens} fixed tokens per turn "
-        "(system prompt and tool schemas). Upper bound, without caching:"
+        "(system prompt and tool schemas). Assumes each question's expected calls\n"
+        "and no caching; a model that makes more calls costs more, the spending cap "
+        "is the guard:"
     )
     total = 0.0
     for spec in models:
@@ -279,6 +282,7 @@ def _run(args: argparse.Namespace) -> None:
             "max_spend_usd": args.max_spend,
         },
         "caching": providers.CACHING,
+        "effort": "provider default",
         "server_commit": _server_commit(),
     }
     _write_run(run_dir, run)
@@ -318,10 +322,13 @@ def _write_run(run_dir: Path, run: dict[str, Any]) -> None:
 def _summary(args: argparse.Namespace) -> None:
     run_dir: Path = args.run_dir
     run = json.loads((run_dir / "run.json").read_text("utf-8"))
-    summary, answers = summarise(run, read_records(run_dir / "trace.jsonl"))
+    records, skipped = read_records(run_dir / "trace.jsonl")
+    summary, answers = summarise(run, records)
     (run_dir / "summary.md").write_text(summary, "utf-8")
     (run_dir / "answers.md").write_text(answers, "utf-8")
     print(f"Wrote {run_dir / 'summary.md'} and {run_dir / 'answers.md'}")
+    if skipped:
+        print(f"{skipped} trace lines could not be read and were skipped.")
 
 
 def _add_selection(parser: argparse.ArgumentParser) -> None:

@@ -84,6 +84,11 @@ def _usage(message: AIMessage) -> Usage:
     )
 
 
+def _stop_reason(message: AIMessage) -> str | None:
+    meta = message.response_metadata
+    return meta.get("stop_reason") or meta.get("finish_reason")
+
+
 async def run_question(
     chat: ChatTurn,
     call_tool: CallTool,
@@ -127,6 +132,7 @@ async def run_question(
                 turn_usage.cache_write_tokens,
                 turn_usage.output_tokens,
                 _elapsed_ms(turn_start),
+                _stop_reason(reply),
             )
         )
         last_text = _text(reply) or last_text

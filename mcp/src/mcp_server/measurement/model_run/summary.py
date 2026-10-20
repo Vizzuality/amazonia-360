@@ -6,6 +6,8 @@ import statistics
 
 from mcp_server.measurement.model_run.trace import QuestionRecord
 
+NORMAL_STOPS = {"end_turn", "stop", "stop_sequence", "tool_use", "tool_calls"}
+
 
 def _labels(run: dict, records: list[QuestionRecord]) -> list[str]:
     labels = [m["label"] for m in run.get("models", [])]
@@ -16,13 +18,23 @@ def _seconds(ms: float) -> str:
     return f"{ms / 1000:.1f}"
 
 
+def _abnormal_stop(record: QuestionRecord) -> bool:
+    reason = record.turns[-1].stop_reason if record.turns else None
+    return reason is not None and reason not in NORMAL_STOPS
+
+
 def _model_row(label: str, records: list[QuestionRecord]) -> str:
     if not records:
-        return f"| {label} | 0 | | | | | | |"
+        return f"| {label} | 0 | | | | | | | |"
     total = sum(r.price_usd for r in records)
     times = [r.total_ms for r in records]
     unanswered = ", ".join(
         f"{r.question} ({r.ended})" for r in records if r.ended != "answer"
+    )
+    cut = ", ".join(
+        f"{r.question} ({r.turns[-1].stop_reason})"
+        for r in records
+        if r.ended == "answer" and _abnormal_stop(r)
     )
     cells = [
         label,
@@ -33,6 +45,7 @@ def _model_row(label: str, records: list[QuestionRecord]) -> str:
         _seconds(max(times)),
         str(sum(len(r.calls) for r in records)),
         unanswered,
+        cut,
     ]
     return "| " + " | ".join(cells) + " |"
 
@@ -46,6 +59,39 @@ def _spent(run: dict) -> list[str]:
     return ["", line + "."]
 
 
+def _caching(run: dict) -> str:
+    caching = run.get("caching")
+    if not caching:
+        return "Caching: not recorded."
+    providers = {m.get("provider") for m in run.get("models", [])}
+    used = {p: how for p, how in caching.items() if p in providers} or caching
+    return "Caching on: " + "; ".join(f"{p}, {how}" for p, how in used.items()) + "."
+
+
+def _settings(run: dict) -> list[str]:
+    lines = ["", _caching(run)]
+    if run.get("effort"):
+        lines.append(f"Reasoning effort: {run['effort']}.")
+    models = [m for m in run.get("models", []) if m.get("price")]
+    if models:
+        lines += [
+            "",
+            "Prices per model, USD per million tokens:",
+            "",
+            "| Model | Input | Cached input | Cache write | Output | Read on "
+            "| Source |",
+            "|---|---|---|---|---|---|---|",
+        ]
+        for m in models:
+            price = m["price"]
+            lines.append(
+                f"| {m['label']} | {price.get('input')} | {price.get('cached_input')} "
+                f"| {price.get('cache_write')} | {price.get('output')} "
+                f"| {price.get('read_on')} | {price.get('source')} |"
+            )
+    return lines
+
+
 def _summary(run: dict, labels: list[str], records: list[QuestionRecord]) -> str:
     limits = run.get("limits", {})
     lines = [
@@ -57,12 +103,13 @@ def _summary(run: dict, labels: list[str], records: list[QuestionRecord]) -> str
         f"Limits per question: {limits.get('max_turns', '?')} turns, "
         f"{limits.get('max_seconds', '?')} s.",
         *_spent(run),
+        *_settings(run),
         "",
         "Prices in USD, times in seconds from the question to its end.",
         "",
         "| Model | Questions | Total | Per question | Median time | Longest time "
-        "| Tool calls | Not ended by an answer |",
-        "|---|---|---|---|---|---|---|---|",
+        "| Tool calls | Not ended by an answer | Answer cut short |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
     lines += [_model_row(lb, [r for r in records if r.model == lb]) for lb in labels]
     numbers = sorted({r.question for r in records})
