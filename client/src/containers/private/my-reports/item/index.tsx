@@ -10,6 +10,7 @@ import { Card } from "@/components/ui/card";
 import { Report } from "@/payload-types";
 
 import { ReportActions } from "./actions";
+import { ModuleChips } from "./module-chip";
 
 const ReportMapPreview = dynamic(() => import("@/containers/private/my-reports/item/map-preview"), {
   ssr: false,
@@ -47,6 +48,7 @@ export const MyReportsItem = ({ report }: MyReportsItemProps) => {
         {/* Header */}
         <header className="flex justify-between gap-2">
           <div className="space-y-2">
+            <ModuleChips modules={report.modules} />
             <div className="flex items-start justify-between gap-2">
               <h3 className="text-foreground line-clamp-2 text-lg font-medium">
                 {report.title || t("my-reports-item-untitled")}
