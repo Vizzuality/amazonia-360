@@ -42,24 +42,26 @@ export const MyReportsItem = ({ report }: MyReportsItemProps) => {
   };
 
   return (
-    <Card className="group flex flex-col overflow-hidden shadow-none">
+    <Card className="group flex flex-col gap-1 overflow-hidden shadow-none">
       {/* Map Preview */}
-      <div className="flex grow flex-col space-y-3 p-6">
+      <div className="flex grow flex-col space-y-3 px-5 pt-5 pb-2">
         {/* Header */}
         <header className="flex justify-between gap-2">
-          <div className="space-y-2">
+          <div className="space-y-4">
             <ModuleChips modules={report.modules} />
-            <div className="flex items-start justify-between gap-2">
-              <h3 className="text-foreground line-clamp-2 text-lg font-medium">
-                {report.title || t("my-reports-item-untitled")}
-              </h3>
-            </div>
+            <div className="space-y-2">
+              <div className="flex items-start justify-between gap-2">
+                <h3 className="text-foreground line-clamp-2 text-lg leading-6 font-medium">
+                  {report.title || t("my-reports-item-untitled")}
+                </h3>
+              </div>
 
-            {report.description && (
-              <p className="text-muted-foreground line-clamp-3 text-sm font-medium">
-                {report.description}
-              </p>
-            )}
+              {report.description && (
+                <p className="text-muted-foreground line-clamp-3 text-sm leading-4 font-normal">
+                  {report.description}
+                </p>
+              )}
+            </div>
           </div>
 
           <ReportActions report={report} />
@@ -77,11 +79,11 @@ export const MyReportsItem = ({ report }: MyReportsItemProps) => {
             <span>{formatDate(report.createdAt)}</span>
           </div>
         </div>
+      </div>
 
-        <div className="bg-muted relative flex min-h-[12rem] w-full grow flex-col overflow-hidden rounded-xs">
-          <div className="grow">
-            <ReportMapPreview {...report} />
-          </div>
+      <div className="bg-muted border-border relative flex h-[200px] w-full shrink-0 flex-col overflow-hidden border-t">
+        <div className="grow">
+          <ReportMapPreview {...report} />
         </div>
       </div>
     </Card>
