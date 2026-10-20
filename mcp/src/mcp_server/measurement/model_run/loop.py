@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import time
-from collections.abc import Awaitable, Callable
+from collections.abc import Awaitable, Callable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from typing import Any
 
 from langchain_core.messages import (
     AIMessage,
@@ -63,13 +64,22 @@ def _text(message: AIMessage) -> str:
     return "".join(parts)
 
 
+def _cache_write_tokens(details: Mapping[str, Any]) -> int:
+    # langchain-anthropic zeroes cache_creation when the response splits writes by
+    # TTL. Only 5-minute marks are set, so the 5m write price covers both keys.
+    return details.get("cache_creation") or (
+        details.get("ephemeral_5m_input_tokens", 0)
+        + details.get("ephemeral_1h_input_tokens", 0)
+    )
+
+
 def _usage(message: AIMessage) -> Usage:
     meta = message.usage_metadata or {}
     details = meta.get("input_token_details") or {}
     return Usage(
         input_tokens=meta.get("input_tokens", 0),
         cached_tokens=details.get("cache_read", 0),
-        cache_write_tokens=details.get("cache_creation", 0),
+        cache_write_tokens=_cache_write_tokens(details),
         output_tokens=meta.get("output_tokens", 0),
     )
 

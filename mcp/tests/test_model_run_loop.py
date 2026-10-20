@@ -121,6 +121,28 @@ async def test_cache_details_are_read_from_usage_metadata():
 
 
 @pytest.mark.anyio
+async def test_cache_writes_split_by_ttl_are_counted():
+    message = AIMessage(
+        content="ok",
+        usage_metadata={
+            "input_tokens": 1000,
+            "output_tokens": 100,
+            "total_tokens": 1100,
+            "input_token_details": {
+                "cache_read": 0,
+                "cache_creation": 0,
+                "ephemeral_5m_input_tokens": 300,
+                "ephemeral_1h_input_tokens": 0,
+            },
+        },
+    )
+    record = await run(scripted([message]))
+    assert record.turns[0].cache_write_tokens == 300
+    assert record.usage == Usage(1000, 0, 300, 100)
+    assert record.price_usd == cost(Usage(1000, 0, 300, 100), PRICE)
+
+
+@pytest.mark.anyio
 async def test_answer_text_from_content_blocks():
     blocks = [{"type": "text", "text": "Hola "}, {"type": "text", "text": "mundo"}]
     record = await run(scripted([final(blocks)]))
