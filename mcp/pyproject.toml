@@ -18,6 +18,7 @@ dependencies = [
 [project.scripts]
 amazonia360-mcp = "mcp_server.__main__:main"
 amazonia360-mcp-catalogue = "mcp_server.catalogue.cli:main"
+amazonia360-mcp-measure = "mcp_server.measurement.model_run.cli:main"
 amazonia360-mcp-timing = "mcp_server.measurement.timing_run:main"
 amazonia360-mcp-http = "mcp_server.__main__:http"
 amazonia360-mcp-db = "mcp_server.db.migrate:main"
@@ -34,6 +35,13 @@ dev = [
     "pytest>=9.1",
     "pyright>=1.1.414",
     "ruff>=0.16",
+    {include-group = "measure"},
+]
+measure = [
+    "langchain-anthropic>=1.7.6",
+    "langchain-core>=1.6.12",
+    "langchain-deepseek>=1.1.1",
+    "langchain-openai>=1.7.2",
 ]
 
 [tool.ruff]
