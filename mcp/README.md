@@ -227,6 +227,50 @@ caffeinate -i nohup uv run amazonia360-mcp-timing run > var/timing.out 2>&1 &
 uv run amazonia360-mcp-timing summary   # per tool and layer: median, max, over 10 s and 60 s
 ```
 
+## Model measurement
+
+`amazonia360-mcp-measure` asks the base questions in `measurement/questions.json` to several
+models, each with the server's instructions and the skill as its system prompt and the server's
+tools, and records what each answer cost, how long it took and which tools it called. Every
+question gets a fresh server over stdio, so no answer leans on an earlier one. Questions 20 and
+21 need AM-757 and run only when named with `--questions`.
+
+It needs the `measure` dependency group (`uv sync --group measure`; `dev` includes it) and the
+key of each provider in the run, from the environment: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`,
+`DEEPSEEK_API_KEY`.
+
+Models are listed in `measurement/models.toml`, one `[[model]]` per label, with the provider,
+the model id and its prices in dollars per million tokens, the date they were read and the page
+they were read from. A model with any of those empty is refused before any call. The DeepSeek
+prices are the peak rates, so their figures are an upper bound; off-peak is half.
+
+```sh
+# From mcp/. First round: one model per provider, at most 20 USD in all
+uv run amazonia360-mcp-measure estimate --models sonnet,openai-mid,deepseek-mid
+uv run amazonia360-mcp-measure run --models sonnet,openai-mid,deepseek-mid --max-spend 20
+uv run amazonia360-mcp-measure summary var/model-runs/<run_id>
+```
+
+`estimate` prices the run without caching, an upper bound. `run` prints the same estimate,
+asks before going on (`--yes` skips the question), sends one short message to every model to
+check that it accepts the tool schemas, and only then starts the questions. `--max-spend` caps
+the whole run: once it is reached the run stops after the question that reached it.
+`--max-turns` (60) and `--max-seconds` (600) limit each question. `--sources arcgis` runs the
+server without the layer store. Ctrl-C stops the run and keeps the finished questions.
+
+Each run lands in `var/model-runs/<run_id>/`, the run id being the UTC start time:
+
+- `run.json`: the models with their prices, the questions, store on or off, the limits, how
+  each provider caches, and the server commit.
+- `trace.jsonl`: one line per question, with every turn's tokens, every tool call, the price,
+  the time and the answer. The server's own lines in `var/calls.jsonl` carry the same run id
+  and question number.
+- `summary.md`: per model, the price per question, the total, the median and longest time,
+  the tool calls and the questions not ended by an answer. These are the figures the D6 report
+  takes.
+- `answers.md`: per question, the text, the expected answer, and each model's answer with its
+  price, time and calls, to grade by hand.
+
 ## Settings
 
 | Variable | Default | Meaning |

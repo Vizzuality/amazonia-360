@@ -1,0 +1,348 @@
+"""``amazonia360-mcp-measure``: ask the base questions to several models and summarise.
+
+``estimate`` prices a run before it starts, ``run`` asks every question to every model
+with a fresh server per question and writes the trace, and ``summary`` turns a run's
+trace into the figures per model and the answers to grade.
+"""
+
+from __future__ import annotations
+
+import argparse
+import asyncio
+import importlib
+import json
+import subprocess
+import time
+from dataclasses import asdict
+from datetime import UTC, datetime
+from pathlib import Path
+from types import ModuleType
+from typing import TYPE_CHECKING, Any
+
+from mcp_server.measurement.model_run.config import (
+    ModelSpec,
+    Question,
+    load_models,
+    load_questions,
+)
+from mcp_server.measurement.model_run.pricing import Usage, estimate_question
+from mcp_server.measurement.model_run.session import (
+    MCP_DIR,
+    server_env,
+    server_session,
+    system_prompt,
+)
+from mcp_server.measurement.model_run.summary import summarise
+from mcp_server.measurement.model_run.trace import (
+    QuestionRecord,
+    append_record,
+    read_records,
+)
+
+if TYPE_CHECKING:
+    from mcp_server.measurement.model_run.loop import Budget, Limits
+
+QUESTIONS_PATH = MCP_DIR / "measurement" / "questions.json"
+MODELS_PATH = MCP_DIR / "measurement" / "models.toml"
+SKILL_PATH = MCP_DIR / "skills" / "amazonia360" / "SKILL.md"
+RUNS_DIR = MCP_DIR / "var" / "model-runs"
+CHARS_PER_TOKEN = 3.5
+YES = ("s", "si", "sí")
+INSTALL_MEASURE = "install the measure group: uv sync --group measure"
+
+
+def _measure_modules() -> tuple[ModuleType, ModuleType]:
+    # LangChain is an optional group: only run needs it, and only when it starts.
+    try:
+        loop = importlib.import_module("mcp_server.measurement.model_run.loop")
+        providers = importlib.import_module(
+            "mcp_server.measurement.model_run.providers"
+        )
+    except ModuleNotFoundError as exc:
+        if not (exc.name or "").startswith("langchain"):
+            raise
+        raise SystemExit(INSTALL_MEASURE) from exc
+    return loop, providers
+
+
+def _store_env(store: bool) -> dict[str, str]:
+    return {} if store else {"MCP_AREA_SOURCES": "arcgis"}
+
+
+async def _server_shape(store: bool) -> tuple[str, list[dict]]:
+    async with server_session(_store_env(store)) as server:
+        return system_prompt(server.instructions, SKILL_PATH), server.tools
+
+
+def _fixed_tokens(prompt: str, tools: list[dict]) -> int:
+    chars = len(prompt) + len(json.dumps(tools, ensure_ascii=False))
+    return round(chars / CHARS_PER_TOKEN)
+
+
+def _print_estimate(
+    models: list[ModelSpec], questions: list[Question], fixed_tokens: int
+) -> None:
+    print(
+        f"{len(questions)} questions, {fixed_tokens} fixed tokens per turn "
+        "(system prompt and tool schemas). Upper bound, without caching:"
+    )
+    total = 0.0
+    for spec in models:
+        usd = sum(estimate_question(q, fixed_tokens, spec.price) for q in questions)
+        total += usd
+        print(f"  {spec.label:<16} {spec.model:<22} {usd:>9.4f} USD")
+    print(f"  {'total':<39} {total:>9.4f} USD")
+
+
+def _run_id() -> str:
+    return datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+
+
+def _server_commit() -> str | None:
+    result = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=MCP_DIR,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return result.stdout.strip() or None
+
+
+def _model_entry(spec: ModelSpec) -> dict[str, Any]:
+    price = {**asdict(spec.price), "read_on": spec.price.read_on.isoformat()}
+    return {
+        "label": spec.label,
+        "provider": spec.provider,
+        "model": spec.model,
+        "price": price,
+    }
+
+
+def _describe(exc: BaseException) -> str:
+    if isinstance(exc, BaseExceptionGroup):
+        return "; ".join(_describe(inner) for inner in exc.exceptions)
+    return f"{type(exc).__name__}: {exc}"
+
+
+def _error_record(
+    run_id: str,
+    spec: ModelSpec,
+    question: Question,
+    store: bool,
+    started: datetime,
+    clock: float,
+    exc: Exception,
+) -> QuestionRecord:
+    return QuestionRecord(
+        run_id=run_id,
+        model=spec.label,
+        question=question.number,
+        store=store,
+        started=started.isoformat(),
+        ended_at=datetime.now(UTC).isoformat(),
+        total_ms=round((time.monotonic() - clock) * 1000),
+        turns=[],
+        calls=[],
+        usage=Usage(0, 0, 0, 0),
+        price_usd=0.0,
+        answer="",
+        ended="error",
+        error=_describe(exc),
+    )
+
+
+async def _ask(
+    loop: ModuleType,
+    providers: ModuleType,
+    spec: ModelSpec,
+    question: Question,
+    limits: Limits,
+    budget: Budget,
+    run_id: str,
+    store: bool,
+) -> QuestionRecord:
+    started = datetime.now(UTC)
+    clock = time.monotonic()
+    record: QuestionRecord | None = None
+    try:
+        env = server_env(run_id, question.number, store)
+        async with server_session(env) as server:
+            answered: QuestionRecord = await loop.run_question(
+                providers.make_chat(spec, server.tools),
+                server.call_tool,
+                system_prompt(server.instructions, SKILL_PATH),
+                question,
+                spec.price,
+                limits,
+                budget,
+                run_id=run_id,
+                model=spec.label,
+                store=store,
+            )
+            record = answered
+        return answered
+    except Exception as exc:
+        # A server that dies on the way out does not void an answer already given.
+        if record is not None:
+            return record
+        return _error_record(run_id, spec, question, store, started, clock, exc)
+
+
+async def _run_all(
+    loop: ModuleType,
+    providers: ModuleType,
+    models: list[ModelSpec],
+    questions: list[Question],
+    limits: Limits,
+    max_spend: float,
+    run_id: str,
+    run_dir: Path,
+    store: bool,
+) -> None:
+    budget = loop.Budget(max_spend)
+    trace = run_dir / "trace.jsonl"
+    for spec in models:
+        for question in questions:
+            if budget.exhausted():
+                print(f"Spending cap of {max_spend} USD reached; the run stops.")
+                return
+            record = await _ask(
+                loop, providers, spec, question, limits, budget, run_id, store
+            )
+            append_record(trace, record)
+            print(
+                f"{spec.label:<16} q{question.number:<3} {record.ended:<10} "
+                f"{record.price_usd:>8.4f} USD {record.total_ms / 1000:>7.1f} s  "
+                f"total {budget.spent_usd:.4f} USD",
+                flush=True,
+            )
+
+
+async def _preflight_all(
+    providers: ModuleType, models: list[ModelSpec], tools: list[dict]
+) -> None:
+    for spec in models:
+        await providers.preflight(spec, tools)
+
+
+def _load(args: argparse.Namespace) -> tuple[list[ModelSpec], list[Question]]:
+    labels = [label.strip() for label in args.models.split(",") if label.strip()]
+    try:
+        numbers = (
+            [int(n) for n in args.questions.split(",") if n.strip()]
+            if args.questions
+            else None
+        )
+        return load_models(MODELS_PATH, labels), load_questions(QUESTIONS_PATH, numbers)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
+
+
+def _estimate(args: argparse.Namespace) -> None:
+    models, questions = _load(args)
+    prompt, tools = asyncio.run(_server_shape(args.sources is None))
+    _print_estimate(models, questions, _fixed_tokens(prompt, tools))
+
+
+def _run(args: argparse.Namespace) -> None:
+    loop, providers = _measure_modules()
+    models, questions = _load(args)
+    store = args.sources is None
+    prompt, tools = asyncio.run(_server_shape(store))
+    _print_estimate(models, questions, _fixed_tokens(prompt, tools))
+    if not args.yes and input("¿Seguir? [s/N] ").strip().lower() not in YES:
+        print("Nothing was run.")
+        return
+    try:
+        asyncio.run(_preflight_all(providers, models, tools))
+    except providers.PreflightError as exc:
+        raise SystemExit(f"Preflight failed, nothing was run: {exc}") from exc
+
+    run_id = _run_id()
+    run_dir = args.out / run_id
+    run_dir.mkdir(parents=True)
+    limits = loop.Limits(max_turns=args.max_turns, max_seconds=args.max_seconds)
+    run = {
+        "run_id": run_id,
+        "models": [_model_entry(spec) for spec in models],
+        "questions": [asdict(q) for q in questions],
+        "store": store,
+        "limits": {
+            "max_turns": limits.max_turns,
+            "max_seconds": limits.max_seconds,
+            "max_spend_usd": args.max_spend,
+        },
+        "caching": providers.CACHING,
+        "server_commit": _server_commit(),
+    }
+    (run_dir / "run.json").write_text(
+        json.dumps(run, ensure_ascii=False, indent=2) + "\n", "utf-8"
+    )
+    print(f"Run {run_id}: {run_dir}")
+    try:
+        asyncio.run(
+            _run_all(
+                loop,
+                providers,
+                models,
+                questions,
+                limits,
+                args.max_spend,
+                run_id,
+                run_dir,
+                store,
+            )
+        )
+    except KeyboardInterrupt:
+        raise SystemExit(
+            f"Interrupted; the finished questions are in {run_dir / 'trace.jsonl'}"
+        ) from None
+
+
+def _summary(args: argparse.Namespace) -> None:
+    run_dir: Path = args.run_dir
+    run = json.loads((run_dir / "run.json").read_text("utf-8"))
+    summary, answers = summarise(run, read_records(run_dir / "trace.jsonl"))
+    (run_dir / "summary.md").write_text(summary, "utf-8")
+    (run_dir / "answers.md").write_text(answers, "utf-8")
+    print(f"Wrote {run_dir / 'summary.md'} and {run_dir / 'answers.md'}")
+
+
+def _add_selection(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--models", required=True, help="comma-separated labels in models.toml"
+    )
+    parser.add_argument(
+        "--questions",
+        default="",
+        help="comma-separated question numbers (all without requires, if omitted)",
+    )
+    parser.add_argument(
+        "--sources",
+        choices=["arcgis"],
+        default=None,
+        help="arcgis turns the layer store off (MCP_AREA_SOURCES=arcgis)",
+    )
+
+
+def main(argv: list[str] | None = None) -> None:
+    parser = argparse.ArgumentParser(prog="amazonia360-mcp-measure")
+    commands = parser.add_subparsers(dest="command", required=True)
+    estimate = commands.add_parser("estimate", help="price a run before it starts")
+    _add_selection(estimate)
+    run = commands.add_parser("run", help="ask every question to every model")
+    _add_selection(run)
+    run.add_argument("--max-spend", type=float, required=True, help="USD, whole run")
+    run.add_argument("--max-turns", type=int, default=60, help="per question")
+    run.add_argument("--max-seconds", type=float, default=600.0, help="per question")
+    run.add_argument("--yes", action="store_true", help="do not ask before running")
+    run.add_argument("--out", type=Path, default=RUNS_DIR)
+    summary = commands.add_parser("summary", help="write summary.md and answers.md")
+    summary.add_argument("run_dir", type=Path)
+    args = parser.parse_args(argv)
+    {"estimate": _estimate, "run": _run, "summary": _summary}[args.command](args)
+
+
+if __name__ == "__main__":
+    main()
