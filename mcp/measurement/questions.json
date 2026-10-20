@@ -1,0 +1,228 @@
+{
+  "questions": [
+    {
+      "number": 1,
+      "group": "A. Discovery",
+      "text": "¿Qué datos hay sobre el medio físico y natural?",
+      "text_from": "translated",
+      "expected": "Lists the 13 layers and their descriptions",
+      "expected_calls": 1
+    },
+    {
+      "number": 2,
+      "group": "B. Presence and counts",
+      "text": "¿Hay áreas en restauración en Mejía?",
+      "text_from": "desktop trial",
+      "expected": "Asked which Mejía was meant; 8 areas in the Pastaza canton",
+      "expected_calls": 2
+    },
+    {
+      "number": 3,
+      "group": "B. Presence and counts",
+      "text": "¿Qué unidades biogeográficas hay en el cantón Tena?",
+      "text_from": "translated",
+      "expected": "The units present",
+      "expected_calls": 3
+    },
+    {
+      "number": 4,
+      "group": "C. Hectares by class",
+      "text": "¿Qué tipos de clima hay en Zamora?",
+      "text_from": "desktop trial",
+      "expected": "Asked whether the province or the canton was meant; 3 classes",
+      "expected_calls": 2
+    },
+    {
+      "number": 5,
+      "group": "C. Hectares by class",
+      "text": "¿Cuántas hectáreas de cada ecosistema hay en el cantón Tena?",
+      "text_from": "translated",
+      "expected": "16 ecosystems over 310,256 ha; 80,099 ha the layer leaves unclassified",
+      "expected_calls": 3
+    },
+    {
+      "number": 6,
+      "group": "C. Hectares by class",
+      "text": "¿Cuánta deforestación hubo en el Parque Nacional Yasuní?",
+      "text_from": "desktop trial",
+      "expected": "472 ha, 2020 to 2022, in three transitions",
+      "expected_calls": 3
+    },
+    {
+      "number": 7,
+      "group": "C. Hectares by class",
+      "text": "¿Cuántas hectáreas de cada régimen de inundación hay en esta zona alrededor de Nuevo Rocafuerte?",
+      "text_from": "translated",
+      "expected": "Hectares per regime",
+      "area": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -75.4899,
+              -1.0099
+            ],
+            [
+              -75.3101,
+              -1.0099
+            ],
+            [
+              -75.3101,
+              -0.8301
+            ],
+            [
+              -75.4899,
+              -0.8301
+            ],
+            [
+              -75.4899,
+              -1.0099
+            ]
+          ]
+        ]
+      },
+      "expected_calls": 2
+    },
+    {
+      "number": 8,
+      "group": "C. Hectares by class",
+      "text": "¿Cuántas hectáreas de cada estrato de bosque hay en el cantón Tena?",
+      "text_from": "translated",
+      "expected": "246,868 ha in four strata, with the layer's carbon caveat",
+      "expected_calls": 3
+    },
+    {
+      "number": 9,
+      "group": "D. Rasters",
+      "text": "Según la cobertura del suelo, ¿cuántas hectáreas de cubierta arbórea hay en el cantón Tena?",
+      "text_from": "desktop trial",
+      "expected": "86.4 % of pixels. It was asked in hectares; the rasters answer in shares of pixels. Decided on 19 October: the answer gives the shares and says why they are not hectares. Rerun on 20 October: shares only, no conversion, but without saying why",
+      "expected_calls": 3
+    },
+    {
+      "number": 10,
+      "group": "D. Rasters",
+      "text": "¿Qué clases de pendiente hay en la provincia de Pastaza?",
+      "text_from": "translated",
+      "expected": "5 of the 7 classes, 81.2 % of pixels between 5° and 15°, given as shares of pixels. 17.4 s for a province",
+      "expected_calls": 3
+    },
+    {
+      "number": 11,
+      "group": "E. Maps",
+      "text": "Muéstrame en un mapa los ecosistemas del cantón Tena",
+      "text_from": "translated",
+      "expected": "Map with the 16 classes and the figures of question 5",
+      "expected_calls": 3
+    },
+    {
+      "number": 12,
+      "group": "E. Maps",
+      "text": "¿Qué cobertura forestal hay en el Yasuní? Muéstramela en un mapa",
+      "text_from": "desktop trial",
+      "expected": "Map; 96.7 % of pixels \"Very High\"",
+      "expected_calls": 3
+    },
+    {
+      "number": 13,
+      "group": "F. Coverage limits",
+      "text": "¿Qué ecosistemas hay en la provincia de Loja?",
+      "text_from": "desktop trial",
+      "expected": "Computed over the 2 % of the province inside the module; the rest reported as outside",
+      "expected_calls": 3
+    },
+    {
+      "number": 14,
+      "group": "F. Coverage limits",
+      "text": "¿Qué ecosistemas hay en Guayaquil?",
+      "text_from": "desktop trial",
+      "expected": "No place found; nothing invented",
+      "expected_calls": 1
+    },
+    {
+      "number": 15,
+      "group": "F. Coverage limits",
+      "text": "¿Qué ecosistemas hay en esta zona alrededor de Iquitos (Perú)?",
+      "text_from": "translated",
+      "expected": "Refused: outside the module",
+      "area": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -73.3438,
+              -3.8390999999999997
+            ],
+            [
+              -73.1638,
+              -3.8390999999999997
+            ],
+            [
+              -73.1638,
+              -3.6591
+            ],
+            [
+              -73.3438,
+              -3.6591
+            ],
+            [
+              -73.3438,
+              -3.8390999999999997
+            ]
+          ]
+        ]
+      },
+      "expected_calls": 2
+    },
+    {
+      "number": 16,
+      "group": "G. Ambiguous wording",
+      "text": "¿Cómo es la biodiversidad del cantón Tena?",
+      "text_from": "desktop trial",
+      "expected": "Without the skill the layer changed between runs. With it, two runs on 19 October named the candidates and chose Ecosystems, with the same figures",
+      "expected_calls": 4
+    },
+    {
+      "number": 17,
+      "group": "G. Ambiguous wording",
+      "text": "¿Cuánto bosque hay en el cantón Tena?",
+      "text_from": "desktop trial",
+      "expected": "Carbon strata in one run, land cover in another. With the skill, both runs chose carbon strata because they give hectares; the skill now answers with Forest Cover. Rerun on 20 October: Forest Cover, with the other layers named, but no single figure for forest",
+      "expected_calls": 3
+    },
+    {
+      "number": 18,
+      "group": "H. Composite",
+      "text": "Compara la deforestación entre 2020 y 2022 en los cantones de Napo",
+      "text_from": "translated",
+      "expected": "Listed the five cantons with the new place listing, then one area query per canton, 30 s of tool time. One layer, figures that add up",
+      "expected_calls": 8
+    },
+    {
+      "number": 19,
+      "group": "H. Composite",
+      "text": "¿Qué área protegida del módulo perdió más bosque entre 2020 y 2022?",
+      "text_from": "translated",
+      "expected": "Cuyabeno, 717.80 ha, practically tied with Cayambe Coca, 714.96 ha. First run: 19 of the 40 areas in 3 min 15 s. With the layer store: 36 areas, the other four too small to lead, in 1 min 38 s, almost all of it the model's own turns. Rerun on 20 October: the areas outside the layer explained in words, 1 min 11 s; it counts 41 areas instead of 40",
+      "expected_calls": 40
+    },
+    {
+      "number": 20,
+      "group": "H. Composite",
+      "text": "¿Qué ecosistemas perdieron más superficie por deforestación en el cantón Tena?",
+      "text_from": "translated",
+      "expected": "Needs a new tool that intersects two layers inside an area",
+      "requires": "AM-757",
+      "expected_calls": 4
+    },
+    {
+      "number": 21,
+      "group": "H. Composite",
+      "text": "¿Qué parte de la zona de recarga hídrica de Pastaza está bajo acciones de restauración?",
+      "text_from": "translated",
+      "expected": "Same new tool as question 20",
+      "requires": "AM-757",
+      "expected_calls": 4
+    }
+  ]
+}

@@ -164,10 +164,10 @@ git commit -m "feat(mcp): call log lines carry the run, the question and the HTT
     output `(c + 1) * O`.
 
 `models.toml` holds one `[[model]]` table per model with `label`, `provider`, `model`, and
-`price = { input, cached_input, cache_write, output, read_on, source }`. Ship it with the three
-Anthropic models (`fable` → `claude-fable-5-1`, `opus` → `claude-opus-5-5`, `sonnet` →
-`claude-sonnet-5-5`) and three OpenAI and three DeepSeek entries whose `model` is `""`, all with
-prices left empty: Miguel fills ids and prices from each provider's page before the first run.
+`price = { input, cached_input, cache_write, output, read_on, source }`. The file already
+exists, filled from the providers' pages on 20 October 2026: eight models (DeepSeek publishes
+two), DeepSeek at its peak rates. `load_models` must accept it as it stands; a test loads all
+eight labels from it.
 
 - [ ] **Step 1: Write the failing tests**
 
