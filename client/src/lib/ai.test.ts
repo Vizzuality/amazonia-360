@@ -3,12 +3,15 @@ import { createElement, ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook } from "@testing-library/react";
 
+import type { CountryModule } from "@/lib/country-modules";
 import { getIndicatorsOptions, getQueryFeatureId, getQueryImageryId } from "@/lib/indicators";
 import { useReportCountry } from "@/lib/report/use-report-country";
 
+import { generateDescriptionTextAiPost } from "@/types/generated/text-generation";
 import { ImageryAggregation, Indicator } from "@/types/indicator";
+import { Topic } from "@/types/topic";
 
-import { getTopicEvidence, getFeatureEvidence, useGetTopicSummary } from "./ai";
+import { getTopicEvidence, getTopicSummary, getFeatureEvidence, useGetTopicSummary } from "./ai";
 
 vi.mock("@/lib/indicators", () => ({
   getIndicators: vi.fn(),
@@ -19,6 +22,7 @@ vi.mock("@/lib/indicators", () => ({
 
 vi.mock("@/lib/country-modules", () => ({
   useGetActiveModuleSlugs: () => ["ECU"],
+  getCountryModulesQueryOptions: vi.fn(() => ({ queryKey: ["country-modules"] })),
 }));
 
 vi.mock("@/lib/report/use-report-country", () => ({
@@ -95,6 +99,7 @@ describe("getTopicEvidence", () => {
         id: 1,
         name: "Feature 1",
         unit: "km²",
+        scope: "regional",
         status: "ok",
         evidence: expect.objectContaining({ feature_count: 1, area_km2: 5, area_share: 50 }),
       },
@@ -146,6 +151,7 @@ describe("getTopicEvidence", () => {
       {
         id: 35,
         name: "Imagery 35",
+        scope: "regional",
         status: "ok",
         evidence: {
           aggregation: "sum",
@@ -290,5 +296,98 @@ describe("useGetTopicSummary", () => {
     await result.current.mutateAsync({ options: {}, locale: "en", location: null });
 
     expect(getIndicatorsOptions).toHaveBeenCalledWith("en", codes);
+  });
+});
+
+describe("getTopicSummary scope", () => {
+  const TOPIC = { id: 7, name: "Water" } as Topic;
+  const MODULES = [{ slug: "ECU", name: "Ecuador" }] as unknown as CountryModule[];
+
+  const scoped = (
+    id: number,
+    extra: { module?: string; replaces?: number } = {},
+    topicId = TOPIC.id,
+  ): Indicator =>
+    ({
+      ...featureIndicator(id),
+      subtopic: { topic_id: topicId },
+      module: extra.module ? { slug: extra.module, tag: "x" } : null,
+      replaces: extra.replaces === undefined ? null : String(extra.replaces),
+    }) as unknown as Indicator;
+
+  const summarize = async (
+    catalogue: Indicator[],
+    options: { only_active?: boolean; shown?: number[] } = {},
+  ) => {
+    vi.mocked(generateDescriptionTextAiPost).mockResolvedValue({ description: "ok" } as never);
+
+    await getTopicSummary({
+      topic: TOPIC,
+      options: { only_active: options.only_active },
+      activeIndicators: options.shown,
+      locale: "en",
+      location: GEOMETRY,
+      loadIndicators: async () => catalogue,
+      loadCountryModules: async () => MODULES,
+    });
+
+    const body = vi.mocked(generateDescriptionTextAiPost).mock.calls[0][0];
+    return body.data.indicators as { id: number; scope: string; country?: string }[];
+  };
+
+  const PAIR = [scoped(1), scoped(2, { module: "ECU", replaces: 1 })];
+
+  test("tags national indicators with their country and regional ones with neither", async () => {
+    const sent = await summarize([scoped(1), scoped(2, { module: "ECU" })]);
+
+    expect(sent).toEqual([
+      expect.objectContaining({ id: 1, scope: "regional" }),
+      expect.objectContaining({ id: 2, scope: "national", country: "Ecuador" }),
+    ]);
+    expect(sent[0]).not.toHaveProperty("country");
+  });
+
+  test("omits the country when no module name matches", async () => {
+    const sent = await summarize([scoped(2, { module: "XXX" })]);
+
+    expect(sent[0]).toMatchObject({ scope: "national" });
+    expect(sent[0]).not.toHaveProperty("country");
+  });
+
+  test("keeps the national indicator when the widget shows it", async () => {
+    const sent = await summarize(PAIR, { shown: [2] });
+
+    expect(sent.map((i) => i.id)).toEqual([2]);
+  });
+
+  test("keeps the regional indicator when the widget shows it", async () => {
+    const sent = await summarize(PAIR, { shown: [1] });
+
+    expect(sent.map((i) => i.id)).toEqual([1]);
+  });
+
+  test("keeps both sides when both are shown", async () => {
+    const sent = await summarize(PAIR, { shown: [1, 2] });
+
+    expect(sent.map((i) => i.id)).toEqual([1, 2]);
+  });
+
+  test("keeps only the national side when neither is shown", async () => {
+    const sent = await summarize([...PAIR, scoped(3)], { shown: [] });
+
+    expect(sent.map((i) => i.id)).toEqual([2, 3]);
+  });
+
+  test("sends exactly the active ids when only_active is on", async () => {
+    const sent = await summarize([...PAIR, scoped(3)], { only_active: true, shown: [3] });
+
+    expect(sent.map((i) => i.id)).toEqual([3]);
+  });
+
+  test("marks every indicator regional when the catalogue has no module", async () => {
+    const sent = await summarize([scoped(1), scoped(3)], { shown: [1] });
+
+    expect(sent.map((i) => i.scope)).toEqual(["regional", "regional"]);
+    expect(sent.some((i) => "country" in i)).toBe(false);
   });
 });
