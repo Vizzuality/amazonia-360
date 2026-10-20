@@ -133,6 +133,7 @@ def _error_record(
     started: datetime,
     clock: float,
     exc: Exception,
+    charged_usd: float,
 ) -> QuestionRecord:
     return QuestionRecord(
         run_id=run_id,
@@ -145,10 +146,11 @@ def _error_record(
         turns=[],
         calls=[],
         usage=Usage(0, 0, 0, 0),
-        price_usd=0.0,
+        # The turns before the failure were billed; only their token split is lost.
+        price_usd=charged_usd,
         answer="",
         ended="error",
-        error=_describe(exc),
+        error=f"{_describe(exc)} (usage lost; {charged_usd:.4f} USD charged)",
     )
 
 
@@ -164,6 +166,7 @@ async def _ask(
 ) -> QuestionRecord:
     started = datetime.now(UTC)
     clock = time.monotonic()
+    before_usd = budget.spent_usd
     record: QuestionRecord | None = None
     try:
         env = server_env(run_id, question.number, store)
@@ -186,7 +189,10 @@ async def _ask(
         # A server that dies on the way out does not void an answer already given.
         if record is not None:
             return record
-        return _error_record(run_id, spec, question, store, started, clock, exc)
+        charged = budget.spent_usd - before_usd
+        return _error_record(
+            run_id, spec, question, store, started, clock, exc, charged
+        )
 
 
 async def _run_all(
@@ -195,17 +201,16 @@ async def _run_all(
     models: list[ModelSpec],
     questions: list[Question],
     limits: Limits,
-    max_spend: float,
+    budget: Budget,
     run_id: str,
     run_dir: Path,
     store: bool,
 ) -> None:
-    budget = loop.Budget(max_spend)
     trace = run_dir / "trace.jsonl"
     for spec in models:
         for question in questions:
             if budget.exhausted():
-                print(f"Spending cap of {max_spend} USD reached; the run stops.")
+                print(f"Spending cap of {budget.cap_usd} USD reached; the run stops.")
                 return
             record = await _ask(
                 loop, providers, spec, question, limits, budget, run_id, store
@@ -276,10 +281,10 @@ def _run(args: argparse.Namespace) -> None:
         "caching": providers.CACHING,
         "server_commit": _server_commit(),
     }
-    (run_dir / "run.json").write_text(
-        json.dumps(run, ensure_ascii=False, indent=2) + "\n", "utf-8"
-    )
+    _write_run(run_dir, run)
     print(f"Run {run_id}: {run_dir}")
+    budget = loop.Budget(args.max_spend)
+    ended = "interrupted"
     try:
         asyncio.run(
             _run_all(
@@ -288,16 +293,26 @@ def _run(args: argparse.Namespace) -> None:
                 models,
                 questions,
                 limits,
-                args.max_spend,
+                budget,
                 run_id,
                 run_dir,
                 store,
             )
         )
+        ended = "finished"
     except KeyboardInterrupt:
         raise SystemExit(
             f"Interrupted; the finished questions are in {run_dir / 'trace.jsonl'}"
         ) from None
+    finally:
+        # The spending of a question cut short is only in the budget; keep it on disk.
+        _write_run(run_dir, {**run, "ended": ended, "spent_usd": budget.spent_usd})
+
+
+def _write_run(run_dir: Path, run: dict[str, Any]) -> None:
+    (run_dir / "run.json").write_text(
+        json.dumps(run, ensure_ascii=False, indent=2) + "\n", "utf-8"
+    )
 
 
 def _summary(args: argparse.Namespace) -> None:

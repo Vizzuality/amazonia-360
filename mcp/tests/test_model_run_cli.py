@@ -128,7 +128,10 @@ def test_summary_per_model(tmp_records):
 
 
 def test_summary_says_when_a_model_did_not_run_a_question(tmp_records):
-    _, answers = summarise(RUN, tmp_records[1:])
+    summary, answers = summarise(
+        {**RUN, "spent_usd": 3.25, "ended": "interrupted"}, tmp_records[1:]
+    )
+    assert "Spent in the run: 3.2500 USD, interrupted" in summary
     assert "### sonnet" in answers.split("## 19.")[1]
     assert "Not run" in answers.split("## 19.")[1]
 
@@ -228,17 +231,29 @@ def test_run_refuses_before_spending_when_preflight_fails(tmp_path, fakes, monke
     assert fakes["chats"] == []
 
 
-def test_run_records_a_crashed_server_and_goes_on(tmp_path, fakes, monkeypatch):
-    real = cli.server_session
+class FailingServer(FakeServer):
+    def __init__(self, failure: BaseException) -> None:
+        self.failure = failure
+
+    async def call_tool(self, name: str, arguments: dict) -> tuple[str, bool]:
+        raise self.failure
+
+
+def failing_on_two(real, failure: BaseException):
+    """The server answers question 2's first tool call, already paid, by failing."""
 
     @asynccontextmanager
-    async def crashing_on_two(env: dict[str, str]):
+    async def session(env: dict[str, str]):
         if env.get("MCP_QUESTION") == "2":
-            raise ExceptionGroup("server", [RuntimeError("process exited")])
+            yield FailingServer(failure)
+            return
         async with real(env) as server:
             yield server
 
-    monkeypatch.setattr(cli, "server_session", crashing_on_two)
+    return session
+
+
+def run_three(tmp_path: Path) -> None:
     main(
         [
             "run",
@@ -253,9 +268,38 @@ def test_run_records_a_crashed_server_and_goes_on(tmp_path, fakes, monkeypatch):
             str(tmp_path),
         ]
     )
-    records = read_records(next(tmp_path.glob("*/trace.jsonl")))
+
+
+def test_run_records_a_crashed_server_and_goes_on(tmp_path, fakes, monkeypatch):
+    crash = ExceptionGroup("server", [RuntimeError("process exited")])
+    monkeypatch.setattr(
+        cli, "server_session", failing_on_two(cli.server_session, crash)
+    )
+    run_three(tmp_path)
+    run_dir = next(tmp_path.iterdir())
+    records = read_records(run_dir / "trace.jsonl")
     assert [r.ended for r in records] == ["answer", "error", "answer"]
     assert "process exited" in (records[1].error or "")
+    assert "usage lost; 0.6000 USD charged" in (records[1].error or "")
+    assert records[1].price_usd == pytest.approx(0.6)
+    run = json.loads((run_dir / "run.json").read_text("utf-8"))
+    assert run["ended"] == "finished"
+    assert run["spent_usd"] == pytest.approx(1.8)
+
+
+def test_run_keeps_the_spending_on_disk_when_interrupted(tmp_path, fakes, monkeypatch):
+    monkeypatch.setattr(
+        cli,
+        "server_session",
+        failing_on_two(cli.server_session, KeyboardInterrupt()),
+    )
+    with pytest.raises(SystemExit):
+        run_three(tmp_path)
+    run_dir = next(tmp_path.iterdir())
+    assert [r.ended for r in read_records(run_dir / "trace.jsonl")] == ["answer"]
+    run = json.loads((run_dir / "run.json").read_text("utf-8"))
+    assert run["ended"] == "interrupted"
+    assert run["spent_usd"] == pytest.approx(1.2)
 
 
 def test_run_keeps_the_answer_when_the_server_dies_on_exit(

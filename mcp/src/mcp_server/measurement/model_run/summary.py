@@ -37,6 +37,15 @@ def _model_row(label: str, records: list[QuestionRecord]) -> str:
     return "| " + " | ".join(cells) + " |"
 
 
+def _spent(run: dict) -> list[str]:
+    if "spent_usd" not in run:
+        return []
+    line = f"Spent in the run: {run['spent_usd']:.4f} USD"
+    if run.get("ended") == "interrupted":
+        line += ", interrupted before the end"
+    return ["", line + "."]
+
+
 def _summary(run: dict, labels: list[str], records: list[QuestionRecord]) -> str:
     limits = run.get("limits", {})
     lines = [
@@ -47,6 +56,7 @@ def _summary(run: dict, labels: list[str], records: list[QuestionRecord]) -> str
         f"Spending cap: {limits.get('max_spend_usd', '?')} USD. "
         f"Limits per question: {limits.get('max_turns', '?')} turns, "
         f"{limits.get('max_seconds', '?')} s.",
+        *_spent(run),
         "",
         "Prices in USD, times in seconds from the question to its end.",
         "",
