@@ -347,3 +347,23 @@ async def test_startup_is_quiet_when_someone_is_allowed(
     async with app.router.lifespan_context(app):
         pass
     assert "allowlist" not in capsys.readouterr().err
+
+
+async def test_the_call_log_carries_the_http_session(
+    http: httpx.AsyncClient, tmp_path: Path
+) -> None:
+    tokens = await sign_in(http)
+    session = await open_session(http, tokens["access_token"])
+    await call(http, tokens["access_token"], session, "list_indicators", {})
+    await call(
+        http,
+        tokens["access_token"],
+        session,
+        "area_by_category",
+        {"indicator_id": 210, "area": TENA},
+    )
+    lines = [
+        json.loads(line) for line in (tmp_path / "calls.jsonl").read_text().splitlines()
+    ]
+    assert [line["tool"] for line in lines] == ["list_indicators", "area_by_category"]
+    assert [line["session"] for line in lines] == [session, session]

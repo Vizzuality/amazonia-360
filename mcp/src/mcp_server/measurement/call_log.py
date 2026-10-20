@@ -6,11 +6,16 @@ from typing import Any
 
 
 class CallLog:
-    def __init__(self, path: Path) -> None:
+    def __init__(self, path: Path, context: dict[str, str] | None = None) -> None:
         self._path = path
+        self._context = context or {}
 
     def write(self, record: dict[str, Any]) -> None:
-        line = {"ts": datetime.now(UTC).isoformat(), **record}
+        line = {
+            "ts": datetime.now(UTC).isoformat(),
+            **self._context,
+            **record,
+        }
         try:
             self._path.parent.mkdir(parents=True, exist_ok=True)
             with self._path.open("a", encoding="utf-8") as f:

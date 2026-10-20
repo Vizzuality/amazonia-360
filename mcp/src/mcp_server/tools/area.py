@@ -2,7 +2,7 @@ from collections.abc import Awaitable, Callable
 from typing import Annotated, Any
 
 from mcp.server.auth.middleware.auth_context import get_access_token
-from mcp.server.mcpserver import MCPServer
+from mcp.server.mcpserver import Context, MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
 from mcp.types import ToolAnnotations
 from pydantic import Field
@@ -38,6 +38,41 @@ def _caller() -> str | None:
     return token.subject if token else None
 
 
+def _session(ctx: Context) -> str | None:
+    """The MCP session id over HTTP; None on stdio, which has no headers."""
+    headers = ctx.headers
+    return headers.get("mcp-session-id") if headers else None
+
+
+def log_lookup[T](
+    call_log: CallLog, tool: str, ctx: Context, call: Callable[[], T], **fields: Any
+) -> T:
+    """Runs a catalogue or place lookup and logs it. The tool's answer and its errors
+    pass through unchanged."""
+    watch = Stopwatch()
+
+    def log(ok: bool, **extra: Any) -> None:
+        call_log.write(
+            {
+                "tool": tool,
+                "user": _caller(),
+                "session": _session(ctx),
+                **fields,
+                "ok": ok,
+                **extra,
+                "elapsed_ms": watch.total_ms(),
+            }
+        )
+
+    try:
+        out = call()
+    except Exception as exc:
+        log(False, error=str(exc))
+        raise
+    log(True)
+    return out
+
+
 async def logged_call[T](
     call_log: CallLog,
     tool: str,
@@ -45,6 +80,7 @@ async def logged_call[T](
     call: Awaitable[T],
     result_of: Callable[[T], Result],
     place_id: str | None = None,
+    ctx: Context | None = None,
 ) -> T:
     """Runs a handler call, logs it for the measurement run, and turns errors into
     ToolErrors whose text says the cause."""
@@ -55,6 +91,7 @@ async def logged_call[T](
             {
                 "tool": tool,
                 "user": _caller(),
+                "session": _session(ctx) if ctx else None,
                 "indicator_id": indicator_id,
                 "place_id": place_id,
                 "ok": ok,
@@ -101,6 +138,7 @@ def register_area_tools(
         call: Callable[..., Awaitable[Result]],
         area: dict[str, Any] | None,
         place_id: str | None,
+        ctx: Context,
     ) -> Result:
         return await logged_call(
             call_log,
@@ -109,11 +147,15 @@ def register_area_tools(
             call(indicator_id, area, place_id=place_id),
             lambda r: r,
             place_id,
+            ctx,
         )
 
     @server.tool(annotations=QUERY)
     async def categories_in_area(
-        indicator_id: IndicatorId, area: Area = None, place_id: PlaceId = None
+        indicator_id: IndicatorId,
+        ctx: Context,
+        area: Area = None,
+        place_id: PlaceId = None,
     ) -> Result:
         """Which classes of a categorical layer are present in the area. Fast."""
         return await run(
@@ -122,20 +164,27 @@ def register_area_tools(
             handlers.categories_in_area,
             area,
             place_id,
+            ctx,
         )
 
     @server.tool(annotations=QUERY)
     async def count_in_area(
-        indicator_id: IndicatorId, area: Area = None, place_id: PlaceId = None
+        indicator_id: IndicatorId,
+        ctx: Context,
+        area: Area = None,
+        place_id: PlaceId = None,
     ) -> Result:
         """How many discrete features of a count layer fall in the area. Fast."""
         return await run(
-            "count_in_area", indicator_id, handlers.count_in_area, area, place_id
+            "count_in_area", indicator_id, handlers.count_in_area, area, place_id, ctx
         )
 
     @server.tool(annotations=QUERY)
     async def area_by_category(
-        indicator_id: IndicatorId, area: Area = None, place_id: PlaceId = None
+        indicator_id: IndicatorId,
+        ctx: Context,
+        area: Area = None,
+        place_id: PlaceId = None,
     ) -> Result:
         """Hectares of each class inside the area, clipped to it.
 
@@ -148,11 +197,15 @@ def register_area_tools(
             handlers.area_by_category,
             area,
             place_id,
+            ctx,
         )
 
     @server.tool(annotations=QUERY)
     async def class_shares_in_area(
-        indicator_id: IndicatorId, area: Area = None, place_id: PlaceId = None
+        indicator_id: IndicatorId,
+        ctx: Context,
+        area: Area = None,
+        place_id: PlaceId = None,
     ) -> Result:
         """Share of the area's pixels in each class of a classed raster. Fast.
 
@@ -165,4 +218,5 @@ def register_area_tools(
             handlers.class_shares,
             area,
             place_id,
+            ctx,
         )

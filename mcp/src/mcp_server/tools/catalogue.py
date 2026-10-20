@@ -1,12 +1,14 @@
 from typing import Annotated, Any
 
-from mcp.server.mcpserver import MCPServer
+from mcp.server.mcpserver import Context, MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
 from mcp.types import ToolAnnotations
 from pydantic import Field
 
 from mcp_server import catalogue
 from mcp_server.catalogue.models import IndicatorMetadata, Operation
+from mcp_server.measurement.call_log import CallLog
+from mcp_server.tools.area import log_lookup
 
 _READ_ONLY = ToolAnnotations(read_only_hint=True, open_world_hint=False)
 
@@ -35,33 +37,51 @@ def _tools(indicator: IndicatorMetadata) -> list[str]:
     return [tool for op, tool in _TOOL_FOR.items() if indicator.allows(op)]
 
 
-def register_catalogue_tools(server: MCPServer) -> None:
+def register_catalogue_tools(server: MCPServer, call_log: CallLog) -> None:
     @server.tool(annotations=_READ_ONLY)
     async def list_indicators(
+        ctx: Context,
         subtopic_id: Annotated[
             int | None, Field(description="Only indicators in this subtopic.")
         ] = None,
     ) -> dict[str, Any]:
         """List the Ecuador module indicators, with the tools each one can be asked
         through. An indicator with no tools cannot be answered about."""
-        return {
-            "indicators": [
-                {**i.model_dump(include=_LIST_FIELDS), "tools": _tools(i)}
-                for i in catalogue.list_indicators(subtopic_id)
-            ]
-        }
+        return log_lookup(
+            call_log,
+            "list_indicators",
+            ctx,
+            lambda: {
+                "indicators": [
+                    {**i.model_dump(include=_LIST_FIELDS), "tools": _tools(i)}
+                    for i in catalogue.list_indicators(subtopic_id)
+                ]
+            },
+            subtopic_id=subtopic_id,
+        )
 
     @server.tool(annotations=_READ_ONLY)
     async def describe_indicator(
         indicator_id: Annotated[int, Field(description="Indicator id.")],
+        ctx: Context,
     ) -> dict[str, Any]:
         """Unit, value type, provenance and known caveats of one indicator."""
-        indicator = catalogue.get_indicator_metadata(indicator_id)
-        if indicator is None:
-            raise ToolError(f"Unknown indicator {indicator_id}.")
-        counts = indicator.record_counts()
-        return {
-            **indicator.model_dump(mode="json"),
-            # Computed, not stored, so it has to be added here for the model to see it.
-            "record_counts": counts.model_dump() if counts else None,
-        }
+        return log_lookup(
+            call_log,
+            "describe_indicator",
+            ctx,
+            lambda: _describe(indicator_id),
+            indicator_id=indicator_id,
+        )
+
+
+def _describe(indicator_id: int) -> dict[str, Any]:
+    indicator = catalogue.get_indicator_metadata(indicator_id)
+    if indicator is None:
+        raise ToolError(f"Unknown indicator {indicator_id}.")
+    counts = indicator.record_counts()
+    return {
+        **indicator.model_dump(mode="json"),
+        # Computed, not stored, so it has to be added here for the model to see it.
+        "record_counts": counts.model_dump() if counts else None,
+    }

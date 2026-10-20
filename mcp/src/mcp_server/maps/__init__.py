@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Annotated, Any
 
 import pydantic_core
-from mcp.server.mcpserver import MCPServer
+from mcp.server.mcpserver import Context, MCPServer
 from mcp.types import CallToolResult, TextContent
 from pydantic import BaseModel
 
@@ -99,7 +99,10 @@ def register_map_tools(
         )(_view(name))
 
     async def map_area_by_category(
-        indicator_id: IndicatorId, area: Area = None, place_id: PlaceId = None
+        indicator_id: IndicatorId,
+        ctx: Context,
+        area: Area = None,
+        place_id: PlaceId = None,
     ) -> Annotated[CallToolResult, Result]:
         """The same figures as area_by_category, from the same query, with the classes
         drawn on an interactive map shown to the user.
@@ -115,6 +118,7 @@ def register_map_tools(
             handlers.area_by_category_map(indicator_id, area, place_id=place_id),
             lambda out: out[0],
             place_id,
+            ctx,
         )
         size = len(pydantic_core.to_json(drawn.shapes))
         # The area always goes to the page, so it takes its share of the budget.
@@ -134,7 +138,10 @@ def register_map_tools(
     )
 
     async def map_class_shares_in_area(
-        indicator_id: IndicatorId, area: Area = None, place_id: PlaceId = None
+        indicator_id: IndicatorId,
+        ctx: Context,
+        area: Area = None,
+        place_id: PlaceId = None,
     ) -> Annotated[CallToolResult, Result]:
         """The same shares as class_shares_in_area, with the raster drawn over the
         area on a map shown to the user.
@@ -149,6 +156,7 @@ def register_map_tools(
             handlers.class_shares_map(indicator_id, area, place_id=place_id),
             lambda out: out[0],
             place_id,
+            ctx,
         )
         return _tool_result(result, asdict(drawn))
 

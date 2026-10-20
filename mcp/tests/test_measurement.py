@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 
+from mcp_server.config import Settings
 from mcp_server.measurement import stopwatch
 from mcp_server.measurement.call_log import CallLog
 from mcp_server.measurement.stopwatch import Stopwatch
@@ -71,3 +72,24 @@ def test_time_known_only_afterwards_goes_to_the_lap_named_then(clock: Clock) -> 
     watch.add_since("store", started)
     assert watch.ms("store") == 200
     assert watch.ms("arcgis") == 0
+
+
+def test_call_log_writes_context(tmp_path: Path) -> None:
+    log = CallLog(tmp_path / "calls.jsonl", context={"run_id": "r1", "question": "19"})
+    log.write({"tool": "find_places"})
+    line = json.loads((tmp_path / "calls.jsonl").read_text())
+    assert line["run_id"] == "r1" and line["question"] == "19"
+
+
+def test_settings_call_context_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("MCP_RUN_ID", "r1")
+    monkeypatch.setenv("MCP_QUESTION", "7")
+    assert Settings.from_env().call_context == {"run_id": "r1", "question": "7"}
+
+
+def test_settings_call_context_empty_by_default(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("MCP_RUN_ID", raising=False)
+    monkeypatch.delenv("MCP_QUESTION", raising=False)
+    assert Settings.from_env().call_context == {}

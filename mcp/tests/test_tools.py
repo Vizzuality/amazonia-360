@@ -265,3 +265,40 @@ async def test_an_area_tool_without_area_or_place_says_what_to_send(
     assert result.is_error
     text = result.content[0]
     assert isinstance(text, TextContent) and "find_places" in text.text
+
+
+def logged(tmp_path: Path) -> list[dict[str, Any]]:
+    path = tmp_path / "calls.jsonl"
+    return [json.loads(line) for line in path.read_text().splitlines()]
+
+
+@pytest.mark.anyio
+async def test_the_place_and_catalogue_tools_are_logged(tmp_path: Path) -> None:
+    async with Client(server(tmp_path)) as client:
+        await client.call_tool("find_places", {"query": "Tena", "kind": "canton"})
+        await client.call_tool("list_places", {"kind": "canton", "province": "Napo"})
+        await client.call_tool("list_indicators", {"subtopic_id": 1})
+        await client.call_tool("describe_indicator", {"indicator_id": 210})
+    lines = logged(tmp_path)
+    assert [line["tool"] for line in lines] == [
+        "find_places",
+        "list_places",
+        "list_indicators",
+        "describe_indicator",
+    ]
+    assert all(line["ok"] is True and line["session"] is None for line in lines)
+    assert all(line["user"] is None and line["elapsed_ms"] >= 0 for line in lines)
+    assert lines[0]["query"] == "Tena" and lines[0]["kind"] == "canton"
+    assert lines[1]["kind"] == "canton" and lines[1]["province"] == "Napo"
+    assert lines[2]["subtopic_id"] == 1
+    assert lines[3]["indicator_id"] == 210
+
+
+@pytest.mark.anyio
+async def test_a_refused_describe_is_logged_with_its_error(tmp_path: Path) -> None:
+    async with Client(server(tmp_path)) as client:
+        result = await client.call_tool("describe_indicator", {"indicator_id": 999})
+    assert result.is_error
+    [line] = logged(tmp_path)
+    assert line["tool"] == "describe_indicator" and line["ok"] is False
+    assert "Unknown indicator 999" in line["error"]

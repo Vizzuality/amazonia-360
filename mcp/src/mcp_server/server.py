@@ -97,7 +97,7 @@ def create_mcp_server(
             selector=build_selector(settings.area_sources, client, store, places),
             store=store,
         )
-    call_log = call_log or CallLog(settings.call_log_path)
+    call_log = call_log or CallLog(settings.call_log_path, settings.call_context)
 
     server = MCPServer(
         name="amazonia360",
@@ -107,8 +107,8 @@ def create_mcp_server(
         auth=auth,
         auth_server_provider=auth_server_provider,
     )
-    register_catalogue_tools(server)
-    register_place_tools(server, places)
+    register_catalogue_tools(server, call_log)
+    register_place_tools(server, places, call_log)
     register_area_tools(server, handlers, call_log)
     register_map_tools(server, handlers, call_log)
     return server

@@ -1,7 +1,7 @@
 import os
 import sys
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import cast
 from urllib.parse import urlsplit
@@ -17,6 +17,7 @@ class Settings:
     arcgis_timeout_s: float
     layer_store_path: Path = Path("var/layer-store")
     area_sources: tuple[SourceName, ...] = SOURCE_NAMES
+    call_context: dict[str, str] = field(default_factory=dict)
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -29,6 +30,14 @@ class Settings:
             area_sources=parse_area_sources(sources)
             if sources.strip()
             else SOURCE_NAMES,
+            call_context={
+                key: value
+                for key, name in (
+                    ("run_id", "MCP_RUN_ID"),
+                    ("question", "MCP_QUESTION"),
+                )
+                if (value := os.environ.get(name))
+            },
         )
 
 
