@@ -222,5 +222,14 @@ def test_trace_survives_a_truncated_last_line(tmp_path: Path):
     assert [r.question for r in read_records(path)] == [1]
 
 
+def test_append_after_a_truncated_line_keeps_both_records(tmp_path: Path):
+    path = tmp_path / "trace.jsonl"
+    append_record(path, some_record(question=1))
+    with path.open("a") as f:
+        f.write('{"run_id": "r", "mod')
+    append_record(path, some_record(question=2))
+    assert [r.question for r in read_records(path)] == [1, 2]
+
+
 def test_read_records_of_a_missing_file_is_empty(tmp_path: Path):
     assert read_records(tmp_path / "none.jsonl") == []

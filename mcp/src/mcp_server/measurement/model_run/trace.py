@@ -51,8 +51,13 @@ class QuestionRecord:
 def append_record(path: Path, record: QuestionRecord) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     line = json.dumps(asdict(record), ensure_ascii=False)
-    with path.open("a", encoding="utf-8") as handle:
-        handle.write(line + "\n")
+    with path.open("a+b") as handle:
+        handle.seek(0, 2)
+        if handle.tell() > 0:
+            handle.seek(-1, 2)
+            if handle.read(1) != b"\n":
+                handle.write(b"\n")
+        handle.write((line + "\n").encode("utf-8"))
         handle.flush()
 
 
