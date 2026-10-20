@@ -443,6 +443,16 @@ def test_summary_shows_answers_cut_short():
     assert row.endswith("| 2 (max_tokens) |")
 
 
+def test_summary_counts_openai_incomplete_answers_as_cut_short():
+    cut = record("gpt", 2)
+    cut = replace(cut, turns=[replace(cut.turns[0], stop_reason="max_output_tokens")])
+    fine = record("gpt", 19)
+    fine = replace(fine, turns=[replace(fine.turns[0], stop_reason="completed")])
+    summary, _ = summarise(RUN, [cut, fine])
+    row = next(line for line in summary.splitlines() if line.startswith("| gpt |"))
+    assert row.endswith("| 2 (max_output_tokens) |")
+
+
 def test_summary_command_reports_skipped_lines(tmp_path, capsys):
     run_dir = tmp_path / "run"
     run_dir.mkdir()

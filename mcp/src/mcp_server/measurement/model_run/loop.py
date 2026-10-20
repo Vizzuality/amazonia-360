@@ -86,7 +86,15 @@ def _usage(message: AIMessage) -> Usage:
 
 def _stop_reason(message: AIMessage) -> str | None:
     meta = message.response_metadata
-    return meta.get("stop_reason") or meta.get("finish_reason")
+    # The Responses API (OpenAI) has no stop reason: an incomplete response says
+    # why in incomplete_details, a finished one only has a status.
+    incomplete = meta.get("incomplete_details") or {}
+    return (
+        meta.get("stop_reason")
+        or meta.get("finish_reason")
+        or incomplete.get("reason")
+        or meta.get("status")
+    )
 
 
 async def run_question(

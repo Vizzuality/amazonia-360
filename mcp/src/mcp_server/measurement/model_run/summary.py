@@ -6,7 +6,14 @@ import statistics
 
 from mcp_server.measurement.model_run.trace import QuestionRecord
 
-NORMAL_STOPS = {"end_turn", "stop", "stop_sequence", "tool_use", "tool_calls"}
+NORMAL_STOPS = {
+    "end_turn",
+    "stop",
+    "stop_sequence",
+    "tool_use",
+    "tool_calls",
+    "completed",
+}
 
 
 def _labels(run: dict, records: list[QuestionRecord]) -> list[str]:

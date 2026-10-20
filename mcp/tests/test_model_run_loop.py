@@ -284,6 +284,22 @@ def test_trace_line_without_stop_reason_still_loads(tmp_path: Path):
     [
         ({"stop_reason": "max_tokens"}, "max_tokens"),
         ({"finish_reason": "length"}, "length"),
+        ({"status": "completed"}, "completed"),
+        (
+            {
+                "status": "incomplete",
+                "incomplete_details": {"reason": "max_output_tokens"},
+            },
+            "max_output_tokens",
+        ),
+        (
+            {
+                "status": "incomplete",
+                "incomplete_details": {"reason": "content_filter"},
+            },
+            "content_filter",
+        ),
+        ({"status": "incomplete"}, "incomplete"),
     ],
 )
 async def test_turn_records_why_it_stopped(metadata: dict, expected: str):
