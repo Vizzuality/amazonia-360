@@ -75,6 +75,11 @@ Never report several of them one after the other without saying why each one is 
   module and has no data, and give `coverage.outside_ha`. Report those hectares as outside the
   module, separately from unclassified land; never call them a class or unclassified. Provinces
   and cantons are whole administrative units and often extend beyond the module.
+- **Empty results.** When `layer.empty_result` is set, the result is empty. For
+  `not_mapped_here`, say that the layer does not map this part of the module, so it has no
+  figures here; never report it as zero. For `unexpected`, say that the layer covers the module
+  but returned nothing, and that the area may lie outside the module. Never show either value
+  to the user; say it in words.
 
 ## Maps
 

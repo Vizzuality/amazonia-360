@@ -88,7 +88,8 @@ class LayerFacts(BaseModel):
             "Set only when the result is empty. not_mapped_here: the layer maps "
             "only part of the module and nothing of it falls in this area, which is "
             "not missing data. unexpected: the layer covers the module, so an empty "
-            "result suggests the area is outside the real module boundary."
+            "result suggests the area is outside the real module boundary. Both are "
+            "internal values: tell the user what they mean in words, never the value."
         ),
     )
 

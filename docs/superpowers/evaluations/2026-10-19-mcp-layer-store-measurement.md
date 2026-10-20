@@ -3,7 +3,7 @@
 What the local layer copy changes for `area_by_category`, measured against live ArcGIS Online:
 whether it gives the same figures, which cell size to cut it with, and how much faster it is.
 
-Status: parity, cell size, timing and question 19 in Claude Desktop done.
+Status: parity, cell size, timing and question 19 in Claude Desktop done; question 19 rerun on 20 October.
 
 ## Conclusions
 
@@ -198,7 +198,22 @@ The figures are the same as round 4: Cuyabeno 717.80 ha, Cayambe Coca 714.96 ha.
   That is a valid cut, unlike round 4's, which left 21 areas unchecked;
 - lists 13 areas, mostly Andean, where the layer has no classes, and explains that this means
   no records rather than a confirmed zero, but still shows the internal value `not_mapped_here`
-  to the user.
+  to the user. The call log has 14 empty results: the answer left one out.
 
 A tool that ranks or compares places in one call (a non-goal of this build) would remove the
 model turns; precomputed figures make it cheap to add.
+
+### Rerun, 20 October
+
+Run after the skill and the output schema were told to explain `empty_result` in words. Same 36
+calls, all `precomputed`, 0.74 s of tool time in total.
+
+- The answer no longer shows `not_mapped_here`. It names the 14 areas outside the layer and says
+  there is no figure for them, which is not a loss of zero.
+- The figures and the tie between Cuyabeno and Cayambe Coca are the same, and the same four
+  small areas are skipped.
+- It says the module has 41 protected areas; it has 40.
+- First call to last took 1 min 11 s against 1 min 38 s the day before. The difference is the
+  model's pace, not the server: 35 gaps between calls, a median of 1.4 s each, against 0.74 s of
+  tool time for all 36 calls. One call per area is now what costs the time; a ranking tool would
+  answer the question in one.

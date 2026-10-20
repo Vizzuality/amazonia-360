@@ -122,7 +122,6 @@ class AreaHandlers:
         store: LayerStore | None = None,
     ) -> None:
         self._client = client
-        self._simplification = simplification
         self._places = places if places is not None else load_places()
         self._selector = selector or SourceSelector(
             [ArcGISSource(client, simplification)]
