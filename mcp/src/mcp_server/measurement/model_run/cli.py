@@ -166,6 +166,7 @@ async def _ask(
     budget: Budget,
     run_id: str,
     store: bool,
+    errlog_path: Path,
 ) -> QuestionRecord:
     started = datetime.now(UTC)
     clock = time.monotonic()
@@ -173,7 +174,7 @@ async def _ask(
     record: QuestionRecord | None = None
     try:
         env = server_env(run_id, question.number, store)
-        async with server_session(env) as server:
+        async with server_session(env, errlog_path) as server:
             answered: QuestionRecord = await loop.run_question(
                 providers.make_chat(spec, server.tools),
                 server.call_tool,
@@ -216,7 +217,15 @@ async def _run_all(
                 print(f"Spending cap of {budget.cap_usd} USD reached; the run stops.")
                 return
             record = await _ask(
-                loop, providers, spec, question, limits, budget, run_id, store
+                loop,
+                providers,
+                spec,
+                question,
+                limits,
+                budget,
+                run_id,
+                store,
+                run_dir / "server.log",
             )
             append_record(trace, record)
             print(
@@ -227,11 +236,41 @@ async def _run_all(
             )
 
 
-async def _preflight_all(
-    providers: ModuleType, models: list[ModelSpec], tools: list[dict]
+async def _measure(
+    loop: ModuleType,
+    providers: ModuleType,
+    models: list[ModelSpec],
+    questions: list[Question],
+    tools: list[dict],
+    run: dict[str, Any],
+    limits: Limits,
+    budget: Budget,
+    run_dir: Path,
+    store: bool,
 ) -> None:
+    # One event loop for both steps: provider clients cache connections bound to it.
     for spec in models:
         await providers.preflight(spec, tools)
+    run_dir.mkdir(parents=True)
+    _write_run(run_dir, run)
+    print(f"Run {run['run_id']}: {run_dir}")
+    ended = "interrupted"
+    try:
+        await _run_all(
+            loop,
+            providers,
+            models,
+            questions,
+            limits,
+            budget,
+            run["run_id"],
+            run_dir,
+            store,
+        )
+        ended = "finished"
+    finally:
+        # The spending of a question cut short is only in the budget; keep it on disk.
+        _write_run(run_dir, {**run, "ended": ended, "spent_usd": budget.spent_usd})
 
 
 def _load(args: argparse.Namespace) -> tuple[list[ModelSpec], list[Question]]:
@@ -262,14 +301,8 @@ def _run(args: argparse.Namespace) -> None:
     if not args.yes and input("¿Seguir? [s/N] ").strip().lower() not in YES:
         print("Nothing was run.")
         return
-    try:
-        asyncio.run(_preflight_all(providers, models, tools))
-    except providers.PreflightError as exc:
-        raise SystemExit(f"Preflight failed, nothing was run: {exc}") from exc
-
     run_id = _run_id()
     run_dir = args.out / run_id
-    run_dir.mkdir(parents=True)
     limits = loop.Limits(max_turns=args.max_turns, max_seconds=args.max_seconds)
     run = {
         "run_id": run_id,
@@ -285,32 +318,28 @@ def _run(args: argparse.Namespace) -> None:
         "effort": "provider default",
         "server_commit": _server_commit(),
     }
-    _write_run(run_dir, run)
-    print(f"Run {run_id}: {run_dir}")
     budget = loop.Budget(args.max_spend)
-    ended = "interrupted"
     try:
         asyncio.run(
-            _run_all(
+            _measure(
                 loop,
                 providers,
                 models,
                 questions,
+                tools,
+                run,
                 limits,
                 budget,
-                run_id,
                 run_dir,
                 store,
             )
         )
-        ended = "finished"
+    except providers.PreflightError as exc:
+        raise SystemExit(f"Preflight failed, nothing was run: {exc}") from exc
     except KeyboardInterrupt:
         raise SystemExit(
             f"Interrupted; the finished questions are in {run_dir / 'trace.jsonl'}"
         ) from None
-    finally:
-        # The spending of a question cut short is only in the budget; keep it on disk.
-        _write_run(run_dir, {**run, "ended": ended, "spent_usd": budget.spent_usd})
 
 
 def _write_run(run_dir: Path, run: dict[str, Any]) -> None:

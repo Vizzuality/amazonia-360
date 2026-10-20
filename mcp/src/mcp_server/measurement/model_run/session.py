@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import os
+import sys
 from collections.abc import AsyncIterator
-from contextlib import asynccontextmanager
+from contextlib import ExitStack, asynccontextmanager
 from pathlib import Path
 
 from mcp import ClientSession
@@ -66,20 +67,29 @@ async def _list_tools(session: ClientSession) -> list[Tool]:
 
 
 @asynccontextmanager
-async def server_session(env: dict[str, str]) -> AsyncIterator[ServerSession]:
+async def server_session(
+    env: dict[str, str], errlog_path: Path | None = None
+) -> AsyncIterator[ServerSession]:
     params = StdioServerParameters(
         command="uv",
         args=["run", "amazonia360-mcp"],
         env={**os.environ, **env},
         cwd=MCP_DIR,
     )
-    async with (
-        stdio_client(params) as (read, write),
-        ClientSession(read, write) as session,
-    ):
-        initialized = await session.initialize()
-        tools = [_openai_tool(tool) for tool in await _list_tools(session)]
-        yield ServerSession(session, initialized.instructions or "", tools)
+    # The server's httpx INFO lines would bury the CLI's progress on a shared stderr.
+    with ExitStack() as stack:
+        errlog = (
+            stack.enter_context(errlog_path.open("a", encoding="utf-8"))
+            if errlog_path
+            else sys.stderr
+        )
+        async with (
+            stdio_client(params, errlog=errlog) as (read, write),
+            ClientSession(read, write) as session,
+        ):
+            initialized = await session.initialize()
+            tools = [_openai_tool(tool) for tool in await _list_tools(session)]
+            yield ServerSession(session, initialized.instructions or "", tools)
 
 
 def system_prompt(instructions: str, skill_path: Path) -> str:

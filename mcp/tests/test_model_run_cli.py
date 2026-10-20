@@ -1,3 +1,4 @@
+import asyncio
 import json
 import sys
 from contextlib import asynccontextmanager
@@ -84,11 +85,13 @@ class FakeServer:
 @pytest.fixture
 def fakes(monkeypatch):
     """A fake server; each question costs 0.6 USD; preflight passes."""
-    seen: dict[str, list] = {"envs": [], "chats": []}
+    seen: dict[str, list] = {"envs": [], "chats": [], "errlogs": []}
 
     @asynccontextmanager
-    async def fake_session(env: dict[str, str]):
+    async def fake_session(env: dict[str, str], errlog_path=None):
         seen["envs"].append(env)
+        if errlog_path:
+            seen["errlogs"].append(errlog_path)
         yield FakeServer()
 
     def fake_make_chat(spec, tools, *, max_tokens=None):
@@ -244,11 +247,11 @@ def failing_on_two(real, failure: BaseException):
     """The server answers question 2's first tool call, already paid, by failing."""
 
     @asynccontextmanager
-    async def session(env: dict[str, str]):
+    async def session(env: dict[str, str], errlog_path=None):
         if env.get("MCP_QUESTION") == "2":
             yield FailingServer(failure)
             return
-        async with real(env) as server:
+        async with real(env, errlog_path) as server:
             yield server
 
     return session
@@ -309,8 +312,8 @@ def test_run_keeps_the_answer_when_the_server_dies_on_exit(
     real = cli.server_session
 
     @asynccontextmanager
-    async def dying_on_exit(env: dict[str, str]):
-        async with real(env) as server:
+    async def dying_on_exit(env: dict[str, str], errlog_path=None):
+        async with real(env, errlog_path) as server:
             yield server
         if "MCP_RUN_ID" in env:
             raise ExceptionGroup("server", [RuntimeError("process exited")])
@@ -449,3 +452,41 @@ def test_summary_command_reports_skipped_lines(tmp_path, capsys):
         f.write("not json\n")
     main(["summary", str(run_dir)])
     assert "1 trace lines could not be read" in capsys.readouterr().out
+
+
+def test_preflight_and_questions_share_one_event_loop(tmp_path, fakes, monkeypatch):
+    loops: dict[str, asyncio.AbstractEventLoop] = {}
+
+    async def preflight(spec, tools) -> None:
+        loops["preflight"] = asyncio.get_running_loop()
+
+    real_make_chat = providers.make_chat
+
+    def make_chat(spec, tools, *, max_tokens=None):
+        chat = real_make_chat(spec, tools)
+
+        async def noting(messages: list[BaseMessage]) -> AIMessage:
+            loops["question"] = asyncio.get_running_loop()
+            return await chat(messages)
+
+        return noting
+
+    monkeypatch.setattr(providers, "preflight", preflight)
+    monkeypatch.setattr(providers, "make_chat", make_chat)
+    main(
+        [
+            "run",
+            "--models",
+            "sonnet",
+            "--questions",
+            "1",
+            "--max-spend",
+            "5",
+            "--yes",
+            "--out",
+            str(tmp_path),
+        ]
+    )
+    assert loops["preflight"] is loops["question"]
+    run_dir = next(tmp_path.iterdir())
+    assert fakes["errlogs"] == [run_dir / "server.log"]

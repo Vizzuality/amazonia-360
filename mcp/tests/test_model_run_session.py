@@ -95,8 +95,10 @@ async def test_session_lists_the_published_tools():
 @pytest.mark.anyio
 async def test_session_calls_a_tool_and_logs_the_question(tmp_path, monkeypatch):
     monkeypatch.setenv("MCP_CALL_LOG", str(tmp_path / "calls.jsonl"))
-    async with server_session(server_env("r9", 3, store=True)) as s:
+    errlog = tmp_path / "server.log"
+    async with server_session(server_env("r9", 3, store=True), errlog) as s:
         text, is_error = await s.call_tool("find_places", {"query": "Tena"})
+    assert errlog.exists()
     assert not is_error and "canton:Napo/Tena" in text
     line = json.loads((tmp_path / "calls.jsonl").read_text().splitlines()[-1])
     assert line["run_id"] == "r9" and line["question"] == "3"
