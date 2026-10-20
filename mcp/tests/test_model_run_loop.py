@@ -306,3 +306,23 @@ async def test_turn_records_why_it_stopped(metadata: dict, expected: str):
     reply = AIMessage(content="Corta", usage_metadata=USAGE, response_metadata=metadata)
     record = await run(scripted([reply]))
     assert record.turns[-1].stop_reason == expected
+
+
+@pytest.mark.anyio
+async def test_without_a_system_prompt_the_question_stands_alone():
+    seen: list = []
+    q = replace(Q, standalone_text="Que hay en Tena (Ecuador)?")
+    await run_question(
+        scripted([final("Nada.")], seen),
+        ok_tool,
+        None,
+        q,
+        PRICE,
+        Limits(),
+        Budget(10),
+        run_id="r",
+        model="m",
+        store=False,
+    )
+    assert [m.type for m in seen[0]] == ["human"]
+    assert seen[0][0].content == "Que hay en Tena (Ecuador)?"

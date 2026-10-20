@@ -77,7 +77,8 @@ def make_chat(
     options: dict[str, Any] = {"model": spec.model, "api_key": api_key}
     if max_tokens is not None:
         options["max_tokens"] = max_tokens
-    bound = _chat_class(spec.provider)(**options).bind_tools(tools, strict=False)
+    chat_model = _chat_class(spec.provider)(**options)
+    bound = chat_model.bind_tools(tools, strict=False) if tools else chat_model
     anthropic = spec.provider == "anthropic"
 
     async def chat(messages: list[BaseMessage]) -> AIMessage:

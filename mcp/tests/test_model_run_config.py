@@ -111,3 +111,19 @@ def test_estimate_question_grows_with_calls():
     q = Question(1, "A", "t", "", 2, None, None)
     # input: 4500 + 5500 + 6500 = 16500; output: 900
     assert estimate_question(q, 4500, price) == pytest.approx(17_400 / 1_000_000)
+
+
+def test_question_message_standalone_uses_its_own_text():
+    q = Question(4, "B", "¿Zamora?", "", 1, None, None, "¿Zamora (Ecuador)?")
+    assert q.message() == "¿Zamora?"
+    assert q.message(standalone=True) == "¿Zamora (Ecuador)?"
+
+
+def test_question_message_standalone_falls_back_to_the_text():
+    assert Question(3, "A", "t", "", 1, None, None).message(standalone=True) == "t"
+
+
+def test_load_questions_reads_standalone_text():
+    by_number = {q.number: q for q in load_questions(QUESTIONS, None)}
+    assert by_number[4].standalone_text is not None
+    assert by_number[3].standalone_text is None

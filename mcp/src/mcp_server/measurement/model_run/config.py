@@ -25,12 +25,15 @@ class Question:
     expected_calls: int
     area: dict | None
     requires: str | None
+    # The question as sent without the MCP server, when the text alone leans on it.
+    standalone_text: str | None = None
 
-    def message(self) -> str:
+    def message(self, *, standalone: bool = False) -> str:
+        text = (standalone and self.standalone_text) or self.text
         if self.area is None:
-            return self.text
+            return text
         geometry = json.dumps(self.area, separators=(",", ":"), ensure_ascii=False)
-        return f"{self.text}\n\nZona (GeoJSON): {geometry}"
+        return f"{text}\n\nZona (GeoJSON): {geometry}"
 
 
 @dataclass(frozen=True)
@@ -52,6 +55,7 @@ def load_questions(path: Path, numbers: list[int] | None) -> list[Question]:
             expected_calls=item["expected_calls"],
             area=item.get("area"),
             requires=item.get("requires"),
+            standalone_text=item.get("standalone_text"),
         )
         for item in raw
     ]

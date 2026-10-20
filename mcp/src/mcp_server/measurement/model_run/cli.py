@@ -70,7 +70,9 @@ def _store_env(store: bool) -> dict[str, str]:
     return {"MCP_AREA_SOURCES": area_sources(store)}
 
 
-async def _server_shape(store: bool) -> tuple[str, list[dict]]:
+async def _server_shape(store: bool, with_tools: bool) -> tuple[str, list[dict]]:
+    if not with_tools:
+        return "", []
     async with server_session(_store_env(store)) as server:
         return system_prompt(server.instructions, SKILL_PATH), server.tools
 
@@ -167,12 +169,26 @@ async def _ask(
     run_id: str,
     store: bool,
     errlog_path: Path,
+    with_tools: bool,
 ) -> QuestionRecord:
     started = datetime.now(UTC)
     clock = time.monotonic()
     before_usd = budget.spent_usd
     record: QuestionRecord | None = None
     try:
+        if not with_tools:
+            return await loop.run_question(
+                providers.make_chat(spec, []),
+                _no_server,
+                None,
+                question,
+                spec.price,
+                limits,
+                budget,
+                run_id=run_id,
+                model=spec.label,
+                store=False,
+            )
         env = server_env(run_id, question.number, store)
         async with server_session(env, errlog_path) as server:
             answered: QuestionRecord = await loop.run_question(
@@ -199,6 +215,10 @@ async def _ask(
         )
 
 
+async def _no_server(name: str, arguments: dict) -> tuple[str, bool]:
+    return f"No tool {name!r}: this run has no MCP server.", True
+
+
 async def _run_all(
     loop: ModuleType,
     providers: ModuleType,
@@ -209,6 +229,7 @@ async def _run_all(
     run_id: str,
     run_dir: Path,
     store: bool,
+    with_tools: bool,
 ) -> None:
     trace = run_dir / "trace.jsonl"
     for spec in models:
@@ -226,6 +247,7 @@ async def _run_all(
                 run_id,
                 store,
                 run_dir / "server.log",
+                with_tools,
             )
             append_record(trace, record)
             print(
@@ -247,6 +269,7 @@ async def _measure(
     budget: Budget,
     run_dir: Path,
     store: bool,
+    with_tools: bool,
 ) -> None:
     # One event loop for both steps: provider clients cache connections bound to it.
     for spec in models:
@@ -266,6 +289,7 @@ async def _measure(
             run["run_id"],
             run_dir,
             store,
+            with_tools,
         )
         ended = "finished"
     finally:
@@ -288,15 +312,16 @@ def _load(args: argparse.Namespace) -> tuple[list[ModelSpec], list[Question]]:
 
 def _estimate(args: argparse.Namespace) -> None:
     models, questions = _load(args)
-    prompt, tools = asyncio.run(_server_shape(args.sources is None))
+    prompt, tools = asyncio.run(_server_shape(args.sources is None, not args.no_tools))
     _print_estimate(models, questions, _fixed_tokens(prompt, tools))
 
 
 def _run(args: argparse.Namespace) -> None:
     loop, providers = _measure_modules()
     models, questions = _load(args)
-    store = args.sources is None
-    prompt, tools = asyncio.run(_server_shape(store))
+    with_tools = not args.no_tools
+    store = args.sources is None and with_tools
+    prompt, tools = asyncio.run(_server_shape(store, with_tools))
     _print_estimate(models, questions, _fixed_tokens(prompt, tools))
     if not args.yes and input("¿Seguir? [s/N] ").strip().lower() not in YES:
         print("Nothing was run.")
@@ -309,6 +334,7 @@ def _run(args: argparse.Namespace) -> None:
         "models": [_model_entry(spec) for spec in models],
         "questions": [asdict(q) for q in questions],
         "store": store,
+        "tools": with_tools,
         "limits": {
             "max_turns": limits.max_turns,
             "max_seconds": limits.max_seconds,
@@ -332,6 +358,7 @@ def _run(args: argparse.Namespace) -> None:
                 budget,
                 run_dir,
                 store,
+                with_tools,
             )
         )
     except providers.PreflightError as exc:
@@ -369,7 +396,13 @@ def _add_selection(parser: argparse.ArgumentParser) -> None:
         default="",
         help="comma-separated question numbers (all without requires, if omitted)",
     )
-    parser.add_argument(
+    server = parser.add_mutually_exclusive_group()
+    server.add_argument(
+        "--no-tools",
+        action="store_true",
+        help="no MCP server: the questions alone, no tools and no system prompt",
+    )
+    server.add_argument(
         "--sources",
         choices=["arcgis"],
         default=None,

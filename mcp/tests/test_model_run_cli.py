@@ -500,3 +500,45 @@ def test_preflight_and_questions_share_one_event_loop(tmp_path, fakes, monkeypat
     assert loops["preflight"] is loops["question"]
     run_dir = next(tmp_path.iterdir())
     assert fakes["errlogs"] == [run_dir / "server.log"]
+
+
+def test_run_without_tools_starts_no_server(tmp_path, fakes, capsys):
+    main(
+        [
+            "run",
+            "--models",
+            "sonnet",
+            "--questions",
+            "4",
+            "--no-tools",
+            "--max-spend",
+            "5",
+            "--yes",
+            "--out",
+            str(tmp_path),
+        ]
+    )
+    assert fakes["envs"] == []
+    run_dir = next(tmp_path.iterdir())
+    run = json.loads((run_dir / "run.json").read_text("utf-8"))
+    assert run["tools"] is False
+    assert "MCP: off" in summarise(run, [])[0]
+
+
+def test_no_tools_and_sources_cannot_go_together(tmp_path, fakes):
+    with pytest.raises(SystemExit):
+        main(
+            [
+                "run",
+                "--models",
+                "sonnet",
+                "--no-tools",
+                "--sources",
+                "arcgis",
+                "--max-spend",
+                "5",
+                "--yes",
+                "--out",
+                str(tmp_path),
+            ]
+        )

@@ -4,6 +4,7 @@
       "number": 1,
       "group": "A. Discovery",
       "text": "¿Qué datos hay sobre el medio físico y natural?",
+      "standalone_text": "¿Qué datos hay sobre el medio físico y natural en el módulo de Ecuador de Amazonia 360?",
       "text_from": "translated",
       "expected": "Lists the 13 layers and their descriptions",
       "expected_calls": 1
@@ -12,6 +13,7 @@
       "number": 2,
       "group": "B. Presence and counts",
       "text": "¿Hay áreas en restauración en Mejía?",
+      "standalone_text": "¿Hay áreas en restauración en Mejía (Ecuador)?",
       "text_from": "desktop trial",
       "expected": "Asked which Mejía was meant; 8 areas in the Pastaza canton",
       "expected_calls": 2
@@ -28,6 +30,7 @@
       "number": 4,
       "group": "C. Hectares by class",
       "text": "¿Qué tipos de clima hay en Zamora?",
+      "standalone_text": "¿Qué tipos de clima hay en Zamora (Ecuador)?",
       "text_from": "desktop trial",
       "expected": "Asked whether the province or the canton was meant; 3 classes",
       "expected_calls": 2
@@ -202,6 +205,7 @@
       "number": 19,
       "group": "H. Composite",
       "text": "¿Qué área protegida del módulo perdió más bosque entre 2020 y 2022?",
+      "standalone_text": "¿Qué área protegida del módulo de Ecuador de Amazonia 360 perdió más bosque entre 2020 y 2022?",
       "text_from": "translated",
       "expected": "Cuyabeno, 717.80 ha, practically tied with Cayambe Coca, 714.96 ha. First run: 19 of the 40 areas in 3 min 15 s. With the layer store: 36 areas, the other four too small to lead, in 1 min 38 s, almost all of it the model's own turns. Rerun on 20 October: the areas outside the layer explained in words, 1 min 11 s; it counts 41 areas instead of 40",
       "expected_calls": 40

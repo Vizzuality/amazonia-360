@@ -100,7 +100,7 @@ def _stop_reason(message: AIMessage) -> str | None:
 async def run_question(
     chat: ChatTurn,
     call_tool: CallTool,
-    system_prompt: str,
+    system_prompt: str | None,
     question: Question,
     price: Price,
     limits: Limits,
@@ -112,9 +112,10 @@ async def run_question(
 ) -> QuestionRecord:
     started = datetime.now(UTC)
     clock = time.monotonic()
+    # No system prompt means no MCP server: the question has to stand on its own.
     messages: list[BaseMessage] = [
-        SystemMessage(system_prompt),
-        HumanMessage(question.message()),
+        *([SystemMessage(system_prompt)] if system_prompt is not None else []),
+        HumanMessage(question.message(standalone=system_prompt is None)),
     ]
     turns: list[TurnRecord] = []
     calls: list[ToolCallRecord] = []

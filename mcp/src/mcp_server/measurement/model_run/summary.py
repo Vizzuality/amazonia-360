@@ -99,12 +99,18 @@ def _settings(run: dict) -> list[str]:
     return lines
 
 
+def _mode(run: dict) -> str:
+    if run.get("tools") is False:
+        return "MCP: off, the questions sent with no tools and no system prompt."
+    return f"Store: {'on' if run.get('store') else 'off'}."
+
+
 def _summary(run: dict, labels: list[str], records: list[QuestionRecord]) -> str:
     limits = run.get("limits", {})
     lines = [
         f"# Model measurement {run.get('run_id', '')}",
         "",
-        f"Store: {'on' if run.get('store') else 'off'}. "
+        f"{_mode(run)} "
         f"Server commit: {run.get('server_commit') or 'unknown'}. "
         f"Spending cap: {limits.get('max_spend_usd', '?')} USD. "
         f"Limits per question: {limits.get('max_turns', '?')} turns, "
