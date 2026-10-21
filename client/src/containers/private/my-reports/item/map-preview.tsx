@@ -43,6 +43,7 @@ export default function ReportMapPreview({ id, location }: Report) {
           ],
         })}
         viewProps={{
+          padding: { top: 48, right: 48, bottom: 48, left: 48 },
           navigation: {
             actionMap: { mouseWheel: "none" },
             browserTouchPanEnabled: false,
