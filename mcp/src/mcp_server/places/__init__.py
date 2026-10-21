@@ -25,7 +25,11 @@ NO_MATCH = (
     "Only these three kinds of place can be named; for anything else, send the "
     "area as a GeoJSON polygon."
 )
-SEVERAL = "Several places match: ask the user which one before calling a tool."
+SEVERAL = (
+    "Several places match. If the user's words already name the kind (province, "
+    "canton, protected area), use the place of that kind; otherwise ask the user "
+    "which one before calling a tool."
+)
 NO_PROVINCE = (
     "No province of the Ecuador module has that name. List the provinces with "
     "kind='province' to see which ones there are."

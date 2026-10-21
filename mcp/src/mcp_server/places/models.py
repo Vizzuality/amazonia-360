@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, computed_field
 
 PlaceKind = Literal["province", "canton", "protected_area"]
 
@@ -37,6 +37,15 @@ class Place(PlaceSummary):
 class PlaceMatches(BaseModel):
     places: list[PlaceSummary]
     note: str | None = None
+
+    # Models miscount long lists: on 40 protected areas several answered 41.
+    @computed_field(
+        description="How many places are listed. When saying how many places were "
+        "checked, give this number."
+    )
+    @property
+    def count(self) -> int:
+        return len(self.places)
 
 
 class PlacesSnapshot(BaseModel):

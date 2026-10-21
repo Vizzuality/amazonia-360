@@ -228,6 +228,7 @@ async def test_list_places(tmp_path: Path) -> None:
     assert result.structured_content is not None
     found = result.structured_content["places"]
     assert found and all(p["province"] == "Pastaza" for p in found)
+    assert result.structured_content["count"] == len(found)
 
 
 @pytest.mark.anyio

@@ -174,6 +174,12 @@ def test_of_kind_lists_every_place_of_that_kind(places: Places) -> None:
         "protected_area:Yasuní",
     ]
     assert listed.note is None
+    assert listed.count == 2
+
+
+def test_matches_count_the_places_they_hold(places: Places) -> None:
+    assert places.find("Pastaza").count == 2
+    assert places.of_kind("canton", "Guayas").count == 0
 
 
 def test_of_kind_filters_cantons_by_province(places: Places) -> None:

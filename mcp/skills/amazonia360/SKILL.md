@@ -28,12 +28,16 @@ Follow these on every answer.
 
 1. **Settle the area.** When the user names a place, call `find_places`.
    - One match: use its `id` as `place_id`.
-   - Several matches, such as Pastaza (a province and a canton): ask the user which one, naming
-     the kind and the province of each. Never pick one yourself.
+   - Several matches, such as Pastaza (a province and a canton): when the user's words already
+     name the kind ("la provincia de Pastaza", "el cantón Pastaza"), use the place of that kind.
+     Otherwise ask the user which one, naming the kind and the province of each. Never pick one
+     yourself.
    - No match: say that only provinces, cantons and protected areas of the module can be named,
      and ask for the area drawn as GeoJSON.
    - A question over several places, such as the cantons of a province or every protected area:
      call `list_places` for the ids. Never supply place names from your own knowledge.
+     When saying how many places there are or how many you checked, give `count` from that
+     result; never count them yourself.
 2. **Choose the indicator.** Call `list_indicators` and choose by description.
    `describe_indicator` gives the unit, the provenance and the caveats of one.
 3. **Call the fast tools first.** `categories_in_area`, `count_in_area` and
@@ -80,7 +84,8 @@ Never report several of them one after the other without saying why each one is 
   `not_mapped_here`, say that the layer does not map this part of the module, so it has no
   figures here; never report it as zero. For `unexpected`, say that the layer covers the module
   but returned nothing, and that the area may lie outside the module. Never show either value
-  to the user; say it in words.
+  to the user; say it in words. A place with no figures counts once in any tally, also when
+  part of it lies outside the module.
 
 ## Maps
 
