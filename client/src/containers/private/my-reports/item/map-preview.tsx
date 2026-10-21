@@ -14,12 +14,6 @@ const SelectedLayer = dynamic(() => import("@/containers/map/layer-manager/selec
   ssr: false,
 });
 
-function getOneZoomLevelOutBbox({ xmin, ymin, xmax, ymax }: __esri.Extent): number[] {
-  const padX = (xmax - xmin) / 2;
-  const padY = (ymax - ymin) / 2;
-  return [xmin - padX, ymin - padY, xmax + padX, ymax + padY];
-}
-
 export default function ReportMapPreview({ id, location }: Report) {
   const GEOMETRY = useLocationGeometry(location);
 
@@ -41,9 +35,15 @@ export default function ReportMapPreview({ id, location }: Report) {
         id={`report-preview-${id}`}
         initialBasemapId="gray-vector"
         {...(GEOMETRY?.extent && {
-          defaultBbox: getOneZoomLevelOutBbox(GEOMETRY.extent),
+          defaultBbox: [
+            GEOMETRY.extent.xmin,
+            GEOMETRY.extent.ymin,
+            GEOMETRY.extent.xmax,
+            GEOMETRY.extent.ymax,
+          ],
         })}
         viewProps={{
+          padding: { top: 48, right: 48, bottom: 48, left: 48 },
           navigation: {
             actionMap: { mouseWheel: "none" },
             browserTouchPanEnabled: false,
