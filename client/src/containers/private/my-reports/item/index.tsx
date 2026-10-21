@@ -7,6 +7,7 @@ import { LuCalendar, LuMapPin } from "react-icons/lu";
 
 import { Card } from "@/components/ui/card";
 
+import { LocaleLink } from "@/i18n/navigation";
 import { Report } from "@/payload-types";
 
 import { ReportActions } from "./actions";
@@ -44,15 +45,20 @@ export const MyReportsItem = ({ report }: MyReportsItemProps) => {
   };
 
   return (
-    <Card className="group after:border-border relative flex flex-col gap-1 overflow-hidden border-0 shadow-none after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:border">
+    <Card className="group after:border-border relative flex flex-col gap-1 overflow-hidden border-0 shadow-none transition-[translate,box-shadow] duration-150 after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:border hover:shadow-md has-[button[aria-expanded=true]]:shadow-md motion-safe:hover:-translate-y-1 motion-safe:has-[button[aria-expanded=true]]:-translate-y-1">
       {/* Map Preview */}
-      <div className="relative flex grow flex-col space-y-3 px-5 pt-5 pb-2">
+      <div className="flex grow flex-col space-y-3 px-5 pt-5 pb-2">
         {/* Header */}
         <header className="space-y-4 [&>:first-child]:pr-7">
           <ModuleChips modules={report.modules} />
           <div className="space-y-2">
             <h3 className="text-foreground line-clamp-2 text-lg leading-6 font-medium">
-              {report.title || t("my-reports-item-untitled")}
+              <LocaleLink
+                href={`/reports/${report.id}`}
+                className="focus-visible:after:ring-ring after:absolute after:inset-0 after:z-[1] after:rounded-xl focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-inset"
+              >
+                {report.title || t("my-reports-item-untitled")}
+              </LocaleLink>
             </h3>
 
             {report.description && (
@@ -63,7 +69,7 @@ export const MyReportsItem = ({ report }: MyReportsItemProps) => {
           </div>
         </header>
 
-        <div className="absolute top-2 right-2">
+        <div className="absolute top-2 right-2 z-[2]">
           <ReportActions report={report} />
         </div>
 
