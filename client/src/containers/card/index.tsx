@@ -18,6 +18,10 @@ import { cn } from "@/lib/utils";
 
 import { Indicator } from "@/types/indicator";
 
+import {
+  getIndicatorInfoTooltipClassName,
+  IndicatorInfoTooltipBody,
+} from "@/containers/indicators/info-tooltip";
 import Info from "@/containers/info";
 
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -239,8 +243,11 @@ export function CardInfo({
           <DialogClose />
         </DialogContent>
         <TooltipPortal>
-          <TooltipContent sideOffset={0} className="max-w-72">
-            {description_short}
+          <TooltipContent sideOffset={0} className={getIndicatorInfoTooltipClassName()}>
+            <IndicatorInfoTooltipBody
+              description={description_short}
+              partners={indicator.partners}
+            />
             <TooltipArrow />
           </TooltipContent>
         </TooltipPortal>

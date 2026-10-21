@@ -52,10 +52,12 @@ export type ImageryAggregation = ResourceImagery["aggregation"];
 
 export type IndicatorModule = { slug: string; tag: string };
 
+export type IndicatorPartner = { id: string; name: string };
+
 /**
  * Restated over the generated Indicator: the numeric `id`, the Topic lifted out from under the
- * Subtopic, the single resource the CMS models as a one-entry block array, and the optional text
- * `lib/cms-content` normalises from `null` to absent.
+ * Subtopic, the single resource the CMS models as a one-entry block array, the partners reduced to
+ * id and name, and the optional text `lib/cms-content` normalises from `null` to absent.
  */
 export type Indicator = Omit<
   CmsIndicator,
@@ -84,6 +86,7 @@ export type Indicator = Omit<
     | ResourceH3
     | ResourceComponent;
   module: IndicatorModule | null;
+  partners: IndicatorPartner[];
 };
 
 export type H3Indicator = Indicator & {
