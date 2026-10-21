@@ -414,4 +414,5 @@ export const mockUseLocationGeometry = vi.fn<() => MockPolygonProperties | null>
 
 vi.mock("@/lib/location", () => ({
   useLocationGeometry: vi.fn(),
+  useLocationAdminUnit: vi.fn(() => null),
 }));

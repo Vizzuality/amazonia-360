@@ -213,6 +213,7 @@ export const getSearch = async (params: GetSearchParams) => {
       return {
         type: projectedGeo.type,
         geometry: projectedGeo.toJSON(),
+        attributes: (r.feature.attributes ?? null) as Record<string, unknown> | null,
       };
     }
     return null;
