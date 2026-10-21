@@ -13,6 +13,7 @@ NORMAL_STOPS = {
     "tool_use",
     "tool_calls",
     "completed",
+    "STOP",  # Gemini
 }
 
 

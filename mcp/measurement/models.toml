@@ -6,6 +6,7 @@
 #   price = { input = 3.0, cached_input = 0.3, output = 15.0, read_on = 2026-10-20, source = "https://…" }
 # A model with any price field, read_on or source empty is refused before any call.
 # DeepSeek publishes two models, so it has two entries, not three.
+# Gemini prices are the rates after the launch offer: the measurement is for later use.
 
 [[model]]
 label = "fable"
@@ -59,3 +60,18 @@ label = "deepseek-mid"
 provider = "deepseek"
 model = "deepseek-flash"
 price = { input = 0.3, cached_input = 0.006, output = 1.2, read_on = 2026-10-20, source = "https://api-docs.deepseek.com/quick_start/pricing" }
+
+# The rate after the launch offer, which ends 2026-11-30; the offer is half.
+# Implicit caching only.
+[[model]]
+label = "gemini-large"
+provider = "google"
+model = "gemini-4-argon"
+price = { input = 4.0, cached_input = 0.2, output = 20.0, read_on = 2026-10-21, source = "https://ai.google.dev/gemini-api/docs/pricing" }
+
+# The rate after the launch offer, which ends 2026-12-31; the offer is half.
+[[model]]
+label = "gemini-mid"
+provider = "google"
+model = "gemini-3.8-flash"
+price = { input = 1.5, cached_input = 0.15, output = 7.5, read_on = 2026-10-21, source = "https://ai.google.dev/gemini-api/docs/pricing" }

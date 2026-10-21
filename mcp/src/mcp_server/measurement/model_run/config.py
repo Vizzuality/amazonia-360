@@ -11,8 +11,8 @@ from typing import Literal
 
 from mcp_server.measurement.model_run.pricing import Price
 
-Provider = Literal["anthropic", "openai", "deepseek"]
-PROVIDERS = ("anthropic", "openai", "deepseek")
+Provider = Literal["anthropic", "openai", "deepseek", "google"]
+PROVIDERS = ("anthropic", "openai", "deepseek", "google")
 PRICE_FIELDS = ("input", "cached_input", "output", "read_on", "source")
 
 

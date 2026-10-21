@@ -173,6 +173,16 @@ async def test_anthropic_chat_marks_system_and_last_message(fake_anthropic):
     assert messages[0].content == "SYS" and messages[-1].content == "RESULT"
 
 
+def test_gemini_chat_binds_tools_without_strict(monkeypatch):
+    FakeChat.instances = []
+    monkeypatch.setattr(providers, "ChatGoogleGenerativeAI", FakeChat)
+    monkeypatch.setenv("GOOGLE_API_KEY", "test-key")
+    make_chat(ModelSpec("gemini", "google", "gemini-test", PRICE), TOOLS)
+    model = FakeChat.instances[0]
+    assert model.kwargs == {"model": "gemini-test", "api_key": "test-key"}
+    assert model.bound == (TOOLS, {})
+
+
 def test_make_chat_needs_the_api_key(monkeypatch, fake_anthropic):
     monkeypatch.delenv("ANTHROPIC_API_KEY")
     with pytest.raises(ValueError, match="ANTHROPIC_API_KEY"):

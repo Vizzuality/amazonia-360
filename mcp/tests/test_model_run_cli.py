@@ -453,6 +453,16 @@ def test_summary_counts_openai_incomplete_answers_as_cut_short():
     assert row.endswith("| 2 (max_output_tokens) |")
 
 
+def test_summary_counts_gemini_max_tokens_as_cut_short():
+    cut = record("gemini", 2)
+    cut = replace(cut, turns=[replace(cut.turns[0], stop_reason="MAX_TOKENS")])
+    fine = record("gemini", 19)
+    fine = replace(fine, turns=[replace(fine.turns[0], stop_reason="STOP")])
+    summary, _ = summarise(RUN, [cut, fine])
+    row = next(line for line in summary.splitlines() if line.startswith("| gemini |"))
+    assert row.endswith("| 2 (MAX_TOKENS) |")
+
+
 def test_summary_command_reports_skipped_lines(tmp_path, capsys):
     run_dir = tmp_path / "run"
     run_dir.mkdir()

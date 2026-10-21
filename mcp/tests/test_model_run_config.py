@@ -27,6 +27,8 @@ LABELS = [
     "openai-small",
     "deepseek-large",
     "deepseek-mid",
+    "gemini-large",
+    "gemini-mid",
 ]
 
 
@@ -78,10 +80,11 @@ def test_load_models_refuses_empty_source(tmp_path):
         load_models(tmp_path / "m.toml", ["x"])
 
 
-def test_load_models_reads_all_eight_labels_from_the_real_file():
+def test_load_models_reads_all_labels_from_the_real_file():
     specs = load_models(MODELS, LABELS)
     assert [s.label for s in specs] == LABELS
-    assert all(s.price.read_on == date(2026, 10, 20) for s in specs)
+    read_on = {date(2026, 10, 20), date(2026, 10, 21)}
+    assert all(s.price.read_on in read_on for s in specs)
 
 
 def test_cache_write_defaults_to_input():

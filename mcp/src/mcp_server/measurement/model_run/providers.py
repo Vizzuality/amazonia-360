@@ -8,6 +8,7 @@ from typing import Any, cast
 from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 from langchain_deepseek import ChatDeepSeek
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 
 from mcp_server.measurement.model_run.config import ModelSpec, Provider
@@ -17,11 +18,13 @@ API_KEY_VARS: dict[Provider, str] = {
     "anthropic": "ANTHROPIC_API_KEY",
     "openai": "OPENAI_API_KEY",
     "deepseek": "DEEPSEEK_API_KEY",
+    "google": "GOOGLE_API_KEY",
 }
 CACHING: dict[str, str] = {
     "anthropic": "cache_control ephemeral on the system message and the last message",
     "openai": "automatic prefix caching by the provider",
     "deepseek": "automatic context caching by the provider",
+    "google": "implicit caching by the provider",
 }
 EPHEMERAL = {"type": "ephemeral"}
 PREFLIGHT_MESSAGE = "Responde solo: ok"
@@ -38,6 +41,7 @@ def _chat_class(provider: Provider) -> Any:
         "anthropic": ChatAnthropic,
         "openai": ChatOpenAI,
         "deepseek": ChatDeepSeek,
+        "google": ChatGoogleGenerativeAI,
     }[provider]
 
 
@@ -78,7 +82,9 @@ def make_chat(
     if max_tokens is not None:
         options["max_tokens"] = max_tokens
     chat_model = _chat_class(spec.provider)(**options)
-    bound = chat_model.bind_tools(tools, strict=False) if tools else chat_model
+    # Gemini has no strict mode for function calling.
+    bind = {} if spec.provider == "google" else {"strict": False}
+    bound = chat_model.bind_tools(tools, **bind) if tools else chat_model
     anthropic = spec.provider == "anthropic"
 
     async def chat(messages: list[BaseMessage]) -> AIMessage:
