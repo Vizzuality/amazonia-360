@@ -309,7 +309,7 @@ def test_grid_table(grid_dataset):
     response = test_client.post(
         "/grid/table?level=4&order_by=-population",
         headers=HEADERS,
-        content=json.dumps(body),
+        json=body,
     )
     assert response.status_code == 200, response.content
     assert json.loads(response.read()) == {
@@ -342,7 +342,7 @@ def test_grid_table_geojson(grid_dataset, geojson):
     response = test_client.post(
         "/grid/table?level=4&order_by=-population",
         headers=HEADERS,
-        content=json.dumps(body),
+        json=body,
     )
     assert response.status_code == 200
     assert json.loads(response.read()) == {
@@ -359,7 +359,7 @@ def test_grid_tile_post_geojson(grid_dataset, geojson):
         f"/grid/tile/{grid_dataset}",
         params={"columns": ["landcover", "population"]},
         headers=HEADERS,
-        content=geojson,
+        json=json.loads(geojson),
     )
     assert response.status_code == 200
     assert pl.read_ipc(response.read()).to_dict(as_series=False) == {
@@ -374,7 +374,7 @@ def test_grid_tile_post_geojson_404(grid_dataset, geojson):
         "/grid/tile/8439181ffffffff",
         params={"columns": ["landcover", "population"]},
         headers=HEADERS,
-        content=geojson,
+        json=json.loads(geojson),
     )
 
     assert response.status_code == 404
@@ -385,7 +385,7 @@ def test_grid_tile_post_wrong_column(grid_dataset, geojson):
         f"/grid/tile/{grid_dataset}",
         params={"columns": ["I DO NOT EXIST"]},
         headers=HEADERS,
-        content=geojson,
+        json=json.loads(geojson),
     )
 
     assert response.status_code == 400
@@ -397,7 +397,7 @@ def test_grid_metadata_filter(grid_dataset, geojson):
         "/grid/meta",
         params={"level": 4},
         headers=HEADERS,
-        content=geojson,
+        json=json.loads(geojson),
     )
     assert response.status_code == 200, response.content
 
