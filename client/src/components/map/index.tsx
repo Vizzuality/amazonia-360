@@ -210,7 +210,7 @@ export function MapView({
     ArcGISReactiveUtils.whenOnce(() => !mapViewRef.current?.updating && loaded && isPdf).then(
       () => {
         // Take a screenshot at the same resolution of the current view
-        mapViewRef.current?.takeScreenshot().then(function (s) {
+        mapViewRef.current?.takeScreenshot({ ignorePadding: true }).then(function (s) {
           if (s && s.dataUrl) {
             setScreenshot(s.dataUrl);
           }

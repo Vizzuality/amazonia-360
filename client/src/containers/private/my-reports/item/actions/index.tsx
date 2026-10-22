@@ -25,8 +25,8 @@ export const ReportActions = ({ report }: ReportActionsProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
-          <LuEllipsisVertical className="h-4 w-4" />
+        <Button variant="ghost" size="icon" className="size-10 shrink-0">
+          <LuEllipsisVertical className="size-5" />
           <span className="sr-only">{t("my-reports-action-open-menu")}</span>
         </Button>
       </DropdownMenuTrigger>
