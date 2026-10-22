@@ -78,6 +78,13 @@ Status on 30 September 2026. The service runs in staging only. Designs are in
 - **Overlap tool.** Questions such as "deforestation inside protected areas", answered by the
   server so the model does not combine two results. It is the first candidate if the question
   recurs in the gatekeeper set. It needs a server-side clip and a class filter per layer.
+- **Swipe map of two layers.** For words with several candidate layers (forest: 119 against
+  206; biodiversity: 210 against 219; climate: 218 against 204), a map tool that draws two
+  layers over the same area with a slider between them. It returns two separate results, each
+  with its own `computed_over`, `coverage` and `caveats`, and no field that joins their
+  figures. The page syncs two MapLibre maps by hand, with no plugin. The skill says when to
+  use it: the user's word has several layers and the user asks to see them. Depends on Next 7,
+  since two layers share one result's size budget.
 
 ## When needed
 
