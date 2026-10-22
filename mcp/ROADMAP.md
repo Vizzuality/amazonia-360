@@ -61,6 +61,15 @@ Status on 30 September 2026. The service runs in staging only. Designs are in
    PostgreSQL, and rebuild a layer on demand after it is uploaded
    (spec, "After the proof of concept"). PostGIS is not on the Tech Radar and needs the team's
    approval first.
+7. **Map results within the host's size limit.** Claude Desktop drops a tool result over 1 MB
+   whole, and the server only leaves the shapes out past 4 MB: ecosystems (210) over the
+   canton of Pastaza come to 1.16 MB and draw no map. Every map result fits a fixed budget
+   (about 900 KB, figures included), whatever the area and the layer. The shapes are
+   simplified at a tolerance set by the area's size, parts smaller than a pixel are not drawn,
+   the tolerance grows until the result fits, and past that the shapes are left out with a
+   note. The figures always come from the full computation; the legend says the outlines are
+   simplified for display. A test over the largest place and the densest layer in the store
+   holds the budget.
 
 ## To decide
 

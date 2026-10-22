@@ -79,6 +79,27 @@ startup.
 Behind a reverse proxy, the proxy must forward the original `Host` header (`proxy_set_header
 Host $host;` in nginx): the server only accepts requests for the host in `MCP_PUBLIC_URL`.
 
+## Tools
+
+Each group is registered in `create_mcp_server` (`src/mcp_server/server.py`). Every area tool
+takes an `indicator_id`, and either an `area` (GeoJSON) or a `place_id`.
+
+| Tool | What it returns | Defined in |
+|---|---|---|
+| `list_indicators` | The module's indicators, with the tools each one can be asked through | `tools/catalogue.py` |
+| `describe_indicator` | Unit, value type, provenance and caveats of one indicator | `tools/catalogue.py` |
+| `find_places` | Provinces, cantons and protected areas with a name, each with its `place_id` | `tools/places.py` |
+| `list_places` | Every place of a kind, or the cantons of one province | `tools/places.py` |
+| `categories_in_area` | Which classes of a categorical layer are present. Fast | `tools/area.py` |
+| `count_in_area` | How many features of a count layer fall in the area. Fast | `tools/area.py` |
+| `class_shares_in_area` | Share of the area's pixels in each class of a classed raster. Fast | `tools/area.py` |
+| `area_by_category` | Hectares of each class, clipped to the area. Slow | `tools/area.py` |
+| `map_area_by_category` | The figures of `area_by_category`, with a map for the user | `maps/__init__.py` |
+| `map_class_shares_in_area` | The shares of `class_shares_in_area`, with a map for the user | `maps/__init__.py` |
+
+Paths are under `src/mcp_server/`. `tests/test_readme.py` fails when this table and the
+server's tools differ.
+
 ## Places
 
 `find_places` returns provinces, cantons and protected areas by name; every area tool takes the
