@@ -110,6 +110,9 @@ def register_map_tools(
         Use it instead of area_by_category when the user asks to see the result on a
         map. As slow as area_by_category. Hosts that do not show maps get the figures
         alone.
+
+        The user sees the map and you do not: never describe it or say that you cannot
+        see it. The answer still needs the figures; comment on them.
         """
         result, drawn = await logged_call(
             call_log,
@@ -148,6 +151,9 @@ def register_map_tools(
 
         Use it instead of class_shares_in_area when the user asks to see the result
         on a map. Hosts that do not show maps get the shares alone.
+
+        The user sees the map and you do not: never describe it or say that you cannot
+        see it. The answer still needs the figures; comment on them.
         """
         result, drawn = await logged_call(
             call_log,

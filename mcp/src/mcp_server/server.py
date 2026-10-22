@@ -32,31 +32,20 @@ polygon. The module's own layers, and a few classed rasters of the regional plat
 (slope, land cover, forest cover, canopy height, grassland), both over areas in the
 module.
 
-Settle the area first (find_places, or a polygon), then call list_indicators. Use
-categories_in_area, count_in_area and class_shares_in_area first; they are fast.
-area_by_category is slow and should be called for one indicator at a time.
+Settle the area first, then call list_indicators. A province, canton or protected area
+of the module can be named instead of drawn: find_places returns a place_id that every
+area tool takes instead of area. When several places match, ask the user which one.
+For questions over several places, take the names from list_places, never from your own
+knowledge.
 
-A province, canton or protected area of the module can be named instead of drawn:
-find_places returns the places with that name, each with a place_id that every area
-tool takes instead of area. When several places match, ask the user which one.
-list_places gives every place of a kind, or the cantons of one province, for questions
-over several places; take the names from it, never from your own knowledge.
-Provinces and cantons are whole administrative units and often extend beyond the
-module. coverage.outside_ha gives the hectares of the area outside the module: report
-them as outside the module, separately from unclassified land, which counts only land
-inside it.
+Provinces and cantons often extend beyond the module. Report coverage.outside_ha as
+outside the module, separately from unclassified land, which counts only land inside it.
 
 Every answer says what it was computed over (computed_over), where the area falls
 against the module (coverage) and what the layer covers (layer); each field is described
 in the tool's output schema. caveats holds known defects of the dataset, written by a
-person in the CMS; quote them unchanged. Figures from different indicators are not meant
-to be combined.
-
-When the user asks to see a result on a map, map_area_by_category returns the same
-figures as area_by_category and draws them for the user; map_class_shares_in_area does
-the same for class_shares_in_area. The map shows the figures and their notes; the
-answer still needs them. The user sees the map and you do not: do not say you cannot
-see it, and do not guess how it looks. Comment on the figures instead.
+person in the CMS; quote them unchanged. Never combine figures from different
+indicators, and never turn a share of pixels into hectares.
 """
 
 
