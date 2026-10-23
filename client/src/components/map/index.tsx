@@ -148,8 +148,6 @@ export function MapView({
         ...mergedViewProps,
       });
 
-      // Set the padding
-
       const mapWidth = mapContainerRef.current.offsetWidth;
       const scaleBarPosition = mapWidth >= 1024 ? "bottom-right" : "top-left";
 
