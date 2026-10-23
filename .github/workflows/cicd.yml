@@ -149,6 +149,9 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: ${{ needs.set_environment.outputs.env_name }}
+    concurrency:
+      group: deploy-${{ needs.set_environment.outputs.env_name }}
+      cancel-in-progress: false
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -263,6 +266,7 @@ jobs:
 
       - name: Deploy to Amazon EB
         uses: einaregilsson/beanstalk-deploy@v21
+        timeout-minutes: 30
         with:
           aws_access_key: ${{ vars.TF_PIPELINE_USER_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.TF_PIPELINE_USER_SECRET_ACCESS_KEY }}
@@ -272,3 +276,4 @@ jobs:
           version_label: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
           deployment_package: infrastructure/source_bundle/deploy.zip
           wait_for_deployment: true
+          wait_for_environment_recovery: 300
