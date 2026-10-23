@@ -192,6 +192,95 @@ to read a result. It is installed by hand:
 `tests/test_skill.py` fails when a tool is missing from the skill, or when the skill names an
 indicator that cannot be answered.
 
+## Chat API
+
+`POST <MCP_PUBLIC_URL>/chat` is the front end's chat: it takes an AG-UI `RunAgentInput`, runs
+the measurement's question loop over this server in process, and streams AG-UI events back
+over SSE. TanStack AI's `ChatClient` and `useChat` read it with `fetchServerSentEvents`. The
+model key stays in this service; the front end holds none. The contract is the spec
+`docs/superpowers/specs/2026-10-22-mcp-chat-api-design.md`.
+
+```bash
+# Locally, alone, with no OAuth and no database, on http://127.0.0.1:8001/chat
+MCP_CHAT_DEV_TOKENS="ana:$(openssl rand -hex 24)" ANTHROPIC_API_KEY=... uv run amazonia360-mcp-chat
+```
+
+| Setting | What it does |
+|---|---|
+| `MCP_CHAT_MODEL` | Label from `measurement/models.toml` (`sonnet` by default); its provider's key must be set |
+| `MCP_CHAT_DEV_TOKENS` | `name:token` pairs, one per developer, 32 characters or more, until the front end issues its JWT |
+| `MCP_CHAT_JWKS_URL`, `MCP_CHAT_JWT_ISSUER` | The front end's public keys and issuer, for its JWTs (`aud` `amazonia360-ai`, 10 minutes at most) |
+| `MCP_CHAT_ALLOWED_ORIGINS` | The front end's origins, comma-separated; `localhost` is allowed while development tokens are set |
+| `MCP_CHAT_MAX_TURNS`, `MCP_CHAT_MAX_SECONDS` | Per question, 60 and 300 by default |
+| `MCP_CHAT_RUN_LOG` | One line per question: user, thread, model, turns, tokens, cost (`var/chat-runs.jsonl`) |
+| `MCP_CHAT_PORT` | Port of the local command (8001) |
+
+With no token setting, `/chat` answers 503. Tool calls go to `var/calls.jsonl` with the token's
+user and the thread id. `examples/chat/` holds recorded streams of real questions, each with its
+request, for the front end to build against before the endpoint is deployed.
+
+### From the front end
+
+Checked with `@tanstack/ai-client` and `@tanstack/ai-react` 1.0.0.
+
+1. **Get a development token.** Ask for one; it is added to `MCP_CHAT_DEV_TOKENS` under your
+   name. Keep it in your local `.env`, never in code or a deployed bundle: anyone who reads it
+   spends the model key. It goes once the front end's backend issues the JWT; the header does
+   not change.
+2. **Point at the API.** The base URL is `<MCP_PUBLIC_URL>` on staging, or
+   `http://127.0.0.1:8001` with the local command. Your origin must be in
+   `MCP_CHAT_ALLOWED_ORIGINS`; `localhost` on any port is allowed while development tokens are
+   set.
+3. **Connect.**
+
+```tsx
+import { useChat, fetchServerSentEvents } from "@tanstack/ai-react";
+
+const { messages, sendMessage, isLoading, error } = useChat({
+  // Required. One id per conversation.
+  threadId,
+  connection: fetchServerSentEvents(`${AI_API_URL}/chat`, async () => ({
+    // Read per request, so a JWT can be refreshed later.
+    headers: { Authorization: `Bearer ${await getToken()}` },
+  })),
+  // The language of the answer: "en", "es" or "pt".
+  forwardedProps: { locale },
+  onChunk: (chunk) => {
+    if (chunk.type === "CUSTOM" && chunk.name === "amazonia360:run-summary") {
+      // { model, turns, toolCalls, costUsd, elapsedMs }
+    }
+  },
+});
+```
+
+4. **Read the figures from the tool results, not the text.** Each assistant message has
+   `parts`. A part with `type: "tool-call"` has `name` (the tool), `input` (its arguments) and
+   `output`, the tool's result already parsed: for the area tools, a `Result` with `value`,
+   `unit`, `computed_over`, `coverage`, `place` and `caveats` (the output schema of each tool
+   describes every field). `input.indicator_id` and `input.place_id` say what to show on the
+   map. Text parts (`type: "text"`) hold the model's answer.
+5. **Handle errors.** A refused request reaches `onError` (and `error`) as a `StreamHttpError`
+   whose `status` is 401 (no or bad token), 400 (bad body) or 503 (chat off, or no model key).
+   A run that fails halfway ends with `RUN_ERROR`; `error.message` is a sentence to show, and
+   the parts already received stay.
+6. **Keep the history if you want it after a reload.** By default it lives in memory.
+   `persistence: localStoragePersistence()` (or the session-storage and IndexedDB adapters from
+   `@tanstack/ai-client`) keeps it in the browser. Do not set `persistence: true`: it asks the
+   server to rebuild the thread, and this API stores none.
+
+**Without the API**, replay a recorded stream with `fetchClient`:
+
+```ts
+import morona from "./examples/chat/morona-canton.sse?raw";
+
+const replay = async () =>
+  new Response(morona, { headers: { "Content-Type": "text/event-stream" } });
+
+useChat({ threadId, connection: fetchServerSentEvents("/chat", { fetchClient: replay }) });
+```
+
+Whatever is sent, the reply is the recorded one; `run-error.sse` shows the error path.
+
 ## Layer store
 
 A local copy of each module vector layer, split into small pieces, and precomputed hectares

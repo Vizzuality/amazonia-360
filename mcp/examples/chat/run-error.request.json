@@ -1,0 +1,17 @@
+{
+  "threadId": "example-error",
+  "runId": "run-1",
+  "messages": [
+    {
+      "id": "u1",
+      "role": "user",
+      "content": "Which ecosystems are there in the canton of Tena?"
+    }
+  ],
+  "tools": [],
+  "context": [],
+  "state": {},
+  "forwardedProps": {
+    "locale": "en"
+  }
+}

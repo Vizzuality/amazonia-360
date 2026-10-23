@@ -1,6 +1,6 @@
 # Chat API for the front end
 
-Date: 22 October 2026. Status: proposed.
+Date: 22 October 2026. Status: built on 23 October 2026, checked against TanStack AI 1.0.
 
 ## Purpose
 
@@ -39,7 +39,9 @@ works too.
 
 ### Request
 
-`POST /chat`, `Content-Type: application/json`, `Authorization: Bearer <token>`.
+`POST <MCP_PUBLIC_URL>/chat` (`/mcp/chat` on staging, next to the MCP endpoint; `/chat` with
+the local command), `Content-Type: application/json`, `Authorization: Bearer <token>`.
+TanStack AI also sends `X-Run-Id`, which CORS allows.
 
 The body is a `RunAgentInput`:
 
@@ -58,7 +60,9 @@ Rules on `messages`:
 - The last message must be a `user` message, or the request gets 400.
 
 The conversation is stateless on the server: the client sends the history each time, as
-TanStack AI does. A client could send a forged `tool` message; the user is signed in and only
+TanStack AI does. `ChatClient` keeps it in memory, and can keep it in `localStorage`,
+`sessionStorage` or IndexedDB through its persistence adapters, which is the front end's
+choice. A client could send a forged `tool` message; the user is signed in and only
 misleads their own conversation, which is accepted in this version.
 
 ### Response
@@ -197,6 +201,7 @@ Informative; the front end's code is the front-end team's.
 
 ```ts
 const { messages, sendMessage } = useChat({
+  threadId,
   connection: fetchServerSentEvents(`${AI_API_URL}/chat`, () => ({
     headers: { Authorization: `Bearer ${getToken()}` },
   })),
@@ -213,30 +218,46 @@ const { messages, sendMessage } = useChat({
   `part.output` its result.
 - `getToken()` returns a development token now and the backend's JWT later.
 
-## Working before the endpoint exists
+## Working before the endpoint is deployed
 
-`mcp/examples/chat/` holds recorded event streams of real runs (Morona, Loja, Guayaquil and a
-`RUN_ERROR`), one `.sse` file each, and the request that produced them. The front end can serve
-them from a stub to build the interface. They are regenerated whenever the contract changes.
+`mcp/examples/chat/` holds recorded streams of real runs, each `.sse` file next to the
+`.request.json` that produced it:
 
-## To verify with a prototype
+| Example | What it shows |
+|---|---|
+| `morona-canton` | Hectares per ecosystem over a named canton |
+| `pastaza-asks-back` | Two places with the name: the answer asks which one, after one tool call |
+| `loja-partly-outside` | A canton mostly outside the module |
+| `guayaquil-outside-module` | A place the module does not have: no figures |
+| `run-error` | A run ended by `RUN_ERROR` (`max_turns`) after its tool calls |
 
-The TanStack AI documentation leaves these open; a prototype with the current `@tanstack/ai-react`
-against this endpoint settles them before the contract is final:
+The front end can serve them from a stub to build the interface. They are recorded again
+whenever the contract changes.
 
-1. The SSE framing the client expects, including whether a final `data: [DONE]` is needed.
-2. That tool results produced on the server inside one run show up as `tool-call` parts with
-   `output`, and how `content` is decoded into `output`.
-3. That `fetchServerSentEvents` takes its options as a function, so the token is read per
-   request.
-4. The `role` in `TEXT_MESSAGE_START` (`"assistant"`), on which the AG-UI pages disagree.
+## Checked with a prototype
+
+A `ChatClient` from `@tanstack/ai-client` 1.0.0 (22 October 2026), run against the endpoint
+with a real model on 23 October 2026, two questions in one thread:
+
+1. **Framing.** The client reads each `data:` line as JSON; no `data: [DONE]` is needed, and
+   one would only log a warning.
+2. **Tool results.** Server-side results arrive as `tool-call` parts with `state: "complete"`,
+   `input` (the parsed arguments) and `output` (the parsed `Result`), followed by a
+   `tool-result` part. The front end reads `part.output`.
+3. **Token per request.** `fetchServerSentEvents(url, async () => ({ headers }))` takes its
+   options as a function, sync or async.
+4. **Role.** `TEXT_MESSAGE_START` with `role: "assistant"` builds an assistant message.
+5. **History.** The second request carries every earlier call and result as `assistant`
+   messages with `toolCalls` and `tool` messages, which the endpoint reads back in order.
+6. **Thread.** `ChatClient` requires a `threadId` option; it is the `threadId` of every request.
+7. **CUSTOM.** `amazonia360:run-summary` reaches `onChunk`.
 
 ## Dependencies
 
-- A JWT library for Python (PyJWT, with `cryptography`). It is not on the Tech Radar and needs
-  approval.
-- The model providers' LangChain packages, today in the `measure` group, move to the service's
-  main dependencies for the configured provider. LangChain is in Adopt.
+- PyJWT, with `cryptography`, to verify the front end's tokens. It is not on the Tech Radar;
+  approved for this project on 23 October 2026.
+- The model providers' LangChain packages moved from the `measure` group to the service's main
+  dependencies. LangChain is in Adopt.
 - No AG-UI package: the events are plain JSON written by the service.
 
 ## Out of scope

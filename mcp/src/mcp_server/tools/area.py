@@ -10,7 +10,7 @@ from pydantic import Field
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.handlers.errors import HandlerError
 from mcp_server.handlers.result import Result
-from mcp_server.measurement.call_log import CallLog
+from mcp_server.measurement.call_log import CHAT_CALLER, CallLog
 from mcp_server.measurement.stopwatch import Stopwatch
 
 QUERY = ToolAnnotations(read_only_hint=True, open_world_hint=True)
@@ -32,16 +32,23 @@ PlaceId = Annotated[
 
 
 def _caller() -> str | None:
-    """The signed-in email over HTTP; None on stdio. The SDK binds each session to
-    the token that opened it, so this cannot be another user's."""
+    """The signed-in email over HTTP, or the chat's user; None on stdio. The SDK binds
+    each session to the token that opened it, so this cannot be another user's."""
     token = get_access_token()
-    return token.subject if token else None
+    if token:
+        return token.subject
+    chat = CHAT_CALLER.get()
+    return chat[0] if chat else None
 
 
 def _session(ctx: Context) -> str | None:
-    """The MCP session id over HTTP; None on stdio, which has no headers."""
+    """The MCP session id over HTTP, or the chat's thread; None on stdio, which has no
+    headers."""
     headers = ctx.headers
-    return headers.get("mcp-session-id") if headers else None
+    if headers and headers.get("mcp-session-id"):
+        return headers.get("mcp-session-id")
+    chat = CHAT_CALLER.get()
+    return chat[1] if chat else None
 
 
 def log_lookup[T](

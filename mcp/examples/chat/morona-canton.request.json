@@ -1,0 +1,17 @@
+{
+  "threadId": "example-morona-canton",
+  "runId": "run-1",
+  "messages": [
+    {
+      "id": "u1",
+      "role": "user",
+      "content": "Which ecosystems are there in the canton of Morona, and how many hectares does each one cover?"
+    }
+  ],
+  "tools": [],
+  "context": [],
+  "state": {},
+  "forwardedProps": {
+    "locale": "en"
+  }
+}

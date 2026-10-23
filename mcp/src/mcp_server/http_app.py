@@ -26,6 +26,8 @@ from mcp_server.auth.google import Google, GoogleSignIn
 from mcp_server.auth.provider import SCOPE, AmazoniaOAuthProvider
 from mcp_server.auth.routes import oauth_routes
 from mcp_server.auth.store import AuthStore
+from mcp_server.chat.app import ChatService, chat_route
+from mcp_server.chat.settings import ChatSettings
 from mcp_server.config import HttpSettings, issuer_url
 from mcp_server.db import create_engine, session_maker
 from mcp_server.handlers.area import AreaHandlers
@@ -83,6 +85,7 @@ def create_http_app(
     google: GoogleSignIn | None = None,
     handlers: AreaHandlers | None = None,
     call_log: CallLog | None = None,
+    chat: ChatService | None = None,
 ) -> Starlette:
     engine = create_engine(settings.database_url)
     store = AuthStore(session_maker(engine))
@@ -143,6 +146,13 @@ def create_http_app(
         )
 
     path = settings.mount_path
+    if chat is None:
+        chat_settings = ChatSettings.from_env()
+        # Its own server instance, with no OAuth: the chat checks its own tokens and
+        # reaches the tools in process.
+        chat = ChatService(chat_settings, create_mcp_server(handlers, call_log))
+    else:
+        chat_settings = chat.settings
     routes = [
         # Discovery at the domain root, where RFC 8414 and RFC 9728 put it for an
         # issuer and a resource with a path.
@@ -154,6 +164,8 @@ def create_http_app(
         *create_protected_resource_routes(
             issuer, [issuer], scopes_supported=[SCOPE], resource_name="Amazonia 360 MCP"
         ),
+        # Before the mount, which would otherwise take /chat as an MCP request.
+        chat_route(f"{path}/chat", chat, chat_settings),
         Mount(path, app=mcp_app),
     ]
 

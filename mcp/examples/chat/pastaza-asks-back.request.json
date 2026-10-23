@@ -1,0 +1,17 @@
+{
+  "threadId": "example-pastaza-asks-back",
+  "runId": "run-1",
+  "messages": [
+    {
+      "id": "u1",
+      "role": "user",
+      "content": "Which ecosystems are there in Pastaza?"
+    }
+  ],
+  "tools": [],
+  "context": [],
+  "state": {},
+  "forwardedProps": {
+    "locale": "en"
+  }
+}

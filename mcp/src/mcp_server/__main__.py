@@ -22,5 +22,22 @@ def http() -> None:
     )
 
 
+def chat() -> None:
+    import os
+
+    import uvicorn
+
+    from mcp_server.chat.app import ChatService, create_chat_app
+    from mcp_server.chat.settings import ChatSettings
+
+    settings = ChatSettings.from_env()
+    service = ChatService(settings, create_mcp_server())
+    uvicorn.run(
+        create_chat_app(service, settings),
+        host="127.0.0.1",
+        port=int(os.environ.get("MCP_CHAT_PORT", "8001")),
+    )
+
+
 if __name__ == "__main__":
     main()

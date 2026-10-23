@@ -1,0 +1,17 @@
+{
+  "threadId": "example-guayaquil-outside-module",
+  "runId": "run-1",
+  "messages": [
+    {
+      "id": "u1",
+      "role": "user",
+      "content": "Which ecosystems are there in Guayaquil?"
+    }
+  ],
+  "tools": [],
+  "context": [],
+  "state": {},
+  "forwardedProps": {
+    "locale": "en"
+  }
+}

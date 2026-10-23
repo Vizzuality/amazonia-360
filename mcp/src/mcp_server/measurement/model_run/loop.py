@@ -47,11 +47,11 @@ class Budget:
         return self.spent_usd >= self.cap_usd
 
 
-def _elapsed_ms(start: float) -> int:
+def elapsed_ms(start: float) -> int:
     return round((time.monotonic() - start) * 1000)
 
 
-def _text(message: AIMessage) -> str:
+def message_text(message: AIMessage) -> str:
     content = message.content
     if isinstance(content, str):
         return content
@@ -73,7 +73,7 @@ def _cache_write_tokens(details: Mapping[str, Any]) -> int:
     )
 
 
-def _usage(message: AIMessage) -> Usage:
+def message_usage(message: AIMessage) -> Usage:
     meta = message.usage_metadata or {}
     details = meta.get("input_token_details") or {}
     return Usage(
@@ -84,7 +84,7 @@ def _usage(message: AIMessage) -> Usage:
     )
 
 
-def _stop_reason(message: AIMessage) -> str | None:
+def stop_reason(message: AIMessage) -> str | None:
     meta = message.response_metadata
     # The Responses API (OpenAI) has no stop reason: an incomplete response says
     # why in incomplete_details, a finished one only has a status.
@@ -131,7 +131,7 @@ async def run_question(
         except Exception as exc:
             ended, error = "error", f"{type(exc).__name__}: {exc}"
             break
-        turn_usage = _usage(reply)
+        turn_usage = message_usage(reply)
         usage = usage + turn_usage
         budget.add(cost(turn_usage, price))
         turns.append(
@@ -140,15 +140,15 @@ async def run_question(
                 turn_usage.cached_tokens,
                 turn_usage.cache_write_tokens,
                 turn_usage.output_tokens,
-                _elapsed_ms(turn_start),
-                _stop_reason(reply),
+                elapsed_ms(turn_start),
+                stop_reason(reply),
             )
         )
-        last_text = _text(reply) or last_text
+        last_text = message_text(reply) or last_text
         messages.append(reply)
 
         if not reply.tool_calls:
-            last_text = _text(reply)
+            last_text = message_text(reply)
             break
 
         for tool_call in reply.tool_calls:
@@ -158,7 +158,7 @@ async def run_question(
                 ToolCallRecord(
                     tool_call["name"],
                     tool_call["args"],
-                    _elapsed_ms(call_start),
+                    elapsed_ms(call_start),
                     len(text),
                     text if failed else None,
                 )
@@ -181,7 +181,7 @@ async def run_question(
         store=store,
         started=started.isoformat(),
         ended_at=datetime.now(UTC).isoformat(),
-        total_ms=_elapsed_ms(clock),
+        total_ms=elapsed_ms(clock),
         turns=turns,
         calls=calls,
         usage=usage,

@@ -367,3 +367,10 @@ async def test_the_call_log_carries_the_http_session(
     ]
     assert [line["tool"] for line in lines] == ["list_indicators", "area_by_category"]
     assert [line["session"] for line in lines] == [session, session]
+
+
+async def test_the_chat_sits_next_to_the_mcp(http: httpx.AsyncClient) -> None:
+    # With no chat settings in the environment the route answers, switched off.
+    response = await http.post(f"{PUBLIC_URL}/chat", json={})
+    assert response.status_code == 503
+    assert response.json()["error"] == "chat_disabled"

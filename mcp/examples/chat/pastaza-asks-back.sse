@@ -1,0 +1,20 @@
+data: {"type":"RUN_STARTED","threadId":"example-pastaza-asks-back","runId":"run-1"}
+
+data: {"type":"TOOL_CALL_START","toolCallId":"toolu_011FvfPwBQwyEisPR6F3faAc","toolCallName":"find_places","parentMessageId":"ea5f8615ea8e44529c343baf87d2f5f5"}
+
+data: {"type":"TOOL_CALL_ARGS","toolCallId":"toolu_011FvfPwBQwyEisPR6F3faAc","delta":"{\"query\": \"Pastaza\"}"}
+
+data: {"type":"TOOL_CALL_END","toolCallId":"toolu_011FvfPwBQwyEisPR6F3faAc"}
+
+data: {"type":"TOOL_CALL_RESULT","messageId":"056852c4c35b4bd38c3b98f2adf6918b","toolCallId":"toolu_011FvfPwBQwyEisPR6F3faAc","role":"tool","content":"{\n  \"places\": [\n    {\n      \"id\": \"province:Pastaza\",\n      \"name\": \"Pastaza\",\n      \"kind\": \"province\",\n      \"province\": null,\n      \"category\": null,\n      \"area_ha\": 2946529.7,\n      \"bbox\": [\n        -78.1779,\n        -2.604,\n        -75.5854,\n        -1.0077\n      ]\n    },\n    {\n      \"id\": \"canton:Pastaza/Pastaza\",\n      \"name\": \"Pastaza\",\n      \"kind\": \"canton\",\n      \"province\": \"Pastaza\",\n      \"category\": null,\n      \"area_ha\": 1981667.2,\n      \"bbox\": [\n        -78.049,\n        -2.604,\n        -75.617,\n        -1.2932\n      ]\n    }\n  ],\n  \"note\": \"Several places match. If the user's words already name the kind (province, canton, protected area), use the place of that kind; otherwise ask the user which one before calling a tool.\",\n  \"count\": 2\n}"}
+
+data: {"type":"TEXT_MESSAGE_START","messageId":"d3ee23fec4a24ddb9e856d418e218eb0","role":"assistant"}
+
+data: {"type":"TEXT_MESSAGE_CONTENT","messageId":"d3ee23fec4a24ddb9e856d418e218eb0","delta":"There are two places called Pastaza:\n\n- **Pastaza**, a province (about 2,946,530 ha).\n- **Pastaza**, a canton in Pastaza province (about 1,981,667 ha).\n\nWhich one do you want the ecosystems for?"}
+
+data: {"type":"TEXT_MESSAGE_END","messageId":"d3ee23fec4a24ddb9e856d418e218eb0"}
+
+data: {"type":"CUSTOM","name":"amazonia360:run-summary","value":{"model":"sonnet","turns":2,"toolCalls":1,"costUsd":0.004029,"elapsedMs":3327}}
+
+data: {"type":"RUN_FINISHED","threadId":"example-pastaza-asks-back","runId":"run-1","metadata":{"tanstack":{"finishReason":"stop"}}}
+

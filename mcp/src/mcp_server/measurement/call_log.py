@@ -1,8 +1,15 @@
 import json
 import sys
+from contextvars import ContextVar
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+# The chat's user and thread when its tools run in process, where there is no OAuth
+# token and no MCP session header to read them from.
+CHAT_CALLER: ContextVar[tuple[str, str] | None] = ContextVar(
+    "chat_caller", default=None
+)
 
 
 class CallLog:
