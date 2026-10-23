@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import { formatNumber } from "@/lib/formats";
 import { useGetIndicatorsId, useQueryFeatureId } from "@/lib/indicators";
-import { useLocationGeometry } from "@/lib/location";
+import { useLocationAdminUnit, useLocationGeometry } from "@/lib/location";
 
 import { ResourceFeature } from "@/types/indicator";
 
@@ -15,6 +15,7 @@ import { DataRowProps } from "./types";
 export default function FeatureDataRow({ id, locale, location, modules }: Readonly<DataRowProps>) {
   const indicator = useGetIndicatorsId(id, locale, modules);
   const GEOMETRY = useLocationGeometry(location);
+  const adminUnit = useLocationAdminUnit(location);
 
   const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();
 
@@ -23,6 +24,7 @@ export default function FeatureDataRow({ id, locale, location, modules }: Readon
     resource: indicator?.resource as ResourceFeature,
     type: "numeric",
     geometry: GEOMETRY,
+    adminUnit,
   });
 
   const VALUE = useMemo(() => {

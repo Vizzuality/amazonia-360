@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import { useQueryFeatureId } from "@/lib/indicators";
-import { useLocationGeometry } from "@/lib/location";
+import { useLocationAdminUnit, useLocationGeometry } from "@/lib/location";
 import { cn } from "@/lib/utils";
 
 import { Indicator, ResourceFeature } from "@/types/indicator";
@@ -26,10 +26,11 @@ export const NumericIndicatorsFeature = ({
   isPdf,
 }: NumericIndicatorsProps) => {
   const GEOMETRY = useLocationGeometry(location);
+  const adminUnit = useLocationAdminUnit(location);
 
   const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();
 
-  const query = useQueryFeatureId({ id, resource, type: "numeric", geometry: GEOMETRY });
+  const query = useQueryFeatureId({ id, resource, type: "numeric", geometry: GEOMETRY, adminUnit });
 
   const VALUE = useMemo(() => {
     if (!query.data) return 0;

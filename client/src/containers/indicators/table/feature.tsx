@@ -4,7 +4,7 @@ import { AccessorKeyColumnDefBase } from "@tanstack/react-table";
 
 import { formatNumber } from "@/lib/formats";
 import { useQueryFeatureId } from "@/lib/indicators";
-import { useLocationGeometry } from "@/lib/location";
+import { useLocationAdminUnit, useLocationGeometry } from "@/lib/location";
 
 import { Indicator, ResourceFeature } from "@/types/indicator";
 
@@ -21,10 +21,11 @@ export interface TableIndicatorsFeatureProps extends Indicator {
 
 export const TableIndicatorsFeature = ({ id, resource, location }: TableIndicatorsFeatureProps) => {
   const GEOMETRY = useLocationGeometry(location);
+  const adminUnit = useLocationAdminUnit(location);
 
   const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();
 
-  const query = useQueryFeatureId({ id, resource, type: "table", geometry: GEOMETRY });
+  const query = useQueryFeatureId({ id, resource, type: "table", geometry: GEOMETRY, adminUnit });
 
   const DATA = useMemo(() => {
     if (!query.data) return [];

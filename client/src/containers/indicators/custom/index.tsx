@@ -9,14 +9,12 @@ import { Indicator } from "@/types/indicator";
 
 import { useFormLocation } from "@/app/(frontend)/store";
 
-import { Municipalities } from "@/containers/indicators/custom/municipalities";
 import { TotalArea } from "@/containers/indicators/custom/total-area";
 import { useLoad } from "@/containers/indicators/load-provider";
 import { IndicatorProvider } from "@/containers/indicators/provider";
 
 const COMPONENT_INDICATORS = {
   "total-area": TotalArea,
-  AMZ_LOCADM2: Municipalities,
 } as const;
 
 type COMPONENT_INDICATORS_KEYS = keyof typeof COMPONENT_INDICATORS;

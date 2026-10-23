@@ -91,6 +91,14 @@ describe("getTopicEvidence", () => {
     expect(getQueryFeatureId).toHaveBeenCalledWith(expect.objectContaining({ id: 1, type: "ai" }));
   });
 
+  test("hands the searched administrative unit to feature queries", async () => {
+    const adminUnit = { level: 1, gid0: "BOL", name1: "Pando" } as const;
+
+    await getTopicEvidence([featureIndicator(1)], GEOMETRY, new Map(), adminUnit);
+
+    expect(getQueryFeatureId).toHaveBeenCalledWith(expect.objectContaining({ adminUnit }));
+  });
+
   test("reports ok with compacted feature evidence", async () => {
     const result = await getTopicEvidence([featureIndicator(1)], GEOMETRY);
 

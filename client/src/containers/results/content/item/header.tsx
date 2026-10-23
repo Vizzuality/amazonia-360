@@ -6,7 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { LuSparkles } from "react-icons/lu";
 
 import { useGetTopicSummary } from "@/lib/ai";
-import { useLocationGeometry } from "@/lib/location";
+import { useLocationAdminUnit, useLocationGeometry } from "@/lib/location";
 
 import { ContextDescriptionType } from "@/types/generated/api.schemas";
 import { Topic } from "@/types/topic";
@@ -31,6 +31,7 @@ export const ReportTopicHeader = (props: Topic) => {
   const TOPIC_VIEW = topics?.find((t) => t.topic_id === props.id);
 
   const LOCATION = useLocationGeometry(location);
+  const adminUnit = useLocationAdminUnit(location);
 
   const summaryMutation = useGetTopicSummary({
     onSuccess: (data, variables) => {
@@ -65,6 +66,7 @@ export const ReportTopicHeader = (props: Topic) => {
       locale,
       activeIndicators,
       location: LOCATION,
+      adminUnit,
     });
   };
 
