@@ -114,7 +114,7 @@
     "html-to-image": "^1.11.13",
     "jotai": "2.15.0",
     "lucide-react": "0.546.0",
-    "next": "16.3.8",
+    "next": "16.4.3",
     "next-auth": "5.0.0-beta.32",
     "next-intl": "4.9.2",
     "next-navigation-guard": "0.2.0",
