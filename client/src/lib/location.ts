@@ -181,31 +181,30 @@ export const useLocationGeometryWithStatus = (
 
   // The buffer resolves asynchronously (via the shared promise cache), so the geometry
   // resolves after render. Consumers that gate queries on `!!GEOMETRY` simply wait.
-  const [GEOMETRY, setGEOMETRY] = useState<__esri.Polygon | null>(null);
-  const [isCalculating, setIsCalculating] = useState(false);
+  // `inputs` records what the stored geometry was buffered from, so the loading flag is
+  // derived by comparing it with the current inputs. The previous geometry stays visible
+  // while a new one is calculated.
+  type BufferInputs = [typeof LOCATION, typeof location, typeof outSpatialReferenceKey];
+  const [resolved, setResolved] = useState<{
+    geometry: __esri.Polygon | null;
+    inputs: BufferInputs;
+  } | null>(null);
 
   useEffect(() => {
     const geometry = LOCATION?.geometry;
-    if (!geometry) {
-      setGEOMETRY(null);
-      setIsCalculating(false);
-      return;
-    }
+    if (!geometry) return;
 
     let cancelled = false;
     const b = location?.type !== "search" ? location?.buffer : BUFFERS[geometry.type];
     const buffer = b || BUFFERS[geometry.type];
+    const inputs: BufferInputs = [LOCATION, location, outSpatialReferenceKey];
 
-    setIsCalculating(true);
     getBufferedProjectedGeometry(geometry, buffer, outSpatialReference)
       .then((geometry) => {
-        if (!cancelled) setGEOMETRY(geometry);
+        if (!cancelled) setResolved({ geometry, inputs });
       })
       .catch(() => {
-        if (!cancelled) setGEOMETRY(null);
-      })
-      .finally(() => {
-        if (!cancelled) setIsCalculating(false);
+        if (!cancelled) setResolved({ geometry: null, inputs });
       });
 
     return () => {
@@ -214,7 +213,15 @@ export const useLocationGeometryWithStatus = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [LOCATION, location, outSpatialReferenceKey]);
 
-  return { geometry: GEOMETRY, isCalculating };
+  if (!LOCATION?.geometry) return { geometry: null, isCalculating: false };
+
+  const [resolvedLocation, resolvedRawLocation, resolvedSrKey] = resolved?.inputs ?? [];
+  const isCalculating =
+    resolvedLocation !== LOCATION ||
+    resolvedRawLocation !== location ||
+    resolvedSrKey !== outSpatialReferenceKey;
+
+  return { geometry: resolved?.geometry ?? null, isCalculating };
 };
 
 export const useLocationGeometry = (
