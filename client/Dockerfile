@@ -1,7 +1,7 @@
 # To use this Dockerfile, you have to set `output: 'standalone'` in your next.config.mjs file.
 # From https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
 
-FROM node:22.14-slim AS base
+FROM node:22.23.4-slim AS base
 
 # Enable pnpm globally in this base
 RUN corepack enable pnpm
