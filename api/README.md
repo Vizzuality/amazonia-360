@@ -114,3 +114,5 @@ Note that it needs to have `OPENAI_TOKEN` defined in order to run.
 
 The production image is defined in [`Dockerfile`](Dockerfile) and deployed with GH actions into the infrastructure
 defined in [`infrastructure/`](../infrastructure).
+
+PR environments on Railway sync the grid data from the production bucket at start.
