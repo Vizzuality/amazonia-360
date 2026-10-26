@@ -216,7 +216,7 @@
     },
     "overrides": {
       "@aws-sdk/xml-builder>fast-xml-parser": "5.10.1",
-      "payload>undici": "7.29.1",
+      "payload>undici": "7.30.1",
       "monaco-editor>dompurify": "3.4.17",
       "@esbuild-kit/core-utils>esbuild": "0.25.0",
       "@loaders.gl/kml>@xmldom/xmldom": "0.8.15",
@@ -235,7 +235,7 @@
       "brace-expansion@1": "1.1.21",
       "brace-expansion@2": "2.1.7",
       "brace-expansion@5": "5.0.12",
-      "jsdom>undici": "7.29.1",
+      "jsdom>undici": "7.30.1",
       "react-world-flags>svgo": "3.3.5",
       "@eslint/eslintrc>js-yaml": "4.3.2",
       "@tailwindcss/node>source-map-js": "1.2.2",
