@@ -244,7 +244,7 @@
       "magicast>source-map-js": "1.2.2",
       "pino-pretty>fast-copy": "3.1.0",
       "ajv>fast-uri": "3.1.8",
-      "typedoc>markdown-it": "14.3.1",
+      "typedoc>markdown-it": "14.3.3",
       "@payloadcms/email-nodemailer>nodemailer": "10.1.1",
       "@payloadcms/plugin-import-export>csv-parse": "7.0.3",
       "@tailwindcss/typography>postcss-selector-parser": "7.1.6"
