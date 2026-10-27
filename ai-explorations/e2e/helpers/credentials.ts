@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+
 // CI always supplies the seed secret, so a missing one there is a broken workflow rather than a
 // local run without secrets. Skipping would report that as a green suite.
 const isCI = !!process.env.CI;
@@ -27,5 +29,5 @@ export function getSeedSecret(): string {
 }
 
 export function getUniqueEmail(prefix: string): string {
-  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.com`;
+  return `${prefix}-${Date.now()}-${randomUUID().slice(0, 8)}@example.com`;
 }
