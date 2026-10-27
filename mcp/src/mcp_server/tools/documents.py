@@ -132,7 +132,8 @@ def register_document_tools(
         ],
         ctx: Context,
     ) -> Section:
-        """The full text of one section of a document, to read around a passage."""
+        """The full text of one section of a document, to read around a passage.
+        Figure descriptions are left out; search_documents returns them."""
         return await _logged(
             call_log,
             "get_document_section",

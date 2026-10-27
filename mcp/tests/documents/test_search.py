@@ -258,6 +258,31 @@ async def test_section_joins_its_passages(
     assert result.link == "http://127.0.0.1:8770/files/uploads/hansen.pdf#page=3"
 
 
+async def test_section_leaves_figure_descriptions_and_their_crops_out(
+    index: tuple[DocumentIndex, FakeEmbedder],
+) -> None:
+    figure = replace(
+        passage("hansen", "FIGURE DESC", ("forest",)),
+        passage_id=make_passage_id("hansen", "fig", 0),
+        ingest_id="fig",
+        origin="figure",
+        figure_path="figures/abc123.png",
+    )
+    await index[0].upsert([figure])
+    result = await make_search(index).section("hansen", "Intro")
+    assert result.text == "deforestation forest cover loss"
+    assert result.link == "http://127.0.0.1:8770/files/uploads/hansen.pdf#page=3"
+
+
+async def test_search_never_computes_bm25_when_the_sparse_weight_is_zero(
+    index: tuple[DocumentIndex, FakeEmbedder],
+) -> None:
+    await make_search(index, sparse_weight=0.0).search("deforestation")
+    assert index[1].sparse_queries == 0
+    await make_search(index, sparse_weight=0.5).search("deforestation")
+    assert index[1].sparse_queries == 1
+
+
 async def test_section_of_unknown_document_or_section_raises(
     search: DocumentSearch,
 ) -> None:

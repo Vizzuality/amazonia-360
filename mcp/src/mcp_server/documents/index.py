@@ -135,6 +135,8 @@ class DocumentIndex:
                 must=[
                     _match("document_id", document_id),
                     _match("section_path", section_path),
+                    # Figure descriptions are model-written, not the document's words.
+                    _match("origin", "text"),
                 ]
             )
         )

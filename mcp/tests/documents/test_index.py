@@ -125,6 +125,29 @@ async def test_section_and_list_are_in_reading_order(index: DocumentIndex) -> No
     assert len(await index.list_document("d1")) == 3
 
 
+async def test_section_holds_only_the_documents_own_text(
+    index: DocumentIndex,
+) -> None:
+    await index.upsert(
+        [
+            passage(text="text A", ordinal=5, section="Results"),
+            passage(text="text B", ordinal=6, section="Results"),
+            passage(
+                text="FIGURE DESC",
+                ingest="fig",
+                ordinal=0,
+                section="Results",
+                origin="figure",
+            ),
+        ]
+    )
+    section = await index.section("d1", "Results")
+    assert [(p.origin, p.text) for p in section] == [
+        ("text", "text A"),
+        ("text", "text B"),
+    ]
+
+
 async def test_set_topics_rewrites_payload_without_reembedding(
     index: DocumentIndex, embedder: FakeEmbedder
 ) -> None:

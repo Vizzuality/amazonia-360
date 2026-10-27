@@ -28,7 +28,7 @@ class Embedder(Protocol):
 
     async def embed_documents(self, texts: list[str]) -> list[Embedded]: ...
 
-    async def embed_query(self, text: str) -> Embedded: ...
+    async def embed_query(self, text: str, *, sparse: bool = True) -> Embedded: ...
 
 
 class OpenAIEmbedder:
@@ -46,10 +46,13 @@ class OpenAIEmbedder:
         sparse = await anyio.to_thread.run_sync(self._sparse_documents, texts)
         return [Embedded(d, s) for d, s in zip(dense, sparse, strict=True)]
 
-    async def embed_query(self, text: str) -> Embedded:
+    async def embed_query(self, text: str, *, sparse: bool = True) -> Embedded:
         (dense,) = await self._dense([text])
-        sparse = await anyio.to_thread.run_sync(self._sparse_query, text)
-        return Embedded(dense, sparse)
+        if not sparse:
+            # Loading BM25 may download the model; a dense-only search never needs it.
+            return Embedded(dense, SparseVec([], []))
+        vec = await anyio.to_thread.run_sync(self._sparse_query, text)
+        return Embedded(dense, vec)
 
     async def _dense(self, batch: list[str]) -> list[list[float]]:
         response = await self._client.embeddings.create(model=self._model, input=batch)

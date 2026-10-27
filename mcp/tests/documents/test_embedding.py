@@ -4,6 +4,7 @@ import httpx
 import pytest
 from openai import AsyncOpenAI
 
+from mcp_server.documents import embedding
 from mcp_server.documents.embedding import BATCH_SIZE, OpenAIEmbedder
 
 pytestmark = pytest.mark.anyio
@@ -54,3 +55,16 @@ async def test_query_embedding_counts_tokens() -> None:
     assert batches == [1]
     assert embedder.tokens == 2
     assert result.sparse.indices
+
+
+async def test_a_dense_only_query_never_loads_the_bm25_model(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def no_bm25(*args: object, **kwargs: object) -> None:
+        raise AssertionError("BM25 model loaded")
+
+    monkeypatch.setattr(embedding, "SparseTextEmbedding", no_bm25)
+    embedder = OpenAIEmbedder(client_with([]))
+    result = await embedder.embed_query("deforestation", sparse=False)
+    assert result.dense == [0.0, 0.0]
+    assert result.sparse.indices == []

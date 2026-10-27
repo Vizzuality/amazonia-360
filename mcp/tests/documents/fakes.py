@@ -18,14 +18,19 @@ class FakeEmbedder:
     def __init__(self) -> None:
         self.calls = 0
         self.tokens = 0
+        self.sparse_queries = 0
 
     async def embed_documents(self, texts: list[str]) -> list[Embedded]:
         self.calls += 1
         return [self._embed(text) for text in texts]
 
-    async def embed_query(self, text: str) -> Embedded:
+    async def embed_query(self, text: str, *, sparse: bool = True) -> Embedded:
         self.calls += 1
-        return self._embed(text)
+        embedded = self._embed(text)
+        if not sparse:
+            return Embedded(embedded.dense, SparseVec([], []))
+        self.sparse_queries += 1
+        return embedded
 
     def _embed(self, text: str) -> Embedded:
         counts = Counter(zlib.crc32(t.encode()) for t in _tokens(text))

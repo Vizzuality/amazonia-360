@@ -166,7 +166,9 @@ class DocumentSearch:
                 passages=[], related_documents=[], candidates=candidates, note=note
             )
         topic_ids = [t.id for t in scope]
-        embedded = await self._embedder.embed_query(query)
+        embedded = await self._embedder.embed_query(
+            query, sparse=self._sparse_weight > 0
+        )
         hits = await self._index.search(
             embedded, topic_ids or None, limit, self._sparse_weight
         )
