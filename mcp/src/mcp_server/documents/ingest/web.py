@@ -28,6 +28,7 @@ LOGIN_ERROR = "The page asks for a login: only public pages can be read"
 HTML_TYPES = ("text/html", "application/xhtml+xml")
 IMAGE_TYPES = ("image/png", "image/jpeg", "image/webp", "image/gif")
 MAX_IMAGE_BYTES = 20 * 1024 * 1024
+MAX_PAGE_BYTES = 10 * 1024 * 1024
 MAX_PAGE_IMAGES = 60
 MAX_REDIRECTS = 5
 
@@ -60,22 +61,57 @@ def _headers() -> dict[str, str]:
     return {"User-Agent": f"amazonia360-docs/{version('mcp-server')}"}
 
 
-def fetch_page(url: str) -> Page:
-    if urlsplit(url).scheme not in ("http", "https"):
-        raise ValueError(f"Not a web address: {url}")
-    response = httpx.get(
-        url, headers=_headers(), follow_redirects=True, timeout=TIMEOUT_S
-    )
+def fetch_page(url: str, client: httpx.Client | None = None) -> Page:
+    """Each hop, the first included, must be a public host: the address comes from
+    whoever submits it, so it cannot be a way into the private network."""
+    owned = client is None
+    client = client or httpx.Client(headers=_headers(), timeout=TIMEOUT_S)
+    try:
+        current = url
+        for _ in range(MAX_REDIRECTS + 1):
+            _check_host(current, "Page")
+            request = client.build_request("GET", current)
+            response = client.send(request, stream=True, follow_redirects=False)
+            try:
+                if response.is_redirect:
+                    current = urljoin(current, response.headers.get("location", ""))
+                    continue
+                html = _page_body(current, response)
+            finally:
+                response.close()
+            if _asks_for_login(url, current, html):
+                raise ValueError(LOGIN_ERROR)
+            title, _ = parse_sections(html)
+            return Page(url=current, title=title, html=html)
+        raise ValueError(f"Too many redirects fetching {url}")
+    finally:
+        if owned:
+            client.close()
+
+
+def _page_body(url: str, response: httpx.Response) -> str:
     if not response.is_success:
         raise ValueError(f"HTTP {response.status_code} fetching {url}")
     content_type = response.headers.get("content-type", "").split(";")[0].strip()
     if content_type not in HTML_TYPES:
         raise ValueError(f"Not an HTML page: {content_type or 'unknown type'}")
-    final_url = str(response.url)
-    if _asks_for_login(url, final_url, response.text):
-        raise ValueError(LOGIN_ERROR)
-    title, _ = parse_sections(response.text)
-    return Page(url=final_url, title=title, html=response.text)
+    body = _read_limited(url, response, MAX_PAGE_BYTES, "Page")
+    return body.decode(response.encoding or "utf-8", errors="replace")
+
+
+def _read_limited(url: str, response: httpx.Response, limit: int, what: str) -> bytes:
+    try:
+        declared = int(response.headers.get("content-length") or 0)
+    except ValueError as error:
+        raise ValueError(f"Invalid content-length fetching {url}") from error
+    if declared > limit:
+        raise ValueError(f"{what} too large: {url}")
+    body = bytearray()
+    for part in response.iter_bytes():
+        body.extend(part)
+        if len(body) > limit:
+            raise ValueError(f"{what} too large: {url}")
+    return bytes(body)
 
 
 def _asks_for_login(requested: str, final: str, html: str) -> bool:
@@ -120,25 +156,27 @@ def _image_body(url: str, response: httpx.Response) -> bytes:
     content_type = response.headers.get("content-type", "").split(";")[0].strip()
     if content_type not in IMAGE_TYPES:
         raise ValueError(f"Not a raster image: {content_type or 'unknown type'}")
-    if int(response.headers.get("content-length") or 0) > MAX_IMAGE_BYTES:
-        raise ValueError(f"Image too large: {url}")
-    body = bytearray()
-    for part in response.iter_bytes():
-        body.extend(part)
-        if len(body) > MAX_IMAGE_BYTES:
-            raise ValueError(f"Image too large: {url}")
-    return bytes(body)
+    return _read_limited(url, response, MAX_IMAGE_BYTES, "Image")
 
 
 def _check_image_host(url: str, page_url: str | None) -> None:
+    if page_url and urlsplit(url).hostname == urlsplit(page_url).hostname:
+        _check_scheme(url)
+        return
+    _check_host(url, "Image")
+
+
+def _check_scheme(url: str) -> None:
     parts = urlsplit(url)
     if parts.scheme not in ("http", "https") or not parts.hostname:
         raise ValueError(f"Not a web address: {url}")
-    if page_url and parts.hostname == urlsplit(page_url).hostname:
-        return
-    for address in _resolve(parts.hostname):
+
+
+def _check_host(url: str, what: str) -> None:
+    _check_scheme(url)
+    for address in _resolve(urlsplit(url).hostname or ""):
         if not ipaddress.ip_address(address).is_global:
-            raise ValueError(f"Image on a private network address: {url}")
+            raise ValueError(f"{what} on a private network address: {url}")
 
 
 def _resolve(host: str) -> list[str]:

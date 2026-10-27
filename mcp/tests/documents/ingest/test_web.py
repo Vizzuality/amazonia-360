@@ -91,58 +91,115 @@ def test_table_is_one_block() -> None:
     assert sections[0].blocks == ["Zone | 1\nLoss | 25 ha"]
 
 
-def fake_get(responses: dict[str, httpx.Response]):
-    def get(url: str, **_: object) -> httpx.Response:
-        response = responses[url]
-        response.request = httpx.Request("GET", response.headers.get("x-final", url))
-        return response
-
-    return get
-
-
 HTML = {"content-type": "text/html; charset=utf-8"}
 LOGIN = (
     "<html><head><title>Sign in</title></head><body><form>"
     '<input name="user"><input type="password" name="pw"></form></body></html>'
 )
+PUBLIC = "93.184.215.14"
 
 
-def test_fetch_page_refuses_a_login_page(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(
-        web.httpx, "get", fake_get({URL: httpx.Response(200, headers=HTML, text=LOGIN)})
-    )
+@pytest.fixture(autouse=True)
+def public_hosts(monkeypatch: pytest.MonkeyPatch) -> None:
+    table = {"169.254.169.254": "169.254.169.254", "localhost": "127.0.0.1"}
+    monkeypatch.setattr(web, "_resolve", lambda host: [table.get(host, PUBLIC)])
+
+
+def page_client(routes: dict[str, httpx.Response]) -> httpx.Client:
+    seen: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(str(request.url))
+        return routes[str(request.url)]
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    client.seen = seen  # type: ignore[attr-defined]
+    return client
+
+
+def html_response(text: str, **headers: str) -> httpx.Response:
+    return httpx.Response(200, headers={**HTML, **headers}, text=text)
+
+
+def test_fetch_page_refuses_a_login_page() -> None:
+    client = page_client({URL: html_response(LOGIN)})
     with pytest.raises(ValueError, match="asks for a login"):
-        fetch_page(URL)
+        fetch_page(URL, client)
 
 
-def test_fetch_page_refuses_a_redirect_to_a_sign_in_path(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
+def test_fetch_page_refuses_a_redirect_to_a_sign_in_path() -> None:
     final = "https://sso.example.com/signin?next=x"
-    response = httpx.Response(
-        200, headers={**HTML, "x-final": final}, text="<body><p>Welcome</p></body>"
+    client = page_client(
+        {
+            URL: httpx.Response(302, headers={"location": final}),
+            final: html_response("<body><p>Welcome</p></body>"),
+        }
     )
-    monkeypatch.setattr(web.httpx, "get", fake_get({URL: response}))
     with pytest.raises(ValueError, match="asks for a login"):
-        fetch_page(URL)
+        fetch_page(URL, client)
 
 
-def test_fetch_page_accepts_a_plain_redirect(monkeypatch: pytest.MonkeyPatch) -> None:
-    response = httpx.Response(
-        200, headers={**HTML, "x-final": URL}, text=FIXTURE.read_text()
+def test_fetch_page_follows_a_public_redirect() -> None:
+    client = page_client(
+        {
+            "http://example.org/forest-loss": httpx.Response(
+                301, headers={"location": URL}
+            ),
+            URL: html_response(FIXTURE.read_text()),
+        }
     )
-    monkeypatch.setattr(
-        web.httpx, "get", fake_get({"http://example.org/forest-loss": response})
-    )
-    page = fetch_page("http://example.org/forest-loss")
+    page = fetch_page("http://example.org/forest-loss", client)
     assert (page.url, page.title) == (URL, "Forest loss in the Western Amazon")
 
 
-def test_fetch_page_refuses_non_html(monkeypatch: pytest.MonkeyPatch) -> None:
-    response = httpx.Response(200, headers={"content-type": "application/pdf"})
-    monkeypatch.setattr(web.httpx, "get", fake_get({URL: response}))
+@pytest.mark.parametrize(
+    "private", ["http://169.254.169.254/latest/meta-data/", "http://localhost:8080/"]
+)
+def test_fetch_page_refuses_a_private_first_url(private: str) -> None:
+    client = page_client({private: html_response("<p>secret</p>")})
+    with pytest.raises(ValueError, match="private network"):
+        fetch_page(private, client)
+    assert client.seen == []  # type: ignore[attr-defined]
+
+
+def test_fetch_page_refuses_a_public_page_redirecting_to_a_private_address() -> None:
+    private = "http://169.254.169.254/latest/meta-data/"
+    client = page_client(
+        {
+            URL: httpx.Response(302, headers={"location": private}),
+            private: html_response("<p>secret</p>"),
+        }
+    )
+    with pytest.raises(ValueError, match="private network"):
+        fetch_page(URL, client)
+    assert client.seen == [URL]  # type: ignore[attr-defined]
+
+
+def test_fetch_page_stops_a_redirect_loop() -> None:
+    client = page_client({URL: httpx.Response(302, headers={"location": URL})})
+    with pytest.raises(ValueError, match="Too many redirects"):
+        fetch_page(URL, client)
+
+
+def test_fetch_page_refuses_an_oversized_body(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(web, "MAX_PAGE_BYTES", 100)
+    client = page_client({URL: html_response("<p>" + "x" * 200 + "</p>")})
+    with pytest.raises(ValueError, match="Page too large"):
+        fetch_page(URL, client)
+
+
+def test_fetch_page_refuses_a_malformed_content_length() -> None:
+    client = page_client({URL: html_response("<p>x</p>", **{"content-length": "abc"})})
+    with pytest.raises(ValueError, match="Invalid content-length"):
+        fetch_page(URL, client)
+
+
+def test_fetch_page_refuses_non_html() -> None:
+    client = page_client(
+        {URL: httpx.Response(200, headers={"content-type": "application/pdf"})}
+    )
     with pytest.raises(ValueError, match="Not an HTML page: application/pdf"):
-        fetch_page(URL)
+        fetch_page(URL, client)
 
 
 def test_fetch_page_refuses_other_schemes() -> None:
