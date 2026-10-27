@@ -1,3 +1,4 @@
+import threading
 from dataclasses import dataclass
 from typing import Protocol
 
@@ -34,7 +35,8 @@ class OpenAIEmbedder:
     def __init__(self, client: AsyncOpenAI, model: str = DENSE_MODEL) -> None:
         self._client = client
         self._model = model
-        self._sparse = SparseTextEmbedding(SPARSE_MODEL)
+        self._sparse_model: SparseTextEmbedding | None = None
+        self._sparse_lock = threading.Lock()
         self.tokens = 0
 
     async def embed_documents(self, texts: list[str]) -> list[Embedded]:
@@ -54,11 +56,18 @@ class OpenAIEmbedder:
         self.tokens += response.usage.total_tokens
         return [item.embedding for item in sorted(response.data, key=_by_index)]
 
+    def _sparse(self) -> SparseTextEmbedding:
+        # Loaded on first use, in a worker thread: loading may download the model.
+        with self._sparse_lock:
+            if self._sparse_model is None:
+                self._sparse_model = SparseTextEmbedding(SPARSE_MODEL)
+            return self._sparse_model
+
     def _sparse_documents(self, texts: list[str]) -> list[SparseVec]:
-        return [_to_sparse_vec(e) for e in self._sparse.embed(texts)]
+        return [_to_sparse_vec(e) for e in self._sparse().embed(texts)]
 
     def _sparse_query(self, text: str) -> SparseVec:
-        return _to_sparse_vec(next(iter(self._sparse.query_embed(text))))
+        return _to_sparse_vec(next(iter(self._sparse().query_embed(text))))
 
 
 def _by_index(item: object) -> int:

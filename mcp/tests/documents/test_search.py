@@ -270,3 +270,19 @@ def test_build_requires_the_openai_key(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     with pytest.raises(ConfigError, match="OPENAI_API_KEY"):
         build_document_search(SETTINGS, load_places())
+
+
+@pytest.mark.filterwarnings("ignore:Failed to obtain server version")
+def test_build_makes_a_search_without_network_or_bm25(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def forbidden(*args: object, **kwargs: object) -> None:
+        raise AssertionError("BM25 must not load at construction")
+
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
+    monkeypatch.setattr("mcp_server.documents.embedding.SparseTextEmbedding", forbidden)
+    settings = DocsSettings(
+        "postgresql+asyncpg://u:p@unreachable.invalid:5432/db",
+        "http://unreachable.invalid:6333",
+    )
+    assert isinstance(build_document_search(settings, load_places()), DocumentSearch)
