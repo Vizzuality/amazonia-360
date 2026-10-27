@@ -2,7 +2,7 @@ from collections.abc import Sequence
 from dataclasses import replace
 from typing import Any
 
-from sqlalchemy import delete, func, insert, select, update
+from sqlalchemy import delete, func, insert, select, text, update
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
@@ -241,31 +241,38 @@ class DocumentStore:
         _check(kind, JOB_KINDS, "job kind")
         async with self._sessions() as session:
             # A queued job of the same kind will see the latest state when it runs;
-            # it takes the newest payload (e.g. the file uploaded last). The queue
-            # row is locked so two requests cannot both insert.
-            row = await session.scalar(
-                select(JobRow)
-                .where(
-                    JobRow.kind == kind,
-                    JobRow.document_id == document_id,
-                    JobRow.status == "queued",
+            # it takes the newest payload (e.g. the file uploaded last). The partial
+            # unique index lets only one of two concurrent requests insert; the
+            # loser selects the winner's row on the next pass.
+            while True:
+                row = await session.scalar(
+                    select(JobRow)
+                    .where(
+                        JobRow.kind == kind,
+                        JobRow.document_id == document_id,
+                        JobRow.status == "queued",
+                    )
+                    .with_for_update()
                 )
-                .order_by(JobRow.id)
-                .limit(1)
-                .with_for_update()
-            )
-            if row is None:
+                if row is not None:
+                    if payload is not None:
+                        row.payload = payload
+                    break
                 row = (
                     await session.execute(
-                        insert(JobRow)
+                        pg_insert(JobRow)
                         .values(
                             kind=kind, document_id=document_id, payload=payload or {}
                         )
+                        .on_conflict_do_nothing(
+                            index_elements=[JobRow.kind, JobRow.document_id],
+                            index_where=text("status = 'queued'"),
+                        )
                         .returning(JobRow)
                     )
-                ).scalar_one()
-            elif payload is not None:
-                row.payload = payload
+                ).scalar_one_or_none()
+                if row is not None:
+                    break
             job = _job(row)
             await session.commit()
         return job

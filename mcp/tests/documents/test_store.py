@@ -348,6 +348,21 @@ async def test_enqueue_coalesces_queued_jobs_of_the_same_kind_and_document(
     assert len(await store.active_jobs()) == 1
 
 
+async def test_concurrent_enqueues_of_one_kind_and_document_make_one_job(
+    store: DocumentStore,
+) -> None:
+    ids: list[int] = []
+
+    async def enqueue() -> None:
+        ids.append((await store.enqueue("index_figures", "d1")).id)
+
+    async with anyio.create_task_group() as group:
+        for _ in range(5):
+            group.start_soon(enqueue)
+    assert len(set(ids)) == 1
+    assert len(await store.active_jobs("d1")) == 1
+
+
 async def test_enqueue_adds_a_new_job_once_the_previous_is_running(
     store: DocumentStore,
 ) -> None:

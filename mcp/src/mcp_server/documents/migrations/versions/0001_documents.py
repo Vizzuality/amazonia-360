@@ -141,6 +141,14 @@ def upgrade() -> None:
     )
     op.create_index("ix_mcp_jobs_status_id", "jobs", ["status", "id"], schema=SCHEMA)
     op.create_index(
+        "uq_mcp_jobs_queued",
+        "jobs",
+        ["kind", "document_id"],
+        unique=True,
+        schema=SCHEMA,
+        postgresql_where=sa.text("status = 'queued'"),
+    )
+    op.create_index(
         f"ix_{SCHEMA}_jobs_document_id", "jobs", ["document_id"], schema=SCHEMA
     )
 

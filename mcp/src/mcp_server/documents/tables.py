@@ -119,6 +119,13 @@ class JobRow(DocumentsBase):
             "status IN ('queued', 'running', 'done', 'error')", name="jobs_status"
         ),
         Index("ix_mcp_jobs_status_id", "status", "id"),
+        Index(
+            "uq_mcp_jobs_queued",
+            "kind",
+            "document_id",
+            unique=True,
+            postgresql_where=text("status = 'queued'"),
+        ),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
