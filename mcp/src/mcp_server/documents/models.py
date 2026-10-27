@@ -1,3 +1,4 @@
+import uuid
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
@@ -71,3 +72,24 @@ class Job:
     progress: int = 0
     total: int = 0
     error_message: str = ""
+
+
+@dataclass(frozen=True)
+class Passage:
+    passage_id: str
+    document_id: str
+    document_type: DocumentType
+    ingest_id: str
+    section_path: str
+    text: str
+    embed_text: str
+    origin: str
+    page: int | None = None
+    figure_path: str | None = None
+    position: int = 0
+    anchor: str | None = None
+    topic_ids: tuple[str, ...] = ()
+
+
+def make_passage_id(document_id: str, ingest_id: str, ordinal: int) -> str:
+    return str(uuid.uuid5(uuid.NAMESPACE_URL, f"{document_id}:{ingest_id}:{ordinal}"))
