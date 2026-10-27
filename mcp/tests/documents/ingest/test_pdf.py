@@ -8,14 +8,16 @@ pytest.importorskip("docling")
 import pypdfium2 as pdfium
 import pypdfium2.raw as raw
 from docling_core.types.doc.base import BoundingBox, CoordOrigin, Size
-from docling_core.types.doc.common.reference import ProvenanceItem
+from docling_core.types.doc.common.reference import ImageRef, ProvenanceItem
 from docling_core.types.doc.document import DoclingDocument
 from docling_core.types.doc.labels import DocItemLabel
+from PIL import Image
 
 from mcp_server.documents.ingest.pdf import (
     ExtractedPdf,
     TileMap,
     _clean_document,
+    _extract_figures,
     _needs_ocr,
     _tile_boxes,
     extract_pdf,
@@ -144,3 +146,18 @@ def test_the_chart_is_extracted_as_a_figure(extracted: ExtractedPdf) -> None:
     assert figure.page == 1
     assert figure.section_path == "1. Introduction"
     assert "accelerated" in figure.context
+
+
+def test_an_image_printed_twice_is_one_figure(tmp_path: Path) -> None:
+    doc = DoclingDocument(name="repeated")
+    doc.add_page(page_no=1, size=Size(width=200, height=200))
+    image = ImageRef.from_pil(Image.new("RGB", (80, 80), "green"), dpi=72)
+    for top in (10, 110):
+        box = BoundingBox(
+            l=10, t=top, r=90, b=top + 80, coord_origin=CoordOrigin.TOPLEFT
+        )
+        prov = ProvenanceItem(page_no=1, bbox=box, charspan=(0, 0))
+        doc.add_picture(image=image, prov=prov)
+    figures = _extract_figures(doc, None, set(), "doc", tmp_path)
+    assert len(figures) == 1
+    assert figures[0].page == 1

@@ -127,6 +127,11 @@ Papers and reports are indexed in Postgres and Qdrant and searched through the d
    open `http://127.0.0.1:8770`. It needs `OPENAI_API_KEY`, and runs the job worker in the
    same process.
 
+The demo corpus (six sources, eight topics) loads with `amazonia360-docs seed` and
+`amazonia360-docs load-demo <folder with the four PDFs>`; `amazonia360-docs eval
+tests/documents/fixtures/questions.yaml` measures retrieval over it. The demo script is
+[docs/document-search-demo.md](docs/document-search-demo.md).
+
 In Claude Desktop, add these to the `env` of the server's entry:
 
 | Variable | Value |

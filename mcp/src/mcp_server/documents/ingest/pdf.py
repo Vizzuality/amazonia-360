@@ -291,7 +291,8 @@ def _extract_figures(
         elif isinstance(item, TextItem):
             section_text.setdefault(section, []).append(item.text)
 
-    figures = []
+    figures: list[Figure] = []
+    seen: set[str] = set()
     for picture, section_path in pending:
         box = _box(doc, picture)
         if min(box.width, box.height) < MIN_FIGURE_SIDE:
@@ -303,6 +304,10 @@ def _extract_figures(
         image.save(buffer, format="PNG")
         image_hash = hashlib.sha256(buffer.getvalue()).hexdigest()
         figure_id = image_hash[:16]
+        # A logo or badge printed on several pages is one figure to review.
+        if figure_id in seen:
+            continue
+        seen.add(figure_id)
         image_path = figures_dir / f"{figure_id}.png"
         image_path.write_bytes(buffer.getvalue())
         figures.append(

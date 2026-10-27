@@ -1,6 +1,3 @@
-import re
-from pathlib import Path
-
 import pytest
 
 pytest.importorskip("fastapi")
@@ -8,6 +5,7 @@ pytest.importorskip("fastapi")
 from mcp_server.documents.ingest.triage import BUCKETS
 from mcp_server.documents.models import Figure, Topic
 
+from ..test_wording import banned_words
 from .backoffice_env import NAPO, Backoffice
 
 pytestmark = [
@@ -15,10 +13,6 @@ pytestmark = [
     pytest.mark.anyio,
     pytest.mark.filterwarnings("ignore:Payload indexes have no effect"),
 ]
-
-# The back office is a port: none of the original's vocabulary may show through.
-BANNED = re.compile(r"device|manual|gear|synth|studio", re.IGNORECASE)
-DOCUMENTS_SRC = Path(__file__).parents[3] / "src" / "mcp_server" / "documents"
 
 
 async def seed(bo: Backoffice) -> None:
@@ -83,19 +77,8 @@ async def test_no_page_uses_the_vocabulary_of_the_original(bo: Backoffice) -> No
     await seed(bo)
     bo.qdrant_up = False
     for name, html in (await pages(bo)).items():
-        found = BANNED.findall(html)
+        found = banned_words(html)
         assert not found, f"{name}: {found}"
-
-
-def test_no_source_file_uses_the_vocabulary_of_the_original() -> None:
-    offending = [
-        f"{path.relative_to(DOCUMENTS_SRC)}: {sorted(set(BANNED.findall(text)))}"
-        for path in sorted(DOCUMENTS_SRC.rglob("*"))
-        if path.is_file()
-        and path.suffix in (".py", ".html", ".css", ".js")
-        and BANNED.search(text := path.read_text(encoding="utf-8"))
-    ]
-    assert offending == []
 
 
 async def test_every_page_says_when_qdrant_is_down(bo: Backoffice) -> None:

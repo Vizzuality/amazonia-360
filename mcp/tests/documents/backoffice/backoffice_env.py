@@ -39,7 +39,8 @@ class Backoffice:
         self.settings = DocsSettings(
             database_url="unused", qdrant_url="unused", data_dir=data_dir
         )
-        # Above zero: the fake embedder scores unrelated passages exactly 0.
+        # Above zero: the fake embedder scores unrelated texts exactly 0. The real
+        # thresholds are set for OpenAI embeddings, not the fake's word overlap.
         self.search = DocumentSearch(
             store,
             index,
@@ -47,6 +48,7 @@ class Backoffice:
             self.settings,
             load_places(),
             passage_min_score=0.05,
+            summary_min_score=0.05,
         )
         self.pipeline = Pipeline(
             store,

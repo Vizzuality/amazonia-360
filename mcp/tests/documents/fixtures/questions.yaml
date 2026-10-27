@@ -1,0 +1,317 @@
+# Retrieval eval of document search: discovery/deliverables/doc-search/questions.yaml
+# without its device_id lines.
+# expected_snippets are verbatim substrings of the indexed chunk text (whitespace and
+# case are normalized when matching). Most questions are in Spanish over English
+# sources, as Amazonia 360 users would ask them. Figure questions come after the
+# figure descriptions are reviewed.
+
+# --- Finer et al. (2008), oil and gas blocks in the western Amazon -----------------
+- id: finer08-block-count
+  question: ¿Cuántos bloques de petróleo y gas hay en la Amazonía occidental?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: About 180 blocks covering some 688,000 km².
+  expected_snippets: ["180 oil and gas blocks"]
+
+- id: finer08-ecuador-share
+  question: ¿Qué parte de la Amazonía ecuatoriana está zonificada para actividades petroleras?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: About 65% (52,300 km²).
+  expected_snippets: ["of the Amazon for oil activities"]
+
+- id: finer08-zona-intangible
+  question: When was the Zona Intangible in Yasuní delimited and how large is it?
+  lang: en
+  answerable: true
+  origin: text
+  expected_answer: By Presidential Decree in January 2007; 7,580 km².
+  expected_snippets: ["7,580"]
+
+- id: finer08-petrobras-road
+  question: ¿Por qué no se dejó a Petrobras abrir una carretera dentro del Yasuní?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: >-
+    A scientists' report and Waorani opposition led the government to ban the road in
+    July 2005; the project was redesigned without a major access road.
+  expected_snippets: ["banned Petrobras from building a road"]
+
+- id: finer08-isolated-peoples
+  question: ¿Qué pueblos en aislamiento voluntario viven en la Amazonía ecuatoriana?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: The Tagaeri and the Taromenane.
+  expected_snippets: ["the Tagaeri and Taromenane"]
+
+- id: finer08-us-exports
+  question: How much of Ecuador's oil went to the United States in 2006?
+  lang: en
+  answerable: true
+  origin: text
+  expected_answer: Over half of total production, and nearly 90% of the OCP heavy crude.
+  expected_snippets: ["over half of Ecuador's total oil production went to the United States"]
+
+- id: finer08-amazon-size
+  question: ¿Qué superficie se tomó para la Amazonía ecuatoriana al calcular el porcentaje en bloques?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: 81,000 km².
+  expected_snippets: ["81,000 km"]
+
+- id: finer08-fpic
+  question: ¿Qué norma internacional obliga a consultar a los pueblos indígenas sobre proyectos en sus territorios?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: ILO Indigenous and Tribal Peoples Convention No. 169 (1989).
+  expected_snippets: ["Convention No. 169"]
+
+- id: finer08-bolivia-parks
+  question: ¿Qué parques nacionales de Bolivia se solapan con bloques de exploración?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: Madidi and Isiboro Secure National Parks, and Pilon-Lajas Biosphere Reserve.
+  expected_snippets: ["including large parts of Madidi and Isiboro"]
+
+# --- Bass et al. (2010), Yasuní biodiversity --------------------------------------
+- id: bass10-amphibians
+  question: ¿Cuántas especies de anfibios se han documentado en el Parque Nacional Yasuní?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: 150 species, a world record among comparable landscapes.
+  expected_snippets: ["150 amphibian species documented"]
+
+- id: bass10-rainfall
+  question: What is the annual rainfall in Yasuní National Park?
+  lang: en
+  answerable: true
+  origin: text
+  expected_answer: About 3,200 mm a year.
+  expected_snippets: ["3,200 mm annually"]
+
+- id: bass10-oil-overlap
+  question: ¿Qué porcentaje del centro de riqueza cuádruple coincide con concesiones petroleras?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: 79%, while the park covers only 14%.
+  expected_snippets: ["79% of the center currently coincides", "proposed oil concessions cover 79%"]
+
+- id: bass10-fish
+  question: ¿Hay más especies de peces en el Yasuní que en la cuenca del Misisipi?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: Yes, 382 known species against about 375 in the Mississippi basin.
+  expected_snippets: ["382 known species"]
+
+- id: bass10-birds
+  question: ¿Cuántas especies de aves tiene el Yasuní?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: At least 596 documented species, a third of the Amazon's native species.
+  expected_snippets: ["596 documented bird species"]
+
+- id: bass10-itt-co2
+  question: How much CO2 would the Yasuní-ITT Initiative keep out of the atmosphere?
+  lang: en
+  answerable: true
+  origin: text
+  expected_answer: About 410 million metric tons.
+  expected_snippets: ["410 M metric tons"]
+
+# --- García-Romero et al. (2026), deforestation hotspots and oil ------------------
+- id: garcia26-forest-loss
+  question: ¿Cuánto bosque se perdió en los bloques petroleros de la Amazonía ecuatoriana entre 2000 y 2023?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: 391,303 ha, about 4% of forest cover.
+  expected_snippets: ["391,303 ha"]
+
+- id: garcia26-kde-params
+  question: ¿Con qué tamaño de celda y radio de búsqueda se calcularon los puntos calientes de deforestación?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: Cell size 1,500 m and search radius 6,000 m.
+  expected_snippets: ["cell size = 1500 m and search radius = 6000 m"]
+
+- id: garcia26-itt-low
+  question: ¿Por qué el bloque ITT apenas muestra deforestación reciente?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: >-
+    It lies almost entirely inside a protected area and its buffer zone; the 6 km KDE
+    radius may also miss small clearings.
+  expected_snippets: ["is located almost entirely within a Protected Area"]
+
+- id: garcia26-hotspot-share
+  question: What share of deforestation fronts is linked to hydrocarbon infrastructure?
+  lang: en
+  answerable: true
+  origin: text
+  expected_answer: About 80%, within a 10 km radius.
+  expected_snippets: ["approximately 80% of the deforestation fronts", "80% of the hotspots located within a 10 km radius"]
+
+- id: garcia26-resolution-limit
+  question: ¿Qué deforestación se le escapa a MapBiomas por su resolución de 30 metros?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: Small clearings and narrow linear openings; also intra-annual events.
+  expected_snippets: ["This resolution may underestimate smaller-scale deforestation"]
+
+- id: garcia26-sote
+  question: ¿Desde qué año funciona el oleoducto SOTE?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: Since 1972.
+  expected_snippets: ["operating since 1972"]
+
+# --- Paredes et al. (2026), REDD+ fragmentation -----------------------------------
+- id: paredes26-priority-zones
+  question: ¿Cuántas zonas prioritarias REDD+ tiene Ecuador y cuántas están en la Amazonía?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: Six; 87% of their area is in the Amazon, in three zones.
+  expected_snippets: ["six priority conservation areas in Ecuador", "six priority zones in Ecuador"]
+
+- id: paredes26-zone-areas
+  question: How large is each REDD+ priority zone of the Ecuadorian Amazon?
+  lang: en
+  answerable: true
+  origin: text
+  expected_answer: North 52,356 km², central 40,366 km², south 24,924 km².
+  expected_snippets: ["52,356 km"]
+
+- id: paredes26-patch-count
+  question: ¿Cuántos más parches de bosque detecta MapBiomas que el mapa del MAATE?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: Up to five times more.
+  expected_snippets: ["up to five times higher", "up to 5 times more"]
+
+- id: paredes26-least-fragmented
+  question: ¿Qué zona REDD+ está menos fragmentada y por qué?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: >-
+    The central Amazon, thanks to limited industrial access and community conservation
+    under Socio Bosque and the Pastaza REDD+ plan.
+  expected_snippets: ["was the least fragmented zone"]
+
+- id: paredes26-south-loss
+  question: ¿Cuánta cobertura natural perdió la zona sur entre 1990 y 2022 según el MAATE?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: 355,327 ha, almost four times the 88,165 ha from MapBiomas.
+  expected_snippets: ["355,327 hectares"]
+
+- id: paredes26-spatial-tool
+  question: ¿Qué programa se usó para mapear la fragmentación píxel a píxel?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: Guidos Toolbox (GTB), through forest area density.
+  expected_snippets: ["Guidos Toolbox (GTB v3.3)"]
+
+# --- MAAP #221, illegal mining in protected areas ----------------------------------
+- id: maap221-podocarpus-growth
+  question: ¿Cuánto creció la minería ilegal dentro del Parque Nacional Podocarpus?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: From 22 ha in July 2023 to 50 ha in September 2024, a 125% expansion.
+  expected_snippets: ["illegal expansion of 125%"]
+
+- id: maap221-river-course
+  question: Is illegal mining changing the course of any river?
+  lang: en
+  answerable: true
+  origin: text
+  expected_answer: Yes, the Loyola River in Podocarpus National Park.
+  expected_snippets: ["changing the course of the Loyola River"]
+
+- id: maap221-threatened-areas
+  question: ¿Qué áreas protegidas de la Amazonía ecuatoriana están amenazadas por la minería?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: >-
+    Podocarpus and Sumaco Napo-Galeras National Parks, Cofán Bermejo Ecological Reserve
+    and El Zarza Wildlife Refuge.
+  expected_snippets: ["Podocarpus and Sumaco Napo-Galeras National Parks"]
+
+- id: maap221-cofan-bermejo
+  question: ¿Cuánta minería hay dentro de los límites de la Reserva Cofán Bermejo?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: About 1.05 ha, of 337 ha of mining advance in the area.
+  expected_snippets: ["1.05 hectares"]
+
+# --- MAAP #82, oil deforestation in Yasuní -----------------------------------------
+- id: maap82-total
+  question: ¿Cuánta deforestación ha causado el petróleo en el Yasuní, sumando directa e indirecta?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: 417 ha (169 direct and 248 indirect).
+  expected_snippets: ["417 hectares"]
+
+- id: maap82-referendum
+  question: ¿Qué límite aprobó el referéndum para la extracción petrolera en el Yasuní?
+  lang: es
+  answerable: true
+  origin: text
+  expected_answer: 300 ha of oil extraction area.
+  expected_snippets: ["limiting the oil extraction area within Yasuni National Park to 300 hectares"]
+
+# --- Not in the corpus --------------------------------------------------------------
+- id: none-galapagos
+  question: ¿Cuál es la tasa de deforestación en Galápagos?
+  lang: es
+  answerable: false
+  origin: null
+  expected_answer: Not in the sources.
+  expected_snippets: []
+
+- id: none-mercury
+  question: ¿Cuánto mercurio se ha medido en los ríos afectados por la minería en Podocarpus?
+  lang: es
+  answerable: false
+  origin: null
+  expected_answer: Not in the sources; MAAP #221 reports area, not water quality.
+  expected_snippets: []
+
+- id: none-tena-population
+  question: What is the population of Tena canton?
+  lang: en
+  answerable: false
+  origin: null
+  expected_answer: Not in the sources.
+  expected_snippets: []
+
+- id: none-sangay-rainfall
+  question: ¿Cuánto llueve al año en el Parque Nacional Sangay?
+  lang: es
+  answerable: false
+  origin: null
+  expected_answer: Not in the sources; only Yasuní's rainfall is given.
+  expected_snippets: []
