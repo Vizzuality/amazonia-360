@@ -10,6 +10,20 @@ import { env } from "@/env.mjs";
 
 import { DATASETS } from "@/constants/datasets";
 
+esriConfig.apiKey = env.NEXT_PUBLIC_ARCGIS_API_KEY;
+
+esriConfig.request.interceptors?.push({
+  urls: [
+    DATASETS.admin0.layer.url,
+    DATASETS.admin1.layer.url,
+    DATASETS.admin2.layer.url,
+    DATASETS.ciudades_capitales.layer.url,
+  ],
+  query: {
+    collation: JSON.stringify({ accentSensitive: false, caseSensitive: false }),
+  },
+});
+
 export const ArcGISProvider = ({
   locale,
   children,
@@ -20,20 +34,6 @@ export const ArcGISProvider = ({
     // Set the locale for ArcGIS
     // Available locales: https://developers.arcgis.com/javascript/latest/api-reference/esri-intl.html#setLocale
     setLocale(locale);
-
-    esriConfig.apiKey = env.NEXT_PUBLIC_ARCGIS_API_KEY;
-
-    esriConfig.request.interceptors?.push({
-      urls: [
-        DATASETS.admin0.layer.url,
-        DATASETS.admin1.layer.url,
-        DATASETS.admin2.layer.url,
-        DATASETS.ciudades_capitales.layer.url,
-      ],
-      query: {
-        collation: JSON.stringify({ accentSensitive: false, caseSensitive: false }),
-      },
-    });
   }, [locale]);
 
   return children;

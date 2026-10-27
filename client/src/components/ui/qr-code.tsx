@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { Slot } from "@radix-ui/react-slot";
 
-import { useComposedRefs } from "@/lib/compose-refs";
+import { composeRefs } from "@/lib/compose-refs";
 import { cn } from "@/lib/utils";
 
 const ROOT_NAME = "QRCode";
@@ -341,7 +341,10 @@ function QRCodeCanvas(props: QRCodeCanvasProps) {
 
   const context = useQRCodeContext(CANVAS_NAME);
 
-  const composedRef = useComposedRefs(ref, context.canvasRef);
+  const composedRef = React.useMemo(
+    () => composeRefs(ref, context.canvasRef),
+    [ref, context.canvasRef],
+  );
 
   const CanvasPrimitive = asChild ? Slot : "canvas";
 
