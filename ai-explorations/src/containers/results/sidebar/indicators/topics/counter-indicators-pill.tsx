@@ -1,0 +1,18 @@
+"use client";
+
+import { useFormTopics } from "@/lib/url-state/store";
+
+import { Topic } from "@/types/topic";
+
+export function CounterIndicatorsPill({ id }: { id: Topic["id"] }) {
+  const { topics } = useFormTopics();
+  const t = topics?.find((t) => t.topic_id === id);
+
+  if (!t || !t.indicators || !t.indicators?.length) return null;
+
+  return (
+    <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-primary">
+      {t.indicators.length}
+    </span>
+  );
+}

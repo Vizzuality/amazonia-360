@@ -1,0 +1,99 @@
+"use client";
+
+import { useMemo } from "react";
+
+import { useTranslations } from "use-intl";
+
+import { useParams } from "@/lib/navigation";
+import { useReport } from "@/lib/report";
+import { cn } from "@/lib/utils";
+
+import { useRegisterPage } from "@/containers/webshot/pdf-report/hooks";
+
+import Image from "@/components/image";
+
+interface PdfHeaderProps {
+  transparent?: boolean;
+  title?: string;
+  topic?: string;
+  totalPages?: number;
+  getCurrentPage?: (element?: HTMLElement) => number;
+  documentHeight?: number;
+}
+
+export default function PdfHeader({ transparent, topic }: PdfHeaderProps) {
+  const t = useTranslations();
+
+  const { id: reportId } = useParams();
+  const { data: reportData } = useReport({ id: `${reportId}` });
+
+  // Generate a stable ID for this instance
+  const id = useMemo(() => {
+    return `pdf-header-${crypto.randomUUID()}`;
+  }, []);
+
+  const { currentPage, totalPages } = useRegisterPage(id);
+
+  return (
+    <header
+      className={cn({
+        "absolute top-0 left-0 box-border flex h-16 w-full shrink-0 flex-col justify-center px-14": true,
+        "border-transparent bg-transparent": transparent,
+        "border-b border-blue-50 bg-blue-50": !transparent,
+        "after:absolute after:top-0 after:left-0 after:z-0 after:h-40 after:w-full after:bg-linear-to-b after:from-black/50 after:to-transparent":
+          transparent,
+      })}
+    >
+      <div className="relative z-10 flex items-center justify-between gap-10">
+        <div className="z-120 flex shrink-0 items-center space-x-2">
+          <div className="flex items-center space-x-2 lg:space-x-4">
+            <Image
+              src={transparent ? "/IDB-logo-white.svg" : "/IDB-logo.svg"}
+              alt="IDB"
+              width={65}
+              height={24}
+              priority
+            />
+            <div className="space-x-2">
+              <span
+                className={cn({
+                  "text-xs font-medium lg:text-sm": true,
+                  "text-white": transparent,
+                  "text-blue-500": !transparent,
+                })}
+              >
+                AmazoniaForever360+
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p
+            className={cn({
+              "text-white": transparent,
+              "text-black": !transparent,
+              "line-clamp-1 text-xs": true,
+            })}
+          >
+            {reportData?.title ?? t("pdf-report-cover-title")}
+
+            {!!topic ? <span className="font-thin"> | {topic}</span> : ""}
+          </p>
+        </div>
+
+        <div
+          className={cn({
+            "flex items-center justify-between": true,
+            "text-white": transparent,
+            "text-black": !transparent,
+          })}
+        >
+          <p className="shrink-0 whitespace-nowrap">
+            {currentPage} / {totalPages}
+          </p>
+        </div>
+      </div>
+    </header>
+  );
+}

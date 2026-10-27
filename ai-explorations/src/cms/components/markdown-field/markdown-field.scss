@@ -1,0 +1,172 @@
+// MDXEditor draws itself from Radix-style colour variables. Mapping them onto Payload's
+// semantic colour tokens, which already flip under [data-theme="dark"], themes the editor in
+// both modes. MDXEditor also gives its popups (link dialog, block type menu) the editor's
+// className, which is why the variables live on that class rather than on the field.
+.markdown-field__editor {
+  --basePageBg: var(--field-color-bg);
+  --baseBase: var(--color-bg);
+  --baseBgSubtle: var(--color-bg-secondary);
+  --baseBg: var(--color-bg-hover);
+  --baseBgHover: var(--color-bg-pressed);
+  --baseBgActive: var(--color-bg-tertiary);
+  --baseLine: var(--color-border);
+  --baseBorder: var(--color-border);
+  --baseBorderHover: var(--color-border-strong);
+  --baseSolid: var(--color-text-tertiary);
+  --baseSolidHover: var(--color-text-secondary);
+  --baseText: var(--color-text-secondary);
+  --baseTextContrast: var(--color-text);
+
+  --accentBase: var(--color-bg);
+  --accentBgSubtle: var(--color-bg-secondary);
+  --accentBg: var(--color-bg-hover);
+  --accentBgHover: var(--color-bg-pressed);
+  --accentBgActive: var(--color-bg-tertiary);
+  --accentLine: var(--color-border);
+  --accentBorder: var(--color-border);
+  --accentBorderHover: var(--color-border-strong);
+  --accentSolid: var(--color-text);
+  --accentSolidHover: var(--color-text-secondary);
+  --accentText: var(--color-text);
+  --accentTextContrast: var(--color-bg);
+
+  color: var(--color-text);
+}
+
+.markdown-field {
+  .markdown-field__editor {
+    border: var(--stroke-width-small) solid var(--field-color-border);
+    border-radius: var(--field-border-radius);
+    background: var(--field-color-bg);
+
+    &:focus-within {
+      border-color: var(--field-color-border-focus);
+    }
+  }
+
+  &.error .markdown-field__editor {
+    border-color: var(--field-color-border-error);
+  }
+
+  // The source view is CodeMirror with MDXEditor's hard-coded `basicLight` theme: white
+  // surfaces and a near-black caret, unreadable in Payload's dark mode. Its syntax colours
+  // are mid-tone Nord and read on both, so only the surfaces are themed.
+  .mdxeditor-source-editor .cm-editor {
+    background-color: var(--field-color-bg);
+    color: var(--color-text);
+
+    .cm-content {
+      caret-color: var(--color-text);
+    }
+
+    .cm-cursor,
+    .cm-dropCursor {
+      border-left-color: var(--color-text);
+    }
+
+    .cm-gutters {
+      background-color: var(--color-bg-secondary);
+      color: var(--color-text-tertiary);
+    }
+
+    .cm-activeLine,
+    .cm-activeLineGutter {
+      background-color: var(--color-bg-hover);
+    }
+
+    &.cm-focused .cm-selectionBackground,
+    .cm-selectionBackground,
+    .cm-content ::selection {
+      background-color: var(--color-bg-pressed);
+    }
+  }
+
+  [role="toolbar"] {
+    border-radius: var(--field-border-radius) var(--field-border-radius) 0 0;
+  }
+
+  .markdown-field__content {
+    min-height: 160px;
+    padding: 15px;
+    font-size: 1rem;
+    line-height: 1.6;
+
+    > :first-child {
+      margin-top: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 1.25em 0 0.5em;
+      line-height: 1.25;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: 1.75em;
+    }
+
+    h2 {
+      font-size: 1.5em;
+    }
+
+    h3 {
+      font-size: 1.25em;
+    }
+
+    h4 {
+      font-size: 1.1em;
+    }
+
+    p,
+    ul,
+    ol,
+    blockquote {
+      margin: 0 0 0.75em;
+    }
+
+    ul,
+    ol {
+      padding-left: 1.5em;
+    }
+
+    ul {
+      list-style: disc;
+    }
+
+    ol {
+      list-style: decimal;
+    }
+
+    blockquote {
+      padding-left: 1em;
+      border-left: 3px solid var(--color-border);
+      color: var(--color-text-secondary);
+    }
+
+    code {
+      padding: 0.1em 0.3em;
+      border-radius: var(--radius-chip);
+      background: var(--color-bg-hover);
+      font-family: var(--font-mono, monospace);
+      font-size: 0.9em;
+    }
+
+    a {
+      color: var(--color-text-success, var(--color-text));
+      text-decoration: underline;
+    }
+
+    hr {
+      margin: 1.5em 0;
+      border: 0;
+      border-top: 1px solid var(--color-border);
+    }
+  }
+}

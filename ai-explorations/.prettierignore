@@ -1,0 +1,17 @@
+pnpm-lock.yaml
+dist/
+.tanstack/
+.vitest/
+.vitest-attachments/
+coverage/
+playwright-report/
+test-results/
+e2e/.auth/
+media/
+public/
+datum/
+src/routeTree.gen.ts
+src/payload-types.ts
+src/app/_payload/importMap.js
+src/cms/migrations/
+src/containers/home/key-features-grid/grid-animation-lottie.json

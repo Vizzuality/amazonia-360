@@ -1,0 +1,204 @@
+"use client";
+
+import { useMemo } from "react";
+
+import * as projectOperator from "@arcgis/core/geometry/operators/projectOperator";
+import Point from "@arcgis/core/geometry/Point";
+import SpatialReference from "@arcgis/core/geometry/SpatialReference";
+import { TooltipPortal } from "@radix-ui/react-tooltip";
+import { cellToLatLng } from "h3-js";
+import { useSetAtom } from "jotai";
+import { useLocale, useTranslations } from "use-intl";
+
+import { formatNumberUnit } from "@/lib/formats";
+import { useGetGridMeta } from "@/lib/grid";
+import { useGetH3Indicators } from "@/lib/indicators";
+import { getGeometryWithBuffer } from "@/lib/location";
+import {
+  gridCellHighlightAtom,
+  tmpBboxAtom,
+  useSyncGridDatasets,
+  useSyncLocation,
+} from "@/lib/url-state/store";
+import { cn } from "@/lib/utils";
+
+import { BUFFERS } from "@/constants/map";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { HexagonIcon } from "@/components/ui/icons/hexagon";
+import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
+if (!projectOperator.isLoaded()) {
+  await projectOperator.load();
+}
+
+export const GridTableItem = (
+  props: Record<string, string | number> & { id: number; cell: string },
+) => {
+  const t = useTranslations();
+  const locale = useLocale();
+  const [, setLocation] = useSyncLocation();
+  const [gridDatasets] = useSyncGridDatasets();
+  const setGridCellHighlight = useSetAtom(gridCellHighlightAtom);
+  const setTmpBbox = useSetAtom(tmpBboxAtom);
+
+  const { data: H3IndicatorsData } = useGetH3Indicators({ locale });
+
+  const queryMeta = useGetGridMeta({
+    select: (data) =>
+      data.datasets
+        .map((dataset) => {
+          const matchingIndicator = H3IndicatorsData?.find(
+            (indicator) =>
+              indicator.resource.type === "h3" &&
+              indicator.resource.column &&
+              indicator.resource.column === dataset.var_name,
+          );
+
+          if (!matchingIndicator) return null;
+
+          return {
+            ...dataset,
+            ...matchingIndicator,
+          };
+        })
+        .filter(Boolean),
+  });
+
+  const { id, cell, ...rest } = props;
+
+  const ITEMS = useMemo(() => {
+    return gridDatasets.map((dataset) => {
+      const d = queryMeta?.data?.find((d) => d?.var_name === dataset);
+      if (!d) return null;
+
+      return {
+        ...d,
+        value: rest[dataset],
+      };
+    });
+  }, [gridDatasets, queryMeta.data, rest]);
+
+  const handleClick = async () => {
+    const latLng = cellToLatLng(cell);
+
+    const p = new Point({ x: latLng[1], y: latLng[0], spatialReference: { wkid: 4326 } });
+    const projectedGeom = projectOperator.execute(p, new SpatialReference({ wkid: 102100 }));
+
+    const g = Array.isArray(projectedGeom) ? projectedGeom[0] : projectedGeom;
+
+    setLocation({ type: "point", geometry: g.toJSON(), buffer: BUFFERS.point });
+
+    const gWithBuffer = await getGeometryWithBuffer(g, BUFFERS.point);
+    if (gWithBuffer?.extent) {
+      setTmpBbox(gWithBuffer.extent);
+    }
+  };
+
+  const handleMouseEnter = () => {
+    setGridCellHighlight({ id, index: cell });
+  };
+
+  const handleMouseLeave = () => {
+    setGridCellHighlight({
+      id: null,
+      index: undefined,
+    });
+  };
+
+  return (
+    <AlertDialog>
+      <Tooltip>
+        <AlertDialogTrigger asChild>
+          <TooltipTrigger asChild>
+            <div
+              className="group flex w-full cursor-pointer items-start gap-2 rounded-lg px-1 py-2 hover:bg-blue-50"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <button
+                type="button"
+                className="flex min-w-16 shrink-0 items-center gap-2 rounded-xs bg-cyan-100 px-2 py-1 group-hover:bg-cyan-500 group-hover:text-white"
+              >
+                <HexagonIcon className="h-4 w-4 text-current" />
+                <span className="text-sm font-semibold">{id + 1}º</span>
+              </button>
+              <ul className="w-full overflow-hidden pt-1">
+                {ITEMS.map((dataset, i) => (
+                  <li
+                    key={dataset?.id}
+                    className="flex w-full items-end justify-between gap-2 text-sm"
+                  >
+                    <div className="relative flex flex-1 items-end overflow-hidden">
+                      <p
+                        className={cn("inline-block max-w-max break-words text-gray-400", {
+                          "font-normal": i !== 0,
+                        })}
+                      >
+                        {dataset?.name}
+                      </p>
+                      <span className="flex-1 overflow-hidden font-extralight tracking-[2.5px] whitespace-nowrap text-muted-foreground">
+                        {".".repeat(200)}
+                      </span>
+                    </div>
+
+                    {dataset?.legend.legend_type === "continuous" && (
+                      <span className="shrink-0 whitespace-nowrap text-blue-700">
+                        {formatNumberUnit(+(dataset?.value ?? 0), `${dataset?.unit}`)}
+                      </span>
+                    )}
+
+                    {dataset?.legend.legend_type === "categorical" &&
+                      "entries" in dataset.legend && (
+                        <span className="shrink-0 whitespace-nowrap text-blue-700">
+                          {dataset.legend.entries.find((e) => e.value === dataset?.value)?.label ||
+                            dataset?.value}
+                        </span>
+                      )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </TooltipTrigger>
+        </AlertDialogTrigger>
+
+        <TooltipPortal>
+          <TooltipContent side="right">
+            <TooltipArrow />
+            <p className="max-w-36 text-center text-sm font-medium">
+              {t("grid-sidebar-report-location-filters-alert-redefine-area-title")}
+            </p>
+          </TooltipContent>
+        </TooltipPortal>
+
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t("grid-sidebar-report-location-filters-alert-redefine-area-title")}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("grid-sidebar-report-location-filters-alert-redefine-area-description")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+
+            <AlertDialogAction onClick={handleClick}>{t("redefine")}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </Tooltip>
+    </AlertDialog>
+  );
+};
+
+export default GridTableItem;

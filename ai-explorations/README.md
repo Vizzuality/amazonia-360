@@ -1,0 +1,170 @@
+# ai-explorations
+
+Proof of concept that ports `client/` (Next.js + Payload 3) to [TanStack Start](https://tanstack.com/start) + [Payload 4 beta](https://payloadcms.com/docs/v4/migration-guide/v4) through `@payloadcms/tanstack-start`. It reproduces the client's routes, CMS, auth and tests on a separate database. It is not production code and is excluded from CI and SonarCloud.
+
+|                   |                                                                                 |
+| ----------------- | ------------------------------------------------------------------------------- |
+| Framework         | TanStack Start 1.169 + TanStack Router 1.170, Vite 8                            |
+| CMS               | Payload `4.0.0-beta.4` (Postgres adapter), admin at `/admin`, REST at `/v1/api` |
+| Language          | TypeScript 7 (`tsc`), TypeScript 6 API for ESLint (see [Tooling](#tooling))     |
+| Production server | [srvx](https://srvx.h3.dev/)                                                    |
+
+## Prerequisites
+
+- Node `24.22.1` (`.nvmrc`; `nvm use` in this directory)
+- pnpm `10.29.2`
+- PostgreSQL from the repo's Docker Compose `database` service (`docker compose --profile local up database`), listening on `localhost:5432`
+
+## Install
+
+The app has its own `package.json` and `pnpm-lock.yaml`. The root `pnpm -r` scripts (`build`, `lint`, `test`, `format`, `check`, `clean`) skip it with `--filter=!ai-explorations`, so run its scripts from this directory:
+
+```sh
+pnpm install --ignore-workspace
+```
+
+Add dependencies with `pnpm add -E --ignore-workspace <pkg>@<version>` (exact pins only).
+
+## Environment
+
+Copy `.env.default` to `.env.local` and fill it in. Vite loads it for `dev`/`build`; `payload` and `start` pass it to Node with `--env-file-if-exists`. Variables are validated at build and boot by `@t3-oss/env-core` in `src/env.ts`: a missing required variable fails the build and names the variable.
+
+Browser-exposed variables use the `VITE_` prefix; each replaces the client's `NEXT_PUBLIC_` variable of the same name. `VITE_*` values are inlined at build time, so changing one needs a rebuild.
+
+| Variable                             | Required | Description                                                                                                                       |
+| ------------------------------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`                       | yes      | Postgres URL of the app database, `postgres://<user>:<password>@localhost:5432/amazonia360_ai_explorations`                       |
+| `DATABASE_PASSWORD`                  | no       | Password merged into `DATABASE_URL` when the URL carries none                                                                     |
+| `PAYLOAD_SECRET`                     | yes      | Payload signing secret                                                                                                            |
+| `AWS_SES_IAM_USER_ACCESS_KEY_ID`     | yes      | SES key id. Empty or `no-ses-configured` switches email to a JSON transport (see [Emails](#emails))                               |
+| `AWS_SES_IAM_USER_SECRET_ACCESS_KEY` | yes      | SES secret (may be empty with the JSON transport)                                                                                 |
+| `AWS_SES_REGION`                     | yes      | SES region (may be empty with the JSON transport)                                                                                 |
+| `BASIC_AUTH_ENABLED`                 | yes      | `true` puts frontend pages and server functions behind HTTP basic auth                                                            |
+| `BASIC_AUTH_USER`                    | yes      | Basic auth user                                                                                                                   |
+| `BASIC_AUTH_PASSWORD`                | yes      | Basic auth password                                                                                                               |
+| `VITE_URL`                           | yes      | Public URL of this app, `http://localhost:3100` locally                                                                           |
+| `VITE_API_URL`                       | yes      | AmazoniaForever360+ API (H3 grid, AI summaries)                                                                                   |
+| `VITE_API_KEY`                       | yes      | API key for `VITE_API_URL`                                                                                                        |
+| `VITE_ARCGIS_API_KEY`                | yes      | ArcGIS API key                                                                                                                    |
+| `VITE_GTM_ID`                        | no       | Google Tag Manager id; GTM and the cookie banner render only when set                                                             |
+| `VITE_FEATURE_FLAGS`                 | no       | Comma-separated flags, e.g. `country-module`                                                                                      |
+| `VITE_E2E_BRIDGE`                    | no       | `true` mounts the e2e test bridge on report pages. Set by the Playwright web server, never in a deployed build                    |
+| `E2E_SEED_SECRET`                    | no       | Enables `/local-api/e2e/seed-*`; without it those routes return 404 and, outside CI, the specs that need seeded users are skipped |
+| `SKIP_ENV_VALIDATION`                | no       | Skips env validation; set by the Vitest config only                                                                               |
+
+## Ports
+
+| Service                             | Port                                           |
+| ----------------------------------- | ---------------------------------------------- |
+| ai-explorations (`dev` and `start`) | `3100` (`strictPort`, fails instead of moving) |
+| client (Next.js)                    | `3000`                                         |
+| Postgres                            | `5432`                                         |
+
+Both apps can run at the same time. The auth cookie uses its own prefix, so signing in on one does not affect the other on `localhost`.
+
+## Database
+
+The app uses its own database, `amazonia360_ai_explorations`, created from a dump of the client database and migrated to Payload 4. It never connects to the client database (`amazonia360`).
+
+1. Dump the client database (custom format):
+
+   ```sh
+   pg_dump -h localhost -p 5432 -U amazonia360 -Fc -f amazonia360.dump amazonia360
+   ```
+
+2. Create the app database and restore the dump into it:
+
+   ```sh
+   createdb -h localhost -p 5432 -U amazonia360 amazonia360_ai_explorations
+   pg_restore -h localhost -p 5432 -U amazonia360 --no-owner -d amazonia360_ai_explorations amazonia360.dump
+   ```
+
+3. Run the migrations:
+
+   ```sh
+   pnpm payload migrate:status
+   pnpm payload migrate
+   ```
+
+   `src/cms/migrations` holds the client's migrations plus `20261026_151428_payload_4_upgrade`, the Payload 3 to 4 delta. The adapter runs with `push: false` in every environment, so the schema changes only through migrations.
+
+**Dumps from deployed environments:** the Payload 4 migration runs `ALTER TABLE "payload_jobs_log" ALTER COLUMN "input" SET NOT NULL`. It fails when the dump has `payload_jobs_log` rows with a `NULL` `input` (a local database usually has none). Check before migrating:
+
+```sql
+SELECT count(*) FROM payload_jobs_log WHERE input IS NULL;
+```
+
+Delete or backfill those rows in `amazonia360_ai_explorations` first.
+
+The migration also copies `_status` into the per-locale tables for localized drafts collections, because Payload 4 stores status per locale. Content that exists only in English (subtopics, reports) has no `es`/`pt` rows, so it does not show on `/es` and `/pt`, where the client falls back to English.
+
+### Seeding
+
+A database restored from a client dump already holds the seeded content. To seed an empty, migrated database, run the client's seeder through Payload:
+
+```sh
+pnpm payload run src/cms/seed/seed-data.ts
+```
+
+It prints `Seeded <n> topics, …` on success. `SEED_PREVIEW=true` also creates the preview users (password from `PREVIEW_USERS_PASSWORD`).
+
+After a schema change, regenerate the generated files:
+
+```sh
+pnpm generate:types
+pnpm generate:importmap
+```
+
+## Scripts
+
+| Script                              | Does                                                                                           |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `pnpm dev`                          | Vite dev server on `:3100`                                                                     |
+| `pnpm build`                        | Production build into `dist/`                                                                  |
+| `pnpm start`                        | Serves `dist/` with srvx on `:3100` (run `build` first)                                        |
+| `pnpm payload <cmd>`                | Payload CLI with `.env.local` loaded (`migrate`, `migrate:status`, `migrate:create`, `run`, …) |
+| `pnpm generate:types`               | Regenerates `src/payload-types.ts`                                                             |
+| `pnpm generate:importmap`           | Regenerates `src/app/_payload/importMap.js`                                                    |
+| `pnpm test`                         | Vitest unit tests (`src/**/*.test.ts(x)`, node + jsdom projects)                               |
+| `pnpm test:integration`             | Vitest Browser Mode tests (`src/**/*.integration.test.tsx`, headless Chromium)                 |
+| `pnpm test:e2e`                     | Playwright e2e against `:3100`                                                                 |
+| `pnpm test:e2e:ui`                  | Playwright UI mode                                                                             |
+| `pnpm test:e2e:report`              | Opens the last Playwright HTML report                                                          |
+| `pnpm lint` / `pnpm lint:fix`       | ESLint                                                                                         |
+| `pnpm format` / `pnpm format:check` | Prettier (with `prettier-plugin-tailwindcss`)                                                  |
+| `pnpm typecheck`                    | `tsc --noEmit --incremental false`                                                             |
+
+## Auth
+
+- Payload built-in auth replaces NextAuth. `users` is the frontend collection, `admins` the `/admin` collection. Sign-up, email verification, sign-in, sign-out, forgot and reset password run as TanStack Start server functions in `src/lib/auth/`.
+- The session is an HTTP-only cookie, `ai-explorations-token` (`cookiePrefix: "ai-explorations"`), valid for 30 days.
+- **One auth collection per browser at a time.** Payload 4 uses a single token cookie for all auth collections, so signing in to `/admin` replaces a frontend session and signing in on the frontend replaces an admin session. The client keeps separate sessions for both. Frontend gates accept only a `users` token, so an admin session counts as signed out on the frontend.
+- Basic auth (`BASIC_AUTH_*`) covers frontend pages and server functions. `/admin`, `/v1/api`, `/local-api` and static files skip it, as in the client.
+
+## Emails
+
+With an empty or `no-ses-configured` `AWS_SES_IAM_USER_ACCESS_KEY_ID`, Payload uses a nodemailer JSON transport: emails are rendered and logged, nothing is sent. Verification and reset links are read from the server log or the database.
+
+## E2E
+
+- Playwright starts `pnpm dev` on `:3100` with `BASIC_AUTH_ENABLED=false` and `VITE_E2E_BRIDGE=true`, or reuses a server already on that port. A reused server needs the same settings.
+- Set `E2E_SEED_SECRET` in the shell that runs Playwright, and in `.env.local` when reusing a running server. Outside CI, specs that need seeded users are skipped without it; in CI they fail.
+- Test users (`E2E_TEST_USER_*`, `E2E_TEST_VIEWER_*`, `E2E_ADMIN_*`) are generated per run with random passwords unless set in the environment. Each run adds new users to `amazonia360_ai_explorations`.
+- Token reads go through `psql` and refuse any database other than `amazonia360_ai_explorations`.
+
+## Tooling
+
+- TypeScript 7 has no compiler API, and `typescript-eslint` supports TypeScript `<6.1.0`. Following the [TypeScript 7 side-by-side setup](https://devblogs.microsoft.com/typescript/?p=5246), `typescript` is aliased to `@typescript/typescript6` (the API ESLint imports) and `@typescript/native` to `typescript@7.0.2` (the `tsc` binary `typecheck` runs). See [typescript-eslint#12518](https://github.com/typescript-eslint/typescript-eslint/issues/12518).
+- ESLint stays on 9.x: `eslint-plugin-react`, `eslint-plugin-jsx-a11y` and `eslint-plugin-import` do not declare ESLint 10 support.
+- `typecheck` is non-incremental; a stale TypeScript 7 build-info cache reports errors that do not exist.
+
+## Differences from client
+
+- Payload 4 beta instead of 3; built-in auth instead of NextAuth. The GitHub provider, `AUTH_SECRET` and `AUTH_URL` are not ported.
+- URL state uses TanStack Router search params instead of nuqs, with the same parameter names and serialization (`bbox`, `defaultTopics`, `country`).
+- The leave-page guard uses TanStack Router's `useBlocker` instead of `next-navigation-guard`.
+- Subtopics and reports show only in English (see [Database](#database)).
+- The session token has a fixed 30-day expiry; NextAuth's session was rolling.
+- Report pages return only the owner's id to other viewers, and markdown output is sanitized; the client does neither.
+- The report summary editor mounts only while editing and does not process raw HTML. A summary containing raw HTML loads in the editor only up to the first tag, so saving an edit of such a summary drops the rest.
+- Library majors are newer than in the client (ArcGIS 5, visx 4, TanStack Table 9, jotai 3, lucide-react 1, …), which causes some markup differences (for example `aria-hidden` on lucide icons).

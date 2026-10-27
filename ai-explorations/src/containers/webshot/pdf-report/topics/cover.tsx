@@ -1,0 +1,50 @@
+"use client";
+
+import { useMemo } from "react";
+
+import { useFormTopics } from "@/lib/url-state/store";
+import { cn } from "@/lib/utils";
+
+import { Topic } from "@/types/topic";
+
+import { Markdown } from "@/components/ui/markdown";
+
+export default function PdfTopicCover(topic: Topic) {
+  const { name, description, image } = topic;
+
+  const { topics } = useFormTopics();
+
+  const TOPIC = useMemo(() => topics?.find((t) => t.topic_id === topic.id), [topic.id, topics]);
+
+  return (
+    <div className="flex w-full grow flex-col overflow-hidden">
+      <div
+        className="grow bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${image})` }}
+      >
+        <div className="flex h-full flex-col justify-end bg-linear-to-t from-black to-transparent">
+          <div className="flex flex-col gap-2 px-14 pb-20 text-white">
+            <h1 className="text-5xl">{name}</h1>
+            {description && (
+              <Markdown className="ml-2 max-w-none text-base text-white prose-invert prose-headings:text-white prose-p:my-0 prose-a:text-white prose-strong:text-white">
+                {description}
+              </Markdown>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {TOPIC?.description && (
+        <section className="px-14 py-10">
+          <Markdown
+            className={cn("prose prose-sm max-w-none columns-2 gap-x-8", {
+              "prose-p:text-xs prose-p:leading-normal": true,
+            })}
+          >
+            {TOPIC?.description}
+          </Markdown>
+        </section>
+      )}
+    </div>
+  );
+}

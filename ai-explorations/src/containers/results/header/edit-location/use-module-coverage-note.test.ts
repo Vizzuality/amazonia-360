@@ -1,0 +1,126 @@
+// @vitest-environment jsdom
+import { renderHook } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { ECU_MODULE } from "@integration/fixtures/country-modules";
+
+import { useModuleCoverageNote } from "./use-module-coverage-note";
+
+const { mockCountry, mockLocation, mockGeometry, mockBoundary, mockRatio, mockQuery } = vi.hoisted(
+  () => ({
+    mockCountry: vi.fn(),
+    mockLocation: vi.fn(),
+    mockGeometry: vi.fn(),
+    mockBoundary: vi.fn(),
+    mockRatio: vi.fn(),
+    mockQuery: vi.fn(),
+  }),
+);
+
+vi.mock("@/lib/country-modules", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/country-modules")>()),
+  useGetCountryModules: () => [ECU_MODULE, { ...ECU_MODULE, slug: "ECU-N", country: "PER" }],
+}));
+vi.mock("@/lib/report/use-report-country", () => ({ useReportCountry: () => mockCountry() }));
+vi.mock("@/lib/url-state/store", () => ({ useSyncLocation: () => [mockLocation(), vi.fn()] }));
+vi.mock("@/lib/location", () => ({ useLocationGeometryWithStatus: () => mockGeometry() }));
+vi.mock("@/lib/country/coverage", () => ({
+  useGetCountryAmazoniaBoundary: (...args: unknown[]) => {
+    mockQuery(...args);
+    return { data: mockBoundary() };
+  },
+  getCountryCoverageRatio: () => mockRatio(),
+  getCountryCoveragePercent: (ratio: number) => Math.round(ratio * 100),
+}));
+
+beforeEach(() => {
+  mockCountry.mockReturnValue(["ECU"]);
+  mockLocation.mockReturnValue({ type: "polygon" });
+  mockGeometry.mockReturnValue({ geometry: { type: "polygon" }, isCalculating: false });
+  mockBoundary.mockReturnValue({ type: "boundary" });
+  mockRatio.mockReturnValue(1);
+  mockQuery.mockClear();
+});
+
+describe("useModuleCoverageNote", () => {
+  it("returns null for a report without a module", () => {
+    mockCountry.mockReturnValue([]);
+    mockRatio.mockReturnValue(0);
+
+    const { result } = renderHook(() => useModuleCoverageNote());
+
+    expect(result.current).toBeNull();
+    expect(mockQuery).toHaveBeenCalledWith("", { enabled: false });
+  });
+
+  it("returns null when the report country is null", () => {
+    mockCountry.mockReturnValue(null);
+
+    expect(renderHook(() => useModuleCoverageNote()).result.current).toBeNull();
+  });
+
+  it("returns the outside note at 0% coverage", () => {
+    mockRatio.mockReturnValue(0);
+
+    const { result } = renderHook(() => useModuleCoverageNote());
+
+    expect(result.current).toEqual({
+      key: "edit-location-confirm-dialog-module-outside",
+      values: { name: "Ecuador Amazonia" },
+    });
+    expect(mockQuery).toHaveBeenCalledWith("ECU", { enabled: true });
+  });
+
+  it("queries the boundary by the module country, not its slug", () => {
+    mockCountry.mockReturnValue(["ECU-N"]);
+
+    renderHook(() => useModuleCoverageNote());
+
+    expect(mockQuery).toHaveBeenCalledWith("PER", { enabled: true });
+  });
+
+  it("returns the partial note with the outside percent", () => {
+    mockRatio.mockReturnValue(0.7);
+
+    expect(renderHook(() => useModuleCoverageNote()).result.current).toEqual({
+      key: "edit-location-confirm-dialog-module-partial",
+      values: { name: "Ecuador Amazonia", percent: 30 },
+    });
+  });
+
+  it("returns null when fully inside", () => {
+    expect(renderHook(() => useModuleCoverageNote()).result.current).toBeNull();
+  });
+
+  it("caps a tiny positive ratio at 99% outside", () => {
+    mockRatio.mockReturnValue(0.003);
+
+    expect(renderHook(() => useModuleCoverageNote()).result.current).toEqual({
+      key: "edit-location-confirm-dialog-module-partial",
+      values: { name: "Ecuador Amazonia", percent: 99 },
+    });
+  });
+
+  it("returns null when the ratio rounds to fully inside", () => {
+    mockRatio.mockReturnValue(0.998);
+
+    expect(renderHook(() => useModuleCoverageNote()).result.current).toBeNull();
+  });
+
+  it.each([
+    [
+      "geometry missing",
+      () => mockGeometry.mockReturnValue({ geometry: null, isCalculating: false }),
+    ],
+    [
+      "geometry calculating",
+      () => mockGeometry.mockReturnValue({ geometry: { type: "polygon" }, isCalculating: true }),
+    ],
+    ["boundary pending", () => mockBoundary.mockReturnValue(undefined)],
+  ])("returns null while pending (%s)", (_label, arrange) => {
+    mockRatio.mockReturnValue(0);
+    arrange();
+
+    expect(renderHook(() => useModuleCoverageNote()).result.current).toBeNull();
+  });
+});

@@ -1,0 +1,39 @@
+import React, { useCallback } from "react";
+
+import { useLocale } from "use-intl";
+
+import { useGetIndicatorsId } from "@/lib/indicators";
+import { useReportCountry } from "@/lib/report/use-report-country";
+import { useFormLocation } from "@/lib/url-state/store";
+
+import { Indicator } from "@/types/indicator";
+
+import { useLoad } from "@/containers/indicators/load-provider";
+import { IndicatorProvider } from "@/containers/indicators/provider";
+import { TableIndicatorsFeature } from "@/containers/indicators/table/feature";
+
+export const TableIndicators = ({ id }: { id: Indicator["id"] }) => {
+  const locale = useLocale();
+  const country = useReportCountry();
+  const indicator = useGetIndicatorsId(id, locale, country);
+
+  const { location } = useFormLocation();
+
+  const { onReady } = useLoad();
+
+  const handleLoad = useCallback(() => {
+    onReady(`${indicator!.id}-table`);
+  }, [indicator, onReady]);
+
+  if (!indicator) return null;
+
+  return (
+    <IndicatorProvider onLoad={handleLoad}>
+      {indicator.resource.type === "feature" && location && (
+        <TableIndicatorsFeature {...indicator} location={location} resource={indicator.resource} />
+      )}
+    </IndicatorProvider>
+  );
+};
+
+export default TableIndicators;

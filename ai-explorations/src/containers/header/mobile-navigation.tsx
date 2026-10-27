@@ -1,0 +1,149 @@
+"use client";
+
+import { useState } from "react";
+
+import { DialogTitle } from "@radix-ui/react-dialog";
+import { useTranslations } from "use-intl";
+
+import { isFeatureEnabled } from "@/lib/feature-flags";
+import { cn } from "@/lib/utils";
+
+import MobileCountrySelector from "@/containers/header/country-selector/mobile";
+import MobileLanguageSelector from "@/containers/header/language-selector/mobile";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogHeader,
+  DialogDescription,
+} from "@/components/ui/dialog";
+
+import { usePathname, Link, LocaleLink } from "@/i18n/navigation";
+
+import Logo from "./logo";
+
+function getTriggerClassName(inline: boolean): string {
+  return cn(
+    "z-110 flex h-6 w-6 cursor-pointer flex-col flex-wrap justify-around",
+    inline ? "relative shrink-0" : "fixed top-1/2 right-5 -translate-y-1/2 transform",
+  );
+}
+
+export default function MobileNavigation({ inline = false }: { inline?: boolean }) {
+  const t = useTranslations();
+  const pathname = usePathname();
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const menuLabel = t("header-menu-label");
+
+  return (
+    <Dialog key={pathname} open={isOpen}>
+      <DialogTrigger asChild>
+        <button
+          type="button"
+          aria-label={menuLabel}
+          onClick={() => setIsOpen(!isOpen)}
+          className={getTriggerClassName(inline)}
+        >
+          <div
+            className={`block h-0.5 w-6 origin-[1px] rounded-full bg-blue-600 transition-all ${
+              isOpen ? "rotate-45" : "rotate-0"
+            }`}
+          />
+          <div
+            className={`block h-0.5 w-6 origin-[1px] rounded-sm bg-blue-600 transition-all ${
+              isOpen ? "translate-x-full bg-transparent" : "translate-x-0"
+            }`}
+          />
+          <div
+            className={`block h-0.5 w-6 origin-[1px] rounded-sm bg-blue-600 transition-all ${
+              isOpen ? "-rotate-45" : "rotate-0"
+            }`}
+          />
+        </button>
+      </DialogTrigger>
+
+      <DialogDescription className="sr-only">{menuLabel}</DialogDescription>
+
+      <DialogContent className="fixed top-0 left-0 z-100 h-full w-screen max-w-none translate-x-0! translate-y-0! border-none px-0 py-0 text-blue-600">
+        <div>
+          <DialogHeader className="flex h-16 w-full flex-col items-center bg-white text-center backdrop-blur-sm sm:text-left">
+            <div className="flex h-full w-full flex-col justify-center bg-white backdrop-blur-sm">
+              <div className="mx-4 flex items-center justify-between md:container md:mx-auto">
+                <DialogTitle className="sr-only">{menuLabel}</DialogTitle>
+                <Logo />
+
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(!isOpen)}
+                  className="z-110 flex h-6 w-6 transform cursor-pointer flex-col flex-wrap justify-around"
+                >
+                  <div
+                    className={`block h-0.5 w-6 origin-[1px] rounded-full bg-blue-600 transition-all ${
+                      isOpen ? "rotate-45" : "rotate-0"
+                    }`}
+                  />
+                  <div
+                    className={`block h-0.5 w-6 origin-[1px] rounded-sm bg-blue-600 transition-all ${
+                      isOpen ? "translate-x-full bg-transparent" : "translate-x-0"
+                    }`}
+                  />
+                  <div
+                    className={`block h-0.5 w-6 origin-[1px] rounded-sm bg-blue-600 transition-all ${
+                      isOpen ? "-rotate-45" : "rotate-0"
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
+          </DialogHeader>
+          <nav className="flex flex-col justify-start bg-white text-left print:hidden">
+            <Link
+              className={cn({
+                "px-6 py-4 text-lg text-blue-900 hover:bg-blue-200 hover:text-blue-500": true,
+                "text-blue-500": pathname === "/",
+              })}
+              href="/"
+            >
+              {t("header-home")}
+            </Link>
+            <Link
+              className={cn({
+                "px-6 py-4 text-lg text-blue-900 hover:bg-blue-200 hover:text-blue-500": true,
+                "text-blue-500": pathname.includes("/reports"),
+              })}
+              href="/reports"
+            >
+              {t("header-report-tool")}
+            </Link>
+            {isFeatureEnabled("country-module") && (
+              <LocaleLink
+                className={cn({
+                  "px-6 py-4 text-lg text-blue-900 hover:bg-blue-200 hover:text-blue-500": true,
+                  "text-blue-500": pathname === "/partners",
+                })}
+                href="/partners"
+              >
+                {t("header-partners")}
+              </LocaleLink>
+            )}
+            {/* <Link
+              className={cn({
+                "px-6 py-4 text-lg text-blue-900 hover:bg-blue-200 hover:text-blue-500": true,
+                "text-blue-500": pathname.includes("/reports/indicators"),
+              })}
+              href="/reports/indicators"
+            >
+              {t("header-hub")}
+            </Link> */}
+
+            <MobileCountrySelector onSelect={() => setIsOpen(false)} />
+
+            <MobileLanguageSelector />
+          </nav>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
