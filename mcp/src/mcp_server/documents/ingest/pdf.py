@@ -23,6 +23,10 @@ from docling_core.types.doc.items.text import SectionHeaderItem, TextItem
 from docling_core.types.doc.labels import DocItemLabel
 
 from mcp_server.documents.embedding import DENSE_MODEL
+from mcp_server.documents.ingest.references import (
+    is_reference_heading,
+    reference_blocks,
+)
 from mcp_server.documents.ingest.sections import FIGURE_CONTEXT_CHARS
 from mcp_server.documents.models import Figure, Passage, make_passage_id
 
@@ -66,6 +70,7 @@ def extract_pdf(
     _clean_document(doc, tiles)
     skipped = _duplicate_tiled_pictures(doc, tiles) if tiles else set()
     figures = _extract_figures(doc, tiles, skipped, document_id, figures_dir)
+    _drop_references(doc)
     chunks = _chunk(doc, document_id, ingest_id, tiled=tiles is not None)
     return ExtractedPdf(chunks=chunks, figures=figures)
 
@@ -326,6 +331,33 @@ def _extract_figures(
             )
         )
     return figures
+
+
+def _drop_references(doc: DoclingDocument) -> None:
+    """Remove reference lists: under a references heading, or a run of citations."""
+    to_delete: list[NodeItem] = []
+    segment: list[TextItem] = []
+    in_references = False
+
+    def close_segment() -> None:
+        dropped = reference_blocks([item.text for item in segment])
+        to_delete.extend(item for i, item in enumerate(segment) if i in dropped)
+        segment.clear()
+
+    for item, _level in doc.iterate_items():
+        if isinstance(item, SectionHeaderItem):
+            close_segment()
+            in_references = is_reference_heading(item.text)
+            if in_references:
+                to_delete.append(item)
+        elif isinstance(item, TextItem):
+            if in_references:
+                to_delete.append(item)
+            else:
+                segment.append(item)
+    close_segment()
+    if to_delete:
+        doc.delete_items(node_items=to_delete)
 
 
 def _chunk(

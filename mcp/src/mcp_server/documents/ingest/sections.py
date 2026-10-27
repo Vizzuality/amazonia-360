@@ -1,5 +1,9 @@
 from dataclasses import dataclass
 
+from mcp_server.documents.ingest.references import (
+    is_reference_heading,
+    reference_blocks,
+)
 from mcp_server.documents.models import DocumentType, Passage, make_passage_id
 
 MAX_WORDS = 300
@@ -35,7 +39,10 @@ def sections_to_chunks(
     ingest_id: str,
 ) -> list[Passage]:
     pieces = [
-        (section, text) for section in sections for text in _section_texts(section)
+        (section, text)
+        for section in sections
+        if not any(is_reference_heading(h) for h in section.path)
+        for text in _section_texts(section)
     ]
     return [
         Passage(
@@ -59,7 +66,9 @@ def _section_texts(section: Section) -> list[str]:
     texts: list[str] = []
     current: list[str] = []
     size = 0
-    for block in (b for b in section.blocks if b.strip()):
+    blocks = [b for b in section.blocks if b.strip()]
+    references = reference_blocks(blocks)
+    for block in (b for i, b in enumerate(blocks) if i not in references):
         words = len(block.split())
         if current and size + words > MAX_WORDS:
             texts.append("\n\n".join(current))

@@ -17,6 +17,7 @@ from mcp_server.documents.ingest.pdf import (
     ExtractedPdf,
     TileMap,
     _clean_document,
+    _drop_references,
     _extract_figures,
     _needs_ocr,
     _tile_boxes,
@@ -161,3 +162,33 @@ def test_an_image_printed_twice_is_one_figure(tmp_path: Path) -> None:
     figures = _extract_figures(doc, None, set(), "doc", tmp_path)
     assert len(figures) == 1
     assert figures[0].page == 1
+
+
+def _section(doc: DoclingDocument, heading: str, texts: list[str]) -> None:
+    doc.add_heading(text=heading)
+    for text in texts:
+        doc.add_text(label=DocItemLabel.TEXT, text=text)
+
+
+def test_reference_lists_are_dropped_before_passages_are_made() -> None:
+    entries = [
+        "Pitman NCA (2000) A large-scale inventory of two Amazonian tree "
+        "communities. Ph.D. Dissertation. Durham, NC: Duke University.",
+        "Killeen TJ, Solórzano LA (2008) Conservation strategies to mitigate "
+        "impacts from climate change in Amazonia. Philos Trans R Soc B 363: 1881-1888.",
+        "Zhang L, Li J. Identifying priority areas for biodiversity conservation "
+        "based on Marxan and InVEST model. Land. 2022;11(3):351.",
+    ]
+    contributions = "Conceived and designed the experiments: MB MSF."
+    doc = DoclingDocument(name="paper")
+    _section(doc, "Results", ["Roads cleared 417 hectares (Finer 2008)."])
+    _section(doc, "References", ["Anything listed here."])
+    # A references heading Docling missed: the list runs on under the last heading.
+    _section(doc, "Author Contributions", [contributions, *entries])
+    _drop_references(doc)
+    assert _texts(doc) == [
+        "Results",
+        "Roads cleared 417 hectares (Finer 2008).",
+        "Author Contributions",
+        contributions,
+    ]

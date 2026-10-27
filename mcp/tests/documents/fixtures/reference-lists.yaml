@@ -1,0 +1,39 @@
+# Entries of reference lists in the styles of the demo papers, as Docling extracts them,
+# and body text that cites or dates things without being a reference list.
+citations:
+  # PLOS, author-year (Finer et al. 2008, Bass et al. 2010)
+  - "Pitman NCA (2000) A large-scale inventory of two Amazonian tree communities. Ph.D. Dissertation. Durham, NC: Duke University."
+  - "Killeen TJ, Solórzano LA (2008) Conservation strategies to mitigate impacts from climate change in Amazonia. Philos Trans R Soc B 363: 1881–1888."
+  - "Tuomisto H, Poulsen AD, Ruokolainen K, Moran RC, Quintana C, et al. (2003) Linking floristic patterns with soil heterogeneity and satellite imagery in Ecuadorian Amazonia. Ecol Appl 13: 352–371."
+  - "4. Pimm SL, Jenkins CN (2005) Sustaining the Variety of Life. Scientific American 293: 66–73."
+  - "Steege H ter, Pitman NCA, Sabatier D, Castellanos H, van der Hout P, et al. (2003) A spatial model of tree a-diversity and tree density for the Amazon. Biodivers Conserv 12: 2255–2277."
+  # PLOS entries with an organisation as author, a particle, or the split accents
+  # Docling extracts from older PDFs
+  - "World Wildlife Fund (WWF) (2001) WildWorld Ecoregion Profile: WWF Full Reports. Washington, DC: WWF."
+  - "IUCN (2008) IUCN Red List of Threatened Species. Available: http://www.iucnredlist.org. Accessed 2008 December 1."
+  - "de la Torre S, Cornejo F (2008) Saguinus tripartitus. In: IUCN 2008. IUCN Red List of Threatened Species."
+  - "ter Steege H, Pitman NCA, Phillips OL, Chave J, Sabatier D, et al. (2006) Continental-scale patterns of canopy tree composition and function across Amazonia. Nature 443: 444–447."
+  - "Sua´rez E, Morales M, Cueva R, Utreras B V, Zapata-Rı´ ´ os G, et al. (2009) Oil industry, wild meat trade and roads. Anim Conserv 12: 364–373."
+  - "Remsen Jr. JV, Parker III TA (1983) Contribution of river-created habitats to bird species richness in Amazonia. Biotropica 15: 223–231."
+  # Elsevier / ISPRS (García-Romero et al. 2026)
+  - "Belgiu, M., Drăguţ, L., 2016. Random forest in remote sensing: A review of applications and future directions. ISPRS Journal of Photogrammetry and Remote Sensing 114, 24–31."
+  - "Cepak, M.C., 2005. Crude Chronicles: Indigenous Politics, Multinational Oil, and Neoliberalism in Ecuador. Tipití 3(1), 107–109."
+  - "Karaman, K., Sainte Fare Garnot, V., Wegner, J.D., 2023. Deforestation detection in the Amazon with Sentinel-1 SAR image time series. ISPRS Annals X-1, 835–842. https://doi.org/10.5194/isprs-annals-X-1-W1-2023-835-2023"
+  # Vancouver (Paredes et al. 2026)
+  - "Zhang L, Li J. Identifying priority areas for biodiversity conservation based on Marxan and InVEST model. Land. 2022;11(3):351."
+  - "Hooper DU, Adair EC, Cardinale BJ, Byrnes JEK, Hungate BA, Matulich KL. A global synthesis reveals biodiversity loss as a major driver of ecosystem change. Nature. 2012;486(7401):105–8."
+  - "31. Laurance WF, Lovejoy TE, Vasconcelos HL, Bruna EM, Didham RK, Stouffer PC, et al. Ecosystem Decay of Amazonian Forest Fragments: a 22-Year Investigation. Conservation Biology. 2002;16(3):605–18."
+not_citations:
+  - "There are now ~180 oil and gas blocks covering ~688,000 km2 of forest in the western Amazon (Figure 2)."
+  - "In 2005, the Brazilian government leased out 25 contiguous blocks surrounding the Urucu and Jurua gas fields in the state of Amazonas, bringing the total leased area to ~67,000 km2."
+  - "Ecuador has had the highest deforestation rate of any South American country [166], and oil development has played a major role (Sierra 2000)."
+  - "MAATE data. This is the official government source, providing LULC maps for 1990, 2000, 2008, 2014, 2016, 2018 and 2022."
+  - "Conceived and designed the experiments: MB MSF. Performed the experiments: MB MSF CNJ HK."
+  - "Received June 5, 2008; Accepted July 13, 2008; Published August 13, 2008"
+  - "Fuente: McGarigal & Cushman, 2012a"
+  - "By September 2024, this impact had increased to 50 hectares, an illegal expansion of 125%."
+  - "In a recent referendum (2023), Ecuadorian voters approved limiting the oil extraction area within Yasuni National Park to 300 hectares."
+# A page footer and running head that PDF extraction leaves between two entries.
+page_break:
+  - "PLoS ONE | www.plosone.org 18 January 2010 | Volume 5 | Issue 1 | e8767"
+  - "Yasunı´ ´ National Park"

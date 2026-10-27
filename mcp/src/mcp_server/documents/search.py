@@ -16,17 +16,18 @@ from mcp_server.documents.settings import DocsSettings
 from mcp_server.documents.store import DocumentStore
 from mcp_server.places import Places
 
-# From `amazonia360-docs eval` on the demo corpus (27 October 2026). BM25 lowered
-# recall at every weight tried (90.9% against 93.9% dense; 88.5% against 96.2% on
-# Spanish questions over English documents), so search is dense only.
+# From `amazonia360-docs eval` on the demo corpus (27 October 2026), reference lists
+# left out. Dense and hybrid both found 97.0% at every BM25 weight tried, dense 100%
+# of the Spanish questions and hybrid 96.2%; with reference lists in, BM25 lowered
+# recall (90.9% against 93.9%). Dense only keeps PASSAGE_MIN_SCORE a similarity.
 SPARSE_WEIGHT = 0.0
 # A cosine similarity, so it only means something while SPARSE_WEIGHT is 0. The
-# lowest-scoring passage that answers a question scored 0.43; a near passage on a
+# lowest-scoring passage that answers a question scored 0.37; a near passage on a
 # question the documents do not answer scored up to 0.55, so no value separates them
 # and the instructions do: answer only from a passage that answers.
-PASSAGE_MIN_SCORE = 0.40
-# Summaries of documents on another place scored 0.45 and 0.49 against a question
-# (Sangay, Galápagos); on the place and theme asked, 0.60 to 0.69.
+PASSAGE_MIN_SCORE = 0.35
+# Summaries of documents on another place scored 0.45 to 0.48 against a question
+# (Sangay, Galápagos); on the place and theme asked, 0.60 to 0.70.
 SUMMARY_MIN_SCORE = 0.50
 DEFAULT_LIMIT = 8
 MAX_LIMIT = 20
