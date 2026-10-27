@@ -22,6 +22,7 @@ from .fakes import FakeEmbedder
 pytestmark = [
     pytest.mark.anyio,
     pytest.mark.filterwarnings("ignore:Payload indexes have no effect"),
+    pytest.mark.filterwarnings("ignore:Failed to obtain server version"),
 ]
 
 SETTINGS = DocsSettings("db", "qdrant", "http://127.0.0.1:8770", Path("data"))
@@ -272,7 +273,6 @@ def test_build_requires_the_openai_key(monkeypatch: pytest.MonkeyPatch) -> None:
         build_document_search(SETTINGS, load_places())
 
 
-@pytest.mark.filterwarnings("ignore:Failed to obtain server version")
 def test_build_makes_a_search_without_network_or_bm25(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
