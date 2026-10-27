@@ -160,14 +160,15 @@ describe("seedIndicators", () => {
     await seedIndicators(payload, [row({ id: 216, country: "ECU" })]);
 
     for (const locale of ["es", "pt"]) {
-      expect(updated.find((entry) => entry.locale === locale)?.data).toEqual({
+      expect(updated.find((entry) => entry.locale === locale)?.data).toMatchObject({
         unit: null,
         description: null,
+        _status: "published",
       });
     }
   });
 
-  test("writes a translated unit, and leaves a missing name translation to fall back", async () => {
+  test("writes a translated unit, and copies English into a missing name translation", async () => {
     const { payload, updated } = fakePayload();
 
     await seedIndicators(payload, [
@@ -179,8 +180,11 @@ describe("seedIndicators", () => {
       unit: "km² es",
     });
     expect(updated.find((entry) => entry.locale === "pt")?.data).toEqual({
+      name: "Protected Areas",
+      description_short: "Short",
       unit: null,
       description: null,
+      _status: "published",
     });
   });
 });

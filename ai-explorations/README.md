@@ -96,7 +96,7 @@ SELECT count(*) FROM payload_jobs_log WHERE input IS NULL;
 
 Delete or backfill those rows in `amazonia360_ai_explorations` first.
 
-The migration also copies `_status` into the per-locale tables for localized drafts collections, because Payload 4 stores status per locale. Content that exists only in English (subtopics, reports) has no `es`/`pt` rows, so it does not show on `/es` and `/pt`, where the client falls back to English.
+The migration also copies `_status` into the per-locale tables for localized drafts collections, because Payload 4 stores status per locale. Content that exists only in English (subtopics, reports) has no `es`/`pt` rows, so it does not show on `/es` and `/pt`, where the client falls back to English. The seed publishes the catalogue (topics, subtopics, indicators) in `es` and `pt` and copies English into a missing translation, so run it after migrating; reports stay English-only.
 
 ### Seeding
 
@@ -230,7 +230,7 @@ With an empty or `no-ses-configured` `AWS_SES_IAM_USER_ACCESS_KEY_ID`, Payload u
 - Payload 4 beta instead of 3; built-in auth instead of NextAuth. The GitHub provider, `AUTH_SECRET` and `AUTH_URL` are not ported.
 - URL state uses TanStack Router search params instead of nuqs, with the same parameter names and serialization (`bbox`, `defaultTopics`, `country`).
 - The leave-page guard uses TanStack Router's `useBlocker` instead of `next-navigation-guard`.
-- Subtopics and reports show only in English (see [Database](#database)).
+- Reports migrated from the client database show only in English (see [Database](#database)). The seed writes English into a missing catalogue translation instead of relying on Payload's locale fallback.
 - The session token has a fixed 30-day expiry; NextAuth's session was rolling.
 - Report pages return only the owner's id to other viewers, and markdown output is sanitized; the client does neither.
 - The report summary editor mounts only while editing and does not process raw HTML. A summary containing raw HTML loads in the editor only up to the first tag, so saving an edit of such a summary drops the rest.
