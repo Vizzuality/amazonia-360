@@ -100,6 +100,43 @@ takes an `indicator_id`, and either an `area` (GeoJSON) or a `place_id`.
 Paths are under `src/mcp_server/`. `tests/test_readme.py` fails when this table and the
 server's tools differ.
 
+## Document tools
+
+Registered only when `DOCS_DATABASE_URL` and `DOCS_QDRANT_URL` are set (see
+[Document search](#document-search)); without them the server has the tools above and nothing
+else.
+
+| Tool | What it returns | Defined in |
+|---|---|---|
+| `list_topics` | The topics of the indexed documents, and every document with its id, title and year | `tools/documents.py` |
+| `search_documents` | Passages that answer a query, each with document, section, page and link, plus documents that match by summary only | `tools/documents.py` |
+| `get_document_section` | The full text of one section of a document | `tools/documents.py` |
+
+`tests/documents/test_tools.py` fails when this table and the registered tools differ.
+
+## Document search
+
+Papers and reports are indexed in Postgres and Qdrant and searched through the document tools.
+
+1. Start both services: `docker compose -f docker-compose.docs.yml up -d` (Postgres on
+   `localhost:5433`, Qdrant on `localhost:6343`).
+2. Install the ingestion extra: `uv sync --extra ingest`.
+3. Create the tables: `uv run amazonia360-docs migrate`.
+4. Run the admin app that uploads and reviews documents, and serves their links:
+   `uv run amazonia360-docs serve`.
+
+The `amazonia360-docs` command is added by the ingestion task of the document search plan;
+until it lands, steps 3 and 4 are not available.
+
+In Claude Desktop, add these to the `env` of the server's entry:
+
+| Variable | Value |
+|---|---|
+| `DOCS_DATABASE_URL` | The Postgres connection string of the documents database |
+| `DOCS_QDRANT_URL` | The Qdrant URL |
+| `DOCS_PUBLIC_URL` | The URL where `amazonia360-docs serve` is reachable, used for passage links |
+| `OPENAI_API_KEY` | Embeds the query; the server fails to start without it when documents are configured |
+
 ## Places
 
 `find_places` returns provinces, cantons and protected areas by name; every area tool takes the
@@ -401,6 +438,11 @@ Each run lands in `var/model-runs/<run_id>/`, the run id being the UTC start tim
 | `MCP_GOOGLE_CLIENT_SECRET` | *(required over HTTP)* | Its secret |
 | `MCP_ALLOWED_REDIRECT_URIS` | Claude, ChatGPT and any loopback address | The redirect allowlist, with the defaults above |
 | `MCP_PORT` | `8000` | The port `amazonia360-mcp-http` listens on |
+| `DOCS_DATABASE_URL`, `DOCS_QDRANT_URL` | *(unset: no document tools)* | The documents database and the Qdrant index; both turn the document tools on |
+| `DOCS_PUBLIC_URL` | `http://127.0.0.1:8770` | Base of the links in passages |
+| `DOCS_DATA_DIR` | `var/documents` | Uploads and extracted figures |
+| `DOCS_PORT` | `8770` | The port `amazonia360-docs serve` listens on |
+| `OPENAI_API_KEY` | *(required with document tools)* | Embeddings for queries |
 
 ## Test
 
