@@ -3,7 +3,7 @@ from collections.abc import AsyncIterator
 import pytest
 from qdrant_client import AsyncQdrantClient
 
-from mcp_server.documents.index import DocumentIndex
+from mcp_server.documents.index import DocumentIndex, _summary_id
 from mcp_server.documents.models import Document, Passage, make_passage_id
 
 from .fakes import FakeEmbedder
@@ -140,13 +140,21 @@ async def test_summaries_search_and_delete(
     index: DocumentIndex, embedder: FakeEmbedder
 ) -> None:
     document = Document(
-        id="d1", type="pdf", title="Napo", origin="napo.pdf", topic_ids=("forest",)
+        id="d1",
+        type="pdf",
+        title="Napo",
+        origin="napo.pdf",
+        authors_year="Silva 2021",
+        topic_ids=("forest",),
     )
     embedded = await embedder.embed_query("deforestation summary")
     await index.upsert_summary(document, embedded.dense, "https://example.org/d1")
     query = await embedder.embed_query("deforestation")
     hits = await index.search_summaries(query, ["forest"], limit=3)
     assert [d for d, _ in hits] == ["d1"]
+    (stored,) = await index._client.retrieve(index._summaries, [_summary_id("d1")])
+    assert stored.payload is not None
+    assert stored.payload["authors_year"] == "Silva 2021"
     assert await index.search_summaries(query, ["mining"], limit=3) == []
     await index.set_topics("d1", ["mining"])
     assert [d for d, _ in await index.search_summaries(query, ["mining"], 3)] == ["d1"]

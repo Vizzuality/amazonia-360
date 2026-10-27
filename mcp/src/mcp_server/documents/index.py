@@ -155,6 +155,7 @@ class DocumentIndex:
             payload={
                 "document_id": document.id,
                 "title": document.title,
+                "authors_year": document.authors_year,
                 "link": link,
                 "topic_ids": list(document.topic_ids),
             },
