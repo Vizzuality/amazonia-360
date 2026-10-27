@@ -19,6 +19,21 @@ dependencies = [
     "langchain-google-genai>=4.4.2",
     "langchain-openai>=1.7.2",
     "pyjwt[crypto]>=2.10",
+    "qdrant-client>=1.20",
+    "fastembed>=0.9.1",
+    "openai>=2",
+]
+
+[project.optional-dependencies]
+ingest = [
+    "docling>=2.142.1",
+    "rapidocr>=3.10",
+    "beautifulsoup4>=4.15",
+    "lxml>=6.1",
+    "fastapi>=0.162",
+    "jinja2>=3.1.6",
+    "python-multipart>=0.0.32",
+    "pillow",
 ]
 
 [project.scripts]
@@ -29,6 +44,7 @@ amazonia360-mcp-timing = "mcp_server.measurement.timing_run:main"
 amazonia360-mcp-http = "mcp_server.__main__:http"
 amazonia360-mcp-chat = "mcp_server.__main__:chat"
 amazonia360-mcp-db = "mcp_server.db.migrate:main"
+amazonia360-docs = "mcp_server.documents.ingest.cli:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -60,9 +76,10 @@ pythonVersion = "3.12"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-ra -m 'not live'"
+addopts = "-ra -m 'not live and not slow'"
 markers = [
     "live: calls the published ArcGIS services; run with -m live",
+    "slow: needs real models or documents (deselected by default)",
     "db: needs MCP_TEST_DATABASE_URL, a PostgreSQL database whose name ends in _test",
 ]
 pythonpath = ["."]
