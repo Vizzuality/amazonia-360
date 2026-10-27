@@ -85,6 +85,9 @@ The same practices as the rest of the MCP, held by server instructions and tests
 - Same guard practices as the existing MCP (section 4).
 - Jinja2, HTMX, RapidOCR, Beautiful Soup and lxml are approved and added to the Tech Radar.
 - The demo runs on the owner's machine and is shown on the owner's screen (section 7.0).
+- Documents are consulted on every question about a place or theme of the module, not only
+  when a passage answers it: each document has a reviewed summary, and the search returns
+  related documents as well as answering passages (sections 7.2 and 7.4).
 
 ## 7. Architecture
 
@@ -109,6 +112,15 @@ Two processes from one package:
 - **The back office**, a new entry point (`amazonia360-docs`), which also runs the job worker
   and serves the stored files (PDFs, figure crops) that the links point to.
 
+### 7.0 Where the demo runs
+
+On the owner's machine (owner's decision): Claude Desktop over stdio, Qdrant and Postgres
+in local Docker, the back office on `127.0.0.1`. Links point at the back office's base URL (`DOCS_PUBLIC_URL`,
+default `http://127.0.0.1:<port>`), so they open on the owner's screen, which is where the
+demo is shown. Making links open for other people is part of the staging decision. The
+document tools register only when the document settings are present, so the deployed
+HTTP server and the front-end chat stay as they are.
+
 ### 7.1 Data
 
 Postgres, schema `mcp`, new Alembic migration (`0003_documents`). *[my call: Postgres instead
@@ -117,20 +129,12 @@ staging already has the database.]* For the demo it is a **local** Postgres, nev
 database: the migration does not run on staging until the staging decision. The stdio entry
 point gets a database connection only when the document settings are present.
 
-### 7.0 Where the demo runs
-
-On the owner's machine (owner's decision): Claude Desktop over stdio, Qdrant and Postgres in local Docker, the
-back office on `127.0.0.1`. Links point at the back office's base URL (`DOCS_PUBLIC_URL`,
-default `http://127.0.0.1:<port>`), so they open on the owner's screen, which is where the
-demo is shown. Making links open for other people is part of the staging decision. The
-document tools register only when the document settings are present, so the deployed
-HTTP server and the front-end chat stay as they are.
-
 - `topics`: `id` (slug), `name`, `aliases` (text array), `place_id` (nullable), timestamps.
 - `documents`: `id`, `type` (`pdf` | `web`), `title`, `origin` (stored file path or URL),
   `authors_year` (free text such as "Bass et al. (2010)", for citations), `status`
   (`pending` | `processing` | `indexed` | `error`), `error_message`, `chunk_count`,
-  `figure_count`, timestamps.
+  `figure_count`, `summary` (generated), `summary_status` (`pending_review` | `approved`),
+  timestamps.
 - `document_topics`: `document_id`, `topic_id`.
 - `figures`: as synthbrain (`image_path`, `image_hash`, `generated_description`,
   `final_description`, `review_status`, `section_path`, `page`, `ocr_text`, size).
@@ -141,6 +145,10 @@ Qdrant: one collection `documents`, named vectors `dense` (1,536) and `sparse` (
 Payload: `document_id`, `topic_ids` (keyword, indexed), `section_path`, `text`, `origin`
 (`text` | `figure`), `page`, `figure_path`, `anchor`, `link`. Topic changes on a document
 rewrite `topic_ids` on its points without re-embedding.
+
+A second collection, `document_summaries`, holds one point per document with an approved
+summary (dense vector of the summary, payload `document_id`, `topic_ids`, `title`,
+`authors_year`, `link`).
 
 Files under a data directory (`var/documents/` by default): uploads and figure crops.
 
@@ -160,6 +168,12 @@ Changes:
   output cap 4,000 tokens (reasoning models used the 700 cap up with nothing written),
   images over 2,048 px downsized.
 - Web sources: public pages only, as synthbrain enforces.
+- Document summary (new): after extraction, GPT-6 Luna writes a summary of the document from
+  its title, section headings, abstract or first section, and figure captions: what it is
+  about, the places it covers, the period and what it measures. It waits in the back office
+  for review like a figure description; once approved it is embedded into
+  `document_summaries`. Passages are searchable without it; the document only shows up as
+  related once its summary is approved.
 
 ### 7.3 Search
 
@@ -174,8 +188,14 @@ when the question is not in English, or a weighted fusion; decided with the eval
 - `search_documents(query, topic=None, place_id=None, limit=8)`: passages over the whole
   corpus, filtered by topic when given (resolved by id or name, as synthbrain resolves
   devices: an ambiguous name returns candidates and no results), or by the topics tied to a
-  `place_id`. Each result: text, document title and authors, section, page, `origin`
-  (`text` | `figure`), link.
+  `place_id`. The response has two lists, each item marked with its kind:
+  - `passages`: passages that may answer the question. Each: text, document title and
+    authors, section, page, `origin` (`text` | `figure`), link.
+  - `related_documents`: documents whose approved summary or topics match the question or
+    the place, whether or not a passage answers it. Each: title, authors and year, summary,
+    topics, link, and why it matched (summary or topic).
+  *[builder's call: score thresholds for both lists, set with the eval; a related document
+  that already has a passage in `passages` is listed once.]*
 - `get_document_section(document_id, section_path)`: the full section when a passage is cut.
 
 Topic and place filtering *[my call]*: the filter is exact, with no nesting between places
@@ -192,8 +212,13 @@ fragmentation.
 Instructions added to `INSTRUCTIONS`, written as rules across tools, in the style already
 there:
 
-- Answer about documents only from returned passages; when none covers the question, say the
-  indexed documents do not cover it.
+- On every question about a place or theme of the module, call search_documents alongside
+  the data tools, not only when the user mentions documents.
+- Answer about documents only from returned passages. When there are related documents but
+  no passage answers the question, say that documents on the subject exist, name them with
+  their link, and say they do not answer the question; never answer from a summary as if it
+  were a passage.
+- When there is neither, say the indexed documents do not cover it.
 - State a document figure with its document and year, and an indicator figure with the
   indicator; never combine, total or compare them as the same measure.
 - Give the link of every passage used; say when a passage is a figure description.
@@ -210,6 +235,7 @@ Synthbrain's layout and screens, renamed, in English:
 - Documents: upload a PDF, add a web report URL, title and authors-year, topics, status and
   counts, re-run, delete, replace.
 - Document page: what was indexed (passages by section).
+- Document summary: on the document page, the generated summary, editable, with approve.
 - Figures: the review queue per document (crop next to the editable description; approve,
   discard, approve all), with synthbrain's triage buckets.
 - Topics: create, edit name, other names and `place_id` (checked against the module's places).
