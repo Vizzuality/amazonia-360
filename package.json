@@ -15,11 +15,12 @@
   },
   "devDependencies": {
     "@types/node": "22.13.10",
-    "@vitest/coverage-v8": "4.1.11",
+    "@vitest/coverage-v8": "4.1.12",
     "husky": "9.1.7",
     "prettier": "3.5.3",
     "rimraf": "6.0.1",
     "typescript": "5.8.2",
-    "vitest": "4.1.11"
+    "vite": "7.3.7",
+    "vitest": "4.1.12"
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import { useTranslations } from "next-intl";
 
@@ -9,11 +9,7 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/compone
 
 export default function ReportMobileWarning() {
   const t = useTranslations();
-  const [open, setOpen] = useState(false);
-
-  useMemo(() => {
-    setOpen(true);
-  }, []);
+  const [open, setOpen] = useState(true);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
