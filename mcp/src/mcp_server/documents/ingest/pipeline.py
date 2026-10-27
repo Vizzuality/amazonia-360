@@ -320,20 +320,14 @@ class Pipeline:
             if not f.generated_description and f.review_status == "pending_review"
         ]
         total = len(to_read) + len(pending)
-        done = 0
-        read_text: set[str] = set()
-        if to_read:
-            ocr = await anyio.to_thread.run_sync(self._ocr_factory)
-            for figure in to_read:
-                await progress(done, total)
-                text = await anyio.to_thread.run_sync(ocr.read, figure.image_path)
-                await self._store.set_ocr(document.id, figure.figure_id, text)
-                if text:
-                    read_text.add(figure.figure_id)
-                done += 1
-        failures: list[str] = []
+        read_text, unread = await self._read_figures(document, to_read, progress, total)
+        failures = list(unread.values())
+        done = len(to_read)
         for figure in pending:
             await progress(done, total)
+            if figure.figure_id in unread:
+                done += 1
+                continue
             figure = await self._store.get_figure(document.id, figure.figure_id)
             if figure is None:
                 continue
@@ -354,10 +348,38 @@ class Pipeline:
             # Approved figures carry their OCR text into search.
             await self._store.enqueue("index_figures", document.id)
         if failures:
+            tried = {f.figure_id for f in to_read} | {f.figure_id for f in pending}
             raise IngestError(
-                f"{len(failures)} of {len(pending)} figures could not be described "
+                f"{len(failures)} of {len(tried)} figures could not be described "
                 f"and were left for the next run ({failures[0]})"
             )
+
+    async def _read_figures(
+        self, document: Document, to_read: list[Figure], progress: Progress, total: int
+    ) -> tuple[set[str], dict[str, str]]:
+        """The ids of the figures with text in them, and the error of each figure
+        that could not be read."""
+        read_text: set[str] = set()
+        unread: dict[str, str] = {}
+        if not to_read:
+            return read_text, unread
+        ocr = await anyio.to_thread.run_sync(self._ocr_factory)
+        for done, figure in enumerate(to_read):
+            await progress(done, total)
+            try:
+                text = await anyio.to_thread.run_sync(ocr.read, figure.image_path)
+            except Exception as error:
+                # Its OCR text stays unset, so the next run reads it again; it is not
+                # described until then, as the text grounds the description.
+                logger.warning("Could not read figure %s: %s", figure.figure_id, error)
+                unread[figure.figure_id] = (
+                    f"{figure.figure_id}: {error or type(error).__name__}"
+                )
+                continue
+            await self._store.set_ocr(document.id, figure.figure_id, text)
+            if text:
+                read_text.add(figure.figure_id)
+        return read_text, unread
 
     async def _index_figures(self, job: Job, progress: Progress) -> None:
         document = await self._document(job.document_id)

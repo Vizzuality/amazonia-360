@@ -178,6 +178,30 @@ async def test_a_failed_description_leaves_the_figure_for_the_next_run(
     assert env.describer.seen == ["f1", "f2", "f1"]
 
 
+async def test_a_figure_that_cannot_be_read_is_left_for_the_next_run(
+    env: Env,
+) -> None:
+    env.extractor.figures = [FakeFigure("f1", "Results"), FakeFigure("f2", "Results")]
+    env.ocr_failing = {"f1"}
+    await env.add_pdf()
+
+    status, message = await latest_job(env, "describe_figures")
+    assert status == "error"
+    assert "1 of 2 figures could not be described" in message
+    assert "onnxruntime could not run" in message
+    figures = {f.figure_id: f for f in await env.store.list_figures(DOCUMENT_ID)}
+    assert (figures["f1"].ocr_text, figures["f1"].generated_description) == (None, "")
+    assert figures["f2"].ocr_text == "BLOCK 31"
+    assert figures["f2"].generated_description != ""
+    assert env.describer.seen == ["f2"]
+
+    env.ocr_failing = set()
+    await env.store.enqueue("describe_figures", DOCUMENT_ID)
+    await env.run_all()
+    assert env.describer.seen == ["f2", "f1"]
+    assert (await latest_job(env, "describe_figures"))[0] == "done"
+
+
 async def test_summary_is_related_only_after_approval_and_index_summary(
     env: Env,
 ) -> None:

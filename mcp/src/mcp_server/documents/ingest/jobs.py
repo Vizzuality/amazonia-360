@@ -8,6 +8,7 @@ from mcp_server.documents.store import DocumentStore
 logger = logging.getLogger(__name__)
 
 POLL_SECONDS = 1.0
+ERROR_PAUSE_SECONDS = 5.0
 
 
 class Worker:
@@ -19,10 +20,12 @@ class Worker:
         store: DocumentStore,
         pipeline: Pipeline,
         poll_seconds: float = POLL_SECONDS,
+        error_pause: float = ERROR_PAUSE_SECONDS,
     ) -> None:
         self._store = store
         self._pipeline = pipeline
         self._poll_seconds = poll_seconds
+        self._error_pause = error_pause
 
     async def run_once(self) -> bool:
         job = await self._store.claim_next()
@@ -46,6 +49,16 @@ class Worker:
         await self._store.recover_interrupted()
         await self._pipeline.clean_stale_files()
         while not stop.is_set():
-            if not await self.run_once():
-                with anyio.move_on_after(self._poll_seconds):
+            try:
+                ran = await self.run_once()
+            except Exception:
+                # A database blip must not stop the worker: uploads would sit queued
+                # while the back office stays up. A job whose finish or fail was lost
+                # stays running until a restart marks it interrupted.
+                logger.exception("worker could not reach the job queue")
+                pause = self._error_pause
+            else:
+                pause = 0.0 if ran else self._poll_seconds
+            if pause:
+                with anyio.move_on_after(pause):
                     await stop.wait()

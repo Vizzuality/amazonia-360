@@ -125,10 +125,13 @@ class FakeSummaryWriter:
 
 
 class FakeOcr:
-    def __init__(self, text: str) -> None:
+    def __init__(self, text: str, failing: set[str] | None = None) -> None:
         self._text = text
+        self._failing = failing or set()
 
     def read(self, image_path: str) -> str:
+        if Path(image_path).stem in self._failing:
+            raise RuntimeError("onnxruntime could not run")
         return self._text
 
 
@@ -173,6 +176,8 @@ class Env:
         self.describer = FakeDescriber()
         self.summary_writer = FakeSummaryWriter()
         self.ocr_text = "BLOCK 31"
+        # Ids of figures whose OCR raises.
+        self.ocr_failing: set[str] = set()
         self.pipeline = Pipeline(
             store,
             index,
@@ -181,7 +186,7 @@ class Env:
             self.summary_writer,
             self.settings,
             pdf_extractor=self.extractor,
-            ocr_factory=lambda: FakeOcr(self.ocr_text),
+            ocr_factory=lambda: FakeOcr(self.ocr_text, self.ocr_failing),
         )
         self.worker = Worker(store, self.pipeline, poll_seconds=0.01)
 

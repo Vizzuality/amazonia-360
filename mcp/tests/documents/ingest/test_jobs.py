@@ -84,3 +84,38 @@ async def test_worker_reports_progress(env: Env) -> None:
     assert done is not None
     assert (done.status, done.progress, done.total) == ("done", 1, 2)
     assert seen == [(1, 2)]
+
+
+@pytest.mark.parametrize("failing", ["claim_next", "finish"])
+async def test_worker_keeps_running_after_a_database_error(
+    env: Env, monkeypatch: pytest.MonkeyPatch, failing: str
+) -> None:
+    await env.add_pdf()
+    await env.store.review(DOCUMENT_ID, "f1", None, "approved")
+    original = getattr(env.store, failing)
+    calls = 0
+
+    async def flaky(*args: object) -> object:
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            raise ConnectionRefusedError("database is down")
+        return await original(*args)
+
+    monkeypatch.setattr(env.store, failing, flaky)
+    worker = Worker(env.store, env.pipeline, poll_seconds=0.01, error_pause=0.01)
+    await env.store.enqueue("index_figures", DOCUMENT_ID)
+    stop = anyio.Event()
+
+    async with anyio.create_task_group() as tasks:
+        tasks.start_soon(worker.run_forever, stop)
+        with anyio.fail_after(5):
+            while calls < 1:
+                await anyio.sleep(0.01)
+        second = await env.store.enqueue("index_summary", DOCUMENT_ID)
+        with anyio.fail_after(5):
+            while (job := await env.store.get_job(second.id)) and job.status != "done":
+                await anyio.sleep(0.01)
+        stop.set()
+
+    assert calls >= 2
