@@ -70,7 +70,7 @@ describe("CheckYourEmail", () => {
 
     await user.click(screen.getByText("auth-check-email-resend-button"));
 
-    expect(mockFetch).toHaveBeenCalledWith("/v1/api/users/resend-verification", {
+    expect(mockFetch).toHaveBeenCalledWith("/v1/app-api/users/resend-verification", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: "test@example.com" }),

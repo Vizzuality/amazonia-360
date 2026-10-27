@@ -30,7 +30,7 @@ test("a created report is stored and opens again after a reload", async ({ page 
   await createReportWithAllTopics(page);
 
   const reportId = new URL(page.url()).pathname.split("/").at(-1);
-  const stored = await page.request.get(`/v1/api/reports/${reportId}?depth=0`);
+  const stored = await page.request.get(`/v1/app-api/reports/${reportId}?depth=0`);
   expect(stored.ok()).toBe(true);
   const report = (await stored.json()) as {
     location: { type: string };

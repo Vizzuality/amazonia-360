@@ -36,6 +36,7 @@ import { Route as LocaleChar123CountryChar125ReportsGridRouteImport } from './ap
 import { Route as LocaleChar123CountryChar125ReportsIndicatorsRouteImport } from './app/$locale/{-$country}/reports/indicators'
 import { Route as LocaleChar123CountryChar125WebshotIndexRouteImport } from './app/$locale/{-$country}/webshot/index'
 import { Route as PayloadV1ApiSplatRouteImport } from './app/_payload/v1.api.$'
+import { Route as PayloadV1AppApiSplatRouteImport } from './app/_payload/v1.app-api.$'
 import { Route as LocaleChar123CountryChar125AppAuthIndexRouteImport } from './app/$locale/{-$country}/_app/auth/index'
 import { Route as LocaleChar123CountryChar125AppAuthCheckYourEmailRouteImport } from './app/$locale/{-$country}/_app/auth/check-your-email'
 import { Route as LocaleChar123CountryChar125AppAuthForgotPasswordRouteImport } from './app/$locale/{-$country}/_app/auth/forgot-password'
@@ -195,6 +196,11 @@ const PayloadV1ApiSplatRoute = PayloadV1ApiSplatRouteImport.update({
   path: '/v1/api/$',
   getParentRoute: () => PayloadRoute,
 } as any)
+const PayloadV1AppApiSplatRoute = PayloadV1AppApiSplatRouteImport.update({
+  id: '/v1/app-api/$',
+  path: '/v1/app-api/$',
+  getParentRoute: () => PayloadRoute,
+} as any)
 const LocaleChar123CountryChar125AppAuthIndexRoute =
   LocaleChar123CountryChar125AppAuthIndexRouteImport.update({
     id: '/',
@@ -272,6 +278,7 @@ export interface FileRoutesByFullPath {
   '/$locale/{-$country}/reports/grid': typeof LocaleChar123CountryChar125ReportsGridRoute
   '/$locale/{-$country}/reports/indicators': typeof LocaleChar123CountryChar125ReportsIndicatorsRoute
   '/v1/api/$': typeof PayloadV1ApiSplatRoute
+  '/v1/app-api/$': typeof PayloadV1AppApiSplatRoute
   '/$locale/{-$country}/': typeof LocaleChar123CountryChar125AppIndexRoute
   '/$locale/{-$country}/private/': typeof LocaleChar123CountryChar125PrivateIndexRoute
   '/$locale/{-$country}/reports/': typeof LocaleChar123CountryChar125ReportsIndexRoute
@@ -304,6 +311,7 @@ export interface FileRoutesByTo {
   '/$locale/{-$country}/reports/grid': typeof LocaleChar123CountryChar125ReportsGridRoute
   '/$locale/{-$country}/reports/indicators': typeof LocaleChar123CountryChar125ReportsIndicatorsRoute
   '/v1/api/$': typeof PayloadV1ApiSplatRoute
+  '/v1/app-api/$': typeof PayloadV1AppApiSplatRoute
   '/$locale/{-$country}/private': typeof LocaleChar123CountryChar125PrivateIndexRoute
   '/$locale/{-$country}/reports': typeof LocaleChar123CountryChar125ReportsIndexRoute
   '/$locale/{-$country}/webshot': typeof LocaleChar123CountryChar125WebshotIndexRoute
@@ -342,6 +350,7 @@ export interface FileRoutesById {
   '/$locale/{-$country}/reports/grid': typeof LocaleChar123CountryChar125ReportsGridRoute
   '/$locale/{-$country}/reports/indicators': typeof LocaleChar123CountryChar125ReportsIndicatorsRoute
   '/_payload/v1/api/$': typeof PayloadV1ApiSplatRoute
+  '/_payload/v1/app-api/$': typeof PayloadV1AppApiSplatRoute
   '/$locale/{-$country}/_app/': typeof LocaleChar123CountryChar125AppIndexRoute
   '/$locale/{-$country}/private/': typeof LocaleChar123CountryChar125PrivateIndexRoute
   '/$locale/{-$country}/reports/': typeof LocaleChar123CountryChar125ReportsIndexRoute
@@ -380,6 +389,7 @@ export interface FileRouteTypes {
     | '/$locale/{-$country}/reports/grid'
     | '/$locale/{-$country}/reports/indicators'
     | '/v1/api/$'
+    | '/v1/app-api/$'
     | '/$locale/{-$country}/'
     | '/$locale/{-$country}/private/'
     | '/$locale/{-$country}/reports/'
@@ -412,6 +422,7 @@ export interface FileRouteTypes {
     | '/$locale/{-$country}/reports/grid'
     | '/$locale/{-$country}/reports/indicators'
     | '/v1/api/$'
+    | '/v1/app-api/$'
     | '/$locale/{-$country}/private'
     | '/$locale/{-$country}/reports'
     | '/$locale/{-$country}/webshot'
@@ -449,6 +460,7 @@ export interface FileRouteTypes {
     | '/$locale/{-$country}/reports/grid'
     | '/$locale/{-$country}/reports/indicators'
     | '/_payload/v1/api/$'
+    | '/_payload/v1/app-api/$'
     | '/$locale/{-$country}/_app/'
     | '/$locale/{-$country}/private/'
     | '/$locale/{-$country}/reports/'
@@ -663,6 +675,13 @@ declare module '@tanstack/react-router' {
       path: '/v1/api/$'
       fullPath: '/v1/api/$'
       preLoaderRoute: typeof PayloadV1ApiSplatRouteImport
+      parentRoute: typeof PayloadRoute
+    }
+    '/_payload/v1/app-api/$': {
+      id: '/_payload/v1/app-api/$'
+      path: '/v1/app-api/$'
+      fullPath: '/v1/app-api/$'
+      preLoaderRoute: typeof PayloadV1AppApiSplatRouteImport
       parentRoute: typeof PayloadRoute
     }
     '/$locale/{-$country}/_app/auth/': {
@@ -907,12 +926,14 @@ interface PayloadRouteChildren {
   PayloadAdminSplatRoute: typeof PayloadAdminSplatRoute
   PayloadAdminIndexRoute: typeof PayloadAdminIndexRoute
   PayloadV1ApiSplatRoute: typeof PayloadV1ApiSplatRoute
+  PayloadV1AppApiSplatRoute: typeof PayloadV1AppApiSplatRoute
 }
 
 const PayloadRouteChildren: PayloadRouteChildren = {
   PayloadAdminSplatRoute: PayloadAdminSplatRoute,
   PayloadAdminIndexRoute: PayloadAdminIndexRoute,
   PayloadV1ApiSplatRoute: PayloadV1ApiSplatRoute,
+  PayloadV1AppApiSplatRoute: PayloadV1AppApiSplatRoute,
 }
 
 const PayloadRouteWithChildren =

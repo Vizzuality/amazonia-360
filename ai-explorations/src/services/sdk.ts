@@ -6,7 +6,7 @@ import { Config } from "@/payload-types";
 
 // Pass your config from generated types as generic
 export const sdk = new PayloadSDK<Config>({
-  baseURL: `${env.VITE_URL}/v1/api`,
+  baseURL: `${env.VITE_URL}/v1/app-api`,
   baseInit: {
     credentials: "include",
   },

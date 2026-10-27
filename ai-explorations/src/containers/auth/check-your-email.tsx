@@ -52,7 +52,7 @@ export function CheckYourEmail({ email, ...props }: CheckYourEmailProps) {
     startCooldown();
 
     toast.promise(
-      fetch("/v1/api/users/resend-verification", {
+      fetch("/v1/app-api/users/resend-verification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),

@@ -204,9 +204,9 @@ With an empty or `no-ses-configured` `AWS_SES_IAM_USER_ACCESS_KEY_ID`, emails go
 ## Auth
 
 - Payload built-in auth replaces NextAuth. `users` is the frontend collection, `admins` the `/admin` collection. Sign-up, email verification, sign-in, sign-out, forgot and reset password run as TanStack Start server functions in `src/lib/auth/`.
-- The session is an HTTP-only cookie, `ai-explorations-token` (`cookiePrefix: "ai-explorations"`), valid for 30 days.
-- **One auth collection per browser at a time.** Payload 4 uses a single token cookie for all auth collections, so signing in to `/admin` replaces a frontend session and signing in on the frontend replaces an admin session. The client keeps separate sessions for both. Frontend gates accept only a `users` token, so an admin session counts as signed out on the frontend.
-- Basic auth (`BASIC_AUTH_*`) covers frontend pages and server functions. `/admin`, `/v1/api`, `/local-api` and static files skip it, as in the client.
+- Two HTTP-only, `SameSite=Lax` cookies, so an `/admin` session and a frontend session coexist in one browser and signing out of one keeps the other. Payload 4 has one token cookie for every auth collection, `ai-explorations-token`; it stays the `/admin` session, used by `/admin` and `/v1/api`. The frontend session is `ai-explorations-user-token`, valid for 30 days, which the server functions set on sign-in and clear on sign-out.
+- The app's browser calls (`src/services/sdk.ts`) go to `/v1/app-api`, a proxy to Payload's REST API that authenticates with `ai-explorations-user-token` only (sent to Payload as `Authorization: JWT`), ignores the admin cookie and drops any `ai-explorations-token` Payload tries to set. Frontend gates accept only a `users` session.
+- Basic auth (`BASIC_AUTH_*`) covers frontend pages and server functions. `/admin`, `/v1/api`, `/v1/app-api`, `/local-api` and static files skip it, as in the client.
 
 ## Emails
 
@@ -228,6 +228,7 @@ With an empty or `no-ses-configured` `AWS_SES_IAM_USER_ACCESS_KEY_ID`, Payload u
 ## Differences from client
 
 - Payload 4 beta instead of 3; built-in auth instead of NextAuth. The GitHub provider, `AUTH_SECRET` and `AUTH_URL` are not ported.
+- The app's browser calls go to `/v1/app-api` instead of `/v1/api`, because the frontend session needs a cookie of its own to coexist with the `/admin` one (see [Auth](#auth)).
 - URL state uses TanStack Router search params instead of nuqs, with the same parameter names and serialization (`bbox`, `defaultTopics`, `country`).
 - The leave-page guard uses TanStack Router's `useBlocker` instead of `next-navigation-guard`.
 - Reports migrated from the client database show only in English (see [Database](#database)). The seed writes English into a missing catalogue translation instead of relying on Payload's locale fallback.

@@ -5,7 +5,8 @@ import { expectHydrated } from "./hydration";
 
 type Credentials = { email: string; password: string };
 
-export const TOKEN_COOKIE = "ai-explorations-token";
+export const USER_TOKEN_COOKIE = "ai-explorations-user-token";
+export const ADMIN_TOKEN_COOKIE = "ai-explorations-token";
 
 export async function fillSignInForm(page: Page, { email, password }: Credentials) {
   await expectHydrated(page.locator("form"));
@@ -21,6 +22,6 @@ export async function signIn(page: Page, credentials: Credentials) {
   await expect(page).toHaveURL(/\/en\/private\/my-reports/, { timeout: 30_000 });
 }
 
-export async function getTokenCookie(context: BrowserContext) {
-  return (await context.cookies()).find((cookie) => cookie.name === TOKEN_COOKIE);
+export async function getTokenCookie(context: BrowserContext, name = USER_TOKEN_COOKIE) {
+  return (await context.cookies()).find((cookie) => cookie.name === name);
 }

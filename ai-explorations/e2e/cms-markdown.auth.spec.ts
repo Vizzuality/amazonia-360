@@ -12,7 +12,6 @@ test.skip(skipWithoutSeedSecret, "E2E_SEED_SECRET not set");
 const INDICATOR = { id: 7, name: "Slope" };
 const API = "/v1/api";
 
-/** Payload 4 keeps one token cookie for every auth collection, so the admin gets its own context. */
 const adminContext = (browser: Browser, baseURL: string | undefined) =>
   browser.newContext({ baseURL, storageState: { cookies: [], origins: [] } });
 

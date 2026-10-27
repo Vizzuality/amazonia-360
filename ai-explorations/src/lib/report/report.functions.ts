@@ -4,6 +4,7 @@ import { getRequestHeaders, setResponseHeader } from "@tanstack/react-start/serv
 
 import * as z from "zod";
 
+import { getFrontendUser } from "@/lib/auth/session";
 import { basicAuthFnMiddleware } from "@/lib/server/basic-auth";
 
 import { routing } from "@/i18n/routing";
@@ -20,8 +21,8 @@ export const getReportFn = createServerFn({ method: "GET" })
     const { getPayload } = await import("payload");
     const payload = await getPayload({ config: await getConfig() });
 
-    const { user } = await payload.auth({ headers: getRequestHeaders() });
-    if (user?.collection !== "users") throw new Error("Unauthorized");
+    const user = await getFrontendUser(payload, getRequestHeaders());
+    if (!user) throw new Error("Unauthorized");
 
     const report = await payload.findByID({
       collection: "reports",

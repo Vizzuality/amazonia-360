@@ -2,7 +2,13 @@ import { randomUUID } from "node:crypto";
 
 import { test, expect } from "@playwright/test";
 
-import { TOKEN_COOKIE, fillSignInForm, getTokenCookie, signIn } from "./helpers/auth";
+import {
+  ADMIN_TOKEN_COOKIE,
+  USER_TOKEN_COOKIE,
+  fillSignInForm,
+  getTokenCookie,
+  signIn,
+} from "./helpers/auth";
 import { dismissCookieConsent } from "./helpers/cookie-consent";
 import { getTestAdmin, getUniqueEmail, skipWithoutSeedSecret } from "./helpers/credentials";
 import { getUserToken } from "./helpers/database";
@@ -32,6 +38,7 @@ test("sign up, verify the email, sign in and sign out", async ({ page, context }
   await fillSignInForm(page, user);
   await expect(page.getByText(/failed to log in/i)).toBeVisible({ timeout: 30_000 });
   expect(await getTokenCookie(context)).toBeUndefined();
+  expect(await getTokenCookie(context, ADMIN_TOKEN_COOKIE)).toBeUndefined();
 
   await page.goto(`/en/auth/verify-email?token=${getUserToken(user.email, "_verificationtoken")}`);
   await expectHydrated(page.getByRole("button", { name: "Confirm my email" }));
@@ -41,7 +48,8 @@ test("sign up, verify the email, sign in and sign out", async ({ page, context }
   await signIn(page, user);
 
   const cookie = await getTokenCookie(context);
-  expect(cookie, `${TOKEN_COOKIE} is set after sign-in`).toBeDefined();
+  expect(cookie, `${USER_TOKEN_COOKIE} is set after sign-in`).toBeDefined();
+  expect(await getTokenCookie(context, ADMIN_TOKEN_COOKIE)).toBeUndefined();
   expect(cookie?.httpOnly).toBe(true);
   expect(cookie?.sameSite).toBe("Lax");
 
@@ -85,6 +93,7 @@ test("forgot password, reset it and sign in with the new one", async ({
   // Payload 4's reset signs the user in; the client sends them to sign in instead.
   await expect(page).toHaveURL(/\/en\/auth\/sign-in$/, { timeout: 30_000 });
   expect(await getTokenCookie(context)).toBeUndefined();
+  expect(await getTokenCookie(context, ADMIN_TOKEN_COOKIE)).toBeUndefined();
 
   await fillSignInForm(page, { email, password: oldPassword });
   await expect(page.getByText(/failed to log in/i)).toBeVisible({ timeout: 30_000 });
@@ -97,7 +106,8 @@ test("an admin session does not open the frontend gates", async ({ page, context
 
   const login = await page.request.post("/v1/api/admins/login", { data: getTestAdmin() });
   expect(login.ok()).toBe(true);
-  expect(await getTokenCookie(context), "the admin token shares the cookie").toBeDefined();
+  expect(await getTokenCookie(context, ADMIN_TOKEN_COOKIE)).toBeDefined();
+  expect(await getTokenCookie(context)).toBeUndefined();
 
   await page.goto("/en/private/my-reports");
   await expect(page).toHaveURL(

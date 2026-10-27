@@ -1,10 +1,19 @@
 import { createServerFn } from "@tanstack/react-start";
 
-import { getRequestHeaders, setResponseHeader } from "@tanstack/react-start/server";
+import {
+  deleteCookie,
+  getRequestHeaders,
+  getRequestProtocol,
+  setCookie,
+  setResponseHeader,
+} from "@tanstack/react-start/server";
+
+import type { Payload } from "payload";
 
 import * as z from "zod";
 
-import { getSession, type Session } from "@/lib/auth/session";
+import { getFrontendUser, getSession, type Session } from "@/lib/auth/session";
+import { getUserTokenCookieName, getUserTokenCookieOptions } from "@/lib/auth/user-token";
 import { basicAuthFnMiddleware } from "@/lib/server/basic-auth";
 
 import { COUNTRIES } from "@/constants/countries";
@@ -30,6 +39,13 @@ function isInvalidTokenError(error: unknown): boolean {
   return (error as { status?: unknown } | null)?.status === 403;
 }
 
+function getUserCookie(payload: Payload) {
+  return {
+    name: getUserTokenCookieName(payload.config.cookiePrefix),
+    options: getUserTokenCookieOptions(payload.collections.users.config.auth, getRequestProtocol()),
+  };
+}
+
 export const getSessionFn = createServerFn({ method: "GET" })
   .middleware([basicAuthFnMiddleware])
   .handler(async (): Promise<Session | null> => {
@@ -41,19 +57,22 @@ export const signInFn = createServerFn({ method: "POST" })
   .middleware([basicAuthFnMiddleware])
   .validator(z.object({ email: z.string(), password: z.string() }))
   .handler(async ({ data }): Promise<SignInResult> => {
-    const { login } = await import("@payloadcms/tanstack-start/server");
+    const payload = await getPayloadInstance();
+    let token: string | undefined;
 
     try {
-      await login({
+      ({ token } = await payload.login({
         collection: "users",
-        config: await getConfig(),
-        email: data.email,
-        password: data.password,
-      });
+        data: { email: data.email, password: data.password },
+      }));
     } catch {
       return { success: false, reason: "credentials" };
     }
 
+    if (!token) return { success: false, reason: "credentials" };
+
+    const { name, options } = getUserCookie(payload);
+    setCookie(name, token, options);
     return { success: true };
   });
 
@@ -61,21 +80,17 @@ export const signOutFn = createServerFn({ method: "POST" })
   .middleware([basicAuthFnMiddleware])
   .handler(async () => {
     const payload = await getPayloadInstance();
-    const { user } = await payload.auth({ headers: getRequestHeaders() });
-    const { clearAuthCookie } = await import("payload/auth");
-    const { logout, tanstackServerAdapter } = await import("@payloadcms/tanstack-start/server");
+    const { name, options } = getUserCookie(payload);
 
-    if (user?.collection === "users") {
-      await logout({ config: await getConfig() });
-      return null;
-    }
+    deleteCookie(name, options);
 
-    // `logout` keeps a token whose user was deleted, as it authenticates as nobody.
-    if (!user) {
-      await clearAuthCookie({
-        authConfig: payload.collections.users.config.auth,
-        cookiePrefix: payload.config.cookiePrefix,
-        serverAdapter: tanstackServerAdapter,
+    const user = await getFrontendUser(payload, getRequestHeaders());
+
+    if (user) {
+      const { createPayloadRequest, logoutOperation } = await import("payload");
+      await logoutOperation({
+        collection: payload.collections.users,
+        req: await createPayloadRequest({ payload, user }),
       });
     }
 
