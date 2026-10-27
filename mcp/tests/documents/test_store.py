@@ -118,6 +118,20 @@ async def test_summary_is_stored_with_its_status(with_doc: DocumentStore) -> Non
     assert (document.summary, document.summary_status) == ("Short text.", "approved")
 
 
+async def test_set_details_changes_title_and_citation_only(
+    with_doc: DocumentStore,
+) -> None:
+    await with_doc.set_status("d1", "indexed")
+    await with_doc.set_details("d1", "Napo roads", "Bass et al. (2010)")
+    document = await with_doc.get_document("d1")
+    assert document is not None
+    assert (document.title, document.authors_year, document.status) == (
+        "Napo roads",
+        "Bass et al. (2010)",
+        "indexed",
+    )
+
+
 async def test_setting_topics_replaces_them(with_doc: DocumentStore) -> None:
     await with_doc.upsert_topic(YASUNI)
     await with_doc.upsert_topic(FORESTS)
@@ -481,3 +495,20 @@ async def test_recovery_leaves_finished_documents_alone(
     document = await with_doc.get_document("d1")
     assert document is not None
     assert document.status == "indexed"
+
+
+async def test_latest_jobs_holds_the_newest_job_of_each_kind(
+    with_doc: DocumentStore,
+) -> None:
+    first = await with_doc.enqueue("describe_figures", "d1")
+    await with_doc.claim_next()
+    await with_doc.fail(first.id, "model refused")
+    await with_doc.enqueue("write_summary", "d1")
+    newer = await with_doc.enqueue("describe_figures", "d1")
+    await with_doc.enqueue("ingest_pdf", "d2")
+    latest = await with_doc.latest_jobs(["d1"])
+    assert set(latest) == {"d1"}
+    by_kind = {job.kind: job for job in latest["d1"]}
+    assert set(by_kind) == {"describe_figures", "write_summary"}
+    assert by_kind["describe_figures"].id == newer.id
+    assert await with_doc.latest_jobs([]) == {}

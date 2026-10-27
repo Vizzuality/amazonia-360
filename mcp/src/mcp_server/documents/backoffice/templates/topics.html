@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Topics · Amazonia 360 documents{% endblock %}
+{% block main %}
+<header class="page-head">
+  <h1>Topics</h1>
+  <p class="quiet">search_documents filters by topic when the user asks about one, and by the topics tied to a place when Claude passes a place_id. A topic tied to a place applies to that place only, never to the places around or inside it.</p>
+</header>
+<section class="topics">
+  {% for card in cards %}
+  <article class="topic-card">
+    {% with creating=False, error="" %}{% include "_topic_form.html" %}{% endwith %}
+  </article>
+  {% else %}
+  <p class="quiet">No topics yet.</p>
+  {% endfor %}
+</section>
+<section class="topic-card new-topic">
+  <h2>New topic</h2>
+  {% with card=new, creating=True, error="" %}{% include "_topic_form.html" %}{% endwith %}
+</section>
+{% endblock %}

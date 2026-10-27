@@ -1,0 +1,26 @@
+{% set form = card.form %}
+<form class="topic-form" hx-post="{{ '/topics' if creating else '/topics/' ~ form.id }}" hx-target="this" hx-swap="outerHTML">
+  {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+  <div class="fields">
+    <label>Id
+      <input name="id" value="{{ form.id }}" {% if creating %}placeholder="oil-and-gas"{% else %}readonly{% endif %}>
+      {% if creating %}<small>made from the name when left empty</small>{% endif %}
+    </label>
+    <label>Name <input name="name" value="{{ form.name }}" required></label>
+    <label class="wide">Other names <small>comma-separated, used to find the topic</small>
+      <input name="aliases" value="{{ form.aliases }}" placeholder="oil, petróleo">
+    </label>
+    <label class="wide">Place id <small>a province, canton or protected area of the module, as find_places returns it</small>
+      <input name="place_id" value="{{ form.place_id }}" placeholder="protected_area:Yasuní">
+      {% if card.place %}<small>{{ kind_labels[card.place.kind] }}: {% if card.place.category %}{{ card.place.category }} {% endif %}{{ card.place.name }}</small>{% endif %}
+    </label>
+  </div>
+  <div class="actions">
+    <button type="submit">{{ "Add topic" if creating else "Save" }}</button>
+    {% if not creating %}
+    <span class="quiet">{{ card.count }} document{{ "s" if card.count != 1 }}</span>
+    <button type="button" class="danger" hx-post="/topics/{{ form.id }}/delete"
+            hx-confirm="Delete the topic {{ form.name }}? Its documents stay, without it.">Delete</button>
+    {% endif %}
+  </div>
+</form>

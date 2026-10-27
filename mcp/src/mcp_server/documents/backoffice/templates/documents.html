@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}{{ view.name if view else "All documents" }} · Amazonia 360 documents{% endblock %}
+{% block main %}
+<header class="page-head">
+  <h1>{{ view.name if view else "All documents" }}</h1>
+  {% if view %}
+  <p class="quiet">Topic <code>{{ view.id }}</code>{% if view.aliases %}, also known as {{ view.aliases | join(", ") }}{% endif %}{% if place %}.
+    Tied to {{ kind_labels[place.kind] | lower }} {% if place.category %}{{ place.category }} {% endif %}{{ place.name }}{% endif %}.</p>
+  {% else %}
+  <p class="quiet">Every indexed paper and report, whatever its topic.</p>
+  {% endif %}
+</header>
+{% include "_documents.html" %}
+<section class="ask">
+  <h2>Test a question</h2>
+  <p class="quiet">Shows exactly what Claude receives from search_documents, links included.</p>
+  <form class="ask-form" hx-post="/ask" hx-target="#answers" hx-swap="outerHTML">
+    <input name="query" placeholder="How much forest was lost along the roads in Yasuní?" required aria-label="Question">
+    <label>Topic
+      <select name="topic">
+        <option value="">All topics</option>
+        {% for t in topics %}<option value="{{ t.id }}"{% if view and t.id == view.id %} selected{% endif %}>{{ t.name }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Place id <input name="place_id" placeholder="protected_area:Yasuní"></label>
+    <button type="submit">Search</button>
+  </form>
+  <div id="answers"></div>
+</section>
+{% endblock %}

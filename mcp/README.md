@@ -122,11 +122,10 @@ Papers and reports are indexed in Postgres and Qdrant and searched through the d
    `localhost:5433`, Qdrant on `localhost:6343`).
 2. Install the ingestion extra: `uv sync --extra ingest`.
 3. Create the tables: `uv run amazonia360-docs migrate`.
-4. Run the admin app that uploads and reviews documents, and serves their links:
-   `uv run amazonia360-docs serve`.
-
-The `amazonia360-docs` command is added by the ingestion task of the document search plan;
-until it lands, steps 3 and 4 are not available.
+4. Run the back office, which uploads and reviews documents, manages topics, tests a
+   question and serves the files that links point at: `uv run amazonia360-docs serve`, then
+   open `http://127.0.0.1:8770`. It needs `OPENAI_API_KEY`, and runs the job worker in the
+   same process.
 
 In Claude Desktop, add these to the `env` of the server's entry:
 

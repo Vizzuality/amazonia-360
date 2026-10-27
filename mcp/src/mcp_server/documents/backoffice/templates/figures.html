@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Figures · {{ d.title or d.origin }} · Amazonia 360 documents{% endblock %}
+{% block main %}
+<p class="crumbs"><a href="/">All documents</a> / <a href="/documents/{{ d.id }}">{{ d.title or d.origin }}</a></p>
+<h1>Figure descriptions</h1>
+<p class="quiet">Approved descriptions become searchable. Edit them so they say only what the figure shows.</p>
+<nav class="tabs" aria-label="Review groups">
+  {% for b in buckets %}
+  <a href="?bucket={{ b }}"{% if b == bucket %} aria-current="page"{% endif %}>{{ labels[b] }} ({{ counts[b] }})</a>
+  {% endfor %}
+</nav>
+<p class="quiet">{{ help }}</p>
+{% if bulk and figures %}
+{% set shown = figures | map(attribute="figure_id") | join(",") %}
+<div class="bulk">
+  <button hx-post="/documents/{{ d.id }}/figures/bulk" hx-vals='{"bucket": "{{ bucket }}", "action": "approve", "figure_ids": "{{ shown }}"}'
+          hx-confirm="Approve all {{ figures | length }} figures in {{ labels[bucket] }}?">Approve all {{ figures | length }}</button>
+  <button class="danger" hx-post="/documents/{{ d.id }}/figures/bulk" hx-vals='{"bucket": "{{ bucket }}", "action": "discard", "figure_ids": "{{ shown }}"}'
+          hx-confirm="Discard all {{ figures | length }} figures in {{ labels[bucket] }}?">Discard all {{ figures | length }}</button>
+</div>
+{% endif %}
+<div class="figure-grid">
+  {% for f in figures %}{% include "_figure_card.html" %}{% else %}
+  <p class="quiet">Nothing here.</p>
+  {% endfor %}
+</div>
+{% endblock %}

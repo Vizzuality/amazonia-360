@@ -1,0 +1,8 @@
+<fieldset class="topic-checks">
+  <legend>Topics</legend>
+  {% for t in topics %}
+  <label><input type="checkbox" name="topic_ids" value="{{ t.id }}"{% if t.id in checked %} checked{% endif %}> {{ t.name }}</label>
+  {% else %}
+  <span class="quiet">No topics yet: <a href="/topics">add one</a>.</span>
+  {% endfor %}
+</fieldset>

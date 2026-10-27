@@ -1,0 +1,13 @@
+<section id="summary" class="summary-card">
+  <h2>Summary</h2>
+  <p class="quiet"><span class="led {{ 'indexed' if summary.status == 'approved' else '' }}"></span> {{ summary.label }}</p>
+  <p class="quiet">Written from the title, headings, opening and figure captions. Once approved, the document shows up as related to questions its passages do not answer.</p>
+  <form hx-post="/documents/{{ d.id }}/summary" hx-target="#summary" hx-swap="outerHTML">
+    {% if summary.error %}<p class="error" role="alert">{{ summary.error }}</p>{% endif %}
+    <textarea name="text" rows="7" aria-label="Summary" placeholder="The summary is written after the document is indexed.">{{ summary.text }}</textarea>
+    <div class="actions">
+      <button type="submit" name="approve" value="true">Approve</button>
+      <button type="submit" class="secondary">Save</button>
+    </div>
+  </form>
+</section>

@@ -1,0 +1,19 @@
+{% set name = f.image_path.rsplit("/", 1)[-1] %}
+<article class="figure-card">
+  <a class="crop" href="/files/figures/{{ name }}" target="_blank" rel="noopener">
+    <img src="/files/figures/{{ name }}" alt="Figure from {{ f.section_path or 'the document' }}" loading="lazy">
+  </a>
+  <form hx-post="/documents/{{ d.id }}/figures/{{ f.figure_id }}" hx-target="closest .figure-card" hx-swap="outerHTML">
+    {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+    <p class="section">{{ f.section_path or "No section" }}{% if f.page %}, page {{ f.page }}{% endif %}</p>
+    {% if f.ocr_text %}<p class="ocr"><span class="quiet">Text found in the figure:</span> {{ f.ocr_text }}</p>{% endif %}
+    <textarea name="description" rows="6" aria-label="Description">{{ f.final_description }}</textarea>
+    <div class="actions">
+      <button type="submit" name="action" value="approve">Approve</button>
+      <button type="submit" name="action" value="discard" class="danger">Discard</button>
+      {% if f.final_description != f.generated_description %}
+      <button type="submit" name="action" value="reset">Reset to generated</button>
+      {% endif %}
+    </div>
+  </form>
+</article>

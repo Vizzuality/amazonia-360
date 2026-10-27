@@ -3,6 +3,7 @@ from dataclasses import replace
 from typing import Any
 
 from sqlalchemy import delete, func, insert, select, text, update
+from sqlalchemy.dialects.postgresql import distinct_on
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
@@ -137,6 +138,12 @@ class DocumentStore:
         await self._update_document(
             document_id, chunk_count=chunks, figure_count=figures
         )
+
+    async def set_details(
+        self, document_id: str, title: str, authors_year: str
+    ) -> None:
+        """Only what the owner edits, so a running job's status is not overwritten."""
+        await self._update_document(document_id, title=title, authors_year=authors_year)
 
     async def set_summary(self, document_id: str, text: str, status: str) -> None:
         _check(status, SUMMARY_STATUSES, "summary status")
@@ -314,6 +321,25 @@ class DocumentStore:
         async with self._sessions() as session:
             rows = await session.scalars(query.order_by(JobRow.id))
             return [_job(row) for row in rows]
+
+    async def latest_jobs(self, document_ids: Sequence[str]) -> dict[str, list[Job]]:
+        """The newest job of each kind, per document: a later job of another kind
+        must not hide that figure descriptions failed."""
+        if not document_ids:
+            return {}
+        async with self._sessions() as session:
+            rows = await session.scalars(
+                select(JobRow)
+                .where(JobRow.document_id.in_(list(document_ids)))
+                .ext(distinct_on(JobRow.document_id, JobRow.kind))
+                .order_by(JobRow.document_id, JobRow.kind, JobRow.id.desc())
+            )
+            latest: dict[str, list[Job]] = {}
+            for row in rows:
+                latest.setdefault(row.document_id, []).append(_job(row))
+        for jobs in latest.values():
+            jobs.sort(key=lambda job: job.id)
+        return latest
 
     async def recover_interrupted(self) -> int:
         """Fails the jobs a stopped process left running, and the documents they

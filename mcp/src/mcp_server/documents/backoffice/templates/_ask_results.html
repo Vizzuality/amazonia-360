@@ -1,0 +1,49 @@
+<div id="answers" class="answers">
+  {% if error %}
+  <p class="error" role="alert">search_documents failed: {{ error }}</p>
+  {% else %}
+  {% if result.topic %}<p class="quiet">Restricted to the topic <code>{{ result.topic }}</code>.</p>{% endif %}
+  {% if result.note %}<p class="notice">{{ result.note }}</p>{% endif %}
+  {% if result.candidates %}
+  <p>Claude would ask which topic is meant: {% for c in result.candidates %}{{ c.name }} (<code>{{ c.id }}</code>){% if not loop.last %}, {% endif %}{% endfor %}.</p>
+  {% endif %}
+  <h3>Passages ({{ result.passages | length }})</h3>
+  {% for p in result.passages %}
+  <article class="hit passage">
+    <header>
+      <span class="rank">{{ loop.index }}</span>
+      <span class="badge kind">passage</span>
+      {% if p.origin == "figure" %}<span class="badge">figure description</span>{% endif %}
+      <strong>{{ p.title }}</strong>
+      {% if p.authors_year %}<span class="quiet">{{ p.authors_year }}</span>{% endif %}
+    </header>
+    <p class="quiet">{{ p.section or "Untitled section" }}{% if p.page %}, page {{ p.page }}{% endif %}</p>
+    <p>{{ p.text }}</p>
+    {% if p.link %}<a class="link" href="{{ p.link }}" target="_blank" rel="noopener">{{ p.link }}</a>{% else %}<span class="quiet">No link</span>{% endif %}
+  </article>
+  {% else %}
+  <p class="quiet">No passages.</p>
+  {% endfor %}
+  <h3>Related documents ({{ result.related_documents | length }})</h3>
+  {% for r in result.related_documents %}
+  <article class="hit related">
+    <header>
+      <span class="rank">{{ loop.index }}</span>
+      <span class="badge kind">related document</span>
+      <strong>{{ r.title }}</strong>
+      {% if r.authors_year %}<span class="quiet">{{ r.authors_year }}</span>{% endif %}
+      <span class="quiet">matched by {{ r.matched_by }}</span>
+    </header>
+    <p>{{ r.summary }}</p>
+    {% if r.topics %}<p class="quiet">Topics: {{ r.topics | join(", ") }}</p>{% endif %}
+    {% if r.link %}<a class="link" href="{{ r.link }}" target="_blank" rel="noopener">{{ r.link }}</a>{% else %}<span class="quiet">No link</span>{% endif %}
+  </article>
+  {% else %}
+  <p class="quiet">No related documents.</p>
+  {% endfor %}
+  <details class="raw">
+    <summary>The response as Claude receives it</summary>
+    <pre>{{ raw }}</pre>
+  </details>
+  {% endif %}
+</div>

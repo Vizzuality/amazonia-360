@@ -1,0 +1,16 @@
+<section class="rack">
+  <ul>
+    <li><a href="/"{% if current == "all" %} aria-current="page"{% endif %}>All documents <small>{{ document_total }}</small></a></li>
+  </ul>
+</section>
+<section class="rack">
+  <h2>Topics</h2>
+  <ul>
+    {% for t in topics %}
+    <li><a href="/?topic={{ t.id }}"{% if t.id == current %} aria-current="page"{% endif %}>{{ t.name }} <small>{{ topic_counts[t.id] }}</small></a></li>
+    {% else %}
+    <li class="quiet">No topics yet.</li>
+    {% endfor %}
+  </ul>
+  <p><a href="/topics"{% if current == "topics" %} aria-current="page"{% endif %}>Manage topics</a></p>
+</section>

@@ -1,0 +1,10 @@
+<details class="edit details-form"{% if error %} open{% endif %}>
+  <summary>Edit title, authors and topics</summary>
+  <form class="add-document" hx-post="/documents/{{ d.id }}" hx-target="closest details" hx-swap="outerHTML">
+    {% if error %}<p class="error wide" role="alert">{{ error }}</p>{% endif %}
+    <label>Title <input name="title" value="{{ form.title }}" maxlength="{{ max_title }}" required></label>
+    <label>Authors and year <input name="authors_year" value="{{ form.authors_year }}" placeholder="Bass et al. (2010)"></label>
+    {% with checked=form.topic_ids %}{% include "_topic_checks.html" %}{% endwith %}
+    <button type="submit">Save</button>
+  </form>
+</details>

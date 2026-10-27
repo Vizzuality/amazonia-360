@@ -1,0 +1,7 @@
+<article class="figure-card moved">
+  <p><span class="led {{ 'indexed' if figure.review_status == 'approved' else '' }}"></span>
+    Moved to {{ label }}.</p>
+  <form hx-post="/documents/{{ d.id }}/figures/{{ figure.figure_id }}" hx-target="closest .figure-card" hx-swap="outerHTML">
+    <button type="submit" name="action" value="reset">Back to review</button>
+  </form>
+</article>

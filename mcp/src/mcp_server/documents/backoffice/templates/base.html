@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Amazonia 360 documents{% endblock %}</title>
+  <meta name="htmx-config" content='{"responseHandling":[{"code":"204","swap":false},{"code":"[23]..","swap":true},{"code":"409","swap":true},{"code":"422","swap":true},{"code":"[45]..","swap":false,"error":true}]}'>
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/htmx.min.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="wordmark" href="/">Amazonia 360 documents</a>
+    <a class="button" href="/topics">Topics</a>
+  </header>
+  {% if qdrant_down %}
+  <p class="error qdrant-down" role="alert">Qdrant is not running: search and indexing are paused.
+    Start it with <code>docker compose -f docker-compose.docs.yml up -d</code>.</p>
+  {% endif %}
+  <div class="shell">
+    <nav id="sidebar" aria-label="Topics">{% include "_sidebar.html" %}</nav>
+    <main>{% block main %}{% endblock %}</main>
+  </div>
+</body>
+</html>

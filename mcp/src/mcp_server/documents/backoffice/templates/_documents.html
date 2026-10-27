@@ -1,0 +1,26 @@
+<section id="documents" class="documents" hx-target="#documents" hx-swap="outerHTML">
+  <h2>Documents</h2>
+  {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+  {% include "_document_rows.html" %}
+  {% set checked = [view.id] if view else [] %}
+  <form class="add-document" hx-post="/documents/pdf" hx-encoding="multipart/form-data">
+    <h3>Upload a PDF</h3>
+    <input type="hidden" name="topic" value="{{ view.id if view else '' }}">
+    <label class="wide">File <input type="file" name="file" accept="application/pdf,.pdf" required></label>
+    <label>Title <small>the file name when left empty</small>
+      <input name="title" maxlength="{{ max_title }}" placeholder="Roads and forest loss in the Napo basin"></label>
+    <label>Authors and year <input name="authors_year" placeholder="Bass et al. (2010)"></label>
+    {% include "_topic_checks.html" %}
+    <button type="submit">Upload PDF</button>
+  </form>
+  <form class="add-document" hx-post="/documents/web">
+    <h3>Add a web report</h3>
+    <input type="hidden" name="topic" value="{{ view.id if view else '' }}">
+    <label class="wide">Address <input type="url" name="url" placeholder="https://…" required></label>
+    <label>Title <small>the page's own title when left empty</small>
+      <input name="title" maxlength="{{ max_title }}"></label>
+    <label>Authors and year <input name="authors_year" placeholder="MAAP (2026)"></label>
+    {% include "_topic_checks.html" %}
+    <button type="submit">Add page</button>
+  </form>
+</section>

@@ -1,0 +1,32 @@
+{# Polled on its own so the add forms keep what the owner is typing. #}
+<div id="document-rows"
+  {% if polling %}hx-get="/document-rows{% if view %}?topic={{ view.id }}{% endif %}" hx-trigger="every 2s"
+  hx-target="this" hx-swap="outerHTML"{% endif %}>
+  {% for row in rows %}
+  {% set d = row.document %}
+  <article class="document">
+    <div class="document-main">
+      <span class="led {{ d.status }}" title="{{ d.status }}"></span>
+      <div>
+        <h3><a class="document-title" href="/documents/{{ d.id }}">{{ d.title or d.origin }}</a></h3>
+        <p class="quiet">
+          {% if d.authors_year %}{{ d.authors_year }}. {% endif %}{{ type_labels[d.type] }}, {{ d.status | capitalize }}, {{ d.chunk_count }} passages
+          {% if row.has_figures %}
+          <br><a href="/documents/{{ d.id }}/figures">Figures: {{ row.approved }} approved, {{ row.to_review }} to review, {{ row.discarded }} discarded</a>
+          {% endif %}
+        </p>
+        {% if row.job_text %}<p class="job"><span class="led running"></span> {{ row.job_text }}</p>{% endif %}
+        {% for message in row.errors %}<p class="error">{{ message }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="document-actions" hx-vals='{"topic": "{{ view.id if view else '' }}"}'>
+      <a class="button" href="/documents/{{ d.id }}">Open</a>
+      <button hx-post="/documents/{{ d.id }}/rerun" hx-target="#documents" hx-swap="outerHTML">Re-run</button>
+      <button class="danger" hx-post="/documents/{{ d.id }}/delete" hx-target="#documents" hx-swap="outerHTML"
+              hx-confirm="Delete {{ d.title or d.origin }} and everything indexed from it?">Delete</button>
+    </div>
+  </article>
+  {% else %}
+  <p class="quiet">No documents {% if view %}on this topic {% endif %}yet. Upload a PDF or add a web report below.</p>
+  {% endfor %}
+</div><!-- document-rows -->
