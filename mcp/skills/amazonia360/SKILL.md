@@ -44,6 +44,9 @@ Follow these on every answer.
    `class_shares_in_area` answer in seconds. Call them in parallel when a question needs several.
 4. **Call the slow one last.** `area_by_category` takes from several seconds to tens of seconds.
    Call it for one indicator at a time, and only when hectares are needed.
+5. **Search the documents too**, when the server has `search_documents`. On every question
+   about a place or theme of the module, call it alongside the data tools, even when the user
+   does not mention documents. See Documents below.
 
 ## Words with more than one layer
 
@@ -86,6 +89,25 @@ Never report several of them one after the other without saying why each one is 
   but returned nothing, and that the area may lie outside the module. Never show either value
   to the user; say it in words. A place with no figures counts once in any tally, also when
   part of it lies outside the module.
+
+## Documents
+
+When the server has the document tools, it also indexes papers and reports on the module.
+
+1. **Search the whole corpus.** Call `search_documents` with the question. Pass `topic` only when
+   the user asks about one topic or the passages drift to other places. `list_topics` gives the
+   topics and every document.
+2. **Answer about documents only from `passages`.** When `related_documents` has entries but no
+   passage answers the question, name those documents with their link and say they cover the
+   subject but do not answer the question. Never answer from a summary as if it were a passage.
+   When both lists are empty, say the indexed documents do not cover it.
+3. **Keep documents and indicators apart.** State a figure from a document with its document and
+   year, and a figure from an indicator with the indicator. Never combine, total or compare them
+   as the same measure.
+4. **Quote and link.** Quote the sentence that states a number. Give the `link` of every passage
+   used, and say when a passage is a figure description (`origin` is `figure`).
+5. **Read around a passage** with `get_document_section`, passing its `document_id` and its
+   `section` unchanged. It returns the section's text without figure descriptions.
 
 ## Maps
 

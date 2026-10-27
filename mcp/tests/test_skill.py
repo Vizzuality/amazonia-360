@@ -25,9 +25,11 @@ def test_frontmatter_names_the_skill_and_says_when_to_use_it() -> None:
 @pytest.mark.anyio
 async def test_the_skill_names_every_tool(tmp_path: Path) -> None:
     text = SKILL.read_text(encoding="utf-8")
+    # Registering the document tools only closes over the search; none is called.
     server = create_mcp_server(
         handlers=AreaHandlers(FakeClient()),  # type: ignore[arg-type]
         call_log=CallLog(tmp_path / "calls.jsonl"),
+        documents=object(),  # type: ignore[arg-type]
     )
     async with Client(server) as client:
         names = {t.name for t in (await client.list_tools()).tools}

@@ -22,6 +22,18 @@ def anyio_backend() -> str:
     return "asyncio"
 
 
+@pytest.fixture(autouse=True)
+def no_document_settings(
+    request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The demo exports DOCS_*; with them set, create_mcp_server would add the
+    document tools to every server a test builds. Live tests use the real services."""
+    if request.node.get_closest_marker("live"):
+        return
+    for name in [n for n in os.environ if n.startswith("DOCS_")]:
+        monkeypatch.delenv(name)
+
+
 async def _execute(url: str, *statements: str) -> None:
     engine = create_engine(url)
     async with engine.begin() as connection:
