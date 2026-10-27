@@ -70,8 +70,10 @@ one link.
 
 The results under each question were rehearsed through the search
 (`DocumentSearch.search`, what `search_documents` returns), not yet in Claude Desktop,
-and before any review, with MAAP #221 loaded. They show which passages Claude gets to
-work with.
+and before any review. Questions 1 to 4 were rehearsed on 27 October 2026 with MAAP
+#221 deleted, as on the day; the live upload and question 5 with it loaded. They show
+which passages Claude gets to work with. The scores are cosine similarities; a passage
+needs 0.35 to be returned.
 
 ## Questions 1 to 4
 
@@ -85,14 +87,15 @@ deforestation due to oil extraction is 417 hectares", with the link to the repor
 two figures are given apart, each with its source and year, never added up or compared
 as one measure.
 
-Rehearsed through the search, not yet in Claude Desktop: 8 passages, the same with and
-without `place_id=protected_area:Yasuní`. Second is MAAP #82's summary paragraph with
-the 417 hectares (169 direct, 248 indirect) and the 300-hectare referendum limit, link
-`https://www.maapprogram.org/yasuni-eng/`. Before it, a passage that is only the
-report's date. The other six are Bass et al. (2010): its introduction on oil concessions
-over the northern half of the park (page 2), the threats section on the Napo region as a
-deforestation front (page 15), and the park's other conservation values (page 13). No
-related documents: no summary is approved yet.
+Rehearsed through the search, MAAP #221 deleted, not yet in Claude Desktop: 8
+passages, the same with and without `place_id=protected_area:Yasuní`. First is a
+passage that is only the report's date (0.68). Second is MAAP #82's summary paragraph
+with the 417 hectares (169 direct, 248 indirect) and the 300-hectare referendum limit
+(0.66), link `https://www.maapprogram.org/yasuni-eng/`. The other six are Bass et al.
+(2010), 0.56 to 0.59: its introduction on oil concessions and access roads in the
+northern half of the park (page 2, three passages), the threats section on the Napo
+region as a deforestation front and on the Via Maxus (page 15, two), and the park's
+other conservation values (page 13). No related documents: no summary is approved yet.
 
 ### 2. Oil blocks in the western Amazon
 
@@ -103,11 +106,13 @@ Must show: the Finer et al. (2008) passage with the number, quoted ("There are n
 the link to page 2 of the PDF. The MCP's layers have nothing on this outside Ecuador,
 and Claude says so rather than reaching for one.
 
-Rehearsed through the search, not yet in Claude Desktop: 8 passages, all Finer et al.
-(2008). The first is the Results passage with "180 oil and gas blocks covering 688,000
-km²" (the PDF's text layer prints "~" as ","), link
+Rehearsed through the search, MAAP #221 deleted, not yet in Claude Desktop: 8
+passages, all Finer et al. (2008), 0.61 to 0.71. The first is the Results passage with
+"180 oil and gas blocks covering 688,000 km²" (the PDF's text layer prints "~" as ","),
+link
 `http://127.0.0.1:8770/files/uploads/finer-2008-western-amazon-oil-gas-plosone.pdf#page=2`.
-The Discussion passage on page 5 repeats "more than 180 oil and gas blocks".
+The Discussion passage on page 5, last of the eight, repeats "more than 180 oil and gas
+blocks".
 
 ### 3. An answer only a figure holds
 
@@ -118,11 +123,14 @@ Must show: once its description is approved, the MAAP #82 satellite image (dated
 that the answer comes from a description of a figure, with the link to the figure crop.
 The report's text does not describe the image.
 
-Rehearsed through the search, not yet in Claude Desktop, before review: the figure is
-pending review, so it is not searchable yet. 8 text passages come back: MAAP #82's date
-line and summary paragraph, and six from Bass et al. (2010) (introduction, abstract,
-species richness, conservation values). None describes the image. Run this again after
-the review: the figure passage should come first, with `origin: figure`.
+Rehearsed through the search, MAAP #221 deleted, not yet in Claude Desktop, before
+review: the figure is pending review, so it is not searchable yet. 8 text passages come
+back, 0.50 to 0.61: MAAP #82's date line and summary paragraph, and six from Bass et al.
+(2010) (introduction, citation block, species richness, conservation values). None
+describes the image. Run this again after the review: the figure passage should come
+first, with `origin: figure`. If Claude then reads the section around it with
+`get_document_section`, it gets the report's text only: figure descriptions are never
+part of a section, and the section's link is the report's, not the crop's.
 
 ### 4. Related documents, no answer
 
@@ -133,20 +141,31 @@ region (Finer et al. 2008, García-Romero et al. 2026) exist, names them with th
 links, and says that they do not measure water quality in Sucumbíos. It may quote the
 general statement it finds, saying it is general, and it does not answer from a summary.
 
-Rehearsed through the search, not yet in Claude Desktop, before review: 8 passages from
-Finer et al. (2008), García-Romero et al. (2026) and Bass et al. (2010), the same with
-`place_id=province:Sucumbios` (with the note that no topic is tied to the place and every
-document was searched). The nearest to the question is Finer et al. (2008), Introduction,
-page 1: "Direct impacts include ... contamination from oil spills and wastewater
-discharges. The technologies of the 1970s-era oil operations caused widespread
-contamination in the northern Ecuadorian [...] Amazon". That is a general statement,
-not a measurement of water quality in Sucumbíos. Among the eight, one is a table of
-oil block ids and one is the García-Romero author list. No related documents. After
-review, related documents may still not appear: the García-Romero and Finer summaries
-score 0.39 and 0.31 against this question, under `SUMMARY_MIN_SCORE` (0.50). The related list then has to
-come from a topic: a search with `topic="oil and gas"` lists every document of that
-topic with an approved summary. Whether Claude passes the topic when the question names
-the theme ("en los documentos sobre petróleo, ...") is to be checked in Claude Desktop.
+Rehearsed through the search, MAAP #221 deleted, not yet in Claude Desktop, before
+review: 8 passages from Bass et al. (2010), Finer et al. (2008) and García-Romero et al.
+(2026), 0.36 to 0.40, the same with `place_id=province:Sucumbios` (with the note that no
+topic is tied to the place and every document was searched). The nearest is Bass et al.
+(2010), page 16: oil impacts "cannot be fully controlled", and Santa Cecilia, north of
+Yasuní, "now completely deforested due to oil-related disturbance". Second is Finer et
+al. (2008), Introduction, page 1: "Direct impacts include ... contamination from oil
+spills and wastewater discharges. The technologies of the 1970s-era oil operations
+caused widespread contamination in the northern Ecuadorian [...] Amazon". Both are
+general statements, not a measurement of water quality in Sucumbíos. Among the eight,
+one is a García-Romero table of oil block ids and one is its author list. No related
+documents.
+
+The documents on oil are named here through these passages, not through
+`related_documents`: that list only holds documents none of whose passages came back,
+and Finer and García-Romero both yield passages. After review, the related list stays
+short. The García-Romero and Finer summaries scored 0.39 and 0.31 against this question,
+under `SUMMARY_MIN_SCORE` (0.50), and even if they cleared it they would be left out for
+having passages. A search with `topic="oil and gas"` returns 7 passages from Finer and
+García-Romero (MAAP #82's two score under 0.35), so its related list can hold MAAP #82
+alone, once its summary is approved. So the guard for this question is the instruction
+"answer about documents only from passages" (and say when they do not answer), not the
+related list. Check in Claude Desktop that Claude names Finer and García-Romero as
+covering oil in the region without measuring water quality, and does not answer from
+them as if they did.
 
 ## The live upload
 
@@ -210,9 +229,10 @@ For the presenter:
   its description is approved, and a document is listed as related only once its
   summary is approved. Question 3 shows nothing from the figure until then.
 - A related document comes from its summary only when the question is close to what the
-  document is about (score 0.50 or more). A question on a place a document covers but
-  on a theme it does not (water in Sucumbíos) gets no related document unless a topic is
-  used.
+  document is about (score 0.50 or more), and only when none of its passages came back.
+  A question on a place a document covers but on a theme it does not (water in
+  Sucumbíos) gets no related document; with a topic, only the topic's documents that
+  yielded no passage are listed.
 - Retrieval finds the expected passage for 32 of the 33 questions the documents answer
   (97%). The miss is a question on the size of Yasuní's Zona Intangible, asked in
   English.
