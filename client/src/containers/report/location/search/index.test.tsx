@@ -6,31 +6,39 @@ import SearchC from "./index";
 
 const mockMutate = vi.fn();
 const mockSetLocation = vi.fn();
+const mockUseGetCountryModule = vi.fn();
 
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
 }));
 
+const mockUseGetSuggestions = vi.fn(({ text }: { text: string }) => ({
+  data: text
+    ? {
+        results: [
+          { sourceIndex: 1, results: [{ text: "Acre, BRA", key: "1" }] },
+          {
+            sourceIndex: 2,
+            results: [
+              { text: "Acrelândia, Acre, BRA", key: "1" },
+              { text: "Assis Brasil, Acre, BRA", key: "2" },
+            ],
+          },
+        ],
+      }
+    : undefined,
+  isFetching: false,
+  isFetched: !!text,
+}));
+
 vi.mock("@/lib/search", () => ({
-  useGetSuggestions: ({ text }: { text: string }) => ({
-    data: text
-      ? {
-          results: [
-            { sourceIndex: 1, results: [{ text: "Acre, BRA", key: "1" }] },
-            {
-              sourceIndex: 2,
-              results: [
-                { text: "Acrelândia, Acre, BRA", key: "1" },
-                { text: "Assis Brasil, Acre, BRA", key: "2" },
-              ],
-            },
-          ],
-        }
-      : undefined,
-    isFetching: false,
-    isFetched: !!text,
-  }),
+  useGetSuggestions: (...args: Parameters<typeof mockUseGetSuggestions>) =>
+    mockUseGetSuggestions(...args),
   useGetMutationSearch: () => ({ mutate: mockMutate }),
+}));
+
+vi.mock("@/lib/country-modules", () => ({
+  useGetCountryModule: () => mockUseGetCountryModule(),
 }));
 
 vi.mock("@/lib/location", () => ({
@@ -59,6 +67,9 @@ describe("location search", () => {
   beforeEach(() => {
     mockMutate.mockReset();
     mockSetLocation.mockReset();
+    mockUseGetSuggestions.mockClear();
+    mockUseGetCountryModule.mockReset();
+    mockUseGetCountryModule.mockReturnValue(null);
   });
 
   it("groups each suggestion under the location type of its source", async () => {
@@ -80,6 +91,26 @@ describe("location search", () => {
     expect(mockMutate).toHaveBeenCalledWith(
       { key: "1", sourceIndex: 2, text: "Acrelândia, Acre, BRA" },
       expect.anything(),
+    );
+  });
+
+  it("scopes suggestions to the country module", async () => {
+    mockUseGetCountryModule.mockReturnValue({ country: "ECU" });
+
+    await openAndType("Pando");
+
+    expect(mockUseGetSuggestions).toHaveBeenLastCalledWith(
+      { text: "Pando", country: "ECU" },
+      { enabled: true },
+    );
+  });
+
+  it("leaves suggestions unscoped outside a country module", async () => {
+    await openAndType("Pando");
+
+    expect(mockUseGetSuggestions).toHaveBeenLastCalledWith(
+      { text: "Pando", country: null },
+      { enabled: true },
     );
   });
 });

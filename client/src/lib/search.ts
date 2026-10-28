@@ -11,19 +11,23 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 
+import { getFeatures } from "@/lib/query";
+import {
+  getCountrySourceOverrides,
+  getSources,
+  SearchSourceProperties,
+} from "@/lib/search-filters";
 import { omit } from "@/lib/utils";
 
+import type { CountryCode } from "@/constants/countries";
 import { DATASETS } from "@/constants/datasets";
-import { LOCATION_TYPES, LocationType } from "@/constants/search";
+import { LocationType } from "@/constants/search";
 
 if (!projectOperator.isLoaded()) {
   await projectOperator.load();
 }
 
-const SOURCES: Record<
-  LocationType,
-  __esri.LayerSearchSourceProperties | __esri.LocatorSearchSourceProperties
-> = {
+const SOURCES: Record<LocationType, SearchSourceProperties> = {
   country: {
     name: "Admin0",
     layer: new FeatureLayer(omit(DATASETS.admin0.layer, ["type"])),
@@ -109,8 +113,45 @@ const searchVM = new SearchVM({
   popupEnabled: false,
   autoSelect: false,
   includeDefaultSources: false,
-  sources: LOCATION_TYPES.map((type) => SOURCES[type]),
+  sources: getSources(SOURCES),
 });
+
+const countrySearchVMs = new Map<CountryCode, Promise<SearchVM>>();
+
+const getCountryGeometry = async (country: CountryCode) => {
+  const { features } = await getFeatures({
+    feature: DATASETS.admin0.layer,
+    query: DATASETS.admin0.getFeatures({
+      where: `GID_0 = '${country}'`,
+      outFields: ["GID_0"],
+      returnGeometry: true,
+      maxAllowableOffset: 500,
+    }),
+  });
+
+  return features[0]?.geometry ?? null;
+};
+
+const getCountrySearchVM = (country: CountryCode): Promise<SearchVM> => {
+  const cached = countrySearchVMs.get(country);
+  if (cached) return cached;
+
+  const vm = getCountryGeometry(country).then((geometry) => {
+    if (!geometry) countrySearchVMs.delete(country);
+
+    return new SearchVM({
+      popupEnabled: false,
+      autoSelect: false,
+      includeDefaultSources: false,
+      sources: getSources(SOURCES, getCountrySourceOverrides(country, geometry)),
+    });
+  });
+
+  countrySearchVMs.set(country, vm);
+  vm.catch(() => countrySearchVMs.delete(country));
+
+  return vm;
+};
 
 /**
  ************************************************************
@@ -123,20 +164,26 @@ const searchVM = new SearchVM({
 
 export type GetSuggestParams = {
   text: string;
+  country?: CountryCode | null;
 };
 export const getSuggestions = async (params: GetSuggestParams) => {
-  const { text } = params;
+  const { text, country } = params;
 
   if (!text) {
     throw new Error("text is required");
+  }
+
+  if (country) {
+    const countrySearchVM = await getCountrySearchVM(country);
+    return countrySearchVM.suggest(text);
   }
 
   return searchVM.suggest(text);
 };
 
 export const getSuggestionsQueryKey = (params: GetSuggestParams) => {
-  const { text } = params;
-  return ["arcgis", "suggest", text] as const;
+  const { text, country } = params;
+  return ["arcgis", "suggest", text, country ?? null] as const;
 };
 
 export const getSuggestionsQueryOptions = <
