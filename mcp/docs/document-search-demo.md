@@ -259,6 +259,14 @@ topic is tied to the place. Without MAAP #221 (if the live upload has not finish
 passage clears the threshold (the nearest scores 0.32) and the answer is that the
 documents do not cover it.
 
+In Claude Desktop on 28 October 2026, with MAAP #221 loaded: no mercury data in the
+module (it lists the water layers) and no relevant passage in the documents. It did not
+mention the Loyola River passage, which it judged off topic. This is the case Known limits
+describes: the passage clears the threshold, and the server instructions are what keep
+Claude from answering from it. Its closing line names Nambija and the Nangaritza River
+as where mercury studies usually come from; that is Claude's own knowledge, said to be
+outside the platform, not a source. If asked, say so.
+
 ## Known limits
 
 For the presenter:
