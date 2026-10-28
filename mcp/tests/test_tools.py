@@ -40,6 +40,7 @@ async def test_exposes_the_tools(tmp_path: Path) -> None:
         "class_shares_in_area",
         "map_area_by_category",
         "map_class_shares_in_area",
+        "compare_on_map",
     }
 
 

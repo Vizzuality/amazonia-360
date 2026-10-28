@@ -75,6 +75,7 @@ class CategoryMap:
     area: dict[str, Any]
     shapes: dict[str, Any]
     styles: dict[str, Style]
+    name: str
 
 
 @dataclass
@@ -235,7 +236,10 @@ class AreaHandlers:
         styles = await self._styles(p, renderer, categories)
         collection = {"type": "FeatureCollection", "features": shapes}
         return result, CategoryMap(
-            area=_outline(p.aoi), shapes=collection, styles=styles
+            area=_outline(p.aoi),
+            shapes=collection,
+            styles=styles,
+            name=p.indicator.name,
         )
 
     async def class_shares(

@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Compare two layers</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@6.11.2/dist/maplibre-gl.css">
+  <style>/*THEME*/</style>
+  <style>/*LEGEND*/</style>
+  <style>
+    body { display: flex; flex-direction: column; }
+    #wrap { position: relative; }
+    #map { height: 440px; }
+    body.fullscreen { height: 100vh; }
+    body.fullscreen #wrap { flex: 1; }
+    body.fullscreen #map { height: 100%; }
+    body.fullscreen #legend { max-height: 40vh; overflow: auto; }
+    #tools { position: absolute; top: 10px; right: 10px; z-index: 2; }
+    #tools button {
+      font: inherit; font-size: 12px; color: hsl(var(--foreground)); cursor: pointer;
+      background: hsl(var(--background)); border: 1px solid var(--color-blue-100);
+      border-radius: var(--radius); padding: 4px 10px;
+    }
+    #tools button:hover { background: hsl(var(--muted)); }
+    .row {
+      width: 100%; font: inherit; font-size: 12px; color: inherit; text-align: left;
+      background: none; border: 0; cursor: pointer;
+    }
+    .row:hover .name { text-decoration: underline; }
+    .row.hidden { opacity: 0.4; }
+        .total { cursor: default; font-weight: 700; }
+    .total:hover .name { text-decoration: none; }
+    .maplibregl-popup-content {
+      font-family: var(--font-sans); color: hsl(var(--popover-foreground));
+      border-radius: var(--radius); padding: 8px 12px; font-size: 12px;
+    }
+    .maplibregl-popup-content strong { display: block; font-weight: 700; }
+  </style>
+  <script>/*COMMON*/</script>
+</head>
+<body>
+  <div id="wrap">
+    <div id="map"></div>
+    <div id="tools"></div>
+  </div>
+  <div id="legend"></div>
+  <script type="module">
+    window.view = { input() {}, result() {}, fail() {} };
+  </script>
+  <script type="module">/*BRIDGE*/</script>
+</body>
+</html>

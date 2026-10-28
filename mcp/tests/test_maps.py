@@ -9,7 +9,7 @@ from mcp.types import TextResourceContents
 from shapely.geometry import Polygon
 
 from mcp_server.handlers.area import AreaHandlers
-from mcp_server.maps import CATEGORIES_URI, RASTER_URI
+from mcp_server.maps import CATEGORIES_URI, COMPARE_URI, RASTER_URI
 from mcp_server.measurement.call_log import CallLog
 from mcp_server.places import Places
 from mcp_server.server import create_mcp_server
@@ -182,3 +182,111 @@ async def test_the_map_result_stays_under_the_budget(
     assert mapped.meta["map"]["simplified"] is True
     assert "shapes" in mapped.meta["map"]
     assert len(mapped.model_dump_json(by_alias=True)) <= whole - 2000
+
+
+class ReliefMissingClient(FakeClient):
+    """The relief layer has no shapes in the area; the others do."""
+
+    async def features(self, layer: Any, aoi: Any, max_allowable_offset: float) -> Any:
+        if layer.category_field == "Relieve":
+            self.calls.append("features")
+            return []
+        return await super().features(layer, aoi, max_allowable_offset)
+
+
+COMPARE = {"left_indicator_id": 210, "right_indicator_id": 211, "area": TENA}
+
+
+@pytest.mark.anyio
+async def test_the_compare_tool_points_at_its_view(tmp_path: Path) -> None:
+    async with Client(server(tmp_path)) as client:
+        tools = {t.name: t for t in (await client.list_tools()).tools}
+        resource = await client.read_resource(COMPARE_URI)
+    assert tools["compare_on_map"].meta == {"ui": {"resourceUri": COMPARE_URI}}
+    [content] = resource.contents
+    assert isinstance(content, TextResourceContents)
+    assert "/*COMMON*/" not in content.text
+
+
+@pytest.mark.anyio
+async def test_compare_answers_what_two_area_by_category_calls_answer(
+    tmp_path: Path,
+) -> None:
+    async with Client(server(tmp_path)) as client:
+        left = await client.call_tool(
+            "area_by_category", {"indicator_id": 210, "area": TENA}
+        )
+        right = await client.call_tool(
+            "area_by_category", {"indicator_id": 211, "area": TENA}
+        )
+        compared = await client.call_tool("compare_on_map", COMPARE)
+    assert compared.structured_content is not None
+    for side, plain in (("left", left), ("right", right)):
+        assert plain.structured_content is not None
+        compared_side = compared.structured_content[side]
+        for key in ("indicator_id", "value", "aoi_ha", "coverage"):
+            assert compared_side[key] == plain.structured_content[key]
+    assert "shapes" not in compared.content[0].text  # type: ignore[union-attr]
+
+
+@pytest.mark.anyio
+async def test_compare_sends_both_layers_with_one_area_and_grid(tmp_path: Path) -> None:
+    async with Client(server(tmp_path)) as client:
+        compared = await client.call_tool("compare_on_map", COMPARE)
+    assert compared.meta is not None
+    drawn = compared.meta["map"]
+    assert set(drawn) == {"area", "grid", "left", "right"}
+    for side in ("left", "right"):
+        assert {"name", "styles", "simplified"} <= set(drawn[side])
+        assert "shapes" in drawn[side] or "shapes_omitted_bytes" in drawn[side]
+    assert all(drawn[side]["name"] for side in ("left", "right"))
+
+
+@pytest.mark.anyio
+async def test_compare_stays_under_the_budget(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from mcp_server import maps
+
+    async with Client(server(tmp_path, DetailedClient())) as client:
+        full = await client.call_tool("compare_on_map", COMPARE)
+        whole = len(full.model_dump_json(by_alias=True))
+        monkeypatch.setattr(maps, "BUDGET_BYTES", whole - 2000)
+        compared = await client.call_tool("compare_on_map", COMPARE)
+    assert compared.meta is not None
+    drawn = compared.meta["map"]
+    assert drawn["left"]["simplified"] or drawn["right"]["simplified"]
+    assert len(compared.model_dump_json(by_alias=True)) <= whole - 2000
+
+
+@pytest.mark.anyio
+async def test_the_same_indicator_twice_is_refused(tmp_path: Path) -> None:
+    client = FakeClient()
+    async with Client(server(tmp_path, client)) as mcp:
+        result = await mcp.call_tool(
+            "compare_on_map",
+            {"left_indicator_id": 210, "right_indicator_id": 210, "area": TENA},
+        )
+    assert result.is_error
+    assert "two different indicators" in result.content[0].text  # type: ignore[union-attr]
+    assert client.calls == []
+
+
+@pytest.mark.anyio
+async def test_an_indicator_without_area_by_category_is_refused(tmp_path: Path) -> None:
+    async with Client(server(tmp_path)) as client:
+        result = await client.call_tool(
+            "compare_on_map",
+            {"left_indicator_id": 210, "right_indicator_id": 129, "area": TENA},
+        )
+    assert result.is_error
+
+
+@pytest.mark.anyio
+async def test_a_side_without_shapes_is_drawn_empty(tmp_path: Path) -> None:
+    async with Client(server(tmp_path, ReliefMissingClient())) as client:
+        compared = await client.call_tool("compare_on_map", COMPARE)
+    assert not compared.is_error
+    assert compared.meta is not None
+    assert compared.meta["map"]["right"]["shapes"] == []
+    assert compared.meta["map"]["left"]["shapes"]

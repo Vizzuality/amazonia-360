@@ -85,7 +85,7 @@ async def test_session_lists_the_published_tools():
     async with server_session(server_env("r", 1, store=True)) as s:
         names = {t["function"]["name"] for t in s.tools}
         assert {"find_places", "list_places", "area_by_category"} <= names
-        assert len(names) == 10
+        assert len(names) == 11
         assert "Ecuador module" in s.instructions
         tool = next(t for t in s.tools if t["function"]["name"] == "find_places")
         assert tool["type"] == "function"

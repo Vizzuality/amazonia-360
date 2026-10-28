@@ -27,7 +27,7 @@ from mcp_server.measurement.model_run.session import MCP_DIR, system_prompt
 MODELS_PATH = MCP_DIR / "measurement" / "models.toml"
 SKILL_PATH = MCP_DIR / "skills" / "amazonia360" / "SKILL.md"
 # The front end draws every area result on its own map.
-MAP_TOOLS = {"map_area_by_category", "map_class_shares_in_area"}
+MAP_TOOLS = {"map_area_by_category", "map_class_shares_in_area", "compare_on_map"}
 CALL_TIMEOUT_S = 600.0
 
 ChatFactory = Callable[[ModelSpec, list[dict]], ChatTurn]

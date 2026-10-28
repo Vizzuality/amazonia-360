@@ -95,6 +95,7 @@ takes an `indicator_id`, and either an `area` (GeoJSON) or a `place_id`.
 | `class_shares_in_area` | Share of the area's pixels in each class of a classed raster. Fast | `tools/area.py` |
 | `area_by_category` | Hectares of each class, clipped to the area. Slow | `tools/area.py` |
 | `map_area_by_category` | The figures of `area_by_category`, with a map for the user | `maps/__init__.py` |
+| `compare_on_map` | Two layers' figures, with a swipe map for the user | `maps/__init__.py` |
 | `map_class_shares_in_area` | The shares of `class_shares_in_area`, with a map for the user | `maps/__init__.py` |
 
 Paths are under `src/mcp_server/`. `tests/test_readme.py` fails when this table and the
@@ -217,6 +218,16 @@ and ask the host to show a map next to the answer, as an
 use MapLibre from jsDelivr and OpenFreeMap tiles, and the front end's tokens and Montserrat. What
 only the page needs (clipped shapes, a raster image) travels in the result's `_meta`, not in the
 text the model reads. Hosts without MCP Apps get the figures alone.
+
+`compare_on_map` takes two module layers and one area, returns each layer's figures as
+`area_by_category` does, and draws both on one map with a divider the user drags. The
+figures are never combined; where the layers coincide is for the user to see.
+
+Every map result stays under 950,000 bytes, below Claude Desktop's 1 MB. Shapes travel
+snapped to a grid of 8,192 steps over the area, each point written as its difference
+from the previous one (`maps/encoding.py`), and are simplified only as far as needed,
+from a quarter of a pixel; a layer that still does not fit is left out and the page says
+so.
 
 ## Skill
 

@@ -7,6 +7,7 @@ model. The pages use MapLibre and the front end's look; the evaluation that led 
 docs/superpowers/evaluations/2026-09-28-mcp-map-spike.md.
 """
 
+import asyncio
 import base64
 from collections.abc import Callable
 from dataclasses import asdict
@@ -15,6 +16,7 @@ from typing import Annotated, Any
 
 import pydantic_core
 from mcp.server.mcpserver import Context, MCPServer
+from mcp.server.mcpserver.exceptions import ToolError
 from mcp.types import CallToolResult, TextContent
 from pydantic import BaseModel
 
@@ -28,6 +30,7 @@ _HERE = Path(__file__).parent
 MIME = "text/html;profile=mcp-app"
 CATEGORIES_URI = "ui://amazonia360/maps/categories.html"
 RASTER_URI = "ui://amazonia360/maps/raster.html"
+COMPARE_URI = "ui://amazonia360/maps/compare.html"
 # A light grey vector basemap with no key, close to the front end's Esri gray-vector.
 # Chosen over Esri's own style, which needs a key in the page; see the evaluation.
 _OPENFREEMAP = "https://tiles.openfreemap.org"
@@ -86,6 +89,13 @@ def _tool_result(structured: BaseModel, meta: dict[str, Any]) -> CallToolResult:
     )
 
 
+class CompareResult(BaseModel):
+    """Each layer's figures, as area_by_category returns them; never combined."""
+
+    left: Result
+    right: Result
+
+
 def shapes_room(result: CallToolResult) -> int:
     """What the shapes may take: the budget less the result built without them."""
     # The key that will hold them, with its quotes and separators.
@@ -120,7 +130,11 @@ def register_map_tools(
     handlers: AreaHandlers,
     call_log: CallLog,
 ) -> None:
-    for uri, name in ((CATEGORIES_URI, "categories"), (RASTER_URI, "raster")):
+    for uri, name in (
+        (CATEGORIES_URI, "categories"),
+        (RASTER_URI, "raster"),
+        (COMPARE_URI, "compare"),
+    ):
         server.resource(
             uri, name=f"map-{name}", mime_type=MIME, meta={"ui": {"csp": CSP}}
         )(_view(name))
@@ -190,4 +204,54 @@ def register_map_tools(
         map_class_shares_in_area,
         annotations=QUERY,
         meta={"ui": {"resourceUri": RASTER_URI}},
+    )
+
+    async def compare_on_map(
+        left_indicator_id: IndicatorId,
+        right_indicator_id: IndicatorId,
+        ctx: Context,
+        area: Area = None,
+        place_id: PlaceId = None,
+    ) -> Annotated[CallToolResult, CompareResult]:
+        """Two layers over the same area on one map shown to the user, with a divider
+        the user drags so that one layer covers the other.
+
+        Use it when the user asks to compare two layers on a map. It returns each
+        layer's figures as area_by_category does. Give them apart, each with its
+        layer: never add, subtract, divide or intersect them, since the layers come
+        from different sources and years. Where they coincide is for the user to see.
+
+        The user sees the map and you do not: never describe it or say that you cannot
+        see it. The answer still needs the figures; comment on them.
+        """
+        if left_indicator_id == right_indicator_id:
+            raise ToolError("Choose two different indicators to compare.")
+
+        def side(indicator_id: int) -> Any:
+            return logged_call(
+                call_log,
+                "compare_on_map",
+                indicator_id,
+                handlers.area_by_category_map(indicator_id, area, place_id=place_id),
+                lambda out: out[0],
+                place_id,
+                ctx,
+            )
+
+        (left, left_map), (right, right_map) = await asyncio.gather(
+            side(left_indicator_id), side(right_indicator_id)
+        )
+        result = CompareResult(left=left, right=right)
+        meta: dict[str, Any] = {
+            "area": left_map.area,
+            "left": {"name": left_map.name, "styles": left_map.styles},
+            "right": {"name": right_map.name, "styles": right_map.styles},
+        }
+        shapes = {"left": left_map.shapes, "right": right_map.shapes}
+        return _tool_result(result, fitted_meta(result, meta, shapes))
+
+    server.add_tool(
+        compare_on_map,
+        annotations=QUERY,
+        meta={"ui": {"resourceUri": COMPARE_URI}},
     )
