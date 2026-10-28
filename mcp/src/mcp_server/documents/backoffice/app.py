@@ -527,6 +527,7 @@ class _Handlers:
 
     async def bulk_review(
         self,
+        request: Request,
         document_id: str,
         bucket: FormText = "",
         action: FormText = "",
@@ -542,8 +543,15 @@ class _Handlers:
         grouped = by_bucket(await self.store.list_figures(document.id))
         chosen = [f for f in grouped[bucket] if f.figure_id in shown]
         status = "approved" if action == "approve" else "discarded"
+        # Each card's textarea comes along, so edits not yet sent are kept.
+        form = await request.form()
+        edits = dict(
+            zip(form.getlist("figure_id"), form.getlist("description"), strict=False)
+        )
         for figure in chosen:
-            await self.store.review(document.id, figure.figure_id, None, status)
+            edit = edits.get(figure.figure_id)
+            text = edit if isinstance(edit, str) and edit.strip() else None
+            await self.store.review(document.id, figure.figure_id, text, status)
         if status == "approved" and chosen:
             await self.store.enqueue("index_figures", document.id)
         return _redirect(f"/documents/{document.id}/figures?bucket={bucket}")

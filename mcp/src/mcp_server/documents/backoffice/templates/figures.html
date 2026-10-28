@@ -14,8 +14,10 @@
 {% set shown = figures | map(attribute="figure_id") | join(",") %}
 <div class="bulk">
   <button hx-post="/documents/{{ d.id }}/figures/bulk" hx-vals='{"bucket": "{{ bucket }}", "action": "approve", "figure_ids": "{{ shown }}"}'
+          hx-include=".figure-card form"
           hx-confirm="Approve all {{ figures | length }} figures in {{ labels[bucket] }}?">Approve all {{ figures | length }}</button>
   <button class="danger" hx-post="/documents/{{ d.id }}/figures/bulk" hx-vals='{"bucket": "{{ bucket }}", "action": "discard", "figure_ids": "{{ shown }}"}'
+          hx-include=".figure-card form"
           hx-confirm="Discard all {{ figures | length }} figures in {{ labels[bucket] }}?">Discard all {{ figures | length }}</button>
 </div>
 {% endif %}

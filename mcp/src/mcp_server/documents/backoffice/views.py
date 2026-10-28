@@ -29,7 +29,10 @@ BUCKET_LABELS = {
     "discarded": "Discarded",
 }
 BUCKET_HELP = {
-    "needs_review": "Start here: the document's text does not already say this.",
+    "needs_review": (
+        "Approve or discard these first: the document's text does not say what "
+        "these figures show, so search can only find it through their descriptions."
+    ),
     "covered": "The section text already says most of what these descriptions say.",
     "small": "Small crops, mostly logos and icons: the model's weakest.",
     "undescribed": "The vision model has not described these yet.",

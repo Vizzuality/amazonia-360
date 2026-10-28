@@ -7,6 +7,7 @@
     {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
     <p class="section">{{ f.section_path or "No section" }}{% if f.page %}, page {{ f.page }}{% endif %}</p>
     {% if f.ocr_text %}<p class="ocr"><span class="quiet">Text found in the figure:</span> {{ f.ocr_text }}</p>{% endif %}
+    <input type="hidden" name="figure_id" value="{{ f.figure_id }}">
     <textarea name="description" rows="6" aria-label="Description">{{ f.final_description }}</textarea>
     <div class="actions">
       <button type="submit" name="action" value="approve">Approve</button>

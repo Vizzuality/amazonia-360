@@ -180,6 +180,31 @@ async def test_bulk_on_a_final_or_undescribed_bucket_is_refused(
     assert response.status_code == 400
 
 
+async def test_bulk_approve_keeps_unsent_edits(with_figures: Backoffice) -> None:
+    bo = with_figures
+    await bo.client.post(
+        f"{URL}/bulk",
+        data={
+            "bucket": "needs_review",
+            "action": "approve",
+            "figure_ids": "big,big2",
+            "figure_id": ["big", "big2"],
+            "description": ["Oil block 31", "  "],
+        },
+    )
+    big = await bo.store.get_figure(NAPO, "big")
+    big2 = await bo.store.get_figure(NAPO, "big2")
+    assert big is not None and big2 is not None
+    assert big.final_description == "Oil block 31"
+    assert big2.final_description == "Ring of oil platforms"
+
+
+async def test_figure_cards_name_their_figure(with_figures: Backoffice) -> None:
+    page = (await with_figures.client.get(URL)).text
+    assert 'name="figure_id" value="big"' in page
+    assert 'hx-include=".figure-card form"' in page
+
+
 async def test_bulk_acts_only_on_the_figures_that_were_shown(
     with_figures: Backoffice,
 ) -> None:
