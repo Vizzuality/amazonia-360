@@ -49,7 +49,7 @@ async def test_all_documents_lists_every_document(bo: Backoffice) -> None:
     html = (await bo.client.get("/")).text
     assert "Forest loss in the Napo basin" in html
     assert "Oil and gas in the western Amazon" in html
-    assert "Indexed, 12 passages" in html
+    assert "Text: searchable, 12 passages" in html
     assert 'class="led indexed"' in html
 
 
@@ -230,8 +230,18 @@ async def test_rows_count_figures_by_review_state(bo: Backoffice) -> None:
     await bo.add_figures(NAPO, [figure(f, bo) for f in ("a", "b", "c")])
     await bo.store.review(NAPO, "a", None, "approved")
     html = (await bo.client.get("/document-rows")).text
-    assert "1 approved, 2 to review, 0 discarded" in html
+    assert "Figures: 1 searchable, 2 waiting for review" in html
     assert f'href="/documents/{NAPO}/figures"' in html
+
+
+async def test_rows_say_what_is_searchable(bo: Backoffice) -> None:
+    await bo.add_pdf()
+    html = (await bo.client.get("/document-rows")).text
+    assert "Text: searchable" in html
+    assert "Summary: not written yet" in html
+    await bo.store.set_summary(NAPO, "Oil roads in Yasuní.", "pending_review")
+    html = (await bo.client.get("/document-rows")).text
+    assert "Summary: waiting for review" in html
 
 
 async def test_rerun_a_pdf_ingests_the_stored_file(bo: Backoffice) -> None:

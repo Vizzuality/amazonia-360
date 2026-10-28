@@ -29,7 +29,7 @@ async def test_page_groups_passages_by_section_with_page_links(
     assert "Roads along the Napo river cleared forest." in html
     assert f'href="http://127.0.0.1:8770/files/uploads/{NAPO}.pdf#page=2"' in html
     assert f'href="http://127.0.0.1:8770/files/uploads/{NAPO}.pdf">Open' in html
-    assert "PDF, Indexed, 2 passages" in html
+    assert "Text: searchable, 2 passages" in html
     assert "Bass et al. (2010)" in html
 
 

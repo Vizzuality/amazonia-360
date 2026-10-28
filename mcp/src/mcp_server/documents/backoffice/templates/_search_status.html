@@ -1,0 +1,14 @@
+{# What a question can reach right now: text needs no review, figures and summary do. #}
+{% set d = row.document %}
+<ul class="search-status">
+  <li><span class="led {{ 'indexed' if d.status == 'indexed' else ('error' if d.status == 'error' else 'processing') }}"></span>
+    {% if d.status == "indexed" %}Text: searchable, {{ d.chunk_count }} passages
+    {% elif d.status == "error" %}Text: not searchable, indexing failed
+    {% else %}Text: not searchable yet, indexing{% endif %}</li>
+  {% if row.has_figures %}
+  <li><span class="led {{ 'review' if row.to_review else ('indexed' if row.approved else '') }}"></span>
+    <a href="/documents/{{ d.id }}/figures">Figures: {{ row.approved }} searchable{% if row.to_review %}, {{ row.to_review }} waiting for review{% endif %}{% if row.discarded %}, {{ row.discarded }} discarded{% endif %}</a></li>
+  {% endif %}
+  <li><span class="led {{ {'approved': 'indexed', 'pending_review': 'review'}.get(d.summary_status, '') }}"></span>
+    <a href="/documents/{{ d.id }}#summary">Summary: {{ {'approved': 'approved, used for related documents', 'pending_review': 'waiting for review'}.get(d.summary_status, 'not written yet') }}</a></li>
+</ul>

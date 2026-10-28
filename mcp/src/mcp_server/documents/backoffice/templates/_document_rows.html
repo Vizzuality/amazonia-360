@@ -9,12 +9,8 @@
       <span class="led {{ d.status }}" title="{{ d.status }}"></span>
       <div>
         <h3><a class="document-title" href="/documents/{{ d.id }}">{{ d.title or d.origin }}</a></h3>
-        <p class="quiet">
-          {% if d.authors_year %}{{ d.authors_year }}. {% endif %}{{ type_labels[d.type] }}, {{ d.status | capitalize }}, {{ d.chunk_count }} passages
-          {% if row.has_figures %}
-          <br><a href="/documents/{{ d.id }}/figures">Figures: {{ row.approved }} approved, {{ row.to_review }} to review, {{ row.discarded }} discarded</a>
-          {% endif %}
-        </p>
+        <p class="quiet">{% if d.authors_year %}{{ d.authors_year }}. {% endif %}{{ type_labels[d.type] }}</p>
+        {% include "_search_status.html" %}
         {% if row.job_text %}<p class="job"><span class="led running"></span> {{ row.job_text }}</p>{% endif %}
         {% for message in row.errors %}<p class="error">{{ message }}</p>{% endfor %}
       </div>

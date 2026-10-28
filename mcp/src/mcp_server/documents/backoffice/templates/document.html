@@ -5,13 +5,11 @@
 <h1>{{ d.title or d.origin }}</h1>
 <p class="quiet">
   {% if d.authors_year %}{{ d.authors_year }}<br>{% endif %}
-  {{ type_labels[d.type] }}, {{ d.status | capitalize }}, {{ d.chunk_count }} passages
+  {{ type_labels[d.type] }}
   {% if d.topic_ids %}<br>Topics: {% for t in topics if t.id in d.topic_ids %}<a href="/?topic={{ t.id }}">{{ t.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}
   {% if original %}<br><a href="{{ original }}">Open the original</a>{% endif %}
-  {% if row.has_figures %}
-  <br><a href="/documents/{{ d.id }}/figures">Figures: {{ row.approved }} approved, {{ row.to_review }} to review, {{ row.discarded }} discarded</a>
-  {% endif %}
 </p>
+{% include "_search_status.html" %}
 {% if row.job_text %}<p class="job"><span class="led running"></span> {{ row.job_text }}</p>{% endif %}
 {% for message in row.errors %}<p class="error">{{ message }}</p>{% endfor %}
 <div id="document-notice"></div>

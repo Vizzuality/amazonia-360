@@ -162,6 +162,9 @@ details.edit[open] summary { margin-bottom: .75rem; }
 .led.indexed, .led.done { background: var(--led-green); box-shadow: 0 0 6px var(--led-green); }
 .led.processing, .led.running, .led.queued { background: var(--led-amber); box-shadow: 0 0 6px var(--led-amber); }
 .led.error { background: var(--led-red); box-shadow: 0 0 6px var(--led-red); }
+.led.review { background: var(--led-amber); }
+.search-status { list-style: none; margin: .35rem 0 0; padding: 0; font-size: .9rem; }
+.search-status li { display: flex; gap: .5rem; align-items: baseline; }
 @media (prefers-reduced-motion: no-preference) {
   .led.processing, .led.running { animation: blink 1.2s ease-in-out infinite; }
 }
