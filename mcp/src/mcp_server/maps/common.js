@@ -52,10 +52,10 @@ window.map360 = (() => {
   };
   // Fetched from the moment the page loads, so it is ready when the area arrives.
   const library = import(MAPLIBRE);
-  const createMap = async (area, padding) => {
+  const createMap = async (area, padding, container = "map") => {
     const maplibregl = await library;
     const map = new maplibregl.Map({
-      container: "map",
+      container,
       style: BASEMAP,
       bounds: bounds(area),
       fitBoundsOptions: { padding },

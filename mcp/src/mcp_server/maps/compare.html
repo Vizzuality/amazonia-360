@@ -8,43 +8,349 @@
   <style>/*LEGEND*/</style>
   <style>
     body { display: flex; flex-direction: column; }
-    #wrap { position: relative; }
-    #map { height: 440px; }
+    #wrap { position: relative; height: 440px; overflow: hidden; }
+    #map-left, #map-right { position: absolute; inset: 0; }
     body.fullscreen { height: 100vh; }
-    body.fullscreen #wrap { flex: 1; }
-    body.fullscreen #map { height: 100%; }
+    body.fullscreen #wrap { flex: 1; height: auto; }
     body.fullscreen #legend { max-height: 40vh; overflow: auto; }
-    #tools { position: absolute; top: 10px; right: 10px; z-index: 2; }
+    #tools { position: absolute; top: 10px; right: 10px; z-index: 3; }
     #tools button {
       font: inherit; font-size: 12px; color: hsl(var(--foreground)); cursor: pointer;
       background: hsl(var(--background)); border: 1px solid var(--color-blue-100);
       border-radius: var(--radius); padding: 4px 10px;
     }
     #tools button:hover { background: hsl(var(--muted)); }
+    .label {
+      position: absolute; bottom: 34px; z-index: 2; box-sizing: border-box;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      font-size: 12px; font-weight: 700; padding: 2px 8px; pointer-events: none;
+      background: hsl(var(--background) / 0.9); border: 1px solid var(--color-blue-100);
+      border-radius: var(--radius);
+    }
+    #label-left { left: 10px; }
+    #label-right { right: 10px; text-align: right; }
+    #divider {
+      position: absolute; top: 0; bottom: 0; z-index: 2; width: 2px; margin-left: -1px;
+      background: hsl(var(--background)); box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+      cursor: ew-resize; touch-action: none;
+    }
+    #divider:focus-visible { outline: 2px solid var(--color-cyan-500); outline-offset: 2px; }
+    #handle {
+      position: absolute; top: 50%; left: 50%; width: 28px; height: 28px;
+      transform: translate(-50%, -50%); border-radius: 50%;
+      background: hsl(var(--background)); border: 1px solid var(--color-blue-100);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; color: hsl(var(--primary));
+    }
+    #legend { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 520px) { #legend { grid-template-columns: 1fr; } }
     .row {
       width: 100%; font: inherit; font-size: 12px; color: inherit; text-align: left;
       background: none; border: 0; cursor: pointer;
     }
     .row:hover .name { text-decoration: underline; }
     .row.hidden { opacity: 0.4; }
-        .total { cursor: default; font-weight: 700; }
+    .total { cursor: default; font-weight: 700; }
     .total:hover .name { text-decoration: none; }
     .maplibregl-popup-content {
       font-family: var(--font-sans); color: hsl(var(--popover-foreground));
       border-radius: var(--radius); padding: 8px 12px; font-size: 12px;
     }
     .maplibregl-popup-content strong { display: block; font-weight: 700; }
+    .maplibregl-popup-content .layer { display: block; color: hsl(var(--muted-foreground)); }
   </style>
   <script>/*COMMON*/</script>
 </head>
 <body>
   <div id="wrap">
-    <div id="map"></div>
+    <div id="map-left"></div>
+    <div id="map-right"></div>
+    <div id="label-left" class="label"></div>
+    <div id="label-right" class="label"></div>
+    <div id="divider" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+      <div id="handle" aria-hidden="true">⇔</div>
+    </div>
     <div id="tools"></div>
   </div>
   <div id="legend"></div>
   <script type="module">
-    window.view = { input() {}, result() {}, fail() {} };
+    const { translator, esc, number, ha, pct, swatch, ringSwatch, notesHtml, createMap, drawOnce, decodeShapes } =
+      window.map360;
+    const t = translator({
+      en: {
+        title: "Hectares by class",
+        area: "Area",
+        toggle: "Show or hide on the map",
+        divider: "Drag to compare {left} and {right}",
+        ha: "{ha} ha",
+        popup: "{ha} ha in the area",
+        popupShare: "{ha} ha in the area · {share} of the area",
+        unclassified: "{ha} ha of the area inside the module have no class in this layer. They are not a class of their own.",
+        notMapped: "This layer does not map this part of the module.",
+        palette: "Some colours are not the layer's own: its style does not give one colour per class.",
+        noShapes: "The host did not pass the shapes to the map; the figures above are complete.",
+        tooLarge: "The shapes are too large to draw here ({size} MB); the figures above are complete. A smaller area draws.",
+        simplified: "Shapes simplified to fit; the figures above are exact.",
+        fullscreen: "Full screen",
+        exitFullscreen: "Exit full screen",
+      },
+      es: {
+        title: "Hectáreas por clase",
+        area: "Área",
+        toggle: "Mostrar u ocultar en el mapa",
+        divider: "Arrastra para comparar {left} y {right}",
+        ha: "{ha} ha",
+        popup: "{ha} ha en el área",
+        popupShare: "{ha} ha en el área · {share} del área",
+        unclassified: "{ha} ha del área dentro del módulo no tienen clase en esta capa. No son una clase propia.",
+        notMapped: "Esta capa no cartografía esta parte del módulo.",
+        palette: "Algunos colores no son los de la capa: su estilo no da un color por clase.",
+        noShapes: "El host no pasó los polígonos al mapa; las cifras de arriba están completas.",
+        tooLarge: "Los polígonos son demasiado grandes para dibujarlos aquí ({size} MB); las cifras de arriba están completas. Un área más pequeña sí se dibuja.",
+        simplified: "Polígonos simplificados para caber; las cifras de arriba son exactas.",
+        fullscreen: "Pantalla completa",
+        exitFullscreen: "Salir de pantalla completa",
+      },
+    });
+    const AREA = "#009ade"; // The front end's POLYGON_SYMBOL.
+    const HOVER = "#009aff"; // The front end's highlight colour.
+    const SIDES = ["left", "right"];
+    const legend = document.getElementById("legend");
+    const divider = document.getElementById("divider");
+    const rightBox = document.getElementById("map-right");
+    legend.textContent = t("waiting");
+
+    const blank = () => ({ map: null, result: null, shapes: null, styles: null, omitted: null, simplified: false, name: "", hidden: new Set() });
+    const state = { left: blank(), right: blank(), error: null, position: 50 };
+    let resolveMaps;
+    const mapsReady = new Promise((r) => { resolveMaps = r; });
+
+    // The divider: the right map shows only to its right.
+    function place(position) {
+      state.position = Math.min(100, Math.max(0, position));
+      divider.style.left = `${state.position}%`;
+      rightBox.style.clipPath = `inset(0 0 0 ${state.position}%)`;
+      // Each label stays on its own side of the divider.
+      document.getElementById("label-left").style.maxWidth = `calc(${state.position}% - 24px)`;
+      document.getElementById("label-right").style.maxWidth = `calc(${100 - state.position}% - 24px)`;
+      divider.setAttribute("aria-valuenow", String(Math.round(state.position)));
+    }
+    place(50);
+    divider.addEventListener("pointerdown", (e) => {
+      divider.setPointerCapture(e.pointerId);
+      const box = document.getElementById("wrap").getBoundingClientRect();
+      const move = (ev) => place(((ev.clientX - box.left) / box.width) * 100);
+      const stop = () => {
+        divider.removeEventListener("pointermove", move);
+        divider.removeEventListener("pointerup", stop);
+        divider.removeEventListener("pointercancel", stop);
+      };
+      divider.addEventListener("pointermove", move);
+      divider.addEventListener("pointerup", stop);
+      divider.addEventListener("pointercancel", stop);
+      e.preventDefault();
+    });
+    divider.addEventListener("keydown", (e) => {
+      const step = { ArrowLeft: -5, ArrowRight: 5, Home: -100, End: 100 }[e.key];
+      if (step === undefined) return;
+      place(state.position + step);
+      e.preventDefault();
+    });
+
+    const byCategory = (side, key, fallback) => {
+      const pairs = Object.entries(state[side].styles || {}).flatMap(([c, s]) => [c, s[key]]);
+      return pairs.length ? ["match", ["get", "category"], ...pairs, fallback] : fallback;
+    };
+
+    function applyFilter(side) {
+      const s = state[side];
+      const visible = ["!", ["in", ["get", "category"], ["literal", [...s.hidden]]]];
+      for (const id of ["shapes-fill", "shapes-line", "shapes-hover"]) s.map.setFilter(id, visible);
+    }
+
+    function paintShapes(side) {
+      const { map, shapes, styles } = state[side];
+      if (!map || !shapes || !styles) return;
+      map.getSource("shapes").setData(shapes);
+      map.setPaintProperty("shapes-fill", "fill-color", byCategory(side, "fill", "#999"));
+      map.setPaintProperty("shapes-line", "line-color", byCategory(side, "outline", "rgba(0,0,0,0.25)"));
+      map.setPaintProperty("shapes-line", "line-width", byCategory(side, "outline_width", 0.5));
+    }
+
+    function sideLegend(side) {
+      const s = state[side];
+      const r = s.result;
+      if (!r) return "";
+      const rows = Object.entries(r.value).sort((a, b) => b[1] - a[1]);
+      const notes = [];
+      if (r.unclassified_ha > 0) notes.push(t("unclassified", { ha: ha(r.unclassified_ha) }));
+      if (r.layer?.empty_result === "not_mapped_here") notes.push(t("notMapped"));
+      if (r.coverage?.outside_ha > 0) notes.push(t("outside", { ha: ha(r.coverage.outside_ha) }));
+      if (s.styles && Object.values(s.styles).some((x) => !x.from_layer)) notes.push(t("palette"));
+      if (s.omitted) notes.push(t("tooLarge", { size: number(s.omitted / 1e6, { maximumFractionDigits: 1 }) }));
+      else if (!s.shapes) notes.push(t("noShapes"));
+      else if (s.simplified) notes.push(t("simplified"));
+      // Written by a person in the CMS, in the language they wrote it in.
+      for (const c of r.caveats || []) notes.push(c);
+      return `<div class="side" data-side="${side}">
+        <h2>${esc(s.name)}</h2>
+        ${rows.map(([c, n]) => `<button class="row${s.hidden.has(c) ? " hidden" : ""}" data-category="${esc(c)}" title="${esc(t("toggle"))}">${swatch(s.styles?.[c]?.swatch)}<span class="name">${esc(c)}</span><span class="figure">${esc(t("ha", { ha: ha(n) }))}</span></button>`).join("")}
+        <div class="row total">${ringSwatch(AREA, 1.5)}<span class="name">${esc(t("area"))}</span><span class="figure">${esc(t("ha", { ha: ha(r.aoi_ha) }))}</span></div>
+        ${notesHtml(notes)}
+      </div>`;
+    }
+
+    function renderLegend() {
+      if (state.error) {
+        legend.innerHTML = `<p class="note">${esc(state.error)}</p>`;
+        return;
+      }
+      if (!state.left.result) return;
+      legend.innerHTML = SIDES.map(sideLegend).join("");
+      legend.querySelectorAll(".side").forEach((box) => {
+        const side = box.dataset.side;
+        box.querySelectorAll("button.row").forEach((row) => row.addEventListener("click", () => {
+          const c = row.dataset.category;
+          const hidden = state[side].hidden;
+          hidden.has(c) ? hidden.delete(c) : hidden.add(c);
+          row.classList.toggle("hidden");
+          if (state[side].map) applyFilter(side);
+        }));
+      });
+      document.getElementById("label-left").textContent = state.left.name;
+      document.getElementById("label-right").textContent = state.right.name;
+      divider.setAttribute("aria-label", t("divider", { left: state.left.name, right: state.right.name }));
+    }
+
+    function addFullscreen() {
+      const app = window.app;
+      const modes = app?.getHostContext?.()?.availableDisplayModes || [];
+      if (!modes.includes("fullscreen")) return;
+      const button = document.createElement("button");
+      const sync = (mode) => {
+        document.body.classList.toggle("fullscreen", mode === "fullscreen");
+        button.textContent = t(mode === "fullscreen" ? "exitFullscreen" : "fullscreen");
+        for (const side of SIDES) state[side].map?.resize();
+      };
+      button.addEventListener("click", async () => {
+        const next = document.body.classList.contains("fullscreen") ? "inline" : "fullscreen";
+        const { mode } = await app.requestDisplayMode({ mode: next });
+        sync(mode);
+      });
+      app.onhostcontextchanged = (ctx) => { if (ctx.displayMode) sync(ctx.displayMode); };
+      sync(app.getHostContext()?.displayMode || "inline");
+      document.getElementById("tools").appendChild(button);
+    }
+
+    function addInteraction(maplibregl, side) {
+      const map = state[side].map;
+      let hovered = null;
+      map.on("mousemove", "shapes-fill", (e) => {
+        map.getCanvas().style.cursor = "pointer";
+        const id = e.features[0]?.id;
+        if (hovered !== null && hovered !== id) map.setFeatureState({ source: "shapes", id: hovered }, { hover: false });
+        hovered = id ?? null;
+        if (hovered !== null) map.setFeatureState({ source: "shapes", id: hovered }, { hover: true });
+      });
+      map.on("mouseleave", "shapes-fill", () => {
+        map.getCanvas().style.cursor = "";
+        if (hovered !== null) map.setFeatureState({ source: "shapes", id: hovered }, { hover: false });
+        hovered = null;
+      });
+      // The right map is clipped, so a click lands on the map of its side of the divider.
+      map.on("click", "shapes-fill", (e) => {
+        const c = e.features[0]?.properties?.category;
+        const r = state[side].result;
+        if (!c) return;
+        const n = r?.value?.[c];
+        const text = n == null ? "" : r?.aoi_ha
+          ? t("popupShare", { ha: ha(n), share: pct(n / r.aoi_ha) })
+          : t("popup", { ha: ha(n) });
+        new maplibregl.Popup({ closeButton: false, maxWidth: "280px" })
+          .setLngLat(e.lngLat)
+          .setHTML(`<strong>${esc(c)}</strong>${esc(text)}<span class="layer">${esc(state[side].name)}</span>`)
+          .addTo(map);
+      });
+    }
+
+    function addLayers(map, area) {
+      map.addSource("area", { type: "geojson", data: { type: "Feature", geometry: area, properties: {} } });
+      map.addSource("shapes", { type: "geojson", data: { type: "FeatureCollection", features: [] }, generateId: true });
+      map.addLayer({ id: "area-fill", type: "fill", source: "area", paint: { "fill-color": AREA, "fill-opacity": 0.13 } });
+      map.addLayer({ id: "shapes-fill", type: "fill", source: "shapes", paint: { "fill-color": "#999" } });
+      map.addLayer({ id: "shapes-line", type: "line", source: "shapes", paint: {} });
+      map.addLayer({
+        id: "shapes-hover", type: "line", source: "shapes",
+        paint: { "line-color": HOVER, "line-width": ["case", ["boolean", ["feature-state", "hover"], false], 2.5, 0] },
+      });
+      map.addLayer({ id: "area-line", type: "line", source: "area", paint: { "line-color": AREA, "line-width": 1.5 } });
+    }
+
+    // Moving either map moves the other to the same view.
+    function syncMaps(a, b) {
+      let busy = false;
+      const follow = (from, to) => from.on("move", () => {
+        if (busy) return;
+        busy = true;
+        to.jumpTo({ center: from.getCenter(), zoom: from.getZoom(), bearing: from.getBearing(), pitch: from.getPitch() });
+        busy = false;
+      });
+      follow(a, b);
+      follow(b, a);
+    }
+
+    async function draw(area) {
+      const [left, right] = await Promise.all([
+        createMap(area, 30, "map-left"),
+        createMap(area, 30, "map-right"),
+      ]);
+      state.left.map = left.map;
+      state.right.map = right.map;
+      syncMaps(left.map, right.map);
+      const loaded = (map) => new Promise((r) => map.once("load", r));
+      await Promise.all([loaded(left.map), loaded(right.map)]);
+      for (const [side, { maplibregl, map }] of [["left", left], ["right", right]]) {
+        addLayers(map, area);
+        addInteraction(maplibregl, side);
+      }
+      addFullscreen();
+      resolveMaps();
+    }
+
+    const drawArea = drawOnce(draw);
+
+    window.view = {
+      input(args) {
+        drawArea(args.area);
+      },
+      async result(result) {
+        const drawn = result._meta?.map;
+        drawArea(drawn?.area);
+        if (result.isError) {
+          state.error = result.content?.[0]?.text || t("failed", { message: "" });
+          renderLegend();
+          return;
+        }
+        for (const side of SIDES) {
+          const s = state[side];
+          const layer = drawn?.[side] || {};
+          s.result = result.structuredContent?.[side] || null;
+          s.shapes = layer.shapes && drawn?.grid ? decodeShapes(layer.shapes, drawn.grid) : null;
+          s.styles = layer.styles || null;
+          s.omitted = layer.shapes_omitted_bytes || null;
+          s.simplified = Boolean(layer.simplified);
+          s.name = layer.name || "";
+        }
+        renderLegend();
+        await mapsReady;
+        for (const side of SIDES) paintShapes(side);
+      },
+      fail(message) {
+        state.error = t("failed", { message });
+        renderLegend();
+      },
+    };
   </script>
   <script type="module">/*BRIDGE*/</script>
 </body>
