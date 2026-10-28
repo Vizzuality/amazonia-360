@@ -1,10 +1,12 @@
 import base64
+import math
 from pathlib import Path
 from typing import Any
 
 import pytest
 from mcp import Client
 from mcp.types import TextResourceContents
+from shapely.geometry import Polygon
 
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.maps import CATEGORIES_URI, RASTER_URI
@@ -22,10 +24,26 @@ VIEWS = {
 }
 
 
-def server(tmp_path: Path) -> Any:
+class DetailedClient(FakeClient):
+    """One forest patch with many vertices, which simplifying can shrink."""
+
+    async def features(self, layer: Any, aoi: Any, max_allowable_offset: float) -> Any:
+        self.calls.append("features")
+        turn = 2 * math.pi / 4000
+        ring = [
+            (
+                -77.85 + 0.04 * (1 + 0.002 * (i % 7)) * math.cos(turn * i),
+                -1.05 + 0.04 * (1 + 0.002 * (i % 5)) * math.sin(turn * i),
+            )
+            for i in range(4000)
+        ]
+        return [("Bosque", Polygon(ring))]
+
+
+def server(tmp_path: Path, client: FakeClient | None = None) -> Any:
     places = Places(SNAPSHOT)
     return create_mcp_server(
-        handlers=AreaHandlers(FakeClient(), places=places),  # type: ignore[arg-type]
+        handlers=AreaHandlers(client or FakeClient(), places=places),  # type: ignore[arg-type]
         call_log=CallLog(tmp_path / "calls.jsonl"),
         places=places,
     )
@@ -79,7 +97,7 @@ async def test_the_map_tool_answers_what_area_by_category_answers(
     assert "shapes" not in mapped.content[0].text  # type: ignore[union-attr]
     assert mapped.meta is not None
     drawn = mapped.meta["map"]
-    assert drawn["shapes"]["type"] == "FeatureCollection"
+    assert [item["c"] for item in drawn["shapes"]] == ["Bosque"]
     assert set(drawn["styles"]) == {"Bosque"}
     logged = (tmp_path / "calls.jsonl").read_text()
     assert '"tool": "map_area_by_category"' in logged
@@ -116,24 +134,51 @@ async def test_the_map_gets_the_area_of_a_place(tmp_path: Path) -> None:
 
 
 @pytest.mark.anyio
-async def test_shapes_are_left_out_when_they_and_the_area_pass_the_budget(
+async def test_shapes_are_left_out_when_they_cannot_fit_the_budget(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    import pydantic_core
-
     from mcp_server import maps
 
     args = {"indicator_id": 210, "area": TENA}
+    monkeypatch.setattr(maps, "BUDGET_BYTES", 100)
     async with Client(server(tmp_path)) as client:
-        full = await client.call_tool("map_area_by_category", args)
-        assert full.meta is not None
-        shapes = len(pydantic_core.to_json(full.meta["map"]["shapes"]))
-        # Room for the shapes alone, not for the shapes and the area.
-        monkeypatch.setattr(maps, "MAX_SHAPES_BYTES", shapes + 1)
         mapped = await client.call_tool("map_area_by_category", args)
     assert mapped.meta is not None
     drawn = mapped.meta["map"]
     assert "shapes" not in drawn
-    assert drawn["shapes_omitted_bytes"] == shapes
+    assert drawn["shapes_omitted_bytes"] > 0
     # The legend still has its colours.
     assert set(drawn["styles"]) == {"Bosque"}
+
+
+@pytest.mark.anyio
+async def test_the_map_sends_encoded_shapes_and_their_grid(tmp_path: Path) -> None:
+    async with Client(server(tmp_path)) as client:
+        mapped = await client.call_tool(
+            "map_area_by_category", {"indicator_id": 210, "area": TENA}
+        )
+    assert mapped.meta is not None
+    drawn = mapped.meta["map"]
+    assert set(drawn["grid"]) == {"x0", "y0", "step"}
+    assert set(drawn["shapes"][0]) == {"c", "p"}
+    assert drawn["simplified"] is False
+
+
+@pytest.mark.anyio
+async def test_the_map_result_stays_under_the_budget(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from mcp_server import maps
+
+    args = {"indicator_id": 210, "area": TENA}
+    async with Client(server(tmp_path, DetailedClient())) as client:
+        full = await client.call_tool("map_area_by_category", args)
+        whole = len(full.model_dump_json(by_alias=True))
+        # Short of what the first tolerance needs, by more than the few bytes the
+        # client's copy of a result adds to the server's.
+        monkeypatch.setattr(maps, "BUDGET_BYTES", whole - 2000)
+        mapped = await client.call_tool("map_area_by_category", args)
+    assert mapped.meta is not None
+    assert mapped.meta["map"]["simplified"] is True
+    assert "shapes" in mapped.meta["map"]
+    assert len(mapped.model_dump_json(by_alias=True)) <= whole - 2000

@@ -20,6 +20,7 @@ from pydantic import BaseModel
 
 from mcp_server.handlers.area import AreaHandlers
 from mcp_server.handlers.result import Result
+from mcp_server.maps.encoding import BUDGET_BYTES, fit, grid_for, side_of
 from mcp_server.measurement.call_log import CallLog
 from mcp_server.tools.area import QUERY, Area, IndicatorId, PlaceId, logged_call
 
@@ -31,9 +32,6 @@ RASTER_URI = "ui://amazonia360/maps/raster.html"
 # Chosen over Esri's own style, which needs a key in the page; see the evaluation.
 _OPENFREEMAP = "https://tiles.openfreemap.org"
 _JSDELIVR = "https://cdn.jsdelivr.net"
-# About 50 times a 20 km box on the densest layer tried (82 KB on 214). Past it the
-# page shows the figures and says the shapes were left out.
-MAX_SHAPES_BYTES = 4_000_000
 CSP = {
     "resourceDomains": [_JSDELIVR, _OPENFREEMAP],
     "connectDomains": [_JSDELIVR, _OPENFREEMAP],
@@ -88,6 +86,35 @@ def _tool_result(structured: BaseModel, meta: dict[str, Any]) -> CallToolResult:
     )
 
 
+def shapes_room(result: CallToolResult) -> int:
+    """What the shapes may take: the budget less the result built without them."""
+    # The key that will hold them, with its quotes and separators.
+    return BUDGET_BYTES - len(result.model_dump_json(by_alias=True)) - len('"shapes":,')
+
+
+def fitted_meta(
+    result: BaseModel, meta: dict[str, Any], collections: dict[str, Any]
+) -> dict[str, Any]:
+    """`meta` with each layer's shapes encoded and fitted to what the budget leaves.
+
+    `collections` maps a key of `meta` (or "" for `meta` itself) to that layer's
+    GeoJSON shapes. Each layer gets `shapes` or `shapes_omitted_bytes`, and
+    `simplified`."""
+    area = meta["area"]
+    grid = grid_for(area)
+    meta = {**meta, "grid": grid.to_json()}
+    room = shapes_room(_tool_result(result, meta)) - 40 * len(collections)
+    fitted = fit(list(collections.values()), grid, side_of(area), room)
+    for key, layer in zip(collections, fitted, strict=True):
+        target = meta if key == "" else meta[key]
+        target["simplified"] = layer.simplified
+        if layer.shapes is None:
+            target["shapes_omitted_bytes"] = layer.omitted_bytes
+        else:
+            target["shapes"] = layer.shapes
+    return meta
+
+
 def register_map_tools(
     server: MCPServer,
     handlers: AreaHandlers,
@@ -123,16 +150,9 @@ def register_map_tools(
             place_id,
             ctx,
         )
-        size = len(pydantic_core.to_json(drawn.shapes))
-        # The area always goes to the page, so it takes its share of the budget.
-        room = MAX_SHAPES_BYTES - len(pydantic_core.to_json(drawn.area))
         # The colours stay either way: the legend needs them.
         meta: dict[str, Any] = {"area": drawn.area, "styles": drawn.styles}
-        if size > room:
-            meta["shapes_omitted_bytes"] = size
-        else:
-            meta["shapes"] = drawn.shapes
-        return _tool_result(result, meta)
+        return _tool_result(result, fitted_meta(result, meta, {"": drawn.shapes}))
 
     server.add_tool(
         map_area_by_category,

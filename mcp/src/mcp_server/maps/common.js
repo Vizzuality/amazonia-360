@@ -64,6 +64,29 @@ window.map360 = (() => {
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
     return { maplibregl, map };
   };
+  // The server sends shapes as grid steps, each point relative to the previous one
+  // (maps/encoding.py); this turns them back into GeoJSON.
+  const decodeShapes = (shapes, grid) => ({
+    type: "FeatureCollection",
+    features: shapes.map((item) => ({
+      type: "Feature",
+      properties: { category: item.c },
+      geometry: {
+        type: "MultiPolygon",
+        coordinates: item.p.map((polygon) => polygon.map((flat) => {
+          const ring = [];
+          let x = 0;
+          let y = 0;
+          for (let i = 0; i < flat.length; i += 2) {
+            x += flat[i];
+            y += flat[i + 1];
+            ring.push([grid.x0 + x * grid.step, grid.y0 + y * grid.step]);
+          }
+          return ring;
+        })),
+      },
+    })),
+  });
   // With a place_id the input has no geometry; the result then carries the area. Either
   // may arrive first, and the map is drawn by whichever brings it.
   const drawOnce = (draw) => {
@@ -76,6 +99,6 @@ window.map360 = (() => {
   };
   return {
     translator, esc, errorMessage, number, ha, pct, swatch, ringSwatch, notesHtml,
-    bounds, outerRings, createMap, drawOnce,
+    bounds, outerRings, createMap, drawOnce, decodeShapes,
   };
 })();
