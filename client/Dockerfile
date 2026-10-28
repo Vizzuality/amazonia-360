@@ -17,6 +17,26 @@ RUN --mount=type=cache,id=s/d2873ca6-1f48-43ff-8a3e-bb858dd87eeb-/root/.local/sh
     corepack enable pnpm && \
     pnpm install --frozen-lockfile
 
+# Production dependencies for the Payload CLI (migrate, seed). This layer only changes with the lockfile.
+FROM base AS prod-deps
+WORKDIR /app
+COPY package.json pnpm-lock.yaml* .npmrc* ./
+RUN --mount=type=cache,id=s/d2873ca6-1f48-43ff-8a3e-bb858dd87eeb-/root/.local/share/pnpm/store,target=/root/.local/share/pnpm/store \
+    corepack enable pnpm && \
+    npm pkg delete scripts.prepare && \
+    pnpm install --frozen-lockfile --prod
+
+# Runs in parallel with the builder; the runner copies its marker, so a type error fails the image build.
+FROM base AS typecheck
+WORKDIR /app
+ENV COREPACK_INTEGRITY_KEYS 0
+ENV NEXT_TELEMETRY_DISABLED=1
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN SKIP_ENV_VALIDATION=1 pnpm exec next typegen && \
+    pnpm exec tsc --noEmit && \
+    touch /tmp/typecheck-passed
+
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
@@ -71,16 +91,24 @@ ENV COREPACK_INTEGRITY_KEYS 0
 # Learn more here: https://nextjs.org/telemetry
 # Opt out with NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV SKIP_BUILD_TYPECHECK=1
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN corepack enable pnpm && \
+RUN --mount=type=cache,id=s/d2873ca6-1f48-43ff-8a3e-bb858dd87eeb-/app/.next/cache,target=/app/.next/cache \
+    corepack enable pnpm && \
     pnpm build
 
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Before the ARG/ENV block so build-arg changes don't invalidate the cached dependency layer
+COPY --from=prod-deps --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 ARG LINUX_GID=1001
 ARG LINUX_UID=1001
@@ -127,8 +155,7 @@ ENV COREPACK_INTEGRITY_KEYS 0
 
 ENV NODE_ENV=production
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+COPY --from=typecheck /tmp/typecheck-passed /tmp/typecheck-passed
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
@@ -137,8 +164,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 
-# Copy node_modules, source files, and tsconfig to enable the use of Payload CLI
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+# Copy source files and tsconfig to enable the use of Payload CLI
 COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./tsconfig.json
 COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
