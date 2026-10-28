@@ -35,15 +35,16 @@ export const ReportTopicHeader = (props: Topic) => {
 
   const summaryMutation = useGetTopicSummary({
     onSuccess: (data, variables) => {
-      // Update the specific topic's description with the AI-generated result
-      if (variables.topic?.id && data?.description) {
-        setTopics(
-          (currentTopics) =>
-            currentTopics?.map((t) =>
-              t.topic_id === variables.topic?.id ? { ...t, description: data.description } : t,
-            ) || [],
-        );
-      }
+      if (data.status !== "ok" || !variables.topic?.id || !data.description) return;
+
+      const { description } = data;
+
+      setTopics(
+        (currentTopics) =>
+          currentTopics?.map((t) =>
+            t.topic_id === variables.topic?.id ? { ...t, description } : t,
+          ) || [],
+      );
     },
     onError: (error) => {
       console.error("Error generating AI summary:", error);

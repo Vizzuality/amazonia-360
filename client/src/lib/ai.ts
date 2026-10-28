@@ -243,9 +243,43 @@ export const getTopicEvidence = async (
 
 export type GetAISummaryParams = Context;
 
-export const getAISummary = (params: GetAISummaryParams) => {
-  return generateDescriptionTextAiPost(params);
+export const getAISummary = (
+  params: GetAISummaryParams,
+  { signal }: { signal?: AbortSignal } = {},
+) => {
+  return generateDescriptionTextAiPost(params, { signal });
 };
+
+/**
+ * Counted from the click and covering the evidence reads as well as `POST /ai`: whichever step
+ * hangs, the user waits no longer than this. The API gives up on OpenAI first.
+ */
+export const AI_SUMMARY_TIMEOUT = 60_000;
+
+export class AISummaryTimeoutError extends Error {
+  constructor() {
+    super("The AI summary took longer than expected");
+    this.name = "AISummaryTimeoutError";
+  }
+}
+
+/** Every read in the topic failed, so its absence of values says nothing about the area. */
+export class AISummaryUnavailableError extends Error {
+  constructor() {
+    super("No indicator in the topic could be read");
+    this.name = "AISummaryUnavailableError";
+  }
+}
+
+const withDeadline = <T>(promise: Promise<T>, signal: AbortSignal): Promise<T> =>
+  new Promise<T>((resolve, reject) => {
+    const onAbort = () => reject(new AISummaryTimeoutError());
+
+    if (signal.aborted) return onAbort();
+    signal.addEventListener("abort", onAbort, { once: true });
+
+    promise.then(resolve, reject).finally(() => signal.removeEventListener("abort", onAbort));
+  });
 
 /**
  * With a module the catalogue holds each replaced indicator twice. The widget's own toggle decides
@@ -279,6 +313,7 @@ type TopicSummaryParams = {
    */
   loadIndicators: (locale: string) => Promise<Indicator[]>;
   loadCountryModules: (locale: string) => Promise<readonly CountryModule[]>;
+  signal?: AbortSignal;
 };
 
 export const getTopicSummary = async (params: TopicSummaryParams) => {
@@ -291,6 +326,7 @@ export const getTopicSummary = async (params: TopicSummaryParams) => {
     adminUnit,
     loadIndicators,
     loadCountryModules,
+    signal,
   } = params;
   const only = options?.only_active ? activeIndicators : undefined;
 
@@ -309,24 +345,41 @@ export const getTopicSummary = async (params: TopicSummaryParams) => {
 
   const countryNames = new Map(countryModules.map(({ slug, name }) => [slug, name]));
   const evidence = await getTopicEvidence(indicators, location, countryNames, adminUnit);
+  const { included, total } = evidence;
+
+  // Prose about nothing is not a summary. Only genuine `no_coverage` licenses saying so; a failed
+  // read among them means we do not know the area is empty.
+  if (!evidence.indicators.some(({ status }) => status === "ok")) {
+    if (evidence.indicators.some(({ status }) => status === "unavailable")) {
+      throw new AISummaryUnavailableError();
+    }
+
+    return { status: "no_data" as const, included, total };
+  }
 
   // Formatting and tone rules live in the API's system prompt (api/src/app/openai_service.py),
   // not here: the client sends measurements, the service decides how to read them.
-  const response = await getAISummary({
-    data: {
-      topic: topic?.name,
-      indicators: evidence.indicators,
-      indicators_included: evidence.included,
-      indicators_total: evidence.total,
+  const response = await getAISummary(
+    {
+      data: {
+        topic: topic?.name,
+        indicators: evidence.indicators,
+        indicators_included: included,
+        indicators_total: total,
+      },
+      language: locale as ContextLanguage,
+      description_type: options?.type,
     },
-    language: locale as ContextLanguage,
-    description_type: options?.type,
-  });
+    { signal },
+  );
 
-  return { ...response, included: evidence.included, total: evidence.total };
+  return { status: "ok" as const, ...response, included, total };
 };
 
-type TopicSummaryVariables = Omit<TopicSummaryParams, "loadIndicators" | "loadCountryModules">;
+type TopicSummaryVariables = Omit<
+  TopicSummaryParams,
+  "loadIndicators" | "loadCountryModules" | "signal"
+>;
 
 export type TopicSummaryMutationOptions<TData, TError> = UseMutationOptions<
   Awaited<ReturnType<typeof getTopicSummary>>,
@@ -345,14 +398,21 @@ export const useGetTopicSummary = <
   const modules = getModuleSlugs(useReportCountry(), useGetActiveModuleSlugs());
 
   return useMutation({
-    mutationFn: (params: TopicSummaryVariables) =>
-      getTopicSummary({
-        ...params,
-        loadIndicators: (locale) =>
-          queryClient.ensureQueryData(getIndicatorsOptions(locale, modules)),
-        loadCountryModules: (locale) =>
-          queryClient.ensureQueryData(getCountryModulesQueryOptions(locale)),
-      }),
+    mutationFn: (params: TopicSummaryVariables) => {
+      const signal = AbortSignal.timeout(AI_SUMMARY_TIMEOUT);
+
+      return withDeadline(
+        getTopicSummary({
+          ...params,
+          signal,
+          loadIndicators: (locale) =>
+            queryClient.ensureQueryData(getIndicatorsOptions(locale, modules)),
+          loadCountryModules: (locale) =>
+            queryClient.ensureQueryData(getCountryModulesQueryOptions(locale)),
+        }),
+        signal,
+      );
+    },
     ...options,
   });
 };
