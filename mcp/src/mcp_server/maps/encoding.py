@@ -88,8 +88,8 @@ def _size(shapes: list[dict[str, Any]]) -> int:
 def fit(
     collections: list[dict[str, Any]], grid: Grid, side: float, room: int
 ) -> list[FittedShapes]:
-    """Each layer at the first tolerance; while they pass the room, the largest still
-    drawn is simplified further, or left out once at the last tolerance."""
+    """Each layer at the first tolerance; while they pass the room, the largest layer
+    that can still be simplified is, and only once none can is the largest left out."""
     first, last = side * FIRST_TOLERANCE, side * LAST_TOLERANCE
     tolerances = [first] * len(collections)
     shapes: list[list[dict[str, Any]] | None] = [
@@ -97,15 +97,18 @@ def fit(
     ]
     sizes = [_size(s) for s in shapes if s is not None]
     while sum(sizes) > room:
-        largest = max(range(len(sizes)), key=sizes.__getitem__)
-        if sizes[largest] == 0:
+        drawn = [i for i, s in enumerate(shapes) if s is not None]
+        if not drawn:
             break
-        if tolerances[largest] * 2 <= last * (1 + 1e-9):
-            tolerances[largest] *= 2
-            encoded = encode(collections[largest], grid, tolerances[largest])
-            shapes[largest], sizes[largest] = encoded, _size(encoded)
+        reducible = [i for i in drawn if tolerances[i] * 2 <= last * (1 + 1e-9)]
+        if reducible:
+            i = max(reducible, key=sizes.__getitem__)
+            tolerances[i] *= 2
+            encoded = encode(collections[i], grid, tolerances[i])
+            shapes[i], sizes[i] = encoded, _size(encoded)
         else:
-            shapes[largest], sizes[largest] = None, 0
+            i = max(drawn, key=sizes.__getitem__)
+            shapes[i], sizes[i] = None, 0
     return [
         FittedShapes(
             shapes=s,

@@ -182,3 +182,18 @@ def test_a_layer_that_cannot_fit_is_omitted() -> None:
     assert fitted.shapes is None
     assert fitted.omitted_bytes == len(pydantic_core.to_json(layer))
     assert fitted.simplified is False
+
+
+def test_both_layers_are_simplified_before_either_is_left_out() -> None:
+    grid = grid_for(AREA)
+    big, small = wiggly(60, seed=5), wiggly(30, seed=6)
+    big_last = size(encode(big, grid, 1.1 * LAST_TOLERANCE))
+    small_first = size(encode(small, grid, 1.1 * FIRST_TOLERANCE))
+    small_last = size(encode(small, grid, 1.1 * LAST_TOLERANCE))
+    room = big_last + small_last + 1
+    # Only simplifying the small layer as well makes room for both.
+    assert room < big_last + small_first
+    fitted_big, fitted_small = fit([big, small], grid, 1.1, room=room)
+    assert fitted_big.shapes is not None
+    assert fitted_small.shapes is not None
+    assert size(fitted_big.shapes) + size(fitted_small.shapes) <= room
