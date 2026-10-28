@@ -221,6 +221,19 @@ Rehearsed through the search, not yet in Claude Desktop: the first six passages 
 MAAP #221's: the opening, then one per protected area and the acknowledgements. The
 last two are García-Romero et al. (2026).
 
+In Claude Desktop on 28 October 2026, with the report uploaded as a PDF without authors
+and year: the four areas, each with its figures, dates and page link (Podocarpus 22 to
+50 ha, "an illegal expansion of 125% within the park"; Punino 142 ha in Sumaco
+Napo-Galeras' buffer zone, 0.32 ha inside; 337 ha along the Bermejo, 1.05 ha inside
+Cofán Bermejo; 33 ha in El Zarza's buffer zone). It says the report is the only indexed
+document on it and that its figures are the report's, from 2024, not the module's. It
+took "MAAP #221 (11 October 2024)" from the text itself; upload from the URL with
+"MAAP #221 (2024)" so the citation does not depend on that.
+
+Before the upload, the same question went to web search: MAAP #243 (2026) and press
+coverage, none of it from the corpus. Showing the two answers side by side is the point
+of the upload.
+
 ## One figure review
 
 On MAAP #221's figures page, open the review queue. Show that the decorative images went
