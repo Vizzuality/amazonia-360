@@ -353,3 +353,9 @@ async def test_an_uploaded_pdf_reaches_indexed(bo: Backoffice) -> None:
     assert document.status == "indexed"
     assert (bo.settings.uploads_dir / "napo.pdf").read_bytes() == PDF
     assert (await bo.client.get("/files/uploads/napo.pdf")).content == PDF
+
+
+async def test_pages_link_static_files_by_version(bo: Backoffice) -> None:
+    html = (await bo.client.get("/")).text
+    assert "/static/app.css?v=" in html
+    assert "/static/htmx.min.js?v=" in html

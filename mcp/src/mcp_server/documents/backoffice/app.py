@@ -61,9 +61,18 @@ NEVER_STORED = (
     "with Replace the PDF on the document page."
 )
 
+
+def static_url(name: str) -> str:
+    # The version changes with the file, so browsers never keep an old stylesheet.
+    return f"/static/{name}?v={int((STATIC_DIR / name).stat().st_mtime)}"
+
+
 templates = Jinja2Templates(directory=HERE / "templates")
 templates.env.globals.update(
-    type_labels=TYPE_LABELS, kind_labels=KIND_LABELS, max_title=MAX_TITLE_CHARS
+    type_labels=TYPE_LABELS,
+    kind_labels=KIND_LABELS,
+    max_title=MAX_TITLE_CHARS,
+    static_url=static_url,
 )
 
 QdrantCheck = Callable[[], Awaitable[bool]]
