@@ -4,6 +4,11 @@ from openai import OpenAI, OpenAIError
 
 from app.config import get_settings
 
+# The browser abandons a summary 60s after the click, evidence reads included. Two attempts of this
+# length leave the API room to fail with an error first instead of working for nobody.
+OPENAI_TIMEOUT_SECONDS = 22.0
+OPENAI_MAX_RETRIES = 1
+
 LENGTHS = {
     "Short": "A concise executive summary of around two sentences.",
     "Normal": "Two paragraphs: the first a general overview, the second the notable data points.",
@@ -93,7 +98,11 @@ def generate_description(context_data: dict, description_type: str, language: st
         ),
     }
 
-    client = OpenAI(api_key=get_settings().openai_token.get_secret_value())
+    client = OpenAI(
+        api_key=get_settings().openai_token.get_secret_value(),
+        timeout=OPENAI_TIMEOUT_SECONDS,
+        max_retries=OPENAI_MAX_RETRIES,
+    )
 
     completion = client.chat.completions.create(
         model="gpt-4o",
