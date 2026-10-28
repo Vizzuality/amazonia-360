@@ -6,7 +6,8 @@ import { cn } from "@/lib/utils";
 
 import { Indicator, ResourceFeature } from "@/types/indicator";
 
-import { CardLoader, CardWidgetNumber } from "@/containers/card";
+import { CardWidgetNumber } from "@/containers/card";
+import { CardState } from "@/containers/card/state";
 import { useIndicator } from "@/containers/indicators/provider";
 
 import { Report } from "@/payload-types";
@@ -32,13 +33,17 @@ export const NumericIndicatorsFeature = ({
 
   const query = useQueryFeatureId({ id, resource, type: "numeric", geometry: GEOMETRY, adminUnit });
 
-  const VALUE = useMemo(() => {
-    if (!query.data) return 0;
+  // A count over nothing still answers one row of 0, which is a finding; an average over nothing
+  // answers null, which is not.
+  const VALUES = useMemo<number[]>(
+    () =>
+      (query.data?.features ?? [])
+        .map((feature) => feature.attributes.value)
+        .filter((value): value is number => typeof value === "number"),
+    [query.data],
+  );
 
-    return query.data.features.reduce((acc, curr) => {
-      return acc + curr.attributes.value;
-    }, 0);
-  }, [query.data]);
+  const VALUE = useMemo(() => VALUES.reduce((acc, curr) => acc + curr, 0), [VALUES]);
 
   useMemo(() => {
     if (query.isLoading) {
@@ -55,11 +60,11 @@ export const NumericIndicatorsFeature = ({
   }, [query, id, onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError]);
 
   return (
-    <CardLoader query={[query]} className="h-12">
+    <CardState query={[query]} isEmpty={!VALUES.length} variant="inline" className="h-12">
       {isPdf && !!description_short && (
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{description_short}</p>
       )}
       <CardWidgetNumber value={VALUE} unit={unit} className={cn({ "grow-0": isPdf })} />
-    </CardLoader>
+    </CardState>
   );
 };

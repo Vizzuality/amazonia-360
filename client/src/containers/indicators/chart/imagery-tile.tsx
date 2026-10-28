@@ -4,12 +4,13 @@ import { scaleOrdinal } from "@visx/scale";
 import CHROMA from "chroma-js";
 
 import { formatPercentage } from "@/lib/formats";
+import { hasImageryCoverage } from "@/lib/imagery";
 import { useQueryImageryTileId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
 import { Indicator, ResourceImageryTile } from "@/types/indicator";
 
-import { CardLoader } from "@/containers/card";
+import { CardState } from "@/containers/card/state";
 
 import MarimekkoChart from "@/components/charts/marimekko";
 
@@ -75,12 +76,16 @@ export const ChartImageryTileIndicators = ({
   }, [query.data, TOTAL, COLOR_SCALE]);
 
   return (
-    <CardLoader query={[query]} className="grow">
+    <CardState
+      query={[query]}
+      isEmpty={!hasImageryCoverage(query.data?.histograms)}
+      className="grow"
+    >
       <MarimekkoChart
         data={DATA}
         format={(d) => formatPercentage(d.value)}
         className="h-full grow"
       />
-    </CardLoader>
+    </CardState>
   );
 };

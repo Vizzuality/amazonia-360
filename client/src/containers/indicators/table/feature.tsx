@@ -8,7 +8,7 @@ import { useLocationAdminUnit, useLocationGeometry } from "@/lib/location";
 
 import { Indicator, ResourceFeature } from "@/types/indicator";
 
-import { CardLoader } from "@/containers/card";
+import { CardState } from "@/containers/card/state";
 import { useIndicator } from "@/containers/indicators/provider";
 import { DataTable } from "@/containers/widgets/table";
 
@@ -69,7 +69,7 @@ export const TableIndicatorsFeature = ({ id, resource, location }: TableIndicato
   }, [query, id, onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError]);
 
   return (
-    <CardLoader query={[query]} className="h-72">
+    <CardState query={[query]} isEmpty={!DATA.length} className="h-72">
       <DataTable
         data={DATA}
         columns={COLUMNS}
@@ -87,6 +87,6 @@ export const TableIndicatorsFeature = ({ id, resource, location }: TableIndicato
           },
         }}
       />
-    </CardLoader>
+    </CardState>
   );
 };

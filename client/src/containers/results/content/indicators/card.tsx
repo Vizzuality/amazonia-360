@@ -28,6 +28,7 @@ import {
   CardTitle,
   CardPopover,
 } from "@/containers/card";
+import { CardStateActionsProvider } from "@/containers/card/state";
 import { ChartIndicators } from "@/containers/indicators/chart";
 import { CustomIndicators } from "@/containers/indicators/custom";
 import { MapIndicators } from "@/containers/indicators/map";
@@ -48,6 +49,7 @@ export default function ReportResultsIndicator(props: {
   readonly editable: boolean;
   readonly isWebshot?: boolean;
   readonly isPdf?: boolean;
+  readonly onRemove?: () => void;
 }) {
   return <ReportResultsIndicatorContent {...props} />;
 }
@@ -61,6 +63,7 @@ function ReportResultsIndicatorContent({
   editable,
   isWebshot = false,
   isPdf = false,
+  onRemove,
 }: {
   readonly id: Report["id"];
   readonly indicatorId: Indicator["id"];
@@ -70,6 +73,7 @@ function ReportResultsIndicatorContent({
   readonly editable: boolean;
   readonly isWebshot?: boolean;
   readonly isPdf?: boolean;
+  readonly onRemove?: () => void;
 }) {
   const { toasts } = useSonner();
   const locale = useLocale();
@@ -141,42 +145,47 @@ function ReportResultsIndicatorContent({
             "justify-between": type === "numeric" && isPdf,
           })}
         >
-          {type === "map" && indicator.resource.type !== "h3" && (
-            <MapIndicators
-              {...(indicator as Omit<Indicator, "resource"> & {
-                resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
-              })}
-              basemapId={basemapId}
-              isWebshot={isWebshot}
-              isPdf={isPdf}
-            />
-          )}
+          <CardStateActionsProvider
+            onRemove={editable && !isPdf && !isWebshot ? onRemove : undefined}
+            retryable={!isPdf && !isWebshot}
+          >
+            {type === "map" && indicator.resource.type !== "h3" && (
+              <MapIndicators
+                {...(indicator as Omit<Indicator, "resource"> & {
+                  resource: ResourceFeature | ResourceWebTile | ResourceImageryTile;
+                })}
+                basemapId={basemapId}
+                isWebshot={isWebshot}
+                isPdf={isPdf}
+              />
+            )}
 
-          {/*
+            {/*
             Charts
           */}
-          {type === "chart" && indicator.resource.type !== "component" && (
-            <ChartIndicators id={indicatorId} />
-          )}
+            {type === "chart" && indicator.resource.type !== "component" && (
+              <ChartIndicators id={indicatorId} />
+            )}
 
-          {/*
+            {/*
             Custom
           */}
-          {indicator.resource.type === "component" && <CustomIndicators id={indicatorId} />}
+            {indicator.resource.type === "component" && <CustomIndicators id={indicatorId} />}
 
-          {/*
+            {/*
             Numeric
           */}
-          {type === "numeric" && indicator.resource.type !== "component" && (
-            <NumericIndicators id={indicatorId} isPdf={isPdf} />
-          )}
+            {type === "numeric" && indicator.resource.type !== "component" && (
+              <NumericIndicators id={indicatorId} isPdf={isPdf} />
+            )}
 
-          {/*
+            {/*
             Table
           */}
-          {type === "table" &&
-            indicator.resource.type !== "component" &&
-            indicator.resource.type === "feature" && <TableIndicators id={indicatorId} />}
+            {type === "table" &&
+              indicator.resource.type !== "component" &&
+              indicator.resource.type === "feature" && <TableIndicators id={indicatorId} />}
+          </CardStateActionsProvider>
         </CardContent>
       </Card>
     </div>

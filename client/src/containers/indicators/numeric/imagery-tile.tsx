@@ -1,13 +1,14 @@
 import { useMemo } from "react";
 
-import { getImageryScalar } from "@/lib/imagery";
+import { getImageryScalar, hasImageryCoverage } from "@/lib/imagery";
 import { useQueryImageryTileId } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 import { cn } from "@/lib/utils";
 
 import { Indicator, ResourceImageryTile } from "@/types/indicator";
 
-import { CardLoader, CardWidgetNumber } from "@/containers/card";
+import { CardWidgetNumber } from "@/containers/card";
+import { CardState } from "@/containers/card/state";
 import { useIndicator } from "@/containers/indicators/provider";
 
 import { Report } from "@/payload-types";
@@ -49,15 +50,16 @@ export const NumericImageryTileIndicators = ({
   }, [query, id, onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError]);
 
   return (
-    <CardLoader query={[query]} className="h-12 grow">
+    <CardState
+      query={[query]}
+      isEmpty={VALUE === null || !hasImageryCoverage(query.data?.histograms)}
+      variant="inline"
+      className="h-12 grow"
+    >
       {isPdf && !!description_short && (
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{description_short}</p>
       )}
-      <CardWidgetNumber
-        value={VALUE ?? "n.d."}
-        unit={VALUE ? unit : undefined}
-        className={cn({ "grow-0": isPdf })}
-      />
-    </CardLoader>
+      <CardWidgetNumber value={VALUE ?? 0} unit={unit} className={cn({ "grow-0": isPdf })} />
+    </CardState>
   );
 };
