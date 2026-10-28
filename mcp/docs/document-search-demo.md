@@ -156,7 +156,7 @@ so: worth showing as the reason for the review.
 
 ### 4. Related documents, no answer
 
-> ¿Cómo afecta la actividad petrolera a la calidad del agua en Sucumbíos?
+> ¿Cómo afecta la actividad petrolera a la calidad del agua en la provincia de Sucumbíos?
 
 Must show: no passage answers it. Claude says that the indexed documents on oil in the
 region (Finer et al. 2008, García-Romero et al. 2026) exist, names them with their
@@ -189,12 +189,13 @@ related list. Check in Claude Desktop that Claude names Finer and García-Romero
 covering oil in the region without measuring water quality, and does not answer from
 them as if they did.
 
-In Claude Desktop: Sucumbíos is both a province and a canton, and Claude asks which one.
-That is the intended behaviour: it never guesses a place. Answer "provincia" to cover
-the northern oil region. Asked for the canton, Claude says neither the data nor the
-documents cover water quality there, lists the module's water layers, and quotes Finer
-et al. (2008) and García-Romero et al. (2026) as general statements with no
-measurements.
+In Claude Desktop, asked without "provincia": Sucumbíos is both a province and a canton,
+and Claude does not always ask which one. Once it asked (the canton was chosen), once it
+took the province without asking. Name the province in the question so the run does not
+depend on that. Both answers said the same: the module has no water quality or oil
+layer (it lists its water layers), no indexed document covers Sucumbíos itself, and
+Finer et al. (2008) and García-Romero et al. (2026) are quoted as general statements on
+the northern Ecuadorian Amazon, with no measurements.
 
 ## The live upload
 
