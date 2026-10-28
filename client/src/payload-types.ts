@@ -125,8 +125,12 @@ export interface Config {
     defaultIDType: string;
   };
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'es' | 'pt') | ('en' | 'es' | 'pt')[];
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'seed-state': SeedState;
+  };
+  globalsSelect: {
+    'seed-state': SeedStateSelect<false> | SeedStateSelect<true>;
+  };
   locale: 'en' | 'es' | 'pt';
   widgets: {
     collections: CollectionsWidget;
@@ -1502,6 +1506,26 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "seed-state".
+ */
+export interface SeedState {
+  id: string;
+  fingerprint?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "seed-state_select".
+ */
+export interface SeedStateSelect<T extends boolean = true> {
+  fingerprint?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
