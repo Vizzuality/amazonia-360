@@ -199,6 +199,8 @@
   "card-state-error-title": "No se pudo cargar este indicador",
   "card-state-error-description": "Algo salió mal por nuestra parte.",
   "card-state-retry": "Reintentar",
+  "map-state-loading-title": "Cargando mapa",
+  "map-state-loading-description": "Esto puede tardar unos segundos.",
   "new-report": "Nuevo informe",
   "report-results-buttons-new-report": "Iniciar un nuevo informe",
   "report-results-buttons-new-report-description": "Al seleccionar una nueva área se iniciará un informe nuevo se reiniciará tu sesión actual.\n Todo el progreso en tu informe existente se perderá.",

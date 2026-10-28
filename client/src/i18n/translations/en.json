@@ -198,6 +198,8 @@
   "card-state-error-title": "Couldn't load this indicator",
   "card-state-error-description": "Something went wrong on our side.",
   "card-state-retry": "Try again",
+  "map-state-loading-title": "Loading map",
+  "map-state-loading-description": "This can take a few seconds.",
   "new-report": "New report",
   "report-results-buttons-new-report": "Start a New Report",
   "report-results-buttons-new-report-description": "Selecting a new area will start a fresh report and reset your current session. \n\n Any progress in your existing report will be lost.",

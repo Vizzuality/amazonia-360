@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 
 export type CardStateStatus = "loading" | Exclude<IndicatorEvidenceStatus, "not_supported">;
 
@@ -60,13 +61,7 @@ export function CardState({
   className,
   children,
 }: CardStateProps) {
-  const t = useTranslations();
-  const { onRemove, retryable } = useContext(CardStateActionsContext);
   const status = getCardStateStatus(query, isEmpty);
-
-  const handleRetry = () => {
-    query.filter((q) => q.isError).forEach((q) => q.refetch());
-  };
 
   if (status === "loading") {
     return <Skeleton data-testid="card-loader" className={className} />;
@@ -74,9 +69,34 @@ export function CardState({
 
   if (status === "ok") return <>{children}</>;
 
+  return (
+    <CardStateMessage
+      status={status}
+      variant={variant}
+      onRetry={() => query.filter((q) => q.isError).forEach((q) => q.refetch())}
+    />
+  );
+}
+
+type CardStateMessageProps = {
+  status: Exclude<CardStateStatus, "loading" | "ok">;
+  variant?: "block" | "inline";
+  onRetry: () => void;
+  className?: string;
+};
+
+export function CardStateMessage({
+  status,
+  variant = "block",
+  onRetry,
+  className,
+}: CardStateMessageProps) {
+  const t = useTranslations();
+  const { onRemove, retryable } = useContext(CardStateActionsContext);
+
   const isError = status === "unavailable";
   const action = isError
-    ? retryable && { label: t("card-state-retry"), icon: RefreshCw, onClick: handleRetry }
+    ? retryable && { label: t("card-state-retry"), icon: RefreshCw, onClick: onRetry }
     : onRemove && {
         label: t(variant === "inline" ? "card-state-remove-short" : "card-state-remove"),
         icon: Trash2,
@@ -88,7 +108,10 @@ export function CardState({
     return (
       <div
         data-testid={`card-state-${status}`}
-        className="flex min-h-12 grow flex-wrap items-center gap-x-2 gap-y-1 text-sm"
+        className={cn(
+          "flex min-h-12 grow flex-wrap items-center gap-x-2 gap-y-1 text-sm",
+          className,
+        )}
       >
         {isError ? (
           <TriangleAlert className="text-destructive h-4 w-4 shrink-0" aria-hidden />
@@ -119,7 +142,10 @@ export function CardState({
   return (
     <div
       data-testid={`card-state-${status}`}
-      className="flex grow flex-col items-center justify-center gap-3 px-4 py-8 text-center"
+      className={cn(
+        "flex grow flex-col items-center justify-center gap-3 px-4 py-8 text-center",
+        className,
+      )}
     >
       <div
         className={cn(
@@ -153,6 +179,24 @@ export function CardState({
           <span>{action.label}</span>
         </Button>
       )}
+    </div>
+  );
+}
+
+export function CardStateMapLoading({ className }: { className?: string }) {
+  const t = useTranslations();
+
+  return (
+    <div
+      data-testid="card-state-map-loading"
+      className={cn(
+        "flex grow flex-col items-center justify-center gap-2 px-4 py-8 text-center",
+        className,
+      )}
+    >
+      <Spinner className="text-primary h-6 w-6" />
+      <p className="text-sm font-medium text-blue-900">{t("map-state-loading-title")}</p>
+      <p className="text-muted-foreground text-sm">{t("map-state-loading-description")}</p>
     </div>
   );
 }

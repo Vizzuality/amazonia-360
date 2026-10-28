@@ -37,6 +37,8 @@ export type MapProps = {
   isPdf?: boolean;
   loaded?: boolean;
   onLoad?: (layerViews: LayerView[]) => void;
+  /** The view or its basemap failed, so nothing on this map can draw. */
+  onError?: () => void;
 };
 
 // Builds the screenshot callback registered for PNG export. Kept at module
@@ -86,6 +88,7 @@ export function MapView({
   initialBasemapId,
   isPdf = false,
   loaded = false,
+  onError,
 }: MapProps) {
   const mapRef = useRef<ArcGISMap | null>(null);
   const mapViewRef = useRef<ArcGISMapView | null>(null);
@@ -184,7 +187,9 @@ export function MapView({
         registerMapForExport(mapContainerRef.current, createMapScreenshotFn(mapViewRef.current));
 
         setMounted(true);
-      });
+      }, onError);
+
+      mapRef.current.basemap?.load().catch(() => onError?.());
 
       // Listen to extent changes
       ArcGISReactiveUtils.when(

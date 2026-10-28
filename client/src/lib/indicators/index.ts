@@ -627,6 +627,42 @@ export const useQueryFeatureId = <
   });
 };
 
+export type QueryFeatureCountParams = {
+  id: Indicator["id"];
+  resource: ResourceFeature;
+  geometry: __esri.Polygon | null;
+};
+
+export const getQueryFeatureCount = async (
+  { resource, geometry }: QueryFeatureCountParams,
+  { signal }: { signal?: AbortSignal } = {},
+) => {
+  const FeatureLayer = (await import("@arcgis/core/layers/FeatureLayer")).default;
+
+  const f = new FeatureLayer({
+    url: resource.url + resource.layer_id,
+  });
+
+  return f.queryFeatureCount(
+    { ...(!!geometry && { geometry }) },
+    { signal: getReadSignal(signal) },
+  );
+};
+
+export const getQueryFeatureCountKey = ({ id, resource, geometry }: QueryFeatureCountParams) => {
+  return ["query-feature-count", id, resource.url, resource.layer_id, geometry?.toJSON()];
+};
+
+export const useQueryFeatureCount = (
+  params: QueryFeatureCountParams,
+  options?: { enabled?: boolean },
+) => {
+  const queryKey = getQueryFeatureCountKey(params);
+  const queryFn: QueryFunction<number> = ({ signal }) => getQueryFeatureCount(params, { signal });
+
+  return useQuery({ queryKey, queryFn, ...options });
+};
+
 export type QueryImageryIdParams = {
   id: Indicator["id"];
   type: VisualizationTypes;
