@@ -36,7 +36,7 @@ From `mcp/`, with `OPENAI_API_KEY` set in the shell:
    `DOCS_PUBLIC_URL=http://127.0.0.1:8770` and `OPENAI_API_KEY`. Restart Claude
    Desktop and check that `list_topics` is among the tools.
 9. Just before the demo, delete MAAP #221 in the back office. It is added again live,
-   after question 4 and before question 5.
+   after question 3 and before question 4.
 
 To measure retrieval on the loaded corpus:
 `uv run amazonia360-docs eval tests/documents/fixtures/questions.yaml`.
@@ -60,25 +60,25 @@ the discarded bucket. Nothing is approved yet: that is the owner's review.
 
 ## Running order
 
-1. Questions 1 to 4, on the loaded corpus.
+1. Questions 1 to 3, on the loaded corpus.
 2. The live upload of MAAP #221, and its question.
 3. One figure review, on MAAP #221's figures.
-4. Question 5, which needs MAAP #221 back in the index.
+4. Question 4, which needs MAAP #221 back in the index.
 
 Ask the questions in Spanish, as the platform's users would. After each answer, open
 one link.
 
 The results under each question were rehearsed through the search
 (`DocumentSearch.search`, what `search_documents` returns), not yet in Claude Desktop,
-and before any review. Questions 1 to 4 were rehearsed on 27 October 2026 with MAAP
-#221 deleted, as on the day; the live upload and question 5 with it loaded. They show
+and before any review. Questions 1 to 3 were rehearsed on 27 October 2026 with MAAP
+#221 deleted, as on the day; the live upload and question 4 with it loaded. They show
 which passages Claude gets to work with. The scores are cosine similarities; a passage
 needs 0.35 to be returned.
 
-Questions 1 to 4 were asked again in Claude Desktop on 28 October 2026, with the MAAP #82
-satellite image approved. Each question ends with what Claude answered there.
+Every question was asked again in Claude Desktop on 28 October 2026, with the MAAP #82
+satellite image approved. Each one ends with what Claude answered there.
 
-## Questions 1 to 4
+## Questions 1 to 3
 
 ### 1. Deforestation in Yasuní
 
@@ -154,49 +154,6 @@ describes the clearings and the winding corridor and says the description does n
 identify them. An approved description that names the access road would let Claude say
 so: worth showing as the reason for the review.
 
-### 4. Related documents, no answer
-
-> ¿Cómo afecta la actividad petrolera a la calidad del agua en la provincia de Sucumbíos?
-
-Must show: no passage answers it. Claude says that the indexed documents on oil in the
-region (Finer et al. 2008, García-Romero et al. 2026) exist, names them with their
-links, and says that they do not measure water quality in Sucumbíos. It may quote the
-general statement it finds, saying it is general, and it does not answer from a summary.
-
-Rehearsed through the search, MAAP #221 deleted, not yet in Claude Desktop, before
-review: 8 passages from Bass et al. (2010), Finer et al. (2008) and García-Romero et al.
-(2026), 0.36 to 0.40, the same with `place_id=province:Sucumbios` (with the note that no
-topic is tied to the place and every document was searched). The nearest is Bass et al.
-(2010), page 16: oil impacts "cannot be fully controlled", and Santa Cecilia, north of
-Yasuní, "now completely deforested due to oil-related disturbance". Second is Finer et
-al. (2008), Introduction, page 1: "Direct impacts include ... contamination from oil
-spills and wastewater discharges. The technologies of the 1970s-era oil operations
-caused widespread contamination in the northern Ecuadorian [...] Amazon". Both are
-general statements, not a measurement of water quality in Sucumbíos. Among the eight,
-one is a García-Romero table of oil block ids and one is its author list. No related
-documents.
-
-The documents on oil are named here through these passages, not through
-`related_documents`: that list only holds documents none of whose passages came back,
-and Finer and García-Romero both yield passages. After review, the related list stays
-short. The García-Romero and Finer summaries scored 0.39 and 0.31 against this question,
-under `SUMMARY_MIN_SCORE` (0.50), and even if they cleared it they would be left out for
-having passages. A search with `topic="oil and gas"` returns 7 passages from Finer and
-García-Romero (MAAP #82's two score under 0.35), so its related list can hold MAAP #82
-alone, once its summary is approved. So the guard for this question is the instruction
-"answer about documents only from passages" (and say when they do not answer), not the
-related list. Check in Claude Desktop that Claude names Finer and García-Romero as
-covering oil in the region without measuring water quality, and does not answer from
-them as if they did.
-
-In Claude Desktop, asked without "provincia": Sucumbíos is both a province and a canton,
-and Claude does not always ask which one. Once it asked (the canton was chosen), once it
-took the province without asking. Name the province in the question so the run does not
-depend on that. Both answers said the same: the module has no water quality or oil
-layer (it lists its water layers), no indexed document covers Sucumbíos itself, and
-Finer et al. (2008) and García-Romero et al. (2026) are quoted as general statements on
-the northern Ecuadorian Amazon, with no measurements.
-
 ## The live upload
 
 Add MAAP #221 in the back office: web report URL
@@ -241,9 +198,9 @@ to the discarded bucket on their own. Approve one description as it is, correct 
 GPT-6 Luna misread a label or a date (the test found errors in 3 of 21), and approve it.
 The approved descriptions become searchable when the indexing job finishes.
 
-## Question 5
+## Question 4
 
-### 5. Not covered
+### 4. Not covered
 
 > ¿Cuánto mercurio se ha medido en los ríos de Podocarpus?
 
@@ -275,7 +232,7 @@ For the presenter:
   eval, Galápagos deforestation, mercury in Podocarpus and rainfall in Sangay each got
   passages scoring 0.49 to 0.55, above the weakest passage that does answer a question
   (0.37). No threshold separates them. The guard is the server instructions: answer only
-  from a passage that answers. Questions 4 and 5 show it.
+  from a passage that answers. Question 4 shows it.
 - Figures and related documents depend on the review. A figure is searchable only once
   its description is approved, and a document is listed as related only once its
   summary is approved. Question 3 shows nothing from the figure until then.
@@ -283,7 +240,7 @@ For the presenter:
   document is about (score 0.50 or more), and only when none of its passages came back.
   A question on a place a document covers but on a theme it does not (water in
   Sucumbíos) gets no related document; with a topic, only the topic's documents that
-  yielded no passage are listed.
+  yielded no passage are listed. No question in this script shows a related document.
 - Retrieval finds the expected passage for 32 of the 33 questions the documents answer
   (97%). The miss is a question on the size of Yasuní's Zona Intangible, asked in
   English.
