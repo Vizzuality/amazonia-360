@@ -75,6 +75,9 @@ and before any review. Questions 1 to 4 were rehearsed on 27 October 2026 with M
 which passages Claude gets to work with. The scores are cosine similarities; a passage
 needs 0.35 to be returned.
 
+Questions 1 to 4 were asked again in Claude Desktop on 28 October 2026, with the MAAP #82
+satellite image approved. Each question ends with what Claude answered there.
+
 ## Questions 1 to 4
 
 ### 1. Deforestation in Yasuní
@@ -97,6 +100,14 @@ northern half of the park (page 2, three passages), the threats section on the N
 region as a deforestation front and on the Via Maxus (page 15, two), and the park's
 other conservation values (page 13). No related documents: no summary is approved yet.
 
+In Claude Desktop: the layer's 472.4 ha of gross loss in 2020-2022 by transition, then,
+under causes from the indexed documents, MAAP #82's 417 ha (169 direct, 248 along the
+access road) quoted with its link, and Bass et al. (2010) on the Vía Maxus, pages 2 and
+15. It says the document figures come from other years and methods and are not
+comparable with the layer. Its closing line reads the layer's pasture next to the
+documents' colonisation story. If asked: the layer says what the forest became, the
+documents say why.
+
 ### 2. Oil blocks in the western Amazon
 
 > ¿Cuántos bloques de petróleo y gas hay en la Amazonía occidental?
@@ -113,6 +124,11 @@ link
 `http://127.0.0.1:8770/files/uploads/finer-2008-western-amazon-oil-gas-plosone.pdf#page=2`.
 The Discussion passage on page 5, last of the eight, repeats "more than 180 oil and gas
 blocks".
+
+In Claude Desktop: the 180 blocks and 688,000 km² quoted from the abstract (page 1), the
+breakdown by country from pages 2 and 5, and García-Romero et al. (2026) for the 65
+blocks in Ecuador, which it attributes to Lessmann et al. (2016). It says the module's
+data cover Ecuador only.
 
 ### 3. An answer only a figure holds
 
@@ -131,6 +147,12 @@ describes the image. Run this again after the review: the figure passage should 
 first, with `origin: figure`. If Claude then reads the section around it with
 `get_document_section`, it gets the report's text only: figure descriptions are never
 part of a section, and the section's link is the report's, not the crop's.
+
+In Claude Desktop, after the image was approved: MAAP #82's figure dated 10 February 2018,
+said to come from the figure's description, not the image, with the link to the crop. It
+describes the clearings and the winding corridor and says the description does not
+identify them. An approved description that names the access road would let Claude say
+so: worth showing as the reason for the review.
 
 ### 4. Related documents, no answer
 
@@ -166,6 +188,13 @@ alone, once its summary is approved. So the guard for this question is the instr
 related list. Check in Claude Desktop that Claude names Finer and García-Romero as
 covering oil in the region without measuring water quality, and does not answer from
 them as if they did.
+
+In Claude Desktop: Sucumbíos is both a province and a canton, and Claude asks which one.
+That is the intended behaviour: it never guesses a place. Answer "provincia" to cover
+the northern oil region. Asked for the canton, Claude says neither the data nor the
+documents cover water quality there, lists the module's water layers, and quotes Finer
+et al. (2008) and García-Romero et al. (2026) as general statements with no
+measurements.
 
 ## The live upload
 
