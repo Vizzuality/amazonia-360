@@ -9,6 +9,7 @@ import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import Graphic from "@arcgis/core/Graphic";
 import { useTranslations } from "next-intl";
 
+import { AdminUnit, getAdminUnit } from "@/lib/admin-hierarchy";
 import { useGetFeatures } from "@/lib/query";
 import { useGetSearch } from "@/lib/search";
 
@@ -16,6 +17,7 @@ import { Location, SearchLocation } from "@/app/(frontend)/parsers";
 
 import { DATASETS } from "@/constants/datasets";
 import { BUFFERS } from "@/constants/map";
+import { LOCATION_TYPES } from "@/constants/search";
 
 if (!projectOperator.isLoaded()) {
   await projectOperator.load();
@@ -112,6 +114,20 @@ export const useLocationTitle = (location?: Location | null) => {
 
     return null;
   }, [location, searchData, t]);
+};
+
+export const useLocationAdminUnit = (location?: Location | null): AdminUnit | null => {
+  const searchLocation = location?.type === "search" ? (location as SearchLocation) : null;
+
+  const { data: searchData } = useGetSearch(searchLocation, {
+    enabled: !!searchLocation,
+  });
+
+  return useMemo(() => {
+    if (!searchLocation || !searchData) return null;
+
+    return getAdminUnit(LOCATION_TYPES[searchLocation.sourceIndex], searchData.attributes);
+  }, [searchLocation, searchData]);
 };
 
 const srKeyOf = (
@@ -231,6 +247,7 @@ export const useLocationGeometry = (
 
 export const useLocationGadm = (location?: Location | null) => {
   const GEOMETRY = useLocationGeometry(location);
+  const adminUnit = useLocationAdminUnit(location);
 
   const query = useGetFeatures(
     {
@@ -242,23 +259,17 @@ export const useLocationGadm = (location?: Location | null) => {
       feature: DATASETS.admin2.layer,
     },
     {
-      enabled: !!DATASETS.admin2.getFeatures && !!GEOMETRY,
-      select(data): {
-        gid0: string[];
-        // gid1: string[];
-        // gid2: string[];
-      } {
+      enabled: !!DATASETS.admin2.getFeatures && !!GEOMETRY && !adminUnit,
+      select(data): { gid0: string[] } {
         const attributes: AdministrativeBoundary[] = data.features.map((f) => f.attributes);
         return {
           gid0: Array.from(new Set(attributes.map((f) => f.GID_0)).values()),
-          // gid1: Array.from(new Set(attributes.map((f) => f.GID_1)).values()),
-          // gid2: Array.from(new Set(attributes.map((f) => f.GID_2)).values()),
         };
       },
     },
   );
 
-  return query;
+  return { data: adminUnit ? { gid0: [adminUnit.gid0] } : query.data };
 };
 
 export const getGeometryByType = (location: Location) => {

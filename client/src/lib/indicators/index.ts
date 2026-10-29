@@ -4,9 +4,18 @@ import { useMemo } from "react";
 
 import * as geodeticAreaOperator from "@arcgis/core/geometry/operators/geodeticAreaOperator";
 import * as intersectionOperator from "@arcgis/core/geometry/operators/intersectionOperator";
-import { QueryFunction, UseQueryOptions, useQuery, useQueries } from "@tanstack/react-query";
+import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
+import {
+  AdminUnit,
+  HierarchyLayer,
+  belongsToAdminUnit,
+  getAncestorAttributes,
+  getCountryWhere,
+  getHierarchyLayer,
+  isAncestorLayer,
+} from "@/lib/admin-hierarchy";
 import { fetchIndicatorById, fetchIndicators } from "@/lib/cms-content";
 import { getModuleSlugs } from "@/lib/country";
 import { useGetActiveModuleSlugs } from "@/lib/country-modules";
@@ -439,11 +448,63 @@ export type QueryFeatureIdParams = {
   type: Exclude<VisualizationTypes, "custom">;
   resource: ResourceFeature;
   geometry: __esri.Polygon | null;
+  /** Set when the location is a searched Country, State or Municipality. */
+  adminUnit?: AdminUnit | null;
 };
 
-export const getQueryFeatureId = async ({ type, resource, geometry }: QueryFeatureIdParams) => {
+const MAX_ADMIN_UNIT_CACHE_ENTRIES = 50;
+const adminUnitObjectIdsCache = new Map<string, Promise<(string | number)[]>>();
+
+/**
+ * Names can't be compared without accents in the service's SQL, so this reads the unit's
+ * country (under 1,000 rows for any layer) and matches the names here. Cached because every
+ * widget and the AI summary ask for the same unit.
+ */
+const getAdminUnitObjectIds = (
+  layer: __esri.FeatureLayer,
+  hierarchy: HierarchyLayer,
+  unit: AdminUnit,
+) => {
+  const cacheKey = JSON.stringify({ url: layer.url, layerId: layer.layerId, unit });
+
+  const cached = adminUnitObjectIdsCache.get(cacheKey);
+  if (cached) return cached;
+
+  const promise = layer
+    .queryFeatures({
+      where: getCountryWhere(hierarchy, unit),
+      outFields: ["*"],
+      returnGeometry: false,
+    })
+    .then((fs) =>
+      fs.features
+        .filter(({ attributes }) => belongsToAdminUnit(attributes, hierarchy, unit))
+        .map(({ attributes }) => attributes[layer.objectIdField] as string | number),
+    )
+    .catch((error) => {
+      adminUnitObjectIdsCache.delete(cacheKey);
+      throw error;
+    });
+
+  if (adminUnitObjectIdsCache.size >= MAX_ADMIN_UNIT_CACHE_ENTRIES) {
+    const oldest = adminUnitObjectIdsCache.keys().next().value;
+    if (oldest !== undefined) adminUnitObjectIdsCache.delete(oldest);
+  }
+  adminUnitObjectIdsCache.set(cacheKey, promise);
+
+  return promise;
+};
+
+export const getQueryFeatureId = async ({
+  type,
+  resource,
+  geometry,
+  adminUnit,
+}: QueryFeatureIdParams) => {
   const FeatureLayer = (await import("@arcgis/core/layers/FeatureLayer")).default;
   const Query = (await import("@arcgis/core/rest/support/Query")).default;
+  const FeatureSet = (await import("@arcgis/core/rest/support/FeatureSet")).default;
+  const Graphic = (await import("@arcgis/core/Graphic")).default;
 
   const f = new FeatureLayer({
     url: resource.url + resource.layer_id,
@@ -453,8 +514,24 @@ export const getQueryFeatureId = async ({ type, resource, geometry }: QueryFeatu
 
   if (q) {
     const query = new Query(q);
+    const hierarchy = adminUnit ? getHierarchyLayer(resource.url) : null;
 
-    if (geometry) {
+    if (hierarchy && adminUnit) {
+      const objectIds = await getAdminUnitObjectIds(f, hierarchy, adminUnit);
+
+      // An empty `objectIds` would lift the filter and return the whole layer.
+      if (objectIds.length === 0) {
+        if (!isAncestorLayer(hierarchy, adminUnit)) return new FeatureSet({ features: [] });
+
+        const attributes = q.outStatistics
+          ? { value: 1 }
+          : getAncestorAttributes(hierarchy, adminUnit);
+
+        return new FeatureSet({ features: [new Graphic({ attributes })] });
+      }
+
+      query.objectIds = objectIds;
+    } else if (geometry) {
       query.geometry = geometry;
     }
 
@@ -512,8 +589,14 @@ export const getQueryFeatureId = async ({ type, resource, geometry }: QueryFeatu
   return null;
 };
 
-export const getQueryFeatureIdKey = ({ id, type, resource, geometry }: QueryFeatureIdParams) => {
-  return ["query-feature", id, type, resource.url, geometry?.toJSON()];
+export const getQueryFeatureIdKey = ({
+  id,
+  type,
+  resource,
+  geometry,
+  adminUnit,
+}: QueryFeatureIdParams) => {
+  return ["query-feature", id, type, resource.url, geometry?.toJSON(), adminUnit ?? null];
 };
 
 export const getQueryFeatureIdOptions = <
@@ -543,41 +626,6 @@ export const useQueryFeatureId = <
     queryFn,
     ...options,
   });
-};
-
-export const useQueryFeatures = (
-  indicators: Indicator[],
-  geometry: QueryFeatureIdParams["geometry"],
-) => {
-  const queries = useQueries({
-    queries: indicators?.map(({ id, resource }) => ({
-      queryKey: ["featureId", id, resource, geometry, geometry?.toJSON()],
-      queryFn: () =>
-        getQueryFeatureId({
-          id,
-          resource: resource as ResourceFeature,
-          type: "numeric",
-          geometry,
-        }),
-      enabled: !!id && !!resource && !!geometry,
-    })),
-  });
-
-  return queries.reduce((acc: { [key: string]: number }, query, index) => {
-    const id = indicators[index]?.id || `Unknown (${indicators[index]?.name})`;
-
-    if (!query.data) {
-      acc[id] = 0;
-      return acc;
-    }
-
-    const total = query.data.features.reduce((sum, curr) => {
-      return sum + (curr.attributes?.value || 0);
-    }, 0);
-
-    acc[id] = total;
-    return acc;
-  }, {});
 };
 
 export type QueryImageryIdParams = {

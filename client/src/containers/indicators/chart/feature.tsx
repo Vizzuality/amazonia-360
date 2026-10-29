@@ -8,7 +8,7 @@ import CHROMA from "chroma-js";
 
 import { formatPercentage } from "@/lib/formats";
 import { useQueryFeatureId, useResourceFeatureLayerId } from "@/lib/indicators";
-import { useLocationGeometry } from "@/lib/location";
+import { useLocationAdminUnit, useLocationGeometry } from "@/lib/location";
 
 import { Indicator, ResourceFeature } from "@/types/indicator";
 
@@ -34,8 +34,9 @@ export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
   const { onIndicatorViewLoading, onIndicatorViewLoaded, onIndicatorViewError } = useIndicator();
 
   const GEOMETRY = useLocationGeometry(location);
+  const adminUnit = useLocationAdminUnit(location);
 
-  const query = useQueryFeatureId({ id, resource, type: "chart", geometry: GEOMETRY });
+  const query = useQueryFeatureId({ id, resource, type: "chart", geometry: GEOMETRY, adminUnit });
   const queryResourceFeatureLayer = useResourceFeatureLayerId(indicator);
 
   // Every branch below sets an id: a unique value or a class-break threshold, compared with `>=`.

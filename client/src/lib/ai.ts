@@ -1,5 +1,6 @@
 import { useMutation, UseMutationOptions, useQueryClient } from "@tanstack/react-query";
 
+import { AdminUnit } from "@/lib/admin-hierarchy";
 import { getModuleSlugs } from "@/lib/country";
 import {
   CountryModule,
@@ -146,10 +147,11 @@ const getFeatureOutcome = async (
   id: Indicator["id"],
   resource: ResourceFeature,
   geometry: __esri.Polygon,
+  adminUnit: AdminUnit | null,
 ): Promise<EvidenceOutcome> => {
   if (!resource.query_ai) return { status: "unavailable" };
 
-  const featureSet = await getQueryFeatureId({ id, type: "ai", resource, geometry });
+  const featureSet = await getQueryFeatureId({ id, type: "ai", resource, geometry, adminUnit });
 
   if (!featureSet?.features) return { status: "unavailable" };
   if (featureSet.features.length === 0) return { status: "no_coverage" };
@@ -196,6 +198,7 @@ export const getTopicEvidence = async (
   indicators: Indicator[],
   geometry: __esri.Polygon | null,
   countryNames: ReadonlyMap<string, string> = new Map(),
+  adminUnit: AdminUnit | null = null,
 ): Promise<TopicEvidence> => {
   // Without an area there is nothing to measure, and an unfiltered `query_ai` would pull whole
   // layers down only for `getQueryFeatureId` to throw them away.
@@ -203,7 +206,9 @@ export const getTopicEvidence = async (
 
   const settled = await Promise.allSettled(
     indicators.map(({ id, resource }): Promise<EvidenceOutcome> => {
-      if (resource.type === "feature") return getFeatureOutcome(id, resource, geometry);
+      if (resource.type === "feature") {
+        return getFeatureOutcome(id, resource, geometry, adminUnit);
+      }
       if (resource.type === "imagery") return getImageryOutcome(id, resource, geometry);
 
       // h3 indicators live in the report's grid section rather than as topic cards and are not
@@ -267,6 +272,7 @@ type TopicSummaryParams = {
   activeIndicators?: Indicator["id"][];
   locale: string;
   location: __esri.Polygon | null;
+  adminUnit?: AdminUnit | null;
   /**
    * How to reach the catalogue. `useGetTopicSummary` supplies the query cache, so a summary for
    * each of the nine topics reads one fetch rather than nine.
@@ -276,8 +282,16 @@ type TopicSummaryParams = {
 };
 
 export const getTopicSummary = async (params: TopicSummaryParams) => {
-  const { topic, options, locale, activeIndicators, location, loadIndicators, loadCountryModules } =
-    params;
+  const {
+    topic,
+    options,
+    locale,
+    activeIndicators,
+    location,
+    adminUnit,
+    loadIndicators,
+    loadCountryModules,
+  } = params;
   const only = options?.only_active ? activeIndicators : undefined;
 
   const [allIndicators, countryModules] = await Promise.all([
@@ -294,7 +308,7 @@ export const getTopicSummary = async (params: TopicSummaryParams) => {
     : getPairFilteredIndicators(topicIndicators, new Set(activeIndicators));
 
   const countryNames = new Map(countryModules.map(({ slug, name }) => [slug, name]));
-  const evidence = await getTopicEvidence(indicators, location, countryNames);
+  const evidence = await getTopicEvidence(indicators, location, countryNames, adminUnit);
 
   // Formatting and tone rules live in the API's system prompt (api/src/app/openai_service.py),
   // not here: the client sends measurements, the service decides how to read them.
