@@ -26,6 +26,7 @@ import { Reports } from "@/cms/collections/Reports";
 import { Subtopics } from "@/cms/collections/Subtopics";
 import { Topics } from "@/cms/collections/Topics";
 import { Users } from "@/cms/collections/Users";
+import { SeedState } from "@/cms/globals/SeedState";
 import { importExportOptions } from "@/cms/import-export/plugin-options";
 import { routing } from "@/i18n/routing";
 
@@ -74,6 +75,7 @@ export default buildConfig({
     Partners,
     Indicators,
   ],
+  globals: [SeedState],
   db: postgresAdapter({
     idType: "uuid",
     pool: {

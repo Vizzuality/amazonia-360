@@ -19,7 +19,7 @@
  * Only the silent no-op is retried. A non-zero exit is a real failure and a step that
  * stops producing output is a different bug; both are reported as they happen.
  *
- * Usage: node scripts/payload-step.mjs <migrate|seed> [--preview]
+ * Usage: node scripts/payload-step.mjs <migrate|seed> [--preview] [--force]
  */
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
@@ -43,15 +43,15 @@ const STEPS = {
     args: ["run", "src/cms/seed/seed-data.ts"],
     // seed-data.ts's last line before it exits 0. A short seed logs "Seed incomplete" and
     // exits 1 instead, which is a real failure and not ours to retry.
-    provesItRan: /Seeded \d+ topics/,
+    provesItRan: /Seeded \d+ topics|Seed skipped/,
     timeoutMs: 5 * 60_000,
     // `payload run` does not set this, so seeding connects as a dev server would and
     // pushes the schema -- which writes the batch -1 row that makes the *next* migrate
     // stop on "data loss will occur, proceed?" and wait on stdin forever. migrate has
     // already built the schema by the time we get here, so there is nothing to push.
     // The flag's only consumer is that push gate in db-postgres' connect().
-    env: { PAYLOAD_MIGRATING: "true", SEED_PREVIEW: "false" },
-    flags: { "--preview": { SEED_PREVIEW: "true" } },
+    env: { PAYLOAD_MIGRATING: "true", SEED_PREVIEW: "false", SEED_FORCE: "false" },
+    flags: { "--preview": { SEED_PREVIEW: "true" }, "--force": { SEED_FORCE: "true" } },
   },
 };
 

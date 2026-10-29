@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import { getPayload } from "payload";
 
 import config from "@payload-config";
@@ -17,6 +19,7 @@ import { seedPartners } from "./seed-partners";
 import { DEFAULT_PREVIEW_USERS_PASSWORD, seedPreviewUsers } from "./seed-preview-users";
 import { seedSubtopics } from "./seed-subtopics";
 import { seedTopics } from "./seed-topics";
+import { getSeedFingerprint } from "./utils/seed-fingerprint";
 import type {
   RawCountryModule,
   RawIndicator,
@@ -32,9 +35,17 @@ const PREVIEW_USER_EMAILS: readonly string[] = [
 ];
 
 const PREVIEW = process.env.SEED_PREVIEW === "true";
+const FORCE = process.env.SEED_FORCE === "true";
 
 async function main() {
   const payload = await getPayload({ config });
+
+  const fingerprint = getSeedFingerprint(path.resolve(import.meta.dirname, "../../.."), PREVIEW);
+  const seedState = await payload.findGlobal({ slug: "seed-state" });
+  if (!FORCE && seedState.fingerprint === fingerprint) {
+    payload.logger.info("Seed skipped: datum, seed code and migrations are unchanged.");
+    process.exit(0);
+  }
 
   const countryModules = COUNTRY_MODULES as RawCountryModule[];
   const partners = PARTNERS as RawPartner[];
@@ -93,6 +104,7 @@ async function main() {
     const count = PREVIEW_USER_EMAILS.length;
     preview = ` and ${count} preview admins and ${count} preview users`;
   }
+  await payload.updateGlobal({ slug: "seed-state", data: { fingerprint } });
   payload.logger.info(
     `Seeded ${seededTopics.totalDocs} topics, ${seededSubtopics.totalDocs} subtopics, ${seededIndicators.totalDocs} indicators, ${seededModules.totalDocs} country modules, ${seededPartners.totalDocs} partners${preview}.`,
   );
