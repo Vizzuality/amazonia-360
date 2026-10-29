@@ -179,7 +179,7 @@ export const AISummaryForm = ({ mutation, onSubmit, onClose }: AISummaryFormProp
       >
         {mutation?.isPending && <Spinner className="h-5 w-5" />}
         {!mutation?.isPending && <LuSparkles className="h-5 w-5" />}
-        <span>Generate Summary</span>
+        <span>{t("ai-summary-generate")}</span>
       </Button>
     </form>
   );

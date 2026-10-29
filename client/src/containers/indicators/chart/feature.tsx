@@ -12,7 +12,7 @@ import { useLocationAdminUnit, useLocationGeometry } from "@/lib/location";
 
 import { Indicator, ResourceFeature } from "@/types/indicator";
 
-import { CardLoader } from "@/containers/card";
+import { CardState } from "@/containers/card/state";
 import { useIndicator } from "@/containers/indicators/provider";
 
 import MarimekkoChart, { Data } from "@/components/charts/marimekko";
@@ -299,7 +299,7 @@ export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
   ]);
 
   return (
-    <CardLoader query={[query, queryResourceFeatureLayer]} className="grow">
+    <CardState query={[query, queryResourceFeatureLayer]} isEmpty={!DATA.length} className="grow">
       <MarimekkoChart
         data={DATA}
         format={(d) => formatPercentage(d.value)}
@@ -310,6 +310,6 @@ export const ChartIndicatorsFeature = (indicator: ChartIndicatorsProps) => {
           <LegendBasic items={LEGEND} type="basic" />
         </div>
       )}
-    </CardLoader>
+    </CardState>
   );
 };

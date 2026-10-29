@@ -142,3 +142,23 @@ export const handleMapIndicatorPropertyChange = (
     });
   }
 };
+
+export type MapWidgetLoadStatus = "loading" | "ready" | "error";
+
+/** A failure anywhere wins over "no data": a map we could not read says nothing about the area. */
+export const getMapWidgetStatus = ({
+  mapStatus,
+  isFeature,
+  count,
+  isCountError,
+}: {
+  mapStatus: MapWidgetLoadStatus;
+  isFeature: boolean;
+  count: number | undefined;
+  isCountError: boolean;
+}) => {
+  if (mapStatus === "error" || isCountError) return "unavailable" as const;
+  if (isFeature && count === 0) return "no_coverage" as const;
+  if (mapStatus === "loading") return "loading" as const;
+  return "ok" as const;
+};

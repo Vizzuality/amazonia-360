@@ -1,16 +1,19 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import dynamic from "next/dynamic";
 
 import { useAtomValue } from "jotai";
+import { RefreshCw, TriangleAlert } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { useDebounce } from "@/lib/hooks";
 
 import { tmpBboxAtom, useSyncBbox, useSyncGridSelectedDataset } from "@/app/(frontend)/store";
 
 import GridLegend from "@/containers/map/grid-legend/grid";
+import LayerStatus from "@/containers/map/layer-status";
 import { SketchTooltips } from "@/containers/map/sketch-tooltips";
 import { useSketchHandlers } from "@/containers/map/use-sketch-handlers";
 
@@ -20,6 +23,7 @@ import ZoomControl from "@/components/map/controls/zoom";
 import MapPopup from "@/components/map/popup";
 import Sketch from "@/components/map/sketch";
 import Tooltip from "@/components/map/tooltip";
+import { Button } from "@/components/ui/button";
 
 const Map = dynamic(() => import("@/components/map"), {
   ssr: false,
@@ -40,7 +44,17 @@ export default function MapContainer({
   desktop?: boolean;
   gridEnabled?: boolean;
 }) {
+  const t = useTranslations();
   const [bbox, setBbox] = useSyncBbox();
+
+  const [mapAttempt, setMapAttempt] = useState(0);
+  const [mapFailed, setMapFailed] = useState(false);
+
+  const handleMapError = useCallback(() => setMapFailed(true), []);
+  const handleMapRetry = useCallback(() => {
+    setMapFailed(false);
+    setMapAttempt((a) => a + 1);
+  }, []);
   const tmpBbox = useAtomValue(tmpBboxAtom);
 
   const [gridSelectedDataset] = useSyncGridSelectedDataset();
@@ -73,6 +87,7 @@ export default function MapContainer({
   return (
     <div className="relative flex w-full grow flex-col">
       <Map
+        key={mapAttempt}
         id="default"
         defaultBbox={defaultBbox}
         bbox={tmpBbox}
@@ -95,6 +110,7 @@ export default function MapContainer({
         }}
         onMapMove={handleMapMove}
         onPointerLeave={handlePointerLeave}
+        onError={handleMapError}
       >
         <LayerManager gridEnabled={gridEnabled} />
         <Tooltip />
@@ -118,7 +134,35 @@ export default function MapContainer({
         </Controls>
 
         <MapPopup />
+
+        <LayerStatus className="absolute top-4 right-16 z-10 max-w-[calc(100%-5rem)] lg:top-[calc(1rem+var(--country-module-strip-h,0px))]" />
       </Map>
+
+      {mapFailed && (
+        <div
+          data-testid="map-unavailable"
+          role="alert"
+          className="bg-background absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 px-4 text-center"
+        >
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-50">
+            <TriangleAlert className="text-destructive h-5 w-5" aria-hidden />
+          </div>
+          <div className="max-w-80 space-y-1">
+            <p className="text-destructive text-sm font-bold">{t("map-state-error-title")}</p>
+            <p className="text-muted-foreground text-sm">{t("map-state-error-description")}</p>
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="space-x-2"
+            onClick={handleMapRetry}
+          >
+            <RefreshCw className="h-4 w-4" aria-hidden />
+            <span>{t("card-state-retry")}</span>
+          </Button>
+        </div>
+      )}
 
       {!gridEnabled && <Legend />}
 

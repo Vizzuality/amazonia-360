@@ -11,7 +11,14 @@ import { generateDescriptionTextAiPost } from "@/types/generated/text-generation
 import { ImageryAggregation, Indicator } from "@/types/indicator";
 import { Topic } from "@/types/topic";
 
-import { getTopicEvidence, getTopicSummary, getFeatureEvidence, useGetTopicSummary } from "./ai";
+import {
+  AI_SUMMARY_TIMEOUT,
+  AISummaryTimeoutError,
+  getTopicEvidence,
+  getTopicSummary,
+  getFeatureEvidence,
+  useGetTopicSummary,
+} from "./ai";
 
 vi.mock("@/lib/indicators", () => ({
   getIndicators: vi.fn(),
@@ -304,6 +311,77 @@ describe("useGetTopicSummary", () => {
     await result.current.mutateAsync({ options: {}, locale: "en", location: null });
 
     expect(getIndicatorsOptions).toHaveBeenCalledWith("en", codes);
+  });
+  test("gives up at the deadline, whichever step is still running", async () => {
+    vi.mocked(useReportCountry).mockReturnValue(null);
+    const deadline = new AbortController();
+    const timeout = vi.spyOn(AbortSignal, "timeout").mockReturnValue(deadline.signal);
+    const queryClient = new QueryClient();
+    vi.spyOn(queryClient, "ensureQueryData").mockReturnValue(new Promise(() => {}));
+
+    const { result } = renderHook(() => useGetTopicSummary(), {
+      wrapper: getWrapper(queryClient),
+    });
+    const pending = result.current.mutateAsync({ options: {}, locale: "en", location: GEOMETRY });
+    deadline.abort();
+
+    await expect(pending).rejects.toBeInstanceOf(AISummaryTimeoutError);
+    expect(timeout).toHaveBeenCalledWith(AI_SUMMARY_TIMEOUT);
+  });
+});
+
+describe("getTopicSummary outcome", () => {
+  const TOPIC = { id: 7, name: "Water" } as Topic;
+
+  const inTopic = (indicator: Indicator) =>
+    ({ ...indicator, subtopic: { topic_id: TOPIC.id }, module: null }) as unknown as Indicator;
+
+  const summarize = (catalogue: Indicator[]) =>
+    getTopicSummary({
+      topic: TOPIC,
+      options: {},
+      locale: "en",
+      location: GEOMETRY,
+      loadIndicators: async () => catalogue.map(inTopic),
+      loadCountryModules: async () => [],
+    });
+
+  test("asks the model when at least one indicator has values", async () => {
+    vi.mocked(generateDescriptionTextAiPost).mockResolvedValue({ description: "prose" } as never);
+    vi.mocked(getQueryFeatureId)
+      .mockResolvedValueOnce(featureSet([{ label: "A", value: 5, total: 10 }]))
+      .mockRejectedValueOnce(new Error("boom"));
+
+    const result = await summarize([featureIndicator(1), featureIndicator(2)]);
+
+    expect(result).toMatchObject({ status: "ok", description: "prose", included: 1, total: 2 });
+  });
+
+  test("reports no data, without asking the model, when the area genuinely has none", async () => {
+    vi.mocked(getQueryFeatureId).mockResolvedValue(featureSet([]));
+
+    const result = await summarize([featureIndicator(1), h3Indicator(2)]);
+
+    expect(result).toEqual({ status: "no_data", included: 1, total: 1 });
+    expect(generateDescriptionTextAiPost).not.toHaveBeenCalled();
+  });
+
+  test("reports no data when nothing in the topic can be summarized at all", async () => {
+    const result = await summarize([h3Indicator(1)]);
+
+    expect(result).toMatchObject({ status: "no_data" });
+    expect(generateDescriptionTextAiPost).not.toHaveBeenCalled();
+  });
+
+  test("reports no data, without asking the model, when the only other reads failed", async () => {
+    vi.mocked(getQueryFeatureId)
+      .mockResolvedValueOnce(featureSet([]))
+      .mockRejectedValueOnce(new Error("boom"));
+
+    const result = await summarize([featureIndicator(1), featureIndicator(2)]);
+
+    expect(result).toMatchObject({ status: "no_data" });
+    expect(generateDescriptionTextAiPost).not.toHaveBeenCalled();
   });
 });
 

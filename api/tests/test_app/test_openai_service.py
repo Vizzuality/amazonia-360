@@ -3,7 +3,12 @@ from unittest.mock import MagicMock, patch
 from openai.types.chat import ChatCompletion, ChatCompletionMessage
 from openai.types.chat.chat_completion import Choice
 
-from app.openai_service import SCOPE_RULE, generate_description
+from app.openai_service import (
+    OPENAI_MAX_RETRIES,
+    OPENAI_TIMEOUT_SECONDS,
+    SCOPE_RULE,
+    generate_description,
+)
 
 
 def completion(content: str) -> ChatCompletion:
@@ -103,3 +108,16 @@ def test_prompt_states_the_requested_length_and_language(mock_openai):
 
     assert "around two sentences" in prompt
     assert "must be in es" in prompt
+
+
+@patch("app.openai_service.OpenAI")
+def test_gives_up_on_openai_before_the_browser_does(mock_openai):
+    mock_client(mock_openai)
+
+    generate_description({"indicators": []}, "Normal", "en")
+
+    kwargs = mock_openai.call_args.kwargs
+    assert kwargs["timeout"] == OPENAI_TIMEOUT_SECONDS
+    assert kwargs["max_retries"] == OPENAI_MAX_RETRIES
+    # Every attempt timing out must still fail inside the client's 60s deadline.
+    assert OPENAI_TIMEOUT_SECONDS * (OPENAI_MAX_RETRIES + 1) < 50

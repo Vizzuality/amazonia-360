@@ -19,6 +19,7 @@ import {
 import { fetchIndicatorById, fetchIndicators } from "@/lib/cms-content";
 import { getModuleSlugs } from "@/lib/country";
 import { useGetActiveModuleSlugs } from "@/lib/country-modules";
+import { getReadSignal } from "@/lib/indicators/deadline";
 
 import {
   Indicator,
@@ -495,12 +496,10 @@ const getAdminUnitObjectIds = (
   return promise;
 };
 
-export const getQueryFeatureId = async ({
-  type,
-  resource,
-  geometry,
-  adminUnit,
-}: QueryFeatureIdParams) => {
+export const getQueryFeatureId = async (
+  { type, resource, geometry, adminUnit }: QueryFeatureIdParams,
+  { signal }: { signal?: AbortSignal } = {},
+) => {
   const FeatureLayer = (await import("@arcgis/core/layers/FeatureLayer")).default;
   const Query = (await import("@arcgis/core/rest/support/Query")).default;
   const FeatureSet = (await import("@arcgis/core/rest/support/FeatureSet")).default;
@@ -539,7 +538,7 @@ export const getQueryFeatureId = async ({
       query.returnGeometry = true;
     }
 
-    const fs = await f.queryFeatures(query);
+    const fs = await f.queryFeatures(query, { signal: getReadSignal(signal) });
 
     if (q.returnIntersections && fs.geometryType === "polygon") {
       if (!geometry) {
@@ -607,8 +606,8 @@ export const getQueryFeatureIdOptions = <
   options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const queryKey = getQueryFeatureIdKey(params);
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getQueryFeatureId>>> = () =>
-    getQueryFeatureId(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getQueryFeatureId>>> = ({ signal }) =>
+    getQueryFeatureId(params, { signal });
   return { queryKey, queryFn, ...options } as IndicatorsQueryOptions<TData, TError>;
 };
 
@@ -628,6 +627,42 @@ export const useQueryFeatureId = <
   });
 };
 
+export type QueryFeatureCountParams = {
+  id: Indicator["id"];
+  resource: ResourceFeature;
+  geometry: __esri.Polygon | null;
+};
+
+export const getQueryFeatureCount = async (
+  { resource, geometry }: QueryFeatureCountParams,
+  { signal }: { signal?: AbortSignal } = {},
+) => {
+  const FeatureLayer = (await import("@arcgis/core/layers/FeatureLayer")).default;
+
+  const f = new FeatureLayer({
+    url: resource.url + resource.layer_id,
+  });
+
+  return f.queryFeatureCount(
+    { ...(!!geometry && { geometry }) },
+    { signal: getReadSignal(signal) },
+  );
+};
+
+export const getQueryFeatureCountKey = ({ id, resource, geometry }: QueryFeatureCountParams) => {
+  return ["query-feature-count", id, resource.url, resource.layer_id, geometry?.toJSON()];
+};
+
+export const useQueryFeatureCount = (
+  params: QueryFeatureCountParams,
+  options?: { enabled?: boolean },
+) => {
+  const queryKey = getQueryFeatureCountKey(params);
+  const queryFn: QueryFunction<number> = ({ signal }) => getQueryFeatureCount(params, { signal });
+
+  return useQuery({ queryKey, queryFn, ...options });
+};
+
 export type QueryImageryIdParams = {
   id: Indicator["id"];
   type: VisualizationTypes;
@@ -635,10 +670,10 @@ export type QueryImageryIdParams = {
   geometry: __esri.Polygon | null;
 };
 
-export const getQueryImageryId = async ({
-  resource,
-  geometry,
-}: QueryImageryIdParams): Promise<{
+export const getQueryImageryId = async (
+  { resource, geometry }: QueryImageryIdParams,
+  { signal }: { signal?: AbortSignal } = {},
+): Promise<{
   histograms: __esri.RasterHistogram[];
   statistics: __esri.RasterBandStatistics[];
 } | null> => {
@@ -647,9 +682,10 @@ export const getQueryImageryId = async ({
     url: resource.url,
   });
 
-  return f.computeStatisticsHistograms({
-    ...(!!geometry && { geometry }),
-  });
+  return f.computeStatisticsHistograms(
+    { ...(!!geometry && { geometry }) },
+    { signal: getReadSignal(signal) },
+  );
 };
 
 export const getQueryImageryIdKey = ({ id, type, resource, geometry }: QueryImageryIdParams) => {
@@ -664,8 +700,8 @@ export const getQueryImageryIdOptions = <
   options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const queryKey = getQueryImageryIdKey(params);
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getQueryImageryId>>> = () =>
-    getQueryImageryId(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getQueryImageryId>>> = ({ signal }) =>
+    getQueryImageryId(params, { signal });
   return { queryKey, queryFn, ...options } as IndicatorsQueryOptions<TData, TError>;
 };
 
@@ -692,10 +728,10 @@ export type QueryImageryTileIdParams = {
   geometry: __esri.Polygon | null;
 };
 
-export const getQueryImageryTileId = async ({
-  resource,
-  geometry,
-}: QueryImageryTileIdParams): Promise<{
+export const getQueryImageryTileId = async (
+  { resource, geometry }: QueryImageryTileIdParams,
+  { signal }: { signal?: AbortSignal } = {},
+): Promise<{
   RAT: {
     features: {
       attributes: {
@@ -716,62 +752,40 @@ export const getQueryImageryTileId = async ({
     url: resource.url,
   });
 
-  try {
-    const RAT = await axios
-      .get<{
-        features: {
-          attributes: {
-            Value: number;
-            Class: string;
-            Red: number;
-            Green: number;
-            Blue: number;
-            Alpha: number;
-          };
-        }[];
-      }>(`${resource.url}/rasterattributetable`, {
-        params: {
-          f: "json",
-        },
-      })
-      .then((response) => response.data);
+  const readSignal = getReadSignal(signal);
 
-    // If we only use Dynamic Layers this is the way to get more statistics
+  const RAT = await axios
+    .get<{
+      features: {
+        attributes: {
+          Value: number;
+          Class: string;
+          Red: number;
+          Green: number;
+          Blue: number;
+          Alpha: number;
+        };
+      }[];
+    }>(`${resource.url}/rasterattributetable`, {
+      params: {
+        f: "json",
+      },
+      signal: readSignal,
+    })
+    .then((response) => response.data);
 
-    // const statistics: {
-    //   histograms: __esri.RasterHistogram[];
-    //   statistics: __esri.RasterBandStatistics[];
-    // } = await axios
-    //   .request({
-    //     url: `${resource.url}/computeStatisticsHistograms`,
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/x-www-form-urlencoded",
-    //     },
-    //     data: {
-    //       geometryType: "esriGeometryPolygon",
-    //       geometry: JSON.stringify(geometry?.toJSON()),
-    //       processAsMultidimensional: JSON.stringify(true),
-    //       token,
-    //       f: "pjson",
-    //     },
-    //   })
-    //   .then((response) => response.data);
-    const statistics: {
-      histograms: __esri.RasterHistogram[];
-      statistics: __esri.RasterBandStatistics[];
-    } = await f.computeStatisticsHistograms({
-      ...(!!geometry && { geometry }),
-    });
+  const statistics: {
+    histograms: __esri.RasterHistogram[];
+    statistics: __esri.RasterBandStatistics[];
+  } = await f.computeStatisticsHistograms(
+    { ...(!!geometry && { geometry }) },
+    { signal: readSignal },
+  );
 
-    return {
-      RAT,
-      ...statistics,
-    };
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
+  return {
+    RAT,
+    ...statistics,
+  };
 };
 
 export const getQueryImageryTileIdKey = ({
@@ -791,8 +805,8 @@ export const getQueryImageryTileIdOptions = <
   options?: Omit<IndicatorsQueryOptions<TData, TError>, "queryKey">,
 ) => {
   const queryKey = getQueryImageryTileIdKey(params);
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getQueryImageryTileId>>> = () =>
-    getQueryImageryTileId(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getQueryImageryTileId>>> = ({ signal }) =>
+    getQueryImageryTileId(params, { signal });
   return { queryKey, queryFn, ...options } as IndicatorsQueryOptions<TData, TError>;
 };
 

@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import { useParams } from "next/navigation";
 
@@ -57,6 +57,16 @@ export const ReportResultsContentIndicatorItem = ({
     [topic.topic_id, setTopics, setEditionModeIndicator],
   );
 
+  // `setTopics` closes over the current topics and changes every render; the memoised card below
+  // would otherwise remove from a stale list.
+  const handleDeleteRef = useRef(handleDelete);
+  handleDeleteRef.current = handleDelete;
+
+  const handleRemove = useCallback(
+    () => handleDeleteRef.current(indicator_id, type),
+    [indicator_id, type],
+  );
+
   const indicatorBasemap = (indicatorView as IndicatorMapView)?.basemapId;
   const INDICATOR = useMemo(() => {
     return (
@@ -68,9 +78,10 @@ export const ReportResultsContentIndicatorItem = ({
         type={type}
         editable={editable}
         basemapId={type === "map" ? indicatorView.basemapId : undefined}
+        onRemove={handleRemove}
       />
     );
-  }, [id, topic.id, topic.topic_id, indicator_id, type, editable, indicatorBasemap]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [id, topic.id, topic.topic_id, indicator_id, type, editable, indicatorBasemap, handleRemove]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div

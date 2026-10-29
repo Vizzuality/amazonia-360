@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { useInView } from "react-intersection-observer";
 
 import dynamic from "next/dynamic";
 
+import { useQueryFeatureCount } from "@/lib/indicators";
 import { useLocationGeometry } from "@/lib/location";
 
 import {
@@ -21,6 +22,7 @@ import { useFormTopics, useSyncDefaultTopics } from "@/app/(frontend)/store";
 import { BasemapIds } from "@/constants/basemaps";
 import { DATASETS } from "@/constants/datasets";
 
+import { CardStateMapLoading, CardStateMessage } from "@/containers/card/state";
 import { useIndicator } from "@/containers/indicators/provider";
 import SelectedLayer from "@/containers/map/layer-manager/selected-layer";
 import { WidgetLegend } from "@/containers/widgets/map/legend";
@@ -30,10 +32,11 @@ import BasemapControl from "@/components/map/controls/basemap";
 import FullscreenControl from "@/components/map/controls/fullscreen";
 import ZoomControl from "@/components/map/controls/zoom";
 import { LayerProps } from "@/components/map/layers/types";
+import { LayerView } from "@/components/map/provider";
 
 import { Report } from "@/payload-types";
 
-import { handleMapIndicatorPropertyChange } from "./utils";
+import { getMapWidgetStatus, handleMapIndicatorPropertyChange, MapWidgetLoadStatus } from "./utils";
 import { FALLBACK_WIDGET_DEFAULT_BASEMAP_ID } from "./utils";
 
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
@@ -65,7 +68,17 @@ export default function WidgetMap({
   const { topics, setTopics } = useFormTopics();
   const [defaultTopics, setDefaultTopics] = useSyncDefaultTopics();
 
-  const { onIndicatorViewLoaded, onIndicatorViewLoading } = useIndicator();
+  const { onIndicatorViewLoaded, onIndicatorViewLoading, onIndicatorViewError } = useIndicator();
+
+  const [attempt, setAttempt] = useState(0);
+  const [mapStatus, setMapStatus] = useState<MapWidgetLoadStatus>("loading");
+
+  // Only a feature layer can be counted cheaply; imagery and tiles just draw whatever is there.
+  const isFeature = indicator.resource.type === "feature";
+  const countQuery = useQueryFeatureCount(
+    { id: indicator.id, resource: indicator.resource as ResourceFeature, geometry: GEOMETRY },
+    { enabled: isFeature && !!GEOMETRY && enabled },
+  );
 
   const { ref, inView } = useInView({
     threshold: 0,
@@ -106,9 +119,36 @@ export default function WidgetMap({
     };
   }, []);
 
-  const handleLoad = useCallback(() => {
-    onIndicatorViewLoaded(indicator.id);
-  }, [indicator.id, onIndicatorViewLoaded]);
+  const indicatorLayerId = layers[0]?.id;
+
+  // "empty" is a layer that will not draw at this scale, not an area without data.
+  const handleLoad = useCallback(
+    (layerViews: LayerView[]) => {
+      const status = layerViews.find((lv) => lv.id === indicatorLayerId)?.status;
+
+      setMapStatus(status === "error" ? "error" : "ready");
+      onIndicatorViewLoaded(indicator.id);
+    },
+    [indicator.id, indicatorLayerId, onIndicatorViewLoaded],
+  );
+
+  const handleError = useCallback(() => {
+    setMapStatus("error");
+    onIndicatorViewError(indicator.id);
+  }, [indicator.id, onIndicatorViewError]);
+
+  const handleRetry = useCallback(() => {
+    setMapStatus("loading");
+    setAttempt((a) => a + 1);
+    if (countQuery.isError) countQuery.refetch();
+  }, [countQuery]);
+
+  const STATE = getMapWidgetStatus({
+    mapStatus,
+    isFeature,
+    count: countQuery.data,
+    isCountError: countQuery.isError,
+  });
 
   const IN_VIEW = useMemo(() => {
     if (isPdf) return true;
@@ -121,6 +161,7 @@ export default function WidgetMap({
     <div ref={ref} className="relative h-full">
       {IN_VIEW && (
         <Map
+          key={attempt}
           id={`overview-${indicator.id}`}
           initialBasemapId={syncBasemapId || basemapId}
           {...(GEOMETRY?.extent && {
@@ -141,6 +182,7 @@ export default function WidgetMap({
           }}
           isPdf={isPdf}
           onLoad={handleLoad}
+          onError={handleError}
         >
           {layers.map((layer: LayerProps, index: number, arr: LayerProps[]) => {
             const i = arr.length - index;
@@ -194,6 +236,17 @@ export default function WidgetMap({
             />
           )}
         </Map>
+      )}
+
+      {STATE === "loading" && (
+        <CardStateMapLoading className="bg-background absolute inset-0 z-10" />
+      )}
+      {(STATE === "unavailable" || STATE === "no_coverage") && (
+        <CardStateMessage
+          status={STATE}
+          onRetry={handleRetry}
+          className="bg-background absolute inset-0 z-10"
+        />
       )}
     </div>
   );

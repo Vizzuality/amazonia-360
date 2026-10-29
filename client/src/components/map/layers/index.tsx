@@ -11,7 +11,7 @@ import PopupTemplate from "@arcgis/core/PopupTemplate";
 
 import { omit } from "@/lib/utils";
 
-import { whenLayerViewSettled } from "@/components/map/layers/layer-view-status";
+import { LayerViewStatus, whenLayerViewSettled } from "@/components/map/layers/layer-view-status";
 import { LayerProps } from "@/components/map/layers/types";
 import { useMap } from "@/components/map/provider";
 
@@ -19,13 +19,18 @@ export default function Layer({
   layer,
   index,
   GEOMETRY,
+  onStatusChange,
 }: {
   layer: LayerProps;
   index: number;
   GEOMETRY?: __esri.Polygon | null;
+  onStatusChange?: (status: LayerViewStatus) => void;
 }) {
   const mapInstance = useMap();
   const { id } = layer;
+
+  const onStatusChangeRef = useRef(onStatusChange);
+  onStatusChangeRef.current = onStatusChange;
 
   // Cancels the pending wait when this layer is removed, so an abandoned layer
   // view can't report back into a map that has moved on.
@@ -43,6 +48,7 @@ export default function Layer({
       }
 
       if (onLayerViewLoading) onLayerViewLoading(l.id);
+      onStatusChangeRef.current?.("loading");
 
       settleAbortRef.current?.abort();
       const controller = new AbortController();
@@ -51,6 +57,7 @@ export default function Layer({
       whenLayerViewSettled(view, l, { signal: controller.signal })
         .then((status) => {
           if (onLayerViewSettled) onLayerViewSettled(l.id, status);
+          onStatusChangeRef.current?.(status);
         })
         .catch(() => {
           // Aborted because the layer was removed — nothing to report.
