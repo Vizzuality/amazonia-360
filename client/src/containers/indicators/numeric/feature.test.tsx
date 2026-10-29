@@ -7,7 +7,10 @@ import { Indicator, ResourceFeature } from "@/types/indicator";
 import { NumericIndicatorsFeature } from "@/containers/indicators/numeric/feature";
 
 vi.mock("@/lib/indicators", () => ({ useQueryFeatureId: vi.fn() }));
-vi.mock("@/lib/location", () => ({ useLocationGeometry: () => null }));
+vi.mock("@/lib/location", () => ({
+  useLocationGeometry: () => null,
+  useLocationAdminUnit: () => null,
+}));
 vi.mock("@/containers/indicators/provider", () => ({
   useIndicator: () => ({
     onIndicatorViewLoading: vi.fn(),
