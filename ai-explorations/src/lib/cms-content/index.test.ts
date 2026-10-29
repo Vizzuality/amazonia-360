@@ -1,0 +1,465 @@
+import { describe, expect, test, vi } from "vitest";
+
+import {
+  CountryModule as CmsCountryModule,
+  Indicator as CmsIndicator,
+  Partner as CmsPartner,
+  Subtopic as CmsSubtopic,
+  Topic as CmsTopic,
+} from "@/payload-types";
+
+const mockFind = vi.fn();
+const mockFindByID = vi.fn();
+
+vi.mock("@/services/sdk", () => ({
+  sdk: {
+    find: (...args: unknown[]) => mockFind(...args),
+    findByID: (...args: unknown[]) => mockFindByID(...args),
+  },
+}));
+
+const {
+  fetchCountryModules,
+  fetchIndicatorById,
+  fetchIndicators,
+  fetchPartners,
+  fetchSubtopics,
+  fetchTopics,
+  getCountryModulesReadArgs,
+} = await import("./index");
+
+/**
+ * Records are built, not recorded, and typed as the collection they stand for: add a required
+ * field to a collection and these stop compiling, which is the alarm a recorded JSON response
+ * cannot raise. Only the fields this boundary reads carry meaningful values.
+ */
+const TIMESTAMPS = { createdAt: "2026-01-01T00:00:00Z", updatedAt: "2026-01-01T00:00:00Z" };
+
+const topic = (over: Partial<CmsTopic> & Pick<CmsTopic, "id">): CmsTopic => ({
+  name: "Geographic context",
+  ...TIMESTAMPS,
+  ...over,
+});
+
+const subtopic = (over: Partial<CmsSubtopic> & Pick<CmsSubtopic, "id">): CmsSubtopic => ({
+  name: "ACU",
+  topic: "0",
+  ...TIMESTAMPS,
+  ...over,
+});
+
+const indicator = (over: Partial<CmsIndicator> & Pick<CmsIndicator, "id">): CmsIndicator => ({
+  order: 0,
+  name: "Total area",
+  description_short: "The area of the selection",
+  // Populated, as `depth: 2` asks for: the boundary reads the Topic through the Subtopic.
+  subtopic: subtopic({ id: "0", topic: topic({ id: "0" }) }),
+  resource: [{ blockType: "component", name: "total-area" }],
+  ...TIMESTAMPS,
+  ...over,
+});
+
+// Ascending, and spaced so a lexicographic sort would answer 0, 10, 2 — the varchar order the
+// CMS itself would give back if this boundary ever asked it to sort.
+const TOPICS = [
+  topic({
+    id: "0",
+    default_visualization: [
+      { indicator: "0", type: "numeric", x: 0, y: 0, w: 1, h: 1 },
+      { indicator: "5", type: "map", x: 1, y: 0, w: 2, h: 2, basemapId: "gray-vector", opacity: 1 },
+    ],
+  }),
+  topic({ id: "2", name: "Population" }),
+  topic({ id: "10", name: "Biodiversity" }),
+];
+
+const SUBTOPICS = [
+  subtopic({ id: "0" }),
+  subtopic({ id: "2", name: "Protected areas" }),
+  subtopic({ id: "10", name: "Deforestation" }),
+];
+
+const INDICATORS = [
+  indicator({ id: "0", visualization_types: ["numeric"] }),
+  indicator({
+    id: "1",
+    name: "Municipalities",
+    resource: [{ blockType: "feature", url: "https://arcgis/1", layer_id: "0" }],
+  }),
+  indicator({
+    id: "5",
+    name: "States",
+    resource: [
+      {
+        blockType: "feature",
+        url: "https://arcgis/5",
+        layer_id: "0",
+        popupTemplate: {
+          title: "{NOMBCAP}",
+          fieldInfos: [
+            { fieldName: "NAME_1", label: "State" },
+            { fieldName: "NAME_0", label: "Country" },
+          ],
+        },
+      },
+    ],
+  }),
+  indicator({
+    id: "7",
+    name: "Rivers",
+    resource: [
+      {
+        blockType: "feature",
+        url: "https://arcgis/7",
+        layer_id: "0",
+        popupTemplate: { title: "{NAME}", fieldInfos: [] },
+      },
+    ],
+  }),
+];
+
+type Args = Record<string, unknown>;
+
+const returning = (
+  docs: CmsTopic[] | CmsSubtopic[] | CmsIndicator[] | CmsCountryModule[] | CmsPartner[],
+) => {
+  mockFind.mockReset();
+  mockFind.mockResolvedValue({ docs });
+  return () => mockFind.mock.calls[0]?.[0] as Args;
+};
+
+describe("the catalogue reads", () => {
+  // The three reads share one `read()` helper, so one collection covers the guard.
+  test("disable pagination, which is the whole of the truncation guard", async () => {
+    const args = returning(TOPICS);
+
+    await fetchTopics({ locale: "en" });
+
+    expect(args()).toMatchObject({ collection: "topics", pagination: false });
+  });
+
+  test("ask for the requested locale and fall back to English", async () => {
+    const args = returning(TOPICS);
+
+    await fetchTopics({ locale: "es" });
+
+    expect(args()).toMatchObject({ locale: "es", fallbackLocale: "en" });
+  });
+
+  test("read topics and subtopics flat: depth 0 already returns the id the app wants", async () => {
+    const topics = returning(TOPICS);
+    await fetchTopics({ locale: "en" });
+    // Explicit, not inherited: the config default is 2 and would make these reads expensive.
+    expect(topics()).toMatchObject({ depth: 0 });
+
+    const subtopics = returning(SUBTOPICS);
+    await fetchSubtopics({ locale: "en" });
+    expect(subtopics()).toMatchObject({ depth: 0 });
+  });
+
+  test("reach an indicator's Topic through its Subtopic, trimming what they drag along", async () => {
+    const args = returning(INDICATORS);
+
+    await fetchIndicators({ locale: "en", modules: [] });
+
+    expect(args()).toMatchObject({
+      depth: 2,
+      populate: {
+        subtopics: { name: true, topic: true },
+        topics: { name: true },
+        "country-modules": { slug: true, tag: true },
+        partners: { name: true },
+      },
+    });
+  });
+
+  test("outside a module, serve the regional catalogue only", async () => {
+    const args = returning(INDICATORS);
+
+    await fetchIndicators({ locale: "en", modules: [] });
+
+    expect(args()).toMatchObject({ where: { module: { exists: false } } });
+  });
+
+  test("with several modules, add every module's rows to the regional catalogue", async () => {
+    const args = returning(INDICATORS);
+
+    await fetchIndicators({ locale: "en", modules: ["ECU", "PER"] });
+
+    expect(args()).toMatchObject({
+      where: { or: [{ module: { exists: false } }, { "module.slug": { in: ["ECU", "PER"] } }] },
+    });
+  });
+
+  test("inside a module, add that module's own rows to the regional catalogue", async () => {
+    const args = returning(INDICATORS);
+
+    await fetchIndicators({ locale: "en", modules: ["ECU"] });
+
+    expect(args()).toMatchObject({
+      where: { or: [{ module: { exists: false } }, { "module.slug": { in: ["ECU"] } }] },
+    });
+  });
+});
+
+// Indicators are absent: `lib/indicators` sorts them by name, so their id order is never read.
+describe("the order the catalogue arrives in", () => {
+  test("is by id for topics and subtopics, whatever order the CMS answered in", async () => {
+    returning([...TOPICS].reverse());
+    expect((await fetchTopics({ locale: "en" })).map(({ id }) => id)).toEqual([0, 2, 10]);
+
+    returning([...SUBTOPICS].reverse());
+    expect((await fetchSubtopics({ locale: "en" })).map(({ id }) => id)).toEqual([0, 2, 10]);
+  });
+});
+
+describe("content ids", () => {
+  test("keep the Overview topic at 0 rather than losing it to a falsy check", async () => {
+    returning(TOPICS);
+
+    const overview = (await fetchTopics({ locale: "en" })).find(({ id }) => id === 0);
+
+    expect(overview?.name).toBe("Geographic context");
+    expect(typeof overview?.id).toBe("number");
+  });
+
+  test("are coerced on a default visualization too, since it becomes a saved report", async () => {
+    returning(TOPICS);
+
+    const views = (await fetchTopics({ locale: "en" })).find(
+      ({ id }) => id === 0,
+    )?.default_visualization;
+
+    expect(views?.[0]).toMatchObject({ indicator_id: 0, type: "numeric" });
+    expect(typeof views?.[0].indicator_id).toBe("number");
+    // basemapId and opacity belong to the map view alone.
+    expect(views?.find((view) => view.type === "map")).toMatchObject({
+      indicator_id: 5,
+      basemapId: "gray-vector",
+      opacity: 1,
+    });
+  });
+
+  test("refuse a non-numeric id rather than resolving to the wrong record", async () => {
+    returning([topic({ id: "" })]);
+
+    await expect(fetchTopics({ locale: "en" })).rejects.toThrow(/numeric content id/);
+  });
+});
+
+describe("the depth each read asks for", () => {
+  test("is checked, because no Payload type narrows it", async () => {
+    returning([indicator({ id: "0", subtopic: "3" })]);
+
+    await expect(fetchIndicators({ locale: "en", modules: [] })).rejects.toThrow(/lost its depth/);
+  });
+
+  test("is checked in the other direction too, on the flat reads", async () => {
+    returning([subtopic({ id: "0", topic: topic({ id: "0" }) })]);
+
+    await expect(fetchSubtopics({ locale: "en" })).rejects.toThrow(/came back populated/);
+  });
+});
+
+describe("indicators", () => {
+  test("hold the Topic beside the Subtopic, where the app expects the two as siblings", async () => {
+    returning(INDICATORS);
+
+    const [first] = await fetchIndicators({ locale: "en", modules: [] });
+
+    expect(first.topic).toEqual({ id: 0, name: "Geographic context" });
+    expect(first.subtopic).toMatchObject({ id: 0, topic_id: 0, name: "ACU" });
+  });
+
+  test("carry the one resource unwrapped from the block array", async () => {
+    returning(INDICATORS);
+
+    const [first] = await fetchIndicators({ locale: "en", modules: [] });
+
+    expect(first.resource.type).toBe("component");
+    expect(Array.isArray(first.resource)).toBe(false);
+  });
+
+  test("refuse a row with no resource, which has nothing to draw or measure", async () => {
+    returning([indicator({ id: "0", resource: [] })]);
+
+    await expect(fetchIndicators({ locale: "en", modules: [] })).rejects.toThrow(/has no resource/);
+  });
+
+  test("default an absent visualization_types to empty rather than null", async () => {
+    returning([indicator({ id: "0", visualization_types: null })]);
+
+    expect((await fetchIndicators({ locale: "en", modules: [] }))[0].visualization_types).toEqual(
+      [],
+    );
+  });
+});
+
+describe("an indicator by id", () => {
+  test("reads at the catalogue's depth, with no module filter", async () => {
+    mockFindByID.mockReset();
+    mockFindByID.mockResolvedValue(INDICATORS[2]);
+
+    const found = await fetchIndicatorById({ id: 5, locale: "es" });
+
+    expect(mockFindByID.mock.calls[0]?.[0]).toMatchObject({
+      collection: "indicators",
+      id: "5",
+      locale: "es",
+      fallbackLocale: "en",
+      depth: 2,
+      populate: { subtopics: { name: true, topic: true }, topics: { name: true } },
+    });
+    expect(mockFindByID.mock.calls[0]?.[0]).not.toHaveProperty("where");
+    expect(found).toMatchObject({
+      id: 5,
+      name: "States",
+      topic: { id: 0, name: "Geographic context" },
+      resource: { type: "feature" },
+    });
+  });
+});
+
+describe("a feature's popup", () => {
+  const popupOf = async (id: number) =>
+    (await fetchIndicators({ locale: "en", modules: [] })).find((found) => found.id === id)
+      ?.resource;
+
+  test("is rebuilt as the ArcGIS `content` shape, dropping Payload's row ids", async () => {
+    returning(INDICATORS);
+
+    expect(await popupOf(5)).toMatchObject({
+      popupTemplate: {
+        title: "{NOMBCAP}",
+        content: [
+          {
+            type: "fields",
+            fieldInfos: [
+              { fieldName: "NAME_1", label: "State" },
+              { fieldName: "NAME_0", label: "Country" },
+            ],
+          },
+        ],
+      },
+    });
+  });
+
+  test("keeps a bare title, where an empty `content` would drop the popup instead", async () => {
+    returning(INDICATORS);
+
+    expect(await popupOf(7)).toMatchObject({
+      popupTemplate: { title: "{NAME}", content: undefined },
+    });
+  });
+
+  test("is left out entirely when it carries neither a title nor a field", async () => {
+    returning(INDICATORS);
+
+    expect(await popupOf(1)).toMatchObject({ popupTemplate: undefined });
+  });
+});
+
+const countryModule = (
+  over: Partial<CmsCountryModule> & Pick<CmsCountryModule, "id">,
+): CmsCountryModule => ({
+  slug: "ECU",
+  country: "ECU",
+  active: true,
+  name: "Ecuador",
+  moduleName: "Ecuadorian Amazon",
+  tag: "ECU",
+  order: 0,
+  ...TIMESTAMPS,
+  ...over,
+});
+
+const partner = (over: Partial<CmsPartner> & Pick<CmsPartner, "id">): CmsPartner => ({
+  name: "Esri",
+  logo: "/partners/esri.avif",
+  order: 0,
+  ...TIMESTAMPS,
+  ...over,
+});
+
+describe("an indicator's module", () => {
+  test("carries the populated module as slug and tag", async () => {
+    returning([indicator({ id: "0", module: countryModule({ id: "m1" }) })]);
+
+    const [found] = await fetchIndicators({ locale: "en", modules: ["ECU"] });
+
+    expect(found.module).toEqual({ slug: "ECU", tag: "ECU" });
+  });
+
+  test("is null for a regional indicator, or one whose module the reader cannot see", async () => {
+    returning([indicator({ id: "0" }), indicator({ id: "1", module: "hidden-module" })]);
+
+    const found = await fetchIndicators({ locale: "en", modules: [] });
+
+    expect(found.map(({ module }) => module)).toEqual([null, null]);
+  });
+});
+
+describe("the country modules read", () => {
+  test("asks for active modules only", () => {
+    expect(getCountryModulesReadArgs("es")).toMatchObject({ where: { active: { equals: true } } });
+  });
+
+  test("maps a complete bbox to a tuple and anything partial to null", async () => {
+    returning([
+      countryModule({
+        id: "m1",
+        partnersDescription: "Line one",
+        bbox: { xmin: 1, ymin: 2, xmax: 3, ymax: 4 },
+      }),
+      countryModule({ id: "m2", slug: "bra-para", bbox: { xmin: 1, ymin: 2, xmax: null } }),
+      countryModule({ id: "m3", slug: "PER", bbox: { xmin: 1, ymin: 2, xmax: 3 } }),
+    ]);
+
+    const [first, second, third] = await fetchCountryModules({ locale: "en" });
+
+    expect(first).toEqual({
+      id: "m1",
+      slug: "ECU",
+      country: "ECU",
+      name: "Ecuador",
+      moduleName: "Ecuadorian Amazon",
+      partnersDescription: "Line one",
+      bbox: [1, 2, 3, 4],
+    });
+    expect(second).toMatchObject({ slug: "bra-para", bbox: null, partnersDescription: null });
+    expect(third.bbox).toBeNull();
+  });
+});
+
+describe("the partners read", () => {
+  test("defaults the optional fields and keeps module ids", async () => {
+    returning([
+      partner({ id: "p1" }),
+      partner({
+        id: "p2",
+        label: "MAE",
+        logoSize: "large",
+        regional: true,
+        modules: ["m1"],
+      }),
+    ]);
+
+    const [bare, full] = await fetchPartners({ locale: "en" });
+
+    expect(bare).toEqual({
+      id: "p1",
+      name: "Esri",
+      label: null,
+      logo: "/partners/esri.avif",
+      logoSize: "default",
+      regional: false,
+      moduleIds: [],
+    });
+    expect(full).toMatchObject({
+      label: "MAE",
+      logoSize: "large",
+      regional: true,
+      moduleIds: ["m1"],
+    });
+  });
+});

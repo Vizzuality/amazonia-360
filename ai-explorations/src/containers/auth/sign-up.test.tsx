@@ -1,0 +1,196 @@
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+const mockSignUpFn = vi.fn();
+const mockPush = vi.fn();
+
+vi.mock("@/lib/auth/session.functions", () => ({
+  signUpFn: (...args: unknown[]) => mockSignUpFn(...args),
+}));
+
+vi.mock("sonner", () => ({
+  toast: {
+    promise: vi.fn((promise: Promise<unknown>) => promise.catch(() => {})),
+  },
+}));
+
+vi.mock("@/i18n/navigation", () => ({
+  Link: ({ children, href }: { children: React.ReactNode; href: string }) => (
+    <a href={href}>{children}</a>
+  ),
+  useRouter: () => ({ push: mockPush }),
+}));
+
+import { SignupForm } from "./sign-up";
+
+const fillRequiredFields = async (user: ReturnType<typeof userEvent.setup>) => {
+  await user.type(screen.getByLabelText("auth-field-name"), "Test User");
+  await user.type(screen.getByLabelText("auth-field-email"), "test@example.com");
+  await user.type(screen.getByLabelText("auth-field-password"), "password123");
+  await user.type(screen.getByLabelText("auth-field-confirm-password"), "password123");
+};
+
+const submit = async (user: ReturnType<typeof userEvent.setup>) => {
+  await user.click(screen.getByRole("button", { name: "auth-button-create-account" }));
+};
+
+describe("SignupForm", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockSignUpFn.mockResolvedValue({ id: "user-1" });
+  });
+
+  it("renders the community opt-in checkbox unticked by default", () => {
+    render(<SignupForm />);
+
+    expect(screen.getByRole("checkbox")).not.toBeChecked();
+    expect(screen.getByText(/auth-community-optin-label/)).toBeInTheDocument();
+    expect(screen.getByText("auth-community-optin-optional")).toBeInTheDocument();
+  });
+
+  it("renders the signup description", () => {
+    render(<SignupForm />);
+
+    expect(screen.getByText("auth-signup-description")).toBeInTheDocument();
+  });
+
+  it("renders the terms agreement as text rather than a checkbox", () => {
+    render(<SignupForm />);
+
+    expect(screen.getByText(/auth-agreement-text/)).toBeInTheDocument();
+    expect(screen.getAllByRole("checkbox")).toHaveLength(1);
+  });
+
+  it("submits with communityOptIn false when the checkbox is left unticked", async () => {
+    const user = userEvent.setup();
+    render(<SignupForm />);
+
+    await fillRequiredFields(user);
+    await submit(user);
+
+    await waitFor(() => {
+      expect(mockSignUpFn).toHaveBeenCalledWith({
+        data: expect.objectContaining({ communityOptIn: false }),
+      });
+    });
+  });
+
+  it("submits with communityOptIn true when the checkbox is ticked", async () => {
+    const user = userEvent.setup();
+    render(<SignupForm />);
+
+    await fillRequiredFields(user);
+    await user.click(screen.getByRole("checkbox"));
+    await submit(user);
+
+    await waitFor(() => {
+      expect(mockSignUpFn).toHaveBeenCalledWith({
+        data: expect.objectContaining({ communityOptIn: true }),
+      });
+    });
+  });
+
+  it("still blocks submission when passwords do not match", async () => {
+    const user = userEvent.setup();
+    render(<SignupForm />);
+
+    await user.type(screen.getByLabelText("auth-field-name"), "Test User");
+    await user.type(screen.getByLabelText("auth-field-email"), "test@example.com");
+    await user.type(screen.getByLabelText("auth-field-password"), "password123");
+    await user.type(screen.getByLabelText("auth-field-confirm-password"), "different");
+    await submit(user);
+
+    await waitFor(() => {
+      expect(screen.getByText("auth-validation-passwords-no-match")).toBeInTheDocument();
+    });
+    expect(mockSignUpFn).not.toHaveBeenCalled();
+  });
+
+  it("blocks submission for a name under 2 characters", async () => {
+    const user = userEvent.setup();
+    render(<SignupForm />);
+
+    await user.type(screen.getByLabelText("auth-field-name"), "A");
+    await user.type(screen.getByLabelText("auth-field-email"), "test@example.com");
+    await user.type(screen.getByLabelText("auth-field-password"), "password123");
+    await user.type(screen.getByLabelText("auth-field-confirm-password"), "password123");
+    await submit(user);
+
+    await waitFor(() => {
+      expect(screen.getByText("auth-validation-name-min-length")).toBeInTheDocument();
+    });
+    expect(mockSignUpFn).not.toHaveBeenCalled();
+  });
+
+  it("blocks submission for an invalid email", async () => {
+    const user = userEvent.setup();
+    render(<SignupForm />);
+
+    await user.type(screen.getByLabelText("auth-field-name"), "Test User");
+    await user.type(screen.getByLabelText("auth-field-email"), "not-an-email");
+    await user.type(screen.getByLabelText("auth-field-password"), "password123");
+    await user.type(screen.getByLabelText("auth-field-confirm-password"), "password123");
+    await submit(user);
+
+    await waitFor(() => {
+      expect(screen.getByText("auth-validation-email-invalid")).toBeInTheDocument();
+    });
+    expect(mockSignUpFn).not.toHaveBeenCalled();
+  });
+
+  it("blocks submission for a password under 6 characters", async () => {
+    const user = userEvent.setup();
+    render(<SignupForm />);
+
+    await user.type(screen.getByLabelText("auth-field-name"), "Test User");
+    await user.type(screen.getByLabelText("auth-field-email"), "test@example.com");
+    await user.type(screen.getByLabelText("auth-field-password"), "12345");
+    await user.type(screen.getByLabelText("auth-field-confirm-password"), "12345");
+    await submit(user);
+
+    await waitFor(() => {
+      expect(screen.getByText("auth-validation-password-min-length")).toBeInTheDocument();
+    });
+    expect(mockSignUpFn).not.toHaveBeenCalled();
+  });
+
+  it("links to the sign-in page", () => {
+    render(<SignupForm />);
+
+    expect(screen.getByRole("link", { name: "auth-link-sign-in" })).toHaveAttribute(
+      "href",
+      "/auth/sign-in",
+    );
+  });
+
+  it("submits with countriesOfInterest empty when no chip is selected", async () => {
+    const user = userEvent.setup();
+    render(<SignupForm />);
+
+    await fillRequiredFields(user);
+    await submit(user);
+
+    await waitFor(() => {
+      expect(mockSignUpFn).toHaveBeenCalledWith({
+        data: expect.objectContaining({ countriesOfInterest: [] }),
+      });
+    });
+  });
+
+  it("submits with the selected countries' iso3 codes", async () => {
+    const user = userEvent.setup();
+    render(<SignupForm />);
+
+    await fillRequiredFields(user);
+    await user.click(screen.getByRole("button", { name: "country-module-BRA-name" }));
+    await user.click(screen.getByRole("button", { name: "country-module-PER-name" }));
+    await submit(user);
+
+    await waitFor(() => {
+      expect(mockSignUpFn).toHaveBeenCalledWith({
+        data: expect.objectContaining({ countriesOfInterest: ["BRA", "PER"] }),
+      });
+    });
+  });
+});

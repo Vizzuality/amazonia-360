@@ -4,12 +4,12 @@
   "description": "Amazonia 360 platform",
   "packageManager": "pnpm@10.29.2",
   "scripts": {
-    "clean": "rimraf dist coverage .next && pnpm -r clean",
-    "lint": "pnpm -r lint",
-    "format": "pnpm -r format",
-    "check": "pnpm -r check",
-    "build": "pnpm -r build",
-    "test": "pnpm -r test",
+    "clean": "rimraf dist coverage .next && pnpm -r --filter=!ai-explorations clean",
+    "lint": "pnpm -r --filter=!ai-explorations lint",
+    "format": "pnpm -r --filter=!ai-explorations format",
+    "check": "pnpm -r --filter=!ai-explorations check",
+    "build": "pnpm -r --filter=!ai-explorations build",
+    "test": "pnpm -r --filter=!ai-explorations test",
     "splitenv": "node scripts/splitenv.mts .env API CLIENT DATABASE LOAD_TESTS",
     "test:splitenv": "vitest run scripts/splitenv.test.mts"
   },

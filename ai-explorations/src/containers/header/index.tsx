@@ -1,0 +1,121 @@
+"use client";
+
+import { useEffect, useMemo } from "react";
+
+import { Separator } from "@radix-ui/react-select";
+import { useSetAtom } from "jotai";
+
+import { Params } from "@/lib/navigation";
+import { useParams } from "@/lib/navigation";
+import { reportEditionModeAtom, useSyncLocation } from "@/lib/url-state/store";
+import { cn } from "@/lib/utils";
+
+import AuthHeader from "@/containers/header/auth/desktop";
+import CountrySelector from "@/containers/header/country-selector";
+import LanguageSelector from "@/containers/header/language-selector/desktop";
+import { Media } from "@/containers/media";
+
+import { useSidebar } from "@/components/ui/sidebar";
+
+import { usePathname } from "@/i18n/navigation";
+
+import ConfirmLocation from "./confirm/desktop";
+import DesktopDrawingTools from "./drawing-tools/desktop";
+import Logo from "./logo";
+import MobileNavigation from "./mobile-navigation";
+import NavigationLinks from "./navigation-links";
+
+function getLinksBreakpoint(hasConfirmBar: boolean): "xl" | "2xl" {
+  return hasConfirmBar ? "2xl" : "xl";
+}
+
+function getCountrySelectorBreakpoint(hasConfirmBar: boolean): "md" | "xl" {
+  return hasConfirmBar ? "xl" : "md";
+}
+
+function getRoutes(pathname: string, params: Params) {
+  const { id } = params;
+  const r = pathname.match(/^(?:\/[a-z]{2})?\/reports(?:\/(grid|indicators))?\/?$/);
+  const isReport = pathname.startsWith("/reports");
+  const isReportResults = !!id;
+
+  return {
+    isReport,
+    isReportResults,
+    isReportRoot: !!r && !r[1],
+    isReportSub: !!r && !!r[1],
+  };
+}
+
+export default function Header() {
+  const params = useParams();
+  const pathname = usePathname();
+
+  const [location] = useSyncLocation();
+  const setEditionMode = useSetAtom(reportEditionModeAtom);
+
+  const { setOpen } = useSidebar();
+
+  const linksBreakpoint = getLinksBreakpoint(!!location && getRoutes(pathname, params).isReportSub);
+  const countrySelectorBreakpoint = getCountrySelectorBreakpoint(
+    !!location && getRoutes(pathname, params).isReportSub,
+  );
+
+  const DYNAMIC_HEADER = useMemo(() => {
+    const { isReportSub } = getRoutes(pathname, params);
+
+    return (
+      <>
+        <Media greaterThanOrEqual={linksBreakpoint}>
+          <NavigationLinks />
+        </Media>
+        {!location && isReportSub && <DesktopDrawingTools />}
+        {location && isReportSub && <ConfirmLocation />}
+        {isReportSub && <Separator className="h-4 w-px bg-border" />}
+      </>
+    );
+  }, [pathname, params, location, linksBreakpoint]);
+
+  useEffect(() => {
+    // Hide sidebar when navigating away from report
+    // Remove edit mode
+    if (!pathname.includes(`/reports/${params.id}`)) {
+      setOpen(false);
+      setEditionMode(false);
+    }
+  }, [params.id, pathname, setOpen, setEditionMode]);
+
+  return (
+    <header
+      className={cn({
+        "relative top-0 left-0 z-10 w-full": true,
+        "box-border flex h-16 flex-col justify-center border-b border-blue-50 bg-white backdrop-blur-sm print:hidden": true,
+        // "border-blue-100": isReport,
+      })}
+    >
+      <div className="container flex items-center justify-between gap-6 md:mx-auto">
+        <Logo />
+        <Media greaterThanOrEqual={countrySelectorBreakpoint} className="flex grow items-center">
+          <CountrySelector />
+        </Media>
+
+        <Media greaterThanOrEqual="md" className="flex min-w-0 items-center gap-4">
+          {DYNAMIC_HEADER}
+
+          <div className="flex items-center space-x-1">
+            <LanguageSelector />
+            <AuthHeader />
+          </div>
+
+          <Media between={["md", linksBreakpoint]}>
+            <MobileNavigation inline />
+          </Media>
+        </Media>
+
+        <Media lessThan="md">
+          <MobileNavigation />
+        </Media>
+      </div>
+    </header>
+  );
+}

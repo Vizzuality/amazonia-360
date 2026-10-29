@@ -1,0 +1,137 @@
+"use client";
+
+import { useForm } from "@tanstack/react-form";
+import { toast } from "sonner";
+import { useTranslations } from "use-intl";
+import * as z from "zod";
+
+import { resetPasswordFn } from "@/lib/auth/session.functions";
+import { useSearchParams } from "@/lib/navigation";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+
+import { useRouter } from "@/i18n/navigation";
+
+export function ResetPasswordForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const router = useRouter();
+  const t = useTranslations();
+
+  const searchParams = useSearchParams();
+
+  const formSchema = z
+    .object({
+      password: z.string().min(6, t("auth-validation-password-min-length")),
+      "confirm-password": z.string(),
+    })
+    .refine((data) => data.password === data["confirm-password"], {
+      message: t("auth-validation-passwords-no-match"),
+      path: ["confirm-password"],
+    });
+
+  const form = useForm({
+    defaultValues: {
+      password: "",
+      "confirm-password": "",
+    },
+    validators: {
+      onSubmit: formSchema,
+    },
+    onSubmit: async ({ value }) => {
+      toast.promise(
+        resetPasswordFn({
+          data: {
+            password: value.password,
+            token: searchParams.get("token") ?? "",
+          },
+        }).then(() => {
+          router.push("/auth/sign-in");
+        }),
+        {
+          loading: t("auth-toast-resetting-password"),
+          success: t("auth-toast-password-reset-success"),
+          error: t("auth-toast-password-reset-failed"),
+          duration: 2000,
+        },
+      );
+    },
+  });
+
+  return (
+    <Card className="border-none shadow-none" {...props}>
+      <CardHeader>
+        <CardTitle className="text-3xl text-primary">{t("auth-reset-password-title")}</CardTitle>
+        <CardDescription className="font-medium">
+          {t("auth-reset-password-description")}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit();
+          }}
+        >
+          <FieldGroup>
+            <form.Field name="password">
+              {(field) => {
+                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>{t("auth-field-new-password")}</FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      type="password"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                    />
+                    <FieldDescription>{t("auth-field-password-description")}</FieldDescription>
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                  </Field>
+                );
+              }}
+            </form.Field>
+            <form.Field name="confirm-password">
+              {(field) => {
+                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>
+                      {t("auth-field-confirm-new-password")}
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      type="password"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                    />
+                    <FieldDescription>
+                      {t("auth-field-confirm-password-description")}
+                    </FieldDescription>
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                  </Field>
+                );
+              }}
+            </form.Field>
+
+            <FieldGroup>
+              <Field>
+                <Button type="submit" size="lg">
+                  {t("auth-button-reset-password")}
+                </Button>
+              </Field>
+            </FieldGroup>
+          </FieldGroup>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}

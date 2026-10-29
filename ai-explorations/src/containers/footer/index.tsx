@@ -1,0 +1,63 @@
+"use client";
+
+import { useLocale, useTranslations } from "use-intl";
+
+import { cn } from "@/lib/utils";
+
+import DataDisclaimer from "@/containers/disclaimers/data";
+
+import Image from "@/components/image";
+import { Button } from "@/components/ui/button";
+
+export default function Footer({ showDisclaimer = true }: Readonly<{ showDisclaimer?: boolean }>) {
+  const locale = useLocale();
+  const t = useTranslations();
+
+  return (
+    <section className={cn("bg-blue-900 text-white print:hidden", { "pt-4": showDisclaimer })}>
+      <div className="container">
+        <div className="divide-y divide-primary">
+          {showDisclaimer && <DataDisclaimer />}
+
+          <div className="flex w-full flex-col items-center justify-between py-4 md:flex-row md:items-center">
+            <div className="flex h-full w-full flex-col items-start space-y-10 pb-6 sm:flex-row md:items-center md:space-y-0 md:space-x-10 md:pb-0">
+              <div className="flex w-full items-center justify-start space-x-10">
+                <div className="flex items-center justify-center">
+                  <Image
+                    src={"/images/home/idb_logo.png"}
+                    alt="IDB Logo"
+                    width={65}
+                    height={24}
+                    className="text-white"
+                  />
+                </div>
+
+                <div className="flex items-center justify-center">
+                  <Image
+                    src={`/images/home/logo-amazonia-forever-${locale}.png`}
+                    alt="Amazonia Forever Logo"
+                    width={40}
+                    height={46}
+                    className="text-white"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex w-full flex-wrap items-center justify-start gap-x-6 text-sm font-light md:flex-nowrap md:justify-end">
+              <Button variant="link" className="p-0 leading-1 text-white">
+                <a href="https://www.iadb.org/en/home/terms-and-conditions" target="_blank">
+                  {t("terms-and-conditions")}
+                </a>
+              </Button>
+              <Button variant="link" className="p-0 leading-1 text-white">
+                <a href="https://www.iadb.org/en/home/privacy-notice" target="_blank">
+                  {t("privacy-policy")}
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

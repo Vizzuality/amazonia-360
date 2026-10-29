@@ -1,0 +1,478 @@
+[
+  {
+    "id": 0,
+    "Numerotation": "0",
+    "name_en": "Geographic context",
+    "name_es": "Contexto geográfico",
+    "name_pt": "Contexto geográfico",
+    "image": "",
+    "description_en": "",
+    "description_es": "",
+    "description_pt": "",
+    "default_visualization": [
+      {
+        "id": 0,
+        "indicator_id": 0,
+        "type": "numeric",
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 35,
+        "indicator_id": 35,
+        "type": "numeric",
+        "x": 1,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 11,
+        "indicator_id": 11,
+        "type": "numeric",
+        "x": 2,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 12,
+        "indicator_id": 12,
+        "type": "numeric",
+        "x": 3,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 5,
+        "indicator_id": 5,
+        "type": "map",
+        "x": 0,
+        "y": 2,
+        "w": 2,
+        "h": 4
+      },
+      {
+        "id": 4,
+        "indicator_id": 4,
+        "type": "table",
+        "x": 2,
+        "y": 2,
+        "w": 2,
+        "h": 4
+      },
+      {
+        "id": 2,
+        "indicator_id": 2,
+        "type": "numeric",
+        "x": 0,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 3,
+        "indicator_id": 3,
+        "type": "numeric",
+        "x": 1,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 4,
+        "indicator_id": 4,
+        "type": "numeric",
+        "x": 2,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      {
+        "id": 5,
+        "indicator_id": 5,
+        "type": "numeric",
+        "x": 3,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "Numerotation": "1",
+    "name_en": "Territory",
+    "name_es": "Territorio",
+    "name_pt": "Território",
+    "image": "/images/topics/territory.webp",
+    "description_en": "Explore physical geography, land cover dynamics and territorial characteristics in your region",
+    "description_es": "Explore la geografía física, la dinámica de la cobertura del suelo y las características territoriales de su región",
+    "description_pt": "Explore a geografia física, a dinâmica da cobertura do solo e as características territoriais da sua região",
+    "default_visualization": [
+      {
+        "id": 9,
+        "indicator_id": 9,
+        "type": "map",
+        "w": 2,
+        "h": 4,
+        "x": 0,
+        "y": 2
+      },
+      {
+        "id": 13,
+        "indicator_id": 13,
+        "type": "map",
+        "w": 2,
+        "h": 4,
+        "x": 2,
+        "y": 2
+      },
+      {
+        "id": 11,
+        "indicator_id": 11,
+        "type": "chart",
+        "w": 2,
+        "h": 2,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "id": 6,
+        "indicator_id": 6,
+        "type": "chart",
+        "w": 2,
+        "h": 2,
+        "x": 2,
+        "y": 0
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "Numerotation": "2",
+    "name_en": "Nature",
+    "name_es": "Naturaleza",
+    "name_pt": "Natureza",
+    "image": "/images/topics/nature.webp",
+    "description_en": "Get data on natural environment, climate patterns, forest dynamics, ecosystems and biodiversity in your area",
+    "description_es": "Obtenga datos sobre el medio ambiente natural, los patrones climáticos, la dinámica forestal, los ecosistemas y la biodiversidad de su zona",
+    "description_pt": "Obtenha dados sobre o ambiente natural, os padrões climáticos, a dinâmica florestal, os ecossistemas e a biodiversidade da sua área",
+    "default_visualization": [
+      {
+        "id": 17,
+        "indicator_id": 17,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "id": 18,
+        "indicator_id": 18,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 1,
+        "y": 0
+      },
+      {
+        "id": 31,
+        "indicator_id": 31,
+        "type": "chart",
+        "w": 2,
+        "h": 2,
+        "x": 2,
+        "y": 1
+      },
+      {
+        "id": 26,
+        "indicator_id": 26,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 2,
+        "y": 0
+      },
+      {
+        "id": 34,
+        "indicator_id": 34,
+        "type": "chart",
+        "w": 2,
+        "h": 2,
+        "x": 2,
+        "y": 3
+      },
+      {
+        "id": 14,
+        "indicator_id": 14,
+        "type": "map",
+        "w": 2,
+        "h": 4,
+        "x": 0,
+        "y": 1
+      },
+      {
+        "type": "numeric",
+        "id": 28,
+        "indicator_id": 28,
+        "x": 3,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "Numerotation": "3",
+    "name_en": "People",
+    "name_es": "Personas",
+    "name_pt": "Pessoas",
+    "image": "/images/topics/people.webp",
+    "description_en": "Access demographic data, social development indicators, traditional communities and cultural heritage for your area of interest",
+    "description_es": "Acceda a datos demográficos, indicadores de desarrollo social, comunidades tradicionales y patrimonio cultural de su zona de interés",
+    "description_pt": "Acesse dados demográficos, indicadores de desenvolvimento social, comunidades tradicionais e patrimônio cultural da sua área de interesse",
+    "default_visualization": [
+      {
+        "id": 35,
+        "indicator_id": 35,
+        "type": "map",
+        "w": 2,
+        "h": 4,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "id": 37,
+        "indicator_id": 37,
+        "type": "map",
+        "w": 2,
+        "h": 4,
+        "x": 2,
+        "y": 1
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "Numerotation": "4",
+    "name_en": "Economic activities",
+    "name_es": "Actividades económicas",
+    "name_pt": "Atividades econômicas",
+    "image": "/images/topics/productive.webp",
+    "description_en": "Understand economic sectors, extractive industries, agriculture and bioeconomy production systems in your region",
+    "description_es": "Comprenda los sectores económicos, las industrias extractivas, la agricultura y los sistemas de producción bioeconómica de su región",
+    "description_pt": "Entenda os setores econômicos, as indústrias extrativas, a agricultura e os sistemas de produção da bioeconomia da sua região",
+    "default_visualization": [
+      {
+        "id": 41,
+        "indicator_id": 41,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 1,
+        "y": 0
+      },
+      {
+        "id": 40,
+        "indicator_id": 40,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "id": 46,
+        "indicator_id": 46,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 2,
+        "y": 0
+      },
+      {
+        "id": 39,
+        "indicator_id": 39,
+        "type": "map",
+        "w": 2,
+        "h": 4,
+        "x": 0,
+        "y": 1
+      },
+      {
+        "id": 51,
+        "indicator_id": 51,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 3,
+        "y": 0
+      },
+      {
+        "id": 51,
+        "indicator_id": 51,
+        "type": "map",
+        "w": 2,
+        "h": 4,
+        "x": 2,
+        "y": 1
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "Numerotation": "5",
+    "name_en": "Infrastructure",
+    "name_es": "Infraestructura",
+    "name_pt": "Infraestrutura",
+    "image": "/images/topics/infrastructure.webp",
+    "description_en": "Explore transportation networks, utilities, digital connectivity and urban development in your area",
+    "description_es": "Explore las redes de transporte, los servicios públicos, la conectividad digital y el desarrollo urbano de su zona",
+    "description_pt": "Explore redes de transporte, serviços públicos, conectividade digital e desenvolvimento urbano em sua área",
+    "default_visualization": [
+      {
+        "id": 52,
+        "indicator_id": 52,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "id": 53,
+        "indicator_id": 53,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 1,
+        "y": 0
+      },
+      {
+        "id": 56,
+        "indicator_id": 56,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 2,
+        "y": 0
+      },
+      {
+        "id": 146,
+        "indicator_id": 146,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 3,
+        "y": 0
+      },
+      {
+        "id": 54,
+        "indicator_id": 54,
+        "type": "map",
+        "w": 4,
+        "h": 4,
+        "x": 0,
+        "y": 1
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "Numerotation": "6",
+    "name_en": "Risks and vulnerabilities",
+    "name_es": "Riesgos y vulnerabilidades",
+    "name_pt": "Riscos e vulnerabilidades",
+    "image": "/images/topics/risks-and-vulnerabilities.webp",
+    "description_en": "Understand environmental risks, citizen security threats and governance challenges in your region",
+    "description_es": "Comprenda los riesgos ambientales, las amenazas a la seguridad ciudadana y los desafios de gobernabilidad de su región",
+    "description_pt": "Entenda os riscos ambientais, as ameaças à segurança dos cidadãos e os desafios de governança em sua região",
+    "default_visualization": [
+      {
+        "id": 63,
+        "indicator_id": 63,
+        "type": "map",
+        "w": 2,
+        "h": 4,
+        "x": 2,
+        "y": 0
+      },
+      {
+        "id": 59,
+        "indicator_id": 59,
+        "type": "chart",
+        "w": 2,
+        "h": 3,
+        "x": 0,
+        "y": 1
+      },
+      {
+        "id": 62,
+        "indicator_id": 62,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "id": 60,
+        "indicator_id": 60,
+        "type": "numeric",
+        "w": 1,
+        "h": 1,
+        "x": 1,
+        "y": 0
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "Numerotation": "7",
+    "name_en": "Knowledge products",
+    "name_es": "Productos de conocimiento",
+    "name_pt": "Produtos de conhecimento",
+    "image": "/images/topics/knowledge-products.webp",
+    "description_en": "Access research outputs, technical studies and institutional knowledge for your area of interest",
+    "description_es": "Acceda a los resultados de investigaciones, estudios técnicos y conocimientos institucionales de su área de interés",
+    "description_pt": "Acesse resultados de pesquisas, estudos técnicos e conhecimento institucional para sua área de interesse",
+    "default_visualization": []
+  },
+  {
+    "id": 8,
+    "Numerotation": "8",
+    "name_en": "IDB Operations",
+    "name_es": "Operaciones del BID",
+    "name_pt": "Operações do BID",
+    "image": "/images/topics/idb-operations.webp",
+    "description_en": "Explore IDB projects, development investments and sectoral interventions in your area of interest",
+    "description_es": "Explore los proyectos, las inversiones en desarrollo y las intervenciones sectoriales del BID en su área de interés",
+    "description_pt": "Explore projetos do BID, investimentos em desenvolvimento e intervenções setoriais em sua área de interesse",
+    "default_visualization": [
+      {
+        "type": "map",
+        "id": 64,
+        "indicator_id": 64,
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      },
+      {
+        "type": "table",
+        "id": 64,
+        "indicator_id": 64,
+        "x": 2,
+        "y": 0,
+        "w": 2,
+        "h": 4
+      }
+    ]
+  }
+]

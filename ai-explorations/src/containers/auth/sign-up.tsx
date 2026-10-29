@@ -1,0 +1,259 @@
+"use client";
+
+import { useForm } from "@tanstack/react-form";
+import { toast } from "sonner";
+import { useTranslations } from "use-intl";
+import * as z from "zod";
+
+import { signUpFn } from "@/lib/auth/session.functions";
+
+import { COUNTRIES, type CountryCode } from "@/constants/countries";
+
+import { CountriesField } from "@/containers/auth/countries-field";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+
+import { Link, useRouter } from "@/i18n/navigation";
+
+const COUNTRY_ISO3_CODES = COUNTRIES.map((country) => country.iso3);
+
+export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const router = useRouter();
+  const t = useTranslations();
+
+  const formSchema = z
+    .object({
+      name: z.string().min(2, t("auth-validation-name-min-length")),
+      email: z.email(t("auth-validation-email-invalid")),
+      password: z.string().min(6, t("auth-validation-password-min-length")),
+      "confirm-password": z.string(),
+      communityOptIn: z.boolean(),
+      countriesOfInterest: z.array(z.enum(COUNTRY_ISO3_CODES)),
+    })
+    .refine((data) => data.password === data["confirm-password"], {
+      message: t("auth-validation-passwords-no-match"),
+      path: ["confirm-password"],
+    });
+
+  const form = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      "confirm-password": "",
+      communityOptIn: false,
+      countriesOfInterest: [] as CountryCode[],
+    },
+    validators: {
+      onSubmit: formSchema,
+    },
+    onSubmit: async ({ value }) => {
+      toast.promise(
+        signUpFn({
+          data: {
+            name: value.name,
+            email: value.email,
+            password: value.password,
+            communityOptIn: value.communityOptIn,
+            countriesOfInterest: value.countriesOfInterest,
+          },
+        }).then(() => {
+          router.push(`/auth/check-your-email?email=${encodeURIComponent(value.email)}`);
+        }),
+        {
+          loading: t("auth-toast-creating-account"),
+          success: t("auth-toast-account-created"),
+          error: t("auth-toast-account-creation-failed"),
+          duration: 2000,
+        },
+      );
+    },
+  });
+
+  return (
+    <Card className="border-none shadow-none" {...props}>
+      <CardHeader>
+        <CardTitle className="text-3xl text-primary">{t("auth-signup-title")}</CardTitle>
+        <CardDescription className="font-medium">{t("auth-signup-description")}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit();
+          }}
+        >
+          <FieldGroup>
+            <form.Field name="name">
+              {(field) => {
+                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>{t("auth-field-name")}</FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder={t("auth-field-name-placeholder")}
+                      aria-invalid={isInvalid}
+                    />
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                  </Field>
+                );
+              }}
+            </form.Field>
+            <form.Field name="email">
+              {(field) => {
+                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>{t("auth-field-email")}</FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder={t("auth-field-email-placeholder")}
+                      aria-invalid={isInvalid}
+                    />
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                  </Field>
+                );
+              }}
+            </form.Field>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <form.Field name="password">
+                {(field) => {
+                  const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>{t("auth-field-password")}</FieldLabel>
+                      <Input
+                        id={field.name}
+                        type="password"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder={t("auth-field-password-placeholder")}
+                        aria-invalid={isInvalid}
+                      />
+                      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                    </Field>
+                  );
+                }}
+              </form.Field>
+              <form.Field name="confirm-password">
+                {(field) => {
+                  const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("auth-field-confirm-password")}
+                      </FieldLabel>
+                      <Input
+                        id={field.name}
+                        type="password"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder={t("auth-field-confirm-password-placeholder")}
+                        aria-invalid={isInvalid}
+                      />
+                      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                    </Field>
+                  );
+                }}
+              </form.Field>
+            </div>
+
+            <form.Field name="countriesOfInterest">
+              {(field) => (
+                <CountriesField
+                  value={field.state.value}
+                  onChange={(next) => field.handleChange(next)}
+                />
+              )}
+            </form.Field>
+
+            <form.Field name="communityOptIn">
+              {(field) => {
+                return (
+                  <Field>
+                    <div className="flex items-start gap-2">
+                      <Checkbox
+                        id={field.name}
+                        checked={field.state.value}
+                        onCheckedChange={(checked) => field.handleChange(checked as boolean)}
+                        onBlur={field.handleBlur}
+                      />
+                      <label
+                        htmlFor={field.name}
+                        className="text-sm leading-snug text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        {t("auth-community-optin-label")}{" "}
+                        <span className="text-muted-foreground/70">
+                          {t("auth-community-optin-optional")}
+                        </span>
+                      </label>
+                    </div>
+                  </Field>
+                );
+              }}
+            </form.Field>
+
+            <p className="text-sm leading-snug text-muted-foreground">
+              {t("auth-agreement-text")}{" "}
+              <a
+                href="https://www.iadb.org/en/terms-conditions-and-notices/terms-and-conditions"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium underline underline-offset-4 hover:text-primary"
+              >
+                {t("auth-agreement-terms")}
+              </a>{" "}
+              {t("conjunction-and")}{" "}
+              <a
+                href="https://www.iadb.org/en/home/terms-conditions-and-notices/privacy-notice"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium underline underline-offset-4 hover:text-primary"
+              >
+                {t("auth-agreement-privacy")}
+              </a>
+              .
+            </p>
+
+            <FieldGroup>
+              <Field>
+                <Button type="submit" size="lg">
+                  {t("auth-button-create-account")}
+                </Button>
+              </Field>
+            </FieldGroup>
+          </FieldGroup>
+        </form>
+      </CardContent>
+
+      <CardFooter className="justify-center gap-1 text-sm font-medium text-muted-foreground">
+        <span>{t("auth-link-already-have-account")}</span>
+        <Link href="/auth/sign-in" className="hover:underline">
+          {t("auth-link-sign-in")}
+        </Link>
+      </CardFooter>
+    </Card>
+  );
+}

@@ -1,0 +1,111 @@
+import * as migration_20251202_124844 from './20251202_124844';
+import * as migration_20260210_161015 from './20260210_161015';
+import * as migration_20260803_090559 from './20260803_090559';
+import * as migration_20260818_165750_community_opt_in from './20260818_165750_community_opt_in';
+import * as migration_20260818_165800_backfill_community_opt_in from './20260818_165800_backfill_community_opt_in';
+import * as migration_20260819_081214_import_export_collections from './20260819_081214_import_export_collections';
+import * as migration_20260908_122337 from './20260908_122337';
+import * as migration_20260915_100844 from './20260915_100844';
+import * as migration_20260916_132710_default_visualization_type from './20260916_132710_default_visualization_type';
+import * as migration_20260916_155831_countries_of_interest from './20260916_155831_countries_of_interest';
+import * as migration_20260917_123018_indicator_aggregation from './20260917_123018_indicator_aggregation';
+import * as migration_20260917_152604_realign_snapshot_after_develop_merge from './20260917_152604_realign_snapshot_after_develop_merge';
+import * as migration_20260922_091400_ecu_country_indicators from './20260922_091400_ecu_country_indicators';
+import * as migration_20260923_112441_reports_country from './20260923_112441_reports_country';
+import * as migration_20260925_110019_am_719_amazonian_countries from './20260925_110019_am_719_amazonian_countries';
+import * as migration_20261007_080235_am_740_country_modules_partners from './20261007_080235_am_740_country_modules_partners';
+import * as migration_20261014_134300_payload_3_90_upgrade from './20261014_134300_payload_3_90_upgrade';
+import * as migration_20261026_151428_payload_4_upgrade from './20261026_151428_payload_4_upgrade';
+
+export const migrations = [
+  {
+    up: migration_20251202_124844.up,
+    down: migration_20251202_124844.down,
+    name: '20251202_124844',
+  },
+  {
+    up: migration_20260210_161015.up,
+    down: migration_20260210_161015.down,
+    name: '20260210_161015',
+  },
+  {
+    up: migration_20260803_090559.up,
+    down: migration_20260803_090559.down,
+    name: '20260803_090559',
+  },
+  {
+    up: migration_20260818_165750_community_opt_in.up,
+    down: migration_20260818_165750_community_opt_in.down,
+    name: '20260818_165750_community_opt_in',
+  },
+  {
+    up: migration_20260818_165800_backfill_community_opt_in.up,
+    down: migration_20260818_165800_backfill_community_opt_in.down,
+    name: '20260818_165800_backfill_community_opt_in',
+  },
+  {
+    up: migration_20260819_081214_import_export_collections.up,
+    down: migration_20260819_081214_import_export_collections.down,
+    name: '20260819_081214_import_export_collections',
+  },
+  {
+    up: migration_20260908_122337.up,
+    down: migration_20260908_122337.down,
+    name: '20260908_122337',
+  },
+  {
+    up: migration_20260915_100844.up,
+    down: migration_20260915_100844.down,
+    name: '20260915_100844',
+  },
+  {
+    up: migration_20260916_132710_default_visualization_type.up,
+    down: migration_20260916_132710_default_visualization_type.down,
+    name: '20260916_132710_default_visualization_type',
+  },
+  {
+    up: migration_20260916_155831_countries_of_interest.up,
+    down: migration_20260916_155831_countries_of_interest.down,
+    name: '20260916_155831_countries_of_interest',
+  },
+  {
+    up: migration_20260917_123018_indicator_aggregation.up,
+    down: migration_20260917_123018_indicator_aggregation.down,
+    name: '20260917_123018_indicator_aggregation',
+  },
+  {
+    up: migration_20260917_152604_realign_snapshot_after_develop_merge.up,
+    down: migration_20260917_152604_realign_snapshot_after_develop_merge.down,
+    name: '20260917_152604_realign_snapshot_after_develop_merge',
+  },
+  {
+    up: migration_20260922_091400_ecu_country_indicators.up,
+    down: migration_20260922_091400_ecu_country_indicators.down,
+    name: '20260922_091400_ecu_country_indicators',
+  },
+  {
+    up: migration_20260923_112441_reports_country.up,
+    down: migration_20260923_112441_reports_country.down,
+    name: '20260923_112441_reports_country',
+  },
+  {
+    up: migration_20260925_110019_am_719_amazonian_countries.up,
+    down: migration_20260925_110019_am_719_amazonian_countries.down,
+    name: '20260925_110019_am_719_amazonian_countries',
+  },
+  {
+    up: migration_20261007_080235_am_740_country_modules_partners.up,
+    down: migration_20261007_080235_am_740_country_modules_partners.down,
+    name: '20261007_080235_am_740_country_modules_partners',
+  },
+  {
+    up: migration_20261014_134300_payload_3_90_upgrade.up,
+    down: migration_20261014_134300_payload_3_90_upgrade.down,
+    name: '20261014_134300_payload_3_90_upgrade',
+  },
+  {
+    up: migration_20261026_151428_payload_4_upgrade.up,
+    down: migration_20261026_151428_payload_4_upgrade.down,
+    name: '20261026_151428_payload_4_upgrade'
+  },
+];

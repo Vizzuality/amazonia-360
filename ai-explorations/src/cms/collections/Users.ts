@@ -1,0 +1,183 @@
+import type { CollectionConfig } from "payload";
+
+import { env } from "@/env";
+
+import { COUNTRIES } from "@/constants/countries";
+
+import { anyoneAccess } from "@/cms/access/anyone";
+import { userAccess } from "@/cms/access/user";
+import { buildVerifyEmailHTML, VERIFY_EMAIL_SUBJECT } from "@/cms/emails/verify-email";
+import { resendVerificationHandler } from "@/cms/endpoints/resend-verification";
+import { beforeDeleteUser } from "@/cms/hooks/user";
+
+const COUNTRIES_CSV_SEPARATOR = "|";
+
+function getCountriesOfInterestCsvCell(value: unknown): string {
+  if (!Array.isArray(value)) {
+    return "";
+  }
+
+  return value
+    .map(String)
+    .sort((a, b) => a.localeCompare(b, "en"))
+    .join(COUNTRIES_CSV_SEPARATOR);
+}
+
+function getCountriesOfInterestFromCsvCell(value: unknown): string[] {
+  if (typeof value !== "string") {
+    return [];
+  }
+
+  return value
+    .split(COUNTRIES_CSV_SEPARATOR)
+    .map((code) => code.trim())
+    .filter((code) => code.length > 0);
+}
+
+export const Users: CollectionConfig = {
+  slug: "users",
+  authorship: false,
+  versions: false,
+  admin: {
+    useAsTitle: "email",
+    defaultColumns: [
+      "email",
+      "name",
+      "communityOptIn",
+      "countriesOfInterest",
+      "createdAt",
+      "verified",
+    ],
+  },
+  auth: {
+    tokenExpiration: 2592000,
+    verify: {
+      generateEmailSubject: async () => {
+        return VERIFY_EMAIL_SUBJECT;
+      },
+      generateEmailHTML: async (params) => {
+        return buildVerifyEmailHTML({
+          email: params.user.email,
+          token: params.token,
+        });
+      },
+    },
+    forgotPassword: {
+      expiration: 24 * 60 * 60 * 1000, // 1 day
+      generateEmailSubject: async () => {
+        return "Reset your password";
+      },
+      generateEmailHTML: async (params) => {
+        // Use the token provided to allow your user to reset their password
+        const resetPasswordURL = `${env.VITE_URL}/auth/reset-password?token=${params?.token}`;
+
+        return `
+          <!doctype html>
+        <html lang="en">
+          <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+          </head>
+          <body>
+            <h1>Password reset instructions</h1>
+            <p>
+              Hello ${params?.user.email},<br /><br />
+              We received a request to reset your password for your AmazoniaForever360+ account. If you did not make this request, please ignore this email.<br /><br />
+              If you would like to reset your password, please click the link below:<br />
+              <a href="${resetPasswordURL}">Reset your password</a><br /><br />
+              Thank you!<br />
+              AmazoniaForever360+ Team
+            </p>
+          </body>
+        </html>
+        `;
+      },
+    },
+  },
+  access: {
+    create: anyoneAccess,
+    read: userAccess,
+    update: userAccess,
+    delete: userAccess,
+  },
+  fields: [
+    { name: "name", type: "text" },
+    { name: "image", type: "text" },
+    { name: "emailVerified", type: "date" },
+    {
+      name: "communityOptIn",
+      type: "checkbox",
+      defaultValue: false,
+      label: "Community opt-in",
+      custom: {
+        "plugin-import-export": {
+          hooks: {
+            // csv-stringify renders booleans as "1" and "", so an opt-out is indistinguishable
+            // from missing data in the CSVs used to decide who gets mailed.
+            beforeExport: ({ format, value }) =>
+              format === "csv" ? String(Boolean(value)) : value,
+            beforeImport: ({ format, value }) => {
+              if (format !== "csv") {
+                return value;
+              }
+
+              return value === true || value === "true" || value === "1";
+            },
+          },
+        },
+      },
+    },
+    {
+      name: "countriesOfInterest",
+      type: "select",
+      hasMany: true,
+      label: "Countries of interest",
+      options: COUNTRIES.map(({ iso3, name }) => ({ label: name, value: iso3 })),
+      custom: {
+        "plugin-import-export": {
+          hooks: {
+            // The export flattens arrays into one column per index, so the column set of the
+            // CSVs used to decide who gets mailed would change with each row's selection count.
+            beforeExport: ({ format, value }) =>
+              format === "csv" ? getCountriesOfInterestCsvCell(value) : value,
+            beforeImport: ({ format, value }) =>
+              format === "csv" ? getCountriesOfInterestFromCsvCell(value) : value,
+          },
+        },
+      },
+    },
+    {
+      name: "accounts",
+      type: "join",
+      collection: "accounts",
+      on: "user",
+      // Payload resolves joins on find by default and the export flattens whatever it gets, so
+      // without this the users CSV grows accounts_docs_0_accessToken and every report payload.
+      custom: {
+        "plugin-import-export": {
+          disabled: true,
+        },
+      },
+    },
+    {
+      name: "reports",
+      type: "join",
+      collection: "reports",
+      on: "user",
+      custom: {
+        "plugin-import-export": {
+          disabled: true,
+        },
+      },
+    },
+  ],
+  endpoints: [
+    {
+      path: "/resend-verification",
+      method: "post",
+      handler: resendVerificationHandler,
+    },
+  ],
+  hooks: {
+    beforeDelete: [beforeDeleteUser],
+  },
+};

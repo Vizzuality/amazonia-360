@@ -1,0 +1,116 @@
+// storage-adapter-import-placeholder
+import path from "path";
+import { fileURLToPath } from "url";
+
+import { buildConfig } from "payload";
+
+import { postgresAdapter } from "@payloadcms/db-postgres";
+import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
+import { importExportPlugin } from "@payloadcms/plugin-import-export";
+import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { sharpTransformer } from "@payloadcms/transformer-sharp";
+
+import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2";
+import type { TransportOptions } from "nodemailer";
+import nodemailer from "nodemailer";
+
+import { env } from "@/env";
+
+import { Accounts } from "@/cms/collections/Accounts";
+import { Admins } from "@/cms/collections/Admins";
+import { CountryModules } from "@/cms/collections/CountryModules";
+import { Indicators } from "@/cms/collections/Indicators";
+import { Media } from "@/cms/collections/Media";
+import { Partners } from "@/cms/collections/Partners";
+import { Reports } from "@/cms/collections/Reports";
+import { Subtopics } from "@/cms/collections/Subtopics";
+import { Topics } from "@/cms/collections/Topics";
+import { Users } from "@/cms/collections/Users";
+import { importExportOptions } from "@/cms/import-export/plugin-options";
+import { routing } from "@/i18n/routing";
+
+import { getDatabaseUrlFromUrlAndPassword } from "./utils/database-url";
+
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+
+// Use a JSON transport (no-op) when AWS SES credentials are dummy/test values.
+// This avoids SES validation errors during E2E tests and local development.
+const isTestCredentials =
+  env.AWS_SES_IAM_USER_ACCESS_KEY_ID === "no-ses-configured" ||
+  env.AWS_SES_IAM_USER_ACCESS_KEY_ID === "";
+
+const emailTransport = isTestCredentials
+  ? nodemailer.createTransport({ jsonTransport: true } as TransportOptions)
+  : nodemailer.createTransport({
+      SES: {
+        sesClient: new SESv2Client({
+          region: env.AWS_SES_REGION,
+          credentials: {
+            accessKeyId: env.AWS_SES_IAM_USER_ACCESS_KEY_ID,
+            secretAccessKey: env.AWS_SES_IAM_USER_SECRET_ACCESS_KEY,
+          },
+        }),
+        SendEmailCommand,
+      },
+    });
+
+export default buildConfig({
+  admin: {
+    user: Admins.slug,
+    importMap: {
+      baseDir: path.resolve(dirname),
+    },
+  },
+  collections: [
+    Admins,
+    Users,
+    Accounts,
+    Media,
+    Reports,
+    Topics,
+    Subtopics,
+    CountryModules,
+    Partners,
+    Indicators,
+  ],
+  cookiePrefix: "ai-explorations",
+  db: postgresAdapter({
+    idType: "uuid",
+    pool: {
+      connectionString:
+        getDatabaseUrlFromUrlAndPassword(env.DATABASE_URL, env.DATABASE_PASSWORD) || "",
+    },
+    migrationDir: path.resolve(dirname, "cms", "migrations"),
+    push: false,
+  }),
+  defaultDepth: 2,
+  editor: lexicalEditor(),
+  email: nodemailerAdapter({
+    transport: emailTransport,
+    defaultFromAddress: "info@amazoniaforever360.org",
+    defaultFromName: "Amazonia Forever 360",
+  }),
+  graphQL: {
+    disable: true,
+  },
+  localization: {
+    locales: [...routing.locales], // required
+    defaultLocale: routing.defaultLocale, // required
+  },
+  secret: env.PAYLOAD_SECRET || "",
+  typescript: {
+    outputFile: path.resolve(dirname, "payload-types.ts"),
+  },
+  upload: {
+    transformers: [sharpTransformer()],
+  },
+  plugins: [
+    // storage-adapter-placeholder
+    importExportPlugin(importExportOptions),
+  ],
+  routes: {
+    admin: "/admin",
+    api: "/v1/api",
+  },
+});

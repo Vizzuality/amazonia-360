@@ -1,0 +1,95 @@
+"use client";
+
+import { useMemo } from "react";
+
+import Color from "@arcgis/core/Color";
+
+import { useResourceFeatureLayerId } from "@/lib/indicators";
+
+import { Indicator, ResourceFeature } from "@/types/indicator";
+
+import { CardLoader } from "@/containers/card";
+
+import LegendItem, { LegendItemProps } from "@/components/map/legend/item";
+
+export interface FeatureLegendProps {
+  indicator: Indicator;
+}
+export const FeatureLegend = ({
+  name,
+  resource,
+}: Omit<Indicator, "resource"> & {
+  resource: ResourceFeature;
+}) => {
+  const query = useResourceFeatureLayerId({ resource });
+  const { data: layerData } = query;
+
+  const LEGEND = useMemo<LegendItemProps | null>(() => {
+    if (!layerData) return null;
+
+    const renderer = layerData?.drawingInfo?.renderer;
+
+    if (renderer?.type === "simple") {
+      const r = renderer as __esri.SimpleRenderer;
+
+      if (!r.symbol) return null;
+      if (!("color" in r.symbol)) return null;
+      if (!r.symbol.color) return null;
+
+      return {
+        type: "basic",
+        items: [
+          {
+            id: "1",
+            color: new Color(r.symbol.color).toHex(),
+            label: name,
+          },
+        ],
+      };
+    }
+
+    if (renderer?.type === "uniqueValue") {
+      const r = renderer as __esri.UniqueValueRenderer;
+
+      return {
+        type: "basic",
+        items:
+          r.uniqueValueInfos
+            ?.map((u) => {
+              return {
+                id: u.value,
+                color: u.symbol?.color ? new Color(u.symbol.color).toHex() : undefined,
+                label: `${u.value}`,
+              };
+            })
+            .filter(Boolean) ?? [],
+      };
+    }
+
+    if (renderer?.type === "classBreaks") {
+      const r = renderer as __esri.ClassBreaksRenderer;
+
+      return {
+        type: "basic",
+        items:
+          r.classBreakInfos
+            ?.map((c) => {
+              return {
+                id: `${c.label}`,
+                color: c.symbol?.color ? new Color(c.symbol.color).toHex() : undefined,
+                label: `${c.label}`,
+              };
+            })
+            .filter(Boolean) ?? [],
+      };
+    }
+
+    return null;
+  }, [name, layerData]);
+
+  return (
+    <CardLoader query={[query]} className="h-10 grow">
+      {!!LEGEND && <LegendItem {...LEGEND} direction="vertical" />}
+    </CardLoader>
+  );
+};
