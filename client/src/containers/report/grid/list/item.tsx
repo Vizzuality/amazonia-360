@@ -22,6 +22,10 @@ import {
   useSyncGridDatasetCategoricalSettings,
 } from "@/app/(frontend)/store";
 
+import {
+  getIndicatorInfoTooltipClassName,
+  IndicatorInfoTooltipBody,
+} from "@/containers/indicators/info-tooltip";
 import Info from "@/containers/info";
 import GridIndicatorsItemCategorical from "@/containers/report/grid/list/categorical";
 import GridIndicatorsItemContinous from "@/containers/report/grid/list/continous";
@@ -167,8 +171,11 @@ export default function GridIndicatorsItem(indicator: H3Indicator) {
                   <DialogClose />
                 </DialogContent>
                 <TooltipPortal>
-                  <TooltipContent sideOffset={0} className="max-w-72">
-                    {indicator.description_short}
+                  <TooltipContent sideOffset={0} className={getIndicatorInfoTooltipClassName()}>
+                    <IndicatorInfoTooltipBody
+                      description={indicator.description_short}
+                      partners={indicator.partners}
+                    />
                     <TooltipArrow />
                   </TooltipContent>
                 </TooltipPortal>

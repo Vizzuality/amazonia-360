@@ -400,6 +400,42 @@ describe("an indicator's module", () => {
   });
 });
 
+describe("an indicator's partners", () => {
+  test("carries the populated partners as id and name, in the given order", async () => {
+    returning([
+      indicator({
+        id: "0",
+        partners: [partner({ id: "p1", name: "MAE" }), partner({ id: "p2", name: "Esri" })],
+      }),
+    ]);
+
+    const [found] = await fetchIndicators({ locale: "en", modules: [] });
+
+    expect(found.partners).toEqual([
+      { id: "p1", name: "MAE" },
+      { id: "p2", name: "Esri" },
+    ]);
+  });
+
+  test("is empty for an indicator without partners", async () => {
+    returning([indicator({ id: "0" })]);
+
+    const [found] = await fetchIndicators({ locale: "en", modules: [] });
+
+    expect(found.partners).toEqual([]);
+  });
+
+  test("drops partners the reader cannot see", async () => {
+    returning([
+      indicator({ id: "0", partners: [partner({ id: "p1", name: "MAE" }), "hidden-partner"] }),
+    ]);
+
+    const [found] = await fetchIndicators({ locale: "en", modules: [] });
+
+    expect(found.partners).toEqual([{ id: "p1", name: "MAE" }]);
+  });
+});
+
 describe("the country modules read", () => {
   test("asks for active modules only", () => {
     expect(getCountryModulesReadArgs("es")).toMatchObject({ where: { active: { equals: true } } });

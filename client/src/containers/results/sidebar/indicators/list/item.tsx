@@ -9,6 +9,10 @@ import { Topic } from "@/types/topic";
 
 import { useFormTopics } from "@/app/(frontend)/store";
 
+import {
+  getIndicatorInfoTooltipClassName,
+  IndicatorInfoTooltipBody,
+} from "@/containers/indicators/info-tooltip";
 import { IndicatorScopeBadge } from "@/containers/indicators/scope-badge";
 import Info from "@/containers/info";
 import { VisualizationType } from "@/containers/results/sidebar/indicators/list/visualization-types";
@@ -80,10 +84,15 @@ export function IndicatorsItem({
                 </DialogContent>
 
                 <TooltipPortal>
-                  <TooltipContent side="left" align="center" className="max-w-72">
-                    <div className="text-xxs">
-                      {indicator.description_short || t("about-the-data")}
-                    </div>
+                  <TooltipContent
+                    side="left"
+                    align="center"
+                    className={getIndicatorInfoTooltipClassName()}
+                  >
+                    <IndicatorInfoTooltipBody
+                      description={indicator.description_short || t("about-the-data")}
+                      partners={indicator.partners}
+                    />
 
                     <TooltipArrow className="fill-foreground" width={10} height={5} />
                   </TooltipContent>

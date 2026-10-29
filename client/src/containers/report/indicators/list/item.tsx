@@ -9,6 +9,10 @@ import { Indicator } from "@/types/indicator";
 
 import { useSyncIndicators, useSyncIndicatorsSettings } from "@/app/(frontend)/store";
 
+import {
+  getIndicatorInfoTooltipClassName,
+  IndicatorInfoTooltipBody,
+} from "@/containers/indicators/info-tooltip";
 import { IndicatorScopeBadge } from "@/containers/indicators/scope-badge";
 import Info from "@/containers/info";
 
@@ -29,6 +33,7 @@ export default function IndicatorsItem({
   name,
   description_short,
   module: indicatorModule,
+  partners,
 }: IndicatorsItemProps) {
   const [indicators, setIndicators] = useSyncIndicators();
   const [, setIndicatorsSettings] = useSyncIndicatorsSettings();
@@ -86,8 +91,8 @@ export default function IndicatorsItem({
               <DialogClose />
             </DialogContent>
             <TooltipPortal>
-              <TooltipContent sideOffset={0} className="max-w-72">
-                {description_short}
+              <TooltipContent sideOffset={0} className={getIndicatorInfoTooltipClassName()}>
+                <IndicatorInfoTooltipBody description={description_short} partners={partners} />
                 <TooltipArrow />
               </TooltipContent>
             </TooltipPortal>

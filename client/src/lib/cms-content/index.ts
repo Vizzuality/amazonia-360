@@ -4,7 +4,7 @@ import { Locale } from "next-intl";
 
 import type { CountryModule, Partner } from "@/lib/country-modules/types";
 
-import { Indicator, IndicatorModule, ResourceFeature } from "@/types/indicator";
+import { Indicator, IndicatorModule, IndicatorPartner, ResourceFeature } from "@/types/indicator";
 import { Subtopic, Topic } from "@/types/topic";
 
 import { IndicatorView } from "@/app/(frontend)/parsers";
@@ -178,6 +178,11 @@ const getIndicatorModule = (value: CmsIndicator["module"]): IndicatorModule | nu
   return { slug: value.slug, tag: value.tag };
 };
 
+const getIndicatorPartners = (value: CmsIndicator["partners"]): IndicatorPartner[] =>
+  (value ?? []).flatMap((partner) =>
+    typeof partner === "string" ? [] : [{ id: partner.id, name: partner.name }],
+  );
+
 const toIndicator = (indicator: CmsIndicator): Indicator => {
   const subtopic = asRecord(indicator.subtopic, `Indicator ${indicator.id}'s Subtopic`);
   const topic = asRecord(subtopic.topic, `Indicator ${indicator.id}'s Topic`);
@@ -203,6 +208,7 @@ const toIndicator = (indicator: CmsIndicator): Indicator => {
     visualization_types: indicator.visualization_types ?? [],
     resource: toResource(resource),
     module: getIndicatorModule(indicator.module),
+    partners: getIndicatorPartners(indicator.partners),
   };
 };
 
