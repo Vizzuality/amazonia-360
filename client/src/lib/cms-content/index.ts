@@ -87,7 +87,8 @@ const text = (value?: string | null) => value ?? undefined;
 
 /**
  * ArcGIS wants `content`; the CMS stores the field list flat. Ten features carry a title and no
- * fields, where an empty `content` would drop the popup instead of showing the bare title.
+ * fields: those leave `content` out, because an empty list would drop the popup and an
+ * `undefined` one makes ArcGIS log "unsupported content value" on every layer it builds.
  */
 const toPopupTemplate = (
   popupTemplate: CmsPopupTemplate,
@@ -102,7 +103,7 @@ const toPopupTemplate = (
 
   return {
     title,
-    content: fieldInfos.length ? [{ type: "fields", fieldInfos }] : undefined,
+    ...(fieldInfos.length && { content: [{ type: "fields", fieldInfos }] }),
   };
 };
 
