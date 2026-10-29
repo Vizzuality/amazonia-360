@@ -98,6 +98,22 @@ describe("CardState", () => {
     expect(ok.refetch).not.toHaveBeenCalled();
   });
 
+  it("offers Remove widget beside Try again when the card can be edited", () => {
+    const onRemove = vi.fn();
+
+    render(
+      <CardStateActionsProvider onRemove={onRemove} retryable>
+        <CardState query={[query({ isError: true })]} isEmpty={false}>
+          <div>content</div>
+        </CardState>
+      </CardStateActionsProvider>,
+    );
+
+    expect(screen.getByRole("button", { name: "card-state-retry" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "card-state-remove" }));
+    expect(onRemove).toHaveBeenCalledOnce();
+  });
+
   it("drops Try again on a printed page", () => {
     render(
       <CardStateActionsProvider retryable={false}>

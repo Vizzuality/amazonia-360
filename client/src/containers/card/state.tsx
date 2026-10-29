@@ -95,89 +95,84 @@ export function CardStateMessage({
   const { onRemove, retryable } = useContext(CardStateActionsContext);
 
   const isError = status === "unavailable";
-  const action = isError
-    ? retryable && { label: t("card-state-retry"), icon: RefreshCw, onClick: onRetry }
-    : onRemove && {
-        label: t(variant === "inline" ? "card-state-remove-short" : "card-state-remove"),
-        icon: Trash2,
-        onClick: onRemove,
-      };
+  const remove = onRemove && {
+    label: t(variant === "inline" ? "card-state-remove-short" : "card-state-remove"),
+    icon: Trash2,
+    onClick: onRemove,
+  };
+  const retry = isError &&
+    retryable && { label: t("card-state-retry"), icon: RefreshCw, onClick: onRetry };
+  const actions = [retry, remove].filter((a) => !!a);
   const title = t(isError ? "card-state-error-title" : "card-state-no-data-title");
 
-  if (variant === "inline") {
-    return (
-      <div
-        data-testid={`card-state-${status}`}
-        className={cn(
-          "flex min-h-12 grow flex-wrap items-center gap-x-2 gap-y-1 text-sm",
-          className,
-        )}
-      >
-        {isError ? (
-          <TriangleAlert className="text-destructive h-4 w-4 shrink-0" aria-hidden />
-        ) : (
-          <SearchX className="text-muted-foreground h-4 w-4 shrink-0" aria-hidden />
-        )}
-        <span className={cn("font-medium", isError ? "text-destructive" : "text-muted-foreground")}>
-          {title}
-        </span>
-        {action && (
-          <Button
-            type="button"
-            variant="link"
-            size="xs"
-            className="px-0"
-            onClick={action.onClick}
-            data-export-exclude
-          >
-            {action.label}
-          </Button>
-        )}
-      </div>
-    );
-  }
-
   const Icon = isError ? TriangleAlert : SearchX;
+  const isInline = variant === "inline";
 
   return (
     <div
       data-testid={`card-state-${status}`}
       className={cn(
-        "flex grow flex-col items-center justify-center gap-3 px-4 py-8 text-center",
+        isInline
+          ? "flex min-h-12 grow items-center gap-2"
+          : "flex grow flex-col items-center justify-center gap-3 px-4 py-8 text-center",
         className,
       )}
     >
       <div
         className={cn(
-          "flex h-10 w-10 items-center justify-center rounded-full",
+          "flex shrink-0 items-center justify-center rounded-full",
+          isInline ? "h-8 w-8" : "h-10 w-10",
           isError ? "bg-red-50" : "bg-blue-50",
         )}
       >
         <Icon
-          className={cn("h-5 w-5", isError ? "text-destructive" : "text-muted-foreground")}
+          className={cn(
+            isInline ? "h-4 w-4" : "h-5 w-5",
+            isError ? "text-destructive" : "text-muted-foreground",
+          )}
           aria-hidden
         />
       </div>
-      <div className="space-y-1">
-        <p className={cn("text-sm font-bold", isError ? "text-destructive" : "text-blue-900")}>
+      {/* A numeric card is a fixed one-row tile, so the inline variant drops the description. */}
+      {isInline ? (
+        <p
+          title={title}
+          className={cn(
+            "line-clamp-2 min-w-0 grow text-sm leading-tight font-bold",
+            isError ? "text-destructive" : "text-blue-900",
+          )}
+        >
           {title}
         </p>
-        <p className="text-muted-foreground max-w-64 text-sm">
-          {t(isError ? "card-state-error-description" : "card-state-no-data-description")}
-        </p>
-      </div>
-      {action && (
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="space-x-2"
-          onClick={action.onClick}
-          data-export-exclude
-        >
-          <action.icon className="h-4 w-4" aria-hidden />
-          <span>{action.label}</span>
-        </Button>
+      ) : (
+        <div className="space-y-1">
+          <p className={cn("text-sm font-bold", isError ? "text-destructive" : "text-blue-900")}>
+            {title}
+          </p>
+          <p className="text-muted-foreground max-w-64 text-sm">
+            {t(isError ? "card-state-error-description" : "card-state-no-data-description")}
+          </p>
+        </div>
+      )}
+      {!!actions.length && (
+        <div className="flex shrink-0 gap-2">
+          {actions.map((action) => (
+            <Button
+              key={action.label}
+              type="button"
+              variant="outline"
+              size={isInline ? "icon-sm" : "sm"}
+              className="space-x-2"
+              onClick={action.onClick}
+              aria-label={isInline ? action.label : undefined}
+              title={isInline ? action.label : undefined}
+              data-export-exclude
+            >
+              <action.icon className="h-4 w-4" aria-hidden />
+              {!isInline && <span>{action.label}</span>}
+            </Button>
+          ))}
+        </div>
       )}
     </div>
   );
