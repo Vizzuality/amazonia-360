@@ -263,14 +263,6 @@ export class AISummaryTimeoutError extends Error {
   }
 }
 
-/** Every read in the topic failed, so its absence of values says nothing about the area. */
-export class AISummaryUnavailableError extends Error {
-  constructor() {
-    super("No indicator in the topic could be read");
-    this.name = "AISummaryUnavailableError";
-  }
-}
-
 const withDeadline = <T>(promise: Promise<T>, signal: AbortSignal): Promise<T> =>
   new Promise<T>((resolve, reject) => {
     const onAbort = () => reject(new AISummaryTimeoutError());
@@ -347,13 +339,9 @@ export const getTopicSummary = async (params: TopicSummaryParams) => {
   const evidence = await getTopicEvidence(indicators, location, countryNames, adminUnit);
   const { included, total } = evidence;
 
-  // Prose about nothing is not a summary. Only genuine `no_coverage` licenses saying so; a failed
-  // read among them means we do not know the area is empty.
+  // Prose about nothing is not a summary. Failed reads land here too: with nothing to read, the
+  // reader is better served by "not enough data" than by a retry that is likely to fail again.
   if (!evidence.indicators.some(({ status }) => status === "ok")) {
-    if (evidence.indicators.some(({ status }) => status === "unavailable")) {
-      throw new AISummaryUnavailableError();
-    }
-
     return { status: "no_data" as const, included, total };
   }
 

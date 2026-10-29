@@ -14,7 +14,6 @@ import { Topic } from "@/types/topic";
 import {
   AI_SUMMARY_TIMEOUT,
   AISummaryTimeoutError,
-  AISummaryUnavailableError,
   getTopicEvidence,
   getTopicSummary,
   getFeatureEvidence,
@@ -374,14 +373,14 @@ describe("getTopicSummary outcome", () => {
     expect(generateDescriptionTextAiPost).not.toHaveBeenCalled();
   });
 
-  test("fails rather than claiming no data when a read failed", async () => {
+  test("reports no data, without asking the model, when the only other reads failed", async () => {
     vi.mocked(getQueryFeatureId)
       .mockResolvedValueOnce(featureSet([]))
       .mockRejectedValueOnce(new Error("boom"));
 
-    await expect(summarize([featureIndicator(1), featureIndicator(2)])).rejects.toBeInstanceOf(
-      AISummaryUnavailableError,
-    );
+    const result = await summarize([featureIndicator(1), featureIndicator(2)]);
+
+    expect(result).toMatchObject({ status: "no_data" });
     expect(generateDescriptionTextAiPost).not.toHaveBeenCalled();
   });
 });
