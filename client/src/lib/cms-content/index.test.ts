@@ -347,9 +347,10 @@ describe("a feature's popup", () => {
   test("keeps a bare title, where an empty `content` would drop the popup instead", async () => {
     returning(INDICATORS);
 
-    expect(await popupOf(7)).toMatchObject({
-      popupTemplate: { title: "{NAME}", content: undefined },
-    });
+    const popup = await popupOf(7);
+
+    expect(popup).toMatchObject({ popupTemplate: { title: "{NAME}" } });
+    expect(popup && "popupTemplate" in popup && popup.popupTemplate).not.toHaveProperty("content");
   });
 
   test("is left out entirely when it carries neither a title nor a field", async () => {
