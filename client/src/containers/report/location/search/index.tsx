@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 import { useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
 
+import { useGetCountryModule } from "@/lib/country-modules";
 import { getGeometryByType, getGeometryWithBuffer } from "@/lib/location";
 import { useGetMutationSearch, useGetSuggestions } from "@/lib/search";
 
@@ -32,8 +33,9 @@ export default function SearchC() {
   const [search, setSearch] = useState("");
   const [, setLocation] = useSyncLocation();
   const setTmpBbox = useSetAtom(tmpBboxAtom);
+  const country = useGetCountryModule()?.country ?? null;
 
-  const q = useGetSuggestions({ text: search }, { enabled: !!search });
+  const q = useGetSuggestions({ text: search, country }, { enabled: !!search });
 
   const m = useGetMutationSearch();
 
