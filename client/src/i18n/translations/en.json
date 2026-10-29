@@ -316,6 +316,7 @@
   "ai-summary-generate-again": "Generate again",
   "ai-summary-no-data-title": "Not enough data to summarize this area",
   "ai-summary-no-data-description": "This summary is based on the topic's indicators, but there is no data available for this area.",
+  "ai-summary-dismiss": "Dismiss",
   "report-results-copy-title": "Share & Save",
   "report-results-copy-description": "This link lets you share the report and saves its current status. Copy it to revisit or share with others.",
   "indicators-custom-municipalities-selected-area-intersects": "The selected area intersects",

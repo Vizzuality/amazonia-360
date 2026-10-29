@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from "react";
 
-import { RefreshCw, SearchX, TriangleAlert } from "lucide-react";
+import { CircleAlert, RefreshCw, SearchX, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useDebounceCallback } from "usehooks-ts";
 
@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { ForwardRefEditor } from "@/components/ui/editor";
 import { Markdown } from "@/components/ui/markdown";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 
 export interface ReportResultsSummaryProps {
   topic?: Topic;
@@ -55,6 +56,21 @@ export const ReportResultsSummary = ({ topic, editing, mutation }: ReportResults
 
   const debouncedHandleEditorChange = useDebounceCallback(handleEditorChange, 500);
 
+  const dismiss = (
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon-sm"
+      className="-my-1.5 -mr-2 ml-auto h-7 w-7 shrink-0"
+      aria-label={t("ai-summary-dismiss")}
+      title={t("ai-summary-dismiss")}
+      onClick={() => mutation?.reset()}
+      data-export-exclude
+    >
+      <X className="h-4 w-4" aria-hidden />
+    </Button>
+  );
+
   if (mutation?.isIdle && !TOPIC?.description) {
     return null;
   }
@@ -62,11 +78,14 @@ export const ReportResultsSummary = ({ topic, editing, mutation }: ReportResults
   return (
     <div className="relative grid grid-cols-12 gap-6">
       {mutation?.isPending && (
-        <div className="col-span-12 space-y-1.5" data-testid="ai-summary-generating">
-          <p>{t("ai-summary-generating")}</p>
-          <Skeleton className="h-4" />
-          <Skeleton className="h-4" />
-          <Skeleton className="h-4" />
+        <div className="col-span-12 space-y-3" data-testid="ai-summary-generating">
+          <div className="text-foreground flex items-center gap-2 text-sm font-medium">
+            <Spinner className="text-primary" />
+            <p>{t("ai-summary-generating")}</p>
+          </div>
+          <Skeleton className="bg-border h-4 rounded-full" />
+          <Skeleton className="bg-border h-4 rounded-full" />
+          <Skeleton className="bg-border h-4 w-1/2 rounded-full" />
         </div>
       )}
 
@@ -74,12 +93,12 @@ export const ReportResultsSummary = ({ topic, editing, mutation }: ReportResults
         <div className="col-span-12 space-y-2" data-testid="ai-summary-error">
           <div
             role="alert"
-            className="border-destructive flex gap-3 rounded-md border bg-red-50 px-4 py-3 text-sm"
+            className="border-destructive text-destructive flex gap-3 rounded border bg-red-50 p-4"
           >
-            <TriangleAlert className="text-destructive mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-            <div>
-              <p className="text-destructive font-medium">{t("ai-summary-error-title")}</p>
-              <p className="text-muted-foreground">
+            <CircleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+            <div className="space-y-1">
+              <p className="text-sm font-medium">{t("ai-summary-error-title")}</p>
+              <p className="text-xs">
                 {t(
                   mutation.error instanceof AISummaryTimeoutError
                     ? "ai-summary-error-timeout"
@@ -87,13 +106,14 @@ export const ReportResultsSummary = ({ topic, editing, mutation }: ReportResults
                 )}
               </p>
             </div>
+            {dismiss}
           </div>
           {!!mutation.variables && (
             <Button
               type="button"
-              variant="ghost"
+              variant="secondary"
               size="sm"
-              className="gap-2"
+              className="border-border gap-2.5"
               onClick={() => mutation.variables && mutation.mutate(mutation.variables)}
             >
               <RefreshCw className="h-4 w-4" aria-hidden />
@@ -105,14 +125,15 @@ export const ReportResultsSummary = ({ topic, editing, mutation }: ReportResults
 
       {mutation?.data?.status === "no_data" && (
         <div
-          className="col-span-12 flex gap-3 rounded-md border px-4 py-3 text-sm"
+          className="border-border text-foreground col-span-12 flex gap-3 rounded border bg-white p-4"
           data-testid="ai-summary-no-data"
         >
-          <SearchX className="text-muted-foreground mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-          <div>
-            <p className="font-medium text-blue-900">{t("ai-summary-no-data-title")}</p>
-            <p className="text-muted-foreground">{t("ai-summary-no-data-description")}</p>
+          <SearchX className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+          <div className="space-y-1">
+            <p className="text-sm font-medium">{t("ai-summary-no-data-title")}</p>
+            <p className="text-xs">{t("ai-summary-no-data-description")}</p>
           </div>
+          {dismiss}
         </div>
       )}
 
