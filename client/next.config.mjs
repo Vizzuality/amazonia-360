@@ -13,6 +13,10 @@ const nextConfig = {
   turbopack: {
     root: import.meta.dirname,
   },
+  // The Dockerfile type-checks in its own stage, in parallel with this build.
+  typescript: {
+    ignoreBuildErrors: process.env.SKIP_BUILD_TYPECHECK === "1",
+  },
   images: {
     unoptimized: true,
     remotePatterns: [

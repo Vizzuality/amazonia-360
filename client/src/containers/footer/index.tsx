@@ -44,7 +44,7 @@ export default function Footer({ showDisclaimer = true }: Readonly<{ showDisclai
                 </div>
               </div>
             </div>
-            <div className="flex w-full items-center justify-start space-x-0 text-sm font-light sm:space-x-6 md:justify-end">
+            <div className="flex w-full flex-wrap items-center justify-start gap-x-6 text-sm font-light md:flex-nowrap md:justify-end">
               <Button variant="link" className="p-0 leading-1 text-white">
                 <a href="https://www.iadb.org/en/home/terms-and-conditions" target="_blank">
                   {t("terms-and-conditions")}
